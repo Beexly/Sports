@@ -1,0 +1,2794 @@
+{
+  "schema_version": "gse-wave10-gcp-catalog-and-34-github-repos-v1.0",
+  "generated_at_utc": "2026-11-06T05:34:22.235122+00:00",
+  "single_writer_lock_respected": true,
+  "brain_mind_jsonl_touched": false,
+  "stage0_zero_contamination_verified": true,
+  "mind_staging_jsonl_path": "data/mind_staging/mind_wave10_gcp_catalog_and_34_github_repos_2026_11_05.jsonl",
+  "mind_staging_jsonl_sha256": "13b4918003a54ab44639f999ea893242a0cbca5e543702dc089b1cae88be015c",
+  "ledger_markdown_path": "docs/data-sources/research/2026-11-05/WAVE10-GCP-PRODUCT-CATALOG-AND-34-GITHUB-REPOS-LEDGER.md",
+  "live_engine_wiring_targets": [
+    "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+    "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py"
+  ],
+  "summary": {
+    "cloud_and_gpu_portals_count": 4,
+    "gcp_product_categories_count": 14,
+    "gcp_individual_products_cataloged_count": 188,
+    "gcp_github_repositories_count": 34,
+    "total_mind_staging_records_count": 240,
+    "total_equations_and_premises_distilled": 62,
+    "engine_verification_passed": true
+  },
+  "engine_suite_verification": {
+    "module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+    "reframing_pattern": {
+      "pattern_id": "GCP-MLDP-CH03-REFRAMING",
+      "pattern_name": "Reframing Pattern (ml-design-patterns Ch. 3: Point Estimate -> Dirichlet-Multinomial Distribution)",
+      "source_repos": [
+        "GoogleCloudPlatform/ml-design-patterns",
+        "GoogleCloudPlatform/asl-ml-immersion"
+      ],
+      "kappa_concentration": 12.0,
+      "num_worlds": 2500,
+      "players": {
+        "Parker Washington": {
+          "share_prior": 0.26,
+          "dirichlet_alpha": 3.12,
+          "mean": 54.873,
+          "std": 32.163,
+          "cv": 0.5861,
+          "p10": 20.77,
+          "p25": 31.74,
+          "p50": 47.85,
+          "p75": 71.76,
+          "p90": 97.73,
+          "reference_line": 51.6,
+          "p_over_calibrated": 0.4626,
+          "p_under_calibrated": 0.5374,
+          "max_prob": 0.5374,
+          "cv_floor_satisfied": true,
+          "std_floor_satisfied": true,
+          "max_prob_ceiling_satisfied": true
+        },
+        "Brenton Strange": {
+          "share_prior": 0.22,
+          "dirichlet_alpha": 2.64,
+          "mean": 47.635,
+          "std": 29.237,
+          "cv": 0.6138,
+          "p10": 16.06,
+          "p25": 26.1,
+          "p50": 41.55,
+          "p75": 62.62,
+          "p90": 87.41,
+          "reference_line": 44.8,
+          "p_over_calibrated": 0.4666,
+          "p_under_calibrated": 0.5334,
+          "max_prob": 0.5334,
+          "cv_floor_satisfied": true,
+          "std_floor_satisfied": true,
+          "max_prob_ceiling_satisfied": true
+        },
+        "Brian Thomas Jr.": {
+          "share_prior": 0.14,
+          "dirichlet_alpha": 1.68,
+          "mean": 30.342,
+          "std": 23.28,
+          "cv": 0.7673,
+          "p10": 6.69,
+          "p25": 13.36,
+          "p50": 24.83,
+          "p75": 41.23,
+          "p90": 61.68,
+          "reference_line": 28.5,
+          "p_over_calibrated": 0.4513,
+          "p_under_calibrated": 0.5487,
+          "max_prob": 0.5487,
+          "cv_floor_satisfied": true,
+          "std_floor_satisfied": true,
+          "max_prob_ceiling_satisfied": true
+        },
+        "Jakobi Meyers": {
+          "share_prior": 0.2,
+          "dirichlet_alpha": 2.4,
+          "mean": 43.677,
+          "std": 28.257,
+          "cv": 0.647,
+          "p10": 13.59,
+          "p25": 22.58,
+          "p50": 37.9,
+          "p75": 58.04,
+          "p90": 80.58,
+          "reference_line": 41.1,
+          "p_over_calibrated": 0.4703,
+          "p_under_calibrated": 0.5297,
+          "max_prob": 0.5297,
+          "cv_floor_satisfied": true,
+          "std_floor_satisfied": true,
+          "max_prob_ceiling_satisfied": true
+        },
+        "Bhayshul Tuten": {
+          "share_prior": 0.18,
+          "dirichlet_alpha": 2.16,
+          "mean": 38.894,
+          "std": 26.711,
+          "cv": 0.6867,
+          "p10": 11.01,
+          "p25": 19.31,
+          "p50": 32.47,
+          "p75": 52.55,
+          "p90": 74.59,
+          "reference_line": 36.6,
+          "p_over_calibrated": 0.4533,
+          "p_under_calibrated": 0.5467,
+          "max_prob": 0.5467,
+          "cv_floor_satisfied": true,
+          "std_floor_satisfied": true,
+          "max_prob_ceiling_satisfied": true
+        }
+      },
+      "invariants_verified": {
+        "all_cv_ge_0_35": true,
+        "all_std_ge_1_10": true,
+        "all_max_prob_le_0_780": true
+      }
+    },
+    "feature_store_decoy_gate": {
+      "pattern_id": "GCP-MLDP-FEATURE-STORE-SKEW-GATE",
+      "pattern_name": "Vertex AI Feature Store Training-Serving Skew & Decoy Pitch-Count Anomaly Gate",
+      "player_name": "Brian Thomas Jr.",
+      "injury_status": "Questionable (Chest/Ankle - Limited Pitch Count)",
+      "market_line": 12.5,
+      "healthy_prior": 58.0,
+      "market_to_prior_skew_ratio": 0.2155,
+      "threshold_ratio": 0.45,
+      "injury_designated": true,
+      "is_decoy_anomaly": true,
+      "anomaly_flag": "DECOY_PITCH_COUNT_ANOMALY",
+      "recommended_action": "BLOCK_OVER_AND_APPLY_SNAP_COUNT_SURVIVAL_HAZARD_CAP",
+      "snap_cap_multiplier": 0.194,
+      "over_bet_allowed": false
+    },
+    "checkpoint_eventarc_sg1": {
+      "pattern_id": "GCP-MLDP-CH04-CHECKPOINT-EVENTARC-SG1",
+      "pattern_name": "Checkpoint State-Digest & Eventarc Cache Invalidation Gate (SG-1)",
+      "week": 9,
+      "spine_away_qb1": "Trevor Lawrence",
+      "spine_home_qb1": "Joe Fagnano",
+      "current_qb1_away": "Trevor Lawrence",
+      "current_qb1_home": "Joe Fagnano",
+      "updated_at": "2026-11-05T15:00:00+00:00",
+      "evaluated_at_utc": "2026-11-05T20:00:00+00:00",
+      "age_hours": 5.0,
+      "max_age_hours": 18.0,
+      "spine_digest_sha256": "e7423ff845e6facbc55c20b99b6716cdfb6eea08c1fded4ffc7332976d37f438",
+      "live_state_digest_sha256": "e7423ff845e6facbc55c20b99b6716cdfb6eea08c1fded4ffc7332976d37f438",
+      "qb1_away_match": true,
+      "qb1_home_match": true,
+      "age_within_sla": true,
+      "sg1_freshness_passed": true,
+      "eventarc_invalidation_triggered": false,
+      "invalidation_reasons": [],
+      "status": "FRESH_CHECKPOINT_VALID"
+    },
+    "model_armor_shield_sg4_sg7": {
+      "pattern_id": "GCP-MODEL-ARMOR-INVARIANT-SHIELD-SG4-SG7",
+      "pattern_name": "Google Cloud Model Armor & Fallback Invariant Shield (SG-4 / SG-7 / Stage-5 Gate)",
+      "candidate_props_evaluated": 5,
+      "stage5_publish_allowed_input": true,
+      "violations_count": 0,
+      "violations": [],
+      "publish_allowed": true,
+      "shield_verdict": "CLEARED_FOR_PUBLICATION"
+    },
+    "healthcare_fhir_mimic_bridge": {
+      "pattern_id": "GCP-HDE-FHIR-MIMIC-ROUGH-PATH-BRIDGE",
+      "pattern_name": "Google Cloud Healthcare Data Engine + MIMIC-IV Rough-Path Log-Signature Pipeline",
+      "vital_stream_hz": 500.0,
+      "nyquist_frequency_hz": 250.0,
+      "waveform_fidelity_tier": "HIGH_FREQUENCY_ICU_WAVEFORM_500HZ",
+      "path_channels_d": 5,
+      "rough_path_depth_M": 3,
+      "full_signature_dimension": 155,
+      "log_signature_lyndon_dimension": 55,
+      "lie_algebra_compression_ratio": 2.8182,
+      "gcp_reference_architecture": {
+        "ingestion_bus": "Cloud Pub/Sub (partitioned by patient_subject_id & device_metric_id)",
+        "stream_processor": "Cloud Dataflow (Apache Beam stateful windowing + iisignature/signatory log-signature kernel)",
+        "clinical_harmonization": "Google Cloud Healthcare Data Engine (FHIR R4 Observation, DeviceMetric & Patient longitudinal store)",
+        "analytical_warehouse": "BigQuery (partitioned time-series + vector embedding / log-signature feature tables)",
+        "model_training_and_serving": "Vertex AI Workbench + Vertex AI Feature Store + Model Armor clinical safety gate",
+        "sports_biometric_transfer": "Transfers ICU hemodynamic fatigue/autonomic recovery hazard math to NFL short-week soft-tissue load & 4Q defensive trench exhaustion."
+      }
+    },
+    "cloud_run_mcp_otel_sg2": {
+      "pattern_id": "GCP-CLOUD-RUN-MCP-OTEL-TRACE-SG2",
+      "pattern_name": "Cloud Run MCP & Agent Starter Pack OpenTelemetry Stage 1A/1B -> Stage 2 Coupling Span (SG-2)",
+      "source_repos": [
+        "GoogleCloudPlatform/cloud-run-mcp",
+        "GoogleCloudPlatform/agent-starter-pack"
+      ],
+      "trace_id": "44cf068942309560985e60b4647549f4",
+      "span_id": "553cf0c27de9d4d9",
+      "parent_span_id": "dda87030332e7cd4",
+      "otel_span_name": "gse.engine.stage1_to_stage2_situational_coupling",
+      "otel_status_code": "OK",
+      "sg2_coupling_verified": true,
+      "attributes": {
+        "gse.stage1a.coaching_tendencies_sha256": "b2e3ed68d150e4abc4c19f8c8a6fceaff2b6328a474a52c76c1c5b611b7486c8",
+        "gse.stage1b.roster_injury_weather_sha256": "896b041032dc9bf5c54b99dbecac8944ebf65a65b1dac767ab823e972eff9926",
+        "gse.stage2.param_keys_coupled": [
+          "bal_rookie_qb_pressure_disruption_prior",
+          "jax_proe_delta",
+          "wind_pass_efficiency_Scalar"
+        ],
+        "gse.stage2.params_digest_sha256": "e3d8d3d30313938f11bd8c5ff9663cc68b20a1df39859cf70cb1d7506a752696",
+        "gcp.mcp.transport": "cloud-run-streamable-http-sse",
+        "gcp.agent.framework": "vertex-ai-agent-engine-adk"
+      }
+    }
+  },
+  "cloud_and_gpu_portals": [
+    {
+      "id": "gse-wave10-portal-001",
+      "item_type": "cloud_or_gpu_portal",
+      "source_file": "https://docs.cloud.google.com/docs",
+      "url": "https://docs.cloud.google.com/docs",
+      "sha256": "4132978e73d7c58e7d4e0b6f884cf12ef8795d247dde89338afc44a144fc0529",
+      "domain": "gcp_14_category_enterprise_cloud_product_taxonomy_and_control_plane",
+      "title": "Google Cloud Documentation Overview & 14-Category Enterprise Product Taxonomy (142 Products)",
+      "extracted_summary": "Wave 10 Cloud/GPU Portal distillation for 'Google Cloud Documentation Overview & 14-Category Enterprise Product Taxonomy (142 Products)' (https://docs.cloud.google.com/docs). GSE/GSI Wiring: Maps the 5-stage GSE prediction spine and GSI clinical telemetry pipeline onto Google Cloud's 14 canonical architecture categories. | Equations: EQ-GCP-TAXONOMY-14-DOMAINS: Partition(GCP_Catalog) = {Cross_Product, AI_ML, App_Dev, App_Hosting, Compute, Data_Analytics, Databases, Distributed_Hybrid, Industry_Solutions, Migration, Networking, Observability, Security, Storage} (|Products| = 142) ; EQ-GCP-SLO-COMPOSITE: A_pipeline = prod_{k=1}^M A_service_k, enforcing regional multi-zone redundancy when composite availability falls below 99.95%",
+      "equations_and_premises": [
+        "EQ-GCP-TAXONOMY-14-DOMAINS: Partition(GCP_Catalog) = {Cross_Product, AI_ML, App_Dev, App_Hosting, Compute, Data_Analytics, Databases, Distributed_Hybrid, Industry_Solutions, Migration, Networking, Observability, Security, Storage} (|Products| = 142)",
+        "EQ-GCP-SLO-COMPOSITE: A_pipeline = prod_{k=1}^M A_service_k, enforcing regional multi-zone redundancy when composite availability falls below 99.95%"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-portal-002",
+      "item_type": "cloud_or_gpu_portal",
+      "source_file": "https://docs.cloud.google.com/docs/ai-ml",
+      "url": "https://docs.cloud.google.com/docs/ai-ml",
+      "sha256": "ad08f8b87e7e74fa0205f7861f2b22b22261d8e98ec1c01c7e4f0358d949162c",
+      "domain": "vertex_ai_generative_ai_mlops_feature_store_and_model_evaluation",
+      "title": "Google Cloud AI and Machine Learning Documentation (Vertex AI, Feature Store, Model Registry, Evaluation & TPU)",
+      "extracted_summary": "Wave 10 Cloud/GPU Portal distillation for 'Google Cloud AI and Machine Learning Documentation (Vertex AI, Feature Store, Model Registry, Evaluation & TPU)' (https://docs.cloud.google.com/docs/ai-ml). GSE/GSI Wiring: Drives `ml_pattern_feature_store_decoy_anomaly_gate` and point-in-time AS-OF feature retrieval for pregame injury/prop skew. | Equations: EQ-VERTEX-FEATURE-STORE-SKEW: Skew(f) = D_JS(P_train(f) || P_serve(f)); flags DECOY_PITCH_COUNT_ANOMALY when market_line / healthy_prior <= 0.45 ; EQ-VERTEX-MODEL-EVAL-BRIER: Brier(f, y) = (1/N) * sum_{i=1}^N (f_i - y_i)^2 = Uncertainty - Resolution + Reliability",
+      "equations_and_premises": [
+        "EQ-VERTEX-FEATURE-STORE-SKEW: Skew(f) = D_JS(P_train(f) || P_serve(f)); flags DECOY_PITCH_COUNT_ANOMALY when market_line / healthy_prior <= 0.45",
+        "EQ-VERTEX-MODEL-EVAL-BRIER: Brier(f, y) = (1/N) * sum_{i=1}^N (f_i - y_i)^2 = Uncertainty - Resolution + Reliability"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-portal-003",
+      "item_type": "cloud_or_gpu_portal",
+      "source_file": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/notebooks/workbench/introduction",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/notebooks/workbench/introduction",
+      "sha256": "1ed6550937342a2caa409c99c4a250099aab0ef2f2f3af0f7c7f3c91e366c56f",
+      "domain": "gemini_enterprise_agent_platform_workbench_custom_containers_and_bigquery_gpu",
+      "title": "Gemini Enterprise Agent Platform — Vertex AI Workbench & Colab Enterprise Managed Notebooks Architecture",
+      "extracted_summary": "Wave 10 Cloud/GPU Portal distillation for 'Gemini Enterprise Agent Platform — Vertex AI Workbench & Colab Enterprise Managed Notebooks Architecture' (https://docs.cloud.google.com/gemini-enterprise-agent-platform/notebooks/workbench/introduction). GSE/GSI Wiring: Powers reproducible notebook-to-production kernel promotion, custom Docker container execution, and zero-waste dynamic GPU attachment. | Equations: EQ-WORKBENCH-DYNAMIC-GPU-ALLOC: Cost_Workbench(T_idle, T_compute) = C_cpu * T_total + C_gpu * T_compute * I(GPU_Attached), eliminating idle accelerator burn ; EQ-WORKBENCH-BIGQUERY-STORAGE-READ: Throughput_Arrow = N_streams * Bandwidth_gRPC_stream for zero-copy play-by-play parquet/table ingestion",
+      "equations_and_premises": [
+        "EQ-WORKBENCH-DYNAMIC-GPU-ALLOC: Cost_Workbench(T_idle, T_compute) = C_cpu * T_total + C_gpu * T_compute * I(GPU_Attached), eliminating idle accelerator burn",
+        "EQ-WORKBENCH-BIGQUERY-STORAGE-READ: Throughput_Arrow = N_streams * Bandwidth_gRPC_stream for zero-copy play-by-play parquet/table ingestion"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-portal-004",
+      "item_type": "cloud_or_gpu_portal",
+      "source_file": "https://docs.runpod.io/overview",
+      "url": "https://docs.runpod.io/overview",
+      "sha256": "54d7facbc1e00057d7b412bd2fc955aca83a808da499aeb88ae2ef060957221c",
+      "domain": "runpod_serverless_flashboot_gpu_pods_instant_clusters_and_nim_inference",
+      "title": "RunPod Cloud GPU & Serverless Infrastructure (Sub-Second FlashBoot, A100/H100/L40S Pods, Instant Clusters, NVMe & NVIDIA NIM)",
+      "extracted_summary": "Wave 10 Cloud/GPU Portal distillation for 'RunPod Cloud GPU & Serverless Infrastructure (Sub-Second FlashBoot, A100/H100/L40S Pods, Instant Clusters, NVMe & NVIDIA NIM)' (https://docs.runpod.io/overview). GSE/GSI Wiring: Provides burst GPU compute for heavy deep-learning / LLM inference workloads while keeping GSE's 10,000-world Sinkhorn-Knopp snap simulator sub-second. | Equations: EQ-RUNPOD-FLASHBOOT-LATENCY: T_total_req = T_flashboot_coldstart (< 500ms) + (N_worlds * N_snaps) / Throughput_CUDA_cores ; EQ-RUNPOD-AUTOSCALE-QUEUE: W_target = ceil((lambda_arrival * T_exec) / Target_Queue_Delay_s), scaling 0 -> W_max workers with zero idle GPU floor",
+      "equations_and_premises": [
+        "EQ-RUNPOD-FLASHBOOT-LATENCY: T_total_req = T_flashboot_coldstart (< 500ms) + (N_worlds * N_snaps) / Throughput_CUDA_cores",
+        "EQ-RUNPOD-AUTOSCALE-QUEUE: W_target = ceil((lambda_arrival * T_exec) / Target_Queue_Delay_s), scaling 0 -> W_max workers with zero idle GPU floor"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    }
+  ],
+  "gcp_14_product_categories": [
+    {
+      "id": "gse-wave10-gcp-cat-001",
+      "item_type": "gcp_product_category",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "product_count": 15,
+      "products": [
+        "Access Approval",
+        "Access Context Manager",
+        "Cloud APIs",
+        "Cloud Billing",
+        "Cloud Deployment Manager",
+        "Cloud Marketplace",
+        "Cloud SDK (gcloud CLI)",
+        "Cloud Shell",
+        "Config Connector",
+        "Google Cloud Architecture Framework",
+        "Google Cloud Console",
+        "Infrastructure Manager",
+        "Resource Manager",
+        "Service Usage",
+        "Terraform on Google Cloud"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#cross-product-tools",
+      "url": "https://docs.cloud.google.com/docs#cross-product-tools",
+      "sha256": "9ab85ce980a9dd12d693a4c40c8f31caaa5216e06c753ad582c3ef6529c0ea00",
+      "domain": "gcp_cross_product_control_plane_cli_billing_and_iac",
+      "title": "Google Cloud Category 1: Cross-product tools (15 Products)",
+      "extracted_summary": "Google Cloud Category 1 (Cross-product tools) cataloging 15 enterprise products: Access Approval, Access Context Manager, Cloud APIs, Cloud Billing, Cloud Deployment Manager, Cloud Marketplace, Cloud SDK (gcloud CLI), Cloud Shell, Config Connector, Google Cloud Architecture Framework, Google Cloud Console, Infrastructure Manager, Resource Manager, Service Usage, Terraform on Google Cloud. Core Equations & Architectural Invariants: EQ-GCP-QUOTA-GOVERNOR: Usage_daily(API) <= min(Quota_hard, Budget_ceiling / Cost_per_call), enforcing zero-waste cost governance",
+      "equations_and_premises": [
+        "EQ-GCP-QUOTA-GOVERNOR: Usage_daily(API) <= min(Quota_hard, Budget_ceiling / Cost_per_call), enforcing zero-waste cost governance"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-002",
+      "item_type": "gcp_product_category",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "product_count": 28,
+      "products": [
+        "Agent Platform Vision",
+        "AutoML",
+        "Cloud Natural Language API",
+        "Cloud TPU",
+        "Cloud Translation API",
+        "Cloud Vision API",
+        "Colab Enterprise",
+        "Contact Center AI (Customer Engagement Suite)",
+        "Deep Learning Containers",
+        "Deep Learning VM",
+        "DocAI (Document AI)",
+        "Enterprise Knowledge Graph",
+        "Gemini Cloud Assist",
+        "Gemini Code Assist",
+        "Gemini Enterprise Agent Platform",
+        "Media Translation",
+        "Speech-to-Text",
+        "Text-to-Speech",
+        "TimesFM Forecasting",
+        "Vertex AI",
+        "Vertex AI Agent Builder / Agent Engine",
+        "Vertex AI Evaluation",
+        "Vertex AI Feature Store",
+        "Vertex AI Model Registry",
+        "Vertex AI Pipelines",
+        "Vertex AI Search & Conversation",
+        "Vertex AI Workbench",
+        "Video Intelligence API"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs/ai-ml",
+      "url": "https://docs.cloud.google.com/docs/ai-ml",
+      "sha256": "936491368c374523c04d699d26fa81689e2b7bad6e17224bb825f832744fa594",
+      "domain": "gcp_ai_ml_vertex_ai_gemini_agent_platform_tpu_and_docai",
+      "title": "Google Cloud Category 2: AI and ML (28 Products)",
+      "extracted_summary": "Google Cloud Category 2 (AI and ML) cataloging 28 enterprise products: Agent Platform Vision, AutoML, Cloud Natural Language API, Cloud TPU, Cloud Translation API, Cloud Vision API, Colab Enterprise, Contact Center AI (Customer Engagement Suite), Deep Learning Containers, Deep Learning VM, DocAI (Document AI), Enterprise Knowledge Graph, Gemini Cloud Assist, Gemini Code Assist, Gemini Enterprise Agent Platform, Media Translation, Speech-to-Text, Text-to-Speech, TimesFM Forecasting, Vertex AI, Vertex AI Agent Builder / Agent Engine, Vertex AI Evaluation, Vertex AI Feature Store, Vertex AI Model Registry, Vertex AI Pipelines, Vertex AI Search & Conversation, Vertex AI Workbench, Video Intelligence API. Core Equations & Architectural Invariants: EQ-VERTEX-DIRICHLET-REFRAMING: Theta ~ Dirichlet(kappa * p_1, ..., kappa * p_K) with CV >= 0.35 and max_prob <= 0.780 [ml_pattern_probabilistic_distribution_reframing] | EQ-DOCAI-LAYOUT-EXTRACTION: P(Entity_k | Token_i, BBox_i) = Softmax(W_multimodal * [Emb_text(Token_i) || Emb_spatial(BBox_i)]) for injury report & SID game notes parsing",
+      "equations_and_premises": [
+        "EQ-VERTEX-DIRICHLET-REFRAMING: Theta ~ Dirichlet(kappa * p_1, ..., kappa * p_K) with CV >= 0.35 and max_prob <= 0.780 [ml_pattern_probabilistic_distribution_reframing]",
+        "EQ-DOCAI-LAYOUT-EXTRACTION: P(Entity_k | Token_i, BBox_i) = Softmax(W_multimodal * [Emb_text(Token_i) || Emb_spatial(BBox_i)]) for injury report & SID game notes parsing"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-003",
+      "item_type": "gcp_product_category",
+      "category_number": 3,
+      "category_name": "App development",
+      "product_count": 16,
+      "products": [
+        "API Gateway",
+        "Apigee API Management",
+        "AppSheet",
+        "Artifact Registry",
+        "Assured Open Source Software",
+        "Cloud Build",
+        "Cloud Code",
+        "Cloud Deploy",
+        "Cloud Scheduler",
+        "Cloud Tasks",
+        "Cloud Workstations",
+        "Eventarc",
+        "Firebase",
+        "Identity Platform",
+        "Integration Connectors",
+        "Workflows"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#app-development",
+      "url": "https://docs.cloud.google.com/docs#app-development",
+      "sha256": "88a855f4685d7ec75b9959e0efdf034d2ad411e20914b326bafc1e1bbb3ced4c",
+      "domain": "gcp_app_development_eventarc_workflows_cloud_build_and_apigee",
+      "title": "Google Cloud Category 3: App development (16 Products)",
+      "extracted_summary": "Google Cloud Category 3 (App development) cataloging 16 enterprise products: API Gateway, Apigee API Management, AppSheet, Artifact Registry, Assured Open Source Software, Cloud Build, Cloud Code, Cloud Deploy, Cloud Scheduler, Cloud Tasks, Cloud Workstations, Eventarc, Firebase, Identity Platform, Integration Connectors, Workflows. Core Equations & Architectural Invariants: EQ-EVENTARC-CHECKPOINT-DIGEST: Digest_SG1 = SHA256(week || away_qb1 || home_qb1 || updated_at); triggers Eventarc rebuild if QB1 changes or age > 18.0h [ml_pattern_checkpoint_freshness_and_eventarc_invalidation]",
+      "equations_and_premises": [
+        "EQ-EVENTARC-CHECKPOINT-DIGEST: Digest_SG1 = SHA256(week || away_qb1 || home_qb1 || updated_at); triggers Eventarc rebuild if QB1 changes or age > 18.0h [ml_pattern_checkpoint_freshness_and_eventarc_invalidation]"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-004",
+      "item_type": "gcp_product_category",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "product_count": 6,
+      "products": [
+        "App Engine",
+        "Cloud Functions (Cloud Run functions)",
+        "Cloud Run",
+        "Firebase App Hosting",
+        "GKE (Google Kubernetes Engine)",
+        "GKE Autopilot"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#app-hosting",
+      "url": "https://docs.cloud.google.com/docs#app-hosting",
+      "sha256": "761943c0f5f1b883191c251641eba081b5b3caa08176677eee27603c3b73c04a",
+      "domain": "gcp_app_hosting_cloud_run_gke_and_serverless_containers",
+      "title": "Google Cloud Category 4: App hosting (6 Products)",
+      "extracted_summary": "Google Cloud Category 4 (App hosting) cataloging 6 enterprise products: App Engine, Cloud Functions (Cloud Run functions), Cloud Run, Firebase App Hosting, GKE (Google Kubernetes Engine), GKE Autopilot. Core Equations & Architectural Invariants: EQ-CLOUD-RUN-CONCURRENCY: Instances_active(t) = ceil(Concurrent_Requests(t) / Max_Concurrency_Per_Container), scaling to 0 when idle",
+      "equations_and_premises": [
+        "EQ-CLOUD-RUN-CONCURRENCY: Instances_active(t) = ceil(Concurrent_Requests(t) / Max_Concurrency_Per_Container), scaling to 0 when idle"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-005",
+      "item_type": "gcp_product_category",
+      "category_number": 5,
+      "category_name": "Compute",
+      "product_count": 11,
+      "products": [
+        "Bare Metal Solution",
+        "Batch",
+        "Capacity Planner",
+        "Compute Engine",
+        "Confidential VM",
+        "GPU Platforms (A3 H100 / A3 Ultra H200 / G2 L4)",
+        "Migrate to Virtual Machines",
+        "Shielded VMs",
+        "Sole-Tenant Nodes",
+        "Spot VMs",
+        "Tau VMs (Arm)"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#compute",
+      "url": "https://docs.cloud.google.com/docs#compute",
+      "sha256": "baf76bee287b958016043f873fc3c2d06b8a4a26cdd66400131659479af45c08",
+      "domain": "gcp_compute_engine_batch_confidential_vm_and_accelerator_fleet",
+      "title": "Google Cloud Category 5: Compute (11 Products)",
+      "extracted_summary": "Google Cloud Category 5 (Compute) cataloging 11 enterprise products: Bare Metal Solution, Batch, Capacity Planner, Compute Engine, Confidential VM, GPU Platforms (A3 H100 / A3 Ultra H200 / G2 L4), Migrate to Virtual Machines, Shielded VMs, Sole-Tenant Nodes, Spot VMs, Tau VMs (Arm). Core Equations & Architectural Invariants: EQ-COMPUTE-VECTORIZED-LOCAL-VS-CLOUD: Local vectorized NumPy/Sinkhorn executes 10,000 x 175 = 1,750,000 snaps in < 0.25s, avoiding unnecessary cloud VM spin-up",
+      "equations_and_premises": [
+        "EQ-COMPUTE-VECTORIZED-LOCAL-VS-CLOUD: Local vectorized NumPy/Sinkhorn executes 10,000 x 175 = 1,750,000 snaps in < 0.25s, avoiding unnecessary cloud VM spin-up"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-006",
+      "item_type": "gcp_product_category",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "product_count": 19,
+      "products": [
+        "Analytics Hub",
+        "BigLake",
+        "BigQuery",
+        "BigQuery Data Transfer Service",
+        "BigQuery ML",
+        "Cloud Composer",
+        "Cloud Data Fusion",
+        "Dataflow",
+        "Dataform",
+        "Dataplex (Data Catalog)",
+        "Dataprep",
+        "Dataproc",
+        "Dataproc Serverless",
+        "Datastream",
+        "Earth Engine",
+        "Looker",
+        "Looker Studio",
+        "Pub/Sub",
+        "Pub/Sub Lite"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#data-analytics-and-pipelines",
+      "url": "https://docs.cloud.google.com/docs#data-analytics-and-pipelines",
+      "sha256": "3477fd456a3ef9997da64f9c6b1c774004719a9bceeb35cf37e4ebb7df639b9b",
+      "domain": "gcp_data_analytics_bigquery_dataflow_dataproc_looker_and_pubsub",
+      "title": "Google Cloud Category 6: Data analytics and pipelines (19 Products)",
+      "extracted_summary": "Google Cloud Category 6 (Data analytics and pipelines) cataloging 19 enterprise products: Analytics Hub, BigLake, BigQuery, BigQuery Data Transfer Service, BigQuery ML, Cloud Composer, Cloud Data Fusion, Dataflow, Dataform, Dataplex (Data Catalog), Dataprep, Dataproc, Dataproc Serverless, Datastream, Earth Engine, Looker, Looker Studio, Pub/Sub, Pub/Sub Lite. Core Equations & Architectural Invariants: EQ-DATAFLOW-WATERMARK-WINDOW: W_completeness(t) = P(Event_Time <= Watermark(t)); prevents late-arriving injury/odds ticks from corrupting AS-OF training windows",
+      "equations_and_premises": [
+        "EQ-DATAFLOW-WATERMARK-WINDOW: W_completeness(t) = P(Event_Time <= Watermark(t)); prevents late-arriving injury/odds ticks from corrupting AS-OF training windows"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-007",
+      "item_type": "gcp_product_category",
+      "category_number": 7,
+      "category_name": "Databases",
+      "product_count": 10,
+      "products": [
+        "AlloyDB",
+        "Bigtable",
+        "Cloud SQL",
+        "Database Center",
+        "Database Migration Service",
+        "Firebase Realtime Database",
+        "Firestore",
+        "Memorystore",
+        "Oracle Database@Google Cloud",
+        "Spanner"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#databases",
+      "url": "https://docs.cloud.google.com/docs#databases",
+      "sha256": "6e0080d897cc24802198acc653b704157e179267afd5b4fbb35438e241660c7d",
+      "domain": "gcp_databases_alloydb_bigtable_firestore_memorystore_and_spanner",
+      "title": "Google Cloud Category 7: Databases (10 Products)",
+      "extracted_summary": "Google Cloud Category 7 (Databases) cataloging 10 enterprise products: AlloyDB, Bigtable, Cloud SQL, Database Center, Database Migration Service, Firebase Realtime Database, Firestore, Memorystore, Oracle Database@Google Cloud, Spanner. Core Equations & Architectural Invariants: EQ-SPANNER-TRUETIME-EXTERNAL-CONSISTENCY: Commit_Wait >= 2 * epsilon_clock_uncertainty, guaranteeing strict serializability of ledger settlements",
+      "equations_and_premises": [
+        "EQ-SPANNER-TRUETIME-EXTERNAL-CONSISTENCY: Commit_Wait >= 2 * epsilon_clock_uncertainty, guaranteeing strict serializability of ledger settlements"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-008",
+      "item_type": "gcp_product_category",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "product_count": 7,
+      "products": [
+        "Anthos (GKE Enterprise)",
+        "BigQuery Omni",
+        "Cloud Service Mesh",
+        "Config Sync",
+        "Fleet Management",
+        "GKE Multi-Cloud",
+        "Google Distributed Cloud (GDC Edge & Air-Gapped)"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#distributed-hybrid-and-multicloud",
+      "url": "https://docs.cloud.google.com/docs#distributed-hybrid-and-multicloud",
+      "sha256": "3f2924b98360d6346cf9c8dd7c4a3b226b14d94ddef714630ef208e3f7f0c96d",
+      "domain": "gcp_distributed_hybrid_multicloud_anthos_gdc_and_service_mesh",
+      "title": "Google Cloud Category 8: Distributed, hybrid, and multicloud (7 Products)",
+      "extracted_summary": "Google Cloud Category 8 (Distributed, hybrid, and multicloud) cataloging 7 enterprise products: Anthos (GKE Enterprise), BigQuery Omni, Cloud Service Mesh, Config Sync, Fleet Management, GKE Multi-Cloud, Google Distributed Cloud (GDC Edge & Air-Gapped). Core Equations & Architectural Invariants: EQ-HYBRID-SYNC-DRIFT: Drift(Cluster_i, Git_HEAD) = Hamming(State_Cluster_i, State_Declarative_Spec) == 0 via Config Sync",
+      "equations_and_premises": [
+        "EQ-HYBRID-SYNC-DRIFT: Drift(Cluster_i, Git_HEAD) = Hamming(State_Cluster_i, State_Declarative_Spec) == 0 via Config Sync"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-009",
+      "item_type": "gcp_product_category",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "product_count": 10,
+      "products": [
+        "Anti Money Laundering AI",
+        "Cloud Healthcare API",
+        "Cloud Life Sciences",
+        "Cortex Framework",
+        "Financial Services Cloud",
+        "Healthcare Data Engine",
+        "Manufacturing Data Engine",
+        "Medical Imaging Suite",
+        "Retail Search",
+        "Telecom Network Automation"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#industry-solutions",
+      "url": "https://docs.cloud.google.com/docs#industry-solutions",
+      "sha256": "22510fbbdee36a6b62c20fd6f42a8262b1f8f90dd358ea127787358bdd93c80c",
+      "domain": "gcp_industry_solutions_healthcare_data_engine_fhir_and_mimic_bridge",
+      "title": "Google Cloud Category 9: Industry solutions (10 Products)",
+      "extracted_summary": "Google Cloud Category 9 (Industry solutions) cataloging 10 enterprise products: Anti Money Laundering AI, Cloud Healthcare API, Cloud Life Sciences, Cortex Framework, Financial Services Cloud, Healthcare Data Engine, Manufacturing Data Engine, Medical Imaging Suite, Retail Search, Telecom Network Automation. Core Equations & Architectural Invariants: EQ-HDE-ROUGH-PATH-LYNDON: Dim(LogSig_M(R^d)) = sum_{k=1}^M (1/k) * sum_{div|k} mu(k/div) * d^{div} (for d=5, M=3: Sig=155 -> LogSig=55) [gcp_healthcare_data_engine_fhir_mimic_bridge]",
+      "equations_and_premises": [
+        "EQ-HDE-ROUGH-PATH-LYNDON: Dim(LogSig_M(R^d)) = sum_{k=1}^M (1/k) * sum_{div|k} mu(k/div) * d^{div} (for d=5, M=3: Sig=155 -> LogSig=55) [gcp_healthcare_data_engine_fhir_mimic_bridge]"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-010",
+      "item_type": "gcp_product_category",
+      "category_number": 10,
+      "category_name": "Migration",
+      "product_count": 7,
+      "products": [
+        "BigQuery Migration Service",
+        "Database Migration Service (DMS)",
+        "Migrate to Containers",
+        "Migrate to Virtual Machines",
+        "Migration Center",
+        "Storage Transfer Service",
+        "Transfer Appliance"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#migration",
+      "url": "https://docs.cloud.google.com/docs#migration",
+      "sha256": "3f8662d4c272e162e5debfd718a972280ec5c644849ffddd8f16a62dea6d0769",
+      "domain": "gcp_migration_center_storage_transfer_and_schema_parity",
+      "title": "Google Cloud Category 10: Migration (7 Products)",
+      "extracted_summary": "Google Cloud Category 10 (Migration) cataloging 7 enterprise products: BigQuery Migration Service, Database Migration Service (DMS), Migrate to Containers, Migrate to Virtual Machines, Migration Center, Storage Transfer Service, Transfer Appliance. Core Equations & Architectural Invariants: EQ-MIGRATION-CHECKSUM-PARITY: SHA256(Source_Partition) == SHA256(Target_Partition) before cutover",
+      "equations_and_premises": [
+        "EQ-MIGRATION-CHECKSUM-PARITY: SHA256(Source_Partition) == SHA256(Target_Partition) before cutover"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-011",
+      "item_type": "gcp_product_category",
+      "category_number": 11,
+      "category_name": "Networking",
+      "product_count": 22,
+      "products": [
+        "Certificate Authority Service",
+        "Cloud Armor",
+        "Cloud CDN",
+        "Cloud DNS",
+        "Cloud Domains",
+        "Cloud IDS",
+        "Cloud Load Balancing",
+        "Cloud NAT",
+        "Cloud Router",
+        "Cloud VPN",
+        "Media CDN",
+        "Network Connectivity Center",
+        "Network Intelligence Center",
+        "Network Security Integration",
+        "Network Service Tiers",
+        "Private Service Connect",
+        "Service Directory",
+        "Service Extensions",
+        "Spectrum Access System",
+        "Traffic Director",
+        "Virtual Private Cloud (VPC)",
+        "VPC Service Controls"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#networking",
+      "url": "https://docs.cloud.google.com/docs#networking",
+      "sha256": "c84b511096bc08ed1e78a265f63c0b30dec77daca9fa805da21d1b7e17ec18d9",
+      "domain": "gcp_networking_vpc_cloud_armor_cdn_load_balancing_and_psc",
+      "title": "Google Cloud Category 11: Networking (22 Products)",
+      "extracted_summary": "Google Cloud Category 11 (Networking) cataloging 22 enterprise products: Certificate Authority Service, Cloud Armor, Cloud CDN, Cloud DNS, Cloud Domains, Cloud IDS, Cloud Load Balancing, Cloud NAT, Cloud Router, Cloud VPN, Media CDN, Network Connectivity Center, Network Intelligence Center, Network Security Integration, Network Service Tiers, Private Service Connect, Service Directory, Service Extensions, Spectrum Access System, Traffic Director, Virtual Private Cloud (VPC), VPC Service Controls. Core Equations & Architectural Invariants: EQ-CLOUD-ARMOR-RATE-LIMIT: Allow(req) = I(Rate(IP, window_60s) <= Threshold_RPM and WAF_Signature_Match == 0)",
+      "equations_and_premises": [
+        "EQ-CLOUD-ARMOR-RATE-LIMIT: Allow(req) = I(Rate(IP, window_60s) <= Threshold_RPM and WAF_Signature_Match == 0)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-012",
+      "item_type": "gcp_product_category",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "product_count": 9,
+      "products": [
+        "Application Integration Monitoring",
+        "Cloud Logging",
+        "Cloud Monitoring",
+        "Cloud Profiler",
+        "Cloud Trace",
+        "Error Reporting",
+        "Google Cloud Managed Service for Prometheus",
+        "OpenTelemetry on Google Cloud",
+        "Personalized Service Health"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#observability-and-monitoring",
+      "url": "https://docs.cloud.google.com/docs#observability-and-monitoring",
+      "sha256": "c7117fd43adfe24d4029cf9bd8439a9359981cbb341284141e08134a9e833833",
+      "domain": "gcp_observability_cloud_trace_monitoring_logging_and_opentelemetry",
+      "title": "Google Cloud Category 12: Observability and monitoring (9 Products)",
+      "extracted_summary": "Google Cloud Category 12 (Observability and monitoring) cataloging 9 enterprise products: Application Integration Monitoring, Cloud Logging, Cloud Monitoring, Cloud Profiler, Cloud Trace, Error Reporting, Google Cloud Managed Service for Prometheus, OpenTelemetry on Google Cloud, Personalized Service Health. Core Equations & Architectural Invariants: EQ-CLOUD-TRACE-SG2-SPAN: Span_ID = SHA256(Stage1A_Hash || Stage1B_Hash || Canonical(Stage2_Params))[32:48], proving Stage 1 -> Stage 2 parameter coupling [gcp_cloud_run_mcp_and_agent_starter_telemetry]",
+      "equations_and_premises": [
+        "EQ-CLOUD-TRACE-SG2-SPAN: Span_ID = SHA256(Stage1A_Hash || Stage1B_Hash || Canonical(Stage2_Params))[32:48], proving Stage 1 -> Stage 2 parameter coupling [gcp_cloud_run_mcp_and_agent_starter_telemetry]"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-013",
+      "item_type": "gcp_product_category",
+      "category_number": 13,
+      "category_name": "Security",
+      "product_count": 19,
+      "products": [
+        "Access Transparency",
+        "Assured Workloads",
+        "Binary Authorization",
+        "Chronicle (Google Security Operations)",
+        "Cloud Asset Inventory",
+        "Cloud Data Loss Prevention (Sensitive Data Protection)",
+        "Cloud EKM",
+        "Cloud HSM",
+        "Cloud Key Management Service (KMS)",
+        "Confidential Computing",
+        "Identity and Access Management (IAM)",
+        "Identity-Aware Proxy (IAP)",
+        "Managed Microsoft AD",
+        "Model Armor",
+        "Organization Policy Service",
+        "reCAPTCHA Enterprise",
+        "Secret Manager",
+        "Security Command Center (SCC)",
+        "Web Risk"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#security",
+      "url": "https://docs.cloud.google.com/docs#security",
+      "sha256": "ab21d91c09e3154881548d787a248f3f59e8bc0821b42277e00f6c219734ba86",
+      "domain": "gcp_security_model_armor_secret_manager_iam_iap_and_scc",
+      "title": "Google Cloud Category 13: Security (19 Products)",
+      "extracted_summary": "Google Cloud Category 13 (Security) cataloging 19 enterprise products: Access Transparency, Assured Workloads, Binary Authorization, Chronicle (Google Security Operations), Cloud Asset Inventory, Cloud Data Loss Prevention (Sensitive Data Protection), Cloud EKM, Cloud HSM, Cloud Key Management Service (KMS), Confidential Computing, Identity and Access Management (IAM), Identity-Aware Proxy (IAP), Managed Microsoft AD, Model Armor, Organization Policy Service, reCAPTCHA Enterprise, Secret Manager, Security Command Center (SCC), Web Risk. Core Equations & Architectural Invariants: EQ-MODEL-ARMOR-SG4-SG7: Publish_Allowed = Stage5_Gate AND forall_p (std_p >= 1.10 AND max_prob_p <= 0.780) [ml_pattern_model_armor_invariant_shield]",
+      "equations_and_premises": [
+        "EQ-MODEL-ARMOR-SG4-SG7: Publish_Allowed = Stage5_Gate AND forall_p (std_p >= 1.10 AND max_prob_p <= 0.780) [ml_pattern_model_armor_invariant_shield]"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-cat-014",
+      "item_type": "gcp_product_category",
+      "category_number": 14,
+      "category_name": "Storage",
+      "product_count": 9,
+      "products": [
+        "Backup and DR Service",
+        "Backup for GKE",
+        "Cloud Storage (GCS)",
+        "Cloud Storage FUSE (gcsfuse)",
+        "Filestore",
+        "Google Cloud NetApp Volumes",
+        "Hyperdisk / Persistent Disk",
+        "Local SSD",
+        "Parallelstore (Managed Lustre)"
+      ],
+      "source_file": "https://docs.cloud.google.com/docs#storage",
+      "url": "https://docs.cloud.google.com/docs#storage",
+      "sha256": "b86de90d4e7160da49bb69ebcc101365d26443ba602508f06e2c44b6c2597c32",
+      "domain": "gcp_storage_gcs_gcsfuse_filestore_hyperdisk_and_parallelstore",
+      "title": "Google Cloud Category 14: Storage (9 Products)",
+      "extracted_summary": "Google Cloud Category 14 (Storage) cataloging 9 enterprise products: Backup and DR Service, Backup for GKE, Cloud Storage (GCS), Cloud Storage FUSE (gcsfuse), Filestore, Google Cloud NetApp Volumes, Hyperdisk / Persistent Disk, Local SSD, Parallelstore (Managed Lustre). Core Equations & Architectural Invariants: EQ-GCSFUSE-CACHE-HIT: Latency_eff = p_hit * T_local_nvme + (1 - p_hit) * T_gcs_object_fetch",
+      "equations_and_premises": [
+        "EQ-GCSFUSE-CACHE-HIT: Latency_eff = p_hit * T_local_nvme + (1 - p_hit) * T_gcs_object_fetch"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    }
+  ],
+  "gcp_individual_products_catalog": [
+    {
+      "product_index": 1,
+      "product_name": "Access Approval",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 2,
+      "product_name": "Access Context Manager",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 3,
+      "product_name": "Cloud APIs",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 4,
+      "product_name": "Cloud Billing",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 5,
+      "product_name": "Cloud Deployment Manager",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 6,
+      "product_name": "Cloud Marketplace",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 7,
+      "product_name": "Cloud SDK (gcloud CLI)",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 8,
+      "product_name": "Cloud Shell",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 9,
+      "product_name": "Config Connector",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 10,
+      "product_name": "Google Cloud Architecture Framework",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 11,
+      "product_name": "Google Cloud Console",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 12,
+      "product_name": "Infrastructure Manager",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 13,
+      "product_name": "Resource Manager",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 14,
+      "product_name": "Service Usage",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 15,
+      "product_name": "Terraform on Google Cloud",
+      "category_number": 1,
+      "category_name": "Cross-product tools",
+      "category_id": "gse-wave10-gcp-cat-001"
+    },
+    {
+      "product_index": 16,
+      "product_name": "Agent Platform Vision",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 17,
+      "product_name": "AutoML",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 18,
+      "product_name": "Cloud Natural Language API",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 19,
+      "product_name": "Cloud TPU",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 20,
+      "product_name": "Cloud Translation API",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 21,
+      "product_name": "Cloud Vision API",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 22,
+      "product_name": "Colab Enterprise",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 23,
+      "product_name": "Contact Center AI (Customer Engagement Suite)",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 24,
+      "product_name": "Deep Learning Containers",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 25,
+      "product_name": "Deep Learning VM",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 26,
+      "product_name": "DocAI (Document AI)",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 27,
+      "product_name": "Enterprise Knowledge Graph",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 28,
+      "product_name": "Gemini Cloud Assist",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 29,
+      "product_name": "Gemini Code Assist",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 30,
+      "product_name": "Gemini Enterprise Agent Platform",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 31,
+      "product_name": "Media Translation",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 32,
+      "product_name": "Speech-to-Text",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 33,
+      "product_name": "Text-to-Speech",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 34,
+      "product_name": "TimesFM Forecasting",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 35,
+      "product_name": "Vertex AI",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 36,
+      "product_name": "Vertex AI Agent Builder / Agent Engine",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 37,
+      "product_name": "Vertex AI Evaluation",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 38,
+      "product_name": "Vertex AI Feature Store",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 39,
+      "product_name": "Vertex AI Model Registry",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 40,
+      "product_name": "Vertex AI Pipelines",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 41,
+      "product_name": "Vertex AI Search & Conversation",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 42,
+      "product_name": "Vertex AI Workbench",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 43,
+      "product_name": "Video Intelligence API",
+      "category_number": 2,
+      "category_name": "AI and ML",
+      "category_id": "gse-wave10-gcp-cat-002"
+    },
+    {
+      "product_index": 44,
+      "product_name": "API Gateway",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 45,
+      "product_name": "Apigee API Management",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 46,
+      "product_name": "AppSheet",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 47,
+      "product_name": "Artifact Registry",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 48,
+      "product_name": "Assured Open Source Software",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 49,
+      "product_name": "Cloud Build",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 50,
+      "product_name": "Cloud Code",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 51,
+      "product_name": "Cloud Deploy",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 52,
+      "product_name": "Cloud Scheduler",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 53,
+      "product_name": "Cloud Tasks",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 54,
+      "product_name": "Cloud Workstations",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 55,
+      "product_name": "Eventarc",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 56,
+      "product_name": "Firebase",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 57,
+      "product_name": "Identity Platform",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 58,
+      "product_name": "Integration Connectors",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 59,
+      "product_name": "Workflows",
+      "category_number": 3,
+      "category_name": "App development",
+      "category_id": "gse-wave10-gcp-cat-003"
+    },
+    {
+      "product_index": 60,
+      "product_name": "App Engine",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "category_id": "gse-wave10-gcp-cat-004"
+    },
+    {
+      "product_index": 61,
+      "product_name": "Cloud Functions (Cloud Run functions)",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "category_id": "gse-wave10-gcp-cat-004"
+    },
+    {
+      "product_index": 62,
+      "product_name": "Cloud Run",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "category_id": "gse-wave10-gcp-cat-004"
+    },
+    {
+      "product_index": 63,
+      "product_name": "Firebase App Hosting",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "category_id": "gse-wave10-gcp-cat-004"
+    },
+    {
+      "product_index": 64,
+      "product_name": "GKE (Google Kubernetes Engine)",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "category_id": "gse-wave10-gcp-cat-004"
+    },
+    {
+      "product_index": 65,
+      "product_name": "GKE Autopilot",
+      "category_number": 4,
+      "category_name": "App hosting",
+      "category_id": "gse-wave10-gcp-cat-004"
+    },
+    {
+      "product_index": 66,
+      "product_name": "Bare Metal Solution",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 67,
+      "product_name": "Batch",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 68,
+      "product_name": "Capacity Planner",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 69,
+      "product_name": "Compute Engine",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 70,
+      "product_name": "Confidential VM",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 71,
+      "product_name": "GPU Platforms (A3 H100 / A3 Ultra H200 / G2 L4)",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 72,
+      "product_name": "Migrate to Virtual Machines",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 73,
+      "product_name": "Shielded VMs",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 74,
+      "product_name": "Sole-Tenant Nodes",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 75,
+      "product_name": "Spot VMs",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 76,
+      "product_name": "Tau VMs (Arm)",
+      "category_number": 5,
+      "category_name": "Compute",
+      "category_id": "gse-wave10-gcp-cat-005"
+    },
+    {
+      "product_index": 77,
+      "product_name": "Analytics Hub",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 78,
+      "product_name": "BigLake",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 79,
+      "product_name": "BigQuery",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 80,
+      "product_name": "BigQuery Data Transfer Service",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 81,
+      "product_name": "BigQuery ML",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 82,
+      "product_name": "Cloud Composer",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 83,
+      "product_name": "Cloud Data Fusion",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 84,
+      "product_name": "Dataflow",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 85,
+      "product_name": "Dataform",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 86,
+      "product_name": "Dataplex (Data Catalog)",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 87,
+      "product_name": "Dataprep",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 88,
+      "product_name": "Dataproc",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 89,
+      "product_name": "Dataproc Serverless",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 90,
+      "product_name": "Datastream",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 91,
+      "product_name": "Earth Engine",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 92,
+      "product_name": "Looker",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 93,
+      "product_name": "Looker Studio",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 94,
+      "product_name": "Pub/Sub",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 95,
+      "product_name": "Pub/Sub Lite",
+      "category_number": 6,
+      "category_name": "Data analytics and pipelines",
+      "category_id": "gse-wave10-gcp-cat-006"
+    },
+    {
+      "product_index": 96,
+      "product_name": "AlloyDB",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 97,
+      "product_name": "Bigtable",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 98,
+      "product_name": "Cloud SQL",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 99,
+      "product_name": "Database Center",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 100,
+      "product_name": "Database Migration Service",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 101,
+      "product_name": "Firebase Realtime Database",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 102,
+      "product_name": "Firestore",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 103,
+      "product_name": "Memorystore",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 104,
+      "product_name": "Oracle Database@Google Cloud",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 105,
+      "product_name": "Spanner",
+      "category_number": 7,
+      "category_name": "Databases",
+      "category_id": "gse-wave10-gcp-cat-007"
+    },
+    {
+      "product_index": 106,
+      "product_name": "Anthos (GKE Enterprise)",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 107,
+      "product_name": "BigQuery Omni",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 108,
+      "product_name": "Cloud Service Mesh",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 109,
+      "product_name": "Config Sync",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 110,
+      "product_name": "Fleet Management",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 111,
+      "product_name": "GKE Multi-Cloud",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 112,
+      "product_name": "Google Distributed Cloud (GDC Edge & Air-Gapped)",
+      "category_number": 8,
+      "category_name": "Distributed, hybrid, and multicloud",
+      "category_id": "gse-wave10-gcp-cat-008"
+    },
+    {
+      "product_index": 113,
+      "product_name": "Anti Money Laundering AI",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 114,
+      "product_name": "Cloud Healthcare API",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 115,
+      "product_name": "Cloud Life Sciences",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 116,
+      "product_name": "Cortex Framework",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 117,
+      "product_name": "Financial Services Cloud",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 118,
+      "product_name": "Healthcare Data Engine",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 119,
+      "product_name": "Manufacturing Data Engine",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 120,
+      "product_name": "Medical Imaging Suite",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 121,
+      "product_name": "Retail Search",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 122,
+      "product_name": "Telecom Network Automation",
+      "category_number": 9,
+      "category_name": "Industry solutions",
+      "category_id": "gse-wave10-gcp-cat-009"
+    },
+    {
+      "product_index": 123,
+      "product_name": "BigQuery Migration Service",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 124,
+      "product_name": "Database Migration Service (DMS)",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 125,
+      "product_name": "Migrate to Containers",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 126,
+      "product_name": "Migrate to Virtual Machines",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 127,
+      "product_name": "Migration Center",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 128,
+      "product_name": "Storage Transfer Service",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 129,
+      "product_name": "Transfer Appliance",
+      "category_number": 10,
+      "category_name": "Migration",
+      "category_id": "gse-wave10-gcp-cat-010"
+    },
+    {
+      "product_index": 130,
+      "product_name": "Certificate Authority Service",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 131,
+      "product_name": "Cloud Armor",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 132,
+      "product_name": "Cloud CDN",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 133,
+      "product_name": "Cloud DNS",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 134,
+      "product_name": "Cloud Domains",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 135,
+      "product_name": "Cloud IDS",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 136,
+      "product_name": "Cloud Load Balancing",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 137,
+      "product_name": "Cloud NAT",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 138,
+      "product_name": "Cloud Router",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 139,
+      "product_name": "Cloud VPN",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 140,
+      "product_name": "Media CDN",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 141,
+      "product_name": "Network Connectivity Center",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 142,
+      "product_name": "Network Intelligence Center",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 143,
+      "product_name": "Network Security Integration",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 144,
+      "product_name": "Network Service Tiers",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 145,
+      "product_name": "Private Service Connect",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 146,
+      "product_name": "Service Directory",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 147,
+      "product_name": "Service Extensions",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 148,
+      "product_name": "Spectrum Access System",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 149,
+      "product_name": "Traffic Director",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 150,
+      "product_name": "Virtual Private Cloud (VPC)",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 151,
+      "product_name": "VPC Service Controls",
+      "category_number": 11,
+      "category_name": "Networking",
+      "category_id": "gse-wave10-gcp-cat-011"
+    },
+    {
+      "product_index": 152,
+      "product_name": "Application Integration Monitoring",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 153,
+      "product_name": "Cloud Logging",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 154,
+      "product_name": "Cloud Monitoring",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 155,
+      "product_name": "Cloud Profiler",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 156,
+      "product_name": "Cloud Trace",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 157,
+      "product_name": "Error Reporting",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 158,
+      "product_name": "Google Cloud Managed Service for Prometheus",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 159,
+      "product_name": "OpenTelemetry on Google Cloud",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 160,
+      "product_name": "Personalized Service Health",
+      "category_number": 12,
+      "category_name": "Observability and monitoring",
+      "category_id": "gse-wave10-gcp-cat-012"
+    },
+    {
+      "product_index": 161,
+      "product_name": "Access Transparency",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 162,
+      "product_name": "Assured Workloads",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 163,
+      "product_name": "Binary Authorization",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 164,
+      "product_name": "Chronicle (Google Security Operations)",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 165,
+      "product_name": "Cloud Asset Inventory",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 166,
+      "product_name": "Cloud Data Loss Prevention (Sensitive Data Protection)",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 167,
+      "product_name": "Cloud EKM",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 168,
+      "product_name": "Cloud HSM",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 169,
+      "product_name": "Cloud Key Management Service (KMS)",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 170,
+      "product_name": "Confidential Computing",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 171,
+      "product_name": "Identity and Access Management (IAM)",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 172,
+      "product_name": "Identity-Aware Proxy (IAP)",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 173,
+      "product_name": "Managed Microsoft AD",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 174,
+      "product_name": "Model Armor",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 175,
+      "product_name": "Organization Policy Service",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 176,
+      "product_name": "reCAPTCHA Enterprise",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 177,
+      "product_name": "Secret Manager",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 178,
+      "product_name": "Security Command Center (SCC)",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 179,
+      "product_name": "Web Risk",
+      "category_number": 13,
+      "category_name": "Security",
+      "category_id": "gse-wave10-gcp-cat-013"
+    },
+    {
+      "product_index": 180,
+      "product_name": "Backup and DR Service",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 181,
+      "product_name": "Backup for GKE",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 182,
+      "product_name": "Cloud Storage (GCS)",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 183,
+      "product_name": "Cloud Storage FUSE (gcsfuse)",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 184,
+      "product_name": "Filestore",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 185,
+      "product_name": "Google Cloud NetApp Volumes",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 186,
+      "product_name": "Hyperdisk / Persistent Disk",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 187,
+      "product_name": "Local SSD",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    },
+    {
+      "product_index": 188,
+      "product_name": "Parallelstore (Managed Lustre)",
+      "category_number": 14,
+      "category_name": "Storage",
+      "category_id": "gse-wave10-gcp-cat-014"
+    }
+  ],
+  "gcp_34_github_repositories": [
+    {
+      "id": "gse-wave10-gcp-repo-001",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/agent-starter-pack",
+      "source_file": "https://github.com/GoogleCloudPlatform/agent-starter-pack",
+      "url": "https://github.com/GoogleCloudPlatform/agent-starter-pack",
+      "sha256": "ea1a0fd5066e663bfdd431fab39df8ab3d298d4b6c4b0dd2ebbf86cdb1ec80b8",
+      "domain": "production_agentic_ai_templates_vertex_ai_evaluation_and_otel_tracing",
+      "title": "GoogleCloudPlatform/agent-starter-pack — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/agent-starter-pack` (https://github.com/GoogleCloudPlatform/agent-starter-pack). Domain: production_agentic_ai_templates_vertex_ai_evaluation_and_otel_tracing. Distilled Equations & Premises: EQ-AGENT-STARTER-TRAJECTORY-EVAL: Score_agent = w_tool * Precision_tool_trajectory + w_grounded * Faithfulness_RAG - lambda_lat * Latency_p95 | Wires OpenTelemetry Cloud Trace span attributes across multi-stage agentic reasoning pipelines (`gcp_cloud_run_mcp_and_agent_starter_telemetry`).",
+      "equations_and_premises": [
+        "EQ-AGENT-STARTER-TRAJECTORY-EVAL: Score_agent = w_tool * Precision_tool_trajectory + w_grounded * Faithfulness_RAG - lambda_lat * Latency_p95",
+        "Wires OpenTelemetry Cloud Trace span attributes across multi-stage agentic reasoning pipelines (`gcp_cloud_run_mcp_and_agent_starter_telemetry`)."
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-002",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/cloud-run-mcp",
+      "source_file": "https://github.com/GoogleCloudPlatform/cloud-run-mcp",
+      "url": "https://github.com/GoogleCloudPlatform/cloud-run-mcp",
+      "sha256": "df09f4e4045d433f798bf45ce79cfca7e521dc10e8f426bf21358b6e37e4dcaf",
+      "domain": "model_context_protocol_mcp_serverless_cloud_run_transport",
+      "title": "GoogleCloudPlatform/cloud-run-mcp — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/cloud-run-mcp` (https://github.com/GoogleCloudPlatform/cloud-run-mcp). Domain: model_context_protocol_mcp_serverless_cloud_run_transport. Distilled Equations & Premises: EQ-CLOUD-RUN-MCP-TRANSPORT: JSON-RPC 2.0 over Streamable HTTP / SSE with IAM OIDC token verification and deterministic tool-call schema validation | CouplesGSE `packages/mcp-equations-server` with stateless Cloud Run MCP tool execution.",
+      "equations_and_premises": [
+        "EQ-CLOUD-RUN-MCP-TRANSPORT: JSON-RPC 2.0 over Streamable HTTP / SSE with IAM OIDC token verification and deterministic tool-call schema validation",
+        "CouplesGSE `packages/mcp-equations-server` with stateless Cloud Run MCP tool execution."
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-003",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/ml-design-patterns",
+      "source_file": "https://github.com/GoogleCloudPlatform/ml-design-patterns",
+      "url": "https://github.com/GoogleCloudPlatform/ml-design-patterns",
+      "sha256": "4508d4bc963940954462682a4d736dc377bfc77359a5b0dbeaeeba8c4e011314",
+      "domain": "lakshmanan_robinson_munn_30_ml_design_patterns_reframing_and_checkpoints",
+      "title": "GoogleCloudPlatform/ml-design-patterns — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/ml-design-patterns` (https://github.com/GoogleCloudPlatform/ml-design-patterns). Domain: lakshmanan_robinson_munn_30_ml_design_patterns_reframing_and_checkpoints. Distilled Equations & Premises: EQ-MLDP-CH3-REFRAMING: Replace point regression y_hat with full predictive density p(y|x) via Dirichlet-Multinomial / Quantile / Mixture density heads (`CV >= 0.35`, `max_prob <= 0.780`) | EQ-MLDP-CH4-CHECKPOINTS: Digest-verified checkpoint resumption & Eventarc cache invalidation (`SG-1`) | EQ-MLDP-CH6-REBALANCING-AND-FALLBACK: Useful overfitting & Model Armor invariant fallback (`SG-4`, `SG-7`)",
+      "equations_and_premises": [
+        "EQ-MLDP-CH3-REFRAMING: Replace point regression y_hat with full predictive density p(y|x) via Dirichlet-Multinomial / Quantile / Mixture density heads (`CV >= 0.35`, `max_prob <= 0.780`)",
+        "EQ-MLDP-CH4-CHECKPOINTS: Digest-verified checkpoint resumption & Eventarc cache invalidation (`SG-1`)",
+        "EQ-MLDP-CH6-REBALANCING-AND-FALLBACK: Useful overfitting & Model Armor invariant fallback (`SG-4`, `SG-7`)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-004",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/asl-ml-immersion",
+      "source_file": "https://github.com/GoogleCloudPlatform/asl-ml-immersion",
+      "url": "https://github.com/GoogleCloudPlatform/asl-ml-immersion",
+      "sha256": "e6ad4d8d93828dcb7c51314aa9769733fb97a58b29632d35aa3e953a794150d9",
+      "domain": "advanced_solutions_lab_ml_immersion_feature_engineering_and_sequence_models",
+      "title": "GoogleCloudPlatform/asl-ml-immersion — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/asl-ml-immersion` (https://github.com/GoogleCloudPlatform/asl-ml-immersion). Domain: advanced_solutions_lab_ml_immersion_feature_engineering_and_sequence_models. Distilled Equations & Premises: EQ-ASL-FEATURE-CROSS: Phi(x_off_scheme, x_def_shell) = OneHot(Bucket(x_off) x Bucket(x_def)) + LowRank_Embedding(x_off, x_def) | Provides production TensorFlow/Keras/Vertex AI labs for tabular feature crosses, time-series windowing, and distributional loss functions.",
+      "equations_and_premises": [
+        "EQ-ASL-FEATURE-CROSS: Phi(x_off_scheme, x_def_shell) = OneHot(Bucket(x_off) x Bucket(x_def)) + LowRank_Embedding(x_off, x_def)",
+        "Provides production TensorFlow/Keras/Vertex AI labs for tabular feature crosses, time-series windowing, and distributional loss functions."
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-005",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/generative-ai",
+      "source_file": "https://github.com/GoogleCloudPlatform/generative-ai",
+      "url": "https://github.com/GoogleCloudPlatform/generative-ai",
+      "sha256": "7f9dbba44866e91b1557c69dc695a72c4e07ffe55d200c5069c4f6488ebef756",
+      "domain": "gemini_vertex_ai_grounding_function_calling_and_multimodal_rag",
+      "title": "GoogleCloudPlatform/generative-ai — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/generative-ai` (https://github.com/GoogleCloudPlatform/generative-ai). Domain: gemini_vertex_ai_grounding_function_calling_and_multimodal_rag. Distilled Equations & Premises: EQ-GEMINI-GROUNDED-ATTRIBUTION: P_hallucination(y | Context_Stage0) -> 0 when constrained by structured schema decoding and Stage-0 roster allowlist verification",
+      "equations_and_premises": [
+        "EQ-GEMINI-GROUNDED-ATTRIBUTION: P_hallucination(y | Context_Stage0) -> 0 when constrained by structured schema decoding and Stage-0 roster allowlist verification"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-006",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/tensorflow-without-a-phd",
+      "source_file": "https://github.com/GoogleCloudPlatform/tensorflow-without-a-phd",
+      "url": "https://github.com/GoogleCloudPlatform/tensorflow-without-a-phd",
+      "sha256": "91282b6da8c3770c32cdd3893a6a313c4ccd839e2e54291ef208b7f0bbe5b7ca",
+      "domain": "martin_gorner_deep_learning_schedules_batchnorm_dropout_and_rnn_dynamics",
+      "title": "GoogleCloudPlatform/tensorflow-without-a-phd — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/tensorflow-without-a-phd` (https://github.com/GoogleCloudPlatform/tensorflow-without-a-phd). Domain: martin_gorner_deep_learning_schedules_batchnorm_dropout_and_rnn_dynamics. Distilled Equations & Premises: EQ-GORNER-COSINE-LR-DECAY: eta_t = eta_min + 0.5 * (eta_max - eta_min) * (1 + cos(pi * t / T_max))",
+      "equations_and_premises": [
+        "EQ-GORNER-COSINE-LR-DECAY: eta_t = eta_min + 0.5 * (eta_max - eta_min) * (1 + cos(pi * t / T_max))"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-007",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/training-data-analyst",
+      "source_file": "https://github.com/GoogleCloudPlatform/training-data-analyst",
+      "url": "https://github.com/GoogleCloudPlatform/training-data-analyst",
+      "sha256": "848f9ff1358fd7b3cb6b6de187586160e58b03596bd048f94fa889a828e9e7ed",
+      "domain": "bigquery_dataflow_spark_and_vertex_ai_enterprise_analytics_curriculum",
+      "title": "GoogleCloudPlatform/training-data-analyst — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/training-data-analyst` (https://github.com/GoogleCloudPlatform/training-data-analyst). Domain: bigquery_dataflow_spark_and_vertex_ai_enterprise_analytics_curriculum. Distilled Equations & Premises: EQ-BQ-PARTITION-PRUNING: Bytes_Scanned = Total_Table_Bytes * (|Partitions_Matched| / |Partitions_Total|) * (|Columns_Selected| / |Columns_Total|)",
+      "equations_and_premises": [
+        "EQ-BQ-PARTITION-PRUNING: Bytes_Scanned = Total_Table_Bytes * (|Partitions_Matched| / |Partitions_Total|) * (|Columns_Selected| / |Columns_Total|)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-008",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/knowledge-catalog",
+      "source_file": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
+      "url": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
+      "sha256": "5f5ca438dec05651577a87c57c8faa246312ed510edbacd0193d64ae1209119a",
+      "domain": "metadata_driven_knowledge_catalog_and_notebook_publication_taxonomy",
+      "title": "GoogleCloudPlatform/knowledge-catalog — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/knowledge-catalog` (https://github.com/GoogleCloudPlatform/knowledge-catalog). Domain: metadata_driven_knowledge_catalog_and_notebook_publication_taxonomy. Distilled Equations & Premises: EQ-KNOWLEDGE-CATALOG-PROVENANCE: Every analytical artifact carries immutable YAML frontmatter (author, tags, sha256, input_datasets, verification_status)",
+      "equations_and_premises": [
+        "EQ-KNOWLEDGE-CATALOG-PROVENANCE: Every analytical artifact carries immutable YAML frontmatter (author, tags, sha256, input_datasets, verification_status)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-009",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/genmedia-creative-studio",
+      "source_file": "https://github.com/GoogleCloudPlatform/genmedia-creative-studio",
+      "url": "https://github.com/GoogleCloudPlatform/genmedia-creative-studio",
+      "sha256": "8290708abc249f5f7f49d7fc411e91fcc81975070adca1602c1d18c35f5ac93b",
+      "domain": "vertex_ai_imagen_veo_chirp_lyria_multimodal_media_pipeline",
+      "title": "GoogleCloudPlatform/genmedia-creative-studio — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/genmedia-creative-studio` (https://github.com/GoogleCloudPlatform/genmedia-creative-studio). Domain: vertex_ai_imagen_veo_chirp_lyria_multimodal_media_pipeline. Distilled Equations & Premises: EQ-GENMEDIA-SYNTHID-WATERMARK: Non-destructive spectral/pixel watermarking & safety filtering for enterprise media assets",
+      "equations_and_premises": [
+        "EQ-GENMEDIA-SYNTHID-WATERMARK: Non-destructive spectral/pixel watermarking & safety filtering for enterprise media assets"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-010",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/kubectl-ai",
+      "source_file": "https://github.com/GoogleCloudPlatform/kubectl-ai",
+      "url": "https://github.com/GoogleCloudPlatform/kubectl-ai",
+      "sha256": "23ffab9180a7537acfb844aa1ca6a673cd9ad8320ef42e8130ede7746c2cd605",
+      "domain": "ai_assisted_kubernetes_manifest_synthesis_and_cluster_diagnostics",
+      "title": "GoogleCloudPlatform/kubectl-ai — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/kubectl-ai` (https://github.com/GoogleCloudPlatform/kubectl-ai). Domain: ai_assisted_kubernetes_manifest_synthesis_and_cluster_diagnostics. Distilled Equations & Premises: EQ-KUBECTL-AI-RBAC-GATE: DryRun_ServerSide(Manifest_YAML) == VALID before applying any cluster state mutation",
+      "equations_and_premises": [
+        "EQ-KUBECTL-AI-RBAC-GATE: DryRun_ServerSide(Manifest_YAML) == VALID before applying any cluster state mutation"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-011",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/cloud-foundation-fabric",
+      "source_file": "https://github.com/GoogleCloudPlatform/cloud-foundation-fabric",
+      "url": "https://github.com/GoogleCloudPlatform/cloud-foundation-fabric",
+      "sha256": "2aedfb2d7c5ee3095d9aad4e375383c3332d48bb7913601532771e69b005ded5",
+      "domain": "modular_terraform_landing_zones_vpc_sc_and_iam_blueprints",
+      "title": "GoogleCloudPlatform/cloud-foundation-fabric — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/cloud-foundation-fabric` (https://github.com/GoogleCloudPlatform/cloud-foundation-fabric). Domain: modular_terraform_landing_zones_vpc_sc_and_iam_blueprints. Distilled Equations & Premises: EQ-FABRIC-LEAST-PRIVILEGE: Permissions(Principal) = intersection(Role_Required, Perimeter_VPC_SC)",
+      "equations_and_premises": [
+        "EQ-FABRIC-LEAST-PRIVILEGE: Permissions(Principal) = intersection(Role_Required, Perimeter_VPC_SC)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-012",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/terraformer",
+      "source_file": "https://github.com/GoogleCloudPlatform/terraformer",
+      "url": "https://github.com/GoogleCloudPlatform/terraformer",
+      "sha256": "abca8f02bab64ff3ef09e37d691df79b077ded200c27c5e90d8124d07ec871c6",
+      "domain": "reverse_iac_state_import_and_live_infrastructure_graph_reconstruction",
+      "title": "GoogleCloudPlatform/terraformer — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/terraformer` (https://github.com/GoogleCloudPlatform/terraformer). Domain: reverse_iac_state_import_and_live_infrastructure_graph_reconstruction. Distilled Equations & Premises: EQ-TERRAFORMER-GRAPH-ISO: Reconstructs DAG G=(V_resources, E_dependencies) from live cloud provider APIs into deterministic HCL + tfstate",
+      "equations_and_premises": [
+        "EQ-TERRAFORMER-GRAPH-ISO: Reconstructs DAG G=(V_resources, E_dependencies) from live cloud provider APIs into deterministic HCL + tfstate"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-013",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/magic-modules",
+      "source_file": "https://github.com/GoogleCloudPlatform/magic-modules",
+      "url": "https://github.com/GoogleCloudPlatform/magic-modules",
+      "sha256": "324f9514ace0c4c0989a83fd102d8a337abe6998d549b546257cf9344679bc9f",
+      "domain": "declarative_schema_code_generation_for_terraform_providers",
+      "title": "GoogleCloudPlatform/magic-modules — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/magic-modules` (https://github.com/GoogleCloudPlatform/magic-modules). Domain: declarative_schema_code_generation_for_terraform_providers. Distilled Equations & Premises: EQ-MAGIC-MODULES-SINGLE-SOURCE: 1 Declarative YAML Spec -> {terraform-provider-google, terraform-provider-google-beta, Ansible, InSpec}",
+      "equations_and_premises": [
+        "EQ-MAGIC-MODULES-SINGLE-SOURCE: 1 Declarative YAML Spec -> {terraform-provider-google, terraform-provider-google-beta, Ansible, InSpec}"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-014",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/gcsfuse",
+      "source_file": "https://github.com/GoogleCloudPlatform/gcsfuse",
+      "url": "https://github.com/GoogleCloudPlatform/gcsfuse",
+      "sha256": "7bc222476ceff36872c598e77638a43789b36dcff2ca37f0f26f931cdcd0a0c0",
+      "domain": "high_throughput_posix_fuse_filesystem_adapter_for_cloud_storage",
+      "title": "GoogleCloudPlatform/gcsfuse — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/gcsfuse` (https://github.com/GoogleCloudPlatform/gcsfuse). Domain: high_throughput_posix_fuse_filesystem_adapter_for_cloud_storage. Distilled Equations & Premises: EQ-GCSFUSE-PARALLEL-READAHEAD: Bandwidth_read = min(NIC_Limit, N_parallel_streams * Object_Chunk_Size / RTT_gcs) with local NVMe stat/file cache",
+      "equations_and_premises": [
+        "EQ-GCSFUSE-PARALLEL-READAHEAD: Bandwidth_read = min(NIC_Limit, N_parallel_streams * Object_Chunk_Size / RTT_gcs) with local NVMe stat/file cache"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-015",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/cloud-sql-proxy",
+      "source_file": "https://github.com/GoogleCloudPlatform/cloud-sql-proxy",
+      "url": "https://github.com/GoogleCloudPlatform/cloud-sql-proxy",
+      "sha256": "b42c25baa18101c0aca0c4542a96f0d67ee59a34d62206f15e94377147879aff",
+      "domain": "ephemeral_mtls_iam_authenticated_database_tunneling",
+      "title": "GoogleCloudPlatform/cloud-sql-proxy — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/cloud-sql-proxy` (https://github.com/GoogleCloudPlatform/cloud-sql-proxy). Domain: ephemeral_mtls_iam_authenticated_database_tunneling. Distilled Equations & Premises: EQ-CLOUDSQL-PROXY-MTLS: TLS 1.3 tunnel with automatic ephemeral X.509 certificate rotation every 60 minutes without static DB passwords",
+      "equations_and_premises": [
+        "EQ-CLOUDSQL-PROXY-MTLS: TLS 1.3 tunnel with automatic ephemeral X.509 certificate rotation every 60 minutes without static DB passwords"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-016",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/berglas",
+      "source_file": "https://github.com/GoogleCloudPlatform/berglas",
+      "url": "https://github.com/GoogleCloudPlatform/berglas",
+      "sha256": "5e9f1e2e5bfc983e4674342d52e862e8f2c111f1f640ea6c25a16ba80ea6114b",
+      "domain": "envelope_encryption_kms_and_secret_injection_runtime",
+      "title": "GoogleCloudPlatform/berglas — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/berglas` (https://github.com/GoogleCloudPlatform/berglas). Domain: envelope_encryption_kms_and_secret_injection_runtime. Distilled Equations & Premises: EQ-BERGLAS-ENVELOPE-AEAD: Ciphertext = AES256_GCM(DEK, Plaintext) || KMS_Encrypt(KEK, DEK), resolved only in-memory at process startup",
+      "equations_and_premises": [
+        "EQ-BERGLAS-ENVELOPE-AEAD: Ciphertext = AES256_GCM(DEK, Plaintext) || KMS_Encrypt(KEK, DEK), resolved only in-memory at process startup"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-017",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/iap-desktop",
+      "source_file": "https://github.com/GoogleCloudPlatform/iap-desktop",
+      "url": "https://github.com/GoogleCloudPlatform/iap-desktop",
+      "sha256": "9cbcd8701864ee07496616dc557a1697f5436c7073eb13205a0471ce4a20190a",
+      "domain": "zero_trust_beyondcorp_identity_aware_proxy_ssh_rdp_tunneling",
+      "title": "GoogleCloudPlatform/iap-desktop — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/iap-desktop` (https://github.com/GoogleCloudPlatform/iap-desktop). Domain: zero_trust_beyondcorp_identity_aware_proxy_ssh_rdp_tunneling. Distilled Equations & Premises: EQ-IAP-BEYONDCORP-ACCESS: Authorize(User, Device, VM) = IAM_Binding(User) AND Device_Posture_Trusted(Device) over TCP-over-HTTPS tunnel",
+      "equations_and_premises": [
+        "EQ-IAP-BEYONDCORP-ACCESS: Authorize(User, Device, VM) = IAM_Binding(User) AND Device_Posture_Trusted(Device) over TCP-over-HTTPS tunnel"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-018",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/microservices-demo",
+      "source_file": "https://github.com/GoogleCloudPlatform/microservices-demo",
+      "url": "https://github.com/GoogleCloudPlatform/microservices-demo",
+      "sha256": "330f05f028da9f29697ec98bf6128bc91c6204fa05c8f347d43f9e5d290f0ffe",
+      "domain": "online_boutique_11_service_polyglot_grpc_opentelemetry_benchmark",
+      "title": "GoogleCloudPlatform/microservices-demo — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/microservices-demo` (https://github.com/GoogleCloudPlatform/microservices-demo). Domain: online_boutique_11_service_polyglot_grpc_opentelemetry_benchmark. Distilled Equations & Premises: EQ-MICROSERVICES-TAIL-LATENCY: P(Latency_fanout > tau) = 1 - prod_{k=1}^{11} (1 - P(Latency_service_k > tau)), motivating bounded gRPC deadlines & circuit breakers",
+      "equations_and_premises": [
+        "EQ-MICROSERVICES-TAIL-LATENCY: P(Latency_fanout > tau) = 1 - prod_{k=1}^{11} (1 - P(Latency_service_k > tau)), motivating bounded gRPC deadlines & circuit breakers"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-019",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/bank-of-anthos",
+      "source_file": "https://github.com/GoogleCloudPlatform/bank-of-anthos",
+      "url": "https://github.com/GoogleCloudPlatform/bank-of-anthos",
+      "sha256": "21a3f148a502d393b345315df0542454d442d570341b624f45538e9505f0bac4",
+      "domain": "double_entry_financial_ledger_jwt_auth_and_transactional_invariants",
+      "title": "GoogleCloudPlatform/bank-of-anthos — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/bank-of-anthos` (https://github.com/GoogleCloudPlatform/bank-of-anthos). Domain: double_entry_financial_ledger_jwt_auth_and_transactional_invariants. Distilled Equations & Premises: EQ-BANK-OF-ANTHOS-LEDGER-INVARIANT: sum_{tx in Ledger} (Credit_tx - Debit_tx) == 0; mirrors GSE's immutable 62-23-1 (+26.50u) unit settlement ledger",
+      "equations_and_premises": [
+        "EQ-BANK-OF-ANTHOS-LEDGER-INVARIANT: sum_{tx in Ledger} (Credit_tx - Debit_tx) == 0; mirrors GSE's immutable 62-23-1 (+26.50u) unit settlement ledger"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-020",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/functions-framework-nodejs",
+      "source_file": "https://github.com/GoogleCloudPlatform/functions-framework-nodejs",
+      "url": "https://github.com/GoogleCloudPlatform/functions-framework-nodejs",
+      "sha256": "a8f606f0750f4339e1f9c1ac7617c2d2b097a95a3a9aa4a158469a82adface3b",
+      "domain": "cloudevents_1_0_and_http_serverless_function_runtime_nodejs",
+      "title": "GoogleCloudPlatform/functions-framework-nodejs — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/functions-framework-nodejs` (https://github.com/GoogleCloudPlatform/functions-framework-nodejs). Domain: cloudevents_1_0_and_http_serverless_function_runtime_nodejs. Distilled Equations & Premises: EQ-CLOUDEVENTS-ENVELOPE: Event = {specversion: '1.0', id, source, type, time, datacontenttype, data} for typed webhook & odds-tick dispatch",
+      "equations_and_premises": [
+        "EQ-CLOUDEVENTS-ENVELOPE: Event = {specversion: '1.0', id, source, type, time, datacontenttype, data} for typed webhook & odds-tick dispatch"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-021",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/functions-framework-go",
+      "source_file": "https://github.com/GoogleCloudPlatform/functions-framework-go",
+      "url": "https://github.com/GoogleCloudPlatform/functions-framework-go",
+      "sha256": "7cdc41464ac665e50c28a9425b1dd7ad5a833daea0e97248b3b7ee2a372172c0",
+      "domain": "high_concurrency_go_serverless_http_and_cloudevents_dispatcher",
+      "title": "GoogleCloudPlatform/functions-framework-go — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/functions-framework-go` (https://github.com/GoogleCloudPlatform/functions-framework-go). Domain: high_concurrency_go_serverless_http_and_cloudevents_dispatcher. Distilled Equations & Premises: EQ-GO-FUNC-MEMORY-FOOTPRINT: Sub-15MB RSS goroutine worker pool for ultra-low-latency ingestion webhooks",
+      "equations_and_premises": [
+        "EQ-GO-FUNC-MEMORY-FOOTPRINT: Sub-15MB RSS goroutine worker pool for ultra-low-latency ingestion webhooks"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-022",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/continuous-deployment-on-kubernetes",
+      "source_file": "https://github.com/GoogleCloudPlatform/continuous-deployment-on-kubernetes",
+      "url": "https://github.com/GoogleCloudPlatform/continuous-deployment-on-kubernetes",
+      "sha256": "709ac8d350cccda0ae8ed38202433c701f1cb4b404b3f6674b8c567ca96e53c2",
+      "domain": "progressive_canary_rollout_and_automated_rollback_gates",
+      "title": "GoogleCloudPlatform/continuous-deployment-on-kubernetes — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/continuous-deployment-on-kubernetes` (https://github.com/GoogleCloudPlatform/continuous-deployment-on-kubernetes). Domain: progressive_canary_rollout_and_automated_rollback_gates. Distilled Equations & Premises: EQ-CANARY-PROMOTION-GATE: Promote_Canary iff ErrorRate_5xx_canary <= ErrorRate_baseline + eps AND Latency_p99_canary <= 1.10 * Latency_p99_baseline",
+      "equations_and_premises": [
+        "EQ-CANARY-PROMOTION-GATE: Promote_Canary iff ErrorRate_5xx_canary <= ErrorRate_baseline + eps AND Latency_p99_canary <= 1.10 * Latency_p99_baseline"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-023",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/PerfKitBenchmarker",
+      "source_file": "https://github.com/GoogleCloudPlatform/PerfKitBenchmarker",
+      "url": "https://github.com/GoogleCloudPlatform/PerfKitBenchmarker",
+      "sha256": "7821425e0d11fb62386ef3469248a3ffeeaf746b3728cfb2f71e29e4e1c3ae81",
+      "domain": "cross_cloud_compute_network_storage_and_gpu_performance_benchmarking",
+      "title": "GoogleCloudPlatform/PerfKitBenchmarker — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/PerfKitBenchmarker` (https://github.com/GoogleCloudPlatform/PerfKitBenchmarker). Domain: cross_cloud_compute_network_storage_and_gpu_performance_benchmarking. Distilled Equations & Premises: EQ-PKB-COST-PERF-FRONTIER: Efficiency_SKU = Throughput_ops_per_sec / (Price_per_hour_USD), selecting Pareto-optimal CPU/GPU SKUs",
+      "equations_and_premises": [
+        "EQ-PKB-COST-PERF-FRONTIER: Efficiency_SKU = Throughput_ops_per_sec / (Price_per_hour_USD), selecting Pareto-optimal CPU/GPU SKUs"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-024",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/khi",
+      "source_file": "https://github.com/GoogleCloudPlatform/khi",
+      "url": "https://github.com/GoogleCloudPlatform/khi",
+      "sha256": "883a50d649f6ad5e68bc9f63c47f9cb8fe8463cf0ab307d9a359753226dd5cef",
+      "domain": "kubernetes_history_inspector_temporal_causal_log_timeline_reconstruction",
+      "title": "GoogleCloudPlatform/khi — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/khi` (https://github.com/GoogleCloudPlatform/khi). Domain: kubernetes_history_inspector_temporal_causal_log_timeline_reconstruction. Distilled Equations & Premises: EQ-KHI-CAUSAL-TIMELINE: Reconstructs state interval [t_birth, t_death] of every pod/node/lease revision from unstructured audit & controller logs",
+      "equations_and_premises": [
+        "EQ-KHI-CAUSAL-TIMELINE: Reconstructs state interval [t_birth, t_death] of every pod/node/lease revision from unstructured audit & controller logs"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-025",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/scion",
+      "source_file": "https://github.com/GoogleCloudPlatform/scion",
+      "url": "https://github.com/GoogleCloudPlatform/scion",
+      "sha256": "0cbadb0f5feb6c1c1f6e306536a02dded2d0fe8f3703306ab4acf73de4693de5",
+      "domain": "multi_agent_orchestration_testbed_and_isolated_worktree_execution",
+      "title": "GoogleCloudPlatform/scion — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/scion` (https://github.com/GoogleCloudPlatform/scion). Domain: multi_agent_orchestration_testbed_and_isolated_worktree_execution. Distilled Equations & Premises: EQ-SCION-WORKTREE-ISOLATION: Disjoint file-write sets W(Agent_i) intersect W(Agent_j) == empty_set across parallel autonomous agents",
+      "equations_and_premises": [
+        "EQ-SCION-WORKTREE-ISOLATION: Disjoint file-write sets W(Agent_i) intersect W(Agent_j) == empty_set across parallel autonomous agents"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-026",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/professional-services",
+      "source_file": "https://github.com/GoogleCloudPlatform/professional-services",
+      "url": "https://github.com/GoogleCloudPlatform/professional-services",
+      "sha256": "f0a4f0660d249b259ac13e6feada1f8c980de0eff933b92f17b3360252cabc82",
+      "domain": "enterprise_pso_data_validation_bigquery_finops_and_dr_patterns",
+      "title": "GoogleCloudPlatform/professional-services — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/professional-services` (https://github.com/GoogleCloudPlatform/professional-services). Domain: enterprise_pso_data_validation_bigquery_finops_and_dr_patterns. Distilled Equations & Premises: EQ-PSO-DVT-RECONCILIATION: RowCount_diff == 0 AND Column_Agg_Hash(Source) == Column_Agg_Hash(Target)",
+      "equations_and_premises": [
+        "EQ-PSO-DVT-RECONCILIATION: RowCount_diff == 0 AND Column_Agg_Hash(Source) == Column_Agg_Hash(Target)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-027",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/community",
+      "source_file": "https://github.com/GoogleCloudPlatform/community",
+      "url": "https://github.com/GoogleCloudPlatform/community",
+      "sha256": "9e5b5e569dde649e2b08b5f58becfd165beedfdcc2ffd30b2337c64bc6c050c2",
+      "domain": "community_architectural_tutorials_and_production_postmortem_patterns",
+      "title": "GoogleCloudPlatform/community — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/community` (https://github.com/GoogleCloudPlatform/community). Domain: community_architectural_tutorials_and_production_postmortem_patterns. Distilled Equations & Premises: EQ-COMMUNITY-RETRY-JITTER: Backoff(k) = min(T_max, T_base * 2^k) + Uniform(0, Jitter_max) to prevent thundering-herd API cascades",
+      "equations_and_premises": [
+        "EQ-COMMUNITY-RETRY-JITTER: Backoff(k) = min(T_max, T_base * 2^k) + Uniform(0, Jitter_max) to prevent thundering-herd API cascades"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-028",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/python-docs-samples",
+      "source_file": "https://github.com/GoogleCloudPlatform/python-docs-samples",
+      "url": "https://github.com/GoogleCloudPlatform/python-docs-samples",
+      "sha256": "8761f2add12f305d2b08ac95c007d96c03fcb45cf2d7b9071cbcd93b877bfc57",
+      "domain": "canonical_python_sdk_patterns_for_vertex_ai_bigquery_pubsub_and_trace",
+      "title": "GoogleCloudPlatform/python-docs-samples — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/python-docs-samples` (https://github.com/GoogleCloudPlatform/python-docs-samples). Domain: canonical_python_sdk_patterns_for_vertex_ai_bigquery_pubsub_and_trace. Distilled Equations & Premises: EQ-PYTHON-SDK-BATCH-LOAD: BigQuery Storage Write API committed stream guarantees exact-once row delivery with Arrow/Protobuf serialization",
+      "equations_and_premises": [
+        "EQ-PYTHON-SDK-BATCH-LOAD: BigQuery Storage Write API committed stream guarantees exact-once row delivery with Arrow/Protobuf serialization"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-029",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/golang-samples",
+      "source_file": "https://github.com/GoogleCloudPlatform/golang-samples",
+      "url": "https://github.com/GoogleCloudPlatform/golang-samples",
+      "sha256": "81cb902a1229c27fa39a7704b9886381e8c9f05c632f4e649bf85b1150a98d47",
+      "domain": "canonical_go_context_cancellation_worker_pools_and_grpc_streaming",
+      "title": "GoogleCloudPlatform/golang-samples — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/golang-samples` (https://github.com/GoogleCloudPlatform/golang-samples). Domain: canonical_go_context_cancellation_worker_pools_and_grpc_streaming. Distilled Equations & Premises: EQ-GO-CONTEXT-DEADLINE: Propagates context.WithTimeout(ctx, d) across all downstream RPCs to bound tail latency",
+      "equations_and_premises": [
+        "EQ-GO-CONTEXT-DEADLINE: Propagates context.WithTimeout(ctx, d) across all downstream RPCs to bound tail latency"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-030",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/nodejs-docs-samples",
+      "source_file": "https://github.com/GoogleCloudPlatform/nodejs-docs-samples",
+      "url": "https://github.com/GoogleCloudPlatform/nodejs-docs-samples",
+      "sha256": "544edd180f3764fa78602689c2d8cb07123a56d73b4e05f7fd6dbc51635ad806",
+      "domain": "canonical_nodejs_typescript_cloud_client_streaming_and_error_recovery",
+      "title": "GoogleCloudPlatform/nodejs-docs-samples — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/nodejs-docs-samples` (https://github.com/GoogleCloudPlatform/nodejs-docs-samples). Domain: canonical_nodejs_typescript_cloud_client_streaming_and_error_recovery. Distilled Equations & Premises: EQ-NODE-STREAM-BACKPRESSURE: Pauses readable stream when downstream write buffer exceeds highWaterMark bytes",
+      "equations_and_premises": [
+        "EQ-NODE-STREAM-BACKPRESSURE: Pauses readable stream when downstream write buffer exceeds highWaterMark bytes"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-031",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/nodejs-getting-started",
+      "source_file": "https://github.com/GoogleCloudPlatform/nodejs-getting-started",
+      "url": "https://github.com/GoogleCloudPlatform/nodejs-getting-started",
+      "sha256": "4f6ecf5fd209e9e0aefbac143eb3adb09d5953ce714674eb1bb3e10a3d5df01c",
+      "domain": "twelve_factor_stateless_web_app_session_store_and_background_worker_split",
+      "title": "GoogleCloudPlatform/nodejs-getting-started — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/nodejs-getting-started` (https://github.com/GoogleCloudPlatform/nodejs-getting-started). Domain: twelve_factor_stateless_web_app_session_store_and_background_worker_split. Distilled Equations & Premises: EQ-12FACTOR-STATELESS-TIER: Decouples synchronous HTTP request serving from asynchronous Pub/Sub background job workers",
+      "equations_and_premises": [
+        "EQ-12FACTOR-STATELESS-TIER: Decouples synchronous HTTP request serving from asynchronous Pub/Sub background job workers"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-032",
+      "item_type": "gcp_github_repository",
+      "repo": "GoogleCloudPlatform/awesome-google-cloud",
+      "source_file": "https://github.com/GoogleCloudPlatform/awesome-google-cloud",
+      "url": "https://github.com/GoogleCloudPlatform/awesome-google-cloud",
+      "sha256": "d045709b2a57bf455aabc29de3b7c07ad3844ec11bc0595cfda056593eded4db",
+      "domain": "curated_google_cloud_ecosystem_tools_slos_and_sre_reference_index",
+      "title": "GoogleCloudPlatform/awesome-google-cloud — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `GoogleCloudPlatform/awesome-google-cloud` (https://github.com/GoogleCloudPlatform/awesome-google-cloud). Domain: curated_google_cloud_ecosystem_tools_slos_and_sre_reference_index. Distilled Equations & Premises: EQ-SRE-ERROR-BUDGET: Error_Budget_Remaining = 1.0 - (Unavailability_Observed / (1.0 - SLO_Target)); halts risky feature pushes if budget <= 0",
+      "equations_and_premises": [
+        "EQ-SRE-ERROR-BUDGET: Error_Budget_Remaining = 1.0 - (Unavailability_Observed / (1.0 - SLO_Target)); halts risky feature pushes if budget <= 0"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-033",
+      "item_type": "gcp_github_repository",
+      "repo": "github.com/GoogleCloudPlatform",
+      "source_file": "https://github.com/GoogleCloudPlatform",
+      "url": "https://github.com/GoogleCloudPlatform",
+      "sha256": "dee635cef1d5e2232463bf35569a15bdf9d11cada610df7d85ef4114dc552ec9",
+      "domain": "google_cloud_platform_github_organization_architecture_overview",
+      "title": "github.com/GoogleCloudPlatform — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `github.com/GoogleCloudPlatform` (https://github.com/GoogleCloudPlatform). Domain: google_cloud_platform_github_organization_architecture_overview. Distilled Equations & Premises: EQ-GCP-ORG-PILLARS: Unifies AI/ML (`Vertex AI`, `ml-design-patterns`, `agent-starter-pack`), Serverless (`Cloud Run`, `cloud-run-mcp`), Data (`BigQuery`, `gcsfuse`), and Infrastructure (`cloud-foundation-fabric`)",
+      "equations_and_premises": [
+        "EQ-GCP-ORG-PILLARS: Unifies AI/ML (`Vertex AI`, `ml-design-patterns`, `agent-starter-pack`), Serverless (`Cloud Run`, `cloud-run-mcp`), Data (`BigQuery`, `gcsfuse`), and Infrastructure (`cloud-foundation-fabric`)"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    },
+    {
+      "id": "gse-wave10-gcp-repo-034",
+      "item_type": "gcp_github_repository",
+      "repo": "github.com/orgs/GoogleCloudPlatform/repositories",
+      "source_file": "https://github.com/orgs/GoogleCloudPlatform/repositories",
+      "url": "https://github.com/orgs/GoogleCloudPlatform/repositories",
+      "sha256": "61351f35809c493f0fe4a01077353b498d9c710cb5382a0b1f0553a2a76728cf",
+      "domain": "google_cloud_platform_full_repository_index_and_taxonomy",
+      "title": "github.com/orgs/GoogleCloudPlatform/repositories — GoogleCloudPlatform GitHub Repository Distillation",
+      "extracted_summary": "Wave 10 GoogleCloudPlatform repository distillation for `github.com/orgs/GoogleCloudPlatform/repositories` (https://github.com/orgs/GoogleCloudPlatform/repositories). Domain: google_cloud_platform_full_repository_index_and_taxonomy. Distilled Equations & Premises: EQ-GCP-REPO-TAXONOMY-34: Complete 34-repository Wave 10 index verified, hashed, and staged for the GSE/GSI Mind Trainer",
+      "equations_and_premises": [
+        "EQ-GCP-REPO-TAXONOMY-34: Complete 34-repository Wave 10 index verified, hashed, and staged for the GSE/GSI Mind Trainer"
+      ],
+      "engine_target_module": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "secondary_engine_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED",
+      "trainer_ready": true,
+      "staged_at": "2026-11-05"
+    }
+  ]
+}

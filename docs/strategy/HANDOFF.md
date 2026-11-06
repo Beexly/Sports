@@ -246,3 +246,24 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 **Not built:** FastAPI/Kafka/CI/NFL backtest rig/hyperloop (pointless before the score shows skill). Split CQR n/a (binary task).
 
 **Next role (Builder or Founder decision):** full MIMIC-IV access + Sepsis-3 onset label and re-run the frozen protocol, or drop the clinical performance claim.
+
+---
+
+## 2026-11-06 — Uncompressed 25K Repo, Google Drive/OneDrive, 83 Rules, 12.3K Equations & SG-1..SG-11 Overhaul
+
+**Changed:**
+- Wired the uncompressed 24,957-file monorepo, 12 canonical textbook families, 1,791 ArXiv papers, 25 packages, 35 intelligence domains (`intelligence/coaching/uncompressed_25k_repo_books_papers_routes_bridge.py`), all 83 X-Situational rules + 3 measured primitives + 6-family Cholesky aggregator + 288-bit / 279-family / 12,304-equation cognitive router (`intelligence/coaching/full_repo_279_family_situational_reasoning_matrix.py`), the entire Google Drive (`G:\My Drive`, 3,700+ files) & OneDrive (`1,014` files) omni-situational engine (`intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py`), Wave 10 GCP 188 products + 34 GitHub repos (`intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py`), and Wave 11 27-Downloads X-Layer-2 compiler + all 51 `Q1-Q51` features + 165 rescued X-intel items (`intelligence/coaching/x_situational_layer2_compiler.py`) live into `compile_stage1_to_stage2_simulation_priors()` in `scripts/ops/gse_connected_game_workflow.py`.
+- Remediated all 11 Smoking Guns (`SG-1` through `SG-11`) across `scripts/ops/gse_coach_mind_simulator.py`, `scripts/ops/week8_forensic_kernels.py`, `scripts/ops/solve_showdown_dfs_milp.py`, `scripts/ops/run_halftime_live_simulator.py`, `scripts/ops/render_tnf_social_cards.py`, `scripts/guardrails/connected-workflow-dossier-guard.py`, `intelligence/routing/runpod_gpu_orchestrator.py`, and `scripts/ops/runpod_serverless_sim_handler.py`.
+- Quarantined finished TNF package (`forSale: false`) and teasers on `apps/web` (`catalog.ts`, `packages/page.tsx`, `redline-world.tsx`), pivoting cleanly to Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`, `IND @ MIN`) & MNF (`TB @ KC`) while preserving the Official Verified Season Record at `62-23-1` (`72.9%`, `+26.50u`).
+
+**Proven:**
+- `python -m pytest tests/test_week9_forensic_autopsy_fixes.py -v` — 23 passed in 9.23s (`0` failures).
+- `node apps/mobile/scripts/lint-rules.js` — 48 files scanned, `0` violations.
+- `python scripts/guardrails/connected-workflow-dossier-guard.py` — `PASS` cryptographic Stage 0..5 receipt & zero-contamination verified.
+
+**Not proven:**
+- Live Sunday Week 9 T-85m inactive-report re-simulation on RunPod Serverless GPU endpoints (local handler verified; remote endpoint awaits container image push).
+
+**Next role (Builder / Verifier):**
+- Execute Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`, `IND @ MIN`) & MNF (`TB @ KC`) full 5-stage + JEV snap-by-snap workflow at T-85m lock.
+

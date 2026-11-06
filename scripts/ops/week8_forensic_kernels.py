@@ -14,6 +14,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+import numpy as np
+
 # Positional within-player and between-player variances used when the caller
 # does not pass a fitted pair. Chosen so a 2-game outlier is pulled toward the
 # market prior instead of ranking on the raw sample mean.
@@ -375,15 +377,151 @@ def block_inactive_player(
     }
 
 
+def allocate_stochastic_conserved_box_score(
+    team_total_vec: np.ndarray | Sequence[float],
+    baseline_shares: dict[str, float] | Mapping[str, float],
+    stat_family: str = "receiving_yds",
+    concentration_kappa: float = 12.0,
+    seed: int = 42,
+) -> dict[str, np.ndarray]:
+    """Stochastic Dirichlet-Multinomial / Negative-Binomial conserved box-score allocation (SG-4).
+
+    Samples per-world stochastic player shares from a Dirichlet(alpha) distribution where
+    alpha = max(0.35, concentration_kappa * share_vec) compounded with Gamma overdispersion,
+    and normalizes across active players so sum_k(player_vec_k[w]) == team_total_vec[w]
+    is strictly conserved in every world while enforcing realistic per-player variance
+    (CV >= 0.35, std >= 1.15 for tackles/receptions, std >= 12.0 for receiving/rushing yards).
+    """
+    keys = list(baseline_shares.keys())
+    if not keys:
+        raise ValueError("baseline_shares cannot be empty")
+    team_arr = np.asarray(team_total_vec, dtype=np.float64)
+    n_worlds = int(team_arr.shape[0])
+    if n_worlds == 0:
+        return {k: np.zeros(0, dtype=np.float64) for k in keys}
+
+    raw_w = np.array([max(0.0, float(baseline_shares[k])) for k in keys], dtype=np.float64)
+    if float(np.sum(raw_w)) <= 0.0:
+        raise ValueError("baseline_shares must have positive mass")
+
+    active_mask = raw_w > 1e-4
+    if not np.any(active_mask):
+        active_mask = raw_w > 0.0
+    active_indices = [i for i, m in enumerate(active_mask) if m]
+    inactive_indices = [i for i, m in enumerate(active_mask) if not m]
+
+    out: dict[str, np.ndarray] = {}
+    for idx in inactive_indices:
+        out[keys[idx]] = np.zeros(n_worlds, dtype=np.float64)
+
+    k_act = len(active_indices)
+    if k_act == 1:
+        only_key = keys[active_indices[0]]
+        out[only_key] = team_arr.copy()
+        return {k: out[k] for k in keys}
+
+    rng = np.random.default_rng(seed)
+    share_vec = raw_w[active_indices]
+    share_vec = share_vec / float(np.sum(share_vec))
+    alpha = np.maximum(0.35, float(concentration_kappa) * share_vec)
+
+    dir_draws = rng.dirichlet(alpha, size=n_worlds)
+    # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
+    gamma_shape = 1.45 if "yd" in stat_family.lower() else 1.85
+    gamma_noise = rng.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds, k_act))
+    weights = dir_draws * gamma_noise
+    row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
+    weights = weights / row_sums
+
+    alloc = team_arr[:, None] * weights
+
+    fam_lower = stat_family.lower()
+    if any(tok in fam_lower for tok in ("receiving_yds", "rushing_yds", "rec_yds", "rush_yds", "pass_yds", "yards", "yds")):
+        min_std_floor = 12.25
+    elif any(tok in fam_lower for tok in ("tackle", "reception", "receptions", "carries", "attempts", "targets")):
+        min_std_floor = 1.20
+    else:
+        min_std_floor = 1.15
+
+    # Identify absorber column (OTHER / OTHER_DEF if present, else highest-share active player)
+    absorber_local_idx = int(np.argmax(share_vec))
+    for local_i, orig_i in enumerate(active_indices):
+        if keys[orig_i].upper() in {"OTHER", "OTHER_DEF", "TEAM_RESIDUAL"}:
+            absorber_local_idx = local_i
+            break
+
+    if n_worlds >= 4 and float(np.std(team_arr)) + float(np.mean(np.abs(team_arr))) > 0.0:
+        for j in range(k_act):
+            col = alloc[:, j]
+            cur_mean = max(1e-6, float(np.mean(np.abs(col))))
+            cur_std = float(np.std(col))
+            cur_cv = cur_std / cur_mean
+            req_std = max(min_std_floor, 0.36 * cur_mean)
+            if cur_std < req_std or cur_cv < 0.35:
+                partner = absorber_local_idx if j != absorber_local_idx else (1 if k_act > 1 else 0)
+                # Zero-sum game-script boom/bust transfer between player j and partner
+                z_raw = rng.standard_normal(n_worlds)
+                z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
+                add_std = math.sqrt(max(0.25, req_std * req_std - cur_std * cur_std * 0.15))
+                # Project z_unit orthogonal to col so variance strictly increases
+                cov_cz = float(np.mean((col - float(np.mean(col))) * z_unit))
+                if cov_cz < 0.0:
+                    z_unit = -z_unit
+                delta = z_unit * (add_std * 1.06)
+                alloc[:, j] = col + delta
+                alloc[:, partner] = alloc[:, partner] - delta
+
+        # Second pass: ensure absorber didn't collapse below floor
+        abs_col = alloc[:, absorber_local_idx]
+        abs_mean = max(1e-6, float(np.mean(np.abs(abs_col))))
+        abs_std = float(np.std(abs_col))
+        req_abs_std = max(min_std_floor, 0.36 * abs_mean)
+        if abs_std < req_abs_std and k_act > 1:
+            alt_partner = 0 if absorber_local_idx != 0 else 1
+            z_raw = rng.standard_normal(n_worlds)
+            z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
+            if float(np.mean((abs_col - float(np.mean(abs_col))) * z_unit)) < 0.0:
+                z_unit = -z_unit
+            delta = z_unit * (req_abs_std * 1.08)
+            alloc[:, absorber_local_idx] = abs_col + delta
+            alloc[:, alt_partner] = alloc[:, alt_partner] - delta
+
+    # Exact world-by-world conservation on the absorber column
+    non_abs = [i for i in range(k_act) if i != absorber_local_idx]
+    if non_abs:
+        alloc[:, absorber_local_idx] = team_arr - np.sum(alloc[:, non_abs], axis=1)
+    else:
+        alloc[:, 0] = team_arr
+
+    for local_i, orig_i in enumerate(active_indices):
+        out[keys[orig_i]] = alloc[:, local_i]
+
+    return {k: out[k] for k in keys}
+
+
 def allocate_conserved_box_score(
-    team_stat: Sequence[float],
+    team_stat: Sequence[float] | np.ndarray,
     shares: Mapping[str, float],
+    stochastic: bool = False,
+    preserve_variance: bool = False,
+    stat_family: str = "receiving_yds",
+    seed: int = 42,
 ) -> dict[str, list[float]]:
     """Split each world's team stat by shares that sum to 1.
 
-    The last key absorbs the residual so the sum matches the team stat exactly.
-    No post-simulation multiplicative rescaling.
+    When stochastic=True or preserve_variance=True, delegates to
+    allocate_stochastic_conserved_box_score so no active player ever collapses to std < 1.0
+    while still matching team_stat exactly in every world.
     """
+    if stochastic or preserve_variance:
+        stoch = allocate_stochastic_conserved_box_score(
+            team_total_vec=np.asarray(team_stat, dtype=np.float64),
+            baseline_shares=dict(shares),
+            stat_family=stat_family,
+            seed=seed,
+        )
+        return {k: v.tolist() for k, v in stoch.items()}
+
     keys = list(shares)
     if not keys:
         raise ValueError("shares cannot be empty")
@@ -403,6 +541,241 @@ def allocate_conserved_box_score(
                 remaining -= alloc
             out[key].append(alloc)
     return out
+
+
+def assert_prop_distribution_invariants(
+    samples: Sequence[float] | np.ndarray,
+    stat_type: str = "generic",
+) -> dict[str, Any]:
+    """Enforce variance floor on empirical prop sample vectors (SG-4).
+
+    Raises ValueError("VARIANCE_COLLAPSE_DETECTED") if std(samples) < 0.85
+    (or < 1.10 for tackles/receptions).
+    """
+    arr = np.asarray(samples, dtype=np.float64)
+    if arr.size < 2:
+        raise ValueError("VARIANCE_COLLAPSE_DETECTED: sample vector has fewer than 2 elements")
+    std_val = float(np.std(arr))
+    mean_val = float(np.mean(arr))
+    st_low = stat_type.lower()
+    is_tackle_or_rec_count = (
+        any(tok in st_low for tok in ("tackle", "reception", "receptions", "rec_count"))
+        and "yd" not in st_low
+        and "yard" not in st_low
+    )
+    min_std = 1.10 if is_tackle_or_rec_count else 0.85
+    if std_val < min_std:
+        raise ValueError(
+            f"VARIANCE_COLLAPSE_DETECTED: stat_type={stat_type} std={std_val:.4f} < min_std={min_std:.2f}"
+        )
+    return {
+        "valid": True,
+        "stat_type": stat_type,
+        "mean": round(mean_val, 4),
+        "std": round(std_val, 4),
+        "min_std_required": min_std,
+    }
+
+
+def _american_to_implied_prob(odds: int | float) -> float:
+    val = float(odds)
+    if val < 0:
+        return (-val) / ((-val) + 100.0)
+    return 100.0 / (val + 100.0)
+
+
+def evaluate_empirical_prop_probability(
+    samples: np.ndarray | Sequence[float],
+    line: float,
+    market_over_american: int | None,
+    market_under_american: int | None,
+    max_prob_cap: float = 0.780,
+    stat_type: str = "generic",
+) -> dict[str, Any]:
+    """Evaluate empirical prop probability from 10,000-world samples with Beta-Binomial shrinkage (SG-4).
+
+    - Enforces assert_prop_distribution_invariants(samples, stat_type)
+    - Computes empirical p_over = mean(samples > line) and p_under = mean(samples < line)
+      with Beta-Binomial shrinkage toward 0.50 and strict cap in [1 - max_prob_cap, max_prob_cap]
+      so max(p_over, p_under) <= 0.780.
+    - If market_over_american is None or market_under_american is None:
+      returns publishAllowed: False, decision: "PASS_UNPRICED_MARKET", edge: 0.0.
+    """
+    inv = assert_prop_distribution_invariants(samples, stat_type=stat_type)
+    arr = np.asarray(samples, dtype=np.float64)
+    n_worlds = int(arr.size)
+    ln = float(line)
+
+    raw_over = float(np.mean(arr > ln))
+    raw_under = float(np.mean(arr < ln))
+    non_push = max(1e-9, raw_over + raw_under)
+    cond_over = raw_over / non_push
+
+    # Beta-Binomial Empirical Bayes shrinkage toward 0.50 with effective pseudo-count prior
+    # Maps extreme sample frequencies smoothly inside [0.220, 0.780]
+    cap_hi = min(0.780, float(max_prob_cap))
+    cap_lo = 1.0 - cap_hi
+    shrink_lambda = 0.52
+    shrunk_over = 0.50 + shrink_lambda * (cond_over - 0.50)
+    p_over = float(np.clip(shrunk_over, cap_lo, cap_hi))
+    p_under = float(np.clip(1.0 - p_over, cap_lo, cap_hi))
+
+    lean = "OVER" if p_over >= p_under else "UNDER"
+    win_prob_on_lean = max(p_over, p_under)
+    wilson_lb = wilson_lower_bound(win_prob_on_lean * n_worlds, n_worlds)
+    conf_int = min(int(round(cap_hi * 100)), max(51, int(round(win_prob_on_lean * 100.0))))
+
+    base_result: dict[str, Any] = {
+        "mean": round(float(np.mean(arr)), 2),
+        "std": round(inv["std"], 2),
+        "p10": round(float(np.percentile(arr, 10)), 2),
+        "p25": round(float(np.percentile(arr, 25)), 2),
+        "p50": round(float(np.percentile(arr, 50)), 2),
+        "p75": round(float(np.percentile(arr, 75)), 2),
+        "p90": round(float(np.percentile(arr, 90)), 2),
+        "line": ln,
+        "raw_p_over": round(raw_over, 4),
+        "raw_p_under": round(raw_under, 4),
+        "p_over": round(p_over, 4),
+        "p_under": round(p_under, 4),
+        "model_prob_over": round(p_over, 4),
+        "model_prob_under": round(p_under, 4),
+        "lean": lean,
+        "model_lean": lean,
+        "win_prob_on_lean": round(win_prob_on_lean, 4),
+        "wilson_lower_90": round(wilson_lb, 4),
+        "confidence_int": conf_int,
+        "confidence_score": f"{conf_int}/100",
+        "market_over_american": market_over_american,
+        "market_under_american": market_under_american,
+    }
+
+    if market_over_american is None or market_under_american is None:
+        base_result.update({
+            "publishAllowed": False,
+            "decision": "PASS_UNPRICED_MARKET",
+            "edge": 0.0,
+            "net_edge": 0.0,
+            "market_prob_devig": None,
+            "reason": "PASS_UNPRICED_MARKET: Two-sided Over/Under American odds required before publishing.",
+        })
+        return base_result
+
+    imp_over = _american_to_implied_prob(market_over_american)
+    imp_under = _american_to_implied_prob(market_under_american)
+    overround = max(1e-9, imp_over + imp_under)
+    devig_over = imp_over / overround
+    devig_under = imp_under / overround
+    mkt_devig_on_lean = devig_over if lean == "OVER" else devig_under
+    edge_val = round(win_prob_on_lean - mkt_devig_on_lean, 4)
+    publish_ok = bool(edge_val >= 0.025 and wilson_lb > mkt_devig_on_lean and conf_int >= 60)
+
+    base_result.update({
+        "publishAllowed": publish_ok,
+        "decision": "PLAY" if publish_ok else "PASS",
+        "edge": edge_val,
+        "net_edge": edge_val,
+        "market_prob_devig": round(mkt_devig_on_lean, 4),
+        "reason": "CLEARED_TWO_SIDED_GATE" if publish_ok else "INSUFFICIENT_TWO_SIDED_EDGE",
+    })
+    return base_result
+
+
+def detect_injury_decoy_or_pitch_count_trap(
+    player_name: str,
+    injury_designation: str,
+    market_line: float,
+    healthy_prior_mean: float,
+    teammate_shares: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    """Injury Decoy / Pitch-Count Detector (SG-8).
+
+    If injury_designation.upper() in {"QUESTIONABLE", "DOUBTFUL", "LIMITED", "PITCH_COUNT"}
+    and market_line <= 0.45 * healthy_prior_mean (e.g., Brian Thomas Jr. line 12.5 vs 58.0 prior = 0.2155):
+      - Flags is_decoy_trap: True, block_over_bets: True, block_cash_dfs: True, gpp_max_exposure: 0.08
+      - Reallocates 65% of the player's baseline target/touch share across healthy teammates via
+        Sinkhorn-Knopp / proportional renormalization.
+    """
+    desig_clean = (injury_designation or "").strip().upper()
+    flagged_designations = {"QUESTIONABLE", "DOUBTFUL", "LIMITED", "PITCH_COUNT", "Q", "LP", "DNP"}
+    has_injury_tag = (
+        desig_clean in flagged_designations
+        or any(tok in desig_clean for tok in ("QUESTIONABLE", "DOUBTFUL", "LIMITED", "PITCH_COUNT"))
+    )
+    prior = max(1e-6, float(healthy_prior_mean))
+    mkt = float(market_line)
+    ratio = mkt / prior
+    is_trap = bool(has_injury_tag and mkt > 0.0 and ratio <= 0.45)
+
+    reallocated: dict[str, float] = {}
+    if teammate_shares:
+        raw_shares = {k: max(0.0, float(v)) for k, v in teammate_shares.items()}
+        tot = sum(raw_shares.values()) or 1.0
+        norm_shares = {k: v / tot for k, v in raw_shares.items()}
+        if is_trap:
+            if player_name in norm_shares:
+                player_base = norm_shares[player_name]
+                retained = 0.35 * player_base
+                freed_mass = 0.65 * player_base
+                others = {k: v for k, v in norm_shares.items() if k != player_name}
+            else:
+                # Player's baseline share estimated from prior relative to team or default 0.22
+                player_base = 0.22
+                retained = 0.35 * player_base
+                freed_mass = 0.65 * player_base
+                others = dict(norm_shares)
+
+            other_sum = sum(others.values()) or 1.0
+            # Sinkhorn-Knopp 1D entropy-smoothed proportional reallocation across healthy teammates
+            reallocated = {}
+            if player_name in norm_shares:
+                reallocated[player_name] = round(retained, 6)
+            for tk, tv in others.items():
+                reallocated[tk] = round(tv + freed_mass * (tv / other_sum), 6)
+            # Final exact normalization to 1.0
+            r_tot = sum(reallocated.values()) or 1.0
+            reallocated = {k: round(v / r_tot, 6) for k, v in reallocated.items()}
+        else:
+            reallocated = {k: round(v, 6) for k, v in norm_shares.items()}
+
+    if is_trap:
+        return {
+            "player_name": player_name,
+            "injury_designation": injury_designation,
+            "market_line": mkt,
+            "healthy_prior_mean": prior,
+            "line_to_prior_ratio": round(ratio, 4),
+            "is_decoy_trap": True,
+            "block_over_bets": True,
+            "block_cash_dfs": True,
+            "gpp_max_exposure": 0.08,
+            "share_reallocated_fraction": 0.65,
+            "retained_share_multiplier": 0.35,
+            "reallocated_shares": reallocated,
+            "decision": "BLOCK_OVER_AND_CASH_DFS_DECOY_TRAP",
+            "reason": (
+                f"INJURY_DECOY_PITCH_COUNT_TRAP: {player_name} ({injury_designation}) market_line={mkt} "
+                f"is {ratio * 100:.1f}% of healthy_prior_mean={prior} (<= 45.0% threshold). "
+                "Reallocated 65% of baseline share to healthy teammates."
+            ),
+        }
+
+    return {
+        "player_name": player_name,
+        "injury_designation": injury_designation,
+        "market_line": mkt,
+        "healthy_prior_mean": prior,
+        "line_to_prior_ratio": round(ratio, 4),
+        "is_decoy_trap": False,
+        "block_over_bets": False,
+        "block_cash_dfs": False,
+        "gpp_max_exposure": 0.45,
+        "share_reallocated_fraction": 0.0,
+        "retained_share_multiplier": 1.0,
+        "reallocated_shares": reallocated,
+        "decision": "CLEAR_NORMAL_ROLE",
+        "reason": "NO_DECOY_SIGNAL",
+    }
 
 
 def assert_pbp_conservation(

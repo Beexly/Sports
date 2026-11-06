@@ -3,7 +3,7 @@
  *
  * Galaxy Picks (paid) storefront. One-time Stripe checkout, no subscription required.
  * Wired to live Stripe Products and one-time Prices on Galaxy Sports Network:
- * - tnf-all-in-pack ($19): prod_VX406TulqtZwJJ / price_1UVzsdQ2wPZMxx60lqO3TLbQ
+ * - tnf-all-in-pack ($19, archived/closed): prod_VX406TulqtZwJJ / price_1UVzsdQ2wPZMxx60lqO3TLbQ
  * - sgp-correlation-basket ($29): prod_VX40XMRjV4FiJl / price_1UVzseQ2wPZMxx60VqAfAyNe
  * - sunday-nfl-5pct-slate ($39): prod_VX400OaIktCGLb / price_1UVzsfQ2wPZMxx606fYPjKEJ
  * - redzone-dfs-pro-pack ($39.99): prod_VX400OaIktCGLb / price_1UWjT2Q2wPZMxx60OrkMpGvF
@@ -16,6 +16,7 @@
  */
 
 export interface PickPackageOffering {
+  id?: string;
   slug: string;
   title: string;
   subtitle: string;
@@ -53,9 +54,9 @@ export interface SpecialtyPackTier extends PickPackageOffering {
 }
 
 export const WEEK8_GAME_DAY_CATALOG_METADATA = {
-  asOfCt: "2026-11-05T16:00:00-06:00",
+  asOfCt: "2026-11-06T00:00:00-06:00",
   kickoffCountdownMinutes: 195,
-  slateWindowLabel: "Week 9 Thursday Night Football (JAX @ BAL) through Sunday & Monday Night Football (TB @ KC)",
+  slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
   verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
   pullListEnforced: "All active Week 9 injury reports and offensive/defensive line protection splits verified",
   expandedDfsCoreSpec: {
@@ -69,11 +70,12 @@ export const WEEK8_GAME_DAY_CATALOG_METADATA = {
 
 export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
   {
+    id: "tnf-all-in-pack",
     slug: "tnf-all-in-pack",
-    title: "Week 9 Thursday Night Football Game Pack (JAX @ BAL + Showdown DFS)",
-    subtitle: "Spread Pass Discipline Read + 10 Top-Confidence TNF Player Matchups (88/100) + 3-Leg SGP + Showdown Lineups",
+    title: "Week 9 Standalone Primetime Game Pack (Closed Window)",
+    subtitle: "Window Closed — Pivot to Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     description:
-      "Built for Week 9 Thursday Night Football (Jacksonville Jaguars at Baltimore Ravens). With the spread steamed from -3.5 past the key -7 number to -7.5, we pass the side and attack 10 top-confidence TNF player matchups and derivatives (rated 88/100), led by Mark Andrews Over 2.5 Receptions against Jacksonville's blitz. Includes our 3-leg correlated JAX @ BAL Same-Game Parlay and DraftKings/FanDuel Showdown Captain lineups. Verified 62-23-1 (+26.50u) season record.",
+      "This standalone primetime window is closed and no longer offered for sale. Explore our active Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC) packages below. Verified 62-23-1 (72.9%, +26.50u) season record.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     creditBackPriceCents: null,
@@ -82,23 +84,21 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     stripeLookupKey: "gse-pack-tnf-all-in",
     gamesCount: 1,
     highlights: [
-      "Week 9 TNF (JAX @ BAL): Disciplined Spread Pass at -7.5 + 10 Top-Confidence Player Matchups (88/100)",
-      "Full-Game & 1st-Half Props: Mark Andrews, Derrick Henry, Zay Flowers, Brenton Strange & Chris Rodriguez Jr.",
-      "3-Leg Correlated JAX @ BAL Same-Game Parlay Ticket Built Around Blitz & Trench Tendencies",
-      "DraftKings & FanDuel TNF Showdown Captain Lineups (Cash Core + Tournament Leverage Builds)",
+      "Standalone Primetime Window Closed — See Active Week 9 Sunday Main Slate & MNF Packs Below",
     ],
-    badge: "WEEK 9 TNF · JAX @ BAL + SHOWDOWN DFS",
+    badge: "CLOSED WINDOW · ARCHIVED",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,
-    forSale: true,
+    forSale: false,
   },
   {
+    id: "sunday-nfl-5pct-slate",
     slug: "sunday-nfl-5pct-slate",
-    title: "Week 9 Sunday & MNF Best Bets, 1Q/1H & Kicking Derivatives Pack",
-    subtitle: "Every Week 9 Sunday & Monday Night (TB @ KC) Spread, Moneyline, 1Q/1H Script & Kicking FGM Call",
+    title: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC) Best Bets Pack",
+    subtitle: "Every Week 9 Sunday Main Slate & Monday Night Football (TB @ KC) Spread, Moneyline, 1Q/1H Script & Kicking FGM Call",
     description:
-      "Our complete Week 9 Sunday Main Slate, Sunday Night Football (IND @ MIN), and Monday Night Football (TB @ KC) game-line and derivative card. Includes our highest-conviction Spread, Moneyline, and Total calls (led by DET @ GB, MIA @ BUF, and IND @ MIN), 1st-Quarter and 1st-Half script plays, and our Red-Zone Stall Kicker Field Goals Made Over 1.5 suite. Verified 62-23-1 (+26.50u) season record.",
+      "Our complete Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC) game-line and derivative card. Includes our highest-conviction Spread, Moneyline, and Total calls (led by DET @ GB, MIA @ BUF, IND @ MIN, and TB @ KC), 1st-Quarter and 1st-Half script plays, and our Red-Zone Stall Kicker Field Goals Made Over 1.5 suite. Verified 62-23-1 (72.9%, +26.50u) season record.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3900,
     creditBackPriceCents: null,
@@ -107,7 +107,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     stripeLookupKey: "gse-pack-sunday-nfl-5pct-slate",
     gamesCount: 13,
     highlights: [
-      "Week 9 Sunday & Monday Night Matchups: Locked Main-Line Spread, Moneyline & Total Calls (Up to 85/100)",
+      "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC): Locked Spread, Moneyline & Total Calls (Up to 85/100)",
       "1Q / 1H / 2Q Opening Script Derivatives + Team Total Over/Under Calls",
       "Kicking & Special Teams Suite: Red-Zone Stall Field Goals Made Over 1.5 Reads",
     ],
@@ -118,20 +118,21 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     forSale: true,
   },
   {
+    id: "sgp-correlation-basket",
     slug: "sgp-correlation-basket",
-    title: "Week 9 Player Props, Anytime TD, Defense/IDP & Correlated Parlay/SGP Pack",
-    subtitle: "TNF (JAX @ BAL) + Week 9 Sunday/MNF Skill/QB Props, Goal-Line Anytime TDs, IDP Tackles/Sacks & SGPs",
+    title: "Week 9 Sunday & MNF Player Props, Anytime TD, Defense/IDP & Correlated Parlay/SGP Pack",
+    subtitle: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC) Skill/QB Props, Anytime TDs, IDP & SGPs",
     description:
-      "Built across Week 9 Thursday Night Football (JAX @ BAL) through Sunday and Monday Night Football (TB @ KC). Unlocks our top-rated Skill and Quarterback Player Props (up to 88/100), Inside-the-5 Goal-Line Anytime Touchdown plays, Linebacker Tackle-Funnel and Edge Sack props, and 2-Leg & 3-Leg Correlated Same-Game Parlay tickets built around real offensive and defensive game scripts.",
+      "Built across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC). Unlocks our top-rated Skill and Quarterback Player Props (up to 86/100), Inside-the-5 Goal-Line Anytime Touchdown plays, Linebacker Tackle-Funnel and Edge Sack props, and 2-Leg & 3-Leg Correlated Same-Game Parlay tickets built around real offensive and defensive game scripts.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2900,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-sgp-correlation-basket",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "Locked Skill & QB Player Props Across Week 9 TNF, Sunday & MNF (Rated Up to 88/100)",
+      "Locked Skill & QB Player Props Across Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC)",
       "Anytime Touchdown Pack: Inside-the-5 Goal-Line Bellcow TD Reads",
       "Defense & IDP Pack: Linebacker Tackle-Funnel & Edge Rush Sack Props",
       "Correlated Parlay & SGP Pack: 2-Leg & 3-Leg Game-Script Tickets with Zero Conflicting Legs",
@@ -143,20 +144,21 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     forSale: true,
   },
   {
+    id: "redzone-dfs-pro-pack",
     slug: "redzone-dfs-pro-pack",
-    title: "RedZone Standalone Week 9 DFS Pro Pack (TNF Showdown + Sunday Lineups & Pool)",
-    subtitle: "JAX @ BAL Showdown Captain Builds + 2 Sunday Optimal Lineups (Cash & GPP) + 14-Player Core Pool",
+    title: "RedZone Standalone Week 9 Sunday & MNF DFS Pro Pack (Optimal Lineups & Core Pool)",
+    subtitle: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC): 2 Optimal Lineups (Cash & GPP) + 14-Player Core Pool",
     description:
-      "Our complete standalone Week 9 Daily Fantasy (DFS) package on the unified RedZone site. Includes DraftKings and FanDuel Showdown Captain lineups for JAX @ BAL, Optimal Lineup #1 (High-Floor Cash/Double-Up), Optimal Lineup #2 (GPP Tournament Leverage Stack), our 14-Player Position Core (2 QB, 4 RB, 4 WR, 2 TE, 2 DST with full coaching and matchup writeups), and our injury-adjusted active player pool.",
+      "Our complete standalone Week 9 Daily Fantasy (DFS) package on the unified RedZone site for the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC). Includes Optimal Lineup #1 (High-Floor Cash/Double-Up), Optimal Lineup #2 (GPP Tournament Leverage Stack), our 14-Player Position Core (2 QB, 4 RB, 4 WR, 2 TE, 2 DST with full coaching and matchup writeups), and our injury-adjusted active player pool.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3999,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UWjT2Q2wPZMxx60OrkMpGvF",
     stripeLookupKey: "gse-pack-redzone-dfs-pro-pack",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "JAX @ BAL Showdown Captain Lineups + 2 Sunday Optimal Lineups (Cash High-Floor + GPP Correlated Stack)",
+      "2 Week 9 Sunday Main Slate Optimal Lineups (Cash High-Floor + GPP Correlated Stack) + SNF/MNF Primetime Builds",
       "14-Player Position Core Pool (2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs + Coaching Writeups)",
       "Complete 588-Active-Player Pool with Injury Replacements & Role Shifts Audited",
     ],
@@ -167,24 +169,25 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     forSale: true,
   },
   {
+    id: "week8-all-access",
     slug: "week8-all-access",
-    title: "Week 9 All-Access Bundle (TNF JAX @ BAL + All Sunday/MNF Packs + Full DFS)",
-    subtitle: "Every Week 9 Pack Included: TNF JAX @ BAL, Sunday & MNF Main Lines, Props, SGPs, Specialty Packs & Full DFS",
+    title: "Week 9 All-Access Bundle (Sunday Main Slate DET @ GB, MIA @ BUF, IND @ MIN + MNF TB @ KC + Full DFS)",
+    subtitle: "Every Week 9 Sunday & MNF Pack Included: Main Lines, Props, SGPs, Specialty Packs & Full RedZone DFS",
     description:
-      "Unlock every single Week 9 pack across Thursday Night Football (JAX @ BAL), the Sunday Main Slate, Sunday Night Football (IND @ MIN), and Monday Night Football (TB @ KC) in one click: 10 Top-Confidence TNF Player Matchups (88/100), 3-Leg TNF SGP, Showdown Captain Lineups, Sunday/MNF Main Game Lines, Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio. Verified 62-23-1 (+26.50u) season record.",
+      "Unlock every single Week 9 pack across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC) in one click: Sunday/MNF Main Game Lines, Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Correlated Parlay & SGP Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio. Verified 62-23-1 (72.9%, +26.50u) season record.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX40T4RNpoNNIp",
     stripePriceId: "price_1UVzsfQ2wPZMxx60ozEJ1P3n",
     stripeLookupKey: "gse-pack-week8-all-access",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "All Week 9 Games Included: TNF (JAX @ BAL) + Sunday Early/Late + SNF (IND @ MIN) + MNF (TB @ KC)",
-      "Every Pack Included: Main Lines, TNF 10-Play Card (88/100), Props, Defense/IDP, Anytime TD, SGPs & Kicking/1Q/1H",
-      "Full RedZone DFS Included: TNF Showdown Captain Lineups + 2 Sunday Optimal Lineups + 14-Player Core",
+      "All Remaining Week 9 Games Included: Sunday Main Slate (DET @ GB, MIA @ BUF) + SNF (IND @ MIN) + MNF (TB @ KC)",
+      "Every Pack Included: Main Lines, Skill/QB Props, Defense/IDP, Anytime TD, SGPs & Kicking/1Q/1H Derivatives",
+      "Full RedZone DFS Included: 2 Sunday Optimal Lineups + 14-Player Core + SNF/MNF Primetime Builds",
     ],
-    badge: "WEEK 9 ALL-ACCESS VIP · TNF + SUN–MON + DFS",
+    badge: "WEEK 9 ALL-ACCESS VIP · SUN–MON + DFS",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,
@@ -194,22 +197,23 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
 
 export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
   {
+    id: "week8-defense-idp-pack",
     slug: "week8-defense-idp-pack",
     category: "DEFENSE_IDP",
-    title: "Week 9 Defense & IDP Tackle/Sack Pack (TNF + Sun–Mon)",
-    subtitle: "8 LB Tackle-Funnel & Edge Sack Plays + 2 Core Week 9 DST Units",
+    title: "Week 9 Defense & IDP Tackle/Sack Pack (Sunday Main Slate & MNF)",
+    subtitle: "8 LB Tackle-Funnel & Edge Sack Plays + 2 Core Week 9 DST Units Across DET @ GB, MIA @ BUF, IND @ MIN & TB @ KC",
     description:
-      "Dedicated Defense, Special Teams & Individual Defensive Player (IDP) pack across Week 9 Thursday Night Football (JAX @ BAL) and the Sunday–Monday slate. Built from opponent play-volume tackle funnels, offensive line pass-protection splits, and our 2 locked Week 9 DFS DST units.",
+      "Dedicated Defense, Special Teams & Individual Defensive Player (IDP) pack across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC). Built from opponent play-volume tackle funnels, offensive line pass-protection splits, and our 2 locked Week 9 DFS DST units.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 1900,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX406TulqtZwJJ",
     stripePriceId: "price_1UVzsdQ2wPZMxx60lqO3TLbQ",
     stripeLookupKey: "gse-pack-week8-defense-idp",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "8 LB Tackle-Funnel & Edge Sack Props Across Week 9 TNF (JAX @ BAL) & Sun–Mon",
-      "Headlined by High-Conviction Linebacker Tackle & Pass-Rush Sack Reads (Up to 88/100)",
+      "8 LB Tackle-Funnel & Edge Sack Props Across Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC)",
+      "Headlined by High-Conviction Linebacker Tackle & Pass-Rush Sack Reads (Up to 86/100)",
       "Includes Our 2 Core Week 9 Defense/ST Units + Trench Protection Mismatch Notes",
     ],
     badge: "DEFENSE & IDP PACK · $19",
@@ -217,28 +221,29 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesSgp: false,
     includesDfs: true,
     forSale: true,
-    slateWindowLabel: "Week 9 TNF (JAX @ BAL) + Sun–Mon Slate",
+    slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
     pullListIntegrityNote: "All active defensive & offensive line injury designations verified",
-    topConfidenceRatings: ["88/100", "84/100", "81/100", "78/100", "75/100", "72/100"],
+    topConfidenceRatings: ["86/100", "84/100", "81/100", "78/100", "75/100", "72/100"],
   },
   {
+    id: "week8-anytime-td-pack",
     slug: "week8-anytime-td-pack",
     category: "ANYTIME_TD",
-    title: "Week 9 Anytime Touchdown & Goal-Line Pack (TNF + Sun–Mon)",
-    subtitle: "Inside-the-5 Bellcow & Red-Zone Target Anytime TD Plays Across Week 9",
+    title: "Week 9 Anytime Touchdown & Goal-Line Pack (Sunday Main Slate & MNF)",
+    subtitle: "Inside-the-5 Bellcow & Red-Zone Target Anytime TD Plays Across DET @ GB, MIA @ BUF, IND @ MIN & TB @ KC",
     description:
-      "Dedicated Anytime Touchdown Scorer pack across Week 9 Thursday Night Football (JAX @ BAL) and the Sunday–Monday slate. Isolates red-zone and inside-the-5 carry and target roles where goal-line volume is concentrated.",
+      "Dedicated Anytime Touchdown Scorer pack across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC). Isolates red-zone and inside-the-5 carry and target roles where goal-line volume is concentrated.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2400,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-week8-anytime-td",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "Inside-the-5 Goal-Line & Red-Zone Anytime TD Plays Across Week 9 TNF & Sun–Mon",
-      "Top Anytime TD Confidence Ratings: 88/100, 85/100, 82/100, 79/100 & 76/100",
+      "Inside-the-5 Goal-Line & Red-Zone Anytime TD Plays Across Week 9 Sunday Main Slate & MNF",
+      "Top Anytime TD Confidence Ratings: 86/100, 85/100, 82/100, 79/100 & 76/100",
       "Includes Fair Price vs Sportsbook Price Thresholds & Red-Zone Play-Calling Splits",
     ],
     badge: "ANYTIME TD PACK · $24",
@@ -246,28 +251,29 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesSgp: false,
     includesDfs: false,
     forSale: true,
-    slateWindowLabel: "Week 9 TNF (JAX @ BAL) + Sun–Mon Slate",
+    slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
     pullListIntegrityNote: "All Week 9 RB/TE injury replacements and goal-line roles applied",
-    topConfidenceRatings: ["88/100", "85/100", "82/100", "79/100", "76/100", "74/100"],
+    topConfidenceRatings: ["86/100", "85/100", "82/100", "79/100", "76/100", "74/100"],
   },
   {
+    id: "week8-parlay-sgp-pack",
     slug: "week8-parlay-sgp-pack",
     category: "PARLAY_SGP",
-    title: "Week 9 Correlated Parlay & Same-Game Parlay Pack (TNF + Sun–Mon)",
-    subtitle: "JAX @ BAL 3-Leg SGP + Week 9 Sunday/MNF 2-Leg & 3-Leg Correlated Game-Script Parlays",
+    title: "Week 9 Correlated Parlay & Same-Game Parlay Pack (Sunday Main Slate & MNF)",
+    subtitle: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC) 2-Leg & 3-Leg Correlated Game-Script Parlays",
     description:
-      "Built for correlated multi-leg tickets where every leg fits the exact same game script. Pairs Sides, Totals, Skill/QB Props, Anytime TDs, and 1Q/1H derivatives across Week 9 Thursday Night Football (JAX @ BAL) and the Sunday–Monday slate.",
+      "Built for correlated multi-leg tickets where every leg fits the exact same game script. Pairs Sides, Totals, Skill/QB Props, Anytime TDs, and 1Q/1H derivatives across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC).",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2900,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-week8-parlay-sgp",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "Includes Locked 3-Leg JAX @ BAL TNF Same-Game Parlay + Full Week 9 Sun–Mon SGP Card",
-      "Cross-Game High-Conviction Anchor Parlay Baskets (Pairing 88/100 & 85/100 Reads)",
+      "Includes Full Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC) Correlated SGP Card",
+      "Cross-Game High-Conviction Anchor Parlay Baskets (Pairing 86/100 & 85/100 Reads)",
       "Zero Conflicting Legs — Every Ticket Built Around Matching Offensive & Defensive Game Scripts",
     ],
     badge: "PARLAY & SGP PACK · $29",
@@ -275,27 +281,28 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesSgp: true,
     includesDfs: false,
     forSale: true,
-    slateWindowLabel: "Week 9 TNF (JAX @ BAL) + Sun–Mon Slate",
+    slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
     pullListIntegrityNote: "Zero conflicting legs; active QB/RB injury replacements verified",
-    topConfidenceRatings: ["88/100", "86/100", "84/100", "81/100", "79/100"],
+    topConfidenceRatings: ["86/100", "85/100", "84/100", "81/100", "79/100"],
   },
   {
+    id: "week8-kicking-1q-1h-pack",
     slug: "week8-kicking-1q-1h-pack",
     category: "KICKING_1Q_1H",
-    title: "Week 9 Kicking, Special Teams & 1Q / 1H Derivative Pack (TNF + Sun–Mon)",
+    title: "Week 9 Kicking, Special Teams & 1Q / 1H Derivative Pack (Sunday Main Slate & MNF)",
     subtitle: "1st-Quarter Totals, 1H/2Q Script Calls, Team Totals & Red-Zone Stall Kicker FGM Over 1.5",
     description:
-      "Attack early-script scoring and red-zone stalls across Week 9 Thursday Night Football (JAX @ BAL) and the Sunday–Monday window. Combines 1st-Quarter and 1st-Half scripted drive calls, Team Total derivatives, and Kicker Field Goals Made Over 1.5 reads.",
+      "Attack early-script scoring and red-zone stalls across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC). Combines 1st-Quarter and 1st-Half scripted drive calls, Team Total derivatives, and Kicker Field Goals Made Over 1.5 reads.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2400,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UVzsfQ2wPZMxx606fYPjKEJ",
     stripeLookupKey: "gse-pack-week8-kicking-1q-1h",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "Week 9 TNF (JAX @ BAL) & Sunday 1Q / 1H Scripted Drive Calls + Team Total Derivatives (Up to 88/100)",
+      "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC) 1Q / 1H Scripted Drive Calls + Team Total Derivatives",
       "Kicker Field Goals Made Over 1.5 Reads Powered by Red-Zone Stall & 4th-Down Field Goal Tendencies",
       "Includes Fair Line Thresholds & Stadium Wind/Weather Notes for Every Outdoor Venue",
     ],
@@ -304,27 +311,28 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesSgp: false,
     includesDfs: false,
     forSale: true,
-    slateWindowLabel: "Week 9 TNF (JAX @ BAL) + Sun–Mon Slate",
+    slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
     pullListIntegrityNote: "All Week 9 outdoor stadiums cross-checked against wind & weather reports",
-    topConfidenceRatings: ["88/100", "84/100", "80/100", "77/100", "75/100", "73/100"],
+    topConfidenceRatings: ["85/100", "84/100", "80/100", "77/100", "75/100", "73/100"],
   },
   {
+    id: "week8-sun-mon-dfs-expanded-pack",
     slug: "week8-sun-mon-dfs-expanded-pack",
     category: "DFS_EXPANDED_CORE",
-    title: "RedZone Expanded Week 9 DFS Pack (TNF Showdown + 2 Sunday Optimal Lineups + 14-Player Core)",
-    subtitle: "JAX @ BAL Showdown Captain Builds + Sunday Main Slate: 2 Optimal Lineups, 14-Player Core & 20-Max MME",
+    title: "RedZone Expanded Week 9 DFS Pack (2 Sunday Optimal Lineups + 14-Player Core + SNF/MNF)",
+    subtitle: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC): 2 Optimal Lineups, 14-Player Core & 20-Max MME",
     description:
-      "Built for Week 9 Thursday Night Football Showdown (JAX @ BAL) and the full Sunday–Monday DFS slate. Delivers DraftKings and FanDuel Showdown Captain lineups, 2 Complete Sunday Optimal Lineups (Lineup #1 Cash High-Floor + Lineup #2 Tournament Ceiling), our Expanded 14-Player Position Core (2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs), and full 588-active-player pool with OUT/IR players zeroed.",
+      "Built for the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC) DFS slate. Delivers 2 Complete Sunday Optimal Lineups (Lineup #1 Cash High-Floor + Lineup #2 Tournament Ceiling), SNF/MNF Primetime builds, our Expanded 14-Player Position Core (2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs), and full 588-active-player pool with OUT/IR players zeroed.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3999,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UWjT2Q2wPZMxx60OrkMpGvF",
     stripeLookupKey: "gse-pack-redzone-dfs-pro-pack",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "JAX @ BAL Showdown Captain Builds + 2 Complete Sunday Optimal Lineups (Cash High-Floor + Tournament Stack)",
+      "2 Complete Week 9 Sunday Optimal Lineups (Cash High-Floor + Tournament Stack) + SNF/MNF Primetime Builds",
       "Expanded 14-Player Core Pool: 2 QBs, 4 RBs, 4 WRs, 2 TEs & 2 DSTs with Matchup Writeups",
       "Includes 20-Max MME Portfolio + 588-Player Active Pool (Injury Replacements & Role Shifts Audited)",
     ],
@@ -333,43 +341,58 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesSgp: false,
     includesDfs: true,
     forSale: true,
-    slateWindowLabel: "Week 9 TNF Showdown (JAX @ BAL) + Sunday Main Slate",
+    slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
     pullListIntegrityNote: "All Week 9 OUT/IR players zeroed across every lineup and player pool",
-    topConfidenceRatings: ["88/100", "86/100", "85/100", "84/100"],
-    dfsCoreSummary: "TNF Showdown Captains + 2 Sunday Optimal Lineups + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
+    topConfidenceRatings: ["86/100", "85/100", "84/100", "83/100"],
+    dfsCoreSummary: "2 Sunday Optimal Lineups + SNF/MNF Primetime Builds + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
   },
   {
+    id: "week8-all-access-gameday-pass",
     slug: "week8-all-access-gameday-pass",
     category: "ALL_ACCESS_PASS",
-    title: "Week 9 All-Access Game-Day Pass (TNF JAX @ BAL + All 6 Packs Included)",
-    subtitle: "TNF 10-Play Card + Main Lines + Props + Defense/IDP + Anytime TD + Parlays/SGPs + Kicking/1Q/1H + Full DFS",
+    title: "Week 9 All-Access Game-Day Pass (Sunday Main Slate & MNF · All Packs Included)",
+    subtitle: "Sunday & MNF Main Lines + Props + Defense/IDP + Anytime TD + Parlays/SGPs + Kicking/1Q/1H + Full DFS",
     description:
-      "Complete one-click access to every single Week 9 pack across Thursday Night Football (JAX @ BAL), Sunday Early/Late, Sunday Night Football (IND @ MIN), and Monday Night Football (TB @ KC), including all specialty packs and the Expanded TNF Showdown + Sunday DFS portfolio.",
+      "Complete one-click access to every single Week 9 pack across the Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF), Sunday Night Football (IND @ MIN), and Monday Night Football (TB @ KC), including all specialty packs and the Expanded Sunday & MNF DFS portfolio.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
     creditBackPriceCents: null,
     stripeProductId: "prod_VX40T4RNpoNNIp",
     stripePriceId: "price_1UVzsfQ2wPZMxx60ozEJ1P3n",
     stripeLookupKey: "gse-pack-week8-all-access",
-    gamesCount: 14,
+    gamesCount: 13,
     highlights: [
-      "Unlocks All Week 9 Packs: TNF (JAX @ BAL) + Sunday Main Slate + SNF (IND @ MIN) + MNF (TB @ KC)",
-      "10 Top-Confidence TNF Plays (88/100) + Main Lines + Skill/QB Props + Defense/IDP + Anytime TDs + SGPs",
-      "Full RedZone DFS Included: JAX @ BAL Showdown Captain Builds + 2 Sunday Optimal Lineups + 14-Player Core",
+      "Unlocks All Week 9 Packs: Sunday Main Slate (DET @ GB, MIA @ BUF) + SNF (IND @ MIN) + MNF (TB @ KC)",
+      "Main Lines + Skill/QB Props + Defense/IDP + Anytime TDs + Correlated SGPs + Kicking/1Q/1H Derivatives",
+      "Full RedZone DFS Included: 2 Sunday Optimal Lineups + 14-Player Core + SNF/MNF Primetime Builds",
     ],
     badge: "ALL-ACCESS GAME-DAY PASS · $49",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,
     forSale: true,
-    slateWindowLabel: "Week 9 TNF (JAX @ BAL) through Monday Night Football",
+    slateWindowLabel: "Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & Monday Night Football (TB @ KC)",
     verifiedRecordBanner: "62-23-1 · +26.50u Verified Season Record",
-    pullListIntegrityNote: "Verified 62-23-1 (+26.50u) record; all active Week 9 injury reports applied",
-    topConfidenceRatings: ["88/100", "88/100", "86/100", "85/100", "84/100", "82/100"],
-    dfsCoreSummary: "TNF Showdown Captains + 2 Sunday Optimal Lineups + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
+    pullListIntegrityNote: "Verified 62-23-1 (72.9%, +26.50u) record; all active Week 9 injury reports applied",
+    topConfidenceRatings: ["86/100", "85/100", "84/100", "83/100", "82/100", "81/100"],
+    dfsCoreSummary: "2 Sunday Optimal Lineups + SNF/MNF Primetime Builds + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
   },
 ];
+
+export const ACTIVE_FOR_SALE_PACKAGE_CATALOG: readonly PickPackageOffering[] =
+  LIVE_PACKAGE_CATALOG.filter((pkg) => pkg.forSale !== false);
+
+export const ACTIVE_FOR_SALE_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] =
+  WEEK8_SPECIALTY_PACK_TIERS.filter((pkg) => pkg.forSale !== false);
+
+export function getActiveForSalePackages(): PickPackageOffering[] {
+  return LIVE_PACKAGE_CATALOG.filter((pkg) => pkg.forSale !== false);
+}
+
+export function getActiveForSaleSpecialtyPacks(): SpecialtyPackTier[] {
+  return WEEK8_SPECIALTY_PACK_TIERS.filter((pkg) => pkg.forSale !== false);
+}
 
 const PACKAGE_SLUG_ALIASES: Record<string, string> = {
   "sunday-afternoon-slate-pack": "sunday-nfl-5pct-slate",

@@ -17,6 +17,7 @@ import json
 import math
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from types import MappingProxyType
 import numpy as np
@@ -50,12 +51,21 @@ DEFAULT_SEALED_BASELINE = {
     ],
     "epaDropoffTable": {
         "QB1": 0.11,
+        "QB2_BACKUP": 0.18,
+        "EMERGENCY_QB3_UDFA": 0.38,
         "QB_QUESTIONABLE": QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF,
         "OL": 0.02,
         "SKILL": 0.03,
         "DEF": -0.015,
         "execution_multipliers": {
-            "QB1": 0.78, "RB1": 0.85, "WR1": 0.82, "WR2": 0.88, "TE1": 0.84, "OL": 0.91
+            "QB1": 0.78,
+            "QB2_BACKUP": 0.72,
+            "EMERGENCY_QB3_UDFA": 0.62,
+            "RB1": 0.85,
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "TE1": 0.84,
+            "OL": 0.91,
         },
     },
     "teamRatings": {
@@ -425,13 +435,210 @@ def _classify_score_script(score_diff: float) -> str:
     return "close"
 
 
-def build_jev_state_tensor(spine_game: dict | None) -> dict:
+def verify_jev_spine_freshness_and_qb1(
+    spine_data: dict,
+    expected_week: int = 9,
+    expected_away_qb1: str | None = None,
+    expected_home_qb1: str | None = None,
+    max_age_hours: float = 18.0,
+    reference_utc: str | None = None,
+    strict: bool = True,
+) -> dict:
+    """Verify JEV full-game spine freshness (<= max_age_hours), week, and starting QB1 alignment (SG-1).
+
+    Raises RuntimeError("STALE_OR_MISMATCHED_JEV_SPINE: ...") when strict=True and validation fails,
+    or returns {"valid": False, "reason": ...} when strict=False.
+    """
+    if not spine_data or not isinstance(spine_data, dict):
+        reason = "STALE_OR_MISMATCHED_JEV_SPINE: empty_or_invalid_spine_dict"
+        if strict:
+            raise RuntimeError(reason)
+        return {"valid": False, "reason": reason, "age_hours": None}
+
+    reasons: list[str] = []
+    ts_str = spine_data.get("updated_at") or spine_data.get("generated_at")
+    if not ts_str and isinstance(spine_data.get("games"), dict):
+        for g_val in spine_data["games"].values():
+            if isinstance(g_val, dict):
+                ts_str = g_val.get("updated_at") or g_val.get("generated_at")
+                if ts_str:
+                    break
+
+    if reference_utc:
+        ref_dt = datetime.fromisoformat(str(reference_utc).replace("Z", "+00:00"))
+    else:
+        ref_dt = datetime.now(timezone.utc)
+    if ref_dt.tzinfo is None:
+        ref_dt = ref_dt.replace(tzinfo=timezone.utc)
+
+    age_hours = 0.0
+    if ts_str:
+        spine_dt = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00"))
+        if spine_dt.tzinfo is None:
+            spine_dt = spine_dt.replace(tzinfo=timezone.utc)
+        age_hours = (ref_dt - spine_dt).total_seconds() / 3600.0
+        if age_hours > float(max_age_hours):
+            reasons.append(f"spine_age_hours={age_hours:.2f} > max_age_hours={max_age_hours:.2f} (ts={ts_str})")
+    else:
+        reasons.append("missing_updated_at_or_generated_at_timestamp")
+
+    spine_week = spine_data.get("week")
+    if spine_week is not None and int(spine_week) != int(expected_week):
+        reasons.append(f"week_mismatch(spine={spine_week}, expected={expected_week})")
+
+    raw_blob_lower = json.dumps(spine_data, default=str).lower()
+    if int(expected_week) == 9 and "w8 dnp" in raw_blob_lower and "w9" not in raw_blob_lower:
+        reasons.append("stale_w8_injury_report_embedded_in_week9_spine")
+
+    if expected_away_qb1:
+        exp_aw = expected_away_qb1.strip().lower()
+        act_aw = str(
+            spine_data.get("away_qb1")
+            or (spine_data.get("confirmed_qb1") or {}).get("away")
+            or ""
+        ).strip().lower()
+        if act_aw and act_aw != exp_aw:
+            reasons.append(f"away_qb1_mismatch(spine={act_aw}, expected={exp_aw})")
+
+    if expected_home_qb1:
+        exp_hm = expected_home_qb1.strip().lower()
+        act_hm = str(
+            spine_data.get("home_qb1")
+            or (spine_data.get("confirmed_qb1") or {}).get("home")
+            or ""
+        ).strip().lower()
+        if act_hm and act_hm != exp_hm:
+            reasons.append(f"home_qb1_mismatch(spine={act_hm}, expected={exp_hm})")
+        elif not act_hm and ("active_injuries_ingested" in spine_data or "snap_by_snap_log" in spine_data):
+            if exp_hm not in raw_blob_lower:
+                reasons.append(f"expected_home_qb1_missing_from_spine({expected_home_qb1})")
+
+    if reasons:
+        full_reason = "STALE_OR_MISMATCHED_JEV_SPINE: " + "; ".join(reasons)
+        if strict:
+            raise RuntimeError(full_reason)
+        return {
+            "valid": False,
+            "reason": full_reason,
+            "age_hours": round(age_hours, 2),
+            "expected_week": expected_week,
+        }
+
+    return {
+        "valid": True,
+        "reason": "FRESH_AND_QB1_VERIFIED",
+        "age_hours": round(age_hours, 2),
+        "expected_week": expected_week,
+    }
+
+
+def compute_qb_tier_adjusted_epa(base_off_epa: float, qb_tier: str) -> dict:
+    """Apply QB tier dropoff, execution multiplier, completion floor, and sack/INT multipliers (SG-3).
+
+    For EMERGENCY_QB3_UDFA (e.g., BAL +0.134 with Joe Fagnano):
+      - epa_dropoff = 0.38 -> adjusted_off_epa = +0.134 - 0.380 = -0.246 EPA/play
+      - execution_multiplier = 0.62
+      - completion_floor = 0.34 (lowered from 0.48)
+      - sack_multiplier = 1.55
+      - int_multiplier = 1.65
+      - lambda_margin = 0.25
+    """
+    tier_key = (qb_tier or "QB1_STARTER").strip().upper()
+    epa_table = DEFAULT_SEALED_BASELINE["epaDropoffTable"]
+    exec_table = epa_table["execution_multipliers"]
+
+    if tier_key in {"EMERGENCY_QB3_UDFA", "QB3", "UDFA", "QB3_UDFA"}:
+        dropoff = float(epa_table["EMERGENCY_QB3_UDFA"])
+        exec_mult = float(exec_table["EMERGENCY_QB3_UDFA"])
+        comp_floor = 0.34
+        sack_mult = 1.55
+        int_mult = 1.65
+        lam_margin = 0.25
+        canonical_tier = "EMERGENCY_QB3_UDFA"
+    elif tier_key in {"QB2_BACKUP", "BACKUP", "QB2"}:
+        dropoff = float(epa_table["QB2_BACKUP"])
+        exec_mult = float(exec_table["QB2_BACKUP"])
+        comp_floor = 0.42
+        sack_mult = 1.30
+        int_mult = 1.35
+        lam_margin = 0.45
+        canonical_tier = "QB2_BACKUP"
+    elif tier_key in {"QB1", "QB1_OUT"}:
+        dropoff = float(epa_table["QB1"])
+        exec_mult = float(exec_table["QB1"])
+        comp_floor = 0.44
+        sack_mult = 1.25
+        int_mult = 1.25
+        lam_margin = 0.55
+        canonical_tier = "QB1"
+    elif tier_key in {"QB_QUESTIONABLE", "QUESTIONABLE"}:
+        dropoff = float(epa_table["QB_QUESTIONABLE"])
+        exec_mult = 0.88
+        comp_floor = 0.45
+        sack_mult = 1.15
+        int_mult = 1.15
+        lam_margin = 0.60
+        canonical_tier = "QB_QUESTIONABLE"
+    else:
+        dropoff = 0.0
+        exec_mult = 1.0
+        comp_floor = 0.48
+        sack_mult = 1.0
+        int_mult = 1.0
+        lam_margin = 0.70
+        canonical_tier = "QB1_STARTER"
+
+    adj_epa = round(float(base_off_epa) - dropoff, 4)
+    return {
+        "base_off_epa": round(float(base_off_epa), 4),
+        "qb_tier": canonical_tier,
+        "epa_dropoff": round(dropoff, 4),
+        "adjusted_off_epa": adj_epa,
+        "effective_scaled_epa": round(adj_epa * exec_mult, 4),
+        "execution_multiplier": exec_mult,
+        "completion_floor": comp_floor,
+        "sack_multiplier": sack_mult,
+        "int_multiplier": int_mult,
+        "lambda_margin": lam_margin,
+    }
+
+
+def build_jev_state_tensor(
+    spine_game: dict | None,
+    enforce_freshness: bool = False,
+    expected_week: int = 9,
+    expected_away_qb1: str | None = None,
+    expected_home_qb1: str | None = None,
+    max_age_hours: float = 18.0,
+    reference_utc: str | None = None,
+    strict: bool = True,
+) -> dict:
     """
     Aggregate the 166 snap responses from `spine_game["snap_by_snap_log"]` into a
     transition tensor keyed by `(offense_abbr, down_bucket, field_zone, score_script)`.
+    When enforce_freshness=True, validates spine freshness and QB1 alignment via SG-1.
     """
     if not spine_game or not isinstance(spine_game, dict):
         return {"by_state": {}, "by_team": {}, "total_snaps_ingested": 0}
+    if enforce_freshness:
+        chk = verify_jev_spine_freshness_and_qb1(
+            spine_game,
+            expected_week=expected_week,
+            expected_away_qb1=expected_away_qb1,
+            expected_home_qb1=expected_home_qb1,
+            max_age_hours=max_age_hours,
+            reference_utc=reference_utc,
+            strict=strict,
+        )
+        if not chk["valid"]:
+            return {
+                "by_state": {},
+                "by_team": {},
+                "total_snaps_ingested": 0,
+                "valid": False,
+                "reason": chk["reason"],
+                "stale_spine_ignored": True,
+            }
     snaps = spine_game.get("snap_by_snap_log") or []
     if not snaps:
         return {"by_state": {}, "by_team": {}, "total_snaps_ingested": 0}
@@ -501,11 +708,12 @@ def build_jev_state_tensor(spine_game: dict | None) -> dict:
         "by_state": by_state,
         "by_team": by_team,
         "total_snaps_ingested": len(snaps),
+        "valid": True,
     }
 
 
-def derive_comp_base(track_comp: float) -> float:
-    return float(np.clip(track_comp, 0.48, 0.76))
+def derive_comp_base(track_comp: float, comp_floor: float = 0.48) -> float:
+    return float(np.clip(track_comp, comp_floor, 0.76))
 
 
 def simulate_matchup_pbp(
@@ -532,6 +740,16 @@ def simulate_matchup_pbp(
     home_sack_prob = 0.062
     away_comp_base = 0.645
     home_comp_base = 0.645
+    away_comp_floor = 0.48
+    home_comp_floor = 0.48
+    away_int_mult = 1.0
+    home_int_mult = 1.0
+    away_sack_mult = 1.0
+    home_sack_mult = 1.0
+    away_qb_exec_mult = 1.0
+    home_qb_exec_mult = 1.0
+    away_qb_tier = "EMERGENCY_QB3_UDFA" if "EMERGENCY_QB3_UDFA" in away_inj else ("QB2_BACKUP" if "QB2_BACKUP" in away_inj else "QB1_STARTER")
+    home_qb_tier = "EMERGENCY_QB3_UDFA" if "EMERGENCY_QB3_UDFA" in home_inj else ("QB2_BACKUP" if "QB2_BACKUP" in home_inj else "QB1_STARTER")
     away_wr1_share_emp = 0.26
     home_wr1_share_emp = 0.26
     away_rb1_share_emp = 0.62
@@ -544,8 +762,28 @@ def simulate_matchup_pbp(
             posted_home_spread = float(w1_w7_override["posted_home_spread"])
         if posted_total is None and w1_w7_override.get("posted_total") is not None:
             posted_total = float(w1_w7_override["posted_total"])
+        qb_t_map = w1_w7_override.get("qb_tier") or {}
+        if isinstance(qb_t_map, dict):
+            if qb_t_map.get("away"):
+                away_qb_tier = str(qb_t_map["away"])
+            if qb_t_map.get("home"):
+                home_qb_tier = str(qb_t_map["home"])
         aw_ov = w1_w7_override.get("away") or {}
         hm_ov = w1_w7_override.get("home") or {}
+        if aw_ov.get("qb_tier"):
+            away_qb_tier = str(aw_ov["qb_tier"])
+        if hm_ov.get("qb_tier"):
+            home_qb_tier = str(hm_ov["qb_tier"])
+        aw_qb_adj = compute_qb_tier_adjusted_epa(float(tr_away["off_epa"]), away_qb_tier)
+        hm_qb_adj = compute_qb_tier_adjusted_epa(float(tr_home["off_epa"]), home_qb_tier)
+        away_comp_floor = float(aw_qb_adj["completion_floor"])
+        home_comp_floor = float(hm_qb_adj["completion_floor"])
+        away_int_mult = float(aw_qb_adj["int_multiplier"])
+        home_int_mult = float(hm_qb_adj["int_multiplier"])
+        away_sack_mult = float(aw_qb_adj["sack_multiplier"])
+        home_sack_mult = float(hm_qb_adj["sack_multiplier"])
+        away_qb_exec_mult = float(aw_qb_adj["execution_multiplier"])
+        home_qb_exec_mult = float(hm_qb_adj["execution_multiplier"])
         if aw_ov:
             tr_away["early_pass_rate"] = 0.50 * float(tr_away["early_pass_rate"]) + 0.50 * float(
                 aw_ov.get("early_down_pass_rate", tr_away["early_pass_rate"])
@@ -556,10 +794,10 @@ def simulate_matchup_pbp(
                 c_w17 /= 100.0
             if c_w67 > 1.5:
                 c_w67 /= 100.0
-            away_comp_base = derive_comp_base(0.55 * c_w17 + 0.45 * c_w67)
+            away_comp_base = derive_comp_base(0.55 * c_w17 + 0.45 * c_w67, comp_floor=away_comp_floor)
             ol_sack = float(aw_ov.get("sack_rate_allowed", 6.2)) / 100.0
             def_press = float(hm_ov.get("def_pressure_rate", 21.5)) / 100.0
-            away_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
+            away_sack_prob = float(np.clip((0.55 * ol_sack + 0.25 * (def_press * 0.30)) * away_sack_mult, 0.030, 0.195))
             if aw_ov.get("wr1_target_share"):
                 away_wr1_share_emp = float(np.clip(float(aw_ov["wr1_target_share"]) / 100.0, 0.14, 0.42))
             if aw_ov.get("rb1_carry_share"):
@@ -574,14 +812,27 @@ def simulate_matchup_pbp(
                 c_w17 /= 100.0
             if c_w67 > 1.5:
                 c_w67 /= 100.0
-            home_comp_base = derive_comp_base(0.55 * c_w17 + 0.45 * c_w67)
+            home_comp_base = derive_comp_base(0.55 * c_w17 + 0.45 * c_w67, comp_floor=home_comp_floor)
             ol_sack = float(hm_ov.get("sack_rate_allowed", 6.2)) / 100.0
             def_press = float(aw_ov.get("def_pressure_rate", 21.5)) / 100.0
-            home_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
+            home_sack_prob = float(np.clip((0.55 * ol_sack + 0.25 * (def_press * 0.30)) * home_sack_mult, 0.030, 0.195))
             if hm_ov.get("wr1_target_share"):
                 home_wr1_share_emp = float(np.clip(float(hm_ov["wr1_target_share"]) / 100.0, 0.14, 0.42))
             if hm_ov.get("rb1_carry_share"):
                 home_rb1_share_emp = float(np.clip(float(hm_ov["rb1_carry_share"]) / 100.0, 0.35, 0.88))
+    else:
+        aw_qb_adj = compute_qb_tier_adjusted_epa(float(tr_away["off_epa"]), away_qb_tier)
+        hm_qb_adj = compute_qb_tier_adjusted_epa(float(tr_home["off_epa"]), home_qb_tier)
+        away_comp_floor = float(aw_qb_adj["completion_floor"])
+        home_comp_floor = float(hm_qb_adj["completion_floor"])
+        away_int_mult = float(aw_qb_adj["int_multiplier"])
+        home_int_mult = float(hm_qb_adj["int_multiplier"])
+        away_sack_mult = float(aw_qb_adj["sack_multiplier"])
+        home_sack_mult = float(hm_qb_adj["sack_multiplier"])
+        away_qb_exec_mult = float(aw_qb_adj["execution_multiplier"])
+        home_qb_exec_mult = float(hm_qb_adj["execution_multiplier"])
+        away_sack_prob = float(np.clip(away_sack_prob * away_sack_mult, 0.030, 0.195))
+        home_sack_prob = float(np.clip(home_sack_prob * home_sack_mult, 0.030, 0.195))
 
     epa_table = sealed_state["epaDropoffTable"]
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
@@ -683,10 +934,18 @@ def simulate_matchup_pbp(
     stamp_injury_reallocation(home_usage, _unit_shares(home_sh), home_carry_sh)
     role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
     exec_mults = epa_table["execution_multipliers"]
-    away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names))
-    home_eff_mult = sum(home_sh[i] * (exec_mults.get(rn, 0.90) if rn in home_inj else 1.0) for i, rn in enumerate(role_names))
+    away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names)) * away_qb_exec_mult
+    home_eff_mult = sum(home_sh[i] * (exec_mults.get(rn, 0.90) if rn in home_inj else 1.0) for i, rn in enumerate(role_names)) * home_qb_exec_mult
     away_drop = sum(float(epa_table[fl]) for fl in away_inj if fl in epa_table)
     home_drop = sum(float(epa_table[fl]) for fl in home_inj if fl in epa_table)
+    if away_qb_tier == "EMERGENCY_QB3_UDFA" and "EMERGENCY_QB3_UDFA" not in away_inj:
+        away_drop = away_drop - (float(epa_table["QB1"]) if "QB1" in away_inj else 0.0) + float(epa_table["EMERGENCY_QB3_UDFA"])
+    elif away_qb_tier == "QB2_BACKUP" and "QB2_BACKUP" not in away_inj:
+        away_drop = away_drop - (float(epa_table["QB1"]) if "QB1" in away_inj else 0.0) + float(epa_table["QB2_BACKUP"])
+    if home_qb_tier == "EMERGENCY_QB3_UDFA" and "EMERGENCY_QB3_UDFA" not in home_inj:
+        home_drop = home_drop - (float(epa_table["QB1"]) if "QB1" in home_inj else 0.0) + float(epa_table["EMERGENCY_QB3_UDFA"])
+    elif home_qb_tier == "QB2_BACKUP" and "QB2_BACKUP" not in home_inj:
+        home_drop = home_drop - (float(epa_table["QB1"]) if "QB1" in home_inj else 0.0) + float(epa_table["QB2_BACKUP"])
     away_net_epa = ((tr_away["off_epa"] - away_drop) * away_eff_mult) - tr_home["def_epa"]
     home_net_epa = ((tr_home["off_epa"] - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
 
@@ -719,6 +978,21 @@ def simulate_matchup_pbp(
     home_rush_yds_tot = np.zeros(n_sims, dtype=np.float64)
     away_pass_tds_tot = np.zeros(n_sims, dtype=np.float64)
     home_pass_tds_tot = np.zeros(n_sims, dtype=np.float64)
+    home_pass_att = np.zeros(n_sims, dtype=np.int32)
+    away_pass_att = np.zeros(n_sims, dtype=np.int32)
+    home_pass_comp = np.zeros(n_sims, dtype=np.int32)
+    away_pass_comp = np.zeros(n_sims, dtype=np.int32)
+    home_ints = np.zeros(n_sims, dtype=np.int32)
+    away_ints = np.zeros(n_sims, dtype=np.int32)
+    home_sacks = np.zeros(n_sims, dtype=np.int32)
+    away_sacks = np.zeros(n_sims, dtype=np.int32)
+    home_qb_scrambles = np.zeros(n_sims, dtype=np.int32)
+    away_qb_scrambles = np.zeros(n_sims, dtype=np.int32)
+    home_qb_rush_yds = np.zeros(n_sims, dtype=np.int32)
+    away_qb_rush_yds = np.zeros(n_sims, dtype=np.int32)
+    home_kneeldowns = np.zeros(n_sims, dtype=np.int32)
+    away_kneeldowns = np.zeros(n_sims, dtype=np.int32)
+    qb_rng = np.random.default_rng(seed + 104729)
     total_plays = np.zeros(n_sims, dtype=np.int32)
     poss = rng.integers(0, 2, size=n_sims)
     down = np.ones(n_sims, dtype=np.int32)
@@ -822,6 +1096,8 @@ def simulate_matchup_pbp(
             )
             p_pass = np.clip(base_p + pass_delta_vec[idx_13] + script_pass_mod, 0.15, 0.90)
             comp_base_v = np.where(ps_v == 1, home_comp_base, away_comp_base)
+            comp_floor_v = np.where(ps_v == 1, home_comp_floor, away_comp_floor)
+            int_mult_v = np.where(ps_v == 1, home_int_mult, away_int_mult)
             sack_prob_v = np.where(ps_v == 1, home_sack_prob, away_sack_prob)
 
             if has_jev_tensor:
@@ -831,13 +1107,13 @@ def simulate_matchup_pbp(
                 jev_p_pass = jev_pass_arr[ps_v, db_idx, fz_idx, ss_idx]
                 jev_p_press = jev_press_arr[ps_v, db_idx, fz_idx, ss_idx]
                 p_pass = np.clip(0.65 * p_pass + 0.35 * jev_p_pass, 0.15, 0.90)
-                sack_prob_v = np.clip(0.70 * sack_prob_v + 0.30 * (jev_p_press * 0.18), 0.030, 0.125)
+                sack_prob_v = np.clip(0.70 * sack_prob_v + 0.30 * (jev_p_press * 0.18), 0.030, 0.195)
 
             is_pass = rng.random(len(idx_13)) < p_pass
             u_out = rng.random(len(idx_13))
-            to_prob = np.clip(np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v, 0.003, 0.045)
+            to_prob = np.clip((np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v) * np.where(is_pass, int_mult_v, 1.0), 0.003, 0.075)
             is_to = u_out < to_prob
-            pass_comp = np.clip(comp_base_v + 0.38 * ne_v, 0.48, 0.78)
+            pass_comp = np.clip(comp_base_v + 0.38 * ne_v, comp_floor_v, 0.78)
             pass_mu = np.clip(11.4 + 14.5 * ne_v, 4.0, 22.0)
             pass_draw = rng.gamma(shape=2.5, scale=pass_mu / 2.5, size=len(idx_13))
             pass_yds = np.where(
@@ -859,9 +1135,52 @@ def simulate_matchup_pbp(
                 pass_yds = np.where(cap_mask & is_pass, yds, pass_yds)
                 run_yds = np.where(cap_mask & (~is_pass), yds, run_yds)
 
+            # SG-5: Track per-world QB attempts, completions, INTs, sacks, scrambles & QB rush yds (excluding kneeldowns)
+            is_int_snap = is_pass & is_to
+            is_sack_snap = is_pass & (~is_to) & (u_out < (to_prob + sack_prob_v))
+            is_comp_snap = is_pass & (~is_to) & (~is_sack_snap) & (u_out < (to_prob + sack_prob_v + pass_comp))
+            is_att_snap = is_pass & (~is_sack_snap)
+
+            if np.any(is_att_snap):
+                home_pass_att[idx_13[is_att_snap & (ps_v == 1)]] += 1
+                away_pass_att[idx_13[is_att_snap & (ps_v == 0)]] += 1
+            if np.any(is_comp_snap):
+                home_pass_comp[idx_13[is_comp_snap & (ps_v == 1)]] += 1
+                away_pass_comp[idx_13[is_comp_snap & (ps_v == 0)]] += 1
+            if np.any(is_int_snap):
+                home_ints[idx_13[is_int_snap & (ps_v == 1)]] += 1
+                away_ints[idx_13[is_int_snap & (ps_v == 0)]] += 1
+            if np.any(is_sack_snap):
+                home_sacks[idx_13[is_sack_snap & (ps_v == 1)]] += 1
+                away_sacks[idx_13[is_sack_snap & (ps_v == 0)]] += 1
+
+            # Late-game victory kneeldowns: leading in Q4 with <= 105s left on clock on a run play
+            is_kneeldown = (~is_pass) & (~is_to) & (qt_v == 4) & (clock_sec[idx_13] <= 105.0) & (sd_v > 0.0)
+            if np.any(is_kneeldown):
+                run_yds = np.where(is_kneeldown, -1, run_yds)
+                yds = np.where(is_kneeldown, -1, yds)
+                home_kneeldowns[idx_13[is_kneeldown & (ps_v == 1)]] += 1
+                away_kneeldowns[idx_13[is_kneeldown & (ps_v == 0)]] += 1
+
             # Accumulate real simulated passing & rushing yardage per world (capped at remaining field length)
             pos_pass_yds = np.minimum(yl_v, np.maximum(0, pass_yds))
             pos_run_yds = np.minimum(yl_v, np.maximum(-3, run_yds))
+
+            # Classify live QB scrambles / designed rushes strictly excluding victory kneeldowns
+            live_run_mask = (~is_pass) & (~is_to) & (~is_kneeldown)
+            if np.any(live_run_mask):
+                qb_scramble_p = np.where(ps_v == 1, 0.115, 0.145)
+                is_qb_scramble = live_run_mask & (qb_rng.random(len(idx_13)) < qb_scramble_p)
+                if np.any(is_qb_scramble):
+                    hm_scr = is_qb_scramble & (ps_v == 1)
+                    aw_scr = is_qb_scramble & (ps_v == 0)
+                    if np.any(hm_scr):
+                        home_qb_scrambles[idx_13[hm_scr]] += 1
+                        home_qb_rush_yds[idx_13[hm_scr]] += pos_run_yds[hm_scr]
+                    if np.any(aw_scr):
+                        away_qb_scrambles[idx_13[aw_scr]] += 1
+                        away_qb_rush_yds[idx_13[aw_scr]] += pos_run_yds[aw_scr]
+
             hm_pass_mask = (~is_to) & is_pass & (ps_v == 1)
             aw_pass_mask = (~is_to) & is_pass & (ps_v == 0)
             hm_run_mask = (~is_to) & (~is_pass) & (ps_v == 1)
@@ -912,22 +1231,24 @@ def simulate_matchup_pbp(
 
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
 
-    # Stage 2 Layer-1 Market-Anchor James-Stein Shrinkage & Variance Calibration (Vector 1)
+    # Stage 2 Layer-1 Market-Anchor James-Stein Shrinkage & Variance Calibration (Vector 1 & SG-3)
     raw_margin_vec = home_score - away_score
     raw_total_vec = home_score + away_score
     raw_margin = float(np.mean(raw_margin_vec))
     raw_total = float(np.mean(raw_total_vec))
 
+    has_emergency_qb3 = "EMERGENCY_QB3_UDFA" in (away_qb_tier, home_qb_tier)
     if posted_home_spread is not None and posted_total is not None:
         market_margin = -float(posted_home_spread)
         market_total = float(posted_total)
-        lambda_margin = 0.70
-        lambda_total = 0.65
+        lambda_margin = 0.25 if has_emergency_qb3 else 0.70
+        lambda_total = 0.45 if has_emergency_qb3 else 0.65
+        margin_bound = 10.5 if has_emergency_qb3 else 6.0
         shrunk_margin = float(
             np.clip(
                 market_margin + (1.0 - lambda_margin) * (raw_margin - market_margin),
-                market_margin - 6.0,
-                market_margin + 6.0,
+                market_margin - margin_bound,
+                market_margin + margin_bound,
             )
         )
         shrunk_total = float(
@@ -1048,6 +1369,20 @@ def simulate_matchup_pbp(
             "away_pass_tds": away_pass_tds_tot,
             "home_rush_yds": home_rush_yds_tot,
             "away_rush_yds": away_rush_yds_tot,
+            "home_pass_att": home_pass_att,
+            "away_pass_att": away_pass_att,
+            "home_pass_comp": home_pass_comp,
+            "away_pass_comp": away_pass_comp,
+            "home_ints": home_ints,
+            "away_ints": away_ints,
+            "home_sacks": home_sacks,
+            "away_sacks": away_sacks,
+            "home_qb_scrambles": home_qb_scrambles,
+            "away_qb_scrambles": away_qb_scrambles,
+            "home_qb_rush_yds": home_qb_rush_yds,
+            "away_qb_rush_yds": away_qb_rush_yds,
+            "home_kneeldowns_excluded": home_kneeldowns,
+            "away_kneeldowns_excluded": away_kneeldowns,
             "home_wr1_yds": np.asarray(home_rec["WR1"], dtype=np.float64),
             "away_wr1_yds": np.asarray(away_rec["WR1"], dtype=np.float64),
             "home_wr1_tds": np.asarray(home_td_rec["WR1"], dtype=np.float64),

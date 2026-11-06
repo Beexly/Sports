@@ -11,11 +11,16 @@ Humanized Paywall-Protected Social & Chalkboard Renderer for Week 9 TNF (JAX @ B
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_MASTER_JSON_PATH = (
+    REPO_ROOT / "data" / "engine" / "tnf_jax_bal_connected_workflow_master_2026_11_05.json"
+)
 DOWNLOADS_DIR = Path(r"C:\c\wt-week8-forensic\apps\web\public\social\tnf_week9")
 ARTIFACT_DIR = Path(r"C:\Users\Garrett\.gemini\antigravity-cli\brain\5197728e-0087-4fdd-81c0-5069895c77e1")
 DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)
@@ -62,92 +67,51 @@ def draw_rounded_box(
     draw.rounded_rectangle(box, radius=radius, fill=fill, outline=outline, width=width)
 
 
-TOP_10_PRIVATE_PICKS: List[Dict[str, Any]] = [
-    {
-        "rank": 1,
-        "player": "Kyle Hamilton (BAL S)",
-        "pick": "OVER 6.5 Tackles + Assists (or OVER 3.5 Solo Tackles)",
-        "conf": "88/100",
-        "proj": "8.0 Projected (5.5 Solo, 2.5 Ast)",
-        "reason": "Lines up near the line of scrimmage and cleans up almost every short pass and outside run.",
-    },
-    {
-        "rank": 2,
-        "player": "Roquan Smith (BAL LB)",
-        "pick": "OVER 8.5 Tackles + Assists",
-        "conf": "88/100",
-        "proj": "9.5 Projected Tackles + Ast",
-        "reason": "Baltimore plays light boxes to stop deep passes, funneling every inside run straight into Roquan.",
-    },
-    {
-        "rank": 3,
-        "player": "Brian Thomas Jr. (JAX WR)",
-        "pick": "OVER 12.5 Receiving Yards (or OVER 1.5 Receptions)",
-        "conf": "88/100",
-        "proj": "24.1 Projected Yds (2.1 Catches)",
-        "reason": "Can clear this number on a single intermediate throw over the middle against two-high coverage.",
-    },
-    {
-        "rank": 4,
-        "player": "Zay Flowers (BAL WR)",
-        "pick": "UNDER 4.5 Receptions",
-        "conf": "88/100",
-        "proj": "2.9 Projected Receptions",
-        "reason": "With undrafted rookie Joe Fagnano starting at QB against a 31% blitz, outside receiver volume drops.",
-    },
-    {
-        "rank": 5,
-        "player": "Trevor Lawrence (JAX QB)",
-        "pick": "OVER 11.5 Rushing Yards (or OVER 3.5 Carries)",
-        "conf": "88/100",
-        "proj": "17.3 Projected Rush Yds (4.8 Carries)",
-        "reason": "Baltimore drops two deep safeties on 60% of snaps, leaving wide-open scramble lanes up the middle.",
-    },
-    {
-        "rank": 6,
-        "player": "Joe Fagnano (BAL QB)",
-        "pick": "OVER 0.5 Interceptions",
-        "conf": "88/100",
-        "proj": "1.2 Projected INTs",
-        "reason": "Undrafted rookie making his prime-time start while trailing in the second half against heavy pressure.",
-    },
-    {
-        "rank": 7,
-        "player": "Mark Andrews (BAL TE)",
-        "pick": "OVER 2.5 Receptions (and OVER 18.5 Rec Yds)",
-        "conf": "88/100",
-        "proj": "3.7 Projected Catches (27.7 Yds)",
-        "reason": "When Jacksonville brings heat, Andrews over the middle is a rookie quarterback's #1 safety valve.",
-    },
-    {
-        "rank": 8,
-        "player": "Parker Washington (JAX WR)",
-        "pick": "UNDER 63.5 Receiving Yards",
-        "conf": "84/100",
-        "proj": "52.5 Projected Rec Yds",
-        "reason": "Jacksonville playing ahead in the second half shifts the offense toward running the ball and bleeding clock.",
-    },
-    {
-        "rank": 9,
-        "player": "Jakobi Meyers (JAX WR)",
-        "pick": "UNDER 40.5 Receiving Yards",
-        "conf": "82/100",
-        "proj": "33.9 Projected Rec Yds",
-        "reason": "Baltimore's two-high coverage caps outside routes while Jacksonville leans on the run game.",
-    },
-    {
-        "rank": 10,
-        "player": "Derrick Henry (BAL RB)",
-        "pick": "OVER 67.5 Rushing Yards (and OVER 16.5 Carries)",
-        "conf": "69/100",
-        "proj": "73.8 Projected Rush Yds (18.6 Carries)",
-        "reason": "Baltimore cannot ask a rookie QB to drop back 35 times tonight; the game plan runs through feeding Henry.",
-    },
-]
+def verify_stage5_publish_permission(
+    master_json_path: str | Path | Dict[str, Any] = DEFAULT_MASTER_JSON_PATH,
+) -> Dict[str, Any]:
+    """
+    SG-7 Stage 5 Circuit Breaker:
+    Refuses to render tout/promotional social cards or private pick sheets when
+    Stage 5 publishAllowed is False or approved_bets == 0.
+    """
+    if isinstance(master_json_path, dict):
+        bundle = master_json_path
+    else:
+        path = Path(master_json_path)
+        if not path.is_file():
+            raise RuntimeError(
+                "STAGE_5_PASS_CIRCUIT_BREAKER: Refusing to render cards when publishAllowed is False or approved_bets == 0"
+            )
+        bundle = json.loads(path.read_text(encoding="utf-8"))
+
+    stage5 = (
+        bundle.get("stage5_360_conjunction_gate")
+        or bundle.get("stage5_360_conjunction_gate_and_call_sheet")
+        or bundle
+    )
+    board_summary = stage5.get("board_summary") or {}
+    approved_bets = int(
+        board_summary.get(
+            "approved_plays_count",
+            board_summary.get("approved_bets", stage5.get("approved_bets", 0)),
+        )
+    )
+    publish_allowed = bool(stage5.get("publishAllowed", approved_bets > 0))
+    if not publish_allowed or approved_bets <= 0:
+        raise RuntimeError(
+            "STAGE_5_PASS_CIRCUIT_BREAKER: Refusing to render cards when publishAllowed is False or approved_bets == 0"
+        )
+    return {
+        "publishAllowed": True,
+        "approved_bets": approved_bets,
+        "approved_picks": stage5.get("top_15_ranked_prop_plays") or [],
+    }
 
 
-def render_x_card() -> Path:
-    """Renders 1200x675 X Tweet #1 Teaser Card — NO free picks leaked beyond 1 teaser."""
+def render_x_card(master_json_path: str | Path | Dict[str, Any] = DEFAULT_MASTER_JSON_PATH) -> Path:
+    """Renders 1200x675 X Tweet #1 Teaser Card — gated by Stage 5 publish permission."""
+    verify_stage5_publish_permission(master_json_path)
     w, h = 1200, 675
     img = Image.new("RGB", (w, h), BG_DARK)
     draw = ImageDraw.Draw(img)
@@ -420,8 +384,12 @@ def render_scheme_gif() -> Path:
     return out_gif
 
 
-def render_private_top10_for_garrett_and_dad() -> Path:
-    """Renders PRIVATE Top-10 Confidence Sheet for Garrett & His Dad ONLY (marked PRIVATE)."""
+def render_private_top10_for_garrett_and_dad(
+    master_json_path: str | Path | Dict[str, Any] = DEFAULT_MASTER_JSON_PATH,
+) -> Path:
+    """Renders PRIVATE Top-10 Confidence Sheet — gated by Stage 5 publish permission."""
+    perm = verify_stage5_publish_permission(master_json_path)
+    approved_picks = perm.get("approved_picks") or []
     w, h = 1080, 1350
     img = Image.new("RGB", (w, h), BG_DARK)
     draw = ImageDraw.Draw(img)
@@ -434,18 +402,18 @@ def render_private_top10_for_garrett_and_dad() -> Path:
 
     draw_rounded_box(draw, (24, 20, w - 24, 110), BG_PANEL, ACCENT_RED, width=2, radius=10)
     draw.text((44, 32), "PRIVATE SHEET (GARRETT & DAD ONLY - DO NOT POST ON SOCIALS)", fill=ACCENT_RED, font=f_sub)
-    draw.text((44, 58), "TNF JAX @ BAL: TOP 10 PICKS RANKED BY CONFIDENCE", fill=TEXT_PRIMARY, font=f_title)
+    draw.text((44, 58), "TNF JAX @ BAL: STAGE 5 VERIFIED PICKS", fill=TEXT_PRIMARY, font=f_title)
 
     y = 126
-    for item in TOP_10_PRIVATE_PICKS:
+    for idx, item in enumerate(approved_picks[:10], start=1):
         draw_rounded_box(draw, (24, y, w - 24, y + 108), BG_CARD, BORDER_SUBTLE, width=1, radius=8)
         draw_rounded_box(draw, (38, y + 16, 132, y + 92), (16, 40, 28), ACCENT_GREEN, width=1, radius=6)
-        draw.text((52, y + 28), f"#{item['rank']}", fill=ACCENT_GOLD, font=f_mono)
-        draw.text((48, y + 54), item["conf"], fill=ACCENT_GREEN, font=f_mono)
+        draw.text((52, y + 28), f"#{idx}", fill=ACCENT_GOLD, font=f_mono)
+        draw.text((48, y + 54), str(item.get("confidence_score", "65/100")), fill=ACCENT_GREEN, font=f_mono)
 
-        draw.text((150, y + 14), f"{item['player']}  ·  {item['pick']}", fill=TEXT_PRIMARY, font=f_row_b)
-        draw.text((150, y + 44), f"Projection: {item['proj']}", fill=ACCENT_CYAN, font=f_row)
-        draw.text((150, y + 70), item["reason"], fill=TEXT_MUTED, font=f_row)
+        draw.text((150, y + 14), f"{item.get('athlete', '')}  ·  {item.get('model_lean', '')} {item.get('line', '')}", fill=TEXT_PRIMARY, font=f_row_b)
+        draw.text((150, y + 44), f"Projection P50: {item.get('post_sim_p50', '')}", fill=ACCENT_CYAN, font=f_row)
+        draw.text((150, y + 70), str(item.get("gate_reason", "")), fill=TEXT_MUTED, font=f_row)
         y += 118
 
     out = ARTIFACT_DIR / "PRIVATE-GARRETT-DAD-TOP10-CONFIDENCE.png"
@@ -456,12 +424,13 @@ def render_private_top10_for_garrett_and_dad() -> Path:
     return out
 
 
-def main() -> None:
+def main(master_json_path: str | Path = DEFAULT_MASTER_JSON_PATH) -> None:
     import shutil
-    x_card = render_x_card()
+    verify_stage5_publish_permission(master_json_path)
+    x_card = render_x_card(master_json_path)
     ig_slides = render_ig_slides()
     gif_path = render_scheme_gif()
-    private_card = render_private_top10_for_garrett_and_dad()
+    private_card = render_private_top10_for_garrett_and_dad(master_json_path)
     for p in [x_card, *ig_slides, gif_path]:
         shutil.copy2(p, ARTIFACT_DIR / p.name)
     print(f"Rendered X Teaser Card: {x_card}")

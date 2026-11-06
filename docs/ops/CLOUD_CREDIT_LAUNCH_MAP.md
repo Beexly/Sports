@@ -1,9 +1,22 @@
-# Cloud credit launch map — AWS · Azure Foundry · Google
+# Cloud credit launch map — AWS · Azure Foundry · Google · NVIDIA Inception · RunPod · Scaleway
 
-**2026-08-06** · One team. One stack. Cash AI → 0.
+**Updated 2026-11-05** (Originally 2026-08-06) · One team. One stack. Cash AI → 0.
 
-You already have (or can claim) **AWS**, **Azure/Foundry**, and **Google** capacity.  
-Code is aligned to **burn credits first**. Applications and portal model maps remain **founder-only**.
+You already have (or can claim) **NVIDIA Inception / NIM**, **RunPod Serverless FlashBoot GPU**, **Scaleway Generative APIs (`€100`)**, **Google for Startups Cloud (`Case #00318218`)**, **AWS**, and **Azure/Foundry** capacity.  
+Code is aligned to **burn credits and free tiers first**. Applications and portal model maps remain **founder-only**.
+
+---
+
+## 2026-11-05 Approved Startup Cloud & Partner Accounts
+
+| Program / Provider | Status | Account / Case Identifier | Engine Integration Path |
+|--------------------|--------|---------------------------|-------------------------|
+| **NVIDIA Inception Program** | **NVIDIA Inception Approved** | Organization: `Galaxy Sports Edge LLC` | Unlock downloadable **NVIDIA NIM™** containers (`nvcr.io/nim/*`, `nvcr.io/nvidia/cuopt/*`), GPU cloud partner credits, & Inception capital/co-marketing |
+| **NVIDIA Cloud / NGC / NIM** | **Active (`40-RPM` Governed)** | **NVIDIA Cloud Account `#1086418431979798`** | `intelligence/routing/zero_waste_model_router.py` (`https://integrate.api.nvidia.com/v1`, `min_interval_ms=1500`) |
+| **RunPod GPU Cloud & Serverless** | **RunPod Live API Configured** | Account `user_3LigrJ4v7NkkBnPiyvzI3sh2ICU` (`.env.local` `RUNPOD_API_KEY` masked) | `intelligence/routing/runpod_gpu_orchestrator.py` + `scripts/ops/runpod_serverless_sim_handler.py` (`FlashBoot`, `workersMin: 0`, automatic local NumPy fallback when `$0` balance) |
+| **Scaleway Generative APIs** | **Scaleway €100 Credit** | `€100` Free Generative API Credit Pool | `intelligence/routing/zero_waste_model_router.py` (`https://api.scaleway.ai/v1`, `TIER_1C_SCALEWAY_CREDIT_POOL`) |
+| **Google for Startups Cloud** | **Active Support Thread** | **Google for Startups Cloud Case `#00318218`** (`ref:!00D1U0118G1.!500Ki0ELii1:ref`) | `providers/vertex.ts` + `TIER_3B_GOOGLE_VERTEX_STARTUP_CREDITS` (Vertex AI & Gemini Enterprise Agent Platform) |
+| **impact.com Partnership Network** | **Active Account** | **impact.com Account `#8111208`** | Affiliate & commercial attribution tracking ledger |
 
 ---
 

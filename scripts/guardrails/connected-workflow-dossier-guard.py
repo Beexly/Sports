@@ -193,6 +193,99 @@ def verify_connected_workflow_json(json_path: Path) -> dict[str, Any]:
     return s0
 
 
+def validate_dossier_forensic_invariants(dossier_dict: dict[str, Any]) -> list[str]:
+    """
+    Validate the 4 Week 8 Forensic Invariants on a dossier dictionary:
+      1. `stage1_parameter_coupling_verified is True`
+      2. `max_prop_win_prob <= 0.780`
+      3. No unpriced prop (`market_over_american is None`) marked `publishAllowed: True`
+      4. Official ledger record equals `"62-23-1"` (`+26.50u`)
+    Returns a list of violation strings (empty list `[]` when all invariants pass).
+    """
+    violations: list[str] = []
+    s2 = dossier_dict.get("stage2_jev_spine_and_10k_simulation") or {}
+    s5 = (
+        dossier_dict.get("stage5_360_conjunction_gate")
+        or dossier_dict.get("stage5_360_conjunction_gate_and_call_sheet")
+        or {}
+    )
+
+    # 1. stage1_parameter_coupling_verified is True
+    coupling_ok = (
+        dossier_dict.get("stage1_parameter_coupling_verified") is True
+        or s2.get("stage1_parameter_coupling_verified") is True
+    )
+    if not coupling_ok:
+        violations.append(
+            "INVARIANT_1_FAIL: stage1_parameter_coupling_verified must be True"
+        )
+
+    # 2. max_prop_win_prob <= 0.780
+    props = (
+        dossier_dict.get("core_prop_evaluations")
+        or s5.get("core_prop_evaluations")
+        or dossier_dict.get("props")
+        or []
+    )
+    observed_probs: list[float] = []
+    if dossier_dict.get("max_prop_win_prob") is not None:
+        observed_probs.append(float(dossier_dict["max_prop_win_prob"]))
+    if s5.get("max_prop_win_prob") is not None:
+        observed_probs.append(float(s5["max_prop_win_prob"]))
+    for prop in props:
+        for k in ("model_prob_over", "model_prob_under", "win_prob_on_lean", "p_over", "p_under"):
+            if prop.get(k) is not None:
+                observed_probs.append(float(prop[k]))
+    max_prob = max(observed_probs, default=0.0)
+    if max_prob > 0.780 + 1e-6:
+        violations.append(
+            f"INVARIANT_2_FAIL: max_prop_win_prob={max_prob:.4f} exceeds 0.780 cap"
+        )
+
+    # 3. No unpriced prop (market_over_american is None) marked publishAllowed: True
+    for prop in props:
+        if prop.get("publishAllowed") is True:
+            if prop.get("market_over_american") is None or prop.get("market_under_american") is None:
+                violations.append(
+                    f"INVARIANT_3_FAIL: Unpriced prop ({prop.get('athlete', 'unknown')} {prop.get('market', '')}) has market_over_american=None but publishAllowed=True"
+                )
+
+    # 4. Official ledger record equals "62-23-1" (+26.50u)
+    dual = (
+        dossier_dict.get("dual_panel_ledger_summary")
+        or s5.get("dual_panel_ledger_summary")
+        or {}
+    )
+    panel_b = (
+        dual.get("panel_b_21_pick_5stage_ledger")
+        or dual.get("panel_b_official_new_engine_ledger")
+        or {}
+    )
+    record_str = str(
+        dossier_dict.get("official_ledger_record")
+        or dossier_dict.get("record")
+        or panel_b.get("record")
+        or ""
+    ).strip()
+    units_val = (
+        dossier_dict.get("official_ledger_units")
+        or dossier_dict.get("net_units")
+        or panel_b.get("net_units")
+    )
+    units_ok = True
+    if units_val is not None:
+        u_str = str(units_val).strip()
+        units_ok = u_str in {"+26.50u", "+26.5u", "26.5", "26.50"} or (
+            isinstance(units_val, (int, float)) and abs(float(units_val) - 26.50) < 1e-4
+        )
+    if record_str != "62-23-1" or not units_ok:
+        violations.append(
+            f"INVARIANT_4_FAIL: Official ledger record must equal '62-23-1' (+26.50u), got record='{record_str}', units='{units_val}'"
+        )
+
+    return violations
+
+
 def verify_dossier_markdown(md_path: Path, allowlist: dict[str, Any]) -> None:
     if not md_path.is_file():
         raise RuntimeError(f"GUARD_FAIL: Missing Markdown dossier: {md_path}")
