@@ -1,0 +1,132 @@
+openapi: 3.1.0
+info:
+  title: Knowledge Integrity API
+  version: 0.2.0
+  description: >
+    Consistency, Certified Repair Class (CRC), holonomy localization, and
+    relative (self vs ledger) integrity. Public surface stays free of Riemannian jargon.
+servers:
+  - url: http://localhost:8080
+paths:
+  /v1/consistency:
+    post:
+      summary: Score consistency and return Certified Repair Class
+      operationId: scoreConsistency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphRequest'
+      responses:
+        '200':
+          description: CRC consistency report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsistencyReport'
+  /v1/propose:
+    post:
+      summary: Propose fixes gated by repair_class
+      operationId: proposeFixes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposeRequest'
+      responses:
+        '200':
+          description: Ranked proposals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposeResponse'
+components:
+  schemas:
+    Node:
+      type: object
+      required: [id]
+      properties:
+        id: { type: string }
+        features:
+          type: array
+          items: { type: number }
+        system: { type: string }
+    Edge:
+      type: object
+      required: [source, target]
+      properties:
+        source: { type: string }
+        target: { type: string }
+        relation: { type: string, default: related }
+        theta:
+          type: number
+          default: 0
+          description: Optional SO(2) restriction angle in radians (0 = identity)
+    GraphRequest:
+      type: object
+      required: [nodes, edges]
+      properties:
+        nodes:
+          type: array
+          items: { $ref: '#/components/schemas/Node' }
+        edges:
+          type: array
+          items: { $ref: '#/components/schemas/Edge' }
+        feature_dim: { type: integer, default: 2 }
+        reference_features:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: number }
+    ConsistencyReport:
+      type: object
+      required: [energy, repair_class, holonomy_flag]
+      properties:
+        energy: { type: number }
+        normalized_energy: { type: number }
+        repair_class:
+          type: string
+          enum: [consistent, statistical, structural, mixed]
+        holonomy_flag: { type: boolean }
+        dim_H0: { type: integer }
+        dim_H1: { type: integer }
+        bad_cycles:
+          type: array
+          items: { type: object }
+        gaps:
+          type: array
+          items: { type: object }
+        proposals:
+          type: array
+          items: { $ref: '#/components/schemas/Proposal' }
+        relative: { type: object }
+        n_nodes: { type: integer }
+        n_edges: { type: integer }
+    ProposeRequest:
+      allOf:
+        - $ref: '#/components/schemas/GraphRequest'
+        - type: object
+          properties:
+            top_k: { type: integer, default: 5 }
+    Proposal:
+      type: object
+      required: [action, score, rationale]
+      properties:
+        action:
+          type: string
+          enum: [realign, drop_edge, relax_restriction, grow_structure, add_edge]
+        source: { type: string }
+        target: { type: string }
+        score: { type: number }
+        rationale: { type: string }
+    ProposeResponse:
+      type: object
+      required: [proposals, baseline_energy, repair_class]
+      properties:
+        baseline_energy: { type: number }
+        repair_class: { type: string }
+        proposals:
+          type: array
+          items: { $ref: '#/components/schemas/Proposal' }

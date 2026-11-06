@@ -1,0 +1,26 @@
+{
+  "feature_dim": 2,
+  "nodes": [
+    {"id": "crm:alice", "features": [1.0, 0.0], "system": "crm"},
+    {"id": "ledger:alice", "features": [1.0, 0.0], "system": "ledger"},
+    {"id": "support:alice", "features": [1.0, 0.0], "system": "support"},
+    {"id": "crm:bob", "features": [0.0, 1.0], "system": "crm"},
+    {"id": "ledger:bob", "features": [0.0, 1.0], "system": "ledger"},
+    {"id": "kyc:alice", "features": [1.0, 0.0], "system": "kyc"}
+  ],
+  "edges": [
+    {"source": "crm:alice", "target": "ledger:alice", "relation": "same_person", "theta": 0},
+    {"source": "ledger:alice", "target": "support:alice", "relation": "same_person", "theta": 0},
+    {"source": "support:alice", "target": "crm:alice", "relation": "same_person", "theta": 0},
+    {"source": "crm:bob", "target": "ledger:bob", "relation": "same_person", "theta": 0},
+    {"source": "crm:alice", "target": "kyc:alice", "relation": "verified", "theta": 0}
+  ],
+  "reference_features": {
+    "crm:alice": [0.0, 1.0],
+    "ledger:alice": [0.0, 1.0],
+    "support:alice": [0.0, 1.0],
+    "crm:bob": [0.0, 1.0],
+    "ledger:bob": [0.0, 1.0],
+    "kyc:alice": [0.0, 1.0]
+  }
+}

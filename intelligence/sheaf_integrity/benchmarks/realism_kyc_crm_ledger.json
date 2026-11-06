@@ -1,0 +1,49 @@
+{
+  "description": "Realistic multi-system identity graph: CRM + Ledger + KYC + Support. Planted case: Alice cluster is internally consistent VIP but ledger/SoT says standard.",
+  "feature_dim": 2,
+  "feature_legend": {
+    "dim0": "risk_tier (1=VIP/elevated, 0=standard)",
+    "dim1": "verified_standard (1=matches SoT standard)"
+  },
+  "nodes": [
+    {"id": "crm:alice", "system": "crm", "features": [1.0, 0.0]},
+    {"id": "kyc:alice", "system": "kyc", "features": [1.0, 0.0]},
+    {"id": "support:alice", "system": "support", "features": [1.0, 0.0]},
+    {"id": "ledger:alice", "system": "ledger", "features": [1.0, 0.0]},
+    {"id": "crm:bob", "system": "crm", "features": [0.0, 1.0]},
+    {"id": "kyc:bob", "system": "kyc", "features": [0.0, 1.0]},
+    {"id": "ledger:bob", "system": "ledger", "features": [0.0, 1.0]},
+    {"id": "crm:carol", "system": "crm", "features": [0.05, 0.95]},
+    {"id": "kyc:carol", "system": "kyc", "features": [0.0, 1.0]},
+    {"id": "ledger:carol", "system": "ledger", "features": [0.02, 0.98]}
+  ],
+  "edges": [
+    {"source": "crm:alice", "target": "kyc:alice", "relation": "same_person", "theta": 0.0},
+    {"source": "kyc:alice", "target": "support:alice", "relation": "same_person", "theta": 0.0},
+    {"source": "support:alice", "target": "ledger:alice", "relation": "same_person", "theta": 0.0},
+    {"source": "ledger:alice", "target": "crm:alice", "relation": "same_person", "theta": 0.0},
+    {"source": "crm:bob", "target": "kyc:bob", "relation": "same_person", "theta": 0.0},
+    {"source": "kyc:bob", "target": "ledger:bob", "relation": "same_person", "theta": 0.0},
+    {"source": "ledger:bob", "target": "crm:bob", "relation": "same_person", "theta": 0.0},
+    {"source": "crm:carol", "target": "kyc:carol", "relation": "same_person", "theta": 0.0},
+    {"source": "kyc:carol", "target": "ledger:carol", "relation": "same_person", "theta": 0.0},
+    {"source": "ledger:carol", "target": "crm:carol", "relation": "same_person", "theta": 0.0}
+  ],
+  "reference_features": {
+    "crm:alice": [0.0, 1.0],
+    "kyc:alice": [0.0, 1.0],
+    "support:alice": [0.0, 1.0],
+    "ledger:alice": [0.0, 1.0],
+    "crm:bob": [0.0, 1.0],
+    "kyc:bob": [0.0, 1.0],
+    "ledger:bob": [0.0, 1.0],
+    "crm:carol": [0.0, 1.0],
+    "kyc:carol": [0.0, 1.0],
+    "ledger:carol": [0.0, 1.0]
+  },
+  "planted": {
+    "alice": "self_consistent_wrong_vs_ledger",
+    "bob": "consistent and aligned",
+    "carol": "statistical noise only"
+  }
+}

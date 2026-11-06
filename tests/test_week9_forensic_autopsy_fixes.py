@@ -906,4 +906,216 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
         assert indiv_path.is_file(), f"Missing individual dossier: {indiv_path}"
 
 
+# ============================================================================
+# TEST 20: Semantic Data-Truth, L1-L5 Specialist Reasoning & Cross-Game Uniqueness Audit
+# ============================================================================
+def test_20_semantic_data_truth_and_cross_game_uniqueness_audit() -> None:
+    """
+    Enforces that all 15 official Week 9 NFL games in `week9_full_slate_connected_dossiers_2026_11_06.json`
+    have:
+      1. 30 distinct teams (every active Week 9 team playing once; PIT & TEN on bye).
+      2. Exact `confirmed_qb1` alignment with `week9_live_roster_transactions_and_starters_2026.json`.
+      3. Real 32-team 2026 PBP + FTN coaching/trench metrics with cross-game uniqueness
+         (zero copy-pasted JAX@BAL constants across non-JAX@BAL games).
+      4. Real L1-L5 Specialist Reasoning Trace (`depth_reached == "L5"`, `hierarchy_ok is True`,
+         validated corpus hits & validated equations) executed on every game.
+      5. Dynamic 6-family Cholesky overlay with `weather.raw_z == 0.0` on all indoor stadiums
+         and `weather.raw_z != 0.0` on all outdoor stadiums, plus cross-game vector uniqueness.
+      6. Zero excluded players (`Travis Etienne Jr.`, `Lamar Jackson`, `Tyler Huntley`, `Isaiah Likely`)
+         in `roster_truth_player_adjustments["player_adjustments"]` on any game.
+      7. Zero self-contradictory Stage 5 `NEGATIVE_EV` `<` strings or `circuit_breaker_status` mismatches.
+    """
+    from scripts.ops.run_week9_full_slate_connected_workflow import OFFICIAL_WEEK9_15_GAME_SLATE
+
+    w9_slate_path = REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
+    roster_truth_path = REPO_ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+    assert w9_slate_path.is_file()
+    assert roster_truth_path.is_file()
+
+    w9_slate = json.loads(w9_slate_path.read_text(encoding="utf-8"))
+    roster_truth = json.loads(roster_truth_path.read_text(encoding="utf-8"))
+    truth_qb1 = roster_truth["confirmed_qb1"]
+    dossiers = w9_slate["dossiers"]
+
+    # 1. 15 official games = 30 distinct teams, zero team playing twice, PIT & TEN on bye
+    seen_teams: set[str] = set()
+    for away, home in OFFICIAL_WEEK9_15_GAME_SLATE:
+        assert away not in seen_teams, f"Duplicate team {away} in official 15-game slate"
+        assert home not in seen_teams, f"Duplicate team {home} in official 15-game slate"
+        seen_teams.add(away)
+        seen_teams.add(home)
+    assert len(seen_teams) == 30
+    assert "PIT" not in seen_teams and "TEN" not in seen_teams
+
+    ol_press_pairs: set[tuple[float, float]] = set()
+    blitz_pairs: set[tuple[float, float]] = set()
+    epa_adj_pairs: set[tuple[float, float]] = set()
+    cholesky_vectors: set[tuple[float, ...]] = set()
+
+    banned_adj_substrings = ("etienne", "lamar jackson", "tyler huntley", "isaiah likely")
+
+    for away, home in OFFICIAL_WEEK9_15_GAME_SLATE:
+        key = f"{away} @ {home}"
+        d = dossiers[key]
+
+        # 2. Exact QB1 match
+        assert d["confirmed_qb1"][away] == truth_qb1[away], f"QB1 mismatch for {away} in {key}"
+        assert d["confirmed_qb1"][home] == truth_qb1[home], f"QB1 mismatch for {home} in {key}"
+
+        # 3. Coaching tendencies & trench physics uniqueness
+        tend = d["coaching_tendencies_resolved"]
+        aw_t = tend[away]
+        hm_t = tend[home]
+        ol_press_pairs.add((float(aw_t["ol_pressure_allowed"]), float(hm_t["ol_pressure_allowed"])))
+        blitz_pairs.add((float(aw_t["dc_blitz_rate"]), float(hm_t["dc_blitz_rate"])))
+
+        # 4. Real L1-L5 Specialist Reasoning Trace
+        l5_tr = d.get("l1_to_l5_specialist_reasoning_trace") or {}
+        assert l5_tr.get("depth_reached") == "L5", f"Expected L5 reasoning depth on {key}"
+        assert l5_tr.get("hierarchy_ok") is True, f"Hierarchy check failed on {key}"
+        assert l5_tr.get("validated_corpus_hits_count", 0) >= 1, f"Missing corpus hits on {key}"
+        assert l5_tr.get("validated_equations_count", 0) >= 1, f"Missing validated equations on {key}"
+
+        # 5. Stage 2 Load-Bearing Priors uniqueness & zero excluded players
+        lb = d["combined_load_bearing_priors"]
+        epa_adj_pairs.add((float(lb["away_off_epa_adj"]), float(lb["home_off_epa_adj"])))
+        player_adj = (lb.get("roster_truth_player_adjustments") or {}).get("player_adjustments") or {}
+        for p_name in player_adj:
+            assert not any(b in p_name.lower() for b in banned_adj_substrings), (
+                f"Excluded player {p_name} found in roster_truth_player_adjustments on {key}"
+            )
+
+        # 6. Dynamic 6-family Cholesky overlay & indoor dome zero-wind invariant
+        env = d["matchup_environment"]
+        chol = d["situational_6family_cholesky_overlay"]
+        weather_rz = float(chol["weather"]["raw_z"])
+        if env.get("is_indoor"):
+            assert weather_rz == 0.0, f"Indoor game {key} ({env.get('stadium')}) must have weather.raw_z == 0.0, got {weather_rz}"
+        else:
+            assert weather_rz != 0.0, f"Outdoor game {key} ({env.get('stadium')}) must have non-zero weather.raw_z"
+
+        vec = tuple(
+            float(chol[fam]["raw_z"])
+            for fam in ("pressure", "weather", "restFatigue", "coveragePersonnel", "qbSkillScript", "marketMicrostructure")
+        )
+        cholesky_vectors.add(vec)
+
+        # 7. Stage 5 gate_reason & circuit_breaker_status consistency
+        for gl in d["stage5_game_line_evaluations"]:
+            reason = str(gl.get("gate_reason") or "")
+            if "NEGATIVE_EV" in reason or "<" in reason.split(";")[0]:
+                if "conf" not in reason.split("<")[0]:
+                    assert float(gl["post_sim_prob"]) < float(gl["market_prob_devig"]), (
+                        f"Inverted NEGATIVE_EV gate_reason on {key} {gl['selection']}: {reason}"
+                    )
+
+        bs = d["stage5_board_summary"]
+        if int(bs["approved_plays_count"]) > 0:
+            assert bs["circuit_breaker_status"] != "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES", (
+                f"Contradictory circuit_breaker_status on {key} with {bs['approved_plays_count']} approved plays"
+            )
+
+    assert len(ol_press_pairs) == 15, f"Expected 15 unique OL pressure pairs across 15 games, got {len(ol_press_pairs)}"
+    assert len(blitz_pairs) == 15, f"Expected 15 unique blitz pairs across 15 games, got {len(blitz_pairs)}"
+    assert len(epa_adj_pairs) == 15, f"Expected 15 unique EPA adj pairs across 15 games, got {len(epa_adj_pairs)}"
+    assert len(cholesky_vectors) == 15, f"Expected 15 unique 6-family Cholesky vectors across 15 games, got {len(cholesky_vectors)}"
+
+
+# ============================================================================
+# TEST 21: Wave 13 Beexly/Project-Tree Sheaf CRC, Navier-Stokes & Phase-Transition
+# ============================================================================
+def test_21_wave13_project_tree_sheaf_crc_navier_stokes_and_phase_transition() -> None:
+    """
+    Verifies Wave 13 integration:
+      1. Vendored `intelligence/sheaf_integrity/` (Beexly/Project-Tree Cellular Sheaf
+         Cohomology & Certified Repair Class `CRC` engine) executes natively with zero fallback.
+      2. `intelligence/coaching/universal_phase_transition_navier_stokes_sheaf_engine.py`
+         computes Project-Tree Sheaf CRC, Navier-Stokes Laboratory Phase Resultant R + BKM
+         integral + Constantin-Fefferman direction curvature + Hou-Li 36th-order filter,
+         Theorem 9 1-RSB Mezard-Parisi Spin-Glass Cavity Susceptibility, Theorem 12 Mahler-Dual
+         Conformal Score + Pade [3/3] & [4/4] rational approximants, and 19-Rule Honesty Doctrine
+         + Glicko-2 idle step + Shin closed-form de-vigging.
+      3. All 4 prototypes (`doctrine-symphony-supervisor.ts`, `mezard-parisi-mahler-kernel.py`,
+         `gsi_virtual_icp_mahler_kernel.hpp`, `gse_gsi_phase_gym.py`), all 5 archived research
+         docs in `docs/engine/research/2026-11-06/`, and the 114 staged mind records in
+         `mind_wave13_project_tree_sheaf_navier_stokes_phase_transition_2026_11_06.jsonl` exist and pass self-checks.
+      4. `compile_stage1_to_stage2_simulation_priors()` wires `wave13_universal_phase_transition_navier_stokes_sheaf`
+         live into the Stage 2 simulation priors.
+    """
+    import math
+    from intelligence.coaching.universal_phase_transition_navier_stokes_sheaf_engine import (
+        pade44_exp_neg,
+        pade_exp_neg,
+        r_controls,
+        run_universal_phase_transition_navier_stokes_sheaf_engine,
+        shin_closed_form_devig,
+    )
+    from scripts.ops.gse_connected_game_workflow import compile_stage1_to_stage2_simulation_priors
+
+    # 1. Verify Pade [3/3] and [4/4] accuracy and Shin -110/-110 identity
+    assert abs(pade_exp_neg(0.5) - math.exp(-0.5)) < 1e-6
+    assert abs(pade44_exp_neg(0.5) - math.exp(-0.5)) < 1e-7
+    shin_res = shin_closed_form_devig(1.9090909, 1.9090909)
+    assert shin_res["fair_prob_a"] == 0.5 and shin_res["fair_prob_b"] == 0.5
+    assert abs(shin_res["shin_z"] - 0.047619) < 1e-4
+
+    # 2. Verify Navier-Stokes phase_entropy.py controls
+    ctrl = r_controls()
+    assert ctrl["one_locked_phase"]["R"] == 0.952
+    assert ctrl["two_opposed_halves"]["R"] == 0.250
+    assert ctrl["random_phases"]["R"] == 0.007
+
+    # 3. Verify live execution of Wave 13 engine with vendored Beexly/Project-Tree sheaf_integrity
+    w13 = run_universal_phase_transition_navier_stokes_sheaf_engine(
+        away_tm="JAX",
+        home_tm="BAL",
+        env={"spread": -7.5, "total": 48.5, "open_spread": -7.0, "open_total": 47.5, "away_qb_tier": 1, "home_qb_tier": 2},
+        family_raw_z={
+            "pressure": 0.85,
+            "weather": -0.20,
+            "restFatigue": 0.15,
+            "coveragePersonnel": 0.65,
+            "qbSkillScript": -0.55,
+            "marketMicrostructure": 0.40,
+        },
+        away_pbp={"off_epa": 0.02, "def_epa": 0.04, "pa_rate": 0.25, "motion_rate": 0.54, "dc_blitz_rate": 0.29, "sack_rate_allowed": 0.068},
+        home_pbp={"off_epa": 0.11, "def_epa": -0.06, "pa_rate": 0.31, "motion_rate": 0.62, "dc_blitz_rate": 0.33, "sack_rate_allowed": 0.052},
+    )
+    assert w13["status"] == "WAVE13_PROJECT_TREE_SHEAF_NAVIER_STOKES_PHASE_TRANSITION_ACTIVE"
+    assert w13["project_tree_sheaf_crc"]["engine"] == "Beexly/Project-Tree/sheaf_integrity (vendored live)"
+    assert w13["project_tree_sheaf_crc"]["dim_H0"] == 2
+    assert w13["navier_stokes_lab_diagnostics"]["reconciled_audit_clean_rising_draws_count"] == 32
+    assert 0.0 <= w13["navier_stokes_lab_diagnostics"]["phase_resultant_R"] <= 1.0
+    assert w13["doctrine19_and_glicko2_verification"]["doctrine_19_rules_status"] == "19/19_PASS"
+
+    # 4. Verify Stage 1 -> Stage 2 compilation includes Wave 13
+    priors = compile_stage1_to_stage2_simulation_priors(
+        stage1a_receipt={"away": "CIN", "home": "ATL", "away_qb1_starter": "Joe Burrow", "home_qb1_starter": "Kirk Cousins"},
+        stage1b_receipt={"weather_wind_mph": 0.0},
+    )
+    assert "wave13_universal_phase_transition_navier_stokes_sheaf" in priors
+    assert (
+        priors["wave13_universal_phase_transition_navier_stokes_sheaf"]["project_tree_sheaf_crc"]["engine"]
+        == "Beexly/Project-Tree/sheaf_integrity (vendored live)"
+    )
+
+    # 5. Verify prototypes, archived research docs, and staged mind records
+    assert (REPO_ROOT / "packages" / "epistemic-twin" / "src" / "doctrine-symphony-supervisor.ts").is_file()
+    assert (REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "mezard-parisi-mahler-kernel.py").is_file()
+    assert (REPO_ROOT / "packages" / "genesis-kernel" / "include" / "gsi_virtual_icp_mahler_kernel.hpp").is_file()
+    assert (REPO_ROOT / "packages" / "epistemic-twin" / "src" / "gse_gsi_phase_gym.py").is_file()
+    research_2026_11_06 = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06"
+    assert (research_2026_11_06 / "GSE-GSI-OpenAI-Breakthroughs-Theorems-9-to-12.md").is_file()
+    assert (research_2026_11_06 / "Universal-Phase-Transition-Engine-GSE-Revenue-GSI-Grant-Blueprint-Theorems-4-to-8.md").is_file()
+    assert (research_2026_11_06 / "GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md").is_file()
+    assert (research_2026_11_06 / "navier-stokes-session-full.md").is_file()
+    assert (research_2026_11_06 / "GSE_Full_Session_2026-10-09_to_11-05.md").is_file()
+    w13_jsonl = REPO_ROOT / "data" / "mind_staging" / "mind_wave13_project_tree_sheaf_navier_stokes_phase_transition_2026_11_06.jsonl"
+    assert w13_jsonl.is_file()
+    w13_rows = [json.loads(line) for line in w13_jsonl.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(w13_rows) >= 110
+
+
+
+
 

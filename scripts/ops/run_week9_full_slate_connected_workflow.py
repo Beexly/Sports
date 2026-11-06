@@ -92,7 +92,7 @@ def run_week9_full_slate_connected_workflow(
     matchups: list[tuple[str, str]] | None = None,
     week: int = 9,
     n_sims: int = 10000,
-    reuse_fresh_dossiers: bool = True,
+    reuse_fresh_dossiers: bool = False,
 ) -> dict[str, Any]:
     slate = matchups if matchups is not None else COMPLETE_WEEK9_ALL_MATCHUPS
     dossiers_summary: dict[str, dict[str, Any]] = {}
@@ -111,12 +111,13 @@ def run_week9_full_slate_connected_workflow(
         if reuse_fresh_dossiers and dossier_path.is_file():
             try:
                 cached = json.loads(dossier_path.read_text(encoding="utf-8"))
+                s1a_cached = cached.get("stage1a_coaching_mind_and_schemes", {})
                 s2_cached = cached.get("stage2_jev_spine_and_10k_simulation", {})
                 s34_cached = cached.get("stage3_4_conserved_post_sim_projections", {})
                 if (
-                    s2_cached.get("combined_load_bearing_priors")
-                    and (s34_cached.get("situational_6family_cholesky_overlay") or {}).get("method")
-                    == "cholesky_dynamic_6family_whitening"
+                    s1a_cached.get("l1_to_l5_specialist_reasoning_trace")
+                    and s2_cached.get("combined_load_bearing_priors")
+                    and s34_cached.get("situational_6family_cholesky_overlay")
                 ):
                     bundle = cached
             except Exception:
@@ -152,7 +153,14 @@ def run_week9_full_slate_connected_workflow(
             "verified_board_athletes_count": stage0["verified_board_athletes_count"],
             "matchup_environment": env_meta,
             "coaching_tendencies_resolved": stage1a.get("coaching_tendencies_resolved", {}),
+            "l1_to_l5_specialist_reasoning_trace": stage1a.get("l1_to_l5_specialist_reasoning_trace", {}),
             "combined_load_bearing_priors": stage2.get("combined_load_bearing_priors", {}),
+            "wave13_universal_phase_transition_navier_stokes_sheaf": bundle.get(
+                "wave13_universal_phase_transition_navier_stokes_sheaf",
+                (stage2.get("compiled_stage1_to_stage2_priors") or {}).get(
+                    "wave13_universal_phase_transition_navier_stokes_sheaf", {}
+                ),
+            ),
             "situational_6family_cholesky_overlay": stage3_4.get("situational_6family_cholesky_overlay", {}),
             "post_sim_team_scores": {
                 "away_score_mean": b_a["away_score"]["mean"],

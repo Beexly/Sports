@@ -9,6 +9,14 @@
     "week": 9,
     "away_qb1_starter": "Trevor Lawrence",
     "home_qb1_starter": "Joe Fagnano",
+    "base_away_off_epa": 0.015,
+    "base_home_off_epa": 0.134,
+    "away_def_epa": -0.0244,
+    "home_def_epa": -0.0955,
+    "away_proe": 0.024,
+    "home_proe": -0.018,
+    "away_comp_rate": 0.658,
+    "home_comp_rate": 0.645,
     "matchup_environment": {
       "window": "TNF (Thu 8:15 PM ET)",
       "posted_home_spread": 7.5,
@@ -28,25 +36,84 @@
       "short_week": 1.0,
       "away_qb_tier": "QB1",
       "home_qb_tier": "EMERGENCY_QB3_UDFA",
-      "weather_note": "M&T Bank Stadium outdoor grass, clear Nov night, mild aero drag (6.5 mph wind, 54F)"
+      "weather_note": "M&T Bank Stadium outdoor grass, clear Nov night, mild aero drag (6.5 mph wind, 54F)",
+      "open_home_spread": -4.5,
+      "open_total": 49.5,
+      "kickoff_utc": "2026-11-06T01:15Z",
+      "is_dome": false,
+      "venue": "M&T Bank Stadium",
+      "slot": "TNF (Thu 8:15 PM ET)"
     },
     "coaching_tendencies_resolved": {
       "JAX": {
         "team": "JAX",
-        "proe": 0.0061,
+        "proe": 0.024,
         "neutral_pace_sec": 26.8,
         "dc_blitz_rate": 0.309,
         "dc_man_rate": 0.285,
-        "ol_pressure_allowed": 0.6208
+        "ol_pressure_allowed": 0.6208,
+        "off_epa": 0.015,
+        "def_epa": -0.0244,
+        "pass_epa": 0.2703,
+        "rush_epa": 0.0403,
+        "comp_rate": 0.658,
+        "sack_rate_allowed": 0.0607,
+        "pa_rate": 0.2371,
+        "motion_rate": 0.6394,
+        "rpo_rate": 0.0085,
+        "screen_rate": 0.0928
       },
       "BAL": {
         "team": "BAL",
-        "proe": -0.0088,
+        "proe": -0.018,
         "neutral_pace_sec": 27.6,
         "dc_blitz_rate": 0.245,
         "dc_man_rate": 0.245,
-        "ol_pressure_allowed": 0.6349
+        "ol_pressure_allowed": 0.6349,
+        "off_epa": 0.134,
+        "def_epa": -0.0955,
+        "pass_epa": 0.0821,
+        "rush_epa": -0.0427,
+        "comp_rate": 0.645,
+        "sack_rate_allowed": 0.0884,
+        "pa_rate": 0.2511,
+        "motion_rate": 0.6502,
+        "rpo_rate": 0.0423,
+        "screen_rate": 0.0731
       }
+    },
+    "l1_to_l5_specialist_reasoning_trace": {
+      "trace_id": "2026-11-06T084631Z0000-59cff43f",
+      "content_hash": "824bcc300c35a8773c1384196ceae17c2ac47ee16f75f4acee4e54ff4993714d",
+      "depth_reached": "L5",
+      "hierarchy_order": [
+        "offensive_line",
+        "coaching_scheme",
+        "scheme_matchup",
+        "qb_behavior",
+        "trust_signals"
+      ],
+      "hierarchy_ok": true,
+      "checklist_verdicts": {
+        "qb_behavior": "CLEAR",
+        "coaching_scheme": "CLEAR",
+        "offensive_line": "CLEAR",
+        "trust_signals": "CLEAR",
+        "scheme_matchup": "CLEAR"
+      },
+      "breaking_conditions_met": false,
+      "killed_legs": [],
+      "recommendation": "Thesis survived L4 adversary (no breaking condition met). Proceed only with the checklist verdicts and weak-link flags attached; final sizing and publication remain downstream gates.",
+      "validated_corpus_hits_count": 5,
+      "validated_corpus_hits": [
+        "research_corpus/openalex/W7112540155",
+        "research_corpus/local_pdf/48ae0d16384ed704",
+        "research_corpus/arxiv/2305.10262v3",
+        "research_corpus/arxiv/2609.33664v2",
+        "research_corpus/arxiv/2604.01491v2"
+      ],
+      "validated_equations_count": 3,
+      "l5_epa_signal_delta": -0.0069
     },
     "coaching_modules_total": 48,
     "coaching_modules_imported_and_verified": 48,
@@ -699,7 +766,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-06T07:57:36.953622+00:00",
+      "generated_at_utc": "2026-11-06T08:45:57.883990+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -3169,11 +3236,11 @@
     },
     "pbp_reproductions_2026_summary": {},
     "bdb2025_coverage_shell_summary": {},
-    "stage1a_receipt_sha256": "d20b5ccceba81efe06c0e31c667be4645417e18bd2c73e0a7411b99d3ab051d1"
+    "stage1a_receipt_sha256": "3668c7a6f011ea8d9dac679d5cd52da40484e8e848abc990a9cc43b6c01046b5"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "d20b5ccceba81efe06c0e31c667be4645417e18bd2c73e0a7411b99d3ab051d1",
+    "parent_stage1a_receipt_sha256": "3668c7a6f011ea8d9dac679d5cd52da40484e8e848abc990a9cc43b6c01046b5",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -5208,6 +5275,6 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "ebe1e5af3ddbb134512782fc0349667d774e672f42af2af1917b2afbbffc9fd9"
+    "stage1b_receipt_sha256": "cf0201a2826c33eb9b84b0395fd446496b694c7fc5abae2c32f4f640f614688e"
   }
 }

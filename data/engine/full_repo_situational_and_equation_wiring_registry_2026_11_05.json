@@ -1,10 +1,10 @@
 {
   "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-  "generated_at_utc": "2026-11-06T08:08:55.730332+00:00",
+  "generated_at_utc": "2026-11-06T09:02:30.820848+00:00",
   "total_ts_modules_cataloged": 1227,
   "prediction_engine_ts_modules": 1220,
   "mcp_equations_server_ts_modules": 7,
-  "total_python_intelligence_modules_cataloged": 380,
+  "total_python_intelligence_modules_cataloged": 405,
   "x_situational_80_rules_count": 87,
   "consolidated_sweep_signals_count": 29,
   "all_in_one_research_signals_count": 17,
@@ -25,7 +25,7 @@
       "Coaching Decisions": 0.114,
       "Personnel & Matchup": 0.19,
       "Availability: QB Change": 0.0,
-      "Environment: Weather": -0.075,
+      "Environment: Weather": -0.012,
       "Availability: OL Attrition": -0.233,
       "Market Context": 0.14
     },
@@ -521,7 +521,7 @@
         "theme": "Environment: Weather",
         "evaluator": "weather",
         "name": "Sustained Wind >=15 mph Deep-Pass & FG Make Penalty",
-        "value": -0.025,
+        "value": -0.004,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -530,7 +530,7 @@
         "theme": "Environment: Weather",
         "evaluator": "weather",
         "name": "Precipitation Wet-Ball Fumble & Drop Hazard",
-        "value": -0.025,
+        "value": -0.004,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -539,7 +539,7 @@
         "theme": "Environment: Weather",
         "evaluator": "weather",
         "name": "Sub-Freezing (<32F) Air Density Ball-Flight Drag",
-        "value": -0.025,
+        "value": -0.004,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -909,5 +909,5 @@
     "probability_movement_cap": 0.12,
     "post_overlay_prob": 0.5073
   },
-  "receipt_sha256": "51de8c60d88041c923804b783a461b37ccf30840bbb2f5a084519c43df743910"
+  "receipt_sha256": "273025479f1395389140cb9dedcc8123c465a6ba5cdd79fd661b831414b45e4e"
 }

@@ -1,0 +1,38 @@
+{
+  "full": {
+    "repair_class": "statistical",
+    "relative": {
+      "status": "inconsistent_and_mismatched",
+      "self_energy": 0.019999999999999997,
+      "reference_energy": 0.0,
+      "grounding_mismatch": 4.02,
+      "self_repair_class": "statistical",
+      "reference_repair_class": "consistent",
+      "interpretation": "Broken internally and vs ledger"
+    },
+    "energy": 0.019999999999999997,
+    "holonomy_flag": false
+  },
+  "per_entity": {
+    "E001": {
+      "repair_class": "consistent",
+      "relative": "self_consistent_wrong_vs_ledger",
+      "energy": 0.0,
+      "n_systems": 2
+    },
+    "E002": {
+      "repair_class": "consistent",
+      "relative": "aligned_with_reference",
+      "energy": 0.0,
+      "n_systems": 2
+    },
+    "E003": {
+      "repair_class": "statistical",
+      "relative": "inconsistent_and_mismatched",
+      "energy": 0.019999999999999997,
+      "n_systems": 2
+    }
+  },
+  "n_nodes": 6,
+  "n_edges": 3
+}
