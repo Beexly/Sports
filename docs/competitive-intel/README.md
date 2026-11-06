@@ -122,6 +122,12 @@ stdin so 100k people load in one statement. `emailHash` is stable per owner id, 
 updates rather than duplicates. Handles load at confidence 60, grinders 70, whales 80, because a
 public handle is not an email and should not claim to be.
 
+`--probes <jsonl>` takes the output of `_shared/probe_x2.py` (X existence, 200 versus 404) and
+raises a verified handle to confidence 85 with the profile as source. A probed handle that 404s
+stays a contest handle, because pointing at an account that does not exist is a dead link. First
+100 probes ran 51 percent exist, which matches the 52 percent seen on the earlier 906-handle
+sample.
+
 ## The chalk board
 
 `npm run competitors:chalk -- --in .ci-out/<contest>.json --owners 20 --out .ci-out` pulls the

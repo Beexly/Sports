@@ -11,8 +11,13 @@
  * owner id, so re-loading the same person updates rather than duplicates, and a handle that is
  * not an email is marked with its own segment rather than pretending to be contactable mail.
  *
+ * A --probes JSONL from probe_x2 raises a contact that verified on X to confidence 85 and moves
+ * its source_url to the profile. A probed handle that 404s stays a contest handle: the account
+ * does not exist, so pointing at x.com/<handle> would be a dead link.
+ *
  * Usage:
  *   npx tsx scripts/competitive-intel/emit-sql.ts --in .ci-out --org fantasylabs --out .ci-out/load.sql
+ *   npx tsx scripts/competitive-intel/emit-sql.ts --in .ci-out --probes xprobe.jsonl --out load.sql
  *   psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f .ci-out/load.sql
  *
  * Exit: 0 written, 2 nothing to read.
@@ -37,6 +42,7 @@ interface Artifact {
 }
 
 const inDir = arg("in") ?? ".ci-out";
+const probePath = arg("probes");
 const orgSlug = arg("org") ?? "fantasylabs";
 const outPath = arg("out") ?? join(inDir, "load.sql");
 
@@ -61,6 +67,17 @@ const stableId = (prefix: string, seed: string): string =>
   `${prefix}_${createHash("sha256").update(`${orgSlug}:${seed}`).digest("hex").slice(0, 24)}`;
 const emailHashFor = (ownerId: number): string =>
   createHash("sha256").update(`${orgSlug}:owner:${ownerId}`).digest("hex").slice(0, 40);
+
+/** handle -> verified existence, from a probe JSONL. Missing handle means unprobed. */
+const probes = new Map<string, boolean>();
+if (probePath) {
+  for (const line of readFileSync(probePath, "utf8").split(String.fromCharCode(10))) {
+    if (!line.trim()) continue;
+    const row = JSON.parse(line) as { handle: string; exists: boolean; status: number };
+    if (row.status === 200 || row.status === 404) probes.set(row.handle, row.exists);
+  }
+  console.log(`[emit-sql] ${probes.size} probed handle(s), ${[...probes.values()].filter(Boolean).length} exist`);
+}
 
 const q = (value: string | number | boolean | null): string => {
   if (value === null) return "\\N";
@@ -118,10 +135,21 @@ for (const profile of profiles) {
       orgId,
       q(emailHashFor(profile.ownerId)),
       q(profile.username),
-      "fantasylabs",
+      probes.get(profile.username) === true ? "x.com" : "fantasylabs",
       q(engagementBand(profile)),
-      engagementBand(profile) === "whale" ? 80 : engagementBand(profile) === "grinder" ? 70 : 60,
-      q(`https://www.fantasylabs.com/contests/${profile.ownerId}`),
+      // A verified X profile is worth more than a contest handle, and still short of an email.
+      probes.get(profile.username) === true
+        ? 85
+        : engagementBand(profile) === "whale"
+          ? 80
+          : engagementBand(profile) === "grinder"
+            ? 70
+            : 60,
+      q(
+        probes.get(profile.username) === true
+          ? `https://x.com/${profile.username}`
+          : `https://www.fantasylabs.com/contests/${profile.ownerId}`,
+      ),
       new Date().toISOString(),
     ].join("\t"),
   );
