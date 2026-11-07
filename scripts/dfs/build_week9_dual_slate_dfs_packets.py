@@ -52,6 +52,11 @@ from scripts.ops.preflight_live_roster_injury_gate import (  # noqa: E402
     assert_lineup_rules,
     load_config as load_gate_config,
 )
+from intelligence.external_charting.morning_sweep_2026_11_07 import (  # noqa: E402
+    build_morning_sweep_summary,
+    get_qb_supporting_cast_scores,
+    get_wpp_pass_protection_profiles,
+)
 
 MIN_AVG_PPG = 3.0  # below this a DK player has no usable role evidence this season
 DOWNLOADS = Path("C:/Users/Garrett/Downloads")
@@ -434,18 +439,25 @@ def build_classic_packet(
         "rhamondre stevenson",
         "joe milton",
     }
+    cast_scores = get_qb_supporting_cast_scores()
+    wpp_profiles = get_wpp_pass_protection_profiles()
+    morning_sweep_summary = build_morning_sweep_summary()
     spotlights = []
     for _, r in opt_df.iterrows():
         if _norm_player_key(str(r["player"])) in spotlight_names:
+            tm_code = str(r["team"])
             spotlights.append({
                 "player": str(r["player"]),
                 "position": str(r["position"]),
-                "team": str(r["team"]),
+                "team": tm_code,
                 "opponent": str(r["opponent"]),
                 "salary": int(r["salary"]),
                 "projection": round(float(r["projection"]), 2),
                 "sd": round(float(r["sd"]), 2),
                 "value_per_1k": round(float(r["projection"]) / (float(r["salary"]) / 1000.0), 2),
+                "qb_supporting_cast_ovr": cast_scores.get(tm_code, {}).get("ovr_score"),
+                "qb_supporting_cast_rank": cast_scores.get(tm_code, {}).get("rank"),
+                "team_wpp_total": wpp_profiles.get(tm_code, {}).get("total_wpp", 0.0),
             })
 
     return {
@@ -465,6 +477,7 @@ def build_classic_packet(
             "five_tracks_l5_verified": True,
             "situational_flags": cfg.get("situational_flags", {}),
             "situational_and_vacated_role_spotlights": spotlights,
+            "morning_analytics_sweep_2026_11_07": morning_sweep_summary,
             "games_connected": players.attrs.get("engine_game_provenance", {}),
         },
         "submodular": {k: v for k, v in sub.items() if isinstance(v, (int, float, str, list))},

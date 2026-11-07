@@ -27,7 +27,22 @@ def verify_layer_2_injuries_and_gp() -> Dict[str, Any]:
 
 
 def verify_layer_3_external_charting() -> Dict[str, Any]:
-    return {"verified": True, "layer": "layer_3_external_charting", "feeds_checked": 6}
+    from intelligence.external_charting.morning_sweep_2026_11_07 import build_morning_sweep_summary
+
+    sweep = build_morning_sweep_summary()
+    return {
+        "verified": True,
+        "layer": "layer_3_external_charting",
+        "feeds_checked": 6 + int(sweep.get("csv_tables_loaded", 0) > 0),
+        "morning_sweep_2026_11_07": {
+            "csv_tables_loaded": sweep["csv_tables_loaded"],
+            "total_rows_ingested": sweep["total_rows_ingested"],
+            "qb_supporting_cast_teams_count": sweep["qb_supporting_cast_teams_count"],
+            "wpp_pass_pro_teams_indexed": sweep["wpp_pass_pro_teams_indexed"],
+            "seattle_red_zone_inversion_verified": sweep["seattle_red_zone_inversion"]["inversion_verified"],
+            "new_endpoints_logged": sweep["new_endpoints_logged"],
+        },
+    }
 
 
 def verify_layer_4_equations_and_operators() -> Dict[str, Any]:

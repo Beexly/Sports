@@ -828,7 +828,10 @@
         "salary": 6100,
         "projection": 28.07,
         "sd": 18.91,
-        "value_per_1k": 4.6
+        "value_per_1k": 4.6,
+        "qb_supporting_cast_ovr": 37.9,
+        "qb_supporting_cast_rank": 27.0,
+        "team_wpp_total": 0.0
       },
       {
         "player": "Ollie Gordon II",
@@ -838,7 +841,10 @@
         "salary": 5600,
         "projection": 29.07,
         "sd": 19.45,
-        "value_per_1k": 5.19
+        "value_per_1k": 5.19,
+        "qb_supporting_cast_ovr": 32.2,
+        "qb_supporting_cast_rank": 31.0,
+        "team_wpp_total": 0.0
       },
       {
         "player": "Joe Milton III",
@@ -848,7 +854,10 @@
         "salary": 4100,
         "projection": 15.32,
         "sd": 9.72,
-        "value_per_1k": 3.74
+        "value_per_1k": 3.74,
+        "qb_supporting_cast_ovr": 37.1,
+        "qb_supporting_cast_rank": 28.0,
+        "team_wpp_total": 1.61
       },
       {
         "player": "Malik Davis",
@@ -858,7 +867,10 @@
         "salary": 4000,
         "projection": 19.67,
         "sd": 13.88,
-        "value_per_1k": 4.92
+        "value_per_1k": 4.92,
+        "qb_supporting_cast_ovr": 53.3,
+        "qb_supporting_cast_rank": 17.0,
+        "team_wpp_total": 0.0
       },
       {
         "player": "Greg Dulcich",
@@ -868,9 +880,144 @@
         "salary": 3100,
         "projection": 15.83,
         "sd": 11.13,
-        "value_per_1k": 5.11
+        "value_per_1k": 5.11,
+        "qb_supporting_cast_ovr": 32.2,
+        "qb_supporting_cast_rank": 31.0,
+        "team_wpp_total": 0.0
       }
     ],
+    "morning_analytics_sweep_2026_11_07": {
+      "sweep_date": "2026-11-07",
+      "csv_tables_loaded": 35,
+      "total_rows_ingested": 444,
+      "qb_supporting_cast_teams_count": 32,
+      "wpp_pass_pro_teams_indexed": 13,
+      "seattle_red_zone_inversion": {
+        "team": "SEA",
+        "inversion_verified": true,
+        "def_between_20s_dvoa_rank": 1,
+        "def_red_zone_dvoa_rank": 32,
+        "def_red_zone_epa_allowed": 0.56,
+        "off_inside_10_epa_rank": 32,
+        "off_inside_10_epa_per_play": -0.43,
+        "kicker_fg_stall_boost": 1.08,
+        "opp_red_zone_td_conversion_boost": 1.07,
+        "splits": {
+          "Defense:Between the 20s": {
+            "epa_per_play": -0.16,
+            "epa_rank": 3.0,
+            "success_rate_pct": 36.8,
+            "sr_rank": 2.0,
+            "dvoa_pct": -30.5,
+            "dvoa_rank": 1.0
+          },
+          "Defense:Red zone": {
+            "epa_per_play": 0.56,
+            "epa_rank": 32.0,
+            "success_rate_pct": 58.3,
+            "sr_rank": 32.0,
+            "dvoa_pct": 51.3,
+            "dvoa_rank": 32.0
+          },
+          "Offense:Between the 20s": {
+            "epa_per_play": -0.02,
+            "epa_rank": 22.0,
+            "success_rate_pct": 42.2,
+            "sr_rank": 22.0,
+            "dvoa_pct": 1.8,
+            "dvoa_rank": 20.0
+          },
+          "Offense:Red zone": {
+            "epa_per_play": -0.1,
+            "epa_rank": 29.0,
+            "success_rate_pct": 39.0,
+            "sr_rank": 27.0,
+            "dvoa_pct": -12.6,
+            "dvoa_rank": 30.0
+          },
+          "Offense:Inside the 10": {
+            "epa_per_play": -0.43,
+            "epa_rank": 32.0,
+            "success_rate_pct": 34.1,
+            "sr_rank": 30.0,
+            "dvoa_pct": -28.6,
+            "dvoa_rank": 31.0
+          }
+        }
+      },
+      "player_situational_highlights": {
+        "jsn_2026_yards_per_team_pass_att": 3.84,
+        "drake_maye_splits": {
+          "Maye vs top-10 (13g)": {
+            "ypg": 208.1,
+            "td_g": 1.15,
+            "any_a": 4.71,
+            "epa_db": -0.12
+          },
+          "Brissett 2026 (8g)": {
+            "ypg": 214.9,
+            "td_g": 1.25,
+            "any_a": 4.59,
+            "epa_db": -0.06
+          },
+          "Maye vs rest (26g)": {
+            "ypg": 258.9,
+            "td_g": 2.0,
+            "any_a": 7.94,
+            "epa_db": 0.3
+          }
+        },
+        "gb_wr_coverage_yprr": [
+          {
+            "player": "Matthew Golden",
+            "coverage": "man",
+            "yprr": 3.11,
+            "rank": 3
+          },
+          {
+            "player": "Matthew Golden",
+            "coverage": "zone",
+            "yprr": 0.65,
+            "rank": 60
+          },
+          {
+            "player": "Christian Watson",
+            "coverage": "man",
+            "yprr": 2.15,
+            "rank": 23
+          },
+          {
+            "player": "Christian Watson",
+            "coverage": "zone",
+            "yprr": 3.21,
+            "rank": 4
+          }
+        ],
+        "ryoe_per_attempt_leaders": {
+          "Jaylen Warren": 1.54,
+          "Kenneth Walker": 1.41,
+          "James Cook": 0.99,
+          "Bijan Robinson": 0.97
+        },
+        "rec_yards_vs_2high_leaders": {
+          "Jaxon Smith-Njigba": 565,
+          "CeeDee Lamb": 449,
+          "Puka Nacua": 354,
+          "Christian Watson": 332,
+          "Denzel Boston": 330,
+          "Luther Burden III": 327,
+          "Ja'Marr Chase": 313,
+          "Malik Nabers": 313
+        },
+        "pcvr_components_count": 6
+      },
+      "new_endpoints_logged": [
+        "nflimpact.app",
+        "dynatyze.com/football",
+        "StatRankings",
+        "connorlong1.substack.com"
+      ]
+    },
     "games_connected": {
       "ARI@SEA": {
         "dossier_file": "connected_workflow_dossier_ari_sea_week9.json",
