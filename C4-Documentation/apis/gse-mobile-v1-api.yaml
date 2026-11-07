@@ -1,0 +1,40 @@
+openapi: 3.1.0
+info:
+  title: Galaxy Sports Edge (GSE) Native iOS Mobile v1 API
+  description: Bearer-authenticated REST API (`apps/web/app/api/mobile/v1/*`) serving the Expo SDK 57 / React Native 0.86 iOS client. Enforces server-side paywall redaction and `72/100` integer score formatting.
+  version: 1.0.0
+servers:
+  - url: https://www.galaxysportsedge.com/api/mobile/v1
+    description: Production Mobile v1 Gateway
+paths:
+  /slate:
+    get:
+      summary: Fetch active slate cards with server-redacted entitlements and 72/100 rating scores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Mobile slate payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cards:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        gameId:
+                          type: string
+                        scoreDisplay:
+                          type: string
+                          example: "84/100"
+                        publishAllowed:
+                          type: boolean
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

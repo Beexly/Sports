@@ -1,6 +1,6 @@
 # Week 9 TNF Showdown JAX@BAL — Optimizer Packet
 
-**Generated:** 2026-11-07T19:33:41Z
+**Generated:** 2026-11-07T19:53:11Z
 **Source salary export:** `C:\Users\Garrett\Downloads\DKSalaries (3).csv`
 **Archived copy:** `data/dfs/dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv`
 

@@ -32,6 +32,12 @@ import numpy as np
 import pandas as pd
 from scipy.stats import t as student_t
 
+from intelligence.native_kernels.native_bridge import (
+    c_dk_ppr_milestone_scoring,
+    cpp_simulate_student_t_dfs_worlds,
+    is_native_kernel_loaded,
+)
+
 from intelligence.dfs.dfs_and_fantasy_accuracy_engine import (
     BLOCKED_PUNT_DSTS_BY_TEAM,
     SUB_FLOOR_ROLE_TRAP_DENYLIST,
@@ -191,9 +197,33 @@ def build_gse_post_game_sim_projections_and_curated_pool(
         pool_p90 = np.percentile(dedicated_pool_fpts, 90.0, axis=0)
         pool_p99 = np.percentile(dedicated_pool_fpts, 99.0, axis=0)
 
+        native_cpp_active = is_native_kernel_loaded()
+        if native_cpp_active:
+            pos_map = {"QB": 1, "RB": 2, "WR": 3, "TE": 4, "DST": 5}
+            pos_codes_arr = np.array([pos_map.get(p, 3) for p in positions], dtype=np.int32)
+            team_idx_map = {t: idx for idx, t in enumerate(unique_teams)}
+            game_idx_map = {g: idx for idx, g in enumerate(unique_games)}
+            team_ids_arr = np.array([team_idx_map[t] for t in teams], dtype=np.int32)
+            game_ids_arr = np.array([game_idx_map[g] for g in games], dtype=np.int32)
+            means_arr = pool_df["projection"].astype(float).to_numpy()
+            stds_arr = np.maximum(1.5, means_arr * 0.36)
+            cpp_res = cpp_simulate_student_t_dfs_worlds(
+                mean_fpts=means_arr,
+                std_fpts=stds_arr,
+                team_ids=team_ids_arr,
+                game_ids=game_ids_arr,
+                pos_codes=pos_codes_arr,
+                n_sims=num_dfs_sims,
+                seed=seed,
+            )
+            pool_p90 = np.maximum(pool_p90, cpp_res["p90"])
+            pool_p99 = np.maximum(pool_p99, cpp_res["p99"])
+            bonus_300_100_rates = np.maximum(bonus_300_100_rates, cpp_res["bonus_prob"])
+
         for j in range(n_pool):
             accepted_pool_records[j]["second_stage_dfs_pool_sim"] = {
                 "dfs_pool_sims": int(num_dfs_sims),
+                "native_c11_cpp20_kernel_active": bool(native_cpp_active),
                 "sim_mean": round(float(dedicated_pool_fpts[:, j].mean()), 2),
                 "sim_p50_median": round(float(pool_p50[j]), 2),
                 "sim_p75_upside": round(float(pool_p75[j]), 2),

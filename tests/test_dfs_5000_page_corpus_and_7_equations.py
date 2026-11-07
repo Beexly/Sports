@@ -183,3 +183,85 @@ def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
     assert (REPO_ROOT / "data" / "mind" / "feeds" / "stealth_skeleton_distillation_flywheel_2026_11_07.jsonl").is_file()
 
 
+def test_c11_cpp20_native_kernels_and_c4_architecture_suite() -> None:
+    import numpy as np
+    from intelligence.native_kernels.native_bridge import (
+        c_dk_ppr_milestone_scoring,
+        c_empirical_bayes_role_shrinkage,
+        c_sinkhorn_knopp_bounded_conservation,
+        cpp_simulate_student_t_dfs_worlds,
+        is_native_kernel_loaded,
+    )
+
+    assert is_native_kernel_loaded() is True
+
+    # 1. C11 Sinkhorn-Knopp Bounded Conservation (Gate G1)
+    priors = np.array([0.26, 0.22, 0.14, 0.05], dtype=np.float64)
+    floors = np.array([0.25, 0.18, 0.10, 0.00], dtype=np.float64)
+    caps = np.array([0.38, 0.32, 0.25, 0.08], dtype=np.float64)
+    conserved = c_sinkhorn_knopp_bounded_conservation(priors, floors, caps, 1.0)
+    assert abs(float(np.sum(conserved)) - 1.0) < 1e-6
+    assert conserved[0] >= 0.25 - 1e-9
+    assert conserved[3] <= 0.08 + 1e-9
+
+    # 2. C11 Empirical Bayes Role-Prior Shrinkage (Gate G2)
+    shrunk = c_empirical_bayes_role_shrinkage(
+        raw_sim_fpts=np.array([15.0, 21.71]),
+        dk_avg_fpts=np.array([14.2, 12.5]),
+        salary_role_prior=np.array([2.8, 18.5]),
+        effective_snaps=np.array([8.0, 58.0]),
+        is_vacated_bellcow=np.array([0, 1], dtype=np.int32),
+        is_sub_floor_trap=np.array([1, 0], dtype=np.int32),
+    )
+    assert shrunk[0] <= 4.20 + 1e-9
+    assert abs(float(shrunk[1]) - 21.71) < 1e-6
+
+    # 3. C11 DraftKings +3.0 Milestone Scoring
+    base_m = np.full((100, 3), 15.0, dtype=np.float64)
+    pass_m = np.full((100, 3), 310.0, dtype=np.float64)
+    rush_m = np.zeros((100, 3), dtype=np.float64)
+    rec_m = np.zeros((100, 3), dtype=np.float64)
+    tot_m, bonus_r = c_dk_ppr_milestone_scoring(base_m, pass_m, rush_m, rec_m)
+    assert abs(float(tot_m[0, 0]) - 18.0) < 1e-6
+    assert abs(float(bonus_r[0]) - 1.0) < 1e-6
+
+    # 4. C++20 Student-t (nu=4) 10,000-World Copula
+    cpp_res = cpp_simulate_student_t_dfs_worlds(
+        mean_fpts=np.array([22.0, 18.0, 14.0]),
+        std_fpts=np.array([6.5, 5.5, 4.5]),
+        team_ids=np.array([0, 0, 1], dtype=np.int32),
+        game_ids=np.array([0, 0, 0], dtype=np.int32),
+        pos_codes=np.array([1, 3, 2], dtype=np.int32),
+        n_sims=10000,
+        seed=20261107,
+    )
+    assert cpp_res["worlds"].shape == (10000, 3)
+    assert float(cpp_res["p99"][0]) > float(cpp_res["p90"][0]) > 22.0
+
+    # 5. Complete 4-Level C4 Architecture Suite Verification
+    c4_dir = REPO_ROOT / "C4-Documentation"
+    expected_c4_files = [
+        "README.md",
+        "c4-context.md",
+        "c4-container.md",
+        "c4-component.md",
+        "c4-component-situational-reasoning-and-equation-router.md",
+        "c4-component-jev-snap-and-native-trajectory-engine.md",
+        "c4-component-two-stage-dfs-and-fantasy-engine.md",
+        "c4-component-enterprise-cloud-and-stealth-distillation.md",
+        "c4-component-web-and-mobile-delivery.md",
+        "c4-code-intelligence-native-kernels.md",
+        "c4-code-intelligence-dfs.md",
+        "c4-code-intelligence-fantasy.md",
+        "c4-code-intelligence-coaching-and-reasoning.md",
+        "c4-code-packages-mcp-equations-and-prediction-engine.md",
+        "c4-code-intelligence-providers-and-routing.md",
+        "c4-code-apps-web-and-mobile.md",
+        "apis/gse-engine-and-dfs-api.yaml",
+        "apis/gse-mobile-v1-api.yaml",
+    ]
+    for rel in expected_c4_files:
+        assert (c4_dir / rel).is_file(), f"Missing C4 file: {rel}"
+
+
+

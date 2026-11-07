@@ -1,0 +1,61 @@
+openapi: 3.1.0
+info:
+  title: Galaxy Sports Edge (GSE) Autonomous Engine, Two-Stage DFS & Fantasy API
+  description: Internal and authenticated API surface for Stage 0..5 Game Dossiers, Two-Stage GSE Simulation-to-DFS Packets, Unified Season-Long Fantasy Rankings, and Stealth-Skeleton Distillation Telemetry.
+  version: 5.3.0
+servers:
+  - url: https://www.galaxysportsedge.com
+    description: Production Vercel Edge & Node Server
+paths:
+  /api/engine/live-board:
+    get:
+      summary: Retrieve live Stage 0..5 verified NFL game environments and tier-gated plays
+      parameters:
+        - name: week
+          in: query
+          schema:
+            type: integer
+            default: 9
+      responses:
+        '200':
+          description: Verified game board with server-side entitlement redaction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  week:
+                    type: integer
+                  stage0_roster_gate:
+                    type: string
+                  games:
+                    type: array
+                    items:
+                      type: object
+  /api/dfs/two-stage-packet:
+    get:
+      summary: Retrieve Stage 1 GSE Post-Game-Sim Projections, Stage 2 Curated Pool, and Stage 3 3-Archetype Classic/Showdown Portfolios
+      parameters:
+        - name: slate
+          in: query
+          schema:
+            type: string
+            enum: [sunday_main, tnf_showdown]
+      responses:
+        '200':
+          description: Two-stage GSE DFS optimizer packet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  monte_carlo_sims:
+                    type: integer
+                  curated_pool_count:
+                    type: integer
+                  native_c11_cpp20_kernel_active:
+                    type: boolean
+                  portfolio:
+                    type: array
+                    items:
+                      type: object
