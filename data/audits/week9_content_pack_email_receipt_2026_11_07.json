@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-11-07T16:27:51.938421+00:00",
+  "generated_at_utc": "2026-11-07T16:42:09.638386+00:00",
   "content_pack_path": "docs/predictions/research/2026-11-07/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
   "local_agent_bus_path": "brain/agent-bus/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
-  "content_sha256": "3eb8bcec2e357d145c5d9dd6cbef2b98a9c93b0b577ee62ec7a5bab65011271f",
+  "content_sha256": "7861d229d687c6d7c8dc6aca425693d2228b79012b3a0d85b879bf6dbcde1cfc",
   "recipients": [
     "hq@galaxysportsedge.com",
     "baxley.garrett@gmail.com"
@@ -11,16 +11,23 @@
   "agent_inbox_deliveries": [
     {
       "channel": "github_agent_bus_inbox",
+      "target": "Beexly/agent-bus/inbox/WEEK-9-TOP-10-PLAYS-AND-DFS-DAD-PACKET-2026-11-07.md",
+      "status": "DELIVERED",
+      "commit_sha": "746a10ea95995a47862a9e6ff45bc1d3c2d85038",
+      "url": "https://github.com/Beexly/agent-bus/blob/main/inbox/WEEK-9-TOP-10-PLAYS-AND-DFS-DAD-PACKET-2026-11-07.md"
+    },
+    {
+      "channel": "github_agent_bus_inbox",
       "target": "Beexly/agent-bus/inbox/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
       "status": "DELIVERED",
-      "commit_sha": "ac258c3d60b99cc8f19d06d2935f86b331ab47da",
+      "commit_sha": "3967751029b09e55bb2aa03eb5fbdb9406a92ae2",
       "url": "https://github.com/Beexly/agent-bus/blob/main/inbox/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md"
     },
     {
       "channel": "github_agent_bus_inbox",
       "target": "Beexly/agent-bus/inbox/from-builder/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
       "status": "DELIVERED",
-      "commit_sha": "6a95dcc833de255929a5b0068328edd3af5d12d5",
+      "commit_sha": "5ad17fce84b3aa30b8d5fc94d1ba4b91ee8c92b6",
       "url": "https://github.com/Beexly/agent-bus/blob/main/inbox/from-builder/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md"
     }
   ],
@@ -29,15 +36,23 @@
       "channel": "direct_mx_esmtp_ipv4",
       "recipient": "hq@galaxysportsedge.com",
       "mx_host": "aspmx.l.google.com",
-      "mx_ipv4": "142.250.114.27",
-      "message_id": "<179406887018.18564.10814287741151185425@galaxysportsedge.com>",
+      "mx_ipv4": "142.250.113.26",
+      "message_id": "<179406972550.10232.3879396137413991828@galaxysportsedge.com>",
       "status": "SENT_ACCEPTED_250"
+    },
+    {
+      "channel": "direct_mx_esmtp",
+      "recipient": "garrett@galaxysportsedge.com",
+      "mx_host": "aspmx.l.google.com",
+      "message_id": "<179406972658.10232.5948118395552513923@galaxysportsedge.com>",
+      "status": "MX_POLICY_RESTRICTED_RESIDENTIAL_IP",
+      "detail": "(550, b\"5.7.1 [139.94.213.210] The IP you're using to send mail is not authorized to\\n5.7.1 send email directly to our servers. Please use the SMTP relay at your\\n5.7.1 service provider instead. For more information, go to\\n5.7.1  https://s"
     },
     {
       "channel": "direct_mx_esmtp",
       "recipient": "baxley.garrett@gmail.com",
       "mx_host": "aspmx.l.google.com",
-      "message_id": "<179406887144.18564.11852038984916038029@galaxysportsedge.com>",
+      "message_id": "<179406972910.10232.7069804837060264082@galaxysportsedge.com>",
       "status": "MX_POLICY_RESTRICTED_RESIDENTIAL_IP",
       "detail": "(550, b\"5.7.1 [139.94.213.210] The IP you're using to send mail is not authorized to\\n5.7.1 send email directly to our servers. Please use the SMTP relay at your\\n5.7.1 service provider instead. For more information, go to\\n5.7.1  https://s"
     }

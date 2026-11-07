@@ -28,6 +28,14 @@ from typing import Any
 import urllib.request
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+TOP10_DFS_MD_PATH = (
+    REPO_ROOT
+    / "docs"
+    / "predictions"
+    / "research"
+    / "2026-11-07"
+    / "WEEK-9-TOP-10-PLAYS-AND-DFS-DAD-PACKET-2026-11-07.md"
+)
 PACK_MD_PATH = (
     REPO_ROOT
     / "docs"
@@ -82,13 +90,15 @@ def _markdown_to_clean_html(md_text: str) -> str:
 </html>"""
 
 
-def _deliver_to_beexly_agent_bus(md_text: str) -> list[dict[str, Any]]:
+def _deliver_to_beexly_agent_bus(md_text: str, top10_md_text: str = "") -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
-    b64_content = base64.b64encode(md_text.encode("utf-8")).decode("ascii")
-    for remote_path in (
-        "inbox/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
-        "inbox/from-builder/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
-    ):
+    deliver_items = [
+        ("inbox/WEEK-9-TOP-10-PLAYS-AND-DFS-DAD-PACKET-2026-11-07.md", top10_md_text or md_text),
+        ("inbox/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md", md_text),
+        ("inbox/from-builder/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md", md_text),
+    ]
+    for remote_path, body_text in deliver_items:
+        b64_content = base64.b64encode(body_text.encode("utf-8")).decode("ascii")
         sha_val = None
         try:
             chk = subprocess.run(
@@ -104,7 +114,7 @@ def _deliver_to_beexly_agent_bus(md_text: str) -> list[dict[str, Any]]:
             pass
 
         payload_obj: dict[str, Any] = {
-            "message": "feat(inbox): deliver Week 9 ready-to-post master content & engagement pack (all 5 engine verticals)",
+            "message": "feat(inbox): deliver Week 9 Top 10 Plays/Props + Garrett & Dad DFS Guide (10,000 sims)",
             "content": b64_content,
         }
         if sha_val:
@@ -167,6 +177,7 @@ def _attempt_smtp_mx_delivery(md_text: str, html_text: str) -> list[dict[str, An
     deliveries: list[dict[str, Any]] = []
     targets = [
         ("hq@galaxysportsedge.com", "aspmx.l.google.com", 25),
+        ("garrett@galaxysportsedge.com", "aspmx.l.google.com", 25),
         ("baxley.garrett@gmail.com", "aspmx.l.google.com", 25),
     ]
     for recipient, mx_host, port in targets:
@@ -174,7 +185,7 @@ def _attempt_smtp_mx_delivery(md_text: str, html_text: str) -> list[dict[str, An
         msg_id = make_msgid(domain="galaxysportsedge.com")
         msg["Message-ID"] = msg_id
         msg["Date"] = formatdate(localtime=True)
-        msg["Subject"] = "GSE Week 9 Ready-to-Post Content Packs & Engagement Suite (47-19-1, +24.92u)"
+        msg["Subject"] = "GSE Week 9 Top 10 Plays/Props (77 Categories) + Full DFS Guide for Garrett & Dad (10,000 Sims)"
         msg["From"] = "Galaxy Sports Edge Dispatch <hq@galaxysportsedge.com>"
         msg["To"] = recipient
         msg.set_content(md_text)
@@ -214,7 +225,9 @@ def _attempt_smtp_mx_delivery(md_text: str, html_text: str) -> list[dict[str, An
 
 
 def main() -> int:
-    md_text = PACK_MD_PATH.read_text(encoding="utf-8")
+    top10_md = TOP10_DFS_MD_PATH.read_text(encoding="utf-8") if TOP10_DFS_MD_PATH.is_file() else ""
+    pack_md = PACK_MD_PATH.read_text(encoding="utf-8")
+    md_text = (top10_md + "\n\n---\n\n" + pack_md) if top10_md else pack_md
     html_text = _markdown_to_clean_html(md_text)
 
     # 1. Write to local repo brain/agent-bus/ and docs/wiring/inbox/
@@ -224,7 +237,7 @@ def main() -> int:
     WIRING_INBOX_LOCAL_PATH.write_text(md_text, encoding="utf-8")
 
     # 2. Deliver to GitHub Beexly/agent-bus inbox
-    agent_bus_results = _deliver_to_beexly_agent_bus(md_text)
+    agent_bus_results = _deliver_to_beexly_agent_bus(md_text, top10_md_text=top10_md)
 
     # 3. Attempt direct MX ESMTP delivery
     smtp_results = _attempt_smtp_mx_delivery(md_text, html_text)
