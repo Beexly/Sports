@@ -188,3 +188,10 @@ def test_zero_stale_rosters_and_clean_repo_relative_paths() -> None:
 
     cc_txt = (REPO_ROOT / "docs" / "wiring" / "CORPUS-CENSUS.csv").read_text(encoding="utf-8")
     assert "C:/Users/Garrett/Sports/" not in cc_txt
+
+    seal_router = REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "seal-pot-cognitive-router.ts"
+    if seal_router.exists():
+        assert "5,367" not in seal_router.read_text(encoding="utf-8")
+    zw_router = REPO_ROOT / "scripts" / "ops" / "zero_waste_model_router.py"
+    if zw_router.exists():
+        assert "5,367" not in zw_router.read_text(encoding="utf-8")
