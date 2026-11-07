@@ -59,15 +59,15 @@ def test_7_dfs_equations_execute_and_wire_into_layer_4_gate():
     assert l4["dfs_literature_optimization_engine"]["verified_total_pages_harvested"] >= 5000
 
     sample_lineup = [
-        {"player": "Josh Allen", "position": "QB", "team": "BUF", "opponent": "MIA", "salary": 7800, "projection": 24.5, "sd": 9.2},
-        {"player": "Ollie Gordon II", "position": "RB", "team": "MIA", "opponent": "BUF", "salary": 5000, "projection": 29.07, "sd": 10.6},
-        {"player": "Rhamondre Stevenson", "position": "RB", "team": "NE", "opponent": "TEN", "salary": 5800, "projection": 28.07, "sd": 10.2},
-        {"player": "Khalil Shakir", "position": "WR", "team": "BUF", "opponent": "MIA", "salary": 5700, "projection": 15.8, "sd": 6.4},
-        {"player": "Keon Coleman", "position": "WR", "team": "BUF", "opponent": "MIA", "salary": 4900, "projection": 13.4, "sd": 6.1},
-        {"player": "Jaxon Smith-Njigba", "position": "WR", "team": "SEA", "opponent": "LAR", "salary": 6800, "projection": 19.2, "sd": 7.8},
-        {"player": "Greg Dulcich", "position": "TE", "team": "MIA", "opponent": "BUF", "salary": 3200, "projection": 15.83, "sd": 6.5},
-        {"player": "Malik Davis", "position": "RB", "team": "DAL", "opponent": "ATL", "salary": 4600, "projection": 19.67, "sd": 7.9},
-        {"player": "Patriots DST", "position": "DST", "team": "NE", "opponent": "TEN", "salary": 2900, "projection": 8.4, "sd": 4.1},
+        {"player": "Jared Goff", "position": "QB", "team": "DET", "opponent": "MIA", "salary": 6600, "projection": 30.02, "sd": 9.2},
+        {"player": "Ollie Gordon II", "position": "RB", "team": "MIA", "opponent": "DET", "salary": 5600, "projection": 21.27, "sd": 8.6},
+        {"player": "Malik Davis", "position": "RB", "team": "DAL", "opponent": "IND", "salary": 4000, "projection": 16.10, "sd": 7.2},
+        {"player": "Jameson Williams", "position": "WR", "team": "DET", "opponent": "MIA", "salary": 6100, "projection": 17.68, "sd": 7.4},
+        {"player": "Malik Nabers", "position": "WR", "team": "NYG", "opponent": "PHI", "salary": 7300, "projection": 22.64, "sd": 8.1},
+        {"player": "Jaxon Smith-Njigba", "position": "WR", "team": "SEA", "opponent": "ARI", "salary": 9300, "projection": 29.57, "sd": 8.8},
+        {"player": "Sam LaPorta", "position": "TE", "team": "DET", "opponent": "MIA", "salary": 5100, "projection": 19.43, "sd": 6.5},
+        {"player": "Greg Dulcich", "position": "TE", "team": "MIA", "opponent": "DET", "salary": 3100, "projection": 12.39, "sd": 5.9},
+        {"player": "Broncos DST", "position": "DST", "team": "DEN", "opponent": "CAR", "salary": 3000, "projection": 10.96, "sd": 4.1},
     ]
     sim_matrix = np.array([[155.0, 182.0, 195.0, 171.0], [160.0, 175.0, 202.0, 168.0]])
     gains = eq_dfs_03_submodular_p99_marginal_gain(sim_matrix, win_threshold_p99=180.0)
@@ -76,7 +76,7 @@ def test_7_dfs_equations_execute_and_wire_into_layer_4_gate():
     assert gains[1] == 0.0
 
     audit = evaluate_lineup_with_7_dfs_equations(sample_lineup, submodular_marginal_gain=gains[0])
-    assert audit["eq_dfs_01_stack_and_overlap"]["qb_team"] == "BUF"
+    assert audit["eq_dfs_01_stack_and_overlap"]["qb_team"] == "DET"
     assert audit["eq_dfs_01_stack_and_overlap"]["stack_count"] == 2
     assert audit["eq_dfs_01_stack_and_overlap"]["bring_back_count"] == 2
     assert audit["eq_dfs_02_kl_contrarian_leverage"] > 0

@@ -95,6 +95,6 @@ export function jointThreeLegExceedance(
   if (joint > upperBound + 0.02) {
     joint = upperBound * 0.92;
   }
-  return Math.min(0.28, Math.max(0.14, Math.min(upperBound, joint)));
+  return Math.min(0.28, upperBound, Math.max(0.14, Math.min(upperBound, joint)));
 }
 

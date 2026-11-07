@@ -20,7 +20,8 @@ gse_status_t gse_c_sinkhorn_knopp_bounded_conservation(
         max_cap_weights == NULL || out_weights == NULL) {
         return GSE_STATUS_ERR_NULL_PTR;
     }
-    if (n_players == 0 || target_total_sum <= 0.0 || max_iters == 0) {
+    if (n_players == 0 || max_iters == 0 || !isfinite(target_total_sum) ||
+        target_total_sum <= 0.0 || !isfinite(tol) || tol < 0.0) {
         return GSE_STATUS_ERR_INVALID_DIM;
     }
 
@@ -34,7 +35,7 @@ gse_status_t gse_c_sinkhorn_knopp_bounded_conservation(
 
     double sum_prior = 0.0;
     for (size_t i = 0; i < n_players; ++i) {
-        double p = prior_weights[i] > 1e-9 ? prior_weights[i] : 1e-9;
+        double p = (isfinite(prior_weights[i]) && prior_weights[i] > 1e-9) ? prior_weights[i] : 1e-9;
         w[i] = p;
         sum_prior += p;
     }
@@ -58,13 +59,15 @@ gse_status_t gse_c_sinkhorn_knopp_bounded_conservation(
                 locked_sum += w[i];
                 continue;
             }
-            if (w[i] < min_floor_weights[i]) {
-                w[i] = min_floor_weights[i];
+            const double fl_i = (isfinite(min_floor_weights[i]) && min_floor_weights[i] >= 0.0) ? min_floor_weights[i] : 0.0;
+            const double cp_i = (isfinite(max_cap_weights[i]) && max_cap_weights[i] >= fl_i) ? max_cap_weights[i] : target_total_sum;
+            if (w[i] < fl_i) {
+                w[i] = fl_i;
                 locked[i] = 1;
                 locked_sum += w[i];
                 any_clamped = 1;
-            } else if (w[i] > max_cap_weights[i]) {
-                w[i] = max_cap_weights[i];
+            } else if (w[i] > cp_i) {
+                w[i] = cp_i;
                 locked[i] = 1;
                 locked_sum += w[i];
                 any_clamped = 1;
@@ -95,6 +98,58 @@ gse_status_t gse_c_sinkhorn_knopp_bounded_conservation(
         }
     }
 
+    /* Post-loop exact conservation reconciliation within [min_floor, max_cap] */
+    for (uint32_t pass = 0; pass < 8; ++pass) {
+        double total_now = 0.0;
+        for (size_t i = 0; i < n_players; ++i) {
+            total_now += w[i];
+        }
+        double diff = target_total_sum - total_now;
+        if (fabs(diff) <= tol) {
+            break;
+        }
+        if (diff > 0.0) {
+            double total_room = 0.0;
+            for (size_t i = 0; i < n_players; ++i) {
+                const double fl_i = (isfinite(min_floor_weights[i]) && min_floor_weights[i] >= 0.0) ? min_floor_weights[i] : 0.0;
+                const double cp_i = (isfinite(max_cap_weights[i]) && max_cap_weights[i] >= fl_i) ? max_cap_weights[i] : target_total_sum;
+                if (cp_i > w[i]) {
+                    total_room += (cp_i - w[i]);
+                }
+            }
+            if (total_room <= 1e-15) {
+                break;
+            }
+            for (size_t i = 0; i < n_players; ++i) {
+                const double fl_i = (isfinite(min_floor_weights[i]) && min_floor_weights[i] >= 0.0) ? min_floor_weights[i] : 0.0;
+                const double cp_i = (isfinite(max_cap_weights[i]) && max_cap_weights[i] >= fl_i) ? max_cap_weights[i] : target_total_sum;
+                if (cp_i > w[i]) {
+                    double add = diff * ((cp_i - w[i]) / total_room);
+                    w[i] = (w[i] + add < cp_i) ? (w[i] + add) : cp_i;
+                }
+            }
+        } else {
+            double excess = -diff;
+            double total_slack = 0.0;
+            for (size_t i = 0; i < n_players; ++i) {
+                const double fl_i = (isfinite(min_floor_weights[i]) && min_floor_weights[i] >= 0.0) ? min_floor_weights[i] : 0.0;
+                if (w[i] > fl_i) {
+                    total_slack += (w[i] - fl_i);
+                }
+            }
+            if (total_slack <= 1e-15) {
+                break;
+            }
+            for (size_t i = 0; i < n_players; ++i) {
+                const double fl_i = (isfinite(min_floor_weights[i]) && min_floor_weights[i] >= 0.0) ? min_floor_weights[i] : 0.0;
+                if (w[i] > fl_i) {
+                    double sub = excess * ((w[i] - fl_i) / total_slack);
+                    w[i] = (w[i] - sub > fl_i) ? (w[i] - sub) : fl_i;
+                }
+            }
+        }
+    }
+
     memcpy(out_weights, w, n_players * sizeof(double));
     free(w);
     free(locked);
@@ -117,14 +172,19 @@ gse_status_t gse_c_empirical_bayes_role_shrinkage(
         is_sub_floor_trap == NULL || out_shrunk_fpts == NULL) {
         return GSE_STATUS_ERR_NULL_PTR;
     }
-    if (n_players == 0 || prior_strength_k <= 0.0) {
+    if (n_players == 0 || !isfinite(prior_strength_k) || prior_strength_k <= 0.0) {
         return GSE_STATUS_ERR_INVALID_DIM;
     }
 
     for (size_t i = 0; i < n_players; ++i) {
+        const double raw_i = isfinite(raw_sim_fpts[i]) ? raw_sim_fpts[i] : 0.0;
+        const double dk_i = isfinite(dk_avg_fpts[i]) ? dk_avg_fpts[i] : 0.0;
+        const double prior_i = (isfinite(salary_role_prior[i]) && salary_role_prior[i] > 0.0) ? salary_role_prior[i] : 0.0;
+        const double snaps_i = (isfinite(effective_snaps[i]) && effective_snaps[i] > 0.0) ? effective_snaps[i] : 15.0;
+
         if (is_sub_floor_trap[i] != 0 && is_vacated_bellcow[i] == 0) {
             /* Gate G2: Hard shrinkage on sub-floor WR4/TE3/RB3 trap */
-            double shrunk = 0.25 * raw_sim_fpts[i] + 0.75 * salary_role_prior[i];
+            double shrunk = 0.25 * (raw_i > 0.0 ? raw_i : 0.0) + 0.75 * prior_i;
             if (shrunk > 4.2) {
                 shrunk = 4.2;
             }
@@ -132,16 +192,16 @@ gse_status_t gse_c_empirical_bayes_role_shrinkage(
             continue;
         }
 
-        double n_eff = effective_snaps[i] > 0.0 ? effective_snaps[i] : 15.0;
+        double n_eff = snaps_i;
         double lambda = n_eff / (n_eff + prior_strength_k);
-        double sample_est = raw_sim_fpts[i] > 0.0 ? raw_sim_fpts[i] : dk_avg_fpts[i];
-        double blended = lambda * sample_est + (1.0 - lambda) * salary_role_prior[i];
+        double sample_est = raw_i > 0.0 ? raw_i : (dk_i > 0.0 ? dk_i : 0.0);
+        double blended = lambda * sample_est + (1.0 - lambda) * prior_i;
 
-        if (is_vacated_bellcow[i] != 0 && raw_sim_fpts[i] > blended) {
+        if (is_vacated_bellcow[i] != 0 && raw_i > blended) {
             /* Preserve verified vacated-workload bell-cow projection */
-            blended = raw_sim_fpts[i];
+            blended = raw_i;
         }
-        out_shrunk_fpts[i] = blended > 0.0 ? blended : 0.0;
+        out_shrunk_fpts[i] = (isfinite(blended) && blended > 0.0) ? blended : 0.0;
     }
 
     return GSE_STATUS_OK;
@@ -176,19 +236,23 @@ gse_status_t gse_c_dk_ppr_milestone_scoring(
         for (size_t p = 0; p < n_players; ++p) {
             const size_t idx = row_offset + p;
             double bonus = 0.0;
-            if (pass_yds_matrix[idx] >= 300.0) {
+            const double pass_y = isfinite(pass_yds_matrix[idx]) ? pass_yds_matrix[idx] : 0.0;
+            const double rush_y = isfinite(rush_yds_matrix[idx]) ? rush_yds_matrix[idx] : 0.0;
+            const double rec_y = isfinite(rec_yds_matrix[idx]) ? rec_yds_matrix[idx] : 0.0;
+            const double base_f = isfinite(base_fpts_matrix[idx]) ? base_fpts_matrix[idx] : 0.0;
+            if (pass_y >= 300.0) {
                 bonus += 3.0;
             }
-            if (rush_yds_matrix[idx] >= 100.0) {
+            if (rush_y >= 100.0) {
                 bonus += 3.0;
             }
-            if (rec_yds_matrix[idx] >= 100.0) {
+            if (rec_y >= 100.0) {
                 bonus += 3.0;
             }
             if (bonus > 0.0) {
                 bonus_hits[p] += 1U;
             }
-            out_total_matrix[idx] = base_fpts_matrix[idx] + bonus;
+            out_total_matrix[idx] = base_f + bonus;
         }
     }
 
@@ -218,16 +282,22 @@ gse_status_t gse_c_evt_gpd_tweedie_and_wasserstein_dro(
         out_dro_robust_ev == NULL) {
         return GSE_STATUS_ERR_NULL_PTR;
     }
-    if (n_players == 0 || wasserstein_eps < 0.0 || tweedie_p <= 1.0 || tweedie_p >= 2.0) {
+    if (n_players == 0 || !isfinite(wasserstein_eps) || wasserstein_eps < 0.0 ||
+        !isfinite(tweedie_p) || tweedie_p <= 1.0 || tweedie_p >= 2.0) {
         return GSE_STATUS_ERR_INVALID_DIM;
     }
 
     /* Exceedance ratio (1 - 0.999) / (1 - 0.90) = 0.001 / 0.10 = 0.01 -> (0.01)^(-xi) = 100^xi */
     for (size_t i = 0; i < n_players; ++i) {
-        const double mu = mean_fpts[i] > 0.1 ? mean_fpts[i] : 0.1;
-        const double sigma = std_fpts[i] > 0.1 ? std_fpts[i] : 0.1;
-        const double u_i = p90_threshold[i] > mu ? p90_threshold[i] : (mu + 1.28155 * sigma);
-        const double xi = gpd_xi[i] > 0.01 ? gpd_xi[i] : 0.12;
+        const double raw_mu = isfinite(mean_fpts[i]) ? mean_fpts[i] : 0.1;
+        const double raw_sigma = isfinite(std_fpts[i]) ? fabs(std_fpts[i]) : 0.1;
+        const double mu = raw_mu > 0.1 ? raw_mu : 0.1;
+        const double sigma = raw_sigma > 0.1 ? raw_sigma : 0.1;
+        const double raw_u = isfinite(p90_threshold[i]) ? p90_threshold[i] : (mu + 1.28155 * sigma);
+        const double u_i = raw_u > mu ? raw_u : (mu + 1.28155 * sigma);
+        double xi = isfinite(gpd_xi[i]) ? gpd_xi[i] : 0.12;
+        if (xi < 0.01) xi = 0.01;
+        if (xi > 0.45) xi = 0.45;
         const double beta_scale = 0.68 * sigma * (1.0 + 0.5 * xi);
 
         /* EQ-DFS-10: Pickands-Balkema-de Haan GPD quantile x_{0.999} */
@@ -238,13 +308,13 @@ gse_status_t gse_c_evt_gpd_tweedie_and_wasserstein_dro(
         const double phi = (sigma * sigma) / pow(mu, tweedie_p);
         const double lambda_pois = pow(mu, 2.0 - tweedie_p) / (phi * (2.0 - tweedie_p) + 1e-9);
         double p_zero = exp(-lambda_pois);
-        if (p_zero > 0.95) p_zero = 0.95;
+        if (!isfinite(p_zero) || p_zero > 0.95) p_zero = 0.95;
         if (p_zero < 1e-6) p_zero = 1e-6;
         out_zero_prob[i] = p_zero;
 
         /* EQ-DFS-08: Esfahani-Kuhn / Blanchet-Murthy Wasserstein DRO lower-bound EV */
         const double dro_ev = mu - wasserstein_eps * sigma * (1.0 + 0.5 * p_zero);
-        out_dro_robust_ev[i] = dro_ev > 0.0 ? dro_ev : 0.0;
+        out_dro_robust_ev[i] = (isfinite(dro_ev) && dro_ev > 0.0) ? dro_ev : 0.0;
     }
 
     return GSE_STATUS_OK;
@@ -263,7 +333,7 @@ gse_status_t gse_c_level_k_qre_ownership_fixed_point(
         out_qre_ownership == NULL || out_level3_edge == NULL) {
         return GSE_STATUS_ERR_NULL_PTR;
     }
-    if (n_players == 0 || poisson_tau <= 0.0) {
+    if (n_players == 0 || !isfinite(poisson_tau) || poisson_tau <= 0.0) {
         return GSE_STATUS_ERR_INVALID_DIM;
     }
 
@@ -278,33 +348,54 @@ gse_status_t gse_c_level_k_qre_ownership_fixed_point(
     }
 
     /* Poisson cognitive hierarchy weights f(k) = exp(-tau) * tau^k / k! normalized over k=0,1,2 */
-    const double w0_raw = exp(-poisson_tau);
-    const double w1_raw = w0_raw * poisson_tau;
-    const double w2_raw = w1_raw * poisson_tau * 0.5;
-    const double w_sum = w0_raw + w1_raw + w2_raw;
+    const double tau_clamped = poisson_tau > 25.0 ? 25.0 : poisson_tau;
+    const double w0_raw = exp(-tau_clamped);
+    const double w1_raw = w0_raw * tau_clamped;
+    const double w2_raw = w1_raw * tau_clamped * 0.5;
+    const double w_sum = (w0_raw + w1_raw + w2_raw) > 1e-15 ? (w0_raw + w1_raw + w2_raw) : 1.0;
     const double f0 = w0_raw / w_sum;
     const double f1 = w1_raw / w_sum;
     const double f2 = w2_raw / w_sum;
 
-    double sum0 = 0.0, sum1 = 0.0, sum2 = 0.0;
+    double max_u0 = -1e30, max_u1 = -1e30;
     for (size_t i = 0; i < n_players; ++i) {
-        const double sal_k = (salaries[i] > 1000.0 ? salaries[i] : 3000.0) / 1000.0;
-        const double val0 = (naive_fppg[i] > 0.0 ? naive_fppg[i] : projections[i]) / sal_k;
-        const double val1 = projections[i] / sal_k;
-        pi0[i] = exp(0.55 * val0);
-        pi1[i] = exp(0.85 * val1);
+        const double proj_i = (isfinite(projections[i]) && projections[i] > 0.0) ? projections[i] : 0.0;
+        const double sal_i = (isfinite(salaries[i]) && salaries[i] > 1000.0) ? salaries[i] : 3000.0;
+        const double naive_i = (isfinite(naive_fppg[i]) && naive_fppg[i] > 0.0) ? naive_fppg[i] : proj_i;
+        const double sal_k = sal_i / 1000.0;
+        const double u0 = 0.55 * (naive_i / sal_k);
+        const double u1 = 0.85 * (proj_i / sal_k);
+        pi0[i] = u0;
+        pi1[i] = u1;
+        if (u0 > max_u0) max_u0 = u0;
+        if (u1 > max_u1) max_u1 = u1;
+    }
+
+    double sum0 = 0.0, sum1 = 0.0;
+    for (size_t i = 0; i < n_players; ++i) {
+        pi0[i] = exp(pi0[i] - max_u0);
+        pi1[i] = exp(pi1[i] - max_u1);
         sum0 += pi0[i];
         sum1 += pi1[i];
     }
 
+    double max_u2 = -1e30;
     for (size_t i = 0; i < n_players; ++i) {
         pi0[i] /= (sum0 > 0.0 ? sum0 : 1.0);
         pi1[i] /= (sum1 > 0.0 ? sum1 : 1.0);
-        const double sal_k = (salaries[i] > 1000.0 ? salaries[i] : 3000.0) / 1000.0;
+        const double proj_i = (isfinite(projections[i]) && projections[i] > 0.0) ? projections[i] : 0.0;
+        const double sal_i = (isfinite(salaries[i]) && salaries[i] > 1000.0) ? salaries[i] : 3000.0;
+        const double sal_k = sal_i / 1000.0;
         const double chalk_mix = 0.4 * pi0[i] + 0.6 * pi1[i];
         /* Level-2 contrarians discount chalk concentration */
-        const double u2 = (projections[i] / sal_k) - 6.5 * chalk_mix;
-        pi2[i] = exp(0.95 * u2);
+        const double u2 = 0.95 * ((proj_i / sal_k) - 6.5 * chalk_mix);
+        pi2[i] = u2;
+        if (u2 > max_u2) max_u2 = u2;
+    }
+
+    double sum2 = 0.0;
+    for (size_t i = 0; i < n_players; ++i) {
+        pi2[i] = exp(pi2[i] - max_u2);
         sum2 += pi2[i];
     }
 
@@ -312,13 +403,16 @@ gse_status_t gse_c_level_k_qre_ownership_fixed_point(
     for (size_t i = 0; i < n_players; ++i) {
         pi2[i] /= (sum2 > 0.0 ? sum2 : 1.0);
         double field_prob = (f0 * pi0[i] + f1 * pi1[i] + f2 * pi2[i]) * 9.0;
+        if (!isfinite(field_prob) || field_prob < 0.005) field_prob = 0.005;
         if (field_prob > 0.45) field_prob = 0.45;
-        if (field_prob < 0.005) field_prob = 0.005;
         out_qre_ownership[i] = field_prob;
 
         /* Level-3 GSE best-response leverage against the QRE field mixture */
-        const double sal_k = (salaries[i] > 1000.0 ? salaries[i] : 3000.0) / 1000.0;
-        out_level3_edge[i] = (projections[i] / sal_k) * log(1.0 + 1.0 / (field_prob + 0.02));
+        const double proj_i = (isfinite(projections[i]) && projections[i] > 0.0) ? projections[i] : 0.0;
+        const double sal_i = (isfinite(salaries[i]) && salaries[i] > 1000.0) ? salaries[i] : 3000.0;
+        const double sal_k = sal_i / 1000.0;
+        const double edge = (proj_i / sal_k) * log(1.0 + 1.0 / (field_prob + 0.02));
+        out_level3_edge[i] = (isfinite(edge) && edge > 0.0) ? edge : 0.0;
     }
 
     free(pi0);

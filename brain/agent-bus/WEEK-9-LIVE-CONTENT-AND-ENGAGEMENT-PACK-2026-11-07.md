@@ -1,27 +1,3 @@
-# EXECUTIVE SUMMARY FOR GARRETT & DAD (UPDATED & ZERO-DUPLICATE SCHEDULE VERIFIED)
-- **Schedule Integrity Gate (`0` Duplicate Teams Verified via Firecrawl Alexandria + Live ESPN + DraftKings):**
-  - Strictly **15 Official 2026 Week 9 Games (`30` unique active teams, `0` duplicates; Bye Teams: `PIT`, `TEN`)**:
-    1. `JAX @ BAL` (TNF) · 2. `CIN @ ATL` (Sun 9:30 AM ET Madrid) · 3. `CLE @ NO` (1:00 PM) · 4. `DAL @ IND` (1:00 PM) · 5. `DEN @ CAR` (1:00 PM) · 6. `DET @ MIA` (1:00 PM — **Miami's ONLY game**) · 7. `LAR @ WAS` (1:00 PM) · 8. `NYG @ PHI` (1:00 PM) · 9. `NYJ @ KC` (1:00 PM) · 10. `HOU @ LAC` (4:05 PM) · 11. `LV @ SF` (4:25 PM) · 12. `ARI @ SEA` (4:25 PM) · 13. `GB @ NE` (4:25 PM) · 14. `TB @ CHI` (SNF 8:20 PM) · 15. `BUF @ MIN` (MNF 8:15 PM — **Buffalo's ONLY game**).
-  - All stale 2024 cross-slate games (`MIA @ BUF`, `DET @ GB`, `IND @ MIN`, `TB @ KC`) have been permanently purged and blocked by `assert_zero_duplicate_teams_or_players_on_slate`.
-
-## TOP 10 WEEK 9 PLAYS & PROPS ACROSS ALL 77 CATEGORIES (RANKED BY CONFIDENCE)
-| Rank | Matchup | Category (of 77) | Official Ticket | Engine Projection | Confidence |
-|---:|---|---|---|---|---:|
-| **1** | `DET @ MIA` | RB Rushing / Combo Yards | **Ollie Gordon II OVER 68.5 Rushing Yards (-112)** (or OVER 88.5 Rush+Rec Yds) | `86.4 Rush / 111.2 Total Yds` (`Achane` IR + `Wright` DNP) | **`86/100`** |
-| **2** | `GB @ NE` | RB Rushing / Combo Yards | **Rhamondre Stevenson OVER 64.5 Rushing Yards (-115)** (or OVER 86.5 Rush+Rec Yds) | `81.2 Rush / 108.7 Total Yds` (**`TreVeyon Henderson` OUT**) | **`85/100`** |
-| **3** | `DET @ MIA` | TE Receiving Yards | **Greg Dulcich OVER 34.5 Receiving Yards (-110)** (or OVER 3.5 Receptions +105) | `52.8 Rec Yds / 4.8 Rec` (`Will Kacmarek` LP, MOF funnel) | **`83/100`** |
-| **4** | `ARI @ SEA` | WR Receiving Yards | **Jaxon Smith-Njigba OVER 74.5 Receiving Yards (-110)** | `91.4 Rec Yds (7.6 Rec)` (`29.4%` target share vs ARI zone) | **`82/100`** |
-| **5** | `LV @ SF` | Full-Game Spread / 1H | **San Francisco 49ers -6.5 (-110)** (or **SF 1H -3.5**) | `SF 27.6 - LV 19.2` (`Purdy + Mike Evans + Kittle` red zone) | **`81/100`** |
-| **6** | `NYG @ PHI` | QB Rushing Yards | **Joe Milton (Joe Milton III) OVER 34.5 Rushing Yards (-110)** | `46.8 Rush Yds` (Named PHI QB1 starter over Tanner McKee) | **`81/100`** |
-| **7** | `DET @ MIA` | 1st-Quarter Rushing | **Ollie Gordon II OVER 16.5 1Q Rushing Yards (-110)** | `23.4 1Q Rush Yds` (Scripted Drive 1 & Drive 2 bell-cow carries) | **`81/100`** |
-| **8** | `GB @ NE` | 1st-Quarter Rushing | **Rhamondre Stevenson OVER 15.5 1Q Rushing Yards (-110)** | `21.8 1Q Rush Yds` (Uncontested early carries, Henderson OUT) | **`80/100`** |
-| **9** | `NYG @ PHI` | WR Receiving Yards | **Malik Nabers OVER 68.5 Receiving Yards (-110)** | `83.2 Rec Yds (7.1 Rec)` (`J.J. McCarthy` 31% first-read alpha) | **`80/100`** |
-| **10** | `LV @ SF` | IDP Defensive Sacks | **Nick Bosa OVER 0.25 Sacks (-145)** (Half-sack clears) | `0.88 Expected Sacks` (Wide-9 edge vs Kirk Cousins dropbacks) | **`80/100`** |
-
-*(Full DFS Lineups 1–4 for Garrett & Dad + All 15 Game Breakdowns Follow Immediately Below — See Part 9 for the 4 Optimal DraftKings 9-Man Lineups)*
-
----
-
 # Week 9 Live Master Engine Deliverable, Content Pack & High-Engagement Suite (All 5 Verticals + Ready-to-Post Social)
 
 - **Generated Date:** `2026-11-07`
@@ -444,77 +420,77 @@ Generated directly from `scripts/dfs/build_week9_dual_slate_dfs_packets.py --sim
 
 | Player | Pos | Team | Opp | DK Salary | 10,000-Sim Engine Projection | Value (`Pts / $1k`) | Role & Matchup Leverage |
 |---|---|---|---|---:|---:|---:|---|
-| **Ollie Gordon II** | RB | MIA | DET | **$5,600** | **29.03 DK pts** | **5.18x** | Bell-cow RB1 (`Achane` IR + `Jaylen Wright` DNP + `Kaytron Allen` LP) |
-| **Greg Dulcich** | TE | MIA | DET | **$3,100** | **15.90 DK pts** | **5.13x** | Full-time TE1 (`Will Kacmarek` LP) vs Detroit middle-of-field funnel |
-| **Rhamondre Stevenson** | RB | NE | GB | **$6,100** | **28.17 DK pts** | **4.62x** | Three-down bell-cow RB1 (**`TreVeyon Henderson` OUT** + `Henry`/`AJB` DNP) vs GB light boxes |
-| **Malik Davis** | RB | DAL | IND | **$4,000** | **15.79 DK pts** | **3.95x** | Explosive indoor fast-track RB/FLEX leverage (`Ferguson`/`Turpin` DNP) |
-| **Joe Milton III** | QB | PHI | NYG | **$4,100** | **15.41 DK pts** | **3.76x** | Named Eagles starting QB1 over Tanner McKee (`Jalen Hurts` IR); elite rushing floor |
+| **Rhamondre Stevenson** | RB | NE | GB | **$6,100** | **22.24 DK pts** | **3.65x** | Three-down bell-cow RB1 (**`TreVeyon Henderson` OUT** + `Henry`/`AJB` DNP) vs GB light boxes |
+| **Ollie Gordon II** | RB | MIA | DET | **$5,600** | **21.27 DK pts** | **3.80x** | Bell-cow RB1 (`Achane` IR + `Jaylen Wright` DNP + `Kaytron Allen` LP) |
+| **Joe Milton III** | QB | PHI | NYG | **$4,100** | **19.01 DK pts** | **4.64x** | Named Eagles starting QB1 over Tanner McKee (`Jalen Hurts` IR); elite rushing floor |
+| **Malik Davis** | RB | DAL | IND | **$4,000** | **16.10 DK pts** | **4.03x** | Explosive indoor fast-track RB/FLEX leverage (`Ferguson`/`Turpin` DNP) |
+| **Greg Dulcich** | TE | MIA | DET | **$3,100** | **12.39 DK pts** | **4.00x** | Full-time TE1 (`Will Kacmarek` LP) vs Detroit middle-of-field funnel |
 
-### 9B. Sunday Main Slate (11 Games) — 3 Optimal 9-Man DraftKings Lineups
+### 9B. Sunday Main Slate (11 Games) — 4 Optimal 9-Man DraftKings Lineups
 
-#### Lineup 1 (Primary Tournament & Cash Optimal — `$50,000` Salary · `199.84` Projected Pts · `90.8%` Win Prob vs `p99` Field)
-*Features the Detroit passing core (`Jared Goff + Jahmyr Gibbs + Jameson Williams`) paired with the Miami vacated-workload bring-back (`Ollie Gordon II + Greg Dulcich`) and New England bell-cow `Rhamondre Stevenson`.*
-
-| Slot | Player | Pos | Team | Opp | Salary | 10,000-Sim Proj |
-|---|---|---|---|---|---:|---:|
-| **QB** | **Jared Goff** | QB | DET | @ MIA | $6,600 | **30.21** |
-| **RB1** | **Jahmyr Gibbs** | RB | DET | @ MIA | $10,000 | **39.31** |
-| **RB2** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **28.17** |
-| **WR1** | **Malik Nabers** | WR | NYG | @ PHI | $7,300 | **23.18** |
-| **WR2** | **Jameson Williams** | WR | DET | @ MIA | $6,100 | **17.25** |
-| **WR3** | **KeAndre Lambert-Smith** | WR | LAC | vs HOU | $3,000 | **10.84** |
-| **TE** | **Greg Dulcich** | TE | MIA | vs DET | $3,100 | **15.90** |
-| **FLEX** | **Ollie Gordon II** | RB | MIA | vs DET | $5,600 | **29.03** |
-| **DST** | **Raiders** | DST | LV | @ SF | $2,200 | **5.94** |
-| **TOTAL** | — | — | **6 Teams** | — | **$50,000** | **199.84** |
-
-#### Lineup 2 (Houston Stack + JSN Stud Pivot — `$49,300` Salary · `196.82` Projected Pts · `89.1%` Win Prob vs `p99` Field)
-*Pivots to the `C.J. Stroud + Xavier Hutchinson + Dalton Schultz` Houston passing attack alongside `Jaxon Smith-Njigba`, `Jahmyr Gibbs`, `Rhamondre Stevenson`, and `Ollie Gordon II`.*
+#### Lineup 1 (Primary Tournament & Cash Optimal — `$49,600` Salary · `181.30` Projected Pts · `82.3%` Win Prob vs `p99` Field)
+*Features the Detroit passing core (`Jared Goff + Jameson Williams + Sam LaPorta`) paired with the Miami vacated-workload bring-back (`Greg Dulcich`), Seattle stud `Jaxon Smith-Njigba`, Green Bay workhorse `Josh Jacobs`, and Dallas indoor leverage `Malik Davis`.*
 
 | Slot | Player | Pos | Team | Opp | Salary | 10,000-Sim Proj |
 |---|---|---|---|---|---:|---:|
-| **QB** | **C.J. Stroud** | QB | HOU | @ LAC | $5,900 | **27.76** |
-| **RB1** | **Jahmyr Gibbs** | RB | DET | @ MIA | $10,000 | **39.31** |
-| **RB2** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **28.17** |
-| **WR1** | **Jaxon Smith-Njigba** | WR | SEA | vs ARI | $9,300 | **28.37** |
-| **WR2** | **Xavier Hutchinson** | WR | HOU | @ LAC | $4,000 | **12.80** |
-| **WR3** | **KeAndre Lambert-Smith** | WR | LAC | vs HOU | $3,000 | **10.84** |
-| **TE** | **Dalton Schultz** | TE | HOU | @ LAC | $3,200 | **14.61** |
-| **FLEX** | **Ollie Gordon II** | RB | MIA | vs DET | $5,600 | **29.03** |
-| **DST** | **Raiders** | DST | LV | @ SF | $2,200 | **5.94** |
-| **TOTAL** | — | — | **7 Teams** | — | **$49,300** | **196.82** |
+| **QB** | **Jared Goff** | QB | DET | @ MIA | $6,600 | **30.02** |
+| **RB1** | **Josh Jacobs** | RB | GB | @ NE | $6,800 | **27.48** |
+| **RB2** | **Malik Davis** | RB | DAL | @ IND | $4,000 | **16.10** |
+| **WR1** | **Jaxon Smith-Njigba** | WR | SEA | vs ARI | $9,300 | **29.57** |
+| **WR2** | **Jameson Williams** | WR | DET | @ MIA | $6,100 | **17.68** |
+| **WR3** | **Stefon Diggs** | WR | WAS | vs LAR | $5,600 | **17.65** |
+| **TE** | **Sam LaPorta** | TE | DET | @ MIA | $5,100 | **19.43** |
+| **FLEX** | **Greg Dulcich** | TE | MIA | vs DET | $3,100 | **12.39** |
+| **DST** | **Broncos** | DST | DEN | @ CAR | $3,000 | **10.96** |
+| **TOTAL** | — | — | **7 Teams** | — | **$49,600** | **181.30** |
 
-#### Lineup 3 (Goff + Gibbs + JSN + Dulcich + Ollie Gordon II Ceiling Build — `$49,900` Salary · `198.28` Projected Pts · `89.9%` Win Prob vs `p99` Field)
-*Combines the two highest-ceiling skill studs on the slate (`Jahmyr Gibbs $10,000` + `Jaxon Smith-Njigba $9,300`) made possible by the underpriced salaries on `Ollie Gordon II ($5,600)`, `Rhamondre Stevenson ($6,100)`, and `Greg Dulcich ($3,100)`.*
-
-| Slot | Player | Pos | Team | Opp | Salary | 10,000-Sim Proj |
-|---|---|---|---|---|---:|---:|
-| **QB** | **Jared Goff** | QB | DET | @ MIA | $6,600 | **30.21** |
-| **RB1** | **Jahmyr Gibbs** | RB | DET | @ MIA | $10,000 | **39.31** |
-| **RB2** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **28.17** |
-| **WR1** | **Jaxon Smith-Njigba** | WR | SEA | vs ARI | $9,300 | **28.37** |
-| **WR2** | **Xavier Hutchinson** | WR | HOU | @ LAC | $4,000 | **12.80** |
-| **WR3** | **Isaac TeSlaa** | WR | DET | @ MIA | $3,100 | **9.67** |
-| **TE** | **Greg Dulcich** | TE | MIA | vs DET | $3,100 | **15.90** |
-| **FLEX** | **Ollie Gordon II** | RB | MIA | vs DET | $5,600 | **29.03** |
-| **DST** | **Jets** | DST | NYJ | @ KC | $2,100 | **4.81** |
-| **TOTAL** | — | — | **6 Teams** | — | **$49,900** | **198.28** |
-
-#### Lineup 4 (GPP Indoor Shootout & Dual-Threat Leverage Build Featuring `Malik Davis` & `Joe Milton III` — `$49,800` Salary · `191.45` Projected Pts)
-*Designed specifically for large-field 150-max tournaments to capture low-owned ceiling from `Joe Milton III ($4,100)` and `Malik Davis ($4,000)` alongside `CeeDee Lamb`, `Jahmyr Gibbs`, `Ollie Gordon II`, `Rhamondre Stevenson`, and `Greg Dulcich`.*
+#### Lineup 2 (Houston Stack + Puka Nacua & Bell-Cow RB Trio — `$49,900` Salary · `181.99` Projected Pts · `84.1%` Win Prob vs `p99` Field)
+*Pivots to the `C.J. Stroud + Dalton Schultz` Houston passing attack with `Ladd McConkey` bring-back alongside `Puka Nacua`, `Josh Jacobs`, `Rhamondre Stevenson`, and `Ollie Gordon II`.*
 
 | Slot | Player | Pos | Team | Opp | Salary | 10,000-Sim Proj |
 |---|---|---|---|---|---:|---:|
-| **QB** | **Joe Milton III** | QB | PHI | vs NYG | $4,100 | **15.41** |
-| **RB1** | **Jahmyr Gibbs** | RB | DET | @ MIA | $10,000 | **39.31** |
-| **RB2** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **28.17** |
-| **WR1** | **Jaxon Smith-Njigba** | WR | SEA | vs ARI | $9,300 | **28.37** |
-| **WR2** | **CeeDee Lamb** | WR | DAL | @ IND | $8,300 | **24.60** |
-| **WR3** | **KeAndre Lambert-Smith** | WR | LAC | vs HOU | $3,000 | **10.84** |
-| **TE** | **Greg Dulcich** | TE | MIA | vs DET | $3,100 | **15.90** |
-| **FLEX** | **Malik Davis** | RB | DAL | @ IND | $4,000 | **15.79** |
-| **DST** | **Jets** | DST | NYJ | @ KC | $2,100 | **4.81** |
-| **TOTAL** | — | — | **7 Teams** | — | **$50,000** | **183.20** |
+| **QB** | **C.J. Stroud** | QB | HOU | @ LAC | $5,900 | **28.31** |
+| **RB1** | **Josh Jacobs** | RB | GB | @ NE | $6,800 | **27.48** |
+| **RB2** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **22.24** |
+| **WR1** | **Puka Nacua** | WR | LAR | @ WAS | $8,800 | **26.07** |
+| **WR2** | **Stefon Diggs** | WR | WAS | vs LAR | $5,600 | **17.65** |
+| **WR3** | **Ladd McConkey** | WR | LAC | vs HOU | $5,500 | **15.88** |
+| **TE** | **Dalton Schultz** | TE | HOU | @ LAC | $3,200 | **13.15** |
+| **FLEX** | **Ollie Gordon II** | RB | MIA | vs DET | $5,600 | **21.27** |
+| **DST** | **Packers** | DST | GB | @ NE | $2,400 | **9.94** |
+| **TOTAL** | — | — | **7 Teams** | — | **$49,900** | **181.99** |
+
+#### Lineup 3 (Eagles Dual-Threat Stack + Three-RB Volume Build — `$49,500` Salary · `167.54` Projected Pts · `72.9%` Win Prob vs `p99` Field)
+*Stacks `Joe Milton III ($4,100) + DeVonta Smith ($6,800)` with `Malik Nabers ($7,300)` bring-back and three bell-cow running backs (`Rhamondre Stevenson`, `Ashton Jeanty`, `Ollie Gordon II`).*
+
+| Slot | Player | Pos | Team | Opp | Salary | 10,000-Sim Proj |
+|---|---|---|---|---|---:|---:|
+| **QB** | **Joe Milton III** | QB | PHI | vs NYG | $4,100 | **19.01** |
+| **RB1** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **22.24** |
+| **RB2** | **Ashton Jeanty** | RB | LV | @ SF | $5,900 | **19.88** |
+| **WR1** | **Malik Nabers** | WR | NYG | @ PHI | $7,300 | **22.64** |
+| **WR2** | **DeVonta Smith** | WR | PHI | vs NYG | $6,800 | **16.43** |
+| **WR3** | **Ladd McConkey** | WR | LAC | vs HOU | $5,500 | **15.88** |
+| **TE** | **Sam LaPorta** | TE | DET | @ MIA | $5,100 | **19.43** |
+| **FLEX** | **Ollie Gordon II** | RB | MIA | vs DET | $5,600 | **21.27** |
+| **DST** | **Patriots** | DST | NE | vs GB | $3,100 | **10.76** |
+| **TOTAL** | — | — | **7 Teams** | — | **$49,500** | **167.54** |
+
+#### Lineup 4 (GPP Stud WR + Vacated-Workload Leverage Build Featuring `Malik Davis` & `Joe Milton III` — `$49,500` Salary · `174.27` Projected Pts)
+*Designed specifically for large-field tournaments to pair both top-ceiling alpha WRs (`Jaxon Smith-Njigba $9,300` + `Puka Nacua $8,800`) with `Joe Milton III ($4,100)`, `Rhamondre Stevenson ($6,100)`, `Ollie Gordon II ($5,600)`, `Malik Davis ($4,000)`, and `Greg Dulcich ($3,100)`.*
+
+| Slot | Player | Pos | Team | Opp | Salary | 10,000-Sim Proj |
+|---|---|---|---|---|---:|---:|
+| **QB** | **Joe Milton III** | QB | PHI | vs NYG | $4,100 | **19.01** |
+| **RB1** | **Rhamondre Stevenson** | RB | NE | vs GB | $6,100 | **22.24** |
+| **RB2** | **Ollie Gordon II** | RB | MIA | vs DET | $5,600 | **21.27** |
+| **WR1** | **Jaxon Smith-Njigba** | WR | SEA | vs ARI | $9,300 | **29.57** |
+| **WR2** | **Puka Nacua** | WR | LAR | @ WAS | $8,800 | **26.07** |
+| **WR3** | **Jameson Williams** | WR | DET | @ MIA | $6,100 | **17.68** |
+| **TE** | **Greg Dulcich** | TE | MIA | vs DET | $3,100 | **12.39** |
+| **FLEX** | **Malik Davis** | RB | DAL | @ IND | $4,000 | **16.10** |
+| **DST** | **Packers** | DST | GB | @ NE | $2,400 | **9.94** |
+| **TOTAL** | — | — | **8 Teams** | — | **$49,500** | **174.27** |
 
 ---
 

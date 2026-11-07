@@ -37,7 +37,7 @@ CORPUS_JSON_PATH = (
     REPO_ROOT / "data" / "corpus" / "dfs_lineup_optimization_5000_page_corpus_2026_11_07.json"
 )
 
-LATE_WINDOW_TEAMS_WEEK9 = {"LAR", "SEA", "DET", "GB", "IND", "MIN", "TB", "KC"}
+LATE_WINDOW_TEAMS_WEEK9 = {"HOU", "LAC", "ARI", "SEA", "GB", "NE", "LV", "SF", "TB", "CHI", "BUF", "MIN"}
 
 
 def load_dfs_5000_page_corpus_summary() -> Dict[str, Any]:

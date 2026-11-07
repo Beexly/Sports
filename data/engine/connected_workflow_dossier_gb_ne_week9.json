@@ -25458,8 +25458,8 @@
           "tackles_plus_assists": {
             "mean": 7.67,
             "std": 19.65,
-            "p10": -18.98,
-            "p25": -6.71,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 7.25,
             "p75": 21.54,
             "p90": 34.41,
@@ -25903,8 +25903,8 @@
           "rec_tds": {
             "mean": 0.09,
             "std": 0.31,
-            "p10": -0.31,
-            "p25": -0.12,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.08,
             "p75": 0.29,
             "p90": 0.49,
@@ -26036,7 +26036,7 @@
           "rush_yds": {
             "mean": 50.27,
             "std": 42.02,
-            "p10": -5.89,
+            "p10": 0.0,
             "p25": 19.21,
             "p50": 48.55,
             "p75": 80.36,
@@ -26127,8 +26127,8 @@
           "rec_yds": {
             "mean": 5.11,
             "std": 16.64,
-            "p10": -14.4,
-            "p25": -5.86,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 3.64,
             "p75": 13.99,
             "p90": 24.71,
@@ -26147,8 +26147,8 @@
           "rec_tds": {
             "mean": 0.03,
             "std": 0.28,
-            "p10": -0.35,
-            "p25": -0.17,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.03,
             "p75": 0.23,
             "p90": 0.41,
@@ -26178,7 +26178,7 @@
           "rush_plus_rec_yds": {
             "mean": 25.93,
             "std": 26.18,
-            "p10": -4.07,
+            "p10": 0.0,
             "p25": 6.77,
             "p50": 21.15,
             "p75": 40.22,
@@ -26330,37 +26330,39 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 42.18,
-            "std": 40.43,
-            "p10": 3.4,
-            "p25": 11.14,
-            "p50": 29.21,
-            "p75": 61.25,
-            "p90": 103.26,
-            "cqr_interval_width_mult": 1.08
+            "mean": 48.4,
+            "std": 15.6,
+            "p10": 26.98,
+            "p25": 36.5,
+            "p50": 46.95,
+            "p75": 57.4,
+            "p90": 66.92,
+            "cqr_interval_width_mult": 1.0
           },
           "receptions": {
-            "mean": 4.24,
-            "std": 4.11,
-            "p10": 0.07,
-            "p25": 1.08,
-            "p50": 3.03,
-            "p75": 6.28,
-            "p90": 10.37,
-            "cqr_interval_width_mult": 1.08
+            "mean": 4.4,
+            "std": 1.5,
+            "p10": 2.35,
+            "p25": 3.26,
+            "p50": 4.27,
+            "p75": 5.27,
+            "p90": 6.19,
+            "cqr_interval_width_mult": 1.0
           },
           "rec_tds": {
-            "mean": 0.25,
-            "std": 0.31,
+            "mean": 0.34,
+            "std": 0.46,
             "p10": 0.0,
-            "p25": 0.04,
-            "p50": 0.16,
-            "p75": 0.36,
-            "p90": 0.65,
-            "cqr_interval_width_mult": 1.08
+            "p25": 0.02,
+            "p50": 0.33,
+            "p75": 0.64,
+            "p90": 0.92,
+            "cqr_interval_width_mult": 1.0
           },
           "target_share_conserved": 0.1459
-        }
+        },
+        "expected_td_lambda": 0.34,
+        "anytime_td_prob": 0.2882
       },
       "Jonnu Smith": {
         "athlete": "Jonnu Smith",
@@ -26440,8 +26442,8 @@
           "rec_tds": {
             "mean": 0.09,
             "std": 0.3,
-            "p10": -0.3,
-            "p25": -0.12,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.07,
             "p75": 0.29,
             "p90": 0.49,
@@ -26528,8 +26530,8 @@
           "rec_tds": {
             "mean": 0.41,
             "std": 0.71,
-            "p10": -0.53,
-            "p25": -0.09,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.38,
             "p75": 0.87,
             "p90": 1.37,
@@ -26539,8 +26541,8 @@
           "rush_yds": {
             "mean": 2.28,
             "std": 13.99,
-            "p10": -16.43,
-            "p25": -7.76,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.8,
             "p75": 11.83,
             "p90": 20.86,
@@ -26658,8 +26660,8 @@
           "rush_yds": {
             "mean": 2.4,
             "std": 13.95,
-            "p10": -16.14,
-            "p25": -7.67,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.92,
             "p75": 11.91,
             "p90": 21.27,
@@ -26766,8 +26768,8 @@
           "rec_tds": {
             "mean": 0.06,
             "std": 0.29,
-            "p10": -0.32,
-            "p25": -0.15,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.05,
             "p75": 0.26,
             "p90": 0.45,
@@ -26777,8 +26779,8 @@
           "rush_yds": {
             "mean": 2.27,
             "std": 13.97,
-            "p10": -16.18,
-            "p25": -7.74,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.95,
             "p75": 11.57,
             "p90": 21.03,
@@ -26797,8 +26799,8 @@
           "rush_plus_rec_yds": {
             "mean": 12.79,
             "std": 22.14,
-            "p10": -11.6,
-            "p25": -1.71,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 9.6,
             "p75": 22.96,
             "p90": 40.49,
@@ -26885,8 +26887,8 @@
           "rec_tds": {
             "mean": 0.15,
             "std": 0.33,
-            "p10": -0.27,
-            "p25": -0.08,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.12,
             "p75": 0.35,
             "p90": 0.58,
@@ -26896,8 +26898,8 @@
           "rush_yds": {
             "mean": 6.69,
             "std": 15.85,
-            "p10": -13.11,
-            "p25": -4.56,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 5.59,
             "p75": 16.34,
             "p90": 27.93,
@@ -26916,7 +26918,7 @@
           "rush_plus_rec_yds": {
             "mean": 31.25,
             "std": 32.95,
-            "p10": -3.0,
+            "p10": 0.0,
             "p25": 8.62,
             "p50": 23.93,
             "p75": 45.78,
@@ -27069,8 +27071,8 @@
           "tackles_plus_assists": {
             "mean": 8.51,
             "std": 19.66,
-            "p10": -17.94,
-            "p25": -5.9,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 7.86,
             "p75": 22.25,
             "p90": 35.52,
@@ -27318,7 +27320,7 @@
           "rush_yds": {
             "mean": 11.61,
             "std": 9.73,
-            "p10": -0.8,
+            "p10": 0.0,
             "p25": 3.52,
             "p50": 10.0,
             "p75": 17.56,
@@ -27406,68 +27408,70 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 41.85,
-            "std": 41.54,
-            "p10": 3.31,
-            "p25": 11.23,
-            "p50": 29.09,
-            "p75": 58.88,
-            "p90": 102.44,
-            "cqr_interval_width_mult": 1.08
+            "mean": 27.5,
+            "std": 12.8,
+            "p10": 10.3,
+            "p25": 18.1,
+            "p50": 26.68,
+            "p75": 35.26,
+            "p90": 43.06,
+            "cqr_interval_width_mult": 1.0
           },
           "receptions": {
-            "mean": 4.12,
-            "std": 4.13,
-            "p10": 0.09,
-            "p25": 1.1,
-            "p50": 2.91,
-            "p75": 5.92,
-            "p90": 10.06,
-            "cqr_interval_width_mult": 1.08
+            "mean": 4.1,
+            "std": 1.5,
+            "p10": 2.06,
+            "p25": 2.97,
+            "p50": 3.98,
+            "p75": 4.99,
+            "p90": 5.9,
+            "cqr_interval_width_mult": 1.0
           },
           "rec_tds": {
-            "mean": 0.14,
-            "std": 0.33,
-            "p10": -0.28,
-            "p25": -0.09,
-            "p50": 0.11,
-            "p75": 0.34,
-            "p90": 0.57,
-            "cqr_interval_width_mult": 1.08
+            "mean": 0.16,
+            "std": 0.36,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 0.16,
+            "p75": 0.4,
+            "p90": 0.62,
+            "cqr_interval_width_mult": 1.0
           },
           "target_share_conserved": 0.1479,
           "rush_yds": {
-            "mean": 63.86,
-            "std": 45.07,
-            "p10": 3.41,
-            "p25": 29.9,
-            "p50": 61.39,
-            "p75": 95.57,
-            "p90": 128.65,
-            "cqr_interval_width_mult": 1.08
+            "mean": 81.2,
+            "std": 20.4,
+            "p10": 52.65,
+            "p25": 65.09,
+            "p50": 78.76,
+            "p75": 92.43,
+            "p90": 104.87,
+            "cqr_interval_width_mult": 1.0
           },
           "carries": {
-            "mean": 17.54,
-            "std": 11.73,
-            "p10": 0.93,
-            "p25": 7.96,
-            "p50": 16.57,
-            "p75": 25.77,
-            "p90": 34.77,
-            "cqr_interval_width_mult": 1.08
+            "mean": 18.4,
+            "std": 3.6,
+            "p10": 13.24,
+            "p25": 15.44,
+            "p50": 17.85,
+            "p75": 20.26,
+            "p90": 22.46,
+            "cqr_interval_width_mult": 1.0
           },
           "rush_plus_rec_yds": {
-            "mean": 105.71,
-            "std": 62.22,
-            "p10": 27.68,
-            "p25": 59.45,
-            "p50": 98.48,
-            "p75": 143.99,
-            "p90": 194.22,
-            "cqr_interval_width_mult": 1.08
+            "mean": 108.7,
+            "std": 23.9,
+            "p10": 74.85,
+            "p25": 89.43,
+            "p50": 105.44,
+            "p75": 121.45,
+            "p90": 136.03,
+            "cqr_interval_width_mult": 1.0
           },
           "carry_share_conserved": 0.5759
-        }
+        },
+        "expected_td_lambda": 0.64,
+        "anytime_td_prob": 0.4727
       },
       "Corey Kiner": {
         "athlete": "Corey Kiner",
@@ -27530,8 +27534,8 @@
           "rec_yds": {
             "mean": 5.13,
             "std": 16.78,
-            "p10": -14.37,
-            "p25": -6.05,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 3.7,
             "p75": 14.07,
             "p90": 24.95,
@@ -27550,8 +27554,8 @@
           "rec_tds": {
             "mean": 0.02,
             "std": 0.27,
-            "p10": -0.36,
-            "p25": -0.18,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.02,
             "p75": 0.21,
             "p90": 0.39,
@@ -27581,7 +27585,7 @@
           "rush_plus_rec_yds": {
             "mean": 28.55,
             "std": 28.47,
-            "p10": -3.41,
+            "p10": 0.0,
             "p25": 7.76,
             "p50": 23.14,
             "p75": 43.43,
@@ -27672,8 +27676,8 @@
           "rec_tds": {
             "mean": 0.06,
             "std": 0.28,
-            "p10": -0.32,
-            "p25": -0.15,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.05,
             "p75": 0.25,
             "p90": 0.45,
@@ -27799,94 +27803,6 @@
           }
         }
       },
-      "Hunter Henry": {
-        "athlete": "Hunter Henry",
-        "team": "NE",
-        "position": "TE",
-        "prop_count_on_board": 2,
-        "injury_status": {
-          "week": "9",
-          "report_status": "",
-          "practice_status": "Did Not Participate In Practice",
-          "primary_injury": "Foot"
-        },
-        "situational_multiplier": 1.0,
-        "roster_truth_adjustment": {},
-        "pbp_2026_baseline": {
-          "pbp_short_names_checked": [
-            "H.Henry",
-            "Hu.Henry",
-            "Hun.Henry"
-          ],
-          "has_2026_pbp_plays": true,
-          "player_gp": 7,
-          "team_gp": 7,
-          "dropbacks": 0,
-          "completions": 0,
-          "pass_yds": 0.0,
-          "pass_tds": 0,
-          "interceptions": 0,
-          "pass_epa_per_dropback": 0.0,
-          "carries": 0,
-          "rush_yds": 0.0,
-          "rush_tds": 0,
-          "rush_yds_per_pg": 0.0,
-          "targets": 31,
-          "receptions": 26,
-          "rec_yds": 296.0,
-          "rec_tds": 2,
-          "air_yds": 187.0,
-          "rec_yds_per_pg": 42.29,
-          "targets_per_pg": 4.43,
-          "carries_per_pg": 0.0,
-          "solo_tackles": 0,
-          "assist_tackles": 0,
-          "total_tackles": 0,
-          "tackles_per_pg": 0.0,
-          "sacks": 0.0,
-          "fg_att": 0,
-          "fg_made": 0,
-          "xp_att": 0,
-          "xp_made": 0
-        },
-        "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 42.5,
-          "Total Receptions (incl. overtime)": 3.5
-        },
-        "projections": {
-          "rec_yds": {
-            "mean": 35.81,
-            "std": 37.08,
-            "p10": 2.7,
-            "p25": 8.99,
-            "p50": 23.44,
-            "p75": 51.03,
-            "p90": 89.26,
-            "cqr_interval_width_mult": 1.08
-          },
-          "receptions": {
-            "mean": 3.18,
-            "std": 3.32,
-            "p10": 0.0,
-            "p25": 0.74,
-            "p50": 2.2,
-            "p75": 4.61,
-            "p90": 7.91,
-            "cqr_interval_width_mult": 1.08
-          },
-          "rec_tds": {
-            "mean": 0.12,
-            "std": 0.32,
-            "p10": -0.29,
-            "p25": -0.11,
-            "p50": 0.1,
-            "p75": 0.31,
-            "p90": 0.55,
-            "cqr_interval_width_mult": 1.08
-          },
-          "target_share_conserved": 0.126
-        }
-      },
       "Eli Raridon": {
         "athlete": "Eli Raridon",
         "team": "NE",
@@ -27965,8 +27881,8 @@
           "rec_tds": {
             "mean": 0.07,
             "std": 0.29,
-            "p10": -0.31,
-            "p25": -0.13,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.06,
             "p75": 0.27,
             "p90": 0.46,
@@ -28053,8 +27969,8 @@
           "rec_tds": {
             "mean": 0.13,
             "std": 0.32,
-            "p10": -0.28,
-            "p25": -0.1,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.11,
             "p75": 0.33,
             "p90": 0.55,
@@ -28064,8 +27980,8 @@
           "rush_yds": {
             "mean": 2.59,
             "std": 14.19,
-            "p10": -16.2,
-            "p25": -7.63,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 2.07,
             "p75": 11.92,
             "p90": 21.42,
@@ -28084,7 +28000,7 @@
           "rush_plus_rec_yds": {
             "mean": 41.38,
             "std": 41.05,
-            "p10": -0.86,
+            "p10": 0.0,
             "p25": 12.29,
             "p50": 31.26,
             "p75": 60.95,
@@ -28172,8 +28088,8 @@
           "rec_tds": {
             "mean": 0.11,
             "std": 0.31,
-            "p10": -0.29,
-            "p25": -0.11,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.09,
             "p75": 0.3,
             "p90": 0.52,
@@ -28183,8 +28099,8 @@
           "rush_yds": {
             "mean": 2.58,
             "std": 14.14,
-            "p10": -16.09,
-            "p25": -7.52,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 2.24,
             "p75": 11.94,
             "p90": 21.65,
@@ -28203,7 +28119,7 @@
           "rush_plus_rec_yds": {
             "mean": 34.44,
             "std": 36.61,
-            "p10": -3.38,
+            "p10": 0.0,
             "p25": 9.08,
             "p50": 26.12,
             "p75": 51.05,
@@ -28291,8 +28207,8 @@
           "rec_tds": {
             "mean": 0.13,
             "std": 0.32,
-            "p10": -0.28,
-            "p25": -0.1,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.1,
             "p75": 0.34,
             "p90": 0.56,
@@ -28302,8 +28218,8 @@
           "rush_yds": {
             "mean": 2.63,
             "std": 14.2,
-            "p10": -16.17,
-            "p25": -7.41,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 2.18,
             "p75": 11.93,
             "p90": 21.55,
@@ -28322,130 +28238,11 @@
           "rush_plus_rec_yds": {
             "mean": 43.29,
             "std": 42.74,
-            "p10": -0.46,
+            "p10": 0.0,
             "p25": 13.17,
             "p50": 33.0,
             "p75": 62.57,
             "p90": 104.86,
-            "cqr_interval_width_mult": 1.08
-          },
-          "carry_share_conserved": 0.0044
-        }
-      },
-      "A.J. Brown": {
-        "athlete": "A.J. Brown",
-        "team": "NE",
-        "position": "WR",
-        "prop_count_on_board": 2,
-        "injury_status": {
-          "week": "9",
-          "report_status": "",
-          "practice_status": "Did Not Participate In Practice",
-          "primary_injury": "Ankle"
-        },
-        "situational_multiplier": 1.0,
-        "roster_truth_adjustment": {},
-        "pbp_2026_baseline": {
-          "pbp_short_names_checked": [
-            "A.Brown",
-            "A..Brown",
-            "A.J.Brown"
-          ],
-          "has_2026_pbp_plays": true,
-          "player_gp": 3,
-          "team_gp": 7,
-          "dropbacks": 0,
-          "completions": 0,
-          "pass_yds": 0.0,
-          "pass_tds": 0,
-          "interceptions": 0,
-          "pass_epa_per_dropback": 0.0,
-          "carries": 0,
-          "rush_yds": 0.0,
-          "rush_tds": 0,
-          "rush_yds_per_pg": 0.0,
-          "targets": 20,
-          "receptions": 9,
-          "rec_yds": 101.0,
-          "rec_tds": 0,
-          "air_yds": 267.0,
-          "rec_yds_per_pg": 33.67,
-          "targets_per_pg": 6.67,
-          "carries_per_pg": 0.0,
-          "solo_tackles": 0,
-          "assist_tackles": 0,
-          "total_tackles": 0,
-          "tackles_per_pg": 0.0,
-          "sacks": 0.0,
-          "fg_att": 0,
-          "fg_made": 0,
-          "xp_att": 0,
-          "xp_made": 0
-        },
-        "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 33.5,
-          "Total Receptions (incl. overtime)": 2.5
-        },
-        "projections": {
-          "rec_yds": {
-            "mean": 51.9,
-            "std": 47.43,
-            "p10": 1.45,
-            "p25": 16.28,
-            "p50": 40.13,
-            "p75": 77.59,
-            "p90": 122.54,
-            "cqr_interval_width_mult": 1.08
-          },
-          "receptions": {
-            "mean": 4.71,
-            "std": 4.23,
-            "p10": 0.0,
-            "p25": 1.41,
-            "p50": 3.66,
-            "p75": 6.95,
-            "p90": 10.96,
-            "cqr_interval_width_mult": 1.08
-          },
-          "rec_tds": {
-            "mean": 0.17,
-            "std": 0.76,
-            "p10": -0.87,
-            "p25": -0.38,
-            "p50": 0.16,
-            "p75": 0.71,
-            "p90": 1.22,
-            "cqr_interval_width_mult": 1.08
-          },
-          "target_share_conserved": 0.1897,
-          "rush_yds": {
-            "mean": 2.54,
-            "std": 14.16,
-            "p10": -16.26,
-            "p25": -7.65,
-            "p50": 2.01,
-            "p75": 12.01,
-            "p90": 21.51,
-            "cqr_interval_width_mult": 1.08
-          },
-          "carries": {
-            "mean": 1.73,
-            "std": 2.45,
-            "p10": 0.0,
-            "p25": 0.0,
-            "p50": 0.48,
-            "p75": 3.06,
-            "p90": 5.52,
-            "cqr_interval_width_mult": 1.08
-          },
-          "rush_plus_rec_yds": {
-            "mean": 54.44,
-            "std": 49.63,
-            "p10": -1.18,
-            "p25": 17.71,
-            "p50": 43.99,
-            "p75": 82.32,
-            "p90": 126.99,
             "cqr_interval_width_mult": 1.08
           },
           "carry_share_conserved": 0.0044

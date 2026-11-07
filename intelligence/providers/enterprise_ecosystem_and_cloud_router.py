@@ -98,7 +98,12 @@ def verify_enterprise_programs_and_services() -> Dict[str, Any]:
             },
             "google_cloud_and_gemini": {
                 "workload": "Frontier Council Seat (Gemini) + Colab GPU notebook execution + BigQuery/Drive sync",
-                "env_configured": bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or True),
+                "env_configured": bool(
+                    os.environ.get("GEMINI_API_KEY")
+                    or os.environ.get("GOOGLE_API_KEY")
+                    or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+                ),
+                "colab_notebooks_present": len(colab_files) > 0,
             },
         },
     }

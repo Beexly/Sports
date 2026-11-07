@@ -94,7 +94,7 @@ export function evaluateParlayConjunctionGate(
   bookParlayImpliedProb: number,
   nWorlds = 10000,
 ): { publishAllowed: boolean; decision: "PASS" | "SPEAK"; reason: string; wilsonLower90: number } {
-  if (legs.some((leg) => !leg.publishAllowed || leg.decision === "PASS")) {
+  if (!Array.isArray(legs) || legs.length === 0 || legs.some((leg) => !leg.publishAllowed || leg.decision !== "SPEAK")) {
     return { publishAllowed: false, decision: "PASS", reason: "PARLAY_CONTAINS_PASS_LEG", wilsonLower90: 0 };
   }
   const lower = wilsonLower(jointSimProb * nWorlds, nWorlds);

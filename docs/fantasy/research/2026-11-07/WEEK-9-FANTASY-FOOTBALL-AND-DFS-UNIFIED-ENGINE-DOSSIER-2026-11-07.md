@@ -1,6 +1,6 @@
 # Week 9 Unified Season-Long Fantasy Football & DraftKings DFS Dossier (2026-11-07)
 
-- **Generated (UTC):** `2026-11-07T20:04:46.811641+00:00`
+- **Generated (UTC):** `2026-11-07T23:09:09.464051+00:00`
 - **Engine Backbone:** 10,000-World Connected Workflow Dossiers + 10-Gate DFS/Fantasy Accuracy Engine (`G1..G10`) + 35-Table Nov 7 Morning Analytics Sweep + 7-Equation Literature Portfolio Optimizer (`EQ-DFS-01..07`)
 - **Live Sleeper Waiver Telemetry:** `50` trending adds / `50` trending drops ingested
 
@@ -87,19 +87,19 @@
 |---|---|---|---:|---:|---:|---:|---:|---:|---|---|
 | `WR1` | **Jaxon Smith-Njigba** | `SEA` | `ARI` | $9,300 | **27.39** | 22.63 | 17.87 | `3.05x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
 | `WR2` | **Puka Nacua** | `LAR` | `WAS` | $8,800 | **24.03** | 19.38 | 14.73 | `2.83x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
-| `WR3` | **Malik Nabers** | `NYG` | `PHI` | $7,300 | **22.02** | 18.05 | 14.08 | `3.13x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
+| `WR3` | **Malik Nabers** | `NYG` | `PHI` | $7,300 | **21.09** | 17.18 | 13.27 | `2.99x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
 | `WR4` | **Amon-Ra St. Brown** | `DET` | `MIA` | $8,100 | **21.07** | 17.27 | 13.47 | `2.70x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
 | `WR5` | **CeeDee Lamb** | `DAL` | `IND` | $8,300 | **20.91** | 17.28 | 13.64 | `2.61x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
 | `WR6` | **Nico Collins** | `HOU` | `LAC` | $7,200 | **18.93** | 15.78 | 12.63 | `2.72x` | Tier 1 (ALPHA MUST-START) | Alpha volume ceiling + tournament stack anchor |
 | `WR7` | **Christian Watson** | `GB` | `NE` | $7,500 | **17.84** | 14.74 | 11.64 | `2.46x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
 | `WR8` | **Chris Olave** | `NO` | `CLE` | $7,400 | **16.96** | 14.02 | 11.07 | `2.37x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
 | `WR9` | **Matthew Golden** | `GB` | `NE` | $7,000 | **16.60** | 13.89 | 11.17 | `2.46x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
-| `WR10` | **Jameson Williams** | `DET` | `MIA` | $6,100 | **16.39** | 14.08 | 11.76 | `2.78x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
-| `WR11` | **Garrett Wilson** | `NYJ` | `KC` | $6,600 | **16.29** | 13.19 | 10.09 | `2.56x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
-| `WR12` | **DeVonta Smith** | `PHI` | `NYG` | $6,800 | **15.98** | 13.20 | 10.43 | `2.44x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
-| `WR13` | **Ladd McConkey** | `LAC` | `HOU` | $5,500 | **14.76** | 11.86 | 8.96 | `2.78x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
-| `WR14` | **Tetairoa McMillan** | `CAR` | `DEN` | $6,900 | **14.74** | 12.18 | 9.62 | `2.21x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
-| `WR15` | **George Pickens** | `DAL` | `IND` | $6,300 | **13.61** | 11.31 | 9.00 | `2.24x` | Tier 3 (FLEX START / GPP LEVERAGE) | Viable FLEX starter with matchup leverage |
+| `WR10` | **Stefon Diggs** | `WAS` | `LAR` | $5,600 | **16.52** | 13.30 | 10.08 | `3.06x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
+| `WR11` | **Jameson Williams** | `DET` | `MIA` | $6,100 | **16.39** | 14.08 | 11.76 | `2.78x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
+| `WR12` | **Garrett Wilson** | `NYJ` | `KC` | $6,600 | **16.29** | 13.19 | 10.09 | `2.56x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
+| `WR13` | **DeVonta Smith** | `PHI` | `NYG` | $6,800 | **15.98** | 13.20 | 10.43 | `2.44x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
+| `WR14` | **Mike Evans** | `SF` | `LV` | $6,500 | **15.66** | 13.01 | 10.36 | `2.50x` | Tier 2 (HIGH-FLOOR RB2/WR2 START) | Strong weekly starter in all 10/12-team formats |
+| `WR15` | **Ladd McConkey** | `LAC` | `HOU` | $5,500 | **14.76** | 11.86 | 8.96 | `2.78x` | Tier 3 (FLEX START / GPP LEVERAGE) | Viable FLEX starter with matchup leverage |
 
 ---
 
@@ -114,7 +114,7 @@
 | `TE5` | **Dalton Schultz** | `HOU` | `LAC` | $3,200 | **13.41** | 10.86 | 8.31 | `4.34x` | Tier 1 (ELITE BELL-COW / MUST-START) | MUST-START + CORE DFS ANCHOR (4.34x) — Primary HOU red-zone & intermediate seam outlet with Brevin Jordan LP and David Montgomery DNP |
 | `TE6` | **Greg Dulcich** | `MIA` | `DET` | $3,100 | **13.05** | 10.65 | 8.25 | `4.36x` | Tier 1 (ELITE BELL-COW / MUST-START) | MUST-START + CORE DFS ANCHOR (4.36x) — Full-go MIA TE1 (82% route participation) vs DET middle-of-field funnel with Will Kacmarek LP |
 | `TE7` | **Tyler Warren** | `IND` | `DAL` | $4,600 | **12.44** | 9.72 | 7.00 | `2.80x` | Tier 2 (SOLID STARTER / STREAMER) | Strong Week 9 matchup starter |
-| `TE8` | **Tucker Kraft** | `GB` | `NE` | $5,500 | **11.51** | 9.22 | 6.93 | `2.17x` | Tier 2 (SOLID STARTER / STREAMER) | Strong Week 9 matchup starter |
+| `TE8` | **Tucker Kraft** | `GB` | `NE` | $5,500 | **12.32** | 9.94 | 7.57 | `2.32x` | Tier 2 (SOLID STARTER / STREAMER) | Strong Week 9 matchup starter |
 | `TE9` | **Travis Kelce** | `KC` | `NYJ` | $4,900 | **10.74** | 8.88 | 7.01 | `2.27x` | Tier 2 (SOLID STARTER / STREAMER) | Strong Week 9 matchup starter |
 | `TE10` | **Harold Fannin Jr.** | `CLE` | `NO` | $4,700 | **10.56** | 8.73 | 6.89 | `2.33x` | Tier 2 (SOLID STARTER / STREAMER) | Strong Week 9 matchup starter |
 | `TE11` | **Tyler Higbee** | `LAR` | `WAS` | $3,700 | **9.82** | 7.80 | 5.79 | `2.75x` | Tier 3 (MATCHUP PIVOT / SIT) | Streaming / tournament-only option |

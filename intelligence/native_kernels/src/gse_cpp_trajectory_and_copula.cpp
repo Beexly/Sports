@@ -52,16 +52,27 @@ gse_status_t StudentTCopulaEngine::simulate_correlated_dfs_worlds(
 
     Xoshiro256StarStar rng(seed_);
 
-    // Determine max game_id and team_id to allocate compact factor buffers
-    int32_t max_game = 0;
-    int32_t max_team = 0;
+    // Map arbitrary game_ids and team_ids (including large ESPN event IDs or negative numbers)
+    // to compact dense indices [0 .. K-1] so memory allocation is strictly O(n_players_)
+    std::vector<int32_t> unique_games(game_ids.begin(), game_ids.end());
+    std::sort(unique_games.begin(), unique_games.end());
+    unique_games.erase(std::unique(unique_games.begin(), unique_games.end()), unique_games.end());
+
+    std::vector<int32_t> unique_teams(team_ids.begin(), team_ids.end());
+    std::sort(unique_teams.begin(), unique_teams.end());
+    unique_teams.erase(std::unique(unique_teams.begin(), unique_teams.end()), unique_teams.end());
+
+    std::vector<size_t> compact_game_idx(n_players_, 0U);
+    std::vector<size_t> compact_team_idx(n_players_, 0U);
     for (size_t p = 0; p < n_players_; ++p) {
-        if (game_ids[p] > max_game) max_game = game_ids[p];
-        if (team_ids[p] > max_team) max_team = team_ids[p];
+        auto git = std::lower_bound(unique_games.begin(), unique_games.end(), game_ids[p]);
+        compact_game_idx[p] = static_cast<size_t>(std::distance(unique_games.begin(), git));
+        auto tit = std::lower_bound(unique_teams.begin(), unique_teams.end(), team_ids[p]);
+        compact_team_idx[p] = static_cast<size_t>(std::distance(unique_teams.begin(), tit));
     }
 
-    std::vector<double> game_shocks(static_cast<size_t>(max_game + 2), 0.0);
-    std::vector<double> team_pass_shocks(static_cast<size_t>(max_team + 2), 0.0);
+    std::vector<double> game_shocks(unique_games.size() + 1U, 0.0);
+    std::vector<double> team_pass_shocks(unique_teams.size() + 1U, 0.0);
     std::vector<uint32_t> bonus_counts(n_players_, 0U);
 
     // Position codes: 1=QB, 2=RB, 3=WR, 4=TE, 5=DST
@@ -79,12 +90,12 @@ gse_status_t StudentTCopulaEngine::simulate_correlated_dfs_worlds(
         const size_t row_offset = s * n_players_;
 
         for (size_t p = 0; p < n_players_; ++p) {
-            const int32_t g_id = std::max<int32_t>(0, game_ids[p]);
-            const int32_t t_id = std::max<int32_t>(0, team_ids[p]);
+            const size_t g_id = compact_game_idx[p];
+            const size_t t_id = compact_team_idx[p];
             const int32_t pos = pos_codes[p];
 
-            const double g_z = game_shocks[static_cast<size_t>(g_id)];
-            const double t_z = team_pass_shocks[static_cast<size_t>(t_id)];
+            const double g_z = game_shocks[g_id];
+            const double t_z = team_pass_shocks[t_id];
             const double idio_z = rng.next_standard_normal();
 
             double latent_z = 0.0;
@@ -98,9 +109,14 @@ gse_status_t StudentTCopulaEngine::simulate_correlated_dfs_worlds(
                 latent_z = -0.25 * g_z + 0.96 * idio_z;
             }
 
-            const double mu = mean_fpts[p];
-            const double sigma = std_fpts[p];
+            const double raw_mu = std::isfinite(mean_fpts[p]) ? mean_fpts[p] : 0.0;
+            const double raw_sigma = std::isfinite(std_fpts[p]) ? std::abs(std_fpts[p]) : 0.0;
+            const double mu = std::max(0.0, raw_mu);
+            const double sigma = std::max(0.0, raw_sigma);
             double pts = std::max(0.0, mu + sigma * latent_z * t_scale);
+            if (!std::isfinite(pts)) {
+                pts = 0.0;
+            }
 
             // DraftKings +3.0 milestone bonus trigger in right tail (300-yd pass / 100-yd rush/rec)
             bool hit_bonus = false;

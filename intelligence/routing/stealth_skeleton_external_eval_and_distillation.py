@@ -50,11 +50,14 @@ import heapq
 import json
 import math
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 EXTERNAL_EVAL_MANIFEST_PATH = (
     REPO_ROOT / "data" / "audits" / "stealth_skeleton_official_external_eval_manifest_2026_11_07.json"
 )

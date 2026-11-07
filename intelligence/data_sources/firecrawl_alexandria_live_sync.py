@@ -135,6 +135,10 @@ def _normalize_matchup_tuple(item: str | Sequence[str] | dict[str, Any]) -> tupl
     return aw, hm
 
 
+class SlateIntegrityError(ValueError, RuntimeError):
+    """Dual ValueError/RuntimeError exception for schedule, team, and player uniqueness gates."""
+
+
 def _normalize_team_code(team: str) -> str:
     tm = str(team or "").strip().upper()
     if tm == "LA":
@@ -164,11 +168,11 @@ def assert_zero_duplicate_teams_or_players_on_slate(
 ) -> dict[str, Any]:
     """
     Hard schedule, team-uniqueness, and player-uniqueness invariant gate.
-    Raises RuntimeError immediately if:
+    Raises SlateIntegrityError (both ValueError and RuntimeError) immediately if:
       1. Any bogus/2024 matchup appears in a 2026 Week 9 artifact.
       2. Any bye team (`PIT`, `TEN` in Week 9) appears in a matchup.
-      3. Any matchup is not part of `OFFICIAL_2026_WEEK9_15_GAMES` (when week == 9).
-      4. Any NFL team appears in more than 1 game on the slate (e.g. MIA twice or BUF twice).
+      3. Any NFL team appears in more than 1 game on the slate (e.g. MIA twice or BUF twice).
+      4. Any matchup is not part of `OFFICIAL_2026_WEEK9_15_GAMES` (when week == 9).
       5. Any player appears on a bye team, an off-slate team, on more than 1 team,
          or more than once on the same team/lineup (including case/suffix aliases).
     """
@@ -178,21 +182,16 @@ def assert_zero_duplicate_teams_or_players_on_slate(
     if week == 9:
         for pair in parsed_matchups:
             if pair in FORBIDDEN_BOGUS_WEEK9_MATCHUPS or (pair[1], pair[0]) in FORBIDDEN_BOGUS_WEEK9_MATCHUPS:
-                raise RuntimeError(
-                    f"[{context_label}] FORBIDDEN BOGUS/2024 MATCHUP DETECTED: "
+                raise SlateIntegrityError(
+                    f"[{context_label}] CROSS-SEASON SLATE CONTAMINATION / FORBIDDEN BOGUS/2024 MATCHUP DETECTED: "
                     f"{pair[0]} @ {pair[1]} is NOT a 2026 Week 9 NFL game!"
                 )
             for tm in pair:
                 if tm in OFFICIAL_2026_WEEK9_BYE_TEAMS:
-                    raise RuntimeError(
-                        f"[{context_label}] BYE TEAM VIOLATION: {tm} is on BYE in Week 9 "
+                    raise SlateIntegrityError(
+                        f"[{context_label}] BYE-TEAM CONTAMINATION / BYE TEAM VIOLATION: {tm} is on BYE in Week 9 "
                         f"and cannot appear in {pair[0]} @ {pair[1]}!"
                     )
-            if pair not in official_set:
-                raise RuntimeError(
-                    f"[{context_label}] INVALID WEEK 9 MATCHUP: {pair[0]} @ {pair[1]} "
-                    f"is not in OFFICIAL_2026_WEEK9_15_GAMES!"
-                )
 
     team_counts: Counter[str] = Counter()
     team_games: dict[str, list[str]] = {}
@@ -206,10 +205,18 @@ def assert_zero_duplicate_teams_or_players_on_slate(
         tm: games for tm, games in team_games.items() if len(games) > 1
     }
     if duplicate_teams:
-        raise RuntimeError(
-            f"[{context_label}] DUPLICATE TEAM SCHEDULE VIOLATION: "
+        raise SlateIntegrityError(
+            f"[{context_label}] DUPLICATE TEAM ON SLATE / DUPLICATE TEAM SCHEDULE VIOLATION: "
             f"The following teams are listed multiple times on the same slate: {duplicate_teams}"
         )
+
+    if week == 9:
+        for pair in parsed_matchups:
+            if pair not in official_set:
+                raise SlateIntegrityError(
+                    f"[{context_label}] INVALID WEEK 9 MATCHUP: {pair[0]} @ {pair[1]} "
+                    f"is not in OFFICIAL_2026_WEEK9_15_GAMES!"
+                )
 
     player_teams: dict[str, set[str]] = {}
     player_display_names: dict[str, str] = {}
@@ -230,11 +237,12 @@ def assert_zero_duplicate_teams_or_players_on_slate(
                 player_teams.setdefault(pkey, set()).add(pteam)
                 same_team_counts[(pkey, pteam)] += 1
                 if week == 9 and pteam in OFFICIAL_2026_WEEK9_BYE_TEAMS:
-                    raise RuntimeError(
-                        f"[{context_label}] BYE TEAM PLAYER VIOLATION: {pname} ({pteam}) is on Week 9 BYE!"
+                    raise SlateIntegrityError(
+                        f"[{context_label}] BYE-TEAM CONTAMINATION / BYE TEAM PLAYER VIOLATION: "
+                        f"{pname} ({pteam}) is on Week 9 BYE!"
                     )
                 if team_counts and pteam not in team_counts:
-                    raise RuntimeError(
+                    raise SlateIntegrityError(
                         f"[{context_label}] OFF-SLATE TEAM PLAYER VIOLATION: {pname} ({pteam}) "
                         f"is not on any active matchup in {sorted(team_counts.keys())}!"
                     )
@@ -244,7 +252,7 @@ def assert_zero_duplicate_teams_or_players_on_slate(
             if cnt > 1
         }
         if duplicate_same_team:
-            raise RuntimeError(
+            raise SlateIntegrityError(
                 f"[{context_label}] DUPLICATE PLAYER ON SAME TEAM VIOLATION: {duplicate_same_team}"
             )
         multi_team_players = {
@@ -253,8 +261,8 @@ def assert_zero_duplicate_teams_or_players_on_slate(
             if len(tms) > 1
         }
         if multi_team_players:
-            raise RuntimeError(
-                f"[{context_label}] PLAYER MULTI-TEAM CONTAMINATION: {multi_team_players}"
+            raise SlateIntegrityError(
+                f"[{context_label}] DUPLICATE PLAYER / PLAYER MULTI-TEAM CONTAMINATION: {multi_team_players}"
             )
 
     return {

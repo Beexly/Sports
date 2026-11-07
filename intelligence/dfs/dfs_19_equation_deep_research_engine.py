@@ -212,9 +212,34 @@ def evaluate_frontier_19_equations_on_curated_pool(
     if n == 0:
         return {"equations_executed": 19, "player_count": 0}
 
-    means = np.array([float(r.get("gse_post_game_sim_projection", 10.0)) for r in curated_pool], dtype=np.float64)
-    salaries = np.array([float(r.get("salary", 4000)) for r in curated_pool], dtype=np.float64)
-    dk_avgs = np.array([float(r.get("dk_csv_avg_fpts", 8.0)) for r in curated_pool], dtype=np.float64)
+    means = np.array(
+        [
+            float(
+                r.get(
+                    "gse_dk_projection",
+                    r.get("gse_post_game_sim_projection", r.get("projection", 10.0)),
+                )
+            )
+            for r in curated_pool
+        ],
+        dtype=np.float64,
+    )
+    salaries = np.array(
+        [float(r.get("dk_salary", r.get("salary", 4000))) for r in curated_pool],
+        dtype=np.float64,
+    )
+    dk_avgs = np.array(
+        [
+            float(
+                r.get(
+                    "dk_csv_avg_fpts",
+                    r.get("gse_dk_projection", r.get("projection", 8.0)),
+                )
+            )
+            for r in curated_pool
+        ],
+        dtype=np.float64,
+    )
     p90s = np.array(
         [
             float(r.get("second_stage_dfs_pool_sim", {}).get("sim_p90_ceiling", m * 1.45))
@@ -271,31 +296,50 @@ def evaluate_frontier_19_equations_on_curated_pool(
         prelec_weight = math.exp(-math.pow(-math.log(p_top01), 0.65))
         rdeu_utility = float(evt_dro["p999_evt"][idx]) * prelec_weight
 
+        rec["eq_dfs_11_qre_ownership"] = round(float(qre_res["qre_ownership"][idx]), 6)
+        rec["eq_dfs_12_tweedie_zero_prob"] = round(float(evt_dro["tweedie_zero_prob"][idx]), 6)
         rec["frontier_19_equation_metrics"] = {
             "eq_dfs_08_wasserstein_dro_robust_ev": round(float(evt_dro["wasserstein_dro_ev"][idx]), 2),
             "eq_dfs_10_evt_gpd_p999_milly_ceiling": round(float(evt_dro["p999_evt"][idx]), 2),
             "eq_dfs_11_gumbel_upper_tail_lambda_u": round(float(lambda_upper_tail), 4),
-            "eq_dfs_12_qre_equilibrium_ownership": round(float(qre_res["qre_ownership"][idx]), 4),
+            "eq_dfs_11_qre_ownership": round(float(qre_res["qre_ownership"][idx]), 6),
+            "eq_dfs_12_qre_equilibrium_ownership": round(float(qre_res["qre_ownership"][idx]), 6),
             "eq_dfs_12_level3_cognitive_leverage": round(float(qre_res["level3_edge"][idx]), 3),
+            "eq_dfs_12_tweedie_zero_prob": round(float(evt_dro["tweedie_zero_prob"][idx]), 6),
             "eq_dfs_13_late_swap_recourse_option_ev": round(float(late_swap_option_ev), 2),
             "eq_dfs_13_is_late_swap_4pm_window": bool(is_late_wave),
-            "eq_dfs_14_tweedie_exact_zero_prob": round(float(evt_dro["tweedie_zero_prob"][idx]), 5),
+            "eq_dfs_14_tweedie_exact_zero_prob": round(float(evt_dro["tweedie_zero_prob"][idx]), 6),
             "eq_dfs_15_hawkes_cascade_multiplier": round(float(hawkes_branching_multiplier), 4),
             "eq_dfs_17_quiggin_prelec_rdeu_score": round(float(rdeu_utility), 2),
         }
 
     # 4. EQ-DFS-09: k-Determinantal Point Process (k-DPP) Log-Det Gram Matrix Portfolio Repulsion
     dpp_log_det = 0.0
-    if portfolio_lineups and len(portfolio_lineups) >= 2:
-        k_lu = len(portfolio_lineups)
+    effective_lineups = list(portfolio_lineups or [])
+    if len(effective_lineups) < 2 and len(curated_pool) >= 27:
+        sorted_pool = sorted(
+            curated_pool,
+            key=lambda r: float(r.get("gse_mean_fpts", 0.0)),
+            reverse=True,
+        )
+        effective_lineups = [
+            {"proj_sum": sum(float(x.get("gse_mean_fpts", 15.0)) for x in sorted_pool[0:9]), "players": sorted_pool[0:9]},
+            {"proj_sum": sum(float(x.get("gse_mean_fpts", 15.0)) for x in sorted_pool[9:18]), "players": sorted_pool[9:18]},
+            {"proj_sum": sum(float(x.get("gse_mean_fpts", 15.0)) for x in sorted_pool[18:27]), "players": sorted_pool[18:27]},
+        ]
+    if effective_lineups and len(effective_lineups) >= 2:
+        k_lu = len(effective_lineups)
         # Build normalized feature vectors over players for each lineup
-        name_to_idx = {str(r["name"]).lower().strip(): i for i, r in enumerate(curated_pool)}
+        name_to_idx = {
+            str(r.get("player") or r.get("name") or "").lower().strip(): i
+            for i, r in enumerate(curated_pool)
+        }
         feat_mat = np.zeros((k_lu, max(n, 10)), dtype=np.float64)
         qualities = np.zeros(k_lu, dtype=np.float64)
-        for m, lu in enumerate(portfolio_lineups):
-            qualities[m] = math.exp(0.01 * float(lu.get("proj", 150.0)) / 10.0)
+        for m, lu in enumerate(effective_lineups):
+            qualities[m] = math.exp(0.01 * float(lu.get("proj_sum", lu.get("proj", 150.0))) / 10.0)
             for p_item in lu.get("players", []):
-                nm = str(p_item.get("name", "")).lower().strip()
+                nm = str(p_item.get("player") or p_item.get("name") or "").lower().strip()
                 if nm in name_to_idx:
                     feat_mat[m, name_to_idx[nm]] = 1.0
             norm = np.linalg.norm(feat_mat[m])

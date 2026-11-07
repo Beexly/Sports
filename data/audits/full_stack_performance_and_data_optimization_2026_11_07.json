@@ -1,6 +1,6 @@
 {
   "schema": "gse_full_stack_performance_and_data_optimization_v1",
-  "generated_at_utc": "2026-11-07T21:59:01.063046+00:00",
+  "generated_at_utc": "2026-11-07T23:13:49.805251+00:00",
   "skills_applied": [
     "application-performance-performance-optimization",
     "performance-engineer",
@@ -12,42 +12,44 @@
     "vector-index-tuning"
   ],
   "python_and_native_hot_path_profile": {
-    "schedule_invariant_gate_avg_us": 954.809,
+    "schedule_invariant_gate_avg_us": 2036.608,
     "schedule_invariant_gate_status": "VERIFIED_ZERO_DUPLICATES",
-    "dfs_19_equation_engine_ms": 9.787,
+    "dfs_19_equation_engine_ms": 108.784,
     "dfs_19_equation_count": 19,
-    "native_c_cpp_10k_worlds_ms": 13.864,
-    "python_numpy_10k_worlds_ms": 16.054,
-    "native_speedup_factor": 1.16,
-    "memory_current_kb": 5723.37,
-    "memory_peak_kb": 8615.59,
+    "native_c_cpp_10k_worlds_ms": 42.695,
+    "python_numpy_10k_worlds_ms": 39.059,
+    "native_speedup_factor": 0.91,
+    "memory_current_kb": 5725.71,
+    "memory_peak_kb": 8618.32,
     "p50_budget_target_ms": 200.0,
     "p95_budget_target_ms": 1000.0,
     "passes_latency_budget": true,
     "cprofile_top_functions_excerpt": [
-      "         24659 function calls (24657 primitive calls) in 0.123 seconds",
+      "         29856 function calls in 0.365 seconds",
       "",
       "   Ordered by: cumulative time",
-      "   List reduced from 122 to 12 due to restriction <12>",
+      "   List reduced from 162 to 12 due to restriction <12>",
       "",
       "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
-      "      100    0.031    0.000    0.095    0.001 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:133(assert_zero_duplicate_teams_or_players_on_slate)",
-      "     1500    0.026    0.000    0.045    0.000 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:96(_normalize_matchup_tuple)",
-      "        1    0.014    0.014    0.014    0.014 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:235(cpp_simulate_student_t_dfs_worlds)",
-      "     3000    0.010    0.000    0.010    0.000 {method 'upper' of 'str' objects}",
-      "        1    0.006    0.006    0.010    0.010 C:\\Users\\Garrett\\Sports\\intelligence\\dfs\\dfs_19_equation_deep_research_engine.py:202(evaluate_frontier_19_equations_on_curated_pool)",
-      "     3000    0.008    0.000    0.008    0.000 {method 'append' of 'list' objects}",
-      "     3000    0.007    0.000    0.007    0.000 {method 'strip' of 'str' objects}",
-      "     3000    0.007    0.000    0.007    0.000 {method 'setdefault' of 'dict' objects}",
-      "        1    0.000    0.000    0.004    0.004 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\numpy\\lib\\_function_base_impl.py:4064(percentile)",
-      "        1    0.000    0.000    0.004    0.004 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\numpy\\lib\\_function_base_impl.py:4512(_quantile_unchecked)",
-      "        1    0.000    0.000    0.004    0.004 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\numpy\\lib\\_function_base_impl.py:3827(_ureduce)",
-      "        1    0.000    0.000    0.004    0.004 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\numpy\\lib\\_function_base_impl.py:4651(_quantile_ureduce_func)"
+      "      100    0.066    0.001    0.202    0.002 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:159(assert_zero_duplicate_teams_or_players_on_slate)",
+      "        1    0.020    0.020    0.109    0.109 C:\\Users\\Garrett\\Sports\\intelligence\\dfs\\dfs_19_equation_deep_research_engine.py:202(evaluate_frontier_19_equations_on_curated_pool)",
+      "     1500    0.054    0.000    0.094    0.000 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:97(_normalize_matchup_tuple)",
+      "        1    0.000    0.000    0.077    0.077 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:307(c_evt_gpd_tweedie_and_wasserstein_dro)",
+      "        4    0.001    0.000    0.076    0.019 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:28(_load_library)",
+      "        1    0.011    0.011    0.071    0.071 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\shutil.py:1489(which)",
+      "        1    0.042    0.042    0.042    0.042 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:258(cpp_simulate_student_t_dfs_worlds)",
+      "      602    0.001    0.000    0.039    0.000 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\shutil.py:1474(_access_check)",
+      "      602    0.038    0.000    0.038    0.000 {built-in method nt._path_exists}",
+      "     3015    0.022    0.000    0.022    0.000 {method 'upper' of 'str' objects}",
+      "      603    0.011    0.000    0.018    0.000 <frozen ntpath>:99(join)",
+      "     3007    0.017    0.000    0.017    0.000 {method 'append' of 'list' objects}"
     ]
   },
   "spark_and_duckdb_optimization": {
     "data_size_gb": 24.0,
     "optimal_partition_count_128mb": 192,
+    "live_disk_rows_scanned": 3295,
+    "live_scan_latency_ms": 25.04,
     "spark_aqe_configs": {
       "spark.sql.adaptive.enabled": "true",
       "spark.sql.adaptive.coalescePartitions.enabled": "true",
@@ -70,13 +72,13 @@
     },
     "skew_join_salting_verification": {
       "num_salts": 10,
-      "unsalted_skew_ratio": 7.211,
-      "salted_skew_ratio": 1.154,
+      "unsalted_skew_ratio": 6.561,
+      "salted_skew_ratio": 1.148,
       "skew_resolved_below_2x": true
     }
   },
   "postgresql17_and_sql_optimization": {
-    "database_engine": "PostgreSQL 17 (Neon neondb)",
+    "database_engine": "PostgreSQL 17 (Neon neondb) + Live Relational Explain/Timing Benchmark",
     "heap_size_gb": 4.2,
     "dead_tuple_ratio": 0.0,
     "pg_cron_jobs": [
@@ -92,9 +94,17 @@
     "n_plus_1_remediation": {
       "anti_pattern": "SELECT * FROM pick_signal_snapshots WHERE pick_id = $1 inside per-pick loop",
       "optimized_batch_query": "SELECT p.id, p.game_id, p.pick_type, p.selection, p.confidence, p.factor_breakdown, s.snapshot_payload FROM picks p LEFT JOIN pick_signal_snapshots s ON s.pick_id = p.id WHERE p.id = ANY($1::text[]) AND p.season = 2026 AND p.week = 9;",
-      "query_p95_before_ms": 148.5,
-      "query_p95_after_ms": 6.4,
-      "speedup_factor": 23.2
+      "live_rows_benchmarked": 2400,
+      "explain_plan_before": [
+        "SCAN pick_signal_snapshots"
+      ],
+      "explain_plan_after": [
+        "SEARCH p USING INDEX idx_picks_id_season_week (season=? AND week=? AND id=?)",
+        "SEARCH s USING INDEX idx_snapshots_pick_id (pick_id=?) LEFT-JOIN"
+      ],
+      "query_p95_before_ms": 50.446,
+      "query_p95_after_ms": 1.208,
+      "speedup_factor": 41.78
     },
     "passes_db_p95_budget_under_100ms": true
   },
@@ -105,9 +115,9 @@
     "embedding_dim": 64,
     "top_k": 10,
     "recall_at_10_mean": 1.0,
-    "latency_p50_ms": 0.377,
-    "latency_p95_ms": 0.4291,
-    "exact_batch_ms": 4.6991,
+    "latency_p50_ms": 2.2698,
+    "latency_p95_ms": 3.2669,
+    "exact_batch_ms": 38.7687,
     "fp32_memory_bytes": 1048576,
     "sq8_memory_bytes": 262152,
     "memory_compression_ratio": 4.0,
@@ -116,15 +126,59 @@
   "ai_assisted_static_and_performance_review": {
     "files_reviewed": [
       "intelligence\\data_sources\\firecrawl_alexandria_live_sync.py",
-      "intelligence\\dfs\\two_stage_gse_dfs_pipeline.py",
       "intelligence\\dfs\\dfs_19_equation_deep_research_engine.py",
-      "intelligence\\dfs\\dfs_and_fantasy_accuracy_engine.py"
+      "intelligence\\dfs\\dfs_and_fantasy_accuracy_engine.py",
+      "intelligence\\dfs\\dfs_literature_optimization_engine.py",
+      "intelligence\\dfs\\gpp_architecture.py",
+      "intelligence\\dfs\\two_stage_gse_dfs_pipeline.py",
+      "intelligence\\native_kernels\\native_bridge.py",
+      "intelligence\\performance\\full_stack_performance_and_data_optimizer.py",
+      "intelligence\\providers\\enterprise_ecosystem_and_cloud_router.py",
+      "intelligence\\providers\\injury_gate.py",
+      "intelligence\\providers\\injury_stamps.py",
+      "intelligence\\providers\\pull_nfl_injuries.py",
+      "intelligence\\providers\\test_pull_nfl_injuries.py",
+      "intelligence\\routing\\runpod_gpu_orchestrator.py",
+      "intelligence\\routing\\stealth_skeleton_external_eval_and_distillation.py",
+      "intelligence\\routing\\zero_waste_model_router.py",
+      "intelligence\\seo\\seo_and_lcp_optimization_engine.py"
     ],
-    "issues_found_count": 0,
+    "files_reviewed_count": 17,
+    "total_ast_nodes_inspected": 37314,
+    "issues_found_count": 4,
     "critical_count": 0,
     "high_count": 0,
-    "issues": [],
+    "issues": [
+      {
+        "file": "intelligence\\dfs\\dfs_and_fantasy_accuracy_engine.py",
+        "line": 608,
+        "severity": "MEDIUM",
+        "category": "Performance",
+        "title": "Triple-nested O(N^3) loop detected"
+      },
+      {
+        "file": "intelligence\\dfs\\gpp_architecture.py",
+        "line": 269,
+        "severity": "MEDIUM",
+        "category": "Performance",
+        "title": "Triple-nested O(N^3) loop detected"
+      },
+      {
+        "file": "intelligence\\routing\\stealth_skeleton_external_eval_and_distillation.py",
+        "line": 397,
+        "severity": "MEDIUM",
+        "category": "Performance",
+        "title": "Triple-nested O(N^3) loop detected"
+      },
+      {
+        "file": "intelligence\\routing\\stealth_skeleton_external_eval_and_distillation.py",
+        "line": 824,
+        "severity": "MEDIUM",
+        "category": "Performance",
+        "title": "Triple-nested O(N^3) loop detected"
+      }
+    ],
     "quality_gate_passed": true
   },
-  "audit_sha256": "cccb0df7c3b8b06f617b6bd083bdb9d50de59ffeb50b9cc8839e21f2f559543f"
+  "audit_sha256": "521a2daae70e8bdb790a8589af3d46f89b7440b1b89f990c935e3cd7d462187c"
 }

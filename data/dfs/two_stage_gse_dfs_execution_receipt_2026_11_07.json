@@ -1,0 +1,362 @@
+{
+  "generated_at_utc": "2026-11-07T23:10:26+00:00",
+  "two_stage_gse_dfs_pipeline": {},
+  "spotlights": [],
+  "lineups": [
+    {
+      "index": 1,
+      "salary": 49600,
+      "proj_sum": 181.3,
+      "win_prob_vs_p99_field": 0.823,
+      "teams": [
+        "DAL",
+        "DEN",
+        "DET",
+        "GB",
+        "MIA",
+        "SEA",
+        "WAS"
+      ],
+      "literature_7_equation_audit": {
+        "eq_dfs_01_stack_and_overlap": {
+          "qb_team": "DET",
+          "stack_pass_catchers": [
+            "Jameson Williams",
+            "Sam LaPorta"
+          ],
+          "stack_count": 2,
+          "bring_back_players": [
+            "Greg Dulcich"
+          ],
+          "bring_back_count": 1,
+          "max_overlap_with_prior_lineups": 0
+        },
+        "eq_dfs_02_kl_contrarian_leverage": 19.64,
+        "eq_dfs_03_submodular_p99_marginal_gain": 0.823,
+        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 130.91,
+        "eq_dfs_05_shrunk_stack_covariance_bonus": 6.85,
+        "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
+        "eq_dfs_07_late_swap_recourse": {
+          "late_window_slots_count": 2,
+          "late_window_players": [
+            "Jaxon Smith-Njigba",
+            "Josh Jacobs"
+          ],
+          "expected_recourse_fpts_gain": 1.3
+        }
+      },
+      "players": [
+        {
+          "player": "Jaxon Smith-Njigba",
+          "position": "WR",
+          "team": "SEA",
+          "opponent": "ARI",
+          "salary": 9300,
+          "projection": 29.57
+        },
+        {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 6800,
+          "projection": 27.48
+        },
+        {
+          "player": "Jared Goff",
+          "position": "QB",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 6600,
+          "projection": 30.02
+        },
+        {
+          "player": "Jameson Williams",
+          "position": "WR",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 6100,
+          "projection": 17.68
+        },
+        {
+          "player": "Stefon Diggs",
+          "position": "WR",
+          "team": "WAS",
+          "opponent": "LAR",
+          "salary": 5600,
+          "projection": 17.65
+        },
+        {
+          "player": "Sam LaPorta",
+          "position": "TE",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 5100,
+          "projection": 19.43
+        },
+        {
+          "player": "Malik Davis",
+          "position": "RB",
+          "team": "DAL",
+          "opponent": "IND",
+          "salary": 4000,
+          "projection": 16.1
+        },
+        {
+          "player": "Greg Dulcich",
+          "position": "TE",
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 3100,
+          "projection": 12.39
+        },
+        {
+          "player": "Broncos",
+          "position": "DST",
+          "team": "DEN",
+          "opponent": "CAR",
+          "salary": 3000,
+          "projection": 10.96
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "salary": 49900,
+      "proj_sum": 181.99,
+      "win_prob_vs_p99_field": 0.8408,
+      "teams": [
+        "GB",
+        "HOU",
+        "LAC",
+        "LAR",
+        "MIA",
+        "NE",
+        "WAS"
+      ],
+      "literature_7_equation_audit": {
+        "eq_dfs_01_stack_and_overlap": {
+          "qb_team": "HOU",
+          "stack_pass_catchers": [
+            "Dalton Schultz"
+          ],
+          "stack_count": 1,
+          "bring_back_players": [
+            "Ladd McConkey"
+          ],
+          "bring_back_count": 1,
+          "max_overlap_with_prior_lineups": 2
+        },
+        "eq_dfs_02_kl_contrarian_leverage": 19.809,
+        "eq_dfs_03_submodular_p99_marginal_gain": 0.1335,
+        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 133.29,
+        "eq_dfs_05_shrunk_stack_covariance_bonus": 5.45,
+        "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
+        "eq_dfs_07_late_swap_recourse": {
+          "late_window_slots_count": 6,
+          "late_window_players": [
+            "Josh Jacobs",
+            "Rhamondre Stevenson",
+            "C.J. Stroud",
+            "Ladd McConkey",
+            "Dalton Schultz",
+            "Packers"
+          ],
+          "expected_recourse_fpts_gain": 3.9
+        }
+      },
+      "players": [
+        {
+          "player": "Puka Nacua",
+          "position": "WR",
+          "team": "LAR",
+          "opponent": "WAS",
+          "salary": 8800,
+          "projection": 26.07
+        },
+        {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 6800,
+          "projection": 27.48
+        },
+        {
+          "player": "Rhamondre Stevenson",
+          "position": "RB",
+          "team": "NE",
+          "opponent": "GB",
+          "salary": 6100,
+          "projection": 22.24
+        },
+        {
+          "player": "C.J. Stroud",
+          "position": "QB",
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 5900,
+          "projection": 28.31
+        },
+        {
+          "player": "Ollie Gordon II",
+          "position": "RB",
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 5600,
+          "projection": 21.27
+        },
+        {
+          "player": "Stefon Diggs",
+          "position": "WR",
+          "team": "WAS",
+          "opponent": "LAR",
+          "salary": 5600,
+          "projection": 17.65
+        },
+        {
+          "player": "Ladd McConkey",
+          "position": "WR",
+          "team": "LAC",
+          "opponent": "HOU",
+          "salary": 5500,
+          "projection": 15.88
+        },
+        {
+          "player": "Dalton Schultz",
+          "position": "TE",
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 3200,
+          "projection": 13.15
+        },
+        {
+          "player": "Packers",
+          "position": "DST",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 2400,
+          "projection": 9.94
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "salary": 49500,
+      "proj_sum": 167.54,
+      "win_prob_vs_p99_field": 0.7287,
+      "teams": [
+        "DET",
+        "LAC",
+        "LV",
+        "MIA",
+        "NE",
+        "NYG",
+        "PHI"
+      ],
+      "literature_7_equation_audit": {
+        "eq_dfs_01_stack_and_overlap": {
+          "qb_team": "PHI",
+          "stack_pass_catchers": [
+            "DeVonta Smith"
+          ],
+          "stack_count": 1,
+          "bring_back_players": [
+            "Malik Nabers"
+          ],
+          "bring_back_count": 1,
+          "max_overlap_with_prior_lineups": 3
+        },
+        "eq_dfs_02_kl_contrarian_leverage": 19.288,
+        "eq_dfs_03_submodular_p99_marginal_gain": 0.0224,
+        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 122.4,
+        "eq_dfs_05_shrunk_stack_covariance_bonus": 5.45,
+        "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
+        "eq_dfs_07_late_swap_recourse": {
+          "late_window_slots_count": 4,
+          "late_window_players": [
+            "Rhamondre Stevenson",
+            "Ashton Jeanty",
+            "Ladd McConkey",
+            "Patriots"
+          ],
+          "expected_recourse_fpts_gain": 2.6
+        }
+      },
+      "players": [
+        {
+          "player": "Malik Nabers",
+          "position": "WR",
+          "team": "NYG",
+          "opponent": "PHI",
+          "salary": 7300,
+          "projection": 22.64
+        },
+        {
+          "player": "DeVonta Smith",
+          "position": "WR",
+          "team": "PHI",
+          "opponent": "NYG",
+          "salary": 6800,
+          "projection": 16.43
+        },
+        {
+          "player": "Rhamondre Stevenson",
+          "position": "RB",
+          "team": "NE",
+          "opponent": "GB",
+          "salary": 6100,
+          "projection": 22.24
+        },
+        {
+          "player": "Ashton Jeanty",
+          "position": "RB",
+          "team": "LV",
+          "opponent": "SF",
+          "salary": 5900,
+          "projection": 19.88
+        },
+        {
+          "player": "Ollie Gordon II",
+          "position": "RB",
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 5600,
+          "projection": 21.27
+        },
+        {
+          "player": "Ladd McConkey",
+          "position": "WR",
+          "team": "LAC",
+          "opponent": "HOU",
+          "salary": 5500,
+          "projection": 15.88
+        },
+        {
+          "player": "Sam LaPorta",
+          "position": "TE",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 5100,
+          "projection": 19.43
+        },
+        {
+          "player": "Joe Milton III",
+          "position": "QB",
+          "team": "PHI",
+          "opponent": "NYG",
+          "salary": 4100,
+          "projection": 19.01
+        },
+        {
+          "player": "Patriots",
+          "position": "DST",
+          "team": "NE",
+          "opponent": "GB",
+          "salary": 3100,
+          "projection": 10.76
+        }
+      ]
+    }
+  ]
+}

@@ -987,7 +987,7 @@ def build_all(
         dest_p = out_dir / dest
         if src.exists():
             if src.resolve() != dest_p.resolve():
-                shutil.copyfile(src, dest_p)
+                dest_p.write_text(src.read_text(encoding="utf-8-sig"), encoding="utf-8")
             written.append(str(dest_p))
 
     classic = build_classic_packet(main_src, lineups=lineups, sims=sims, opponents=opponents, seed=seed)

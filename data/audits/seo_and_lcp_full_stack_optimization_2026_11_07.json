@@ -1,6 +1,6 @@
 {
   "schema": "gse_eight_skill_seo_and_lcp_optimization_v1",
-  "generated_at_utc": "2026-11-07T21:59:01.065815+00:00",
+  "generated_at_utc": "2026-11-07T23:13:49.998769+00:00",
   "skills_applied": [
     "seo-meta-optimizer",
     "seo-keyword-strategist",
@@ -107,8 +107,8 @@
     ]
   },
   "freshness_eeat_snippets_and_lcp_audit": {
-    "content_word_count": 6439,
-    "core_topic_density_pct": 1.82,
+    "content_word_count": 6447,
+    "core_topic_density_pct": 1.81,
     "lsi_keywords_count": 25,
     "featured_snippets_count": 3,
     "featured_snippets": [
@@ -145,15 +145,27 @@
       "trust_signals": "Strict PASS discipline on low-edge lines, integer XX/100 conviction format, and zero leaked paid picks on free surfaces"
     },
     "lcp_four_subpart_audit": {
-      "ttfb_ms": 580,
-      "ttfb_share_pct": 35.8,
-      "resource_load_delay_ms": 95,
-      "resource_load_delay_share_pct": 5.9,
-      "resource_load_duration_ms": 790,
-      "resource_load_duration_share_pct": 48.8,
-      "element_render_delay_ms": 155,
-      "element_render_delay_share_pct": 9.5,
-      "total_lcp_ms": 1620,
+      "measured_route_payload_bytes": {
+        "root_layout": 13168,
+        "home_page": 3056,
+        "packages_page": 21560,
+        "dfs_page": 15601,
+        "redline_hero": 42137
+      },
+      "measured_total_critical_bytes": 95522,
+      "local_ast_io_ms": 208.001,
+      "font_display_swap_verified": true,
+      "zero_stale_36_13_1_verified": true,
+      "zero_bogus_2024_matchups_verified": true,
+      "ttfb_ms": 1392,
+      "ttfb_share_pct": 56.8,
+      "resource_load_delay_ms": 45,
+      "resource_load_delay_share_pct": 1.8,
+      "resource_load_duration_ms": 836,
+      "resource_load_duration_share_pct": 34.1,
+      "element_render_delay_ms": 178,
+      "element_render_delay_share_pct": 7.3,
+      "total_lcp_ms": 2451,
       "cwv_lcp_good_threshold_ms": 2500,
       "passes_cwv_good_threshold": true,
       "lcp_optimizations_wired": [
@@ -164,5 +176,5 @@
       ]
     }
   },
-  "audit_sha256": "afb453c7dfda4ae1dcbfe402828476c15134045afcb00d61870b5e88e8a0d10c"
+  "audit_sha256": "7037042ac4c41a3be6b4d296684f6bd9fb61896bbb00bc160d68121de77c3e1a"
 }

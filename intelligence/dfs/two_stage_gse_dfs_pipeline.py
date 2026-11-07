@@ -53,10 +53,19 @@ GSE_PROJECTIONS_JSON = REPO_ROOT / "data" / "dfs" / "gse_post_game_sim_player_pr
 GSE_CURATED_POOL_JSON = REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
 
 
+def _safe_num(val: Any, default: float = 0.0) -> float:
+    try:
+        f = float(val)
+        return f if math.isfinite(f) else default
+    except (TypeError, ValueError):
+        return default
+
+
 def build_gse_post_game_sim_projections_and_curated_pool(
     hydrated_df: pd.DataFrame,
     num_dfs_sims: int = 10000,
     seed: int = 42,
+    portfolio_lineups: List[Dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
     """
     Execute the 3-step sequence:
@@ -89,19 +98,23 @@ def build_gse_post_game_sim_projections_and_curated_pool(
 
         rec_entry = {
             "player": nm,
+            "name": nm,
             "position": pos,
             "team": tm,
             "opponent": opp,
             "game_id": gid,
             "dk_salary": sal,
+            "salary": sal,
+            "dk_csv_avg_fpts": round(_safe_num(r.get("dk_csv_avg_fpts", gse_proj), gse_proj), 2),
             "gse_post_game_sim_stats": {
-                "pass_yds": round(float(r.get("proj_pass_yds") or 0.0), 1),
-                "rush_yds": round(float(r.get("proj_rush_yds") or 0.0), 1),
-                "rec_yds": round(float(r.get("proj_rec_yds") or 0.0), 1),
-                "receptions": round(float(r.get("proj_receptions") or 0.0), 2),
-                "total_tds": round(float(r.get("proj_td") or 0.0), 2),
+                "pass_yds": round(_safe_num(r.get("proj_pass_yds"), 0.0), 1),
+                "rush_yds": round(_safe_num(r.get("proj_rush_yds"), 0.0), 1),
+                "rec_yds": round(_safe_num(r.get("proj_rec_yds"), 0.0), 1),
+                "receptions": round(_safe_num(r.get("proj_receptions"), 0.0), 2),
+                "total_tds": round(_safe_num(r.get("proj_td"), 0.0), 2),
             },
             "gse_dk_projection": gse_proj,
+            "gse_post_game_sim_projection": gse_proj,
             "gse_value_per_1k": val_1k,
             "pos_salary_rank_on_team": int(r.get("pos_salary_rank", 1)),
             "accuracy_gate_note": gate_note,
@@ -172,19 +185,19 @@ def build_gse_post_game_sim_projections_and_curated_pool(
 
             if pos_j == "QB":
                 composite = 0.42 * g_shk + 0.48 * t_shk + 0.44 * i_shk
-                pass_yds_sim = np.clip(float(pool_df.loc[j, "proj_pass_yds"] or 235.0) * (1.0 + 0.24 * composite), 60.0, 480.0)
+                pass_yds_sim = np.clip(_safe_num(pool_df.loc[j, "proj_pass_yds"], 235.0) * (1.0 + 0.24 * composite), 60.0, 480.0)
                 bonus_300 = np.where(pass_yds_sim >= 300.0, 3.0, 0.0)
                 bonus_300_100_rates[j] = float(np.mean(bonus_300 > 0))
                 dedicated_pool_fpts[:, j] = np.clip(mu_j + (0.38 * mu_j) * composite + bonus_300 - bonus_300.mean(), 0.0, None)
             elif pos_j == "RB":
                 composite = 0.28 * g_shk + 0.36 * t_shk + 0.68 * i_shk
-                rush_yds_sim = np.clip(float(pool_df.loc[j, "proj_rush_yds"] or 55.0) * (1.0 + 0.42 * composite), 0.0, 240.0)
+                rush_yds_sim = np.clip(_safe_num(pool_df.loc[j, "proj_rush_yds"], 55.0) * (1.0 + 0.42 * composite), 0.0, 240.0)
                 bonus_100 = np.where(rush_yds_sim >= 100.0, 3.0, 0.0)
                 bonus_300_100_rates[j] = float(np.mean(bonus_100 > 0))
                 dedicated_pool_fpts[:, j] = np.clip(mu_j + (0.46 * mu_j) * composite + bonus_100 - bonus_100.mean(), 0.0, None)
             elif pos_j in ("WR", "TE"):
                 composite = 0.40 * g_shk + 0.46 * t_shk + 0.56 * i_shk
-                rec_yds_sim = np.clip(float(pool_df.loc[j, "proj_rec_yds"] or 50.0) * (1.0 + 0.48 * composite), 0.0, 250.0)
+                rec_yds_sim = np.clip(_safe_num(pool_df.loc[j, "proj_rec_yds"], 50.0) * (1.0 + 0.48 * composite), 0.0, 250.0)
                 bonus_100 = np.where(rec_yds_sim >= 100.0, 3.0, 0.0)
                 bonus_300_100_rates[j] = float(np.mean(bonus_100 > 0))
                 dedicated_pool_fpts[:, j] = np.clip(mu_j + (0.50 * mu_j) * composite + bonus_100 - bonus_100.mean(), 0.0, None)
@@ -235,7 +248,10 @@ def build_gse_post_game_sim_projections_and_curated_pool(
                 "dk_300_100_yd_bonus_prob": round(float(bonus_300_100_rates[j]), 4),
             }
 
-    frontier_19_summary = evaluate_frontier_19_equations_on_curated_pool(accepted_pool_records)
+    frontier_19_summary = evaluate_frontier_19_equations_on_curated_pool(
+        accepted_pool_records,
+        portfolio_lineups=portfolio_lineups,
+    )
 
     # Write Stage 1 GSE Post-Game-Sim Projections Artifact
     GSE_PROJECTIONS_JSON.parent.mkdir(parents=True, exist_ok=True)
@@ -249,6 +265,7 @@ def build_gse_post_game_sim_projections_and_curated_pool(
                 "projections": all_gse_projections,
             },
             indent=2,
+            allow_nan=False,
         ),
         encoding="utf-8",
     )
@@ -269,13 +286,14 @@ def build_gse_post_game_sim_projections_and_curated_pool(
         "frontier_19_equations_summary": {
             "total_dfs_equations_active": frontier_19_summary.get("total_dfs_equations_active", 19),
             "new_frontier_equations_added": frontier_19_summary.get("new_frontier_equations_added", 12),
+            "eq_dfs_09_k_dpp_portfolio_log_det_diversity": frontier_19_summary.get("eq_dfs_09_k_dpp_portfolio_log_det_diversity", 0.0),
             "eq_dfs_13_late_swap_eligible_pool_count": frontier_19_summary.get("eq_dfs_13_late_swap_eligible_pool_count", 0),
             "eq_dfs_18_kelly_contest_allocation": frontier_19_summary.get("eq_dfs_18_kelly_contest_allocation", {}),
         },
         "curated_dfs_player_pool": accepted_pool_records,
         "rejected_players_audit": rejected_pool_records,
     }
-    GSE_CURATED_POOL_JSON.write_text(json.dumps(pool_summary, indent=2), encoding="utf-8")
+    GSE_CURATED_POOL_JSON.write_text(json.dumps(pool_summary, indent=2, allow_nan=False), encoding="utf-8")
 
     return {
         "stage1_gse_projections_file": str(GSE_PROJECTIONS_JSON.relative_to(REPO_ROOT)),
@@ -286,4 +304,6 @@ def build_gse_post_game_sim_projections_and_curated_pool(
         "second_stage_dfs_pool_sims": int(num_dfs_sims),
         "total_dfs_equations_active": 19,
         "accepted_by_position": pool_summary["accepted_by_position"],
+        "accepted_indices": accepted_indices,
+        "curated_pool_records": accepted_pool_records,
     }

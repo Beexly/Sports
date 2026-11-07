@@ -6,11 +6,15 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "gse_native_kernels",
     srcs = [
-        "intelligence/native_kernels/gse_c11_simd_kernels.c",
-        "intelligence/native_kernels/gse_cpp20_dfs_engine.cpp",
+        "intelligence/native_kernels/src/gse_c_sinkhorn_and_dk_scoring.c",
+        "intelligence/native_kernels/src/gse_cpp_trajectory_and_copula.cpp",
     ],
     hdrs = [
-        "intelligence/native_kernels/gse_native_kernels.h",
+        "intelligence/native_kernels/include/gse_c_kernel.h",
+        "intelligence/native_kernels/include/gse_cpp_kernel.hpp",
+    ],
+    includes = [
+        "intelligence/native_kernels/include",
     ],
     copts = [
         "-O3",
