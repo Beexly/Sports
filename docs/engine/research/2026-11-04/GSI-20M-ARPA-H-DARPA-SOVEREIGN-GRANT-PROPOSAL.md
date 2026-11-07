@@ -1,7 +1,7 @@
-#  ARPA-H / DARPA SOVEREIGN GRANT PROPOSAL: GSI (Galaxy Sports Intelligence) & Neuromorphic Clinical Edge
+#  ARPA-H / DARPA SOVEREIGN GRANT PROPOSAL: GSI (Galaxy Sports Institute) & Neuromorphic Clinical Edge
 
 ## Executive Summary & Mission
-This proposal outlines the  unified architecture for **Galaxy Sports Intelligence (GSI)** and **Neuromorphic Clinical Edge**, bridging elite athletic injury surveillance, sudden cardiac arrest interception, hypersonic structural health monitoring, electrical grid islanding, and institutional finance liquidity mechanics under a single rigorous mathematical framework.
+This proposal outlines the  unified architecture for **Galaxy Sports Institute (GSI)** and **Neuromorphic Clinical Edge**, bridging elite athletic injury surveillance, sudden cardiac arrest interception, hypersonic structural health monitoring, electrical grid islanding, and institutional finance liquidity mechanics under a single rigorous mathematical framework.
 
 ---
 

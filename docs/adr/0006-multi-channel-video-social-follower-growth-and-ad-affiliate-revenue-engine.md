@@ -6,7 +6,7 @@ Accepted (`2026-11-06`)
 
 ## Context
 
-To scale Galaxy Sports Edge (`GSE`) and Galaxy Sports Intelligence (`GSI`) revenue aggressively while keeping customer acquisition cost (`CAC`) near zero, we must combine:
+To scale Galaxy Sports Edge (`GSE`) and Galaxy Sports Institute (`GSI`) revenue aggressively while keeping customer acquisition cost (`CAC`) near zero, we must combine:
 1. **High-Retention Short-Form Video Production** across TikTok, YouTube Shorts, Instagram Reels, and X Video (`1080x1920`, `60fps`, 45–60s storyboard packets with `0-3s` pattern-interrupt hooks, `3-25s` film/trench breakdowns, `25-45s` matchup environment overlays, and `45-60s` paywall/follow CTAs).
 2. **Multi-Stream Monetization**:
    - Direct Subscriptions & Day/Week Passes via Stripe (`/packages` instant paywall unlock) and Whop (`/whop`).

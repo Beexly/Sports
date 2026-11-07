@@ -6,7 +6,7 @@ Accepted (`2026-11-06`)
 
 ## Context
 
-Galaxy Sports Edge (`GSE`) and Galaxy Sports Intelligence (`GSI`) require total informational, mathematical, and tactical omniscience across NFL football, sports medicine/biomechanics, statistical physics, causal inference, and market microstructure. Historically, naive pipelines either discarded third-party commercial/academic feeds out of excessive caution or compressed large textbook/paper corpora into shallow summaries.
+Galaxy Sports Edge (`GSE`) and Galaxy Sports Institute (`GSI`) require total informational, mathematical, and tactical omniscience across NFL football, sports medicine/biomechanics, statistical physics, causal inference, and market microstructure. Historically, naive pipelines either discarded third-party commercial/academic feeds out of excessive caution or compressed large textbook/paper corpora into shallow summaries.
 
 At the same time, our corpus expanded to:
 - `197 / 197` (`100.0%`) unique Mega-Sweep Google Drive textbooks across `395` synced PDF files (`204` unique folder/filename paths) and `210` total cataloged textbooks (`197` Drive PDFs + `3` source-repo resolved + `10` web-native textbooks) plus `41` `.md` wave/index files.

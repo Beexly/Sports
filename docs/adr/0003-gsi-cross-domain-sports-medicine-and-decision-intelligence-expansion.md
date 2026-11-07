@@ -1,4 +1,4 @@
-# ADR-0003: Galaxy Sports Intelligence (GSI) Cross-Domain Sports Medicine & Enterprise Decision Intelligence Expansion
+# ADR-0003: Galaxy Sports Institute (GSI) Cross-Domain Sports Medicine & Enterprise Decision Intelligence Expansion
 
 ## Status
 
@@ -27,7 +27,7 @@ The mathematical, biomechanical, and causal engines built inside `Beexly/Sports`
 
 ## Decision
 
-We adopt **Option 2**: Formalize the dual **Galaxy Sports Edge (`GSE`) + Galaxy Sports Intelligence (`GSI`)** architecture across the monorepo.
+We adopt **Option 2**: Formalize the dual **Galaxy Sports Edge (`GSE`) + Galaxy Sports Institute (`GSI`)** architecture across the monorepo.
 
 ## Rationale
 

@@ -101,7 +101,7 @@ export default function BenchmarksPage(): JSX.Element {
             GSE Stealth-Skeleton Proprietary Model Benchmarks (86.62 / 100 Composite)
           </h1>
           <p className="mt-3 max-w-4xl text-sm leading-relaxed text-[#C4BFB6] sm:text-base">
-            Galaxy Sports Edge &amp; Galaxy Sports Intelligence (GSI) built the proprietary{" "}
+            Galaxy Sports Edge &amp; Galaxy Sports Institute (GSI) built the proprietary{" "}
             <code className="text-emerald-400">gse/skeleton-*</code> neuro-symbolic model family
             specifically for high-precision mathematical reasoning, calibrated probabilistic
             forecasting, vectorless hierarchical tree retrieval, and clinical/biomechanical

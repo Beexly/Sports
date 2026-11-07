@@ -20,7 +20,7 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
     name: "GSE Stealth-Skeleton v2.4 (Proprietary Frontier Reasoning & Forecasting)",
     created: 1762466400,
     description:
-      "Proprietary neuro-symbolic reasoning and calibrated probabilistic forecasting model by Galaxy Sports Edge & Galaxy Sports Intelligence (86.62/100 7-Suite Composite Score). Couples a 5,367-equation 288-bit spectral/James-Stein mathematical router, VectifyAI/PageIndex vectorless hierarchical tree RAG (10/10 recall), iterative Sinkhorn-Knopp optimal transport (L1 = 2.66e-7), Romano Conformalized Quantile Regression (CQR), and Kadavath P(IK) calibrated abstention.",
+      "Proprietary neuro-symbolic reasoning and calibrated probabilistic forecasting model by Galaxy Sports Edge & Galaxy Sports Institute (86.62/100 7-Suite Composite Score). Couples a 5,367-equation 288-bit spectral/James-Stein mathematical router, VectifyAI/PageIndex vectorless hierarchical tree RAG (10/10 recall), iterative Sinkhorn-Knopp optimal transport (L1 = 2.66e-7), Romano Conformalized Quantile Regression (CQR), and Kadavath P(IK) calibrated abstention.",
     context_length: 131072,
     architecture: {
       modality: "text->text",
@@ -325,7 +325,7 @@ export async function GET(req: Request): Promise<NextResponse> {
   return NextResponse.json(
     {
       object: "list",
-      provider: "Galaxy Sports Edge & Galaxy Sports Intelligence (gse-stealth-skeleton)",
+      provider: "Galaxy Sports Edge & Galaxy Sports Institute (gse-stealth-skeleton)",
       version: "2.4.0",
       authenticated_probe: keyValid,
       zero_data_retention: true,
