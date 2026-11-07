@@ -25,6 +25,31 @@ function makeRegistry(capacity: number) {
   });
 }
 
+describe("InMemoryCapabilityLeaseRegistry — lease ID generation", () => {
+  it("generates unique lease IDs across many generations", async () => {
+    const registry = makeRegistry(1000);
+    const ids = new Set<string>();
+
+    for (let i = 0; i < 500; i++) {
+      const outcome = await registry.acquire({
+        requestId: `req_unique_${i}`,
+        capability: { pool: "p" },
+        holderId: "h1",
+        quantity: 1,
+        now: new Date(0),
+        ttlMs: 1000,
+      });
+
+      expect(outcome.kind).toBe("ACQUIRED");
+      if (outcome.kind === "ACQUIRED") {
+        ids.add(outcome.lease.leaseId);
+      }
+    }
+
+    expect(ids.size).toBe(500);
+  });
+});
+
 describe("InMemoryCapabilityLeaseRegistry — unit behavior", () => {
   it("acquires up to capacity and rejects the request that would exceed it", async () => {
     const registry = makeRegistry(10);
