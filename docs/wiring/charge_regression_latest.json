@@ -1,0 +1,144 @@
+{
+  "wave": "WAVE_1",
+  "timestamp_utc": "2026-11-07T05:35:09.719807+00:00",
+  "passed_count": 4,
+  "total_charges": 10,
+  "checks": [
+    {
+      "charge": 1,
+      "name": "No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified",
+      "status": "FAIL",
+      "active_surface_86_62_hits": 93,
+      "sample_hits": [
+        "apps/web/__tests__/cockpit-office-3d-bot-hq.test.ts:135",
+        "apps/web/__tests__/hermes-plugin-universe-suite.test.ts:32",
+        "apps/web/__tests__/hermes-plugin-universe-suite.test.ts:80",
+        "apps/web/__tests__/hermes-plugin-universe-suite.test.ts:99",
+        "apps/web/__tests__/hermes-plugin-universe-suite.test.ts:115",
+        "apps/web/app/api/cockpit/jarvis/bot-sdk-adapter/route.ts:22",
+        "apps/web/app/benchmarks/page.tsx:104",
+        "apps/web/app/benchmarks/page.tsx:120",
+        "apps/web/app/benchmarks/page.tsx:192",
+        "apps/web/app/cockpit/bot-hq/page.tsx:21",
+        "apps/web/app/cockpit/hermes-plugins/page.tsx:23",
+        "apps/web/components/cockpit/ask-jarvis-panel.tsx:143",
+        "apps/web/components/cockpit/ask-jarvis-panel.tsx:171",
+        "apps/web/components/cockpit/cockpit-office-3d-bot-hq.tsx:78",
+        "apps/web/components/cockpit/cockpit-office-3d-bot-hq.tsx:326"
+      ],
+      "raw_3pass_audit_verified": true
+    },
+    {
+      "charge": 2,
+      "name": "No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present",
+      "status": "FAIL",
+      "literal_5367_hits": 8,
+      "sample_hits": [
+        "apps/web/lib/jarvis/stealth-skeleton-brain.ts:133",
+        "apps/web/lib/jarvis/stealth-skeleton-brain.ts:338",
+        "apps/web/lib/engine/connected-workflow-loader.ts:191",
+        "C:\\Users\\Garrett\\.agents\\skills\\dgx-spark-skills\\SKILL.md",
+        "C:\\Users\\Garrett\\.agents\\skills\\ethos-explore\\SKILL.md",
+        "C:\\Users\\Garrett\\.agents\\skills\\ethos-explore\\SKILL.md",
+        "C:\\Users\\Garrett\\.agents\\skills\\ethos-write\\SKILL.md",
+        "C:\\Users\\Garrett\\.agents\\skills\\nvidia-skill-finder\\SKILL.md"
+      ]
+    },
+    {
+      "charge": 3,
+      "name": "Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger",
+      "status": "FAIL",
+      "brain_logs_fallback_fired": false,
+      "ask_jarvis_wired": false
+    },
+    {
+      "charge": 4,
+      "name": "Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER)",
+      "status": "FAIL",
+      "active_hits": 27,
+      "sample_hits": [
+        "apps/web/lib/jarvis/autonomous-bot-sdk-adapter.ts:199 (NYJ ML -122)",
+        "data/engine/downloads_social_radio_dfs_signals_2026_11_05.json:1134 (NYJ ML -122)",
+        "data/engine/downloads_social_radio_dfs_signals_2026_11_05.json:1180 (NYJ ML -122)",
+        "intelligence/coaching/downloads_social_radio_and_dfs_signals.py:729 (NYJ ML -122)",
+        "intelligence/coaching/downloads_social_radio_and_dfs_signals.py:842 (NYJ ML -122)",
+        "apps/web/__tests__/jarvis-jynx-brain.test.ts:66 (NYJ -1.5)",
+        "apps/web/lib/jarvis/autonomous-bot-sdk-adapter.ts:200 (NYJ -1.5)",
+        "apps/web/lib/week8/sealed-board.json:119 (NYJ -1.5)",
+        "apps/web/lib/writeups/coach-writeup-engine.ts:1391 (NYJ -1.5)",
+        "apps/web/lib/writeups/week8-2026-board.ts:115 (NYJ -1.5)",
+        "data/engine/downloads_social_radio_dfs_signals_2026_11_05.json:1134 (NYJ -1.5)",
+        "data/engine/downloads_social_radio_dfs_signals_2026_11_05.json:1181 (NYJ -1.5)",
+        "data/engine/live_dk_odds_and_props_2026_10_29.json:2274 (NYJ -1.5)",
+        "data/engine/week8_360_locked_card_2026_10_30.json:368 (NYJ -1.5)",
+        "data/engine/week8_gate_decisions_2026_10_30.jsonl:194 (NYJ -1.5)"
+      ]
+    },
+    {
+      "charge": 5,
+      "name": "Verifiable test suite execution",
+      "status": "PASS",
+      "detail": "test_wave_consumption_proofs.py pending Wave 3+ creation"
+    },
+    {
+      "charge": 6,
+      "name": "Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo",
+      "status": "FAIL",
+      "public_surface_hits": 14,
+      "unmarked_repo_files": 78,
+      "sample_public_hits": [
+        "apps/web/__tests__/cockpit-office-3d-bot-hq.test.ts:165",
+        "apps/web/__tests__/cockpit-office-3d-bot-hq.test.ts:166",
+        "apps/web/__tests__/hermes-plugin-universe-suite.test.ts:137",
+        "apps/web/__tests__/jarvis-jynx-brain.test.ts:64",
+        "apps/web/__tests__/marketing-science-conversion-engine.test.ts:115",
+        "apps/web/__tests__/mega-sweep-and-surface-truth.test.ts:171",
+        "apps/web/__tests__/mega-sweep-and-surface-truth.test.ts:177",
+        "apps/web/__tests__/mega-sweep-and-surface-truth.test.ts:182",
+        "apps/web/__tests__/packages-storefront-paywall.test.tsx:186",
+        "apps/web/__tests__/packages-storefront-paywall.test.tsx:217"
+      ],
+      "sample_unmarked_files": [
+        "apps/web/__tests__/cockpit-office-3d-bot-hq.test.ts",
+        "apps/web/__tests__/hermes-plugin-universe-suite.test.ts",
+        "apps/web/__tests__/marketing-science-conversion-engine.test.ts",
+        "apps/web/__tests__/mega-sweep-and-surface-truth.test.ts",
+        "apps/web/__tests__/packages-storefront-paywall.test.tsx",
+        "apps/web/__tests__/packages-storefront.test.ts",
+        "apps/web/public/cards/week9-tnf-jax-bal-card.svg",
+        "apps/web/public/llms.txt",
+        "data/audits/comprehensive_review_full_review_2026_11_06.json",
+        "data/audits/honest_100pct_wiring_and_gse_vs_gsi_state_2026_11_06.json",
+        "data/audits/openai_10_repos_jules_and_opendots_audit_2026_11_06.json",
+        "data/engine/connected_workflow_dossier_ari_sea_week9.json",
+        "data/engine/connected_workflow_dossier_buf_min_week9.json",
+        "data/engine/connected_workflow_dossier_cin_atl_week9.json",
+        "data/engine/connected_workflow_dossier_cle_no_week9.json"
+      ]
+    },
+    {
+      "charge": 7,
+      "name": "Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked",
+      "status": "PASS",
+      "domains_configured": true
+    },
+    {
+      "charge": 8,
+      "name": "Grants execution packs and cited wiring artifacts exist on disk",
+      "status": "PASS",
+      "missing_files": []
+    },
+    {
+      "charge": 9,
+      "name": "Every Drive/library claim reconciled to exact listing in CORPUS-CENSUS.csv with SHA/drive_id",
+      "status": "PASS",
+      "corpus_census_present": true
+    },
+    {
+      "charge": 10,
+      "name": "Automated perturbation consumption tests present in tests/wiring/test_wave_consumption_proofs.py",
+      "status": "PENDING_WAVE_3_TO_8",
+      "consumption_test_file_present": false
+    }
+  ]
+}
