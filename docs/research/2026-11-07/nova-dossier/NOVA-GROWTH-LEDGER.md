@@ -26,6 +26,8 @@ Every artifact, in order. Fields: date/time CT · artifact · route · cost · s
 | 2026-11-07 ~15:0x | scriptA-callirrhoe-adjusted-feminine.wav (A2) | AI Studio TTS | free | Script A | A/B — not picked | — | heard |
 | 2026-11-07 ~15:0x | scriptB-zephyr-adjusted-feminine.wav (B1) | AI Studio TTS (Zephyr, adjusted style) | free | Script B | **PICKED — production voice reference** | — | **Picked 15:04 CT** |
 | 2026-11-07 ~15:1x | Take 4 — game-day report, rugged, Script B | Higgsfield Soul | 160 cr (expected) | Script B | IN PRODUCTION | pending frame review | pending |
+| 2026-11-07 11:48–12:00 | nova-test-a-fictional-bar.mp4 (4,154,027 bytes, on disk 2026-11-07 12:00) (added by daily tracking) | Google Flow (Omni, diagnostic isolation test) | 24 Flow credits | silent — Nova alone in a fictional neon sports bar, no city/teams/speech | HELD — diagnostic only | identity holds across motion; large presenter-style gestures in laugh frame; gibberish background neon text | — |
+| 2026-11-07 11:48–12:00 | nova-test-b-houston-crowd.mp4 (6,041,346 bytes, on disk 2026-11-07 12:00) (added by daily tracking) | Google Flow (Omni, diagnostic isolation test) | 24 Flow credits | silent — Houston tailgate crowd alone, wide shot, no central character | HELD — diagnostic only | reads very natural at crowd scale (grill smoke, canopies, crowd) | — |
 
 ## Performance Log
 
@@ -45,6 +47,7 @@ Every change to who Nova is or how she is made, with who decided it. Garrett's d
 | 2026-11-07 14:59 | Voice slightly more feminine; NO end push-in / no stepping into camera; "Let's eat" banned permanently; rugged iPhone format confirmed for football settings | Garrett | VOICE-LOCK.md Nov 7 UPDATE; memory 2026-11-07 |
 | 2026-11-07 15:04 | B1 picked: Zephyr + adjusted-feminine style text replaces §45 text for production; Script B approved | Garrett | VOICE-LOCK.md Nov 7 UPDATE |
 | 2026-11-07 15:10 | Automatic growth/performance tracking ordered — ledger + workflows, tested, never Garrett's job | Garrett | this ledger; TRACKING-PROTOCOL.md |
+| 2026-11-07 ~12:07 | Verdict/direction on the Flow diagnostic takes: decent and improving, but movement still not fluid and image still too polished / almost too HD — output must be less polished (precursor to the 14:20/14:59 rugged ruling) (added by daily tracking) | Garrett | memory 2026-11-07 (12:21 CT flush); NOVA-CHARACTER-SPEC-2026-11-07.md |
 
 ## Drift & Consistency Checks
 
