@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   LIVE_PACKAGE_CATALOG,
+  WEEK8_GAME_DAY_CATALOG_METADATA,
   getPackageBySlug,
   buildStripePackageCheckoutPayload,
 } from "@/lib/packages/catalog";
@@ -8,6 +9,21 @@ import { POST as checkoutRoute } from "@/app/api/packages/checkout/route";
 import { GET as unlockRoute } from "@/app/api/packages/unlock/route";
 
 describe("Galaxy Picks storefront catalog", () => {
+  it("enforces the official Season Ledger of Record (47-19-1 / +24.92u; Base 38-13-1 / +22.85u) and standing roster ruling", () => {
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.baseRecord).toBe("38-13-1");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.baseUnits).toBe("+22.85u");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsRecord).toBe("47-19-1");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsUnits).toBe("+24.92u");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.genoSmithTeam).toBe("NYJ");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.mikeEvansTeam).toBe("SF");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.oct30Section23IdentityPassVoided).toBe(true);
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.rescuedItems).toHaveLength(4);
+    for (const pkg of LIVE_PACKAGE_CATALOG) {
+      expect(pkg.description).not.toContain("62-23-1");
+      expect(pkg.description).not.toContain("+26.50u");
+    }
+  });
+
   it("contains the Week 8 packs at the published prices including the $39.99 standalone DFS pack", () => {
     expect(LIVE_PACKAGE_CATALOG.length).toBe(5);
 

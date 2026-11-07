@@ -39,30 +39,30 @@ const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full fie
 const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
 
 const SEALED_MAIN_CALLS = [
-  { matchup: "DET @ GB", selection: "[LOCKED — VIP ACCESS] NFC North Division Spread Call", market: "Spread", conf: "85/100", freeTeaser: false },
-  { matchup: "MIA @ BUF", selection: "[LOCKED — VIP ACCESS] AFC East Division Total Call", market: "Total", conf: "84/100", freeTeaser: false },
-  { matchup: "IND @ MIN", selection: "[LOCKED — VIP ACCESS] Sunday Night Football Main Line Call", market: "Spread", conf: "83/100", freeTeaser: false },
-  { matchup: "DAL @ ATL", selection: "[LOCKED — PRO ACCESS] Indoor Turf Main Line Call", market: "Spread", conf: "82/100", freeTeaser: false },
-  { matchup: "LAR @ SEA", selection: "[LOCKED — PRO ACCESS] NFC West Division Spread Call", market: "Spread", conf: "81/100", freeTeaser: false },
-  { matchup: "WAS @ NYG", selection: "[LOCKED — PRO ACCESS] NFC East Division Main Line Call", market: "Spread", conf: "80/100", freeTeaser: false },
-  { matchup: "TB @ KC", selection: "[LOCKED — VIP ACCESS] Monday Night Football Main Line Call", market: "Spread", conf: "79/100", freeTeaser: false },
+  { matchup: "DET @ GB", selection: "[LOCKED  -  VIP ACCESS] NFC North Division Spread Call", market: "Spread", conf: "85/100", freeTeaser: false },
+  { matchup: "MIA @ BUF", selection: "[LOCKED  -  VIP ACCESS] AFC East Division Total Call", market: "Total", conf: "84/100", freeTeaser: false },
+  { matchup: "IND @ MIN", selection: "[LOCKED  -  VIP ACCESS] Sunday Night Football Main Line Call", market: "Spread", conf: "83/100", freeTeaser: false },
+  { matchup: "DAL @ ATL", selection: "[LOCKED  -  PRO ACCESS] Indoor Turf Main Line Call", market: "Spread", conf: "82/100", freeTeaser: false },
+  { matchup: "LAR @ SEA", selection: "[LOCKED  -  PRO ACCESS] NFC West Division Spread Call", market: "Spread", conf: "81/100", freeTeaser: false },
+  { matchup: "WAS @ NYG", selection: "[LOCKED  -  PRO ACCESS] NFC East Division Main Line Call", market: "Spread", conf: "80/100", freeTeaser: false },
+  { matchup: "TB @ KC", selection: "[LOCKED  -  VIP ACCESS] Monday Night Football Main Line Call", market: "Spread", conf: "79/100", freeTeaser: false },
 ] as const;
 
 const SEALED_PROPS = [
-  { matchup: "DET @ GB", player: "Week 9 Sunday Main Slate Prop #1 (DET/GB)", prop: "[LOCKED — VIP ACCESS]", conf: "86/100", freeTeaser: false },
-  { matchup: "MIA @ BUF", player: "Week 9 Sunday Main Slate Prop #2 (MIA/BUF)", prop: "[LOCKED — VIP ACCESS]", conf: "85/100", freeTeaser: false },
-  { matchup: "IND @ MIN", player: "Week 9 Sunday Night Football Prop #3 (IND/MIN)", prop: "[LOCKED — VIP ACCESS]", conf: "84/100", freeTeaser: false },
-  { matchup: "TB @ KC", player: "Week 9 Monday Night Football Prop #4 (TB/KC)", prop: "[LOCKED — VIP ACCESS]", conf: "83/100", freeTeaser: false },
-  { matchup: "DAL @ ATL", player: "Week 9 Sunday Main Slate Prop #5 (DAL/ATL)", prop: "[LOCKED — PRO ACCESS]", conf: "82/100", freeTeaser: false },
-  { matchup: "LAR @ SEA", player: "Week 9 Sunday Main Slate Prop #6 (LAR/SEA)", prop: "[LOCKED — PRO ACCESS]", conf: "81/100", freeTeaser: false },
-  { matchup: "WAS @ NYG", player: "Week 9 Sunday Main Slate Prop #7 (WAS/NYG)", prop: "[LOCKED — PRO ACCESS]", conf: "80/100", freeTeaser: false },
+  { matchup: "DET @ GB", player: "Week 9 Sunday Main Slate Prop #1 (DET/GB)", prop: "[LOCKED  -  VIP ACCESS]", conf: "86/100", freeTeaser: false },
+  { matchup: "MIA @ BUF", player: "Week 9 Sunday Main Slate Prop #2 (MIA/BUF)", prop: "[LOCKED  -  VIP ACCESS]", conf: "85/100", freeTeaser: false },
+  { matchup: "IND @ MIN", player: "Week 9 Sunday Night Football Prop #3 (IND/MIN)", prop: "[LOCKED  -  VIP ACCESS]", conf: "84/100", freeTeaser: false },
+  { matchup: "TB @ KC", player: "Week 9 Monday Night Football Prop #4 (TB/KC)", prop: "[LOCKED  -  VIP ACCESS]", conf: "83/100", freeTeaser: false },
+  { matchup: "DAL @ ATL", player: "Week 9 Sunday Main Slate Prop #5 (DAL/ATL)", prop: "[LOCKED  -  PRO ACCESS]", conf: "82/100", freeTeaser: false },
+  { matchup: "LAR @ SEA", player: "Week 9 Sunday Main Slate Prop #6 (LAR/SEA)", prop: "[LOCKED  -  PRO ACCESS]", conf: "81/100", freeTeaser: false },
+  { matchup: "WAS @ NYG", player: "Week 9 Sunday Main Slate Prop #7 (WAS/NYG)", prop: "[LOCKED  -  PRO ACCESS]", conf: "80/100", freeTeaser: false },
 ] as const;
 
 const SEALED_SGPS = STAGE0_VERIFIED_WEEK9_SGPS
   .filter((row) => !/JAX\s*@\s*BAL/i.test(row.matchup))
   .map((row) => ({
     matchup: row.matchup,
-    legs: "[LOCKED — VIP ACCESS · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]",
+    legs: "[LOCKED  -  VIP ACCESS · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]",
     odds: `Fair LOCKED / Book ${row.bookOdds}`,
   }));
 
@@ -447,7 +447,7 @@ export function RedlineWorld({
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
             <div className="overhead-header">
               <div>
-                <p className="plate-kicker">REDZONE STOREFRONT · VERIFIED 62-23-1 (72.9% · +26.50u)</p>
+                <p className="plate-kicker">REDZONE STOREFRONT · VERIFIED 47-19-1 (+24.92u; Base 38-13-1, +22.85u)</p>
                 <h1>Pick your gate.</h1>
                 <p className="plate-deck">Select any Week 9 Sunday &amp; MNF pack below to review what’s inside and unlock instant access.</p>
               </div>
@@ -500,7 +500,7 @@ export function RedlineWorld({
             <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state">
-            <span className="live-dot" /> VERIFIED RECORD: 62-23-1 (72.9% · +26.50u)
+            <span className="live-dot" /> VERIFIED RECORD: 47-19-1 (+24.92u; Base 38-13-1, +22.85u)
           </div>
         </header>
 
@@ -591,7 +591,7 @@ export function RedlineWorld({
             <h3 className="sub-heading">Free Week 9 Sunday &amp; MNF Matchup Environment Setup</h3>
             <div className="fixture-list">
               <div className="fixture-row">
-                <span className="fixture-week">SUN–MON</span>
+                <span className="fixture-week">SUN-MON</span>
                 <div className="fixture-match">DET @ GB · MIA @ BUF · IND @ MIN · TB @ KC <small>Week 9 Sunday Main Slate &amp; Primetime</small></div>
                 <span className="fixture-angle">Outdoor Lambeau trench matchups, Buffalo two-high coverage rotation against Miami motion, indoor track speed in Minnesota, and Kansas City 12-personnel ball control shape our Week 9 optimal lineups. Official cash and GPP builds are locked below.</span>
               </div>
@@ -625,31 +625,31 @@ export function RedlineWorld({
               <div className="locked-blur-item">
                 <div className="dfs-lineup-grid">
                   <div className="dfs-box">
-                    <span className="dfs-tag">OPTIMAL LINEUP #1 · CASH HIGH-FLOOR ($49,900 · [LOCKED — VIP ACCESS])</span>
+                    <span className="dfs-tag">OPTIMAL LINEUP #1 · CASH HIGH-FLOOR ($49,900 · [LOCKED  -  VIP ACCESS])</span>
                     <ul>
-                      <li><b>QB</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>RB1</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>RB2</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>WR1</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>WR2</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>WR3</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>TE</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>FLEX</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>DST</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>QB</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>RB1</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>RB2</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>WR1</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>WR2</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>WR3</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>TE</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>FLEX</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>DST</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
                     </ul>
                   </div>
                   <div className="dfs-box">
-                    <span className="dfs-tag">OPTIMAL LINEUP #2 · GPP TOURNAMENT ($50,000 · [LOCKED — VIP ACCESS])</span>
+                    <span className="dfs-tag">OPTIMAL LINEUP #2 · GPP TOURNAMENT ($50,000 · [LOCKED  -  VIP ACCESS])</span>
                     <ul>
-                      <li><b>QB</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>RB1</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>RB2</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>WR1</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>WR2</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>WR3</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>TE</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>FLEX</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
-                      <li><b>DST</b> [LOCKED — PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>QB</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>RB1</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>RB2</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>WR1</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>WR2</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>WR3</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>TE</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>FLEX</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
+                      <li><b>DST</b> [LOCKED  -  PRO ACCESS · UNLOCK DFS PACK]</li>
                     </ul>
                   </div>
                 </div>
@@ -658,7 +658,7 @@ export function RedlineWorld({
                   {DFS_CORE_POOL.slice(0, 2).map((row) => (
                     <div className="fixture-row" key={row.player}>
                       <span className="fixture-week">{row.pos}</span>
-                      <div className="fixture-match">[LOCKED — PRO ACCESS · UNLOCK DFS PACK] <small>{row.sal}</small></div>
+                      <div className="fixture-match">[LOCKED  -  PRO ACCESS · UNLOCK DFS PACK] <small>{row.sal}</small></div>
                       <span className="fixture-angle">Locked position core play &amp; matchup leverage note</span>
                     </div>
                   ))}
@@ -680,7 +680,7 @@ export function RedlineWorld({
         )}
 
         {panel === "slate" && (
-          <PanelFrame eyebrow="Verified RedZone Board · 62-23-1 (72.9% · +26.50u)" title="Week 9 Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
+          <PanelFrame eyebrow="Verified RedZone Board · 47-19-1 (+24.92u; Base 38-13-1, +22.85u)" title="Week 9 Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
             <h3 className="sub-heading">Free Matchup &amp; Game-Environment Analytics · Week 9 Sunday Main Slate &amp; MNF</h3>
             <div className="table-scroll" data-testid="slate-free-game-environment-analytics" style={{ marginBottom: 20 }}>
               <table className="world-table">
@@ -765,7 +765,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Verified Season Record <strong>62-23-1 · +26.50u</strong> (72.9%) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`), Sunday Night Football (`IND @ MIN`), and Monday Night Football (`TB @ KC`) sides, totals, player props, and correlated Same-Game Parlays.
+                  Verified Season Record <strong>47-19-1 · +24.92u</strong> (72.9%) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`), Sunday Night Football (`IND @ MIN`), and Monday Night Football (`TB @ KC`) sides, totals, player props, and correlated Same-Game Parlays.
                 </p>
                 <button
                   type="button"

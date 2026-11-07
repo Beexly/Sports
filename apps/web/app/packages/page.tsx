@@ -70,10 +70,10 @@ export default function PackagesPage(): JSX.Element {
                 VERIFIED SEASON RECORD
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                62-23-1 · +26.50u
+                47-19-1 · +24.92u
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                72.9% Win Rate · Entering Week 9 Sunday Main Slate &amp; Monday Night Football (Week 8 Settled).
+                Base 38-13-1 · +22.85u · Entering Week 9 Sunday Main Slate &amp; Monday Night Football.
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
@@ -130,7 +130,7 @@ export default function PackagesPage(): JSX.Element {
               </p>
             </div>
             <span className="rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1.5 text-xs font-extrabold text-emerald-300">
-              Official Sides, Totals, Props &amp; SGPs Locked Below · 62-23-1 (+26.50u)
+              Official Sides, Totals, Props &amp; SGPs Locked Below · 47-19-1 (+24.92u)
             </span>
           </div>
 
@@ -156,10 +156,10 @@ export default function PackagesPage(): JSX.Element {
                     <strong className="text-white">27.4 sec/snap</strong> neutral pace · Projected <strong className="text-white">63.0</strong> Detroit plays vs <strong className="text-white">61.5</strong> Green Bay plays on outdoor grass
                   </td>
                   <td className="py-3 pr-4">
-                    Detroit interior OL <strong className="text-white">71.5%</strong> clean-pocket rate vs Green Bay <strong className="text-white">31.8%</strong> simulated-pressure and stunt rate
+                    Detroit interior OL <strong className="text-white">{"71.5%"}</strong> clean-pocket rate vs Green Bay <strong className="text-white">{"31.8%"}</strong> simulated-pressure and stunt rate
                   </td>
                   <td className="py-3">
-                    Green Bay <strong className="text-white">58.0%</strong> two-high quarters/palms shell; Detroit <strong className="text-white">61.0%</strong> red-zone heavy-personnel rush &amp; play-action split
+                    Green Bay <strong className="text-white">{"58.0%"}</strong> two-high quarters/palms shell; Detroit <strong className="text-white">{"61.0%"}</strong> red-zone heavy-personnel rush &amp; play-action split
                   </td>
                 </tr>
                 <tr>
@@ -167,10 +167,10 @@ export default function PackagesPage(): JSX.Element {
                     MIA @ BUF · Sun 12:00 PM CT (Highmark)
                   </th>
                   <td className="py-3 pr-4">
-                    <strong className="text-white">26.6 sec/snap</strong> neutral pace · Miami <strong className="text-white">68.2%</strong> pre-snap motion rate to force coverage rotation before the snap
+                    <strong className="text-white">26.6 sec/snap</strong> neutral pace · Miami <strong className="text-white">{"68.2%"}</strong> pre-snap motion rate to force coverage rotation before the snap
                   </td>
                   <td className="py-3 pr-4">
-                    Miami quick-release timing (<strong className="text-white">2.34s</strong> time-to-throw) vs Buffalo four-man edge rush (<strong className="text-white">35.4%</strong> pressure rate without blitzing)
+                    Miami quick-release timing (<strong className="text-white">2.34s</strong> time-to-throw) vs Buffalo four-man pass rush (<strong className="text-white">{"35.4%"}</strong> pressure rate without blitzing)
                   </td>
                   <td className="py-3">
                     Buffalo <strong className="text-white">61.5%</strong> two-high nickel shell; compressed red-zone spacing elevates inside-the-20 field-goal stall tendencies

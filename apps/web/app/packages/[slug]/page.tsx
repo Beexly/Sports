@@ -51,7 +51,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
           <h1 className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">{pkg.title}</h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">{pkg.description}</p>
           <p className="mt-6 border-t border-mineral pt-6 font-numerals text-sm tabular-nums text-ion-2">
-            Verified Season Record: 62-23-1 (72.9% · +26.50u). Window closed — not for sale.
+            Verified Season Record: 47-19-1 (+24.92u; Base 38-13-1, +22.85u). Window closed  -  not for sale.
           </p>
         </main>
         <Footer />
@@ -105,7 +105,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
                 {pkg.badge || formatWindowSlotLabel(pkg.windowSlot)}
               </span>
               <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-plasma">
-                Verified 62-23-1 (+26.50u)
+                Verified 47-19-1 (+24.92u)
               </span>
               {isUnlocked ? (
                 <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-plasma">
@@ -139,7 +139,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
           </p>
         </header>
 
-        {/* ── LOCKED — paywall reveal + free matchup storylines ─── */}
+        {/* ── LOCKED  -  paywall reveal + free matchup storylines ─── */}
         {!isUnlocked && (
           <div className="mt-10 space-y-12">
             <PaywallRevealCard
@@ -201,7 +201,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
           </div>
         )}
 
-        {/* ── UNLOCKED — full actionable picks revealed ─────────── */}
+        {/* ── UNLOCKED  -  full actionable picks revealed ─────────── */}
         {isUnlocked && (
           <div className="mt-10">
             <PaywallRevealCard

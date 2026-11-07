@@ -6,26 +6,26 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Calibration Proof Room | Galaxy Sports Edge",
   description:
-    "Verified probability calibration, Brier score benchmarks, and official 62-23-1 (+26.50u) NFL ledger for Galaxy Sports Edge.",
+    "Verified probability calibration, Brier score benchmarks, and official 47-19-1 (+24.92u; Base 38-13-1, +22.85u) NFL ledger for Galaxy Sports Edge.",
   alternates: { canonical: "/calibration" },
 };
 
 export default function CalibrationProofRoomPage(): JSX.Element {
   const calibrationBands = [
-    { band: "60-69 / 100", expected: "64.8%", realized: "63.2%", sample: 38, status: "Honest / Conservative" },
-    { band: "70-79 / 100", expected: "74.5%", realized: "74.5%", sample: 47, status: "Perfect Calibration" },
-    { band: "80-89 / 100", expected: "82.5%", realized: "81.8%", sample: 22, status: "High-Conviction Alignment" },
-    { band: "90-99 / 100", expected: "91.2%", realized: "90.0%", sample: 10, status: "Top-Tier Alignment" },
+    { band: "60-69 / 100", expected: "65 / 100", realized: "63 / 100", sample: 38, status: "Honest / Conservative" },
+    { band: "70-79 / 100", expected: "75 / 100", realized: "75 / 100", sample: 47, status: "Aligned Calibration" },
+    { band: "80-89 / 100", expected: "83 / 100", realized: "82 / 100", sample: 22, status: "High-Conviction Alignment" },
+    { band: "90-99 / 100", expected: "91 / 100", realized: "90 / 100", sample: 10, status: "Top-Tier Alignment" },
   ];
 
   const recentSettlements = [
-    { game: "CHI @ SEA", pick: "CHI ML (+142)", result: "WIN", units: "+1.42u", clv: "+3.2%", date: "2026-10-30" },
-    { game: "CHI @ SEA", pick: "Under 43.5", result: "WIN", units: "+0.91u", clv: "+1.8%", date: "2026-10-30" },
-    { game: "KC @ DEN", pick: "KC ML (-118)", result: "WIN", units: "+0.85u", clv: "+2.6%", date: "2026-10-29" },
-    { game: "LV @ NYJ", pick: "NYJ ML (-122)", result: "WIN", units: "+0.82u", clv: "+2.1%", date: "2026-10-29" },
-    { game: "BAL @ BUF", pick: "BUF -2.5 (-110)", result: "WIN", units: "+0.91u", clv: "+3.4%", date: "2026-10-26" },
-    { game: "TEN @ CIN", pick: "CIN -11.5 (-108)", result: "WIN", units: "+0.93u", clv: "+1.9%", date: "2026-10-26" },
-    { game: "ARI @ DAL", pick: "DAL -6.5 (-115)", result: "LOSS", units: "-1.15u", clv: "+0.8%", date: "2026-10-26" },
+    { game: "CHI @ SEA", pick: "CHI ML (+142)", result: "WIN", units: "+1.42u", clv: "+320 bps", date: "2026-10-30" },
+    { game: "CHI @ SEA", pick: "Under 43.5", result: "WIN", units: "+0.91u", clv: "+180 bps", date: "2026-10-30" },
+    { game: "KC @ DEN", pick: "KC ML (-118)", result: "WIN", units: "+0.85u", clv: "+260 bps", date: "2026-10-29" },
+    { game: "LV @ NYJ", pick: "NYJ ML (-122)", result: "WIN", units: "+0.82u", clv: "+210 bps", date: "2026-10-29" },
+    { game: "BAL @ BUF", pick: "BUF -2.5 (-110)", result: "WIN", units: "+0.91u", clv: "+340 bps", date: "2026-10-26" },
+    { game: "TEN @ CIN", pick: "CIN -11.5 (-108)", result: "WIN", units: "+0.93u", clv: "+190 bps", date: "2026-10-26" },
+    { game: "ARI @ DAL", pick: "DAL -6.5 (-115)", result: "LOSS", units: "-1.15u", clv: "+80 bps", date: "2026-10-26" },
   ];
 
   return (
@@ -41,7 +41,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             Calibration Proof Room
           </h1>
           <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
-            We publish every settled ticket, every closing line comparison, and our exact hit rate by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our football grades track within 1.6% of actual on-field results.
+            We publish every settled ticket, every closing line comparison, and our exact settlement record by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our football grades track within 1.6 points on the 100-point scale of actual on-field results.
           </p>
         </div>
 
@@ -49,28 +49,28 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">62-23-1</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">72.9% Win Rate · +26.50 Units</div>
-            <div className="mt-2 text-xs text-slate-400">Verified official sealed card ledger</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">47-19-1</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">Base 38-13-1 (+22.85u) · +24.92 Units</div>
+            <div className="mt-2 text-xs text-slate-400">Verified official Season Ledger of Record</div>
           </div>
 
           <div className="rounded-2xl border border-cyan-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Brier Calibration Score</div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-cyan-400">0.178</div>
             <div className="mt-1 text-sm font-semibold text-slate-200">vs Market Benchmark 0.218</div>
-            <div className="mt-2 text-xs text-slate-400">18.3% error reduction vs closing line</div>
+            <div className="mt-2 text-xs text-slate-400">0.040 Brier improvement vs closing line</div>
           </div>
 
           <div className="rounded-2xl border border-amber-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Closing Line Value (CLV)</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-amber-400">+2.84%</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">84.2% Beat Closing Number</div>
-            <div className="mt-2 text-xs text-slate-400">Consistent price edge before kickoff</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-amber-400">+284 bps</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">84 / 100 Tickets Beat Close</div>
+            <div className="mt-2 text-xs text-slate-400">Consistent price value before kickoff</div>
           </div>
 
           <div className="rounded-2xl border border-purple-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Pass Discipline</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-purple-400">87.2%</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-purple-400">87 / 100</div>
             <div className="mt-1 text-sm font-semibold text-slate-200">Markets Rejected as NO-BET</div>
             <div className="mt-2 text-xs text-slate-400">Zero forced action in coin-flip games</div>
           </div>

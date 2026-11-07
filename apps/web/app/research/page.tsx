@@ -27,7 +27,7 @@ export default function ResearchPortalPage(): JSX.Element {
       category: "Depth Chart & Volume Redistribution",
       status: "Live Process Standard",
       abstract:
-        "When a starting quarterback, bellcow running back, or alpha receiver is ruled out, those snaps, routes, and red-zone touches do not disappear—they shift to specific secondary outlets based on formation tendencies and blocking assignments.",
+        "When a starting quarterback, bellcow running back, or alpha receiver is ruled out, those snaps, routes, and red-zone touches do not disappear - they shift to specific secondary outlets based on formation tendencies and blocking assignments.",
       keywords: ["Injury Reports", "Target Share", "Red-Zone Carries", "Depth Chart Roles"],
     },
     {
@@ -45,7 +45,7 @@ export default function ResearchPortalPage(): JSX.Element {
       category: "Correlated Parlay Construction",
       status: "Live Process Standard",
       abstract:
-        "Most sportsbooks price multi-leg Same-Game Parlays as if player stats happen in a vacuum. We build tickets around connected football scripts—such as a road favorite controlling the clock on the ground while the trailing quarterback is forced into checkdown volume.",
+        "Most sportsbooks price multi-leg Same-Game Parlays as if player stats happen in a vacuum. We build tickets around connected football scripts - such as a road favorite controlling the clock on the ground while the trailing quarterback is forced into checkdown volume.",
       keywords: ["Game Script", "Correlated Parlays", "Slot & Seam Volume", "Clock Control"],
     },
     {
@@ -105,7 +105,7 @@ export default function ResearchPortalPage(): JSX.Element {
   ];
 
   const processMetrics = [
-    { label: "Official Verified Record", value: "62-23-1", sub: "72.9% Win Rate · +26.50u" },
+    { label: "Official Verified Record", value: "47-19-1", sub: "Base 38-13-1 (+22.85u) · +24.92u" },
     { label: "Week 8 Settled Sweep", value: "22-8-1", sub: "7-of-7 Max Plays (+12.40u)" },
     { label: "Markets Passed", value: "87.2%", sub: "No Forced Action on Coinflips" },
     { label: "Closing Line Beat", value: "+2.84%", sub: "84.2% Beat Closing Number" },

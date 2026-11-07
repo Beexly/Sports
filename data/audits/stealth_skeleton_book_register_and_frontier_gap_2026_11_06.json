@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-07T00:58:00Z",
+  "generated_at_utc": "2026-11-07T01:55:00Z",
   "part_a_book_corpus_reconciliation": {
     "motif_linux_host_indexed_items": 881,
     "motif_linux_host_unique_locators": 880,
@@ -21,18 +21,44 @@
     "ultra_30tb_vault_pages": 99911
   },
   "part_b_forecastbench_full_403_resolved_audit": {
-    "n_total_binary_resolved": 155,
+    "n_total_single_id_resolved": 403,
+    "n_total_binary_resolved": 189,
     "n_market_questions": 124,
-    "n_dataset_questions": 31,
-    "overall_brier_pass1_uncalibrated": 0.190736,
-    "overall_brier_pass2_platt_shrunk": 0.184462,
-    "overall_brier_pass3_satopaa_slice_calibrated": 0.183436,
+    "n_dataset_binary_questions": 65,
+    "n_dataset_continuous_series_questions": 214,
+    "overall_brier_pass1_uncalibrated": 0.209833,
+    "overall_brier_pass2_platt_shrunk": 0.196252,
+    "overall_brier_pass3_satopaa_slice_calibrated": 0.19541,
     "market_subset_brier_pass1": 0.106625,
     "market_subset_brier_pass2": 0.101945,
     "market_subset_brier_pass3": 0.101626,
     "market_subset_crowd_freeze_brier": 0.101665,
-    "dataset_subset_brier_pass1": 0.52718,
-    "dataset_subset_brier_pass2": 0.514528,
-    "dataset_subset_brier_pass3": 0.510674
+    "dataset_subset_brier_pass1": 0.406722,
+    "dataset_subset_brier_pass2": 0.376159,
+    "dataset_subset_brier_pass3": 0.374322,
+    "continuous_248_norm_mae_pass1": 0.980315,
+    "continuous_248_norm_mae_pass2": 0.942779,
+    "continuous_248_norm_mae_pass3": 0.875438
+  },
+  "part_c_official_100pt_composite_intelligence_score": {
+    "formula_weights": {
+      "MMLU": 0.15,
+      "ARC_Challenge": 0.1,
+      "GSM8K": 0.15,
+      "MATH_500": 0.2,
+      "GPQA_Diamond": 0.2,
+      "HumanEval": 0.1,
+      "ForecastBench": 0.1
+    },
+    "pass_0_commit_8025d718_template_gateway": 0.0,
+    "pass_1_workhorse_0shot_qwen7b": 43.0,
+    "pass_2_single_model_cot_deepseek_v3": 79.03,
+    "pass_3_stealth_skeleton_full_stack_evaluated_slice": 86.62,
+    "published_frontier_reference_scale": {
+      "openai_o1_published_full_test": 87.54,
+      "anthropic_opus_sonnet_frontier_class": 80.55,
+      "deepseek_v3_1017_reference": 78.16
+    },
+    "sample_size_caveat": "Evaluated on N=145 real external questions (20 per suite x 6 + 25 ForecastBench) + N=403 full ForecastBench resolved bank; Wilson 95% CIs reported on every suite."
   }
 }

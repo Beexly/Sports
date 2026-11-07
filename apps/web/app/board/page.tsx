@@ -11,7 +11,7 @@ const card = board as unknown as SealedBoard;
 export const metadata: Metadata = {
   title: "Official Verified Board | Galaxy Sports Edge",
   description:
-    "Official verified NFL record 62-23-1 (72.9%) · +26.50u. The complete sealed card: 11 game calls, 18 player props, and 13 correlated SGPs.",
+    "Official verified NFL Season Ledger of Record 47-19-1 (+24.92u; Base 38-13-1, +22.85u). The complete sealed card: game calls, player props, and correlated SGPs.",
   alternates: { canonical: "/board" },
 };
 
@@ -36,17 +36,17 @@ export default function BoardPage(): JSX.Element {
           <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">62-23-1</div>
-              <div className="text-xs text-slate-400">72.9% win rate · +26.50 Units</div>
+              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">47-19-1</div>
+              <div className="text-xs text-slate-400">Base 38-13-1 (+22.85u) · +24.92 Units</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Week 8 Settled Sweep</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-cyan-400">22-8-1</div>
-              <div className="text-xs text-slate-400">7-of-7 max plays · +12.40 Units</div>
+              <div className="text-xs uppercase tracking-wider text-slate-400">Base Game &amp; Slate Ledger</div>
+              <div className="mt-1 font-mono text-3xl font-extrabold text-cyan-400">38-13-1</div>
+              <div className="text-xs text-slate-400">Verified core card · +22.85 Units</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <div className="text-xs uppercase tracking-wider text-slate-400">Closing Line Value (CLV)</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-amber-400">+2.84%</div>
+              <div className="mt-1 font-mono text-3xl font-extrabold text-amber-400">+284 bps</div>
               <div className="text-xs text-slate-400">Average beat vs closing market line</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">

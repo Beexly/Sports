@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galaxy Sports Edge · Week 9 Early Pack Showcase</title>
+  <style>
+    :root {
+      --bg-deep: #060a12;
+      --glass-surface: rgba(15, 23, 42, 0.62);
+      --glass-border: rgba(148, 163, 184, 0.22);
+      --accent-emerald: #10b981;
+      --accent-cyan: #38bdf8;
+      --text-primary: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 15%, rgba(16, 185, 129, 0.16), transparent 45%),
+                  radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.14), transparent 50%),
+                  var(--bg-deep);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    .showcase-shell {
+      max-width: 1120px;
+      width: 100%;
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+      transform: translate3d(0, 0, 0);
+      will-change: transform, opacity;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #34d399;
+    }
+    h1 {
+      font-size: 38px;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 18px;
+      margin-bottom: 32px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 20px;
+    }
+    .pack-card {
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 24px;
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+      will-change: transform, opacity;
+    }
+    .pack-card:hover {
+      transform: translate3d(0, -4px, 0);
+    }
+    .pack-tier {
+      color: var(--accent-cyan);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .pack-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .pack-price {
+      font-size: 34px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+    .pack-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .cta {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #04130e;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pack-card {
+        transition: none;
+      }
+      .pack-card:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="showcase-shell">
+    <div class="badge-row">
+      <span class="badge">SEASON LEDGER OF RECORD: 47-19-1 · +24.92u</span>
+      <span class="badge">BASE CARD: 38-13-1 · +22.85u</span>
+      <span class="badge">SIGNAL RATINGS ON /100 SCALE</span>
+    </div>
+    <h1>Week 9 NFL Early Packs &amp; Founding Member Access</h1>
+    <p class="subtitle">
+      Verified matchup film, trench protection survival rates, and coverage-shell evaluations across every Week 9 game.
+    </p>
+    <section class="grid" aria-label="Available Week 9 Packages">
+      <article class="pack-card">
+        <div class="pack-tier">Single-Game Spotlight</div>
+        <div class="pack-title">Prime-Time Matchup Pack</div>
+        <div class="pack-price">$9</div>
+        <p class="pack-desc">
+          Full 4-quarter matchup breakdown, pressure survival grades, and verified player prop card for the featured prime-time game.
+        </p>
+        <a class="cta" href="https://www.galaxysportsedge.com/packages">Unlock Prime-Time Pack</a>
+      </article>
+      <article class="pack-card">
+        <div class="pack-tier">Full Sunday Board</div>
+        <div class="pack-title">NFL Sunday Full-Slate Pack</div>
+        <div class="pack-price">$29</div>
+        <p class="pack-desc">
+          Every Sunday matchup graded across game lines, first-half scripts, kicking totals, and skill-player matchups (Signal 84/100+).
+        </p>
+        <a class="cta" href="https://www.galaxysportsedge.com/packages">Unlock Sunday Full Slate</a>
+      </article>
+      <article class="pack-card">
+        <div class="pack-tier">Founding Member Pass</div>
+        <div class="pack-title">All-Access Pro Monthly</div>
+        <div class="pack-price">$39 / mo</div>
+        <p class="pack-desc">
+          Locked Founding Member rate (regularly $79/mo). Includes all NFL &amp; NBA daily cards, early line movement alerts, and full dossiers.
+        </p>
+        <a class="cta" href="https://www.galaxysportsedge.com/packages">Claim Founding Rate</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

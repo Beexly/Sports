@@ -352,10 +352,13 @@ def eval_multiple_choice_suite(
                 max_tokens=1500,
             )
             q32_ans = extract_mc_letter(p3_resp, default=p2_ans)
-            # Majority vote across (deepseek-chat CoT, qwen-2.5-coder-32b CoT, jevkit choice)
-            votes = [p2_ans, q32_ans, jev_choice]
-            counts = {v: votes.count(v) for v in set(votes)}
-            p3_ans = max(counts.items(), key=lambda kv: (kv[1], 1 if kv[0] == p2_ans else 0))[0]
+            # Kadavath P(IK) (arXiv:2207.05221) confidence-gated tie-breaker across (p2_ans, q32_ans, jev_choice):
+            if q32_ans == p2_ans:
+                p3_ans = p2_ans
+            elif q32_ans == jev_choice and jev_conf >= 0.72:
+                p3_ans = q32_ans
+            else:
+                p3_ans = p2_ans
 
         return {
             "idx": idx,

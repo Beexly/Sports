@@ -1,0 +1,75 @@
+{
+  "schema_version": "week9-portfolio-risk-and-r-multiple-v1.0",
+  "generated_at": "2026-11-06T20:15:00Z",
+  "season_ledger_of_record": {
+    "official_overall": "47-19-1",
+    "official_units": "+24.92u",
+    "base_overall": "38-13-1",
+    "base_units": "+22.85u",
+    "voided_nov5_batch_excluded": true
+  },
+  "standing_roster_ruling": {
+    "geno_smith_team": "NYJ",
+    "geno_smith_position": "QB",
+    "mike_evans_team": "SF",
+    "mike_evans_position": "WR",
+    "oct30_section23_identity_pass_voided": true
+  },
+  "portfolio_risk_metrics": {
+    "total_positions_sized": 4,
+    "total_units_allocated": 3.85,
+    "daily_bankroll_cap_units": 5.0,
+    "expected_r_multiple_per_position": 0.0927,
+    "var_95_units": -2.85,
+    "cvar_95_units": -3.42,
+    "sharpe_annualized_estimate": 2.41,
+    "sortino_annualized_estimate": 3.68,
+    "max_correlated_cluster_exposure_units": 1.9
+  },
+  "positions": [
+    {
+      "slot_id": "W9-NFL-01",
+      "market_family": "NFL_SPREAD_FULL_GAME",
+      "signal_rating_100": 86,
+      "win_prob_calibrated": 0.578,
+      "decimal_odds": 1.909,
+      "full_kelly_fraction": 0.1142,
+      "quarter_kelly_units": 1.1,
+      "r_multiple_target": 0.91,
+      "max_loss_r": -1.0
+    },
+    {
+      "slot_id": "W9-NFL-02",
+      "market_family": "NFL_TOTAL_1H",
+      "signal_rating_100": 82,
+      "win_prob_calibrated": 0.566,
+      "decimal_odds": 1.909,
+      "full_kelly_fraction": 0.0894,
+      "quarter_kelly_units": 0.9,
+      "r_multiple_target": 0.91,
+      "max_loss_r": -1.0
+    },
+    {
+      "slot_id": "W9-NFL-03",
+      "market_family": "NFL_PLAYER_PROP_RECEIVING",
+      "signal_rating_100": 84,
+      "win_prob_calibrated": 0.572,
+      "decimal_odds": 1.952,
+      "full_kelly_fraction": 0.1225,
+      "quarter_kelly_units": 1.0,
+      "r_multiple_target": 0.95,
+      "max_loss_r": -1.0
+    },
+    {
+      "slot_id": "W9-NFL-04",
+      "market_family": "NFL_IDP_SACKS_025",
+      "signal_rating_100": 81,
+      "win_prob_calibrated": 0.585,
+      "decimal_odds": 1.833,
+      "full_kelly_fraction": 0.087,
+      "quarter_kelly_units": 0.85,
+      "r_multiple_target": 0.83,
+      "max_loss_r": -1.0
+    }
+  ]
+}

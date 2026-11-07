@@ -1,0 +1,82 @@
+{
+  "generated_at_utc": "2026-11-07T01:50:30.167948+00:00",
+  "publishable_key_redacted": "pk_live_51TPE9...cLIonk",
+  "secret_or_restricted_key_redacted": "rk_live_51TPE9...eisyHD",
+  "stripe_live_api_probe": {
+    "connected": true,
+    "key_type": "RESTRICTED_LIVE_KEY (rk_live_)",
+    "products_probe_http": 200,
+    "products_count_sampled": 3,
+    "error_message": null
+  },
+  "founding_subscription_prices": {
+    "prices": {
+      "STRIPE_FANTASY_MONTHLY_PRICE_ID": {
+        "price_id": "price_1UIsMUQ2wPZMxx60cI4ex8Vq",
+        "lookup_key": "gse-fantasy-monthly",
+        "unit_amount": 699,
+        "status": "EXISTING_VERIFIED"
+      },
+      "STRIPE_FANTASY_ANNUAL_PRICE_ID": {
+        "price_id": "price_1UIsMUQ2wPZMxx601OeTJZjs",
+        "lookup_key": "gse-fantasy-annual",
+        "unit_amount": 5900,
+        "status": "EXISTING_VERIFIED"
+      },
+      "STRIPE_PRO_MONTHLY_PRICE_ID": {
+        "price_id": "price_1UIsMPQ2wPZMxx60uvvgZHTC",
+        "lookup_key": "gse-pro-monthly",
+        "unit_amount": 1999,
+        "status": "EXISTING_VERIFIED"
+      },
+      "STRIPE_PRO_ANNUAL_PRICE_ID": {
+        "price_id": "price_1UIsMQQ2wPZMxx60T89av8Rw",
+        "lookup_key": "gse-pro-annual",
+        "unit_amount": 14900,
+        "status": "EXISTING_VERIFIED"
+      },
+      "STRIPE_ELITE_MONTHLY_PRICE_ID": {
+        "price_id": "price_1UIsMRQ2wPZMxx60dRVF9kS7",
+        "lookup_key": "gse-elite-monthly",
+        "unit_amount": 2999,
+        "status": "EXISTING_VERIFIED"
+      },
+      "STRIPE_ELITE_ANNUAL_PRICE_ID": {
+        "price_id": "price_1UIsMSQ2wPZMxx60Vjr2qaa5",
+        "lookup_key": "gse-elite-annual",
+        "unit_amount": 22900,
+        "status": "EXISTING_VERIFIED"
+      }
+    },
+    "errors": []
+  },
+  "updated_gitignored_env_files": [
+    ".env.local",
+    "apps\\web\\.env.local"
+  ],
+  "vercel_production_sync": {
+    "attempted": true,
+    "updated_vars": [
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+      "STRIPE_SECRET_KEY",
+      "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+      "STRIPE_FANTASY_ANNUAL_PRICE_ID",
+      "STRIPE_PRO_MONTHLY_PRICE_ID",
+      "STRIPE_PRO_ANNUAL_PRICE_ID",
+      "STRIPE_ELITE_MONTHLY_PRICE_ID",
+      "STRIPE_ELITE_ANNUAL_PRICE_ID"
+    ],
+    "note": ""
+  },
+  "live_storefront_checkout_probe": {
+    "http_status": 200,
+    "session_id_prefix": "cs_live_a1eUu5CG...",
+    "checkout_mode": "LIVE_CS_LIVE",
+    "url_host": "checkout.stripe.com"
+  },
+  "inline_price_data_one_time_packs_ready": true,
+  "season_ledger_of_record": {
+    "base": "38-13-1 (+22.85u)",
+    "with_gated_props": "47-19-1 (+24.92u)"
+  }
+}

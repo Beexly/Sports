@@ -7,7 +7,7 @@ import { getEntitledSgpRows } from "@/lib/engine/engine-live-bridge";
 export const metadata: Metadata = {
   title: "Correlated SGP Projections | Galaxy Sports Edge",
   description:
-    "Same-Game Parlay game-script pricing, connected player prop pairings, and live line value across all NFL matchups. Official verified record 62-23-1 (72.9%) · +26.50u.",
+    "Same-Game Parlay game-script pricing, connected player prop pairings, and live line value across all NFL matchups. Official verified record 47-19-1 (+24.92u; Base 38-13-1, +22.85u).",
   alternates: { canonical: "/sgp-projections" },
 };
 
@@ -21,13 +21,13 @@ export default function SgpProjectionsPage(): JSX.Element {
         {/* Header */}
         <div className="border-b border-slate-800 pb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-purple-400">
-            Connected Game-Script Parlays · 62-23-1 (+26.50u)
+            Connected Game-Script Parlays · 47-19-1 (+24.92u)
           </div>
           <h1 className="mt-4 font-display text-4xl uppercase sm:text-6xl text-white">
             Correlated SGP Projections
           </h1>
           <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
-            Sportsbooks hold a massive house edge on Same-Game Parlays by pricing legs as if they happen in a vacuum or penalizing obvious combinations. We build multi-leg tickets around connected on-field game scripts—offensive line protection, coverage shells, and injury workload shifts—where the sportsbook payout still leaves real value.
+            Sportsbooks hold a massive house edge on Same-Game Parlays by pricing legs as if they happen in a vacuum or penalizing obvious combinations. We build multi-leg tickets around connected on-field game scripts - offensive line protection, coverage shells, and injury workload shifts - where the sportsbook payout still leaves real value.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function SgpProjectionsPage(): JSX.Element {
 
             <div className="mt-4 rounded-lg bg-slate-950/40 p-3 text-xs leading-relaxed text-slate-300">
               <span className="font-bold text-slate-200">On-Field Game Script: </span>
-              With Lamar Jackson and Tyler Huntley out, Jacoby Brissett steps in at quarterback for Baltimore against a Jacksonville defense that leans on single-high coverage and blitz pressure—making Mark Andrews the primary quick-game and play-action safety valve over the middle.
+              With Lamar Jackson and Tyler Huntley out, Jacoby Brissett steps in at quarterback for Baltimore against a Jacksonville defense that leans on single-high coverage and blitz pressure - making Mark Andrews the primary quick-game and play-action safety valve over the middle.
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function SgpProjectionsPage(): JSX.Element {
             <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
               <div className="font-bold text-cyan-400 uppercase tracking-wider">2. Match the Trench &amp; Coverage Script</div>
               <p className="mt-2 text-slate-400">
-                Every leg in our parlay must tell the exact same football story—from offensive line pass protection and defensive blitz tendencies to fourth-quarter clock control.
+                Every leg in our parlay must tell the exact same football story - from offensive line pass protection and defensive blitz tendencies to fourth-quarter clock control.
               </p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">

@@ -1,0 +1,134 @@
+{
+  "schema_version": "pm01-pm03-pageindex-gitingest-eval-v1.0",
+  "evaluated_at": "2026-11-06T20:18:00Z",
+  "pm03_pageindex_vectorless_tree_rag": {
+    "repo": "VectifyAI/PageIndex",
+    "verdict": "PROVEN_AND_WIRED_INTO_STEALTH_SKELETON",
+    "document_sections_indexed": 27,
+    "tree_build_latency_ms": 0.504,
+    "known_answer_recall_10": "10/10 (100.0%)",
+    "baseline_fixed_chunk_recall_10": "1/10 (10.0%)",
+    "recall_lift_over_fixed_chunk": 0.9
+  },
+  "pm01_gitingest_digest": {
+    "repo": "cyclotruc/gitingest",
+    "verdict": "PROVEN_FOR_REPO_COMPREHENSION",
+    "files_packed": 2,
+    "total_chars": 197614,
+    "estimated_tokens": 49403
+  },
+  "questions": [
+    {
+      "question": "What is the Pass 3 100-point composite intelligence score?",
+      "expected_substring": "86.62",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "9.1 Official 100-Point Composite Intelligence Score (`Pass 0` $\\to$ `Pass 3` vs Published Frontier Reference Scale)",
+        "DELIVERABLE 9 \u2014 Official 100-Point Composite Intelligence Score, Standing Ledger & Roster Rulings, 81 Motif Pull-Master Dossiers, & Evening Instagram Sweep (`2026-11-06-PM.md`)",
+        "9.2 Standing Ledger of Record, Roster Rulings & Four Corrected Fleet Qualifiers (`FACTS ON THE TABLE`)",
+        "9.3 Evening Instagram Sweep (`2026-11-06-PM.md`) \u2014 80 Positions Scanned, 20 Dossiers & Top Priority Tests (`PM-01` & `PM-03`)"
+      ]
+    },
+    {
+      "question": "What is the verified Season Ledger of Record overall and units?",
+      "expected_substring": "47-19-1",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "9.2 Standing Ledger of Record, Roster Rulings & Four Corrected Fleet Qualifiers (`FACTS ON THE TABLE`)",
+        "5.2 Primary-Source Frontier Model Score Table & Provenance Corrections"
+      ]
+    },
+    {
+      "question": "Which team is Geno Smith assigned to under the standing roster ruling?",
+      "expected_substring": "NYJ",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "9.2 Standing Ledger of Record, Roster Rulings & Four Corrected Fleet Qualifiers (`FACTS ON THE TABLE`)",
+        "DELIVERABLE 9 \u2014 Official 100-Point Composite Intelligence Score, Standing Ledger & Roster Rulings, 81 Motif Pull-Master Dossiers, & Evening Instagram Sweep (`2026-11-06-PM.md`)",
+        "9.1 Official 100-Point Composite Intelligence Score (`Pass 0` $\\to$ `Pass 3` vs Published Frontier Reference Scale)",
+        "9.3 Evening Instagram Sweep (`2026-11-06-PM.md`) \u2014 80 Positions Scanned, 20 Dossiers & Top Priority Tests (`PM-01` & `PM-03`)"
+      ]
+    },
+    {
+      "question": "Which team is Mike Evans assigned to under the standing roster ruling?",
+      "expected_substring": "SF",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "9.2 Standing Ledger of Record, Roster Rulings & Four Corrected Fleet Qualifiers (`FACTS ON THE TABLE`)",
+        "DELIVERABLE 9 \u2014 Official 100-Point Composite Intelligence Score, Standing Ledger & Roster Rulings, 81 Motif Pull-Master Dossiers, & Evening Instagram Sweep (`2026-11-06-PM.md`)",
+        "9.1 Official 100-Point Composite Intelligence Score (`Pass 0` $\\to$ `Pass 3` vs Published Frontier Reference Scale)",
+        "9.3 Evening Instagram Sweep (`2026-11-06-PM.md`) \u2014 80 Positions Scanned, 20 Dossiers & Top Priority Tests (`PM-01` & `PM-03`)"
+      ]
+    },
+    {
+      "question": "What is the ForecastBench Brier score on Pass 3 across all 403 items?",
+      "expected_substring": "0.1095",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "5.4 Live Multi-Pass Evaluation Results Across All 7 Recognized External Suites & Frontier Gap Analysis",
+        "9.1 Official 100-Point Composite Intelligence Score (`Pass 0` $\\to$ `Pass 3` vs Published Frontier Reference Scale)"
+      ]
+    },
+    {
+      "question": "What is the GPQA Diamond score on Pass 3 with Kadavath P(IK) abstention?",
+      "expected_substring": "65.0%",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": true,
+      "matched_section_titles": [
+        "9.1 Official 100-Point Composite Intelligence Score (`Pass 0` $\\to$ `Pass 3` vs Published Frontier Reference Scale)",
+        "5.2 Primary-Source Frontier Model Score Table & Provenance Corrections"
+      ]
+    },
+    {
+      "question": "Which book is BK-23 in the Book Register?",
+      "expected_substring": "Barber",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "DELIVERABLE 8 \u2014 The Complete Book Register (Part A \u2014 PDF Books as a First-Class Source Class)",
+        "8.1 Cross-Workspace & Cross-Host Book Corpus Reconciliation (`3,113` Local PDFs + `1,735` Combined Textbook Locators)",
+        "8.2 Complete 9-Step Method, Equation & Capability Register for the Core Graduate Monographs (`BK-01` Through `BK-25`)",
+        "8.3 Named Gap List of Must-Have Books Without a Direct Single-File Open-Access PDF (`5` General + `3` Dedicated Copula Monographs)"
+      ]
+    },
+    {
+      "question": "Which book is BK-24 in the Book Register?",
+      "expected_substring": "Peyr\u00e9",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "DELIVERABLE 8 \u2014 The Complete Book Register (Part A \u2014 PDF Books as a First-Class Source Class)",
+        "8.1 Cross-Workspace & Cross-Host Book Corpus Reconciliation (`3,113` Local PDFs + `1,735` Combined Textbook Locators)",
+        "8.2 Complete 9-Step Method, Equation & Capability Register for the Core Graduate Monographs (`BK-01` Through `BK-25`)",
+        "8.3 Named Gap List of Must-Have Books Without a Direct Single-File Open-Access PDF (`5` General + `3` Dedicated Copula Monographs)"
+      ]
+    },
+    {
+      "question": "Which book is BK-25 in the Book Register?",
+      "expected_substring": "de la Pe\u00f1a",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "8.2 Complete 9-Step Method, Equation & Capability Register for the Core Graduate Monographs (`BK-01` Through `BK-25`)",
+        "DELIVERABLE 8 \u2014 The Complete Book Register (Part A \u2014 PDF Books as a First-Class Source Class)",
+        "8.1 Cross-Workspace & Cross-Host Book Corpus Reconciliation (`3,113` Local PDFs + `1,735` Combined Textbook Locators)",
+        "8.3 Named Gap List of Must-Have Books Without a Direct Single-File Open-Access PDF (`5` General + `3` Dedicated Copula Monographs)"
+      ]
+    },
+    {
+      "question": "Which Copula monographs are named in the Gap Audit?",
+      "expected_substring": "Nelsen",
+      "pageindex_recalled": true,
+      "baseline_chunk_recalled": false,
+      "matched_section_titles": [
+        "8.3 Named Gap List of Must-Have Books Without a Direct Single-File Open-Access PDF (`5` General + `3` Dedicated Copula Monographs)",
+        "DELIVERABLE 7 \u2014 The Gap Audit (Exact Counts, Reasons & Closing Paths)"
+      ]
+    }
+  ]
+}

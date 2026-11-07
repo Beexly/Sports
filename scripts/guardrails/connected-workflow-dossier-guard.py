@@ -71,9 +71,13 @@ def verify_web_storefront_human_copy() -> None:
                     f"GUARD_FAIL: Banned robotic/AI/stale phrase '{banned}' found in {rel_path}"
                 )
         if rel_path in ("apps/web/app/packages/page.tsx", "apps/web/lib/packages/catalog.ts"):
-            if "62-23-1" not in content:
+            if "47-19-1" not in content:
                 raise RuntimeError(
-                    f"GUARD_FAIL: Verified season record '62-23-1' missing in {rel_path}"
+                    f"GUARD_FAIL: Official Season Ledger of Record '47-19-1' missing in {rel_path}"
+                )
+            if "62-23-1" in content:
+                raise RuntimeError(
+                    f"GUARD_FAIL: Voided Nov 5 batch '62-23-1' must not appear on active storefront {rel_path}"
                 )
 
     checkout_route = REPO_ROOT / "apps/web/app/api/packages/checkout/route.ts"

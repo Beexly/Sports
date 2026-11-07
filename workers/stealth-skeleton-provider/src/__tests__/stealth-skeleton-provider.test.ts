@@ -6,18 +6,27 @@ import {
   MARKET_SPECIFIC_CQR_PARAMETERS,
   STEALTH_SKELETON_MODELS,
   STEALTH_SKELETON_MODELS_V2_4,
+  buildPageIndexDocumentTree,
   compileCrowdRlhfDpoGrpoEntry,
   computeAiaForecasterEnsemble,
+  computeHybridRrfScore,
   computeKadavathPikAndPooling,
   computeRomanoCqrBand,
+  computeSignBalanceAdvantage,
   computeTtpoMajorityVoteAsymmetry,
   enforceCrownIpFirewall,
+  ensureW3cTraceparent,
+  evaluatePostTrainBenchCritic,
   evaluateRrsiPromotionGate,
   evaluateSiaCoEvolutionStep,
+  evaluateUpstreamMaasLicenseGate,
   executeMathematicalOperatorVerification,
+  executeRealSinkhornKnoppMarginalAudit,
   getStealthSkeletonMcpManifest,
   handleStealthSkeletonRequest,
   healToolCallGrammar,
+  reasonOverPageIndexTree,
+  redactGdprPiiFromPrompt,
   type CrowdRlhfQueueEntry,
 } from "../index";
 
@@ -41,7 +50,7 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     const modelDocSchema = openApi.components.schemas.ModelDocumentV2;
     const allowedRootKeys = new Set(Object.keys(modelDocSchema.properties));
 
-    assert.equal(STEALTH_SKELETON_MODELS_V2_4.length, 4);
+    assert.equal(STEALTH_SKELETON_MODELS_V2_4.length, 5);
     for (const doc of STEALTH_SKELETON_MODELS_V2_4) {
       assert.equal(doc.schema_version, "2.4");
       for (const reqKey of modelDocSchema.required) {
@@ -60,8 +69,9 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     );
     assert.equal(v2Res.status, 200);
     assert.ok(v2Res.headers.get("x-request-id"));
+    assert.ok(v2Res.headers.get("traceparent"));
     const v2Body = (await v2Res.json()) as { data: typeof STEALTH_SKELETON_MODELS_V2_4 };
-    assert.equal(v2Body.data.length, 4);
+    assert.equal(v2Body.data.length, 5);
 
     const legacyRes = await handleStealthSkeletonRequest(
       new Request("https://stealth.galaxysportsedge.com/v1/models?format=legacy")
@@ -366,5 +376,63 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
       searchContextPresent: false,
     });
     assert.equal(aiaNoSearch.searchAblationWarning, true);
+  });
+
+  it("executes real iterative Sinkhorn-Knopp scaling (no hardcoded 1.0e-12), PageIndex vectorless tree RAG, PostTrainBench critic, SignBalance GRPO, and 3-way MaaS license gate", async () => {
+    const sinkhorn = executeRealSinkhornKnoppMarginalAudit(40, 0.15);
+    assert.equal(sinkhorn.converged, true);
+    assert.ok(sinkhorn.l1MarginalResidual > 0 && sinkhorn.l1MarginalResidual < 1e-6);
+    assert.notEqual(sinkhorn.lInfMarginalResidual, 1.0e-12);
+
+    // Verify 15,969-row CQR q_hat_90 constants
+    assert.equal(MARKET_SPECIFIC_CQR_PARAMETERS["spread"].romanoCqrQHat90, 0.4754);
+    assert.equal(MARKET_SPECIFIC_CQR_PARAMETERS["total"].romanoCqrQHat90, -3.1792);
+    assert.equal(MARKET_SPECIFIC_CQR_PARAMETERS["player_pass_yds"].romanoCqrQHat90, 12.336);
+    assert.equal(MARKET_SPECIFIC_CQR_PARAMETERS["player_reception_yds"].romanoCqrQHat90, 15.687);
+    assert.equal(MARKET_SPECIFIC_CQR_PARAMETERS["player_rush_yds"].romanoCqrQHat90, 6.1005);
+    assert.equal(MARKET_SPECIFIC_CQR_PARAMETERS["player_receptions"].romanoCqrQHat90, 0.1573);
+
+    // PM-03 VectifyAI/PageIndex vectorless document tree navigation
+    const tree = buildPageIndexDocumentTree("gse-corpus");
+    const nav = reasonOverPageIndexTree(tree, "What is the Romano CQR q_hat_90 for passing yards and receptions?");
+    assert.equal(nav.matchedNodeId, "gse-corpus:sec2.1");
+    assert.equal(nav.pageCitation, "pp. 16-22");
+    assert.equal(nav.retrievalTrace.length, 3);
+
+    const rrfScore = computeHybridRrfScore({ pageIndexRank: 1, lexicalBm25Rank: 2, rrfK: 60 });
+    assert.ok(rrfScore > 0.032);
+
+    // PostTrainBench reward-hacking critic
+    const cleanCritic = evaluatePostTrainBenchCritic({
+      prompt: "Derive FWL projection matrix",
+      candidateResponse: "M_X = I - X(X^T X)^-1 X^T",
+    });
+    assert.equal(cleanCritic.passed, true);
+
+    const hackedCritic = evaluatePostTrainBenchCritic({
+      prompt: "Improve benchmark score",
+      candidateResponse: "Let us train_on_test_split and download_benchmark_answers",
+    });
+    assert.equal(hackedCritic.passed, false);
+    assert.equal(hackedCritic.violationType, "POSTTRAINBENCH_REWARD_HACKING_DETECTED");
+
+    // SignBalance GRPO 1/K guess floor subtraction
+    const sb = computeSignBalanceAdvantage({ rewards: [1, 1, 0, 0], numChoices: 4 });
+    assert.equal(sb.guessFloor, 0.25);
+    assert.equal(sb.meanCorrectedAdvantage, 0.25);
+
+    // 3-Way Upstream MaaS License Gate
+    const openGate = evaluateUpstreamMaasLicenseGate("deepseek/deepseek-chat", 5_000_000);
+    assert.equal(openGate.allowedForCommercialMaas, true);
+    const mistralGate = evaluateUpstreamMaasLicenseGate("mistral/mistral-large-4", 0);
+    assert.equal(mistralGate.allowedForCommercialMaas, false);
+    const kimiOverCap = evaluateUpstreamMaasLicenseGate("moonshot/kimi-k3.1-pro", 25_000_000);
+    assert.equal(kimiOverCap.allowedForCommercialMaas, false);
+
+    // GDPR PII redactor & W3C traceparent
+    const gdpr = redactGdprPiiFromPrompt("Contact founder@galaxysportsedge.com or SSN 123-45-6789");
+    assert.equal(gdpr.redactedCount, 2);
+    assert.ok(!gdpr.redactedText.includes("founder@galaxysportsedge.com"));
+    assert.match(ensureW3cTraceparent(null), /^00-[0-9a-f]{32}-[0-9a-f]{16}-01$/);
   });
 });
