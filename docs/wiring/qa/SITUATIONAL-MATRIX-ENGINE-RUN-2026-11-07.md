@@ -1,0 +1,11 @@
+# SITUATIONAL MATRIX ENGINE — EXECUTED (Motif, 2026-11-07)
+
+The second Python consumer of the catalog gate — intelligence/coaching/full_repo_279_family_situational_reasoning_matrix.py, whose execute_288bit_12304_equation_cognitive_router() calls the gate's router at line 296 — was run end-to-end via its own __main__ entry (default empty context), staged with the real catalog + twin + matrix files.
+
+**Output (verbatim):** `[FULL-REPO SITUATIONAL ENGINE OK] TS=1227 | PY=377 | Rules=87 | Families=279 | Equations=12304 | SHA256=6c4a9f801e98034b…`
+
+**Payload fields read on a second programmatic run:** status = LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE; total_equations_routed 12,304; equation_families_count 279; context_mask_bits 288 with the 9 uint32 mask words populated; clamped_log_odds_delta +0.022269 on the empty context (a third distinct context → a third distinct delta; cf. perturbation battery); x_situational_80_rules_count 87 (the "80 rules" name undercounts its own output by 7); master 6-family Cholesky aggregator ran (6 families orthogonalized); measured_primitives_count 3 with wr1_absorption.loaded = false in this staging (its primitives JSONs were not staged — the module degrades to hardcoded lift multipliers 1.135/1.156, which it reports alongside the loaded flag, honestly).
+
+**Caveats, for the record:** the TS/PY module counts (1,227 / 377) are the module's own cataloging of a repo tree that, in this staging, contains only the staged subset — those two numbers describe its counting logic against whatever tree it runs in, not a verified census of the full repo (the full-tree census is AGY's Wave-1 work). The receipt_sha256 differs between runs (6c4a9f80… vs 7be7ca32…) because the payload embeds a UTC timestamp — the receipt is run-stamped, not content-stable. Neither caveat touches the routed-equations result, which is computed from the staged catalog file itself.
+
+Chain state addition: BOTH Python gate consumers (ops workflow path per code read; coaching matrix here by execution; reasoning orchestrator via the engine run) now have executed evidence. The situational layer consumes the catalog through the same gate, in its own dialect, and produces its own receipt.
