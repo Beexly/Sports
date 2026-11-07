@@ -20,6 +20,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from datetime import datetime, timezone
@@ -123,11 +124,36 @@ def _normalize_matchup_tuple(item: str | Sequence[str] | dict[str, Any]) -> tupl
         aw = "LAR"
     elif aw == "WSH":
         aw = "WAS"
+    elif aw == "JAC":
+        aw = "JAX"
     if hm == "LA":
         hm = "LAR"
     elif hm == "WSH":
         hm = "WAS"
+    elif hm == "JAC":
+        hm = "JAX"
     return aw, hm
+
+
+def _normalize_team_code(team: str) -> str:
+    tm = str(team or "").strip().upper()
+    if tm == "LA":
+        return "LAR"
+    if tm == "WSH":
+        return "WAS"
+    if tm == "JAC":
+        return "JAX"
+    return tm
+
+
+def _normalize_player_key(name: str) -> str:
+    cleaned = re.sub(r"[^a-z0-9\s]", " ", str(name or "").lower())
+    tokens = [
+        tok
+        for tok in cleaned.split()
+        if tok not in {"jr", "sr", "ii", "iii", "iv", "v"}
+    ]
+    return " ".join(tokens)
 
 
 def assert_zero_duplicate_teams_or_players_on_slate(
@@ -143,14 +169,15 @@ def assert_zero_duplicate_teams_or_players_on_slate(
       2. Any bye team (`PIT`, `TEN` in Week 9) appears in a matchup.
       3. Any matchup is not part of `OFFICIAL_2026_WEEK9_15_GAMES` (when week == 9).
       4. Any NFL team appears in more than 1 game on the slate (e.g. MIA twice or BUF twice).
-      5. Any player appears on more than 1 team or more than once in a classic lineup.
+      5. Any player appears on a bye team, an off-slate team, on more than 1 team,
+         or more than once on the same team/lineup (including case/suffix aliases).
     """
     parsed_matchups = [_normalize_matchup_tuple(m) for m in matchups]
     official_set = set(OFFICIAL_2026_WEEK9_15_GAMES)
 
     if week == 9:
         for pair in parsed_matchups:
-            if pair in FORBIDDEN_BOGUS_WEEK9_MATCHUPS:
+            if pair in FORBIDDEN_BOGUS_WEEK9_MATCHUPS or (pair[1], pair[0]) in FORBIDDEN_BOGUS_WEEK9_MATCHUPS:
                 raise RuntimeError(
                     f"[{context_label}] FORBIDDEN BOGUS/2024 MATCHUP DETECTED: "
                     f"{pair[0]} @ {pair[1]} is NOT a 2026 Week 9 NFL game!"
@@ -185,6 +212,8 @@ def assert_zero_duplicate_teams_or_players_on_slate(
         )
 
     player_teams: dict[str, set[str]] = {}
+    player_display_names: dict[str, str] = {}
+    same_team_counts: Counter[tuple[str, str]] = Counter()
     if players:
         for p in players:
             pname = str(
@@ -194,15 +223,34 @@ def assert_zero_duplicate_teams_or_players_on_slate(
                 or p.get("playerName")
                 or ""
             ).strip()
-            pteam = str(p.get("team") or "").strip().upper()
-            if pname and pteam:
-                player_teams.setdefault(pname, set()).add(pteam)
+            pteam = _normalize_team_code(str(p.get("team") or ""))
+            pkey = _normalize_player_key(pname)
+            if pkey and pteam:
+                player_display_names.setdefault(pkey, pname)
+                player_teams.setdefault(pkey, set()).add(pteam)
+                same_team_counts[(pkey, pteam)] += 1
                 if week == 9 and pteam in OFFICIAL_2026_WEEK9_BYE_TEAMS:
                     raise RuntimeError(
                         f"[{context_label}] BYE TEAM PLAYER VIOLATION: {pname} ({pteam}) is on Week 9 BYE!"
                     )
+                if team_counts and pteam not in team_counts:
+                    raise RuntimeError(
+                        f"[{context_label}] OFF-SLATE TEAM PLAYER VIOLATION: {pname} ({pteam}) "
+                        f"is not on any active matchup in {sorted(team_counts.keys())}!"
+                    )
+        duplicate_same_team = {
+            f"{player_display_names[pk]} ({tm})": cnt
+            for (pk, tm), cnt in same_team_counts.items()
+            if cnt > 1
+        }
+        if duplicate_same_team:
+            raise RuntimeError(
+                f"[{context_label}] DUPLICATE PLAYER ON SAME TEAM VIOLATION: {duplicate_same_team}"
+            )
         multi_team_players = {
-            pn: sorted(tms) for pn, tms in player_teams.items() if len(tms) > 1
+            player_display_names[pk]: sorted(tms)
+            for pk, tms in player_teams.items()
+            if len(tms) > 1
         }
         if multi_team_players:
             raise RuntimeError(

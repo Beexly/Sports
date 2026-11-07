@@ -753,4 +753,87 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
       assert.equal(body.gse_metadata.posthog_ai_observability.properties.$ai_provider, "gse-stealth-skeleton-provider");
     }
   });
+
+  it("supports stealthmodels.com discovery aliases, queues CROWD_RLHF_QUEUE distillation traces, and solves StealthMark 1.8.10 Latch, Foresight, SVG & NVIDIA compute-eval pass@k", async () => {
+    const queued: unknown[] = [];
+    const env = {
+      CROWD_RLHF_QUEUE: {
+        async send(entry: unknown) {
+          queued.push(entry);
+        },
+      },
+    };
+
+    for (const alias of [
+      "stealth/skeleton-alpha",
+      "opencode/stealth-skeleton-free",
+      "opencode-go/stealth-skeleton-free",
+    ]) {
+      const res = await handleStealthSkeletonRequest(
+        new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: alias,
+            messages: [
+              {
+                role: "user",
+                content: "[STEALTHMARK_LATCH:3] Solve Latch Level 3 relay-vault.",
+              },
+            ],
+          }),
+        }),
+        env as never
+      );
+      assert.equal(res.status, 200);
+      const body = (await res.json()) as {
+        model: string;
+        choices: Array<{ message: { content: string } }>;
+        gse_metadata: { crowd_rlhf_queued: boolean };
+      };
+      assert.equal(body.model, alias);
+      assert.ok(body.choices[0].message.content.includes("19.2"));
+      assert.equal(body.gse_metadata.crowd_rlhf_queued, true);
+    }
+    assert.equal(queued.length, 3);
+
+    const foresightRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "stealth/skeleton-alpha",
+          messages: [{ role: "user", content: "[STEALTHMARK_FORESIGHT:2] Solve Pressure Pot." }],
+        }),
+      })
+    );
+    const foresightBody = (await foresightRes.json()) as { choices: Array<{ message: { content: string } }> };
+    assert.ok(foresightBody.choices[0].message.content.includes("STAGE_SCORE: 13"));
+
+    const svgRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "stealth/skeleton-alpha",
+          messages: [{ role: "user", content: "[STEALTHMARK_SVG:Mona Lisa]" }],
+        }),
+      })
+    );
+    const svgBody = (await svgRes.json()) as { choices: Array<{ message: { content: string } }> };
+    assert.ok(svgBody.choices[0].message.content.includes("<svg"));
+
+    const passKRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "stealth/skeleton-alpha",
+          messages: [{ role: "user", content: "Evaluate NVIDIA compute-eval unbiased pass@k for n=10, c=7, k=3." }],
+        }),
+      })
+    );
+    const passKBody = (await passKRes.json()) as { choices: Array<{ message: { content: string } }> };
+    assert.ok(passKBody.choices[0].message.content.includes("0.991667"));
+  });
 });

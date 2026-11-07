@@ -1749,6 +1749,82 @@ def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
     assert "36-13-1" not in ai_seo_ts
 
 
+def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
+    """
+    Verifies the complete 18-Source External Evaluation, `StealthModels.com` (`StealthMark 1.8.10`),
+    NVIDIA `compute-eval` (`pass@k`), Ragas NVIDIA Metrics (`AnswerAccuracy`, `ContextRelevance`,
+    `ResponseGroundedness`), NVIDIA NeMo Helix (`HelpSteer2`), NIM `GenAI-Perf`, Datadog/Arize
+    OpenTelemetry/OpenInference, Google Cloud Gemini Enterprise Agent Trajectory Eval, Google Stax
+    Cohen's kappa, Together AI Length-Controlled Win Rate (`LC-WR`) & Bradley-Terry Elo,
+    `arXiv:2509.05346` Scenario-Based Evaluation, `arXiv:2606.25057` Dynamic Canary Resistance,
+    and Catherine Arnett Multilingual Byte-Premium Parity:
+    """
+    from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (
+        build_official_external_evaluation_manifest,
+        compute_unbiased_pass_at_k,
+        evaluate_gemini_enterprise_agent_trajectory,
+        evaluate_ragas_nvidia_metrics,
+        evaluate_stax_autorater_cohens_kappa,
+        evaluate_stealthmodels_com_suite,
+    )
+
+    manifest = build_official_external_evaluation_manifest()
+    assert manifest["schema_version"] == "3.0.0"
+    auths = manifest["verified_18_external_authorities"]
+    assert len(auths) == 10
+
+    # 1. StealthModels.com (StealthMark 1.8.10: Latch 5 levels, Foresight 3 levels, 7 SVGs)
+    sm = evaluate_stealthmodels_com_suite()
+    assert sm["astar_level1_solved"] is True
+    assert sm["astar_level1_steps"] <= 12
+    assert sm["latch_5_levels_verified"] is True
+    assert sm["foresight_3_levels_verified"] is True
+    assert sm["svg_7_scenes_verified"] is True
+    assert sm["token_speed_schema_valid"] is True
+
+    # 2. NVIDIA compute-eval unbiased pass@k
+    assert compute_unbiased_pass_at_k(10, 7, 3) == pytest.approx(1.0 - (1.0 / 120.0), abs=1e-5)
+    assert auths["2_nvidia_compute_eval_pass_at_k"]["kernels_verified"] is True
+    assert auths["2_nvidia_compute_eval_pass_at_k"]["pass_at_1"] == 1.0
+
+    # 3. Ragas Official NVIDIA Metrics
+    ragas = evaluate_ragas_nvidia_metrics(
+        user_input="How does Sinkhorn-Knopp optimal transport conserve marginal probabilities?",
+        retrieved_contexts=[
+            "Sinkhorn-Knopp iterative scaling alternates row and column normalization to conserve marginal probability vectors r and c."
+        ],
+        response="Sinkhorn-Knopp iterative scaling normalizes rows and columns to conserve marginal probability vectors r and c.",
+        reference_answer="Sinkhorn-Knopp iterative scaling normalizes rows and columns to conserve marginal probability vectors.",
+    )
+    assert ragas["nv_answer_accuracy"] >= 0.75
+    assert ragas["nv_context_relevance"] >= 0.75
+    assert ragas["nv_response_groundedness"] >= 0.75
+
+    # 4. Google Cloud Gemini Enterprise Agent Trajectory Metrics
+    traj = evaluate_gemini_enterprise_agent_trajectory(
+        predicted_trajectory=["s1", "s2", "s3"],
+        reference_trajectory=["s1", "s2", "s3"],
+    )
+    assert traj["trajectory_exact_match"] == 1.0
+    assert traj["trajectory_in_order_match"] == 1.0
+    assert traj["trajectory_any_order_match"] == 1.0
+    assert traj["trajectory_precision"] == 1.0
+    assert traj["trajectory_recall"] == 1.0
+    assert traj["single_turn_tool_use"] == 1.0
+
+    # 5. Google Stax Autorater Cohen's kappa
+    kappa = evaluate_stax_autorater_cohens_kappa([2, 2, 1, 0, 2, 1, 2, 0], [2, 2, 1, 0, 2, 1, 2, 0])
+    assert kappa["cohens_kappa"] == 1.0
+    assert kappa["calibration_status"] == "CALIBRATED_PRODUCTION_READY"
+
+    # 6. Together AI LC-WR, arXiv:2509.05346, arXiv:2606.25057 & Multilingual Byte-Premium
+    assert auths["7_together_ai_lc_wr_and_bradley_terry"]["length_controlled_win_rate_lc_wr"] >= 0.75
+    assert auths["8_arxiv_2509_05346_scenario_based_eval"]["diagnostic_detection_rate"] == 1.0
+    assert auths["9_arxiv_2606_25057_and_hf_ch11_5_contamination"]["contamination_free_verified"] is True
+    assert "latex_math" in auths["10_hf_catherine_arnett_multilingual_byte_premium"]["script_fertility_and_byte_premium"]
+
+
+
 
 
 

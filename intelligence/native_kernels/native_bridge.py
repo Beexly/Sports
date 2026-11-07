@@ -12,6 +12,8 @@ Provides zero-copy NumPy `ctypes` bindings for:
 from __future__ import annotations
 
 import ctypes
+import os
+import shutil
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
@@ -30,6 +32,18 @@ def _load_library() -> Optional[ctypes.CDLL]:
     if not DLL_PATH.exists():
         return None
     try:
+        if hasattr(os, "add_dll_directory"):
+            os.add_dll_directory(str(DLL_PATH.parent))
+            gpp = shutil.which("g++") or shutil.which("gcc")
+            if gpp:
+                os.add_dll_directory(str(Path(gpp).resolve().parent))
+            for candidate in (
+                r"C:\ProgramData\mingw64\mingw64\bin",
+                r"C:\msys64\ucrt64\bin",
+                r"C:\msys64\mingw64\bin",
+            ):
+                if Path(candidate).is_dir():
+                    os.add_dll_directory(candidate)
         lib = ctypes.CDLL(str(DLL_PATH))
 
         # 1. gse_c_sinkhorn_knopp_bounded_conservation
@@ -154,6 +168,9 @@ def c_sinkhorn_knopp_bounded_conservation(
         )
         if status == 0:
             return out
+        raise ValueError(f"gse_c_sinkhorn_knopp_bounded_conservation rejected invalid arguments (status={status})")
+    if n == 0 or not np.isfinite(target_total_sum) or target_total_sum <= 0.0 or max_iters <= 0 or not np.isfinite(tol) or tol < 0.0:
+        raise ValueError("Invalid parameters for c_sinkhorn_knopp_bounded_conservation")
 
     # Fallback if DLL unavailable
     w = np.clip(priors, floors, caps)
@@ -194,6 +211,9 @@ def c_empirical_bayes_role_shrinkage(
         )
         if status == 0:
             return out
+        raise ValueError(f"gse_c_empirical_bayes_role_shrinkage rejected invalid arguments (status={status})")
+    if n == 0 or not np.isfinite(prior_strength_k) or prior_strength_k <= 0.0:
+        raise ValueError("Invalid parameters for c_empirical_bayes_role_shrinkage")
 
     lam = snaps_arr / (snaps_arr + prior_strength_k)
     return lam * raw_arr + (1.0 - lam) * prior_arr
@@ -227,6 +247,9 @@ def c_dk_ppr_milestone_scoring(
         )
         if status == 0:
             return out_total, out_bonus_rate
+        raise ValueError(f"gse_c_dk_ppr_milestone_scoring rejected invalid arguments (status={status})")
+    if n_sims == 0 or n_players == 0:
+        raise ValueError("Invalid dimensions for c_dk_ppr_milestone_scoring")
 
     bonus = ((pass_m >= 300.0) * 3.0) + ((rush_m >= 100.0) * 3.0) + ((rec_m >= 100.0) * 3.0)
     return base_m + bonus, np.mean(bonus > 0.0, axis=0)
