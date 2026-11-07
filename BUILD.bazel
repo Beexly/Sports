@@ -1,20 +1,33 @@
-# Root BUILD.bazel — Galaxy Sports Edge (GSE + GSI) Monorepo
+# BUILD.bazel — Root Monorepo Build Graph for Galaxy Sports Edge
+# Fine-grained C11/C++20 Native Kernel & Python Engine Targets
+
 package(default_visibility = ["//visibility:public"])
 
-exports_files([
-    "package.json",
-    "package-lock.json",
-    "tsconfig.json",
-    "pytest.ini",
-    "AGENTS.md",
-])
-
-filegroup(
-    name = "monorepo_governance_configs",
+cc_library(
+    name = "gse_native_kernels",
     srcs = [
-        "AGENTS.md",
-        "package.json",
-        "pytest.ini",
-        "tsconfig.json",
+        "intelligence/native_kernels/gse_c11_simd_kernels.c",
+        "intelligence/native_kernels/gse_cpp20_dfs_engine.cpp",
+    ],
+    hdrs = [
+        "intelligence/native_kernels/gse_native_kernels.h",
+    ],
+    copts = [
+        "-O3",
+        "-mavx2",
+        "-mfma",
+    ],
+)
+
+py_library(
+    name = "gse_dfs_and_performance_engine",
+    srcs = [
+        "intelligence/data_sources/firecrawl_alexandria_live_sync.py",
+        "intelligence/dfs/dfs_19_equation_deep_research_engine.py",
+        "intelligence/dfs/dfs_and_fantasy_accuracy_engine.py",
+        "intelligence/dfs/two_stage_gse_dfs_pipeline.py",
+        "intelligence/native_kernels/native_bridge.py",
+        "intelligence/performance/full_stack_performance_and_data_optimizer.py",
+        "intelligence/seo/seo_and_lcp_optimization_engine.py",
     ],
 )

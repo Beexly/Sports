@@ -114,10 +114,80 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@id": `${siteUrl}/#dataset`,
         name: "Galaxy Sports Edge Verified NFL Picks, Player Props & Closing Line Value Ledger",
         description:
-          "Verified public NFL settlement ledger reporting a 36-13-1 (73.5% win rate, +20.14u) official record alongside settled closing line value (CLV) comparisons and conviction-band calibration.",
+          "Verified public NFL settlement ledger reporting a 47-19-1 (+24.92u) overall and 38-13-1 (+22.85u) base official record alongside settled closing line value (CLV) comparisons and conviction-band calibration.",
+        dateModified: "2026-11-07",
         url: `${siteUrl}/calibration`,
         creator: { "@id": `${siteUrl}/#organization` },
         keywords: HIGH_INTENT_SEARCH_KEYWORDS,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${siteUrl}/#breadcrumbs`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "NFL Picks & Analytics Hub",
+            item: `${siteUrl}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "NFL Week 9 Picks & Packages",
+            item: `${siteUrl}/packages`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: "NFL Week 9 Player Props (77 Categories)",
+            item: `${siteUrl}/props`,
+          },
+          {
+            "@type": "ListItem",
+            position: 4,
+            name: "DraftKings NFL Week 9 DFS Lineup Optimizer",
+            item: `${siteUrl}/fantasy/dfs`,
+          },
+          {
+            "@type": "ListItem",
+            position: 5,
+            name: "Audited NFL Settlement Ledger (47-19-1)",
+            item: `${siteUrl}/calibration`,
+          },
+        ],
+      },
+      {
+        "@type": "HowTo",
+        "@id": `${siteUrl}/#howto-nfl-dfs-and-props`,
+        name: "How Galaxy Sports Edge Evaluates NFL Week 9 Player Props and DraftKings DFS Lineups",
+        description:
+          "Step-by-step film, trench, injury-workload, and two-sided de-vigging workflow for NFL Week 9 player props and DraftKings $50,000 salary-cap lineups.",
+        step: [
+          {
+            "@type": "HowToStep",
+            position: 1,
+            name: "Verify Active 32-Team Rosters, QB1 Starters & Friday Injury Designations",
+            text: "Confirm every active NFL starter and DNP/Out injury designation across all 15 official Week 9 games (30 active teams; PIT and TEN on bye).",
+          },
+          {
+            "@type": "HowToStep",
+            position: 2,
+            name: "Quantify Vacated Carries & Targets per Active Game Played",
+            text: "Project redistributed rushing and receiving workloads when primary starters are sidelined (such as Ollie Gordon II and Greg Dulcich in DET at MIA or Rhamondre Stevenson in GB at NE).",
+          },
+          {
+            "@type": "HowToStep",
+            position: 3,
+            name: "Grade Trench Pass Protection & Coverage Shell Matchups",
+            text: "Evaluate offensive line pass protection against edge-rush win rates and receiver route separation against man and zone coverage shells.",
+          },
+          {
+            "@type": "HowToStep",
+            position: 4,
+            name: "Compare Against De-Vigged Sportsbook Odds & Optimize DFS Stacks",
+            text: "Remove two-sided sportsbook vig before grading any prop on a calibrated XX/100 scale, then construct correlated DraftKings cash and tournament stacks.",
+          },
+        ],
       },
       {
         "@type": "FAQPage",

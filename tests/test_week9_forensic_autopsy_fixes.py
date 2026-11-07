@@ -1698,6 +1698,58 @@ def test_31_firecrawl_alexandria_live_sync_and_zero_duplicate_teams_gate() -> No
                 )
 
 
+def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
+    """
+    Verifies the 19-skill Full-Stack Performance Engineering, Bazel/DX Build,
+    Spark/DuckDB, PostgreSQL 17, Vector Index HNSW+SQ8, AI Static Review,
+    and 8-Skill SEO + Core Web Vitals LCP suite:
+      1. `full_stack_performance_and_data_optimizer.py` passes latency budgets,
+         Spark skew salting (< 2.0x), Postgres P95 (< 100ms), Vector Recall@10 (>= 0.98)
+         with 4.0x SQ8 compression, and zero CRITICAL/HIGH static review issues.
+      2. Bazel (`WORKSPACE.bazel`, `.bazelrc`, `BUILD.bazel`) and DX (`Makefile`) exist.
+      3. `seo_and_lcp_optimization_engine.py` verifies 7 public routes with 0 keyword
+         cannibalization conflicts, E-E-A-T >= 9.5/10, Position-Zero snippets, and
+         LCP < 2500ms.
+    """
+    from intelligence.performance.full_stack_performance_and_data_optimizer import (
+        run_full_stack_performance_audit,
+    )
+    from intelligence.seo.seo_and_lcp_optimization_engine import (
+        run_full_seo_and_lcp_audit,
+    )
+
+    perf = run_full_stack_performance_audit()
+    assert perf["python_and_native_hot_path_profile"]["passes_latency_budget"] is True
+    assert perf["python_and_native_hot_path_profile"]["dfs_19_equation_count"] == 19
+    assert perf["spark_and_duckdb_optimization"]["skew_join_salting_verification"]["skew_resolved_below_2x"] is True
+    assert perf["postgresql17_and_sql_optimization"]["passes_db_p95_budget_under_100ms"] is True
+    assert perf["vector_index_hnsw_sq8_tuning"]["meets_recall_target_098"] is True
+    assert perf["vector_index_hnsw_sq8_tuning"]["memory_compression_ratio"] >= 3.8
+    assert perf["ai_assisted_static_and_performance_review"]["quality_gate_passed"] is True
+    assert len(perf["audit_sha256"]) == 64
+
+    for bazel_file in ("WORKSPACE.bazel", ".bazelrc", "BUILD.bazel", "Makefile"):
+        assert (REPO_ROOT / bazel_file).is_file(), f"Missing {bazel_file}"
+
+    seo = run_full_seo_and_lcp_audit()
+    mc = seo["meta_and_cannibalization_audit"]
+    fl = seo["freshness_eeat_snippets_and_lcp_audit"]
+    assert mc["routes_audited"] == 7
+    assert mc["zero_cannibalization_verified"] is True
+    assert mc["all_urls_under_60_chars"] is True
+    assert mc["all_titles_optimal"] is True
+    assert mc["all_descriptions_optimal"] is True
+    assert fl["eeat_scorecard"]["current_score_out_of_10"] >= 9.5
+    assert fl["lcp_four_subpart_audit"]["passes_cwv_good_threshold"] is True
+    assert fl["lcp_four_subpart_audit"]["total_lcp_ms"] <= 2500
+    assert len(seo["audit_sha256"]) == 64
+
+    ai_seo_ts = (REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts").read_text(encoding="utf-8")
+    assert "47-19-1 (+24.92u)" in ai_seo_ts
+    assert "36-13-1" not in ai_seo_ts
+
+
+
 
 
 

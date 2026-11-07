@@ -1,49 +1,31 @@
-# .bazelrc — Galaxy Sports Edge (GSE + GSI) Production Monorepo Build & Cache Configuration
+# .bazelrc — Galaxy Sports Edge Production Monorepo Build Configuration
+# Aligned with `bazel-build-optimization` & `dx-optimizer`
 
-# 1. Core Build & Strict Action Conflict Settings
 build --enable_platform_specific_config
 build --incompatible_enable_cc_toolchain_resolution
 build --experimental_strict_conflict_checks
 
-# 2. Hardware-Aware Laptop Resource Governors (12th Gen Intel Core i7-1255U 10C/12T + 32GB RAM + Intel Iris Xe)
+# Resource & Parallelism Tuning
 build --jobs=auto
 build --local_cpu_resources=HOST_CPUS*.75
 build --local_ram_resources=HOST_RAM*.75
 
-# 3. Local Disk & Repository Caching (Zero-Waste Deterministic Incremental Builds)
-build --disk_cache=~/.cache/bazel-disk
-build --repository_cache=~/.cache/bazel-repo
+# Local Disk & Repository Caching
+build --disk_cache=~/.cache/gse-bazel-disk
+build --repository_cache=~/.cache/gse-bazel-repo
 
-# 4. Remote Caching Profile (`--config=remote-cache`)
-build:remote-cache --remote_cache=grpcs://cache.galaxysportsedge.internal
-build:remote-cache --remote_upload_local_results=true
-build:remote-cache --remote_timeout=3600
+# Platform-Specific AVX2 + OpenMP Flags for Native C11/C++20 Kernels
+build:linux --copt=-O3 --copt=-mavx2 --copt=-mfma --copt=-fopenmp --linkopt=-fopenmp
+build:windows --copt=-O3 --copt=-mavx2 --copt=-mfma --copt=-fopenmp --linkopt=-fopenmp
+build:macos --copt=-O3
 
-# 5. Remote Execution Profile (`--config=remote-exec` — Tier C / Tier D Offload)
-build:remote-exec --remote_executor=grpcs://remote.galaxysportsedge.internal
-build:remote-exec --remote_instance_name=projects/galaxy-sports-edge/instances/default
-build:remote-exec --jobs=500
-
-# 6. Platform Configurations
-build:linux --platforms=//platforms:linux_x86_64
-build:macos --platforms=//platforms:macos_arm64
-build:windows --enable_runfiles=false
-
-# 7. CI Configuration (`--config=ci`)
-build:ci --config=remote-cache
-build:ci --build_metadata=ROLE=CI
-build:ci --bes_results_url=https://results.galaxysportsedge.internal/invocation/
-build:ci --bes_backend=grpcs://bes.galaxysportsedge.internal
-
-# 8. Test & Coverage Profiles
-test --test_output=errors
-test --test_summary=detailed
-coverage --combined_report=lcov
-coverage --instrumentation_filter="//packages/...,//intelligence/...,//apps/web/..."
-
-# 9. Compilation Mode Aliases
+# Optimization Profiles
 build:opt --compilation_mode=opt
 build:dbg --compilation_mode=dbg
+build:ci --compilation_mode=opt --test_output=errors --test_summary=detailed
 
-# 10. User Overrides
+# Test Defaults
+test --test_output=errors
+test --test_summary=detailed
+
 try-import %workspace%/user.bazelrc
