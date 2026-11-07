@@ -1,0 +1,7 @@
+# MIND-TO-ENGINE CONSUMPTION BOUNDARY (Motif, 2026-11-07)
+
+Question: can the mind staging corpus feed the equation gate — i.e., is there any path from a staging record to a game context the gate can evaluate?
+
+Record schemas across all 13 staging files (14,040 lines) fall into a few families: text records (id/kind/source/title/text/trainer_ready, some with reasoning_track + weekly_cycle_step), document-chunk records (content + sha256), file-inventory records (510, with equations_and_premises summaries), and runtime stream records (the TNF aggregator). **Zero records carry flat game-state fields** (off_epa / def_epa / pressure_rate / proe_pct / spread / total), and none carries a game_ctx object. The gate's extractor consumes game_ctx dictionaries built by callers (the ops workflow from PBP/slate data) — no adapter from staging records to game_ctx exists in the tree (the coaching matrix module loads primitives JSONs + the catalog, not staging text).
+
+Boundary, stated plainly: the mind corpus (6,240 unique records) and the equation catalog are both real and both in-repo, and there is **no code path connecting them**. The corpus is trainer-ready text; the gate eats numeric game state. Any claim that the engine "reasons over the corpus" through the catalog is unsupported at this commit — the bridge would have to be built (record -> feature extraction -> game_ctx), and nothing tonight's wiring changes that. Filed as the precise remaining gap behind the catalog-consumption reversal in LANE2-FAMILY-CONSUMPTION.md.
