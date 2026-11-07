@@ -5,7 +5,7 @@ Quad-Frontier Sovereign Spine & Zero-Waste Model Router (`scripts/ops/zero_waste
 Wires the entire GSE & GSI Engine to run across the 4 Frontier Sovereign Pillars:
   1. Google Argon 4 (`google/gemini-4-argon` / `Gemini 4 Argon`)
      - 2,000,000-token context window
-     - Role: Cross-repo 25-package dependency auditing, 5,367-equation matrix verification,
+     - Role: Cross-repo 25-package dependency auditing, 21,419-equation matrix verification,
        3,152-scenario Stage 1-2 situational context synthesis, and Stage 4.5 film-room translation.
   2. Anthropic Claude Opus 5.5 (`anthropic/claude-opus-5.5` / `Claude Opus 5.5`)
      - 1,000,000-token context window
@@ -59,7 +59,7 @@ QUAD_FRONTIER_SOVEREIGN_SPINE: Dict[FrontierPillarId, QuadFrontierPillarSpec] = 
         context_window_tokens=2_000_000,
         engine_stages_owned=("Stage 0 Roster Hygiene", "Stage 1 Tendency & Injury Intake", "Stage 2 288-Bit Situational Overlay", "Stage 4.5 Film Translation"),
         primary_capabilities=(
-            "5,367-Equation Cross-Repo Dependency & Dimensional Audit",
+            "21,419-Equation Cross-Repo Dependency & Dimensional Audit",
             "3,152-Scenario Situational Context & NFL Scheme Synthesis",
             "Multimodal PageIndex Vectorless Hierarchical Tree RAG",
             "Zero-Jargon Customer Film-Room Translation",

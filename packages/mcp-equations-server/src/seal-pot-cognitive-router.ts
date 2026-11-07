@@ -4,7 +4,7 @@
  *
  * Implements:
  *   1. Quad-Frontier Sovereign Spine Routing:
- *      - `google/gemini-4-argon` (Google Argon 4 — 2M context, 5,367-equation cross-repo audit & 3,152-scenario Stage 1-2 situational overlay)
+ *      - `google/gemini-4-argon` (Google Argon 4 — 2M context, 21,419-equation cross-repo audit & 3,152-scenario Stage 1-2 situational overlay)
  *      - `anthropic/claude-opus-5.5` (Claude Opus 5.5 — Adversarial theorem prover, 753 graduate math/NS32 proofs & C++20 STM32H7 256KB SRAM verifier)
  *      - `anthropic/claude-fable-5` (Claude Fable 5 — 1M context sovereign orchestrator, Cellular Sheaf Cohomology merger & 4-Voice Council Arbiter)
  *      - `openai/astra` (OpenAI Astra — Snell ICLR 2025 Compute-Optimal Test-Time Scaling N = 4 -> 16 -> 64 & ASTRA Reliability Diagram calibration)
@@ -34,7 +34,7 @@ export const QUAD_FRONTIER_MODELS: readonly QuadFrontierModelDescriptor[] = [
     id: "google/gemini-4-argon",
     label: "Google Argon 4 (Gemini 4 Argon)",
     contextTokens: 2_000_000,
-    engineStage: "Stage 1-2 Situational 288-Bit Overlay & 5,367-Equation Cross-Repo Audit",
+    engineStage: "Stage 1-2 Situational 288-Bit Overlay & 21,419-Equation Cross-Repo Audit",
     sheafPriorWeight: 0.26,
   },
   {
