@@ -230,7 +230,10 @@ from gse_coach_mind_simulator import (  # noqa: E402
     load_week8_injuries_from_csv,
     simulate_matchup_pbp,
 )
-from jevkit import client as jev_client  # noqa: E402
+try:
+    from jevkit import client as jev_client  # noqa: E402
+except ImportError:
+    jev_client = None  # type: ignore[assignment]
 CSV_11_PATH = REPO_ROOT / "data" / "dfs" / "dk-2026-10-31" / "DKSalaries-1.csv"
 CSV_13_PATH = REPO_ROOT / "data" / "dfs" / "dk-2026-10-31" / "DKSalaries.csv"
 PENNY_PATH = REPO_ROOT / "data" / "nflverse" / "pennydata_2026_player_week_stats.csv"

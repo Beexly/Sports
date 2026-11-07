@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import posthog from "posthog-js";
 
 export function ManageSubscriptionButton() {
   const [loading, setLoading] = useState(false);
@@ -20,7 +19,6 @@ export function ManageSubscriptionButton() {
         );
         return;
       }
-      posthog.capture("billing_portal_opened");
       window.location.href = data.url;
     } catch {
       setError("Network blip. Check your connection and retry.");

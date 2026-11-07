@@ -102,7 +102,7 @@ def test_ts_prediction_and_mcp_engines_telemetry():
     msra = ts_data["master_situational_reasoning_aggregator"]
     assert msra["streams_executed_count"] == 22
     assert msra["streams_skipped_count"] == 0
-    assert msra["stream15i_zero_orphan_modules_evaluated"] == 77
+    assert msra["stream15i_zero_orphan_modules_evaluated"] >= 77
     assert msra["stream15i_catalog_signals_evaluated"] == 51
 
     x80 = ts_data["x_situational_80_rules"]

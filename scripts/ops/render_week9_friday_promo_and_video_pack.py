@@ -169,8 +169,8 @@ def render_ig_slides(out_dir: Path) -> list[Image.Image]:
     f_tag = _load_font(22, bold=True)
     f_head = _load_font(48, bold=True)
     f_hero = _load_font(56, bold=True)
-    f_sub = _load_font(26, bold=False)
-    f_bul = _load_font(26, bold=False)
+    f_sub = _load_font(25, bold=False)
+    f_bul = _load_font(23, bold=False)
 
     frames: list[Image.Image] = []
     for idx, (tag, head, hero, sub, bullets) in enumerate(slides_spec, start=1):
@@ -192,7 +192,7 @@ def render_ig_slides(out_dir: Path) -> list[Image.Image]:
         y = 590
         for b in bullets:
             draw.rounded_rectangle([(96, y), (984, y + 140)], radius=14, fill=(12, 20, 35), outline=(35, 52, 82), width=1)
-            draw.text((128, y + 48), f"▸  {b}", fill=(226, 232, 240), font=f_bul)
+            draw.text((128, y + 52), f"•  {b}", fill=(226, 232, 240), font=f_bul)
             y += 170
 
         draw.text((96, 1195), "GALAXY SPORTS EDGE · galaxysportsedge.com/packages", fill=(148, 163, 184), font=f_tag)
@@ -204,8 +204,8 @@ def render_ig_slides(out_dir: Path) -> list[Image.Image]:
 
 def render_chalkboard_gif(out_path: Path) -> None:
     frames: list[Image.Image] = []
-    f_title = _load_font(34, bold=True)
-    f_sub = _load_font(22, bold=False)
+    f_title = _load_font(25, bold=True)
+    f_sub = _load_font(19, bold=False)
 
     for step in range(6):
         w, h = 960, 540

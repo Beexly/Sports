@@ -5,7 +5,6 @@ import { auth } from "@/lib/auth";
 import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
 import { jsonNoStore } from "@/lib/api/no-store";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
-import { emitPostHogLog, flushPostHogLogs } from "@/lib/observability/posthog-logs";
 import {
   getOrCreateStripeCustomer,
   createCheckoutSession,
@@ -605,13 +604,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           `${attempt.id} — repair job will reconcile: ${message}`,
       );
     }
-
-    emitPostHogLog("checkout_session_created", {
-      event: "billing.checkout_session_created",
-      tier,
-      interval,
-    });
-    await flushPostHogLogs();
 
     return jsonNoStore({ url: checkoutSession.url });
   } catch (err) {

@@ -14,8 +14,6 @@
  *   INTERNAL_LLM_API_KEY   (Groq key; omit for local Ollama)
  */
 
-import { captureAiGeneration } from "@/lib/observability/posthog-ai";
-
 export type InternalLlmConfig = { baseUrl: string; model: string; apiKey?: string };
 
 export function internalLlmConfig(env: Record<string, string | undefined> = process.env): InternalLlmConfig | null {
@@ -102,27 +100,13 @@ export async function callInternalLlm(request: InternalLlmRequest): Promise<Inte
     const payload = (await res.json()) as OpenAiChatResponse;
     const text = payload.choices?.[0]?.message?.content?.trim();
     if (!text) throw new InternalLlmError("Internal LLM returned no content", res.status);
-    const result = {
+    return {
       text,
       model,
       inputTokens: payload.usage?.prompt_tokens ?? 0,
       outputTokens: payload.usage?.completion_tokens ?? 0,
       durationMs: Date.now() - startedAt,
     };
-    await captureAiGeneration({
-      provider: new URL(config.baseUrl).hostname,
-      model: result.model,
-      system: request.system,
-      user: request.user,
-      output: result.text,
-      inputTokens: result.inputTokens,
-      outputTokens: result.outputTokens,
-      latencyMs: result.durationMs,
-      maxTokens: request.maxTokens,
-      temperature: request.temperature,
-    });
-
-    return result;
   } finally {
     clearTimeout(timer);
   }

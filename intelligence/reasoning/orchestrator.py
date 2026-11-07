@@ -51,7 +51,7 @@ def validate_corpus_and_equation_gate(
                     matchup_terms.append(str(val))
         effective_query = " ".join(matchup_terms) if matchup_terms else "nfl situational reasoning"
 
-    if not context.corpus_hits:
+    if not context.corpus_hits and context.tool_backend is None:
         try:
             context.corpus_hits = list(_cached_corpus_hits(effective_query, k))
         except Exception:

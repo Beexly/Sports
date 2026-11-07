@@ -5,8 +5,7 @@
  *
  * No-claim by construction: it renders only the copy in
  * `@/lib/gse/waitlist-copy`, validates with the shared zod schema, and posts to
- * the local `/api/waitlist` handler. Conversion actions capture through the
- * globally initialized PostHog browser client.
+ * the local `/api/waitlist` handler. Analytics calls are the no-op `track()`.
  * No pricing, no Stripe, no external send.
  *
  * Hardening: fires `waitlist_viewed` on mount (funnel), associates field errors
@@ -16,7 +15,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics/events";
-import posthog from "posthog-js";
 import {
   WAITLIST_COPY,
   WAITLIST_COPY_VERSION,
@@ -68,7 +66,7 @@ export function WaitlistForm(): JSX.Element {
   function markStarted(): void {
     if (!started) {
       setStarted(true);
-      posthog.capture("waitlist_started");
+      track("waitlist_started");
     }
   }
 
@@ -115,7 +113,7 @@ export function WaitlistForm(): JSX.Element {
 
     const local = validateWaitlistLead(payload);
     if (!local.success) {
-      if (local.errors.consent) posthog.capture("waitlist_consent_blocked");
+      if (local.errors.consent) track("waitlist_consent_blocked");
       setErrors(local.errors);
       setStatus("error");
       return;
@@ -136,7 +134,7 @@ export function WaitlistForm(): JSX.Element {
         setStatus("error");
         return;
       }
-      posthog.capture("waitlist_submitted", { role: local.data.role });
+      track("waitlist_submitted", { role: local.data.role });
       setStatus("done");
     } catch {
       setErrors({ _form: "Could not reach the server. Please try again." });

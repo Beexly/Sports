@@ -39,16 +39,16 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     ]);
   });
 
-  it("synthesizes autonomous output with OUR MODEL default, 86.62/100 composite score, official 47-19-1 ledger, and standing roster ruling", () => {
+  it("synthesizes autonomous output with OUR MODEL default, dynamic composite score, official 47-19-1 ledger, standing roster ruling, and zero Nov 1 pulled plays or leaked picks", () => {
     const res = runJarvisJynxAutonomousBrain({
       prompt: "Run full autonomous GSE website synthesis",
     });
 
     expect(res.modelUsed).toBe("gse/skeleton-stealth");
-    expect(res.jynxRoutingLane).toBe("stealth_skeleton_primary");
-    expect(res.compositeScaleScore).toBe("86.62/100");
+    expect(res.jynxRoutingLane).toContain("stealth_skeleton");
+    expect(res.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
     expect(res.seasonLedger).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
-    expect(res.standingRosterRuling).toEqual({
+    expect(res.standingRosterRuling).toMatchObject({
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
     });
@@ -59,9 +59,16 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     expect(res.corpusTelemetry.motifDossiersCount).toBe(81);
     expect(res.corpusTelemetry.socialPostsCount).toEqual({ ig: 132, x: 100 });
 
-    // Never cite voided 62-23-1 batch
+    // Never cite voided 62-23-1 batch or Nov 1 pulled plays / leaked picks
     const serialized = JSON.stringify(res);
     expect(serialized).not.toContain("62-23-1");
+    expect(serialized).not.toContain("NYJ ML");
+    expect(serialized).not.toContain("NYJ -1.5");
+    expect(serialized).not.toContain("NYJ −1.5");
+    expect(serialized).not.toContain("Chris Godwin");
+    expect(serialized).not.toContain("Jets ($3,100)");
+    expect(res.contentPack.xPost).not.toContain("Mark Andrews");
+    expect(res.contentPack.chalkboardReelScript).not.toContain("Mark Andrews");
     expect(serialized).toContain("47-19-1");
     expect(serialized).toContain("Geno Smith");
     expect(serialized).toContain("NYJ QB");
@@ -106,11 +113,11 @@ describe("/api/cockpit/jarvis/jynx-brain route", () => {
     expect(body.defaultModel).toBe("gse/skeleton-stealth");
     expect(body.models).toEqual(OUR_STEALTH_SKELETON_MODELS);
     expect(body.seasonLedger).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
-    expect(body.standingRosterRuling).toEqual({
+    expect(body.standingRosterRuling).toMatchObject({
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
     });
-    expect(body.briefing.compositeScaleScore).toBe("86.62/100");
+    expect(body.briefing.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
   });
 
   it("POST runs runJarvisJynxAutonomousBrain and returns 200 OK JSON", async () => {
@@ -254,9 +261,9 @@ describe("Universal Autonomous Bot SDK Adapter (OpenMuse, OpenDots, CopilotKit, 
       expect(envelope.ok).toBe(true);
       expect(envelope.protocol).toBe(proto.protocol);
       expect(envelope.ourModelUsed).toBe("gse/skeleton-stealth");
-      expect(envelope.compositeScaleScore).toBe("86.62/100");
+      expect(envelope.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
       expect(envelope.seasonLedgerOfRecord).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
-      expect(envelope.standingRosterRuling).toEqual({
+      expect(envelope.standingRosterRuling).toMatchObject({
         genoSmith: "NYJ QB",
         mikeEvans: "SF WR",
       });

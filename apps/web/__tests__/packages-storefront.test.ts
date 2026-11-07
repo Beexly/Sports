@@ -17,7 +17,8 @@ describe("Galaxy Picks storefront catalog", () => {
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.genoSmithTeam).toBe("NYJ");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.mikeEvansTeam).toBe("SF");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.oct30Section23IdentityPassVoided).toBe(true);
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.rescuedItems).toHaveLength(4);
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.pullOrderDecision).toBe("PULLED_AND_STRICKEN_NOV1_0801CT");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.pulledContaminatedItems).toHaveLength(6);
     for (const pkg of LIVE_PACKAGE_CATALOG) {
       expect(pkg.description).not.toContain("62-23-1");
       expect(pkg.description).not.toContain("+26.50u");

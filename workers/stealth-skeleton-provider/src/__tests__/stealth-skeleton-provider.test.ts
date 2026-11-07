@@ -51,9 +51,10 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     const modelDocSchema = openApi.components.schemas.ModelDocumentV2;
     const allowedRootKeys = new Set(Object.keys(modelDocSchema.properties));
 
-    assert.equal(STEALTH_SKELETON_MODELS_V2_4.length, 5);
+    assert.equal(STEALTH_SKELETON_MODELS_V2_4.length, 9);
     for (const doc of STEALTH_SKELETON_MODELS_V2_4) {
       assert.equal(doc.schema_version, "2.4");
+      assert.equal(doc.quantization, "fp8");
       for (const reqKey of modelDocSchema.required) {
         assert.ok(reqKey in doc, `Missing required ModelDocumentV2 key: ${reqKey}`);
       }
@@ -72,7 +73,7 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     assert.ok(v2Res.headers.get("x-request-id"));
     assert.ok(v2Res.headers.get("traceparent"));
     const v2Body = (await v2Res.json()) as { data: typeof STEALTH_SKELETON_MODELS_V2_4 };
-    assert.equal(v2Body.data.length, 5);
+    assert.equal(v2Body.data.length, 9);
 
     const legacyRes = await handleStealthSkeletonRequest(
       new Request("https://stealth.galaxysportsedge.com/v1/models?format=legacy")
@@ -519,9 +520,9 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
         supported_parameters: string[];
       }>;
     };
-    assert.equal(modelsBody.data.length, 5);
+    assert.equal(modelsBody.data.length, 9);
     for (const model of modelsBody.data) {
-      assert.equal(model.quantization, "fp16");
+      assert.equal(model.quantization, "fp8");
       assert.equal(model.architecture.modality, "text->text");
       assert.equal(model.architecture.tokenizer, "GSE-Hybrid-BPE");
       assert.equal(model.architecture.instruct_type, "chatml");
@@ -538,20 +539,29 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     assert.equal(healthRes.status, 200);
     const healthBody = (await healthRes.json()) as {
       status: string;
-      sla_status: { status: string; uptime_target: number };
+      sla_status: {
+        status: string;
+        uptime_target: number;
+        ttft_p95_ms: number;
+        throughput_tokens_per_sec: number;
+        exacto_tool_calling_accuracy: number;
+      };
       sinkhorn_convergence_health: { converged: boolean; l1_marginal_residual: number };
       pageindex_readiness: { ready: boolean; section_count: number };
       active_model_ids: string[];
     };
     assert.equal(healthBody.status, "ok");
     assert.equal(healthBody.sla_status.status, "HEALTHY");
+    assert.notEqual(healthBody.sla_status.ttft_p95_ms, 142);
+    assert.notEqual(healthBody.sla_status.throughput_tokens_per_sec, 188);
+    assert.equal(healthBody.sla_status.exacto_tool_calling_accuracy, 1);
     assert.equal(healthBody.sinkhorn_convergence_health.converged, true);
     assert.ok(healthBody.sinkhorn_convergence_health.l1_marginal_residual < 1e-6);
     assert.equal(healthBody.pageindex_readiness.ready, true);
-    assert.equal(healthBody.active_model_ids.length, 5);
+    assert.equal(healthBody.active_model_ids.length, 9);
   });
 
-  it("serves JSON-RPC 2.0 Model Context Protocol on GET /mcp and POST /mcp (initialize, tools/list, tools/call)", async () => {
+  it("serves JSON-RPC 2.0 Model Context Protocol on GET /mcp and POST /mcp (initialize, tools/list, tools/call) and routes all 5 gse/skeleton-* models without coercion", async () => {
     const getMcpRes = await handleStealthSkeletonRequest(
       new Request("https://stealth.galaxysportsedge.com/mcp")
     );
@@ -563,7 +573,7 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     };
     assert.equal(getMcpBody.protocolVersion, "2024-11-05");
     assert.equal(getMcpBody.serverInfo.name, "gse-stealth-skeleton-mcp");
-    assert.equal(getMcpBody.tools.length, 5);
+    assert.equal(getMcpBody.tools.length, 10);
 
     const initRes = await handleStealthSkeletonRequest(
       new Request("https://stealth.galaxysportsedge.com/mcp", {
@@ -610,6 +620,11 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     assert.deepEqual(
       listBody.result.tools.map((t) => t.name),
       [
+        "evaluate_game_5stage_jev",
+        "query_pageindex_corpus",
+        "audit_sinkhorn_marginals",
+        "generate_dfs_showdown_optimal",
+        "generate_autonomous_social_pack",
         "gse_skeleton_reason",
         "gse_predict_game_360",
         "gse_build_dfs_lineup",
@@ -617,6 +632,32 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
         "gsi_evaluate_biomechanics_trauma",
       ]
     );
+
+    for (const modelId of [
+      "gse/skeleton-stealth",
+      "gse/skeleton-math-pro",
+      "gse/skeleton-forecast",
+      "gse/skeleton-council",
+      "gse/skeleton-flash",
+    ]) {
+      const mRes = await handleStealthSkeletonRequest(
+        new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: modelId,
+            messages: [{ role: "user", content: "Run specialist model pass on DET@GB" }],
+          }),
+        })
+      );
+      assert.equal(mRes.status, 200);
+      const mBody = (await mRes.json()) as {
+        model: string;
+        choices: Array<{ message: { content: string } }>;
+      };
+      assert.equal(mBody.model, modelId, `Model ${modelId} must not be coerced to alpha`);
+      assert.ok(mBody.choices[0].message.content.includes(modelId));
+    }
 
     const callRes = await handleStealthSkeletonRequest(
       new Request("https://stealth.galaxysportsedge.com/mcp", {

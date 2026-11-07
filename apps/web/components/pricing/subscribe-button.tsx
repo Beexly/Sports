@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics/events";
 import { saveCheckoutIntent } from "@/lib/pricing/checkout-resume";
 
 /**
@@ -129,14 +129,18 @@ export function SubscribeButton({
   async function handleClick() {
     setError(null);
     setLoading(true);
-    posthog.capture("upgrade_cta_click", { tier, interval });
+    // Intent signal — the user committed to moving up a tier (before the
+    // network round-trip). Inert no-op until a provider is wired.
+    track("upgrade_cta_click", { tier, interval });
     try {
       const intentKey = `${tier}:${interval}`;
       if (!intentRef.current || intentRef.current.key !== intentKey) {
         intentRef.current = { key: intentKey, id: newIntentId() };
       }
       const intentId = intentRef.current.id;
-      posthog.capture("checkout_start", { tier, interval });
+      // Checkout attempt initiated — the durable CheckoutAttempt is about to be
+      // minted server-side. Inert no-op until a provider is wired.
+      track("checkout_start", { tier, interval });
       const res = await fetch("/api/subscriptions/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -522,7 +522,7 @@ def test_10_sg10_overnight_shift_orchestrator_and_official_62_23_1_ledger() -> N
     """
     SG-10: Verifies data/engine/new_engine_official_ledger_2026.json and
     data/engine/overnight_20h_shift_master_receipt_2026_11_05.json preserve
-    62-23-1 (72.9%, +26.50u) with zero TNF contamination.
+    the official verified ledger with zero TNF contamination.
     """
     ledger_path = REPO_ROOT / "data" / "engine" / "new_engine_official_ledger_2026.json"
     overnight_path = REPO_ROOT / "data" / "engine" / "overnight_20h_shift_master_receipt_2026_11_05.json"
@@ -531,12 +531,13 @@ def test_10_sg10_overnight_shift_orchestrator_and_official_62_23_1_ledger() -> N
 
     ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
     ver = ledger["verified_record"]
-    assert ver["wins"] == 62
-    assert ver["losses"] == 23
+    assert ver["wins"] == 36
+    assert ver["losses"] == 13
     assert ver["pushes"] == 1
-    assert ver["record"] == "62-23-1"
-    assert ver["win_pct"] == pytest.approx(72.9, abs=0.1)
-    assert ver["net_units"] == "+26.50u"
+    assert ver["record"] == "36-13-1"
+    assert ver["win_pct"] == pytest.approx(73.5, abs=0.2)
+    assert ver["net_units"] == "+20.14u"
+    assert any(v.get("record") == "47-19-1" for v in ledger.get("secondary_views", []))
 
     leg_ids = [leg["id"] for leg in ver.get("component_legs", [])]
     assert all("jax_at_bal" not in lid for lid in leg_ids)
@@ -1279,26 +1280,28 @@ def test_25_workstream4_360_x_and_ig_charting_32teams_and_zero_jax_bal_leakage()
 
 
 # ============================================================================
-# TEST 26 (Workstream 5): Official 62-23-1 Ledger Lock & Single-Writer Mind Rule
+# TEST 26 (Workstream 5): Official New Engine Ledger Lock & Single-Writer Mind Rule
 # ============================================================================
 def test_26_workstream5_revenue_storefront_62_23_1_record_lock_and_guardrails() -> None:
     """
     Workstream 5: Verifies `data/engine/new_engine_official_ledger_2026.json` and
     `apps/web/lib/packages/catalog.ts` lock the Official New Engine Verified Record
-    `62-23-1` (`72.9%` · `+26.50u`), and verifies the consolidated mind feed in `brain/feeds/`.
+    (Base `36-13-1` / All-4-Buckets `47-19-1` · `+24.92u`, with voided `62-23-1` excluded
+    from standing claims), and verifies the consolidated mind feed in `brain/feeds/`.
     """
     ledger_path = REPO_ROOT / "data" / "engine" / "new_engine_official_ledger_2026.json"
     assert ledger_path.is_file()
     ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
     vr = ledger["verified_record"]
-    assert vr["record"] == "62-23-1"
-    assert vr["wins"] == 62 and vr["losses"] == 23 and vr["pushes"] == 1
-    assert vr["win_pct"] == pytest.approx(72.9, abs=0.1)
-    assert vr["net_units"] == "+26.50u"
+    assert vr["record"] == "36-13-1"
+    assert vr["wins"] == 36 and vr["losses"] == 13 and vr["pushes"] == 1
+    assert vr["win_pct"] == pytest.approx(73.5, abs=0.2)
+    assert vr["net_units"] == "+20.14u"
+    assert any(v.get("record") == "47-19-1" for v in ledger.get("secondary_views", []))
 
     catalog_ts = (REPO_ROOT / "apps" / "web" / "lib" / "packages" / "catalog.ts").read_text(encoding="utf-8")
-    assert "62-23-1" in catalog_ts
-    assert "+26.50u" in catalog_ts
+    assert "47-19-1" in catalog_ts
+    assert "+24.92u" in catalog_ts
 
     mind_receipt_path = REPO_ROOT / "data" / "engine" / "mind_and_corpus_consolidation_receipt_2026_11_06.json"
     assert mind_receipt_path.is_file()

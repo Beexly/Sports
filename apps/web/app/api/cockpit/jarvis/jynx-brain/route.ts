@@ -5,16 +5,16 @@
  *   - content_making (X, IG carousel, Chalkboard Reel scripts)
  *   - dfs_picking (DraftKings & FanDuel Cash Flagship, GPP Stacks, 14-Player Core)
  *   - bet_predicting (5-Stage Gated Game Calls, Player Props, Correlated SGPs)
- *   - corpus_and_gsi (5,367 equations, 25 graduate books BK-01..BK-25, 257 PDFs, 81 Motif dossiers, GSI biomechanics)
+ *   - corpus_and_gsi (5,367 canonical / 5,408 module equations, 25 graduate books BK-01..BK-25, 257 PDFs, 81 Motif dossiers, GSI biomechanics)
  *
- * Uses OUR MODEL (`gse/skeleton-stealth` and `OUR_STEALTH_SKELETON_MODELS`).
+ * Enforces ADMIN authentication in accordance with cockpit security policy.
  */
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import {
   OUR_STEALTH_SKELETON_MODELS,
-  runJarvisJynxAutonomousBrain,
+  runJarvisJynxAutonomousBrainAsync,
   type JarvisJynxBrainMode,
 } from "@/lib/jarvis/stealth-skeleton-brain";
 
@@ -22,7 +22,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
   const session = await auth().catch(() => null);
-  const briefing = runJarvisJynxAutonomousBrain({
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const briefing = await runJarvisJynxAutonomousBrainAsync({
     prompt: "Initialize Jarvis x Jynx Autonomous Cockpit Briefing",
     mode: "autonomous_all",
     model: "gse/skeleton-stealth",
@@ -32,7 +36,7 @@ export async function GET(): Promise<NextResponse> {
     {
       status: "ONLINE",
       engine: "jarvis-jynx-autonomous-brain",
-      operatorAuthenticated: Boolean(session?.user),
+      operatorAuthenticated: true,
       defaultModel: "gse/skeleton-stealth",
       models: OUR_STEALTH_SKELETON_MODELS,
       capabilities: [
@@ -58,7 +62,10 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(req: Request): Promise<NextResponse> {
-  await auth().catch(() => null);
+  const session = await auth().catch(() => null);
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   let body: {
     prompt?: string;
@@ -72,7 +79,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     body = {};
   }
 
-  const result = runJarvisJynxAutonomousBrain({
+  const result = await runJarvisJynxAutonomousBrainAsync({
     prompt:
       typeof body.prompt === "string" && body.prompt.trim().length > 0
         ? body.prompt

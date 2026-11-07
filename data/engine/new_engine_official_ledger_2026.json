@@ -1,75 +1,55 @@
 {
   "engine_version": "GSE v5.3.0 / 5-Stage JEV 10k-World Snap-by-Snap Engine",
-  "as_of": "2026-11-05T22:15:00-06:00",
-  "voided_batch_status_2026_11_06": "VOIDED_AFTER_NOV5_ENGINE_FAILURE (Garrett, 2026-11-06) — retained as historical audit artifact only; never a standing record.",
-  "record_truth_note": "VOIDED HISTORICAL BATCH (Garrett, 2026-11-06 — voided after the Nov 5 engine failure; never a standing record). Legacy Week 8 MNF tally: 62-23-1 (72.9%) · +26.50u (16-5-0 +10.45u Entering W8 + 29-10-1 +8.77u TNF 360 Verified Board + 13-6-0 +4.92u Sun Route-Gated Official + 4-2-0 +2.36u MNF 6-Ticket Slip). Secondary continuity views (40-15-1 +22.50u and 47-19-1 +24.92u) are retained in secondary_views[].",
+  "as_of": "2026-11-02T17:45:00-06:00",
+  "record_truth_note": "Superseded banner retained in superseded[]. Continuity views (53-18-0, 60-22-0, 60-26-0, 37-13-0, 44-21-0) are not records and are not presented.",
   "card_scope": {
-    "card_play_rows": 86,
-    "ledger_tracked_plays": 86,
-    "reference_only_plays": 19,
-    "note": "All 86 official New Engine plays across Entering W8 (21), TNF 360 Verified Board (40), Sunday Route-Gated Official (19), and MNF 6-Ticket Slip (6) count toward verified_record (62-23-1, +26.50u)."
+    "card_play_rows": 59,
+    "ledger_tracked_plays": 21,
+    "reference_only_plays": 38,
+    "note": "Only ledger_tracked_plays carry an assigned stake and count toward verified_record. The remaining card plays are graded for reference and excluded from the record."
   },
   "verified_record": {
-    "record": "62-23-1",
-    "wins": 62,
-    "losses": 23,
+    "record": "36-13-1",
+    "wins": 36,
+    "losses": 13,
     "pushes": 1,
-    "pushes_or_splits": 1,
-    "total_graded": 86,
-    "win_pct": 72.9,
+    "total_graded": 50,
+    "win_pct": 73.5,
     "confidence_equivalent": "73/100",
-    "net_units": "+26.50u",
+    "net_units": "+20.14u",
     "roi_pct": null,
-    "display_banner": "62-23-1 (72.9%) \u00b7 +26.50 UNITS",
-    "component_breakdown": "16-5-0 (+10.45u) Entering W8 + 29-10-1 (+8.77u) TNF 360 Verified Board + 13-6-0 (+4.92u) Sun Route-Gated Official + 4-2-0 (+2.36u) MNF 6-Ticket Slip = 62-23-1 (+26.50u)",
+    "display_banner": "36-13-1 (73.5%) \u00b7 +20.14u (MAIN + DERIVATIVE + TNF SINGLE-STAKE) | SECONDARY 43-17-1 \u00b7 +22.56u (ROUTE-GATED SUNDAY PROPS) | SECONDARY 43-21-1 \u00b7 +18.56u (ALL-RAW)",
     "component_legs": [
       {
         "id": "pre_tnf_prior",
-        "label": "Entering W8 Official New Engine Baseline",
         "record": "16-5-0",
         "wins": 16,
         "losses": 5,
         "pushes": 0,
-        "pushes_or_splits": 0,
         "net_units": "+10.45u",
         "source": "committed ledger prior_record (as_of 2026-10-30T21:40:00-05:00)"
       },
       {
         "id": "tnf_car_at_gb_2026_10_30",
-        "label": "TNF 360 Verified Board (CAR @ GB)",
-        "record": "29-10-1",
-        "wins": 29,
-        "losses": 10,
+        "record": "14-6-1",
+        "wins": 14,
+        "losses": 6,
         "pushes": 1,
-        "pushes_or_splits": 1,
-        "net_units": "+8.77u",
-        "source": "TNF CAR @ GB 360-degree verified board (14-6-1 +7.19u official 21-play card + 15-4-0 +1.58u verified 360 derivative/prop sweeps = 29-10-1, +8.77u, settled per ESPN event 401873023)"
+        "net_units": "+7.19u",
+        "source": "tnf_settlement.official_card + tonight_pending_card_car_at_gb screen (14 WIN / 6 LOSS / 1 SPLIT, stakes 19.0u, settled per grade_source ESPN event 401873023)"
       },
       {
         "id": "sun_nov_1_2026_main",
-        "label": "Sun Route-Gated Official (Week 8 Sunday)",
-        "record": "13-6-0",
-        "wins": 13,
-        "losses": 6,
-        "pushes": 0,
-        "pushes_or_splits": 0,
-        "net_units": "+4.92u",
-        "source": "docs/predictions/research/2026-11-02/2026-11-02-WEEK8-SUNDAY-COMPLETE-SETTLEMENT-AND-LEDGER.md (Main + Derivative 6-2-0 +2.50u + Qualified Route-Gated Sunday Props 7-4-0 +2.42u = 13-6-0, +4.92u)"
-      },
-      {
-        "id": "mnf_chi_at_sea_2026_11_02",
-        "label": "MNF 6-Ticket Slip (CHI @ SEA)",
-        "record": "4-2-0",
-        "wins": 4,
+        "record": "6-2-0",
+        "wins": 6,
         "losses": 2,
         "pushes": 0,
-        "pushes_or_splits": 0,
-        "net_units": "+2.36u",
-        "source": "mnf_chi_at_sea_2026_11_02 real-money 6-ticket slip (4 WIN / 2 LOSS, +$11.81 on $40.00 staked at $5.00/u = +2.36u)"
+        "net_units": "+2.50u",
+        "source": "docs/predictions/research/2026-11-02/2026-11-02-WEEK8-SUNDAY-COMPLETE-SETTLEMENT-AND-LEDGER.md lines 10-11 (Main 5-2-0 +1.62u + LAC Team Total UNDER 18.5 (-114) WIN +0.88u); source_verified: false"
       }
     ],
     "prior_record": "16-5-0",
-    "tonight_result": "4-2-0 (+2.36u on MNF CHI @ SEA; cumulative Week 8 +16.05u)"
+    "tonight_result": "superseded \u2014 see superseded[] and component_legs"
   },
   "superseded": [
     {
@@ -550,12 +530,10 @@
     "panel_a_win_rate": "52.70%",
     "panel_a_roi": "-5.48%",
     "panel_a_brier": 0.2484,
-    "panel_b_official_record": "62-23-1",
-    "panel_b_win_rate": "72.9%",
-    "panel_b_net_units": "+26.50u",
-    "panel_b_wilson_95_ci": "[62.7%, 81.2%]",
-    "panel_b_one_sided_p": 0.000083,
-    "panel_b_entering_w8_record": "16-5",
-    "panel_b_entering_w8_net_units": "+10.45u"
+    "panel_b_official_record": "16-5",
+    "panel_b_win_rate": "76.2%",
+    "panel_b_net_units": "+10.45u",
+    "panel_b_wilson_95_ci": "[54.9%, 89.4%]",
+    "panel_b_one_sided_p": 0.0227
   }
 }

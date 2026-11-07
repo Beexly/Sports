@@ -3,7 +3,6 @@
  * Free-lane secondary hosts (Gemma/Nemotron free, Groq free, NIM, etc.).
  * OpenAiCompatError on transport/empty so free-lane can hop to callClaude.
  */
-import { captureAiGeneration } from "@/lib/observability/posthog-ai";
 import type { ClaudeMessagesResult } from "./messages";
 
 export interface OpenAiCompatRequest {
@@ -114,25 +113,11 @@ export async function callOpenAiCompatMessages(
     });
   }
 
-  const result = {
+  return {
     text,
     modelName: ledgerModel,
     inputTokens: payload.usage?.prompt_tokens ?? 0,
     outputTokens: payload.usage?.completion_tokens ?? 0,
     durationMs,
   };
-  await captureAiGeneration({
-    provider: new URL(request.baseUrl).hostname,
-    model: result.modelName,
-    system: request.system,
-    user: request.user,
-    output: result.text,
-    inputTokens: result.inputTokens,
-    outputTokens: result.outputTokens,
-    latencyMs: result.durationMs,
-    maxTokens: request.maxTokens,
-    temperature: request.temperature,
-  });
-
-  return result;
 }

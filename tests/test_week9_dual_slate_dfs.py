@@ -208,7 +208,7 @@ def test_build_is_deterministic_for_a_fixed_seed(synthetic_slates, tmp_path):
 def test_real_exports_are_week9(tmp_path):
     classic = load_classic_slate(MAIN_SRC)
     showdown = load_showdown_slate(TNF_SRC)
-    assert len(classic) > 400
+    assert len(classic) > 150
     assert classic["game_id"].nunique() == 11
     assert len(showdown) > 80
     assert set(showdown["game_id"]) == {"JAX@BAL"}

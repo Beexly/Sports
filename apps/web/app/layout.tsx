@@ -17,7 +17,6 @@ import {
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
-import { PostHogClientInit } from "@/components/observability/PostHogClientInit";
 import { AdSenseLoader } from "@/components/observability/AdSenseLoader";
 import {
   shouldRenderCloudflareAnalytics,
@@ -249,7 +248,6 @@ export default function RootLayout({
             contradict "not AI, math you can read" and rule 1 (no fabricated
             signals). The components remain for /cockpit use. */}
         {/* Field: Nova explainer launcher hidden � chrome fought the instrument look */}
-        <PostHogClientInit />
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}

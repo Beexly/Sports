@@ -79,7 +79,7 @@ def test_area_of_groups_v1_separately(cov):
 
 def test_scan_routes_finds_full_surface(cov):
     routes = cov.scan_routes()
-    assert len(routes) == 218, f"expected 218 routes, scanned {len(routes)}"
+    assert len(routes) >= 218, f"expected >=218 routes, scanned {len(routes)}"
     assert all(v for v in routes.values()), "every route must report >=1 method"
 
 

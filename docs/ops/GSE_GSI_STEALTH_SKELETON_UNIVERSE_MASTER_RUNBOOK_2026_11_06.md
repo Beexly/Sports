@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-06  
 **Baseline Status:** Verified on Windows Host & `origin/main` + `muse/formal-verification-and-ns32-2026-11-06`  
-**Official New Engine Verified Record:** `62-23-1` (`72.9%`, `+26.50u` — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement)
+**Official Season Ledger of Record:** `47-19-1` (`71.2%`, `+24.92u` | Base Card `38-13-1`, `+22.85u` — Note: the legacy `62-23-1` Nov 5 batch is voided per standing doctrine and is never cited as a standing record)
 
 ---
 
@@ -20,7 +20,7 @@ flowchart TD
         S0 --> S1 --> S2 --> S3 --> S4 --> S5
     end
 
-    subgraph U2["UNIVERSE 2: GSI (Galaxy Science Institute — Hardware & $20M+ Non-Dilutive Pipeline)"]
+    subgraph U2["UNIVERSE 2: GSI (Galaxy Sports Institute — Sports Medicine, Neuro-Biomechanics & $20M+ Non-Dilutive Pipeline)"]
         G1["Bare-Metal 256 KB STM32H7 C++20 Kernel\n(20,769 / 262,144 B SRAM, <85 us WCET, 10/10 C++ Tests)"]
         G2["Theorem 4 Non-Invasive ICP & TBI Phase-Transition Detector\n(0.8545 MIMIC-IV Sepsis AUC, 7.08h Lead Time, 45/45 Pytest)"]
         G3["Theorems 10, 11, 12 USPTO Provisional Patent ($65)\n(Completes Abandoned Manwaring US 9,895,070 B2 + Guardian Cap)"]

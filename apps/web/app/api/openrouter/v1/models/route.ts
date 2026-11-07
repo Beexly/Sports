@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { computeDynamicCompositeBenchmarkScore } from "@/lib/jarvis/stealth-skeleton-brain";
 
 export const dynamic = "force-dynamic";
 
 const OPENROUTER_PROVIDER_API_KEY_HEADER = "x-openrouter-provider-api-key";
+const DYNAMIC_COMPOSITE_SCORE = computeDynamicCompositeBenchmarkScore().formattedScore;
 
 function verifyApiKey(req: Request): boolean {
   const configuredKey = process.env["OPENROUTER_PROVIDER_API_KEY"];
@@ -55,11 +57,11 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
       "seed",
     ],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
+      provider_slug: "stealth-skeleton",
       quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
-      composite_benchmark_score: "86.62/100",
+      composite_benchmark_score: DYNAMIC_COMPOSITE_SCORE,
       benchmarks_url: "https://www.galaxysportsedge.com/benchmarks",
     },
   },
@@ -103,11 +105,11 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
       "seed",
     ],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
+      provider_slug: "stealth-skeleton",
       quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
-      composite_benchmark_score: "86.62/100",
+      composite_benchmark_score: DYNAMIC_COMPOSITE_SCORE,
       benchmarks_url: "https://www.galaxysportsedge.com/benchmarks",
     },
   },
@@ -153,11 +155,11 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
       "seed",
     ],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
+      provider_slug: "stealth-skeleton",
       quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
-      composite_benchmark_score: "86.62/100",
+      composite_benchmark_score: DYNAMIC_COMPOSITE_SCORE,
       benchmarks_url: "https://www.galaxysportsedge.com/benchmarks",
     },
   },
@@ -203,11 +205,11 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
       "seed",
     ],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
+      provider_slug: "stealth-skeleton",
       quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
-      composite_benchmark_score: "86.62/100",
+      composite_benchmark_score: DYNAMIC_COMPOSITE_SCORE,
       benchmarks_url: "https://www.galaxysportsedge.com/benchmarks",
     },
   },
@@ -253,11 +255,11 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
       "seed",
     ],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
+      provider_slug: "stealth-skeleton",
       quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
-      composite_benchmark_score: "86.62/100",
+      composite_benchmark_score: DYNAMIC_COMPOSITE_SCORE,
       benchmarks_url: "https://www.galaxysportsedge.com/benchmarks",
     },
   },
@@ -290,8 +292,8 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
     },
     supported_parameters: ["encoding_format", "dimensions"],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
-      quantization: "fp16",
+      provider_slug: "stealth-skeleton",
+      quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
     },
@@ -325,8 +327,8 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
     },
     supported_parameters: ["top_n", "return_documents"],
     provider_metadata: {
-      provider_slug: "gsi-stealth",
-      quantization: "fp16",
+      provider_slug: "stealth-skeleton",
+      quantization: "fp8",
       zero_data_retention: true,
       data_collection: "deny",
     },

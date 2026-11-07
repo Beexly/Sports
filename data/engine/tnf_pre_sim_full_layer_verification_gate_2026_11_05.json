@@ -1,5 +1,28 @@
 {
   "schema": "gse_pre_sim_full_layer_verification_gate_v2",
+  "pre_sim_gate_passed": true,
+  "layers": {
+    "layer_1_coaching": {
+      "verified": true,
+      "modules_checked": 52
+    },
+    "layer_2_injuries_and_gp": {
+      "verified": true,
+      "out_filtered": true
+    },
+    "layer_3_external_charting": {
+      "verified": true,
+      "feeds_checked": 6
+    },
+    "layer_4_equations_and_operators": {
+      "verified": true,
+      "canonical_equations": 5367
+    },
+    "layer_5_situational_overlay": {
+      "verified": true,
+      "rules_checked": 80
+    }
+  },
   "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",

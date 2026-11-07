@@ -13,7 +13,8 @@ import pytest
 # Ensure clean PYTHONPATH
 os.environ["PYTHONPATH"] = ""
 
-GATE_PATH = pathlib.Path("C:/c/wt-week8-forensic/data/engine/tnf_pre_sim_full_layer_verification_gate_2026_11_05.json")
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+GATE_PATH = REPO_ROOT / "data" / "engine" / "tnf_pre_sim_full_layer_verification_gate_2026_11_05.json"
 
 def test_gate_manifest_exists():
     from scripts.ops.verify_and_wire_all_layers_before_sim import assert_all_layers_wired_before_simulation

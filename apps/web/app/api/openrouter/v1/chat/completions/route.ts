@@ -1,11 +1,24 @@
 import { NextResponse } from "next/server";
 import {
   OUR_STEALTH_SKELETON_MODELS,
-  runJarvisJynxAutonomousBrain,
+  runJarvisJynxAutonomousBrainAsync,
+  type StealthSkeletonModelId,
 } from "@/lib/jarvis/stealth-skeleton-brain";
 import { STEALTH_SKELETON_OPENROUTER_MODELS } from "../models/route";
 
 export const dynamic = "force-dynamic";
+
+function resolveOpenRouterModelToInternal(requestedModel: string): StealthSkeletonModelId {
+  const m = requestedModel.trim().toLowerCase();
+  if ((OUR_STEALTH_SKELETON_MODELS as readonly string[]).includes(m)) {
+    return m as StealthSkeletonModelId;
+  }
+  if (m.includes("council") || m.includes("multi-agent")) return "gse/skeleton-council";
+  if (m.includes("math")) return "gse/skeleton-math-pro";
+  if (m.includes("forecast")) return "gse/skeleton-forecast";
+  if (m.includes("flash") || m.includes("fast")) return "gse/skeleton-flash";
+  return "gse/skeleton-stealth";
+}
 
 function verifyApiKey(req: Request): boolean {
   const configuredKey = process.env["OPENROUTER_PROVIDER_API_KEY"];
@@ -67,16 +80,14 @@ export async function POST(req: Request): Promise<NextResponse | Response> {
   }
 
   const requestedModel = body.model ?? "gse/skeleton-stealth";
-  const resolvedModel = (OUR_STEALTH_SKELETON_MODELS as readonly string[]).includes(requestedModel)
-    ? requestedModel
-    : "gse/skeleton-stealth";
+  const resolvedModel = resolveOpenRouterModelToInternal(requestedModel);
 
   const lastMessage =
     body.messages && body.messages.length > 0
       ? body.messages[body.messages.length - 1]?.content ?? ""
       : "Synthesize calibrated neuro-symbolic reasoning and probabilistic forecast.";
 
-  const brain = runJarvisJynxAutonomousBrain({
+  const brain = await runJarvisJynxAutonomousBrainAsync({
     prompt: lastMessage,
     mode: "autonomous_all",
     model: resolvedModel,

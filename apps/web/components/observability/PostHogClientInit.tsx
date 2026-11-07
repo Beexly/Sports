@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import posthog from "posthog-js";
 
 const projectToken =
   process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN || process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -18,34 +17,38 @@ type AuthSession = {
   };
 };
 
+async function sendPostHogCapture(
+  event: string,
+  distinctId: string,
+  properties: Record<string, unknown> = {},
+): Promise<void> {
+  if (!projectToken || !host) return;
+  try {
+    await fetch(`${host.replace(/\/$/, "")}/capture/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        api_key: projectToken,
+        event,
+        distinct_id: distinctId,
+        properties: {
+          $lib: "posthog-js-lite-gse",
+          ...properties,
+        },
+      }),
+    });
+  } catch {
+    // Observability is strictly non-blocking.
+  }
+}
+
 export function PostHogClientInit(): null {
   useEffect(() => {
-    if (!projectToken) {
-      if (process.env.NODE_ENV === "development") {
-        throw new Error(
-          "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN is configured",
-        );
-      }
-      return;
-    }
-
-    if (!host) {
-      if (process.env.NODE_ENV === "development") {
-        throw new Error(
-          "NEXT_PUBLIC_POSTHOG_HOST variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once NEXT_PUBLIC_POSTHOG_HOST is configured",
-        );
-      }
-      return;
-    }
-
+    if (!projectToken || !host) return;
     if (initialized) return;
     initialized = true;
-
-    posthog.init(projectToken, {
-      api_host: host,
-      defaults: "2026-01-30",
-      capture_exceptions: true,
-      debug: process.env.NODE_ENV === "development",
+    void sendPostHogCapture("$pageview", "anonymous-browser-session", {
+      $current_url: typeof window !== "undefined" ? window.location.href : "",
     });
   }, []);
 
@@ -66,20 +69,17 @@ export function PostHogClientInit(): null {
         const previousUserId = sessionStorage.getItem(identityStorageKey);
         if (!user?.id) {
           if (previousUserId) {
-            posthog.reset();
             sessionStorage.removeItem(identityStorageKey);
           }
           return;
         }
 
-        if (previousUserId && previousUserId !== user.id) {
-          posthog.reset();
-        }
-
-        posthog.identify(user.id, {
-          email: user.email ?? undefined,
-          name: user.name ?? undefined,
-          role: user.role ?? undefined,
+        await sendPostHogCapture("$identify", user.id, {
+          $set: {
+            email: user.email ?? undefined,
+            name: user.name ?? undefined,
+            role: user.role ?? undefined,
+          },
         });
         sessionStorage.setItem(identityStorageKey, user.id);
       } catch {

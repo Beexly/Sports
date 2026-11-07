@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { computeDynamicCompositeBenchmarkScore } from "@/lib/jarvis/stealth-skeleton-brain";
+
+const DYNAMIC_SCORE = computeDynamicCompositeBenchmarkScore();
 
 export const metadata: Metadata = {
-  title: "Stealth-Skeleton v2.4.0 Benchmarks & Architecture | Galaxy Sports Edge & GSI",
+  title: `Stealth-Skeleton v2.4.0 Benchmarks & Architecture (${DYNAMIC_SCORE.formattedScore}) | Galaxy Sports Edge & GSI`,
   description:
-    "Official 7-Suite External Benchmark Dossier for GSE Stealth-Skeleton v2.4.0 (86.62/100 Composite Score across LiveBench, GSM8K, MATH-500, AIME 2024, GPQA Diamond, HumanEval+, and 403-item ForecastBench).",
+    `Official 7-Suite External Benchmark Dossier for GSE Stealth-Skeleton v2.4.0 (${DYNAMIC_SCORE.formattedScore} Composite Score across LiveBench, GSM8K, MATH-500, AIME 2024, GPQA Diamond, HumanEval+, and 403-item ForecastBench).`,
   alternates: { canonical: "/benchmarks" },
 };
 

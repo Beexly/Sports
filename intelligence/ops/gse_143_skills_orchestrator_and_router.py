@@ -222,7 +222,12 @@ def classify_skill_domain(skill_name: str) -> str:
 
 
 def load_143_skills_catalog() -> Dict[str, Any]:
-    """Scan `.agents/skills` union `.claude/skills` (143 skills), `.gemini/config/skills`, and 7 `agy` plugins."""
+    """Scan `.agents/skills` union `.claude/skills`, `.gemini/config/skills`, and 7 `agy` plugins (with audit JSON fallback on CI)."""
+    repo_root = Path(__file__).resolve().parents[2]
+    audit_fallback_path = repo_root / "data" / "audits" / "gse_143_skills_and_agy_plugins_audit_2026_11_06.json"
+    if not AGENTS_SKILLS_DIR.is_dir() and not CLAUDE_SKILLS_DIR.is_dir() and audit_fallback_path.is_file():
+        return json.loads(audit_fallback_path.read_text(encoding="utf-8"))["catalog"]
+
     agents_entries = (
         {p.name for p in AGENTS_SKILLS_DIR.iterdir() if not p.name.startswith(".")}
         if AGENTS_SKILLS_DIR.is_dir()

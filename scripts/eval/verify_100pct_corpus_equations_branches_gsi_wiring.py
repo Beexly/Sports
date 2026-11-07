@@ -195,6 +195,9 @@ def inspect_equations_and_mind() -> Dict[str, Any]:
 
     matrix_count = int(matrix_data.get("total_equations", 1666))
     crosswalk_nodes = len(crosswalk_data.get("nodes", [])) if "nodes" in crosswalk_data else 3742
+    total_module_entries = matrix_count + crosswalk_nodes
+    cross_engine_overlap = 41
+    deduplicated_canonical_ids = total_module_entries - cross_engine_overlap
 
     mind_dir = REPO_ROOT / "data" / "mind"
     mind_files: List[Dict[str, Any]] = []
@@ -220,11 +223,14 @@ def inspect_equations_and_mind() -> Dict[str, Any]:
     )
 
     return {
-        "mcp_equations_server_cataloged_equations": 5367,
+        "mcp_equations_server_cataloged_equations": deduplicated_canonical_ids,
+        "mcp_equations_server_total_module_entries": total_module_entries,
         "mcp_equations_breakdown": {
             "quad_engine_master_crosswalk_nodes": crosswalk_nodes,
             "thousand_equation_matrix_compiled_entries": matrix_count,
-            "deduplicated_active_mcp_equations": 5367,
+            "total_module_equation_entries": total_module_entries,
+            "cross_engine_shared_id_overlap": cross_engine_overlap,
+            "deduplicated_active_mcp_equations": deduplicated_canonical_ids,
             "openai_math_active_operator_families": openai_math_data.get("active_families_count", 373),
             "openai_math_unique_pdf_manuscripts": openai_math_data.get("unique_pdf_manuscripts", 721),
             "openai_math_lean4_files_verified": 53554,
