@@ -6,4 +6,6 @@ Header (the file's own numbers): total_equations 1666; citable_verified_count 13
 
 Recomputed from the 1,666 entries: **258 distinct signalFamilyIdx values**, range 12–276. **21 family indices absent: 0–11, 17, 262–265, 268, 275, 277–278.** So the matrix's entries touch 258 of the 279 families its header claims — 21 families have zero matrix entries, including the first twelve (indices 0–11). This matches the DeepSeek salvage recount exactly (258 / absent list identical), so the salvage figure is now confirmed by two independent computations.
 
+Verification-status split recomputed: CITABLE_VERIFIED 1,340 / COMPUTED 326 — matches the header exactly. 515 distinct source strings across the 1,666 entries (mostly unique per entry). Categories: G 850, B 245, D 238, F 122, E 85, C 64, A 62. All 1,666 entry ids distinct.
+
 Context: the catalog router run tonight activated 263 of 279 families on one sample context — a different mechanism (displacement threshold over catalog families), not in conflict with this count.
