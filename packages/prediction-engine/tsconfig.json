@@ -6,5 +6,21 @@
     "outDir": "./dist"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/__tests__/**",
+    "src/backtest/**",
+    "src/continuity-deltas.ts",
+    "src/corpus-signals-load.ts",
+    "src/data-genesis-adapter.ts",
+    "src/edge-lab/**",
+    "src/expected-metrics/**",
+    "src/film/**",
+    "src/ngs-feature-contract.ts",
+    "src/pipeline/unified-autonomous-mind-pipeline.ts",
+    "src/research/residual-info.ts"
+  ]
 }

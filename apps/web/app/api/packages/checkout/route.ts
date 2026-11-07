@@ -150,7 +150,6 @@ export async function POST(req: Request) {
           if (acct?.id) {
             return stripe.accounts.update(acct.id, {
               business_profile: { name: "Galaxy Sports Edge" },
-              settings: { dashboard: { display_name: "Galaxy Sports Edge" } },
             });
           }
           return null;

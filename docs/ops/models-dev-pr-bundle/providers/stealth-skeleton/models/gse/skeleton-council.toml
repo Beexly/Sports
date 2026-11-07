@@ -1,0 +1,36 @@
+schema = 2
+name = "Stealth-Skeleton Council"
+description = "4-Voice Adversarial Council (Proposer, Critic, Skeptic, Pragmatist) and Santa-Method convergence verifier by Galaxy Sports Institute (GSI)."
+family = "stealth-skeleton"
+open_weights = false
+release_date = "2026-11-06"
+last_updated = "2026-11-06"
+knowledge = "2026-11"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+attachment = false
+interleaved = { field = "reasoning_content" }
+
+[limit]
+context = 262144
+output = 32768
+
+[api.chat-completions]
+supported = true
+streaming = true
+
+[cost.text.input]
+base = 0.50
+cache_read = 0.12
+
+[cost.text.output]
+base = 2.00
+reasoning = 2.00

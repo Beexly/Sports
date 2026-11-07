@@ -563,10 +563,10 @@ export function CockpitOffice3dBotHq({
 }) {
   const [activeTab, setActiveTab] = useState<OfficeTabMode>("office-3d");
   const [selectedPodId, setSelectedPodId] = useState<string>(
-    WORKSTATION_PODS[0].id
+    WORKSTATION_PODS[0]?.id ?? "pod-jarvis-jynx"
   );
   const [selectedNodeId, setSelectedNodeId] = useState<string>(
-    OMNIROUTE_NODES[4].id
+    OMNIROUTE_NODES[4]?.id ?? "node-stealth"
   );
   const [pitchDeg, setPitchDeg] = useState<number>(54);
   const [yawDeg, setYawDeg] = useState<number>(-18);
@@ -592,10 +592,12 @@ export function CockpitOffice3dBotHq({
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const selectedPod =
-    WORKSTATION_PODS.find((p) => p.id === selectedPodId) ?? WORKSTATION_PODS[0];
-  const selectedNode =
-    OMNIROUTE_NODES.find((n) => n.id === selectedNodeId) ?? OMNIROUTE_NODES[0];
+  const selectedPod = (
+    WORKSTATION_PODS.find((p) => p.id === selectedPodId) ?? WORKSTATION_PODS[0]
+  )!;
+  const selectedNode = (
+    OMNIROUTE_NODES.find((n) => n.id === selectedNodeId) ?? OMNIROUTE_NODES[0]
+  )!;
 
   // HTML5 Canvas animated inter-agent packet particles for the 3D office floor
   useEffect(() => {
@@ -633,7 +635,7 @@ export function CockpitOffice3dBotHq({
       }
 
       // Draw inter-desk bus lanes and animated packet particles
-      const hub = WORKSTATION_PODS[0].gridPos;
+      const hub = WORKSTATION_PODS[0]!.gridPos;
       WORKSTATION_PODS.slice(1).forEach((pod, idx) => {
         if (!ctx) return;
         ctx.strokeStyle = "rgba(168, 85, 247, 0.28)";

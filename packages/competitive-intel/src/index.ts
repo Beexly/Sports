@@ -6,5 +6,3 @@
 export * from "./types.js";
 export * from "./family-map.js";
 export * from "./adapter.js";
-export * from "./adapters/fantasylabs-filters.js";
-export * from "./adapters/fantasylabs-products.js";

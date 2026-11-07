@@ -235,12 +235,12 @@ export function runIntelligence(bundle: GameBundle): IntelligenceResult {
 
   const traceObs = toTraceObservations(ctx, baseReasoning);
   const anchorP = baseReasoning.marketFairProb ?? baseReasoning.calibratedProb ?? 0.5;
-  const stalkLeans =
+  const stalkLeans: number[] =
     traceObs.length > 0
-      ? traceObs.map((o) => o.probability - anchorP)
+      ? traceObs.map((o) => (o.probability ?? anchorP) - anchorP)
       : [baseReasoning.situationalShift, (anchorP - 0.5) * 0.2, 0.01];
-  const stalkTrusts =
-    traceObs.length > 0 ? traceObs.map((o) => o.declaredWeight) : [0.85, 0.85, 0.85];
+  const stalkTrusts: number[] =
+    traceObs.length > 0 ? traceObs.map((o) => o.declaredWeight ?? 0.85) : [0.85, 0.85, 0.85];
 
   const wave13Receipt = evaluateWave13SheafNavierStokesPhaseTransition({
     stalkObservations: stalkLeans,

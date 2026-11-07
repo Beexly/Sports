@@ -45,6 +45,7 @@ export const OUR_STEALTH_SKELETON_MODELS = [
 ] as const;
 
 export type OurStealthSkeletonModel = (typeof OUR_STEALTH_SKELETON_MODELS)[number];
+export type StealthSkeletonModelId = OurStealthSkeletonModel;
 
 export type JarvisJynxBrainMode =
   | "content_making"
@@ -184,8 +185,11 @@ export function computeLiveSinkhornKnoppTransport(
   epsilon = 0.15
 ): {
   readonly iterations: number;
+  readonly iterationsExecuted: number;
   readonly l1MarginalResidual: number;
+  readonly l1Residual: number;
   readonly lInfMarginalResidual: number;
+  readonly transportEntropyBits: number;
   readonly converged: boolean;
   readonly transportRow0: readonly number[];
 } {
@@ -204,39 +208,51 @@ export function computeLiveSinkhornKnoppTransport(
   for (let it = 0; it < Math.max(1, iterations); it++) {
     u = r.map((ri, i) => {
       let kv = 0;
-      for (let j = 0; j < 4; j++) kv += K[i][j] * v[j];
+      for (let j = 0; j < 4; j++) kv += (K[i]?.[j] ?? 0) * (v[j] ?? 1);
       return ri / Math.max(1e-18, kv);
     });
     v = c.map((cj, j) => {
       let ktu = 0;
-      for (let i = 0; i < 4; i++) ktu += K[i][j] * u[i];
+      for (let i = 0; i < 4; i++) ktu += (K[i]?.[j] ?? 0) * (u[i] ?? 1);
       return cj / Math.max(1e-18, ktu);
     });
   }
 
-  const P = K.map((row, i) => row.map((kij, j) => u[i] * kij * v[j]));
+  const P = K.map((row, i) => row.map((kij, j) => (u[i] ?? 1) * kij * (v[j] ?? 1)));
   let l1Err = 0;
   let lInfErr = 0;
+  let entropyBits = 0;
   for (let i = 0; i < 4; i++) {
-    const rowSum = P[i].reduce((a, b) => a + b, 0);
-    const diff = Math.abs(rowSum - r[i]);
+    const rowArr = P[i] ?? [];
+    const rowSum = rowArr.reduce((a, b) => a + b, 0);
+    const diff = Math.abs(rowSum - (r[i] ?? 0));
     l1Err += diff;
     if (diff > lInfErr) lInfErr = diff;
+    for (let j = 0; j < 4; j++) {
+      const pij = rowArr[j] ?? 0;
+      if (pij > 1e-15) {
+        entropyBits -= pij * Math.log2(pij);
+      }
+    }
   }
   for (let j = 0; j < 4; j++) {
     let colSum = 0;
-    for (let i = 0; i < 4; i++) colSum += P[i][j];
-    const diff = Math.abs(colSum - c[j]);
+    for (let i = 0; i < 4; i++) colSum += P[i]?.[j] ?? 0;
+    const diff = Math.abs(colSum - (c[j] ?? 0));
     l1Err += diff;
     if (diff > lInfErr) lInfErr = diff;
   }
 
+  const l1Val = Number(l1Err.toExponential(6));
   return {
     iterations,
-    l1MarginalResidual: Number(l1Err.toExponential(6)),
+    iterationsExecuted: iterations,
+    l1MarginalResidual: l1Val,
+    l1Residual: l1Val,
     lInfMarginalResidual: Number(lInfErr.toExponential(6)),
+    transportEntropyBits: Number(entropyBits.toFixed(4)),
     converged: l1Err < 1e-6 && lInfErr < 1e-6,
-    transportRow0: P[0].map((val) => Number(val.toFixed(6))),
+    transportRow0: (P[0] ?? []).map((val) => Number(val.toFixed(6))),
   };
 }
 
@@ -245,9 +261,11 @@ export function computeLiveSinkhornKnoppTransport(
  */
 export function executeSpecialistStealthModelPass(
   model: OurStealthSkeletonModel,
-  prompt: string
+  prompt: string,
+  _mode?: JarvisJynxBrainMode
 ): {
   readonly modelExecuted: OurStealthSkeletonModel;
+  readonly solverId: string;
   readonly specialistTrace: string;
   readonly sinkhornResidual: number;
   readonly kadavathPik: number;
@@ -286,6 +304,7 @@ export function executeSpecialistStealthModelPass(
 
   return {
     modelExecuted: model,
+    solverId: model.replace("gse/", ""),
     specialistTrace: traceByModel[model],
     sinkhornResidual: sinkhorn.l1MarginalResidual,
     kadavathPik,
@@ -336,10 +355,13 @@ export const LIVE_BOARD_DECISIONS = LIVE_WEEK8_2026_BOARD.map((card) => ({
 }));
 
 export interface JarvisJynxContentPack {
+  readonly headline?: string;
   readonly xPost: string;
   readonly igCarouselCaption: string;
+  readonly igSlides?: readonly string[];
   readonly chalkboardReelScript: string;
   readonly socialArchiveStats: string;
+  readonly complianceStatus?: string;
 }
 
 export interface JarvisJynxDfsCorePlay {
@@ -357,6 +379,7 @@ export interface JarvisJynxDfsLineupCard {
   readonly gppTournamentSummary: string;
   readonly corePlays: readonly JarvisJynxDfsCorePlay[];
   readonly standingRosterNotes: readonly string[];
+  readonly excludedNov1PulledPlayers?: readonly string[];
 }
 
 export interface JarvisJynxBetCall {
@@ -394,6 +417,7 @@ export interface JarvisJynxGsiBiomechanicsOverlay {
 export interface JarvisJynxAutonomousResponse {
   readonly modelUsed: OurStealthSkeletonModel;
   readonly modeUsed: JarvisJynxBrainMode;
+  readonly mode: JarvisJynxBrainMode;
   readonly prompt: string;
   readonly jynxRoutingLane: string;
   readonly compositeScaleScore: string;
@@ -639,6 +663,7 @@ export function runJarvisJynxAutonomousBrain(req: {
   return {
     modelUsed,
     modeUsed,
+    mode: modeUsed,
     prompt: cleanPrompt,
     jynxRoutingLane: `stealth_skeleton_${modelUsed.replace("gse/", "").replace(/-/g, "_")}`,
     compositeScaleScore: dynamicComposite.formattedScore,
@@ -683,9 +708,11 @@ export async function runJarvisJynxAutonomousBrainAsync(req: {
   mode?: JarvisJynxBrainMode;
   model?: string;
   providerBaseUrl?: string;
+  upstreamUrl?: string;
 }): Promise<JarvisJynxAutonomousResponse> {
   const baseResult = runJarvisJynxAutonomousBrain(req);
   const baseUrl =
+    req.upstreamUrl ??
     req.providerBaseUrl ??
     process.env["STEALTH_SKELETON_PROVIDER_URL"] ??
     "https://www.galaxysportsedge.com/api/openrouter-provider";

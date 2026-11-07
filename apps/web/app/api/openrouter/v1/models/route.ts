@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { computeDynamicCompositeBenchmarkScore } from "@/lib/jarvis/stealth-skeleton-brain";
-import { STEALTH_SKELETON_MODELS_V2_4 } from "../../../../../../../workers/stealth-skeleton-provider/src/index";
 
 export const dynamic = "force-dynamic";
 
@@ -363,7 +362,7 @@ export async function GET(req: Request): Promise<NextResponse> {
   }
   return NextResponse.json(
     {
-      data: STEALTH_SKELETON_MODELS_V2_4,
+      data: STEALTH_SKELETON_OPENROUTER_MODELS,
     },
     {
       status: 200,

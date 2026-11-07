@@ -579,8 +579,8 @@ export function HermesPluginUniverseSuite() {
 
   const activeDescriptor = useMemo(
     () =>
-      HERMES_PLUGINS_CATALOG.find((p) => p.id === activePlugin) ??
-      HERMES_PLUGINS_CATALOG[0],
+      (HERMES_PLUGINS_CATALOG.find((p) => p.id === activePlugin) ??
+        HERMES_PLUGINS_CATALOG[0])!,
     [activePlugin]
   );
 
@@ -810,9 +810,10 @@ export function HermesPluginUniverseSuite() {
         {activeDescriptor.id === "orbit-desktop" && (
           <div data-testid="orbit-desktop-grid" className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {pinnedPlugins.map((pinnedId) => {
-              const desc =
+              const desc = (
                 HERMES_PLUGINS_CATALOG.find((p) => p.id === pinnedId) ??
-                HERMES_PLUGINS_CATALOG[0];
+                HERMES_PLUGINS_CATALOG[0]
+              )!;
               return (
                 <div
                   key={desc.id}
