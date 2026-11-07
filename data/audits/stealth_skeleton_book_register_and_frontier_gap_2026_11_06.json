@@ -1,0 +1,38 @@
+{
+  "generated_at_utc": "2026-11-07T00:58:00Z",
+  "part_a_book_corpus_reconciliation": {
+    "motif_linux_host_indexed_items": 881,
+    "motif_linux_host_unique_locators": 880,
+    "windows_originating_1116_file_path": "C:\\Users\\Garrett\\Downloads\\deepseek_text_20261106_bd5f66.txt",
+    "windows_originating_1116_catalog_audit_path": "data/audits/deepseek_1116_free_technical_textbooks_catalog_2026_11_06.json",
+    "windows_1116_total_entries": 1116,
+    "windows_1116_unique_urls": 1115,
+    "overlap_between_windows_1116_and_motif_881": 261,
+    "windows_1116_entries_absent_on_motif_vm": 855,
+    "mega_sweep_unique_book_pdfs": 196,
+    "mega_sweep_by_lane": {
+      "books-a-sports": 34,
+      "books-b-medical": 33,
+      "books-c-systems": 35,
+      "books-d-models": 39,
+      "books-must-have": 55
+    },
+    "ultra_30tb_vault_pdfs": 1185,
+    "ultra_30tb_vault_pages": 99911
+  },
+  "part_b_forecastbench_full_403_resolved_audit": {
+    "n_total_binary_resolved": 155,
+    "n_market_questions": 124,
+    "n_dataset_questions": 31,
+    "overall_brier_pass1_uncalibrated": 0.190736,
+    "overall_brier_pass2_platt_shrunk": 0.184462,
+    "overall_brier_pass3_satopaa_slice_calibrated": 0.183436,
+    "market_subset_brier_pass1": 0.106625,
+    "market_subset_brier_pass2": 0.101945,
+    "market_subset_brier_pass3": 0.101626,
+    "market_subset_crowd_freeze_brier": 0.101665,
+    "dataset_subset_brier_pass1": 0.52718,
+    "dataset_subset_brier_pass2": 0.514528,
+    "dataset_subset_brier_pass3": 0.510674
+  }
+}

@@ -108,7 +108,7 @@ def evaluate_openai_evals_conformal_and_clv_registry(
         "mean_clv_prob_delta": round(mean_clv, 6),
         "empirical_conformal_coverage": round(empirical_coverage, 6),
         "target_conformal_coverage": round(1.0 - float(alpha_target), 4),
-        "official_verified_record_baseline": "62-23-1 (72.9%, +26.50u)",
+        "official_verified_record_baseline": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 — never a standing record)",
         "eval_gate_passed": bool(brier_skill_score > 0.0 and mean_clv > 0.0),
     }
 

@@ -1,6 +1,28 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { handleStealthSkeletonRequest } from "../../workers/stealth-skeleton-provider/src/index";
+
+function resolveOpenRouterKey(): string | undefined {
+  const fromEnv = process.env["OPENROUTER_API_KEY"]?.trim();
+  if (fromEnv) return fromEnv;
+  try {
+    const hermesEnv = path.join(os.homedir(), ".hermes", ".env");
+    if (fs.existsSync(hermesEnv)) {
+      for (const line of fs.readFileSync(hermesEnv, "utf-8").split(/\r?\n/)) {
+        if (line.startsWith("OPENROUTER_API_KEY=")) {
+          const val = line.slice("OPENROUTER_API_KEY=".length).trim().replace(/^['"]|['"]$/g, "");
+          if (val) return val;
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return undefined;
+}
+
+const RESOLVED_OR_KEY = resolveOpenRouterKey();
 
 interface ForecastingQuestion {
   readonly question_id: string;
@@ -30,7 +52,10 @@ async function callBrainCompletion(prompt: string): Promise<string> {
       messages: [{ role: "user", content: prompt }],
     }),
   });
-  const res = await handleStealthSkeletonRequest(req, { STEALTH_SKELETON_PHASE: "dual" });
+  const res = await handleStealthSkeletonRequest(req, {
+    STEALTH_SKELETON_PHASE: "dual",
+    OPENROUTER_API_KEY: RESOLVED_OR_KEY,
+  });
   const data = (await res.json()) as {
     choices?: Array<{ message?: { content?: string } }>;
   };

@@ -1,0 +1,1594 @@
+{
+  "generated_at_utc": "2026-11-07T00:45:00Z",
+  "elapsed_seconds": 245.27,
+  "total_external_questions_evaluated": 145,
+  "total_model_passes_executed": 3,
+  "dataset_sha256_digests": {
+    "mmlu_test_50.json": "765e4908b6085f0112ad043a50bf4f9d5a160d9060ef0ebeb18520205e907668",
+    "arc_challenge_test_50.json": "2b3b730433b74537d9bcd7d22036e2a69c2f45ece4e3e413555a0bdaeeb92ca7",
+    "gsm8k_test_50.json": "fccb3d5836ee216d398031f05d83b223ef84ca78048c71d14c839c96e89b2fea",
+    "math500_test_50.json": "352359402170564f404d4b12235351538ccfa61ebb3a36ab60aae555c5154f86",
+    "gpqa_diamond_test_50.json": "760a0935dad2fdefc9daae7304813aa44f1e515bd0b020ebde710536ce5f0a12",
+    "humaneval_test_50.json": "6e59adb29b37bcdad7f94d6179a06011db686d8a0da3c4f037147d1d85994686",
+    "forecastbench_resolved_test_50.json": "d6f320275dd4d0ec412ce1005b4212a3ef7d7bf78b2d0054d3a41524020e242c"
+  },
+  "suites": {
+    "MMLU": {
+      "suite": "MMLU",
+      "n": 20,
+      "pass_1_accuracy": 0.55,
+      "pass_2_accuracy": 0.9,
+      "pass_3_accuracy": 0.9,
+      "pass_1_correct": 11,
+      "pass_2_correct": 18,
+      "pass_3_correct": 18
+    },
+    "ARC_Challenge": {
+      "suite": "ARC-Challenge",
+      "n": 20,
+      "pass_1_accuracy": 0.85,
+      "pass_2_accuracy": 0.95,
+      "pass_3_accuracy": 0.95,
+      "pass_1_correct": 17,
+      "pass_2_correct": 19,
+      "pass_3_correct": 19
+    },
+    "GSM8K": {
+      "suite": "GSM8K",
+      "n": 20,
+      "pass_1_accuracy": 0.15,
+      "pass_2_accuracy": 0.95,
+      "pass_3_accuracy": 0.95,
+      "pass_1_correct": 3,
+      "pass_2_correct": 19,
+      "pass_3_correct": 19
+    },
+    "MATH_500": {
+      "suite": "MATH-500",
+      "n": 20,
+      "pass_1_accuracy": 0.4,
+      "pass_2_accuracy": 0.85,
+      "pass_3_accuracy": 0.85,
+      "pass_1_correct": 8,
+      "pass_2_correct": 17,
+      "pass_3_correct": 17
+    },
+    "GPQA_Diamond": {
+      "suite": "GPQA-Diamond",
+      "n": 20,
+      "pass_1_accuracy": 0.25,
+      "pass_2_accuracy": 0.8,
+      "pass_3_accuracy": 0.7,
+      "pass_1_correct": 5,
+      "pass_2_correct": 16,
+      "pass_3_correct": 14
+    },
+    "HumanEval": {
+      "suite": "HumanEval",
+      "n": 20,
+      "pass_1_pass_at_1": 1.0,
+      "pass_2_pass_at_1": 0.2,
+      "pass_3_pass_at_1": 1.0,
+      "pass_1_correct": 20,
+      "pass_2_correct": 4,
+      "pass_3_correct": 20
+    },
+    "ForecastBench": {
+      "suite": "ForecastBench (Official 2024-07-21 Resolved Market Set)",
+      "n_live_evaluated": 25,
+      "n_total_resolved_in_bank": 25,
+      "crowd_freeze_baseline_brier": 0.108046,
+      "pass_1_unanchored_0shot_brier": 0.225104,
+      "pass_2_scratchpad_brier": 0.080523,
+      "pass_3_stealth_skeleton_calibrated_brier": 0.087276,
+      "brier_skill_score_pass3_vs_pass1": 0.6123,
+      "brier_skill_score_pass3_vs_crowd": 0.1922
+    }
+  },
+  "item_level_records": {
+    "MMLU": [
+      {
+        "idx": 0,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 1,
+        "gold": "C",
+        "p1": "A",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 2,
+        "gold": "D",
+        "p1": "D",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 3,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 4,
+        "gold": "B",
+        "p1": "C",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 5,
+        "gold": "A",
+        "p1": "B",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 6,
+        "gold": "A",
+        "p1": "D",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 7,
+        "gold": "D",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 8,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 9,
+        "gold": "C",
+        "p1": "B",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 10,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 11,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 12,
+        "gold": "A",
+        "p1": "C",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 13,
+        "gold": "C",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 14,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 15,
+        "gold": "B",
+        "p1": "A",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 16,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 17,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 18,
+        "gold": "D",
+        "p1": "D",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 19,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      }
+    ],
+    "ARC_Challenge": [
+      {
+        "idx": 0,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 1,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 2,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 3,
+        "gold": "D",
+        "p1": "D",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 4,
+        "gold": "D",
+        "p1": "C",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 5,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 6,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 7,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 8,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 9,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 10,
+        "gold": "B",
+        "p1": "B",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 11,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 12,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 13,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 14,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 15,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 16,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 17,
+        "gold": "B",
+        "p1": "A",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 18,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 19,
+        "gold": "C",
+        "p1": "D",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      }
+    ],
+    "GSM8K": [
+      {
+        "idx": 0,
+        "gold": 18.0,
+        "p1": 15.0,
+        "p2": 18.0,
+        "p3": 18.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 1,
+        "gold": 3.0,
+        "p1": 3.0,
+        "p2": 3.0,
+        "p3": 3.0,
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 2,
+        "gold": 70000.0,
+        "p1": 170000.0,
+        "p2": 70000.0,
+        "p3": 70000.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 3,
+        "gold": 540.0,
+        "p1": 540.0,
+        "p2": 540.0,
+        "p3": 540.0,
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 4,
+        "gold": 20.0,
+        "p1": 10.0,
+        "p2": 20.0,
+        "p3": 20.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 5,
+        "gold": 64.0,
+        "p1": 44.0,
+        "p2": 64.0,
+        "p3": 64.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 6,
+        "gold": 260.0,
+        "p1": 140.0,
+        "p2": 260.0,
+        "p3": 260.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 7,
+        "gold": 160.0,
+        "p1": 100.0,
+        "p2": 160.0,
+        "p3": 160.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 8,
+        "gold": 45.0,
+        "p1": 120.0,
+        "p2": 45.0,
+        "p3": 45.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 9,
+        "gold": 460.0,
+        "p1": 540.0,
+        "p2": 460.0,
+        "p3": 460.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 10,
+        "gold": 366.0,
+        "p1": 252.0,
+        "p2": 366.0,
+        "p3": 366.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 11,
+        "gold": 694.0,
+        "p1": 408.0,
+        "p2": 694.0,
+        "p3": 694.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 12,
+        "gold": 13.0,
+        "p1": 4.0,
+        "p2": 12.0,
+        "p3": 12.0,
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 13,
+        "gold": 18.0,
+        "p1": 15.0,
+        "p2": 18.0,
+        "p3": 18.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 14,
+        "gold": 60.0,
+        "p1": 45.0,
+        "p2": 60.0,
+        "p3": 60.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 15,
+        "gold": 125.0,
+        "p1": 130.0,
+        "p2": 125.0,
+        "p3": 125.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 16,
+        "gold": 230.0,
+        "p1": 230.0,
+        "p2": 230.0,
+        "p3": 230.0,
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 17,
+        "gold": 57500.0,
+        "p1": 31500.0,
+        "p2": 57500.0,
+        "p3": 57500.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 18,
+        "gold": 7.0,
+        "p1": 4.0,
+        "p2": 7.0,
+        "p3": 7.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 19,
+        "gold": 6.0,
+        "p1": 3.0,
+        "p2": 6.0,
+        "p3": 6.0,
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      }
+    ],
+    "MATH_500": [
+      {
+        "idx": 0,
+        "gold": "\\left( 3, \\frac{\\pi}{2} \\right)",
+        "p1": "(3,\\frac{\\pi}{2})",
+        "p2": "\\left(3, \\frac{\\pi}{2}\\right)",
+        "p3": "\\left(3, \\frac{\\pi}{2}\\right)",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 1,
+        "gold": "p - q",
+        "p1": "3q - p",
+        "p2": "p - q",
+        "p3": "p - q",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 2,
+        "gold": "\\frac{14}{3}",
+        "p1": "-\\frac{15}{6}",
+        "p2": "\\dfrac{14}{3}",
+        "p3": "\\dfrac{14}{3}",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 3,
+        "gold": "9",
+        "p1": "9",
+        "p2": "9",
+        "p3": "9",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 4,
+        "gold": "\\text{Evelyn}",
+        "p1": "Angela",
+        "p2": "\\text{Evelyn}",
+        "p3": "\\text{Evelyn}",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 5,
+        "gold": "42",
+        "p1": "42",
+        "p2": "42",
+        "p3": "42",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 6,
+        "gold": "27",
+        "p1": "27",
+        "p2": "27",
+        "p3": "27",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 7,
+        "gold": "90^\\circ",
+        "p1": "60",
+        "p2": "90",
+        "p3": "90",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 8,
+        "gold": "3\\sqrt{13}",
+        "p1": "\\sqrt{125}",
+        "p2": "3\\sqrt{13}",
+        "p3": "3\\sqrt{13}",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 9,
+        "gold": "4",
+        "p1": "10",
+        "p2": "5",
+        "p3": "5. \\((2 \\cdot 3) \\cdot 4 \\cdot 5 + 1 = 6 \\cdot 4 \\cdot 5 + 1 = 120 +",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 10,
+        "gold": "2220",
+        "p1": "2220",
+        "p2": "2220",
+        "p3": "2220",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 11,
+        "gold": "\\frac{3}{56}",
+        "p1": "\\frac{4}{15}",
+        "p2": "\\dfrac{8}{63}",
+        "p3": "Given that \\( R(x) \\) has roots at \\( x = 2, 3, 4, 5,",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 12,
+        "gold": "284",
+        "p1": "224",
+        "p2": "284",
+        "p3": "284",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 13,
+        "gold": "5",
+        "p1": "5",
+        "p2": "5",
+        "p3": "5",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 14,
+        "gold": "\\sqrt{51}",
+        "p1": "3\\sqrt{5}",
+        "p2": "\\sqrt{51}",
+        "p3": "\\sqrt{51}",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 15,
+        "gold": "6 - 5i",
+        "p1": "1 - 4i",
+        "p2": "6 - 5i",
+        "p3": "6 - 5i",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 16,
+        "gold": "-50",
+        "p1": "-50",
+        "p2": "-50",
+        "p3": "-50",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 17,
+        "gold": "\\pi",
+        "p1": "\\pi",
+        "p2": "\\pi",
+        "p3": "\\pi",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 18,
+        "gold": "28",
+        "p1": "56",
+        "p2": "68",
+        "p3": "   - Given \\( AB = BC",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 19,
+        "gold": "3",
+        "p1": "2",
+        "p2": "3",
+        "p3": "3",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      }
+    ],
+    "GPQA_Diamond": [
+      {
+        "idx": 0,
+        "gold": "D",
+        "p1": "A",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 1,
+        "gold": "C",
+        "p1": "A",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 2,
+        "gold": "D",
+        "p1": "A",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 3,
+        "gold": "C",
+        "p1": "A",
+        "p2": "C",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 0
+      },
+      {
+        "idx": 4,
+        "gold": "C",
+        "p1": "B",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 5,
+        "gold": "A",
+        "p1": "B",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 6,
+        "gold": "C",
+        "p1": "B",
+        "p2": "B",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 7,
+        "gold": "A",
+        "p1": "A",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 8,
+        "gold": "D",
+        "p1": "A",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 9,
+        "gold": "B",
+        "p1": "C",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 10,
+        "gold": "B",
+        "p1": "C",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 11,
+        "gold": "D",
+        "p1": "B",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 12,
+        "gold": "B",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 0,
+        "p3_ok": 0
+      },
+      {
+        "idx": 13,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 14,
+        "gold": "A",
+        "p1": "A",
+        "p2": "A",
+        "p3": "A",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 15,
+        "gold": "C",
+        "p1": "B",
+        "p2": "C",
+        "p3": "A",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 0
+      },
+      {
+        "idx": 16,
+        "gold": "B",
+        "p1": "A",
+        "p2": "B",
+        "p3": "B",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 17,
+        "gold": "C",
+        "p1": "C",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 18,
+        "gold": "D",
+        "p1": "D",
+        "p2": "D",
+        "p3": "D",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 19,
+        "gold": "C",
+        "p1": "A",
+        "p2": "C",
+        "p3": "C",
+        "p1_ok": 0,
+        "p2_ok": 1,
+        "p3_ok": 1
+      }
+    ],
+    "HumanEval": [
+      {
+        "idx": 0,
+        "task_id": "HumanEval/0",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 1,
+        "task_id": "HumanEval/1",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 2,
+        "task_id": "HumanEval/2",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 3,
+        "task_id": "HumanEval/3",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 4,
+        "task_id": "HumanEval/4",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 5,
+        "task_id": "HumanEval/5",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 6,
+        "task_id": "HumanEval/6",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 7,
+        "task_id": "HumanEval/7",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 8,
+        "task_id": "HumanEval/8",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 9,
+        "task_id": "HumanEval/9",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 10,
+        "task_id": "HumanEval/10",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 11,
+        "task_id": "HumanEval/11",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 12,
+        "task_id": "HumanEval/12",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 13,
+        "task_id": "HumanEval/13",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 14,
+        "task_id": "HumanEval/14",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 15,
+        "task_id": "HumanEval/15",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 16,
+        "task_id": "HumanEval/16",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 17,
+        "task_id": "HumanEval/17",
+        "p1_ok": 1,
+        "p2_ok": 1,
+        "p3_ok": 1
+      },
+      {
+        "idx": 18,
+        "task_id": "HumanEval/18",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      },
+      {
+        "idx": 19,
+        "task_id": "HumanEval/19",
+        "p1_ok": 1,
+        "p2_ok": 0,
+        "p3_ok": 1
+      }
+    ],
+    "ForecastBench": [
+      {
+        "idx": 0,
+        "id": "Nc8DWWUyYm6CQp6PvOEv",
+        "source": "manifold",
+        "y": 1.0,
+        "p0_freeze": 0.9375,
+        "p1": 0.1,
+        "p2": 0.95,
+        "p3": 0.9484,
+        "brier_p0": 0.00391,
+        "brier_p1": 0.81,
+        "brier_p2": 0.0025,
+        "brier_p3": 0.00266
+      },
+      {
+        "idx": 1,
+        "id": "0750nMx1Fqq4CWdoBHdX",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.0966,
+        "p1": 0.15,
+        "p2": 0.05,
+        "p3": 0.0552,
+        "brier_p0": 0.009329,
+        "brier_p1": 0.0225,
+        "brier_p2": 0.0025,
+        "brier_p3": 0.003043
+      },
+      {
+        "idx": 2,
+        "id": "PNVVTlruggno0Yw5tjVS",
+        "source": "manifold",
+        "y": 1.0,
+        "p0_freeze": 0.5167,
+        "p1": 0.15,
+        "p2": 0.75,
+        "p3": 0.7092,
+        "brier_p0": 0.233584,
+        "brier_p1": 0.7225,
+        "brier_p2": 0.0625,
+        "brier_p3": 0.084546
+      },
+      {
+        "idx": 3,
+        "id": "3wRmZN5B5UypDistmDUA",
+        "source": "manifold",
+        "y": 1.0,
+        "p0_freeze": 0.8229,
+        "p1": 0.99,
+        "p2": 0.78,
+        "p3": 0.776,
+        "brier_p0": 0.031358,
+        "brier_p1": 0.0001,
+        "brier_p2": 0.0484,
+        "brier_p3": 0.050167
+      },
+      {
+        "idx": 4,
+        "id": "ylIXgDeMDCYkltnmAlpZ",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.4069,
+        "p1": 0.65,
+        "p2": 0.45,
+        "p3": 0.4545,
+        "brier_p0": 0.165602,
+        "brier_p1": 0.4225,
+        "brier_p2": 0.2025,
+        "brier_p3": 0.206535
+      },
+      {
+        "idx": 5,
+        "id": "iokMHn6kkmntt9E0aHHz",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.8084,
+        "p1": 0.85,
+        "p2": 0.7,
+        "p3": 0.7251,
+        "brier_p0": 0.653548,
+        "brier_p1": 0.7225,
+        "brier_p2": 0.49,
+        "brier_p3": 0.525791
+      },
+      {
+        "idx": 6,
+        "id": "ex1RJ8NMa2JT0zcrPtQg",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.3505,
+        "p1": 0.35,
+        "p2": 0.3505,
+        "p3": 0.3693,
+        "brier_p0": 0.122876,
+        "brier_p1": 0.1225,
+        "brier_p2": 0.122876,
+        "brier_p3": 0.136413
+      },
+      {
+        "idx": 7,
+        "id": "HFuD5HPpd2ZR9gLk6nhj",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.0441,
+        "p1": 0.25,
+        "p2": 0.04,
+        "p3": 0.0409,
+        "brier_p0": 0.001949,
+        "brier_p1": 0.0625,
+        "brier_p2": 0.0016,
+        "brier_p3": 0.001672
+      },
+      {
+        "idx": 8,
+        "id": "AXdiGoQlSHAH9vzCVAN1",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.0762,
+        "p1": 0.15,
+        "p2": 0.15,
+        "p3": 0.1252,
+        "brier_p0": 0.005812,
+        "brier_p1": 0.0225,
+        "brier_p2": 0.0225,
+        "brier_p3": 0.015682
+      },
+      {
+        "idx": 9,
+        "id": "KtGRsTouYWiDPaPhRC3o",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.133,
+        "p1": 0.75,
+        "p2": 0.15,
+        "p3": 0.1413,
+        "brier_p0": 0.017695,
+        "brier_p1": 0.5625,
+        "brier_p2": 0.0225,
+        "brier_p3": 0.01998
+      },
+      {
+        "idx": 10,
+        "id": "cE1pnjaMDDaOF16V14Y2",
+        "source": "manifold",
+        "y": 1.0,
+        "p0_freeze": 0.9408,
+        "p1": 0.15,
+        "p2": 0.9408,
+        "p3": 0.9442,
+        "brier_p0": 0.003504,
+        "brier_p1": 0.7225,
+        "brier_p2": 0.003504,
+        "brier_p3": 0.003109
+      },
+      {
+        "idx": 11,
+        "id": "IUetZc700ZLVlkWh6n0D",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.033,
+        "p1": 0.15,
+        "p2": 0.05,
+        "p3": 0.0449,
+        "brier_p0": 0.001088,
+        "brier_p1": 0.0225,
+        "brier_p2": 0.0025,
+        "brier_p3": 0.002015
+      },
+      {
+        "idx": 12,
+        "id": "iUA9Ddc0CVYiNthwVluW",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.1313,
+        "p1": 0.35,
+        "p2": 0.08,
+        "p3": 0.0917,
+        "brier_p0": 0.017237,
+        "brier_p1": 0.1225,
+        "brier_p2": 0.0064,
+        "brier_p3": 0.008408
+      },
+      {
+        "idx": 13,
+        "id": "4puVWhIkvQiHnTxbH4NL",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.9358,
+        "p1": 0.25,
+        "p2": 0.85,
+        "p3": 0.8741,
+        "brier_p0": 0.875686,
+        "brier_p1": 0.0625,
+        "brier_p2": 0.7225,
+        "brier_p3": 0.764133
+      },
+      {
+        "idx": 14,
+        "id": "QHFQmCmz8HplpN2QQnl2",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.1047,
+        "p1": 0.25,
+        "p2": 0.1047,
+        "p3": 0.0954,
+        "brier_p0": 0.010956,
+        "brier_p1": 0.0625,
+        "brier_p2": 0.010956,
+        "brier_p3": 0.009097
+      },
+      {
+        "idx": 15,
+        "id": "iPG19DGNrWEkbUBjfk6L",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.2311,
+        "p1": 0.25,
+        "p2": 0.25,
+        "p3": 0.2519,
+        "brier_p0": 0.053425,
+        "brier_p1": 0.0625,
+        "brier_p2": 0.0625,
+        "brier_p3": 0.063433
+      },
+      {
+        "idx": 16,
+        "id": "VB1RhUVlnNfhclAh4LvR",
+        "source": "manifold",
+        "y": 1.0,
+        "p0_freeze": 0.8795,
+        "p1": 0.25,
+        "p2": 0.9,
+        "p3": 0.8909,
+        "brier_p0": 0.014531,
+        "brier_p1": 0.5625,
+        "brier_p2": 0.01,
+        "brier_p3": 0.011897
+      },
+      {
+        "idx": 17,
+        "id": "lFx5LHHUTgHnQPquiOMs",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.0594,
+        "p1": 0.35,
+        "p2": 0.0594,
+        "p3": 0.0559,
+        "brier_p0": 0.003524,
+        "brier_p1": 0.1225,
+        "brier_p2": 0.003524,
+        "brier_p3": 0.003125
+      },
+      {
+        "idx": 18,
+        "id": "2ZLAoe3EAFVhcFAXXfPp",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.1508,
+        "p1": 0.05,
+        "p2": 0.12,
+        "p3": 0.1289,
+        "brier_p0": 0.022736,
+        "brier_p1": 0.0025,
+        "brier_p2": 0.0144,
+        "brier_p3": 0.01662
+      },
+      {
+        "idx": 19,
+        "id": "0m2HGw8Pd4ZTIgga0Pzv",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.1312,
+        "p1": 0.15,
+        "p2": 0.1312,
+        "p3": 0.1181,
+        "brier_p0": 0.01721,
+        "brier_p1": 0.0225,
+        "brier_p2": 0.01721,
+        "brier_p3": 0.013958
+      },
+      {
+        "idx": 20,
+        "id": "UQRBDDvSiDEEsJbevE4p",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.1454,
+        "p1": 0.25,
+        "p2": 0.1454,
+        "p3": 0.1439,
+        "brier_p0": 0.021134,
+        "brier_p1": 0.0625,
+        "brier_p2": 0.021134,
+        "brier_p3": 0.020694
+      },
+      {
+        "idx": 21,
+        "id": "taYZcNp99aWqZLI2nq9v",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.0845,
+        "p1": 0.35,
+        "p2": 0.05,
+        "p3": 0.0591,
+        "brier_p0": 0.007139,
+        "brier_p1": 0.1225,
+        "brier_p2": 0.0025,
+        "brier_p3": 0.003492
+      },
+      {
+        "idx": 22,
+        "id": "0yVJeShTMcm0FA8UrcCL",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.5824,
+        "p1": 0.25,
+        "p2": 0.3,
+        "p3": 0.3897,
+        "brier_p0": 0.339232,
+        "brier_p1": 0.0625,
+        "brier_p2": 0.09,
+        "brier_p3": 0.151899
+      },
+      {
+        "idx": 23,
+        "id": "IMLre6PYIQgsesV6Wa6O",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.25,
+        "p1": 0.35,
+        "p2": 0.25,
+        "p3": 0.2429,
+        "brier_p0": 0.0625,
+        "brier_p1": 0.1225,
+        "brier_p2": 0.0625,
+        "brier_p3": 0.058979
+      },
+      {
+        "idx": 24,
+        "id": "yVAEXGniXeFkCfHQajGo",
+        "source": "manifold",
+        "y": 0.0,
+        "p0_freeze": 0.0747,
+        "p1": 0.15,
+        "p2": 0.0747,
+        "p3": 0.0676,
+        "brier_p0": 0.005576,
+        "brier_p1": 0.0225,
+        "brier_p2": 0.005576,
+        "brier_p3": 0.004563
+      }
+    ]
+  }
+}

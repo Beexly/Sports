@@ -1,5 +1,28 @@
+import { existsSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { handleStealthSkeletonRequest } from "../../../../../../../workers/stealth-skeleton-provider/src/index";
+
+function resolveOpenRouterKey(): string | undefined {
+  const fromEnv = process.env["OPENROUTER_API_KEY"]?.trim();
+  if (fromEnv) return fromEnv;
+  try {
+    const hermesEnvPath = join(homedir(), ".hermes", ".env");
+    if (existsSync(hermesEnvPath)) {
+      const lines = readFileSync(hermesEnvPath, "utf8").split(/\r?\n/);
+      for (const line of lines) {
+        if (line.startsWith("OPENROUTER_API_KEY=")) {
+          const val = line.slice("OPENROUTER_API_KEY=".length).trim().replace(/^['"]|['"]$/g, "");
+          if (val) return val;
+        }
+      }
+    }
+  } catch {
+    // Fail-open if local .hermes/.env is unavailable (e.g., serverless edge runtime)
+  }
+  return undefined;
+}
 
 /**
  * Live OpenRouter Provider Integration v2.4 Chat Completions Endpoint
@@ -30,7 +53,7 @@ export async function POST(request: Request) {
 
   return handleStealthSkeletonRequest(request, {
     OPENROUTER_PROVIDER_SECRET: process.env["OPENROUTER_PROVIDER_API_KEY"],
-    OPENROUTER_API_KEY: process.env["OPENROUTER_API_KEY"],
+    OPENROUTER_API_KEY: resolveOpenRouterKey(),
     DEEPINFRA_API_KEY: process.env["DEEPINFRA_API_KEY"],
     STEALTH_SKELETON_PHASE: "dual",
   });

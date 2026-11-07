@@ -7,9 +7,13 @@ import {
   STEALTH_SKELETON_MODELS,
   STEALTH_SKELETON_MODELS_V2_4,
   compileCrowdRlhfDpoGrpoEntry,
+  computeAiaForecasterEnsemble,
   computeKadavathPikAndPooling,
   computeRomanoCqrBand,
+  computeTtpoMajorityVoteAsymmetry,
   enforceCrownIpFirewall,
+  evaluateRrsiPromotionGate,
+  evaluateSiaCoEvolutionStep,
   executeMathematicalOperatorVerification,
   getStealthSkeletonMcpManifest,
   handleStealthSkeletonRequest,
@@ -296,5 +300,71 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     });
     assert.equal(passDiag.passDisciplineVerdict, "PASS_ABSTAIN");
     assert.ok(passDiag.pIk < 0.5, `Expected P(IK) < 0.50 on REJECT/conflict, got ${passDiag.pIk}`);
+  });
+
+  it("enforces Continual-Learning Flywheel & Frontier Mechanisms: RRSI promotion gate, SIA harness+LoRA co-evolution, TTPO majority-vote asymmetry, and AIA Forecaster search-ablation guard", () => {
+    // 1. Google Research RRSI promotion gate: leakage critic + noise-adjusted score floor + cost rule
+    const promoted = evaluateRrsiPromotionGate({
+      championScore: 0.742,
+      candidateScore: 0.802,
+      sampleSize: 200,
+      championCostUsd: 0.012,
+      candidateCostUsd: 0.013,
+      hasEvalLeakage: false,
+      preEventTimestampVerified: true,
+    });
+    assert.equal(promoted.promoted, true);
+    assert.equal(promoted.leakageCriticPassed, true);
+    assert.ok(promoted.noiseAdjustedGain > 0);
+
+    const leaked = evaluateRrsiPromotionGate({
+      championScore: 0.742,
+      candidateScore: 0.95,
+      sampleSize: 200,
+      championCostUsd: 0.012,
+      candidateCostUsd: 0.012,
+      hasEvalLeakage: true,
+      preEventTimestampVerified: true,
+    });
+    assert.equal(leaked.promoted, false);
+    assert.equal(leaked.rejectionReason, "LEAKAGE_CRITIC_VETO");
+
+    // 2. Hexo Labs SIA harness + LoRA co-evolution state tuple
+    const siaState = evaluateSiaCoEvolutionStep({
+      harnessConfigId: "pot-sympy-jev-v3",
+      loraRank: 32,
+      loraAlpha: 64,
+      gpqaBaselineAcc: 0.5,
+      gpqaCandidateAcc: 0.65,
+    });
+    assert.equal(siaState.accepted, true);
+    assert.equal(siaState.effectiveScaling, 2.0);
+
+    // 3. TTPO label-free test-time training via majority-vote asymmetry
+    const ttpoHigh = computeTtpoMajorityVoteAsymmetry(["B", "B", "B", "B", "C"]);
+    assert.equal(ttpoHigh.majorityAnswer, "B");
+    assert.equal(ttpoHigh.consensusRatio, 0.8);
+    assert.equal(ttpoHigh.trainingAction, "DPO_PREFERENCE_PAIR");
+
+    const ttpoLow = computeTtpoMajorityVoteAsymmetry(["A", "B", "C", "D"]);
+    assert.equal(ttpoLow.trainingAction, "ABSTAIN_NOISY_ROLLOUT");
+
+    // 4. Bridgewater AIA Forecaster: multi-forecaster ensemble + supervisor + Platt calibration + search-ablation warning
+    const aiaWithSearch = computeAiaForecasterEnsemble({
+      forecasterProbs: [0.68, 0.72, 0.7],
+      supervisorProb: 0.71,
+      marketFreezePrior: 0.62,
+      searchContextPresent: true,
+    });
+    assert.equal(aiaWithSearch.searchAblationWarning, false);
+    assert.ok(aiaWithSearch.calibratedProb > 0.62 && aiaWithSearch.calibratedProb < 0.85);
+
+    const aiaNoSearch = computeAiaForecasterEnsemble({
+      forecasterProbs: [0.68, 0.72, 0.7],
+      supervisorProb: 0.71,
+      marketFreezePrior: 0.62,
+      searchContextPresent: false,
+    });
+    assert.equal(aiaNoSearch.searchAblationWarning, true);
   });
 });

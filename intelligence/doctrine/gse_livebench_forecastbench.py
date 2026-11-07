@@ -86,7 +86,8 @@ def evaluate_gse_livebench_vs_forecastbench(
             "both_pairs_preserved_unsmoothed": True,
         },
         "gse_live_performance": {
-            "settled_record": "62-23-1",
+            "settled_record": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
+            "voided_notice": "The 62-23-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
             "win_rate_pct": 72.9,
             "net_units": 26.50,
             "week9_tnf_brier": round(float(gse_settled_brier), 4),
