@@ -1,0 +1,424 @@
+{
+  "generated_at_utc": "2026-11-07T05:28:07.784995+00:00",
+  "all_refs_commit_count": 11915,
+  "origin_remotes_commit_count": 11193,
+  "origin_main_commit_count": 5011,
+  "unique_commits_on_non_main_remote_branches": 6182,
+  "sum_main_plus_unique_non_main": 11193,
+  "commit_partition_reconciled": true,
+  "branch_census_summary": {
+    "local_remote_refs_count": 898,
+    "ls_remote_heads_count": 898,
+    "counts_reconciled": true,
+    "ahead_of_main_count": 862,
+    "fully_merged_into_main_count": 36,
+    "open_prs_cli_count": 82,
+    "open_prs_api_count": 82,
+    "open_prs_reconciled": true
+  },
+  "fsck_dangling_commits_count": 281,
+  "fsck_dangling_blobs_count": 17232,
+  "fsck_dangling_trees_count": 93,
+  "fsck_dangling_commits": [
+    {
+      "sha": "ae0dc073c87076943d07d3f63268d50a7dd66088",
+      "meta": "2026-10-30 00:31:30 -0500 | Garrett Baxley | feat(cv-bootstrap): NFL film vision pipeline staged"
+    },
+    {
+      "sha": "6d13e096e6b92f017c3595fcf19c3e348943831f",
+      "meta": "2026-09-23 14:31:59 -0500 | Garrett Baxley | [c-96] test(cqr): port fail-closed small-n assertions to cqr.test.ts"
+    },
+    {
+      "sha": "d2148004be13442fd05fe4d6135b85c85da75c57",
+      "meta": "2026-10-21 02:38:19 -0500 | Garrett Baxley | On film-edge-cycle-01-2026-10-21: ledger update"
+    },
+    {
+      "sha": "b41510f61cdbaa398f0cda57bb754f60b6446c8c",
+      "meta": "2026-09-18 23:31:45 +0000 | Gemini | fix(types): static dispatch for ranking orderings (Codacy critical)"
+    },
+    {
+      "sha": "0e209064c70e2e39babf18e87d7122142be811fa",
+      "meta": "2026-10-28 11:40:21 -0500 | t | probe: guarded only"
+    },
+    {
+      "sha": "7825184ff0f55629555ace9c62b9b6b37c59f0ee",
+      "meta": "2026-10-30 00:36:23 -0500 | Garrett Baxley | feat(cv-bootstrap): NFL film vision pipeline staged"
+    },
+    {
+      "sha": "5026d00488bf65b76467e2b21f11c4cf8c4f7939",
+      "meta": "2026-10-25 22:05:19 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: tsc-baseline"
+    },
+    {
+      "sha": "9526d822822174cb8e428d32f76c21b42fba11b1",
+      "meta": "2026-09-25 15:12:39 -0500 | Garrett Baxley | [hermes-V3-347,V3-348] close both ledger rows with measured evidence and SHAs"
+    },
+    {
+      "sha": "f9297878fc92f43552b57a670ed8a1690f74e3b5",
+      "meta": "2026-11-03 18:34:04 -0600 | Garrett Baxley | On ci/homepage-cluster-2026-11-03: hp-cluster-wip"
+    },
+    {
+      "sha": "802d10c1ccbbb819db2bff41676b925696a1cc6d",
+      "meta": "2026-09-12 12:10:25 -0500 | Garrett Baxley | Merge remote-tracking branch 'origin/main' into live-merge"
+    },
+    {
+      "sha": "3d393044d636fa362e879362a85031efa5808ca4",
+      "meta": "2026-10-11 14:48:13 -0500 | Garrett Baxley | feat(corpus): ingest 68 research files, handoffs, and engine specs from downloads into docs tree"
+    },
+    {
+      "sha": "ff39f0a5a1ce01295a5021675d5aed5fe97890c4",
+      "meta": "2026-10-29 18:32:10 -0500 | Garrett Baxley | feat(packages,1h-2h): package all 29 CAR@GB 360-degree 1Q/1H/2H/Kicking/IDP/INT locks into live store & render 1H/2H rapid-fire slides"
+    },
+    {
+      "sha": "b240203570e019fcc79d08daa7ea6e3a697390b7",
+      "meta": "2026-10-03 14:36:18 -0500 | Garrett Baxley | eng: lingxi KL(q||p)=sum q log(q/p) (engine-plan)"
+    },
+    {
+      "sha": "6849203d24dc0d7dfc0355d08980c7a40359b866",
+      "meta": "2026-09-24 19:13:23 -0500 | Garrett Baxley | feat(signals): wire NGS context and research artifacts [hermes-gse-signal-wiring-20260924]"
+    },
+    {
+      "sha": "3158e0a8cfd407a340d3dce34e88150cd05ba570",
+      "meta": "2026-10-10 19:02:51 -0500 | Garrett Baxley | Genie acquisition run 2026-10-10: FTN charting 2022-26 + NGS aggregates 2016-26 + ESPN/DK lines + injuries + coaching tables landed under minis/re/genie-acquisition-2026-10-10 (stamped manifest); PFF/SIS/tracking-frame/book-internal/medical blocked w/ reopen conditions; RUNNING_LOG appended"
+    },
+    {
+      "sha": "c55810ef8b61aa739717c7d50938cb0c6e5ecff6",
+      "meta": "2026-10-03 17:49:21 -0500 | Garrett Baxley | eng: lingxi_eq_rouge_l_recall \u2014 LCS(X,Y)/m (Lin 2004 W04-1013 eq 2 p.2). unittest 4 OK."
+    },
+    {
+      "sha": "6167d0acdc18c1c23b2331fa728870acb8cebf42",
+      "meta": "2026-09-02 21:38:02 -0500 | Garrett Baxley | WIP on master: 8171c9e6c leverage-monitor: update LEVERAGE_STATUS.md with fresh verification"
+    },
+    {
+      "sha": "cb6b306ce56474d0cc4adb91da463c2164ff3190",
+      "meta": "2026-10-13 13:22:46 -0500 | Garrett Baxley | frontier: land the staged milestone-2 engine batch (50 frontier/sports engines, toolchain configs, nav/signin fixes) exactly as staged by the overnight session"
+    },
+    {
+      "sha": "b07dd08c495ea7bd7b8d5e62f6e8e552efca809a",
+      "meta": "2026-10-02 12:23:15 -0500 | Garrett Baxley | On motif/gse-intelligence-build-2026-10-02: wip-before-rebase"
+    },
+    {
+      "sha": "a982a85a7e20cde2e9918f9be8f7e5de2debc222",
+      "meta": "2026-10-03 14:58:16 -0500 | Garrett Baxley | eng: lingxi RMSNorm a_i/RMS(a)*g_i (Zhang Sennrich 2019 eq 4)"
+    },
+    {
+      "sha": "1586501e9998a5de578ab08578d3c3303f7190a6",
+      "meta": "2026-09-29 12:35:34 -0500 | Garrett Baxley | [hermes-surf-12] correct the denominator: 901 was a test fixture counted as engine"
+    },
+    {
+      "sha": "0489687835bacbe7122dce46a2d881d429bfe2a4",
+      "meta": "2026-10-14 23:01:46 -0500 | Garrett Baxley | WIP on grok/walk-forward-2026-10-14: 579e8eb2d docs(wf): calibration wiring audit \u2014 81 branches -> 25 modules, only 10 wired; 15 test-only never shipped; 5 wired with NO test (cvap/ivap/pav/aggregation/local-isotonic-patch)"
+    },
+    {
+      "sha": "6a8a30a75513e86586b7522371a0b48f08f8e5df",
+      "meta": "2026-10-21 06:55:20 -0500 | Garrett Baxley | WIP on audit/reconciliation-2026-10-20: 00108b495 T1/T4/T6/T8/T15/T16: six probes land, each with a sweep that can go red"
+    },
+    {
+      "sha": "e98af06f14b3289f4b608b561d4fc86e578a09aa",
+      "meta": "2026-10-12 14:19:08 +0000 | dependabot[bot] | chore(ci): bump actions/setup-node from 4 to 7"
+    },
+    {
+      "sha": "bb9d50dc57180157d167af94f5cc1d6d416cfaf8",
+      "meta": "2026-10-10 20:02:44 -0500 | Garrett Baxley | PC-lane work order: ILP optimizer 25/25 (PuLP+CPSAT, field-relative objective, 5 variants x 5 lambda, valid()-checked); DK payout ladders cracked (Millionaire 23-tier full); Telegram consensus channel live; pre-lock own% lane documented"
+    },
+    {
+      "sha": "ec9e903dc981f0e8100874444dd9085cf4f55b6b",
+      "meta": "2026-09-26 15:52:19 -0500 | Garrett Baxley | docs: ledger ratings family wave 6H"
+    },
+    {
+      "sha": "50a5f8d595ecb77d2ff7287d0a434949e4f275cb",
+      "meta": "2026-10-31 14:19:10 -0500 | Garrett Baxley | WIP on ci/fix-workflow-compile-2026-10-31: 55e5c02ed Merge remote-tracking branch 'origin/main' into ci/fix-workflow-compile-2026-10-31"
+    },
+    {
+      "sha": "a1b640cb1c1d8423390ca59db83c73f4beed0353",
+      "meta": "2026-09-27 03:58:05 +0000 | dependabot[bot] | chore(deps): bump the dev-deps group across 1 directory with 6 updates"
+    },
+    {
+      "sha": "f9bb7041ed5916109751993e36310bc755791767",
+      "meta": "2026-09-15 18:40:44 -0500 | Garrett Baxley | On hermes/c298-inplay-parity-2026-09-12: pre-lockfile-fix WIP 2026-09-15"
+    },
+    {
+      "sha": "c8be98d861ccf85b03d31e35624f0520e7ecd9a8",
+      "meta": "2026-10-22 07:10:08 -0500 | Garrett Baxley | [hermes-c351-20261022] C-380: gsn-transmission-unavailable (5) \u2014 buildDailyTransmission fallbacks now say UNAVAILABLE (C-351), no SAMPLE_TRANSMISSION on failed reads; honest consumer badges"
+    },
+    {
+      "sha": "9ebfa806dc062a1156eb53a6073423907edcc18d",
+      "meta": "2026-10-29 16:40:48 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: autostash"
+    },
+    {
+      "sha": "bdbf30c24cd6c6946fb8ef313f0331b5e24ec2fd",
+      "meta": "2026-10-03 16:23:54 -0500 | Garrett Baxley | eng: lingxi_eq_aldous_volatility \u2014 sin(pi*x)/pi (Campbell and Engelund arXiv:2608.12291 p.44). unittest 5 OK."
+    },
+    {
+      "sha": "4ec610d33373830bac2b9a58aaf7d7cea5f39501",
+      "meta": "2026-10-03 15:12:20 -0500 | Garrett Baxley | eng: lingxi instance norm per-channel mean/var (Ulyanov 2016)"
+    },
+    {
+      "sha": "77d0b8709f7874d8b92608a666002fb1d9751847",
+      "meta": "2026-10-25 22:03:14 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: tdd-red-proof"
+    },
+    {
+      "sha": "60dd886809e68c29821f1783278cd5f89f18f9a7",
+      "meta": "2026-09-27 15:38:57 -0500 | Garrett Baxley | [hermes-CLV-1] ledger: record the resolvable work SHA"
+    },
+    {
+      "sha": "0adf9039b5e8ab8899a814f9daad25290cba7b75",
+      "meta": "2026-09-20 11:50:39 -0500 | Garrett Baxley | [hermes-lane-b-nfl-publish] Mint-side supersede of unpublished PENDING slot-holders (NFL spreads/totals fix)"
+    },
+    {
+      "sha": "8fe910461ca3e60d660a7f925734821d19ef49cc",
+      "meta": "2026-10-13 13:18:18 -0500 | Garrett Baxley | props: land the two 2026-10-11 research sheets the props-board tests read (edge_sheet_pp_vs_dk_v2, dk_vs_pinnacle_shade_2026-10-10)"
+    },
+    {
+      "sha": "47ebb89ecd4babd027345f1cb51e1208a64d81b7",
+      "meta": "2026-10-14 17:12:10 -0500 | Garrett Baxley | dfs/walk_forward: Priority 1 inventory, timestamped pullers, CVI diagnostic \u2014 NOT CLEARED"
+    },
+    {
+      "sha": "aff7c88bb5b78ee4f02f782ffbcaa1573a07b2da",
+      "meta": "2026-09-23 20:43:03 -0500 | Garrett Baxley | On gse/consensus-binder-enforce: wip-away-from-teaser-fix"
+    },
+    {
+      "sha": "c8ffb82b7bd4b60cd3a794f164cf20b4a4dd4dd0",
+      "meta": "2026-09-29 19:27:22 -0500 | Garrett Baxley | On chore/provenance-truth-01: cost-neon-wip"
+    },
+    {
+      "sha": "7b00412672c792310fcc24cd489f44c3de9faf9f",
+      "meta": "2026-10-21 02:30:30 -0500 | Garrett Baxley | On film-edge-cycle-01-2026-10-21: c375-testwall second tranche from film-edge tree"
+    },
+    {
+      "sha": "e807a1b92bb0ee2ab1eab7c675301eee5c5563a3",
+      "meta": "2026-09-06 03:53:56 -0500 | Garrett Baxley | On claude/sports-prediction-launch-rtiexc-r2: r2-verify-tree-superseded-by-3910b07d9"
+    },
+    {
+      "sha": "2909292837e121cbf6a2e6031a34b245405f5f13",
+      "meta": "2026-09-30 15:44:58 -0500 | Garrett Baxley | feat(intel): shadow-only mode \u2014 count and report a family without letting it move calibratedProb or publishState"
+    },
+    {
+      "sha": "4d0901b7d71ac701e7b2d3abb1d93ff8054087fe",
+      "meta": "2026-10-20 23:00:24 -0500 | Garrett Baxley | WIP on audit/reconciliation-2026-10-20: 503630a3b the class-A guard was crying wolf, and the run log was stale"
+    },
+    {
+      "sha": "6509912e17fc565adf6270f6aa12d7fff626d73c",
+      "meta": "2026-10-17 22:14:33 -0500 | Hermes | fix(picks): state NCAAF injury unavailability, and stop the depth-chart ingest wiping labelled weeks"
+    },
+    {
+      "sha": "ef0ef151ff2016f44cc64c7e6455c81794b4ad91",
+      "meta": "2026-10-10 23:30:35 -0500 | Garrett Baxley | B1 weather CLOSE-ADJUSTED: raw -5.41 wind total shrinks to -2.2 ns (t=-1.25) after closing-line adjustment \u2014 market prices wind; B7 CPOE reliability curve stamped (b2b noise, half-season skill, SB 0.644)"
+    },
+    {
+      "sha": "5213c91b180e0dd4d4aafb755090fadbabdaff16",
+      "meta": "2026-11-04 02:24:48 -0600 | Garrett Baxley | WIP on hermes/overnight-2026-11-03-corpus: b6b2ec8dc docs: repo triage, downloads batch 2 triage, EYI zip content correction"
+    },
+    {
+      "sha": "8b2009124d70f6277d40bdfee3fa44f745926b82",
+      "meta": "2026-09-23 20:19:10 -0500 | Garrett Baxley | [hermes-C-22] feat: add disabled MLB model shadow scaffold"
+    },
+    {
+      "sha": "3b24c13359d96b323acc4954483c7b01d2626a69",
+      "meta": "2026-09-16 17:49:25 -0500 | Beexly | fix(ci): align nav + homepage honesty tests with Field IA copy"
+    },
+    {
+      "sha": "582cc1574cae9f8d3d92a0677f5178b5a70e067d",
+      "meta": "2026-10-28 02:02:57 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: autostash"
+    },
+    {
+      "sha": "dc3d41ae93e7a35f6ae4de573e1e0915e1e38217",
+      "meta": "2026-10-11 01:52:41 -0500 | Garrett Baxley | NIGHT-1 EQUATION HARVEST COMPLETE: 14 equations, PFR advstats via nflverse mirror (848 QB-seasons), pressure curve weak at season level (+0.14), master stamp landed; 3 unblocks found (FTN/ESPN/PFR via mirrors)"
+    },
+    {
+      "sha": "c45989e46f35446889d4f4eda3077136cde978b2",
+      "meta": "2026-10-18 10:34:52 -0500 | Garrett Baxley | feat(engine,week6): wire 14-key Sovereign Signal Plane into prediction-engine, sync_week6_db, and matchup_engine with full CHI@ATL attribution proof"
+    },
+    {
+      "sha": "285bc99721d52a29893093367a70fadb8e0b4081",
+      "meta": "2026-10-01 21:10:57 -0500 | Garrett Baxley | feat(arbiter): adjudicate reasoning-vs-legacy path disagreements, graded"
+    },
+    {
+      "sha": "f05c39fef0a676fb5ec0a770c7736688f61b72cf",
+      "meta": "2026-09-23 14:35:06 -0500 | Garrett Baxley | On cursor/c-96-odds-api-remaining-1228: agent-wip-before-ci-greening"
+    },
+    {
+      "sha": "2160311d51cf2d3c8e4a46be0ee9be45b60b5ebb",
+      "meta": "2026-09-30 15:53:56 -0500 | Garrett Baxley | feat(intel): shadow-only mode \u2014 count and report a family without letting it move calibratedProb or publishState"
+    },
+    {
+      "sha": "766ca157ef6861dbaeedd4a6ea74fdbe259866f4",
+      "meta": "2026-09-23 13:32:47 -0500 | Beexly | feat(C2): offline Elo/BTL/pi strength-feature bake-off harness"
+    },
+    {
+      "sha": "da7589d091ba13b57b736002037f14ceda9a056f",
+      "meta": "2026-10-13 20:39:54 -0500 | Garrett Baxley | feat(ingest): wire action-network multi-book second book, schedule 7 dark crons, land full live fetch suite"
+    },
+    {
+      "sha": "328901e4600fd17d3be936daf63c543e3ef98823",
+      "meta": "2026-10-28 02:00:47 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: autostash"
+    },
+    {
+      "sha": "be8b994205691cfcbc24bf1b30971c1ceb9f8454",
+      "meta": "2026-11-01 11:18:26 -0600 | Garrett Baxley | On main: autostash"
+    },
+    {
+      "sha": "298d39b2e065b016b2b091accec82917075b7e4c",
+      "meta": "2026-09-30 15:20:11 -0500 | Garrett Baxley | fix(test): alias @sports/data-ingestion so the intelligence-core suite runs"
+    },
+    {
+      "sha": "bb8f61d50810dae2130447e20ab9aa1d4e52e833",
+      "meta": "2026-10-16 23:40:02 -0500 | Garrett Baxley | WIP on hermes/emission-gate-2026-10-16: 5aa49fde7 [hermes-emission-gate-3] ledger: H-U1/H-U2 rows for the emission-gate build + CLV-bearing run (evidence 295ccb637, b683b35d0)"
+    },
+    {
+      "sha": "9797a1df5d3ca764d1b58266373e2e311ea446f0",
+      "meta": "2026-10-30 03:33:24 -0500 | Garrett Baxley | index on engine/cv-bootstrap-2026-10-30: ad756a737 feat(film-room): add consolidation script for VL analysis results"
+    },
+    {
+      "sha": "b9a041085ad91400e8a6e3618c9d2fd380975a46",
+      "meta": "2026-10-15 20:54:36 -0500 | Garrett Baxley | WIP on hermes/fast-track/espn-dated-settlement-400: 861780ae3 [hermes-settlement] ESPN dated settlement: one day per request \u2014 ESPN 400s every multi-day dates value"
+    },
+    {
+      "sha": "84add93f47c31e9c720276a5d1ea24e7bbc70883",
+      "meta": "2026-10-16 23:40:32 -0500 | Garrett Baxley | WIP on hermes/emission-gate-2026-10-16: 5aa49fde7 [hermes-emission-gate-3] ledger: H-U1/H-U2 rows for the emission-gate build + CLV-bearing run (evidence 295ccb637, b683b35d0)"
+    },
+    {
+      "sha": "a7b5e126752b1d3b5a4f2ae92dddf9ff08921a9d",
+      "meta": "2026-09-25 17:46:59 -0500 | Garrett Baxley | feat: wire V5 submission contract + V7 feature recipe live paths"
+    },
+    {
+      "sha": "37db098e5903795be69793c827fc3e194abefa84",
+      "meta": "2026-09-23 20:13:39 -0500 | Garrett Baxley | [hermes-eprocess-shadow] add shadow calibration e-process scaffold"
+    },
+    {
+      "sha": "48e3d9d945f67e5907b091ea6862f37ac0d4269b",
+      "meta": "2026-10-31 14:17:11 -0500 | Garrett Baxley | On ci/fix-workflow-compile-2026-10-31: c400c"
+    },
+    {
+      "sha": "23e641fc168ec6504c96f16cb1e93769d81fcb02",
+      "meta": "2026-10-20 20:18:34 -0500 | Garrett Baxley | WIP on audit/reconciliation-2026-10-20: e724120ea X20 was closed, but on the WRONG GRAPH, and the treatment was read as a mean"
+    },
+    {
+      "sha": "4c058284745ebf328bf3b49a1d9d1f1f634fe0c0",
+      "meta": "2026-09-28 16:33:16 -0500 | Garrett Baxley | [hermes-surface-fence] Fence 7 internal surfaces + test the HF queue"
+    },
+    {
+      "sha": "d10fe211e23cf03d826e1eb3c21dfbda8ecb4e5c",
+      "meta": "2026-09-26 17:07:21 -0500 | Garrett Baxley | [wire-cycle1] fail-closed: refuse unsound ooEpc / bucketRoi / gaussCopulaJoint results"
+    },
+    {
+      "sha": "ae1482f781b88ff195edb9f716e17c1f4ec76f90",
+      "meta": "2026-10-03 15:09:37 -0500 | Garrett Baxley | eng: lingxi weight norm w=(g/||v||)v (Salimans Kingma 2016)"
+    },
+    {
+      "sha": "611d9a79b1963b4418f274397de175b3dabaecb2",
+      "meta": "2026-09-29 11:51:41 -0500 | Garrett Baxley | [hermes-do-not-stop] founder order: do not stop; research, wire, weight, calibrate into ingestion"
+    },
+    {
+      "sha": "81255a29ea1d389b8bddff9a4d00c2f24ed6b67d",
+      "meta": "2026-09-23 15:20:14 -0500 | Garrett Baxley | ci: fix prediction-engine test typecheck errors (indexed access + arity)"
+    },
+    {
+      "sha": "792b5afe2e1089fbc71262ebfb68526892e721a4",
+      "meta": "2026-09-29 17:03:58 -0500 | Garrett Baxley | [hermes-surf-19] ledger: resolve the evidence SHA"
+    },
+    {
+      "sha": "7d2d3a6d3bf5653ba081b640aad6e78cb6ccc2cc",
+      "meta": "2026-10-19 09:26:18 +0000 | dependabot[bot] | chore(deps): bump the production-deps group across 1 directory with 14 updates"
+    },
+    {
+      "sha": "943c7202a3a57de9bdb3785d660acc4dd0e90c50",
+      "meta": "2026-10-28 00:12:50 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: autostash"
+    },
+    {
+      "sha": "2e3fdabdba4e379219e0d88a8377ad845baea83d",
+      "meta": "2026-10-03 13:39:13 -0500 | Garrett Baxley | test(engine-plan): cover all 16 lingxi_eq_cell_shares names"
+    },
+    {
+      "sha": "574272d4a7f1e4f4aa887e60a5ea37c7761d4455",
+      "meta": "2026-10-28 02:42:43 -0500 | Garrett Baxley | On engine/public-baseline-2026-10-24: autostash"
+    },
+    {
+      "sha": "d34962d43e75e6eeeebe2a80e6bb0fdbb30ed8ce",
+      "meta": "2026-09-23 13:36:00 -0500 | Garrett Baxley | WIP on gse/opencode-nfl-mlb-cal-20260923: c03b05c37 x-analytics-sweep: 2026-09-22 PM AGENTS.md section; Cardio Index + Week-3 composite power ratings CSVs + README"
+    },
+    {
+      "sha": "3d4edad23683e1b84c80f2def9e061c84862551f",
+      "meta": "2026-10-30 03:39:46 -0500 | Garrett Baxley | On engine/cv-bootstrap-2026-10-30: vl-analysis-untracked"
+    },
+    {
+      "sha": "8b5752a0e905bddda2d81bedfdc2212bc170769d",
+      "meta": "2026-10-31 10:22:12 -0500 | Garrett Baxley | On main: autostash"
+    },
+    {
+      "sha": "8660ca919f1916f417be3cbde9999df003c3b610",
+      "meta": "2026-10-03 09:21:21 -0500 | Garrett Baxley | engine: completed air yards does not clear the gate"
+    },
+    {
+      "sha": "e8607267bdbad6c245b397df735a4e82e17148ef",
+      "meta": "2026-10-14 18:30:15 -0500 | Garrett Baxley | dfs/walk_forward: score RIL OLCD PSR PFE CTF on the 2462 filter \u2014 all refused"
+    },
+    {
+      "sha": "5e617a83415d1fd845458fc20c7d6dc57c5dd7bb",
+      "meta": "2026-09-27 14:38:30 -0500 | Garrett Baxley | [hermes-V3-352] group-aware tuner: the evidence floor must count fixtures, not rows"
+    },
+    {
+      "sha": "d162f27866766fa11fe3d7c4c9c081d6608abb83",
+      "meta": "2026-10-01 09:42:25 -0500 | Garrett Baxley | fix(launch): name the NGS fence by what it gates, not by the banned phrase"
+    },
+    {
+      "sha": "6267327ba456a68417a857bcb458579973ca0be4",
+      "meta": "2026-09-22 18:03:30 -0500 | Garrett Baxley | On hermes/last-plan-2026-09-15: dirty-worktree"
+    },
+    {
+      "sha": "dd6b1a63b6e711d0e0616123bec7d8b01ecd09fd",
+      "meta": "2026-10-14 18:24:05 -0500 | Garrett Baxley | dfs/walk_forward: score RIL OLCD PSR PFE CTF on the 2462 filter \u2014 all refused"
+    },
+    {
+      "sha": "386e3248ada4b6a086f90a4c6902a37b4c850154",
+      "meta": "2026-11-03 18:34:44 -0600 | Garrett Baxley | On ci/homepage-cluster-2026-11-03: hp-cluster-wip2"
+    },
+    {
+      "sha": "4573f2217bcee479a2e35546b042d8d313493ecd",
+      "meta": "2026-10-21 06:54:11 -0500 | Garrett Baxley | WIP on audit/reconciliation-2026-10-20: 00108b495 T1/T4/T6/T8/T15/T16: six probes land, each with a sweep that can go red"
+    },
+    {
+      "sha": "ff75a2a96b2b45013a56632b81b43762c50d8cb9",
+      "meta": "2026-10-30 16:55:06 -0500 | Garrett Baxley | Merge branch 'engine/w1w7-tendencies-2026-10-30' into ledger/consolidated-2026-10-30"
+    },
+    {
+      "sha": "347ee2e99172b9e42828f1bd92ef1ac8c9a9f619",
+      "meta": "2026-10-13 20:48:49 -0500 | Garrett Baxley | feat(ingest): wire action-network second book, schedule 7 dark crons, integrate firecrawl alexandria live multi-fetch"
+    },
+    {
+      "sha": "2f7f3a9636b779dbfe0e0bb007391ef9bf80e4b5",
+      "meta": "2026-10-25 02:31:21 -0500 | Garrett Baxley | WIP on engine/public-baseline-2026-10-24: e3cf94b46 feat(coach-sim): wire 32-team trench/blitz shrinkage cells into playGame"
+    },
+    {
+      "sha": "367f22392ac546522cf9ce52999a21e678d6d3ed",
+      "meta": "2026-10-08 20:57:48 -0500 | Garrett Baxley | On opencode/grok-espn-odds-first-20261008: temp-for-branch-switch"
+    },
+    {
+      "sha": "c57f4a3f3553bab0c6914a9f7bf5ab82b51b0952",
+      "meta": "2026-10-31 14:12:12 -0500 | Garrett Baxley | On ci/fix-workflow-compile-2026-10-31: c400-lint-fixes"
+    },
+    {
+      "sha": "dd9cba8b7118e9abe5a0d027af1747beffc65bdd",
+      "meta": "2026-10-26 09:28:20 +0000 | dependabot[bot] | chore(deps): bump the dev-deps group across 1 directory with 4 updates"
+    },
+    {
+      "sha": "79a24ad48cb18a8bdc2ab6ea3135a3fa7858e304",
+      "meta": "2026-09-26 15:48:50 -0500 | Garrett Baxley | docs: ledger ratings family wave 6H"
+    },
+    {
+      "sha": "1cb4320c66521938db7050c5ccc99c430b398fa1",
+      "meta": "2026-10-01 01:50:02 -0500 | Garrett Baxley | docs(signals): correct \"seven of thirteen\" to eight, at all five sites"
+    },
+    {
+      "sha": "e7bc2a4105edeb491968185ede8d63750b95ddda",
+      "meta": "2026-10-03 10:09:24 -0500 | Garrett Baxley | mind_eq_2: code score_drive from ydstogo and yardline_100; block the rest"
+    },
+    {
+      "sha": "95c93a7b7e3d062bfe63264c113a43a044749b22",
+      "meta": "2026-10-03 10:14:48 -0500 | Garrett Baxley | eng: add lingxi_eq_ratios_blends (non-diff formulas)"
+    },
+    {
+      "sha": "dec9bac31ab3f2659447b7cf51c6bc4ca62fc247",
+      "meta": "2026-09-23 13:32:05 -0500 | Garrett Baxley | On cursor/c-96-odds-api-remaining-1228: gse-pre-opencode-nfl-mlb-202609231332"
+    }
+  ]
+}
