@@ -5,7 +5,7 @@
   "description": "OpenRouter Provider Gateway for GSE Stealth-Skeleton Alpha (gse/stealth-skeleton-alpha) and Sovereign Skeleton v1 (gse/skeleton-v1) with Auto Exacto grammar healing, CROWD_RLHF_QUEUE DPO/GRPO compiler, 3-class Crown IP firewall, and @galaxysportsedge/stealth-skeleton-mcp.",
   "main": "./src/index.ts",
   "scripts": {
-    "test": "npx tsx --test src/__tests__/stealth-skeleton-provider.test.ts",
+    "test": "node --experimental-strip-types --test src/__tests__/stealth-skeleton-provider.test.ts",
     "typecheck": "tsc --noEmit"
   }
 }

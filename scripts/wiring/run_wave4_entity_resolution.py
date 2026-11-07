@@ -339,10 +339,35 @@ def main() -> None:
         for rec in records:
             f.write(json.dumps(rec) + "\n")
 
+    # Also emit player_tenure_map.jsonl to both data/identity/ and intelligence/identity/
+    player_tenures = [
+        {
+            "canonical_id": rec["canonical_id"],
+            "canonical_name": rec["canonical_name"],
+            "team_id": rec["current_team_id"],
+            "position": rec["position"],
+            "valid_from": rec["valid_from"],
+            "valid_to": rec["valid_to"],
+            "forbidden_2026_teams": rec.get("forbidden_2026_teams", []),
+            "source_ids": rec.get("source_ids", {}),
+        }
+        for rec in records
+        if rec.get("entity_type") == "player"
+    ]
+    for tenure_target in (
+        IDENTITY_DIR / "player_tenure_map.jsonl",
+        REPO_ROOT / "intelligence" / "identity" / "player_tenure_map.jsonl",
+    ):
+        tenure_target.parent.mkdir(parents=True, exist_ok=True)
+        with tenure_target.open("w", encoding="utf-8") as tf:
+            for trec in player_tenures:
+                tf.write(json.dumps(trec) + "\n")
+
     summary = {
         "wave": "WAVE_4_ENTITY_RESOLUTION",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "total_canonical_entities": len(records),
+        "player_tenure_map_count": len(player_tenures),
         "counts_by_type": counts_by_type,
         "standing_2026_overrides_verified": ["Geno Smith -> NYJ QB", "Mike Evans -> SF WR"],
     }

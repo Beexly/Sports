@@ -5023,11 +5023,50 @@ def execute_connected_game_workflow(
     )
     assert_zero_roster_contamination(markdown_dossier, stage0, "markdown_dossier")
 
+    armed_gid = f"2026_{week:02d}_{away_u}_{home_u}"
+    armed_bundle = build_armed_context_and_reasoning_trace(
+        game_id=armed_gid, as_of_utc="2026-11-05T18:00:00Z", persist=True
+    )
+    armed_pkt = armed_bundle["context_packet"]
+    armed_trace = armed_bundle["reasoning_trace"]
+    sim_out_path = REPO_ROOT / "data" / "simulations" / f"{armed_gid}.sim.json"
+    sim_out_path.parent.mkdir(parents=True, exist_ok=True)
+    branch_a = (stage2.get("branch_a_tuten_out_primary") or {})
+    sim_payload = {
+        "schema_version": "1.0.0",
+        "game_id": armed_gid,
+        "matchup": f"{away_u} @ {home_u}",
+        "week": week,
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "context_packet_id": armed_pkt.get("packet_id"),
+        "reasoning_trace_id": armed_trace.get("trace_id"),
+        "n_sims": n_sims,
+        "total_snaps_simulated": int(branch_a.get("total_snaps_simulated", n_sims * 175)),
+        "home_win_prob": float(branch_a.get("home_win_prob", 0.5)),
+        "away_win_prob": float(branch_a.get("away_win_prob", 0.5)),
+        "projected_margin_mean": float(branch_a.get("margin_mean", 0.0)),
+        "projected_total_mean": float(branch_a.get("total_mean", 44.5)),
+    }
+    sim_out_path.write_text(json.dumps(sim_payload, indent=2), encoding="utf-8")
+
     master_bundle = {
         "schema": "gse_connected_game_workflow_master_bundle_v1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "matchup": f"{away_u} @ {home_u}",
         "week": week,
+        "armed_26_layer_workflow_receipt": {
+            "game_id": armed_gid,
+            "context_packet_id": armed_pkt.get("packet_id"),
+            "context_packet_path": f"data/context_packets/{armed_gid}.json",
+            "reasoning_trace_id": armed_trace.get("trace_id"),
+            "reasoning_trace_path": f"data/reasoning/traces/{armed_gid}.trace.json",
+            "simulation_distribution_path": f"data/simulations/{armed_gid}.sim.json",
+            "layers_populated": len(armed_pkt.get("layers", {})),
+            "equations_executed": sum(
+                int(lv.get("provenance", {}).get("equations_executed", 0))
+                for lv in armed_pkt.get("layers", {}).values()
+            ),
+        },
         "stage1_parameter_coupling_verified": bool(stage2.get("stage1_parameter_coupling_verified", True)),
         "max_prop_win_prob": float(stage5.get("max_prop_win_prob", 0.0)),
         "cryptographic_receipt_chain": {

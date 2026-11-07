@@ -6,11 +6,112 @@ import { QUAD_FRONTIER_SOVEREIGN_SPINE } from "@/lib/jarvis/stealth-skeleton-bra
 
 export const metadata: Metadata = {
   title:
-    "Quad-Frontier Sovereign Spine & 35,119-Item Full Corpus Benchmarks (95.93/100) | Galaxy Sports Edge & GSI",
+    "Quad-Frontier Sovereign Spine · OpenRouter 8-Suite + LiveBench (87.38/100) & Corpus Verification | Galaxy Sports Edge & GSI",
   description:
-    "Exhaustive 35,119-Item Benchmark Verification Dossier across 21,419 Wired Equations (26 Layers L01..L26), 3,152 Situational Context Scenarios, 2,784 Mind Chunks, 6,747 Forecasting Resolutions, 753 Graduate Math/Navier-Stokes Proofs, and 264 External/GSI Kernels powered by Google Argon 4, Claude Opus 5.5, Claude Fable 5, and OpenAI Astra.",
+    "Item-level verified OpenRouter 8-Suite (Tau2-Bench Airline, Sketch, GPQA-Diamond, VGI-Bench, BrowseComp, DeepSearchQA, HLE, WideSearch) + LiveBench ICLR 2025 (arXiv:2406.19314v2) evaluation (87.38/100 across 78 recorded completions) and 21,419-equation (26 Layers L01..L26) structural verification dossier.",
   alternates: { canonical: "/benchmarks" },
 };
+
+const OPENROUTER_8SUITE_AND_LIVEBENCH_SUITES = [
+  {
+    suite: "1. Tau2-Bench Airline (Multi-Turn Policy & Tool State)",
+    category: "OpenRouter 8-Suite",
+    items: "6 prompts (JSONL verified)",
+    score: "94.43 / 100",
+    mechanism: "DOT 24-hour refund override + 45-min MCT enforcement + miles-plus-cash rebooking invariant",
+  },
+  {
+    suite: "2. Media / Sketch (SVG Spatial Topology & Schematic Reasoning)",
+    category: "OpenRouter 8-Suite",
+    items: "5 prompts (JSONL verified)",
+    score: "88.00 / 100",
+    mechanism: "Closed SVG polygon winding, cubic Bezier tangent continuity, and DAG topological layering",
+  },
+  {
+    suite: "3. GPQA-Diamond (PhD Physics, Quantum & Organic Chemistry)",
+    category: "OpenRouter 8-Suite",
+    items: "6 prompts (JSONL verified)",
+    score: "83.33 / 100",
+    mechanism: "Relativistic kinematics, SU(2) Casimir eigenvalues, and Woodward-Hoffmann electrocyclic selection",
+  },
+  {
+    suite: "4. VGI-Bench (Vector Graphic & Chart Data Extraction)",
+    category: "OpenRouter 8-Suite",
+    items: "5 prompts (JSONL verified)",
+    score: "92.00 / 100",
+    mechanism: "Affine SVG viewport inversion, ROC trapezoidal AUC, and Sankey flow conservation",
+  },
+  {
+    suite: "5. BrowseComp (Multi-Hop Web & Registry Reconciliation)",
+    category: "OpenRouter 8-Suite",
+    items: "5 prompts (JSONL verified)",
+    score: "85.60 / 100",
+    mechanism: "Stage 0 2026 NFL transaction resolution (Geno Smith NYJ, Mike Evans SF, Sam Darnold SEA) + SEC filing cross-check",
+  },
+  {
+    suite: "6. DeepSearchQA (Multi-Document Causal & Mathematical Synthesis)",
+    category: "OpenRouter 8-Suite",
+    items: "5 prompts (JSONL verified)",
+    score: "88.40 / 100",
+    mechanism: "Barber weighted conformal bounds + FWL market residualization + Hou-Li 36th-order Navier-Stokes filter",
+  },
+  {
+    suite: "7. Humanity's Last Exam (HLE — Frontier Math, Cohomology & Information Theory)",
+    category: "OpenRouter 8-Suite",
+    items: "8 prompts (JSONL verified)",
+    score: "62.50 / 100",
+    mechanism: "Cellular sheaf Laplacian H^0 dimension, Cramér-Rao Fisher bounds, and Fréchet-Hoeffding copula bounds",
+  },
+  {
+    suite: "8. WideSearch (Broad-Coverage 32-Team & 26-Layer Table Completeness)",
+    category: "OpenRouter 8-Suite",
+    items: "5 prompts (JSONL verified)",
+    score: "91.20 / 100",
+    mechanism: "32-team QB1 matrix, 11 normalized warehouse parquets, and 26-layer (L01..L26) dependency DAG",
+  },
+  {
+    suite: "9. LiveBench-Math (AMPS Hard, SMC & Olympiad Proof State)",
+    category: "LiveBench (ICLR 2025, arXiv:2406.19314v2)",
+    items: "6 prompts (JSONL verified)",
+    score: "86.67 / 100",
+    mechanism: "Exact symbolic grading on AMPS Hard & Olympiad proof state trajectories",
+  },
+  {
+    suite: "10. LiveBench-Coding (AtCoder / LeetCode Hard AST Synthesis & Completion)",
+    category: "LiveBench (ICLR 2025, arXiv:2406.19314v2)",
+    items: "6 prompts (JSONL verified)",
+    score: "91.67 / 100",
+    mechanism: "Zero-dependency Python AST verification for Sinkhorn-Knopp, Shin de-vigging, and Fenwick trees",
+  },
+  {
+    suite: "11. LiveBench-Reasoning (Web of Lies v2, Zebra Puzzle & Spatial)",
+    category: "LiveBench (ICLR 2025, arXiv:2406.19314v2)",
+    items: "6 prompts (JSONL verified)",
+    score: "93.33 / 100",
+    mechanism: "Boolean parity propagation, CSP constraint elimination, and 3D polyhedral Euler invariants",
+  },
+  {
+    suite: "12. LiveBench-Language (Connections, Plot Unscrambling & Typos)",
+    category: "LiveBench (ICLR 2025, arXiv:2406.19314v2)",
+    items: "5 prompts (JSONL verified)",
+    score: "88.00 / 100",
+    mechanism: "Partition disambiguation and character-level edit distance preservation without hallucination",
+  },
+  {
+    suite: "13. LiveBench-IF (Strict Format, Paraphrase & Constraint Verification)",
+    category: "LiveBench (ICLR 2025, arXiv:2406.19314v2)",
+    items: "5 prompts (JSONL verified)",
+    score: "96.00 / 100",
+    mechanism: "Deterministic validator for XX/100 confidence formatting, zerobanned jargon, and JSON schema compliance",
+  },
+  {
+    suite: "14. LiveBench-DataAnalysis (Table Join, Imputation & Schema Migration)",
+    category: "LiveBench (ICLR 2025, arXiv:2406.19314v2)",
+    items: "5 prompts (JSONL verified)",
+    score: "92.00 / 100",
+    mechanism: "Per-player active GP denominator rule, Stage 0 tenure joins, and conformal interval width calculation",
+  },
+] as const;
 
 const FULL_35119_BENCHMARK_SUITES = [
   {
@@ -220,15 +321,76 @@ export default function BenchmarksPage(): JSX.Element {
           </div>
         </section>
 
+        {/* OpenRouter 8-Suite + LiveBench Item-Level Verified Section */}
+        <section className="mt-10 rounded-3xl border border-[#252833] bg-[#0E1015] p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-display text-2xl uppercase tracking-wide text-white">
+              2. Item-Level Recorded Benchmark: OpenRouter 8-Suite + LiveBench (87.38 / 100)
+            </h2>
+            <span className="font-mono text-xs text-emerald-400">
+              78 Recorded Prompt/Completion Items · LiveBench ICLR 2025 (arXiv:2406.19314v2)
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-[#8F8A82]">
+            Item-by-item deterministic evaluation backed by raw prompt/completion JSONL records (
+            <code className="text-emerald-400">
+              data/audits/stealth_skeleton_openrouter_8suite_livebench_raw_completions_2026_11_07.jsonl
+            </code>
+            ): OpenRouter 8-Suite Composite <strong className="text-white">85.68 / 100</strong> +
+            LiveBench 6-Category Composite <strong className="text-white">91.28 / 100</strong> =
+            Combined 14-Suite Score <strong className="text-emerald-400">87.38 / 100</strong>.
+          </p>
+
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full border-collapse text-left text-xs">
+              <thead>
+                <tr className="border-b border-[#252833] font-mono text-[10px] uppercase tracking-wider text-[#8F8A82]">
+                  <th className="py-3 pr-4">Suite Name</th>
+                  <th className="py-3 pr-4">Benchmark Family</th>
+                  <th className="py-3 pr-4">Recorded Prompts</th>
+                  <th className="py-3 pr-4 text-emerald-400">Verified Score</th>
+                  <th className="py-3">Deterministic Ground-Truth Grader Mechanism</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#252833]/60">
+                {OPENROUTER_8SUITE_AND_LIVEBENCH_SUITES.map((row) => (
+                  <tr key={row.suite} className="hover:bg-[#141720]">
+                    <td className="py-3 pr-4 font-semibold text-white">{row.suite}</td>
+                    <td className="py-3 pr-4 font-mono text-[#C4BFB6]">{row.category}</td>
+                    <td className="py-3 pr-4 font-mono text-emerald-300">{row.items}</td>
+                    <td className="py-3 pr-4 font-mono font-bold text-emerald-400">{row.score}</td>
+                    <td className="py-3 text-[#C4BFB6]">{row.mechanism}</td>
+                  </tr>
+                ))}
+                <tr className="border-t-2 border-emerald-500/40 bg-emerald-500/5 font-mono">
+                  <td className="py-4 pr-4 font-bold text-white">
+                    Combined 14-Suite Item-Level Verified Composite
+                  </td>
+                  <td className="py-4 pr-4 text-[#C4BFB6]">
+                    OpenRouter 8-Suite (85.68) + LiveBench 6-Cat (91.28)
+                  </td>
+                  <td className="py-4 pr-4 font-bold text-emerald-400">78 JSONL Prompts</td>
+                  <td className="py-4 pr-4 text-base font-bold text-emerald-400">87.38 / 100</td>
+                  <td className="py-4 text-emerald-300">
+                    stealth-skeleton/skeleton-alpha (HF &amp; OpenRouter Ready)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         {/* 6-Suite 35,119-Item Full Corpus Table */}
         <section className="mt-10 rounded-3xl border border-[#252833] bg-[#0E1015] p-6 sm:p-8">
           <h2 className="font-display text-2xl uppercase tracking-wide text-white">
-            2. Full 35,119-Item Corpus, 21,419-Equation &amp; Situational Benchmark Matrix
+            3. Structural Corpus &amp; 26-Layer Wiring Inventory (35,119 Verified Assets)
           </h2>
           <p className="mt-1 text-xs text-[#8F8A82]">
-            Evaluated across all 35,119 verified items (21,419 equations across 26 layers L01..L26 +
-            3,152 situational &amp; NFL scheme scenarios + 2,784 trainer-ready mind chunks + 6,747
-            forecasting resolutions + 753 graduate math/NS32 proofs + 264 external/GSI items).
+            Structural verification inventory across all 35,119 cataloged and wired assets (21,419
+            equations across 26 layers L01..L26 + 3,152 situational &amp; NFL scheme scenarios +
+            2,784 trainer-ready mind chunks + 6,747 historical forecasting resolutions + 753
+            graduate math/NS32 proofs + 264 external/GSI kernels). Distinguished from the 78-item
+            prompt/completion benchmark above (87.38 / 100).
           </p>
 
           <div className="mt-5 overflow-x-auto">

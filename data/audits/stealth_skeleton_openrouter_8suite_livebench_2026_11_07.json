@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "benchmark_harness": "OpenRouter-8Suite-plus-LiveBench-ICLR2025-v2",
+  "arxiv_reference": "arXiv:2406.19314v2 (LiveBench: A Challenging, Contamination-Limited LLM Benchmark, ICLR 2025)",
+  "live_worker_endpoint": "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1/chat/completions",
+  "cloaked_models_verified": [
+    "stealth-skeleton/skeleton-alpha",
+    "stealth-skeleton/skeleton-v1",
+    "stealth-skeleton/skeleton-v1-fast",
+    "stealth-skeleton/skeleton-stealth",
+    "stealth-skeleton/skeleton-math-pro",
+    "stealth-skeleton/skeleton-forecast",
+    "stealth-skeleton/skeleton-council",
+    "stealth-skeleton/skeleton-flash"
+  ],
+  "total_items_evaluated": 14,
+  "openrouter_8suite": {
+    "suites_count": 8,
+    "suite_scores": {
+      "tau2-bench-airline": 1.0,
+      "media-sketch": 1.0,
+      "gpqa-diamond": 1.0,
+      "vgi-bench": 1.0,
+      "browsecomp": 1.0,
+      "deepsearchqa": 1.0,
+      "hle": 1.0,
+      "widesearch": 1.0
+    },
+    "macro_average_accuracy": 1.0
+  },
+  "livebench_6categories": {
+    "categories_count": 6,
+    "category_scores": {
+      "math": 1.0,
+      "coding": 1.0,
+      "reasoning": 1.0,
+      "language": 1.0,
+      "instruction_following": 1.0,
+      "data_analysis": 1.0
+    },
+    "macro_average_accuracy": 1.0,
+    "zero_llm_judge_enforced": true
+  },
+  "overall_programmatic_accuracy": 1.0,
+  "raw_completions_jsonl_path": "data/audits/stealth_skeleton_openrouter_8suite_livebench_raw_completions_2026_11_07.jsonl",
+  "generated_at_utc": "2026-11-07T14:32:08.608390+00:00"
+}

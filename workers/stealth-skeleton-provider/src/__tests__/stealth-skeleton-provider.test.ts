@@ -29,12 +29,12 @@ import {
   redactGdprPiiFromPrompt,
   resolveOpenRouterTrafficRouting,
   type CrowdRlhfQueueEntry,
-} from "../index";
+} from "../index.ts";
 
 describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", () => {
   it("validates every ModelDocumentV2 entry against OpenRouter provider-monitor-schema-v2.openapi.json", async () => {
     const schemaPath = resolve(
-      __dirname,
+      import.meta.dirname,
       "../../../../data/audits/openrouter_provider_monitor_schema_v2_4.json"
     );
     const openApi = JSON.parse(readFileSync(schemaPath, "utf8")) as {
@@ -55,6 +55,14 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     for (const doc of STEALTH_SKELETON_MODELS_V2_4) {
       assert.equal(doc.schema_version, "2.4");
       assert.equal(doc.quantization, "fp8");
+      assert.ok(
+        typeof doc.hugging_face_id === "string" && doc.hugging_face_id.startsWith("stealth-skeleton/skeleton-"),
+        `Expected live Hugging Face repo ID on ${doc.id}, got '${doc.hugging_face_id}'`
+      );
+      assert.ok(
+        doc.name.startsWith("Stealth-Skeleton:"),
+        `Expected cloaked Stealth-Skeleton display name on ${doc.id}, got '${doc.name}'`
+      );
       for (const reqKey of modelDocSchema.required) {
         assert.ok(reqKey in doc, `Missing required ModelDocumentV2 key: ${reqKey}`);
       }
@@ -698,5 +706,51 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     assert.equal(parsedToolOutput.romano_cqr_90_band.marketKey, "player_pass_yds");
     assert.equal(parsedToolOutput.romano_cqr_90_band.sigmaConditional, 70.6656);
     assert.equal(parsedToolOutput.sinkhorn_marginal_audit.converged, true);
+  });
+
+  it("supports all 8 stealth-skeleton/* cloaked model IDs, emits PostHog $ai_generation telemetry in gse_metadata, and solves OpenRouter 8-Suite + LiveBench tasks", async () => {
+    for (const cloakedModelId of [
+      "stealth-skeleton/skeleton-alpha",
+      "stealth-skeleton/skeleton-v1",
+      "stealth-skeleton/skeleton-v1-fast",
+      "stealth-skeleton/skeleton-stealth",
+      "stealth-skeleton/skeleton-math-pro",
+      "stealth-skeleton/skeleton-forecast",
+      "stealth-skeleton/skeleton-council",
+      "stealth-skeleton/skeleton-flash",
+    ]) {
+      const res = await handleStealthSkeletonRequest(
+        new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: cloakedModelId,
+            messages: [
+              {
+                role: "user",
+                content:
+                  "LIVEBENCH_MATH_AMC12: Find the sum of all positive integers n such that n^2 + 19n + 88 is a perfect square.",
+              },
+            ],
+          }),
+        })
+      );
+      assert.equal(res.status, 200);
+      const body = (await res.json()) as {
+        model: string;
+        choices: Array<{ message: { content: string } }>;
+        gse_metadata: {
+          posthog_ai_observability: {
+            event: string;
+            properties: Record<string, unknown>;
+          };
+        };
+      };
+      assert.equal(body.model, cloakedModelId, `Cloaked model ${cloakedModelId} must be preserved without coercion`);
+      assert.ok(body.choices[0].message.content.includes("31"));
+      assert.equal(body.gse_metadata.posthog_ai_observability.event, "$ai_generation");
+      assert.equal(body.gse_metadata.posthog_ai_observability.properties.$ai_model, cloakedModelId);
+      assert.equal(body.gse_metadata.posthog_ai_observability.properties.$ai_provider, "gse-stealth-skeleton-provider");
+    }
   });
 });

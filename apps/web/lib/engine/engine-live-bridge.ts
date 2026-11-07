@@ -4,7 +4,7 @@
  * Enforces:
  * 1. Stage 0 Live Roster / Transaction / Starter Gate (Week 9: Lamar Jackson OUT, Tyler Huntley OUT,
  *    Joe Fagnano / Jacoby Brissett BAL QB, Travis Etienne Jr. OUT / Chris Rodriguez Jr. JAX RB1, Kyler Murray IR on ARI,
- *    Sam Darnold MIN QB1, Drew Lock NYG QB1, Tanner McKee PHI QB1).
+ *    Sam Darnold SEA QB1, Geno Smith NYJ QB1, Mike Evans SF WR1, Carson Wentz MIN QB1, J.J. McCarthy NYG QB1, Tanner McKee PHI QB1).
  * 2. Official Verified Ledger: 47-19-1 (72.9%, +24.92u) through Week 8.
  * 3. Thaler (1985) Segregated Gains & Bundle Valuation ($52 standalone -> $29 All-Access, $23 surplus).
  * 4. Server-Side Entitlement Redaction: Never ship unredacted locked SGP legs or locked DFS lineups
@@ -284,14 +284,14 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   },
   {
     matchup: "IND @ MIN",
-    legs: "MIN -5.0 · Sam Darnold (MIN QB) Over 235.5 Pass Yds · Justin Jefferson 80+ Rec Yds",
+    legs: "MIN -5.0 · Carson Wentz (MIN QB) Over 225.5 Pass Yds · Justin Jefferson 80+ Rec Yds",
     fairOdds: "+168",
     bookOdds: "+235",
     edge: "24 out of 100",
     conf: "79/100",
     free: false,
     correlation:
-      "Brian Flores Simulated Pressure Script: Minnesota early lead and Sam Darnold play-action shots to Justin Jefferson.",
+      "Brian Flores Simulated Pressure Script: Minnesota early lead and Carson Wentz play-action shots to Justin Jefferson.",
   },
   {
     matchup: "WAS @ NYG",
@@ -313,7 +313,7 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
     conf: "77/100",
     free: false,
     correlation:
-      "Arizona Backup QB Checkdown Funnel: With Kyler Murray on IR and Jacoby Brissett traded to BAL, Clayton Tune funnels short targets to Trey McBride.",
+      "Arizona Backup QB Checkdown Funnel: With Kyler Murray on IR and Jacoby Brissett traded to BAL, Gardner Minshew II funnels short targets to Trey McBride.",
   },
   {
     matchup: "MIA @ BUF",
@@ -346,7 +346,7 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
     conf: "75/100",
     free: false,
     correlation:
-      "NFC West Motion & Slot Duel: Stafford and Geno Smith trade intermediate slot volume across all four quarters.",
+      "NFC West Motion & Slot Duel: Stafford and Sam Darnold (SEA QB) trade intermediate slot volume across all four quarters.",
   },
   {
     matchup: "LAC @ CLE",

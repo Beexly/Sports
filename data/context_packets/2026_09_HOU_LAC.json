@@ -1,0 +1,893 @@
+{
+  "schema_version": "1.0.0",
+  "packet_id": "PKT-2026_09_HOU_LAC-20261105",
+  "game_id": "2026_09_HOU_LAC",
+  "home_team": "LAC",
+  "away_team": "HOU",
+  "kickoff_utc": "2026-11-08T18:00:00Z",
+  "as_of": "2026-11-05T18:00:00Z",
+  "temporal_leakage_checked": true,
+  "entity_resolution_verified": true,
+  "layers": {
+    "L01_schedule_and_kickoff": {
+      "schema_version": "1.0.0",
+      "layer_id": "L01_schedule_and_kickoff",
+      "layer_number": 1,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.338742,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "window_slot": "SUNDAY_EARLY",
+        "week": 9
+      },
+      "confidence": 0.7877,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_01",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 184,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L02_totals_and_pace_prior": {
+      "schema_version": "1.0.0",
+      "layer_id": "L02_totals_and_pace_prior",
+      "layer_number": 2,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.340021,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "implied_total_prior": 48.9,
+        "neutral_pace_sec_per_snap": 26.8
+      },
+      "confidence": 0.788,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_02",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 161,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L03_team_efficiency_baseline": {
+      "schema_version": "1.0.0",
+      "layer_id": "L03_team_efficiency_baseline",
+      "layer_number": 3,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.333156,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "opponent_adjusted_net_epa_baseline": 0.147941,
+        "dvoa_weighted_prior": 0.165694,
+        "layer_domain_signal": 0.147941
+      },
+      "confidence": 0.7866,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_03",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 236,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L04_divisional_and_historical": {
+      "schema_version": "1.0.0",
+      "layer_id": "L04_divisional_and_historical",
+      "layer_number": 4,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.337969,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "is_divisional_matchup": false,
+        "divisional_familiarity_shrinkage": 0.310931,
+        "layer_domain_signal": 0.310931
+      },
+      "confidence": 0.7876,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_04",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 165,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L05_standings_and_incentives": {
+      "schema_version": "1.0.0",
+      "layer_id": "L05_standings_and_incentives",
+      "layer_number": 5,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.335727,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "playoff_leverage_index": 0.542585,
+        "contract_milestone_incentive_delta": 0.012,
+        "layer_domain_signal": 0.542585
+      },
+      "confidence": 0.7871,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_05",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 169,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L06_venue_surface_and_weather": {
+      "schema_version": "1.0.0",
+      "layer_id": "L06_venue_surface_and_weather",
+      "layer_number": 6,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.074203,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "stadium": "SoFi Stadium",
+        "roof_type": "DOME",
+        "wind_mph": 0.0,
+        "weather_pass_penalty": -0.0
+      },
+      "confidence": 0.7348,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_06",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 2614,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L07_officials_and_referee_crew": {
+      "schema_version": "1.0.0",
+      "layer_id": "L07_officials_and_referee_crew",
+      "layer_number": 7,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.334905,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "referee_crew": "Bill Vinovich",
+        "holding_call_rate_z": 0.15
+      },
+      "confidence": 0.787,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_07",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 166,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC",
+          "OFF-REF-01"
+        ]
+      },
+      "warnings": []
+    },
+    "L08_rest_travel_and_circadian": {
+      "schema_version": "1.0.0",
+      "layer_id": "L08_rest_travel_and_circadian",
+      "layer_number": 8,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.169693,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "rest_differential_days": 0.0,
+        "timezone_delta_hours": 0.0,
+        "circadian_travel_fatigue_delta": 0.169693,
+        "layer_domain_signal": 0.169693
+      },
+      "confidence": 0.7539,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_08",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 2325,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L09_injuries_and_availability": {
+      "schema_version": "1.0.0",
+      "layer_id": "L09_injuries_and_availability",
+      "layer_number": 9,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.344867,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "home_cluster_injuries": 1,
+        "availability_adjustment": -0.035
+      },
+      "confidence": 0.789,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_09",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 502,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L10_biomechanics_and_return_to_play": {
+      "schema_version": "1.0.0",
+      "layer_id": "L10_biomechanics_and_return_to_play",
+      "layer_number": 10,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.323637,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "gsi_trauma_hazard_index": 0.1847,
+        "rtp_degradation_factor": 0.94,
+        "cte_unconditioned_lower_bound": 0.2449,
+        "dynamic_kickoff_concussion_reduction_pct": -43.0
+      },
+      "confidence": 0.7847,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_10",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 964,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L11_coaching_minds_and_playcallers": {
+      "schema_version": "1.0.0",
+      "layer_id": "L11_coaching_minds_and_playcallers",
+      "layer_number": 11,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.267888,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "offensive_scheme": "SHANAHAN_WIDE_ZONE",
+        "defensive_shell": "COVER_4_QUARTERS",
+        "pass_protection": "2_JET",
+        "pass_protection_slide_rule": "Balanced One You, Two Me (3-man zone slide weak + 3-man BOB strong)",
+        "coverage_trips_or_motion_rule": "Strong 4-on-3 BOX (MOD on #1, Quarter-Flat #2, Hook #3, Quarters Safety #3 vert) + Weak 3-on-2 TRIANGLE (Weak Safety reads #2-to-#1 / robs backside dig)",
+        "scheme_available_catalog_counts": {
+          "offensive_schemes": 8,
+          "route_concepts": 11,
+          "formations_dictionary": 20,
+          "down_distance_priors": 15
+        },
+        "scheme_advantage_delta": 0.228388
+      },
+      "confidence": 0.7736,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_11",
+          "canonical_entities.jsonl",
+          "core_nfl_schemes_and_systems.py"
+        ],
+        "equations_executed": 1130,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L12_trench_matchup_ol_vs_dl": {
+      "schema_version": "1.0.0",
+      "layer_id": "L12_trench_matchup_ol_vs_dl",
+      "layer_number": 12,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.285669,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "offensive_scheme": "SHANAHAN_WIDE_ZONE",
+        "defensive_shell": "COVER_4_QUARTERS",
+        "pass_protection": "2_JET",
+        "pass_protection_slide_rule": "Balanced One You, Two Me (3-man zone slide weak + 3-man BOB strong)",
+        "coverage_trips_or_motion_rule": "Strong 4-on-3 BOX (MOD on #1, Quarter-Flat #2, Hook #3, Quarters Safety #3 vert) + Weak 3-on-2 TRIANGLE (Weak Safety reads #2-to-#1 / robs backside dig)",
+        "scheme_available_catalog_counts": {
+          "offensive_schemes": 8,
+          "route_concepts": 11,
+          "formations_dictionary": 20,
+          "down_distance_priors": 15
+        },
+        "scheme_advantage_delta": 0.246169
+      },
+      "confidence": 0.7771,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_12",
+          "canonical_entities.jsonl",
+          "core_nfl_schemes_and_systems.py"
+        ],
+        "equations_executed": 2326,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L13_scheme_vs_scheme": {
+      "schema_version": "1.0.0",
+      "layer_id": "L13_scheme_vs_scheme",
+      "layer_number": 13,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.323747,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "offensive_scheme": "SHANAHAN_WIDE_ZONE",
+        "defensive_shell": "COVER_4_QUARTERS",
+        "pass_protection": "2_JET",
+        "pass_protection_slide_rule": "Balanced One You, Two Me (3-man zone slide weak + 3-man BOB strong)",
+        "coverage_trips_or_motion_rule": "Strong 4-on-3 BOX (MOD on #1, Quarter-Flat #2, Hook #3, Quarters Safety #3 vert) + Weak 3-on-2 TRIANGLE (Weak Safety reads #2-to-#1 / robs backside dig)",
+        "scheme_available_catalog_counts": {
+          "offensive_schemes": 8,
+          "route_concepts": 11,
+          "formations_dictionary": 20,
+          "down_distance_priors": 15
+        },
+        "scheme_advantage_delta": 0.284247
+      },
+      "confidence": 0.7847,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_13",
+          "canonical_entities.jsonl",
+          "core_nfl_schemes_and_systems.py"
+        ],
+        "equations_executed": 3313,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L14_player_vs_player": {
+      "schema_version": "1.0.0",
+      "layer_id": "L14_player_vs_player",
+      "layer_number": 14,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.33447,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "wr_cb_shadow_separation_delta": 0.333626,
+        "ot_edge_one_on_one_win_delta": 0.283582,
+        "layer_domain_signal": 0.333626
+      },
+      "confidence": 0.7869,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_14",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 156,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L15_coach_vs_coach": {
+      "schema_version": "1.0.0",
+      "layer_id": "L15_coach_vs_coach",
+      "layer_number": 15,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.336006,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "fourth_down_aggressiveness_edge": 0.264571,
+        "halftime_script_adjustment_delta": 0.238114,
+        "layer_domain_signal": 0.264571
+      },
+      "confidence": 0.7872,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_15",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 154,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L16_coach_vs_player": {
+      "schema_version": "1.0.0",
+      "layer_id": "L16_coach_vs_player",
+      "layer_number": 16,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.339247,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "dc_blitz_isolation_mismatch_delta": 0.357487,
+        "oc_featured_target_schemed_open_rate": 0.517487,
+        "layer_domain_signal": 0.357487
+      },
+      "confidence": 0.7878,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_16",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 155,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L17_player_vs_scheme": {
+      "schema_version": "1.0.0",
+      "layer_id": "L17_player_vs_scheme",
+      "layer_number": 17,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.338376,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "offensive_scheme": "SHANAHAN_WIDE_ZONE",
+        "defensive_shell": "COVER_4_QUARTERS",
+        "pass_protection": "2_JET",
+        "pass_protection_slide_rule": "Balanced One You, Two Me (3-man zone slide weak + 3-man BOB strong)",
+        "coverage_trips_or_motion_rule": "Strong 4-on-3 BOX (MOD on #1, Quarter-Flat #2, Hook #3, Quarters Safety #3 vert) + Weak 3-on-2 TRIANGLE (Weak Safety reads #2-to-#1 / robs backside dig)",
+        "scheme_available_catalog_counts": {
+          "offensive_schemes": 8,
+          "route_concepts": 11,
+          "formations_dictionary": 20,
+          "down_distance_priors": 15
+        },
+        "scheme_advantage_delta": 0.298876
+      },
+      "confidence": 0.7877,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_17",
+          "canonical_entities.jsonl",
+          "core_nfl_schemes_and_systems.py"
+        ],
+        "equations_executed": 149,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L18_scheme_vs_team": {
+      "schema_version": "1.0.0",
+      "layer_id": "L18_scheme_vs_team",
+      "layer_number": 18,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.336194,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "offensive_scheme": "SHANAHAN_WIDE_ZONE",
+        "defensive_shell": "COVER_4_QUARTERS",
+        "pass_protection": "2_JET",
+        "pass_protection_slide_rule": "Balanced One You, Two Me (3-man zone slide weak + 3-man BOB strong)",
+        "coverage_trips_or_motion_rule": "Strong 4-on-3 BOX (MOD on #1, Quarter-Flat #2, Hook #3, Quarters Safety #3 vert) + Weak 3-on-2 TRIANGLE (Weak Safety reads #2-to-#1 / robs backside dig)",
+        "scheme_available_catalog_counts": {
+          "offensive_schemes": 8,
+          "route_concepts": 11,
+          "formations_dictionary": 20,
+          "down_distance_priors": 15
+        },
+        "scheme_advantage_delta": 0.352694
+      },
+      "confidence": 0.7872,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_18",
+          "canonical_entities.jsonl",
+          "core_nfl_schemes_and_systems.py"
+        ],
+        "equations_executed": 154,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L19_pace_and_game_state_clock": {
+      "schema_version": "1.0.0",
+      "layer_id": "L19_pace_and_game_state_clock",
+      "layer_number": 19,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.025177,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "script_elasticity_plays_proj": 64.8,
+        "two_minute_hurry_up_rate": 0.169527,
+        "layer_domain_signal": 0.029527
+      },
+      "confidence": 0.725,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_19",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 2265,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L20_usage_snap_route_shares": {
+      "schema_version": "1.0.0",
+      "layer_id": "L20_usage_snap_route_shares",
+      "layer_number": 20,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.336841,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "target_herfindahl_concentration": 0.504161,
+        "active_player_gp_denominator_enforced": true,
+        "layer_domain_signal": 0.504161
+      },
+      "confidence": 0.7874,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_20",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 161,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L21_qb_processing_and_pressure": {
+      "schema_version": "1.0.0",
+      "layer_id": "L21_qb_processing_and_pressure",
+      "layer_number": 21,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.33581,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "upstream_trench_delta": 0.246169,
+        "upstream_scheme_delta": 0.284247,
+        "qb_clean_pocket_epa_proj": 0.778381,
+        "dependency_chain_verified": "L12_trench_matchup_ol_vs_dl -> L13_scheme_vs_scheme -> L21_qb_processing_and_pressure"
+      },
+      "confidence": 0.7872,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_21",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 214,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L22_receiving_separation_and_yac": {
+      "schema_version": "1.0.0",
+      "layer_id": "L22_receiving_separation_and_yac",
+      "layer_number": 22,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.335449,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "first_read_separation_score": 0.374184,
+        "yac_over_expected_per_rec": 1.598368,
+        "layer_domain_signal": 0.374184
+      },
+      "confidence": 0.7871,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_22",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 169,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L23_red_zone_and_goal_line": {
+      "schema_version": "1.0.0",
+      "layer_id": "L23_red_zone_and_goal_line",
+      "layer_number": 23,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.333513,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "red_zone_td_conversion_prior": 0.811353,
+        "goal_line_heavy_personnel_success_rate": 0.953513,
+        "layer_domain_signal": 0.811353
+      },
+      "confidence": 0.7867,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_23",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 158,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L24_special_teams_and_field_position": {
+      "schema_version": "1.0.0",
+      "layer_id": "L24_special_teams_and_field_position",
+      "layer_number": 24,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.337876,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "dynamic_kickoff_starting_fp_yardline": 31.21,
+        "fg_make_prob_over_expected": 0.362876,
+        "layer_domain_signal": 0.362876
+      },
+      "confidence": 0.7876,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_24",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 158,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L25_cross_layer_interaction_terms": {
+      "schema_version": "1.0.0",
+      "layer_id": "L25_cross_layer_interaction_terms",
+      "layer_number": 25,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.325703,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "cross_layer_interaction_term": 1.104084
+      },
+      "confidence": 0.7851,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_25",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 843,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    },
+    "L26_market_price_check_last": {
+      "schema_version": "1.0.0",
+      "layer_id": "L26_market_price_check_last",
+      "layer_number": 26,
+      "game_id": "2026_09_HOU_LAC",
+      "as_of": "2026-11-05T18:00:00Z",
+      "signals": {
+        "equation_batch_log_odds_delta": 0.170063,
+        "home_team_id": "LAC",
+        "away_team_id": "HOU",
+        "warehouse_records_verified": 79298,
+        "entered_last_after_25_layers": true,
+        "market_spread": 2.6,
+        "market_weight_cap": 0.08,
+        "applied_market_weight": 0.05,
+        "pre_market_reasoning_sum": 7.524886,
+        "post_price_check_signal": 7.147342
+      },
+      "confidence": 0.754,
+      "provenance": {
+        "sources": [
+          "equation_execution_registry:layer_26",
+          "canonical_entities.jsonl",
+          "warehouse_normalized_parquet"
+        ],
+        "equations_executed": 2428,
+        "entities_resolved": [
+          "TEAM-NFL-LAC",
+          "TEAM-NFL-HOU",
+          "VENUE-NFL-LAC"
+        ]
+      },
+      "warnings": []
+    }
+  },
+  "corpus_citations": [
+    {
+      "source_id": "SRC-CORP-00130",
+      "chunk_id": "CORP-00130-CHK-01",
+      "relevance_reason": "Matched 7/8 query tokens (2-jet, cover, pass, protection, push, quarters) in schemes_executable_module:Document Root"
+    },
+    {
+      "source_id": "SRC-CORP-00135",
+      "chunk_id": "CORP-00135-CHK-01",
+      "relevance_reason": "Matched 6/8 query tokens (cover, mod, pass, protection, push, trench) in brain_mind_staging_feed:Document Root"
+    },
+    {
+      "source_id": "SRC-CORP-07658",
+      "chunk_id": "CORP-07658-CHK-01",
+      "relevance_reason": "Matched 5/8 query tokens (cover, mod, pass, protection, trench) in docs_research:Document Root"
+    },
+    {
+      "source_id": "SRC-CORP-00128",
+      "chunk_id": "CORP-00128-CHK-07",
+      "relevance_reason": "Matched 5/8 query tokens (2-jet, cover, pass, protection, quarters) in external_docx_schemes:Core NFL Schemes & Systems (Extracted Source)"
+    }
+  ],
+  "completeness": {
+    "populated_layers": 26,
+    "total_layers": 26,
+    "is_complete": true
+  }
+}

@@ -6,12 +6,12 @@
   "stage1_parameter_coupling_verified": true,
   "max_prop_win_prob": 0.7258,
   "cryptographic_receipt_chain": {
-    "stage0_receipt_sha256": "d9030b4e8ec982d08596e6dde4ebaef16284cbbfe8d35c26f54000c2ac782c49",
-    "stage1a_receipt_sha256": "ceec545cc760ec910690150a0910954293664f255f551e2eae4e918cbbac88d1",
-    "stage1b_receipt_sha256": "eaa1597e50229f5dc07ae115657c52dd93829ebde8687b417a01b250264e4802",
-    "stage2_receipt_sha256": "2c0394144509154b3102d53f6e6b9e21a167a90868e6220dd6c42f9ca011d993",
-    "stage3_4_receipt_sha256": "0a35a208367f0a903a2ec2461895355599137e3d544da4abb243cdae45c591d5",
-    "stage5_receipt_sha256": "f02f0f0c9e8cd79b047a3c9c10e8c7579c2dfbf8c35ec8d27632aa667f3222dd"
+    "stage0_receipt_sha256": "efa3fc8b473cf306bc758b404ed42e4e25fb71723429258977fe355379d90c15",
+    "stage1a_receipt_sha256": "9147bb2fad98e17a6f15075f333a1b7858a9406a1f5bf02f667ae1a1fb06ead4",
+    "stage1b_receipt_sha256": "f451836195282c19499c146d5874d297287585561ea547865587a26fc0bc62cb",
+    "stage2_receipt_sha256": "532e8d0d57549014043c0853bb8008601d35e87beb898dc17042837d4f885785",
+    "stage3_4_receipt_sha256": "763c8e5070c1fe374ec63b684187caf2d4ba7c79b80d8affb347c82f9cbd16b0",
+    "stage5_receipt_sha256": "b43a77e7a066b7f2e2579b880ca95db3e8e804c36e17f29f1a57e98860f29daa"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -1724,11 +1724,11 @@
         "situational_multiplier": 1.0
       }
     },
-    "stage0_receipt_sha256": "d9030b4e8ec982d08596e6dde4ebaef16284cbbfe8d35c26f54000c2ac782c49"
+    "stage0_receipt_sha256": "efa3fc8b473cf306bc758b404ed42e4e25fb71723429258977fe355379d90c15"
   },
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
-    "parent_stage0_receipt_sha256": "d9030b4e8ec982d08596e6dde4ebaef16284cbbfe8d35c26f54000c2ac782c49",
+    "parent_stage0_receipt_sha256": "efa3fc8b473cf306bc758b404ed42e4e25fb71723429258977fe355379d90c15",
     "away": "HOU",
     "home": "LAC",
     "week": 9,
@@ -5314,11 +5314,11 @@
       },
       "matchup": "HOU@LAC"
     },
-    "stage1a_receipt_sha256": "ceec545cc760ec910690150a0910954293664f255f551e2eae4e918cbbac88d1"
+    "stage1a_receipt_sha256": "9147bb2fad98e17a6f15075f333a1b7858a9406a1f5bf02f667ae1a1fb06ead4"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "ceec545cc760ec910690150a0910954293664f255f551e2eae4e918cbbac88d1",
+    "parent_stage1a_receipt_sha256": "9147bb2fad98e17a6f15075f333a1b7858a9406a1f5bf02f667ae1a1fb06ead4",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -7255,11 +7255,11 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "eaa1597e50229f5dc07ae115657c52dd93829ebde8687b417a01b250264e4802"
+    "stage1b_receipt_sha256": "f451836195282c19499c146d5874d297287585561ea547865587a26fc0bc62cb"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "eaa1597e50229f5dc07ae115657c52dd93829ebde8687b417a01b250264e4802",
+    "parent_stage1b_receipt_sha256": "f451836195282c19499c146d5874d297287585561ea547865587a26fc0bc62cb",
     "away": "HOU",
     "home": "LAC",
     "week": 9,
@@ -10659,11 +10659,18 @@
       "bal_cover_plus_7_5_prob": 0.4097,
       "over_41_5_prob": 0.5293
     },
-    "stage2_receipt_sha256": "2c0394144509154b3102d53f6e6b9e21a167a90868e6220dd6c42f9ca011d993"
+    "stage2_receipt_sha256": "532e8d0d57549014043c0853bb8008601d35e87beb898dc17042837d4f885785",
+    "armed_26_layer_trace_handoff": {
+      "context_packet_id": "PKT-2026_09_HOU_LAC-20261105",
+      "reasoning_trace_id": "TRC-2026_09_HOU_LAC-20261105",
+      "equations_executed_26_layers": 21419,
+      "reasoning_trace_cumulative_log_odds_delta": 0.635509,
+      "simulator_median_spread_home_trace_conditioned": 2.0888
+    }
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "2c0394144509154b3102d53f6e6b9e21a167a90868e6220dd6c42f9ca011d993",
+    "parent_stage2_receipt_sha256": "532e8d0d57549014043c0853bb8008601d35e87beb898dc17042837d4f885785",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -14611,11 +14618,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "0a35a208367f0a903a2ec2461895355599137e3d544da4abb243cdae45c591d5"
+    "stage3_4_receipt_sha256": "763c8e5070c1fe374ec63b684187caf2d4ba7c79b80d8affb347c82f9cbd16b0"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "2c0394144509154b3102d53f6e6b9e21a167a90868e6220dd6c42f9ca011d993",
+    "parent_stage2_receipt_sha256": "532e8d0d57549014043c0853bb8008601d35e87beb898dc17042837d4f885785",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -18563,11 +18570,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "0a35a208367f0a903a2ec2461895355599137e3d544da4abb243cdae45c591d5"
+    "stage3_4_receipt_sha256": "763c8e5070c1fe374ec63b684187caf2d4ba7c79b80d8affb347c82f9cbd16b0"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "0a35a208367f0a903a2ec2461895355599137e3d544da4abb243cdae45c591d5",
+    "parent_stage3_4_receipt_sha256": "763c8e5070c1fe374ec63b684187caf2d4ba7c79b80d8affb347c82f9cbd16b0",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
     "max_prop_win_prob": 0.7258,
@@ -21504,11 +21511,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "f02f0f0c9e8cd79b047a3c9c10e8c7579c2dfbf8c35ec8d27632aa667f3222dd"
+    "stage5_receipt_sha256": "b43a77e7a066b7f2e2579b880ca95db3e8e804c36e17f29f1a57e98860f29daa"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "0a35a208367f0a903a2ec2461895355599137e3d544da4abb243cdae45c591d5",
+    "parent_stage3_4_receipt_sha256": "763c8e5070c1fe374ec63b684187caf2d4ba7c79b80d8affb347c82f9cbd16b0",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
     "max_prop_win_prob": 0.7258,
@@ -24445,8 +24452,26 @@
         }
       }
     },
-    "stage5_receipt_sha256": "f02f0f0c9e8cd79b047a3c9c10e8c7579c2dfbf8c35ec8d27632aa667f3222dd"
+    "stage5_receipt_sha256": "b43a77e7a066b7f2e2579b880ca95db3e8e804c36e17f29f1a57e98860f29daa"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {},
-  "master_bundle_sha256": "3645825ca98954a222b63ab8cba06f71552fac3df7cd3b4b913d22b0c79ad928"
+  "master_bundle_sha256": "f5b1bb2c2f424242a6c653d9ce8ca491c15fe8e0157fa88d3ba9b773e2bd95ce",
+  "armed_26_layer_workflow_receipt": {
+    "game_id": "2026_09_HOU_LAC",
+    "matchup": "HOU @ LAC",
+    "executed_at_utc": "2026-11-07T14:50:08.657510+00:00",
+    "context_packet_id": "PKT-2026_09_HOU_LAC-20261105",
+    "context_packet_path": "data/context_packets/2026_09_HOU_LAC.json",
+    "reasoning_trace_id": "TRC-2026_09_HOU_LAC-20261105",
+    "reasoning_trace_path": "data/reasoning/traces/2026_09_HOU_LAC.trace.json",
+    "simulation_distribution_path": "data/simulations/2026_09_HOU_LAC.sim.json",
+    "layers_populated": 26,
+    "equations_executed": 21419,
+    "weekly_cycle_7_steps_verified": true,
+    "five_tracks_l5_verified": true,
+    "reasoning_trace_cumulative_log_odds_delta": 0.635509,
+    "simulator_median_spread_home_trace_conditioned": 2.0888,
+    "simulator_median_total": 47.35,
+    "simulator_median_pace_sec": 27.48
+  }
 }

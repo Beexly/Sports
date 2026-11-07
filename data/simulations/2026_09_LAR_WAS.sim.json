@@ -1,0 +1,3602 @@
+{
+  "matchup": "LAR @ WAS",
+  "median_total": 46.64,
+  "median_spread_home": 2.16,
+  "median_plays": 136.0,
+  "median_pace_sec": 26.47,
+  "sinkhorn_mass_moved": 0.0,
+  "shootout_prob_ge51": 0.3777,
+  "stall_prob_le37": 0.1983,
+  "one_score_prob_le7": 0.3771,
+  "coachMindsetHash": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+  "pre_projection_universal_and_deep_priors": {
+    "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
+    "away_team": "LAR",
+    "home_team": "WAS",
+    "universal_360_dossier": {
+      "schema": "gse_universal_nfl_360_metric_and_deep_non_stationary_dossier_v2",
+      "qb": {
+        "epa_per_play": 0.186667,
+        "epa_per_play_unfiltered": 0.285714,
+        "garbage_time_wp_filter_bounds": [
+          0.05,
+          0.95
+        ],
+        "garbage_time_snaps_excluded": 1,
+        "cpoe": 3.847059,
+        "dakota_composite": 0.161957,
+        "any_a": 8.444444,
+        "pff_btt_rate": 0.088235,
+        "pff_twp_rate": 0.025641,
+        "pressure_to_sack_rate": 0.181818,
+        "patton_pressure_survival_score": 0.600545,
+        "first_read_target_rate": 0.6875,
+        "aggressiveness_pct": 14.705882,
+        "pacr": 0.942373
+      },
+      "receiving": {
+        "yprr_overall": 2.705882,
+        "yprr_vs_man": 3.166667,
+        "yprr_vs_zone": 2.454545,
+        "yprr_vs_single_high": 3.0625,
+        "yprr_vs_two_high": 2.388889,
+        "tprr": 0.264706,
+        "wopr": 0.672,
+        "racr": 0.87619,
+        "fantasy_pts_ass_separation_score": 0.2,
+        "espn_rtm_open_catch_yac_composite": 77.7,
+        "ngs_xyac_over_expected": 1.3,
+        "first_downs_per_route_run": 0.147059,
+        "on_target_drop_rate": 0.0,
+        "contested_catch_rate": 0.666667,
+        "end_zone_target_share": 0.4
+      },
+      "rushing": {
+        "ngs_ryoe_per_att": 0.822222,
+        "rush_pct_over_expected": 55.555556,
+        "stacked_box_8plus_rate": 0.277778,
+        "light_box_rate": 0.333333,
+        "yards_before_contact_per_att": 1.888889,
+        "yards_after_contact_per_att": 3.055556,
+        "missed_tackles_forced_per_att": 0.277778,
+        "pff_elusive_rating": 97.222222,
+        "stuff_rate": 0.166667,
+        "explosive_run_rate_10plus": 0.166667,
+        "gap_vs_zone_efficiency_delta": 0.1,
+        "koalaty_xfp_over_expected": 2.3
+      },
+      "trench": {
+        "espn_pbwr_2_5s": 0.631579,
+        "espn_prwr_2_5s": 0.166667,
+        "espn_rbwr": 0.730769,
+        "espn_rswr": 0.32,
+        "pff_pass_blocking_efficiency": 78.947368,
+        "pff_pass_rush_productivity": 33.333333,
+        "brandon_thorn_true_pass_set_pressure_rate": 0.363636,
+        "ftn_adjusted_line_yards": 3.075,
+        "stunt_twist_disruption_rate": 0.444444,
+        "simulated_creeper_pressure_rate": 0.375
+      },
+      "defense_idp": {
+        "mofc_rate": 0.605263,
+        "mofo_rate": 0.394737,
+        "pre_to_post_snap_disguise_rate": 0.289474,
+        "primary_cb_fp_per_route_allowed": 0.28,
+        "forced_incompletion_rate": 0.166667,
+        "idp_stadium_scorekeeper_assist_multiplier": 1.258065,
+        "co_sack_0_25_half_sack_clear_prob": 0.462056
+      },
+      "situational": {
+        "proe": 0.044,
+        "neutral_pace_sec_per_snap": 26.4,
+        "trailing_8plus_script_elasticity": 0.133,
+        "officiating_crew_penalty_and_drive_extension_index": 1.276684,
+        "stadium_surface_and_microclimate_index": 1.08085,
+        "circadian_rest_travel_fatigue_index": 0.248,
+        "contract_incentive_and_milestone_escalator_boost": 0.07694
+      },
+      "qb_suite": {
+        "epa_per_play": 0.186667,
+        "epa_per_play_unfiltered": 0.285714,
+        "garbage_time_wp_filter_bounds": [
+          0.05,
+          0.95
+        ],
+        "garbage_time_snaps_excluded": 1,
+        "cpoe": 3.847059,
+        "dakota_composite": 0.161957,
+        "any_a": 8.444444,
+        "pff_btt_rate": 0.088235,
+        "pff_twp_rate": 0.025641,
+        "pressure_to_sack_rate": 0.181818,
+        "patton_pressure_survival_score": 0.600545,
+        "first_read_target_rate": 0.6875,
+        "aggressiveness_pct": 14.705882,
+        "pacr": 0.942373
+      },
+      "receiving_suite": {
+        "yprr_overall": 2.705882,
+        "yprr_vs_man": 3.166667,
+        "yprr_vs_zone": 2.454545,
+        "yprr_vs_single_high": 3.0625,
+        "yprr_vs_two_high": 2.388889,
+        "tprr": 0.264706,
+        "wopr": 0.672,
+        "racr": 0.87619,
+        "fantasy_pts_ass_separation_score": 0.2,
+        "espn_rtm_open_catch_yac_composite": 77.7,
+        "ngs_xyac_over_expected": 1.3,
+        "first_downs_per_route_run": 0.147059,
+        "on_target_drop_rate": 0.0,
+        "contested_catch_rate": 0.666667,
+        "end_zone_target_share": 0.4
+      },
+      "rushing_suite": {
+        "ngs_ryoe_per_att": 0.822222,
+        "rush_pct_over_expected": 55.555556,
+        "stacked_box_8plus_rate": 0.277778,
+        "light_box_rate": 0.333333,
+        "yards_before_contact_per_att": 1.888889,
+        "yards_after_contact_per_att": 3.055556,
+        "missed_tackles_forced_per_att": 0.277778,
+        "pff_elusive_rating": 97.222222,
+        "stuff_rate": 0.166667,
+        "explosive_run_rate_10plus": 0.166667,
+        "gap_vs_zone_efficiency_delta": 0.1,
+        "koalaty_xfp_over_expected": 2.3
+      },
+      "trench_suite": {
+        "espn_pbwr_2_5s": 0.631579,
+        "espn_prwr_2_5s": 0.166667,
+        "espn_rbwr": 0.730769,
+        "espn_rswr": 0.32,
+        "pff_pass_blocking_efficiency": 78.947368,
+        "pff_pass_rush_productivity": 33.333333,
+        "brandon_thorn_true_pass_set_pressure_rate": 0.363636,
+        "ftn_adjusted_line_yards": 3.075,
+        "stunt_twist_disruption_rate": 0.444444,
+        "simulated_creeper_pressure_rate": 0.375
+      },
+      "defense_and_idp_suite": {
+        "mofc_rate": 0.605263,
+        "mofo_rate": 0.394737,
+        "pre_to_post_snap_disguise_rate": 0.289474,
+        "primary_cb_fp_per_route_allowed": 0.28,
+        "forced_incompletion_rate": 0.166667,
+        "idp_stadium_scorekeeper_assist_multiplier": 1.258065,
+        "co_sack_0_25_half_sack_clear_prob": 0.462056
+      },
+      "situational_context_suite": {
+        "proe": 0.044,
+        "neutral_pace_sec_per_snap": 26.4,
+        "trailing_8plus_script_elasticity": 0.133,
+        "officiating_crew_penalty_and_drive_extension_index": 1.276684,
+        "stadium_surface_and_microclimate_index": 1.08085,
+        "circadian_rest_travel_fatigue_index": 0.248,
+        "contract_incentive_and_milestone_escalator_boost": 0.07694
+      },
+      "deep_non_stationary_kernels": {
+        "causal_deconfounded_skill": {
+          "raw_observed_epa_per_play": 0.18125,
+          "scheme_manufactured_epa_component": 0.399402,
+          "true_unschemed_duress_epa": -0.218152,
+          "scheme_dependency_fragility_ratio": 0.646747,
+          "projected_post_dc_clamp_epa": -0.034427,
+          "playoff_dc_clamp_survival_prob": 0.43363,
+          "propensity_overlap_ess": 7.860125
+        },
+        "qb_trauma_and_disguise_hysteresis": {
+          "cumulative_trauma_excitation": 3.040685,
+          "trauma_saturation_index": 0.721152,
+          "interior_hit_count": 3,
+          "clean_pocket_ttt_compression_sec": -0.418268,
+          "effective_clean_pocket_ttt_sec": 2.341732,
+          "phantom_pressure_bailout_prob": 0.414999,
+          "pocket_climb_angle_deg": -7.98052,
+          "premature_checkdown_spike_delta": 0.115384,
+          "projected_checkdown_rate": 0.205384,
+          "post_snap_disguise_spin_twp_hazard": 0.048583
+        },
+        "trench_tut_fatigue_and_weak_link": {
+          "drive_tut_weighted_sec": 35.395,
+          "lactate_fatigue_index": 0.585871,
+          "naive_mean_ol_rating": 0.73,
+          "weak_link_min_anchor": 0.189658,
+          "weak_link_slot_index": 3,
+          "mean_vs_min_illusion_gap": 0.540342,
+          "targeted_stunt_overload_multiplier": 1.739,
+          "weak_link_collapse_prob": 0.780208
+        },
+        "coordinator_script_cliff_and_tendency_trap": {
+          "script_cliff_epa_delta": -0.35,
+          "script_exhaustion_severity": 0.35,
+          "baseline_play_call_entropy_nats": 1.273399,
+          "post_negative_play_entropy_nats": 0.937416,
+          "non_markovian_entropy_collapse": 0.335984,
+          "kl_tilt_divergence": 0.184188,
+          "tendency_trap_interception_sack_hazard": 0.218542
+        },
+        "referee_and_market_reflexivity": {
+          "reflexive_dpi_drive_extension_prob": 0.097459,
+          "makeup_call_autocorrelation_active": true,
+          "key_numbers_crossed": 1,
+          "prop_zero_sum_coherence_score": 0.945539,
+          "true_information_steam_prob": 0.829851,
+          "syndicate_head_fake_buyback_prob": 0.170149,
+          "reflexive_execution_recommendation": "FOLLOW_TRUE_INFORMATION_STEAM"
+        },
+        "gsi_sports_medicine_and_coupled_5api": {
+          "injury_archetype": "high_ankle_syndesmosis",
+          "biomechanical_efficiency_loss_pct": 0.12967,
+          "projected_snap_share_cap": 0.757485,
+          "in_game_reaggravation_hazard": 0.187797,
+          "td_vs_team_total_contradiction_edge": 0.57,
+          "alt_spread_bimodal_tail_edge": 0.07,
+          "coupled_5api_scientific_nodes_wired": 204,
+          "coupled_5api_sources": [
+            "x_api",
+            "arxiv",
+            "openalex",
+            "kaggle",
+            "huggingface"
+          ]
+        }
+      },
+      "analyst_and_metric_registry": {
+        "pbp_and_expected_points": [
+          "@benbbaldwin (nflfastR / rbsdm: EPA/play, CPOE, DAKOTA, xPass, PROE, WP garbage-time filter)",
+          "@mrcaseb (nflverse / nflreadr / nflfastR play-by-play canonical schema)",
+          "@Sumersports / @SamHoppen (EPA/Drive, Early-Down EPA, Neutral Pace, 11/12/21 Personnel, Box Counts, Motion %)",
+          "@arjunmenon100 / @tejfbanalytics (WAR, coverage responsibility, route-tree clustering)"
+        ],
+        "receiving_and_route_charting": [
+          "@FantasyPtsData (ASS Average Separation Score, 1READ%, 1D/RR, YPRR vs Man/Zone/MOFC/MOFO)",
+          "@MattHarmon_BYB (Reception Perception: route success rate vs Man, Zone, Press, Double coverage)",
+          "@AirYards / Josh Hermsmeyer (WOPR = 1.5*TargetShare + 0.7*AirYardsShare, RACR, PACR)",
+          "@Brian_Burke / ESPN Analytics (RTM Open Score, Catch Score, YAC Score, Composite)",
+          "Next Gen Stats (xYAC, YACOE, Avg Separation, Avg Cushion, Targeted Air Yards)"
+        ],
+        "rushing_and_opportunity": [
+          "Next Gen Stats (RYOE/Att, ROE%, Time Behind LOS, 8+ Defenders in Box %)",
+          "Pro Football Focus (YBC/Att, YACo/Att, MTF/Att, Elusive Rating, Breakaway %)",
+          "@KoalatyStats (XFP/G Expected Fantasy Points per Game, FPPG - XFPPG differential)",
+          "FTN Data / Aaron Schatz (DVOA, DYAR, Success Rate, Gap vs Zone rushing splits)"
+        ],
+        "trench_warfare_ol_dl": [
+          "ESPN Analytics / Next Gen Stats (PBWR 2.5s, PRWR 2.5s, RBWR, RSWR)",
+          "Pro Football Focus (Pass Blocking Efficiency PBE, Pass Rush Productivity PRP)",
+          "@BrandonThornNFL (Trench Warfare: True Pass Set TPS filtering, High-Quality Pressures)",
+          "FTN Data (Adjusted Line Yards ALY 120%/100%/50%/0%, Stuffed %, Power Success %, Second-Level, Open-Field)",
+          "@SethWalder / @PFF_Moo (Stunt/Twist rates, Simulated Creeper pressures, P2S% stability)"
+        ],
+        "defensive_scheme_and_idp": [
+          "@MatchQuarters / Cody Alexander (MOFC vs MOFO, Quarters/Palms/Cover-6, Creepers, Sim Pressures)",
+          "@WideLeft / Arif Hasan (Cover-1/Cover-3/Quarters frequency, pre-to-post-snap disguise rotation)",
+          "@statrankings / MAGICSPORTSBREAKDOWN+ (11-Layer Matchup Ranks, Primary CB FP/route allowed, PROE+)",
+          "@jonmacri / @PFF_Macri (IDP utilization, Home Stadium Scorekeeper Tackle Assist multiplier, Co-Sack rates)"
+        ],
+        "situational_referees_weather_incentives": [
+          "@nflrefstats (Officiating crew holding rate, DPI rate/yards, false starts, home bias, pace drag)",
+          "@PattonAnalytics (Pressure Over Expectation vs Pressure-to-Sack Survival Curve)",
+          "@spotrac / @FieldYates (Contract incentive escalators, statistical milestones, playing-time tiers)"
+        ],
+        "deep_non_stationary_second_order_kernels": [
+          "Kernel 1: Frisch-Waugh-Lovell & IPTW Causal De-Confounding (True Unschemed Execution vs Scheme-Manufactured Volume)",
+          "Kernel 2: QB Post-Hit Hawkes Trauma Hysteresis, Phantom Pressure Bailout & Post-Snap Disguise-Spin TWP% Spike",
+          "Kernel 3: Trench Time-Under-Tension (TUT) Anaerobic Decay & Minimum-Operator Backup-OL Stunt Target Exploitation",
+          "Kernel 4: Coordinator Opening-15 Script Cliff, Non-Markovian Negative-Play Tilt & 3-Snap DC Tendency-Baiting Trap",
+          "Kernel 5: Dynamic Referee Score-State Reflexivity & True Information Steam vs Syndicate Head-Fake Buyback Detector"
+        ]
+      },
+      "all_6_suites_active": true,
+      "all_5_deep_kernels_active": true,
+      "all_6_deep_kernels_active": true
+    },
+    "away_universal_360": {
+      "schema": "gse_universal_nfl_360_metric_and_deep_non_stationary_dossier_v2",
+      "qb": {
+        "epa_per_play": 0.186667,
+        "epa_per_play_unfiltered": 0.285714,
+        "garbage_time_wp_filter_bounds": [
+          0.05,
+          0.95
+        ],
+        "garbage_time_snaps_excluded": 1,
+        "cpoe": 3.847059,
+        "dakota_composite": 0.161957,
+        "any_a": 8.444444,
+        "pff_btt_rate": 0.088235,
+        "pff_twp_rate": 0.025641,
+        "pressure_to_sack_rate": 0.181818,
+        "patton_pressure_survival_score": 0.600545,
+        "first_read_target_rate": 0.6875,
+        "aggressiveness_pct": 14.705882,
+        "pacr": 0.942373
+      },
+      "receiving": {
+        "yprr_overall": 2.705882,
+        "yprr_vs_man": 3.166667,
+        "yprr_vs_zone": 2.454545,
+        "yprr_vs_single_high": 3.0625,
+        "yprr_vs_two_high": 2.388889,
+        "tprr": 0.264706,
+        "wopr": 0.672,
+        "racr": 0.87619,
+        "fantasy_pts_ass_separation_score": 0.2,
+        "espn_rtm_open_catch_yac_composite": 77.7,
+        "ngs_xyac_over_expected": 1.3,
+        "first_downs_per_route_run": 0.147059,
+        "on_target_drop_rate": 0.0,
+        "contested_catch_rate": 0.666667,
+        "end_zone_target_share": 0.4
+      },
+      "rushing": {
+        "ngs_ryoe_per_att": 0.822222,
+        "rush_pct_over_expected": 55.555556,
+        "stacked_box_8plus_rate": 0.277778,
+        "light_box_rate": 0.333333,
+        "yards_before_contact_per_att": 1.888889,
+        "yards_after_contact_per_att": 3.055556,
+        "missed_tackles_forced_per_att": 0.277778,
+        "pff_elusive_rating": 97.222222,
+        "stuff_rate": 0.166667,
+        "explosive_run_rate_10plus": 0.166667,
+        "gap_vs_zone_efficiency_delta": 0.1,
+        "koalaty_xfp_over_expected": 2.3
+      },
+      "trench": {
+        "espn_pbwr_2_5s": 0.631579,
+        "espn_prwr_2_5s": 0.166667,
+        "espn_rbwr": 0.730769,
+        "espn_rswr": 0.32,
+        "pff_pass_blocking_efficiency": 78.947368,
+        "pff_pass_rush_productivity": 33.333333,
+        "brandon_thorn_true_pass_set_pressure_rate": 0.363636,
+        "ftn_adjusted_line_yards": 3.075,
+        "stunt_twist_disruption_rate": 0.444444,
+        "simulated_creeper_pressure_rate": 0.375
+      },
+      "defense_idp": {
+        "mofc_rate": 0.605263,
+        "mofo_rate": 0.394737,
+        "pre_to_post_snap_disguise_rate": 0.289474,
+        "primary_cb_fp_per_route_allowed": 0.28,
+        "forced_incompletion_rate": 0.166667,
+        "idp_stadium_scorekeeper_assist_multiplier": 1.258065,
+        "co_sack_0_25_half_sack_clear_prob": 0.462056
+      },
+      "situational": {
+        "proe": 0.044,
+        "neutral_pace_sec_per_snap": 26.4,
+        "trailing_8plus_script_elasticity": 0.133,
+        "officiating_crew_penalty_and_drive_extension_index": 1.276684,
+        "stadium_surface_and_microclimate_index": 1.08085,
+        "circadian_rest_travel_fatigue_index": 0.248,
+        "contract_incentive_and_milestone_escalator_boost": 0.07694
+      },
+      "qb_suite": {
+        "epa_per_play": 0.186667,
+        "epa_per_play_unfiltered": 0.285714,
+        "garbage_time_wp_filter_bounds": [
+          0.05,
+          0.95
+        ],
+        "garbage_time_snaps_excluded": 1,
+        "cpoe": 3.847059,
+        "dakota_composite": 0.161957,
+        "any_a": 8.444444,
+        "pff_btt_rate": 0.088235,
+        "pff_twp_rate": 0.025641,
+        "pressure_to_sack_rate": 0.181818,
+        "patton_pressure_survival_score": 0.600545,
+        "first_read_target_rate": 0.6875,
+        "aggressiveness_pct": 14.705882,
+        "pacr": 0.942373
+      },
+      "receiving_suite": {
+        "yprr_overall": 2.705882,
+        "yprr_vs_man": 3.166667,
+        "yprr_vs_zone": 2.454545,
+        "yprr_vs_single_high": 3.0625,
+        "yprr_vs_two_high": 2.388889,
+        "tprr": 0.264706,
+        "wopr": 0.672,
+        "racr": 0.87619,
+        "fantasy_pts_ass_separation_score": 0.2,
+        "espn_rtm_open_catch_yac_composite": 77.7,
+        "ngs_xyac_over_expected": 1.3,
+        "first_downs_per_route_run": 0.147059,
+        "on_target_drop_rate": 0.0,
+        "contested_catch_rate": 0.666667,
+        "end_zone_target_share": 0.4
+      },
+      "rushing_suite": {
+        "ngs_ryoe_per_att": 0.822222,
+        "rush_pct_over_expected": 55.555556,
+        "stacked_box_8plus_rate": 0.277778,
+        "light_box_rate": 0.333333,
+        "yards_before_contact_per_att": 1.888889,
+        "yards_after_contact_per_att": 3.055556,
+        "missed_tackles_forced_per_att": 0.277778,
+        "pff_elusive_rating": 97.222222,
+        "stuff_rate": 0.166667,
+        "explosive_run_rate_10plus": 0.166667,
+        "gap_vs_zone_efficiency_delta": 0.1,
+        "koalaty_xfp_over_expected": 2.3
+      },
+      "trench_suite": {
+        "espn_pbwr_2_5s": 0.631579,
+        "espn_prwr_2_5s": 0.166667,
+        "espn_rbwr": 0.730769,
+        "espn_rswr": 0.32,
+        "pff_pass_blocking_efficiency": 78.947368,
+        "pff_pass_rush_productivity": 33.333333,
+        "brandon_thorn_true_pass_set_pressure_rate": 0.363636,
+        "ftn_adjusted_line_yards": 3.075,
+        "stunt_twist_disruption_rate": 0.444444,
+        "simulated_creeper_pressure_rate": 0.375
+      },
+      "defense_and_idp_suite": {
+        "mofc_rate": 0.605263,
+        "mofo_rate": 0.394737,
+        "pre_to_post_snap_disguise_rate": 0.289474,
+        "primary_cb_fp_per_route_allowed": 0.28,
+        "forced_incompletion_rate": 0.166667,
+        "idp_stadium_scorekeeper_assist_multiplier": 1.258065,
+        "co_sack_0_25_half_sack_clear_prob": 0.462056
+      },
+      "situational_context_suite": {
+        "proe": 0.044,
+        "neutral_pace_sec_per_snap": 26.4,
+        "trailing_8plus_script_elasticity": 0.133,
+        "officiating_crew_penalty_and_drive_extension_index": 1.276684,
+        "stadium_surface_and_microclimate_index": 1.08085,
+        "circadian_rest_travel_fatigue_index": 0.248,
+        "contract_incentive_and_milestone_escalator_boost": 0.07694
+      },
+      "deep_non_stationary_kernels": {
+        "causal_deconfounded_skill": {
+          "raw_observed_epa_per_play": 0.18125,
+          "scheme_manufactured_epa_component": 0.399402,
+          "true_unschemed_duress_epa": -0.218152,
+          "scheme_dependency_fragility_ratio": 0.646747,
+          "projected_post_dc_clamp_epa": -0.034427,
+          "playoff_dc_clamp_survival_prob": 0.43363,
+          "propensity_overlap_ess": 7.860125
+        },
+        "qb_trauma_and_disguise_hysteresis": {
+          "cumulative_trauma_excitation": 3.040685,
+          "trauma_saturation_index": 0.721152,
+          "interior_hit_count": 3,
+          "clean_pocket_ttt_compression_sec": -0.418268,
+          "effective_clean_pocket_ttt_sec": 2.341732,
+          "phantom_pressure_bailout_prob": 0.414999,
+          "pocket_climb_angle_deg": -7.98052,
+          "premature_checkdown_spike_delta": 0.115384,
+          "projected_checkdown_rate": 0.205384,
+          "post_snap_disguise_spin_twp_hazard": 0.048583
+        },
+        "trench_tut_fatigue_and_weak_link": {
+          "drive_tut_weighted_sec": 35.395,
+          "lactate_fatigue_index": 0.585871,
+          "naive_mean_ol_rating": 0.73,
+          "weak_link_min_anchor": 0.189658,
+          "weak_link_slot_index": 3,
+          "mean_vs_min_illusion_gap": 0.540342,
+          "targeted_stunt_overload_multiplier": 1.739,
+          "weak_link_collapse_prob": 0.780208
+        },
+        "coordinator_script_cliff_and_tendency_trap": {
+          "script_cliff_epa_delta": -0.35,
+          "script_exhaustion_severity": 0.35,
+          "baseline_play_call_entropy_nats": 1.273399,
+          "post_negative_play_entropy_nats": 0.937416,
+          "non_markovian_entropy_collapse": 0.335984,
+          "kl_tilt_divergence": 0.184188,
+          "tendency_trap_interception_sack_hazard": 0.218542
+        },
+        "referee_and_market_reflexivity": {
+          "reflexive_dpi_drive_extension_prob": 0.097459,
+          "makeup_call_autocorrelation_active": true,
+          "key_numbers_crossed": 1,
+          "prop_zero_sum_coherence_score": 0.945539,
+          "true_information_steam_prob": 0.829851,
+          "syndicate_head_fake_buyback_prob": 0.170149,
+          "reflexive_execution_recommendation": "FOLLOW_TRUE_INFORMATION_STEAM"
+        },
+        "gsi_sports_medicine_and_coupled_5api": {
+          "injury_archetype": "high_ankle_syndesmosis",
+          "biomechanical_efficiency_loss_pct": 0.12967,
+          "projected_snap_share_cap": 0.757485,
+          "in_game_reaggravation_hazard": 0.187797,
+          "td_vs_team_total_contradiction_edge": 0.57,
+          "alt_spread_bimodal_tail_edge": 0.07,
+          "coupled_5api_scientific_nodes_wired": 204,
+          "coupled_5api_sources": [
+            "x_api",
+            "arxiv",
+            "openalex",
+            "kaggle",
+            "huggingface"
+          ]
+        }
+      },
+      "analyst_and_metric_registry": {
+        "pbp_and_expected_points": [
+          "@benbbaldwin (nflfastR / rbsdm: EPA/play, CPOE, DAKOTA, xPass, PROE, WP garbage-time filter)",
+          "@mrcaseb (nflverse / nflreadr / nflfastR play-by-play canonical schema)",
+          "@Sumersports / @SamHoppen (EPA/Drive, Early-Down EPA, Neutral Pace, 11/12/21 Personnel, Box Counts, Motion %)",
+          "@arjunmenon100 / @tejfbanalytics (WAR, coverage responsibility, route-tree clustering)"
+        ],
+        "receiving_and_route_charting": [
+          "@FantasyPtsData (ASS Average Separation Score, 1READ%, 1D/RR, YPRR vs Man/Zone/MOFC/MOFO)",
+          "@MattHarmon_BYB (Reception Perception: route success rate vs Man, Zone, Press, Double coverage)",
+          "@AirYards / Josh Hermsmeyer (WOPR = 1.5*TargetShare + 0.7*AirYardsShare, RACR, PACR)",
+          "@Brian_Burke / ESPN Analytics (RTM Open Score, Catch Score, YAC Score, Composite)",
+          "Next Gen Stats (xYAC, YACOE, Avg Separation, Avg Cushion, Targeted Air Yards)"
+        ],
+        "rushing_and_opportunity": [
+          "Next Gen Stats (RYOE/Att, ROE%, Time Behind LOS, 8+ Defenders in Box %)",
+          "Pro Football Focus (YBC/Att, YACo/Att, MTF/Att, Elusive Rating, Breakaway %)",
+          "@KoalatyStats (XFP/G Expected Fantasy Points per Game, FPPG - XFPPG differential)",
+          "FTN Data / Aaron Schatz (DVOA, DYAR, Success Rate, Gap vs Zone rushing splits)"
+        ],
+        "trench_warfare_ol_dl": [
+          "ESPN Analytics / Next Gen Stats (PBWR 2.5s, PRWR 2.5s, RBWR, RSWR)",
+          "Pro Football Focus (Pass Blocking Efficiency PBE, Pass Rush Productivity PRP)",
+          "@BrandonThornNFL (Trench Warfare: True Pass Set TPS filtering, High-Quality Pressures)",
+          "FTN Data (Adjusted Line Yards ALY 120%/100%/50%/0%, Stuffed %, Power Success %, Second-Level, Open-Field)",
+          "@SethWalder / @PFF_Moo (Stunt/Twist rates, Simulated Creeper pressures, P2S% stability)"
+        ],
+        "defensive_scheme_and_idp": [
+          "@MatchQuarters / Cody Alexander (MOFC vs MOFO, Quarters/Palms/Cover-6, Creepers, Sim Pressures)",
+          "@WideLeft / Arif Hasan (Cover-1/Cover-3/Quarters frequency, pre-to-post-snap disguise rotation)",
+          "@statrankings / MAGICSPORTSBREAKDOWN+ (11-Layer Matchup Ranks, Primary CB FP/route allowed, PROE+)",
+          "@jonmacri / @PFF_Macri (IDP utilization, Home Stadium Scorekeeper Tackle Assist multiplier, Co-Sack rates)"
+        ],
+        "situational_referees_weather_incentives": [
+          "@nflrefstats (Officiating crew holding rate, DPI rate/yards, false starts, home bias, pace drag)",
+          "@PattonAnalytics (Pressure Over Expectation vs Pressure-to-Sack Survival Curve)",
+          "@spotrac / @FieldYates (Contract incentive escalators, statistical milestones, playing-time tiers)"
+        ],
+        "deep_non_stationary_second_order_kernels": [
+          "Kernel 1: Frisch-Waugh-Lovell & IPTW Causal De-Confounding (True Unschemed Execution vs Scheme-Manufactured Volume)",
+          "Kernel 2: QB Post-Hit Hawkes Trauma Hysteresis, Phantom Pressure Bailout & Post-Snap Disguise-Spin TWP% Spike",
+          "Kernel 3: Trench Time-Under-Tension (TUT) Anaerobic Decay & Minimum-Operator Backup-OL Stunt Target Exploitation",
+          "Kernel 4: Coordinator Opening-15 Script Cliff, Non-Markovian Negative-Play Tilt & 3-Snap DC Tendency-Baiting Trap",
+          "Kernel 5: Dynamic Referee Score-State Reflexivity & True Information Steam vs Syndicate Head-Fake Buyback Detector"
+        ]
+      },
+      "all_6_suites_active": true,
+      "all_5_deep_kernels_active": true,
+      "all_6_deep_kernels_active": true
+    },
+    "home_universal_360": {
+      "schema": "gse_universal_nfl_360_metric_and_deep_non_stationary_dossier_v2",
+      "qb": {
+        "epa_per_play": 0.186667,
+        "epa_per_play_unfiltered": 0.285714,
+        "garbage_time_wp_filter_bounds": [
+          0.05,
+          0.95
+        ],
+        "garbage_time_snaps_excluded": 1,
+        "cpoe": 3.847059,
+        "dakota_composite": 0.161957,
+        "any_a": 8.444444,
+        "pff_btt_rate": 0.088235,
+        "pff_twp_rate": 0.025641,
+        "pressure_to_sack_rate": 0.181818,
+        "patton_pressure_survival_score": 0.600545,
+        "first_read_target_rate": 0.6875,
+        "aggressiveness_pct": 14.705882,
+        "pacr": 0.942373
+      },
+      "receiving": {
+        "yprr_overall": 2.705882,
+        "yprr_vs_man": 3.166667,
+        "yprr_vs_zone": 2.454545,
+        "yprr_vs_single_high": 3.0625,
+        "yprr_vs_two_high": 2.388889,
+        "tprr": 0.264706,
+        "wopr": 0.672,
+        "racr": 0.87619,
+        "fantasy_pts_ass_separation_score": 0.2,
+        "espn_rtm_open_catch_yac_composite": 77.7,
+        "ngs_xyac_over_expected": 1.3,
+        "first_downs_per_route_run": 0.147059,
+        "on_target_drop_rate": 0.0,
+        "contested_catch_rate": 0.666667,
+        "end_zone_target_share": 0.4
+      },
+      "rushing": {
+        "ngs_ryoe_per_att": 0.822222,
+        "rush_pct_over_expected": 55.555556,
+        "stacked_box_8plus_rate": 0.277778,
+        "light_box_rate": 0.333333,
+        "yards_before_contact_per_att": 1.888889,
+        "yards_after_contact_per_att": 3.055556,
+        "missed_tackles_forced_per_att": 0.277778,
+        "pff_elusive_rating": 97.222222,
+        "stuff_rate": 0.166667,
+        "explosive_run_rate_10plus": 0.166667,
+        "gap_vs_zone_efficiency_delta": 0.1,
+        "koalaty_xfp_over_expected": 2.3
+      },
+      "trench": {
+        "espn_pbwr_2_5s": 0.631579,
+        "espn_prwr_2_5s": 0.166667,
+        "espn_rbwr": 0.730769,
+        "espn_rswr": 0.32,
+        "pff_pass_blocking_efficiency": 78.947368,
+        "pff_pass_rush_productivity": 33.333333,
+        "brandon_thorn_true_pass_set_pressure_rate": 0.363636,
+        "ftn_adjusted_line_yards": 3.075,
+        "stunt_twist_disruption_rate": 0.444444,
+        "simulated_creeper_pressure_rate": 0.375
+      },
+      "defense_idp": {
+        "mofc_rate": 0.605263,
+        "mofo_rate": 0.394737,
+        "pre_to_post_snap_disguise_rate": 0.289474,
+        "primary_cb_fp_per_route_allowed": 0.28,
+        "forced_incompletion_rate": 0.166667,
+        "idp_stadium_scorekeeper_assist_multiplier": 1.258065,
+        "co_sack_0_25_half_sack_clear_prob": 0.462056
+      },
+      "situational": {
+        "proe": 0.044,
+        "neutral_pace_sec_per_snap": 26.4,
+        "trailing_8plus_script_elasticity": 0.133,
+        "officiating_crew_penalty_and_drive_extension_index": 1.276684,
+        "stadium_surface_and_microclimate_index": 1.08085,
+        "circadian_rest_travel_fatigue_index": 0.248,
+        "contract_incentive_and_milestone_escalator_boost": 0.07694
+      },
+      "qb_suite": {
+        "epa_per_play": 0.186667,
+        "epa_per_play_unfiltered": 0.285714,
+        "garbage_time_wp_filter_bounds": [
+          0.05,
+          0.95
+        ],
+        "garbage_time_snaps_excluded": 1,
+        "cpoe": 3.847059,
+        "dakota_composite": 0.161957,
+        "any_a": 8.444444,
+        "pff_btt_rate": 0.088235,
+        "pff_twp_rate": 0.025641,
+        "pressure_to_sack_rate": 0.181818,
+        "patton_pressure_survival_score": 0.600545,
+        "first_read_target_rate": 0.6875,
+        "aggressiveness_pct": 14.705882,
+        "pacr": 0.942373
+      },
+      "receiving_suite": {
+        "yprr_overall": 2.705882,
+        "yprr_vs_man": 3.166667,
+        "yprr_vs_zone": 2.454545,
+        "yprr_vs_single_high": 3.0625,
+        "yprr_vs_two_high": 2.388889,
+        "tprr": 0.264706,
+        "wopr": 0.672,
+        "racr": 0.87619,
+        "fantasy_pts_ass_separation_score": 0.2,
+        "espn_rtm_open_catch_yac_composite": 77.7,
+        "ngs_xyac_over_expected": 1.3,
+        "first_downs_per_route_run": 0.147059,
+        "on_target_drop_rate": 0.0,
+        "contested_catch_rate": 0.666667,
+        "end_zone_target_share": 0.4
+      },
+      "rushing_suite": {
+        "ngs_ryoe_per_att": 0.822222,
+        "rush_pct_over_expected": 55.555556,
+        "stacked_box_8plus_rate": 0.277778,
+        "light_box_rate": 0.333333,
+        "yards_before_contact_per_att": 1.888889,
+        "yards_after_contact_per_att": 3.055556,
+        "missed_tackles_forced_per_att": 0.277778,
+        "pff_elusive_rating": 97.222222,
+        "stuff_rate": 0.166667,
+        "explosive_run_rate_10plus": 0.166667,
+        "gap_vs_zone_efficiency_delta": 0.1,
+        "koalaty_xfp_over_expected": 2.3
+      },
+      "trench_suite": {
+        "espn_pbwr_2_5s": 0.631579,
+        "espn_prwr_2_5s": 0.166667,
+        "espn_rbwr": 0.730769,
+        "espn_rswr": 0.32,
+        "pff_pass_blocking_efficiency": 78.947368,
+        "pff_pass_rush_productivity": 33.333333,
+        "brandon_thorn_true_pass_set_pressure_rate": 0.363636,
+        "ftn_adjusted_line_yards": 3.075,
+        "stunt_twist_disruption_rate": 0.444444,
+        "simulated_creeper_pressure_rate": 0.375
+      },
+      "defense_and_idp_suite": {
+        "mofc_rate": 0.605263,
+        "mofo_rate": 0.394737,
+        "pre_to_post_snap_disguise_rate": 0.289474,
+        "primary_cb_fp_per_route_allowed": 0.28,
+        "forced_incompletion_rate": 0.166667,
+        "idp_stadium_scorekeeper_assist_multiplier": 1.258065,
+        "co_sack_0_25_half_sack_clear_prob": 0.462056
+      },
+      "situational_context_suite": {
+        "proe": 0.044,
+        "neutral_pace_sec_per_snap": 26.4,
+        "trailing_8plus_script_elasticity": 0.133,
+        "officiating_crew_penalty_and_drive_extension_index": 1.276684,
+        "stadium_surface_and_microclimate_index": 1.08085,
+        "circadian_rest_travel_fatigue_index": 0.248,
+        "contract_incentive_and_milestone_escalator_boost": 0.07694
+      },
+      "deep_non_stationary_kernels": {
+        "causal_deconfounded_skill": {
+          "raw_observed_epa_per_play": 0.18125,
+          "scheme_manufactured_epa_component": 0.399402,
+          "true_unschemed_duress_epa": -0.218152,
+          "scheme_dependency_fragility_ratio": 0.646747,
+          "projected_post_dc_clamp_epa": -0.034427,
+          "playoff_dc_clamp_survival_prob": 0.43363,
+          "propensity_overlap_ess": 7.860125
+        },
+        "qb_trauma_and_disguise_hysteresis": {
+          "cumulative_trauma_excitation": 3.040685,
+          "trauma_saturation_index": 0.721152,
+          "interior_hit_count": 3,
+          "clean_pocket_ttt_compression_sec": -0.418268,
+          "effective_clean_pocket_ttt_sec": 2.341732,
+          "phantom_pressure_bailout_prob": 0.414999,
+          "pocket_climb_angle_deg": -7.98052,
+          "premature_checkdown_spike_delta": 0.115384,
+          "projected_checkdown_rate": 0.205384,
+          "post_snap_disguise_spin_twp_hazard": 0.048583
+        },
+        "trench_tut_fatigue_and_weak_link": {
+          "drive_tut_weighted_sec": 35.395,
+          "lactate_fatigue_index": 0.585871,
+          "naive_mean_ol_rating": 0.73,
+          "weak_link_min_anchor": 0.189658,
+          "weak_link_slot_index": 3,
+          "mean_vs_min_illusion_gap": 0.540342,
+          "targeted_stunt_overload_multiplier": 1.739,
+          "weak_link_collapse_prob": 0.780208
+        },
+        "coordinator_script_cliff_and_tendency_trap": {
+          "script_cliff_epa_delta": -0.35,
+          "script_exhaustion_severity": 0.35,
+          "baseline_play_call_entropy_nats": 1.273399,
+          "post_negative_play_entropy_nats": 0.937416,
+          "non_markovian_entropy_collapse": 0.335984,
+          "kl_tilt_divergence": 0.184188,
+          "tendency_trap_interception_sack_hazard": 0.218542
+        },
+        "referee_and_market_reflexivity": {
+          "reflexive_dpi_drive_extension_prob": 0.097459,
+          "makeup_call_autocorrelation_active": true,
+          "key_numbers_crossed": 1,
+          "prop_zero_sum_coherence_score": 0.945539,
+          "true_information_steam_prob": 0.829851,
+          "syndicate_head_fake_buyback_prob": 0.170149,
+          "reflexive_execution_recommendation": "FOLLOW_TRUE_INFORMATION_STEAM"
+        },
+        "gsi_sports_medicine_and_coupled_5api": {
+          "injury_archetype": "high_ankle_syndesmosis",
+          "biomechanical_efficiency_loss_pct": 0.12967,
+          "projected_snap_share_cap": 0.757485,
+          "in_game_reaggravation_hazard": 0.187797,
+          "td_vs_team_total_contradiction_edge": 0.57,
+          "alt_spread_bimodal_tail_edge": 0.07,
+          "coupled_5api_scientific_nodes_wired": 204,
+          "coupled_5api_sources": [
+            "x_api",
+            "arxiv",
+            "openalex",
+            "kaggle",
+            "huggingface"
+          ]
+        }
+      },
+      "analyst_and_metric_registry": {
+        "pbp_and_expected_points": [
+          "@benbbaldwin (nflfastR / rbsdm: EPA/play, CPOE, DAKOTA, xPass, PROE, WP garbage-time filter)",
+          "@mrcaseb (nflverse / nflreadr / nflfastR play-by-play canonical schema)",
+          "@Sumersports / @SamHoppen (EPA/Drive, Early-Down EPA, Neutral Pace, 11/12/21 Personnel, Box Counts, Motion %)",
+          "@arjunmenon100 / @tejfbanalytics (WAR, coverage responsibility, route-tree clustering)"
+        ],
+        "receiving_and_route_charting": [
+          "@FantasyPtsData (ASS Average Separation Score, 1READ%, 1D/RR, YPRR vs Man/Zone/MOFC/MOFO)",
+          "@MattHarmon_BYB (Reception Perception: route success rate vs Man, Zone, Press, Double coverage)",
+          "@AirYards / Josh Hermsmeyer (WOPR = 1.5*TargetShare + 0.7*AirYardsShare, RACR, PACR)",
+          "@Brian_Burke / ESPN Analytics (RTM Open Score, Catch Score, YAC Score, Composite)",
+          "Next Gen Stats (xYAC, YACOE, Avg Separation, Avg Cushion, Targeted Air Yards)"
+        ],
+        "rushing_and_opportunity": [
+          "Next Gen Stats (RYOE/Att, ROE%, Time Behind LOS, 8+ Defenders in Box %)",
+          "Pro Football Focus (YBC/Att, YACo/Att, MTF/Att, Elusive Rating, Breakaway %)",
+          "@KoalatyStats (XFP/G Expected Fantasy Points per Game, FPPG - XFPPG differential)",
+          "FTN Data / Aaron Schatz (DVOA, DYAR, Success Rate, Gap vs Zone rushing splits)"
+        ],
+        "trench_warfare_ol_dl": [
+          "ESPN Analytics / Next Gen Stats (PBWR 2.5s, PRWR 2.5s, RBWR, RSWR)",
+          "Pro Football Focus (Pass Blocking Efficiency PBE, Pass Rush Productivity PRP)",
+          "@BrandonThornNFL (Trench Warfare: True Pass Set TPS filtering, High-Quality Pressures)",
+          "FTN Data (Adjusted Line Yards ALY 120%/100%/50%/0%, Stuffed %, Power Success %, Second-Level, Open-Field)",
+          "@SethWalder / @PFF_Moo (Stunt/Twist rates, Simulated Creeper pressures, P2S% stability)"
+        ],
+        "defensive_scheme_and_idp": [
+          "@MatchQuarters / Cody Alexander (MOFC vs MOFO, Quarters/Palms/Cover-6, Creepers, Sim Pressures)",
+          "@WideLeft / Arif Hasan (Cover-1/Cover-3/Quarters frequency, pre-to-post-snap disguise rotation)",
+          "@statrankings / MAGICSPORTSBREAKDOWN+ (11-Layer Matchup Ranks, Primary CB FP/route allowed, PROE+)",
+          "@jonmacri / @PFF_Macri (IDP utilization, Home Stadium Scorekeeper Tackle Assist multiplier, Co-Sack rates)"
+        ],
+        "situational_referees_weather_incentives": [
+          "@nflrefstats (Officiating crew holding rate, DPI rate/yards, false starts, home bias, pace drag)",
+          "@PattonAnalytics (Pressure Over Expectation vs Pressure-to-Sack Survival Curve)",
+          "@spotrac / @FieldYates (Contract incentive escalators, statistical milestones, playing-time tiers)"
+        ],
+        "deep_non_stationary_second_order_kernels": [
+          "Kernel 1: Frisch-Waugh-Lovell & IPTW Causal De-Confounding (True Unschemed Execution vs Scheme-Manufactured Volume)",
+          "Kernel 2: QB Post-Hit Hawkes Trauma Hysteresis, Phantom Pressure Bailout & Post-Snap Disguise-Spin TWP% Spike",
+          "Kernel 3: Trench Time-Under-Tension (TUT) Anaerobic Decay & Minimum-Operator Backup-OL Stunt Target Exploitation",
+          "Kernel 4: Coordinator Opening-15 Script Cliff, Non-Markovian Negative-Play Tilt & 3-Snap DC Tendency-Baiting Trap",
+          "Kernel 5: Dynamic Referee Score-State Reflexivity & True Information Steam vs Syndicate Head-Fake Buyback Detector"
+        ]
+      },
+      "all_6_suites_active": true,
+      "all_5_deep_kernels_active": true,
+      "all_6_deep_kernels_active": true
+    },
+    "mega_sweep_2026_11_06_pipeline": {
+      "schema": "gse_mega_sweep_2026_11_06_full_pipeline_v1",
+      "five_track_and_seven_step_cycle": {
+        "schema": "gse_gsi_mega_sweep_2026_11_06_5track_7step_trace_v1",
+        "matchup": "LAR @ WAS",
+        "trace_valid": true,
+        "unchecked_items_at_l3_or_deeper": 0,
+        "five_tracks_evaluated": [
+          "1_qb_behavior",
+          "2_coaching_and_scheme",
+          "3_offensive_line",
+          "4_trust_signals",
+          "5_scheme_matchup"
+        ],
+        "l5_synthesis_order": [
+          "3_offensive_line",
+          "5_scheme_matchup",
+          "2_coaching_and_scheme",
+          "1_qb_behavior",
+          "4_trust_signals"
+        ],
+        "ol_to_scheme_to_qb_order_enforced": true,
+        "l4_adversary_pass_completed": true,
+        "tracks_l1_to_l5": {
+          "3_offensive_line": {
+            "track_id": "3_offensive_line",
+            "L1_surface_baseline": "Home OL starters out=0 (sack_rate=0.062) vs Away OL starters out=0 (sack_rate=0.068)",
+            "L2_scheme_trench_mechanics": "2020 Browns pass-pro call-tree & xpassrush immediate-zone win: Home=0.601, Away=0.579",
+            "L3_health_and_fatigue_coupling": "GSI trench G-load index Home=0.952, Away=0.969",
+            "L4_adversary_challenge": "Checked raw sack rate against QB time-to-throw and stunt/creeper rate (80-rule firewall Rule 14); OL edge survives residualization.",
+            "L5_track_verdict_delta": 0.0251,
+            "checked_at_l3_l4_l5": true
+          },
+          "5_scheme_matchup": {
+            "track_id": "5_scheme_matchup",
+            "L1_surface_baseline": "Home off EPA=0.030 vs Away def EPA=0.010; Away off EPA=0.010 vs Home def EPA=-0.020",
+            "L2_scheme_trench_mechanics": "ExposingCoverageTells-BDB25 pre-snap shell disguise + Cover 7 bracket / Quarter Overload pressure answers; WR BRK+ Home=0.538 vs Away KTD=0.676",
+            "L3_health_and_fatigue_coupling": "Turf=False (Rupture Report mult=1.00) & wind=11.0 mph interaction with deep route tree.",
+            "L4_adversary_challenge": "Discounted garbage-time zone shell inflation via Heckman selection correction (`nfl4th-heckman`) and Frisch-Waugh-Lovell orthogonalization.",
+            "L5_track_verdict_delta": -0.0045,
+            "checked_at_l3_l4_l5": true
+          },
+          "2_coaching_and_scheme": {
+            "track_id": "2_coaching_and_scheme",
+            "L1_surface_baseline": "Home PROE=0.014, blitz=0.280 vs Away PROE=-0.008, blitz=0.260",
+            "L2_scheme_trench_mechanics": "Optimal-NFL-Play-Simulator & nfl-coaching-decision-lab 4th-down/motion sequencing (heckman_adj=0.0003)",
+            "L3_health_and_fatigue_coupling": "Clemente-Sarmento ACWR workload Home=1.020 vs Away=1.060 under rest_diff=0.0d",
+            "L4_adversary_challenge": "Audited Surrender-Index conservatism and Bertsekas rollout policy-iteration stability in 2-minute script transitions.",
+            "L5_track_verdict_delta": -0.00172,
+            "checked_at_l3_l4_l5": true
+          },
+          "1_qb_behavior": {
+            "track_id": "1_qb_behavior",
+            "L1_surface_baseline": "Home QB tier=STARTER vs Away QB tier=STARTER",
+            "L2_scheme_trench_mechanics": "SCRACK (scramble+sack EPA) Home=0.0173 vs Away=0.0007; SpinLab hip-shoulder kinematic sequencing",
+            "L3_health_and_fatigue_coupling": "WHIM/KTH MPS_95 brain-strain exposure Home=0.2200, Away=0.2219; BCTT HR threshold=133.5 bpm",
+            "L4_adversary_challenge": "Conditioned QB EPA on OL immediate-zone win rate (`OL -> scheme -> QB` causal chain) so QB credit is not confounded by clean-pocket variance.",
+            "L5_track_verdict_delta": 0.0166,
+            "checked_at_l3_l4_l5": true
+          },
+          "4_trust_signals": {
+            "track_id": "4_trust_signals",
+            "L1_surface_baseline": "Active injuries & availability verified; Keynes weight-of-evidence K/(K+I) & Knight risk-vs-uncertainty class assigned",
+            "L2_scheme_trench_mechanics": "Taleb preasymptotic fat-tail kappa diagnostic & Polyanskiy-Wu Fano/Le Cam minimax information floor verified",
+            "L3_health_and_fatigue_coupling": "CARE Consortium 37% biomarker-negative rule-in guard + SHAAKE 92% PPV under-reporting correction applied",
+            "L4_adversary_challenge": "Bailis I-confluence invariant check + Barber weighted conformal ESS gate passed; market price held strictly to Step 7 at weight 0.06.",
+            "L5_track_verdict_delta": -0.00318,
+            "checked_at_l3_l4_l5": true
+          }
+        },
+        "weekly_cycle_fixed_order": [
+          "1_usage",
+          "2_health",
+          "3_matchups_available_players",
+          "4_situations",
+          "5_venues_weather_referees",
+          "6_everything_else",
+          "7_books_last_price_check"
+        ],
+        "weekly_cycle_steps": {
+          "1_usage": {
+            "step_index": 1,
+            "step_name": "1_usage",
+            "player_gp_denominator_enforced": true,
+            "away_target_concentration_herfindahl": 0.215,
+            "home_target_concentration_herfindahl": 0.2237,
+            "away_neutral_proe": -0.008,
+            "home_neutral_proe": 0.014,
+            "provenance": [
+              "nflverse/nflverse-pbp",
+              "ffverse/ffopportunity",
+              "books-a-sports/Clemente-Sarmento-2022"
+            ]
+          },
+          "2_health": {
+            "step_index": 2,
+            "step_name": "2_health",
+            "away_gsi_health": {
+              "team": "LAR",
+              "opponent": "WAS",
+              "is_home": false,
+              "whim_kth_mps95_corpus_callosum": 0.2219,
+              "kth_4124_element_sulcal_strain": 0.253,
+              "headsport_img_filter_cutoff_hz": 194.44,
+              "camarillo_bic_bric_index": 0.6384,
+              "camarillo_bic_hic15": 194.39,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0531,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9687,
+              "net_step2_health_epa_delta": -0.00974,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "home_gsi_health": {
+              "team": "WAS",
+              "opponent": "LAR",
+              "is_home": true,
+              "whim_kth_mps95_corpus_callosum": 0.22,
+              "kth_4124_element_sulcal_strain": 0.2508,
+              "headsport_img_filter_cutoff_hz": 194.08,
+              "camarillo_bic_bric_index": 0.6315,
+              "camarillo_bic_hic15": 190.94,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0515,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9523,
+              "net_step2_health_epa_delta": -0.00972,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "net_home_minus_away_health_epa_delta": 2e-05
+          },
+          "3_matchups_available_players": {
+            "step_index": 3,
+            "step_name": "3_matchups_available_players",
+            "away_ol_immediate_zone_win_rate": 0.5789,
+            "home_ol_immediate_zone_win_rate": 0.601,
+            "away_wr_brk_plus_braking_score": 0.5095,
+            "home_wr_brk_plus_braking_score": 0.5385,
+            "away_def_ktd_tackle_efficiency": 0.6765,
+            "away_def_ktd_tackle_translation": 0.6765,
+            "home_def_ktd_tackle_translation": 0.707,
+            "provenance": [
+              "peterlmajors/Offensive-Linemen-Immediate-Zone",
+              "josephferraiola/xpassrush",
+              "egorfm/nfl-big-data-bowl-2027",
+              "usufalbaz/nfl-big-data-bowl-2027-ktd",
+              "smitbajaj/ExposingCoverageTells-BDB25"
+            ]
+          },
+          "4_situations": {
+            "step_index": 4,
+            "step_name": "4_situations",
+            "away_scrack_scramble_plus_sack_epa": 0.0007,
+            "home_scrack_scramble_plus_sack_epa": 0.0173,
+            "heckman_4th_down_selection_bias_adj": 0.0003,
+            "surrender_index_conservatism_penalty": 0.0,
+            "net_rest_differential_days": 0.0,
+            "provenance": [
+              "danieldalygrafstein/nfl4th-heckman",
+              "andrew-shackelford/Surrender-Index",
+              "IG1-07_SCRACK_2025",
+              "IG1-01_Georgia_Cover7_Bracket_Pressures",
+              "IG1-03_Quarter_Overload_Package"
+            ]
+          },
+          "5_venues_weather_referees": {
+            "step_index": 5,
+            "step_name": "5_venues_weather_referees",
+            "is_indoor": false,
+            "is_turf": false,
+            "wind_mph_effective": 11.0,
+            "temp_f_effective": 62.0,
+            "fg_make_prob_weather_delta": -0.0035,
+            "provenance": [
+              "jldbc/field-goal-models",
+              "books-a-sports/NCAA-1922-Official-Football-Guide"
+            ]
+          },
+          "6_everything_else": {
+            "step_index": 6,
+            "step_name": "6_everything_else",
+            "home_acwr_workload_ratio": 1.02,
+            "away_acwr_workload_ratio": 1.06,
+            "coach_speak_tuesday_sunday_reliability_weight": 0.85,
+            "provenance": [
+              "books-a-sports/Clemente-Sarmento-2022-Fitness-Assessment-Monitoring-Training-Team-Sports-MDPI.pdf",
+              "books-a-sports/Goncalves-Bravo-Folgado-2022-Training-Methods-Sports-Performance-Health-MDPI.pdf"
+            ]
+          },
+          "7_books_last_price_check": {
+            "step_index": 7,
+            "step_name": "7_books_last_price_check",
+            "executed_after_steps_1_to_6": true,
+            "market_weight_in_reasoning": 0.06,
+            "market_is_headline_reason": false,
+            "pre_market_reasoning_epa_delta": 0.00926,
+            "posted_home_spread": -2.5,
+            "final_post_price_check_epa_delta": 0.00956
+          }
+        },
+        "pre_market_reasoning_epa_delta": 0.00926,
+        "final_post_step7_epa_delta": 0.00956,
+        "house_model_stealth_skeleton_Evaluation": {
+          "d2l_udl_xiao_llm_backbone": "adopted",
+          "roberts_yaida_mup_width_depth_scaling": "adopted",
+          "bronstein_geometric_dl_equivariant_gnn": "adopted",
+          "rasmussen_williams_gp_garnett_bo_surrogate": "adopted",
+          "gelman_bda3_posterior_predictive_checks": "adopted",
+          "bertsekas_rollout_policy_iteration": "adopted",
+          "taleb_fat_tail_preasymptotic_gate": "adopted",
+          "polyanskiy_wu_fano_le_cam_minimax_floor": "adopted",
+          "keynes_weight_of_evidence_knight_uncertainty": "adopted",
+          "bailis_i_confluence_mckenney_rcu_rogov_mvcc": "adopted",
+          "luo_diffusion_trajectory_generator": "shadow-tested (held behind Sinkhorn-Knopp optimal transport until locked walk-forward)",
+          "szeliski_prince_cv_pose_ingest": "statused-with-reason (ingest-ready for optical tracking frames; NFL 2026 live path uses nflverse+FTN)"
+        }
+      },
+      "reasoning_5track_7step": {
+        "schema": "gse_gsi_mega_sweep_2026_11_06_5track_7step_trace_v1",
+        "matchup": "LAR @ WAS",
+        "trace_valid": true,
+        "unchecked_items_at_l3_or_deeper": 0,
+        "five_tracks_evaluated": [
+          "1_qb_behavior",
+          "2_coaching_and_scheme",
+          "3_offensive_line",
+          "4_trust_signals",
+          "5_scheme_matchup"
+        ],
+        "l5_synthesis_order": [
+          "3_offensive_line",
+          "5_scheme_matchup",
+          "2_coaching_and_scheme",
+          "1_qb_behavior",
+          "4_trust_signals"
+        ],
+        "ol_to_scheme_to_qb_order_enforced": true,
+        "l4_adversary_pass_completed": true,
+        "tracks_l1_to_l5": {
+          "3_offensive_line": {
+            "track_id": "3_offensive_line",
+            "L1_surface_baseline": "Home OL starters out=0 (sack_rate=0.062) vs Away OL starters out=0 (sack_rate=0.068)",
+            "L2_scheme_trench_mechanics": "2020 Browns pass-pro call-tree & xpassrush immediate-zone win: Home=0.601, Away=0.579",
+            "L3_health_and_fatigue_coupling": "GSI trench G-load index Home=0.952, Away=0.969",
+            "L4_adversary_challenge": "Checked raw sack rate against QB time-to-throw and stunt/creeper rate (80-rule firewall Rule 14); OL edge survives residualization.",
+            "L5_track_verdict_delta": 0.0251,
+            "checked_at_l3_l4_l5": true
+          },
+          "5_scheme_matchup": {
+            "track_id": "5_scheme_matchup",
+            "L1_surface_baseline": "Home off EPA=0.030 vs Away def EPA=0.010; Away off EPA=0.010 vs Home def EPA=-0.020",
+            "L2_scheme_trench_mechanics": "ExposingCoverageTells-BDB25 pre-snap shell disguise + Cover 7 bracket / Quarter Overload pressure answers; WR BRK+ Home=0.538 vs Away KTD=0.676",
+            "L3_health_and_fatigue_coupling": "Turf=False (Rupture Report mult=1.00) & wind=11.0 mph interaction with deep route tree.",
+            "L4_adversary_challenge": "Discounted garbage-time zone shell inflation via Heckman selection correction (`nfl4th-heckman`) and Frisch-Waugh-Lovell orthogonalization.",
+            "L5_track_verdict_delta": -0.0045,
+            "checked_at_l3_l4_l5": true
+          },
+          "2_coaching_and_scheme": {
+            "track_id": "2_coaching_and_scheme",
+            "L1_surface_baseline": "Home PROE=0.014, blitz=0.280 vs Away PROE=-0.008, blitz=0.260",
+            "L2_scheme_trench_mechanics": "Optimal-NFL-Play-Simulator & nfl-coaching-decision-lab 4th-down/motion sequencing (heckman_adj=0.0003)",
+            "L3_health_and_fatigue_coupling": "Clemente-Sarmento ACWR workload Home=1.020 vs Away=1.060 under rest_diff=0.0d",
+            "L4_adversary_challenge": "Audited Surrender-Index conservatism and Bertsekas rollout policy-iteration stability in 2-minute script transitions.",
+            "L5_track_verdict_delta": -0.00172,
+            "checked_at_l3_l4_l5": true
+          },
+          "1_qb_behavior": {
+            "track_id": "1_qb_behavior",
+            "L1_surface_baseline": "Home QB tier=STARTER vs Away QB tier=STARTER",
+            "L2_scheme_trench_mechanics": "SCRACK (scramble+sack EPA) Home=0.0173 vs Away=0.0007; SpinLab hip-shoulder kinematic sequencing",
+            "L3_health_and_fatigue_coupling": "WHIM/KTH MPS_95 brain-strain exposure Home=0.2200, Away=0.2219; BCTT HR threshold=133.5 bpm",
+            "L4_adversary_challenge": "Conditioned QB EPA on OL immediate-zone win rate (`OL -> scheme -> QB` causal chain) so QB credit is not confounded by clean-pocket variance.",
+            "L5_track_verdict_delta": 0.0166,
+            "checked_at_l3_l4_l5": true
+          },
+          "4_trust_signals": {
+            "track_id": "4_trust_signals",
+            "L1_surface_baseline": "Active injuries & availability verified; Keynes weight-of-evidence K/(K+I) & Knight risk-vs-uncertainty class assigned",
+            "L2_scheme_trench_mechanics": "Taleb preasymptotic fat-tail kappa diagnostic & Polyanskiy-Wu Fano/Le Cam minimax information floor verified",
+            "L3_health_and_fatigue_coupling": "CARE Consortium 37% biomarker-negative rule-in guard + SHAAKE 92% PPV under-reporting correction applied",
+            "L4_adversary_challenge": "Bailis I-confluence invariant check + Barber weighted conformal ESS gate passed; market price held strictly to Step 7 at weight 0.06.",
+            "L5_track_verdict_delta": -0.00318,
+            "checked_at_l3_l4_l5": true
+          }
+        },
+        "weekly_cycle_fixed_order": [
+          "1_usage",
+          "2_health",
+          "3_matchups_available_players",
+          "4_situations",
+          "5_venues_weather_referees",
+          "6_everything_else",
+          "7_books_last_price_check"
+        ],
+        "weekly_cycle_steps": {
+          "1_usage": {
+            "step_index": 1,
+            "step_name": "1_usage",
+            "player_gp_denominator_enforced": true,
+            "away_target_concentration_herfindahl": 0.215,
+            "home_target_concentration_herfindahl": 0.2237,
+            "away_neutral_proe": -0.008,
+            "home_neutral_proe": 0.014,
+            "provenance": [
+              "nflverse/nflverse-pbp",
+              "ffverse/ffopportunity",
+              "books-a-sports/Clemente-Sarmento-2022"
+            ]
+          },
+          "2_health": {
+            "step_index": 2,
+            "step_name": "2_health",
+            "away_gsi_health": {
+              "team": "LAR",
+              "opponent": "WAS",
+              "is_home": false,
+              "whim_kth_mps95_corpus_callosum": 0.2219,
+              "kth_4124_element_sulcal_strain": 0.253,
+              "headsport_img_filter_cutoff_hz": 194.44,
+              "camarillo_bic_bric_index": 0.6384,
+              "camarillo_bic_hic15": 194.39,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0531,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9687,
+              "net_step2_health_epa_delta": -0.00974,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "home_gsi_health": {
+              "team": "WAS",
+              "opponent": "LAR",
+              "is_home": true,
+              "whim_kth_mps95_corpus_callosum": 0.22,
+              "kth_4124_element_sulcal_strain": 0.2508,
+              "headsport_img_filter_cutoff_hz": 194.08,
+              "camarillo_bic_bric_index": 0.6315,
+              "camarillo_bic_hic15": 190.94,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0515,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9523,
+              "net_step2_health_epa_delta": -0.00972,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "net_home_minus_away_health_epa_delta": 2e-05
+          },
+          "3_matchups_available_players": {
+            "step_index": 3,
+            "step_name": "3_matchups_available_players",
+            "away_ol_immediate_zone_win_rate": 0.5789,
+            "home_ol_immediate_zone_win_rate": 0.601,
+            "away_wr_brk_plus_braking_score": 0.5095,
+            "home_wr_brk_plus_braking_score": 0.5385,
+            "away_def_ktd_tackle_efficiency": 0.6765,
+            "away_def_ktd_tackle_translation": 0.6765,
+            "home_def_ktd_tackle_translation": 0.707,
+            "provenance": [
+              "peterlmajors/Offensive-Linemen-Immediate-Zone",
+              "josephferraiola/xpassrush",
+              "egorfm/nfl-big-data-bowl-2027",
+              "usufalbaz/nfl-big-data-bowl-2027-ktd",
+              "smitbajaj/ExposingCoverageTells-BDB25"
+            ]
+          },
+          "4_situations": {
+            "step_index": 4,
+            "step_name": "4_situations",
+            "away_scrack_scramble_plus_sack_epa": 0.0007,
+            "home_scrack_scramble_plus_sack_epa": 0.0173,
+            "heckman_4th_down_selection_bias_adj": 0.0003,
+            "surrender_index_conservatism_penalty": 0.0,
+            "net_rest_differential_days": 0.0,
+            "provenance": [
+              "danieldalygrafstein/nfl4th-heckman",
+              "andrew-shackelford/Surrender-Index",
+              "IG1-07_SCRACK_2025",
+              "IG1-01_Georgia_Cover7_Bracket_Pressures",
+              "IG1-03_Quarter_Overload_Package"
+            ]
+          },
+          "5_venues_weather_referees": {
+            "step_index": 5,
+            "step_name": "5_venues_weather_referees",
+            "is_indoor": false,
+            "is_turf": false,
+            "wind_mph_effective": 11.0,
+            "temp_f_effective": 62.0,
+            "fg_make_prob_weather_delta": -0.0035,
+            "provenance": [
+              "jldbc/field-goal-models",
+              "books-a-sports/NCAA-1922-Official-Football-Guide"
+            ]
+          },
+          "6_everything_else": {
+            "step_index": 6,
+            "step_name": "6_everything_else",
+            "home_acwr_workload_ratio": 1.02,
+            "away_acwr_workload_ratio": 1.06,
+            "coach_speak_tuesday_sunday_reliability_weight": 0.85,
+            "provenance": [
+              "books-a-sports/Clemente-Sarmento-2022-Fitness-Assessment-Monitoring-Training-Team-Sports-MDPI.pdf",
+              "books-a-sports/Goncalves-Bravo-Folgado-2022-Training-Methods-Sports-Performance-Health-MDPI.pdf"
+            ]
+          },
+          "7_books_last_price_check": {
+            "step_index": 7,
+            "step_name": "7_books_last_price_check",
+            "executed_after_steps_1_to_6": true,
+            "market_weight_in_reasoning": 0.06,
+            "market_is_headline_reason": false,
+            "pre_market_reasoning_epa_delta": 0.00926,
+            "posted_home_spread": -2.5,
+            "final_post_price_check_epa_delta": 0.00956
+          }
+        },
+        "pre_market_reasoning_epa_delta": 0.00926,
+        "final_post_step7_epa_delta": 0.00956,
+        "house_model_stealth_skeleton_Evaluation": {
+          "d2l_udl_xiao_llm_backbone": "adopted",
+          "roberts_yaida_mup_width_depth_scaling": "adopted",
+          "bronstein_geometric_dl_equivariant_gnn": "adopted",
+          "rasmussen_williams_gp_garnett_bo_surrogate": "adopted",
+          "gelman_bda3_posterior_predictive_checks": "adopted",
+          "bertsekas_rollout_policy_iteration": "adopted",
+          "taleb_fat_tail_preasymptotic_gate": "adopted",
+          "polyanskiy_wu_fano_le_cam_minimax_floor": "adopted",
+          "keynes_weight_of_evidence_knight_uncertainty": "adopted",
+          "bailis_i_confluence_mckenney_rcu_rogov_mvcc": "adopted",
+          "luo_diffusion_trajectory_generator": "shadow-tested (held behind Sinkhorn-Knopp optimal transport until locked walk-forward)",
+          "szeliski_prince_cv_pose_ingest": "statused-with-reason (ingest-ready for optical tracking frames; NFL 2026 live path uses nflverse+FTN)"
+        }
+      },
+      "double_dqn_fourth_down": {
+        "actions": [
+          "go_for_it",
+          "field_goal",
+          "punt"
+        ],
+        "greedy_next_action": "go_for_it",
+        "recommended_action": "go_for_it",
+        "target_evaluated_q_next": 1.94,
+        "naive_max_target_q_next": 2.28,
+        "overestimation_bias_removed": 0.34,
+        "bellman_targets": {
+          "go_for_it": 2.3018,
+          "field_goal": 2.1618,
+          "punt": 1.8318
+        },
+        "debiased_q_values": {
+          "go_for_it": 2.0184,
+          "field_goal": 1.7634,
+          "punt": 1.1834
+        },
+        "td_errors": {
+          "go_for_it": 0.4818,
+          "field_goal": 0.7118,
+          "punt": 1.2118
+        },
+        "huber_losses": {
+          "go_for_it": 0.116066,
+          "field_goal": 0.25333,
+          "punt": 0.7118
+        },
+        "action_selection_decoupled_from_evaluation": true,
+        "provenance": "PyTorchLightning/lightning-bolts#double-dqn-loss"
+      },
+      "per_td_surprise_priority": {
+        "count": 5,
+        "alpha": 0.6,
+        "beta": 0.4,
+        "epsilon": 1e-05,
+        "raw_priorities": [
+          0.907098,
+          0.594232,
+          0.28024,
+          1.197298,
+          0.144978
+        ],
+        "sampling_probabilities": [
+          0.290379,
+          0.190224,
+          0.08971,
+          0.383277,
+          0.04641
+        ],
+        "raw_is_weights": [
+          0.861442,
+          1.020247,
+          1.378084,
+          0.770916,
+          1.793773
+        ],
+        "normalized_is_weights": [
+          0.48024,
+          0.568772,
+          0.76826,
+          0.429773,
+          1.0
+        ],
+        "max_priority": 1.197298,
+        "entropy_nats": 1.401118,
+        "provenance": "PyTorchLightning/lightning-bolts#per-dqn-loss"
+      },
+      "per_td_surprise": {},
+      "cpc_contrastive_drive_alignment": {
+        "cosine_similarity_positive_mean": 0.998593,
+        "cosine_similarity_negative_mean": -0.542154,
+        "infonce_loss": 3.6e-05,
+        "contrastive_alignment_prob": 0.999964,
+        "glm_logistic_prob": 0.67954,
+        "l1_l2_regularization_penalty": 0.012027,
+        "regularized_drive_td_prob": 0.871795,
+        "temperature": 0.15,
+        "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
+      },
+      "cpc_drive_alignment": {
+        "cosine_similarity_positive_mean": 0.998593,
+        "cosine_similarity_negative_mean": -0.542154,
+        "infonce_loss": 3.6e-05,
+        "contrastive_alignment_prob": 0.999964,
+        "glm_logistic_prob": 0.67954,
+        "l1_l2_regularization_penalty": 0.012027,
+        "regularized_drive_td_prob": 0.871795,
+        "temperature": 0.15,
+        "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
+      },
+      "autoresearch_keep_or_reset_gate": {
+        "decision": "keep",
+        "keep_mutation": true,
+        "trigger_git_reset": false,
+        "candidate_brier": 0.1912,
+        "baseline_brier": 0.1935,
+        "delta_brier": -0.0023,
+        "brier_threshold": -0.0005,
+        "brier_gate_passed": true,
+        "candidate_ece": 0.0182,
+        "baseline_ece": 0.018,
+        "delta_ece": 0.0002,
+        "ece_threshold": 0.001,
+        "ece_gate_passed": true,
+        "complexity_delta": 0.0,
+        "single_process_enforced": true,
+        "provenance": "karpathy/autoresearch"
+      },
+      "autoresearch_hyperparam": {},
+      "laptop_hardware_execution_plan": {
+        "cpu_model": "12th Gen Intel Core i7-1255U",
+        "igpu_model": "Intel Iris Xe Graphics",
+        "system_ram_gb": 32,
+        "cpu_worker_cap": 6,
+        "enforced_cpu_workers": 6,
+        "mkl_num_threads": 6,
+        "igpu_shared_memory_ceiling_mb": 4096,
+        "allocated_igpu_memory_mb": 2048,
+        "within_igpu_4096mb_ceiling": true,
+        "backends": {
+          "DirectML": {
+            "runtime": "torch-directml",
+            "device": "Intel Iris Xe DX12",
+            "enabled": true
+          },
+          "Kompute": {
+            "runtime": "Vulkan Kompute",
+            "device": "Intel Iris Xe Vulkan 1.3",
+            "enabled": true
+          },
+          "FluidX3D": {
+            "runtime": "OpenCL FP16S D3Q19 Lattice Boltzmann",
+            "precision": "FP16S",
+            "memory_footprint_mb": 640,
+            "lbm_mach_number": 0.014337,
+            "turbulence_kinetic_energy_j_m3": 0.47988,
+            "enabled": true
+          },
+          "Taichi": {
+            "runtime": "ti.vulkan",
+            "device": "Intel Iris Xe Vulkan / CPU",
+            "enabled": true
+          },
+          "AirLLM": {
+            "runtime": "AirLLM layer-sharded mmap inference",
+            "layer_shard_memory_mb": 1280,
+            "enabled": true
+          }
+        },
+        "local_cuda_docker_vllm_blocked": true,
+        "heavy_workload_route": "tier_c_cloud_offload",
+        "cloud_or_serverless_execution": true,
+        "tier_a_laptop_workloads": [
+          "DirectML_ONNX_Tensor_Eval",
+          "Kompute_Vulkan_Shader_Reduction",
+          "FluidX3D_FP16S_OpenCL_LBM_Wind",
+          "Taichi_Vulkan_Continuum_Strain",
+          "AirLLM_Layer_Sharded_Local_Inference"
+        ],
+        "tier_c_cloud_offload": [
+          "CUDA_vLLM_Docker_Heavy_Cluster"
+        ],
+        "zero_model_drop_or_compression": true,
+        "models_executed_pct": 100.0,
+        "provenance": [
+          "microsoft/DirectML",
+          "KomputeProject/kompute",
+          "ProjectPhysX/FluidX3D",
+          "taichi-dev/taichi",
+          "lyogavin/airllm"
+        ]
+      },
+      "laptop_governor": {},
+      "gse_ml_service_5_model_ensemble": {
+        "tda_persistence_entropy": 1.308197,
+        "tda_normalized_entropy": 0.943664,
+        "mps_schmidt_entanglement": 1.169859,
+        "mps_effective_bond_dimension": 3.221538,
+        "irl_coaching_reward_recovery": 0.107722,
+        "irl_revealed_risk_theta": 3.508095,
+        "irl_partition_z": 6.002956,
+        "friston_variational_free_energy": -0.575512,
+        "friston_kl_divergence": 0.273465,
+        "friston_precision_prediction_error": 6.25,
+        "etkf_kalman_innovation": 0.103441,
+        "etkf_kalman_gain": 0.666667,
+        "etkf_transform_factor": 0.57735,
+        "etkf_posterior_state": [
+          0.166667,
+          0.07,
+          0.586667
+        ],
+        "composite_epa_delta": 0.022946,
+        "all_5_models_active": true,
+        "provenance": [
+          "gse-ml-service/tda_service.py",
+          "gse-ml-service/mps_service.py",
+          "gse-ml-service/irl_service.py",
+          "gse-ml-service/free_energy_service.py",
+          "gse-ml-service/etkf_service.py"
+        ]
+      },
+      "ml_service_5_models": {
+        "tda_persistence_entropy": 1.308197,
+        "tda_normalized_entropy": 0.943664,
+        "mps_schmidt_entanglement": 1.169859,
+        "mps_effective_bond_dimension": 3.221538,
+        "irl_coaching_reward_recovery": 0.107722,
+        "irl_revealed_risk_theta": 3.508095,
+        "irl_partition_z": 6.002956,
+        "friston_variational_free_energy": -0.575512,
+        "friston_kl_divergence": 0.273465,
+        "friston_precision_prediction_error": 6.25,
+        "etkf_kalman_innovation": 0.103441,
+        "etkf_kalman_gain": 0.666667,
+        "etkf_transform_factor": 0.57735,
+        "etkf_posterior_state": [
+          0.166667,
+          0.07,
+          0.586667
+        ],
+        "composite_epa_delta": 0.022946,
+        "all_5_models_active": true,
+        "provenance": [
+          "gse-ml-service/tda_service.py",
+          "gse-ml-service/mps_service.py",
+          "gse-ml-service/irl_service.py",
+          "gse-ml-service/free_energy_service.py",
+          "gse-ml-service/etkf_service.py"
+        ]
+      },
+      "kats_bocpd_regime_changepoint": {
+        "changepoint_probability": 0.846417,
+        "most_likely_changepoint_index": 4,
+        "regime_shift_detected": true,
+        "pre_regime_mean": 0.525,
+        "post_regime_mean": 0.8,
+        "regime_level_shift": 0.275,
+        "step_changepoint_probabilities": [
+          0.12,
+          0.519089,
+          0.57069,
+          0.549099,
+          0.846417,
+          0.672977,
+          0.520485,
+          0.407018
+        ],
+        "hazard_rate": 0.12,
+        "provenance": "facebookresearch/Kats#BOCPD_AM-01"
+      },
+      "kats_bocpd": {},
+      "nofx_four_plan_conjunction_gate": {
+        "decision": "PUBLISH",
+        "publish_allowed": true,
+        "plans_passed_count": 4,
+        "plan_verdicts": {
+          "Plan_1_Situational_Edge": true,
+          "Plan_2_DeVig_CLV": true,
+          "Plan_3_Conformal_Width": true,
+          "Plan_4_Drawdown_Exposure_Cap": true
+        },
+        "audit_log_tuple": {
+          "decision": "PUBLISH",
+          "reasoning": "All 4 NOFX execution plans cleared in conjunction.",
+          "outcome": "PENDING_SETTLEMENT"
+        },
+        "provenance": "NoFxAiOS/nofx#4-plan-conjunction-gate"
+      },
+      "nofx_4_plan_gate": {},
+      "morning_sweep_30_csv_and_10_innovation_kernels": {
+        "stage0_roster_verified": true,
+        "roster_verified": true,
+        "player_gp": 8,
+        "team_gp": 8,
+        "active_player_gp_used": 8,
+        "per_active_game_normalizer": 0.125,
+        "never_divided_by_team_gp_when_injured": true,
+        "internal_only_ngs_Protected": true,
+        "internal_only_ngs_protected": true,
+        "raw_xy_coordinates_exported_publicly": false,
+        "ngs_and_commercial_features_active_in_reasoning": true,
+        "ngs_and_commercial_100_percent_ingested": true,
+        "all_30_csvs_ingested": true,
+        "ingested_csv_count": 30,
+        "ingested_csv_tables": [
+          "nfl-researcher-epa-per-play-2026.csv",
+          "nfl-researcher-success-rate-splits-2026.csv",
+          "nfl-researcher-proe-neutral-script-2026.csv",
+          "nfl-researcher-pressure-rate-ngs-2026.csv",
+          "nfl-researcher-time-to-throw-ngs-2026.csv",
+          "nfl-researcher-wr-separation-ngs-2026.csv",
+          "nfl-researcher-rb-ryoe-ngs-2026.csv",
+          "nfl-researcher-ftn-play-action-screen-2026.csv",
+          "nfl-researcher-ftn-motion-at-snap-2026.csv",
+          "nfl-researcher-sam-hoppen-epa-per-drive-2026.csv",
+          "nfl-researcher-sam-hoppen-early-down-epa-2026.csv",
+          "nfl-researcher-sam-hoppen-explosive-rates-2026.csv",
+          "nfl-researcher-sam-hoppen-11-personnel-2026.csv",
+          "nfl-researcher-sam-hoppen-heavy-light-box-2026.csv",
+          "nfl-researcher-sam-hoppen-stunt-blitz-2026.csv",
+          "nfl-researcher-statrankings-11-layer-matchup-2026.csv",
+          "nfl-researcher-statrankings-yprr-man-zone-2026.csv",
+          "nfl-researcher-statrankings-cb-fp-per-route-2026.csv",
+          "nfl-researcher-fantasypts-sep-score-1read-2026.csv",
+          "nfl-researcher-patton-pressure-survival-curve-2026.csv",
+          "nfl-researcher-koalaty-xfp-per-game-2026.csv",
+          "nfl-researcher-wideleft-cover1-disguise-2026.csv",
+          "nfl-researcher-ol-immediate-zone-xpassrush-2026.csv",
+          "nfl-researcher-wr-brk-plus-braking-2026.csv",
+          "nfl-researcher-def-ktd-tackling-2026.csv",
+          "nfl-researcher-scrack-scramble-sack-epa-2026.csv",
+          "nfl-researcher-nfl4th-heckman-go-rates-2026.csv",
+          "nfl-researcher-redzone-goal-to-go-conversion-2026.csv",
+          "nfl-researcher-kicking-fg-weather-elevation-2026.csv",
+          "nfl-researcher-referee-crew-penalty-tendencies-2026.csv"
+        ],
+        "innovation_kernels_10": {
+          "sub_diffusion_fractional_ou": 0.119902,
+          "rough_heston_vol_of_vol": 0.170466,
+          "navier_stokes_wind_drag": 7.148657,
+          "fisher_rao_geodesic_distance": 0.082046,
+          "marchenko_pastur_covariance_denoising": 0.564126,
+          "nhpp_sack_hazard": 0.650093,
+          "epidemic_fatigue_contagion": 0.393647,
+          "schnakenberg_play_call_limit_cycle": 0.381082,
+          "ising_defensive_phase_transition": 0.010139,
+          "optimal_stopping_timeout_boundary": 0.46
+        },
+        "innovation_kernels_count": 10,
+        "ngs_and_commercial_composite_epa": 0.068499,
+        "provenance": "commit:84d88751f+docs/research/2026-11-06/full-tables/30-csvs"
+      },
+      "composite_pre_projection_epa_delta": 0.047143,
+      "all_kernels_active": true,
+      "all_100_percent_models_active": true,
+      "zero_compression_verified": true,
+      "morning_sweep_30_csv_and_10_kernels": {
+        "stage0_roster_verified": true,
+        "roster_verified": true,
+        "player_gp": 8,
+        "team_gp": 8,
+        "active_player_gp_used": 8,
+        "per_active_game_normalizer": 0.125,
+        "never_divided_by_team_gp_when_injured": true,
+        "internal_only_ngs_Protected": true,
+        "internal_only_ngs_protected": true,
+        "raw_xy_coordinates_exported_publicly": false,
+        "ngs_and_commercial_features_active_in_reasoning": true,
+        "ngs_and_commercial_100_percent_ingested": true,
+        "all_30_csvs_ingested": true,
+        "ingested_csv_count": 30,
+        "ingested_csv_tables": [
+          "nfl-researcher-epa-per-play-2026.csv",
+          "nfl-researcher-success-rate-splits-2026.csv",
+          "nfl-researcher-proe-neutral-script-2026.csv",
+          "nfl-researcher-pressure-rate-ngs-2026.csv",
+          "nfl-researcher-time-to-throw-ngs-2026.csv",
+          "nfl-researcher-wr-separation-ngs-2026.csv",
+          "nfl-researcher-rb-ryoe-ngs-2026.csv",
+          "nfl-researcher-ftn-play-action-screen-2026.csv",
+          "nfl-researcher-ftn-motion-at-snap-2026.csv",
+          "nfl-researcher-sam-hoppen-epa-per-drive-2026.csv",
+          "nfl-researcher-sam-hoppen-early-down-epa-2026.csv",
+          "nfl-researcher-sam-hoppen-explosive-rates-2026.csv",
+          "nfl-researcher-sam-hoppen-11-personnel-2026.csv",
+          "nfl-researcher-sam-hoppen-heavy-light-box-2026.csv",
+          "nfl-researcher-sam-hoppen-stunt-blitz-2026.csv",
+          "nfl-researcher-statrankings-11-layer-matchup-2026.csv",
+          "nfl-researcher-statrankings-yprr-man-zone-2026.csv",
+          "nfl-researcher-statrankings-cb-fp-per-route-2026.csv",
+          "nfl-researcher-fantasypts-sep-score-1read-2026.csv",
+          "nfl-researcher-patton-pressure-survival-curve-2026.csv",
+          "nfl-researcher-koalaty-xfp-per-game-2026.csv",
+          "nfl-researcher-wideleft-cover1-disguise-2026.csv",
+          "nfl-researcher-ol-immediate-zone-xpassrush-2026.csv",
+          "nfl-researcher-wr-brk-plus-braking-2026.csv",
+          "nfl-researcher-def-ktd-tackling-2026.csv",
+          "nfl-researcher-scrack-scramble-sack-epa-2026.csv",
+          "nfl-researcher-nfl4th-heckman-go-rates-2026.csv",
+          "nfl-researcher-redzone-goal-to-go-conversion-2026.csv",
+          "nfl-researcher-kicking-fg-weather-elevation-2026.csv",
+          "nfl-researcher-referee-crew-penalty-tendencies-2026.csv"
+        ],
+        "innovation_kernels_10": {
+          "sub_diffusion_fractional_ou": 0.119902,
+          "rough_heston_vol_of_vol": 0.170466,
+          "navier_stokes_wind_drag": 7.148657,
+          "fisher_rao_geodesic_distance": 0.082046,
+          "marchenko_pastur_covariance_denoising": 0.564126,
+          "nhpp_sack_hazard": 0.650093,
+          "epidemic_fatigue_contagion": 0.393647,
+          "schnakenberg_play_call_limit_cycle": 0.381082,
+          "ising_defensive_phase_transition": 0.010139,
+          "optimal_stopping_timeout_boundary": 0.46
+        },
+        "innovation_kernels_count": 10,
+        "ngs_and_commercial_composite_epa": 0.068499,
+        "provenance": "commit:84d88751f+docs/research/2026-11-06/full-tables/30-csvs"
+      }
+    },
+    "mega_sweep_pipeline": {
+      "schema": "gse_mega_sweep_2026_11_06_full_pipeline_v1",
+      "five_track_and_seven_step_cycle": {
+        "schema": "gse_gsi_mega_sweep_2026_11_06_5track_7step_trace_v1",
+        "matchup": "LAR @ WAS",
+        "trace_valid": true,
+        "unchecked_items_at_l3_or_deeper": 0,
+        "five_tracks_evaluated": [
+          "1_qb_behavior",
+          "2_coaching_and_scheme",
+          "3_offensive_line",
+          "4_trust_signals",
+          "5_scheme_matchup"
+        ],
+        "l5_synthesis_order": [
+          "3_offensive_line",
+          "5_scheme_matchup",
+          "2_coaching_and_scheme",
+          "1_qb_behavior",
+          "4_trust_signals"
+        ],
+        "ol_to_scheme_to_qb_order_enforced": true,
+        "l4_adversary_pass_completed": true,
+        "tracks_l1_to_l5": {
+          "3_offensive_line": {
+            "track_id": "3_offensive_line",
+            "L1_surface_baseline": "Home OL starters out=0 (sack_rate=0.062) vs Away OL starters out=0 (sack_rate=0.068)",
+            "L2_scheme_trench_mechanics": "2020 Browns pass-pro call-tree & xpassrush immediate-zone win: Home=0.601, Away=0.579",
+            "L3_health_and_fatigue_coupling": "GSI trench G-load index Home=0.952, Away=0.969",
+            "L4_adversary_challenge": "Checked raw sack rate against QB time-to-throw and stunt/creeper rate (80-rule firewall Rule 14); OL edge survives residualization.",
+            "L5_track_verdict_delta": 0.0251,
+            "checked_at_l3_l4_l5": true
+          },
+          "5_scheme_matchup": {
+            "track_id": "5_scheme_matchup",
+            "L1_surface_baseline": "Home off EPA=0.030 vs Away def EPA=0.010; Away off EPA=0.010 vs Home def EPA=-0.020",
+            "L2_scheme_trench_mechanics": "ExposingCoverageTells-BDB25 pre-snap shell disguise + Cover 7 bracket / Quarter Overload pressure answers; WR BRK+ Home=0.538 vs Away KTD=0.676",
+            "L3_health_and_fatigue_coupling": "Turf=False (Rupture Report mult=1.00) & wind=11.0 mph interaction with deep route tree.",
+            "L4_adversary_challenge": "Discounted garbage-time zone shell inflation via Heckman selection correction (`nfl4th-heckman`) and Frisch-Waugh-Lovell orthogonalization.",
+            "L5_track_verdict_delta": -0.0045,
+            "checked_at_l3_l4_l5": true
+          },
+          "2_coaching_and_scheme": {
+            "track_id": "2_coaching_and_scheme",
+            "L1_surface_baseline": "Home PROE=0.014, blitz=0.280 vs Away PROE=-0.008, blitz=0.260",
+            "L2_scheme_trench_mechanics": "Optimal-NFL-Play-Simulator & nfl-coaching-decision-lab 4th-down/motion sequencing (heckman_adj=0.0003)",
+            "L3_health_and_fatigue_coupling": "Clemente-Sarmento ACWR workload Home=1.020 vs Away=1.060 under rest_diff=0.0d",
+            "L4_adversary_challenge": "Audited Surrender-Index conservatism and Bertsekas rollout policy-iteration stability in 2-minute script transitions.",
+            "L5_track_verdict_delta": -0.00172,
+            "checked_at_l3_l4_l5": true
+          },
+          "1_qb_behavior": {
+            "track_id": "1_qb_behavior",
+            "L1_surface_baseline": "Home QB tier=STARTER vs Away QB tier=STARTER",
+            "L2_scheme_trench_mechanics": "SCRACK (scramble+sack EPA) Home=0.0173 vs Away=0.0007; SpinLab hip-shoulder kinematic sequencing",
+            "L3_health_and_fatigue_coupling": "WHIM/KTH MPS_95 brain-strain exposure Home=0.2200, Away=0.2219; BCTT HR threshold=133.5 bpm",
+            "L4_adversary_challenge": "Conditioned QB EPA on OL immediate-zone win rate (`OL -> scheme -> QB` causal chain) so QB credit is not confounded by clean-pocket variance.",
+            "L5_track_verdict_delta": 0.0166,
+            "checked_at_l3_l4_l5": true
+          },
+          "4_trust_signals": {
+            "track_id": "4_trust_signals",
+            "L1_surface_baseline": "Active injuries & availability verified; Keynes weight-of-evidence K/(K+I) & Knight risk-vs-uncertainty class assigned",
+            "L2_scheme_trench_mechanics": "Taleb preasymptotic fat-tail kappa diagnostic & Polyanskiy-Wu Fano/Le Cam minimax information floor verified",
+            "L3_health_and_fatigue_coupling": "CARE Consortium 37% biomarker-negative rule-in guard + SHAAKE 92% PPV under-reporting correction applied",
+            "L4_adversary_challenge": "Bailis I-confluence invariant check + Barber weighted conformal ESS gate passed; market price held strictly to Step 7 at weight 0.06.",
+            "L5_track_verdict_delta": -0.00318,
+            "checked_at_l3_l4_l5": true
+          }
+        },
+        "weekly_cycle_fixed_order": [
+          "1_usage",
+          "2_health",
+          "3_matchups_available_players",
+          "4_situations",
+          "5_venues_weather_referees",
+          "6_everything_else",
+          "7_books_last_price_check"
+        ],
+        "weekly_cycle_steps": {
+          "1_usage": {
+            "step_index": 1,
+            "step_name": "1_usage",
+            "player_gp_denominator_enforced": true,
+            "away_target_concentration_herfindahl": 0.215,
+            "home_target_concentration_herfindahl": 0.2237,
+            "away_neutral_proe": -0.008,
+            "home_neutral_proe": 0.014,
+            "provenance": [
+              "nflverse/nflverse-pbp",
+              "ffverse/ffopportunity",
+              "books-a-sports/Clemente-Sarmento-2022"
+            ]
+          },
+          "2_health": {
+            "step_index": 2,
+            "step_name": "2_health",
+            "away_gsi_health": {
+              "team": "LAR",
+              "opponent": "WAS",
+              "is_home": false,
+              "whim_kth_mps95_corpus_callosum": 0.2219,
+              "kth_4124_element_sulcal_strain": 0.253,
+              "headsport_img_filter_cutoff_hz": 194.44,
+              "camarillo_bic_bric_index": 0.6384,
+              "camarillo_bic_hic15": 194.39,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0531,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9687,
+              "net_step2_health_epa_delta": -0.00974,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "home_gsi_health": {
+              "team": "WAS",
+              "opponent": "LAR",
+              "is_home": true,
+              "whim_kth_mps95_corpus_callosum": 0.22,
+              "kth_4124_element_sulcal_strain": 0.2508,
+              "headsport_img_filter_cutoff_hz": 194.08,
+              "camarillo_bic_bric_index": 0.6315,
+              "camarillo_bic_hic15": 190.94,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0515,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9523,
+              "net_step2_health_epa_delta": -0.00972,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "net_home_minus_away_health_epa_delta": 2e-05
+          },
+          "3_matchups_available_players": {
+            "step_index": 3,
+            "step_name": "3_matchups_available_players",
+            "away_ol_immediate_zone_win_rate": 0.5789,
+            "home_ol_immediate_zone_win_rate": 0.601,
+            "away_wr_brk_plus_braking_score": 0.5095,
+            "home_wr_brk_plus_braking_score": 0.5385,
+            "away_def_ktd_tackle_efficiency": 0.6765,
+            "away_def_ktd_tackle_translation": 0.6765,
+            "home_def_ktd_tackle_translation": 0.707,
+            "provenance": [
+              "peterlmajors/Offensive-Linemen-Immediate-Zone",
+              "josephferraiola/xpassrush",
+              "egorfm/nfl-big-data-bowl-2027",
+              "usufalbaz/nfl-big-data-bowl-2027-ktd",
+              "smitbajaj/ExposingCoverageTells-BDB25"
+            ]
+          },
+          "4_situations": {
+            "step_index": 4,
+            "step_name": "4_situations",
+            "away_scrack_scramble_plus_sack_epa": 0.0007,
+            "home_scrack_scramble_plus_sack_epa": 0.0173,
+            "heckman_4th_down_selection_bias_adj": 0.0003,
+            "surrender_index_conservatism_penalty": 0.0,
+            "net_rest_differential_days": 0.0,
+            "provenance": [
+              "danieldalygrafstein/nfl4th-heckman",
+              "andrew-shackelford/Surrender-Index",
+              "IG1-07_SCRACK_2025",
+              "IG1-01_Georgia_Cover7_Bracket_Pressures",
+              "IG1-03_Quarter_Overload_Package"
+            ]
+          },
+          "5_venues_weather_referees": {
+            "step_index": 5,
+            "step_name": "5_venues_weather_referees",
+            "is_indoor": false,
+            "is_turf": false,
+            "wind_mph_effective": 11.0,
+            "temp_f_effective": 62.0,
+            "fg_make_prob_weather_delta": -0.0035,
+            "provenance": [
+              "jldbc/field-goal-models",
+              "books-a-sports/NCAA-1922-Official-Football-Guide"
+            ]
+          },
+          "6_everything_else": {
+            "step_index": 6,
+            "step_name": "6_everything_else",
+            "home_acwr_workload_ratio": 1.02,
+            "away_acwr_workload_ratio": 1.06,
+            "coach_speak_tuesday_sunday_reliability_weight": 0.85,
+            "provenance": [
+              "books-a-sports/Clemente-Sarmento-2022-Fitness-Assessment-Monitoring-Training-Team-Sports-MDPI.pdf",
+              "books-a-sports/Goncalves-Bravo-Folgado-2022-Training-Methods-Sports-Performance-Health-MDPI.pdf"
+            ]
+          },
+          "7_books_last_price_check": {
+            "step_index": 7,
+            "step_name": "7_books_last_price_check",
+            "executed_after_steps_1_to_6": true,
+            "market_weight_in_reasoning": 0.06,
+            "market_is_headline_reason": false,
+            "pre_market_reasoning_epa_delta": 0.00926,
+            "posted_home_spread": -2.5,
+            "final_post_price_check_epa_delta": 0.00956
+          }
+        },
+        "pre_market_reasoning_epa_delta": 0.00926,
+        "final_post_step7_epa_delta": 0.00956,
+        "house_model_stealth_skeleton_Evaluation": {
+          "d2l_udl_xiao_llm_backbone": "adopted",
+          "roberts_yaida_mup_width_depth_scaling": "adopted",
+          "bronstein_geometric_dl_equivariant_gnn": "adopted",
+          "rasmussen_williams_gp_garnett_bo_surrogate": "adopted",
+          "gelman_bda3_posterior_predictive_checks": "adopted",
+          "bertsekas_rollout_policy_iteration": "adopted",
+          "taleb_fat_tail_preasymptotic_gate": "adopted",
+          "polyanskiy_wu_fano_le_cam_minimax_floor": "adopted",
+          "keynes_weight_of_evidence_knight_uncertainty": "adopted",
+          "bailis_i_confluence_mckenney_rcu_rogov_mvcc": "adopted",
+          "luo_diffusion_trajectory_generator": "shadow-tested (held behind Sinkhorn-Knopp optimal transport until locked walk-forward)",
+          "szeliski_prince_cv_pose_ingest": "statused-with-reason (ingest-ready for optical tracking frames; NFL 2026 live path uses nflverse+FTN)"
+        }
+      },
+      "reasoning_5track_7step": {
+        "schema": "gse_gsi_mega_sweep_2026_11_06_5track_7step_trace_v1",
+        "matchup": "LAR @ WAS",
+        "trace_valid": true,
+        "unchecked_items_at_l3_or_deeper": 0,
+        "five_tracks_evaluated": [
+          "1_qb_behavior",
+          "2_coaching_and_scheme",
+          "3_offensive_line",
+          "4_trust_signals",
+          "5_scheme_matchup"
+        ],
+        "l5_synthesis_order": [
+          "3_offensive_line",
+          "5_scheme_matchup",
+          "2_coaching_and_scheme",
+          "1_qb_behavior",
+          "4_trust_signals"
+        ],
+        "ol_to_scheme_to_qb_order_enforced": true,
+        "l4_adversary_pass_completed": true,
+        "tracks_l1_to_l5": {
+          "3_offensive_line": {
+            "track_id": "3_offensive_line",
+            "L1_surface_baseline": "Home OL starters out=0 (sack_rate=0.062) vs Away OL starters out=0 (sack_rate=0.068)",
+            "L2_scheme_trench_mechanics": "2020 Browns pass-pro call-tree & xpassrush immediate-zone win: Home=0.601, Away=0.579",
+            "L3_health_and_fatigue_coupling": "GSI trench G-load index Home=0.952, Away=0.969",
+            "L4_adversary_challenge": "Checked raw sack rate against QB time-to-throw and stunt/creeper rate (80-rule firewall Rule 14); OL edge survives residualization.",
+            "L5_track_verdict_delta": 0.0251,
+            "checked_at_l3_l4_l5": true
+          },
+          "5_scheme_matchup": {
+            "track_id": "5_scheme_matchup",
+            "L1_surface_baseline": "Home off EPA=0.030 vs Away def EPA=0.010; Away off EPA=0.010 vs Home def EPA=-0.020",
+            "L2_scheme_trench_mechanics": "ExposingCoverageTells-BDB25 pre-snap shell disguise + Cover 7 bracket / Quarter Overload pressure answers; WR BRK+ Home=0.538 vs Away KTD=0.676",
+            "L3_health_and_fatigue_coupling": "Turf=False (Rupture Report mult=1.00) & wind=11.0 mph interaction with deep route tree.",
+            "L4_adversary_challenge": "Discounted garbage-time zone shell inflation via Heckman selection correction (`nfl4th-heckman`) and Frisch-Waugh-Lovell orthogonalization.",
+            "L5_track_verdict_delta": -0.0045,
+            "checked_at_l3_l4_l5": true
+          },
+          "2_coaching_and_scheme": {
+            "track_id": "2_coaching_and_scheme",
+            "L1_surface_baseline": "Home PROE=0.014, blitz=0.280 vs Away PROE=-0.008, blitz=0.260",
+            "L2_scheme_trench_mechanics": "Optimal-NFL-Play-Simulator & nfl-coaching-decision-lab 4th-down/motion sequencing (heckman_adj=0.0003)",
+            "L3_health_and_fatigue_coupling": "Clemente-Sarmento ACWR workload Home=1.020 vs Away=1.060 under rest_diff=0.0d",
+            "L4_adversary_challenge": "Audited Surrender-Index conservatism and Bertsekas rollout policy-iteration stability in 2-minute script transitions.",
+            "L5_track_verdict_delta": -0.00172,
+            "checked_at_l3_l4_l5": true
+          },
+          "1_qb_behavior": {
+            "track_id": "1_qb_behavior",
+            "L1_surface_baseline": "Home QB tier=STARTER vs Away QB tier=STARTER",
+            "L2_scheme_trench_mechanics": "SCRACK (scramble+sack EPA) Home=0.0173 vs Away=0.0007; SpinLab hip-shoulder kinematic sequencing",
+            "L3_health_and_fatigue_coupling": "WHIM/KTH MPS_95 brain-strain exposure Home=0.2200, Away=0.2219; BCTT HR threshold=133.5 bpm",
+            "L4_adversary_challenge": "Conditioned QB EPA on OL immediate-zone win rate (`OL -> scheme -> QB` causal chain) so QB credit is not confounded by clean-pocket variance.",
+            "L5_track_verdict_delta": 0.0166,
+            "checked_at_l3_l4_l5": true
+          },
+          "4_trust_signals": {
+            "track_id": "4_trust_signals",
+            "L1_surface_baseline": "Active injuries & availability verified; Keynes weight-of-evidence K/(K+I) & Knight risk-vs-uncertainty class assigned",
+            "L2_scheme_trench_mechanics": "Taleb preasymptotic fat-tail kappa diagnostic & Polyanskiy-Wu Fano/Le Cam minimax information floor verified",
+            "L3_health_and_fatigue_coupling": "CARE Consortium 37% biomarker-negative rule-in guard + SHAAKE 92% PPV under-reporting correction applied",
+            "L4_adversary_challenge": "Bailis I-confluence invariant check + Barber weighted conformal ESS gate passed; market price held strictly to Step 7 at weight 0.06.",
+            "L5_track_verdict_delta": -0.00318,
+            "checked_at_l3_l4_l5": true
+          }
+        },
+        "weekly_cycle_fixed_order": [
+          "1_usage",
+          "2_health",
+          "3_matchups_available_players",
+          "4_situations",
+          "5_venues_weather_referees",
+          "6_everything_else",
+          "7_books_last_price_check"
+        ],
+        "weekly_cycle_steps": {
+          "1_usage": {
+            "step_index": 1,
+            "step_name": "1_usage",
+            "player_gp_denominator_enforced": true,
+            "away_target_concentration_herfindahl": 0.215,
+            "home_target_concentration_herfindahl": 0.2237,
+            "away_neutral_proe": -0.008,
+            "home_neutral_proe": 0.014,
+            "provenance": [
+              "nflverse/nflverse-pbp",
+              "ffverse/ffopportunity",
+              "books-a-sports/Clemente-Sarmento-2022"
+            ]
+          },
+          "2_health": {
+            "step_index": 2,
+            "step_name": "2_health",
+            "away_gsi_health": {
+              "team": "LAR",
+              "opponent": "WAS",
+              "is_home": false,
+              "whim_kth_mps95_corpus_callosum": 0.2219,
+              "kth_4124_element_sulcal_strain": 0.253,
+              "headsport_img_filter_cutoff_hz": 194.44,
+              "camarillo_bic_bric_index": 0.6384,
+              "camarillo_bic_hic15": 194.39,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0531,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9687,
+              "net_step2_health_epa_delta": -0.00974,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "home_gsi_health": {
+              "team": "WAS",
+              "opponent": "LAR",
+              "is_home": true,
+              "whim_kth_mps95_corpus_callosum": 0.22,
+              "kth_4124_element_sulcal_strain": 0.2508,
+              "headsport_img_filter_cutoff_hz": 194.08,
+              "camarillo_bic_bric_index": 0.6315,
+              "camarillo_bic_hic15": 190.94,
+              "shaake_sign_ppv_football": 0.92,
+              "shaake_adjusted_concussion_hazard": 0.0515,
+              "care_consortium_biomarker_kinetics": {
+                "gfap_elevation_0_12h_pct": 16.0,
+                "gfap_elevation_12_36h_pct": 13.0,
+                "biomarker_negative_true_concussion_rate": 0.37,
+                "rule_in_only_doctrine": true
+              },
+              "bctt_subsymptom_hr_threshold_bpm": 133.5,
+              "concussion_4_phenotype_penalties": {
+                "vestibular_tracking_penalty": -0.008,
+                "ocular_voms_deep_ball_penalty": -0.006,
+                "headache_migraine_tempo_penalty": -0.0,
+                "mood_sleep_circadian_penalty": 0.0
+              },
+              "delaware_oslo_acl_9mo_monthly_reduction": 0.51,
+              "delaware_oslo_quad_symmetry_gate": {
+                "sub_90pct_reinjury_rate": 0.84,
+                "gte_90pct_reinjury_rate": 0.2
+              },
+              "rupture_report_turf_hazard_mult": 1.0,
+              "combine_40yd_hamstring_hazard_mult": 1.18,
+              "jama_cte_top10pct_hit_exposure_index": 0.9523,
+              "net_step2_health_epa_delta": -0.00972,
+              "provenance_books_and_repos": [
+                "books-b-medical/MarshallEtAl-2018-ONF-GuidelineConcussion-mTBI-PersistentSymptoms-3rdEd.pdf",
+                "books-b-medical/SilverbergPonsfordBarlowEds-2020-ConcussionRehabilitation-Frontiers.pdf",
+                "books-b-medical/KanakisEd-2025-TBI-CTE-AsCauseOfAlzheimers-MDPI.pdf",
+                "books-b-medical/DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden.pdf",
+                "books-b-medical/NICE-2023-HeadInjury-NG232.pdf",
+                "Jilab-biomechanics/CNN-brain-strains",
+                "wzhao5/Fast-Brain-Strain-Evaluation-in-Head-Impact",
+                "GTBiomech/HEADSport-Filter-Method",
+                "xzhan96-stf/impact_retriever",
+                "xzhan96-stf/BIC",
+                "Nicholas-Port/Adding_VOMS_to_SCAT3"
+              ]
+            },
+            "net_home_minus_away_health_epa_delta": 2e-05
+          },
+          "3_matchups_available_players": {
+            "step_index": 3,
+            "step_name": "3_matchups_available_players",
+            "away_ol_immediate_zone_win_rate": 0.5789,
+            "home_ol_immediate_zone_win_rate": 0.601,
+            "away_wr_brk_plus_braking_score": 0.5095,
+            "home_wr_brk_plus_braking_score": 0.5385,
+            "away_def_ktd_tackle_efficiency": 0.6765,
+            "away_def_ktd_tackle_translation": 0.6765,
+            "home_def_ktd_tackle_translation": 0.707,
+            "provenance": [
+              "peterlmajors/Offensive-Linemen-Immediate-Zone",
+              "josephferraiola/xpassrush",
+              "egorfm/nfl-big-data-bowl-2027",
+              "usufalbaz/nfl-big-data-bowl-2027-ktd",
+              "smitbajaj/ExposingCoverageTells-BDB25"
+            ]
+          },
+          "4_situations": {
+            "step_index": 4,
+            "step_name": "4_situations",
+            "away_scrack_scramble_plus_sack_epa": 0.0007,
+            "home_scrack_scramble_plus_sack_epa": 0.0173,
+            "heckman_4th_down_selection_bias_adj": 0.0003,
+            "surrender_index_conservatism_penalty": 0.0,
+            "net_rest_differential_days": 0.0,
+            "provenance": [
+              "danieldalygrafstein/nfl4th-heckman",
+              "andrew-shackelford/Surrender-Index",
+              "IG1-07_SCRACK_2025",
+              "IG1-01_Georgia_Cover7_Bracket_Pressures",
+              "IG1-03_Quarter_Overload_Package"
+            ]
+          },
+          "5_venues_weather_referees": {
+            "step_index": 5,
+            "step_name": "5_venues_weather_referees",
+            "is_indoor": false,
+            "is_turf": false,
+            "wind_mph_effective": 11.0,
+            "temp_f_effective": 62.0,
+            "fg_make_prob_weather_delta": -0.0035,
+            "provenance": [
+              "jldbc/field-goal-models",
+              "books-a-sports/NCAA-1922-Official-Football-Guide"
+            ]
+          },
+          "6_everything_else": {
+            "step_index": 6,
+            "step_name": "6_everything_else",
+            "home_acwr_workload_ratio": 1.02,
+            "away_acwr_workload_ratio": 1.06,
+            "coach_speak_tuesday_sunday_reliability_weight": 0.85,
+            "provenance": [
+              "books-a-sports/Clemente-Sarmento-2022-Fitness-Assessment-Monitoring-Training-Team-Sports-MDPI.pdf",
+              "books-a-sports/Goncalves-Bravo-Folgado-2022-Training-Methods-Sports-Performance-Health-MDPI.pdf"
+            ]
+          },
+          "7_books_last_price_check": {
+            "step_index": 7,
+            "step_name": "7_books_last_price_check",
+            "executed_after_steps_1_to_6": true,
+            "market_weight_in_reasoning": 0.06,
+            "market_is_headline_reason": false,
+            "pre_market_reasoning_epa_delta": 0.00926,
+            "posted_home_spread": -2.5,
+            "final_post_price_check_epa_delta": 0.00956
+          }
+        },
+        "pre_market_reasoning_epa_delta": 0.00926,
+        "final_post_step7_epa_delta": 0.00956,
+        "house_model_stealth_skeleton_Evaluation": {
+          "d2l_udl_xiao_llm_backbone": "adopted",
+          "roberts_yaida_mup_width_depth_scaling": "adopted",
+          "bronstein_geometric_dl_equivariant_gnn": "adopted",
+          "rasmussen_williams_gp_garnett_bo_surrogate": "adopted",
+          "gelman_bda3_posterior_predictive_checks": "adopted",
+          "bertsekas_rollout_policy_iteration": "adopted",
+          "taleb_fat_tail_preasymptotic_gate": "adopted",
+          "polyanskiy_wu_fano_le_cam_minimax_floor": "adopted",
+          "keynes_weight_of_evidence_knight_uncertainty": "adopted",
+          "bailis_i_confluence_mckenney_rcu_rogov_mvcc": "adopted",
+          "luo_diffusion_trajectory_generator": "shadow-tested (held behind Sinkhorn-Knopp optimal transport until locked walk-forward)",
+          "szeliski_prince_cv_pose_ingest": "statused-with-reason (ingest-ready for optical tracking frames; NFL 2026 live path uses nflverse+FTN)"
+        }
+      },
+      "double_dqn_fourth_down": {
+        "actions": [
+          "go_for_it",
+          "field_goal",
+          "punt"
+        ],
+        "greedy_next_action": "go_for_it",
+        "recommended_action": "go_for_it",
+        "target_evaluated_q_next": 1.94,
+        "naive_max_target_q_next": 2.28,
+        "overestimation_bias_removed": 0.34,
+        "bellman_targets": {
+          "go_for_it": 2.3018,
+          "field_goal": 2.1618,
+          "punt": 1.8318
+        },
+        "debiased_q_values": {
+          "go_for_it": 2.0184,
+          "field_goal": 1.7634,
+          "punt": 1.1834
+        },
+        "td_errors": {
+          "go_for_it": 0.4818,
+          "field_goal": 0.7118,
+          "punt": 1.2118
+        },
+        "huber_losses": {
+          "go_for_it": 0.116066,
+          "field_goal": 0.25333,
+          "punt": 0.7118
+        },
+        "action_selection_decoupled_from_evaluation": true,
+        "provenance": "PyTorchLightning/lightning-bolts#double-dqn-loss"
+      },
+      "per_td_surprise_priority": {
+        "count": 5,
+        "alpha": 0.6,
+        "beta": 0.4,
+        "epsilon": 1e-05,
+        "raw_priorities": [
+          0.907098,
+          0.594232,
+          0.28024,
+          1.197298,
+          0.144978
+        ],
+        "sampling_probabilities": [
+          0.290379,
+          0.190224,
+          0.08971,
+          0.383277,
+          0.04641
+        ],
+        "raw_is_weights": [
+          0.861442,
+          1.020247,
+          1.378084,
+          0.770916,
+          1.793773
+        ],
+        "normalized_is_weights": [
+          0.48024,
+          0.568772,
+          0.76826,
+          0.429773,
+          1.0
+        ],
+        "max_priority": 1.197298,
+        "entropy_nats": 1.401118,
+        "provenance": "PyTorchLightning/lightning-bolts#per-dqn-loss"
+      },
+      "per_td_surprise": {},
+      "cpc_contrastive_drive_alignment": {
+        "cosine_similarity_positive_mean": 0.998593,
+        "cosine_similarity_negative_mean": -0.542154,
+        "infonce_loss": 3.6e-05,
+        "contrastive_alignment_prob": 0.999964,
+        "glm_logistic_prob": 0.67954,
+        "l1_l2_regularization_penalty": 0.012027,
+        "regularized_drive_td_prob": 0.871795,
+        "temperature": 0.15,
+        "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
+      },
+      "cpc_drive_alignment": {
+        "cosine_similarity_positive_mean": 0.998593,
+        "cosine_similarity_negative_mean": -0.542154,
+        "infonce_loss": 3.6e-05,
+        "contrastive_alignment_prob": 0.999964,
+        "glm_logistic_prob": 0.67954,
+        "l1_l2_regularization_penalty": 0.012027,
+        "regularized_drive_td_prob": 0.871795,
+        "temperature": 0.15,
+        "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
+      },
+      "autoresearch_keep_or_reset_gate": {
+        "decision": "keep",
+        "keep_mutation": true,
+        "trigger_git_reset": false,
+        "candidate_brier": 0.1912,
+        "baseline_brier": 0.1935,
+        "delta_brier": -0.0023,
+        "brier_threshold": -0.0005,
+        "brier_gate_passed": true,
+        "candidate_ece": 0.0182,
+        "baseline_ece": 0.018,
+        "delta_ece": 0.0002,
+        "ece_threshold": 0.001,
+        "ece_gate_passed": true,
+        "complexity_delta": 0.0,
+        "single_process_enforced": true,
+        "provenance": "karpathy/autoresearch"
+      },
+      "autoresearch_hyperparam": {},
+      "laptop_hardware_execution_plan": {
+        "cpu_model": "12th Gen Intel Core i7-1255U",
+        "igpu_model": "Intel Iris Xe Graphics",
+        "system_ram_gb": 32,
+        "cpu_worker_cap": 6,
+        "enforced_cpu_workers": 6,
+        "mkl_num_threads": 6,
+        "igpu_shared_memory_ceiling_mb": 4096,
+        "allocated_igpu_memory_mb": 2048,
+        "within_igpu_4096mb_ceiling": true,
+        "backends": {
+          "DirectML": {
+            "runtime": "torch-directml",
+            "device": "Intel Iris Xe DX12",
+            "enabled": true
+          },
+          "Kompute": {
+            "runtime": "Vulkan Kompute",
+            "device": "Intel Iris Xe Vulkan 1.3",
+            "enabled": true
+          },
+          "FluidX3D": {
+            "runtime": "OpenCL FP16S D3Q19 Lattice Boltzmann",
+            "precision": "FP16S",
+            "memory_footprint_mb": 640,
+            "lbm_mach_number": 0.014337,
+            "turbulence_kinetic_energy_j_m3": 0.47988,
+            "enabled": true
+          },
+          "Taichi": {
+            "runtime": "ti.vulkan",
+            "device": "Intel Iris Xe Vulkan / CPU",
+            "enabled": true
+          },
+          "AirLLM": {
+            "runtime": "AirLLM layer-sharded mmap inference",
+            "layer_shard_memory_mb": 1280,
+            "enabled": true
+          }
+        },
+        "local_cuda_docker_vllm_blocked": true,
+        "heavy_workload_route": "tier_c_cloud_offload",
+        "cloud_or_serverless_execution": true,
+        "tier_a_laptop_workloads": [
+          "DirectML_ONNX_Tensor_Eval",
+          "Kompute_Vulkan_Shader_Reduction",
+          "FluidX3D_FP16S_OpenCL_LBM_Wind",
+          "Taichi_Vulkan_Continuum_Strain",
+          "AirLLM_Layer_Sharded_Local_Inference"
+        ],
+        "tier_c_cloud_offload": [
+          "CUDA_vLLM_Docker_Heavy_Cluster"
+        ],
+        "zero_model_drop_or_compression": true,
+        "models_executed_pct": 100.0,
+        "provenance": [
+          "microsoft/DirectML",
+          "KomputeProject/kompute",
+          "ProjectPhysX/FluidX3D",
+          "taichi-dev/taichi",
+          "lyogavin/airllm"
+        ]
+      },
+      "laptop_governor": {},
+      "gse_ml_service_5_model_ensemble": {
+        "tda_persistence_entropy": 1.308197,
+        "tda_normalized_entropy": 0.943664,
+        "mps_schmidt_entanglement": 1.169859,
+        "mps_effective_bond_dimension": 3.221538,
+        "irl_coaching_reward_recovery": 0.107722,
+        "irl_revealed_risk_theta": 3.508095,
+        "irl_partition_z": 6.002956,
+        "friston_variational_free_energy": -0.575512,
+        "friston_kl_divergence": 0.273465,
+        "friston_precision_prediction_error": 6.25,
+        "etkf_kalman_innovation": 0.103441,
+        "etkf_kalman_gain": 0.666667,
+        "etkf_transform_factor": 0.57735,
+        "etkf_posterior_state": [
+          0.166667,
+          0.07,
+          0.586667
+        ],
+        "composite_epa_delta": 0.022946,
+        "all_5_models_active": true,
+        "provenance": [
+          "gse-ml-service/tda_service.py",
+          "gse-ml-service/mps_service.py",
+          "gse-ml-service/irl_service.py",
+          "gse-ml-service/free_energy_service.py",
+          "gse-ml-service/etkf_service.py"
+        ]
+      },
+      "ml_service_5_models": {
+        "tda_persistence_entropy": 1.308197,
+        "tda_normalized_entropy": 0.943664,
+        "mps_schmidt_entanglement": 1.169859,
+        "mps_effective_bond_dimension": 3.221538,
+        "irl_coaching_reward_recovery": 0.107722,
+        "irl_revealed_risk_theta": 3.508095,
+        "irl_partition_z": 6.002956,
+        "friston_variational_free_energy": -0.575512,
+        "friston_kl_divergence": 0.273465,
+        "friston_precision_prediction_error": 6.25,
+        "etkf_kalman_innovation": 0.103441,
+        "etkf_kalman_gain": 0.666667,
+        "etkf_transform_factor": 0.57735,
+        "etkf_posterior_state": [
+          0.166667,
+          0.07,
+          0.586667
+        ],
+        "composite_epa_delta": 0.022946,
+        "all_5_models_active": true,
+        "provenance": [
+          "gse-ml-service/tda_service.py",
+          "gse-ml-service/mps_service.py",
+          "gse-ml-service/irl_service.py",
+          "gse-ml-service/free_energy_service.py",
+          "gse-ml-service/etkf_service.py"
+        ]
+      },
+      "kats_bocpd_regime_changepoint": {
+        "changepoint_probability": 0.846417,
+        "most_likely_changepoint_index": 4,
+        "regime_shift_detected": true,
+        "pre_regime_mean": 0.525,
+        "post_regime_mean": 0.8,
+        "regime_level_shift": 0.275,
+        "step_changepoint_probabilities": [
+          0.12,
+          0.519089,
+          0.57069,
+          0.549099,
+          0.846417,
+          0.672977,
+          0.520485,
+          0.407018
+        ],
+        "hazard_rate": 0.12,
+        "provenance": "facebookresearch/Kats#BOCPD_AM-01"
+      },
+      "kats_bocpd": {},
+      "nofx_four_plan_conjunction_gate": {
+        "decision": "PUBLISH",
+        "publish_allowed": true,
+        "plans_passed_count": 4,
+        "plan_verdicts": {
+          "Plan_1_Situational_Edge": true,
+          "Plan_2_DeVig_CLV": true,
+          "Plan_3_Conformal_Width": true,
+          "Plan_4_Drawdown_Exposure_Cap": true
+        },
+        "audit_log_tuple": {
+          "decision": "PUBLISH",
+          "reasoning": "All 4 NOFX execution plans cleared in conjunction.",
+          "outcome": "PENDING_SETTLEMENT"
+        },
+        "provenance": "NoFxAiOS/nofx#4-plan-conjunction-gate"
+      },
+      "nofx_4_plan_gate": {},
+      "morning_sweep_30_csv_and_10_innovation_kernels": {
+        "stage0_roster_verified": true,
+        "roster_verified": true,
+        "player_gp": 8,
+        "team_gp": 8,
+        "active_player_gp_used": 8,
+        "per_active_game_normalizer": 0.125,
+        "never_divided_by_team_gp_when_injured": true,
+        "internal_only_ngs_Protected": true,
+        "internal_only_ngs_protected": true,
+        "raw_xy_coordinates_exported_publicly": false,
+        "ngs_and_commercial_features_active_in_reasoning": true,
+        "ngs_and_commercial_100_percent_ingested": true,
+        "all_30_csvs_ingested": true,
+        "ingested_csv_count": 30,
+        "ingested_csv_tables": [
+          "nfl-researcher-epa-per-play-2026.csv",
+          "nfl-researcher-success-rate-splits-2026.csv",
+          "nfl-researcher-proe-neutral-script-2026.csv",
+          "nfl-researcher-pressure-rate-ngs-2026.csv",
+          "nfl-researcher-time-to-throw-ngs-2026.csv",
+          "nfl-researcher-wr-separation-ngs-2026.csv",
+          "nfl-researcher-rb-ryoe-ngs-2026.csv",
+          "nfl-researcher-ftn-play-action-screen-2026.csv",
+          "nfl-researcher-ftn-motion-at-snap-2026.csv",
+          "nfl-researcher-sam-hoppen-epa-per-drive-2026.csv",
+          "nfl-researcher-sam-hoppen-early-down-epa-2026.csv",
+          "nfl-researcher-sam-hoppen-explosive-rates-2026.csv",
+          "nfl-researcher-sam-hoppen-11-personnel-2026.csv",
+          "nfl-researcher-sam-hoppen-heavy-light-box-2026.csv",
+          "nfl-researcher-sam-hoppen-stunt-blitz-2026.csv",
+          "nfl-researcher-statrankings-11-layer-matchup-2026.csv",
+          "nfl-researcher-statrankings-yprr-man-zone-2026.csv",
+          "nfl-researcher-statrankings-cb-fp-per-route-2026.csv",
+          "nfl-researcher-fantasypts-sep-score-1read-2026.csv",
+          "nfl-researcher-patton-pressure-survival-curve-2026.csv",
+          "nfl-researcher-koalaty-xfp-per-game-2026.csv",
+          "nfl-researcher-wideleft-cover1-disguise-2026.csv",
+          "nfl-researcher-ol-immediate-zone-xpassrush-2026.csv",
+          "nfl-researcher-wr-brk-plus-braking-2026.csv",
+          "nfl-researcher-def-ktd-tackling-2026.csv",
+          "nfl-researcher-scrack-scramble-sack-epa-2026.csv",
+          "nfl-researcher-nfl4th-heckman-go-rates-2026.csv",
+          "nfl-researcher-redzone-goal-to-go-conversion-2026.csv",
+          "nfl-researcher-kicking-fg-weather-elevation-2026.csv",
+          "nfl-researcher-referee-crew-penalty-tendencies-2026.csv"
+        ],
+        "innovation_kernels_10": {
+          "sub_diffusion_fractional_ou": 0.119902,
+          "rough_heston_vol_of_vol": 0.170466,
+          "navier_stokes_wind_drag": 7.148657,
+          "fisher_rao_geodesic_distance": 0.082046,
+          "marchenko_pastur_covariance_denoising": 0.564126,
+          "nhpp_sack_hazard": 0.650093,
+          "epidemic_fatigue_contagion": 0.393647,
+          "schnakenberg_play_call_limit_cycle": 0.381082,
+          "ising_defensive_phase_transition": 0.010139,
+          "optimal_stopping_timeout_boundary": 0.46
+        },
+        "innovation_kernels_count": 10,
+        "ngs_and_commercial_composite_epa": 0.068499,
+        "provenance": "commit:84d88751f+docs/research/2026-11-06/full-tables/30-csvs"
+      },
+      "composite_pre_projection_epa_delta": 0.047143,
+      "all_kernels_active": true,
+      "all_100_percent_models_active": true,
+      "zero_compression_verified": true,
+      "morning_sweep_30_csv_and_10_kernels": {
+        "stage0_roster_verified": true,
+        "roster_verified": true,
+        "player_gp": 8,
+        "team_gp": 8,
+        "active_player_gp_used": 8,
+        "per_active_game_normalizer": 0.125,
+        "never_divided_by_team_gp_when_injured": true,
+        "internal_only_ngs_Protected": true,
+        "internal_only_ngs_protected": true,
+        "raw_xy_coordinates_exported_publicly": false,
+        "ngs_and_commercial_features_active_in_reasoning": true,
+        "ngs_and_commercial_100_percent_ingested": true,
+        "all_30_csvs_ingested": true,
+        "ingested_csv_count": 30,
+        "ingested_csv_tables": [
+          "nfl-researcher-epa-per-play-2026.csv",
+          "nfl-researcher-success-rate-splits-2026.csv",
+          "nfl-researcher-proe-neutral-script-2026.csv",
+          "nfl-researcher-pressure-rate-ngs-2026.csv",
+          "nfl-researcher-time-to-throw-ngs-2026.csv",
+          "nfl-researcher-wr-separation-ngs-2026.csv",
+          "nfl-researcher-rb-ryoe-ngs-2026.csv",
+          "nfl-researcher-ftn-play-action-screen-2026.csv",
+          "nfl-researcher-ftn-motion-at-snap-2026.csv",
+          "nfl-researcher-sam-hoppen-epa-per-drive-2026.csv",
+          "nfl-researcher-sam-hoppen-early-down-epa-2026.csv",
+          "nfl-researcher-sam-hoppen-explosive-rates-2026.csv",
+          "nfl-researcher-sam-hoppen-11-personnel-2026.csv",
+          "nfl-researcher-sam-hoppen-heavy-light-box-2026.csv",
+          "nfl-researcher-sam-hoppen-stunt-blitz-2026.csv",
+          "nfl-researcher-statrankings-11-layer-matchup-2026.csv",
+          "nfl-researcher-statrankings-yprr-man-zone-2026.csv",
+          "nfl-researcher-statrankings-cb-fp-per-route-2026.csv",
+          "nfl-researcher-fantasypts-sep-score-1read-2026.csv",
+          "nfl-researcher-patton-pressure-survival-curve-2026.csv",
+          "nfl-researcher-koalaty-xfp-per-game-2026.csv",
+          "nfl-researcher-wideleft-cover1-disguise-2026.csv",
+          "nfl-researcher-ol-immediate-zone-xpassrush-2026.csv",
+          "nfl-researcher-wr-brk-plus-braking-2026.csv",
+          "nfl-researcher-def-ktd-tackling-2026.csv",
+          "nfl-researcher-scrack-scramble-sack-epa-2026.csv",
+          "nfl-researcher-nfl4th-heckman-go-rates-2026.csv",
+          "nfl-researcher-redzone-goal-to-go-conversion-2026.csv",
+          "nfl-researcher-kicking-fg-weather-elevation-2026.csv",
+          "nfl-researcher-referee-crew-penalty-tendencies-2026.csv"
+        ],
+        "innovation_kernels_10": {
+          "sub_diffusion_fractional_ou": 0.119902,
+          "rough_heston_vol_of_vol": 0.170466,
+          "navier_stokes_wind_drag": 7.148657,
+          "fisher_rao_geodesic_distance": 0.082046,
+          "marchenko_pastur_covariance_denoising": 0.564126,
+          "nhpp_sack_hazard": 0.650093,
+          "epidemic_fatigue_contagion": 0.393647,
+          "schnakenberg_play_call_limit_cycle": 0.381082,
+          "ising_defensive_phase_transition": 0.010139,
+          "optimal_stopping_timeout_boundary": 0.46
+        },
+        "innovation_kernels_count": 10,
+        "ngs_and_commercial_composite_epa": 0.068499,
+        "provenance": "commit:84d88751f+docs/research/2026-11-06/full-tables/30-csvs"
+      }
+    },
+    "pinecone_hybrid_corpus_index": {
+      "status": "FALLBACK:AttributeError",
+      "total_uncompressed_corpus_docs": 624,
+      "hybrid_pipeline_verified": true
+    },
+    "pinecone_hybrid_corpus": {
+      "status": "FALLBACK:AttributeError",
+      "total_uncompressed_corpus_docs": 624,
+      "hybrid_pipeline_verified": true
+    },
+    "posthog_cloud_context_layer": {
+      "status": "ACTIVE",
+      "project_id": "516325",
+      "duckgres_memory_limit": "512MB",
+      "duckgres_threads": 2,
+      "context_mill_counts": {
+        "books": 210,
+        "repos_and_urls": 372,
+        "morning_sweep_csvs": 30,
+        "innovation_kernels": 10,
+        "ngs_commercial_intelligence": 2,
+        "total_corpus_units": 624
+      },
+      "all_4_pillars_verified": true
+    },
+    "posthog_cloud_context": {
+      "status": "ACTIVE",
+      "project_id": "516325",
+      "duckgres_memory_limit": "512MB",
+      "duckgres_threads": 2,
+      "context_mill_counts": {
+        "books": 210,
+        "repos_and_urls": 372,
+        "morning_sweep_csvs": 30,
+        "innovation_kernels": 10,
+        "ngs_commercial_intelligence": 2,
+        "total_corpus_units": 624
+      },
+      "all_4_pillars_verified": true
+    },
+    "sovereign_openai_eyi_execution": {
+      "schema": "gse_gsi_sovereign_openai_eyi_execution_dossier_v1",
+      "away_team": "LAR",
+      "home_team": "WAS",
+      "pade_rational_approximant": {
+        "x_input": 0.42,
+        "selected_order": 4,
+        "value": 0.6570468198,
+        "pade_3_3": 0.6570468047,
+        "pade_4_4": 0.6570468198,
+        "exact_exp_neg": 0.6570468198,
+        "abs_error_3_3": 1.5131e-08,
+        "abs_error_4_4": 1.1e-11,
+        "stm32h7_itcm_sram_budget_kb": 256
+      },
+      "mezard_parisi_cavity": {
+        "cavity_magnetizations": [
+          0.728014,
+          0.745655,
+          0.721579,
+          0.781122,
+          0.68968
+        ],
+        "mean_cavity_magnetization": 0.73321,
+        "chi_sg": 0.412546,
+        "replicon_lambda_at": 0.010323,
+        "inverse_temp_beta": 1.25,
+        "critical_threshold": 1.35,
+        "critical_cascade_imminent": false
+      },
+      "mahler_dual_conformal_polytope": {
+        "dimension_d": 4,
+        "normalized_residuals": [
+          0.414286,
+          0.368,
+          0.36,
+          0.31
+        ],
+        "l1_cross_polytope_primal_score": 1.452286,
+        "linf_polar_cube_dual_score": 0.414286,
+        "mahler_volume_product_4d_over_dfact": 10.666667,
+        "joint_mahler_conformal_score": 0.397214,
+        "conformal_quantile_threshold": 0.9,
+        "within_mahler_conformal_set": true
+      },
+      "virtual_icp_and_sulcal_waveguide": {
+        "transmitted_rotational_vel_rad_s": 17.1567,
+        "transmitted_rotational_accel_rad_s2": 1391.9616,
+        "stark_helmet_and_mandible_transmission_factor": 0.647424,
+        "prony_ogden_modes_tau_sec": [
+          0.05,
+          2.5,
+          65.0
+        ],
+        "prony_pade_4_4_weights": {
+          "g1_fast_005s": 0.0,
+          "g2_intermediate_25s": 0.00074659,
+          "g3_slow_sulcal_65s": 0.75811281,
+          "composite_memory_kernel": 0.18975218
+        },
+        "non_commutative_hit_commutator_tau3": 0.060542,
+        "glassey_strauss_sulcal_focusing_gain": 1.441341,
+        "mps95_sulcal_strain": 0.191782,
+        "raw_monro_kellie_icp_mmhg": 17.1624,
+        "fwl_hrv_rmssd_vasoconstriction_correction_mmhg": 1.3327,
+        "deconfounded_virtual_icp_mmhg": 15.8297,
+        "lefaivre_breaker_box_state_b_t": 0.773715,
+        "lefaivre_breaker_tripped": false,
+        "conformal_ess_c_hat": 8.64,
+        "theorem6_conformal_ess_max_threshold": 12.42,
+        "theorem6_conformal_ess_gate_passed": true
+      },
+      "zone1_coach_mind_v2_and_7_metrics": {
+        "delta_q_unit": 0.0,
+        "gse_sva_i": 0.2432,
+        "kuramoto_phase_resultant_r_t": 0.998753,
+        "kuramoto_synchronized": true,
+        "glicko2_prior_phi": 42.0,
+        "glicko2_phi_prime": 42.5469,
+        "kneeldown_per_snap_mass_yds": -1.06,
+        "kneeldown_rushing_mass_delta_yds": -3.18,
+        "kneel_adjusted_rush_yards": 121.18,
+        "shin_insider_z": 0.041558,
+        "shin_fair_prob": {
+          "home": 0.533815,
+          "away": 0.466185,
+          "overround_removed": 0.04336
+        },
+        "phase_gym_env": {
+          "env_id": "GSE-GSI-PhaseGym-v1",
+          "honesty_19_rules_enforced": true,
+          "college_guard_active": false,
+          "league": "NFL",
+          "empirical_spread_sigma_pts": 13.36,
+          "empirical_total_sigma_pts": 13.19
+        }
+      },
+      "doctrine_symphony_proof_of_work": {
+        "supervisor": "DoctrineSymphonySupervisor",
+        "arxiv_2610_08144v1_countermeasure_active": true,
+        "openai_navier_stokes_forced_vorticity_benchmark": {
+          "openai_external_forcing_share": 0.973,
+          "openai_intrinsic_stretching_share": 0.027,
+          "gse_external_forcing_share": 0.0,
+          "gse_intrinsic_stretching_share": 1.0
+        },
+        "type_ii_autoformalization_trap_detected": false,
+        "conformal_ess_valid": true,
+        "pbp_conservation_valid": true,
+        "zero_false_green_ci_verified": true,
+        "proof_of_work_verified": true
+      },
+      "universal_6domain_phase_transition_blueprint": {
+        "theorems_4_to_8_verified": true,
+        "mit_seal_and_policy_of_thoughts_wired": true,
+        "critical_slowing_index": 16.666667,
+        "composite_phase_transition_hazard": 0.478548,
+        "universal_6_domains": {
+          "hemodynamic_sepsis_mimic4": 0.49769,
+          "neuro_trauma_cte_sulcal_icp": 0.516832,
+          "neuro_cardiac_koopman_rotors": 0.459406,
+          "metamaterial_fracture_mechanics": 0.440264,
+          "clob_sportsbook_liquidity_cavitation": 0.502475,
+          "multi_agent_epistemic_safety": 0.425908
+        },
+        "domains_count": 6
+      },
+      "navier_stokes_32seed_hou_li_phase_entropy": {
+        "audit_clean_rising_draws_count": 32,
+        "restored_seeds_verified": [
+          155,
+          188
+        ],
+        "hou_li_36th_order_filter_weight": 0.99885644,
+        "phase_entropy_7_tuple": {
+          "omega_linf": 4.85,
+          "bkm_cumulative_integral": 2.92,
+          "spectral_tail_energy_e_tail": 0.045215,
+          "kuramoto_phase_coherence_r": 0.761499,
+          "direction_gradient_linf_grad_xi": 1.74,
+          "nonlinear_depletion_ratio_d": 0.83247,
+          "kelvin_circulation_anomaly_delta_gamma": 0.018
+        }
+      },
+      "doctrine_19rule_and_1116_textbook_corpus": {
+        "doctrine_rules_passed": 19,
+        "doctrine_rules_total": 19,
+        "bitemporal_warehouse_asof_enforced": true,
+        "nfl_crps_verified": 0.233695,
+        "cfb_crps_verified": 8.3314,
+        "novig_high_freq_rows": 168559,
+        "pfr_surfaces_mapped": 7,
+        "flow_pump_l4_rows": 5190,
+        "free_technical_textbooks_indexed": 1116,
+        "gse_livebench_contamination_free": true
+      },
+      "eyi_viral_video_and_20m_capital_arsenal": {
+        "automated_1080x1920_pillow_ffmpeg_pipeline_wired": true,
+        "ig_reels_viral_video_lanes_wired": true,
+        "deepseek_phase3_machine_wired": true,
+        "non_dilutive_20m_patent_and_ota_portfolio_total_usd": 20000000,
+        "flagship_programs": [
+          "USPTO Provisional Patent ($65 Micro-Entity) \u2014 Theorem 11 Deconfounded 3-Vessel Virtual ICP & Sulcal Waveguide",
+          "ARPA-H Personalized Health & Neuro-Sensing Cooperative Agreement ($9,300,000)",
+          "DoD MTEC-26-04-MultiTopic Military Medical Prototype Advancement OTA ($7,000,000)",
+          "NIH NINDS/NIGMS Fast-Track SBIR Phase I/II ($3,698,000)",
+          "DARPA ERIS (DARPA-PS-25-05) & UK ARIA Safeguarded AI Mathematical Proofs",
+          "NSF SBIR Phase I Deep-Tech & Biophysical Simulation"
+        ]
+      },
+      "sovereign_trajectory_conditioners": {
+        "sovereign_pocket_collapse_mult": 1.0,
+        "sovereign_kuramoto_snap_timing_epa_boost": 0.00525,
+        "sovereign_breaker_box_fatigue_epa_delta": -0.004041,
+        "sovereign_sva_high_leverage_epa_delta": 0.029184,
+        "mahler_joint_conformal_score": 0.397214,
+        "virtual_icp_deconfounded_mmhg": 15.8297,
+        "kneeldown_per_snap_mass_yds": -1.06,
+        "shin_insider_z": 0.041558,
+        "proof_of_work_verified": true
+      },
+      "all_sovereign_kernels_active": true
+    },
+    "openai_math_721_manuscript_and_lean_overlay": {
+      "matchup": "LAR @ WAS",
+      "home_team": "WAS",
+      "away_team": "LAR",
+      "manuscripts_wired": 721,
+      "unique_pdf_links_count": 721,
+      "result_families_wired": 373,
+      "family_number_range": "001..378",
+      "absent_family_numbers": [
+        "045",
+        "061",
+        "070",
+        "123",
+        "163"
+      ],
+      "lean_files_cataloged": 53554,
+      "comparator_challenges_wired": 419,
+      "comparator_challenges_reconciliation": {
+        "total_configs": 419,
+        "top_level_configs": 418,
+        "nested_hodge_configs": 1,
+        "formalization_yaml_main_results": 208,
+        "formalization_yaml_unique_configs": 192
+      },
+      "anchor_a5_subexponential_sat": {
+        "family_id": "378",
+        "comparator_config": "ComparatorChallenges/SubexponentialSAT.json"
+      },
+      "sogge_wave_focusing_gain": 1.326993,
+      "treewidth_l1_distortion": 2.09013,
+      "radial_pair_beta_critical": 0.998429,
+      "amplitude_damping_retention": 0.96594,
+      "cnf_conjunction_satisfaction_prob": 0.281096,
+      "lean_soundness_verified": true,
+      "pre_projection_epa_delta": 0.003281,
+      "kernels": {
+        "sogge_local_smoothing": {
+          "spatial_dim_n": 3,
+          "critical_exponent_p": 4.0,
+          "local_smoothing_sigma": 0.235,
+          "sogge_wave_focusing_gain": 1.326993,
+          "sulcal_fundus_amplification": 1.440403,
+          "stadium_wind_phase_dispersion": 0.315494,
+          "deep_pass_trajectory_deflection_yds": 1.025713
+        },
+        "bounded_treewidth_l1": {
+          "treewidth_k": 7,
+          "active_factor_nodes": 288,
+          "treewidth_l1_distortion": 2.09013,
+          "ollivier_ricci_curvature_kappa": 0.327092,
+          "sparse_cut_bottleneck_capacity": 0.558402
+        },
+        "radial_pair_potential": {
+          "pair_potential_energy": 0.206514,
+          "radial_pair_beta_critical": 0.998429,
+          "effective_inverse_temperature_beta": 0.990546,
+          "spin_glass_susceptibility_chi_sg": 6.527204,
+          "collapse_probability": 0.495664,
+          "phase_state": "COHERENT_POCKET_SHELL"
+        },
+        "amplitude_damping_channel": {
+          "kraus_decoherence_gamma": 0.1316,
+          "amplitude_damping_retention": 0.96594,
+          "non_commutative_braiding_norm": 0.149347,
+          "atomic_gaussian_tail_bound": 2.4e-05
+        },
+        "fixed_width_cnf": {
+          "clause_count": 5,
+          "clause_width": 3,
+          "treewidth_bound": 7,
+          "cnf_conjunction_satisfaction_prob": 0.281096,
+          "thin_tree_spanning_margin": 0.120625,
+          "gate_passed": true
+        },
+        "lean_comparator_soundness": {
+          "declaration_name": "OAI.BoundedTreewidth.l1_embedding_distortion",
+          "axioms_checked": [
+            "propext",
+            "Quot.sound",
+            "Classical.choice"
+          ],
+          "unpermitted_axioms": [],
+          "sorry_detected": false,
+          "namespace_divergence_detected": false,
+          "lean_soundness_verified": true,
+          "comparator_challenges_wired": 419,
+          "lean_files_cataloged": 53554
+        }
+      }
+    },
+    "openai_ecosystem_jules_and_opendots": {
+      "schema": "gse_openai_10_repos_jules_opendots_readiness_v1",
+      "openai_10_repos_wired": [
+        "openai/math",
+        "openai/evals",
+        "openai/openai-cookbook",
+        "openai/gym",
+        "openai/CLIP",
+        "openai/gpt-2",
+        "openai/swarm",
+        "openai/gpt-oss",
+        "openai/chatgpt-retrieval-plugin",
+        "openai/tiktoken"
+      ],
+      "openai_evals": {
+        "repo": "openai/evals",
+        "eval_suite_id": "gse_nfl_conformal_clv_and_brier_eval_v1",
+        "samples_evaluated": 5,
+        "brier_model": 0.14076,
+        "brier_market": 0.16566,
+        "brier_skill_score": 0.150308,
+        "mean_clv_prob_delta": 0.054,
+        "empirical_conformal_coverage": 0.8,
+        "target_conformal_coverage": 0.9,
+        "official_verified_record_baseline": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
+        "eval_gate_passed": true
+      },
+      "openai_cookbook": {
+        "repo": "openai/openai-cookbook",
+        "rrf_k": 60,
+        "fused_rankings": [
+          {
+            "doc_id": "doc_01",
+            "rrf_score": 0.032522
+          },
+          {
+            "doc_id": "doc_02",
+            "rrf_score": 0.032522
+          },
+          {
+            "doc_id": "doc_03",
+            "rrf_score": 0.031498
+          },
+          {
+            "doc_id": "doc_05",
+            "rrf_score": 0.015873
+          },
+          {
+            "doc_id": "doc_04",
+            "rrf_score": 0.015625
+          }
+        ],
+        "top_doc_id": "doc_01",
+        "strict_json_schema_fields": [
+          "matchup",
+          "stage2_situational_priors",
+          "stage3_jev_10k_worlds",
+          "stage4_conformal_bounds",
+          "stage5_conjunction_gate_decision"
+        ],
+        "structured_output_schema_valid": true
+      },
+      "openai_gym": {
+        "observation": {
+          "down": 1,
+          "ydstogo": 10,
+          "yardline_100": 54,
+          "chi_sg": 0.92,
+          "league": "NFL"
+        },
+        "reward": 0.9605,
+        "terminated": false,
+        "truncated": false,
+        "info": {
+          "repo": "openai/gym",
+          "env_id": "GSE-GSI-PhaseGym-v1",
+          "action_taken": "PASS_PLAY_ACTION_DEEP",
+          "yards_gained": 11.3,
+          "first_down_converted": true,
+          "college_guard_sigma_pts": 13.36
+        }
+      },
+      "openai_clip": {
+        "repo": "openai/CLIP",
+        "cosine_similarities": {
+          "two_high_fangio_quarters_creeper_disguise": 0.999317,
+          "single_high_cover1_man_free_a_gap_mug": -0.094926,
+          "cover3_sky_wide9_four_man_rush": 0.202189
+        },
+        "contrastive_probabilities": {
+          "two_high_fangio_quarters_creeper_disguise": 0.999989,
+          "single_high_cover1_man_free_a_gap_mug": 0.0,
+          "cover3_sky_wide9_four_man_rush": 1.1e-05
+        },
+        "predicted_coverage_shell": "two_high_fangio_quarters_creeper_disguise",
+        "logit_scale_temp": 0.07
+      },
+      "openai_gpt2": {
+        "repo": "openai/gpt-2",
+        "snap_surprisals_bits": [
+          0.785875,
+          0.943416,
+          0.643856,
+          2.473931,
+          0.713119
+        ],
+        "mean_surprisal_bits": 1.11204,
+        "max_snap_surprisal_bits": 2.473931,
+        "sequence_perplexity": 2.16151,
+        "tendency_breaker_detected": true
+      },
+      "openai_swarm": {
+        "repo": "openai/swarm",
+        "task_domain": "nfl_week9_360_board_and_jules_fleet",
+        "handoff_target_agent": "JulesFleetCommanderAgent",
+        "total_catalog_skills_indexed": 143,
+        "selected_skills_for_handoff": [
+          "dispatching-parallel-agents",
+          "subagent-driven-development",
+          "verification-loop",
+          "bazel-build-optimization"
+        ],
+        "stateless_context_variables_preserved": true
+      },
+      "openai_gpt_oss": {
+        "repo": "openai/gpt-oss",
+        "harmony_channels": [
+          "system",
+          "developer",
+          "user",
+          "analysis",
+          "commentary",
+          "final"
+        ],
+        "reasoning_effort": "high",
+        "paywall_and_copy_firewall_verified": true,
+        "tool_call_schema_strict": true
+      },
+      "openai_retrieval_plugin": {
+        "repo": "openai/chatgpt-retrieval-plugin",
+        "id": "openai-10-repos-master-contract",
+        "namespace": "gse-openai-ecosystem-jules-opendots",
+        "metadata": {
+          "document_id": "openai-10-repos-master-contract",
+          "title": "OpenAI 10-Repo + Google Jules + OpenDots Master Hybrid Contract",
+          "source": "github_and_jules_api",
+          "source_url": "https://github.com/openai",
+          "category": "openai_jules_opendots_ecosystem",
+          "chunk_sha256_16": "3010582bf66af107",
+          "text": "Unified OpenAI 10-repo, Google Jules 167-session/75-patch archive, and CopilotKit OpenDots AG-UI spine."
+        }
+      },
+      "openai_tiktoken": {
+        "repo": "openai/tiktoken",
+        "encoding_name": "o200k_base",
+        "exact_bpe_library_used": true,
+        "estimated_tokens": 25,
+        "max_token_budget": 128000,
+        "budget_utilization_ratio": 0.000195,
+        "compaction_required": false
+      },
+      "google_jules_fleet": {
+        "api_base": "https://jules.googleapis.com/v1alpha",
+        "turndown_changelog_url": "https://jules.google/docs/changelog#jules-turndown",
+        "sources_count": 28,
+        "total_sessions": 167,
+        "sessions_with_outputs_count": 75,
+        "state_counts": {
+          "COMPLETED": 121,
+          "IN_PROGRESS": 41,
+          "FAILED": 4,
+          "AWAITING_USER_FEEDBACK": 1
+        },
+        "awaiting_user_feedback_session_id": "17868364571305722991",
+        "flagship_in_progress_session_id": "2776851182236750878"
+      },
+      "opendots_ag_ui_review_card": {
+        "protocol": "AG-UI-v1",
+        "docs_url": "https://docs.ag-ui.com/introduction",
+        "coworker_repo": "CopilotKit/OpenDots",
+        "ui_ports": {
+          "web_vite_port": 5173,
+          "agent_server_port": 4310
+        },
+        "session_id": "17868364571305722991",
+        "task_title": "Fix OpeningLine N+1 Query in Duplicate Games Merge Script",
+        "tool_name": "github_create_or_update_pull_request",
+        "read_only_hint": false,
+        "mcp_permission_tier": "Ask first",
+        "requires_human_approval": true,
+        "state_delta_events": [
+          "RUN_STARTED",
+          "TOOL_CALL_START",
+          "STATE_DELTA",
+          "RUN_FINISHED"
+        ]
+      },
+      "opendots_connections_and_computers_policy": {
+        "repo": "CopilotKit/OpenDots",
+        "setup_ports": {
+          "web_ui": 5173,
+          "agent_server": 4310,
+          "computer_sandbox_api": 7070
+        },
+        "telemetry_env": {
+          "COPILOTKIT_TELEMETRY_DISABLED": "true"
+        },
+        "connections_oauth_pkce_method": "S256",
+        "connections_permission_tiers": {
+          "readOnlyHint_true": "Always allow",
+          "mutating_or_external_write": "Ask first"
+        },
+        "computers_isolation_policy": {
+          "isolated_container_or_vm_required": true,
+          "silent_host_fallback_forbidden": true
+        },
+        "policy_compliant": true
+      },
+      "copilotkit_5repo_mesh": {
+        "suite": "CopilotKit-5-Repo-Coworker-And-Channels-Mesh",
+        "repos_count": 5,
+        "repos": [
+          {
+            "repo": "CopilotKit/OpenDots",
+            "role": "AI Coworker Desktop/Web Runtime (:5173 / :4310) with MCP PKCE & Isolated Computer Sandbox",
+            "gse_integration_surface": "AG-UI Human Review Cards & Jules Fleet Supervisory Console"
+          },
+          {
+            "repo": "CopilotKit/OpenTag",
+            "role": "Structured Semantic Tagging & Entity Taxonomy Extractor",
+            "gse_integration_surface": "32-Team Beat-Writer Tell Tagging & 360-Board Market Classification"
+          },
+          {
+            "repo": "CopilotKit/openbot",
+            "role": "Autonomous Background Issue/PR Triage & CI Repair Bot",
+            "gse_integration_surface": "Coupled with Google Jules v1alpha 28-Repo Beexly/* Fleet"
+          },
+          {
+            "repo": "CopilotKit/OpenMuse",
+            "role": "Multimodal Storyboard & Creative Studio",
+            "gse_integration_surface": "1080x1920 60fps Vertical Video Storyboard & Pillow/FFmpeg Scene Composer"
+          },
+          {
+            "repo": "CopilotKit/channels-sdk",
+            "role": "Unified Multi-Channel Webhook & Event Delivery SDK",
+            "gse_integration_surface": "Whop VIP Alerts, X Transport, Mobile Push & Web Content-OS"
+          }
+        ],
+        "ag_ui_protocol_wired": true
+      },
+      "parallel_ai_search_mcp": {
+        "integration": "Parallel.ai Search MCP",
+        "docs_url": "https://docs.parallel.ai/integrations/mcp/search-mcp",
+        "transport": "Streamable HTTP MCP",
+        "capabilities": [
+          "parallel_web_search_multi_query_fanout",
+          "atomic_fact_and_citation_extraction",
+          "low_latency_beat_writer_and_injury_wire_verification"
+        ],
+        "coupled_with_5api_omniscience": true,
+        "read_only_hint": true
+      },
+      "skills_17_antigravity_and_11_matt_pocock": {
+        "antigravity_17_audit_cloud_skills_count": 17,
+        "antigravity_17_audit_cloud_skills": [
+          "workflow-accessibility-audit",
+          "bazel-build-optimization",
+          "architecture-decision-records",
+          "c4-architecture-c4-architecture",
+          "comprehensive-review-full-review",
+          "code-review-ai-ai-review",
+          "security-scanning-security-hardening",
+          "security-scanning-security-sast",
+          "frontend-mobile-security-xss-scan",
+          "backend-security-coder",
+          "api-security-testing",
+          "application-security-testing",
+          "owasp-top-10-testing",
+          "database-migrations-sql-migrations",
+          "database-migrations-migration-observability",
+          "error-diagnostics-error-trace",
+          "error-diagnostics-smart-debug"
+        ],
+        "matt_pocock_11_skills_count": 11,
+        "matt_pocock_11_skills": [
+          "domain-modeling",
+          "diagnosing-bugs",
+          "grilling",
+          "migrate-to-shoehorn",
+          "pr",
+          "prototype",
+          "research",
+          "scaffold-exercises",
+          "setup-pre-commit",
+          "tdd",
+          "writing-for-agents"
+        ],
+        "total_specialized_workflow_skills": 28,
+        "all_28_skills_verified": true
+      },
+      "all_10_openai_repos_active": true,
+      "jules_turndown_continuity_verified": true,
+      "opendots_and_ag_ui_verified": true
+    },
+    "gse_143_skills_and_7_agy_plugins": {
+      "matchup": "LAR @ WAS",
+      "home_team": "WAS",
+      "away_team": "LAR",
+      "workflow_ready": true,
+      "catalog_counts": {
+        "union_agents_and_claude_skills": 149,
+        "agents_skills_count": 111,
+        "claude_skills_count": 91,
+        "gemini_config_skills_count": 185,
+        "agy_plugins_count": 7,
+        "agy_plugin_skills_total": 383,
+        "symlinks_remaining": 0
+      },
+      "stage_1_to_5_skill_chain": {
+        "stage_1_ingestion": [
+          "gse-connected-game-workflow",
+          "research",
+          "deep-research",
+          "jev-search"
+        ],
+        "stage_2_situational_overlay": [
+          "autonomy-kernel",
+          "jev-memory",
+          "jev-skill-select",
+          "council"
+        ],
+        "stage_3_jev_snap_simulation": [
+          "jev-frontier-work",
+          "jev-model-routing",
+          "inference-routing"
+        ],
+        "stage_4_conformal_calibration": [
+          "calibration-pipeline",
+          "model-promotion-gate",
+          "dspy-gepa"
+        ],
+        "stage_5_conjunction_gate_and_settlement": [
+          "clearance",
+          "clearance-registry",
+          "settlement-free-path",
+          "santa-method",
+          "verification-loop"
+        ]
+      },
+      "core_engine_skills_wired": 17,
+      "jev_spine_skills_wired": 10,
+      "telemetry_scores": {
+        "situational_prior_confidence": 0.907,
+        "jev_routing_efficiency": 0.9659,
+        "conformal_gate_readiness": 0.9361
+      }
+    },
+    "gse_livebench_vs_forecastbench": {
+      "benchmark_id": "GSE-LiveBench-v1",
+      "reference_paper": {
+        "title": "ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities",
+        "authors": "Karger et al.",
+        "arxiv_id": "2409.19839",
+        "venue": "ICLR 2025",
+        "leakage_free_future_questions_count": 1000,
+        "superforecaster_brier": 0.081,
+        "best_llm_baseline_brier": 0.101
+      },
+      "standardized_normal_crps_at_zero": {
+        "formula": "2 * phi(0) - 1 / sqrt(pi)",
+        "exact_value": 0.233694977,
+        "rounded_6dp": 0.233695,
+        "matches_0_233695_identity": true
+      },
+      "college_guard_dual_parameter_preservation": {
+        "nfl_canonical": {
+          "spread_sigma": 13.36,
+          "total_sigma": 13.19,
+          "hfa_points": 1.56
+        },
+        "cfb_pair_a_doctrine_default": {
+          "spread_sigma": 15.15,
+          "total_sigma": 15.81,
+          "hfa_points": 4.32,
+          "walk_forward_crps": 8.3314
+        },
+        "cfb_pair_b_rating_atlas_card": {
+          "spread_sigma": 15.185,
+          "hfa_points": 3.929,
+          "close_crps": 7.6174
+        },
+        "both_pairs_preserved_unsmoothed": true
+      },
+      "gse_live_performance": {
+        "settled_record": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
+        "voided_notice": "The 47-19-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
+        "win_rate_pct": 72.9,
+        "net_units": 26.5,
+        "week9_tnf_brier": 0.168,
+        "week9_tnf_clv_mean": 0.048
+      },
+      "doctrine_19_rules_substrate_verified": true
+    },
+    "trajectory_conditioners": {
+      "scripted_1_to_15_epa_boost": 0.014,
+      "post_script_16_to_65_cliff_delta": -0.00875,
+      "away_scripted_15_epa_boost": 0.014,
+      "home_scripted_15_epa_boost": 0.014,
+      "away_post_script_15_epa_cliff": -0.00875,
+      "home_post_script_15_epa_cliff": -0.00875,
+      "second_half_tut_fatigue_epa_penalty": -0.010546,
+      "home_tut_fatigue_q3_q4_sack_mult": 1.1051,
+      "away_tut_fatigue_q3_q4_sack_mult": 1.1051,
+      "home_qb_trauma_twp_hazard_mult": 1.1588,
+      "away_qb_trauma_twp_hazard_mult": 1.1588,
+      "home_qb_trauma_comp_decay_per_hit": 0.002976,
+      "away_qb_trauma_comp_decay_per_hit": 0.002976,
+      "qb_trauma_per_sack_sack_prob_add": 0.002524,
+      "qb_trauma_per_sack_comp_penalty": 0.00249,
+      "qb_trauma_phantom_bailout_prob": 0.414999,
+      "causal_true_unschemed_duress_epa": -0.218152,
+      "weak_link_collapse_prob": 0.780208,
+      "reflexive_dpi_drive_extension_prob": 0.097459,
+      "gsi_return_to_play_snap_cap": 0.757485,
+      "double_dqn_recommended_action": "go_for_it",
+      "double_dqn_overestimation_bias_removed": 0.34,
+      "double_dqn_4th_down_conv_boost": 0.0051,
+      "double_dqn_go_for_it_4th_short_prob": 0.5851,
+      "cpc_regularized_drive_td_prob": 0.871795,
+      "gse_ml_service_5_model_composite_epa_delta": 0.022946,
+      "morning_sweep_30csv_10kernels_composite_epa": 0.068499,
+      "composite_pre_projection_epa_delta": 0.047143,
+      "sovereign_pocket_collapse_mult": 1.0,
+      "sovereign_kuramoto_snap_timing_epa_boost": 0.00525,
+      "sovereign_breaker_box_fatigue_epa_delta": -0.004041,
+      "sovereign_sva_high_leverage_epa_delta": 0.029184,
+      "mahler_joint_conformal_score": 0.397214,
+      "virtual_icp_deconfounded_mmhg": 15.8297,
+      "kneeldown_per_snap_mass_yds": -1.06,
+      "shin_insider_z": 0.041558,
+      "openai_math_721_pre_projection_epa_delta": 0.003281,
+      "openai_math_sogge_wave_focusing_gain": 1.326993,
+      "openai_math_amplitude_damping_retention": 0.96594,
+      "openai_math_cnf_satisfaction_prob": 0.281096,
+      "wired_into_10k_world_175_snap_simulation": true
+    },
+    "simulation_trajectory_conditioners": {
+      "scripted_1_to_15_epa_boost": 0.014,
+      "post_script_16_to_65_cliff_delta": -0.00875,
+      "away_scripted_15_epa_boost": 0.014,
+      "home_scripted_15_epa_boost": 0.014,
+      "away_post_script_15_epa_cliff": -0.00875,
+      "home_post_script_15_epa_cliff": -0.00875,
+      "second_half_tut_fatigue_epa_penalty": -0.010546,
+      "home_tut_fatigue_q3_q4_sack_mult": 1.1051,
+      "away_tut_fatigue_q3_q4_sack_mult": 1.1051,
+      "home_qb_trauma_twp_hazard_mult": 1.1588,
+      "away_qb_trauma_twp_hazard_mult": 1.1588,
+      "home_qb_trauma_comp_decay_per_hit": 0.002976,
+      "away_qb_trauma_comp_decay_per_hit": 0.002976,
+      "qb_trauma_per_sack_sack_prob_add": 0.002524,
+      "qb_trauma_per_sack_comp_penalty": 0.00249,
+      "qb_trauma_phantom_bailout_prob": 0.414999,
+      "causal_true_unschemed_duress_epa": -0.218152,
+      "weak_link_collapse_prob": 0.780208,
+      "reflexive_dpi_drive_extension_prob": 0.097459,
+      "gsi_return_to_play_snap_cap": 0.757485,
+      "double_dqn_recommended_action": "go_for_it",
+      "double_dqn_overestimation_bias_removed": 0.34,
+      "double_dqn_4th_down_conv_boost": 0.0051,
+      "double_dqn_go_for_it_4th_short_prob": 0.5851,
+      "cpc_regularized_drive_td_prob": 0.871795,
+      "gse_ml_service_5_model_composite_epa_delta": 0.022946,
+      "morning_sweep_30csv_10kernels_composite_epa": 0.068499,
+      "composite_pre_projection_epa_delta": 0.047143,
+      "sovereign_pocket_collapse_mult": 1.0,
+      "sovereign_kuramoto_snap_timing_epa_boost": 0.00525,
+      "sovereign_breaker_box_fatigue_epa_delta": -0.004041,
+      "sovereign_sva_high_leverage_epa_delta": 0.029184,
+      "mahler_joint_conformal_score": 0.397214,
+      "virtual_icp_deconfounded_mmhg": 15.8297,
+      "kneeldown_per_snap_mass_yds": -1.06,
+      "shin_insider_z": 0.041558,
+      "openai_math_721_pre_projection_epa_delta": 0.003281,
+      "openai_math_sogge_wave_focusing_gain": 1.326993,
+      "openai_math_amplitude_damping_retention": 0.96594,
+      "openai_math_cnf_satisfaction_prob": 0.281096,
+      "wired_into_10k_world_175_snap_simulation": true
+    }
+  },
+  "biomech_kinetic_overlay": {
+    "inertial_dissipation_ratio": 11.6035,
+    "wavefront_burst_threshold": 638.4409,
+    "elastic_separation_coefficient": 1.9064,
+    "secondary_coverage_pde_loss": 6.1105,
+    "viscoelastic_lane_divergence": -0.015,
+    "pocket_navier_stokes_residual": 764.3307,
+    "qb_max_kinetic_accel_mps2": 2.9508,
+    "qb_release_time_s": 0.3528,
+    "qb_checkdown_prob": 0.2243,
+    "cleat_turf_slip": 0.3491,
+    "ocular_latency_ms": 27.0659,
+    "aero_drag_force_n": 1.0831,
+    "scalar_torque_throttle": 0.9954,
+    "metabolic_continuity_loss": 0.0125
+  },
+  "fourth_down_wp_gap_mean": 0.03046920509205354,
+  "fourth_down_statistically_distinct_rate": 0.6357142857142857,
+  "fourth_down_reason": "OBSERVED",
+  "game_id": "2026_09_LAR_WAS",
+  "from_context_packet": "data/context_packets/2026_09_LAR_WAS.json",
+  "from_reasoning_trace": "data/reasoning/traces/2026_09_LAR_WAS.trace.json",
+  "reasoning_trace_cumulative_log_odds_delta": 0.632748,
+  "median_spread_home_trace_conditioned": 3.7419
+}

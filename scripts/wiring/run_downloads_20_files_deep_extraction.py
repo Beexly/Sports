@@ -42,6 +42,7 @@ TARGET_20_FILES = [
     "EYI Package_11-06-2026_1793956103.zip",
     "GSE + GSI + OpenAI.docx",
     "Universal Phase-Transition Engine GSE Revenue & GSI Grant Blueprint.docx",
+    "2406.19314v2.pdf",
 ]
 
 
@@ -178,9 +179,17 @@ def main() -> None:
             full_text = fpath.read_text(encoding="utf-8", errors="ignore")
             ftype = "text"
 
-        # Chunk text into ~2500-char segments for corpus & brain feeds
+        # Chunk text into ~2500-char segments for corpus & brain feeds (or page-by-page for 2406.19314v2.pdf)
         clean_text = full_text.strip() or f"Binary/Archive artifact {fname} (sha256={f_sha})"
-        chunks = [clean_text[i : i + 2500] for i in range(0, min(len(clean_text), 50000), 2500)] or [clean_text[:2500]]
+        if fname == "2406.19314v2.pdf":
+            import pypdf  # type: ignore
+            pdf_reader = pypdf.PdfReader(str(fpath))
+            chunks = [
+                f"[Page {p_i}/37 | LiveBench ICLR 2025 arXiv:2406.19314v2]\n" + (pg.extract_text() or "").strip()
+                for p_i, pg in enumerate(pdf_reader.pages, 1)
+            ]
+        else:
+            chunks = [clean_text[i : i + 2500] for i in range(0, min(len(clean_text), 50000), 2500)] or [clean_text[:2500]]
 
         for c_idx, ch in enumerate(chunks, 1):
             rec_id = f"DL20-{idx:02d}-CHK-{c_idx:03d}"
@@ -190,18 +199,22 @@ def main() -> None:
                     "chunk_id": rec_id,
                     "source_id": f"DOWNLOADS-20-{idx:02d}",
                     "item_id": f"DL20-{idx:02d}",
-                    "location": str(fpath),
+                    "location": f"external/downloads/{fname}",
                     "category": "downloads_sovereign_20_ingest",
                     "title": fname,
-                    "authors": "Garrett Sovereign / Motif / GSE-GSI",
-                    "year": 2026,
-                    "section": f"chunk_{c_idx}_of_{len(chunks)}",
-                    "page_or_line": f"C{c_idx}",
+                    "authors": (
+                        "Colin White, Samuel Dooley, Manley Roberts, Arka Pal, Yann LeCun, Tom Goldstein et al. (ICLR 2025)"
+                        if fname == "2406.19314v2.pdf"
+                        else "Garrett Sovereign / Motif / GSE-GSI"
+                    ),
+                    "year": 2025 if fname == "2406.19314v2.pdf" else 2026,
+                    "section": f"page_{c_idx}_of_{len(chunks)}" if fname == "2406.19314v2.pdf" else f"chunk_{c_idx}_of_{len(chunks)}",
+                    "page_or_line": f"P{c_idx}" if fname == "2406.19314v2.pdf" else f"C{c_idx}",
                     "sha256": f_sha,
                     "full_text": ch,
                 }
             )
-            if c_idx <= 8:
+            if c_idx <= 8 or fname == "2406.19314v2.pdf":
                 brain_feed_rows.append(
                     {
                         "id": f"BRAIN-DL20-{idx:02d}-C{c_idx:02d}",
@@ -280,6 +293,122 @@ def main() -> None:
         lines.append("")
 
     md_out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    # Synchronize LiveBench 2406.19314v2.pdf (CORP-48610, 37 pages) into CORPUS-CENSUS.csv, RESEARCH-LEDGER.jsonl, research_records.jsonl, and WAVE-3-RECONCILIATION.json
+    livebench_pdf = DOWNLOADS_DIR / "2406.19314v2.pdf"
+    if livebench_pdf.exists():
+        import pypdf  # type: ignore
+
+        lb_sha = sha256_file(livebench_pdf)
+        lb_sz = livebench_pdf.stat().st_size
+        lb_reader = pypdf.PdfReader(str(livebench_pdf))
+        lb_pages = [(pg.extract_text() or "").strip() for pg in lb_reader.pages]
+
+        # 1. Write full 37-page extraction & equations dossier
+        lb_md = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-07" / "LIVEBENCH-2406-19314V2-37PAGE-EXTRACTION-AND-EQUATIONS.md"
+        lb_md_lines = [
+            "# LiveBench (`arXiv:2406.19314v2`, ICLR 2025) — 37-Page Full Extraction, Tables & Task Scoring Equations",
+            "",
+            f"- **Source File:** `external/downloads/2406.19314v2.pdf` (`{lb_sz:,}` bytes, `37` pages)",
+            f"- **SHA-256:** `{lb_sha}`",
+            "- **Authors:** Colin White, Samuel Dooley, Manley Roberts, Arka Pal, Benjamin Feuer, Siddhartha Jain, Ravid Shwartz-Ziv, Neel Jain, Khalid Saifullah, Sreemanti Dey, Shubh-Agrawal, Sandeep Singh Sandha, Siddartha Naidu, Chinmay Hegde, Yann LeCun, Tom Goldstein, Willie Neiswanger, Micah Goldblum (Abacus.AI, NYU, NVIDIA, UMD, USC, Columbia)",
+            "- **6 Contamination-Limited Categories & 18 Tasks (Table 13):**",
+            "  1. **`math`:** `math_comp` (96 questions, AMC 12 2023 & AIME 2024), `AMPS_Hard` (100 questions, SymPy symbolic integration/ODEs/algebra), `olympiad` (36 questions, USAMO/IMO proof-by-rearrangement)",
+            "  2. **`coding`:** `LCB_generation` (78 questions, LiveCodeBench post-cutoff LeetCode/AtCoder), `coding_completion` (50 questions, last 15-70% solution completion)",
+            "  3. **`reasoning`:** `web_of_lies_v2` (50 questions, deductive Boolean truth evaluation with red herrings), `zebra_puzzle` (50 questions, CSP constraint satisfaction), `spatial` (50 questions, 2D/3D solid geometry orientations & intersections)",
+            "  4. **`language`:** `connections` (50 questions, NYT Connections 4x4 group partitioning), `typos` (50 questions, generative typo operator $M: \\Sigma^* \\to \\Sigma^*$ preserving British/US style), `plot_unscrambling` (40 questions, normalized Levenshtein sentence ordering)",
+            "  5. **`instruction_following`:** `paraphrase` (50), `simplify` (50), `summarize` (50), `story_generation` (50) over recent Guardian articles under 16 verifiable programmatic constraints (Table 3)",
+            "  6. **`data_analysis`:** `tablereformat` (50 questions, CSV/TSV/JSON/JSONL/Markdown/HTML lossless conversion), `tablejoin` (50 questions, foreign-key join column mapping), `cta` (50 questions, Column Type Annotation)",
+            "- **Programmatic Ground-Truth Scoring Equations (Section 3 & Appendix A.4):**",
+            "  - **Olympiad Proof Rearrangement Score:** $S_{\\text{olympiad}}(\\pi, \\pi^*) = 1 - \\frac{d_{\\text{Levenshtein}}(\\pi, \\pi^*)}{|\\pi^*|}$",
+            "  - **Plot Unscrambling Normalized Edit Distance Score:** $S_{\\text{plot}}(S, S^*) = \\max\\left(0, 1 - \\frac{d_{\\text{Levenshtein}}(S_{\\text{matched}}, S^*)}{|S^*|}\\right)$",
+            "  - **Connections Partial-Credit Partition Score:** $S_{\\text{conn}}(\\hat{\\mathcal{G}}, \\mathcal{G}^*) = \\frac{1}{|\\mathcal{G}^*|}\\sum_{G^* \\in \\mathcal{G}^*} \\mathbb{I}[G^* \\in \\hat{\\mathcal{G}}]$",
+            "  - **Generative Typo-Injection Operator (Page 29):** $M: \\Sigma^* \\to \\Sigma^*$ bounded by character error rate $\\nu \\in (0, 1)$, keyboard-adjacency substitution kernel $K_{\\text{key}}(c, c')$, and length preservation $|M(x)| \\approx |x|$",
+            "  - **Instruction Following Verifiable Constraint Score:** $S_{\\text{IF}}(y, \\mathcal{C}) = \\frac{1}{|\\mathcal{C}|}\\sum_{c \\in \\mathcal{C}} \\mathbb{I}[\\text{verify}_c(y) = 1]$",
+            "",
+            "## Page-by-Page Extracted Text (Pages 1–37)",
+            "",
+        ]
+        for p_idx, p_txt in enumerate(lb_pages, 1):
+            lb_md_lines.append(f"### Page {p_idx} of 37")
+            lb_md_lines.append("```text")
+            lb_md_lines.append(p_txt)
+            lb_md_lines.append("```")
+            lb_md_lines.append("")
+        lb_md.write_text("\n".join(lb_md_lines) + "\n", encoding="utf-8")
+
+        # 2. Ensure CORP-48610 is in docs/wiring/CORPUS-CENSUS.csv
+        cc_path = REPO_ROOT / "docs" / "wiring" / "CORPUS-CENSUS.csv"
+        cc_lines = [l for l in cc_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+        cc_filtered = [l for l in cc_lines if not l.startswith("CORP-48610,")]
+        cc_filtered.append(
+            f"CORP-48610,C:/Users/Garrett/Downloads/2406.19314v2.pdf,downloads_sovereign_livebench_pdf,pdf,{lb_sz},37,{lb_sha},,EXTRACTED_TO_REPO_WAVE_9"
+        )
+        cc_path.write_text("\n".join(cc_filtered) + "\n", encoding="utf-8")
+
+        # 3. Clean RESEARCH-LEDGER.jsonl of any C:/Users/Garrett/Sports/ prefix and ensure CORP-48610 is present
+        rl_path = REPO_ROOT / "docs" / "wiring" / "RESEARCH-LEDGER.jsonl"
+        rl_raw = rl_path.read_text(encoding="utf-8").replace("C:/Users/Garrett/Sports/", "")
+        rl_lines = [l for l in rl_raw.splitlines() if l.strip() and '"CORP-48610"' not in l]
+        rl_entry = {
+            "item_id": "CORP-48610",
+            "source_id": "SRC-CORP-48610",
+            "location": "C:/Users/Garrett/Downloads/2406.19314v2.pdf",
+            "category": "downloads_sovereign_livebench_pdf",
+            "type": "pdf",
+            "size_bytes": lb_sz,
+            "sha256": lb_sha,
+            "drive_id": "",
+            "extraction_status": "FULL_TEXT_CHUNKED",
+            "chunks_emitted": len(lb_pages),
+            "first_chunk_id": "CORP-48610-CHK-01",
+            "target_store": "data/corpus/research_records.jsonl",
+            "ingested_at_utc": datetime.now(timezone.utc).isoformat(),
+            "source_path": "",
+        }
+        rl_lines.append(json.dumps(rl_entry))
+        rl_path.write_text("\n".join(rl_lines) + "\n", encoding="utf-8")
+
+        # 4. Append CORP-48610-CHK-01..37 to data/corpus/research_records.jsonl if not already present
+        rr_path = REPO_ROOT / "data" / "corpus" / "research_records.jsonl"
+        if rr_path.exists():
+            with rr_path.open("rb") as f:
+                f.seek(max(0, rr_path.stat().st_size - 65536))
+                tail_txt = f.read().decode("utf-8", errors="ignore")
+            if "CORP-48610-CHK-01" not in tail_txt:
+                with rr_path.open("a", encoding="utf-8") as f:
+                    for p_idx, p_txt in enumerate(lb_pages, 1):
+                        cid = f"CORP-48610-CHK-{p_idx:02d}"
+                        rec_obj = {
+                            "record_id": cid,
+                            "chunk_id": cid,
+                            "source_id": "SRC-CORP-48610",
+                            "item_id": "CORP-48610",
+                            "location": "C:/Users/Garrett/Downloads/2406.19314v2.pdf",
+                            "category": "downloads_sovereign_livebench_pdf",
+                            "title": "LiveBench: A Challenging, Contamination-Limited LLM Benchmark (ICLR 2025, arXiv:2406.19314v2)",
+                            "authors": "Colin White, Samuel Dooley, Manley Roberts, Arka Pal, Yann LeCun, Tom Goldstein et al.",
+                            "year": 2025,
+                            "section": f"page_{p_idx}_of_37",
+                            "page_or_line": f"P{p_idx}",
+                            "sha256": lb_sha,
+                            "drive_id": "",
+                            "full_text": p_txt,
+                        }
+                        f.write(json.dumps(rec_obj) + "\n")
+
+        # 5. Update docs/wiring/WAVE-3-RECONCILIATION.json
+        w3_path = REPO_ROOT / "docs" / "wiring" / "WAVE-3-RECONCILIATION.json"
+        if w3_path.exists():
+            w3_obj = json.loads(w3_path.read_text(encoding="utf-8"))
+            w3_obj["corpus_census_count"] = len(cc_filtered) - 1
+            w3_obj["research_ledger_count"] = len(rl_lines)
+            w3_obj["counts_reconciled"] = (len(cc_filtered) - 1) == len(rl_lines)
+            cat_counts = w3_obj.get("category_chunk_counts", {})
+            cat_counts["downloads_sovereign_livebench_pdf"] = len(lb_pages)
+            w3_obj["category_chunk_counts"] = cat_counts
+            w3_obj["total_chunks_emitted"] = sum(int(v) for v in cat_counts.values())
+            w3_path.write_text(json.dumps(w3_obj, indent=2) + "\n", encoding="utf-8")
     print(
         json.dumps(
             {

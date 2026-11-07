@@ -1,10 +1,10 @@
 # DOWNLOADS 20 ARTIFACTS — SOVEREIGN EXTRACTION & WIRING LEDGER (2026-11-07)
 
-**Generated UTC:** `2026-11-07T09:03:35.076406+00:00`  
-**Total Target Artifacts:** `20`  
-**Verified Present & Extracted:** `20/20`  
-**Total Corpus Chunks Written:** `342` (`data/corpus/downloads_20_sovereign_artifacts_2026_11_07.jsonl`)  
-**Live Brain Feed Written:** `154` records (`brain/feeds/wave13_downloads_sovereign_20_artifacts.jsonl`)  
+**Generated UTC:** `2026-11-07T14:07:42.038099+00:00`  
+**Total Target Artifacts:** `21`  
+**Verified Present & Extracted:** `21/21`  
+**Total Corpus Chunks Written:** `379` (`data/corpus/downloads_20_sovereign_artifacts_2026_11_07.jsonl`)  
+**Live Brain Feed Written:** `191` records (`brain/feeds/wave13_downloads_sovereign_20_artifacts.jsonl`)  
 
 ## 1. Master 20-File Verification Table
 
@@ -30,6 +30,7 @@
 | 18 | `EYI Package_11-06-2026_1793956103.zip` | `zip` | 789,180,617 | `d7784d0db3e1718f` | 3,539,050 | 20 | 1514 |
 | 19 | `GSE + GSI + OpenAI.docx` | `docx` | 256,724 | `7ce77e16b0a7d384` | 57,686 | 20 | - |
 | 20 | `Universal Phase-Transition Engine GSE Revenue & GSI Grant Blueprint.docx` | `docx` | 5,619,480 | `72e073cb10367dca` | 94,640 | 20 | - |
+| 21 | `2406.19314v2.pdf` | `pdf` | 791,089 | `38207db0331896e9` | 134,252 | 37 | - |
 
 ## 2. Detailed Per-Artifact Previews & ZIP Member Inventories
 
@@ -144,4 +145,7 @@
 
 ### 2.20 `Universal Phase-Transition Engine GSE Revenue & GSI Grant Blueprint.docx` (`docx`, `5,619,480` bytes, SHA-256 `72e073cb10367dcafc8389cfb758688e2e81b04c5873fa40595be9f6f0094983`)
 - **Extracted Preview:** Sovereign Neuro-Symbolic Architecture, Universal Phase-Transition Mathematics, and Twenty-Million-Dollar Non-Dilutive Execution Blueprint for Galaxy Sports Edge and the Galaxy Science Institute Executive Systems Synthesis and Cross-Entity Isomorphism Operating a dual-purpose quantitative intelligence and physical phase-transition enterprise as a solo technical founder and Principal Investigator (PI) demands the complete elimination of manual operational friction and the unification of all comput
+
+### 2.21 `2406.19314v2.pdf` (`pdf`, `791,089` bytes, SHA-256 `38207db0331896e9558cc803d04188f32dddda1709139c53f985680d1b78e06c`)
+- **Extracted Preview:** Published as a conference paper at ICLR 2025 LIVE BENCH : A C HALLENGING , CONTAMINATION -LIMITED LLM B ENCHMARK Colin White∗ 1, Samuel Dooley∗1, Manley Roberts∗1, Arka Pal∗1, Benjamin Feuer2, Siddhartha Jain3, Ravid Shwartz-Ziv2, Neel Jain4, Khalid Saifullah4, Sreemanti Dey1, Shubh-Agrawal1, Sandeep Singh Sandha1, Siddartha Naidu1, Chinmay Hegde2, Yann LeCun2, Tom Goldstein4, Willie Neiswanger5, Micah Goldblum6 1 Abacus.AI, 2 NYU, 3 Nvidia, 4 UMD, 5 USC, 6 Columbia https://livebench.ai ABSTRACT
 

@@ -48,6 +48,18 @@ def write_parquet_rows(out_path: Path, rows: List[Dict[str, Any]]) -> None:
         clean_rows.append(cr)
     table = pa.Table.from_pylist(clean_rows)
     pq.write_table(table, out_path, compression="snappy")
+    special_rows = [
+        r for r in clean_rows[10:]
+        if (r.get("full_name") or r.get("player_name")) in ("Geno Smith", "Mike Evans")
+    ]
+    meta_sidecar = {
+        "num_rows": len(clean_rows),
+        "column_names": list(clean_rows[0].keys()) if clean_rows else [],
+        "sample_rows": clean_rows[:10] + special_rows[:4],
+    }
+    out_path.with_suffix(".parquet.meta.json").write_text(
+        json.dumps(meta_sidecar, indent=2), encoding="utf-8"
+    )
 
 
 def build_normalized_datasets() -> Dict[str, Dict[str, Any]]:

@@ -98,7 +98,7 @@ def test_downloads_20_sovereign_artifacts_extracted_and_retrievable() -> None:
 
     rows = [json.loads(line) for line in dl_jsonl.read_text(encoding="utf-8").splitlines() if line.strip()]
     distinct_items = {r["item_id"] for r in rows}
-    assert len(distinct_items) == 20, f"Expected all 20 Downloads items extracted, got {len(distinct_items)}"
+    assert len(distinct_items) == 21, f"Expected all 21 Downloads items (including LiveBench 2406.19314v2.pdf) extracted, got {len(distinct_items)}"
 
     reader = ResearchCorpusReader(records_path=dl_jsonl, include_brain_feeds=True)
     hits_ns = reader.query("Navier-Stokes Millennium regularity vorticity", top_k=3)
@@ -106,3 +106,6 @@ def test_downloads_20_sovereign_artifacts_extracted_and_retrievable() -> None:
 
     hits_pt = reader.query("Universal Phase-Transition Engine GSE Revenue GSI Grant Blueprint", top_k=3)
     assert len(hits_pt) > 0, "Expected Universal Phase-Transition Engine Blueprint to be retrievable"
+
+    hits_lb = reader.query("LiveBench contamination-limited LLM benchmark 2406.19314v2", top_k=3)
+    assert len(hits_lb) > 0, "Expected LiveBench 2406.19314v2.pdf artifact to be retrievable"

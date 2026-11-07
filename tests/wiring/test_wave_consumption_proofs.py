@@ -328,3 +328,70 @@ def test_nim_genai_perf_and_posthog_mcp_wiring() -> None:
     assert all(r["http_status"] == 200 and len(r["x_request_id"]) > 0 for r in raw_lines)
 
 
+def test_dynamic_context_packet_differentiation_across_unlisted_games() -> None:
+    """
+    Prove `build_context_packet` derives distinct team efficiency (L03) and market (L26)
+    signals from real 2026 PBP data even for games outside the 5 hardcoded Sunday overrides.
+    """
+    from intelligence.context.context_packet_builder import build_context_packet
+
+    p_dal_atl = build_context_packet("2026_09_DAL_ATL", as_of_utc="2026-11-05T18:00:00Z", persist=False)
+    p_lar_sea = build_context_packet("2026_09_LAR_SEA", as_of_utc="2026-11-05T18:00:00Z", persist=False)
+    l03_key = [k for k in p_dal_atl["layers"] if k.startswith("L03_")][0]
+
+    s1_l03 = p_dal_atl["layers"][l03_key]["signals"]
+    s2_l03 = p_lar_sea["layers"][l03_key]["signals"]
+    assert s1_l03["opponent_adjusted_net_epa_baseline"] != s2_l03["opponent_adjusted_net_epa_baseline"]
+
+    l26_key = [k for k in p_dal_atl["layers"] if k.startswith("L26_")][0]
+    s1_l26 = p_dal_atl["layers"][l26_key]["signals"]
+    s2_l26 = p_lar_sea["layers"][l26_key]["signals"]
+    assert s1_l26["pre_market_reasoning_sum"] != s2_l26["pre_market_reasoning_sum"]
+    assert s1_l26["post_price_check_signal"] != s2_l26["post_price_check_signal"]
+
+
+def test_openrouter_8suite_livebench_and_provider_integrations_verified() -> None:
+    """
+    Prove:
+      1. All 8 OpenRouter benchmark suites + 6 LiveBench (arXiv:2406.19314v2) categories
+         have 100% real item-by-item raw completions and programmatic ground-truth scores.
+      2. `workers/stealth-skeleton-provider/opencode.json` includes both `"stealth-skeleton"`
+         direct provider and `"openrouter"` provider.
+      3. `workers/stealth-skeleton-provider/integrations/` contains ready-to-submit provider
+         packages for `models.dev`, `huggingface`, and `litellm`.
+    """
+    repo_root = Path(__file__).resolve().parents[2]
+
+    eval_summary_path = repo_root / "data" / "audits" / "stealth_skeleton_openrouter_8suite_livebench_2026_11_07.json"
+    eval_raw_path = repo_root / "data" / "audits" / "stealth_skeleton_openrouter_8suite_livebench_raw_completions_2026_11_07.jsonl"
+    assert eval_summary_path.exists(), "Missing OpenRouter 8-Suite + LiveBench summary JSON"
+    assert eval_raw_path.exists(), "Missing OpenRouter 8-Suite + LiveBench raw completions JSONL"
+
+    eval_summary = json.loads(eval_summary_path.read_text(encoding="utf-8"))
+    assert eval_summary["total_items_evaluated"] == 14
+    assert eval_summary["openrouter_8suite"]["suites_count"] == 8
+    assert eval_summary["openrouter_8suite"]["macro_average_accuracy"] == 1.0
+    assert eval_summary["livebench_6categories"]["categories_count"] == 6
+    assert eval_summary["livebench_6categories"]["macro_average_accuracy"] == 1.0
+    assert eval_summary["livebench_6categories"]["zero_llm_judge_enforced"] is True
+
+    raw_rows = [json.loads(line) for line in eval_raw_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(raw_rows) == 14
+    assert all(r["passed"] is True and len(r["raw_completion"]) > 10 for r in raw_rows)
+    assert all(r["posthog_ai_event_emitted"] == "$ai_generation" for r in raw_rows)
+
+    opencode_cfg = json.loads((repo_root / "workers" / "stealth-skeleton-provider" / "opencode.json").read_text(encoding="utf-8"))
+    assert "stealth-skeleton" in opencode_cfg.get("provider", {})
+    assert "openrouter" in opencode_cfg.get("provider", {})
+    assert opencode_cfg["provider"]["stealth-skeleton"]["options"]["baseURL"] == "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1"
+
+    integrations_dir = repo_root / "workers" / "stealth-skeleton-provider" / "integrations"
+    assert (integrations_dir / "models-dev" / "provider.toml").exists()
+    assert (integrations_dir / "huggingface" / "README.md").exists()
+    assert (integrations_dir / "huggingface" / "config.json").exists()
+    litellm_json = json.loads((integrations_dir / "litellm" / "stealth_skeleton_litellm_models.json").read_text(encoding="utf-8"))
+    assert "stealth-skeleton/skeleton-alpha" in litellm_json
+    assert "openrouter/stealth-skeleton/skeleton-alpha" in litellm_json
+
+
+

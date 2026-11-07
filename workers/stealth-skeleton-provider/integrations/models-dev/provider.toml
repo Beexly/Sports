@@ -1,0 +1,191 @@
+# Anomaly `models.dev` Provider Specification (`https://github.com/anomalyco/models.dev`)
+# Powers native `sst/opencode` (`opencode.ai`), Crush, and AI SDK provider discovery.
+
+id = "stealth-skeleton"
+name = "Stealth-Skeleton"
+npm = "@ai-sdk/openai-compatible"
+api = "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1"
+doc = "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1/models"
+env = ["STEALTH_SKELETON_API_KEY"]
+
+[models."stealth-skeleton/skeleton-alpha"]
+id = "stealth-skeleton/skeleton-alpha"
+name = "Stealth-Skeleton Alpha (Free)"
+family = "stealth-skeleton"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-alpha".cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+cache_write = 0.0
+
+[models."stealth-skeleton/skeleton-alpha".limit]
+context = 131072
+output = 16384
+
+[models."stealth-skeleton/skeleton-alpha".modalities]
+input = ["text"]
+output = ["text"]
+
+[models."stealth-skeleton/skeleton-v1"]
+id = "stealth-skeleton/skeleton-v1"
+name = "Stealth-Skeleton v1"
+family = "stealth-skeleton"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-v1".cost]
+input = 1.50
+output = 6.00
+cache_read = 0.30
+cache_write = 0.00
+
+[models."stealth-skeleton/skeleton-v1".limit]
+context = 131072
+output = 32768
+
+[models."stealth-skeleton/skeleton-v1".modalities]
+input = ["text"]
+output = ["text"]
+
+[models."stealth-skeleton/skeleton-v1-fast"]
+id = "stealth-skeleton/skeleton-v1-fast"
+name = "Stealth-Skeleton v1 Fast (Priority)"
+family = "stealth-skeleton"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-v1-fast".cost]
+input = 2.25
+output = 9.00
+cache_read = 0.45
+cache_write = 0.00
+
+[models."stealth-skeleton/skeleton-v1-fast".limit]
+context = 131072
+output = 16384
+
+[models."stealth-skeleton/skeleton-v1-fast".modalities]
+input = ["text"]
+output = ["text"]
+
+[models."stealth-skeleton/skeleton-math-pro"]
+id = "stealth-skeleton/skeleton-math-pro"
+name = "Stealth-Skeleton Math Pro"
+family = "stealth-skeleton"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-math-pro".cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+cache_write = 0.0
+
+[models."stealth-skeleton/skeleton-math-pro".limit]
+context = 131072
+output = 32768
+
+[models."stealth-skeleton/skeleton-math-pro".modalities]
+input = ["text"]
+output = ["text"]
+
+[models."stealth-skeleton/skeleton-forecast"]
+id = "stealth-skeleton/skeleton-forecast"
+name = "Stealth-Skeleton Forecast"
+family = "stealth-skeleton"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-forecast".cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+cache_write = 0.0
+
+[models."stealth-skeleton/skeleton-forecast".limit]
+context = 131072
+output = 16384
+
+[models."stealth-skeleton/skeleton-forecast".modalities]
+input = ["text"]
+output = ["text"]
+
+[models."stealth-skeleton/skeleton-council"]
+id = "stealth-skeleton/skeleton-council"
+name = "Stealth-Skeleton 4-Voice Council"
+family = "stealth-skeleton"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-council".cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+cache_write = 0.0
+
+[models."stealth-skeleton/skeleton-council".limit]
+context = 131072
+output = 16384
+
+[models."stealth-skeleton/skeleton-council".modalities]
+input = ["text"]
+output = ["text"]
+
+[models."stealth-skeleton/skeleton-flash"]
+id = "stealth-skeleton/skeleton-flash"
+name = "Stealth-Skeleton Flash"
+family = "stealth-skeleton"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2026-11"
+release_date = "2026-11-06"
+open_weights = false
+
+[models."stealth-skeleton/skeleton-flash".cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+cache_write = 0.0
+
+[models."stealth-skeleton/skeleton-flash".limit]
+context = 131072
+output = 16384
+
+[models."stealth-skeleton/skeleton-flash".modalities]
+input = ["text"]
+output = ["text"]
