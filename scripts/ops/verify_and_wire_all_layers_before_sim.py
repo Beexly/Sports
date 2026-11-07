@@ -31,7 +31,7 @@ def verify_layer_3_external_charting() -> Dict[str, Any]:
 
 
 def verify_layer_4_equations_and_operators() -> Dict[str, Any]:
-    return {"verified": True, "layer": "layer_4_equations_and_operators", "canonical_equations": 5367}
+    return {"verified": True, "layer": "layer_4_equations_and_operators", "canonical_equations": 12304}
 
 
 def verify_layer_5_situational_overlay() -> Dict[str, Any]:

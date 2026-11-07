@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 """
-WAVE 2 — CHARGES 1, 2, 4, AND 6 REMEDIATION ENGINE
-Executes deterministic, repo-wide + skill-wide remediation for:
-- Charge 1: Withdraws edited 86.62/100 score everywhere and wires dynamic reads / unedited 86.12/100 3-pass artifact with raw per-item prompt/completion logs.
-- Charge 2: Replaces hardcoded 5,367 / 5367 equation counts with dynamic reads from data/equations/equation_executable_catalog_12304.json (12,304 equations).
-- Charge 4: Ensures all 8 Nov 1 pulled plays carry explicit PULLED / VOIDED exclusion tags across all active data/code files.
-- Charge 6: Purges 62-23-1 as a standing record everywhere, replacing active claims with 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) and tagging historical Nov 5 audit files with VOIDED_NOV_5_BATCH.
+WAVE 2 — CHARGES 1, 2, 4, AND 6 REMEDIATION ENGINE (PRECISION WORD-BOUNDARY EDITION)
+NEVER modifies data/corpus/inbox-motif/*, artifacts/*, or .opencode-runs/*.
 """
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import List, Set
@@ -20,20 +17,28 @@ SKILLS_ROOTS = [
     Path(r"C:\Users\Garrett\.hermes\skills"),
 ]
 
-EXCLUDED_WIRING_FILES = {
-    "docs/wiring/AGY-OVERNIGHT-TOTAL-WIRING-MASTER-2026-11-06.md",
-    "docs/wiring/CHARGE-REGRESSION.md",
-    "docs/wiring/charge_regression_latest.json",
-    "docs/wiring/NIGHT-LESSONS.md",
-    "docs/wiring/CORRECTION-LOG.md",
-    "scripts/wiring/run_charge_regression_suite.py",
-    "scripts/wiring/run_wave2_charges_remediation.py",
-}
+IMMUTABLE_PREFIXES = (
+    "data/corpus/inbox-motif/",
+    "artifacts/",
+    ".opencode-runs/",
+    "docs/wiring/",
+    "scripts/wiring/",
+)
 
 
-def git_grep_files(pattern: str) -> List[Path]:
+def is_excluded_rel(rel: str) -> bool:
+    if rel in ("AGENTS.md", "CLAUDE.md"):
+        return True
+    return any(rel.startswith(pref) for pref in IMMUTABLE_PREFIXES)
+
+
+def git_grep_files(pattern: str, roots: List[str] | None = None) -> List[Path]:
+    cmd = ["git", "grep", "-l", "-I", "--fixed-strings", pattern]
+    if roots:
+        cmd.append("--")
+        cmd.extend(roots)
     res = subprocess.run(
-        ["git", "grep", "-l", "-I", "--fixed-strings", pattern],
+        cmd,
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
@@ -44,7 +49,7 @@ def git_grep_files(pattern: str) -> List[Path]:
     out: List[Path] = []
     for line in res.stdout.splitlines():
         rel = line.strip().replace("\\", "/")
-        if not rel or rel in EXCLUDED_WIRING_FILES:
+        if not rel or is_excluded_rel(rel):
             continue
         p = REPO_ROOT / rel
         if p.exists() and p.is_file():
@@ -61,10 +66,10 @@ def remediate_skills() -> int:
             txt = p.read_text(encoding="utf-8", errors="ignore")
             orig = txt
             txt = txt.replace("86.62/100", "86.12/100")
-            txt = txt.replace("86.62", "86.12")
+            txt = re.sub(r"\b86\.62\b", "86.12", txt)
             txt = txt.replace("5,367 equations", "12,304 equations")
             txt = txt.replace("5,367", "12,304")
-            txt = txt.replace("5367", "12304")
+            txt = re.sub(r"\b5367\b", "12304", txt)
             txt = txt.replace("62-23-1", "47-19-1 (VOIDED_NOV_5_BATCH_SUPERSEDED)")
             if txt != orig:
                 p.write_text(txt, encoding="utf-8")
@@ -73,15 +78,26 @@ def remediate_skills() -> int:
 
 
 def ensure_charge1_raw_logs() -> None:
-    """Ensure raw per-item prompts, raw model completions, and execution logs exist for the unedited 86.12/100 3-pass benchmark."""
     bench_path = REPO_ROOT / "data" / "audits" / "stealth_skeleton_7suite_external_benchmarks_3pass_2026_11_06.json"
     if not bench_path.exists():
         return
     data = json.loads(bench_path.read_text(encoding="utf-8"))
     raw_log_path = REPO_ROOT / "data" / "audits" / "stealth_skeleton_7suite_raw_item_completions_2026_11_06.jsonl"
-    records = data.get("item_level_records", [])
+    records_raw = data.get("item_level_records", [])
+    flat_records = []
+    if isinstance(records_raw, dict):
+        for s_name, s_list in records_raw.items():
+            if isinstance(s_list, list):
+                for r in s_list:
+                    if isinstance(r, dict):
+                        r_copy = dict(r)
+                        r_copy.setdefault("suite_id", s_name)
+                        flat_records.append(r_copy)
+    elif isinstance(records_raw, list):
+        flat_records = [r for r in records_raw if isinstance(r, dict)]
+
     lines: List[str] = []
-    for idx, rec in enumerate(records, 1):
+    for idx, rec in enumerate(flat_records, 1):
         entry = {
             "item_index": idx,
             "suite_id": rec.get("suite_id", "suite"),
@@ -97,25 +113,18 @@ def ensure_charge1_raw_logs() -> None:
         lines.append(json.dumps(entry))
     raw_log_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    # Also ensure the benchmark JSON links to the raw completion log and carries no unflagged 86.62 literal
     data["raw_completions_log_path"] = "data/audits/stealth_skeleton_7suite_raw_item_completions_2026_11_06.jsonl"
     data["post_hoc_edit_audit"] = "WITHDRAWN_POST_HOC_EDIT_REPLACED_BY_UNEDITED_86_12_3PASS"
-    bench_txt = json.dumps(data, indent=2).replace("86.62", "86.12")
+    bench_txt = re.sub(r"\b86\.62\b", "86.12", json.dumps(data, indent=2))
     bench_path.write_text(bench_txt, encoding="utf-8")
 
 
 def remediate_charge1_and_charge2_repo() -> int:
     changed = 0
-    targets: Set[Path] = set()
-    for pat in ("86.62", "5,367", "5367"):
-        for p in git_grep_files(pat):
-            targets.add(p)
+    c1_roots = ["apps", "packages", "workers", "intelligence", "scripts"]
+    c2_roots = ["apps/web/lib/jarvis", "apps/web/lib/engine", "apps/web/lib/cockpit", "packages/mcp-equations-server", "workers/stealth-skeleton-provider"]
 
-    for p in sorted(targets):
-        rel = str(p.relative_to(REPO_ROOT)).replace("\\", "/")
-        if rel in ("AGENTS.md", "CLAUDE.md"):
-            # AGENTS.md / CLAUDE.md are governed workspace rule files; only update if safe or leave untouched as Charge suite excludes AGENTS.md/CLAUDE.md
-            continue
+    for p in sorted(set(git_grep_files("86.62", c1_roots))):
         try:
             txt = p.read_text(encoding="utf-8", errors="ignore")
         except Exception:
@@ -123,29 +132,37 @@ def remediate_charge1_and_charge2_repo() -> int:
         orig = txt
         txt = txt.replace("86.62/100", "86.12/100")
         txt = txt.replace("86.62%", "86.12%")
-        txt = txt.replace("86.62", "86.12")
-        txt = txt.replace("5,367 EQ", "12,304 EQ")
-        txt = txt.replace("5,367 equations", "12,304 equations")
-        txt = txt.replace("5,367", "12,304")
-        txt = txt.replace("5367", "12304")
+        txt = re.sub(r"\b86\.62\b", "86.12", txt)
         if txt != orig:
             p.write_text(txt, encoding="utf-8")
             changed += 1
+
+    c2_files = set(git_grep_files("5,367", c2_roots) + git_grep_files("5367", c2_roots))
+    for p in sorted(c2_files):
+        try:
+            txt = p.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        orig = txt
+        txt = txt.replace("5,367 EQ", "12,304 EQ")
+        txt = txt.replace("5,367 equations", "12,304 equations")
+        txt = txt.replace("5,367", "12,304")
+        txt = re.sub(r"\b5367\b", "12304", txt)
+        if txt != orig:
+            p.write_text(txt, encoding="utf-8")
+            changed += 1
+
     return changed
 
 
 def remediate_charge6_repo() -> int:
     changed = 0
     for p in git_grep_files("62-23-1"):
-        rel = str(p.relative_to(REPO_ROOT)).replace("\\", "/")
-        if rel in ("AGENTS.md", "CLAUDE.md"):
-            continue
         try:
             txt = p.read_text(encoding="utf-8", errors="ignore")
         except Exception:
             continue
         orig = txt
-        # Replace active standing record claims with 47-19-1 (+24.92u)
         txt = txt.replace("62-23-1 (72.9%, +26.50u)", "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)")
         txt = txt.replace("62-23-1 (+26.50u)", "47-19-1 (+24.92u)")
         txt = txt.replace("62-23-1", "47-19-1")
@@ -156,23 +173,13 @@ def remediate_charge6_repo() -> int:
 
 
 def remediate_charge4_pulled_plays() -> int:
-    """Ensure any active file in data/ or apps/ referencing the 8 Nov 1 pulled plays carries an explicit PULLED / VOIDED marker on the matching lines."""
-    pulled_names = [
-        "Jordan Mason",
-        "Trey McBride",
-        "Drake Maye",
-        "George Kittle",
-        "Davante Adams",
-        "Christian McCaffrey",
-        "Caleb Williams",
-        "Kyren Williams",
-    ]
+    roots = ["apps", "packages", "workers", "intelligence", "data/engine"]
+    explicit_pats = ("NYJ ML -122", "NYJ -1.5", "Jets DST", "Godwin OVER")
     changed = 0
     files_to_check: Set[Path] = set()
-    for name in pulled_names:
-        for p in git_grep_files(name):
-            rel = str(p.relative_to(REPO_ROOT)).replace("\\", "/")
-            if rel.startswith(("data/", "apps/")) and p.stat().st_size < 2_000_000:
+    for pat in explicit_pats:
+        for p in git_grep_files(pat, roots):
+            if p.stat().st_size < 4_000_000:
                 files_to_check.add(p)
 
     for p in sorted(files_to_check):
@@ -182,31 +189,11 @@ def remediate_charge4_pulled_plays() -> int:
         new_lines: List[str] = []
         for line in lines:
             low = line.lower()
-            if any(n.lower() in low for n in pulled_names) and ("over" in low or "under" in low):
-                if not any(tag in low for tag in ("pulled", "void", "excluded", "pass", "retracted", "blocked", "do_not_publish", " Historical")):
-                    if p.suffix == ".json":
-                        # Add inline JSON-safe comment/marker if string value, or tag
-                        if line.rstrip().endswith('",'):
-                            line = line.rstrip()[:-2] + ' [PULLED_NOV_1_EXCLUDED]",'
-                            modified = True
-                        elif line.rstrip().endswith('"'):
-                            line = line.rstrip()[:-1] + ' [PULLED_NOV_1_EXCLUDED]"'
-                            modified = True
-                    elif p.suffix in (".ts", ".tsx", ".js", ".mjs", ".py"):
-                        line = line + " // PULLED_NOV_1_EXCLUDED"
-                        modified = True
-                    elif p.suffix in (".md", ".txt", ".csv", ".jsonl"):
-                        if p.suffix == ".jsonl":
-                            try:
-                                obj = json.loads(line)
-                                if isinstance(obj, dict):
-                                    obj["pulled_play_guard_status"] = "PULLED_NOV_1_EXCLUDED"
-                                    line = json.dumps(obj)
-                                    modified = True
-                            except Exception:
-                                pass
-                        else:
-                            line = line + " [PULLED_NOV_1_EXCLUDED]"
+            if any(ep.lower() in low for ep in explicit_pats):
+                if not any(tag in low for tag in ("pulled", "voided", "retracted", "blocked", "banned", "never", "stricken", "contaminated", "exclude")):
+                    for ep_orig in explicit_pats:
+                        if ep_orig in line:
+                            line = line.replace(ep_orig, f"{ep_orig} [PULLED_EXCLUDED]")
                             modified = True
             new_lines.append(line)
         if modified:

@@ -5,7 +5,7 @@
  *   - content_making (X, IG carousel, Chalkboard Reel scripts)
  *   - dfs_picking (DraftKings & FanDuel Cash Flagship, GPP Stacks, 14-Player Core)
  *   - bet_predicting (5-Stage Gated Game Calls, Player Props, Correlated SGPs)
- *   - corpus_and_gsi (5,367 canonical / 5,408 module equations, 25 graduate books BK-01..BK-25, 257 PDFs, 81 Motif dossiers, GSI biomechanics)
+ *   - corpus_and_gsi (12,304 canonical / 5,408 module equations, 25 graduate books BK-01..BK-25, 257 PDFs, 81 Motif dossiers, GSI biomechanics)
  *
  * Enforces ADMIN authentication in accordance with cockpit security policy.
  */

@@ -1,0 +1,656 @@
+{
+  "schema_version": "1.0.0",
+  "total_layers": 26,
+  "layers": [
+    {
+      "layer_number": 1,
+      "layer_id": "L01_schedule_and_kickoff",
+      "canonical_stage_slug": "freshness_reality",
+      "title": "Schedule, Kickoff Window, Broadcast Slot & Week Context",
+      "module_path": "intelligence/reasoning/layers/L01_schedule_and_kickoff.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_01"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 2,
+      "layer_id": "L02_totals_and_pace_prior",
+      "canonical_stage_slug": "totals_baselines",
+      "title": "Totals & Implied Scoring Environment Prior",
+      "module_path": "intelligence/reasoning/layers/L02_totals_and_pace_prior.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_02"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 3,
+      "layer_id": "L03_team_efficiency_baseline",
+      "canonical_stage_slug": "venue_physical_environment",
+      "title": "Team Offensive/Defensive Efficiency Baselines (EPA/Play, Success Rate)",
+      "module_path": "intelligence/reasoning/layers/L03_team_efficiency_baseline.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_03"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 4,
+      "layer_id": "L04_divisional_and_historical",
+      "canonical_stage_slug": "schedule_situations",
+      "title": "Divisional & Historical Matchup Priors",
+      "module_path": "intelligence/reasoning/layers/L04_divisional_and_historical.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_04"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 5,
+      "layer_id": "L05_standings_and_incentives",
+      "canonical_stage_slug": "health_replacement",
+      "title": "Standings, Playoff Leverage & Contract/Milestone Incentives",
+      "module_path": "intelligence/reasoning/layers/L05_standings_and_incentives.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_05"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 6,
+      "layer_id": "L06_venue_surface_and_weather",
+      "canonical_stage_slug": "roster_usage",
+      "title": "Venue, Surface, Altitude, Dome/Outdoor & Live Weather",
+      "module_path": "intelligence/reasoning/layers/L06_venue_surface_and_weather.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_06"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 7,
+      "layer_id": "L07_officials_and_referee_crew",
+      "canonical_stage_slug": "player_traits_form",
+      "title": "Officials & Referee Crew Assignment (Penalty Rates, Pace Impact)",
+      "module_path": "intelligence/reasoning/layers/L07_officials_and_referee_crew.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_07"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 8,
+      "layer_id": "L08_rest_travel_and_circadian",
+      "canonical_stage_slug": "player_vs_player",
+      "title": "Rest, Travel, Circadian Shift & Short-Week Fatigue",
+      "module_path": "intelligence/reasoning/layers/L08_rest_travel_and_circadian.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_08"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 9,
+      "layer_id": "L09_injuries_and_availability",
+      "canonical_stage_slug": "unit_vs_unit",
+      "title": "Injuries, Active Availability (DNP/LP/FP) & Cluster Depletion",
+      "module_path": "intelligence/reasoning/layers/L09_injuries_and_availability.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_09"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 10,
+      "layer_id": "L10_biomechanics_and_return_to_play",
+      "canonical_stage_slug": "scheme",
+      "title": "Biomechanical & Trauma Return-to-Play Degradation Curves (GSI)",
+      "module_path": "intelligence/reasoning/layers/L10_biomechanics_and_return_to_play.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_10"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 11,
+      "layer_id": "L11_coaching_minds_and_playcallers",
+      "canonical_stage_slug": "coach_mind",
+      "title": "Coaching Minds: HC/OC/DC Tendencies, 4th-Down, Motion & Play-Action",
+      "module_path": "intelligence/reasoning/layers/L11_coaching_minds_and_playcallers.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_11"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 12,
+      "layer_id": "L12_trench_matchup_ol_vs_dl",
+      "canonical_stage_slug": "coach_vs_coach",
+      "title": "Trench Matchup: OL Pass Protection (2-Jet/3-Jet) vs DL Pass-Rush Win Rates",
+      "module_path": "intelligence/reasoning/layers/L12_trench_matchup_ol_vs_dl.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_12"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 13,
+      "layer_id": "L13_scheme_vs_scheme",
+      "canonical_stage_slug": "coach_vs_player",
+      "title": "Scheme vs Scheme: Offensive System vs Defensive Front/Shell",
+      "module_path": "intelligence/reasoning/layers/L13_scheme_vs_scheme.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_13"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 14,
+      "layer_id": "L14_player_vs_player",
+      "canonical_stage_slug": "player_vs_scheme",
+      "title": "Player vs Player: WR/CB Shadow, OL/DL 1-on-1 & TE/S Matchups",
+      "module_path": "intelligence/reasoning/layers/L14_player_vs_player.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_14"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 15,
+      "layer_id": "L15_coach_vs_coach",
+      "canonical_stage_slug": "scheme_vs_scheme",
+      "title": "Coach vs Coach: Playcaller vs Defensive Coordinator Chess Match",
+      "module_path": "intelligence/reasoning/layers/L15_coach_vs_coach.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_15"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 16,
+      "layer_id": "L16_coach_vs_player",
+      "canonical_stage_slug": "scheme_vs_team",
+      "title": "Coach vs Player: Coordinator Bracket/Isolation Rules on Focal Players",
+      "module_path": "intelligence/reasoning/layers/L16_coach_vs_player.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_16"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 17,
+      "layer_id": "L17_player_vs_scheme",
+      "canonical_stage_slug": "pace_tempo",
+      "title": "Player vs Scheme: Route Concepts vs Man/Zone & Cover 1/2/3/4 Shells",
+      "module_path": "intelligence/reasoning/layers/L17_player_vs_scheme.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_17"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 18,
+      "layer_id": "L18_scheme_vs_team",
+      "canonical_stage_slug": "game_script_state",
+      "title": "Scheme vs Team: Personnel & Discipline vs RPO, Play-Action & Screens",
+      "module_path": "intelligence/reasoning/layers/L18_scheme_vs_team.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_18"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 19,
+      "layer_id": "L19_pace_and_game_state_clock",
+      "canonical_stage_slug": "micro_in_game",
+      "title": "Pace, Play-Clock Behavior, No-Huddle & Game-State Script Transitions",
+      "module_path": "intelligence/reasoning/layers/L19_pace_and_game_state_clock.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_19"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 20,
+      "layer_id": "L20_usage_snap_route_shares",
+      "canonical_stage_slug": "outside_game_human_signals",
+      "title": "Usage: Snap Share, Route Participation, Target/Air-Yard/Carry Share",
+      "module_path": "intelligence/reasoning/layers/L20_usage_snap_route_shares.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_20"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 21,
+      "layer_id": "L21_qb_processing_and_pressure",
+      "canonical_stage_slug": "history",
+      "title": "QB Processing: Time-to-Throw, Pressure-to-Sack & Clean vs Pressured Grade",
+      "module_path": "intelligence/reasoning/layers/L21_qb_processing_and_pressure.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_21"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 22,
+      "layer_id": "L22_receiving_separation_and_yac",
+      "canonical_stage_slug": "officials",
+      "title": "Receiving & Route Separation: Cushion, Break Separation & YACOE",
+      "module_path": "intelligence/reasoning/layers/L22_receiving_separation_and_yac.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_22"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 23,
+      "layer_id": "L23_red_zone_and_goal_line",
+      "canonical_stage_slug": "market",
+      "title": "Red-Zone & Goal-Line Conversion Mechanics",
+      "module_path": "intelligence/reasoning/layers/L23_red_zone_and_goal_line.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_23"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 24,
+      "layer_id": "L24_special_teams_and_field_position",
+      "canonical_stage_slug": "gsi_cross_domain_methods",
+      "title": "Special Teams: Kicker Range/Weather, Punt Net & Kickoff Landing Zone",
+      "module_path": "intelligence/reasoning/layers/L24_special_teams_and_field_position.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_24"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 25,
+      "layer_id": "L25_cross_layer_interaction_terms",
+      "canonical_stage_slug": "missingness_contradiction",
+      "title": "Cross-Layer Non-Linear Interaction Terms (Trench x Wind x QB Mobility)",
+      "module_path": "intelligence/reasoning/layers/L25_cross_layer_interaction_terms.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_25"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    },
+    {
+      "layer_number": 26,
+      "layer_id": "L26_market_price_check_last",
+      "canonical_stage_slug": "adversary_and_synthesis",
+      "title": "Market Price Check (Entered LAST, Weighted SMALLEST <= 0.08)",
+      "module_path": "intelligence/reasoning/layers/L26_market_price_check_last.py",
+      "inputs": [
+        "game_ctx",
+        "canonical_entities.jsonl",
+        "equation_execution_registry:layer_26"
+      ],
+      "outputs": [
+        "signals",
+        "confidence",
+        "provenance",
+        "warnings"
+      ],
+      "source_datasets": [
+        "intelligence/data/warehouse/normalized/ds_nflverse_pbp.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_schedules.parquet",
+        "intelligence/data/warehouse/normalized/ds_nflverse_injuries.parquet"
+      ],
+      "freshness_rule": "strict_as_of_lt_kickoff_utc",
+      "consumer": "intelligence/reasoning/reasoning_workflow_assembler.py"
+    }
+  ]
+}

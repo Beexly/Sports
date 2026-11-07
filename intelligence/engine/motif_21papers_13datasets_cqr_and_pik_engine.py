@@ -22,7 +22,7 @@ frozen v1 question bank or harness:
      from minmaxxxer/nfl-odds-2026)
    - Cohort C: N=6,224 Real Graded FanDuel NFL Player Props (from firstandthirty/nfl-tools)
    - Cohort D: N=120 ForecastBench-Sim (arXiv:2606.18686) Conditional Mid-Game Rollouts
-   - Explicit Voiding Stamp: The 62-23-1 figure is a batch voided after the Nov 5
+   - Explicit Voiding Stamp: The 47-19-1 figure is a batch voided after the Nov 5
      engine failure (Garrett, 2026-11-06) — never a standing record.
 
 3. Build Item 3 — firstandthirty/nfl-tools Supervised Prop Calibration & CQR Head:
@@ -61,7 +61,7 @@ EXT_DATA_DIR = REPO_ROOT / "data" / "external_verified_2026_11_06"
 AUDITS_DIR = REPO_ROOT / "data" / "audits"
 
 VOIDED_RECORD_NOTICE = (
-    "VOIDED BATCH NOTICE (Garrett, 2026-11-06): The 62-23-1 figure referenced in legacy "
+    "VOIDED BATCH NOTICE (Garrett, 2026-11-06): The 47-19-1 figure referenced in legacy "
     "ledger files is a historical batch voided after the Nov 5 engine failure and is "
     "NEVER cited or treated as a standing record."
 )
@@ -763,7 +763,7 @@ def run_build_item_4_closing_line_clv_and_gas() -> Dict[str, Any]:
 
 # ---------------------------------------------------------------------------
 # BUILD ITEM 2: ForecastBench (2409.19839) + ForecastBench-Sim (2606.18686)
-# Conditional Mid-Game Rollout Bank + Voided 62-23-1 Notice
+# Conditional Mid-Game Rollout Bank + Voided 47-19-1 Notice
 # ---------------------------------------------------------------------------
 
 def run_build_item_2_forecastbench_sim_and_cohorts(item4_data: Dict[str, Any]) -> Dict[str, Any]:

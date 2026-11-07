@@ -265,8 +265,10 @@ reconciliation/_branches.txt
 intelligence/ingestion/.wall-clear/
 
 # Generated research-corpus artifacts (reproducible in ~25s via
-# scripts/ops/build_corpus_index.py; committing multi-MB derived JSONL bloats history)
+# scripts/ops/build_corpus_index.py or scripts/wiring/run_wave3_research_ingestion.py;
+# 170.58 MB full chunk store stays on disk; 5.38 MB priority slice is tracked)
 intelligence/corpus/corpus_mindfeed.jsonl
+data/corpus/research_records.jsonl
 *.bak.2026*
 
 # Large model weights (downloaded, not source)

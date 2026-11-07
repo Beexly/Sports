@@ -69,7 +69,7 @@ def evaluate_openai_evals_conformal_and_clv_registry(
     """
     Implements an `openai/evals`-compatible deterministic benchmark suite grading
     Brier skill score, log-loss, Closing Line Value (`CLV`), and Barber weighted
-    conformal coverage against the Official New Engine Verified Record (`62-23-1`,
+    conformal coverage against the Official New Engine Verified Record (`47-19-1`,
     `72.9%`, `+26.50u`).
     """
     n = max(1, min(len(predicted_probs), len(closing_market_probs), len(settled_outcomes)))
@@ -108,7 +108,7 @@ def evaluate_openai_evals_conformal_and_clv_registry(
         "mean_clv_prob_delta": round(mean_clv, 6),
         "empirical_conformal_coverage": round(empirical_coverage, 6),
         "target_conformal_coverage": round(1.0 - float(alpha_target), 4),
-        "official_verified_record_baseline": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 — never a standing record)",
+        "official_verified_record_baseline": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 — never a standing record)",
         "eval_gate_passed": bool(brier_skill_score > 0.0 and mean_clv > 0.0),
     }
 

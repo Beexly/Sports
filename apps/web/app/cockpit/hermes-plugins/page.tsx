@@ -20,7 +20,7 @@ export default function CockpitHermesPluginsPage() {
         <div className="flex items-center gap-2 font-mono text-[10px] text-ion-3">
           <span>Ledger: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)</span>
           <span>·</span>
-          <span className="text-accent-400">Stealth-Skeleton 86.62/100</span>
+          <span className="text-accent-400">Stealth-Skeleton 86.12/100</span>
         </div>
       </div>
 

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/reasoning_trace.schema.json",
+  "title": "ReasoningTraceV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "trace_id",
+    "packet_id",
+    "game_id",
+    "as_of",
+    "dependency_order_verified",
+    "tracks",
+    "synthesis_levels",
+    "weighed_signals",
+    "discounted_signals",
+    "corpus_citations",
+    "market_entered_last_and_smallest",
+    "final_reasoning_delta",
+    "weekly_cycle_7_steps",
+    "five_tracks_l1_to_l5",
+    "book_equations_executed"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "trace_id": { "type": "string", "minLength": 5 },
+    "packet_id": { "type": "string", "minLength": 5 },
+    "game_id": { "type": "string", "minLength": 3 },
+    "as_of": { "type": "string", "minLength": 10 },
+    "dependency_order_verified": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tracks": {
+      "type": "object",
+      "required": [
+        "offensive_line",
+        "coaching_scheme",
+        "scheme_matchup",
+        "qb_behavior",
+        "trust_signals"
+      ]
+    },
+    "synthesis_levels": {
+      "type": "object",
+      "required": ["L1", "L2", "L3", "L4", "L5"]
+    },
+    "weighed_signals": { "type": "array", "minItems": 1 },
+    "discounted_signals": { "type": "array", "minItems": 1 },
+    "corpus_citations": { "type": "array", "minItems": 1 },
+    "market_entered_last_and_smallest": {
+      "type": "object",
+      "required": ["entered_last", "weight_cap", "applied_weight"],
+      "properties": {
+        "entered_last": { "type": "boolean", "const": true },
+        "weight_cap": { "type": "number", "maximum": 0.10 },
+        "applied_weight": { "type": "number", "maximum": 0.10 }
+      }
+    },
+    "final_reasoning_delta": { "type": "number" },
+    "weekly_cycle_7_steps": { "type": "object" },
+    "five_tracks_l1_to_l5": { "type": "object" },
+    "book_equations_executed": { "type": "object" }
+  },
+  "additionalProperties": false
+}

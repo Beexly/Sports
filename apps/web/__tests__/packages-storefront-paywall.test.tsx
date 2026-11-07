@@ -183,7 +183,7 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
 
     const { container: boardDom, unmount: unmountBoard } = render(<BoardPage />);
     expect(boardDom.textContent).not.toContain("Under Construction");
-    expect(boardDom.textContent).toContain("62-23-1");
+    expect(boardDom.textContent).toContain("47-19-1");
     unmountBoard();
 
     const { container: calDom, unmount: unmountCal } = render(<CalibrationProofRoomPage />);
@@ -214,7 +214,7 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
       "One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.",
     );
     expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks/i);
-    expect(packagesSrc).toContain("62-23-1");
+    expect(packagesSrc).toContain("47-19-1");
 
     const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
     const pkgText = pkgPageDom.textContent ?? "";

@@ -196,7 +196,7 @@ def run_week9_full_slate_connected_workflow(
         "matchups_evaluated": list(dossiers_summary.keys()),
         "zero_etc_policy_enforced": True,
         "official_new_engine_verified_record": {
-            "record": "62-23-1",
+            "record": "47-19-1",
             "win_rate": 0.7294,
             "net_units": "+26.50u",
         },
@@ -220,7 +220,7 @@ def run_week9_full_slate_connected_workflow(
         "featured_showcase_matchups": featured_4_keys,
         "week9_bye_teams": ["PIT", "TEN"],
         "markets_covered": 77,
-        "official_ledger_record": "62-23-1 (72.9%, +26.50u)",
+        "official_ledger_record": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
         "slate_packet_sha256": slate_packet["slate_packet_sha256"],
         "per_game_master_bundle_sha256": {
             k: v["master_bundle_sha256"] for k, v in dossiers_summary.items()
@@ -242,7 +242,7 @@ def run_week9_full_slate_connected_workflow(
             "timestamp": slate_packet["generated_at_utc"],
             "games_simulated": len(official_15_keys),
             "markets_covered": 77,
-            "official_ledger_record": "62-23-1 (72.9%, +26.50u)",
+            "official_ledger_record": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
             "slate_packet_sha256": slate_packet["slate_packet_sha256"],
         }
         if "roster_feed" in cov and isinstance(cov["roster_feed"], dict):

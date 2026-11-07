@@ -1388,7 +1388,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "New York Jets and Las Vegas Raiders bring contrasting third-down pass-rush plans into this matchup up front.",
       "personnelTendencies": "New York Jets features Garrett Wilson and Braelon Allen on early downs, while Las Vegas Raiders leans on Kirk Cousins (LV QB), Brock Bowers, and Ashton Jeanty.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Las Vegas Raiders and New York Jets headline the film study for this game.",
-      "notes": "Posted Line: NYJ -1.5 \u00b7 O/U 45.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Posted Line: NYJ -1.5 [PULLED_EXCLUDED] \u00b7 O/U 45.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Las Vegas Raiders +1.5",

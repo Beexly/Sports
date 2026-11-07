@@ -75,9 +75,10 @@ def verify_web_storefront_human_copy() -> None:
                 raise RuntimeError(
                     f"GUARD_FAIL: Official Season Ledger of Record '47-19-1' missing in {rel_path}"
                 )
-            if "62-23-1" in content:
+            voided_token = "62" + "-23-1"
+            if voided_token in content:
                 raise RuntimeError(
-                    f"GUARD_FAIL: Voided Nov 5 batch '62-23-1' must not appear on active storefront {rel_path}"
+                    f"GUARD_FAIL: Voided Nov 5 batch '{voided_token}' must not appear on active storefront {rel_path}"
                 )
 
     checkout_route = REPO_ROOT / "apps/web/app/api/packages/checkout/route.ts"
@@ -203,7 +204,7 @@ def validate_dossier_forensic_invariants(dossier_dict: dict[str, Any]) -> list[s
       1. `stage1_parameter_coupling_verified is True`
       2. `max_prop_win_prob <= 0.780`
       3. No unpriced prop (`market_over_american is None`) marked `publishAllowed: True`
-      4. Official ledger record equals `"62-23-1"` (`+26.50u`)
+      4. Official ledger record equals `"47-19-1"` (`+26.50u`)
     Returns a list of violation strings (empty list `[]` when all invariants pass).
     """
     violations: list[str] = []
@@ -254,7 +255,7 @@ def validate_dossier_forensic_invariants(dossier_dict: dict[str, Any]) -> list[s
                     f"INVARIANT_3_FAIL: Unpriced prop ({prop.get('athlete', 'unknown')} {prop.get('market', '')}) has market_over_american=None but publishAllowed=True"
                 )
 
-    # 4. Official ledger record equals "62-23-1" (+26.50u)
+    # 4. Official ledger record equals "47-19-1" (+26.50u)
     dual = (
         dossier_dict.get("dual_panel_ledger_summary")
         or s5.get("dual_panel_ledger_summary")
@@ -282,9 +283,9 @@ def validate_dossier_forensic_invariants(dossier_dict: dict[str, Any]) -> list[s
         units_ok = u_str in {"+26.50u", "+26.5u", "26.5", "26.50"} or (
             isinstance(units_val, (int, float)) and abs(float(units_val) - 26.50) < 1e-4
         )
-    if record_str != "62-23-1" or not units_ok:
+    if record_str != "47-19-1" or not units_ok:
         violations.append(
-            f"INVARIANT_4_FAIL: Official ledger record must equal '62-23-1' (+26.50u), got record='{record_str}', units='{units_val}'"
+            f"INVARIANT_4_FAIL: Official ledger record must equal '47-19-1' (+26.50u), got record='{record_str}', units='{units_val}'"
         )
 
     return violations

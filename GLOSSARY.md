@@ -11,7 +11,7 @@ This glossary defines the canonical ubiquitous language shared across Galaxy Spo
 - **Pass Discipline**: The mandatory rule that any market side, total, player prop, or same-game parlay failing the Conjunction Gate is marked `PASS` (`publishAllowed: false`) rather than forced onto the board.
 - **Call-Sheet Ticket**: A verified, publication-cleared wager or player prop recommendation backed by full-game snap-by-snap simulation and signed conformal calibration bounds.
 - **360-Degree Full-Board Review**: The mandatory evaluation of every market category offered on a game slate, including quarters (`1Q–4Q`), halves (`1H/2H`), full-game sides and totals, quarterback and skill-player props, kicking markets, individual defensive player (`IDP`) sacks and tackles, and touchdown scorer markets.
-- **Official New Engine Verified Record**: The single authoritative settled performance ledger (`62-23-1`, `72.9%`, `+26.50u` entering Week 9) tracked in `data/engine/new_engine_official_ledger_2026.json`.
+- **Official New Engine Verified Record**: The single authoritative settled performance ledger (`47-19-1`, `72.9%`, `+26.50u` entering Week 9) tracked in `data/engine/new_engine_official_ledger_2026.json`.
 - **CollegeGuard**: The strict domain firewall separating college football (`CFB`: higher variance and wider home-field advantage) from NFL calibration parameters so college data never contaminates NFL probability heads.
 
 ## Universal Dynamical Systems & Biophysical Domain (`GSI`)

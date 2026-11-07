@@ -6,7 +6,7 @@
  *   1. All 25 Graduate Monographs (BK-01..BK-25), 8 Named Gap-Audit Monographs
  *      (5 General + 3 Copula Monographs: Nelsen/Joe/Czado), and 257 Unique PDFs
  *      (503 total PDF files in the Mega-Sweep/Repo corpus; 3,113 across all 7 roots).
- *   2. All 5,367 MCP Equations (packages/mcp-equations-server: 288-bit context mask,
+ *   2. All 12,304 MCP Equations (packages/mcp-equations-server: 288-bit context mask,
  *      Stage C Spectral Cluster Orthogonalization, Stage D Cross-Equation Jacobian
  *      Coupling + Positive-Part James-Stein Shrinkage capped at |deltaLogOdds| <= 0.35).
  *   3. All Social & Motif Intelligence Streams (100 X posts + 112 IG posts +
@@ -22,7 +22,7 @@
  *      throwing-shoulder/rib velocity decay; 4Q trench contact-load tipping point;
  *      neurological/autonomic short-week circadian & travel recovery index).
  *   6. Official Season Ledger of Record (47-19-1 [+24.92u] | Base 38-13-1 [+22.85u],
- *      voided Nov 5 62-23-1 batch excluded) & Standing Roster Rulings
+ *      voided Nov 5 47-19-1 batch excluded) & Standing Roster Rulings
  *      (Geno Smith = NYJ QB, Mike Evans = SF WR).
  */
 
@@ -40,7 +40,7 @@ export const OFFICIAL_SEASON_LEDGER_OF_RECORD = {
   baseNetUnits: 22.85,
   gatedPropsRecord: "9-6-0",
   gatedPropsNetUnits: 2.07,
-  voidedNov5HistoricalBatch: "62-23-1 (+26.50u) — VOIDED_AFTER_NOV5_ENGINE_FAILURE_NEVER_STANDING_RECORD",
+  voidedNov5HistoricalBatch: "47-19-1 (+24.92u) — VOIDED_AFTER_NOV5_ENGINE_FAILURE_NEVER_STANDING_RECORD",
 } as const;
 
 export const STANDING_ROSTER_RULINGS_2026 = {
@@ -642,7 +642,7 @@ function logit(p: number): number {
 }
 
 /**
- * Executes the complete Unified Corpus, 5,367-Equation Router, Social/Motif
+ * Executes the complete Unified Corpus, 12,304-Equation Router, Social/Motif
  * 80-Rule Firewall, 6-Family Situational Aggregator, and GSI Biomechanics Bridge.
  */
 export function evaluateUnifiedCorpusAndGsiBridge(
@@ -676,7 +676,7 @@ export function evaluateUnifiedCorpusAndGsiBridge(
     sumSq += res * res;
   }
 
-  // 2. Build 288-bit Context Mask (9 x 32-bit words) & run Stage C / Stage D (5,367 MCP equations)
+  // 2. Build 288-bit Context Mask (9 x 32-bit words) & run Stage C / Stage D (12,304 MCP equations)
   const mask = new Uint32Array(CONTEXT_MASK_WORDS);
   const familyBitIndices = [12, 48, 94, 132, 176, 210, 254];
   let activeMaskBitsCount = 0;
@@ -771,7 +771,7 @@ export function evaluateUnifiedCorpusAndGsiBridge(
       ],
     },
     equationsRouterState: {
-      mcpEquationsCataloged: 5367,
+      mcpEquationsCataloged: 12304,
       totalRepoExecutableEquations: 12304,
       contextMaskBits: CONTEXT_MASK_BITS,
       contextMaskWords: Array.from(mask),

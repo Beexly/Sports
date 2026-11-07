@@ -229,7 +229,7 @@ def build_20_pinecone_openai_jules_opendots_documents(
             "openai/evals: Conformal Coverage, Brier Skill Score & CLV Benchmark Registry",
             "https://github.com/openai/evals",
             "D-MODELS",
-            f"Deterministic benchmark evaluation registry grading Brier skill score ({readiness['openai_evals']['brier_skill_score']}), mean CLV delta ({readiness['openai_evals']['mean_clv_prob_delta']}), and Barber weighted conformal coverage against the 62-23-1 (+26.50u) official baseline.",
+            f"Deterministic benchmark evaluation registry grading Brier skill score ({readiness['openai_evals']['brier_skill_score']}), mean CLV delta ({readiness['openai_evals']['mean_clv_prob_delta']}), and Barber weighted conformal coverage against the 47-19-1 (+24.92u) official baseline.",
         ),
         (
             "oai-repo-03-openai-cookbook",
@@ -473,7 +473,7 @@ def render_wiring_bible_markdown(
         "| # | Repository | Engine Kernel Function | Core Mathematical / Architectural Role |",
         "|---:|---|---|---|",
         "| 1 | `openai/math` | `evaluate_sovereign_openai_eyi_execution_dossier` | 722 manuscripts across 372 families: 1-RSB Mezard-Parisi cavity susceptibility `chi_sg`, Mahler polar-dual polytope conformal score `4^d/d!`, and `[3/3]`/`[4/4]` Minimax Pade `pade_exp_neg`. |",
-        "| 2 | `openai/evals` | `evaluate_openai_evals_conformal_and_clv_registry` | Brier skill score, mean CLV probability delta, and Barber weighted conformal coverage benchmarked against the `62-23-1` (`72.9%`, `+26.50u`) ledger. |",
+        "| 2 | `openai/evals` | `evaluate_openai_evals_conformal_and_clv_registry` | Brier skill score, mean CLV probability delta, and Barber weighted conformal coverage benchmarked against the `47-19-1` (`72.9%`, `+26.50u`) ledger. |",
         "| 3 | `openai/openai-cookbook` | `evaluate_cookbook_hybrid_rag_and_structured_outputs` | Reciprocal Rank Fusion (`RRF k=60`) across Pinecone dense + BM25 sparse retrieval and strict 5-stage JSON schema validation. |",
         "| 4 | `openai/gym` | `step_openai_gym_compatible_phase_transition_env` | `GSE-GSI-PhaseGym-v1` snap-by-snap environment step with 19-Rule Honesty and `CollegeGuard` (`sigma=15.15` CFB vs `sigma=13.36` NFL). |",
         "| 5 | `openai/CLIP` | `compute_clip_contrastive_all22_and_chart_alignment` | Contrastive cosine-similarity alignment between All-22 pre-snap formation embeddings and defensive coverage shells. |",

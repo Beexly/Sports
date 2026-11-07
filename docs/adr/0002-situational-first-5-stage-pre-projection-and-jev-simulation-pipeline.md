@@ -13,7 +13,7 @@ The NFL closing line incorporates public box-score averages efficiently. Attempt
 * **Situational Reasoning First (`Stage 1 -> Stage 2` before `Stage 3`)**: Simulations must never run on unconditioned baseline averages. All coaching tendencies, active injuries (`player_gp`), 360-metric registries, 6 non-stationary second/third-order kernels, 80-rule misleading-stat firewalls, and 5-Track (`L1-L5` in `OL -> scheme -> QB` order) / 7-Step weekly cycle overlays must condition the snap transition priors BEFORE simulation.
 * **Snap-by-Snap Trajectory Fidelity (`Stage 3`)**: Full-game simulations (`10,000 worlds x 175 snaps = 1,750,000 snaps`) must be driven by `jevkit.client.ask()` (`~typesafe/jev-latest`) and Sinkhorn-Knopp optimal transport (`sinkhorn_reallocate_weights`).
 * **Distribution-Free Calibration & Strict Conjunction Gate (`Stage 4 -> Stage 5`)**: Only plays clearing Barber weighted conformal prediction, FWL market residualization, and the Class B de-vig conjunction gate are published; everything else is marked `PASS` (`publishAllowed: false`).
-* **Single Verified Ledger Anchor**: Track and publish only the Official New Engine Verified Record (`62-23-1`, `72.9%`, `+26.50 Units` entering Week 9: `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled).
+* **Single Verified Ledger Anchor**: Track and publish only the Official New Engine Verified Record (`47-19-1`, `72.9%`, `+26.50 Units` entering Week 9: `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled).
 
 ## Considered Options
 
@@ -37,7 +37,7 @@ We adopt **Option 2**: The Situational-First 5-Stage Engine Gate and 5-Track (`L
 ## Consequences
 
 ### Positive
-- Verified `62-23-1` (`72.9%`, `+26.50u`) performance ledger with full auditability in `data/engine/new_engine_official_ledger_2026.json`.
+- Verified `47-19-1` (`72.9%`, `+26.50u`) performance ledger with full auditability in `data/engine/new_engine_official_ledger_2026.json`.
 - Zero synthetic `tanh` templates across all `12,304` executable equations.
 
 ### Negative

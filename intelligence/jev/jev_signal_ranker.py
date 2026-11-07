@@ -207,7 +207,7 @@ def main() -> int:
         "jev_screening_protocol": jev_result,
         "wr_separation_and_soe_audit": wr_soe_audit,
         "structural_blind_spot_fixes": [
-            "Eliminated negative DST-vs-Offense correlation (replaced Panthers DST vs Goedert/Pierce with Browns DST $2,500 vs backup QB Tyler Huntley / Jets DST $2,200).",
+            "Eliminated negative DST-vs-Offense correlation (replaced Panthers DST vs Goedert/Pierce with Browns DST $2,500 vs backup QB Tyler Huntley / Jets DST [PULLED_EXCLUDED] $2,200).",
             "Locked Drake London ($7,000, +0.462 SOE, 3.33 sep, 43.8% air share) across 100% of entries (Lineup 1 & Lineup 2).",
             "Stacked Josh Allen ($7,500) with Khalil Shakir ($5,300, 4.03 yds sep — #1 raw sep on slate) + Tre Tucker ($4,700) in 53.5 indoor total.",
             "Placed 3:25 PM CST late-window players (Kenneth Walker III $8,500 in Lineup 1; Xavier Worthy $4,600 in Lineup 2) in the FLEX slot for afternoon late-swap leverage.",

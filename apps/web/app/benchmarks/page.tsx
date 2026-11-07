@@ -42,7 +42,7 @@ const BENCHMARK_SUITES = [
     pass2: "70.00 / 100",
     pass3: "85.00 / 100",
     frontierRef: "DeepSeek-V3: 90.20 · OpenAI o1: 94.80",
-    mechanism: "5,367-equation MCP library + 25 graduate mathematics textbooks (BK-01..BK-25)",
+    mechanism: "12,304-equation MCP library + 25 graduate mathematics textbooks (BK-01..BK-25)",
   },
   {
     suite: "AIME 2024 (Olympiad Integer Proof)",
@@ -101,7 +101,7 @@ export default function BenchmarksPage(): JSX.Element {
             </span>
           </div>
           <h1 className="mt-4 font-display text-3xl uppercase tracking-tight text-white sm:text-5xl">
-            GSE Stealth-Skeleton Proprietary Model Benchmarks (86.62 / 100 Composite)
+            GSE Stealth-Skeleton Proprietary Model Benchmarks (86.12 / 100 Composite)
           </h1>
           <p className="mt-3 max-w-4xl text-sm leading-relaxed text-[#C4BFB6] sm:text-base">
             Galaxy Sports Edge &amp; Galaxy Sports Institute (GSI) built the proprietary{" "}
@@ -117,7 +117,7 @@ export default function BenchmarksPage(): JSX.Element {
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
                 7-Suite Composite Score
               </p>
-              <p className="mt-1 font-mono text-2xl font-bold text-emerald-400">86.62 / 100</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-emerald-400">86.12 / 100</p>
               <p className="mt-0.5 text-xs text-[#8F8A82]">Pass 3 Full Neuro-Symbolic Stack</p>
             </div>
             <div className="rounded-2xl border border-[#252833] bg-[#08090C] p-4">
@@ -189,7 +189,7 @@ export default function BenchmarksPage(): JSX.Element {
                   <td className="py-4 pr-4 text-[#8F8A82]">0.00 / 100</td>
                   <td className="py-4 pr-4 text-[#C4BFB6]">43.00 / 100</td>
                   <td className="py-4 pr-4 text-[#C4BFB6]">79.03 / 100</td>
-                  <td className="py-4 pr-4 text-base font-bold text-emerald-400">86.62 / 100</td>
+                  <td className="py-4 pr-4 text-base font-bold text-emerald-400">86.12 / 100</td>
                   <td className="py-4 pr-4 text-[#C4BFB6]">
                     DeepSeek 1017: 78.16 · Opus 4.6: 80.55..85.00 · o1: 87.54
                   </td>
@@ -210,7 +210,7 @@ export default function BenchmarksPage(): JSX.Element {
             <ul className="mt-4 space-y-3 text-xs leading-relaxed text-[#C4BFB6]">
               <li>
                 <strong className="text-white">
-                  1. 5,367-Equation 288-Bit Context Router &amp; Spectral Orthogonalization:
+                  1. 12,304-Equation 288-Bit Context Router &amp; Spectral Orthogonalization:
                 </strong>{" "}
                 Maps every prompt into a 288-bit situational context mask, orthogonalizes collinear
                 equation clusters via spectral decomposition, and bounds log-odds updates via

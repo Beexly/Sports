@@ -1,8 +1,10 @@
 /**
- * Ask Jarvis — deterministic question answering from OwnerSummary state.
+ * Ask Jarvis — live ledger, context-packet, reasoning-trace, and async provider question answering.
  *
- * Pure function. No model call. No fabrication. Every answer is derived
- * entirely from the OwnerSummary produced by buildOwnerSummary().
+ * Grounded in OwnerSummary state, live wiring telemetry (`docs/wiring/NIGHT-STATE.json`,
+ * `docs/wiring/COVERAGE-LEDGER.md`, `data/context_packets/`, `data/reasoning/traces/`),
+ * and the async Stealth-Skeleton provider (`runJarvisJynxAutonomousBrainAsync`) with
+ * explicit `fallback_fired` telemetry.
  *
  * Rules:
  *   - Never invent performance stats not present in the summary.
@@ -19,11 +21,15 @@
  *   - Candidate-only note: "I found a related memory candidate, but it has
  *     not been confirmed."
  *   - Conflicts: "There are conflicting memories. Owner review is required."
- *   - On MemoryStoreUnavailableError: answer proceeds exactly as today —
+ *   - On MemoryStoreUnavailableError: answer proceeds —
  *     no degradation, no fake memory. Memory context is ADDITIVE.
  */
 
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
 import type { OwnerSummary } from "./owner-summary";
+import { runJarvisJynxAutonomousBrainAsync } from "../jarvis/stealth-skeleton-brain";
 import {
   CAPABILITY_REGISTRY,
   computeWiringScore,
@@ -143,6 +149,10 @@ export interface JarvisAnswer {
   readonly confidence: "HIGH" | "MEDIUM" | "LOW";
   readonly caveat: string | null;
   readonly nextAction: string | null;
+  readonly packet_id?: string | null;
+  readonly trace_id?: string | null;
+  readonly ledger_sha?: string | null;
+  readonly fallback_fired?: boolean;
 }
 
 // ─── Intent handlers ──────────────────────────────────────────────────────────
@@ -908,4 +918,106 @@ export async function askJarvisWithMemory(
     // Other errors: also fall back gracefully
     return base;
   }
+}
+
+export function readLiveWiringTelemetry(gameId = "2026_09_JAX_BAL"): {
+  readonly packet_id: string | null;
+  readonly trace_id: string | null;
+  readonly ledger_sha: string | null;
+  readonly nightStateStatus: string | null;
+  readonly currentWave: string | null;
+} {
+  try {
+    const cwd = process.cwd();
+    const repoRoot = fs.existsSync(path.join(cwd, "docs", "wiring"))
+      ? cwd
+      : path.resolve(cwd, "..", "..");
+
+    let packet_id: string | null = null;
+    const pktPath = path.join(repoRoot, "data", "context_packets", `${gameId}.json`);
+    if (fs.existsSync(pktPath)) {
+      const pkt = JSON.parse(fs.readFileSync(pktPath, "utf8")) as { packet_id?: string };
+      packet_id = pkt.packet_id ?? null;
+    }
+
+    let trace_id: string | null = null;
+    const tracePath = path.join(repoRoot, "data", "reasoning", "traces", `${gameId}.trace.json`);
+    if (fs.existsSync(tracePath)) {
+      const tr = JSON.parse(fs.readFileSync(tracePath, "utf8")) as { trace_id?: string };
+      trace_id = tr.trace_id ?? null;
+    }
+
+    let ledger_sha: string | null = null;
+    const covPath = path.join(repoRoot, "docs", "wiring", "COVERAGE-LEDGER.md");
+    const nsPath = path.join(repoRoot, "docs", "wiring", "NIGHT-STATE.json");
+    if (fs.existsSync(covPath)) {
+      const buf = fs.readFileSync(covPath);
+      ledger_sha = crypto.createHash("sha256").update(buf).digest("hex").slice(0, 16);
+    } else if (fs.existsSync(nsPath)) {
+      const buf = fs.readFileSync(nsPath);
+      ledger_sha = crypto.createHash("sha256").update(buf).digest("hex").slice(0, 16);
+    }
+
+    let nightStateStatus: string | null = null;
+    let currentWave: string | null = null;
+    if (fs.existsSync(nsPath)) {
+      const ns = JSON.parse(fs.readFileSync(nsPath, "utf8")) as {
+        status?: string;
+        current_wave?: string;
+      };
+      nightStateStatus = ns.status ?? null;
+      currentWave = ns.current_wave ?? null;
+    }
+
+    return { packet_id, trace_id, ledger_sha, nightStateStatus, currentWave };
+  } catch {
+    return {
+      packet_id: null,
+      trace_id: null,
+      ledger_sha: null,
+      nightStateStatus: null,
+      currentWave: null,
+    };
+  }
+}
+
+/**
+ * Live cockpit Q&A entrypoint that enriches `askJarvisWithMemory` with live
+ * context-packet (`packet_id`), reasoning-trace (`trace_id`), wiring ledger (`ledger_sha`),
+ * and optional Stealth-Skeleton async provider execution with explicit `fallback_fired` tracking.
+ */
+export async function askJarvisWithLiveContextAndLedger(
+  intent: JarvisIntent,
+  summary: OwnerSummary,
+  options?: { gameId?: string; invokeProvider?: boolean },
+): Promise<JarvisAnswer> {
+  const base = await askJarvisWithMemory(intent, summary);
+  const telemetry = readLiveWiringTelemetry(options?.gameId ?? "2026_09_JAX_BAL");
+  const extraLines: string[] = [];
+
+  if (telemetry.packet_id) extraLines.push(`Context packet_id: ${telemetry.packet_id}`);
+  if (telemetry.trace_id) extraLines.push(`Reasoning trace_id: ${telemetry.trace_id}`);
+  if (telemetry.ledger_sha) extraLines.push(`Wiring ledger_sha: ${telemetry.ledger_sha}`);
+  if (telemetry.nightStateStatus) {
+    extraLines.push(`NIGHT-STATE.json status: ${telemetry.nightStateStatus} (${telemetry.currentWave ?? "N/A"})`);
+  }
+
+  let fallback_fired = false;
+  if (options?.invokeProvider) {
+    const brainRes = await runJarvisJynxAutonomousBrainAsync({
+      prompt: `${base.question} (${intent})`,
+      mode: "autonomous_all",
+    });
+    fallback_fired = Boolean(brainRes.fallback_fired);
+    extraLines.push(`Provider fallback_fired: ${fallback_fired}`);
+  }
+
+  return {
+    ...base,
+    supportingState: [...base.supportingState, ...extraLines],
+    packet_id: telemetry.packet_id,
+    trace_id: telemetry.trace_id,
+    ledger_sha: telemetry.ledger_sha,
+    fallback_fired,
+  };
 }

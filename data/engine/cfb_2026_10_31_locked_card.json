@@ -1,0 +1,4076 @@
+{
+  "date": "2026-10-31",
+  "week": 9,
+  "generated_from": [
+    "Hugging Face 24601p/cfb-data games-2026.parquet and drives-2026.parquet, last_modified 2026-10-26",
+    "Firecrawl scrape of https://www.espn.com/college-football/odds DraftKings widget, fetched 2026-10-30 evening"
+  ],
+  "fbs_games": 47,
+  "lines_matched": 47,
+  "completed_fbs_games_used_for_drives": 566,
+  "drives_used": 13242,
+  "priced_plays": 0,
+  "individual_19_cards": [],
+  "day_pass_for_sale": false,
+  "day_pass_reason": "All 47 FBS games simulated via 10,000-world Compound-Poisson / Negative-Binomial drive engine (VMR=1.85, pathwise_conservation_residual=0.0). Zero games cleared the 5-stage conjunction gate (missing college snap-by-snap JEV spine, active player injury/role Sinkhorn table, and cognitive-router Stage C/D). A pass-only bundle is not for sale.",
+  "layers_run": [
+    "schedule and pregame Elo from the 2026 games file",
+    "drive yards, points, plays, and scoring rate from completed FBS games before 2026-10-31",
+    "Phase I pure internal 10,000-world Compound-Poisson / Negative-Binomial drive simulation (VMR=1.85, zero odds)",
+    "Phase II DraftKings spread, total, and moneyline comparison LAST after internal seal",
+    "multiplicative de-vig on two-way spread, total, and moneyline"
+  ],
+  "layers_not_run": [
+    "snap-by-snap JEV",
+    "college active player injury/role Sinkhorn table",
+    "cognitive router",
+    "80-rule situational overlay",
+    "closing-line projection"
+  ],
+  "slate": [
+    {
+      "away": "UAB",
+      "home": "South Florida",
+      "away_conference": "American Athletic",
+      "home_conference": "American Athletic",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1396.0,
+      "home_elo": 1613.0,
+      "home_elo_win_prob_no_hfa": 0.7772,
+      "away_drive": {
+        "drives": 76.0,
+        "yds_per_drive": 31.053,
+        "pts_per_drive": 1.868,
+        "plays_per_drive": 6.421,
+        "scoring_rate": 0.434
+      },
+      "home_drive": {
+        "drives": 73.0,
+        "yds_per_drive": 30.575,
+        "pts_per_drive": 2.425,
+        "plays_per_drive": 5.877,
+        "scoring_rate": 0.438
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 28.911,
+        "pts_allowed_per_drive": 2.101
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 31.31,
+        "pts_allowed_per_drive": 1.592
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401862816",
+        "away_spread": 7.5,
+        "away_spread_price": -108,
+        "home_spread": -7.5,
+        "home_spread_price": -112,
+        "total": 41.5,
+        "over_price": -112,
+        "under_price": -108,
+        "away_ml": 245,
+        "home_ml": -305,
+        "away_ml_devig": 0.2779,
+        "home_ml_devig": 0.7221,
+        "ml_overround": 0.0429
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 20.35,
+        "sim_home_pts_mean": 29.37,
+        "sim_away_pts_median": 18.0,
+        "sim_home_pts_median": 27.0,
+        "sim_home_margin_mean": 9.02,
+        "sim_home_margin_median": 8.0,
+        "sim_total_mean": 49.72,
+        "sim_total_median": 47.0,
+        "sim_home_win_prob": 0.6603,
+        "sim_away_win_prob": 0.3397,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.01,
+      "raw_total_edge": 0.0967,
+      "raw_ml_edge": 0.0618,
+      "market_comparison": {
+        "spread_lean": "South Florida -7.5",
+        "sim_home_cover_prob": 0.5143,
+        "raw_spread_edge": 0.01,
+        "total_lean": "OVER 41.5",
+        "sim_over_prob": 0.601,
+        "raw_total_edge": 0.0967,
+        "ml_lean": "UAB ML",
+        "raw_ml_edge": 0.0618
+      }
+    },
+    {
+      "away": "Illinois",
+      "home": "Maryland",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1580.0,
+      "home_elo": 1294.0,
+      "home_elo_win_prob_no_hfa": 0.1616,
+      "away_drive": {
+        "drives": 69.0,
+        "yds_per_drive": 40.739,
+        "pts_per_drive": 2.768,
+        "plays_per_drive": 6.42,
+        "scoring_rate": 0.493
+      },
+      "home_drive": {
+        "drives": 90.0,
+        "yds_per_drive": 30.3,
+        "pts_per_drive": 2.111,
+        "plays_per_drive": 5.411,
+        "scoring_rate": 0.389
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 36.38,
+        "pts_allowed_per_drive": 2.408
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 30.595,
+        "pts_allowed_per_drive": 2.452
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401858503",
+        "away_spread": -2.5,
+        "away_spread_price": -115,
+        "home_spread": 2.5,
+        "home_spread_price": -105,
+        "total": 54.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": -135,
+        "home_ml": 114,
+        "away_ml_devig": 0.5514,
+        "home_ml_devig": 0.4486,
+        "ml_overround": 0.0418
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 33.96,
+        "sim_home_pts_mean": 28.21,
+        "sim_away_pts_median": 31.0,
+        "sim_home_pts_median": 26.0,
+        "sim_home_margin_mean": -5.75,
+        "sim_home_margin_median": -5.0,
+        "sim_total_mean": 62.17,
+        "sim_total_median": 59.0,
+        "sim_home_win_prob": 0.413,
+        "sim_away_win_prob": 0.587,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0324,
+      "raw_total_edge": 0.0821,
+      "raw_ml_edge": 0.0356,
+      "market_comparison": {
+        "spread_lean": "Illinois -2.5",
+        "sim_home_cover_prob": 0.4568,
+        "raw_spread_edge": 0.0324,
+        "total_lean": "OVER 54.5",
+        "sim_over_prob": 0.5713,
+        "raw_total_edge": 0.0821,
+        "ml_lean": "Illinois ML",
+        "raw_ml_edge": 0.0356
+      }
+    },
+    {
+      "away": "Arizona",
+      "home": "Texas Tech",
+      "away_conference": "Big 12",
+      "home_conference": "Big 12",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1811.0,
+      "home_elo": 1825.0,
+      "home_elo_win_prob_no_hfa": 0.5201,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 39.457,
+        "pts_per_drive": 2.951,
+        "plays_per_drive": 5.988,
+        "scoring_rate": 0.494
+      },
+      "home_drive": {
+        "drives": 87.0,
+        "yds_per_drive": 34.632,
+        "pts_per_drive": 2.414,
+        "plays_per_drive": 5.701,
+        "scoring_rate": 0.471
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 29.474,
+        "pts_allowed_per_drive": 1.171
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 28.163,
+        "pts_allowed_per_drive": 1.554
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401856842",
+        "away_spread": 3.5,
+        "away_spread_price": -108,
+        "home_spread": -3.5,
+        "home_spread_price": -112,
+        "total": 54.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": 150,
+        "home_ml": -180,
+        "away_ml_devig": 0.3836,
+        "home_ml_devig": 0.6164,
+        "ml_overround": 0.0429
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 27.22,
+        "sim_home_pts_mean": 26.03,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 23.0,
+        "sim_home_margin_mean": -1.19,
+        "sim_home_margin_median": -1.0,
+        "sim_total_mean": 53.25,
+        "sim_total_median": 51.0,
+        "sim_home_win_prob": 0.4833,
+        "sim_away_win_prob": 0.5167,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0864,
+      "raw_total_edge": 0.0563,
+      "raw_ml_edge": 0.1331,
+      "market_comparison": {
+        "spread_lean": "Arizona +3.5",
+        "sim_home_cover_prob": 0.4179,
+        "raw_spread_edge": 0.0864,
+        "total_lean": "UNDER 54.5",
+        "sim_over_prob": 0.4329,
+        "raw_total_edge": 0.0563,
+        "ml_lean": "Arizona ML",
+        "raw_ml_edge": 0.1331
+      }
+    },
+    {
+      "away": "California",
+      "home": "NC State",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1236.0,
+      "home_elo": 1465.0,
+      "home_elo_win_prob_no_hfa": 0.7889,
+      "away_drive": {
+        "drives": 98.0,
+        "yds_per_drive": 31.612,
+        "pts_per_drive": 1.806,
+        "plays_per_drive": 5.857,
+        "scoring_rate": 0.316
+      },
+      "home_drive": {
+        "drives": 80.0,
+        "yds_per_drive": 36.737,
+        "pts_per_drive": 2.825,
+        "plays_per_drive": 6.213,
+        "scoring_rate": 0.463
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 33.798,
+        "pts_allowed_per_drive": 2.333
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 32.704,
+        "pts_allowed_per_drive": 2.346
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401858277",
+        "away_spread": 9.5,
+        "away_spread_price": -108,
+        "home_spread": -9.5,
+        "home_spread_price": -112,
+        "total": 56.5,
+        "over_price": -112,
+        "under_price": -108,
+        "away_ml": 250,
+        "home_ml": -310,
+        "away_ml_devig": 0.2742,
+        "home_ml_devig": 0.7258,
+        "ml_overround": 0.0418
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 24.56,
+        "sim_home_pts_mean": 33.62,
+        "sim_away_pts_median": 21.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 9.06,
+        "sim_home_margin_median": 8.0,
+        "sim_total_mean": 58.18,
+        "sim_total_median": 55.0,
+        "sim_home_win_prob": 0.6361,
+        "sim_away_win_prob": 0.3639,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0233,
+      "raw_total_edge": 0.0242,
+      "raw_ml_edge": 0.0897,
+      "market_comparison": {
+        "spread_lean": "California +9.5",
+        "sim_home_cover_prob": 0.481,
+        "raw_spread_edge": 0.0233,
+        "total_lean": "UNDER 56.5",
+        "sim_over_prob": 0.4801,
+        "raw_total_edge": 0.0242,
+        "ml_lean": "California ML",
+        "raw_ml_edge": 0.0897
+      }
+    },
+    {
+      "away": "Notre Dame",
+      "home": "Navy",
+      "away_conference": "FBS Independents",
+      "home_conference": "American Athletic",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 2082.0,
+      "home_elo": 1487.0,
+      "home_elo_win_prob_no_hfa": 0.0315,
+      "away_drive": {
+        "drives": 75.0,
+        "yds_per_drive": 41.613,
+        "pts_per_drive": 3.467,
+        "plays_per_drive": 6.52,
+        "scoring_rate": 0.587
+      },
+      "home_drive": {
+        "drives": 78.0,
+        "yds_per_drive": 38.833,
+        "pts_per_drive": 2.641,
+        "plays_per_drive": 6.038,
+        "scoring_rate": 0.436
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 21.973,
+        "pts_allowed_per_drive": 1.189
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 33.221,
+        "pts_allowed_per_drive": 2.506
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401859185",
+        "away_spread": -30.5,
+        "away_spread_price": -110,
+        "home_spread": 30.5,
+        "home_spread_price": -110,
+        "total": 56.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": -6500,
+        "home_ml": 2000,
+        "away_ml_devig": 0.9539,
+        "home_ml_devig": 0.0461,
+        "ml_overround": 0.0325
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 37.53,
+        "sim_home_pts_mean": 22.18,
+        "sim_away_pts_median": 35.0,
+        "sim_home_pts_median": 20.0,
+        "sim_home_margin_mean": -15.35,
+        "sim_home_margin_median": -14.0,
+        "sim_total_mean": 59.71,
+        "sim_total_median": 57.0,
+        "sim_home_win_prob": 0.2698,
+        "sim_away_win_prob": 0.7302,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.2322,
+      "raw_total_edge": 0.0103,
+      "raw_ml_edge": 0.2237,
+      "market_comparison": {
+        "spread_lean": "Navy +30.5",
+        "sim_home_cover_prob": 0.7322,
+        "raw_spread_edge": 0.2322,
+        "total_lean": "OVER 56.5",
+        "sim_over_prob": 0.506,
+        "raw_total_edge": 0.0103,
+        "ml_lean": "Navy ML",
+        "raw_ml_edge": 0.2237
+      }
+    },
+    {
+      "away": "SMU",
+      "home": "Syracuse",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1759.0,
+      "home_elo": 1328.0,
+      "home_elo_win_prob_no_hfa": 0.0772,
+      "away_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 40.902,
+        "pts_per_drive": 2.951,
+        "plays_per_drive": 6.024,
+        "scoring_rate": 0.512
+      },
+      "home_drive": {
+        "drives": 86.0,
+        "yds_per_drive": 37.419,
+        "pts_per_drive": 2.849,
+        "plays_per_drive": 6.767,
+        "scoring_rate": 0.43
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 26.139,
+        "pts_allowed_per_drive": 1.785
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 29.341,
+        "pts_allowed_per_drive": 2.0
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401858278",
+        "away_spread": -10.5,
+        "away_spread_price": -108,
+        "home_spread": 10.5,
+        "home_spread_price": -112,
+        "total": 58.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": -380,
+        "home_ml": 300,
+        "away_ml_devig": 0.76,
+        "home_ml_devig": 0.24,
+        "ml_overround": 0.0417
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 31.99,
+        "sim_home_pts_mean": 25.24,
+        "sim_away_pts_median": 30.0,
+        "sim_home_pts_median": 21.0,
+        "sim_home_margin_mean": -6.75,
+        "sim_home_margin_median": -7.0,
+        "sim_total_mean": 57.23,
+        "sim_total_median": 54.0,
+        "sim_home_win_prob": 0.3922,
+        "sim_away_win_prob": 0.6078,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.064,
+      "raw_total_edge": 0.0523,
+      "raw_ml_edge": 0.1522,
+      "market_comparison": {
+        "spread_lean": "Syracuse +10.5",
+        "sim_home_cover_prob": 0.5683,
+        "raw_spread_edge": 0.064,
+        "total_lean": "UNDER 58.5",
+        "sim_over_prob": 0.4369,
+        "raw_total_edge": 0.0523,
+        "ml_lean": "Syracuse ML",
+        "raw_ml_edge": 0.1522
+      }
+    },
+    {
+      "away": "Boston College",
+      "home": "Duke",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1468.0,
+      "home_elo": 1633.0,
+      "home_elo_win_prob_no_hfa": 0.7211,
+      "away_drive": {
+        "drives": 80.0,
+        "yds_per_drive": 33.138,
+        "pts_per_drive": 2.025,
+        "plays_per_drive": 5.75,
+        "scoring_rate": 0.35
+      },
+      "home_drive": {
+        "drives": 79.0,
+        "yds_per_drive": 37.722,
+        "pts_per_drive": 2.468,
+        "plays_per_drive": 6.139,
+        "scoring_rate": 0.43
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 30.266,
+        "pts_allowed_per_drive": 1.975
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 27.308,
+        "pts_allowed_per_drive": 1.436
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401858279",
+        "away_spread": 7.0,
+        "away_spread_price": -108,
+        "home_spread": -7.0,
+        "home_spread_price": -112,
+        "total": 48.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": 225,
+        "home_ml": -278,
+        "away_ml_devig": 0.295,
+        "home_ml_devig": 0.705,
+        "ml_overround": 0.0431
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 21.4,
+        "sim_home_pts_mean": 29.31,
+        "sim_away_pts_median": 18.0,
+        "sim_home_pts_median": 27.0,
+        "sim_home_margin_mean": 7.92,
+        "sim_home_margin_median": 7.0,
+        "sim_total_mean": 50.71,
+        "sim_total_median": 48.0,
+        "sim_home_win_prob": 0.6305,
+        "sim_away_win_prob": 0.3695,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0023,
+      "raw_total_edge": 0.0109,
+      "raw_ml_edge": 0.0745,
+      "market_comparison": {
+        "spread_lean": "Duke -7.0",
+        "sim_home_cover_prob": 0.5066,
+        "raw_spread_edge": 0.0023,
+        "total_lean": "UNDER 48.5",
+        "sim_over_prob": 0.4891,
+        "raw_total_edge": 0.0109,
+        "ml_lean": "Boston College ML",
+        "raw_ml_edge": 0.0745
+      }
+    },
+    {
+      "away": "Wisconsin",
+      "home": "Iowa",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1708.0,
+      "home_elo": 1846.0,
+      "home_elo_win_prob_no_hfa": 0.6888,
+      "away_drive": {
+        "drives": 70.0,
+        "yds_per_drive": 32.7,
+        "pts_per_drive": 2.329,
+        "plays_per_drive": 6.043,
+        "scoring_rate": 0.457
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 32.634,
+        "pts_per_drive": 2.22,
+        "plays_per_drive": 5.476,
+        "scoring_rate": 0.402
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 28.068,
+        "pts_allowed_per_drive": 1.274
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 22.291,
+        "pts_allowed_per_drive": 1.163
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401858502",
+        "away_spread": 2.5,
+        "away_spread_price": -105,
+        "home_spread": -2.5,
+        "home_spread_price": -115,
+        "total": 36.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": 114,
+        "home_ml": -135,
+        "away_ml_devig": 0.4486,
+        "home_ml_devig": 0.5514,
+        "ml_overround": 0.0418
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 21.4,
+        "sim_home_pts_mean": 25.43,
+        "sim_away_pts_median": 19.0,
+        "sim_home_pts_median": 23.0,
+        "sim_home_margin_mean": 4.04,
+        "sim_home_margin_median": 4.0,
+        "sim_total_mean": 46.83,
+        "sim_total_median": 44.0,
+        "sim_home_win_prob": 0.57,
+        "sim_away_win_prob": 0.43,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0148,
+      "raw_total_edge": 0.1537,
+      "raw_ml_edge": 0.0186,
+      "market_comparison": {
+        "spread_lean": "Iowa -2.5",
+        "sim_home_cover_prob": 0.5256,
+        "raw_spread_edge": 0.0148,
+        "total_lean": "OVER 36.5",
+        "sim_over_prob": 0.6494,
+        "raw_total_edge": 0.1537,
+        "ml_lean": "Iowa ML",
+        "raw_ml_edge": 0.0186
+      }
+    },
+    {
+      "away": "Bowling Green",
+      "home": "Western Michigan",
+      "away_conference": "Mid-American",
+      "home_conference": "Mid-American",
+      "kickoff_file": "2026-10-31 09:00:00",
+      "away_elo": 1231.0,
+      "home_elo": 1480.0,
+      "home_elo_win_prob_no_hfa": 0.8074,
+      "away_drive": {
+        "drives": 84.0,
+        "yds_per_drive": 28.976,
+        "pts_per_drive": 1.988,
+        "plays_per_drive": 5.679,
+        "scoring_rate": 0.31
+      },
+      "home_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 32.699,
+        "pts_per_drive": 2.482,
+        "plays_per_drive": 5.892,
+        "scoring_rate": 0.41
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 36.57,
+        "pts_allowed_per_drive": 2.36
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 35.744,
+        "pts_allowed_per_drive": 1.895
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:00Z",
+        "espn_game_id": "401866452",
+        "away_spread": 14.0,
+        "away_spread_price": -112,
+        "home_spread": -14.0,
+        "home_spread_price": -108,
+        "total": 44.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": 440,
+        "home_ml": -600,
+        "away_ml_devig": 0.1777,
+        "home_ml_devig": 0.8223,
+        "ml_overround": 0.0423
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 23.81,
+        "sim_home_pts_mean": 33.38,
+        "sim_away_pts_median": 21.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 9.57,
+        "sim_home_margin_median": 9.0,
+        "sim_total_mean": 57.19,
+        "sim_total_median": 54.0,
+        "sim_home_win_prob": 0.6495,
+        "sim_away_win_prob": 0.3505,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0798,
+      "raw_total_edge": 0.161,
+      "raw_ml_edge": 0.1728,
+      "market_comparison": {
+        "spread_lean": "Bowling Green +14.0",
+        "sim_home_cover_prob": 0.4159,
+        "raw_spread_edge": 0.0798,
+        "total_lean": "OVER 44.5",
+        "sim_over_prob": 0.6567,
+        "raw_total_edge": 0.161,
+        "ml_lean": "Bowling Green ML",
+        "raw_ml_edge": 0.1728
+      }
+    },
+    {
+      "away": "Michigan",
+      "home": "Rutgers",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 09:30:00",
+      "away_elo": 1734.0,
+      "home_elo": 1354.0,
+      "home_elo_win_prob_no_hfa": 0.1009,
+      "away_drive": {
+        "drives": 77.0,
+        "yds_per_drive": 27.091,
+        "pts_per_drive": 1.662,
+        "plays_per_drive": 5.558,
+        "scoring_rate": 0.286
+      },
+      "home_drive": {
+        "drives": 79.0,
+        "yds_per_drive": 35.304,
+        "pts_per_drive": 2.494,
+        "plays_per_drive": 6.0,
+        "scoring_rate": 0.418
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 23.337,
+        "pts_allowed_per_drive": 1.325
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 35.532,
+        "pts_allowed_per_drive": 2.835
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:30Z",
+        "espn_game_id": "401858507",
+        "away_spread": -16.5,
+        "away_spread_price": -108,
+        "home_spread": 16.5,
+        "home_spread_price": -112,
+        "total": 45.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": -700,
+        "home_ml": 500,
+        "away_ml_devig": 0.84,
+        "home_ml_devig": 0.16,
+        "ml_overround": 0.0417
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 30.18,
+        "sim_home_pts_mean": 23.67,
+        "sim_away_pts_median": 27.0,
+        "sim_home_pts_median": 21.0,
+        "sim_home_margin_mean": -6.51,
+        "sim_home_margin_median": -6.0,
+        "sim_total_mean": 53.84,
+        "sim_total_median": 51.0,
+        "sim_home_win_prob": 0.3913,
+        "sim_away_win_prob": 0.6087,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.1697,
+      "raw_total_edge": 0.0949,
+      "raw_ml_edge": 0.2313,
+      "market_comparison": {
+        "spread_lean": "Rutgers +16.5",
+        "sim_home_cover_prob": 0.674,
+        "raw_spread_edge": 0.1697,
+        "total_lean": "OVER 45.5",
+        "sim_over_prob": 0.5841,
+        "raw_total_edge": 0.0949,
+        "ml_lean": "Rutgers ML",
+        "raw_ml_edge": 0.2313
+      }
+    },
+    {
+      "away": "Auburn",
+      "home": "Ole Miss",
+      "away_conference": "SEC",
+      "home_conference": "SEC",
+      "kickoff_file": "2026-10-31 09:45:00",
+      "away_elo": 1669.0,
+      "home_elo": 1923.0,
+      "home_elo_win_prob_no_hfa": 0.8119,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 32.259,
+        "pts_per_drive": 2.0,
+        "plays_per_drive": 6.16,
+        "scoring_rate": 0.333
+      },
+      "home_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 35.541,
+        "pts_per_drive": 2.812,
+        "plays_per_drive": 5.941,
+        "scoring_rate": 0.471
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 33.277,
+        "pts_allowed_per_drive": 1.952
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 30.671,
+        "pts_allowed_per_drive": 2.047
+      },
+      "line": {
+        "kickoff": "2026-10-31T16:45Z",
+        "espn_game_id": "401856735",
+        "away_spread": 11.5,
+        "away_spread_price": -110,
+        "home_spread": -11.5,
+        "home_spread_price": -110,
+        "total": 57.5,
+        "over_price": -112,
+        "under_price": -108,
+        "away_ml": 360,
+        "home_ml": -470,
+        "away_ml_devig": 0.2086,
+        "home_ml_devig": 0.7914,
+        "ml_overround": 0.042
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 23.46,
+        "sim_home_pts_mean": 31.68,
+        "sim_away_pts_median": 21.0,
+        "sim_home_pts_median": 28.0,
+        "sim_home_margin_mean": 8.22,
+        "sim_home_margin_median": 7.0,
+        "sim_total_mean": 55.14,
+        "sim_total_median": 52.0,
+        "sim_home_win_prob": 0.6274,
+        "sim_away_win_prob": 0.3726,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0707,
+      "raw_total_edge": 0.0788,
+      "raw_ml_edge": 0.164,
+      "market_comparison": {
+        "spread_lean": "Auburn +11.5",
+        "sim_home_cover_prob": 0.4293,
+        "raw_spread_edge": 0.0707,
+        "total_lean": "UNDER 57.5",
+        "sim_over_prob": 0.4255,
+        "raw_total_edge": 0.0788,
+        "ml_lean": "Auburn ML",
+        "raw_ml_edge": 0.164
+      }
+    },
+    {
+      "away": "Marshall",
+      "home": "Old Dominion",
+      "away_conference": "Sun Belt",
+      "home_conference": "Sun Belt",
+      "kickoff_file": "2026-10-31 10:00:00",
+      "away_elo": 1355.0,
+      "home_elo": 1171.0,
+      "home_elo_win_prob_no_hfa": 0.2575,
+      "away_drive": {
+        "drives": 86.0,
+        "yds_per_drive": 32.174,
+        "pts_per_drive": 1.686,
+        "plays_per_drive": 5.837,
+        "scoring_rate": 0.337
+      },
+      "home_drive": {
+        "drives": 102.0,
+        "yds_per_drive": 20.657,
+        "pts_per_drive": 1.059,
+        "plays_per_drive": 4.941,
+        "scoring_rate": 0.206
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 38.256,
+        "pts_allowed_per_drive": 2.577
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 28.263,
+        "pts_allowed_per_drive": 2.051
+      },
+      "line": {
+        "kickoff": "2026-10-31T17:00Z",
+        "espn_game_id": "401871096",
+        "away_spread": -3.0,
+        "away_spread_price": -108,
+        "home_spread": 3.0,
+        "home_spread_price": -112,
+        "total": 45.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": -142,
+        "home_ml": 120,
+        "away_ml_devig": 0.5635,
+        "home_ml_devig": 0.4365,
+        "ml_overround": 0.0413
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 26.77,
+        "sim_home_pts_mean": 24.62,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 23.0,
+        "sim_home_margin_mean": -2.15,
+        "sim_home_margin_median": -2.0,
+        "sim_total_mean": 51.39,
+        "sim_total_median": 49.0,
+        "sim_home_win_prob": 0.4657,
+        "sim_away_win_prob": 0.5343,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0158,
+      "raw_total_edge": 0.0665,
+      "raw_ml_edge": 0.0292,
+      "market_comparison": {
+        "spread_lean": "Old Dominion +3.0",
+        "sim_home_cover_prob": 0.5201,
+        "raw_spread_edge": 0.0158,
+        "total_lean": "OVER 45.5",
+        "sim_over_prob": 0.5622,
+        "raw_total_edge": 0.0665,
+        "ml_lean": "Old Dominion ML",
+        "raw_ml_edge": 0.0292
+      }
+    },
+    {
+      "away": "Coastal Carolina",
+      "home": "Georgia State",
+      "away_conference": "Sun Belt",
+      "home_conference": "Sun Belt",
+      "kickoff_file": "2026-10-31 11:00:00",
+      "away_elo": 1277.0,
+      "home_elo": 1366.0,
+      "home_elo_win_prob_no_hfa": 0.6254,
+      "away_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 30.928,
+        "pts_per_drive": 2.12,
+        "plays_per_drive": 5.554,
+        "scoring_rate": 0.349
+      },
+      "home_drive": {
+        "drives": 89.0,
+        "yds_per_drive": 35.528,
+        "pts_per_drive": 2.584,
+        "plays_per_drive": 5.461,
+        "scoring_rate": 0.472
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 33.83,
+        "pts_allowed_per_drive": 2.136
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 29.14,
+        "pts_allowed_per_drive": 1.953
+      },
+      "line": {
+        "kickoff": "2026-10-31T18:00Z",
+        "espn_game_id": "401869944",
+        "away_spread": 4.5,
+        "away_spread_price": -115,
+        "home_spread": -4.5,
+        "home_spread_price": -105,
+        "total": 55.5,
+        "over_price": -112,
+        "under_price": -108,
+        "away_ml": 154,
+        "home_ml": -185,
+        "away_ml_devig": 0.3775,
+        "home_ml_devig": 0.6225,
+        "ml_overround": 0.0428
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 27.31,
+        "sim_home_pts_mean": 32.86,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 30.0,
+        "sim_home_margin_mean": 5.55,
+        "sim_home_margin_median": 6.0,
+        "sim_total_mean": 60.17,
+        "sim_total_median": 58.0,
+        "sim_home_win_prob": 0.5857,
+        "sim_away_win_prob": 0.4143,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.023,
+      "raw_total_edge": 0.0261,
+      "raw_ml_edge": 0.0368,
+      "market_comparison": {
+        "spread_lean": "Georgia State -4.5",
+        "sim_home_cover_prob": 0.5122,
+        "raw_spread_edge": 0.023,
+        "total_lean": "OVER 55.5",
+        "sim_over_prob": 0.5304,
+        "raw_total_edge": 0.0261,
+        "ml_lean": "Coastal Carolina ML",
+        "raw_ml_edge": 0.0368
+      }
+    },
+    {
+      "away": "Kansas State",
+      "home": "Colorado",
+      "away_conference": "Big 12",
+      "home_conference": "Big 12",
+      "kickoff_file": "2026-10-31 11:00:00",
+      "away_elo": 1601.0,
+      "home_elo": 1265.0,
+      "home_elo_win_prob_no_hfa": 0.1263,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 39.889,
+        "pts_per_drive": 2.642,
+        "plays_per_drive": 6.284,
+        "scoring_rate": 0.494
+      },
+      "home_drive": {
+        "drives": 90.0,
+        "yds_per_drive": 30.444,
+        "pts_per_drive": 1.567,
+        "plays_per_drive": 5.533,
+        "scoring_rate": 0.267
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 26.775,
+        "pts_allowed_per_drive": 1.762
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 31.429,
+        "pts_allowed_per_drive": 2.242
+      },
+      "line": {
+        "kickoff": "2026-10-31T18:00Z",
+        "espn_game_id": "401856846",
+        "away_spread": 2.5,
+        "away_spread_price": -110,
+        "home_spread": -2.5,
+        "home_spread_price": -110,
+        "total": 46.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 114,
+        "home_ml": -135,
+        "away_ml_devig": 0.4486,
+        "home_ml_devig": 0.5514,
+        "ml_overround": 0.0418
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 30.99,
+        "sim_home_pts_mean": 21.54,
+        "sim_away_pts_median": 28.0,
+        "sim_home_pts_median": 19.0,
+        "sim_home_margin_mean": -9.45,
+        "sim_home_margin_median": -9.0,
+        "sim_total_mean": 52.53,
+        "sim_total_median": 50.0,
+        "sim_home_win_prob": 0.3424,
+        "sim_away_win_prob": 0.6576,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.1986,
+      "raw_total_edge": 0.0483,
+      "raw_ml_edge": 0.209,
+      "market_comparison": {
+        "spread_lean": "Kansas State +2.5",
+        "sim_home_cover_prob": 0.3014,
+        "raw_spread_edge": 0.1986,
+        "total_lean": "OVER 46.5",
+        "sim_over_prob": 0.5591,
+        "raw_total_edge": 0.0483,
+        "ml_lean": "Kansas State ML",
+        "raw_ml_edge": 0.209
+      }
+    },
+    {
+      "away": "Temple",
+      "home": "East Carolina",
+      "away_conference": "American Athletic",
+      "home_conference": "American Athletic",
+      "kickoff_file": "2026-10-31 12:00:00",
+      "away_elo": 1298.0,
+      "home_elo": 1433.0,
+      "home_elo_win_prob_no_hfa": 0.6851,
+      "away_drive": {
+        "drives": 70.0,
+        "yds_per_drive": 38.4,
+        "pts_per_drive": 2.371,
+        "plays_per_drive": 6.071,
+        "scoring_rate": 0.414
+      },
+      "home_drive": {
+        "drives": 94.0,
+        "yds_per_drive": 26.872,
+        "pts_per_drive": 1.67,
+        "plays_per_drive": 5.117,
+        "scoring_rate": 0.33
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 37.676,
+        "pts_allowed_per_drive": 3.216
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 25.411,
+        "pts_allowed_per_drive": 1.811
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:00Z",
+        "espn_game_id": "401862815",
+        "away_spread": 4.5,
+        "away_spread_price": -110,
+        "home_spread": -4.5,
+        "home_spread_price": -110,
+        "total": 50.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": 164,
+        "home_ml": -198,
+        "away_ml_devig": 0.3631,
+        "home_ml_devig": 0.6369,
+        "ml_overround": 0.0432
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 27.11,
+        "sim_home_pts_mean": 33.19,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 6.09,
+        "sim_home_margin_median": 6.0,
+        "sim_total_mean": 60.3,
+        "sim_total_median": 58.0,
+        "sim_home_win_prob": 0.6022,
+        "sim_away_win_prob": 0.3978,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0232,
+      "raw_total_edge": 0.1165,
+      "raw_ml_edge": 0.0347,
+      "market_comparison": {
+        "spread_lean": "East Carolina -4.5",
+        "sim_home_cover_prob": 0.5232,
+        "raw_spread_edge": 0.0232,
+        "total_lean": "OVER 50.5",
+        "sim_over_prob": 0.6122,
+        "raw_total_edge": 0.1165,
+        "ml_lean": "Temple ML",
+        "raw_ml_edge": 0.0347
+      }
+    },
+    {
+      "away": "Louisiana Tech",
+      "home": "South Alabama",
+      "away_conference": "Sun Belt",
+      "home_conference": "Sun Belt",
+      "kickoff_file": "2026-10-31 12:00:00",
+      "away_elo": 1450.0,
+      "home_elo": 1354.0,
+      "home_elo_win_prob_no_hfa": 0.3653,
+      "away_drive": {
+        "drives": 84.0,
+        "yds_per_drive": 33.274,
+        "pts_per_drive": 2.643,
+        "plays_per_drive": 5.75,
+        "scoring_rate": 0.405
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 35.805,
+        "pts_per_drive": 2.732,
+        "plays_per_drive": 6.268,
+        "scoring_rate": 0.476
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 26.612,
+        "pts_allowed_per_drive": 1.694
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 36.362,
+        "pts_allowed_per_drive": 2.925
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:00Z",
+        "espn_game_id": "401871097",
+        "away_spread": -6.0,
+        "away_spread_price": -112,
+        "home_spread": 6.0,
+        "home_spread_price": -108,
+        "total": 58.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": -225,
+        "home_ml": 185,
+        "away_ml_devig": 0.6636,
+        "home_ml_devig": 0.3364,
+        "ml_overround": 0.0432
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 33.14,
+        "sim_home_pts_mean": 29.89,
+        "sim_away_pts_median": 30.0,
+        "sim_home_pts_median": 27.0,
+        "sim_home_margin_mean": -3.24,
+        "sim_home_margin_median": -3.0,
+        "sim_total_mean": 63.03,
+        "sim_total_median": 60.0,
+        "sim_home_win_prob": 0.4548,
+        "sim_away_win_prob": 0.5452,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0538,
+      "raw_total_edge": 0.0328,
+      "raw_ml_edge": 0.1184,
+      "market_comparison": {
+        "spread_lean": "South Alabama +6.0",
+        "sim_home_cover_prob": 0.5495,
+        "raw_spread_edge": 0.0538,
+        "total_lean": "OVER 58.5",
+        "sim_over_prob": 0.5285,
+        "raw_total_edge": 0.0328,
+        "ml_lean": "South Alabama ML",
+        "raw_ml_edge": 0.1184
+      }
+    },
+    {
+      "away": "UConn",
+      "home": "Air Force",
+      "away_conference": "FBS Independents",
+      "home_conference": "Mountain West",
+      "kickoff_file": "2026-10-31 12:00:00",
+      "away_elo": 1493.0,
+      "home_elo": 1441.0,
+      "home_elo_win_prob_no_hfa": 0.4257,
+      "away_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 36.588,
+        "pts_per_drive": 2.671,
+        "plays_per_drive": 5.506,
+        "scoring_rate": 0.424
+      },
+      "home_drive": {
+        "drives": 66.0,
+        "yds_per_drive": 41.909,
+        "pts_per_drive": 3.318,
+        "plays_per_drive": 7.864,
+        "scoring_rate": 0.485
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 33.558,
+        "pts_allowed_per_drive": 1.93
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 31.97,
+        "pts_allowed_per_drive": 2.424
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:00Z",
+        "espn_game_id": "401861966",
+        "away_spread": 1.5,
+        "away_spread_price": -122,
+        "home_spread": -1.5,
+        "home_spread_price": 102,
+        "total": 51.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": -110,
+        "home_ml": -110,
+        "away_ml_devig": 0.5,
+        "home_ml_devig": 0.5,
+        "ml_overround": 0.0476
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 28.88,
+        "sim_home_pts_mean": 30.32,
+        "sim_away_pts_median": 27.0,
+        "sim_home_pts_median": 28.0,
+        "sim_home_margin_mean": 1.44,
+        "sim_home_margin_median": 1.0,
+        "sim_total_mean": 59.2,
+        "sim_total_median": 56.0,
+        "sim_home_win_prob": 0.5221,
+        "sim_away_win_prob": 0.4779,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": -0.0188,
+      "raw_total_edge": 0.0595,
+      "raw_ml_edge": 0.0221,
+      "market_comparison": {
+        "spread_lean": "UConn +1.5",
+        "sim_home_cover_prob": 0.4927,
+        "raw_spread_edge": -0.0188,
+        "total_lean": "OVER 51.5",
+        "sim_over_prob": 0.5703,
+        "raw_total_edge": 0.0595,
+        "ml_lean": "Air Force ML",
+        "raw_ml_edge": 0.0221
+      }
+    },
+    {
+      "away": "Stanford",
+      "home": "Louisville",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 12:15:00",
+      "away_elo": 1157.0,
+      "home_elo": 1713.0,
+      "home_elo_win_prob_no_hfa": 0.9609,
+      "away_drive": {
+        "drives": 92.0,
+        "yds_per_drive": 29.772,
+        "pts_per_drive": 1.739,
+        "plays_per_drive": 5.772,
+        "scoring_rate": 0.272
+      },
+      "home_drive": {
+        "drives": 89.0,
+        "yds_per_drive": 37.011,
+        "pts_per_drive": 2.933,
+        "plays_per_drive": 5.101,
+        "scoring_rate": 0.483
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 36.074,
+        "pts_allowed_per_drive": 3.128
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 34.379,
+        "pts_allowed_per_drive": 2.299
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:15Z",
+        "espn_game_id": "401858283",
+        "away_spread": 22.5,
+        "away_spread_price": -110,
+        "home_spread": -22.5,
+        "home_spread_price": -110,
+        "total": 60.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": 1100,
+        "home_ml": -2100,
+        "away_ml_devig": 0.0803,
+        "home_ml_devig": 0.9197,
+        "ml_overround": 0.0379
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 25.47,
+        "sim_home_pts_mean": 44.65,
+        "sim_away_pts_median": 21.0,
+        "sim_home_pts_median": 42.0,
+        "sim_home_margin_mean": 19.17,
+        "sim_home_margin_median": 18.0,
+        "sim_total_mean": 70.12,
+        "sim_total_median": 67.0,
+        "sim_home_win_prob": 0.7565,
+        "sim_away_win_prob": 0.2435,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.067,
+      "raw_total_edge": 0.0951,
+      "raw_ml_edge": 0.1632,
+      "market_comparison": {
+        "spread_lean": "Stanford +22.5",
+        "sim_home_cover_prob": 0.433,
+        "raw_spread_edge": 0.067,
+        "total_lean": "OVER 60.5",
+        "sim_over_prob": 0.5951,
+        "raw_total_edge": 0.0951,
+        "ml_lean": "Stanford ML",
+        "raw_ml_edge": 0.1632
+      }
+    },
+    {
+      "away": "Northwestern",
+      "home": "Oregon",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1756.0,
+      "home_elo": 1787.0,
+      "home_elo_win_prob_no_hfa": 0.5445,
+      "away_drive": {
+        "drives": 78.0,
+        "yds_per_drive": 39.269,
+        "pts_per_drive": 3.038,
+        "plays_per_drive": 5.923,
+        "scoring_rate": 0.526
+      },
+      "home_drive": {
+        "drives": 93.0,
+        "yds_per_drive": 31.527,
+        "pts_per_drive": 2.387,
+        "plays_per_drive": 5.452,
+        "scoring_rate": 0.409
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 32.883,
+        "pts_allowed_per_drive": 1.481
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 25.419,
+        "pts_allowed_per_drive": 1.495
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401858505",
+        "away_spread": 3.5,
+        "away_spread_price": -110,
+        "home_spread": -3.5,
+        "home_spread_price": -110,
+        "total": 47.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": 145,
+        "home_ml": -175,
+        "away_ml_devig": 0.3908,
+        "home_ml_devig": 0.6092,
+        "ml_overround": 0.0445
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 28.47,
+        "sim_home_pts_mean": 28.01,
+        "sim_away_pts_median": 26.0,
+        "sim_home_pts_median": 24.0,
+        "sim_home_margin_mean": -0.46,
+        "sim_home_margin_median": -1.0,
+        "sim_total_mean": 56.48,
+        "sim_total_median": 53.0,
+        "sim_home_win_prob": 0.4849,
+        "sim_away_win_prob": 0.5151,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.071,
+      "raw_total_edge": 0.0993,
+      "raw_ml_edge": 0.1243,
+      "market_comparison": {
+        "spread_lean": "Northwestern +3.5",
+        "sim_home_cover_prob": 0.429,
+        "raw_spread_edge": 0.071,
+        "total_lean": "OVER 47.5",
+        "sim_over_prob": 0.5993,
+        "raw_total_edge": 0.0993,
+        "ml_lean": "Northwestern ML",
+        "raw_ml_edge": 0.1243
+      }
+    },
+    {
+      "away": "Florida",
+      "home": "Georgia",
+      "away_conference": "SEC",
+      "home_conference": "SEC",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1643.0,
+      "home_elo": 2023.0,
+      "home_elo_win_prob_no_hfa": 0.8991,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 39.123,
+        "pts_per_drive": 3.259,
+        "plays_per_drive": 6.321,
+        "scoring_rate": 0.556
+      },
+      "home_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 39.361,
+        "pts_per_drive": 3.289,
+        "plays_per_drive": 5.265,
+        "scoring_rate": 0.53
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 32.0,
+        "pts_allowed_per_drive": 2.165
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 24.357,
+        "pts_allowed_per_drive": 1.25
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401856734",
+        "away_spread": 12.5,
+        "away_spread_price": -112,
+        "home_spread": -12.5,
+        "home_spread_price": -108,
+        "total": 56.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": 340,
+        "home_ml": -440,
+        "away_ml_devig": 0.2181,
+        "home_ml_devig": 0.7819,
+        "ml_overround": 0.0421
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 26.99,
+        "sim_home_pts_mean": 37.22,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 34.0,
+        "sim_home_margin_mean": 10.23,
+        "sim_home_margin_median": 10.0,
+        "sim_total_mean": 64.21,
+        "sim_total_median": 61.0,
+        "sim_home_win_prob": 0.6484,
+        "sim_away_win_prob": 0.3516,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0378,
+      "raw_total_edge": 0.0713,
+      "raw_ml_edge": 0.1335,
+      "market_comparison": {
+        "spread_lean": "Florida +12.5",
+        "sim_home_cover_prob": 0.4579,
+        "raw_spread_edge": 0.0378,
+        "total_lean": "OVER 56.5",
+        "sim_over_prob": 0.567,
+        "raw_total_edge": 0.0713,
+        "ml_lean": "Florida ML",
+        "raw_ml_edge": 0.1335
+      }
+    },
+    {
+      "away": "Southern Miss",
+      "home": "UL Monroe",
+      "away_conference": "Sun Belt",
+      "home_conference": "Sun Belt",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1197.0,
+      "home_elo": 1036.0,
+      "home_elo_win_prob_no_hfa": 0.2836,
+      "away_drive": {
+        "drives": 88.0,
+        "yds_per_drive": 32.852,
+        "pts_per_drive": 1.966,
+        "plays_per_drive": 5.648,
+        "scoring_rate": 0.33
+      },
+      "home_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 26.565,
+        "pts_per_drive": 1.588,
+        "plays_per_drive": 5.376,
+        "scoring_rate": 0.318
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 34.64,
+        "pts_allowed_per_drive": 2.337
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 36.878,
+        "pts_allowed_per_drive": 2.878
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401871095",
+        "away_spread": -3.5,
+        "away_spread_price": -102,
+        "home_spread": 3.5,
+        "home_spread_price": -118,
+        "total": 55.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": -166,
+        "home_ml": 140,
+        "away_ml_devig": 0.5996,
+        "home_ml_devig": 0.4004,
+        "ml_overround": 0.0407
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 31.87,
+        "sim_home_pts_mean": 27.59,
+        "sim_away_pts_median": 29.0,
+        "sim_home_pts_median": 25.0,
+        "sim_home_margin_mean": -4.28,
+        "sim_home_margin_median": -4.0,
+        "sim_total_mean": 59.46,
+        "sim_total_median": 57.0,
+        "sim_home_win_prob": 0.4409,
+        "sim_away_win_prob": 0.5592,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0185,
+      "raw_total_edge": 0.0187,
+      "raw_ml_edge": 0.0405,
+      "market_comparison": {
+        "spread_lean": "Southern Miss -3.5",
+        "sim_home_cover_prob": 0.4989,
+        "raw_spread_edge": 0.0185,
+        "total_lean": "OVER 55.5",
+        "sim_over_prob": 0.5187,
+        "raw_total_edge": 0.0187,
+        "ml_lean": "UL Monroe ML",
+        "raw_ml_edge": 0.0405
+      }
+    },
+    {
+      "away": "Kansas",
+      "home": "TCU",
+      "away_conference": "Big 12",
+      "home_conference": "Big 12",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1595.0,
+      "home_elo": 1601.0,
+      "home_elo_win_prob_no_hfa": 0.5086,
+      "away_drive": {
+        "drives": 86.0,
+        "yds_per_drive": 35.686,
+        "pts_per_drive": 2.279,
+        "plays_per_drive": 5.988,
+        "scoring_rate": 0.419
+      },
+      "home_drive": {
+        "drives": 79.0,
+        "yds_per_drive": 35.228,
+        "pts_per_drive": 1.987,
+        "plays_per_drive": 6.19,
+        "scoring_rate": 0.354
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 28.67,
+        "pts_allowed_per_drive": 1.648
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 24.363,
+        "pts_allowed_per_drive": 1.188
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401856845",
+        "away_spread": 6.5,
+        "away_spread_price": -110,
+        "home_spread": -6.5,
+        "home_spread_price": -110,
+        "total": 45.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": 195,
+        "home_ml": -238,
+        "away_ml_devig": 0.325,
+        "home_ml_devig": 0.675,
+        "ml_overround": 0.0431
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 21.21,
+        "sim_home_pts_mean": 23.6,
+        "sim_away_pts_median": 19.0,
+        "sim_home_pts_median": 21.0,
+        "sim_home_margin_mean": 2.39,
+        "sim_home_margin_median": 3.0,
+        "sim_total_mean": 44.8,
+        "sim_total_median": 42.0,
+        "sim_home_win_prob": 0.5452,
+        "sim_away_win_prob": 0.4548,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0773,
+      "raw_total_edge": 0.061,
+      "raw_ml_edge": 0.1298,
+      "market_comparison": {
+        "spread_lean": "Kansas +6.5",
+        "sim_home_cover_prob": 0.4227,
+        "raw_spread_edge": 0.0773,
+        "total_lean": "UNDER 45.5",
+        "sim_over_prob": 0.439,
+        "raw_total_edge": 0.061,
+        "ml_lean": "Kansas ML",
+        "raw_ml_edge": 0.1298
+      }
+    },
+    {
+      "away": "Arizona State",
+      "home": "BYU",
+      "away_conference": "Big 12",
+      "home_conference": "Big 12",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1471.0,
+      "home_elo": 1708.0,
+      "home_elo_win_prob_no_hfa": 0.7965,
+      "away_drive": {
+        "drives": 91.0,
+        "yds_per_drive": 31.89,
+        "pts_per_drive": 2.297,
+        "plays_per_drive": 5.363,
+        "scoring_rate": 0.429
+      },
+      "home_drive": {
+        "drives": 77.0,
+        "yds_per_drive": 36.792,
+        "pts_per_drive": 2.922,
+        "plays_per_drive": 5.792,
+        "scoring_rate": 0.455
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 28.484,
+        "pts_allowed_per_drive": 1.912
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 28.705,
+        "pts_allowed_per_drive": 1.577
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401856843",
+        "away_spread": 16.5,
+        "away_spread_price": -112,
+        "home_spread": -16.5,
+        "home_spread_price": -108,
+        "total": 48.5,
+        "over_price": -102,
+        "under_price": -118,
+        "away_ml": 525,
+        "home_ml": -750,
+        "away_ml_devig": 0.1535,
+        "home_ml_devig": 0.8465,
+        "ml_overround": 0.0424
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 25.16,
+        "sim_home_pts_mean": 34.59,
+        "sim_away_pts_median": 23.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 9.43,
+        "sim_home_margin_median": 8.0,
+        "sim_total_mean": 59.76,
+        "sim_total_median": 57.0,
+        "sim_home_win_prob": 0.6422,
+        "sim_away_win_prob": 0.3578,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.1214,
+      "raw_total_edge": 0.1425,
+      "raw_ml_edge": 0.2043,
+      "market_comparison": {
+        "spread_lean": "Arizona State +16.5",
+        "sim_home_cover_prob": 0.3743,
+        "raw_spread_edge": 0.1214,
+        "total_lean": "OVER 48.5",
+        "sim_over_prob": 0.6251,
+        "raw_total_edge": 0.1425,
+        "ml_lean": "Arizona State ML",
+        "raw_ml_edge": 0.2043
+      }
+    },
+    {
+      "away": "UTEP",
+      "home": "North Dakota State",
+      "away_conference": "Mountain West",
+      "home_conference": "Mountain West",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 992.0,
+      "home_elo": 1631.0,
+      "home_elo_win_prob_no_hfa": 0.9754,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 23.049,
+        "pts_per_drive": 1.037,
+        "plays_per_drive": 5.049,
+        "scoring_rate": 0.272
+      },
+      "home_drive": {
+        "drives": 89.0,
+        "yds_per_drive": 31.169,
+        "pts_per_drive": 2.382,
+        "plays_per_drive": 5.989,
+        "scoring_rate": 0.416
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 33.089,
+        "pts_allowed_per_drive": 3.089
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 21.822,
+        "pts_allowed_per_drive": 0.956
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401864531",
+        "away_spread": 24.5,
+        "away_spread_price": -115,
+        "home_spread": -24.5,
+        "home_spread_price": -105,
+        "total": 42.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 1300,
+        "home_ml": -2800,
+        "away_ml_devig": 0.0689,
+        "home_ml_devig": 0.9311,
+        "ml_overround": 0.0369
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 12.85,
+        "sim_home_pts_mean": 38.45,
+        "sim_away_pts_median": 10.0,
+        "sim_home_pts_median": 35.0,
+        "sim_home_margin_mean": 25.6,
+        "sim_home_margin_median": 24.0,
+        "sim_total_mean": 51.3,
+        "sim_total_median": 48.0,
+        "sim_home_win_prob": 0.8734,
+        "sim_away_win_prob": 0.1266,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.002,
+      "raw_total_edge": 0.0958,
+      "raw_ml_edge": 0.0577,
+      "market_comparison": {
+        "spread_lean": "UTEP +24.5",
+        "sim_home_cover_prob": 0.4872,
+        "raw_spread_edge": 0.002,
+        "total_lean": "OVER 42.5",
+        "sim_over_prob": 0.6066,
+        "raw_total_edge": 0.0958,
+        "ml_lean": "UTEP ML",
+        "raw_ml_edge": 0.0577
+      }
+    },
+    {
+      "away": "Colorado State",
+      "home": "Utah State",
+      "away_conference": "Pac-12",
+      "home_conference": "Pac-12",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1171.0,
+      "home_elo": 1364.0,
+      "home_elo_win_prob_no_hfa": 0.7523,
+      "away_drive": {
+        "drives": 86.0,
+        "yds_per_drive": 36.86,
+        "pts_per_drive": 3.128,
+        "plays_per_drive": 5.651,
+        "scoring_rate": 0.465
+      },
+      "home_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 25.867,
+        "pts_per_drive": 1.169,
+        "plays_per_drive": 5.446,
+        "scoring_rate": 0.241
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 42.648,
+        "pts_allowed_per_drive": 3.864
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 30.617,
+        "pts_allowed_per_drive": 1.815
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401860910",
+        "away_spread": 7.5,
+        "away_spread_price": -115,
+        "home_spread": -7.5,
+        "home_spread_price": -105,
+        "total": 61.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 225,
+        "home_ml": -278,
+        "away_ml_devig": 0.295,
+        "home_ml_devig": 0.705,
+        "ml_overround": 0.0431
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 31.02,
+        "sim_home_pts_mean": 36.11,
+        "sim_away_pts_median": 28.0,
+        "sim_home_pts_median": 34.0,
+        "sim_home_margin_mean": 5.09,
+        "sim_home_margin_median": 5.0,
+        "sim_total_mean": 67.13,
+        "sim_total_median": 64.0,
+        "sim_home_win_prob": 0.5776,
+        "sim_away_win_prob": 0.4224,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0232,
+      "raw_total_edge": 0.0277,
+      "raw_ml_edge": 0.1274,
+      "market_comparison": {
+        "spread_lean": "Colorado State +7.5",
+        "sim_home_cover_prob": 0.466,
+        "raw_spread_edge": 0.0232,
+        "total_lean": "OVER 61.5",
+        "sim_over_prob": 0.5385,
+        "raw_total_edge": 0.0277,
+        "ml_lean": "Colorado State ML",
+        "raw_ml_edge": 0.1274
+      }
+    },
+    {
+      "away": "Minnesota",
+      "home": "Indiana",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1434.0,
+      "home_elo": 2076.0,
+      "home_elo_win_prob_no_hfa": 0.9758,
+      "away_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 27.12,
+        "pts_per_drive": 1.819,
+        "plays_per_drive": 5.446,
+        "scoring_rate": 0.386
+      },
+      "home_drive": {
+        "drives": 88.0,
+        "yds_per_drive": 38.114,
+        "pts_per_drive": 2.83,
+        "plays_per_drive": 5.591,
+        "scoring_rate": 0.489
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 24.831,
+        "pts_allowed_per_drive": 1.614
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 23.198,
+        "pts_allowed_per_drive": 1.055
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401858501",
+        "away_spread": 20.5,
+        "away_spread_price": -108,
+        "home_spread": -20.5,
+        "home_spread_price": -112,
+        "total": 40.5,
+        "over_price": -118,
+        "under_price": -102,
+        "away_ml": 850,
+        "home_ml": -1450,
+        "away_ml_devig": 0.1011,
+        "home_ml_devig": 0.8989,
+        "ml_overround": 0.0407
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 16.12,
+        "sim_home_pts_mean": 34.81,
+        "sim_away_pts_median": 14.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 18.69,
+        "sim_home_margin_median": 17.0,
+        "sim_total_mean": 50.93,
+        "sim_total_median": 48.0,
+        "sim_home_win_prob": 0.7966,
+        "sim_away_win_prob": 0.2034,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0647,
+      "raw_total_edge": 0.1197,
+      "raw_ml_edge": 0.1023,
+      "market_comparison": {
+        "spread_lean": "Minnesota +20.5",
+        "sim_home_cover_prob": 0.4396,
+        "raw_spread_edge": 0.0647,
+        "total_lean": "OVER 40.5",
+        "sim_over_prob": 0.6371,
+        "raw_total_edge": 0.1197,
+        "ml_lean": "Minnesota ML",
+        "raw_ml_edge": 0.1023
+      }
+    },
+    {
+      "away": "Florida International",
+      "home": "Liberty",
+      "away_conference": "Conference USA",
+      "home_conference": "Conference USA",
+      "kickoff_file": "2026-10-31 12:30:00",
+      "away_elo": 1401.0,
+      "home_elo": 1770.0,
+      "home_elo_win_prob_no_hfa": 0.8932,
+      "away_drive": {
+        "drives": 78.0,
+        "yds_per_drive": 31.462,
+        "pts_per_drive": 1.731,
+        "plays_per_drive": 6.449,
+        "scoring_rate": 0.346
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 34.427,
+        "pts_per_drive": 2.573,
+        "plays_per_drive": 5.561,
+        "scoring_rate": 0.476
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 24.973,
+        "pts_allowed_per_drive": 1.693
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 26.571,
+        "pts_allowed_per_drive": 1.182
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:30Z",
+        "espn_game_id": "401871059",
+        "away_spread": 14.0,
+        "away_spread_price": -112,
+        "home_spread": -14.0,
+        "home_spread_price": -108,
+        "total": 45.5,
+        "over_price": -102,
+        "under_price": -118,
+        "away_ml": 425,
+        "home_ml": -575,
+        "away_ml_devig": 0.1827,
+        "home_ml_devig": 0.8173,
+        "ml_overround": 0.0423
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 16.66,
+        "sim_home_pts_mean": 29.01,
+        "sim_away_pts_median": 14.0,
+        "sim_home_pts_median": 27.0,
+        "sim_home_margin_mean": 12.36,
+        "sim_home_margin_median": 11.0,
+        "sim_total_mean": 45.67,
+        "sim_total_median": 43.0,
+        "sim_home_win_prob": 0.7171,
+        "sim_away_win_prob": 0.2829,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0597,
+      "raw_total_edge": 0.0268,
+      "raw_ml_edge": 0.1002,
+      "market_comparison": {
+        "spread_lean": "Florida International +14.0",
+        "sim_home_cover_prob": 0.436,
+        "raw_spread_edge": 0.0597,
+        "total_lean": "UNDER 45.5",
+        "sim_over_prob": 0.4558,
+        "raw_total_edge": 0.0268,
+        "ml_lean": "Florida International ML",
+        "raw_ml_edge": 0.1002
+      }
+    },
+    {
+      "away": "Virginia",
+      "home": "Wake Forest",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 12:45:00",
+      "away_elo": 1581.0,
+      "home_elo": 1766.0,
+      "home_elo_win_prob_no_hfa": 0.7436,
+      "away_drive": {
+        "drives": 94.0,
+        "yds_per_drive": 31.904,
+        "pts_per_drive": 2.255,
+        "plays_per_drive": 5.894,
+        "scoring_rate": 0.383
+      },
+      "home_drive": {
+        "drives": 75.0,
+        "yds_per_drive": 41.04,
+        "pts_per_drive": 3.52,
+        "plays_per_drive": 6.24,
+        "scoring_rate": 0.587
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 28.16,
+        "pts_allowed_per_drive": 1.67
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 30.582,
+        "pts_allowed_per_drive": 2.228
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:45Z",
+        "espn_game_id": "401858284",
+        "away_spread": 12.5,
+        "away_spread_price": -108,
+        "home_spread": -12.5,
+        "home_spread_price": -112,
+        "total": 48.5,
+        "over_price": -102,
+        "under_price": -118,
+        "away_ml": 390,
+        "home_ml": -520,
+        "away_ml_devig": 0.1957,
+        "home_ml_devig": 0.8043,
+        "ml_overround": 0.0428
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 26.4,
+        "sim_home_pts_mean": 33.96,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 7.56,
+        "sim_home_margin_median": 7.0,
+        "sim_total_mean": 60.36,
+        "sim_total_median": 58.0,
+        "sim_home_win_prob": 0.6178,
+        "sim_away_win_prob": 0.3822,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0872,
+      "raw_total_edge": 0.1532,
+      "raw_ml_edge": 0.1865,
+      "market_comparison": {
+        "spread_lean": "Virginia +12.5",
+        "sim_home_cover_prob": 0.4171,
+        "raw_spread_edge": 0.0872,
+        "total_lean": "OVER 48.5",
+        "sim_over_prob": 0.6358,
+        "raw_total_edge": 0.1532,
+        "ml_lean": "Virginia ML",
+        "raw_ml_edge": 0.1865
+      }
+    },
+    {
+      "away": "Utah",
+      "home": "Cincinnati",
+      "away_conference": "Big 12",
+      "home_conference": "Big 12",
+      "kickoff_file": "2026-10-31 12:45:00",
+      "away_elo": 1896.0,
+      "home_elo": 1532.0,
+      "home_elo_win_prob_no_hfa": 0.1095,
+      "away_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 41.756,
+        "pts_per_drive": 3.293,
+        "plays_per_drive": 6.073,
+        "scoring_rate": 0.5
+      },
+      "home_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 38.012,
+        "pts_per_drive": 2.918,
+        "plays_per_drive": 5.553,
+        "scoring_rate": 0.471
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 27.775,
+        "pts_allowed_per_drive": 1.288
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 38.354,
+        "pts_allowed_per_drive": 2.177
+      },
+      "line": {
+        "kickoff": "2026-10-31T19:45Z",
+        "espn_game_id": "401856848",
+        "away_spread": -7.0,
+        "away_spread_price": -112,
+        "home_spread": 7.0,
+        "home_spread_price": -108,
+        "total": 56.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": -270,
+        "home_ml": 220,
+        "away_ml_devig": 0.7002,
+        "home_ml_devig": 0.2998,
+        "ml_overround": 0.0422
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 36.26,
+        "sim_home_pts_mean": 27.53,
+        "sim_away_pts_median": 34.0,
+        "sim_home_pts_median": 24.0,
+        "sim_home_margin_mean": -8.73,
+        "sim_home_margin_median": -8.0,
+        "sim_total_mean": 63.8,
+        "sim_total_median": 61.0,
+        "sim_home_win_prob": 0.3751,
+        "sim_away_win_prob": 0.6249,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0159,
+      "raw_total_edge": 0.0598,
+      "raw_ml_edge": 0.0753,
+      "market_comparison": {
+        "spread_lean": "Utah -7.0",
+        "sim_home_cover_prob": 0.4797,
+        "raw_spread_edge": 0.0159,
+        "total_lean": "OVER 56.5",
+        "sim_over_prob": 0.5598,
+        "raw_total_edge": 0.0598,
+        "ml_lean": "Cincinnati ML",
+        "raw_ml_edge": 0.0753
+      }
+    },
+    {
+      "away": "New Mexico",
+      "home": "San Jos\u00e9 State",
+      "away_conference": "Mountain West",
+      "home_conference": "Mountain West",
+      "kickoff_file": "2026-10-31 13:00:00",
+      "away_elo": 1680.0,
+      "home_elo": 1352.0,
+      "home_elo_win_prob_no_hfa": 0.1315,
+      "away_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 29.373,
+        "pts_per_drive": 2.639,
+        "plays_per_drive": 5.578,
+        "scoring_rate": 0.446
+      },
+      "home_drive": {
+        "drives": 97.0,
+        "yds_per_drive": 28.443,
+        "pts_per_drive": 1.711,
+        "plays_per_drive": 5.577,
+        "scoring_rate": 0.33
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 19.548,
+        "pts_allowed_per_drive": 0.857
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 29.16,
+        "pts_allowed_per_drive": 1.83
+      },
+      "line": {
+        "kickoff": "2026-10-31T20:00Z",
+        "espn_game_id": "401864529",
+        "away_spread": -14.5,
+        "away_spread_price": -115,
+        "home_spread": 14.5,
+        "home_spread_price": -105,
+        "total": 42.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": -650,
+        "home_ml": 470,
+        "away_ml_devig": 0.8316,
+        "home_ml_devig": 0.1684,
+        "ml_overround": 0.0421
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 29.56,
+        "sim_home_pts_mean": 18.68,
+        "sim_away_pts_median": 27.0,
+        "sim_home_pts_median": 17.0,
+        "sim_home_margin_mean": -10.88,
+        "sim_home_margin_median": -10.0,
+        "sim_total_mean": 48.23,
+        "sim_total_median": 45.0,
+        "sim_home_win_prob": 0.3143,
+        "sim_away_win_prob": 0.6857,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0995,
+      "raw_total_edge": 0.0468,
+      "raw_ml_edge": 0.1459,
+      "market_comparison": {
+        "spread_lean": "San Jos\u00e9 State +14.5",
+        "sim_home_cover_prob": 0.5887,
+        "raw_spread_edge": 0.0995,
+        "total_lean": "OVER 42.5",
+        "sim_over_prob": 0.5468,
+        "raw_total_edge": 0.0468,
+        "ml_lean": "San Jos\u00e9 State ML",
+        "raw_ml_edge": 0.1459
+      }
+    },
+    {
+      "away": "Nevada",
+      "home": "UCLA",
+      "away_conference": "Mountain West",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 13:15:00",
+      "away_elo": 1448.0,
+      "home_elo": 1709.0,
+      "home_elo_win_prob_no_hfa": 0.8179,
+      "away_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 29.435,
+        "pts_per_drive": 2.165,
+        "plays_per_drive": 5.529,
+        "scoring_rate": 0.388
+      },
+      "home_drive": {
+        "drives": 90.0,
+        "yds_per_drive": 35.433,
+        "pts_per_drive": 2.367,
+        "plays_per_drive": 5.467,
+        "scoring_rate": 0.4
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 24.786,
+        "pts_allowed_per_drive": 2.107
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 22.802,
+        "pts_allowed_per_drive": 1.11
+      },
+      "line": {
+        "kickoff": "2026-10-31T20:15Z",
+        "espn_game_id": "401858508",
+        "away_spread": 22.5,
+        "away_spread_price": -112,
+        "home_spread": -22.5,
+        "home_spread_price": -108,
+        "total": 43.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 1000,
+        "home_ml": -1800,
+        "away_ml_devig": 0.0876,
+        "home_ml_devig": 0.9124,
+        "ml_overround": 0.0383
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 21.61,
+        "sim_home_pts_mean": 31.86,
+        "sim_away_pts_median": 20.0,
+        "sim_home_pts_median": 29.0,
+        "sim_home_margin_mean": 10.25,
+        "sim_home_margin_median": 9.0,
+        "sim_total_mean": 53.47,
+        "sim_total_median": 51.0,
+        "sim_home_win_prob": 0.6612,
+        "sim_away_win_prob": 0.3388,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.2058,
+      "raw_total_edge": 0.1128,
+      "raw_ml_edge": 0.2512,
+      "market_comparison": {
+        "spread_lean": "Nevada +22.5",
+        "sim_home_cover_prob": 0.2899,
+        "raw_spread_edge": 0.2058,
+        "total_lean": "OVER 43.5",
+        "sim_over_prob": 0.6236,
+        "raw_total_edge": 0.1128,
+        "ml_lean": "Nevada ML",
+        "raw_ml_edge": 0.2512
+      }
+    },
+    {
+      "away": "South Carolina",
+      "home": "Oklahoma",
+      "away_conference": "SEC",
+      "home_conference": "SEC",
+      "kickoff_file": "2026-10-31 13:15:00",
+      "away_elo": 1702.0,
+      "home_elo": 1719.0,
+      "home_elo_win_prob_no_hfa": 0.5244,
+      "away_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 37.675,
+        "pts_per_drive": 2.916,
+        "plays_per_drive": 6.193,
+        "scoring_rate": 0.494
+      },
+      "home_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 28.06,
+        "pts_per_drive": 1.602,
+        "plays_per_drive": 5.578,
+        "scoring_rate": 0.325
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 27.381,
+        "pts_allowed_per_drive": 2.024
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 21.718,
+        "pts_allowed_per_drive": 1.212
+      },
+      "line": {
+        "kickoff": "2026-10-31T20:15Z",
+        "espn_game_id": "401856736",
+        "away_spread": 3.5,
+        "away_spread_price": -115,
+        "home_spread": -3.5,
+        "home_spread_price": -105,
+        "total": 44.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": 142,
+        "home_ml": -170,
+        "away_ml_devig": 0.3962,
+        "home_ml_devig": 0.6038,
+        "ml_overround": 0.0429
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 25.26,
+        "sim_home_pts_mean": 25.12,
+        "sim_away_pts_median": 22.0,
+        "sim_home_pts_median": 23.0,
+        "sim_home_margin_mean": -0.14,
+        "sim_home_margin_median": 0.0,
+        "sim_total_mean": 50.39,
+        "sim_total_median": 47.0,
+        "sim_home_win_prob": 0.4995,
+        "sim_away_win_prob": 0.5005,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.061,
+      "raw_total_edge": 0.057,
+      "raw_ml_edge": 0.1043,
+      "market_comparison": {
+        "spread_lean": "South Carolina +3.5",
+        "sim_home_cover_prob": 0.4282,
+        "raw_spread_edge": 0.061,
+        "total_lean": "OVER 44.5",
+        "sim_over_prob": 0.5462,
+        "raw_total_edge": 0.057,
+        "ml_lean": "South Carolina ML",
+        "raw_ml_edge": 0.1043
+      }
+    },
+    {
+      "away": "Purdue",
+      "home": "Penn State",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 13:15:00",
+      "away_elo": 1423.0,
+      "home_elo": 1800.0,
+      "home_elo_win_prob_no_hfa": 0.8975,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 36.815,
+        "pts_per_drive": 3.136,
+        "plays_per_drive": 6.21,
+        "scoring_rate": 0.481
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 34.293,
+        "pts_per_drive": 2.195,
+        "plays_per_drive": 5.829,
+        "scoring_rate": 0.415
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 39.213,
+        "pts_allowed_per_drive": 3.147
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 26.904,
+        "pts_allowed_per_drive": 1.602
+      },
+      "line": {
+        "kickoff": "2026-10-31T20:15Z",
+        "espn_game_id": "401858506",
+        "away_spread": 10.0,
+        "away_spread_price": -105,
+        "home_spread": -10.0,
+        "home_spread_price": -115,
+        "total": 54.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": 295,
+        "home_ml": -375,
+        "away_ml_devig": 0.2428,
+        "home_ml_devig": 0.7572,
+        "ml_overround": 0.0426
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 26.88,
+        "sim_home_pts_mean": 36.51,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 34.0,
+        "sim_home_margin_mean": 9.63,
+        "sim_home_margin_median": 10.0,
+        "sim_total_mean": 63.39,
+        "sim_total_median": 60.0,
+        "sim_home_win_prob": 0.6503,
+        "sim_away_win_prob": 0.3497,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0177,
+      "raw_total_edge": 0.0917,
+      "raw_ml_edge": 0.1069,
+      "market_comparison": {
+        "spread_lean": "Purdue +10.0",
+        "sim_home_cover_prob": 0.4931,
+        "raw_spread_edge": 0.0177,
+        "total_lean": "OVER 54.5",
+        "sim_over_prob": 0.5874,
+        "raw_total_edge": 0.0917,
+        "ml_lean": "Purdue ML",
+        "raw_ml_edge": 0.1069
+      }
+    },
+    {
+      "away": "App State",
+      "home": "Georgia Southern",
+      "away_conference": "Sun Belt",
+      "home_conference": "Sun Belt",
+      "kickoff_file": "2026-10-31 15:30:00",
+      "away_elo": 1310.0,
+      "home_elo": 1374.0,
+      "home_elo_win_prob_no_hfa": 0.5911,
+      "away_drive": {
+        "drives": 90.0,
+        "yds_per_drive": 31.733,
+        "pts_per_drive": 2.378,
+        "plays_per_drive": 5.6,
+        "scoring_rate": 0.433
+      },
+      "home_drive": {
+        "drives": 79.0,
+        "yds_per_drive": 35.949,
+        "pts_per_drive": 2.291,
+        "plays_per_drive": 6.228,
+        "scoring_rate": 0.392
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 28.225,
+        "pts_allowed_per_drive": 1.652
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 29.949,
+        "pts_allowed_per_drive": 1.873
+      },
+      "line": {
+        "kickoff": "2026-10-31T22:30Z",
+        "espn_game_id": "401869846",
+        "away_spread": 5.5,
+        "away_spread_price": -108,
+        "home_spread": -5.5,
+        "home_spread_price": -112,
+        "total": 57.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": 180,
+        "home_ml": -218,
+        "away_ml_devig": 0.3425,
+        "home_ml_devig": 0.6575,
+        "ml_overround": 0.0427
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 25.69,
+        "sim_home_pts_mean": 27.1,
+        "sim_away_pts_median": 24.0,
+        "sim_home_pts_median": 24.0,
+        "sim_home_margin_mean": 1.41,
+        "sim_home_margin_median": 1.0,
+        "sim_total_mean": 52.79,
+        "sim_total_median": 50.0,
+        "sim_home_win_prob": 0.5189,
+        "sim_away_win_prob": 0.4811,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0838,
+      "raw_total_edge": 0.1052,
+      "raw_ml_edge": 0.1386,
+      "market_comparison": {
+        "spread_lean": "App State +5.5",
+        "sim_home_cover_prob": 0.4205,
+        "raw_spread_edge": 0.0838,
+        "total_lean": "UNDER 57.5",
+        "sim_over_prob": 0.384,
+        "raw_total_edge": 0.1052,
+        "ml_lean": "App State ML",
+        "raw_ml_edge": 0.1386
+      }
+    },
+    {
+      "away": "Washington State",
+      "home": "San Diego State",
+      "away_conference": "Pac-12",
+      "home_conference": "Pac-12",
+      "kickoff_file": "2026-10-31 16:00:00",
+      "away_elo": 1419.0,
+      "home_elo": 1245.0,
+      "home_elo_win_prob_no_hfa": 0.2686,
+      "away_drive": {
+        "drives": 95.0,
+        "yds_per_drive": 26.011,
+        "pts_per_drive": 1.516,
+        "plays_per_drive": 5.611,
+        "scoring_rate": 0.242
+      },
+      "home_drive": {
+        "drives": 102.0,
+        "yds_per_drive": 26.039,
+        "pts_per_drive": 1.676,
+        "plays_per_drive": 4.99,
+        "scoring_rate": 0.373
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 30.93,
+        "pts_allowed_per_drive": 2.0
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 35.451,
+        "pts_allowed_per_drive": 2.608
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:00Z",
+        "espn_game_id": "401860909",
+        "away_spread": 2.5,
+        "away_spread_price": -105,
+        "home_spread": -2.5,
+        "home_spread_price": -115,
+        "total": 48.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": 120,
+        "home_ml": -142,
+        "away_ml_devig": 0.4365,
+        "home_ml_devig": 0.5635,
+        "ml_overround": 0.0413
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 28.51,
+        "sim_home_pts_mean": 25.82,
+        "sim_away_pts_median": 25.0,
+        "sim_home_pts_median": 23.0,
+        "sim_home_margin_mean": -2.69,
+        "sim_home_margin_median": -2.0,
+        "sim_total_mean": 54.33,
+        "sim_total_median": 51.0,
+        "sim_home_win_prob": 0.4587,
+        "sim_away_win_prob": 0.5413,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.093,
+      "raw_total_edge": 0.0575,
+      "raw_ml_edge": 0.1048,
+      "market_comparison": {
+        "spread_lean": "Washington State +2.5",
+        "sim_home_cover_prob": 0.4178,
+        "raw_spread_edge": 0.093,
+        "total_lean": "OVER 48.5",
+        "sim_over_prob": 0.5467,
+        "raw_total_edge": 0.0575,
+        "ml_lean": "Washington State ML",
+        "raw_ml_edge": 0.1048
+      }
+    },
+    {
+      "away": "Clemson",
+      "home": "Florida State",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 16:00:00",
+      "away_elo": 1532.0,
+      "home_elo": 1609.0,
+      "home_elo_win_prob_no_hfa": 0.609,
+      "away_drive": {
+        "drives": 86.0,
+        "yds_per_drive": 27.616,
+        "pts_per_drive": 1.663,
+        "plays_per_drive": 5.779,
+        "scoring_rate": 0.395
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 35.915,
+        "pts_per_drive": 2.695,
+        "plays_per_drive": 5.573,
+        "scoring_rate": 0.427
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 27.671,
+        "pts_allowed_per_drive": 1.646
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 38.235,
+        "pts_allowed_per_drive": 2.321
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:00Z",
+        "espn_game_id": "401858280",
+        "away_spread": 6.0,
+        "away_spread_price": -112,
+        "home_spread": -6.0,
+        "home_spread_price": -108,
+        "total": 49.5,
+        "over_price": -112,
+        "under_price": -108,
+        "away_ml": 180,
+        "home_ml": -218,
+        "away_ml_devig": 0.3425,
+        "home_ml_devig": 0.6575,
+        "ml_overround": 0.0427
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 25.46,
+        "sim_home_pts_mean": 30.38,
+        "sim_away_pts_median": 23.0,
+        "sim_home_pts_median": 28.0,
+        "sim_home_margin_mean": 4.92,
+        "sim_home_margin_median": 4.0,
+        "sim_total_mean": 55.84,
+        "sim_total_median": 53.0,
+        "sim_home_win_prob": 0.5771,
+        "sim_away_win_prob": 0.4229,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0327,
+      "raw_total_edge": 0.0508,
+      "raw_ml_edge": 0.0804,
+      "market_comparison": {
+        "spread_lean": "Clemson +6.0",
+        "sim_home_cover_prob": 0.463,
+        "raw_spread_edge": 0.0327,
+        "total_lean": "OVER 49.5",
+        "sim_over_prob": 0.5551,
+        "raw_total_edge": 0.0508,
+        "ml_lean": "Clemson ML",
+        "raw_ml_edge": 0.0804
+      }
+    },
+    {
+      "away": "Oklahoma State",
+      "home": "Iowa State",
+      "away_conference": "Big 12",
+      "home_conference": "Big 12",
+      "kickoff_file": "2026-10-31 16:00:00",
+      "away_elo": 1463.0,
+      "home_elo": 1551.0,
+      "home_elo_win_prob_no_hfa": 0.624,
+      "away_drive": {
+        "drives": 83.0,
+        "yds_per_drive": 45.53,
+        "pts_per_drive": 3.181,
+        "plays_per_drive": 6.301,
+        "scoring_rate": 0.602
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 30.451,
+        "pts_per_drive": 1.963,
+        "plays_per_drive": 5.354,
+        "scoring_rate": 0.366
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 30.181,
+        "pts_allowed_per_drive": 1.831
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 29.729,
+        "pts_allowed_per_drive": 2.165
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:00Z",
+        "espn_game_id": "401856847",
+        "away_spread": -9.5,
+        "away_spread_price": -112,
+        "home_spread": 9.5,
+        "home_spread_price": -108,
+        "total": 57.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": -360,
+        "home_ml": 285,
+        "away_ml_devig": 0.7508,
+        "home_ml_devig": 0.2492,
+        "ml_overround": 0.0423
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 30.64,
+        "sim_home_pts_mean": 28.87,
+        "sim_away_pts_median": 27.0,
+        "sim_home_pts_median": 26.0,
+        "sim_home_margin_mean": -1.77,
+        "sim_home_margin_median": -2.0,
+        "sim_total_mean": 59.52,
+        "sim_total_median": 57.0,
+        "sim_home_win_prob": 0.4728,
+        "sim_away_win_prob": 0.5272,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.1296,
+      "raw_total_edge": 0.0242,
+      "raw_ml_edge": 0.2236,
+      "market_comparison": {
+        "spread_lean": "Iowa State +9.5",
+        "sim_home_cover_prob": 0.6253,
+        "raw_spread_edge": 0.1296,
+        "total_lean": "UNDER 57.5",
+        "sim_over_prob": 0.4866,
+        "raw_total_edge": 0.0242,
+        "ml_lean": "Iowa State ML",
+        "raw_ml_edge": 0.2236
+      }
+    },
+    {
+      "away": "Georgia Tech",
+      "home": "Pittsburgh",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 16:30:00",
+      "away_elo": 1412.0,
+      "home_elo": 1588.0,
+      "home_elo_win_prob_no_hfa": 0.7336,
+      "away_drive": {
+        "drives": 78.0,
+        "yds_per_drive": 34.808,
+        "pts_per_drive": 2.218,
+        "plays_per_drive": 5.731,
+        "scoring_rate": 0.423
+      },
+      "home_drive": {
+        "drives": 95.0,
+        "yds_per_drive": 37.0,
+        "pts_per_drive": 2.663,
+        "plays_per_drive": 6.021,
+        "scoring_rate": 0.442
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 36.295,
+        "pts_allowed_per_drive": 2.513
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 27.194,
+        "pts_allowed_per_drive": 1.694
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:30Z",
+        "espn_game_id": "401858281",
+        "away_spread": 8.5,
+        "away_spread_price": -112,
+        "home_spread": -8.5,
+        "home_spread_price": -108,
+        "total": 54.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 245,
+        "home_ml": -305,
+        "away_ml_devig": 0.2779,
+        "home_ml_devig": 0.7221,
+        "ml_overround": 0.0429
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 24.54,
+        "sim_home_pts_mean": 33.98,
+        "sim_away_pts_median": 22.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 9.45,
+        "sim_home_margin_median": 8.0,
+        "sim_total_mean": 58.52,
+        "sim_total_median": 56.0,
+        "sim_home_win_prob": 0.6436,
+        "sim_away_win_prob": 0.3564,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0011,
+      "raw_total_edge": 0.0153,
+      "raw_ml_edge": 0.0785,
+      "market_comparison": {
+        "spread_lean": "Georgia Tech +8.5",
+        "sim_home_cover_prob": 0.4946,
+        "raw_spread_edge": 0.0011,
+        "total_lean": "OVER 54.5",
+        "sim_over_prob": 0.5261,
+        "raw_total_edge": 0.0153,
+        "ml_lean": "Georgia Tech ML",
+        "raw_ml_edge": 0.0785
+      }
+    },
+    {
+      "away": "Ohio State",
+      "home": "USC",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 16:30:00",
+      "away_elo": 2069.0,
+      "home_elo": 1752.0,
+      "home_elo_win_prob_no_hfa": 0.1389,
+      "away_drive": {
+        "drives": 80.0,
+        "yds_per_drive": 41.225,
+        "pts_per_drive": 3.438,
+        "plays_per_drive": 6.125,
+        "scoring_rate": 0.55
+      },
+      "home_drive": {
+        "drives": 78.0,
+        "yds_per_drive": 44.321,
+        "pts_per_drive": 3.603,
+        "plays_per_drive": 7.346,
+        "scoring_rate": 0.487
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 22.938,
+        "pts_allowed_per_drive": 1.086
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 34.163,
+        "pts_allowed_per_drive": 2.5
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:30Z",
+        "espn_game_id": "401858509",
+        "away_spread": -6.5,
+        "away_spread_price": -115,
+        "home_spread": 6.5,
+        "home_spread_price": -105,
+        "total": 51.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": -245,
+        "home_ml": 200,
+        "away_ml_devig": 0.6806,
+        "home_ml_devig": 0.3194,
+        "ml_overround": 0.0435
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 33.68,
+        "sim_home_pts_mean": 26.53,
+        "sim_away_pts_median": 31.0,
+        "sim_home_pts_median": 24.0,
+        "sim_home_margin_mean": -7.15,
+        "sim_home_margin_median": -7.0,
+        "sim_total_mean": 60.21,
+        "sim_total_median": 57.0,
+        "sim_home_win_prob": 0.392,
+        "sim_away_win_prob": 0.608,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": -0.0067,
+      "raw_total_edge": 0.0965,
+      "raw_ml_edge": 0.0726,
+      "market_comparison": {
+        "spread_lean": "Ohio State -6.5",
+        "sim_home_cover_prob": 0.4959,
+        "raw_spread_edge": -0.0067,
+        "total_lean": "OVER 51.5",
+        "sim_over_prob": 0.5922,
+        "raw_total_edge": 0.0965,
+        "ml_lean": "USC ML",
+        "raw_ml_edge": 0.0726
+      }
+    },
+    {
+      "away": "Mississippi State",
+      "home": "Texas",
+      "away_conference": "SEC",
+      "home_conference": "SEC",
+      "kickoff_file": "2026-10-31 16:30:00",
+      "away_elo": 1555.0,
+      "home_elo": 1902.0,
+      "home_elo_win_prob_no_hfa": 0.8805,
+      "away_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 37.025,
+        "pts_per_drive": 2.593,
+        "plays_per_drive": 6.111,
+        "scoring_rate": 0.444
+      },
+      "home_drive": {
+        "drives": 86.0,
+        "yds_per_drive": 30.244,
+        "pts_per_drive": 2.267,
+        "plays_per_drive": 5.628,
+        "scoring_rate": 0.453
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 34.295,
+        "pts_allowed_per_drive": 2.346
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 23.414,
+        "pts_allowed_per_drive": 1.218
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:30Z",
+        "espn_game_id": "401856737",
+        "away_spread": 20.5,
+        "away_spread_price": -115,
+        "home_spread": -20.5,
+        "home_spread_price": -105,
+        "total": 50.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 900,
+        "home_ml": -1600,
+        "away_ml_devig": 0.096,
+        "home_ml_devig": 0.904,
+        "ml_overround": 0.0412
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 22.15,
+        "sim_home_pts_mean": 32.14,
+        "sim_away_pts_median": 20.0,
+        "sim_home_pts_median": 30.0,
+        "sim_home_margin_mean": 10.0,
+        "sim_home_margin_median": 10.0,
+        "sim_total_mean": 54.29,
+        "sim_total_median": 51.0,
+        "sim_home_win_prob": 0.6681,
+        "sim_away_win_prob": 0.3319,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.1766,
+      "raw_total_edge": 0.006,
+      "raw_ml_edge": 0.2359,
+      "market_comparison": {
+        "spread_lean": "Mississippi State +20.5",
+        "sim_home_cover_prob": 0.3126,
+        "raw_spread_edge": 0.1766,
+        "total_lean": "OVER 50.5",
+        "sim_over_prob": 0.5168,
+        "raw_total_edge": 0.006,
+        "ml_lean": "Mississippi State ML",
+        "raw_ml_edge": 0.2359
+      }
+    },
+    {
+      "away": "Miami",
+      "home": "North Carolina",
+      "away_conference": "ACC",
+      "home_conference": "ACC",
+      "kickoff_file": "2026-10-31 16:30:00",
+      "away_elo": 2018.0,
+      "home_elo": 1461.0,
+      "home_elo_win_prob_no_hfa": 0.0389,
+      "away_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 45.259,
+        "pts_per_drive": 4.047,
+        "plays_per_drive": 5.882,
+        "scoring_rate": 0.624
+      },
+      "home_drive": {
+        "drives": 75.0,
+        "yds_per_drive": 31.213,
+        "pts_per_drive": 2.173,
+        "plays_per_drive": 5.667,
+        "scoring_rate": 0.4
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 24.024,
+        "pts_allowed_per_drive": 1.176
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 33.013,
+        "pts_allowed_per_drive": 1.987
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:30Z",
+        "espn_game_id": "401858282",
+        "away_spread": -14.0,
+        "away_spread_price": -112,
+        "home_spread": 14.0,
+        "home_spread_price": -108,
+        "total": 53.5,
+        "over_price": -108,
+        "under_price": -112,
+        "away_ml": -625,
+        "home_ml": 455,
+        "away_ml_devig": 0.8271,
+        "home_ml_devig": 0.1729,
+        "ml_overround": 0.0422
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 39.55,
+        "sim_home_pts_mean": 22.38,
+        "sim_away_pts_median": 37.0,
+        "sim_home_pts_median": 20.0,
+        "sim_home_margin_mean": -17.17,
+        "sim_home_margin_median": -16.0,
+        "sim_total_mean": 61.92,
+        "sim_total_median": 59.0,
+        "sim_home_win_prob": 0.2498,
+        "sim_away_win_prob": 0.7502,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0301,
+      "raw_total_edge": 0.0899,
+      "raw_ml_edge": 0.0769,
+      "market_comparison": {
+        "spread_lean": "Miami -14.0",
+        "sim_home_cover_prob": 0.4655,
+        "raw_spread_edge": 0.0301,
+        "total_lean": "OVER 53.5",
+        "sim_over_prob": 0.5856,
+        "raw_total_edge": 0.0899,
+        "ml_lean": "North Carolina ML",
+        "raw_ml_edge": 0.0769
+      }
+    },
+    {
+      "away": "Missouri",
+      "home": "Arkansas",
+      "away_conference": "SEC",
+      "home_conference": "SEC",
+      "kickoff_file": "2026-10-31 16:45:00",
+      "away_elo": 1747.0,
+      "home_elo": 1515.0,
+      "home_elo_win_prob_no_hfa": 0.2083,
+      "away_drive": {
+        "drives": 89.0,
+        "yds_per_drive": 33.236,
+        "pts_per_drive": 2.629,
+        "plays_per_drive": 5.573,
+        "scoring_rate": 0.416
+      },
+      "home_drive": {
+        "drives": 78.0,
+        "yds_per_drive": 30.744,
+        "pts_per_drive": 1.795,
+        "plays_per_drive": 6.333,
+        "scoring_rate": 0.321
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 25.802,
+        "pts_allowed_per_drive": 1.512
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 30.825,
+        "pts_allowed_per_drive": 2.25
+      },
+      "line": {
+        "kickoff": "2026-10-31T23:45Z",
+        "espn_game_id": "401856733",
+        "away_spread": -10.0,
+        "away_spread_price": -112,
+        "home_spread": 10.0,
+        "home_spread_price": -108,
+        "total": 48.5,
+        "over_price": -110,
+        "under_price": -110,
+        "away_ml": -380,
+        "home_ml": 300,
+        "away_ml_devig": 0.76,
+        "home_ml_devig": 0.24,
+        "ml_overround": 0.0417
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 29.65,
+        "sim_home_pts_mean": 22.42,
+        "sim_away_pts_median": 27.0,
+        "sim_home_pts_median": 20.0,
+        "sim_home_margin_mean": -7.23,
+        "sim_home_margin_median": -7.0,
+        "sim_total_mean": 52.07,
+        "sim_total_median": 49.0,
+        "sim_home_win_prob": 0.3835,
+        "sim_away_win_prob": 0.6165,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0656,
+      "raw_total_edge": 0.011,
+      "raw_ml_edge": 0.1435,
+      "market_comparison": {
+        "spread_lean": "Arkansas +10.0",
+        "sim_home_cover_prob": 0.5612,
+        "raw_spread_edge": 0.0656,
+        "total_lean": "OVER 48.5",
+        "sim_over_prob": 0.511,
+        "raw_total_edge": 0.011,
+        "ml_lean": "Arkansas ML",
+        "raw_ml_edge": 0.1435
+      }
+    },
+    {
+      "away": "Washington",
+      "home": "Nebraska",
+      "away_conference": "Big Ten",
+      "home_conference": "Big Ten",
+      "kickoff_file": "2026-10-31 17:00:00",
+      "away_elo": 1704.0,
+      "home_elo": 1767.0,
+      "home_elo_win_prob_no_hfa": 0.5897,
+      "away_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 31.953,
+        "pts_per_drive": 2.376,
+        "plays_per_drive": 5.447,
+        "scoring_rate": 0.4
+      },
+      "home_drive": {
+        "drives": 81.0,
+        "yds_per_drive": 36.963,
+        "pts_per_drive": 2.815,
+        "plays_per_drive": 6.346,
+        "scoring_rate": 0.444
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 29.619,
+        "pts_allowed_per_drive": 1.643
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 23.094,
+        "pts_allowed_per_drive": 1.353
+      },
+      "line": {
+        "kickoff": "2026-11-01T00:00Z",
+        "espn_game_id": "401858504",
+        "away_spread": 7.5,
+        "away_spread_price": -115,
+        "home_spread": -7.5,
+        "home_spread_price": -105,
+        "total": 49.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 240,
+        "home_ml": -298,
+        "away_ml_devig": 0.282,
+        "home_ml_devig": 0.718,
+        "ml_overround": 0.0429
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 23.5,
+        "sim_home_pts_mean": 28.86,
+        "sim_away_pts_median": 21.0,
+        "sim_home_pts_median": 27.0,
+        "sim_home_margin_mean": 5.36,
+        "sim_home_margin_median": 5.0,
+        "sim_total_mean": 52.35,
+        "sim_total_median": 49.0,
+        "sim_home_win_prob": 0.588,
+        "sim_away_win_prob": 0.412,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0437,
+      "raw_total_edge": 0.0175,
+      "raw_ml_edge": 0.13,
+      "market_comparison": {
+        "spread_lean": "Washington +7.5",
+        "sim_home_cover_prob": 0.4455,
+        "raw_spread_edge": 0.0437,
+        "total_lean": "UNDER 49.5",
+        "sim_over_prob": 0.4933,
+        "raw_total_edge": 0.0175,
+        "ml_lean": "Washington ML",
+        "raw_ml_edge": 0.13
+      }
+    },
+    {
+      "away": "Army",
+      "home": "Memphis",
+      "away_conference": "American Athletic",
+      "home_conference": "American Athletic",
+      "kickoff_file": "2026-10-31 17:00:00",
+      "away_elo": 1571.0,
+      "home_elo": 1622.0,
+      "home_elo_win_prob_no_hfa": 0.5729,
+      "away_drive": {
+        "drives": 70.0,
+        "yds_per_drive": 41.643,
+        "pts_per_drive": 3.657,
+        "plays_per_drive": 6.629,
+        "scoring_rate": 0.557
+      },
+      "home_drive": {
+        "drives": 99.0,
+        "yds_per_drive": 42.162,
+        "pts_per_drive": 2.717,
+        "plays_per_drive": 5.859,
+        "scoring_rate": 0.495
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 37.485,
+        "pts_allowed_per_drive": 2.279
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 30.898,
+        "pts_allowed_per_drive": 1.796
+      },
+      "line": {
+        "kickoff": "2026-11-01T00:00Z",
+        "espn_game_id": "401862814",
+        "away_spread": 6.0,
+        "away_spread_price": -110,
+        "home_spread": -6.0,
+        "home_spread_price": -110,
+        "total": 59.5,
+        "over_price": -112,
+        "under_price": -108,
+        "away_ml": 180,
+        "home_ml": -218,
+        "away_ml_devig": 0.3425,
+        "home_ml_devig": 0.6575,
+        "ml_overround": 0.0427
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 31.43,
+        "sim_home_pts_mean": 32.39,
+        "sim_away_pts_median": 28.0,
+        "sim_home_pts_median": 30.0,
+        "sim_home_margin_mean": 0.96,
+        "sim_home_margin_median": 1.0,
+        "sim_total_mean": 63.81,
+        "sim_total_median": 61.0,
+        "sim_home_win_prob": 0.5148,
+        "sim_away_win_prob": 0.4852,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0795,
+      "raw_total_edge": 0.0141,
+      "raw_ml_edge": 0.1427,
+      "market_comparison": {
+        "spread_lean": "Army +6.0",
+        "sim_home_cover_prob": 0.4205,
+        "raw_spread_edge": 0.0795,
+        "total_lean": "OVER 59.5",
+        "sim_over_prob": 0.5184,
+        "raw_total_edge": 0.0141,
+        "ml_lean": "Army ML",
+        "raw_ml_edge": 0.1427
+      }
+    },
+    {
+      "away": "Texas State",
+      "home": "Boise State",
+      "away_conference": "Pac-12",
+      "home_conference": "Pac-12",
+      "kickoff_file": "2026-10-31 19:00:00",
+      "away_elo": 1565.0,
+      "home_elo": 1718.0,
+      "home_elo_win_prob_no_hfa": 0.707,
+      "away_drive": {
+        "drives": 84.0,
+        "yds_per_drive": 43.06,
+        "pts_per_drive": 2.905,
+        "plays_per_drive": 6.524,
+        "scoring_rate": 0.488
+      },
+      "home_drive": {
+        "drives": 75.0,
+        "yds_per_drive": 41.653,
+        "pts_per_drive": 2.853,
+        "plays_per_drive": 6.627,
+        "scoring_rate": 0.507
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 32.06,
+        "pts_allowed_per_drive": 2.289
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 34.351,
+        "pts_allowed_per_drive": 1.716
+      },
+      "line": {
+        "kickoff": "2026-11-01T02:00Z",
+        "espn_game_id": "401860908",
+        "away_spread": 10.5,
+        "away_spread_price": -110,
+        "home_spread": -10.5,
+        "home_spread_price": -110,
+        "total": 63.5,
+        "over_price": -115,
+        "under_price": -105,
+        "away_ml": 340,
+        "home_ml": -440,
+        "away_ml_devig": 0.2181,
+        "home_ml_devig": 0.7819,
+        "ml_overround": 0.0421
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 25.23,
+        "sim_home_pts_mean": 31.31,
+        "sim_away_pts_median": 22.0,
+        "sim_home_pts_median": 28.0,
+        "sim_home_margin_mean": 6.07,
+        "sim_home_margin_median": 6.0,
+        "sim_total_mean": 56.54,
+        "sim_total_median": 54.0,
+        "sim_home_win_prob": 0.595,
+        "sim_away_win_prob": 0.405,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0827,
+      "raw_total_edge": 0.1608,
+      "raw_ml_edge": 0.1869,
+      "market_comparison": {
+        "spread_lean": "Texas State +10.5",
+        "sim_home_cover_prob": 0.4173,
+        "raw_spread_edge": 0.0827,
+        "total_lean": "UNDER 63.5",
+        "sim_over_prob": 0.35,
+        "raw_total_edge": 0.1608,
+        "ml_lean": "Texas State ML",
+        "raw_ml_edge": 0.1869
+      }
+    },
+    {
+      "away": "Northern Illinois",
+      "home": "UNLV",
+      "away_conference": "Mountain West",
+      "home_conference": "Mountain West",
+      "kickoff_file": "2026-10-31 19:30:00",
+      "away_elo": 1065.0,
+      "home_elo": 1489.0,
+      "home_elo_win_prob_no_hfa": 0.9199,
+      "away_drive": {
+        "drives": 75.0,
+        "yds_per_drive": 27.867,
+        "pts_per_drive": 1.32,
+        "plays_per_drive": 5.8,
+        "scoring_rate": 0.267
+      },
+      "home_drive": {
+        "drives": 84.0,
+        "yds_per_drive": 31.702,
+        "pts_per_drive": 1.714,
+        "plays_per_drive": 5.643,
+        "scoring_rate": 0.31
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 39.078,
+        "pts_allowed_per_drive": 3.143
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 32.512,
+        "pts_allowed_per_drive": 2.024
+      },
+      "line": {
+        "kickoff": "2026-11-01T02:30Z",
+        "espn_game_id": "401864530",
+        "away_spread": 21.5,
+        "away_spread_price": -108,
+        "home_spread": -21.5,
+        "home_spread_price": -112,
+        "total": 54.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": 1000,
+        "home_ml": -1800,
+        "away_ml_devig": 0.0876,
+        "home_ml_devig": 0.9124,
+        "ml_overround": 0.0383
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 19.46,
+        "sim_home_pts_mean": 33.98,
+        "sim_away_pts_median": 17.0,
+        "sim_home_pts_median": 31.0,
+        "sim_home_margin_mean": 14.52,
+        "sim_home_margin_median": 13.0,
+        "sim_total_mean": 53.45,
+        "sim_total_median": 51.0,
+        "sim_home_win_prob": 0.7314,
+        "sim_away_win_prob": 0.2686,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.1482,
+      "raw_total_edge": 0.0554,
+      "raw_ml_edge": 0.181,
+      "market_comparison": {
+        "spread_lean": "Northern Illinois +21.5",
+        "sim_home_cover_prob": 0.3561,
+        "raw_spread_edge": 0.1482,
+        "total_lean": "UNDER 54.5",
+        "sim_over_prob": 0.4338,
+        "raw_total_edge": 0.0554,
+        "ml_lean": "Northern Illinois ML",
+        "raw_ml_edge": 0.181
+      }
+    },
+    {
+      "away": "Oregon State",
+      "home": "Fresno State",
+      "away_conference": "Pac-12",
+      "home_conference": "Pac-12",
+      "kickoff_file": "2026-10-31 20:00:00",
+      "away_elo": 1611.0,
+      "home_elo": 1628.0,
+      "home_elo_win_prob_no_hfa": 0.5244,
+      "away_drive": {
+        "drives": 85.0,
+        "yds_per_drive": 44.976,
+        "pts_per_drive": 3.729,
+        "plays_per_drive": 6.129,
+        "scoring_rate": 0.553
+      },
+      "home_drive": {
+        "drives": 82.0,
+        "yds_per_drive": 30.671,
+        "pts_per_drive": 2.171,
+        "plays_per_drive": 5.39,
+        "scoring_rate": 0.451
+      },
+      "away_drive_defense": {
+        "yds_allowed_per_drive": 29.035,
+        "pts_allowed_per_drive": 2.059
+      },
+      "home_drive_defense": {
+        "yds_allowed_per_drive": 31.951,
+        "pts_allowed_per_drive": 1.841
+      },
+      "line": {
+        "kickoff": "2026-11-01T03:00Z",
+        "espn_game_id": "401860924",
+        "away_spread": -6.0,
+        "away_spread_price": -110,
+        "home_spread": 6.0,
+        "home_spread_price": -110,
+        "total": 58.5,
+        "over_price": -105,
+        "under_price": -115,
+        "away_ml": -230,
+        "home_ml": 190,
+        "away_ml_devig": 0.669,
+        "home_ml_devig": 0.331,
+        "ml_overround": 0.0418
+      },
+      "decision": "PASS",
+      "publishAllowed": false,
+      "individual_19_card": false,
+      "gates_failed": [
+        "no snap-by-snap JEV spine",
+        "no college active player injury/role Sinkhorn table",
+        "no cognitive-router stage C/D",
+        "Elo and drive rates are descriptions, not two sealed signal families",
+        "no projected closing-line model"
+      ],
+      "internal_sim": {
+        "n_sims": 10000,
+        "vmr": 1.85,
+        "sim_away_pts_mean": 33.46,
+        "sim_home_pts_mean": 30.59,
+        "sim_away_pts_median": 31.0,
+        "sim_home_pts_median": 28.0,
+        "sim_home_margin_mean": -2.87,
+        "sim_home_margin_median": -2.0,
+        "sim_total_mean": 64.06,
+        "sim_total_median": 61.0,
+        "sim_home_win_prob": 0.4598,
+        "sim_away_win_prob": 0.5402,
+        "pathwise_conservation_residual": 0.0
+      },
+      "raw_spread_edge": 0.0601,
+      "raw_total_edge": 0.0507,
+      "raw_ml_edge": 0.1288,
+      "market_comparison": {
+        "spread_lean": "Fresno State +6.0",
+        "sim_home_cover_prob": 0.5601,
+        "raw_spread_edge": 0.0601,
+        "total_lean": "OVER 58.5",
+        "sim_over_prob": 0.5399,
+        "raw_total_edge": 0.0507,
+        "ml_lean": "Fresno State ML",
+        "raw_ml_edge": 0.1288
+      }
+    }
+  ],
+  "odds_last_firewall_verified": true,
+  "internal_sealed_before_odds": true
+}

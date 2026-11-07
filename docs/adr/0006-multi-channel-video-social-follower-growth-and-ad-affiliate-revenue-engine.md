@@ -17,7 +17,7 @@ To scale Galaxy Sports Edge (`GSE`) and Galaxy Sports Institute (`GSI`) revenue 
 ## Decision Drivers
 
 * **Maximum Organic Reach & Follower Velocity**: Sharp, natural football-film storytelling (offensive line slide mismatches, silent-count road crowd latency, coverage shell tendencies, weather/wind kicking edges) outperforms robotic AI jargon on TikTok, Reels, Shorts, and X.
-* **Strict Paywall Conversion**: Public content reveals the *matchup environment* and *why the market is vulnerable*, then routes viewers directly to `https://www.galaxysportsedge.com/packages` to unlock the official `62-23-1` (`+26.50u`) Week 9 card and DFS lineup cores.
+* **Strict Paywall Conversion**: Public content reveals the *matchup environment* and *why the market is vulnerable*, then routes viewers directly to `https://www.galaxysportsedge.com/packages` to unlock the official `47-19-1` (`+26.50u`) Week 9 card and DFS lineup cores.
 * **End-to-End Funnel Telemetry**: Track every impression-to-checkout step in PostHog Cloud Project `516325`.
 
 ## Considered Options

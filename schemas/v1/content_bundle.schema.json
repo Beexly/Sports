@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/content_bundle.schema.json",
+  "title": "ContentBundleV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "placeholder_only_no_live_content",
+    "paywall_redaction_verified",
+    "entity_resolution_verified",
+    "sanitized_environment_summary",
+    "redacted_fields_count"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "bundle_id": { "type": "string", "minLength": 5 },
+    "placeholder_only_no_live_content": { "type": "boolean", "const": true },
+    "paywall_redaction_verified": { "type": "boolean", "const": true },
+    "entity_resolution_verified": { "type": "boolean", "const": true },
+    "sanitized_environment_summary": { "type": "string", "minLength": 5 },
+    "redacted_fields_count": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

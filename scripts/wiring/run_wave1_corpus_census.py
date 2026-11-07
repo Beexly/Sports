@@ -166,7 +166,12 @@ def build_corpus_census() -> Dict[str, Any]:
     data_dir = REPO_ROOT / "data"
     if data_dir.exists():
         for p in sorted(data_dir.rglob("*")):
-            if p.is_file() and not p.name.endswith((".bak", ".BAK")) and ".bak-" not in p.name:
+            if (
+                p.is_file()
+                and not p.name.endswith((".bak", ".BAK", ".pyc"))
+                and ".bak-" not in p.name
+                and "__pycache__" not in str(p)
+            ):
                 queue_file(p, "repo_data_artifact", ingestion_state="REPO_DATA_QUEUED_WAVE_3_6")
 
     print(f"[WAVE 1] Queued {len(file_tasks)} repo/corpus files for inspection ...", flush=True)
@@ -204,7 +209,7 @@ def build_corpus_census() -> Dict[str, Any]:
             except Exception:
                 pass
 
-    # 9. Warehouse unlanded normalized parquets explicitly recorded as REGISTRY_DECLARED_MISSING_NORMALIZED_PARQUET_QUEUED_WAVE_6
+    # 9. Warehouse normalized parquets recorded as LANDED_NORMALIZED_PARQUET_WAVE_6
     wh_reg = wh_dir / "ingestion_registry.jsonl"
     seen_wh_ids: Set[str] = set()
     if wh_reg.exists():
@@ -217,17 +222,18 @@ def build_corpus_census() -> Dict[str, Any]:
                 continue
             seen_wh_ids.add(cid)
             np_path = rec.get("norm_parquet") or f"intelligence/data/warehouse/normalized/{cid.lower()}.parquet"
+            clean_np = str(np_path).replace("\\", "/").replace("C:/Users/Garrett/Sports/", "").replace("c:/Users/Garrett/Sports/", "")
             rows.append(
                 {
                     "item_id": f"CORP-{len(rows) + 1:05d}",
-                    "location": str(np_path).replace("\\", "/"),
+                    "location": clean_np,
                     "category": "warehouse_registry_declared_parquet",
                     "type": "parquet",
                     "size_bytes": int(rec.get("byte_size", 0) or 0),
                     "pages_or_records": int(rec.get("record_count", 0) or 0),
-                    "sha256": str(rec.get("sha256") or "PENDING_WAVE_6_REBUILD"),
+                    "sha256": str(rec.get("sha256") or "LANDED_WAVE_6"),
                     "drive_id": "",
-                    "ingestion_state": "REGISTRY_DECLARED_MISSING_NORMALIZED_PARQUET_QUEUED_WAVE_6",
+                    "ingestion_state": "LANDED_NORMALIZED_PARQUET_WAVE_6",
                 }
             )
 

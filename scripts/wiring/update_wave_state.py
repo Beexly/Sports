@@ -8,10 +8,17 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 WIRING_DIR = REPO_ROOT / "docs" / "wiring"
+
+
+def matches_wave(item_wave: str, target_wave: str) -> bool:
+    if item_wave == target_wave:
+        return True
+    parts_i = item_wave.split("_")[:2]
+    parts_t = target_wave.split("_")[:2]
+    return parts_i == parts_t
 
 
 def main() -> None:
@@ -24,33 +31,33 @@ def main() -> None:
 
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    # 1. Update WORK-QUEUE.jsonl
     wq_path = WIRING_DIR / "WORK-QUEUE.jsonl"
     items = [json.loads(line) for line in wq_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     for item in items:
-        if item.get("wave") == args.close_wave:
+        w = str(item.get("wave", ""))
+        if matches_wave(w, args.close_wave):
             item["status"] = "DONE"
             item["completed_at_utc"] = now_iso
-        elif item.get("wave") == args.next_wave and item.get("status") == "QUEUED":
+        elif matches_wave(w, args.next_wave) and item.get("status") == "QUEUED":
             item["status"] = "IN_PROGRESS"
 
     wq_path.write_text("\n".join(json.dumps(x) for x in items) + "\n", encoding="utf-8")
 
-    done_count = sum(1 for x in items if x.get("status") == "DONE")
+    done_count = sum(1 for x in items if x.get("status") in ("DONE", "COMPLETED"))
     in_prog_count = sum(1 for x in items if x.get("status") == "IN_PROGRESS")
     queued_count = sum(1 for x in items if x.get("status") == "QUEUED")
 
-    # 2. Update NIGHT-STATE.json
     ns_path = WIRING_DIR / "NIGHT-STATE.json"
     ns = json.loads(ns_path.read_text(encoding="utf-8"))
     ns["updated_at_utc"] = now_iso
     ns["status"] = args.status
     ns["current_wave"] = args.next_wave
     if "waves" in ns:
-        if args.close_wave in ns["waves"]:
-            ns["waves"][args.close_wave] = "DONE"
-        if args.next_wave in ns["waves"] and args.status != "ARMED":
-            ns["waves"][args.next_wave] = "IN_PROGRESS"
+        for k in list(ns["waves"].keys()):
+            if matches_wave(k, args.close_wave):
+                ns["waves"][k] = "DONE"
+            elif matches_wave(k, args.next_wave) and args.status != "ARMED":
+                ns["waves"][k] = "IN_PROGRESS"
     ns["queue_summary"] = {
         "total_items": len(items),
         "done_items": done_count,
@@ -59,7 +66,6 @@ def main() -> None:
     }
     ns_path.write_text(json.dumps(ns, indent=2) + "\n", encoding="utf-8")
 
-    # 3. Append to NIGHT-LESSONS.md
     if args.lesson:
         nl_path = WIRING_DIR / "NIGHT-LESSONS.md"
         with nl_path.open("a", encoding="utf-8") as f:

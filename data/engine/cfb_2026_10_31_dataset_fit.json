@@ -1,0 +1,173 @@
+{
+  "sources": [
+    "kaggle:robertlopezniu/cfb-box-scores-2005-to-2025",
+    "kaggle:robbypeery/college-football-data-2025/full_team_season_averages_2025.csv",
+    "huggingface:24601p/cfb-data games-2026.parquet",
+    "firecrawl:ESPN DraftKings odds page 2026-10-31",
+    "openalex:cfbfastR 10.32614/cran.package.cfbfastr"
+  ],
+  "college_fit": {
+    "box_2019_2025_n": 5605,
+    "home_margin_mean": 7.7,
+    "home_margin_sigma": 22.35,
+    "elo_fit_n": 444,
+    "elo_intercept": 5.149,
+    "elo_slope_points_per_elo": 0.04235,
+    "elo_resid_sd": 16.05,
+    "nfl_sigma_used": false
+  },
+  "packaged_picks": [],
+  "why_empty": "No game cleared a three-signal screen at 7 points and 0.05 net EPA, and none has a college pathwise simulation. Empty package is the result of the datasets, not a skipped pull.",
+  "largest_disagreements": [
+    {
+      "game": "Oklahoma State @ Iowa State",
+      "home_spread": 9.5,
+      "total": 57.5,
+      "fitted_home_margin": 8.88,
+      "market_home_margin": -9.5,
+      "edge_pts": 18.38,
+      "epa_2025_net_edge": 0.231,
+      "agree": true
+    },
+    {
+      "game": "Oregon State @ Fresno State",
+      "home_spread": 6.0,
+      "total": 58.5,
+      "fitted_home_margin": 5.87,
+      "market_home_margin": -6.0,
+      "edge_pts": 11.87,
+      "epa_2025_net_edge": -0.042,
+      "agree": false
+    },
+    {
+      "game": "Minnesota @ Indiana",
+      "home_spread": -20.5,
+      "total": 40.5,
+      "fitted_home_margin": 32.34,
+      "market_home_margin": 20.5,
+      "edge_pts": 11.84,
+      "epa_2025_net_edge": 0.173,
+      "agree": true
+    },
+    {
+      "game": "Kansas State @ Colorado",
+      "home_spread": -2.5,
+      "total": 46.5,
+      "fitted_home_margin": -9.08,
+      "market_home_margin": 2.5,
+      "edge_pts": -11.58,
+      "epa_2025_net_edge": -0.002,
+      "agree": true
+    },
+    {
+      "game": "Purdue @ Penn State",
+      "home_spread": -10.0,
+      "total": 54.5,
+      "fitted_home_margin": 21.12,
+      "market_home_margin": 10.0,
+      "edge_pts": 11.12,
+      "epa_2025_net_edge": 0.161,
+      "agree": true
+    },
+    {
+      "game": "Notre Dame @ Navy",
+      "home_spread": 30.5,
+      "total": 56.5,
+      "fitted_home_margin": -20.05,
+      "market_home_margin": -30.5,
+      "edge_pts": 10.45,
+      "epa_2025_net_edge": -0.025,
+      "agree": false
+    },
+    {
+      "game": "Florida @ Georgia",
+      "home_spread": -12.5,
+      "total": 56.5,
+      "fitted_home_margin": 21.24,
+      "market_home_margin": 12.5,
+      "edge_pts": 8.74,
+      "epa_2025_net_edge": 0.041,
+      "agree": true
+    },
+    {
+      "game": "Wisconsin @ Iowa",
+      "home_spread": -2.5,
+      "total": 36.5,
+      "fitted_home_margin": 10.99,
+      "market_home_margin": 2.5,
+      "edge_pts": 8.49,
+      "epa_2025_net_edge": 0.174,
+      "agree": true
+    },
+    {
+      "game": "UTEP @ North Dakota State",
+      "home_spread": -24.5,
+      "total": 42.5,
+      "fitted_home_margin": 32.21,
+      "market_home_margin": 24.5,
+      "edge_pts": 7.71,
+      "epa_2025_net_edge": 0.087,
+      "agree": true
+    },
+    {
+      "game": "Louisiana Tech @ South Alabama",
+      "home_spread": 6.0,
+      "total": 58.5,
+      "fitted_home_margin": 1.08,
+      "market_home_margin": -6.0,
+      "edge_pts": 7.08,
+      "epa_2025_net_edge": 0.001,
+      "agree": true
+    },
+    {
+      "game": "UAB @ South Florida",
+      "home_spread": -7.5,
+      "total": 41.5,
+      "fitted_home_margin": 14.34,
+      "market_home_margin": 7.5,
+      "edge_pts": 6.84,
+      "epa_2025_net_edge": 0.169,
+      "agree": true
+    },
+    {
+      "game": "Florida International @ Liberty",
+      "home_spread": -14.0,
+      "total": 45.5,
+      "fitted_home_margin": 20.78,
+      "market_home_margin": 14.0,
+      "edge_pts": 6.78,
+      "epa_2025_net_edge": -0.064,
+      "agree": false
+    },
+    {
+      "game": "Temple @ East Carolina",
+      "home_spread": -4.5,
+      "total": 50.5,
+      "fitted_home_margin": 10.87,
+      "market_home_margin": 4.5,
+      "edge_pts": 6.37,
+      "epa_2025_net_edge": 0.07,
+      "agree": true
+    },
+    {
+      "game": "Nevada @ UCLA",
+      "home_spread": -22.5,
+      "total": 43.5,
+      "fitted_home_margin": 16.2,
+      "market_home_margin": 22.5,
+      "edge_pts": -6.3,
+      "epa_2025_net_edge": 0.013,
+      "agree": false
+    },
+    {
+      "game": "Stanford @ Louisville",
+      "home_spread": -22.5,
+      "total": 60.5,
+      "fitted_home_margin": 28.7,
+      "market_home_margin": 22.5,
+      "edge_pts": 6.2,
+      "epa_2025_net_edge": 0.113,
+      "agree": true
+    }
+  ]
+}

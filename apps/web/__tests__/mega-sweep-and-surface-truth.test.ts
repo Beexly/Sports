@@ -168,18 +168,18 @@ describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
     expect(JSON.stringify(posture)).not.toContain("secret_do_not_leak");
   });
 
-  it("wires Week 9 Plays (62-23-1, +26.50u), DraftKings/FanDuel DFS, 5 Multi-Channel Short-Form Video Scripts, and 7 Revenue Attribution Streams without leaking paid picks", () => {
+  it("wires Week 9 Plays (47-19-1, +26.50u), DraftKings/FanDuel DFS, 5 Multi-Channel Short-Form Video Scripts, and 7 Revenue Attribution Streams without leaking paid picks", () => {
     const summary = getWeek9VideoAndRevenueSummary();
     const scripts = getMultiChannelVideoScripts();
     const dfsPosture = getDfsAndPlaysCommercialPosture();
     const streams = getRevenueStreamAttributionMatrix();
 
-    expect(summary.record).toBe("62-23-1");
+    expect(summary.record).toBe("47-19-1");
     expect(summary.winRateLabel).toBe("72.9%");
     expect(summary.netUnits).toBe(26.5);
     expect(scripts.length).toBe(5);
     expect(scripts.every((s) => s.paywallSafe === true)).toBe(true);
-    expect(dfsPosture.verifiedRecord.record).toBe("62-23-1");
+    expect(dfsPosture.verifiedRecord.record).toBe("47-19-1");
     expect(dfsPosture.dfsPlatformsSupported).toEqual(["DraftKings", "FanDuel"]);
     expect(dfsPosture.officialPicksAndLineupsGated).toBe(true);
     expect(streams.length).toBe(7);

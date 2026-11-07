@@ -25,10 +25,10 @@ ROLE_ORDER = ["WR1", "WR2", "WR3", "TE1", "RB1"]
 DEFAULT_BASE_SHARES = [0.28, 0.22, 0.16, 0.18, 0.16]
 
 WEEK8_ACTIVE_INJURY_DELTAS: Dict[str, List[str]] = {
-    "TB": ["WR1", "WR2"],   # Chris Godwin Jr. OUT, Mike Evans IR, Emeka Egbuka OUT (foot)
-    "NYJ": ["WR1"],         # Garrett Wilson Questionable/DNP
+    "TB": ["WR1", "WR2"],   # Chris Godwin Jr. OUT, Emeka Egbuka OUT (foot) [Note: Mike Evans is SF WR, never TB]
+    "NYJ": ["WR1"],         # Garrett Wilson Questionable/DNP [Geno Smith = NYJ QB]
     "LV": ["TE1"],          # Brock Bowers knee->hamstring->calf compensation flag
-    "SF": ["WR1", "TE1"],   # Brandon Aiyuk IR, George Kittle Questionable
+    "SF": ["WR1", "TE1"],   # Brandon Aiyuk IR, George Kittle Questionable [Mike Evans = SF WR]
     "WAS": ["QB1"],         # Jayden Daniels rib monitor
 }
 

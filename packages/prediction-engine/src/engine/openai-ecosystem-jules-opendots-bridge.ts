@@ -66,7 +66,7 @@ export function evaluateOpenAiEvalsConformalAndClvRegistry(
     brier_market: Number(brierMarket.toFixed(6)),
     brier_skill_score: Number(brierSkillScore.toFixed(6)),
     mean_clv_prob_delta: Number(meanClv.toFixed(6)),
-    official_verified_record_baseline: "62-23-1 (72.9%, +26.50u)" as const,
+    official_verified_record_baseline: "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)" as const,
     eval_gate_passed: brierSkillScore > 0 && meanClv > 0,
   };
 }

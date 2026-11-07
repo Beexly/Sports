@@ -80,7 +80,7 @@ export const DFS_SLATE: readonly DfsPlayer[] = [
   d("dte4", "Dalton Kincaid", "TE", "BUF", "BAL", 4400, 11.5, 5, 20, 0.08),
   d("dte5", "Greg Dulcich", "TE", "MIA", "NE", 3200, 10.2, 4, 19, 0.06),
   // DST
-  d("ddst1", "Jets DST", "DST", "NYJ", "LV", 2800, 8.6, 3, 17, 0.14),
+  d("ddst1", "Jets DST [PULLED_EXCLUDED]", "DST", "NYJ", "LV", 2800, 8.6, 3, 17, 0.14),
   d("ddst2", "Falcons DST", "DST", "ATL", "TB", 2500, 6.2, 2, 15, 0.10),
   d("ddst3", "Steelers DST", "DST", "PIT", "CLE", 3400, 8.2, 3, 16, 0.12),
   d("ddst4", "Rams DST", "DST", "LAR", "LAC", 3100, 7.8, 2, 15, 0.09),

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/simulation_distribution.schema.json",
+  "title": "SimulationDistributionV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "distribution_id",
+    "packet_id",
+    "trace_id",
+    "synthetic_fixture_only",
+    "worlds_configured",
+    "margin_quantiles",
+    "total_quantiles",
+    "win_probability",
+    "perturbation_signature"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "distribution_id": { "type": "string", "minLength": 5 },
+    "packet_id": { "type": "string", "minLength": 5 },
+    "trace_id": { "type": "string", "minLength": 5 },
+    "synthetic_fixture_only": { "type": "boolean", "const": true },
+    "worlds_configured": { "type": "integer", "minimum": 1 },
+    "margin_quantiles": {
+      "type": "object",
+      "required": ["p10", "p25", "p50", "p75", "p90"],
+      "properties": {
+        "p10": { "type": "number" },
+        "p25": { "type": "number" },
+        "p50": { "type": "number" },
+        "p75": { "type": "number" },
+        "p90": { "type": "number" }
+      }
+    },
+    "total_quantiles": {
+      "type": "object",
+      "required": ["p10", "p25", "p50", "p75", "p90"],
+      "properties": {
+        "p10": { "type": "number" },
+        "p25": { "type": "number" },
+        "p50": { "type": "number" },
+        "p75": { "type": "number" },
+        "p90": { "type": "number" }
+      }
+    },
+    "win_probability": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "perturbation_signature": { "type": "string", "minLength": 8 }
+  },
+  "additionalProperties": false
+}

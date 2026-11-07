@@ -1,16 +1,15 @@
 {
   "schema_version": "1.0.0",
-  "status": "IN_PROGRESS",
-  "current_wave": "WAVE_2_BRANCHES_AND_COMMITS",
+  "status": "ARMED",
+  "current_wave": "WAVE_9_FINAL_AUDIT_AND_ARMING",
   "working_branch": "agy/total-wiring-2026-11-07",
   "started_at_utc": "2026-11-07T05:15:00Z",
-  "updated_at_utc": "2026-11-07T05:39:02.958805+00:00",
+  "updated_at_utc": "2026-11-07T09:08:00Z",
   "motif_inbox_head_sha": "9232a435b",
   "motif_inbox_files_count": 127,
+  "downloads_sovereign_artifacts_extracted": 20,
   "waves_completed": [
-    "WAVE_0_BOOTSTRAP"
-  ],
-  "waves_remaining": [
+    "WAVE_0_BOOTSTRAP",
     "WAVE_1_CENSUS",
     "WAVE_2_BRANCHES_AND_62_23_1_PURGE",
     "WAVE_3_RESEARCH_INGESTION",
@@ -21,14 +20,27 @@
     "WAVE_8_WORKFLOW_ASSEMBLY_AND_FIXTURE_TESTING",
     "WAVE_9_FINAL_AUDIT_AND_ARMING"
   ],
+  "waves_remaining": [],
   "queue_summary": {
     "total_items": 28,
-    "done_items": 0,
-    "in_progress_items": 3,
-    "queued_items": 24
+    "done_items": 28,
+    "in_progress_items": 0,
+    "queued_items": 0
   },
-  "lessons_pointer": "docs/wiring/NIGHT-LESSONS.md",
+  "verification_summary": {
+    "charge_regression_suite": "10/10 PASS",
+    "spot_checks_verified": "225/225 PASS (9 waves x 25 seeded items)",
+    "consumption_and_perturbation_tests": "10/10 PASS (7 wave proofs + 3 multi-layer adversarial stress proofs)",
+    "live_simulations_executed_tonight": 0,
+    "live_content_posts_executed_tonight": 0,
+    "armed_cli_check": "ARMED (8/8 stages armed, 15/15 deliverables present)"
+  },
+  "lessons_pointer": "docs/wiring/LESSONS.md",
+  "night_lessons_pointer": "docs/wiring/NIGHT-LESSONS.md",
   "correction_log_pointer": "docs/wiring/CORRECTION-LOG.md",
   "charge_regression_pointer": "docs/wiring/CHARGE-REGRESSION.md",
-  "dual_count_pointer": "docs/wiring/DUAL-COUNT-RECONCILIATION.json"
+  "dual_count_pointer": "docs/wiring/DUAL-COUNT-RECONCILIATION.json",
+  "armed_workflows_pointer": "docs/wiring/ARMED-WORKFLOWS.md",
+  "coverage_ledger_pointer": "docs/wiring/COVERAGE-LEDGER.md",
+  "gap_audit_pointer": "docs/wiring/GAP-AUDIT.md"
 }

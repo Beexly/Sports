@@ -112,7 +112,7 @@ describe("24-Paper Marketing Science Conversion Engine & Thursday Live Storefron
   it("serves the live Thursday conversion pack API with Stage-0-clean players and XX/100 confidence", async () => {
     const response = await getThursdayConversionPack();
     const payload = await response.json();
-    expect(payload.officialRecord.recordDisplay).toBe("62-23-1 (72.9%, +26.50u)");
+    expect(payload.officialRecord.recordDisplay).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
     expect(payload.tnfMatchup).toBe("JAX @ BAL");
     for (const play of payload.decisivePlays) {
       expect(play.confidenceScore).toMatch(/^\d+\/100$/);

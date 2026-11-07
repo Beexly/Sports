@@ -188,7 +188,7 @@ export function loadVerifiedConnectedWorkflowBundle(): ConnectedWorkflowApiSumma
 
   const s0 = bundle.stage0_roster_and_board_allowlist ?? {};
   const s1a = bundle.stage1a_coaching_mind_and_schemes ?? {};
-  const s1b = bundle.stage1b_5367_equations_pre_sim_review ?? {};
+  const s1b = bundle.stage1b_12304_equations_pre_sim_review ?? bundle.stage1b_5367_equations_pre_sim_review ?? {}; // legacy key replaced by 12,304 catalog
   const s2 = bundle.stage2_jev_spine_and_10k_simulation ?? {};
   const s34 = bundle.stage3_4_conserved_post_sim_projections ?? {};
   const s5 = bundle.stage5_360_conjunction_gate ?? {};

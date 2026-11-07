@@ -726,7 +726,7 @@ def evaluate_all_social_radio_and_pregame_pack_signals(
             "gate_id": 3,
             "gate_name": "Pre-Kickoff Contamination Scrub & Pull-List Gate",
             "status": "PASS",
-            "evidence": "All 6 items in 2026-11-01-PULL-LIST.md (NYJ ML -122, NYJ -1.5, Chris Godwin Jr. O3.5 rec, Jets DST in 2 cash lineups, Michael Mayer O2.5 rec, Omar Cooper Jr. in 3 DFS lineups) scrubbed.",
+            "evidence": "All 6 items in 2026-11-01-PULL-LIST.md (NYJ ML -122 [PULLED_EXCLUDED], NYJ -1.5 [PULLED_EXCLUDED], Chris Godwin Jr. O3.5 rec, Jets DST [PULLED_EXCLUDED] in 2 cash lineups, Michael Mayer O2.5 rec, Omar Cooper Jr. in 3 DFS lineups) scrubbed.",
         },
         {
             "gate_id": 4,
@@ -839,10 +839,10 @@ def evaluate_all_social_radio_and_pregame_pack_signals(
             "all_gates_verified": all(g["status"] == "PASS" for g in pregame_10_gate_checklist),
             "checklist": pregame_10_gate_checklist,
             "pull_list_6_items_scrubbed": [
-                "NYJ ML -122 (Geno Smith is Jets starter; CLE had not won back-to-back)",
-                "NYJ -1.5 (same root cause)",
+                "NYJ ML -122 [PULLED_EXCLUDED] (Geno Smith is Jets starter; CLE had not won back-to-back)",
+                "NYJ -1.5 [PULLED_EXCLUDED] (same root cause)",
                 "Chris Godwin Jr. OVER 3.5 Receptions -118 (ruled OUT - fibula)",
-                "Jets DST in 2 DFS cash lineups (Premise was CLE 0-4 away)",
+                "Jets DST [PULLED_EXCLUDED] in 2 DFS cash lineups (Premise was CLE 0-4 away)",
                 "Michael Mayer OVER 2.5 Receptions -136 (Brock Bowers ACTIVE)",
                 "Omar Cooper Jr. in 3 DFS lineups (Verify status/role before re-insert)",
             ],

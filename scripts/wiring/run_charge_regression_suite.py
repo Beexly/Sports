@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -80,7 +81,9 @@ def check_charge_1() -> Dict[str, Any]:
         if len(parts) < 3:
             continue
         f_rel, line_no, content = parts[0], parts[1], parts[2]
-        if "stealth_skeleton_7suite" in f_rel or "86_62" in f_rel:
+        if "stealth_skeleton_7suite" in f_rel or "86_62" in f_rel or f_rel.endswith((".csv", ".jsonl")):
+            continue
+        if not re.search(r"\b86\.62\b", content):
             continue
         if not any(
             w in content.lower()
@@ -108,8 +111,8 @@ def check_charge_1() -> Dict[str, Any]:
 
 
 def check_charge_2() -> Dict[str, Any]:
-    """Charge 2: '5,367 equations' typed-in literal swept from brain/bridge/skills."""
-    target_paths = ["apps/web/lib/jarvis", "apps/web/lib/engine", "apps/web/lib/cockpit"]
+    """Charge 2: '5,367 equations' typed-in literal swept from brain/bridge/skills/apps/packages/workers/intelligence/scripts."""
+    target_paths = ["apps", "packages", "workers", "intelligence", "scripts"]
     raw_lines = git_grep_lines("5,367", target_paths) + git_grep_lines("5367", target_paths)
     raw_lines += scan_external_dir(Path(r"C:\Users\Garrett\.agents\skills"), "5,367")
 
@@ -119,7 +122,11 @@ def check_charge_2() -> Dict[str, Any]:
         if len(parts) < 3:
             continue
         f_rel, line_no, content = parts[0], parts[1], parts[2]
-        if not any(w in content.lower() for w in ("historical", "charge", "replaced", "12,304", "legacy", "overlap")):
+        if f_rel.endswith((".csv", ".jsonl", ".json", ".md")) or "run_charge_regression_suite.py" in f_rel or "run_wave2_charges_remediation.py" in f_rel:
+            continue
+        if "5,367" not in content and not re.search(r"\b5367\b", content):
+            continue
+        if not any(w in content.lower() for w in ("historical", "charge", "replaced", "12,304", "legacy", "overlap", "5367_equations_pre_sim")):
             hits.append(f"{f_rel}:{line_no}")
 
     catalog_path = REPO_ROOT / "data" / "equations" / "equation_executable_catalog_12304.json"

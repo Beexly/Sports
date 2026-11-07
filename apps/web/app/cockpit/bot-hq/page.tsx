@@ -18,7 +18,7 @@ export default function CockpitBotHqPage() {
         <p className="mt-2 max-w-4xl text-xs leading-relaxed text-ion-2">
           Live spatial workstation telemetry for all 6 autonomous GSE desks,
           universal API &amp; MCP plugin routing across 5 native stealth-skeleton
-          models (86.62/100 Composite Scale), and real-time inter-agent bus
+          models (86.12/100 Composite Scale), and real-time inter-agent bus
           dispatch. Official Season Ledger: 47-19-1 (+24.92u) | Base 38-13-1
           (+22.85u) · Roster Ruling: Geno Smith = NYJ QB · Mike Evans = SF WR.
         </p>

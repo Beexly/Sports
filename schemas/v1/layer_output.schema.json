@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/layer_output.schema.json",
+  "title": "LayerOutputV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "layer_id",
+    "layer_number",
+    "game_id",
+    "as_of",
+    "signals",
+    "confidence",
+    "provenance",
+    "warnings"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "layer_id": { "type": "string", "minLength": 3 },
+    "layer_number": { "type": "integer", "minimum": 1, "maximum": 26 },
+    "game_id": { "type": "string", "minLength": 3 },
+    "as_of": { "type": "string", "minLength": 10 },
+    "signals": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": ["number", "string", "boolean", "array", "object"] }
+    },
+    "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "provenance": {
+      "type": "object",
+      "required": ["sources", "equations_executed", "entities_resolved"],
+      "properties": {
+        "sources": { "type": "array", "items": { "type": "string" } },
+        "equations_executed": { "type": "integer", "minimum": 0 },
+        "entities_resolved": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

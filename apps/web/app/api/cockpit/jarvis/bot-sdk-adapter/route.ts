@@ -19,7 +19,7 @@ export async function GET(): Promise<NextResponse> {
     {
       ok: true,
       adapterSuite: "GSE Universal Autonomous Bot SDK Adapter (Powered by OUR OWN LLM MODEL)",
-      compositeScaleScore: "86.62/100",
+      compositeScaleScore: "86.12/100",
       seasonLedgerOfRecord: "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
       standingRosterRuling: {
         genoSmith: "NYJ QB",

@@ -90,7 +90,7 @@ export const OFFICIAL_SEASON_LEDGER = {
   baseUnits: "+22.85u",
   baseSummary: "Base 38-13-1 (+22.85u)",
   fullBanner: "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
-  stealthSkeletonScore: "86.62/100",
+  stealthSkeletonScore: "86.12/100",
 } as const;
 
 export const ROSTER_TRUTH_PINS = [
@@ -115,9 +115,9 @@ export const ROSTER_TRUTH_PINS = [
 export const BLINKENBAR_CHANNELS: readonly BlinkenbarChannel[] = [
   {
     channel: 1,
-    code: "STEALTH-86.62",
+    code: "STEALTH-86.12",
     state: "GREEN",
-    metric: "86.62/100",
+    metric: "86.12/100",
     subsystem: "GSI Stealth-Skeleton 3D Pose & Kinematic Core",
     latencyMs: 3.4,
   },
@@ -149,7 +149,7 @@ export const BLINKENBAR_CHANNELS: readonly BlinkenbarChannel[] = [
     channel: 5,
     code: "MCP-JSONRPC",
     state: "GREEN",
-    metric: "5,367 eqs",
+    metric: "12,304 eqs",
     subsystem: "MCP Equations Server & 288-Bit Context Router",
     latencyMs: 2.1,
   },
@@ -229,7 +229,7 @@ export const BLINKENBAR_CHANNELS: readonly BlinkenbarChannel[] = [
     channel: 15,
     code: "BRAIN-GRAPH",
     state: "GREEN",
-    metric: "5,367 nodes",
+    metric: "12,304 nodes",
     subsystem: "Interactive Knowledge Graph (Equations · Books · GSI)",
     latencyMs: 4.4,
   },
@@ -250,14 +250,14 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Plexus Mesh",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/hermes-plexus",
     category: "Neural Constellation & Routing Mesh",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Neural multi-agent constellation routing tasks across free OpenRouter workhorses (MiMo-V2-Pro, Qwen-2.5-Coder-32B, DeepSeek-R1) and frontier JEV snap synthesis seats.",
     keyMetrics: [
       { label: "Mesh Nodes", value: "11 Active" },
       { label: "Cost Governance", value: "Zero-Waste Tiered" },
-      { label: "Stealth-Skeleton", value: "86.62/100" },
+      { label: "Stealth-Skeleton", value: "86.12/100" },
     ],
   },
   {
@@ -266,7 +266,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Squad Hub",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/squad-hub",
     category: "Autonomous Squad Coordination",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Real-time seat coordination across Jarvis (CEO), Jynx (CSO), Quant Engine Lead, GSI Biomechanics, 360 Market Auditor, and Airwave Social Director.",
@@ -282,7 +282,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "X Dashboard",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/x-dashboard",
     category: "Social & Beat Intelligence",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "X/Twitter and Instagram command desk managing 100 X posts, 132 IG posts, Friday promo packs, and real-time NFL beat writer injury & weather signals.",
@@ -298,7 +298,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Blinkenbar LED",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/blinkenbar",
     category: "Hardware LED Telemetry Bar",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "16-channel hardware-style LED status light bar at the top of the Cockpit deck showing live heartbeats for models, MCP tools, Sinkhorn, PageIndex, and Stripe Live.",
@@ -314,7 +314,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Boardstate 360",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/boardstate",
     category: "NFL Week 9 Betting Board Matrix",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Live NFL Week 9 360-degree betting board state matrix anchored on Official Ledger 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u), Geno Smith (NYJ QB), and Mike Evans (SF WR).",
@@ -330,7 +330,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Kanban Gantt",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/kanban-gantt",
     category: "Workstream Kanban & Timeline",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Unified Kanban board and Gantt timeline enforcing Wire-First Sequencing: research -> wire -> weight -> calibrate -> test -> polish.",
@@ -346,7 +346,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Orbit Desktop",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/orbit-desktop",
     category: "Spatial Multi-Window Workspace",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Spatial multi-window Orbit Desktop workspace inside Cockpit allowing operators to tile, pin, and cross-inspect any Hermes plugin and NVIDIA skill.",
@@ -362,7 +362,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Cloud Corpus",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/hermes-cloud-file-manager",
     category: "Cloud Corpus & Dossier Browser",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Cloud corpus browser across all 257 unique PDFs / 503 files, 25 graduate books (BK-01..BK-25), 81 Motif dossiers, and Week 9 social packs.",
@@ -378,7 +378,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Kanban DAG",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/kanban-graph",
     category: "DAG Dependency & Receipt Graph",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "Directed Acyclic Graph (DAG) dependency topology across tasks, parallel subagents, 5-stage engine gates, and cryptographic verification receipts.",
@@ -394,12 +394,12 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Brain Graph",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/brain-graph",
     category: "Interactive Equation & Book Graph",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
-      "Interactive knowledge graph across 5,367 equations, 25 graduate books (BK-01..BK-25), PageIndex 10/10 hierarchical trees, and GSI biomechanics.",
+      "Interactive knowledge graph across 12,304 equations, 25 graduate books (BK-01..BK-25), PageIndex 10/10 hierarchical trees, and GSI biomechanics.",
     keyMetrics: [
-      { label: "Equations Wired", value: "5,367 Equations" },
+      { label: "Equations Wired", value: "12,304 Equations" },
       { label: "PageIndex Score", value: "10/10 Tree Search" },
       { label: "Context Mask", value: "288-Bit Orthogonal" },
     ],
@@ -410,7 +410,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     shortLabel: "Chat Share",
     docsUrl: "https://hermes-agent.nousresearch.com/docs/plugins/hermes-chat-share",
     category: "1-Click Session & Call-Sheet Export",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
       "1-click deterministic JSON and Markdown export and shareable snapshot builder for Jarvis x Jynx executive sessions and NFL Week 9 call-sheets.",
@@ -429,12 +429,12 @@ export const NVIDIA_SKILLS_CATALOG: readonly NvidiaSkillDescriptor[] = [
     installCommand: "hermes skills install NVIDIA/skills/skills/tao-setup",
     hermesPath: "C:/Users/Garrett/.hermes/skills/tao-setup/SKILL.md",
     agentsPath: "C:/Users/Garrett/.agents/skills/tao-setup/SKILL.md",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "INSTALLED",
     domain: "Computer Vision · 3D Pose · TensorRT INT8/FP16",
     pairedPlugins: ["blinkenbar", "brain-graph", "orbit-desktop"],
     description:
-      "Provisions NVIDIA TAO Toolkit containers, structured pruning, QAT quantization, and TensorRT engines for GSI Stealth-Skeleton (86.62/100) 33-keypoint 3D pose estimation on All-22 film.",
+      "Provisions NVIDIA TAO Toolkit containers, structured pruning, QAT quantization, and TensorRT engines for GSI Stealth-Skeleton (86.12/100) 33-keypoint 3D pose estimation on All-22 film.",
   },
   {
     id: "dgx-spark-skills",
@@ -442,7 +442,7 @@ export const NVIDIA_SKILLS_CATALOG: readonly NvidiaSkillDescriptor[] = [
     installCommand: "hermes skills install NVIDIA/skills/skills/dgx-spark-skills",
     hermesPath: "C:/Users/Garrett/.hermes/skills/dgx-spark-skills/SKILL.md",
     agentsPath: "C:/Users/Garrett/.agents/skills/dgx-spark-skills/SKILL.md",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "INSTALLED",
     domain: "RAPIDS · Sinkhorn Optimal Transport · 10k World Sim",
     pairedPlugins: ["boardstate", "blinkenbar", "brain-graph"],
@@ -455,7 +455,7 @@ export const NVIDIA_SKILLS_CATALOG: readonly NvidiaSkillDescriptor[] = [
     installCommand: "hermes skills install NVIDIA/skills/skills/ethos-orchestrate",
     hermesPath: "C:/Users/Garrett/.hermes/skills/ethos-orchestrate/SKILL.md",
     agentsPath: "C:/Users/Garrett/.agents/skills/ethos-orchestrate/SKILL.md",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "INSTALLED",
     domain: "Multi-Agent Wave Orchestration · DAG Verification",
     pairedPlugins: ["hermes-plexus", "squad-hub", "kanban-gantt", "kanban-graph"],
@@ -468,7 +468,7 @@ export const NVIDIA_SKILLS_CATALOG: readonly NvidiaSkillDescriptor[] = [
     installCommand: "hermes skills install NVIDIA/skills/skills/ethos-write",
     hermesPath: "C:/Users/Garrett/.hermes/skills/ethos-write/SKILL.md",
     agentsPath: "C:/Users/Garrett/.agents/skills/ethos-write/SKILL.md",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "INSTALLED",
     domain: "81 Motif Dossiers · 100 X / 132 IG Copy · Guardrails",
     pairedPlugins: ["x-dashboard", "hermes-chat-share", "hermes-cloud-file-manager"],
@@ -481,12 +481,12 @@ export const NVIDIA_SKILLS_CATALOG: readonly NvidiaSkillDescriptor[] = [
     installCommand: "hermes skills install NVIDIA/skills/skills/ethos-explore",
     hermesPath: "C:/Users/Garrett/.hermes/skills/ethos-explore/SKILL.md",
     agentsPath: "C:/Users/Garrett/.agents/skills/ethos-explore/SKILL.md",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "INSTALLED",
-    domain: "PageIndex 10/10 · 257 PDFs · 25 Books · 5,367 Eqs",
+    domain: "PageIndex 10/10 · 257 PDFs · 25 Books · 12,304 Eqs",
     pairedPlugins: ["hermes-cloud-file-manager", "brain-graph", "boardstate"],
     description:
-      "Executes hierarchical PageIndex 10/10 tree traversal across 257 unique PDFs (503 files), 25 graduate books (BK-01..BK-25), and 5,367 equations.",
+      "Executes hierarchical PageIndex 10/10 tree traversal across 257 unique PDFs (503 files), 25 graduate books (BK-01..BK-25), and 12,304 equations.",
   },
   {
     id: "nvidia-skill-finder",
@@ -494,7 +494,7 @@ export const NVIDIA_SKILLS_CATALOG: readonly NvidiaSkillDescriptor[] = [
     installCommand: "hermes skills install NVIDIA/skills/skills/nvidia-skill-finder",
     hermesPath: "C:/Users/Garrett/.hermes/skills/nvidia-skill-finder/SKILL.md",
     agentsPath: "C:/Users/Garrett/.agents/skills/nvidia-skill-finder/SKILL.md",
-    wiringScore: "86.62/100",
+    wiringScore: "86.12/100",
     status: "INSTALLED",
     domain: "Capability Discovery & Zero-Waste Skill Routing",
     pairedPlugins: ["orbit-desktop", "hermes-plexus", "blinkenbar"],
@@ -534,7 +534,7 @@ export function buildHermesChatShareBundle(
     `- **Stealth-Skeleton Wiring Score**: ${OFFICIAL_SEASON_LEDGER.stealthSkeletonScore}`,
     `- **Active Focus Plugin**: ${selectedPlugin}`,
     "- **Verified Roster Truth Pins**: Geno Smith (NYJ QB) · Mike Evans (SF WR)",
-    "- **Corpus & Mind State**: 257 unique PDFs (503 files) · 25 Graduate Books (BK-01..BK-25) · 5,367 Equations · 81 Motif Dossiers",
+    "- **Corpus & Mind State**: 257 unique PDFs (503 files) · 25 Graduate Books (BK-01..BK-25) · 12,304 Equations · 81 Motif Dossiers",
     "- **Social & Airwave Queue**: 100 X Posts + 132 IG Posts + Friday Promo Pack Ready",
     "- **NVIDIA Skills Installed (6/6)**: tao-setup, dgx-spark-skills, ethos-orchestrate, ethos-write, ethos-explore, nvidia-skill-finder",
   ].join("\n");
@@ -555,7 +555,7 @@ export function buildHermesChatShareBundle(
       uniquePdfs: 257,
       totalFiles: 503,
       graduateBooks: "25 (BK-01..BK-25)",
-      equations: 5367,
+      equations: 12304,
       motifDossiers: 81,
       socialPack: "100 X posts + 132 IG posts",
     },
@@ -703,7 +703,7 @@ export function HermesPluginUniverseSuite() {
             <p className="font-mono text-[8px] uppercase tracking-widest text-accent-400">
               Stealth-Skeleton
             </p>
-            <p className="font-mono text-base font-bold text-ion-white">86.62/100</p>
+            <p className="font-mono text-base font-bold text-ion-white">86.12/100</p>
           </div>
         </div>
       </header>
@@ -923,7 +923,7 @@ export function HermesPluginUniverseSuite() {
                 Tier 3 · Vectorized Local GPU/SIMD
               </p>
               <p className="mt-1 text-xs text-ion-2">
-                NVIDIA DGX Spark + Sinkhorn-Knopp optimal transport + Stealth-Skeleton (86.62/100) 3D pose kinematics.
+                NVIDIA DGX Spark + Sinkhorn-Knopp optimal transport + Stealth-Skeleton (86.12/100) 3D pose kinematics.
               </p>
             </div>
           </div>
@@ -932,12 +932,12 @@ export function HermesPluginUniverseSuite() {
         {activeDescriptor.id === "squad-hub" && (
           <div data-testid="squad-hub-seats" className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { seat: "Jarvis (CEO)", focus: "Executive Command, Capital Allocation & Conjunction Gate", state: "ONLINE · 86.62/100" },
-              { seat: "Jynx (CSO)", focus: "Situational Strategy, 80-Rule Firewall & Beat Synthesis", state: "ONLINE · 86.62/100" },
-              { seat: "Quant Engine Lead", focus: "5,367 Equations, 288-Bit Router & Sinkhorn 10k Worlds", state: "ONLINE · 86.62/100" },
-              { seat: "GSI Biomechanics", focus: "Stealth-Skeleton 33-Keypoint 3D Pose & Fatigue Tensors", state: "ONLINE · 86.62/100" },
-              { seat: "360 Market Auditor", focus: "77+ DK Market Types, 1Q-4Q/Kicking/IDP & Roster Locks", state: "ONLINE · 86.62/100" },
-              { seat: "Airwave Social Desk", focus: "100 X Posts + 132 IG Posts + Friday Promo Pack", state: "ONLINE · 86.62/100" },
+              { seat: "Jarvis (CEO)", focus: "Executive Command, Capital Allocation & Conjunction Gate", state: "ONLINE · 86.12/100" },
+              { seat: "Jynx (CSO)", focus: "Situational Strategy, 80-Rule Firewall & Beat Synthesis", state: "ONLINE · 86.12/100" },
+              { seat: "Quant Engine Lead", focus: "12,304 Equations, 288-Bit Router & Sinkhorn 10k Worlds", state: "ONLINE · 86.12/100" },
+              { seat: "GSI Biomechanics", focus: "Stealth-Skeleton 33-Keypoint 3D Pose & Fatigue Tensors", state: "ONLINE · 86.12/100" },
+              { seat: "360 Market Auditor", focus: "77+ DK Market Types, 1Q-4Q/Kicking/IDP & Roster Locks", state: "ONLINE · 86.12/100" },
+              { seat: "Airwave Social Desk", focus: "100 X Posts + 132 IG Posts + Friday Promo Pack", state: "ONLINE · 86.12/100" },
             ].map((s) => (
               <div key={s.seat} className="rounded-xl border border-titanium/40 bg-carbon/90 p-3">
                 <div className="flex items-center justify-between">
@@ -1024,7 +1024,7 @@ export function HermesPluginUniverseSuite() {
               {activeDescriptor.name} Live Topology · Wire-First Sequencing Active
             </p>
             <p className="mt-1 text-xs text-ion-2">
-              Pipeline order locked: research → wire → weight → calibrate → test → polish · 5,367 Equations · 25 Graduate Books (BK-01..BK-25) · 288-Bit Context Mask · Stealth-Skeleton 86.62/100.
+              Pipeline order locked: research → wire → weight → calibrate → test → polish · 12,304 Equations · 25 Graduate Books (BK-01..BK-25) · 288-Bit Context Mask · Stealth-Skeleton 86.12/100.
             </p>
           </div>
         )}
@@ -1090,7 +1090,7 @@ export function HermesPluginUniverseSuite() {
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-ion-white">
-              Installed NVIDIA Hermes Skills (6 / 6 Active · Stealth-Skeleton 86.62/100)
+              Installed NVIDIA Hermes Skills (6 / 6 Active · Stealth-Skeleton 86.12/100)
             </h2>
             <p className="text-[11px] text-ion-3">
               Installed in ~/.hermes/skills and ~/.agents/skills via hermes skills install NVIDIA/skills/skills/&lt;skill&gt;

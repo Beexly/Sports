@@ -1,0 +1,89 @@
+{
+  "generated_at": "2026-10-30T19:31:00-05:00",
+  "source": "NFL Week 8 Fantasy Football - Meat & Potatoes (Friday Late Afternoon Packet)",
+  "tnf_recap_verified": {
+    "matchup": "CAR @ GB",
+    "final_score": { "GB": 27, "CAR": 19, "total": 46, "margin_gb": 8 },
+    "player_actuals": {
+      "Christian Watson": { "targets": 10, "receptions": 8, "rec_yds": 113, "rec_td": 0, "notes": "Left in ambulance (ribs), returned, top-12 WR ROS" },
+      "Matthew Golden": { "targets": 13, "receptions": 7, "rec_yds": 79, "rec_td": 1, "notes": "23 of Love's 41 attempts went to Watson + Golden" },
+      "Tucker Kraft": { "receptions": 6, "rec_yds": 53, "rec_td": 1 },
+      "Jordan Love": { "pass_att": 41, "pass_yds": 288, "rush_att": 0 },
+      "Josh Jacobs": { "rush_att": 21, "rush_yds": 39, "ypc": 1.9, "rush_td": 1, "receptions": 6, "rec_yds": 13, "rec_td": 1, "notes": "Packers OL limiting run efficiency; sell-high candidate" },
+      "Chuba Hubbard": { "rush_att": 22, "rush_yds": 81, "ypc": 3.7, "rush_td": 1, "receptions": 7, "rec_yds": 38 },
+      "Bryce Young": { "pass_att": 41, "completions": 23, "pass_yds": 209, "pass_td": 1, "sacks_taken": 6 },
+      "Jalen Coker": { "targets": 5, "receptions": 2, "rec_yds": 36, "rec_td": 1 },
+      "Tetairoa McMillan": { "targets": 11, "receptions": 6, "rec_yds": 58 },
+      "Mitchell Evans": { "rec_yds": 22, "cleared_6_5_over": true }
+    }
+  },
+  "trade_deadline_moves": [
+    {
+      "player": "Jeffery Simmons",
+      "position": "DT",
+      "from_team": "TEN",
+      "to_team": "CHI",
+      "compensation": "Two 1st-round picks + 4th-round pick",
+      "trench_delta": {
+        "TEN_def_rush_epa_allowed_delta": 0.045,
+        "CHI_def_pressure_rate_delta": 0.055,
+        "beneficiaries": ["Chase Brown", "Montez Sweat", "Dayo Odeyingbo", "Kyler Gordon", "CHI D/ST"],
+        "downgrades": ["Sam Darnold"]
+      }
+    },
+    {
+      "player": "Quenton Nelson",
+      "position": "LG",
+      "from_team": "IND",
+      "to_team": "SEA",
+      "trench_delta": {
+        "IND_off_rush_epa_delta": -0.05,
+        "SEA_off_interior_ol_delta": 0.04,
+        "beneficiaries": ["Gray Zabel (can slide to LT if Charles Cross sits)", "JAX Run Defense"],
+        "downgrades": ["Jonathan Taylor"]
+      }
+    },
+    {
+      "player": "DeForest Buckner",
+      "position": "DT",
+      "from_team": "IND",
+      "to_team": "TRADED_OUT",
+      "trench_delta": {
+        "IND_def_rush_epa_allowed_delta": 0.05,
+        "beneficiaries": ["Bhayshul Tuten", "Chris Rodriguez", "Trevor Lawrence", "Parker Washington", "Brenton Strange"]
+      }
+    }
+  ],
+  "friday_injury_and_role_overrides": {
+    "Lamar Jackson": { "team": "BAL", "status": "ACTIVE", "notes": "Practiced full all week; confirmed to start vs BUF" },
+    "DJ Moore": { "team": "BUF", "status": "QUESTIONABLE", "notes": "Limited all week in non-contact jersey (AC joint); unlocks Dalton Kincaid if active" },
+    "Dalton Kincaid": { "team": "BUF", "status": "QUESTIONABLE", "notes": "Chest injury, non-contact jersey, limited" },
+    "RJ Harvey": { "team": "DEN", "status": "OUT", "notes": "Ruled out (knee); Jonah Coleman vaults into RB2 bellcow role; J.K. Dobbins low-upside TD-dependent flex" },
+    "Jonah Coleman": { "team": "DEN", "status": "ACTIVE_BELLCOW", "notes": "Led DEN backfield in snaps; primary RB2 with RJ Harvey ruled out and Dobbins phased out" },
+    "J.K. Dobbins": { "team": "DEN", "status": "PHASED_OUT_TD_DEPENDENT", "notes": "6 carries in Week 7; low-upside flex even with Harvey out" },
+    "Brian Robinson Jr.": { "team": "ATL", "status": "OUT", "notes": "Hamstring; Bijan Robinson projects for massive bellcow workload vs TB" },
+    "DeVonta Smith": { "team": "PHI", "status": "OUT", "notes": "Not practicing; Tanner McKee starting at QB for PHI" },
+    "Dontayvion Wicks": { "team": "PHI", "status": "OUT", "notes": "Not practicing" },
+    "AJ Brown": { "team": "PHI", "status": "QUESTIONABLE_GTD", "notes": "Knee flared Wednesday, DNP Thu/Fri; Makakai Lemon WR3 and Dallas Goedert step up" },
+    "Saquon Barkley": { "team": "PHI", "status": "ACTIVE_LIMITED_SNAPS", "notes": "Returned Friday (hamstring/back); 9 snaps/9 touches last week; RB2/flex volume cap" },
+    "Terry McLaurin": { "team": "WAS", "status": "OUT_IR", "notes": "Chig Okonkwo (90% route rate), Stefon Diggs, Antonio Williams, and Rachaad White carry WAS offense" },
+    "Tyjae Spears": { "team": "TEN", "status": "OUT", "notes": "Has not practiced; Tony Pollard gets full early-down volume" },
+    "Carnell Tate": { "team": "TEN", "status": "DOUBTFUL_OUT", "notes": "DNP (shoulder)" },
+    "Davante Adams": { "team": "LAR", "status": "OUT", "notes": "Hamstring; Puka Nacua commands massive target share" },
+    "Charles Cross": { "team": "SEA", "status": "DOUBTFUL", "notes": "Left tackle issue vs Bears pass rush (Sweat/Simmons/Odeyingbo)" },
+    "Zach Charbonnet": { "team": "SEA", "status": "ACTIVE", "notes": "Full practice; creates 3-way split with Kenneth Walker and Kenny Gainwell/Emanuel Wilson" },
+    "Breece Hall": { "team": "NYJ", "status": "QUESTIONABLE", "notes": "Quad, limited all week; Braelon Allen is goal-line back and RB1 if Hall sits" },
+    "TreVeyon Henderson": { "team": "NE", "status": "QUESTIONABLE_DNP", "notes": "Illness DNP; Rhamondre Stevenson bellcow role vs MIA" },
+    "Rashee Rice": { "team": "KC", "status": "ACTIVE", "notes": "Returning from hamstring; shadowed by Patrick Surtain II (6-38 on 9 targets last year)" }
+  },
+  "sharp_betting_steam_consensus": [
+    { "matchup": "BAL @ BUF", "sharp_side": "BAL +3.5", "sharp_total": "OVER 54.5", "source": "VR", "notes": "Lamar Jackson returns; BUF allows 285.8 pass yds/g and 3rd-most RB pts" },
+    { "matchup": "MIN @ DET", "sharp_side": "MIN +3.0 (23-20 outright)", "sharp_total": "UNDER 46.5", "source": "Meat & Potatoes / Flores Overlay", "notes": "Brian Flores pre-snap disguise confuses Goff; Goff outside Top-12 QBs" },
+    { "matchup": "KC @ DEN", "sharp_side": "KC ML (19-17)", "sharp_total": "UNDER 41.5 / 40.5", "source": "Kelly Best Bet", "notes": "5 of DEN last 7 under 41; Surtain shadows returning Rashee Rice; RJ Harvey OUT" },
+    { "matchup": "CHI @ SEA", "sharp_side": "CHI +3.5 (-120)", "sharp_total": "UNDER 46.5 (lean)", "source": "VR", "notes": "Bears 5-2 SU/ATS + acquired Jeffery Simmons vs Doubtful SEA LT Charles Cross" },
+    { "matchup": "LV @ NYJ", "sharp_side": "NYJ ML -120", "sharp_total": "PASS", "source": "Marco & VR Best Bet", "notes": "Geno Smith revenge game; Raiders cross-country travel + 49ers on deck + 28 PPG allowed" },
+    { "matchup": "ATL @ TB", "sharp_side": "ATL +3.5 / Outright 24-20", "sharp_total": "PASS (weather watch)", "source": "Marco Best Bet", "notes": "Bijan massive workload (Brian Robinson OUT), Baker thumb injury (11 att last week), AJ Terrell back" },
+    { "matchup": "ARI @ DAL", "sharp_side": "ARI +6.5", "sharp_total": "OVER 54.5", "source": "Kelly Barking Dog", "notes": "DAL on short week after MNF, allowing 25.7 PPG; Trey McBride field day" },
+    { "matchup": "PHI @ WAS", "sharp_side": "PHI +5.5 / +6.0 (lean, no bet on WAS -6)", "sharp_total": "PASS", "source": "Kelly & Marco", "notes": "Refuse to lay -6 with 1-win WAS; Tanner McKee starting for PHI with Smith & Wicks OUT" }
+  ]
+}

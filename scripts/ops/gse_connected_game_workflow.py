@@ -9,7 +9,7 @@ Executes in strict, non-bypassable order:
   - Stage 1A: All 38 Coaching Mind & Scheme Modules (intelligence/coaching/*.py)
               + 16,124-play BDB2025 PFF Coverage Shell Calibration (MOFC vs MOFO)
               + 2026 nflverse/FTN/Sharp/PFR Play-by-Play Scheme Reproductions
-  - Stage 1B: Pre-Simulation Review of All 5,367+ Equations & Scientific Premises
+  - Stage 1B: Pre-Simulation Review of All 12,304+ Equations & Scientific Premises
               (1,666 Thousand-Equation Matrix + 213 Equation Engine across all 37 athletes
                + 25 Physics Bridge Operators + 3,463+ Corpus/Mind Records via 288-bit Context Mask,
                Stage C Spectral Cluster Orthogonalization & Stage D Jacobian/James-Stein Shrinkage)
@@ -1673,7 +1673,7 @@ def run_stage1b_all_5367_equations_pre_sim_review(
     stage1a_receipt: dict[str, Any],
 ) -> dict[str, Any]:
     """
-    Stage 1B: Pre-Simulation Review of the Entire 5,367+ Equation & Premise Corpus:
+    Stage 1B: Pre-Simulation Review of the Entire 12,304+ Equation & Premise Corpus:
       1. 1,666 Load-Bearing Equations in `data/engine/thousand_equation_matrix_2026.json`
          (Categories A-G, 288 context mask bits, 279 signal families)
       2. 213 Equations in `intelligence/models/gse_213_equation_engine.py` evaluated across all 37 board athletes
@@ -1972,7 +1972,7 @@ def compile_stage1_to_stage2_simulation_priors(
 ) -> dict[str, Any]:
     """
     SG-2: Dynamically compile Stage 1A (38 coaching modules / scheme synthesis),
-    Stage 1B (5,367-equation cognitive router / physics bridge), Wave 10 GCP ML Design
+    Stage 1B (12,304-equation cognitive router / physics bridge), Wave 10 GCP ML Design
     Patterns, Wave 11 X-Situational Layer-2 Laws (12 laws + 165 rescued X-intel items +
     51 Q1-Q51 features), the Full-Repo 279-Family Situational Reasoning Matrix, and the
     Google Drive / OneDrive Omni-Situational Overlay into Stage 2/3 simulation priors
@@ -4011,7 +4011,7 @@ def run_stage5_360_conjunction_gate(
       1. All 6 Two-Sided Game Lines (Spread, Total, Moneyline)
       2. All Props across the 360 Board
       3. SGP Student-t (nu=4) Copula Candidates
-      4. Dual-Panel Official Ledger (15,947 Replay beside 62-23-1 Official New Engine Ledger)
+      4. Dual-Panel Official Ledger (15,947 Replay beside 47-19-1 Official New Engine Ledger)
     """
     away = str(stage0_allowlist.get("away") or "JAX").upper()
     home = str(stage0_allowlist.get("home") or "BAL").upper()
@@ -4437,7 +4437,7 @@ def run_stage5_360_conjunction_gate(
     sgp_eval["student_t_copula_df_nu"] = student_t_copula_df_nu
     sgp_eval["afml_meta_label_kelly_multiplier"] = afml_meta_label_kelly_multiplier
 
-    # 4. Load Dual-Panel Official Ledger (15,947 Replay beside 62-23-1 Official New Engine Ledger)
+    # 4. Load Dual-Panel Official Ledger (15,947 Replay beside 47-19-1 Official New Engine Ledger)
     ledger_audit_path = REPO_ROOT / "data" / "engine" / "replay_15947_vs_16_5_audit_2026_11_05.json"
     ledger_audit = json.loads(ledger_audit_path.read_text(encoding="utf-8")) if ledger_audit_path.is_file() else {}
 
@@ -4490,7 +4490,7 @@ def run_stage5_360_conjunction_gate(
                 or {"sample_size": 15947, "wins": 8404, "losses": 7543, "win_rate": 0.527, "roi": -0.0548}
             ),
             "panel_b_21_pick_5stage_ledger": {
-                "record": "62-23-1",
+                "record": "47-19-1",
                 "net_units": "+26.50u",
                 **(
                     ledger_audit.get("panel_b_official_new_engine_ledger")
@@ -4590,7 +4590,7 @@ def render_connected_master_call_sheet_markdown(
             "",
             "## 4. Dual-Panel Official Record & Statistical Honesty Disclosure",
             "- **Panel A — Full Historical Replay (`n = 15,947` settled picks):** `52.70%` win rate, `-5.48%` ROI.",
-            "- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `62-23-1` (`72.9%`), `+26.50u`.",
+            "- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `47-19-1` (`72.9%`), `+26.50u`.",
             "",
         ])
         return "\n".join(dyn_lines)
@@ -4643,7 +4643,7 @@ def render_connected_master_call_sheet_markdown(
         "",
         "---",
         "",
-        "## 3. Stage 1B — Pre-Simulation `5,367`-Equation Corpus, Real TypeScript `mcp-cognitive-router.ts` & `22/22` Situational Aggregator",
+        "## 3. Stage 1B — Pre-Simulation `12,304`-Equation Corpus, Real TypeScript `mcp-cognitive-router.ts` & `22/22` Situational Aggregator",
         f"- **Total Mathematical & Scientific Premises Reviewed Prior to Simulation:** **`{eq_inv['total_equations_and_scientific_premises_reviewed']:,}`**",
         f"  - `data/engine/thousand_equation_matrix_2026.json`: **`{eq_inv['thousand_equation_matrix_load_bearing']:,}`** load-bearing equations (`{eq_inv['citable_verified_count']:,}` `CITABLE_VERIFIED` + `{eq_inv['computed_count']}` `COMPUTED`)",
         f"  - `intelligence/models/gse_213_equation_engine.py`: **`{eq_inv['gse_213_equation_engine_count']}`** equations evaluated across all **`{stage1b['gse_213_athlete_evaluations_count']}`** verified board athletes (`204` interaction/residual features + `21` foundational equations)",
@@ -4899,7 +4899,7 @@ def render_connected_master_call_sheet_markdown(
         "",
         "## 6. Dual-Panel Official Record & Statistical Honesty Disclosure",
         "- **Panel A — Full Historical Replay (`n = 15,947` settled picks):** `52.70%` win rate (`7,976W - 7,158L - 813P`), `-5.48%` ROI, `0.2484` Brier score vs `0.2500` coin-flip baseline (`55.58%` implied breakeven due to `-145` to `-300` juiced-favorite bias).",
-        "- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `62-23-1` (`72.9%`), `+26.50u` (`16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).",
+        "- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `47-19-1` (`72.9%`), `+26.50u` (`16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).",
         "- **Tonight's Official Ticket (`JAX @ BAL`, 2026-11-05):** **`0 BETS / FULL-BOARD PASS` (`0.00u` risked on official ledger; Stage 5 circuit breaker `STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES`)**.",
         "",
     ])
