@@ -257,3 +257,33 @@ Automated execution log of `scripts/wiring/run_charge_regression_suite.py` acros
 | 9 | Every Drive/library claim reconciled to exact listing in CORPUS-CENSUS.csv with SHA/drive_id | **PASS** | `{"corpus_census_present": true}` |
 | 10 | Automated perturbation consumption tests present in tests/wiring/test_wave_consumption_proofs.py | **PASS** | `{"consumption_test_file_present": true}` |
 
+## WAVE_9 — `2026-11-07T10:25:16.035382+00:00` (`9/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **FAIL** | `{"active_hits": 1, "sample_hits": ["data/engine/week8_gate_decisions_2026_10_30.jsonl.BAK:196 (NYJ -1.5)"]}` |
+| 5 | Verifiable test suite execution | **PASS** | `{"detail": "7 passed in 32.16s"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled to exact listing in CORPUS-CENSUS.csv with SHA/drive_id | **PASS** | `{"corpus_census_present": true}` |
+| 10 | Automated perturbation consumption tests present in tests/wiring/test_wave_consumption_proofs.py | **PASS** | `{"consumption_test_file_present": true}` |
+
+## WAVE_9 — `2026-11-07T10:28:47.459353+00:00` (`10/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **PASS** | `{"active_hits": 0, "sample_hits": []}` |
+| 5 | Verifiable test suite execution | **PASS** | `{"detail": "7 passed in 31.48s"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled to exact listing in CORPUS-CENSUS.csv with SHA/drive_id | **PASS** | `{"corpus_census_present": true}` |
+| 10 | Automated perturbation consumption tests present in tests/wiring/test_wave_consumption_proofs.py | **PASS** | `{"consumption_test_file_present": true}` |
+

@@ -92,6 +92,23 @@ from intelligence.reasoning.equation_gate import (  # noqa: E402
     audit_12304_equation_catalog_integrity,
     evaluate_12304_equations_cognitive_router,
 )
+from intelligence.context.context_packet_builder import (  # noqa: E402
+    build_context_packet,
+)
+from intelligence.reasoning.workflow_runner import (  # noqa: E402
+    execute_reasoning_workflow,
+)
+
+
+def build_armed_context_and_reasoning_trace(
+    game_id: str = "2024_10_CIN_BAL",
+    as_of_utc: str = "2024-11-07T00:00:00Z",
+    persist: bool = False,
+) -> dict[str, Any]:
+    """Build a point-in-time ContextPacket and execute the 26-layer ReasoningTrace workflow."""
+    pkt = build_context_packet(game_id=game_id, as_of_utc=as_of_utc, persist=persist)
+    trace = execute_reasoning_workflow(pkt, persist=persist)
+    return {"context_packet": pkt, "reasoning_trace": trace}
 
 _STAGE3_4_EMPIRICAL_VECTORS_CACHE: dict[tuple[str, str, str, str], np.ndarray] = {}
 try:

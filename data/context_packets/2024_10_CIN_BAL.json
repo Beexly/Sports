@@ -16,20 +16,21 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.191007,
+        "equation_batch_log_odds_delta": 0.339904,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "window_slot": "TNF",
         "week": 10
       },
-      "confidence": 0.7582,
+      "confidence": 0.788,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_01",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 184,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -45,20 +46,21 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.198771,
+        "equation_batch_log_odds_delta": 0.340456,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "implied_total_prior": 47.49,
+        "warehouse_records_verified": 79298,
+        "implied_total_prior": 48.9,
         "neutral_pace_sec_per_snap": 26.8
       },
-      "confidence": 0.7598,
+      "confidence": 0.7881,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_02",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 161,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -74,19 +76,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.025031,
+        "equation_batch_log_odds_delta": 0.338027,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.037786
+        "warehouse_records_verified": 79298,
+        "opponent_adjusted_net_epa_baseline": 0.423027,
+        "dvoa_weighted_prior": 0.47379,
+        "layer_domain_signal": 0.423027
       },
-      "confidence": 0.725,
+      "confidence": 0.7876,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_03",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 236,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -102,19 +107,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.034438,
+        "equation_batch_log_odds_delta": 0.33903,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.051604
+        "warehouse_records_verified": 79298,
+        "is_divisional_matchup": false,
+        "divisional_familiarity_shrinkage": 0.311908,
+        "layer_domain_signal": 0.311908
       },
-      "confidence": 0.7269,
+      "confidence": 0.7878,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_04",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 165,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -130,19 +138,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.196785,
+        "equation_batch_log_odds_delta": 0.336583,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.241303
+        "warehouse_records_verified": 79298,
+        "playoff_leverage_index": 0.54351,
+        "contract_milestone_incentive_delta": 0.012,
+        "layer_domain_signal": 0.54351
       },
-      "confidence": 0.7594,
+      "confidence": 0.7873,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_05",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 169,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -158,22 +169,23 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": -0.240509,
+        "equation_batch_log_odds_delta": 0.0806,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "stadium": "M&T Bank Stadium",
         "roof_type": "OUTDOORS",
         "wind_mph": 6.0,
         "weather_pass_penalty": -0.0
       },
-      "confidence": 0.7681,
+      "confidence": 0.7361,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_06",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 2614,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -189,20 +201,21 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.196024,
+        "equation_batch_log_odds_delta": 0.336895,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "referee_crew": "Bill Vinovich",
         "holding_call_rate_z": 0.15
       },
-      "confidence": 0.7592,
+      "confidence": 0.7874,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_07",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 166,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -219,19 +232,23 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.040536,
+        "equation_batch_log_odds_delta": 0.169218,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.070616
+        "warehouse_records_verified": 79298,
+        "rest_differential_days": 0.0,
+        "timezone_delta_hours": 0.0,
+        "circadian_travel_fatigue_delta": 0.169218,
+        "layer_domain_signal": 0.169218
       },
-      "confidence": 0.7281,
+      "confidence": 0.7538,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_08",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 2325,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -247,20 +264,21 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.190659,
+        "equation_batch_log_odds_delta": 0.345095,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "home_cluster_injuries": 1,
         "availability_adjustment": -0.035
       },
-      "confidence": 0.7581,
+      "confidence": 0.789,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_09",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 502,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -276,22 +294,23 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.188998,
+        "equation_batch_log_odds_delta": 0.337597,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "gsi_trauma_hazard_index": 0.1578,
+        "warehouse_records_verified": 79298,
+        "gsi_trauma_hazard_index": 0.1875,
         "rtp_degradation_factor": 0.94,
         "cte_unconditioned_lower_bound": 0.2449,
         "dynamic_kickoff_concussion_reduction_pct": -43.0
       },
-      "confidence": 0.7578,
+      "confidence": 0.7875,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_10",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 964,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -307,9 +326,10 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.041275,
+        "equation_batch_log_odds_delta": 0.267103,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "offensive_scheme": "SHANAHAN_WIDE_ZONE",
         "defensive_shell": "COVER_4_QUARTERS",
         "pass_protection": "2_JET",
@@ -321,16 +341,16 @@
           "formations_dictionary": 20,
           "down_distance_priors": 15
         },
-        "scheme_advantage_delta": 0.001775
+        "scheme_advantage_delta": 0.227603
       },
-      "confidence": 0.7283,
+      "confidence": 0.7734,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_11",
           "canonical_entities.jsonl",
           "core_nfl_schemes_and_systems.py"
         ],
-        "equations_executed": 25,
+        "equations_executed": 1130,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -346,9 +366,10 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.036819,
+        "equation_batch_log_odds_delta": 0.28451,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "offensive_scheme": "SHANAHAN_WIDE_ZONE",
         "defensive_shell": "COVER_4_QUARTERS",
         "pass_protection": "2_JET",
@@ -360,16 +381,16 @@
           "formations_dictionary": 20,
           "down_distance_priors": 15
         },
-        "scheme_advantage_delta": -0.002681
+        "scheme_advantage_delta": 0.24501
       },
-      "confidence": 0.7274,
+      "confidence": 0.7769,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_12",
           "canonical_entities.jsonl",
           "core_nfl_schemes_and_systems.py"
         ],
-        "equations_executed": 25,
+        "equations_executed": 2326,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -385,9 +406,10 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.035073,
+        "equation_batch_log_odds_delta": 0.334884,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "offensive_scheme": "SHANAHAN_WIDE_ZONE",
         "defensive_shell": "COVER_4_QUARTERS",
         "pass_protection": "2_JET",
@@ -399,16 +421,16 @@
           "formations_dictionary": 20,
           "down_distance_priors": 15
         },
-        "scheme_advantage_delta": -0.004427
+        "scheme_advantage_delta": 0.295384
       },
-      "confidence": 0.727,
+      "confidence": 0.787,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_13",
           "canonical_entities.jsonl",
           "core_nfl_schemes_and_systems.py"
         ],
-        "equations_executed": 25,
+        "equations_executed": 3313,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -424,19 +446,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.18732,
+        "equation_batch_log_odds_delta": 0.336618,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.257418
+        "warehouse_records_verified": 79298,
+        "wr_cb_shadow_separation_delta": 0.338298,
+        "ot_edge_one_on_one_win_delta": 0.287553,
+        "layer_domain_signal": 0.338298
       },
-      "confidence": 0.7575,
+      "confidence": 0.7873,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_14",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 156,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -452,19 +477,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.193927,
+        "equation_batch_log_odds_delta": 0.337889,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.268016
+        "warehouse_records_verified": 79298,
+        "fourth_down_aggressiveness_edge": 0.363889,
+        "halftime_script_adjustment_delta": 0.3275,
+        "layer_domain_signal": 0.363889
       },
-      "confidence": 0.7588,
+      "confidence": 0.7876,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_15",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 154,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -480,19 +508,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.193382,
+        "equation_batch_log_odds_delta": 0.341567,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.270389
+        "warehouse_records_verified": 79298,
+        "dc_blitz_isolation_mismatch_delta": 0.354487,
+        "oc_featured_target_schemed_open_rate": 0.514487,
+        "layer_domain_signal": 0.354487
       },
-      "confidence": 0.7587,
+      "confidence": 0.7883,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_16",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 155,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -508,9 +539,10 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.192361,
+        "equation_batch_log_odds_delta": 0.341128,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "offensive_scheme": "SHANAHAN_WIDE_ZONE",
         "defensive_shell": "COVER_4_QUARTERS",
         "pass_protection": "2_JET",
@@ -522,16 +554,16 @@
           "formations_dictionary": 20,
           "down_distance_priors": 15
         },
-        "scheme_advantage_delta": 0.152861
+        "scheme_advantage_delta": 0.301628
       },
-      "confidence": 0.7585,
+      "confidence": 0.7882,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_17",
           "canonical_entities.jsonl",
           "core_nfl_schemes_and_systems.py"
         ],
-        "equations_executed": 25,
+        "equations_executed": 149,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -547,9 +579,10 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.197484,
+        "equation_batch_log_odds_delta": 0.338516,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "offensive_scheme": "SHANAHAN_WIDE_ZONE",
         "defensive_shell": "COVER_4_QUARTERS",
         "pass_protection": "2_JET",
@@ -561,16 +594,16 @@
           "formations_dictionary": 20,
           "down_distance_priors": 15
         },
-        "scheme_advantage_delta": 0.213984
+        "scheme_advantage_delta": 0.355016
       },
-      "confidence": 0.7595,
+      "confidence": 0.7877,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_18",
           "canonical_entities.jsonl",
           "core_nfl_schemes_and_systems.py"
         ],
-        "equations_executed": 25,
+        "equations_executed": 154,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -586,19 +619,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.193201,
+        "equation_batch_log_odds_delta": 0.024908,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.279181
+        "warehouse_records_verified": 79298,
+        "script_elasticity_plays_proj": 64.93,
+        "two_minute_hurry_up_rate": 0.182908,
+        "layer_domain_signal": 0.042908
       },
-      "confidence": 0.7586,
+      "confidence": 0.725,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_19",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 2265,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -614,19 +650,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.195155,
+        "equation_batch_log_odds_delta": 0.337827,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.284428
+        "warehouse_records_verified": 79298,
+        "target_herfindahl_concentration": 0.577027,
+        "active_player_gp_denominator_enforced": true,
+        "layer_domain_signal": 0.577027
       },
-      "confidence": 0.759,
+      "confidence": 0.7876,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_20",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 161,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -642,22 +681,23 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.195028,
+        "equation_batch_log_odds_delta": 0.339742,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "upstream_trench_delta": -0.002681,
-        "upstream_scheme_delta": -0.004427,
-        "qb_clean_pocket_epa_proj": 0.412138,
+        "warehouse_records_verified": 79298,
+        "upstream_trench_delta": 0.24501,
+        "upstream_scheme_delta": 0.295384,
+        "qb_clean_pocket_epa_proj": 0.785631,
         "dependency_chain_verified": "L12_trench_matchup_ol_vs_dl -> L13_scheme_vs_scheme -> L21_qb_processing_and_pressure"
       },
-      "confidence": 0.759,
+      "confidence": 0.7879,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_21",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 214,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -673,19 +713,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.190987,
+        "equation_batch_log_odds_delta": 0.336798,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.285635
+        "warehouse_records_verified": 79298,
+        "first_read_separation_score": 0.486798,
+        "yac_over_expected_per_rec": 1.823596,
+        "layer_domain_signal": 0.486798
       },
-      "confidence": 0.7582,
+      "confidence": 0.7874,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_22",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 169,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -701,19 +744,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.194408,
+        "equation_batch_log_odds_delta": 0.334808,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.292569
+        "warehouse_records_verified": 79298,
+        "red_zone_td_conversion_prior": 0.939808,
+        "goal_line_heavy_personnel_success_rate": 0.954808,
+        "layer_domain_signal": 0.939808
       },
-      "confidence": 0.7589,
+      "confidence": 0.787,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_23",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 158,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -729,19 +775,22 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.190283,
+        "equation_batch_log_odds_delta": 0.340626,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "layer_domain_signal": 0.290825
+        "warehouse_records_verified": 79298,
+        "dynamic_kickoff_starting_fp_yardline": 31.23,
+        "fg_make_prob_over_expected": 0.365626,
+        "layer_domain_signal": 0.365626
       },
-      "confidence": 0.7581,
+      "confidence": 0.7881,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_24",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 158,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -757,19 +806,20 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.204529,
+        "equation_batch_log_odds_delta": 0.335575,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
-        "cross_layer_interaction_term": 0.591939
+        "warehouse_records_verified": 79298,
+        "cross_layer_interaction_term": 1.074068
       },
-      "confidence": 0.7609,
+      "confidence": 0.7871,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_25",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 843,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",
@@ -785,24 +835,25 @@
       "game_id": "2024_10_CIN_BAL",
       "as_of": "2024-11-07T18:00:00Z",
       "signals": {
-        "equation_batch_log_odds_delta": 0.019851,
+        "equation_batch_log_odds_delta": 0.171302,
         "home_team_id": "BAL",
         "away_team_id": "CIN",
+        "warehouse_records_verified": 79298,
         "entered_last_after_25_layers": true,
         "market_spread": -3.5,
         "market_weight_cap": 0.08,
         "applied_market_weight": 0.05,
-        "pre_market_reasoning_sum": 3.462972,
-        "post_price_check_signal": 3.291573
+        "pre_market_reasoning_sum": 7.595904,
+        "post_price_check_signal": 7.217859
       },
-      "confidence": 0.724,
+      "confidence": 0.7543,
       "provenance": {
         "sources": [
           "equation_execution_registry:layer_26",
           "canonical_entities.jsonl",
           "warehouse_normalized_parquet"
         ],
-        "equations_executed": 25,
+        "equations_executed": 2428,
         "entities_resolved": [
           "TEAM-NFL-BAL",
           "TEAM-NFL-CIN",

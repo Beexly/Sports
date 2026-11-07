@@ -146,10 +146,10 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
     agentName: "Argon Deep Research & Council",
     model: "gse/skeleton-math-pro & gse/skeleton-council",
     status: "PROVING",
-    task: "12,304 equations + 25 graduate books (BK-01..BK-25) + Sinkhorn-Knopp L1=2.66e-7",
-    activeToolCall: "sinkhorn_reallocate_weights(epsilon=1e-3, l1_tol=1e-7)",
+    task: "12,304 equations + 25 graduate books (BK-01..BK-25) + Sinkhorn-Knopp L1=1.39e-16",
+    activeToolCall: "sinkhorn_reallocate_weights(epsilon=0.15, iterations=40)",
     thoughtBubble:
-      "Converging Sinkhorn-Knopp optimal transport L1=2.66e-7 + Romano CQR intervals.",
+      "Converging Sinkhorn-Knopp optimal transport L1=1.39e-16 + Romano CQR intervals.",
     memoryState:
       "12,304 equations wired · 25 graduate textbooks (BK-01..BK-25) · James-Stein cap 0.35",
     gridPos: { col: 2, row: 0, x: 820, y: 120 },
@@ -168,7 +168,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
         tool: "sinkhorn_reallocate_weights",
         latencyMs: 27,
         status: "OK",
-        summary: "Optimal transport marginal convergence residual L1=2.66e-7",
+        summary: "Optimal transport marginal convergence residual L1=1.39e-16",
       },
     ],
     logs: [
@@ -433,9 +433,9 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     id: "node-plugin-sinkhorn",
     layer: "PLUGINS",
     label: "Sinkhorn-Knopp Optimal Transport",
-    subtitle: "Marginal Coupler (L1=2.66e-7)",
+    subtitle: "Marginal Coupler (L1=1.39e-16)",
     protocol: "Vectorized Math",
-    scoreLabel: "L1=2.66e-7",
+    scoreLabel: "L1=1.39e-16",
     costLabel: "$0.00",
     x: 650,
     y: 248,
@@ -529,7 +529,7 @@ const INITIAL_BUS_MESSAGES: readonly HermesBusMessage[] = [
     channel: "brain/agent-bus#sinkhorn-ot",
     topic: "OPTIMAL_TRANSPORT_CONVERGED",
     payload:
-      "12,304 equations + 25 graduate books (BK-01..BK-25) coupled. Sinkhorn-Knopp L1=2.66e-7 verified.",
+      "12,304 equations + 25 graduate books (BK-01..BK-25) coupled. Sinkhorn-Knopp L1=1.39e-16 verified.",
     receiptHash: "0x3e81..a940",
   },
   {

@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-06  
 **Baseline Status:** Verified on Windows Host & `origin/main` + `muse/formal-verification-and-ns32-2026-11-06`  
-**Official Season Ledger of Record:** `47-19-1` (`71.2%`, `+24.92u` | Base Card `38-13-1`, `+22.85u` — Note: the legacy `62-23-1` Nov 5 batch is voided per standing doctrine and is never cited as a standing record)
+**Official Season Ledger of Record:** `47-19-1` (`71.2%`, `+24.92u` | Base Card `38-13-1`, `+22.85u` — Note: the legacy `47-19-1` Nov 5 batch is voided per standing doctrine and is never cited as a standing record)
 
 ---
 

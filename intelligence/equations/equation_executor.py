@@ -186,11 +186,12 @@ def execute_layer_equation_family_batch(
     feature_vector: Dict[str, float],
     family_weight_overrides: Optional[Dict[str, float]] = None,
     registry_path: Optional[Path] = None,
-    max_equations: int = 120,
+    max_equations: int = 0,
 ) -> Dict[str, Any]:
     """
-    Executes wired_and_tested equations assigned to target_layer (1..26) using their
-    real mathematical formulas, coefficients, and parameter bindings, then applies
+    Executes ALL wired_and_tested equations assigned to target_layer (1..26) using their
+    real mathematical formulas, coefficients, and parameter bindings (max_equations=0 means
+    execute 100% of registered equations in the layer with zero truncation), then applies
     Stage D Positive-Part James-Stein shrinkage capped at |delta_log_odds| <= 0.35.
     """
     reg_file = Path(registry_path) if registry_path else DEFAULT_REGISTRY_PATH

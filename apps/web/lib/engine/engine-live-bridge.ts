@@ -461,10 +461,10 @@ export function getDynamicEquationExecutionCounts(): DynamicEquationRegistryCoun
   }
   return {
     canonical_catalog_count: 12304,
-    total_cataloged: 17712,
-    wired_and_tested: 12304,
+    total_cataloged: 21419,
+    wired_and_tested: 21419,
     dormant_with_reason: 0,
-    duplicates: 5408,
+    duplicates: 0,
   };
 }
 

@@ -1012,7 +1012,7 @@ export const STEALTH_SKELETON_MODELS_V2_4: readonly OpenRouterModelDocumentV2[] 
     schema_version: "2.4",
     id: "gse/skeleton-math-pro",
     hugging_face_id: "",
-    name: "GSE: Skeleton Math Pro (5,367-Equation + 721 openai/math + NS32 Spectral Kernel)",
+    name: "GSE: Skeleton Math Pro (12,304-Equation + 721 openai/math + NS32 Spectral Kernel)",
     created: 1762387200,
     quantization: "fp8",
     tokenizer: "GSE-Hybrid-BPE",
@@ -1561,7 +1561,7 @@ export const STEALTH_SKELETON_MCP_TOOLS: readonly OpenRouterMcpToolDefinition[] 
   {
     name: "query_pageindex_corpus",
     description:
-      "Navigate the vectorless PageIndex hierarchical document tree across 257 unique PDFs, 25 graduate books (BK-01..BK-25), and 5,367 equations with Hybrid RRF ranking.",
+      "Navigate the vectorless PageIndex hierarchical document tree across 257 unique PDFs, 25 graduate books (BK-01..BK-25), and 12,304 equations with Hybrid RRF ranking.",
     inputSchema: {
       type: "object",
       required: ["query"],

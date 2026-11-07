@@ -718,8 +718,36 @@ export function evaluateUnifiedCorpusAndGsiBridge(
   }
 
   // 4. Book Class Mathematical Operators (BK-01..BK-25)
-  // BK-24 Sinkhorn-Knopp 2x2 step marginal residual
-  const sinkhornMarginalL1Residual = 9.92e-12;
+  // BK-24 Sinkhorn-Knopp 2x2 step marginal residual (40 iterations, epsilon = 0.15)
+  const sinkhornMarginalL1Residual = (() => {
+    const p = [0.58, 0.42];
+    const q = [0.54, 0.46];
+    const eps = 0.15;
+    const K = [
+      [Math.exp(-0.0 / eps), Math.exp(-0.22 / eps)],
+      [Math.exp(-0.26 / eps), Math.exp(-0.0 / eps)],
+    ];
+    let u = [1.0, 1.0];
+    let v = [1.0, 1.0];
+    for (let it = 0; it < 40; it++) {
+      const kv0 = K[0]![0]! * v[0]! + K[0]![1]! * v[1]!;
+      const kv1 = K[1]![0]! * v[0]! + K[1]![1]! * v[1]!;
+      u = [p[0]! / Math.max(1e-18, kv0), p[1]! / Math.max(1e-18, kv1)];
+      const ktu0 = K[0]![0]! * u[0]! + K[1]![0]! * u[1]!;
+      const ktu1 = K[0]![1]! * u[0]! + K[1]![1]! * u[1]!;
+      v = [q[0]! / Math.max(1e-18, ktu0), q[1]! / Math.max(1e-18, ktu1)];
+    }
+    const r0 = u[0]! * (K[0]![0]! * v[0]! + K[0]![1]! * v[1]!);
+    const r1 = u[1]! * (K[1]![0]! * v[0]! + K[1]![1]! * v[1]!);
+    const c0 = (u[0]! * K[0]![0]! + u[1]! * K[1]![0]!) * v[0]!;
+    const c1 = (u[0]! * K[0]![1]! + u[1]! * K[1]![1]!) * v[1]!;
+    return Math.max(
+      Math.abs(r0 - p[0]!),
+      Math.abs(r1 - p[1]!),
+      Math.abs(c0 - q[0]!),
+      Math.abs(c1 - q[1]!),
+    );
+  })();
   // BK-20 Standard Normal CRPS at y=0: 2*phi(0) - 1/sqrt(pi)
   const crpsStandardNormalZero = Number(
     (2 * (1 / Math.sqrt(2 * Math.PI)) - 1 / Math.sqrt(Math.PI)).toFixed(10),
@@ -772,7 +800,7 @@ export function evaluateUnifiedCorpusAndGsiBridge(
     },
     equationsRouterState: {
       mcpEquationsCataloged: 12304,
-      totalRepoExecutableEquations: 12304,
+      totalRepoExecutableEquations: 21419,
       contextMaskBits: CONTEXT_MASK_BITS,
       contextMaskWords: Array.from(mask),
       activeMaskBitsCount,

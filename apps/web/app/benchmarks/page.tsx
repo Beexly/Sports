@@ -138,7 +138,7 @@ export default function BenchmarksPage(): JSX.Element {
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
                 Sinkhorn-Knopp Convergence
               </p>
-              <p className="mt-1 font-mono text-2xl font-bold text-white">2.66e-7 L1</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-white">1.39e-16 L1</p>
               <p className="mt-0.5 text-xs text-[#8F8A82]">40-Iter Entropic Optimal Transport</p>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function BenchmarksPage(): JSX.Element {
                 </strong>{" "}
                 Replaces Gaussian independence assumptions with 40-iteration log-domain
                 Sinkhorn-Knopp scaling (epsilon = 0.15) across 10,000 correlated world trajectories,
-                converging to L1 marginal residual = 2.66e-7.
+                converging to L1 marginal residual = 1.39e-16.
               </li>
               <li>
                 <strong className="text-white">

@@ -94,7 +94,10 @@ def validate_reasoning_trace_schema(trace: Dict[str, Any]) -> None:
 def execute_reasoning_workflow(
     context_packet: Dict[str, Any],
     write_to_disk: bool = True,
+    persist: bool | None = None,
 ) -> Dict[str, Any]:
+    if persist is not None:
+        write_to_disk = persist
     validate_context_packet_schema(context_packet)
     game_id = str(context_packet["game_id"])
     packet_id = str(context_packet["packet_id"])

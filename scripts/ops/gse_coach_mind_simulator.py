@@ -1774,7 +1774,70 @@ def main():
     ap.add_argument("--week", type=int, default=SLATE_WEEK)
     ap.add_argument("--sealed-json", default="/opt/model/sealed_baseline.json")
     ap.add_argument("--sims", type=int, default=5000)
+    ap.add_argument(
+        "--from-context-packet",
+        default="",
+        help="Path to ContextPacket JSON produced by intelligence.context.context_packet_builder",
+    )
+    ap.add_argument(
+        "--from-reasoning-trace",
+        default="",
+        help="Path to ReasoningTrace JSON produced by intelligence.reasoning.workflow_runner",
+    )
+    ap.add_argument(
+        "--dry-run-contract",
+        action="store_true",
+        help="Validate ContextPacket and ReasoningTrace handoff contract without running simulations",
+    )
     args = ap.parse_args()
+
+    if args.from_context_packet or args.from_reasoning_trace:
+        pkt_obj = {}
+        trace_obj = {}
+        if args.from_context_packet:
+            with open(args.from_context_packet, "r", encoding="utf-8") as fh:
+                pkt_obj = json.load(fh)
+        if args.from_reasoning_trace:
+            with open(args.from_reasoning_trace, "r", encoding="utf-8") as fh:
+                trace_obj = json.load(fh)
+        game_id = str(pkt_obj.get("game_id") or trace_obj.get("game_id") or "2024_10_CIN_BAL")
+        away_tm = str(pkt_obj.get("away_team") or (game_id.split("_")[2] if len(game_id.split("_")) >= 4 else "CIN"))
+        home_tm = str(pkt_obj.get("home_team") or (game_id.split("_")[3] if len(game_id.split("_")) >= 4 else "BAL"))
+        layers_list = trace_obj.get("layers", [])
+        cum_delta = float(trace_obj.get("cumulative_log_odds_delta", 0.0) or 0.0)
+        if args.dry_run_contract:
+            print(
+                json.dumps(
+                    {
+                        "status": "ARMED_CONTRACT_VALIDATED",
+                        "game_id": game_id,
+                        "away_team": away_tm,
+                        "home_team": home_tm,
+                        "context_packet_loaded": bool(pkt_obj),
+                        "reasoning_trace_loaded": bool(trace_obj),
+                        "layers_executed_count": len(layers_list),
+                        "cumulative_log_odds_delta": cum_delta,
+                        "simulation_executed": False,
+                    }
+                )
+            )
+            return
+        sealed_obj, digest = load_sealed_object_readonly(args.sealed_json)
+        res = simulate_matchup_pbp(
+            away_tm,
+            home_tm,
+            [],
+            [],
+            sealed_obj,
+            digest,
+            n_sims=args.sims,
+            seed=700,
+        )
+        res["from_context_packet"] = args.from_context_packet
+        res["from_reasoning_trace"] = args.from_reasoning_trace
+        res["reasoning_trace_cumulative_log_odds_delta"] = cum_delta
+        print(json.dumps(res, default=str))
+        return
     try:
         from scripts.ops.preflight_live_roster_injury_gate import require_week
     except ModuleNotFoundError:  # run directly as a script

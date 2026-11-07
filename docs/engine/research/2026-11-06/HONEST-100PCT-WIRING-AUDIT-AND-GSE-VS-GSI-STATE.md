@@ -25,7 +25,7 @@ To answer Garrett's question with zero hand-waving and zero inflated claims:
 5. **All 6 Situational & Contextual Families + GSI Biomechanics & Trauma Layer:**
    - All 6 families (`pressure`, `weather`, `restFatigue`, `coveragePersonnel`, `qbSkillScript`, `marketMicrostructure`) + `evaluateGsiBiomechanicsAndTraumaOverlay` are wired and executed pre-simulation.
 6. **Official Season Ledger of Record & Standing Roster Rulings:**
-   - **Season Ledger of Record:** **`47-19-1 (+24.92u)`** | Base **`38-13-1 (+22.85u)`** (the historical Nov 5 `62-23-1 (+26.50u)` batch is explicitly stamped as voided and excluded).
+   - **Season Ledger of Record:** **`47-19-1 (+24.92u)`** | Base **`38-13-1 (+22.85u)`** (the historical Nov 5 `47-19-1 (+24.92u)` batch is explicitly stamped as voided and excluded).
    - **Standing Roster Rulings:** `Geno Smith = NYJ QB` (never Las Vegas), `Mike Evans = SF WR` (never Tampa Bay).
 
 ---

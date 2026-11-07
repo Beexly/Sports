@@ -8,10 +8,10 @@ Every finding from Dual Counting, Charge Regression Suite, 25 Seeded Spot Checks
 |---|---:|---|
 | `missing_data` | 0 | No |
 | `stale_data` | 1 | No |
-| `schema_mismatch` | 2 | No |
-| `identity_mismatch` | 0 | No |
+| `schema_mismatch` | 3 | Yes (Systemic upstream catalog + layer execution audit applied) |
+| `identity_mismatch` | 1 | No |
 | `dead_code` | 0 | No |
-| `false_inherited_claim` | 2 | No |
+| `false_inherited_claim` | 3 | Yes (Systemic Sinkhorn residual & literal verification applied) |
 | `environment` | 1 | No |
 | `unknown` | 0 | No |
 
@@ -77,3 +77,10 @@ Every finding from Dual Counting, Charge Regression Suite, 25 Seeded Spot Checks
 - **Root Cause:** Initial Wave 5 builder populated `"formula_spec": "f_EQ_..."` placeholders in `data/equations/equation_execution_registry.jsonl` instead of preserving the real mathematical expressions, coefficients, parameter bindings, and book/PDF/monograph equations, and `intelligence/equations/equation_executor.py` used a synthetic `math.tanh` template.
 - **Fix Applied:** Built and ran `scripts/wiring/build_full_integrity_equation_registry.py` (`21,419` real, formula-bearing equations across `12,304` catalog + `1,666` matrix + `3,742` crosswalk + `33` graduate monographs `BK-01..BK-25`/`GAP-BK-01..08` + `516` extracted Drive PDF book formulas + `177` local football PDF/GitHub repo equations + `2,949` extracted PDF theorems/lemmas/equations + `32` Sovereign 20-Downloads equations, with `0` `"f_EQ_..."` placeholders), upgraded `intelligence/equations/equation_executor.py` with real operator kernels (`linear_logit`, `bilinear_interaction`, `exponential_survival`, `conformal_quantile`, `copula_tail`, `bellman_advantage`, `sheaf_laplacian`, `rational_pade`) and `execute_book_equations()`, and wired `evaluate_5track_l1_to_l5_and_7step_weekly_cycle()` + `execute_book_equations()` directly into `intelligence/reasoning/reasoning_workflow_assembler.py`.
 - **Verification:** `python -m pytest tests/wiring/test_deep_book_equation_data_integrity.py -v` (`6 passed`).
+
+### [CL-W9-005] 4-Voice Council (`Architect`, `Skeptic`, `Pragmatist`, `Critic`) & Motif QA (`F-01..F-12`) Full Remediation
+- **Wave:** `WAVE_9`
+- **Taxonomy Class:** `schema_mismatch` / `identity_mismatch` / `false_inherited_claim`
+- **Root Cause:** Combined audit from the 4-Voice Council and Motif's merged QA suite (`docs/wiring/qa/*`) identified: (1) upstream equation catalog defects (`F-01` duplicate/unindexed IDs in `thousand_equation_matrix_2026.json`, `F-05` unparameterized PDF book formulas, `F-07` missing `book_id` on `books_and_repos_ingest_2026.jsonl` and Sovereign Downloads, `F-09` `DOMAIN_TO_LAYER` alignment with `ALL_26_LAYERS_META`, `F-12` execution cap `max_equations=128` limiting runtime execution instead of running all `21,419` equations); (2) `rosters_2026.csv` (`4,538` rows) and `pennydata_2026_player_week_stats.csv` (`7,447` rows) not merged into Wave 4/Wave 6, plus non-32 team code `"2TM"` in `pennydata`; (3) layers `L01..L25` not all consuming `WarehouseLoader` with distinct domain-specific equations; (4) refuted Sinkhorn residual `2.66e-7` in UI/bridge files instead of the verified `1.39e-16` at `(40, 0.15)`; and (5) `gse_coach_mind_simulator.py` missing `--from-context-packet` / `--from-reasoning-trace` CLI flags.
+- **Fix Applied:** Added `repair_upstream_catalogs()` in `scripts/wiring/build_full_integrity_equation_registry.py` and regenerated `data/equations/equation_execution_registry.jsonl` (`21,419` equations); set `max_equations=0` in `intelligence/equations/equation_executor.py` and wired `WarehouseLoader` + distinct domain formulas across all 26 layers in `intelligence/reasoning/layers/layer_registry.py`; merged `rosters_2026.csv` and `pennydata_2026_player_week_stats.csv` with `valid_32_teams` filtering (`6,558` canonical entities); replaced `2.66e-7` with `1.39e-16` (`(40, 0.15)`); added `--from-context-packet`, `--from-reasoning-trace`, and `--dry-run-contract` to `scripts/ops/gse_coach_mind_simulator.py`; created `intelligence/context/context_packet_builder.py`; and upgraded `scripts/wiring/verify_armed_workflows.py` with `stage_8_live_runtime_execution_proofs`.
+- **Verification:** All 4 Wave scripts (`run_wave4`, `run_wave6`, `run_wave7`, `run_wave8`), full `pytest` suite (`17 passed`), `vitest`, and all 6 verification gates pass with exit code `0`.

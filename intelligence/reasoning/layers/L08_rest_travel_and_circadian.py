@@ -12,7 +12,7 @@ from intelligence.reasoning.layers.layer_registry import ALL_26_LAYERS_META, exe
 
 LAYER_NUMBER = 8
 LAYER_ID = "L08_rest_travel_and_circadian"
-CANONICAL_STAGE_SLUG = "player_vs_player"
+CANONICAL_STAGE_SLUG = "rest_travel_and_circadian"
 EQUATION_FAMILY = "fatigue"
 
 

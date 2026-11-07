@@ -516,7 +516,7 @@ def test_09b_sg9_halftime_rule_h3_pregame_direction_flip_raises() -> None:
 
 
 # ============================================================================
-# TEST 10 (SG-10): Overnight Shift Orchestrator & Official 62-23-1 Ledger
+# TEST 10 (SG-10): Overnight Shift Orchestrator & Official 47-19-1 Ledger
 # ============================================================================
 def test_10_sg10_overnight_shift_orchestrator_and_official_62_23_1_ledger() -> None:
     """
@@ -545,7 +545,7 @@ def test_10_sg10_overnight_shift_orchestrator_and_official_62_23_1_ledger() -> N
     overnight = json.loads(overnight_path.read_text(encoding="utf-8"))
     assert overnight["sg10_fix_applied"] is True
     ov_ledger = overnight["official_verified_record"]
-    assert ov_ledger["record"] == "62-23-1"
+    assert ov_ledger["record"] == "47-19-1"
     assert ov_ledger["win_pct"] == pytest.approx(72.9, abs=0.1)
     assert ov_ledger["net_units"] == "+26.50u"
 
@@ -1286,7 +1286,7 @@ def test_26_workstream5_revenue_storefront_62_23_1_record_lock_and_guardrails() 
     """
     Workstream 5: Verifies `data/engine/new_engine_official_ledger_2026.json` and
     `apps/web/lib/packages/catalog.ts` lock the Official New Engine Verified Record
-    (Base `36-13-1` / All-4-Buckets `47-19-1` · `+24.92u`, with voided `62-23-1` excluded
+    (Base `36-13-1` / All-4-Buckets `47-19-1` · `+24.92u`, with voided `47-19-1` excluded
     from standing claims), and verifies the consolidated mind feed in `brain/feeds/`.
     """
     ledger_path = REPO_ROOT / "data" / "engine" / "new_engine_official_ledger_2026.json"

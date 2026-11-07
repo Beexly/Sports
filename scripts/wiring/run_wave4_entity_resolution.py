@@ -221,35 +221,91 @@ def main() -> None:
             )
             counts_by_type["player"] += 1
 
-    # 6. Load active players from warehouse raw roster CSV & injuries_2026.csv
+    # 6. Load authoritative 2026 rosters (data/nflverse/rosters_2026.csv) FIRST, then merge with warehouse raw roster CSV & injuries_2026.csv
+    valid_teams_set = {t[0] for t in NFL_TEAMS_32}
+    team_alias_fix = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
+    rosters_2026_csv = REPO_ROOT / "data" / "nflverse" / "rosters_2026.csv"
+    rosters_2026_map: Dict[str, Dict[str, str]] = {}
+    if rosters_2026_csv.exists():
+        with rosters_2026_csv.open("r", encoding="utf-8", errors="ignore") as f26:
+            for r26 in csv.DictReader(f26):
+                pname26 = (r26.get("full_name") or r26.get("player_name") or "").strip()
+                raw_t26 = (r26.get("team") or "").strip().upper()
+                team26 = team_alias_fix.get(raw_t26, raw_t26)
+                pos26 = (r26.get("position") or "UNK").strip().upper()
+                if pname26 and team26 in valid_teams_set:
+                    rosters_2026_map[pname26.lower()] = {"name": pname26, "team": team26, "position": pos26}
+
     roster_csv = REPO_ROOT / "intelligence" / "data" / "warehouse" / "raw" / "ds_nflverse_roster_annual_raw.csv"
     if roster_csv.exists():
         with roster_csv.open("r", encoding="utf-8", errors="ignore") as f:
             reader = csv.DictReader(f)
             for idx, r in enumerate(reader, 1):
                 pname = (r.get("full_name") or r.get("player_name") or r.get("name") or "").strip()
-                team = (r.get("team") or r.get("recent_team") or "").strip().upper()
+                team_2024 = (r.get("team") or r.get("recent_team") or "").strip().upper()
                 pos = (r.get("position") or "UNK").strip().upper()
                 gsis = (r.get("gsis_id") or r.get("player_id") or f"GSIS-{idx:05d}").strip()
-                if not pname or not team or pname.lower() in seen_player_names:
+                if not pname or not team_2024 or pname.lower() in seen_player_names:
                     continue
                 seen_player_names.add(pname.lower())
                 cid = f"PLY-{gsis}" if gsis else f"PLY-{slugify(pname)}"
+                ov26 = rosters_2026_map.get(pname.lower())
+                team_active = ov26["team"] if ov26 else team_2024
+                pos_active = ov26["position"] if (ov26 and ov26["position"] != "UNK") else pos
+                moved_teams = bool(ov26 and team_active != team_2024)
                 records.append(
                     {
                         "entity_type": "player",
                         "canonical_id": cid,
                         "canonical_name": pname,
-                        "valid_from": "2020-01-01",
+                        "valid_from": "2026-03-01" if moved_teams else "2020-01-01",
                         "valid_to": "2027-02-28",
-                        "current_team_id": team,
-                        "position": pos,
+                        "current_team_id": team_active,
+                        "position": pos_active,
                         "source_ids": {"gsis_id": gsis, "espn_id": r.get("espn_id", "")},
                         "aliases": [pname],
-                        "forbidden_2026_teams": [],
+                        "forbidden_2026_teams": [team_2024] if moved_teams else [],
                     }
                 )
                 counts_by_type["player"] += 1
+                if moved_teams:
+                    records.append(
+                        {
+                            "entity_type": "player",
+                            "canonical_id": f"{cid}-HIST-2024",
+                            "canonical_name": pname,
+                            "valid_from": "2020-01-01",
+                            "valid_to": "2026-02-28",
+                            "current_team_id": team_2024,
+                            "position": pos,
+                            "source_ids": {"gsis_id": gsis, "historical_2024": team_2024},
+                            "aliases": [pname],
+                            "forbidden_2026_teams": [team_2024],
+                        }
+                    )
+                    counts_by_type["player"] += 1
+
+    # Add any remaining 2026 active players from rosters_2026.csv not in 2024 raw CSV
+    for low_p, info26 in rosters_2026_map.items():
+        if low_p in seen_player_names:
+            continue
+        seen_player_names.add(low_p)
+        cid26 = f"PLY-2026-{slugify(info26['name'])}"
+        records.append(
+            {
+                "entity_type": "player",
+                "canonical_id": cid26,
+                "canonical_name": info26["name"],
+                "valid_from": "2026-01-01",
+                "valid_to": "2027-02-28",
+                "current_team_id": info26["team"],
+                "position": info26["position"],
+                "source_ids": {"rosters_2026": cid26},
+                "aliases": [info26["name"]],
+                "forbidden_2026_teams": [],
+            }
+        )
+        counts_by_type["player"] += 1
 
     inj_csv = REPO_ROOT / "data" / "nflverse" / "injuries_2026.csv"
     if inj_csv.exists():

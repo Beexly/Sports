@@ -119,6 +119,79 @@ def check_armed() -> Dict[str, Any]:
         "missing": missing_deliv,
     }
 
+    # 9. Live Runtime Execution & Handoff Contract Proofs (Council Pragmatist Mandate)
+    try:
+        import subprocess
+        from intelligence.context.context_packet_builder import build_context_packet
+        from intelligence.corpus.research_corpus_reader import ResearchCorpusReader
+        from intelligence.data.warehouse.warehouse_loader import WarehouseLoader
+        from intelligence.equations.equation_executor import get_dynamic_equation_registry_counts
+        from intelligence.identity.entity_resolver import CanonicalEntityResolver
+        from intelligence.reasoning.reasoning_workflow_assembler import execute_reasoning_workflow
+
+        resolver = CanonicalEntityResolver()
+        darnold = resolver.resolve_entity("Sam Darnold", entity_type="player", as_of_date="2026-11-06")
+        rodgers = resolver.resolve_entity("Aaron Rodgers", entity_type="player", as_of_date="2026-11-06")
+        geno = resolver.resolve_entity("Geno Smith", entity_type="player", as_of_date="2026-11-06")
+        evans = resolver.resolve_entity("Mike Evans", entity_type="player", as_of_date="2026-11-06")
+        rosters_ok = (
+            darnold.get("current_team_id") == "SEA"
+            and rodgers.get("current_team_id") == "PIT"
+            and geno.get("current_team_id") == "NYJ"
+            and evans.get("current_team_id") == "SF"
+        )
+
+        eq_counts = get_dynamic_equation_registry_counts()
+        eqs_ok = eq_counts["total_cataloged"] >= 21419 and eq_counts["placeholder_formula_specs"] == 0
+
+        wh = WarehouseLoader()
+        wh_meta = wh.verify_all_10_datasets()
+        wh_ok = int(wh_meta.get("dataset_count", 0)) == 10
+
+        reader = ResearchCorpusReader()
+        corpus_hits = reader.query("Cover 4 Quarters MOD PUSH 2-Jet pass protection trench", top_k=5)
+        corpus_ok = len(corpus_hits) >= 1 and int(w3_data.get("research_ledger_count", 0)) >= 48609
+
+        pkt = build_context_packet(game_id="2024_10_CIN_BAL", as_of_utc="2024-11-07T00:00:00Z", persist=False)
+        trace = execute_reasoning_workflow(pkt, write_to_disk=False)
+        layers_dict = pkt.get("layers", {})
+        total_eq_eval = sum(
+            int(l_val.get("provenance", {}).get("equations_executed", 0))
+            for l_val in layers_dict.values()
+        )
+        workflow_ok = len(layers_dict) == 26 and total_eq_eval >= 21419 and bool(trace.get("trace_id"))
+
+        sim_cmd = subprocess.run(
+            [
+                sys.executable,
+                str(REPO_ROOT / "scripts" / "ops" / "gse_coach_mind_simulator.py"),
+                "--from-context-packet",
+                str(REPO_ROOT / "data" / "context_packets" / "2024_10_CIN_BAL.json"),
+                "--from-reasoning-trace",
+                str(REPO_ROOT / "data" / "reasoning" / "traces" / "2024_10_CIN_BAL.trace.json"),
+                "--dry-run-contract",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        sim_contract_ok = sim_cmd.returncode == 0 and "ARMED_CONTRACT_VALIDATED" in sim_cmd.stdout
+
+        checks["stage_8_live_runtime_execution_proofs"] = {
+            "armed": bool(rosters_ok and eqs_ok and wh_ok and corpus_ok and workflow_ok and sim_contract_ok),
+            "rosters_2026_verified": rosters_ok,
+            "equations_21419_zero_placeholders_verified": eqs_ok,
+            "equations_evaluated_in_live_trace": total_eq_eval,
+            "warehouse_10_datasets_verified": wh_ok,
+            "corpus_records_verified": int(w3_data.get("research_ledger_count", 0)),
+            "simulator_cli_handoff_contract_verified": sim_contract_ok,
+        }
+    except Exception as exc:
+        checks["stage_8_live_runtime_execution_proofs"] = {
+            "armed": False,
+            "error": str(exc),
+        }
+
     all_armed = all(bool(v.get("armed")) for v in checks.values())
     return {
         "status": "ARMED" if all_armed else "NOT_ARMED",

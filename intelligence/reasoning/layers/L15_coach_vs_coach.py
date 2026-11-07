@@ -12,7 +12,7 @@ from intelligence.reasoning.layers.layer_registry import ALL_26_LAYERS_META, exe
 
 LAYER_NUMBER = 15
 LAYER_ID = "L15_coach_vs_coach"
-CANONICAL_STAGE_SLUG = "scheme_vs_scheme"
+CANONICAL_STAGE_SLUG = "coach_vs_coach"
 EQUATION_FAMILY = "coaching"
 
 
