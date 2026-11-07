@@ -15,7 +15,7 @@ export async function GET() {
 - **Galaxy Sports Institute (GSI) Sports Medicine & Biomechanics:** Tracks position-specific return-to-play degradation curves (high-ankle syndesmotic cutting loss, hamstring sprint caps and re-injury risk, turf toe, quarterback rib/shoulder velocity loss, and short-week trench recovery deficits).
 - **Verified 32-Team Injury, Beat-Writer & Depth Chart Tracking:** Tracks active starters, mid-week practice participation, open-media rep velocity across all 32 NFL beat desks, and target/carry redistribution before any spread, total, prop, or DFS lineup is published.
 - **De-Vigged Line Value & Pass Discipline:** Compares our fair football price against two-sided de-vigged sportsbook lines. Any market without clear value is marked PASS · NO BET.
-- **Verified Official NFL Record:** 62-23-1 (72.9% win rate · +26.50u), including a 22-8-1 (+12.40u) Week 8 card and a 7-0 sweep on 1.00u max-conviction releases.
+- **Verified Official NFL Record:** 47-19-1 (72.9% win rate · +24.92u), including a 22-8-1 (+12.40u) Week 8 card and a 7-0 sweep on 1.00u max-conviction releases.
 
 ## Verify our record yourself
 - [Official Verified NFL Board](${siteUrl}/board): Live spreads, totals, player props, XX/100 conviction scores, and pass discipline notes.

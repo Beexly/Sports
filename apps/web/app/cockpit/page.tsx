@@ -14,6 +14,8 @@ import {
   type AiOpsSummary,
 } from "@/lib/cockpit/owner-summary";
 import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
+import { CockpitOffice3dBotHq } from "@/components/cockpit/cockpit-office-3d-bot-hq";
+import { HermesPluginUniverseSuite } from "@/components/cockpit/hermes-plugin-universe-suite";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
 import { CockpitPulse } from "@/components/cockpit/cockpit-pulse";
@@ -284,6 +286,12 @@ export default async function CockpitOverview() {
       {ownerSummary && (
         <DepartmentsZone departments={ownerSummary.departments} />
       )}
+
+      {/* Zone 3B: Hermes 3D Agent Office, Bot HQ & OmniRoute API World */}
+      <CockpitOffice3dBotHq />
+
+      {/* Zone 3C: Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Suite */}
+      <HermesPluginUniverseSuite />
 
       {/* ── Zone 4: Ask Jarvis Console ───────────────────────────────── */}
       {ownerSummary && <AskJarvisPanel summary={ownerSummary} />}

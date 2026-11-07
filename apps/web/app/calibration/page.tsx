@@ -128,7 +128,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
               </p>
             </div>
             <Link href="/board" className="text-xs font-bold text-emerald-400 hover:text-emerald-300">
-              View Full 62-23-1 Board →
+              View Full 47-19-1 Board →
             </Link>
           </div>
 

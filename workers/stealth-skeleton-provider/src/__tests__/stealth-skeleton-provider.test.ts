@@ -27,6 +27,7 @@ import {
   healToolCallGrammar,
   reasonOverPageIndexTree,
   redactGdprPiiFromPrompt,
+  resolveOpenRouterTrafficRouting,
   type CrowdRlhfQueueEntry,
 } from "../index";
 
@@ -434,5 +435,227 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     assert.equal(gdpr.redactedCount, 2);
     assert.ok(!gdpr.redactedText.includes("founder@galaxysportsedge.com"));
     assert.match(ensureW3cTraceparent(null), /^00-[0-9a-f]{32}-[0-9a-f]{16}-01$/);
+  });
+
+  it("enforces OpenRouter Traffic Routing (sort, data_collection: deny, max_price, order) and returns x_gse_skeleton.openrouter_traffic_routing", async () => {
+    const latencyRoute = resolveOpenRouterTrafficRouting("gse/skeleton-v1", {
+      sort: "latency",
+      data_collection: "deny",
+      order: ["gse-sovereign-primary", "legacy-slow-node"],
+      ignore: ["legacy-slow-node"],
+      quantizations: ["fp16"],
+    });
+    assert.equal(latencyRoute.resolved_model, "gse/skeleton-flash");
+    assert.equal(latencyRoute.routing_lane, "latency_flash_lane");
+    assert.equal(latencyRoute.zero_data_retention_enforced, true);
+    assert.deepEqual(latencyRoute.order, ["gse-sovereign-primary"]);
+
+    const throughputRoute = resolveOpenRouterTrafficRouting("gse/skeleton-v1", {
+      sort: "throughput",
+    });
+    assert.equal(throughputRoute.resolved_model, "gse/skeleton-v1-fast");
+    assert.equal(throughputRoute.parallel_speculative_lanes, 4);
+
+    const priceRoute = resolveOpenRouterTrafficRouting("gse/skeleton-v1", {
+      sort: "price",
+      max_price: { prompt: 0, completion: 0, request: 0 },
+    });
+    assert.equal(priceRoute.resolved_model, "gse/stealth-skeleton-alpha");
+    assert.equal(priceRoute.max_price.zero_cost_enforced, true);
+
+    const queued: CrowdRlhfQueueEntry[] = [];
+    const res = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "gse/stealth-skeleton-alpha",
+          provider: {
+            sort: "latency",
+            data_collection: "deny",
+            order: ["gse-sovereign-primary", "deepinfra-fp16"],
+            ignore: ["deepinfra-fp16"],
+            max_price: { prompt: 0.0005, completion: 0.0015 },
+          },
+          messages: [{ role: "user", content: "Verify CRPS(N(0,1), 0)" }],
+        }),
+      }),
+      {
+        CROWD_RLHF_QUEUE: {
+          async send(item) {
+            queued.push(item);
+          },
+        },
+      }
+    );
+    assert.equal(res.status, 200);
+    // Zero prompt retention enforced when data_collection === "deny"
+    assert.equal(queued.length, 0);
+    const body = (await res.json()) as {
+      model: string;
+      x_gse_skeleton: {
+        openrouter_traffic_routing: typeof latencyRoute;
+        declared_zdr: boolean;
+      };
+    };
+    assert.equal(body.model, "gse/skeleton-flash");
+    assert.equal(body.x_gse_skeleton.declared_zdr, true);
+    assert.equal(body.x_gse_skeleton.openrouter_traffic_routing.sort, "latency");
+    assert.equal(body.x_gse_skeleton.openrouter_traffic_routing.data_collection, "deny");
+    assert.deepEqual(body.x_gse_skeleton.openrouter_traffic_routing.order, ["gse-sovereign-primary"]);
+  });
+
+  it("serves OpenRouter Provider Integration metadata on GET /v1/models and SLA/Sinkhorn/PageIndex health on GET /v1/providers/health", async () => {
+    const modelsRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/models")
+    );
+    assert.equal(modelsRes.status, 200);
+    const modelsBody = (await modelsRes.json()) as {
+      data: Array<{
+        id: string;
+        quantization: string;
+        architecture: { modality: string; tokenizer: string; instruct_type: string };
+        top_provider: { context_length: number; max_completion_tokens: number; is_moderated: boolean };
+        supported_parameters: string[];
+      }>;
+    };
+    assert.equal(modelsBody.data.length, 5);
+    for (const model of modelsBody.data) {
+      assert.equal(model.quantization, "fp16");
+      assert.equal(model.architecture.modality, "text->text");
+      assert.equal(model.architecture.tokenizer, "GSE-Hybrid-BPE");
+      assert.equal(model.architecture.instruct_type, "chatml");
+      assert.equal(model.top_provider.context_length, 131072);
+      assert.equal(model.top_provider.max_completion_tokens, 16384);
+      assert.equal(model.top_provider.is_moderated, false);
+      assert.ok(Array.isArray(model.supported_parameters));
+      assert.ok(model.supported_parameters.includes("tools"));
+    }
+
+    const healthRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/providers/health")
+    );
+    assert.equal(healthRes.status, 200);
+    const healthBody = (await healthRes.json()) as {
+      status: string;
+      sla_status: { status: string; uptime_target: number };
+      sinkhorn_convergence_health: { converged: boolean; l1_marginal_residual: number };
+      pageindex_readiness: { ready: boolean; section_count: number };
+      active_model_ids: string[];
+    };
+    assert.equal(healthBody.status, "ok");
+    assert.equal(healthBody.sla_status.status, "HEALTHY");
+    assert.equal(healthBody.sinkhorn_convergence_health.converged, true);
+    assert.ok(healthBody.sinkhorn_convergence_health.l1_marginal_residual < 1e-6);
+    assert.equal(healthBody.pageindex_readiness.ready, true);
+    assert.equal(healthBody.active_model_ids.length, 5);
+  });
+
+  it("serves JSON-RPC 2.0 Model Context Protocol on GET /mcp and POST /mcp (initialize, tools/list, tools/call)", async () => {
+    const getMcpRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/mcp")
+    );
+    assert.equal(getMcpRes.status, 200);
+    const getMcpBody = (await getMcpRes.json()) as {
+      protocolVersion: string;
+      serverInfo: { name: string; version: string };
+      tools: Array<{ name: string }>;
+    };
+    assert.equal(getMcpBody.protocolVersion, "2024-11-05");
+    assert.equal(getMcpBody.serverInfo.name, "gse-stealth-skeleton-mcp");
+    assert.equal(getMcpBody.tools.length, 5);
+
+    const initRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/mcp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "initialize",
+          params: {},
+        }),
+      })
+    );
+    assert.equal(initRes.status, 200);
+    const initBody = (await initRes.json()) as {
+      jsonrpc: string;
+      id: number;
+      result: {
+        protocolVersion: string;
+        serverInfo: { name: string; version: string };
+        capabilities: { tools: Record<string, unknown> };
+      };
+    };
+    assert.equal(initBody.result.protocolVersion, "2024-11-05");
+    assert.equal(initBody.result.serverInfo.name, "gse-stealth-skeleton-mcp");
+    assert.equal(initBody.result.serverInfo.version, "2.4.0");
+    assert.deepEqual(initBody.result.capabilities, { tools: {} });
+
+    const listRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/mcp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/list",
+        }),
+      })
+    );
+    assert.equal(listRes.status, 200);
+    const listBody = (await listRes.json()) as {
+      result: { tools: Array<{ name: string }> };
+    };
+    assert.deepEqual(
+      listBody.result.tools.map((t) => t.name),
+      [
+        "gse_skeleton_reason",
+        "gse_predict_game_360",
+        "gse_build_dfs_lineup",
+        "gse_generate_content_pack",
+        "gsi_evaluate_biomechanics_trauma",
+      ]
+    );
+
+    const callRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/mcp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 3,
+          method: "tools/call",
+          params: {
+            name: "gse_predict_game_360",
+            arguments: {
+              matchup: "DET@GB",
+              market_type: "player_pass_yds",
+              engine_prob: 0.66,
+              market_prob: 0.52,
+              center_projection: 258.5,
+              gate_decision: "PUBLISH",
+            },
+          },
+        }),
+      })
+    );
+    assert.equal(callRes.status, 200);
+    const callBody = (await callRes.json()) as {
+      result: { isError: boolean; content: Array<{ type: string; text: string }> };
+    };
+    assert.equal(callBody.result.isError, false);
+    assert.equal(callBody.result.content[0].type, "text");
+    const parsedToolOutput = JSON.parse(callBody.result.content[0].text) as {
+      tool: string;
+      matchup: string;
+      romano_cqr_90_band: { marketKey: string; sigmaConditional: number };
+      sinkhorn_marginal_audit: { converged: boolean };
+    };
+    assert.equal(parsedToolOutput.tool, "gse_predict_game_360");
+    assert.equal(parsedToolOutput.matchup, "DET@GB");
+    assert.equal(parsedToolOutput.romano_cqr_90_band.marketKey, "player_pass_yds");
+    assert.equal(parsedToolOutput.romano_cqr_90_band.sigmaConditional, 70.6656);
+    assert.equal(parsedToolOutput.sinkhorn_marginal_audit.converged, true);
   });
 });

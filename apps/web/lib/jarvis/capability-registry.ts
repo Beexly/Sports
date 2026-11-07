@@ -233,7 +233,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "canonical sample size and display safety rules. Never expose stats before the trust bar is met.",
     currentTruth:
       "Calibration Proof Room live at /calibration and /cockpit/calibration. Official New Engine Verified Record " +
-      "(62-23-1, 72.9%, +26.50u) audited and sealed in data/engine/new_engine_official_ledger_2026.json. " +
+      "(47-19-1, 72.9%, +24.92u) audited and sealed in data/engine/new_engine_official_ledger_2026.json. " +
       "Barber weighted conformal prediction, FWL market residualization, and Karpathy autoresearch keep-or-reset gate wired.",
     inputs: ["Canonical settled picks", "Win/loss/push record", "Display gate (canExposePerformanceStats)"],
     outputs: ["Win rate (if displaySafe)", "Calibration proposals", "Performance policy state"],

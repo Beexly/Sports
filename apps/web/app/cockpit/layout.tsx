@@ -48,6 +48,8 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     section: "Agents & memory",
     items: [
       { href: "/cockpit/agents", label: "Agents", hint: "Six operator roles" },
+      { href: "/cockpit/bot-hq", label: "3D Bot HQ", hint: "Office-3D & OmniRoute mesh" },
+      { href: "/cockpit/hermes-plugins", label: "Hermes Plugins", hint: "11 Hermes plugins & 6 NVIDIA skills" },
       { href: "/cockpit/memory", label: "Memory", hint: "Memory review queue" },
       { href: "/cockpit/nova", label: "NOVA", hint: "Founder OS overview" },
     ],

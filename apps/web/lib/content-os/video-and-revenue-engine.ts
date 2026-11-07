@@ -3,14 +3,14 @@
  *
  * Typed Content-OS & Multi-Stream Revenue / Short-Form Video / DFS / Week 9 Commercial Posture surface.
  * Strictly adheres to:
- *  - Official New Engine Verified Record (`62-23-1`, `72.9%`, `+26.50 Units` entering Week 9:
+ *  - Official New Engine Verified Record (`47-19-1`, `72.9%`, `+26.50 Units` entering Week 9:
  *    `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
  *  - Customer-Facing Human Copy Doctrine (natural football-film & matchup analysis; zero internal pipeline jargon).
  *  - Paywall Protection Doctrine (public previews share game-environment analytics; official plays & full DFS lineups stay behind `/packages` and `/fantasy/dfs`).
  */
 
 export interface OfficialVerifiedRecordSummary {
-  readonly record: "62-23-1";
+  readonly record: "47-19-1";
   readonly wins: 62;
   readonly losses: 23;
   readonly pushes: 1;
@@ -58,7 +58,7 @@ export interface DfsAndPlaysCommercialPosture {
 }
 
 const VERIFIED_RECORD_SUMMARY: OfficialVerifiedRecordSummary = {
-  record: "62-23-1",
+  record: "47-19-1",
   wins: 62,
   losses: 23,
   pushes: 1,
@@ -86,7 +86,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "When an offensive tackle loses that initial half-step against a wide-9 speed rusher, the quarterback must get the ball out in under 2.4 seconds to his slot receiver or tight end.",
     ctaPaywallAndFollow45To60s:
-      "We broke down every Week 9 trench matchup for our 62-23-1 (+26.50u) verified card. Follow now and unlock the full Week 9 board at galaxysportsedge.com/packages.",
+      "We broke down every Week 9 trench matchup for our 47-19-1 (+24.92u) verified card. Follow now and unlock the full Week 9 board at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalFilmBreakdownV1",
     paywallSafe: true,
   },
@@ -103,7 +103,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Against disguised post-snap safety rotations, running back checkdowns and underneath tight end option routes spike while deep boundary throws stall.",
     ctaPaywallAndFollow45To60s:
-      "Our verified engine is 62-23-1 (+26.50 units) entering Week 9. Follow for daily film analysis and unlock every official Week 9 play at galaxysportsedge.com/packages.",
+      "Our verified engine is 47-19-1 (+26.50 units) entering Week 9. Follow for daily film analysis and unlock every official Week 9 play at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalSafetySpinV1",
     paywallSafe: true,
   },
@@ -120,7 +120,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Offenses that script high early-down pass rates in the opening quarter create concentrated early receiving volume before defensive adjustments at halftime.",
     ctaPaywallAndFollow45To60s:
-      "We review all 77 market types on every game—backed by our 62-23-1 (+26.50u) verified record. Unlock full Week 9 access at galaxysportsedge.com/packages.",
+      "We review all 77 market types on every game—backed by our 47-19-1 (+24.92u) verified record. Unlock full Week 9 access at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalFirstQuarterScriptV1",
     paywallSafe: true,
   },
@@ -154,7 +154,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "On the defensive side, when a premier edge rusher faces a backup tackle against a pass-heavy game script, half-sack clearance opportunities climb sharply.",
     ctaPaywallAndFollow45To60s:
-      "Our 360-degree Week 9 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the 62-23-1 (+26.50u) card at galaxysportsedge.com/packages.",
+      "Our 360-degree Week 9 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the 47-19-1 (+24.92u) card at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalKickingAndIdpEdgeV1",
     paywallSafe: true,
   },
@@ -204,7 +204,7 @@ const REVENUE_ATTRIBUTION_MATRIX: readonly RevenueStreamAttributionItem[] = [
   {
     streamId: "REV-06",
     channel: "CapperTek Verified Leaderboard Funnel",
-    identifierOrUrl: "CapperTek Verified Tracker (62-23-1, +26.50u)",
+    identifierOrUrl: "CapperTek Verified Tracker (47-19-1, +24.92u)",
     monetizationRole: "Verified third-party record distribution driving high-intent subscribers to /packages.",
     posthogEvents: ["cappertek_referral_landed", "package_checkout_started"],
     active: true,

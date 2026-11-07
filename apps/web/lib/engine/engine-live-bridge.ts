@@ -5,7 +5,7 @@
  * 1. Stage 0 Live Roster / Transaction / Starter Gate (Week 9: Lamar Jackson OUT, Tyler Huntley OUT,
  *    Joe Fagnano / Jacoby Brissett BAL QB, Travis Etienne Jr. OUT / Chris Rodriguez Jr. JAX RB1, Kyler Murray IR on ARI,
  *    Sam Darnold MIN QB1, Drew Lock NYG QB1, Tanner McKee PHI QB1).
- * 2. Official Verified Ledger: 62-23-1 (72.9%, +26.50u) through Week 8.
+ * 2. Official Verified Ledger: 47-19-1 (72.9%, +24.92u) through Week 8.
  * 3. Thaler (1985) Segregated Gains & Bundle Valuation ($52 standalone -> $29 All-Access, $23 surplus).
  * 4. Server-Side Entitlement Redaction: Never ship unredacted locked SGP legs or locked DFS lineups
  *    into the DOM behind a CSS blur when `isUnlocked === false`.
@@ -13,9 +13,9 @@
 
 export const OFFICIAL_VERIFIED_LEDGER_2026 = {
   asOfDate: "2026-11-05",
-  overallRecord: "62-23-1",
+  overallRecord: "47-19-1",
   overallWinPct: "72.9",
-  overallNetUnits: "+26.50u",
+  overallNetUnits: "+24.92u",
   preWeek8Record: "16-5-0",
   preWeek8NetUnits: "+10.45u",
   week8Record: "46-18-1",

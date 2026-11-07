@@ -15,7 +15,7 @@ Galaxy Sports Edge (${siteUrl}) provides plain-English, film-backed NFL analysis
 - **DraftKings & FanDuel NFL DFS:** Showdown captain-mode lineups, main-slate cash-game cores, and correlated tournament stacks.
 - **Correlated Same-Game Parlays (SGPs):** Multi-leg tickets built around connected on-field game scripts rather than disconnected box-score guesses.
 
-Official Verified Record: **62-23-1 (72.9% · +26.50u)**.
+Official Verified Record: **47-19-1 (+24.92u; Base 38-13-1, +22.85u)**.
 
 ## 2. Our 5-Step Football Breakdown Process (GSE & GSI)
 1. **Step 1 — Active 32-Team Roster, Beat-Writer & GSI Sports Medicine Verification:**

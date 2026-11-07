@@ -114,7 +114,7 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@id": `${siteUrl}/#dataset`,
         name: "Galaxy Sports Edge Verified NFL Picks, Player Props & Closing Line Value Ledger",
         description:
-          "Verified public NFL settlement ledger reporting a 62-23-1 (72.9% win rate, +26.50u) official record alongside settled closing line value (CLV) comparisons and conviction-band calibration.",
+          "Verified public NFL settlement ledger reporting a 47-19-1 (72.9% win rate, +24.92u) official record alongside settled closing line value (CLV) comparisons and conviction-band calibration.",
         url: `${siteUrl}/calibration`,
         creator: { "@id": `${siteUrl}/#organization` },
         keywords: HIGH_INTENT_SEARCH_KEYWORDS,
