@@ -33,7 +33,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
               <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                GALAXY PICKS · WEEK 9 SUNDAY MAIN SLATE (DET @ GB, MIA @ BUF, IND @ MIN) &amp; MNF (TB @ KC)
+                GALAXY PICKS · WEEK 9 SUNDAY MAIN SLATE (DET @ MIA, GB @ NE, DAL @ IND) &amp; MNF (BUF @ MIN)
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 Real football film, trench matchups, and disciplined numbers.
@@ -123,7 +123,7 @@ export default function PackagesPage(): JSX.Element {
                 FREE GAME-SCRIPT INTELLIGENCE · WEEK 9 SUNDAY MAIN SLATE &amp; MNF
               </span>
               <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-white">
-                Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) &amp; Monday Night Football (TB @ KC) Free Game-Environment Preview
+                Week 9 Sunday Main Slate (DET @ MIA, GB @ NE, DAL @ IND) &amp; Primetime (TB @ CHI, BUF @ MIN) Free Game-Environment Preview
               </h2>
               <p className="mt-1 text-sm text-slate-300">
                 Film-room neutral pace, trench pressure rates, coverage shell tendencies, and red-zone play-calling splits across our featured Week 9 Sunday and Monday matchups. Official sides, totals, player props, and Same-Game Parlay legs stay locked inside the packs below.
@@ -137,7 +137,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <caption className="sr-only">
-                Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) and Monday Night Football (TB @ KC) Free Game-Environment Preview covering neutral pace, trench pressure rates, and red-zone tendencies.
+                Week 9 Sunday Main Slate (DET @ MIA, GB @ NE, DAL @ IND) and Primetime (TB @ CHI, BUF @ MIN) Free Game-Environment Preview covering neutral pace, trench pressure rates, and red-zone tendencies.
               </caption>
               <thead>
                 <tr className="border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-amber-300">
@@ -150,41 +150,41 @@ export default function PackagesPage(): JSX.Element {
               <tbody className="divide-y divide-slate-800/80 text-slate-200">
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    DET @ GB · Sun 3:25 PM CT (Lambeau)
+                    DET @ MIA · Sun 12:00 PM CT (Hard Rock)
                   </th>
                   <td className="py-3 pr-4">
-                    <strong className="text-white">27.4 sec/snap</strong> neutral pace · Projected <strong className="text-white">63.0</strong> Detroit plays vs <strong className="text-white">61.5</strong> Green Bay plays on outdoor grass
+                    <strong className="text-white">26.6 sec/snap</strong> neutral pace · Projected <strong className="text-white">63.0</strong> Detroit plays vs <strong className="text-white">61.5</strong> Miami plays with pre-snap motion on <strong className="text-white">{"68.2%"}</strong> of snaps
                   </td>
                   <td className="py-3 pr-4">
-                    Detroit interior OL <strong className="text-white">{"71.5%"}</strong> clean-pocket rate vs Green Bay <strong className="text-white">{"31.8%"}</strong> simulated-pressure and stunt rate
+                    Detroit interior OL <strong className="text-white">{"71.5%"}</strong> clean-pocket rate vs Miami <strong className="text-white">{"2.34s"}</strong> quick-release timing and perimeter RPO spacing
                   </td>
                   <td className="py-3">
-                    Green Bay <strong className="text-white">{"58.0%"}</strong> two-high quarters/palms shell; Detroit <strong className="text-white">{"61.0%"}</strong> red-zone heavy-personnel rush &amp; play-action split
+                    Miami two-high nickel shell vs Detroit <strong className="text-white">{"61.0%"}</strong> red-zone heavy-personnel rush &amp; play-action split
                   </td>
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    MIA @ BUF · Sun 12:00 PM CT (Highmark)
+                    GB @ NE · Sun 3:25 PM CT (Gillette)
                   </th>
                   <td className="py-3 pr-4">
-                    <strong className="text-white">26.6 sec/snap</strong> neutral pace · Miami <strong className="text-white">{"68.2%"}</strong> pre-snap motion rate to force coverage rotation before the snap
+                    <strong className="text-white">27.4 sec/snap</strong> neutral pace · Green Bay <strong className="text-white">{"58.0%"}</strong> two-TE &amp; motion formations to dictate linebacker leverage
                   </td>
                   <td className="py-3 pr-4">
-                    Miami quick-release timing (<strong className="text-white">2.34s</strong> time-to-throw) vs Buffalo four-man pass rush (<strong className="text-white">{"35.4%"}</strong> pressure rate without blitzing)
+                    Green Bay <strong className="text-white">{"31.8%"}</strong> simulated-pressure and stunt rate vs New England quick-game &amp; tight-end hot-read outlets
                   </td>
                   <td className="py-3">
-                    Buffalo <strong className="text-white">61.5%</strong> two-high nickel shell; compressed red-zone spacing elevates inside-the-20 field-goal stall tendencies
+                    Green Bay <strong className="text-white">58.0%</strong> two-high quarters/palms shell; compressed red-zone spacing elevates inside-the-20 field-goal stall tendencies
                   </td>
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    IND @ MIN · SNF 7:20 PM CT (U.S. Bank)
+                    TB @ CHI · SNF 7:20 PM CT (Soldier Field)
                   </th>
                   <td className="py-3 pr-4">
-                    <strong className="text-white">25.8 sec/snap</strong> fast indoor turf track · Projected <strong className="text-white">64.5</strong> combined scripts per side in climate-controlled dome
+                    <strong className="text-white">26.9 sec/snap</strong> outdoor lakefront track · Projected <strong className="text-white">64.0</strong> combined plays per side in Sunday Night Football
                   </td>
                   <td className="py-3 pr-4">
-                    Minnesota <strong className="text-white">38.4%</strong> blitz &amp; zero-look drop-eight disguise rate vs Indianapolis six-man slide pass protection
+                    Tampa Bay <strong className="text-white">36.4%</strong> blitz &amp; A-gap pressure rate vs Chicago six-man slide pass protection
                   </td>
                   <td className="py-3">
                     High-frequency pre-snap safety rotation forces hot-read intermediate throws and early-down RPO adjustments inside the 20
@@ -192,16 +192,16 @@ export default function PackagesPage(): JSX.Element {
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    TB @ KC · MNF 7:15 PM CT (Arrowhead)
+                    BUF @ MIN · MNF 7:15 PM CT (U.S. Bank)
                   </th>
                   <td className="py-3 pr-4">
-                    <strong className="text-white">27.9 sec/snap</strong> methodical ball-control pace · Kansas City <strong className="text-white">69.0%</strong> third-down conversion &amp; drive sustain rate
+                    <strong className="text-white">25.8 sec/snap</strong> fast indoor turf track · Buffalo <strong className="text-white">66.5%</strong> third-down conversion &amp; red-zone QB power sustain rate
                   </td>
                   <td className="py-3 pr-4">
-                    Kansas City <strong className="text-white">34.2%</strong> third-down exotic corner/safety blitz rate vs Tampa Bay RB/TE hot-read checkdown outlets
+                    Minnesota <strong className="text-white">38.4%</strong> Brian Flores zero-look blitz &amp; drop-eight disguise rate vs Josh Allen scramble &amp; RB/TE checkdown outlets
                   </td>
                   <td className="py-3">
-                    Kansas City <strong className="text-white">38.5%</strong> 12- and 13-personnel usage; heavy middle-of-field tight-end &amp; goal-line motion tendencies inside the 10
+                    Buffalo <strong className="text-white">61.5%</strong> two-high nickel shell; heavy play-action &amp; goal-line motion tendencies inside the 10
                   </td>
                 </tr>
               </tbody>
@@ -239,7 +239,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <div>
               <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                WEEK 9 SUNDAY MAIN SLATE (DET @ GB, MIA @ BUF, IND @ MIN) &amp; MONDAY NIGHT FOOTBALL (TB @ KC)
+                WEEK 9 SUNDAY MAIN SLATE (DET @ MIA, GB @ NE, DAL @ IND) &amp; MONDAY NIGHT FOOTBALL (BUF @ MIN)
               </span>
               <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
                 Specialty Betting &amp; Expanded Week 9 DFS Packs

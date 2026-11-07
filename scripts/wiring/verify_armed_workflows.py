@@ -134,11 +134,17 @@ def check_armed() -> Dict[str, Any]:
         rodgers = resolver.resolve_entity("Aaron Rodgers", entity_type="player", as_of_date="2026-11-06")
         geno = resolver.resolve_entity("Geno Smith", entity_type="player", as_of_date="2026-11-06")
         evans = resolver.resolve_entity("Mike Evans", entity_type="player", as_of_date="2026-11-06")
+        metcalf = resolver.resolve_entity("DK Metcalf", entity_type="player", as_of_date="2026-11-06")
+        adams = resolver.resolve_entity("Davante Adams", entity_type="player", as_of_date="2026-11-06")
+        diggs = resolver.resolve_entity("Stefon Diggs", entity_type="player", as_of_date="2026-11-06")
         rosters_ok = (
             darnold.get("current_team_id") == "SEA"
             and rodgers.get("current_team_id") == "PIT"
             and geno.get("current_team_id") == "NYJ"
             and evans.get("current_team_id") == "SF"
+            and metcalf.get("current_team_id") == "PIT"
+            and adams.get("current_team_id") == "LAR"
+            and diggs.get("current_team_id") == "WAS"
         )
 
         eq_counts = get_dynamic_equation_registry_counts()

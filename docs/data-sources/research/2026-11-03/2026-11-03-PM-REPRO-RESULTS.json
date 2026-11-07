@@ -1,0 +1,379 @@
+{
+  "sweep_file": "docs/data-sources/research/2026-11-03/2026-11-03-PM-X-SWEEP.md",
+  "W4_run_defense_conjunction": {
+    "top5_both_sr_and_explosive10_allowed": [
+      "JAX",
+      "SEA"
+    ],
+    "top5_both_sr_and_explosive12_allowed": [
+      "JAX",
+      "KC"
+    ],
+    "jax_sea_detail": [
+      {
+        "defteam": "BAL",
+        "rush_att_faced": 178,
+        "sr_allowed": 0.39325842696629215,
+        "exp10_allowed": 0.07865168539325842,
+        "exp12_allowed": 0.056179775280898875,
+        "sr_rank": 9,
+        "exp10_rank": 4,
+        "exp12_rank": 8
+      },
+      {
+        "defteam": "DET",
+        "rush_att_faced": 140,
+        "sr_allowed": 0.40714285714285714,
+        "exp10_allowed": 0.12857142857142856,
+        "exp12_allowed": 0.10714285714285714,
+        "sr_rank": 11,
+        "exp10_rank": 27,
+        "exp12_rank": 31
+      },
+      {
+        "defteam": "JAX",
+        "rush_att_faced": 131,
+        "sr_allowed": 0.35877862595419846,
+        "exp10_allowed": 0.05343511450381679,
+        "exp12_allowed": 0.03816793893129771,
+        "sr_rank": 3,
+        "exp10_rank": 2,
+        "exp12_rank": 3
+      },
+      {
+        "defteam": "MIN",
+        "rush_att_faced": 141,
+        "sr_allowed": 0.3617021276595745,
+        "exp10_allowed": 0.09929078014184398,
+        "exp12_allowed": 0.0851063829787234,
+        "sr_rank": 4,
+        "exp10_rank": 13,
+        "exp12_rank": 23
+      },
+      {
+        "defteam": "SEA",
+        "rush_att_faced": 175,
+        "sr_allowed": 0.33714285714285713,
+        "exp10_allowed": 0.07428571428571429,
+        "exp12_allowed": 0.05142857142857143,
+        "sr_rank": 1,
+        "exp10_rank": 3,
+        "exp12_rank": 7
+      }
+    ]
+  },
+  "W2_qb_and_jsn_verification": {
+    "caleb_williams_2025": [
+      {
+        "passer_player_name": "C.Williams",
+        "dropbacks": 594,
+        "cpoe": -3.5054313989193266,
+        "cpoe_rank": 34
+      }
+    ],
+    "caleb_williams_2026": [
+      {
+        "passer_player_name": "C.Williams",
+        "dropbacks": 136,
+        "epa_per_play": 0.27256738523311425,
+        "cpoe": 9.006042911538056,
+        "ya": 6.897058823529412,
+        "sr": 0.49264705882352944,
+        "epa_rank": 3,
+        "cpoe_rank": 1,
+        "ya_rank": 9,
+        "sr_rank": 7
+      }
+    ],
+    "geno_smith_nyj_2026": [
+      {
+        "passer_player_name": "G.Smith",
+        "dropbacks": 230,
+        "epa_per_play": 0.10533980124831707,
+        "cpoe": 5.2368452403751125,
+        "ya": 6.304347826086956,
+        "sr": 0.4782608695652174,
+        "epa_rank": 14,
+        "cpoe_rank": 4,
+        "ya_rank": 15,
+        "sr_rank": 11
+      }
+    ],
+    "top_10_receiving_yards_through_w8": [
+      {
+        "receiver_player_name": "J.Smith-Njigba",
+        "posteam": "SEA",
+        "receptions": 58,
+        "rec_yards": 867.0,
+        "rec_tds": 8.0
+      },
+      {
+        "receiver_player_name": "C.Watson",
+        "posteam": "GB",
+        "receptions": 42,
+        "rec_yards": 708.0,
+        "rec_tds": 6.0
+      },
+      {
+        "receiver_player_name": "C.Lamb",
+        "posteam": "DAL",
+        "receptions": 53,
+        "rec_yards": 651.0,
+        "rec_tds": 6.0
+      },
+      {
+        "receiver_player_name": "C.Olave",
+        "posteam": "NO",
+        "receptions": 49,
+        "rec_yards": 636.0,
+        "rec_tds": 2.0
+      },
+      {
+        "receiver_player_name": "D.London",
+        "posteam": "ATL",
+        "receptions": 38,
+        "rec_yards": 630.0,
+        "rec_tds": 1.0
+      },
+      {
+        "receiver_player_name": "M.Golden",
+        "posteam": "GB",
+        "receptions": 43,
+        "rec_yards": 624.0,
+        "rec_tds": 4.0
+      },
+      {
+        "receiver_player_name": "Z.Flowers",
+        "posteam": "BAL",
+        "receptions": 40,
+        "rec_yards": 608.0,
+        "rec_tds": 3.0
+      },
+      {
+        "receiver_player_name": "M.Nabers",
+        "posteam": "NYG",
+        "receptions": 48,
+        "rec_yards": 605.0,
+        "rec_tds": 2.0
+      },
+      {
+        "receiver_player_name": "T.Higgins",
+        "posteam": "CIN",
+        "receptions": 33,
+        "rec_yards": 571.0,
+        "rec_tds": 2.0
+      },
+      {
+        "receiver_player_name": "T.McMillan",
+        "posteam": "CAR",
+        "receptions": 42,
+        "rec_yards": 570.0,
+        "rec_tds": 2.0
+      }
+    ]
+  },
+  "W7_explosive_receptions_td_regression_screen": [
+    {
+      "receiver_player_name": "R.Odunze",
+      "posteam": "CHI",
+      "exp20_receptions": 11,
+      "exp20_tds": 0,
+      "total_rec_yards": 393.0
+    },
+    {
+      "receiver_player_name": "L.Burden",
+      "posteam": "CHI",
+      "exp20_receptions": 11,
+      "exp20_tds": 1,
+      "total_rec_yards": 491.0
+    },
+    {
+      "receiver_player_name": "M.Golden",
+      "posteam": "GB",
+      "exp20_receptions": 11,
+      "exp20_tds": 1,
+      "total_rec_yards": 624.0
+    },
+    {
+      "receiver_player_name": "D.London",
+      "posteam": "ATL",
+      "exp20_receptions": 10,
+      "exp20_tds": 1,
+      "total_rec_yards": 630.0
+    },
+    {
+      "receiver_player_name": "M.Nabers",
+      "posteam": "NYG",
+      "exp20_receptions": 9,
+      "exp20_tds": 1,
+      "total_rec_yards": 605.0
+    },
+    {
+      "receiver_player_name": "T.McMillan",
+      "posteam": "CAR",
+      "exp20_receptions": 9,
+      "exp20_tds": 1,
+      "total_rec_yards": 570.0
+    },
+    {
+      "receiver_player_name": "M.Evans",
+      "posteam": "SF",
+      "exp20_receptions": 9,
+      "exp20_tds": 2,
+      "total_rec_yards": 500.0
+    },
+    {
+      "receiver_player_name": "Z.Flowers",
+      "posteam": "BAL",
+      "exp20_receptions": 9,
+      "exp20_tds": 2,
+      "total_rec_yards": 608.0
+    },
+    {
+      "receiver_player_name": "J.Smith-Njigba",
+      "posteam": "SEA",
+      "exp20_receptions": 14,
+      "exp20_tds": 3,
+      "total_rec_yards": 867.0
+    },
+    {
+      "receiver_player_name": "C.Watson",
+      "posteam": "GB",
+      "exp20_receptions": 13,
+      "exp20_tds": 3,
+      "total_rec_yards": 708.0
+    }
+  ],
+  "W7_official_injury_feed_cross_check_bal_jax_lar": [
+    {
+      "season": 2026,
+      "week": 7,
+      "team": "BAL",
+      "full_name": "Mark Andrews",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 7,
+      "team": "BAL",
+      "full_name": "Lamar Jackson",
+      "position": "QB",
+      "report_primary_injury": "Ankle",
+      "report_status": "Out",
+      "practice_status": "Limited Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 7,
+      "team": "BAL",
+      "full_name": "Rashod Bateman",
+      "position": "WR",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 7,
+      "team": "BAL",
+      "full_name": "Matthew Hibner",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 7,
+      "team": "LA",
+      "full_name": "Colby Parkinson",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 7,
+      "team": "LA",
+      "full_name": "Puka Nacua",
+      "position": "WR",
+      "report_primary_injury": "Calf",
+      "report_status": "Questionable",
+      "practice_status": "Did Not Participate In Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "BAL",
+      "full_name": "Mark Andrews",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "BAL",
+      "full_name": "Lamar Jackson",
+      "position": "QB",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "BAL",
+      "full_name": "Matthew Hibner",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "BAL",
+      "full_name": "Adam Randall",
+      "position": "RB",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "JAX",
+      "full_name": "Jakobi Meyers",
+      "position": "WR",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Limited Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "JAX",
+      "full_name": "Brenton Strange",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Full Participation in Practice"
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "team": "LA",
+      "full_name": "Colby Parkinson",
+      "position": "TE",
+      "report_primary_injury": NaN,
+      "report_status": NaN,
+      "practice_status": "Did Not Participate In Practice"
+    }
+  ]
+}

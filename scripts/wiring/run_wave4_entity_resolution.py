@@ -102,6 +102,30 @@ STANDING_2026_PLAYER_OVERRIDES = {
             {"team_id": "TB", "valid_from": "2014-05-01", "valid_to": "2026-02-28", "position": "WR"}
         ],
     },
+    "joe milton": {
+        "canonical_id": "PLY-JOE-MILTON",
+        "canonical_name": "Joe Milton",
+        "current_team_id": "PHI",
+        "position": "QB",
+        "valid_from": "2026-10-15",
+        "valid_to": "2027-02-28",
+        "forbidden_2026_teams": ["DAL", "NE"],
+        "historical_tenures": [
+            {"team_id": "DAL", "valid_from": "2026-03-01", "valid_to": "2026-10-14", "position": "QB"}
+        ],
+    },
+    "joe milton iii": {
+        "canonical_id": "PLY-JOE-MILTON-III",
+        "canonical_name": "Joe Milton III",
+        "current_team_id": "PHI",
+        "position": "QB",
+        "valid_from": "2026-10-15",
+        "valid_to": "2027-02-28",
+        "forbidden_2026_teams": ["DAL", "NE"],
+        "historical_tenures": [
+            {"team_id": "DAL", "valid_from": "2026-03-01", "valid_to": "2026-10-14", "position": "QB"}
+        ],
+    },
 }
 
 

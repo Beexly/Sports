@@ -1,0 +1,680 @@
+# Week 8 Bitemporal DraftKings NFL Simulation & MILP Portfolio Report
+
+**Architecture:** `GSEFullSlateSimulator` (Enhanced Discrete DST + Student-$t$ $\nu=4$ Copula + NegBin Red-Zone TDs $\text{VMR}=1.87$ + Gamma Yardage + $+3$ Milestone Cliffs) $\to$ `simulate_dirichlet_multinomial_field` ($O=5,000$ Salary-Legal Rosters $\le \$50,000$) $\to$ `optimize_gpp_portfolio` (Sequential Covariance & Overlap-Constrained MILP)
+
+## 1. Full-Pool CSV Ingestion & Same-Position Sinkhorn Injury Reallocation Audit
+
+- **Sunday 11-Game Main Slate (`DKSalaries-1.csv`):** `562` total CSV rows $\to$ **`490` active legal rows** after strictly excluding all `72` `OUT` and `IR` rows (including `RJ Harvey $5200 OUT` id `44664511`, `Emeka Egbuka $5800 OUT` id `44664747`, `Carnell Tate $5200 OUT` id `44664765`, `Tyjae Spears $4800 OUT` id `44664527`, `Brian Robinson Jr. $4500 OUT` id `44664541`, `Andrei Iosivas $3300 IR` id `44664837`, `Alec Pierce $5000 IR`, `Davante Adams $3000 IR`, `De'Von Achane $4000 IR`).
+- **Full 13-Game Slate (`DKSalaries.csv` adding `PHI@WAS` & `CHI@SEA`):** `674` total CSV rows $\to$ **`583` active legal rows** after strictly excluding all `91` `OUT` and `IR` rows (additionally excluding `DeVonta Smith $6700 OUT` id `44684168`, `Dontayvion Wicks $4900 OUT` id `44684216`, `Dameon Pierce $5200 IR`, `Jalen Hurts $4000 IR`, `Terry McLaurin $3000 IR`, `Jacory Croskey-Merritt $4000 IR`).
+- **Note on Roster Team Mappings in Official Week 8 CSVs:** In the 2026 Week 8 DraftKings CSVs, `A.J. Brown ($5900 Q)` is on `NE`, `Tyler Allgeier ($4900)` is on `ARI`, and `PHI`'s active pass-catching room behind `Tanner McKee ($4800)` consists of `Dallas Goedert ($4700)`, `Darius Cooper ($4700)`, `Makai Lemon ($4000)`, `Hollywood Brown ($3700)`, and `Saquon Barkley ($6800)`. Same-position Sinkhorn-Knopp optimal transport (`tau=0.42`) reallocates each `OUT` player's vacated usage strictly to active teammates on their exact CSV team:
+
+| Team | Pos Group | Excluded `OUT`/`IR` Player(s) | Vacated Usage Mass (Yds/G) | Primary Active Sinkhorn Beneficiaries | Sinkhorn Dual Residual |
+|---|---|---|---:|---|---:|
+| **`ATL`** | `RB` | Brian Robinson Jr. | `26.1 yds` | Bijan Robinson (+25.4 yds) | `0.00e+00` |
+| **`CIN`** | `WR/TE` | Andrei Iosivas | `5.9 yds` | Tee Higgins (+4.1 yds) | `1.78e-15` |
+| **`DAL`** | `WR/TE` | KaVontae Turpin | `4.0 yds` |  | `0.00e+00` |
+| **`DEN`** | `RB` | RJ Harvey | `32.9 yds` | Jonah Coleman (+32.8 yds) | `1.78e-15` |
+| **`PHI`** | `WR/TE` | DeVonta Smith, Dontayvion Wicks | `77.4 yds` | Darius Cooper (+9.1 yds), Dallas Goedert (+50.0 yds), Makai Lemon (+15.3 yds) | `0.00e+00` |
+| **`TB`** | `WR/TE` | Emeka Egbuka | `24.8 yds` | Chris Godwin Jr. (+9.5 yds), Ted Hurst III (+5.7 yds), Tez Johnson (+4.5 yds), Cade Otton (+5.0 yds) | `0.00e+00` |
+| **`TEN`** | `RB` | Tyjae Spears | `15.3 yds` | Tony Pollard (+15.3 yds) | `0.00e+00` |
+| **`TEN`** | `WR/TE` | Carnell Tate | `36.6 yds` | Wan'Dale Robinson (+19.5 yds), Elic Ayomanor (+13.7 yds) | `0.00e+00` |
+
+---
+
+## 2. Adversarial Review Enhancements: Empirical Tail Dependence, Wind Sensitivity & Discrete DST
+
+### 2A. Empirical Upper-Tail Dependence Audit ($\hat{\lambda}_U(0.95)$ across 10,000 Simulated Worlds)
+Comparing the Multivariate Student-$t$ Copula ($\nu=4$) against a Gaussian Copula ($\nu=\infty$) with identical linear correlation matrix $\Sigma$:
+
+| Matchup | Correlated Stack Pair | Stack Archetype | Linear Pearson $r$ | Student-$t$ ($\nu=4$) $\hat{\lambda}_U(0.95)$ | Gaussian ($\nu=\infty$) $\hat{\lambda}_U(0.95)$ | Tail Exceedance Lift |
+|---|---|---|---:|---:|---:|---:|
+| `BAL@BUF` | **Josh Allen + Khalil Shakir** | QB-WR1 Same-Team Stack | `+0.263` | **`19.0%`** | `15.4%` | **`1.23x`** |
+| `BAL@BUF` | **Josh Allen + Keon Coleman** | QB-WR2 Same-Team Stack | `+0.228` | **`19.4%`** | `13.2%` | **`1.47x`** |
+| `BAL@BUF` | **Josh Allen + Zay Flowers** | QB-OppWR1 Game Bring-Back | `+0.134` | **`17.8%`** | `9.8%` | **`1.82x`** |
+| `BAL@BUF` | **Lamar Jackson + Zay Flowers** | QB-WR1 Same-Team Stack | `+0.288` | **`24.2%`** | `16.0%` | **`1.51x`** |
+| `ARI@DAL` | **Dak Prescott + CeeDee Lamb** | QB-WR1 Dome Shootout | `+0.287` | **`22.6%`** | `15.8%` | **`1.43x`** |
+| `ARI@DAL` | **Dak Prescott + George Pickens** | QB-WR2 Dome Shootout | `+0.239` | **`20.8%`** | `11.0%` | **`1.89x`** |
+| `ARI@DAL` | **Dak Prescott + Trey McBride** | QB-OppTE1 Dome Bring-Back | `+0.130` | **`16.4%`** | `7.4%` | **`2.22x`** |
+| `TEN@CIN` | **Joe Burrow + Ja'Marr Chase** | QB-WR1 Alpha Stack | `+0.226` | **`20.4%`** | `11.0%` | **`1.85x`** |
+| `TEN@CIN` | **Joe Burrow + Tee Higgins** | QB-WR2 Alpha Stack | `+0.258` | **`21.6%`** | `11.8%` | **`1.83x`** |
+| `MIN@DET` | **Jared Goff + Amon-Ra St. Brown** | QB-WR1 Dome Stack | `+0.287` | **`22.6%`** | `14.0%` | **`1.61x`** |
+| `CLE@PIT` | **Jaylen Warren + Steelers** | RB1-DST Grinder Correlation | `+0.105` | **`11.4%`** | `6.4%` | **`1.78x`** |
+| `KC@DEN` | **Jonah Coleman + Broncos** | RB1-DST Grinder Correlation | `+0.140` | **`11.8%`** | `6.2%` | **`1.90x`** |
+
+### 2B. Outdoor Wind Sensitivity Analysis (`-3.007 yds/mph` GSE Baseline vs `-2.000 yds/mph` Literature Midpoint above `8.0 mph`)
+
+| Matchup | Wind (mph) | Player | Pos | Mean (`-3.007`) | Median `q50` (`-3.007`) | Ceiling `q85` (`-3.007`) | Mean (`-2.000`) | Median `q50` (`-2.000`) | Ceiling `q85` (`-2.000`) | Ceiling Shift $\Delta q_{85}$ |
+|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `BAL@BUF` | `11.2` | **Josh Allen** | `QB` | `30.06` | `26.73` | `45.76` | `30.23` | `27.11` | `45.94` | **`+0.18`** |
+| `BAL@BUF` | `11.2` | **Zay Flowers** | `WR` | `27.92` | `27.66` | `43.51` | `28.06` | `27.77` | `43.67` | **`+0.16`** |
+| `BAL@BUF` | `11.2` | **Khalil Shakir** | `WR` | `12.63` | `9.01` | `20.15` | `12.76` | `9.12` | `20.33` | **`+0.17`** |
+| `CLE@PIT` | `9.4` | **Aaron Rodgers** | `QB` | `15.43` | `12.37` | `23.70` | `15.49` | `12.43` | `23.77` | **`+0.07`** |
+| `CLE@PIT` | `9.4` | **DK Metcalf** | `WR` | `11.38` | `8.42` | `19.09` | `11.43` | `8.46` | `19.16` | **`+0.07`** |
+| `LV@NYJ` | `9.1` | **Garrett Wilson** | `WR` | `13.96` | `10.18` | `21.79` | `14.00` | `10.22` | `21.85` | **`+0.06`** |
+| `TEN@CIN` | `8.8` | **Joe Burrow** | `QB` | `25.71` | `21.85` | `40.09` | `25.75` | `21.89` | `40.13` | **`+0.04`** |
+| `TEN@CIN` | `8.8` | **Ja'Marr Chase** | `WR` | `16.42` | `12.06` | `24.31` | `16.46` | `12.09` | `24.35` | **`+0.04`** |
+| `KC@DEN` | `8.5` | **Patrick Mahomes** | `QB` | `18.96` | `15.26` | `31.36` | `18.99` | `15.28` | `31.38` | **`+0.03`** |
+| `NE@MIA` | `8.3` | **Drake Maye** | `QB` | `22.58` | `19.74` | `36.61` | `22.60` | `19.75` | `36.62` | **`+0.02`** |
+
+---
+
+## 3. Portfolio 1 — Sunday 11-Game Main Slate (`DKSalaries-1.csv`) Flagship Lineups
+
+### Lineup 1A — Optimal 11-Game Cash / Double-Up Lineup
+_Maximizes 0.55 * Median(q50) + 0.45 * Romano-CQR-Floor(q10) across all 490 active players._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `168.3%` (`18.70%` avg/player) | **Low-Owned (`<=10%`) Count:** `4`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`181.67`** | Floor `q10`: `130.38` | Median `q50`: `178.03` | Ceiling `q85`: **`226.07`** | Tail `q99`: **`295.28`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `93.1%` | Top-1% Finish Rate: **`22.28%`** | 1st-Place Tail Rate: **`1.08%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Josh Allen** | `44664390` | `BUF` (`BAL@BUF`) | `$7,700` | `31.8%` | `30.06` | `12.87` | `26.73` | **`45.76`** | **`72.79`** | Starter QB (6 GP) |
+| **RB1** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **CeeDee Lamb** | `44664719` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.60` | `10.82` | `22.37` | **`43.83`** | **`80.30`** | WR (7 GP) |
+| **WR2** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR3** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **TE** | **Mark Andrews** | `44665161` | `BAL` (`BAL@BUF`) | `$3,400` | `2.0%` | `9.10` | `3.63` | `6.93` | **`16.51`** | **`35.26`** | TE (7 GP) |
+| **FLEX** | **Greg Dulcich** | `44665169` | `MIA` (`NE@MIA`) | `$3,200` | `2.9%` | `10.36` | `3.43` | `7.18` | **`17.80`** | **`41.31`** | TE (5 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### Lineup 1B — Flagship Single-Entry GPP (`BAL@BUF` High-Shootout Double-Stack + Bring-Back)
+_Stacks Josh Allen ($7,700) with two BUF pass-catchers and brings back BAL alpha Zay Flowers ($7,200) + injury-vacated RB leverage._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `134.3%` (`14.93%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`168.13`** | Floor `q10`: `117.65` | Median `q50`: `163.87` | Ceiling `q85`: **`210.76`** | Tail `q99`: **`290.99`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `89.0%` | Top-1% Finish Rate: **`13.52%`** | 1st-Place Tail Rate: **`0.44%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Josh Allen** | `44664390` | `BUF` (`BAL@BUF`) | `$7,700` | `31.8%` | `30.06` | `12.87` | `26.73` | **`45.76`** | **`72.79`** | Starter QB (6 GP) |
+| **RB1** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **Khalil Shakir** | `44664751` | `BUF` (`BAL@BUF`) | `$5,600` | `2.5%` | `12.63` | `4.53` | `9.01` | **`20.15`** | **`48.05`** | WR (6 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Joshua Palmer** | `44664817` | `BUF` (`BAL@BUF`) | `$3,600` | `0.6%` | `5.92` | `1.48` | `3.89` | **`12.57`** | **`30.03`** | WR (4 GP) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### Lineup 1C — Flagship Single-Entry GPP (`ARI@DAL` Dome Shootout Double-Stack + Bring-Back)
+_Zero-wind AT&T Stadium dome shootout (Sim Median Total 59.73): Dak Prescott ($6,300) double-stack + ARI bring-back._
+
+- **Total Salary:** `$49,800` / `$50,000` (`$200` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `124.6%` (`13.84%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`173.68`** | Floor `q10`: `122.20` | Median `q50`: `169.24` | Ceiling `q85`: **`217.04`** | Tail `q99`: **`293.78`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `90.3%` | Top-1% Finish Rate: **`17.96%`** | 1st-Place Tail Rate: **`1.16%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Dak Prescott** | `44664396` | `DAL` (`ARI@DAL`) | `$6,300` | `7.4%` | `23.49` | `8.45` | `22.85` | **`36.31`** | **`62.06`** | Starter QB (7 GP) |
+| **RB1** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Ryan Flournoy** | `44664785` | `DAL` (`ARI@DAL`) | `$4,600` | `2.9%` | `12.44` | `4.49` | `8.91` | **`20.25`** | **`47.69`** | WR (7 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### Lineup 1D — Flagship Contrarian / Low-Owned Leverage GPP (`TEN@CIN` Stack + `Jonah Coleman $4,300` RB Leverage)
+_Targets low average ownership (<=12.5% avg) with >=4 sub-10% owned leverage pieces and DEN RB Jonah Coleman ($4,300, RJ Harvey OUT)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `112.1%` (`12.45%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`168.81`** | Floor `q10`: `117.55` | Median `q50`: `164.92` | Ceiling `q85`: **`212.67`** | Tail `q99`: **`285.69`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `88.9%` | Top-1% Finish Rate: **`15.43%`** | 1st-Place Tail Rate: **`0.67%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Joe Burrow** | `44664391` | `CIN` (`TEN@CIN`) | `$7,000` | `11.5%` | `25.71` | `8.57` | `21.85` | **`40.09`** | **`66.17`** | Starter QB (6 GP) |
+| **RB1** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **RB2** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **WR1** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR2** | **Parker Washington** | `44664735` | `JAX` (`IND@JAX`) | `$6,500` | `6.4%` | `16.61` | `5.63` | `11.13` | **`32.10`** | **`59.51`** | WR (6 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Mike Gesicki** | `44665153` | `CIN` (`TEN@CIN`) | `$3,700` | `1.7%` | `8.82` | `2.89` | `6.36` | **`15.69`** | **`37.48`** | TE (5 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Steelers** | `44665384` | `PIT` (`CLE@PIT`) | `$3,300` | `7.7%` | `9.25` | `2.00` | `8.00` | **`17.00`** | **`26.00`** | Team DST |
+
+### Lineup 1E — Low-Scoring / Defensive Grinder Regime GPP (`CLE@PIT` RB1 + DST Correlation + `LAC@LAR` Stack)
+_Pairs Jaylen Warren ($6,600) + Steelers DST ($3,300) positive game-script correlation (rho = +0.24) with Matthew Stafford ($6,400) dome stack._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `124.3%` (`13.81%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`163.81`** | Floor `q10`: `113.50` | Median `q50`: `159.30` | Ceiling `q85`: **`206.21`** | Tail `q99`: **`289.67`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `87.4%` | Top-1% Finish Rate: **`12.39%`** | 1st-Place Tail Rate: **`1.20%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Matthew Stafford** | `44664395` | `LAR` (`LAC@LAR`) | `$6,400` | `2.5%` | `17.53` | `5.88` | `13.69` | **`31.22`** | **`53.53`** | Starter QB (7 GP) |
+| **RB1** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **Puka Nacua** | `44664717` | `LAR` (`LAC@LAR`) | `$8,600` | `21.4%` | `22.47` | `8.91` | `16.25` | **`38.95`** | **`69.18`** | WR (5 GP) |
+| **WR2** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR3** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **TE** | **Tyler Higbee** | `44665151` | `LAR` (`LAC@LAR`) | `$3,800` | `2.1%` | `9.98` | `3.86` | `7.47` | **`17.22`** | **`40.37`** | TE (6 GP) |
+| **FLEX** | **KeAndre Lambert-Smith** | `44664857` | `LAC` (`LAC@LAR`) | `$3,100` | `1.4%` | `8.68` | `3.35` | `6.67` | **`16.22`** | **`34.23`** | WR (1 GP) |
+| **DST** | **Steelers** | `44665384` | `PIT` (`CLE@PIT`) | `$3,300` | `7.7%` | `9.25` | `2.00` | `8.00` | **`17.00`** | **`26.00`** | Team DST |
+
+---
+
+## 4. Portfolio 1 — Full 20-Lineup Diversified Millionaire Maker Portfolio (`DKSalaries-1.csv`)
+
+### 4A. `grade_portfolio` Diagnostics vs 5,000 Salary-Feasible Dirichlet-Multinomial Opponents
+
+- **Generated Lineups:** `20` / `20` (`100%` legal 9-man rosters, `$49,000 <= Salary <= $50,000`, `0` OUT/IR players)
+- **Maximum Pairwise Overlap ($\gamma$):** `4` shared players (`<= 4` hard constraint enforced)
+- **Sequential Covariance Ceiling ($\rho_{cov}$):** `0.42` enforced across all 20 sequential MILP solves
+- **Mean Single-Lineup Win Equity (vs Avg Field Roster):** **`86.81%`**
+- **Portfolio Mean Score:** `162.14` | **Portfolio Mean `p85` Ceiling Score:** **`203.76`**
+- **Portfolio Cumulative Top-1% Finish Rate (at least 1 of 20 in Top 1%):** **`87.13%`**
+- **Portfolio Cumulative 1st-Place Takedown Rate (vs 5,000-Lineup Field):** **`12.71%`**
+
+### 4B. 20-Lineup MME Portfolio Summary Table
+
+| Lineup # | Primary QB + Double Stack | Bring-Back | RB1 / RB2 / FLEX Core | DST | Total Salary | Avg Own% | Mean | Ceiling `q85` | Tail `q99` |
+|---:|---|---|---|---|---:|---:|---:|---:|---:|
+| **#1** | **Lamar Jackson** (`BAL`) + Zay Flowers, Mark Andrews | James Cook III (`BUF`) | James Cook III (RB), Tony Pollard (RB), Jonah Coleman (RB) | `Rams` | `$49,800` | `14.2%` | `177.96` | **`221.58`** | **`300.87`** |
+| **#2** | **Dak Prescott** (`DAL`) + CeeDee Lamb, George Pickens | Trey McBride, Kendrick Bourne (`ARI`) | Tony Pollard (RB), Jonah Coleman (RB), Kendrick Bourne (WR) | `Jets` | `$50,000` | `13.8%` | `172.78` | **`218.13`** | **`305.37`** |
+| **#3** | **Joe Burrow** (`CIN`) + Tee Higgins, Mike Gesicki | Wan'Dale Robinson (`TEN`) | Kenneth Walker III (RB), Jaylen Warren (RB), Jonah Coleman (RB) | `Rams` | `$49,600` | `13.5%` | `169.91` | **`213.09`** | **`290.93`** |
+| **#4** | **Jacoby Brissett** (`ARI`) + Reggie Virgil, Elijah Higgins | CeeDee Lamb (`DAL`) | Bijan Robinson (RB), Jaylen Warren (RB), Jonah Coleman (RB) | `Rams` | `$49,600` | `13.4%` | `168.79` | **`212.20`** | **`285.12`** |
+| **#5** | **Trevor Lawrence** (`JAX`) + Parker Washington, Brenton Strange | Keenan Allen (`IND`) | Kenneth Walker III (RB), Jonah Coleman (RB), Keenan Allen (WR) | `Rams` | `$49,800` | `12.5%` | `167.16` | **`209.90`** | **`284.46`** |
+| **#6** | **Trevor Lawrence** (`JAX`) + Jakobi Meyers, Brenton Strange | Jonathan Taylor (`IND`) | Jonathan Taylor (RB), Tony Pollard (RB), Jonah Coleman (RB) | `Falcons` | `$49,900` | `13.2%` | `169.32` | **`211.96`** | **`288.83`** |
+| **#7** | **Jacoby Brissett** (`ARI`) + Trey McBride, Kendrick Bourne | Javonte Williams (`DAL`) | James Cook III (RB), Javonte Williams (RB), Jonah Coleman (RB) | `Steelers` | `$49,600` | `13.7%` | `164.44` | **`205.04`** | **`275.46`** |
+| **#8** | **Jacoby Brissett** (`ARI`) + Kendrick Bourne, Elijah Higgins | George Pickens (`DAL`) | Kenneth Walker III (RB), Bhayshul Tuten (RB), Tony Pollard (RB) | `Steelers` | `$49,900` | `12.1%` | `160.01` | **`201.89`** | **`278.06`** |
+| **#9** | **Drake Maye** (`NE`) + Hunter Henry, Ryan Miller | Caleb Douglas (`MIA`) | Kenneth Walker III (RB), James Cook III (RB), Jonah Coleman (RB) | `Jets` | `$49,800` | `13.6%` | `162.79` | **`203.97`** | **`282.27`** |
+| **#10** | **Matthew Stafford** (`LAR`) + Puka Nacua, Tyler Higbee | KeAndre Lambert-Smith (`LAC`) | Bijan Robinson (RB), Tony Pollard (RB), Jonah Coleman (RB) | `Jets` | `$50,000` | `12.0%` | `159.82` | **`202.00`** | **`279.87`** |
+| **#11** | **Patrick Mahomes** (`KC`) + Rashee Rice, Travis Kelce | Jonah Coleman (`DEN`) | Bijan Robinson (RB), James Cook III (RB), Jonah Coleman (RB) | `Jets` | `$49,900` | `9.9%` | `160.37` | **`201.94`** | **`276.63`** |
+| **#12** | **Lamar Jackson** (`BAL`) + Zay Flowers, Mark Andrews | Keon Coleman (`BUF`) | Jaylen Warren (RB), Bhayshul Tuten (RB), Mark Andrews (TE) | `Jets` | `$50,000` | `13.3%` | `159.04` | **`200.12`** | **`277.54`** |
+| **#13** | **Joe Burrow** (`CIN`) + Tee Higgins, Mike Gesicki | Elic Ayomanor (`TEN`) | Bijan Robinson (RB), James Cook III (RB), Bhayshul Tuten (RB) | `Jets` | `$49,900` | `12.5%` | `157.99` | **`200.55`** | **`271.46`** |
+| **#14** | **Trevor Lawrence** (`JAX`) + Parker Washington, Brenton Strange | Laquon Treadwell (`IND`) | James Cook III (RB), Jaylen Warren (RB), Tony Pollard (RB) | `Steelers` | `$50,000` | `9.3%` | `154.33` | **`195.70`** | **`272.73`** |
+| **#15** | **Malik Willis** (`MIA`) + Caleb Douglas, Greg Dulcich | Rhamondre Stevenson (`NE`) | Tony Pollard (RB), Rhamondre Stevenson (RB), Greg Dulcich (TE) | `Rams` | `$49,800` | `14.2%` | `161.66` | **`201.97`** | **`273.56`** |
+| **#16** | **Patrick Mahomes** (`KC`) + Rashee Rice, Noah Gray | Jonah Coleman (`DEN`) | Chase Brown (RB), Jonah Coleman (RB), Noah Gray (TE) | `Jets` | `$49,900` | `12.0%` | `159.89` | **`199.16`** | **`276.03`** |
+| **#17** | **Jacoby Brissett** (`ARI`) + Trey McBride, Reggie Virgil | Ryan Flournoy (`DAL`) | Kenneth Walker III (RB), Bijan Robinson (RB), Reggie Virgil (WR) | `Jets` | `$49,800` | `13.4%` | `154.26` | **`195.31`** | **`262.79`** |
+| **#18** | **Drake Maye** (`NE`) + DeMario Douglas, Hunter Henry | Malik Washington (`MIA`) | Bijan Robinson (RB), Jonah Coleman (RB), Hunter Henry (TE) | `Rams` | `$49,900` | `10.3%` | `155.80` | **`195.94`** | **`267.92`** |
+| **#19** | **Jacoby Brissett** (`ARI`) + Kendrick Bourne, Elijah Higgins | George Pickens (`DAL`) | Jahmyr Gibbs (RB), Jaylen Warren (RB), Kendrick Bourne (WR) | `Rams` | `$50,000` | `11.9%` | `154.71` | **`195.09`** | **`266.12`** |
+| **#20** | **Lamar Jackson** (`BAL`) + Ja'Kobi Lane, Josh Cuevas | James Cook III (`BUF`) | Kenneth Walker III (RB), James Cook III (RB), Chase Brown (RB) | `Jets` | `$49,900` | `11.5%` | `151.67` | **`189.74`** | **`257.93`** |
+
+### 4C. Top Player Exposure Summary Across the 20-Lineup MME Portfolio
+
+| Player | DK ID | Pos | Team | Salary | Portfolio Exposure (`n/20`) | Field Proj Own% | Leverage (`Exp% - Own%`) | Mean FPTS | Ceiling `q85` |
+|---|---:|---|---|---:|---:|---:|---:|---:|---:|
+| **Jonah Coleman** | `44664547` | `RB` | `DEN` | `$4,300` | **`12/20` (`60%`)** | `7.8%` | **`+52.2%`** | `22.19` | `34.96` |
+| **Jets** | `44665389` | `DST` | `NYJ` | `$2,800` | **`9/20` (`45%`)** | `8.4%` | **`+36.6%`** | `8.65` | `16.00` |
+| **Omar Cooper Jr.** | `44664777` | `WR` | `NYJ` | `$4,800` | **`8/20` (`40%`)** | `10.4%` | **`+29.6%`** | `15.97` | `31.37` |
+| **James Cook III** | `44664471` | `RB` | `BUF` | `$7,900` | **`7/20` (`35%`)** | `23.6%` | **`+11.4%`** | `25.49` | `43.91` |
+| **Trey McBride** | `44665127` | `TE` | `ARI` | `$7,400` | **`7/20` (`35%`)** | `34.0%` | **`+1.0%`** | `23.12` | `39.18` |
+| **Zay Flowers** | `44664725` | `WR` | `BAL` | `$7,200` | **`7/20` (`35%`)** | `34.0%` | **`+1.0%`** | `27.92` | `43.51` |
+| **Tee Higgins** | `44664731` | `WR` | `CIN` | `$6,700` | **`7/20` (`35%`)** | `34.0%` | **`+1.0%`** | `24.77` | `40.41` |
+| **George Pickens** | `44664733` | `WR` | `DAL` | `$6,600` | **`7/20` (`35%`)** | `10.8%` | **`+24.2%`** | `19.90` | `36.19` |
+| **Tony Pollard** | `44664497` | `RB` | `TEN` | `$5,800` | **`7/20` (`35%`)** | `8.9%` | **`+26.1%`** | `20.01` | `34.65` |
+| **Rams** | `44665382` | `DST` | `LAR` | `$3,500` | **`7/20` (`35%`)** | `4.2%` | **`+30.8%`** | `10.31` | `18.00` |
+| **Kenneth Walker III** | `44664467` | `RB` | `KC` | `$8,800` | **`6/20` (`30%`)** | `33.9%` | **`-3.9%`** | `26.95` | `46.67` |
+| **Bijan Robinson** | `44664469` | `RB` | `ATL` | `$8,500` | **`6/20` (`30%`)** | `21.9%` | **`+8.1%`** | `25.54` | `45.28` |
+| **CeeDee Lamb** | `44664719` | `WR` | `DAL` | `$8,100` | **`5/20` (`25%`)** | `34.0%` | **`-9.0%`** | `27.60` | `43.83` |
+| **Jaylen Warren** | `44664483` | `RB` | `PIT` | `$6,600` | **`5/20` (`25%`)** | `13.4%` | **`+11.6%`** | `21.02` | `35.65` |
+| **Jacoby Brissett** | `44664399` | `QB` | `ARI` | `$5,700` | **`5/20` (`25%`)** | `3.9%` | **`+21.1%`** | `19.97` | `33.30` |
+| **Wan'Dale Robinson** | `44664799` | `WR` | `TEN` | `$4,200` | **`4/20` (`20%`)** | `4.6%` | **`+15.4%`** | `14.18` | `22.52` |
+| **Kendrick Bourne** | `44664805` | `WR` | `ARI` | `$3,900` | **`4/20` (`20%`)** | `2.9%` | **`+17.1%`** | `11.86` | `19.75` |
+| **Lamar Jackson** | `44664392` | `QB` | `BAL` | `$6,800` | **`3/20` (`15%`)** | `8.8%` | **`+6.2%`** | `23.99` | `37.23` |
+| **Trevor Lawrence** | `44664397` | `QB` | `JAX` | `$6,200` | **`3/20` (`15%`)** | `7.1%` | **`+7.9%`** | `22.43` | `37.02` |
+| **Bhayshul Tuten** | `44664495` | `RB` | `JAX` | `$5,900` | **`3/20` (`15%`)** | `5.9%` | **`+9.1%`** | `17.36` | `31.23` |
+| **Brenton Strange** | `44665147` | `TE` | `JAX` | `$4,000` | **`3/20` (`15%`)** | `5.4%` | **`+9.6%`** | `12.77` | `19.90` |
+| **Steelers** | `44665384` | `DST` | `PIT` | `$3,300` | **`3/20` (`15%`)** | `7.7%` | **`+7.3%`** | `9.25` | `17.00` |
+| **Elijah Higgins** | `44665189` | `TE` | `ARI` | `$2,700` | **`3/20` (`15%`)** | `1.0%` | **`+14.0%`** | `6.80` | `13.91` |
+| **Joe Burrow** | `44664391` | `QB` | `CIN` | `$7,000` | **`2/20` (`10%`)** | `11.5%` | **`-1.5%`** | `25.71` | `40.09` |
+| **Parker Washington** | `44664735` | `WR` | `JAX` | `$6,500` | **`2/20` (`10%`)** | `6.4%` | **`+3.6%`** | `16.61` | `32.10` |
+| **Drake Maye** | `44664394` | `QB` | `NE` | `$6,500` | **`2/20` (`10%`)** | `7.2%` | **`+2.8%`** | `22.58` | `36.61` |
+| **Rashee Rice** | `44664737` | `WR` | `KC` | `$6,400` | **`2/20` (`10%`)** | `3.4%` | **`+6.6%`** | `15.32` | `22.82` |
+| **Chase Brown** | `44664487` | `RB` | `CIN` | `$6,300` | **`2/20` (`10%`)** | `5.6%` | **`+4.4%`** | `17.68` | `30.54` |
+
+### 4D. Complete 9-Man Rosters for All 20 MME Portfolio Lineups
+
+### MME Portfolio Lineup #1
+_Sequential covariance-diversified GPP lineup #1 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,800` / `$50,000` (`$200` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `127.9%` (`14.21%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`177.96`** | Floor `q10`: `126.14` | Median `q50`: `173.29` | Ceiling `q85`: **`221.58`** | Tail `q99`: **`300.87`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `91.7%` | Top-1% Finish Rate: **`20.30%`** | 1st-Place Tail Rate: **`1.00%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Lamar Jackson** | `44664392` | `BAL` (`BAL@BUF`) | `$6,800` | `8.8%` | `23.99` | `9.49` | `21.11` | **`37.23`** | **`60.69`** | Starter QB (4 GP) |
+| **RB1** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **RB2** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR3** | **Wan'Dale Robinson** | `44664799` | `TEN` (`TEN@CIN`) | `$4,200` | `4.6%` | `14.18` | `5.64` | `10.91` | **`22.52`** | **`50.55`** | WR (7 GP) + Sinkhorn Boost (+19.5 rec yds from Carnell Tate OUT) |
+| **TE** | **Mark Andrews** | `44665161` | `BAL` (`BAL@BUF`) | `$3,400` | `2.0%` | `9.10` | `3.63` | `6.93` | **`16.51`** | **`35.26`** | TE (7 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #2
+_Sequential covariance-diversified GPP lineup #2 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `124.6%` (`13.84%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`172.78`** | Floor `q10`: `119.37` | Median `q50`: `167.31` | Ceiling `q85`: **`218.13`** | Tail `q99`: **`305.37`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `89.6%` | Top-1% Finish Rate: **`19.85%`** | 1st-Place Tail Rate: **`1.79%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Dak Prescott** | `44664396` | `DAL` (`ARI@DAL`) | `$6,300` | `7.4%` | `23.49` | `8.45` | `22.85` | **`36.31`** | **`62.06`** | Starter QB (7 GP) |
+| **RB1** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **CeeDee Lamb** | `44664719` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.60` | `10.82` | `22.37` | **`43.83`** | **`80.30`** | WR (7 GP) |
+| **WR2** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Kendrick Bourne** | `44664805` | `ARI` (`ARI@DAL`) | `$3,900` | `2.9%` | `11.86` | `4.30` | `9.20` | **`19.75`** | **`46.76`** | WR (6 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #3
+_Sequential covariance-diversified GPP lineup #3 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,600` / `$50,000` (`$400` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `121.5%` (`13.50%` avg/player) | **Low-Owned (`<=10%`) Count:** `4`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`169.91`** | Floor `q10`: `118.45` | Median `q50`: `165.62` | Ceiling `q85`: **`213.09`** | Tail `q99`: **`290.93`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `89.2%` | Top-1% Finish Rate: **`16.63%`** | 1st-Place Tail Rate: **`1.01%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Joe Burrow** | `44664391` | `CIN` (`TEN@CIN`) | `$7,000` | `11.5%` | `25.71` | `8.57` | `21.85` | **`40.09`** | **`66.17`** | Starter QB (6 GP) |
+| **RB1** | **Kenneth Walker III** | `44664467` | `KC` (`KC@DEN`) | `$8,800` | `33.9%` | `26.95` | `8.59` | `25.73` | **`46.67`** | **`78.74`** | RB (6 GP) |
+| **RB2** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **WR1** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR2** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **WR3** | **Wan'Dale Robinson** | `44664799` | `TEN` (`TEN@CIN`) | `$4,200` | `4.6%` | `14.18` | `5.64` | `10.91` | **`22.52`** | **`50.55`** | WR (7 GP) + Sinkhorn Boost (+19.5 rec yds from Carnell Tate OUT) |
+| **TE** | **Mike Gesicki** | `44665153` | `CIN` (`TEN@CIN`) | `$3,700` | `1.7%` | `8.82` | `2.89` | `6.36` | **`15.69`** | **`37.48`** | TE (5 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #4
+_Sequential covariance-diversified GPP lineup #4 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,600` / `$50,000` (`$400` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `121.0%` (`13.44%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`168.79`** | Floor `q10`: `118.43` | Median `q50`: `164.53` | Ceiling `q85`: **`212.20`** | Tail `q99`: **`285.12`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `89.1%` | Top-1% Finish Rate: **`14.23%`** | 1st-Place Tail Rate: **`0.82%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Jacoby Brissett** | `44664399` | `ARI` (`ARI@DAL`) | `$5,700` | `3.9%` | `19.97` | `7.28` | `16.37` | **`33.30`** | **`54.79`** | Starter QB (7 GP) |
+| **RB1** | **Bijan Robinson** | `44664469` | `ATL` (`ATL@TB`) | `$8,500` | `21.9%` | `25.54` | `8.11` | `24.69` | **`45.28`** | **`81.42`** | RB (7 GP) + Sinkhorn Boost (+25.4 yds from Brian Robinson Jr. OUT) |
+| **RB2** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **WR1** | **CeeDee Lamb** | `44664719` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.60` | `10.82` | `22.37` | **`43.83`** | **`80.30`** | WR (7 GP) |
+| **WR2** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR3** | **Reggie Virgil** | `44665055` | `ARI` (`ARI@DAL`) | `$3,000` | `0.9%` | `7.44` | `2.55` | `5.17` | **`14.95`** | **`32.54`** | WR (1 GP) |
+| **TE** | **Elijah Higgins** | `44665189` | `ARI` (`ARI@DAL`) | `$2,700` | `1.0%` | `6.80` | `2.49` | `4.68` | **`13.91`** | **`30.04`** | TE (6 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #5
+_Sequential covariance-diversified GPP lineup #5 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,800` / `$50,000` (`$200` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `112.3%` (`12.48%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`167.16`** | Floor `q10`: `117.21` | Median `q50`: `162.89` | Ceiling `q85`: **`209.90`** | Tail `q99`: **`284.46`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `88.4%` | Top-1% Finish Rate: **`14.24%`** | 1st-Place Tail Rate: **`0.96%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Trevor Lawrence** | `44664397` | `JAX` (`IND@JAX`) | `$6,200` | `7.1%` | `22.43` | `7.45` | `19.22` | **`37.02`** | **`60.10`** | Starter QB (6 GP) |
+| **RB1** | **Kenneth Walker III** | `44664467` | `KC` (`KC@DEN`) | `$8,800` | `33.9%` | `26.95` | `8.59` | `25.73` | **`46.67`** | **`78.74`** | RB (6 GP) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **Parker Washington** | `44664735` | `JAX` (`IND@JAX`) | `$6,500` | `6.4%` | `16.61` | `5.63` | `11.13` | **`32.10`** | **`59.51`** | WR (6 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Brenton Strange** | `44665147` | `JAX` (`IND@JAX`) | `$4,000` | `5.4%` | `12.77` | `4.71` | `8.87` | **`19.90`** | **`48.00`** | TE (6 GP) |
+| **FLEX** | **Keenan Allen** | `44664789` | `IND` (`IND@JAX`) | `$4,500` | `3.1%` | `12.01` | `4.80` | `9.33` | **`20.03`** | **`46.75`** | WR (6 GP) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #6
+_Sequential covariance-diversified GPP lineup #6 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `119.0%` (`13.23%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`169.32`** | Floor `q10`: `119.48` | Median `q50`: `165.37` | Ceiling `q85`: **`211.96`** | Tail `q99`: **`288.83`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `89.2%` | Top-1% Finish Rate: **`15.35%`** | 1st-Place Tail Rate: **`0.86%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Trevor Lawrence** | `44664397` | `JAX` (`IND@JAX`) | `$6,200` | `7.1%` | `22.43` | `7.45` | `19.22` | **`37.02`** | **`60.10`** | Starter QB (6 GP) |
+| **RB1** | **Jonathan Taylor** | `44664473` | `IND` (`IND@JAX`) | `$7,800` | `13.2%` | `22.07` | `7.07` | `19.27` | **`35.88`** | **`71.49`** | RB (7 GP) |
+| **RB2** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **WR1** | **CeeDee Lamb** | `44664719` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.60` | `10.82` | `22.37` | **`43.83`** | **`80.30`** | WR (7 GP) |
+| **WR2** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR3** | **Jakobi Meyers** | `44664791` | `JAX` (`IND@JAX`) | `$4,500` | `2.5%` | `11.32` | `3.64` | `7.79` | **`18.79`** | **`46.63`** | WR (6 GP) |
+| **TE** | **Brenton Strange** | `44665147` | `JAX` (`IND@JAX`) | `$4,000` | `5.4%` | `12.77` | `4.71` | `8.87` | **`19.90`** | **`48.00`** | TE (6 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Falcons** | `44665392` | `ATL` (`ATL@TB`) | `$2,500` | `6.1%` | `6.16` | `0.00` | `5.00` | **`12.00`** | **`22.00`** | Team DST |
+
+### MME Portfolio Lineup #7
+_Sequential covariance-diversified GPP lineup #7 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,600` / `$50,000` (`$400` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `123.0%` (`13.67%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`164.44`** | Floor `q10`: `116.11` | Median `q50`: `160.64` | Ceiling `q85`: **`205.04`** | Tail `q99`: **`275.46`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `88.0%` | Top-1% Finish Rate: **`11.75%`** | 1st-Place Tail Rate: **`0.48%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Jacoby Brissett** | `44664399` | `ARI` (`ARI@DAL`) | `$5,700` | `3.9%` | `19.97` | `7.28` | `16.37` | **`33.30`** | **`54.79`** | Starter QB (7 GP) |
+| **RB1** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **RB2** | **Javonte Williams** | `44664477` | `DAL` (`ARI@DAL`) | `$7,300` | `7.8%` | `19.12` | `6.05` | `12.21` | **`33.66`** | **`66.68`** | RB (7 GP) |
+| **WR1** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR2** | **Kendrick Bourne** | `44664805` | `ARI` (`ARI@DAL`) | `$3,900` | `2.9%` | `11.86` | `4.30` | `9.20` | **`19.75`** | **`46.76`** | WR (6 GP) |
+| **WR3** | **KeAndre Lambert-Smith** | `44664857` | `LAC` (`LAC@LAR`) | `$3,100` | `1.4%` | `8.68` | `3.35` | `6.67` | **`16.22`** | **`34.23`** | WR (1 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Steelers** | `44665384` | `PIT` (`CLE@PIT`) | `$3,300` | `7.7%` | `9.25` | `2.00` | `8.00` | **`17.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #8
+_Sequential covariance-diversified GPP lineup #8 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `109.0%` (`12.11%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`160.01`** | Floor `q10`: `110.19` | Median `q50`: `155.94` | Ceiling `q85`: **`201.89`** | Tail `q99`: **`278.06`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `86.2%` | Top-1% Finish Rate: **`10.42%`** | 1st-Place Tail Rate: **`0.38%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Jacoby Brissett** | `44664399` | `ARI` (`ARI@DAL`) | `$5,700` | `3.9%` | `19.97` | `7.28` | `16.37` | **`33.30`** | **`54.79`** | Starter QB (7 GP) |
+| **RB1** | **Kenneth Walker III** | `44664467` | `KC` (`KC@DEN`) | `$8,800` | `33.9%` | `26.95` | `8.59` | `25.73` | **`46.67`** | **`78.74`** | RB (6 GP) |
+| **RB2** | **Bhayshul Tuten** | `44664495` | `JAX` (`IND@JAX`) | `$5,900` | `5.9%` | `17.36` | `5.48` | `10.81` | **`31.23`** | **`64.46`** | RB (6 GP) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR3** | **Kendrick Bourne** | `44664805` | `ARI` (`ARI@DAL`) | `$3,900` | `2.9%` | `11.86` | `4.30` | `9.20` | **`19.75`** | **`46.76`** | WR (6 GP) |
+| **TE** | **Elijah Higgins** | `44665189` | `ARI` (`ARI@DAL`) | `$2,700` | `1.0%` | `6.80` | `2.49` | `4.68` | **`13.91`** | **`30.04`** | TE (6 GP) |
+| **FLEX** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **DST** | **Steelers** | `44665384` | `PIT` (`CLE@PIT`) | `$3,300` | `7.7%` | `9.25` | `2.00` | `8.00` | **`17.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #9
+_Sequential covariance-diversified GPP lineup #9 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,800` / `$50,000` (`$200` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `122.3%` (`13.59%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`162.79`** | Floor `q10`: `113.79` | Median `q50`: `158.46` | Ceiling `q85`: **`203.97`** | Tail `q99`: **`282.27`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `87.1%` | Top-1% Finish Rate: **`11.85%`** | 1st-Place Tail Rate: **`0.85%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Drake Maye** | `44664394` | `NE` (`NE@MIA`) | `$6,500` | `7.2%` | `22.58` | `8.33` | `19.74` | **`36.61`** | **`60.08`** | Starter QB (7 GP) |
+| **RB1** | **Kenneth Walker III** | `44664467` | `KC` (`KC@DEN`) | `$8,800` | `33.9%` | `26.95` | `8.59` | `25.73` | **`46.67`** | **`78.74`** | RB (6 GP) |
+| **RB2** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **WR1** | **CeeDee Lamb** | `44664719` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.60` | `10.82` | `22.37` | **`43.83`** | **`80.30`** | WR (7 GP) |
+| **WR2** | **Caleb Douglas** | `44664801` | `MIA` (`NE@MIA`) | `$4,100` | `4.6%` | `12.86` | `3.94` | `8.77` | **`20.06`** | **`53.77`** | WR (3 GP) |
+| **WR3** | **Ryan Miller** | `44665037` | `NE` (`NE@MIA`) | `$3,000` | `0.5%` | `5.72` | `1.47` | `3.91` | **`12.60`** | **`29.16`** | WR (3 GP) |
+| **TE** | **Hunter Henry** | `44665141` | `NE` (`NE@MIA`) | `$4,300` | `2.4%` | `10.75` | `3.61` | `7.30` | **`17.89`** | **`40.93`** | TE (7 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #10
+_Sequential covariance-diversified GPP lineup #10 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `108.3%` (`12.04%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`159.82`** | Floor `q10`: `110.05` | Median `q50`: `155.26` | Ceiling `q85`: **`202.00`** | Tail `q99`: **`279.87`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `85.8%` | Top-1% Finish Rate: **`12.05%`** | 1st-Place Tail Rate: **`1.12%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Matthew Stafford** | `44664395` | `LAR` (`LAC@LAR`) | `$6,400` | `2.5%` | `17.53` | `5.88` | `13.69` | **`31.22`** | **`53.53`** | Starter QB (7 GP) |
+| **RB1** | **Bijan Robinson** | `44664469` | `ATL` (`ATL@TB`) | `$8,500` | `21.9%` | `25.54` | `8.11` | `24.69` | **`45.28`** | **`81.42`** | RB (7 GP) + Sinkhorn Boost (+25.4 yds from Brian Robinson Jr. OUT) |
+| **RB2** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **WR1** | **Puka Nacua** | `44664717` | `LAR` (`LAC@LAR`) | `$8,600` | `21.4%` | `22.47` | `8.91` | `16.25` | **`38.95`** | **`69.18`** | WR (5 GP) |
+| **WR2** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR3** | **KeAndre Lambert-Smith** | `44664857` | `LAC` (`LAC@LAR`) | `$3,100` | `1.4%` | `8.68` | `3.35` | `6.67` | **`16.22`** | **`34.23`** | WR (1 GP) |
+| **TE** | **Tyler Higbee** | `44665151` | `LAR` (`LAC@LAR`) | `$3,800` | `2.1%` | `9.98` | `3.86` | `7.47` | **`17.22`** | **`40.37`** | TE (6 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #11
+_Sequential covariance-diversified GPP lineup #11 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `89.3%` (`9.92%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`160.37`** | Floor `q10`: `111.35` | Median `q50`: `156.40` | Ceiling `q85`: **`201.94`** | Tail `q99`: **`276.63`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `86.1%` | Top-1% Finish Rate: **`11.74%`** | 1st-Place Tail Rate: **`0.96%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Patrick Mahomes** | `44664398` | `KC` (`KC@DEN`) | `$6,000` | `3.4%` | `18.96` | `7.03` | `15.26` | **`31.36`** | **`55.22`** | Starter QB (6 GP) |
+| **RB1** | **Bijan Robinson** | `44664469` | `ATL` (`ATL@TB`) | `$8,500` | `21.9%` | `25.54` | `8.11` | `24.69` | **`45.28`** | **`81.42`** | RB (7 GP) + Sinkhorn Boost (+25.4 yds from Brian Robinson Jr. OUT) |
+| **RB2** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **WR1** | **Rashee Rice** | `44664737` | `KC` (`KC@DEN`) | `$6,400` | `3.4%` | `15.32` | `5.28` | `10.40` | **`22.82`** | **`57.24`** | WR (3 GP) |
+| **WR2** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **WR3** | **Wan'Dale Robinson** | `44664799` | `TEN` (`TEN@CIN`) | `$4,200` | `4.6%` | `14.18` | `5.64` | `10.91` | **`22.52`** | **`50.55`** | WR (7 GP) + Sinkhorn Boost (+19.5 rec yds from Carnell Tate OUT) |
+| **TE** | **Travis Kelce** | `44665133` | `KC` (`KC@DEN`) | `$5,000` | `5.9%` | `14.07` | `5.24` | `9.76` | **`21.20`** | **`53.27`** | TE (6 GP) |
+| **FLEX** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #12
+_Sequential covariance-diversified GPP lineup #12 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `119.6%` (`13.29%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`159.04`** | Floor `q10`: `110.08` | Median `q50`: `154.83` | Ceiling `q85`: **`200.12`** | Tail `q99`: **`277.54`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `86.0%` | Top-1% Finish Rate: **`9.32%`** | 1st-Place Tail Rate: **`0.36%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Lamar Jackson** | `44664392` | `BAL` (`BAL@BUF`) | `$6,800` | `8.8%` | `23.99` | `9.49` | `21.11` | **`37.23`** | **`60.69`** | Starter QB (4 GP) |
+| **RB1** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **RB2** | **Bhayshul Tuten** | `44664495` | `JAX` (`IND@JAX`) | `$5,900` | `5.9%` | `17.36` | `5.48` | `10.81` | **`31.23`** | **`64.46`** | RB (6 GP) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **Keon Coleman** | `44664767` | `BUF` (`BAL@BUF`) | `$5,100` | `2.7%` | `11.90` | `3.94` | `8.04` | **`19.34`** | **`47.42`** | WR (6 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Mark Andrews** | `44665161` | `BAL` (`BAL@BUF`) | `$3,400` | `2.0%` | `9.10` | `3.63` | `6.93` | **`16.51`** | **`35.26`** | TE (7 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #13
+_Sequential covariance-diversified GPP lineup #13 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `112.1%` (`12.46%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`157.99`** | Floor `q10`: `108.05` | Median `q50`: `153.98` | Ceiling `q85`: **`200.55`** | Tail `q99`: **`271.46`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `85.4%` | Top-1% Finish Rate: **`10.26%`** | 1st-Place Tail Rate: **`0.49%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Joe Burrow** | `44664391` | `CIN` (`TEN@CIN`) | `$7,000` | `11.5%` | `25.71` | `8.57` | `21.85` | **`40.09`** | **`66.17`** | Starter QB (6 GP) |
+| **RB1** | **Bijan Robinson** | `44664469` | `ATL` (`ATL@TB`) | `$8,500` | `21.9%` | `25.54` | `8.11` | `24.69` | **`45.28`** | **`81.42`** | RB (7 GP) + Sinkhorn Boost (+25.4 yds from Brian Robinson Jr. OUT) |
+| **RB2** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **WR1** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR2** | **Malik Washington** | `44664793` | `MIA` (`NE@MIA`) | `$4,400` | `3.3%` | `12.52` | `4.57` | `9.12` | **`20.57`** | **`49.62`** | WR (6 GP) |
+| **WR3** | **Elic Ayomanor** | `44664941` | `TEN` (`TEN@CIN`) | `$3,000` | `1.8%` | `9.14` | `3.00` | `6.63` | **`16.49`** | **`43.14`** | WR (7 GP) + Sinkhorn Boost (+13.7 rec yds from Carnell Tate OUT) |
+| **TE** | **Mike Gesicki** | `44665153` | `CIN` (`TEN@CIN`) | `$3,700` | `1.7%` | `8.82` | `2.89` | `6.36` | **`15.69`** | **`37.48`** | TE (5 GP) |
+| **FLEX** | **Bhayshul Tuten** | `44664495` | `JAX` (`IND@JAX`) | `$5,900` | `5.9%` | `17.36` | `5.48` | `10.81` | **`31.23`** | **`64.46`** | RB (6 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #14
+_Sequential covariance-diversified GPP lineup #14 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `84.1%` (`9.35%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`154.33`** | Floor `q10`: `104.94` | Median `q50`: `150.27` | Ceiling `q85`: **`195.70`** | Tail `q99`: **`272.73`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `84.0%` | Top-1% Finish Rate: **`9.28%`** | 1st-Place Tail Rate: **`0.59%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Trevor Lawrence** | `44664397` | `JAX` (`IND@JAX`) | `$6,200` | `7.1%` | `22.43` | `7.45` | `19.22` | **`37.02`** | **`60.10`** | Starter QB (6 GP) |
+| **RB1** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **RB2** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **WR1** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR2** | **Parker Washington** | `44664735` | `JAX` (`IND@JAX`) | `$6,500` | `6.4%` | `16.61` | `5.63` | `11.13` | **`32.10`** | **`59.51`** | WR (6 GP) |
+| **WR3** | **Laquon Treadwell** | `44664855` | `IND` (`IND@JAX`) | `$3,100` | `0.8%` | `6.85` | `2.29` | `4.84` | **`14.39`** | **`31.15`** | WR (7 GP) |
+| **TE** | **Brenton Strange** | `44665147` | `JAX` (`IND@JAX`) | `$4,000` | `5.4%` | `12.77` | `4.71` | `8.87` | **`19.90`** | **`48.00`** | TE (6 GP) |
+| **FLEX** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **DST** | **Steelers** | `44665384` | `PIT` (`CLE@PIT`) | `$3,300` | `7.7%` | `9.25` | `2.00` | `8.00` | **`17.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #15
+_Sequential covariance-diversified GPP lineup #15 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,800` / `$50,000` (`$200` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `127.8%` (`14.20%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`161.66`** | Floor `q10`: `114.45` | Median `q50`: `157.56` | Ceiling `q85`: **`201.97`** | Tail `q99`: **`273.56`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `87.1%` | Top-1% Finish Rate: **`9.74%`** | 1st-Place Tail Rate: **`0.44%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Malik Willis** | `44664409` | `MIA` (`NE@MIA`) | `$4,900` | `2.1%` | `15.34` | `6.01` | `13.31` | **`24.07`** | **`47.38`** | Starter QB (6 GP) |
+| **RB1** | **Tony Pollard** | `44664497` | `TEN` (`TEN@CIN`) | `$5,800` | `8.9%` | `20.01` | `6.32` | `12.51` | **`34.65`** | **`68.59`** | RB (7 GP) + Sinkhorn Boost (+15.3 yds from Tyjae Spears OUT) |
+| **RB2** | **Rhamondre Stevenson** | `44664503` | `NE` (`NE@MIA`) | `$5,600` | `3.1%` | `14.13` | `4.72` | `9.64` | **`26.50`** | **`51.99`** | RB (7 GP) |
+| **WR1** | **CeeDee Lamb** | `44664719` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.60` | `10.82` | `22.37` | **`43.83`** | **`80.30`** | WR (7 GP) |
+| **WR2** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR3** | **Caleb Douglas** | `44664801` | `MIA` (`NE@MIA`) | `$4,100` | `4.6%` | `12.86` | `3.94` | `8.77` | **`20.06`** | **`53.77`** | WR (3 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Greg Dulcich** | `44665169` | `MIA` (`NE@MIA`) | `$3,200` | `2.9%` | `10.36` | `3.43` | `7.18` | **`17.80`** | **`41.31`** | TE (5 GP) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #16
+_Sequential covariance-diversified GPP lineup #16 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `108.0%` (`12.00%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`159.89`** | Floor `q10`: `113.41` | Median `q50`: `155.41` | Ceiling `q85`: **`199.16`** | Tail `q99`: **`276.03`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `86.3%` | Top-1% Finish Rate: **`9.83%`** | 1st-Place Tail Rate: **`0.57%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Patrick Mahomes** | `44664398` | `KC` (`KC@DEN`) | `$6,000` | `3.4%` | `18.96` | `7.03` | `15.26` | **`31.36`** | **`55.22`** | Starter QB (6 GP) |
+| **RB1** | **Chase Brown** | `44664487` | `CIN` (`TEN@CIN`) | `$6,300` | `5.6%` | `17.68` | `6.58` | `12.50` | **`30.54`** | **`59.90`** | RB (6 GP) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **Zay Flowers** | `44664725` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.92` | `10.43` | `27.66` | **`43.51`** | **`82.13`** | WR (6 GP) |
+| **WR2** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR3** | **Rashee Rice** | `44664737` | `KC` (`KC@DEN`) | `$6,400` | `3.4%` | `15.32` | `5.28` | `10.40` | **`22.82`** | **`57.24`** | WR (3 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Noah Gray** | `44665179` | `KC` (`KC@DEN`) | `$2,900` | `0.7%` | `6.16` | `1.62` | `4.64` | **`12.91`** | **`28.86`** | TE (6 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #17
+_Sequential covariance-diversified GPP lineup #17 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,800` / `$50,000` (`$200` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `120.8%` (`13.42%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`154.26`** | Floor `q10`: `106.75` | Median `q50`: `150.20` | Ceiling `q85`: **`195.31`** | Tail `q99`: **`262.79`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `84.3%` | Top-1% Finish Rate: **`8.15%`** | 1st-Place Tail Rate: **`0.42%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Jacoby Brissett** | `44664399` | `ARI` (`ARI@DAL`) | `$5,700` | `3.9%` | `19.97` | `7.28` | `16.37` | **`33.30`** | **`54.79`** | Starter QB (7 GP) |
+| **RB1** | **Kenneth Walker III** | `44664467` | `KC` (`KC@DEN`) | `$8,800` | `33.9%` | `26.95` | `8.59` | `25.73` | **`46.67`** | **`78.74`** | RB (6 GP) |
+| **RB2** | **Bijan Robinson** | `44664469` | `ATL` (`ATL@TB`) | `$8,500` | `21.9%` | `25.54` | `8.11` | `24.69` | **`45.28`** | **`81.42`** | RB (7 GP) + Sinkhorn Boost (+25.4 yds from Brian Robinson Jr. OUT) |
+| **WR1** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **WR2** | **Ryan Flournoy** | `44664785` | `DAL` (`ARI@DAL`) | `$4,600` | `2.9%` | `12.44` | `4.49` | `8.91` | **`20.25`** | **`47.69`** | WR (7 GP) |
+| **WR3** | **Wan'Dale Robinson** | `44664799` | `TEN` (`TEN@CIN`) | `$4,200` | `4.6%` | `14.18` | `5.64` | `10.91` | **`22.52`** | **`50.55`** | WR (7 GP) + Sinkhorn Boost (+19.5 rec yds from Carnell Tate OUT) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Reggie Virgil** | `44665055` | `ARI` (`ARI@DAL`) | `$3,000` | `0.9%` | `7.44` | `2.55` | `5.17` | **`14.95`** | **`32.54`** | WR (1 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+### MME Portfolio Lineup #18
+_Sequential covariance-diversified GPP lineup #18 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `92.9%` (`10.33%` avg/player) | **Low-Owned (`<=10%`) Count:** `6`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`155.80`** | Floor `q10`: `108.71` | Median `q50`: `151.82` | Ceiling `q85`: **`195.94`** | Tail `q99`: **`267.92`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `84.7%` | Top-1% Finish Rate: **`9.56%`** | 1st-Place Tail Rate: **`0.55%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Drake Maye** | `44664394` | `NE` (`NE@MIA`) | `$6,500` | `7.2%` | `22.58` | `8.33` | `19.74` | **`36.61`** | **`60.08`** | Starter QB (7 GP) |
+| **RB1** | **Bijan Robinson** | `44664469` | `ATL` (`ATL@TB`) | `$8,500` | `21.9%` | `25.54` | `8.11` | `24.69` | **`45.28`** | **`81.42`** | RB (7 GP) + Sinkhorn Boost (+25.4 yds from Brian Robinson Jr. OUT) |
+| **RB2** | **Jonah Coleman** | `44664547` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.19` | `8.42` | `15.89` | **`34.96`** | **`72.18`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR2** | **Malik Washington** | `44664793` | `MIA` (`NE@MIA`) | `$4,400` | `3.3%` | `12.52` | `4.57` | `9.12` | **`20.57`** | **`49.62`** | WR (6 GP) |
+| **WR3** | **DeMario Douglas** | `44664795` | `NE` (`NE@MIA`) | `$4,400` | `1.3%` | `8.89` | `2.76` | `6.43` | **`16.48`** | **`38.97`** | WR (7 GP) |
+| **TE** | **Trey McBride** | `44665127` | `ARI` (`ARI@DAL`) | `$7,400` | `34.0%` | `23.12` | `10.34` | `17.29` | **`39.18`** | **`65.90`** | TE (7 GP) |
+| **FLEX** | **Hunter Henry** | `44665141` | `NE` (`NE@MIA`) | `$4,300` | `2.4%` | `10.75` | `3.61` | `7.30` | **`17.89`** | **`40.93`** | TE (7 GP) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #19
+_Sequential covariance-diversified GPP lineup #19 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `107.3%` (`11.93%` avg/player) | **Low-Owned (`<=10%`) Count:** `4`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`154.71`** | Floor `q10`: `106.73` | Median `q50`: `150.77` | Ceiling `q85`: **`195.09`** | Tail `q99`: **`266.12`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `84.5%` | Top-1% Finish Rate: **`8.19%`** | 1st-Place Tail Rate: **`0.40%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Jacoby Brissett** | `44664399` | `ARI` (`ARI@DAL`) | `$5,700` | `3.9%` | `19.97` | `7.28` | `16.37` | **`33.30`** | **`54.79`** | Starter QB (7 GP) |
+| **RB1** | **Jahmyr Gibbs** | `44664465` | `DET` (`MIN@DET`) | `$9,500` | `26.8%` | `24.11` | `8.66` | `22.11` | **`39.90`** | **`74.51`** | RB (6 GP) |
+| **RB2** | **Jaylen Warren** | `44664483` | `PIT` (`CLE@PIT`) | `$6,600` | `13.4%` | `21.02` | `6.82` | `19.55` | **`35.65`** | **`70.00`** | RB (7 GP) |
+| **WR1** | **Tee Higgins** | `44664731` | `CIN` (`TEN@CIN`) | `$6,700` | `34.0%` | `24.77` | `8.67` | `20.05` | **`40.41`** | **`75.73`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **WR2** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR3** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **TE** | **Elijah Higgins** | `44665189` | `ARI` (`ARI@DAL`) | `$2,700` | `1.0%` | `6.80` | `2.49` | `4.68` | **`13.91`** | **`30.04`** | TE (6 GP) |
+| **FLEX** | **Kendrick Bourne** | `44664805` | `ARI` (`ARI@DAL`) | `$3,900` | `2.9%` | `11.86` | `4.30` | `9.20` | **`19.75`** | **`46.76`** | WR (6 GP) |
+| **DST** | **Rams** | `44665382` | `LAR` (`LAC@LAR`) | `$3,500` | `4.2%` | `10.31` | `2.00` | `10.00` | **`18.00`** | **`28.00`** | Team DST |
+
+### MME Portfolio Lineup #20
+_Sequential covariance-diversified GPP lineup #20 of 20 (overlap gamma <= 4)._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `103.1%` (`11.46%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`151.67`** | Floor `q10`: `105.53` | Median `q50`: `147.95` | Ceiling `q85`: **`189.74`** | Tail `q99`: **`257.93`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `83.6%` | Top-1% Finish Rate: **`5.81%`** | 1st-Place Tail Rate: **`0.19%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Lamar Jackson** | `44664392` | `BAL` (`BAL@BUF`) | `$6,800` | `8.8%` | `23.99` | `9.49` | `21.11` | **`37.23`** | **`60.69`** | Starter QB (4 GP) |
+| **RB1** | **Kenneth Walker III** | `44664467` | `KC` (`KC@DEN`) | `$8,800` | `33.9%` | `26.95` | `8.59` | `25.73` | **`46.67`** | **`78.74`** | RB (6 GP) |
+| **RB2** | **James Cook III** | `44664471` | `BUF` (`BAL@BUF`) | `$7,900` | `23.6%` | `25.49` | `7.39` | `24.01` | **`43.91`** | **`80.44`** | RB (6 GP) |
+| **WR1** | **George Pickens** | `44664733` | `DAL` (`ARI@DAL`) | `$6,600` | `10.8%` | `19.90` | `7.37` | `13.76` | **`36.19`** | **`64.11`** | WR (7 GP) |
+| **WR2** | **Omar Cooper Jr.** | `44664777` | `NYJ` (`LV@NYJ`) | `$4,800` | `10.4%` | `15.97` | `4.98` | `10.36` | **`31.37`** | **`58.98`** | WR (3 GP) |
+| **WR3** | **Ja'Kobi Lane** | `44664835` | `BAL` (`BAL@BUF`) | `$3,400` | `0.9%` | `7.26` | `2.27` | `5.48` | **`14.83`** | **`31.79`** | WR (3 GP) |
+| **TE** | **Josh Cuevas** | `44665371` | `BAL` (`BAL@BUF`) | `$2,500` | `0.8%` | `5.78` | `1.40` | `4.33` | **`12.45`** | **`28.27`** | TE (5 GP) |
+| **FLEX** | **Chase Brown** | `44664487` | `CIN` (`TEN@CIN`) | `$6,300` | `5.6%` | `17.68` | `6.58` | `12.50` | **`30.54`** | **`59.90`** | RB (6 GP) |
+| **DST** | **Jets** | `44665389` | `NYJ` (`LV@NYJ`) | `$2,800` | `8.4%` | `8.65` | `2.00` | `7.00` | **`16.00`** | **`26.00`** | Team DST |
+
+---
+
+## 5. Portfolio 2 — Full 13-Game Slate (`DKSalaries.csv` adding `PHI@WAS` & `CHI@SEA`)
+
+### Lineup 2A — 13-Game Optimal Cash / Double-Up Lineup (`DKSalaries.csv`)
+_Maximizes 0.55 * Median(q50) + 0.45 * Floor(q10) across all 583 active 13-game players._
+
+- **Total Salary:** `$49,900` / `$50,000` (`$100` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `167.2%` (`18.58%` avg/player) | **Low-Owned (`<=10%`) Count:** `4`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`191.55`** | Floor `q10`: `137.43` | Median `q50`: `188.40` | Ceiling `q85`: **`236.72`** | Tail `q99`: **`304.19`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `93.6%` | Top-1% Finish Rate: **`25.70%`** | 1st-Place Tail Rate: **`1.16%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Dak Prescott** | `44683760` | `DAL` (`ARI@DAL`) | `$6,300` | `6.6%` | `23.47` | `8.41` | `22.78` | **`36.28`** | **`62.29`** | Starter QB (7 GP) |
+| **RB1** | **Jaylen Warren** | `44683866` | `PIT` (`CLE@PIT`) | `$6,600` | `12.7%` | `21.13` | `6.85` | `19.55` | **`35.67`** | **`71.24`** | RB (7 GP) |
+| **RB2** | **Jonah Coleman** | `44683958` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.18` | `8.51` | `15.91` | **`34.91`** | **`72.34`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **CeeDee Lamb** | `44684156` | `DAL` (`ARI@DAL`) | `$8,100` | `34.0%` | `27.77` | `10.91` | `27.66` | **`43.82`** | **`80.07`** | WR (7 GP) |
+| **WR2** | **Zay Flowers** | `44684162` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.98` | `10.47` | `28.10` | **`43.45`** | **`80.91`** | WR (6 GP) |
+| **WR3** | **Tee Higgins** | `44684170` | `CIN` (`TEN@CIN`) | `$6,700` | `29.5%` | `24.95` | `8.77` | `25.29` | **`40.36`** | **`76.43`** | WR (6 GP) + Sinkhorn Boost (+4.1 rec yds from Andrei Iosivas OUT) |
+| **TE** | **Dallas Goedert** | `44684648` | `PHI` (`PHI@WAS`) | `$4,700` | `34.0%` | `25.29` | `10.52` | `18.02` | **`40.77`** | **`74.02`** | TE (5 GP) + Sinkhorn Boost (+50.0 rec yds from DeVonta Smith, Dontayvion Wicks OUT) |
+| **FLEX** | **Greg Dulcich** | `44684684` | `MIA` (`NE@MIA`) | `$3,200` | `1.7%` | `10.15` | `3.58` | `7.17` | **`17.42`** | **`40.36`** | TE (5 GP) |
+| **DST** | **Jets** | `44684949` | `NYJ` (`LV@NYJ`) | `$2,800` | `7.0%` | `8.63` | `2.00` | `7.00` | **`15.00`** | **`26.00`** | Team DST |
+
+### Lineup 2B — 13-Game Flagship Single-Entry GPP Lineup (`CHI@SEA` Stack + `PHI@WAS` & `KC@DEN` Injury Leverage)
+_Stacks Caleb Williams ($6,100) + CHI pass-catchers with Jaxon Smith-Njigba ($9,100) bring-back, plus Dallas Goedert ($4,700, DeVonta Smith + Dontayvion Wicks OUT) and Jonah Coleman ($4,300, RJ Harvey OUT)._
+
+- **Total Salary:** `$50,000` / `$50,000` (`$0` remaining) | **Roster Size:** `9/9 Legal DK` | **Zero OUT/IR Verified:** `PASS`
+- **Projected Ownership:** Sum `143.2%` (`15.91%` avg/player) | **Low-Owned (`<=10%`) Count:** `5`
+- **Simulated Lineup Distribution (10,000 Worlds):** Mean **`169.35`** | Floor `q10`: `118.33` | Median `q50`: `165.32` | Ceiling `q85`: **`212.89`** | Tail `q99`: **`286.54`**
+- **Field Win Equity (vs 5,000 Dirichlet-Multinomial Opponents):** Beat Avg Opponent: `86.9%` | Top-1% Finish Rate: **`11.43%`** | 1st-Place Tail Rate: **`0.85%`**
+
+| Slot | Player | DK ID | Team (Matchup) | Salary | Proj Own% | Mean | Floor q10 | Median q50 | Ceiling q85 | Tail q99 | Role / Stack & Injury Reallocation Note |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **QB** | **Caleb Williams** | `44683762` | `CHI` (`CHI@SEA`) | `$6,100` | `3.2%` | `18.12` | `6.99` | `15.39` | **`28.89`** | **`52.88`** | Starter QB (4 GP) |
+| **RB1** | **James Cook III** | `44683850` | `BUF` (`BAL@BUF`) | `$7,900` | `22.3%` | `26.04` | `7.57` | `24.18` | **`44.61`** | **`80.03`** | RB (6 GP) |
+| **RB2** | **Jonah Coleman** | `44683958` | `DEN` (`KC@DEN`) | `$4,300` | `7.8%` | `22.18` | `8.51` | `15.91` | **`34.91`** | **`72.34`** | DEN Lead Active RB (W7 Takeover + Harvey OUT) + Sinkhorn Boost (+32.8 yds from RJ Harvey OUT) |
+| **WR1** | **Jaxon Smith-Njigba** | `44684152` | `SEA` (`CHI@SEA`) | `$9,100` | `34.0%` | `25.36` | `9.46` | `20.63` | **`41.96`** | **`75.30`** | WR (7 GP) |
+| **WR2** | **Zay Flowers** | `44684162` | `BAL` (`BAL@BUF`) | `$7,200` | `34.0%` | `27.98` | `10.47` | `28.10` | **`43.45`** | **`80.91`** | WR (6 GP) |
+| **WR3** | **Rome Odunze** | `44684232` | `CHI` (`CHI@SEA`) | `$4,600` | `1.6%` | `10.27` | `3.30` | `7.51` | **`17.80`** | **`44.57`** | WR (7 GP) |
+| **TE** | **Dallas Goedert** | `44684648` | `PHI` (`PHI@WAS`) | `$4,700` | `34.0%` | `25.29` | `10.52` | `18.02` | **`40.77`** | **`74.02`** | TE (5 GP) + Sinkhorn Boost (+50.0 rec yds from DeVonta Smith, Dontayvion Wicks OUT) |
+| **FLEX** | **Kalif Raymond** | `44684276` | `CHI` (`CHI@SEA`) | `$3,600` | `1.1%` | `7.88` | `2.49` | `5.90` | **`15.54`** | **`32.70`** | WR (7 GP) |
+| **DST** | **Falcons** | `44684953` | `ATL` (`ATL@TB`) | `$2,500` | `5.1%` | `6.23` | `0.00` | `5.00` | **`12.00`** | **`23.00`** | Team DST |
+

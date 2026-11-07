@@ -325,7 +325,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Baltimore plays a two-high safety shell on 59.5 out of 100 snaps with light boxes on 78.0 out of 100 snaps, while Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 on play-action) against Baltimore's 36.5 out of 100 clean-pocket rate.",
       "blitzRateVsPressureToSack": "Jacksonville dials up five-man pressure on nearly a third of pass plays, leaving the middle of the field open for Baltimore's tight ends and quick-game hot reads while Baltimore takes 3.1 sacks and Jacksonville takes 2.6 sacks.",
-      "personnelTendencies": "With Travis Etienne Jr. sidelined, Chris Rodriguez Jr. steps into Jacksonville's primary early-down rushing role alongside Trevor Lawrence's perimeter and middle-field passing to Brian Thomas Jr., Travis Hunter, and Brenton Strange. For Baltimore, Derrick Henry handles 18.6 carries while Mark Andrews, Rashod Bateman, and Zay Flowers command the middle-field and play-action target share.",
+      "personnelTendencies": "With Travis Etienne Jr. sidelined, Bhayshul Tuten steps into Jacksonville's primary early-down rushing role alongside Trevor Lawrence's perimeter and middle-field passing to Brian Thomas Jr., Travis Hunter, and Brenton Strange. For Baltimore, Derrick Henry handles 18.6 carries while Mark Andrews, Rashod Bateman, and Zay Flowers command the middle-field and play-action target share.",
       "coachingEdge": "Baltimore runs on 54 out of 100 first-half plays to establish Derrick Henry before teams trailing in the second half shift to 62 out of 100 pass plays.",
       "notes": "Because the spread steamed from Baltimore -3.5 past the key 3 and 7 football numbers to -7.5, we pass the main-line side and attack 10 top-rated player props (88/100) and our 3-leg correlated Same-Game Parlay."
     },
@@ -440,8 +440,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.346
       },
       {
-        "playerId": "chris-rodriguez-jr",
-        "playerName": "Chris Rodriguez Jr.",
+        "playerId": "bhayshul-tuten",
+        "playerName": "Bhayshul Tuten",
         "propType": "Rushing Yards",
         "market": "rush_yds",
         "line": 42.5,
@@ -449,7 +449,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "88/100",
         "expectedClv": 0.119,
         "decision": "PLAY",
-        "nEffTargetNotes": "With Travis Etienne Jr. sidelined and Bhayshul Tuten limited, Chris Rodriguez Jr. leads Jacksonville's early-down ground attack against a Baltimore defense playing light boxes on 78.0 out of 100 snaps.",
+        "nEffTargetNotes": "With Travis Etienne Jr. sidelined, Bhayshul Tuten leads Jacksonville's early-down ground attack against a Baltimore defense playing light boxes on 78.0 out of 100 snaps.",
         "pOver": 0.651,
         "pUnder": 0.349
       },
@@ -557,7 +557,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "floorNote": "Projects for 29.5 pass attempts plus scramble volume in second-half catch-up script."
         },
         {
-          "player": "Chris Rodriguez Jr.",
+          "player": "Bhayshul Tuten",
           "position": "RB",
           "salary": 5600,
           "projection": 16.4,

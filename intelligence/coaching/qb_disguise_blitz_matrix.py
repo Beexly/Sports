@@ -266,6 +266,26 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         sack_rate_pct=5.6, pressure_to_sack_rate_pct=11.4, qb_fault_sack_share_pct=20.0,
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
+    "Joe Milton": QBDisguiseBlitzProfile(
+        "Joe Milton", "PHI", 48, 7.05, 89.4, 0.022, 0.295, 19, 6.45, 82.5, -0.045, 0.04, 1.2,
+        sack_rate_pct=6.8, pressure_to_sack_rate_pct=13.5, qb_fault_sack_share_pct=26.0,
+        pressure_survival_archetype="SCRAMBLE_CREATOR"
+    ),
+    "Joe Milton III": QBDisguiseBlitzProfile(
+        "Joe Milton III", "PHI", 48, 7.05, 89.4, 0.022, 0.295, 19, 6.45, 82.5, -0.045, 0.04, 1.2,
+        sack_rate_pct=6.8, pressure_to_sack_rate_pct=13.5, qb_fault_sack_share_pct=26.0,
+        pressure_survival_archetype="SCRAMBLE_CREATOR"
+    ),
+    "Carson Wentz": QBDisguiseBlitzProfile(
+        "Carson Wentz", "MIN", 88, 7.18, 91.2, 0.035, 0.285, 34, 6.52, 83.8, -0.042, 0.01, -1.2,
+        sack_rate_pct=6.5, pressure_to_sack_rate_pct=13.0, qb_fault_sack_share_pct=27.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
+    "Gardner Minshew II": QBDisguiseBlitzProfile(
+        "Gardner Minshew II", "ARI", 110, 6.75, 88.0, 0.012, 0.288, 42, 6.20, 81.5, -0.055, -0.03, -1.8,
+        sack_rate_pct=6.2, pressure_to_sack_rate_pct=12.4, qb_fault_sack_share_pct=23.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
     "Brock Purdy": QBDisguiseBlitzProfile(
         "Brock Purdy", "SF", 144, 8.42, 108.6, 0.212, 0.272, 54, 7.86, 101.8, 0.108, 0.19, 6.2,
         sack_rate_pct=5.1, pressure_to_sack_rate_pct=17.0, qb_fault_sack_share_pct=19.0,
@@ -305,7 +325,7 @@ TEAM_TO_QB_2026: Dict[str, str] = {
     "NO": "Tyler Shough",
     "NYG": "Jameis Winston",
     "NYJ": "Geno Smith",
-    "PHI": "Tanner McKee",
+    "PHI": "Joe Milton",
     "PIT": "Aaron Rodgers",
     "SEA": "Sam Darnold",
     "SF": "Brock Purdy",

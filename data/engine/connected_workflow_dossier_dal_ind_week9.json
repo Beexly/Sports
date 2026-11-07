@@ -6,7 +6,7 @@
   "armed_26_layer_workflow_receipt": {
     "game_id": "2026_09_DAL_IND",
     "matchup": "DAL @ IND",
-    "executed_at_utc": "2026-11-07T16:17:18.575440+00:00",
+    "executed_at_utc": "2026-11-07T21:19:16.367893+00:00",
     "context_packet_id": "PKT-2026_09_DAL_IND-20261105",
     "context_packet_path": "data/context_packets/2026_09_DAL_IND.json",
     "reasoning_trace_id": "TRC-2026_09_DAL_IND-20261105",
@@ -29,9 +29,9 @@
     "stage0_receipt_sha256": "61c294aaf03f36fe9393d8f7ee3ce9f92215bdb17fc13212a5d47269ad92c8de",
     "stage1a_receipt_sha256": "bda08da2f8fa1bc406f4ab9277755c1fd4c2e0ea8154c720c75f2ebdbcfcb075",
     "stage1b_receipt_sha256": "ab6ea8bd411cbe9fc2423efebcca939696c798d81ae89231df23e0a7c6014ee8",
-    "stage2_receipt_sha256": "c5868719efd2454d0cc6b0d61d3fbfa8abf7422d110b1b3ec6cffded09235579",
-    "stage3_4_receipt_sha256": "473d953b69b318a8bd665ef0dd6c9c89d75dd7c93e7fb60e3451555ff6249032",
-    "stage5_receipt_sha256": "a49c3f5cbaed6fde97d9e3a55f0f7785bf4ad2901bef1848f0f2c4666558e89b"
+    "stage2_receipt_sha256": "a0f49f7bb71e1106bc0b6b2101edf926c8120b98f86f9a452bb9470ad8929aea",
+    "stage3_4_receipt_sha256": "343a73e575d61f4fa50652fe43b10d985fdd3ddf725192d1a30d40917289cbc3",
+    "stage5_receipt_sha256": "2a8d60477a9760d614d511b57a41d4150d907f0c114e812cf65444377881263a"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -15185,11 +15185,11 @@
       },
       "full_repo_279_family_situational_matrix": {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-        "generated_at_utc": "2026-11-07T16:17:18.504752+00:00",
+        "generated_at_utc": "2026-11-07T21:19:16.271142+00:00",
         "total_ts_modules_cataloged": 1464,
         "prediction_engine_ts_modules": 1455,
         "mcp_equations_server_ts_modules": 9,
-        "total_python_intelligence_modules_cataloged": 550,
+        "total_python_intelligence_modules_cataloged": 611,
         "x_situational_80_rules_count": 87,
         "consolidated_sweep_signals_count": 29,
         "all_in_one_research_signals_count": 17,
@@ -16103,7 +16103,7 @@
           "probability_movement_cap": 0.12,
           "post_overlay_prob": 0.5073
         },
-        "receipt_sha256": "8f6594805ece5bb150cdcd3b3c5d03965e1526ec0406bef378efc2c3d16b0cbd",
+        "receipt_sha256": "61e27fd6128e3a3a99c198b59f7f287b938f977ee17e345382c4f59820175ffc",
         "measured_primitives": {
           "measured_primitives_count": 3,
           "wr1_absorption": {
@@ -16465,15 +16465,15 @@
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "bridge_version": "uncompressed_25k_v1.0",
         "monorepo_census_summary": {
-          "total_repo_files_indexed": 63262,
-          "docs_files_indexed": 11318,
+          "total_repo_files_indexed": 63409,
+          "docs_files_indexed": 11361,
           "arxiv_program_files_indexed": 1799,
           "engine_docs_indexed": 3811,
           "packages_files_indexed": 5939,
           "packages_count": 25,
-          "intelligence_files_indexed": 947,
+          "intelligence_files_indexed": 1017,
           "intelligence_domains_count": 35,
-          "scripts_files_indexed": 860,
+          "scripts_files_indexed": 875,
           "apps_files_indexed": 3540,
           "web_api_routes_indexed": 271,
           "formal_proof_files_indexed": 69,
@@ -25080,7 +25080,7 @@
       "bal_cover_plus_7_5_prob": 0.4172,
       "over_41_5_prob": 0.3193
     },
-    "stage2_receipt_sha256": "c5868719efd2454d0cc6b0d61d3fbfa8abf7422d110b1b3ec6cffded09235579",
+    "stage2_receipt_sha256": "a0f49f7bb71e1106bc0b6b2101edf926c8120b98f86f9a452bb9470ad8929aea",
     "eq_gate_12k_epa_shift": 0.001849,
     "equation_gate_12304_clamped_delta": 0.022269,
     "armed_26_layer_trace_handoff": {
@@ -25095,7 +25095,7 @@
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "c5868719efd2454d0cc6b0d61d3fbfa8abf7422d110b1b3ec6cffded09235579",
+    "parent_stage2_receipt_sha256": "a0f49f7bb71e1106bc0b6b2101edf926c8120b98f86f9a452bb9470ad8929aea",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -28930,11 +28930,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "473d953b69b318a8bd665ef0dd6c9c89d75dd7c93e7fb60e3451555ff6249032"
+    "stage3_4_receipt_sha256": "343a73e575d61f4fa50652fe43b10d985fdd3ddf725192d1a30d40917289cbc3"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "c5868719efd2454d0cc6b0d61d3fbfa8abf7422d110b1b3ec6cffded09235579",
+    "parent_stage2_receipt_sha256": "a0f49f7bb71e1106bc0b6b2101edf926c8120b98f86f9a452bb9470ad8929aea",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -32769,11 +32769,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "473d953b69b318a8bd665ef0dd6c9c89d75dd7c93e7fb60e3451555ff6249032"
+    "stage3_4_receipt_sha256": "343a73e575d61f4fa50652fe43b10d985fdd3ddf725192d1a30d40917289cbc3"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "473d953b69b318a8bd665ef0dd6c9c89d75dd7c93e7fb60e3451555ff6249032",
+    "parent_stage3_4_receipt_sha256": "343a73e575d61f4fa50652fe43b10d985fdd3ddf725192d1a30d40917289cbc3",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
     "max_prop_win_prob": 0.7254,
@@ -35545,11 +35545,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "a49c3f5cbaed6fde97d9e3a55f0f7785bf4ad2901bef1848f0f2c4666558e89b"
+    "stage5_receipt_sha256": "2a8d60477a9760d614d511b57a41d4150d907f0c114e812cf65444377881263a"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "473d953b69b318a8bd665ef0dd6c9c89d75dd7c93e7fb60e3451555ff6249032",
+    "parent_stage3_4_receipt_sha256": "343a73e575d61f4fa50652fe43b10d985fdd3ddf725192d1a30d40917289cbc3",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
     "max_prop_win_prob": 0.7254,
@@ -38321,8 +38321,8 @@
         }
       }
     },
-    "stage5_receipt_sha256": "a49c3f5cbaed6fde97d9e3a55f0f7785bf4ad2901bef1848f0f2c4666558e89b"
+    "stage5_receipt_sha256": "2a8d60477a9760d614d511b57a41d4150d907f0c114e812cf65444377881263a"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {},
-  "master_bundle_sha256": "e689b7e64626f70c04ee961e40c78d16ab56ca863df7e7718f5c9bb2def23fb6"
+  "master_bundle_sha256": "6f1964aa8f8a3148e4968b5a3b34ea547f31674ca23e75f0aa0fd8660226e314"
 }

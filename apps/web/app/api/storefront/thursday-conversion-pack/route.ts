@@ -47,7 +47,7 @@ export async function GET() {
       balQb1: "Joe Fagnano / Jacoby Brissett",
       balRb1: "Derrick Henry",
       jaxQb1: "Trevor Lawrence",
-      jaxRb1: "Chris Rodriguez Jr.",
+      jaxRb1: "Bhayshul Tuten",
       blockedInactives: ["Lamar Jackson (Out)", "Tyler Huntley (Out)", "Travis Etienne Jr. (Out)"],
     },
     decisivePlays: [

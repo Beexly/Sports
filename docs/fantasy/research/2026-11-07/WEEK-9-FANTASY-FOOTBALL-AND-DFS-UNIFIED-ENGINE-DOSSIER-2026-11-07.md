@@ -1,6 +1,6 @@
 # Week 9 Unified Season-Long Fantasy Football & DraftKings DFS Dossier (2026-11-07)
 
-- **Generated (UTC):** `2026-11-07T19:32:03.464126+00:00`
+- **Generated (UTC):** `2026-11-07T20:04:46.811641+00:00`
 - **Engine Backbone:** 10,000-World Connected Workflow Dossiers + 10-Gate DFS/Fantasy Accuracy Engine (`G1..G10`) + 35-Table Nov 7 Morning Analytics Sweep + 7-Equation Literature Portfolio Optimizer (`EQ-DFS-01..07`)
 - **Live Sleeper Waiver Telemetry:** `50` trending adds / `50` trending drops ingested
 

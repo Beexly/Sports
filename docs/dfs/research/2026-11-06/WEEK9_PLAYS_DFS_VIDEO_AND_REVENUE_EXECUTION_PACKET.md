@@ -1,7 +1,7 @@
 # Week 9 Plays, 360-Degree Board, DraftKings/FanDuel DFS, Short-Form Video & Multi-Stream Revenue Execution Packet
 
-- **Generated At (UTC):** `2026-11-07T10:57:39.540962+00:00`
-- **Official New Engine Verified Record:** **`47-19-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**
+- **Generated At (UTC):** `2026-11-07T21:21:04.844107+00:00`
+- **Official New Engine Verified Record:** **`47-19-1` (`71.2%`, `+24.92 Units` | Base `38-13-1`, `+22.85 Units`)**
 - **Paywall & Copy Compliance:** `0` Free Paid Picks Leaked · `0` Robotic Math Jargon on Public Surfaces · Official Plays & Full DFS Lineups Gated at `https://www.galaxysportsedge.com/packages` and `/fantasy/dfs`
 
 ---
@@ -10,9 +10,9 @@
 
 | Matchup | Window | Public Film & Environment Hook | Trench & Scheme Watch | Official Tickets |
 |---|---|---|---|---|
-| **MIN @ DET** | Sunday 1:00 PM ET (Ford Field Indoor) | NFC North indoor track meet featuring Brian Flores' simulated A-gap pressure looks against Detroit's play-action protection and condensed bunch formations. Both offenses rank top-6 in neutral script efficiency, creating high snap-volume leverage in the intermediate middle of the field. | Interior pass-pro slide communication on silent count vs blitz-look safety rotations. | `GATED_BEHIND_PAYWALL` ([Unlock](https://www.galaxysportsedge.com/packages)) |
-| **WAS @ NYG** | Sunday 1:00 PM ET (MetLife Stadium Outdoor) | Divisional rematch where Washington's up-tempo no-huddle RPO spacing tests New York's defensive front four and single-high man coverage outside the numbers. Early-down rushing efficiency and red-zone play-action bootlegs dictate total drive volume. | Edge rush containment on mobile quarterback rollouts vs slot option routes. | `GATED_BEHIND_PAYWALL` ([Unlock](https://www.galaxysportsedge.com/packages)) |
-| **DET / NFC North & Afternoon Slate Window** | Sunday 4:05 PM / 4:25 PM ET Late Window | Late-window matchups feature sharp contrast between two-high quarters shells forcing checkdowns and aggressive Cover-1 man defenses surrendering explosive play-action post and corner routes. | Second-half pass-rush stamina and 1Q scripted opening-drive pass rates. | `GATED_BEHIND_PAYWALL` ([Unlock](https://www.galaxysportsedge.com/packages)) |
+| **DET @ MIA** | Sunday 1:00 PM ET (Hard Rock Stadium Outdoor) | Interconference track meet featuring Detroit's play-action protection and condensed bunch formations against Miami's speed-based RPO and perimeter motion attack. High snap-volume leverage in the intermediate middle of the field for Amon-Ra St. Brown and Jahmyr Gibbs. | Interior pass-pro slide communication vs blitz-look safety rotations. | `GATED_BEHIND_PAYWALL` ([Unlock](https://www.galaxysportsedge.com/packages)) |
+| **NYG @ PHI** | Sunday 1:00 PM ET (Lincoln Financial Field Outdoor) | NFC East divisional battle where Philadelphia's inside-zone rushing attack with Saquon Barkley and Joe Milton tests New York's defensive front four and single-high man coverage outside the numbers. | Edge rush containment on mobile quarterback rollouts vs slot option routes. | `GATED_BEHIND_PAYWALL` ([Unlock](https://www.galaxysportsedge.com/packages)) |
+| **BUF @ MIN** | Monday 8:15 PM ET (U.S. Bank Stadium Indoor MNF) | Monday Night Football indoor showcase featuring Brian Flores' simulated A-gap pressure looks against Josh Allen and Buffalo's 12-personnel play-action attack, while Carson Wentz and Justin Jefferson attack Buffalo's two-high quarters shell. | Road silent-count communication in a loud dome and 1Q scripted opening-drive pass rates. | `GATED_BEHIND_PAYWALL` ([Unlock](https://www.galaxysportsedge.com/packages)) |
 
 ---
 
@@ -52,7 +52,7 @@
 - **0–3s Hook:** Visual: All-22 end-zone angle showing two safeties standing 12 yards deep pre-snap. Voiceover: 'Before the snap, this looks like basic two-high zone—watch what happens the instant the center snaps the ball.'
 - **3–25s Film Breakdown:** Visual: Animated arrows tracking the boundary safety sprinting into the robber window while the slot corner blitzes. Voiceover: 'The defense rotates into single-high robber right as the quarterback drops back. By the time the quarterback resets his eyes from the rotating safety to his second read, the interior pressure is already in his lap.'
 - **25–45s Matchup Overlay:** Visual: Matchup card comparing completion rate and checkdown rate against disguised safety rotations in Week 9. Voiceover: 'Against disguised coverage rotations, running back checkdown targets and tight end underneath sit routes jump dramatically while deep boundary throws stall out.'
-- **45–60s Paywall & Follow CTA:** Visual: Galaxy Sports Edge prop explorer and 47-19-1 verified banner. Voiceover: 'Our verified engine is 47-19-1 (+26.50 units) this season. Follow for daily film breakdowns and unlock every official Week 9 play and player prop at galaxysportsedge.com/packages.'
+- **45–60s Paywall & Follow CTA:** Visual: Galaxy Sports Edge prop explorer and 47-19-1 verified banner. Voiceover: 'Our verified engine is 47-19-1 (+24.92 units) this season. Follow for daily film breakdowns and unlock every official Week 9 play and player prop at galaxysportsedge.com/packages.'
 - **Social Caption:** `Post-snap safety rotation is the biggest trap for quarterbacks in Week 9. Verified Record: 47-19-1 (+24.92u). Unlock the full Week 9 prop & game card at galaxysportsedge.com/packages #NFL #Quarterback #FootballStrategy #PlayerProps`
 
 ### `VID-W9-03` — The 1st-Quarter Scripted Play-Call Edge Sportsbooks Miss Every Sunday (`1080x1920 Vertical 60fps (50 seconds)`)
@@ -61,7 +61,7 @@
 - **0–3s Hook:** Visual: Offensive coordinator call sheet on the sideline during the opening drive. Voiceover: 'The first 15 plays of an NFL game are scripted all week—and that makes 1st-quarter markets completely different from full-game lines.'
 - **3–25s Film Breakdown:** Visual: Motion graphics highlighting opening-drive pre-snap motion and scripted tight-end screens. Voiceover: 'Before second-half score effects or injuries take over, offensive coordinators run their highest-percentage schemed touches for their primary playmakers on Drive 1 and Drive 2.'
 - **25–45s Matchup Overlay:** Visual: 1st-Quarter pass rate and opening-drive target concentration leaderboard for Week 9 offenses. Voiceover: 'Teams that script 68% pass plays in the first quarter create immediate early-volume opportunities before defensive coordinators adjust at halftime.'
-- **45–60s Paywall & Follow CTA:** Visual: Galaxy Sports Edge 360-degree board view (1Q, 1H, Kicking, IDP, Full Game). Voiceover: 'We review all 77 market types on every game—and our verified record sits at 47-19-1 (+26.50 units). Follow us and grab full Week 9 access at galaxysportsedge.com/packages.'
+- **45–60s Paywall & Follow CTA:** Visual: Galaxy Sports Edge 360-degree board view (1Q, 1H, Kicking, IDP, Full Game). Voiceover: 'We review all 77 market types on every game—and our verified record sits at 47-19-1 (+24.92 units). Follow us and grab full Week 9 access at galaxysportsedge.com/packages.'
 - **Social Caption:** `Why the first 15 scripted plays create the sharpest 1Q & 1H setups in Week 9. 47-19-1 (+24.92u) verified record. See the official Week 9 card at galaxysportsedge.com/packages #NFLBetting #FirstQuarter #NFLWeek9 #GalaxySportsEdge`
 
 ### `VID-W9-04` — How to Build a Winning Week 9 DraftKings & FanDuel GPP Tournament Stack (`1080x1920 Vertical 60fps (55 seconds)`)
@@ -93,7 +93,7 @@
 | `REV-03` | **Whop Digital Storefront & VIP Community** | `https://whop.com/galaxy-sports-edge` | Cross-platform membership checkout & automated Discord/alert role provisioning synced with GSE entitlements. | `whop_storefront_clicked`, `whop_membership_synced` | `ACTIVE_PRODUCTION` |
 | `REV-04` | **Impact.com Sportsbook & Fantasy Partner Network** | `Impact Account 8111208` | CPA and revenue-share affiliate attribution on partner sportsbook, DFS, and analytics tool signups. | `affiliate_partner_clicked`, `impact_conversion_logged` | `ACTIVE_PRODUCTION` |
 | `REV-05` | **OddsJam Line-Shopping & Positive-EV Partner Referral** | `https://oddsjam.com/?ref=zwniodg` | Recurring affiliate commission when subscribers use our execution price-shopping referral link. | `oddsjam_referral_clicked` | `ACTIVE_PRODUCTION` |
-| `REV-06` | **CapperTek Verified Record Syndication & Leaderboard Funnel** | `CapperTek Verified Tracker (47-19-1, 72.9%, +26.50u)` | Third-party verified record syndication driving high-intent organic bettors to /packages. | `cappertek_referral_landed`, `package_checkout_started` | `ACTIVE_PRODUCTION` |
+| `REV-06` | **CapperTek Verified Record Syndication & Leaderboard Funnel** | `CapperTek Verified Tracker (47-19-1, 71.2%, +24.92u)` | Third-party verified record syndication driving high-intent organic bettors to /packages. | `cappertek_referral_landed`, `package_checkout_started` | `ACTIVE_PRODUCTION` |
 | `REV-07` | **Short-Form Video Creator Ad Revenue (YouTube Shorts, X, TikTok, IG Reels)** | `Multi-Platform Vertical Video Feed (VID-W9-01..05)` | Platform ad-revenue sharing plus top-of-funnel organic follower acquisition routing to /packages and /fantasy/dfs. | `video_hook_viewed`, `social_cta_clicked`, `dfs_hub_viewed` | `ACTIVE_PRODUCTION` |
 
 ---

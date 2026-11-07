@@ -51,6 +51,9 @@ if str(REPO_ROOT) not in sys.path:
 if str(REPO_ROOT / "intelligence") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "intelligence"))
 
+from intelligence.data_sources.firecrawl_alexandria_live_sync import (  # noqa: E402
+    assert_zero_duplicate_teams_or_players_on_slate,
+)
 from scripts.ops.gse_connected_game_workflow import execute_connected_game_workflow  # noqa: E402
 
 OFFICIAL_WEEK9_15_GAME_SLATE: list[tuple[str, str]] = [
@@ -71,16 +74,9 @@ OFFICIAL_WEEK9_15_GAME_SLATE: list[tuple[str, str]] = [
     ("BUF", "MIN"),  # 15. Monday Night Football
 ]
 
-FEATURED_WEEK9_SLATE: list[tuple[str, str]] = [
-    ("DET", "GB"),
-    ("MIA", "BUF"),
-    ("IND", "MIN"),
-    ("TB", "KC"),
-]
+FEATURED_WEEK9_SLATE: list[tuple[str, str]] = []
 
-COMPLETE_WEEK9_ALL_MATCHUPS: list[tuple[str, str]] = (
-    OFFICIAL_WEEK9_15_GAME_SLATE + FEATURED_WEEK9_SLATE
-)
+COMPLETE_WEEK9_ALL_MATCHUPS: list[tuple[str, str]] = list(OFFICIAL_WEEK9_15_GAME_SLATE)
 
 
 def _sha256_obj(obj: Any) -> str:
@@ -211,7 +207,7 @@ def run_week9_full_slate_connected_workflow(
     # Also update week9_complete_360_all_games_verified_call_sheet.json (eliminating the legacy 8-line "16-5" stub)
     call_sheet_path = REPO_ROOT / "data" / "engine" / "week9_complete_360_all_games_verified_call_sheet.json"
     call_sheet_payload = {
-        "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet + 4 Featured Showcase Matchups",
+        "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet (30 Active Teams, 0 Duplicate Teams)",
         "status": "VERIFIED",
         "timestamp": slate_packet["generated_at_utc"],
         "games_simulated": len(official_15_keys),
@@ -220,7 +216,13 @@ def run_week9_full_slate_connected_workflow(
         "featured_showcase_matchups": featured_4_keys,
         "week9_bye_teams": ["PIT", "TEN"],
         "markets_covered": 77,
-        "official_ledger_record": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
+        "official_ledger_record": {
+            "record": "47-19-1",
+            "win_rate": 0.7121,
+            "net_units": "+24.92u",
+            "base_record": "38-13-1",
+            "base_net_units": "+22.85u",
+        },
         "slate_packet_sha256": slate_packet["slate_packet_sha256"],
         "per_game_master_bundle_sha256": {
             k: v["master_bundle_sha256"] for k, v in dossiers_summary.items()
@@ -228,10 +230,15 @@ def run_week9_full_slate_connected_workflow(
     }
     call_sheet_path.write_text(json.dumps(call_sheet_payload, indent=2, allow_nan=False), encoding="utf-8")
 
-    # Update week9_coverage_audit_2026.json to reflect 15/15 official games + 32/32 QB1s
+    # Update week9_coverage_audit_2026.json to reflect 15/15 official games + 32/32 QB1s + 0 duplicate teams
     cov_path = REPO_ROOT / "data" / "engine" / "week9_coverage_audit_2026.json"
     if cov_path.is_file():
         cov = json.loads(cov_path.read_text(encoding="utf-8"))
+        if "slate_sources" in cov and isinstance(cov["slate_sources"], dict):
+            if "live_board" in cov["slate_sources"] and isinstance(cov["slate_sources"]["live_board"], dict):
+                cov["slate_sources"]["live_board"]["games"] = [
+                    f"2026_09_{a}_{h}" for a, h in OFFICIAL_WEEK9_15_GAME_SLATE
+                ]
         cov["total_staged_week9_games"] = len(official_15_keys)
         cov["all_15_espn_week9_games_evaluated"] = (len(official_15_keys) == 15)
         cov["official_15_week9_matchups"] = official_15_keys
@@ -250,8 +257,8 @@ def run_week9_full_slate_connected_workflow(
         cov["note"] = (
             "All 15 official 2026 Week 9 NFL games (JAX@BAL, CIN@ATL, DAL@IND, NYJ@KC, DET@MIA, "
             "CLE@NO, NYG@PHI, LAR@WAS, DEN@CAR, HOU@LAC, GB@NE, LV@SF, ARI@SEA, TB@CHI, BUF@MIN) "
-            "plus 4 featured showcase matchups (DET@GB, MIA@BUF, IND@MIN, TB@KC) have full Stage 0..5 "
-            "cryptographically chained dossiers and 32/32 confirmed NFL QB1s."
+            "have full Stage 0..5 cryptographically chained dossiers, 30 unique active teams (0 duplicate teams; "
+            "PIT and TEN on Bye), and 32/32 confirmed NFL QB1s."
         )
         cov_path.write_text(json.dumps(cov, indent=2, allow_nan=False), encoding="utf-8")
 

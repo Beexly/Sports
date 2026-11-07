@@ -607,25 +607,25 @@ export function runJarvisJynxAutonomousBrain(req: {
 
   const gatedGameCalls: JarvisJynxBetCall[] = [
     {
-      matchup: "DET @ GB",
+      matchup: "DET @ MIA",
       market: "Spread",
-      selection: "DET +2.5",
+      selection: "DET -3.5",
       convictionScore: "84/100",
       clvBps: 112,
       stageGateDecision: "PLAY",
-      note: "Detroit slot efficiency and trench protection advantage in NFC North division clash.",
+      note: "Detroit slot efficiency and trench protection advantage in Miami.",
     },
     {
-      matchup: "MIA @ BUF",
+      matchup: "GB @ NE",
       market: "Spread",
-      selection: "BUF -6.0",
+      selection: "GB -3.0",
       convictionScore: "83/100",
       clvBps: 105,
       stageGateDecision: "PLAY",
-      note: "Josh Allen red-zone rush equity and Highmark ground control.",
+      note: "Jordan Love two-TE play-action seam leverage and Gillette ground control.",
     },
     {
-      matchup: "IND @ MIN",
+      matchup: "BUF @ MIN",
       market: "Total",
       selection: "Control Tempo & Red-Zone Field Goal Environment",
       convictionScore: "81/100",
@@ -674,7 +674,7 @@ export function runJarvisJynxAutonomousBrain(req: {
   const contentPack: JarvisJynxContentPack = {
     xPost:
       `[GSE AUTONOMOUS DESK · ${modelUsed}] Verified Season Record: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u). ` +
-      `Week 9 Sunday Main Slate (DET @ GB, MIA @ BUF, IND @ MIN) & MNF (TB @ KC) 360-degree market categories live: ` +
+      `Week 9 Sunday Main Slate (DET @ MIA, GB @ NE, DAL @ IND) & MNF (BUF @ MIN) 360-degree market categories live: ` +
       `Game Lines, 1Q/1H Scripts, Red-Zone Kicking FGM, Receiving Volume Props, Correlated SGPs & 14-Player DFS Core. ` +
       `Full locked card at galaxysportsedge.com/packages.`,
     igCarouselCaption:

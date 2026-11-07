@@ -1,0 +1,98 @@
+{
+  "report_type": "CADENCE_V2_5_SUPPLEMENTAL_DK_CONTEXT_NOT_IN_SINKHORN",
+  "slot": "TNF",
+  "week": 9,
+  "season": 2026,
+  "matchup": "JAX @ BAL",
+  "generated_at_utc": "2026-11-05T23:49:52.073770+00:00",
+  "dk_file": {
+    "path": "data\\dfs\\DKSalaries_week9_tnf_jax_bal_2026-11-05.csv",
+    "sha256": "89244ef2a319aea980adea660a4d5c155ce354816e2c8940ad62a547b4148392",
+    "rows": 104
+  },
+  "statuses": [
+    {
+      "team": "BAL",
+      "position": "RB",
+      "name": "Adam Randall",
+      "status": "IR"
+    },
+    {
+      "team": "BAL",
+      "position": "TE",
+      "name": "Durham Smythe",
+      "status": "IR"
+    },
+    {
+      "team": "BAL",
+      "position": "QB",
+      "name": "Joe Fagnano",
+      "status": "Q"
+    },
+    {
+      "team": "BAL",
+      "position": "RB",
+      "name": "Justice Hill",
+      "status": "Q"
+    },
+    {
+      "team": "BAL",
+      "position": "QB",
+      "name": "Lamar Jackson",
+      "status": "OUT"
+    },
+    {
+      "team": "BAL",
+      "position": "QB",
+      "name": "Skylar Thompson",
+      "status": "IR"
+    },
+    {
+      "team": "BAL",
+      "position": "QB",
+      "name": "Tyler Huntley",
+      "status": "Q"
+    },
+    {
+      "team": "BAL",
+      "position": "K",
+      "name": "Tyler Loop",
+      "status": "Q"
+    },
+    {
+      "team": "JAX",
+      "position": "RB",
+      "name": "Bhayshul Tuten",
+      "status": "Q"
+    },
+    {
+      "team": "JAX",
+      "position": "RB",
+      "name": "Chris Rodriguez Jr.",
+      "status": "Q"
+    },
+    {
+      "team": "JAX",
+      "position": "WR",
+      "name": "Jakobi Meyers",
+      "status": "Q"
+    }
+  ],
+  "canonical_feed_gap": "data/nflverse/injuries_2026.csv has 0 week-9 rows (stops at week 8); canonical run is identity. DK statuses are DFS-eligibility tags, not report_status, and were NOT fed to Sinkhorn.",
+  "role_mapping_for_documentation_only": {
+    "JAX": {
+      "Bhayshul Tuten (RB Q)": "RB1",
+      "Jakobi Meyers (WR Q)": "WR1",
+      "Chris Rodriguez Jr. (RB Q)": "second RB -> no sealed role"
+    },
+    "BAL": {
+      "Justice Hill (RB Q)": "RB1",
+      "Tyler Huntley (QB Q)": "QB_QUESTIONABLE",
+      "Joe Fagnano (QB Q)": "second QB -> no sealed role",
+      "Tyler Loop (K Q)": "ignored (no role)",
+      "Lamar Jackson (QB OUT)": "would be QB1 if report_status Out existed in canonical feed; NOT applied"
+    }
+  },
+  "applied_to_sinkhorn": false,
+  "note": "Documentation only. Changing Sinkhorn input on DK tags would break loader parity with gse_coach_mind_simulator.load_week8_injuries_from_csv / week_designations (report_status only)."
+}

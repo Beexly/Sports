@@ -21,7 +21,27 @@ except ImportError:
 
 @functools.lru_cache(maxsize=256)
 def _cached_corpus_hits(query: str, k: int) -> tuple[str, ...]:
-    return tuple(as_corpus_hits(query, k=k))
+    try:
+        hits = list(as_corpus_hits(query, k=k))
+        if hits:
+            return tuple(hits)
+    except Exception:
+        pass
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[2]
+    for candidate in (
+        repo_root / "data" / "corpus" / "research_records_priority.jsonl",
+        repo_root / "data" / "corpus" / "downloads_20_sovereign_artifacts_2026_11_07.jsonl",
+    ):
+        if candidate.is_file():
+            try:
+                hits = list(as_corpus_hits(query, k=k, manifest=candidate))
+                if hits:
+                    return tuple(hits)
+            except Exception:
+                continue
+    return ()
 
 
 def validate_corpus_and_equation_gate(

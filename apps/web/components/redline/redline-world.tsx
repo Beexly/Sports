@@ -39,23 +39,23 @@ const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full fie
 const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
 
 const SEALED_MAIN_CALLS = [
-  { matchup: "DET @ GB", selection: "[LOCKED  -  VIP ACCESS] NFC North Division Spread Call", market: "Spread", conf: "85/100", freeTeaser: false },
-  { matchup: "MIA @ BUF", selection: "[LOCKED  -  VIP ACCESS] AFC East Division Total Call", market: "Total", conf: "84/100", freeTeaser: false },
-  { matchup: "IND @ MIN", selection: "[LOCKED  -  VIP ACCESS] Sunday Night Football Main Line Call", market: "Spread", conf: "83/100", freeTeaser: false },
-  { matchup: "DAL @ ATL", selection: "[LOCKED  -  PRO ACCESS] Indoor Turf Main Line Call", market: "Spread", conf: "82/100", freeTeaser: false },
-  { matchup: "LAR @ SEA", selection: "[LOCKED  -  PRO ACCESS] NFC West Division Spread Call", market: "Spread", conf: "81/100", freeTeaser: false },
-  { matchup: "WAS @ NYG", selection: "[LOCKED  -  PRO ACCESS] NFC East Division Main Line Call", market: "Spread", conf: "80/100", freeTeaser: false },
-  { matchup: "TB @ KC", selection: "[LOCKED  -  VIP ACCESS] Monday Night Football Main Line Call", market: "Spread", conf: "79/100", freeTeaser: false },
+  { matchup: "DET @ MIA", selection: "[LOCKED  -  VIP ACCESS] Sunday Main Slate Spread Call", market: "Spread", conf: "85/100", freeTeaser: false },
+  { matchup: "GB @ NE", selection: "[LOCKED  -  VIP ACCESS] Sunday Afternoon Total Call", market: "Total", conf: "84/100", freeTeaser: false },
+  { matchup: "DAL @ IND", selection: "[LOCKED  -  VIP ACCESS] Lucas Oil Indoor Turf Main Line Call", market: "Spread", conf: "83/100", freeTeaser: false },
+  { matchup: "LV @ SF", selection: "[LOCKED  -  PRO ACCESS] Sunday Afternoon Main Line Call", market: "Spread", conf: "82/100", freeTeaser: false },
+  { matchup: "ARI @ SEA", selection: "[LOCKED  -  PRO ACCESS] NFC West Division Spread Call", market: "Spread", conf: "81/100", freeTeaser: false },
+  { matchup: "TB @ CHI", selection: "[LOCKED  -  VIP ACCESS] Sunday Night Football Main Line Call", market: "Spread", conf: "80/100", freeTeaser: false },
+  { matchup: "BUF @ MIN", selection: "[LOCKED  -  VIP ACCESS] Monday Night Football Main Line Call", market: "Spread", conf: "79/100", freeTeaser: false },
 ] as const;
 
 const SEALED_PROPS = [
-  { matchup: "DET @ GB", player: "Week 9 Sunday Main Slate Prop #1 (DET/GB)", prop: "[LOCKED  -  VIP ACCESS]", conf: "86/100", freeTeaser: false },
-  { matchup: "MIA @ BUF", player: "Week 9 Sunday Main Slate Prop #2 (MIA/BUF)", prop: "[LOCKED  -  VIP ACCESS]", conf: "85/100", freeTeaser: false },
-  { matchup: "IND @ MIN", player: "Week 9 Sunday Night Football Prop #3 (IND/MIN)", prop: "[LOCKED  -  VIP ACCESS]", conf: "84/100", freeTeaser: false },
-  { matchup: "TB @ KC", player: "Week 9 Monday Night Football Prop #4 (TB/KC)", prop: "[LOCKED  -  VIP ACCESS]", conf: "83/100", freeTeaser: false },
-  { matchup: "DAL @ ATL", player: "Week 9 Sunday Main Slate Prop #5 (DAL/ATL)", prop: "[LOCKED  -  PRO ACCESS]", conf: "82/100", freeTeaser: false },
-  { matchup: "LAR @ SEA", player: "Week 9 Sunday Main Slate Prop #6 (LAR/SEA)", prop: "[LOCKED  -  PRO ACCESS]", conf: "81/100", freeTeaser: false },
-  { matchup: "WAS @ NYG", player: "Week 9 Sunday Main Slate Prop #7 (WAS/NYG)", prop: "[LOCKED  -  PRO ACCESS]", conf: "80/100", freeTeaser: false },
+  { matchup: "DET @ MIA", player: "Week 9 Sunday Main Slate Prop #1 (DET/MIA)", prop: "[LOCKED  -  VIP ACCESS]", conf: "86/100", freeTeaser: false },
+  { matchup: "GB @ NE", player: "Week 9 Sunday Main Slate Prop #2 (GB/NE)", prop: "[LOCKED  -  VIP ACCESS]", conf: "85/100", freeTeaser: false },
+  { matchup: "TB @ CHI", player: "Week 9 Sunday Night Football Prop #3 (TB/CHI)", prop: "[LOCKED  -  VIP ACCESS]", conf: "84/100", freeTeaser: false },
+  { matchup: "BUF @ MIN", player: "Week 9 Monday Night Football Prop #4 (BUF/MIN)", prop: "[LOCKED  -  VIP ACCESS]", conf: "83/100", freeTeaser: false },
+  { matchup: "DAL @ IND", player: "Week 9 Sunday Main Slate Prop #5 (DAL/IND)", prop: "[LOCKED  -  PRO ACCESS]", conf: "82/100", freeTeaser: false },
+  { matchup: "ARI @ SEA", player: "Week 9 Sunday Main Slate Prop #6 (ARI/SEA)", prop: "[LOCKED  -  PRO ACCESS]", conf: "81/100", freeTeaser: false },
+  { matchup: "LV @ SF", player: "Week 9 Sunday Main Slate Prop #7 (LV/SF)", prop: "[LOCKED  -  PRO ACCESS]", conf: "80/100", freeTeaser: false },
 ] as const;
 
 const SEALED_SGPS = STAGE0_VERIFIED_WEEK9_SGPS
@@ -70,20 +70,20 @@ const DFS_CORE_POOL = STAGE0_VERIFIED_DFS_CORE_POOL;
 
 const WEEK9_FREE_GAME_ENVIRONMENT_ANALYTICS = [
   {
-    metric: "DET @ GB (Sun 3:25 PM CT · Lambeau)",
-    breakdown: "27.4 sec/snap neutral pace · Detroit interior OL 71.5% clean-pocket rate vs Green Bay 31.8% simulated-pressure/stunt rate · Detroit 61.0% red-zone heavy-personnel run & play-action split",
+    metric: "DET @ MIA (Sun 12:00 PM CT · Hard Rock)",
+    breakdown: "26.6 sec/snap neutral pace · Detroit interior OL 71.5% clean-pocket rate vs Miami 68.2% pre-snap motion rate · Detroit 61.0% red-zone heavy-personnel run & play-action split",
   },
   {
-    metric: "MIA @ BUF (Sun 12:00 PM CT · Highmark)",
-    breakdown: "26.6 sec/snap neutral pace · Miami 68.2% pre-snap motion rate & 2.34s quick-release timing vs Buffalo 61.5% two-high nickel shell & 35.4% four-man edge pressure rate",
+    metric: "GB @ NE (Sun 3:25 PM CT · Gillette)",
+    breakdown: "27.4 sec/snap neutral pace · Green Bay 58.0% two-high quarters/palms shell & 31.8% simulated-pressure/stunt rate vs New England quick-game & tight-end hot-read outlets",
   },
   {
-    metric: "IND @ MIN (SNF 7:20 PM CT · U.S. Bank)",
-    breakdown: "25.8 sec/snap fast indoor track · Minnesota 38.4% blitz & zero-look drop-eight disguise rate vs Indianapolis six-man slide protection & intermediate hot-read outlets",
+    metric: "TB @ CHI (SNF 7:20 PM CT · Soldier Field)",
+    breakdown: "26.9 sec/snap outdoor lakefront track · Tampa Bay 36.4% blitz & A-gap pressure rate vs Chicago six-man slide protection & intermediate hot-read outlets",
   },
   {
-    metric: "TB @ KC (MNF 7:15 PM CT · Arrowhead)",
-    breakdown: "27.9 sec/snap ball-control pace · Kansas City 34.2% third-down exotic blitz rate vs Tampa Bay RB/TE checkdowns · Kansas City 38.5% 12/13-personnel drive sustain & goal-line motion tendencies",
+    metric: "BUF @ MIN (MNF 7:15 PM CT · U.S. Bank)",
+    breakdown: "25.8 sec/snap fast indoor track · Minnesota 38.4% Brian Flores blitz & drop-eight disguise rate vs Josh Allen scramble & RB/TE checkdowns · Buffalo 61.5% two-high nickel shell",
   },
 ] as const;
 
@@ -585,15 +585,15 @@ export function RedlineWorld({
         {panel === "dfs" && (
           <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 9 Sunday Main Slate & MNF DFS Lineups" close={closePanel} className="dfs-panel">
             <p className="panel-intro">
-              Integrated directly into the unified RedZone site. Includes 2 Sunday Main Slate Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), SNF (IND @ MIN) and MNF (TB @ KC) builds, and our 14-Player Core Pool with coaching and injury replacement notes.
+              Integrated directly into the unified RedZone site. Includes 2 Sunday Main Slate Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), SNF (TB @ CHI) and MNF (BUF @ MIN) builds, and our 14-Player Core Pool with coaching and injury replacement notes.
             </p>
 
             <h3 className="sub-heading">Free Week 9 Sunday &amp; MNF Matchup Environment Setup</h3>
             <div className="fixture-list">
               <div className="fixture-row">
                 <span className="fixture-week">SUN-MON</span>
-                <div className="fixture-match">DET @ GB · MIA @ BUF · IND @ MIN · TB @ KC <small>Week 9 Sunday Main Slate &amp; Primetime</small></div>
-                <span className="fixture-angle">Outdoor Lambeau trench matchups, Buffalo two-high coverage rotation against Miami motion, indoor track speed in Minnesota, and Kansas City 12-personnel ball control shape our Week 9 optimal lineups. Official cash and GPP builds are locked below.</span>
+                <div className="fixture-match">DET @ MIA · GB @ NE · TB @ CHI · BUF @ MIN <small>Week 9 Sunday Main Slate &amp; Primetime</small></div>
+                <span className="fixture-angle">Detroit slot efficiency in Miami, Green Bay two-TE seam leverage at New England, Soldier Field lakefront pressure in TB @ CHI, and indoor track speed in BUF @ MIN shape our Week 9 optimal lineups. Official cash and GPP builds are locked below.</span>
               </div>
             </div>
 
@@ -765,7 +765,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Verified Season Record <strong>36-13-1 · +20.14u</strong> (73.5%) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`), Sunday Night Football (`IND @ MIN`), and Monday Night Football (`TB @ KC`) sides, totals, player props, and correlated Same-Game Parlays.
+                  Verified Season Record <strong>36-13-1 · +20.14u</strong> (73.5%) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ MIA`, `GB @ NE`, `DAL @ IND`), Sunday Night Football (`TB @ CHI`), and Monday Night Football (`BUF @ MIN`) sides, totals, player props, and correlated Same-Game Parlays.
                 </p>
                 <button
                   type="button"

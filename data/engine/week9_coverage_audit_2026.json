@@ -37,9 +37,21 @@
     "live_board": {
       "file": "data/engine/week9_live_board_simulations_props_dfs_2026.json",
       "games": [
+        "2026_09_ARI_SEA",
+        "2026_09_BUF_MIN",
+        "2026_09_CIN_ATL",
+        "2026_09_CLE_NO",
+        "2026_09_DAL_IND",
+        "2026_09_DEN_CAR",
+        "2026_09_DET_MIA",
+        "2026_09_GB_NE",
+        "2026_09_HOU_LAC",
         "2026_09_JAX_BAL",
-        "2026_09_LAC_CLE",
-        "2026_09_DET_GB"
+        "2026_09_LAR_WAS",
+        "2026_09_LV_SF",
+        "2026_09_NYG_PHI",
+        "2026_09_NYJ_KC",
+        "2026_09_TB_CHI"
       ],
       "members": [
         "aci_crc_decisive_plays",
@@ -58,13 +70,13 @@
   "total_staged_week9_games": 15,
   "claimed_15_games_source": "data/engine/week9_complete_360_all_games_verified_call_sheet.json",
   "claimed_15_games_artifacts": {
-    "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet + 4 Featured Showcase Matchups",
+    "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet (30 Active Teams, 0 Duplicate Teams)",
     "status": "VERIFIED",
-    "timestamp": "2026-11-06T15:59:16.880156+00:00",
+    "timestamp": "2026-11-07T21:20:14.774604+00:00",
     "games_simulated": 15,
     "markets_covered": 77,
     "official_ledger_record": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
-    "slate_packet_sha256": "39eb913d0dec13db8422f731d5b0b4150b2b43913488361953e7e24f0595d02d"
+    "slate_packet_sha256": "ece397e760df6c5687214e39aebd262dac02c2b37343a14046e39963f93b33df"
   },
   "market_families_present_in_live_board": [
     "1st Half Total",
@@ -92,29 +104,24 @@
     "7",
     "8"
   ],
-  "note": "All 15 official 2026 Week 9 NFL games (JAX@BAL, CIN@ATL, DAL@IND, NYJ@KC, DET@MIA, CLE@NO, NYG@PHI, LAR@WAS, DEN@CAR, HOU@LAC, GB@NE, LV@SF, ARI@SEA, TB@CHI, BUF@MIN) plus 4 featured showcase matchups (DET@GB, MIA@BUF, IND@MIN, TB@KC) have full Stage 0..5 cryptographically chained dossiers and 32/32 confirmed NFL QB1s.",
+  "note": "All 15 official 2026 Week 9 NFL games (JAX@BAL, CIN@ATL, DAL@IND, NYJ@KC, DET@MIA, CLE@NO, NYG@PHI, LAR@WAS, DEN@CAR, HOU@LAC, GB@NE, LV@SF, ARI@SEA, TB@CHI, BUF@MIN) have full Stage 0..5 cryptographically chained dossiers, 30 unique active teams (0 duplicate teams; PIT and TEN on Bye), and 32/32 confirmed NFL QB1s.",
   "all_15_espn_week9_games_evaluated": true,
   "official_15_week9_matchups": [
-    "JAX @ BAL",
-    "CIN @ ATL",
-    "DAL @ IND",
-    "NYJ @ KC",
-    "DET @ MIA",
-    "CLE @ NO",
-    "NYG @ PHI",
-    "LAR @ WAS",
-    "DEN @ CAR",
-    "HOU @ LAC",
-    "GB @ NE",
-    "LV @ SF",
     "ARI @ SEA",
-    "TB @ CHI",
-    "BUF @ MIN"
+    "BUF @ MIN",
+    "CIN @ ATL",
+    "CLE @ NO",
+    "DAL @ IND",
+    "DEN @ CAR",
+    "DET @ MIA",
+    "GB @ NE",
+    "HOU @ LAC",
+    "JAX @ BAL",
+    "LAR @ WAS",
+    "LV @ SF",
+    "NYG @ PHI",
+    "NYJ @ KC",
+    "TB @ CHI"
   ],
-  "featured_showcase_matchups": [
-    "DET @ GB",
-    "MIA @ BUF",
-    "IND @ MIN",
-    "TB @ KC"
-  ]
+  "featured_showcase_matchups": []
 }

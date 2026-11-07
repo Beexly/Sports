@@ -60,16 +60,16 @@ def build_x_pack() -> dict:
                 (
                     "JAX @ BAL Thursday Night Football — Stage 0 Roster Reality:\n\n"
                     "• Lamar Jackson: OUT\n"
-                    "• Tyler Huntley: OUT for season\n"
-                    "• Jacoby Brissett: Traded ARI -> BAL on Nov 4\n"
-                    "• Travis Etienne Jr.: OUT (Tank Bigsby JAX RB1)\n\n"
+                    "• Cooper Rush: OUT\n"
+                    "• Joe Fagnano: BAL Emergency QB1 Starter\n"
+                    "• Travis Etienne Jr.: OUT (Brian Thomas Jr. & Brenton Strange lead JAX offense)\n\n"
                     "Any model pricing Baltimore at full-season offensive EPA/play is blind to the active 53-man roster."
                 ),
                 (
                     "What our 10,000-world PBP & Sinkhorn reallocation engine sees in JAX @ BAL:\n\n"
                     "• BAL neutral pass rate drops -7.5 points; Derrick Henry early-down carry share surges +14 points\n"
-                    "• Zay Flowers absorbs short-area RPO/quick-game funnel (Conviction 84/100)\n"
-                    "• Tank Bigsby takes uncontested JAX RB1 workload"
+                    "• Mark Andrews and Zay Flowers absorb short-area quick-game funnel\n"
+                    "• Brian Thomas Jr. and Brenton Strange command JAX target share"
                 ),
                 (
                     "Full JAX @ BAL 5-Stage Dossier, Correlated SGP fair odds, and Showdown Captain MILP portfolio:\n"
@@ -84,24 +84,24 @@ def build_x_pack() -> dict:
             "target_handle": "@SamHoppen",
             "topic": "PROE & Neutral Pace in Week 9 TNF (JAX @ BAL)",
             "reply_text": (
-                "With Lamar Jackson and Tyler Huntley both OUT and Jacoby Brissett just arriving from ARI on Nov 4, "
+                "With Lamar Jackson and Cooper Rush both OUT and emergency QB Joe Fagnano starting for Baltimore, "
                 "Baltimore's neutral pass rate projects to compress by 7.5 points while Derrick Henry's early-down carry share "
                 "climbs +14 points via Sinkhorn reallocation."
             ),
         },
         {
             "target_handle": "@PattonAnalytics",
-            "topic": "Pressure-to-Sack Survival in DET @ GB",
+            "topic": "Pressure-to-Sack Survival in DET @ MIA",
             "reply_text": (
                 "Detroit's interior pocket survival and Jared Goff's intermediate slot efficiency (Amon-Ra St. Brown 31 out of 100 target share) "
-                "create the highest 2-way EPA floor on the Week 9 board against Green Bay's two-high shell."
+                "create the highest 2-way EPA floor on the Week 9 board against Miami's defensive shell."
             ),
         },
         {
             "target_handle": "@FantasyPtsData",
-            "topic": "First-Read & Slot Funnel in CHI @ ARI",
+            "topic": "First-Read & Slot Funnel in ARI @ SEA",
             "reply_text": (
-                "With Kyler Murray on IR and Jacoby Brissett traded to Baltimore, Clayton Tune steps in for Arizona — "
+                "With Kyler Murray on IR and Jacoby Brissett traded to Baltimore, Gardner Minshew II steps in for Arizona at Seattle — "
                 "historically concentrating first-read and checkdown targets onto Trey McBride (Conviction 77/100)."
             ),
         },
@@ -110,7 +110,7 @@ def build_x_pack() -> dict:
             "topic": "4th-Down WP & Selectivity Gate",
             "reply_text": (
                 "Subtracting the Layer-1 market projection via Frisch-Waugh-Lovell before applying situational overlays "
-                "is what separated our 7-of-7 1.00u Week 8 sweep (38-13-1, +22.85u) from raw EPA double-counting."
+                "is what separated our 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) ledger from raw EPA double-counting."
             ),
         },
     ]
@@ -119,11 +119,11 @@ def build_x_pack() -> dict:
     active_recommended_players = [
         "Derrick Henry",
         "Zay Flowers",
-        "Tank Bigsby",
+        "Brian Thomas Jr.",
         "Amon-Ra St. Brown",
         "Jared Goff",
         "Trey McBride",
-        "Clayton Tune",
+        "Gardner Minshew II",
     ]
     assert_lineup_clean(active_recommended_players, cfg)
 

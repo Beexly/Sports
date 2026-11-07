@@ -9,9 +9,9 @@
     "stage0_receipt_sha256": "0223c5c84ff5a17fd6f11b90b58ed5a4ce858996913fb9ad3d4243deda5a3fd2",
     "stage1a_receipt_sha256": "99dcc7cb951c3ded74a6a78e41e42fb4cbc9105930abdd62646277eccd5e5dbf",
     "stage1b_receipt_sha256": "d659503a3f69d2a42eb8d46b3ee907246fdb9238b56f7f59a691dc2e951e75ea",
-    "stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
-    "stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee",
-    "stage5_receipt_sha256": "67be612ef754c1db02b5e248b010a715efcae6e898a28290725b0fb1f2f49ba9"
+    "stage2_receipt_sha256": "f14850010b14535eca5fc79b653adcc507fa3357f43368066013d14051f990f4",
+    "stage3_4_receipt_sha256": "78c272e06dfc3942cefad313b3e1eafc253c286636bf077095b9db620471debd",
+    "stage5_receipt_sha256": "eb134635dd4ab660124533324eda1a706e2a9b59955a14809cdaca0c3374812e"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -16189,11 +16189,11 @@
       },
       "full_repo_279_family_situational_matrix": {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-        "generated_at_utc": "2026-11-07T16:17:56.176587+00:00",
+        "generated_at_utc": "2026-11-07T21:19:45.020146+00:00",
         "total_ts_modules_cataloged": 1464,
         "prediction_engine_ts_modules": 1455,
         "mcp_equations_server_ts_modules": 9,
-        "total_python_intelligence_modules_cataloged": 550,
+        "total_python_intelligence_modules_cataloged": 611,
         "x_situational_80_rules_count": 87,
         "consolidated_sweep_signals_count": 29,
         "all_in_one_research_signals_count": 17,
@@ -17107,7 +17107,7 @@
           "probability_movement_cap": 0.12,
           "post_overlay_prob": 0.5073
         },
-        "receipt_sha256": "d9cb4e2a4863154d56a20fb20384746c1b2527498cf88ba0d6c454053eb13808",
+        "receipt_sha256": "e52d470e09d7027814fe4392583a7f734d300b20b195017c23986a59df9f89b8",
         "measured_primitives": {
           "measured_primitives_count": 3,
           "wr1_absorption": {
@@ -17163,6 +17163,19 @@
           ],
           "cqr_ess_gate_passed": true,
           "roster_truth_player_adjustments": {
+            "Travis Etienne Jr.": {
+              "canonical_team": "JAX",
+              "player_gp": 6,
+              "team_gp": 8,
+              "naive_per_team_gp_rate": 47.25,
+              "true_per_player_gp_rate": 63.0,
+              "denominator_correction_delta": 15.75,
+              "ir_return_ramp_mult": 0.62,
+              "practice_squad_elevation": false,
+              "elevation_snap_cap_mult": 1.0,
+              "roster_truth_adjusted_rate": 39.06,
+              "source_conflict_detected": false
+            },
             "Parker Washington": {
               "canonical_team": "JAX",
               "player_gp": 8,
@@ -17330,6 +17343,19 @@
             "subsystem": "nfl_roster_truth_and_wave3_line_level",
             "build_cards_wired": 68,
             "roster_truth_player_adjustments": {
+              "Travis Etienne Jr.": {
+                "canonical_team": "JAX",
+                "player_gp": 6,
+                "team_gp": 8,
+                "naive_per_team_gp_rate": 47.25,
+                "true_per_player_gp_rate": 63.0,
+                "denominator_correction_delta": 15.75,
+                "ir_return_ramp_mult": 0.62,
+                "practice_squad_elevation": false,
+                "elevation_snap_cap_mult": 1.0,
+                "roster_truth_adjusted_rate": 39.06,
+                "source_conflict_detected": false
+              },
               "Parker Washington": {
                 "canonical_team": "JAX",
                 "player_gp": 8,
@@ -17448,15 +17474,15 @@
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "bridge_version": "uncompressed_25k_v1.0",
         "monorepo_census_summary": {
-          "total_repo_files_indexed": 63262,
-          "docs_files_indexed": 11318,
+          "total_repo_files_indexed": 63409,
+          "docs_files_indexed": 11361,
           "arxiv_program_files_indexed": 1799,
           "engine_docs_indexed": 3811,
           "packages_files_indexed": 5939,
           "packages_count": 25,
-          "intelligence_files_indexed": 947,
+          "intelligence_files_indexed": 1017,
           "intelligence_domains_count": 35,
-          "scripts_files_indexed": 860,
+          "scripts_files_indexed": 875,
           "apps_files_indexed": 3540,
           "web_api_routes_indexed": 271,
           "formal_proof_files_indexed": 69,
@@ -26082,7 +26108,7 @@
       "bal_cover_plus_7_5_prob": 0.2003,
       "over_41_5_prob": 0.3905
     },
-    "stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
+    "stage2_receipt_sha256": "f14850010b14535eca5fc79b653adcc507fa3357f43368066013d14051f990f4",
     "armed_26_layer_trace_handoff": {
       "context_packet_id": "PKT-2026_09_JAX_BAL-20261105",
       "reasoning_trace_id": "TRC-2026_09_JAX_BAL-20261105",
@@ -26090,14 +26116,14 @@
       "reasoning_trace_cumulative_log_odds_delta": 0.640047,
       "equation_gate_12304_clamped_delta": -0.036676,
       "eq_gate_12k_epa_shift": -0.000954,
-      "simulator_median_spread_home_trace_conditioned": 4.2601
+      "simulator_median_spread_home_trace_conditioned": 4.3701
     },
     "eq_gate_12k_epa_shift": -0.000954,
     "equation_gate_12304_clamped_delta": -0.036676
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
+    "parent_stage2_receipt_sha256": "f14850010b14535eca5fc79b653adcc507fa3357f43368066013d14051f990f4",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -31311,11 +31337,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee"
+    "stage3_4_receipt_sha256": "78c272e06dfc3942cefad313b3e1eafc253c286636bf077095b9db620471debd"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
+    "parent_stage2_receipt_sha256": "f14850010b14535eca5fc79b653adcc507fa3357f43368066013d14051f990f4",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -36529,11 +36555,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee"
+    "stage3_4_receipt_sha256": "78c272e06dfc3942cefad313b3e1eafc253c286636bf077095b9db620471debd"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee",
+    "parent_stage3_4_receipt_sha256": "78c272e06dfc3942cefad313b3e1eafc253c286636bf077095b9db620471debd",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7593,
@@ -39242,11 +39268,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "67be612ef754c1db02b5e248b010a715efcae6e898a28290725b0fb1f2f49ba9"
+    "stage5_receipt_sha256": "eb134635dd4ab660124533324eda1a706e2a9b59955a14809cdaca0c3374812e"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee",
+    "parent_stage3_4_receipt_sha256": "78c272e06dfc3942cefad313b3e1eafc253c286636bf077095b9db620471debd",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7593,
@@ -41955,14 +41981,14 @@
         }
       }
     },
-    "stage5_receipt_sha256": "67be612ef754c1db02b5e248b010a715efcae6e898a28290725b0fb1f2f49ba9"
+    "stage5_receipt_sha256": "eb134635dd4ab660124533324eda1a706e2a9b59955a14809cdaca0c3374812e"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {},
-  "master_bundle_sha256": "283d76582c0a226d2e753fb2fe9c4519d36b01a7bbdda4987b432f398bf4d3b2",
+  "master_bundle_sha256": "1c284506fa9609b55743991b8a161b93e6c9aa806f8235ae7ed179e363c69b09",
   "armed_26_layer_workflow_receipt": {
     "game_id": "2026_09_JAX_BAL",
     "matchup": "JAX @ BAL",
-    "executed_at_utc": "2026-11-07T16:17:56.263547+00:00",
+    "executed_at_utc": "2026-11-07T21:19:45.118675+00:00",
     "context_packet_id": "PKT-2026_09_JAX_BAL-20261105",
     "context_packet_path": "data/context_packets/2026_09_JAX_BAL.json",
     "reasoning_trace_id": "TRC-2026_09_JAX_BAL-20261105",
@@ -41975,8 +42001,8 @@
     "reasoning_trace_cumulative_log_odds_delta": 0.640047,
     "equation_gate_12304_clamped_delta": -0.036676,
     "eq_gate_12k_epa_shift": -0.000954,
-    "simulator_median_spread_home_trace_conditioned": 4.2601,
-    "simulator_median_total": 49.54,
+    "simulator_median_spread_home_trace_conditioned": 4.3701,
+    "simulator_median_total": 49.62,
     "simulator_median_pace_sec": 26.87
   }
 }

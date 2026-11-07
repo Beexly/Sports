@@ -378,7 +378,7 @@ def test_06b_sg6_real_milp_dk_classic_9_roster_constraints() -> None:
         {"name": "Aaron Jones", "team": "MIN", "pos": "RB", "salary": 5800, "median_fpts": 15.8, "p90_ceiling_fpts": 22.0, "p25_floor_fpts": 11.9},
         {"name": "Amon-Ra St. Brown", "team": "DET", "pos": "WR", "salary": 7200, "median_fpts": 21.0, "p90_ceiling_fpts": 29.5, "p25_floor_fpts": 15.2},
         {"name": "Justin Jefferson", "team": "MIN", "pos": "WR", "salary": 7500, "median_fpts": 22.4, "p90_ceiling_fpts": 31.5, "p25_floor_fpts": 16.8},
-        {"name": "Jayden Reed", "team": "GB", "pos": "WR", "salary": 5500, "median_fpts": 14.5, "p90_ceiling_fpts": 21.5, "p25_floor_fpts": 10.2},
+        {"name": "Jameson Williams", "team": "DET", "pos": "WR", "salary": 5500, "median_fpts": 14.5, "p90_ceiling_fpts": 21.5, "p25_floor_fpts": 10.2},
         {"name": "Khalil Shakir", "team": "BUF", "pos": "WR", "salary": 5100, "median_fpts": 13.8, "p90_ceiling_fpts": 19.5, "p25_floor_fpts": 10.4},
         {"name": "Josh Downs", "team": "IND", "pos": "WR", "salary": 4800, "median_fpts": 13.2, "p90_ceiling_fpts": 19.0, "p25_floor_fpts": 9.8},
         {"name": "Tucker Kraft", "team": "GB", "pos": "TE", "salary": 4300, "median_fpts": 11.8, "p90_ceiling_fpts": 17.5, "p25_floor_fpts": 8.4},
@@ -704,11 +704,17 @@ def test_14_storefront_quarantine_verification() -> None:
     ]:
         assert "Mark Andrews OVER 2.5" not in content, f"Found banned teaser in {path_name}"
 
-    # 3. Active Week 9 Sunday/MNF (DET @ GB, MIA @ BUF, IND @ MIN, TB @ KC) content present
-    for matchup in ("DET @ GB", "MIA @ BUF", "IND @ MIN", "TB @ KC"):
+    # 3. Active Week 9 Sunday/MNF (DET @ MIA, GB @ NE, DAL @ IND, BUF @ MIN) content present
+    for matchup in ("DET @ MIA", "GB @ NE", "DAL @ IND", "BUF @ MIN"):
         assert matchup in catalog_text, f"Missing {matchup} in catalog.ts"
         assert matchup in packages_text, f"Missing {matchup} in packages/page.tsx"
         assert matchup in redline_text, f"Missing {matchup} in redline-world.tsx"
+
+    # 4. Zero stale 2024 Week 9 matchups (DET @ GB, MIA @ BUF, IND @ MIN, TB @ KC) in storefront
+    for stale_matchup in ("DET @ GB", "MIA @ BUF", "IND @ MIN", "TB @ KC"):
+        assert stale_matchup not in catalog_text, f"Stale 2024 matchup {stale_matchup} in catalog.ts"
+        assert stale_matchup not in packages_text, f"Stale 2024 matchup {stale_matchup} in packages/page.tsx"
+        assert stale_matchup not in redline_text, f"Stale 2024 matchup {stale_matchup} in redline-world.tsx"
 
 
 # ============================================================================
@@ -889,7 +895,11 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
     assert pdf_sum["verified_full_text"] == 877
     assert pdf_sum["coverage_pct"] == 100.0
 
-    # 5. Workstream 4 & 6 Turborepo + GitHub Actions workflow + 19-game Week 9 master dossier
+    # 5. Workstream 4 & 6 Turborepo + GitHub Actions workflow + 15-game Week 9 master dossier (0 duplicate teams)
+    from intelligence.data_sources.firecrawl_alexandria_live_sync import (
+        assert_zero_duplicate_teams_or_players_on_slate,
+    )
+
     assert (REPO_ROOT / "turbo.json").is_file()
     assert (REPO_ROOT / "apps" / "web" / "turbo.json").is_file()
     assert (REPO_ROOT / ".github" / "workflows" / "gse-connected-5stage-gameday-orchestrator.yml").is_file()
@@ -898,9 +908,14 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
     assert w9_slate_path.is_file()
     w9_slate = json.loads(w9_slate_path.read_text(encoding="utf-8"))
     assert w9_slate["official_15_week9_games_count"] == 15
-    assert w9_slate["matchups_evaluated_count"] == 19
+    assert w9_slate["matchups_evaluated_count"] == 15
     assert w9_slate["zero_etc_policy_enforced"] is True
-    for away, home in OFFICIAL_WEEK9_15_GAME_SLATE + FEATURED_WEEK9_SLATE:
+    assert_zero_duplicate_teams_or_players_on_slate(
+        list(w9_slate["dossiers"].keys()),
+        week=9,
+        context_label="test_19:week9_full_slate_connected_dossiers_2026_11_06.json",
+    )
+    for away, home in OFFICIAL_WEEK9_15_GAME_SLATE:
         key = f"{away} @ {home}"
         assert key in w9_slate["dossiers"], f"Missing {key} in week9_full_slate_connected_dossiers_2026_11_06.json"
         indiv_path = REPO_ROOT / "data" / "engine" / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week9.json"
@@ -1589,6 +1604,99 @@ def test_30_mega_sweep_2026_11_06_100pct_manifest_coverage_and_5track_7step_engi
         ms1["pre_market_reasoning_epa_delta"]
         != ms2["pre_market_reasoning_epa_delta"]
     )
+
+
+# ============================================================================
+# TEST 31: Firecrawl Alexandria Live Sync & Unbreakable Zero-Duplicate Schedule Gate
+# ============================================================================
+def test_31_firecrawl_alexandria_live_sync_and_zero_duplicate_teams_gate() -> None:
+    """
+    Verifies:
+      1. `assert_zero_duplicate_teams_or_players_on_slate` passes on the official 15-game
+         2026 NFL Week 9 schedule (`30` unique active teams, `0` duplicates, Byes `PIT`, `TEN`).
+      2. Negative controls: `assert_zero_duplicate_teams_or_players_on_slate` immediately raises
+         `RuntimeError` when `MIA` or `BUF` is listed twice (e.g., `DET @ MIA` + `MIA @ BUF`, or
+         `BUF @ MIN` + `MIA @ BUF`), when a Bye team (`PIT` or `TEN`) appears, or when a player
+         appears twice in a pool/lineup.
+      3. `data/engine/week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json` is present
+         with verified Firecrawl Alexandria v2 discovery/retrieve + ESPN scoreboard + DraftKings
+         Sunday Main Slate sync receipt.
+      4. Zero stale 2024 Week 9 files (`MIA_BUF`, `DET_GB`, `IND_MIN`, `TB_KC`, `LAC_CLE`, `DEN_BAL`)
+         exist in `data/context_packets/`, `data/simulations/`, `data/reasoning/traces/`, or `data/engine/`.
+    """
+    from intelligence.data_sources.firecrawl_alexandria_live_sync import (
+        OFFICIAL_2026_WEEK9_15_GAMES,
+        assert_zero_duplicate_teams_or_players_on_slate,
+    )
+
+    ok_res = assert_zero_duplicate_teams_or_players_on_slate(
+        OFFICIAL_2026_WEEK9_15_GAMES,
+        week=9,
+        context_label="test_31_official_15",
+    )
+    assert ok_res["status"] == "VERIFIED_ZERO_DUPLICATES"
+    assert ok_res["games_count"] == 15
+    assert ok_res["unique_teams_count"] == 30
+    assert ok_res["duplicate_teams_count"] == 0
+
+    # Negative Control 1A: Bogus 2024 MIA @ BUF matchup blocked
+    with pytest.raises(RuntimeError, match="FORBIDDEN BOGUS/2024 MATCHUP"):
+        assert_zero_duplicate_teams_or_players_on_slate(
+            list(OFFICIAL_2026_WEEK9_15_GAMES) + [("MIA", "BUF")],
+            week=9,
+            context_label="neg_ctrl_mia_buf_bogus",
+        )
+
+    # Negative Control 1B: Duplicate team on slate (DET @ MIA listed twice)
+    with pytest.raises(RuntimeError, match="DUPLICATE TEAM SCHEDULE VIOLATION"):
+        assert_zero_duplicate_teams_or_players_on_slate(
+            list(OFFICIAL_2026_WEEK9_15_GAMES) + [("DET", "MIA")],
+            week=9,
+            context_label="neg_ctrl_det_mia_dup",
+        )
+
+    # Negative Control 2: Bye team PIT on Week 9 slate
+    with pytest.raises(RuntimeError, match="BYE TEAM VIOLATION"):
+        assert_zero_duplicate_teams_or_players_on_slate(
+            [("PIT", "BAL")],
+            week=9,
+            context_label="neg_ctrl_bye_team",
+        )
+
+    # Negative Control 3: Multi-team player contamination
+    with pytest.raises(RuntimeError, match="PLAYER MULTI-TEAM CONTAMINATION"):
+        assert_zero_duplicate_teams_or_players_on_slate(
+            OFFICIAL_2026_WEEK9_15_GAMES,
+            players=[
+                {"name": "Amon-Ra St. Brown", "team": "DET"},
+                {"name": "Amon-Ra St. Brown", "team": "MIA"},
+            ],
+            week=9,
+            context_label="neg_ctrl_dup_player",
+        )
+
+    # Verify fresh Firecrawl Alexandria + ESPN sync receipt on disk
+    sync_path = REPO_ROOT / "data" / "engine" / "week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json"
+    assert sync_path.is_file()
+    sync_data = json.loads(sync_path.read_text(encoding="utf-8"))
+    assert sync_data["schedule_invariant_gate"]["status"] == "VERIFIED_ZERO_DUPLICATES"
+    assert sync_data["schedule_invariant_gate"]["games_count"] == 15
+    assert sync_data["schedule_invariant_gate"]["unique_teams_count"] == 30
+    assert sync_data["dk_sunday_main_slate_gate"]["status"] == "VERIFIED_ZERO_DUPLICATES"
+    assert sync_data["dk_sunday_main_slate_gate"]["players_checked"] == 570
+    assert len(sync_data["sync_sha256"]) == 64
+
+    # Verify zero stale 2024 Week 9 artifact files exist on disk
+    stale_tokens = ("mia_buf", "det_gb", "ind_min", "tb_kc", "lac_cle", "den_bal")
+    for rel_dir in ("data/context_packets", "data/simulations", "data/reasoning/traces", "data/engine"):
+        folder = REPO_ROOT / rel_dir
+        for f in folder.iterdir():
+            if f.is_file():
+                low_name = f.name.lower()
+                assert not any(tok in low_name for tok in stale_tokens), (
+                    f"Stale 2024 Week 9 artifact file still present on disk: {f}"
+                )
+
 
 
 

@@ -263,7 +263,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Thread",
     headline: "Week 9 Flagship 12-Post Film & Matchup Environment Thread",
     copy:
-      "NFL Week 9 Film & Matchup Environment Thread: DET @ GB slot/seam duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and IND @ MIN (Carson Wentz play-action vs Flores simulated pressure). Verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
+      "NFL Week 9 Film & Matchup Environment Thread: DET @ MIA slot/motion duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and BUF @ MIN (Josh Allen vs Carson Wentz & Flores simulated pressure). Verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
@@ -272,7 +272,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Poll / Hook",
     headline: "Silent-Count Pass-Rush Trench Mismatch Poll",
     copy:
-      "Which Week 9 offensive line faces the toughest silent-count pass-rush test on Sunday? A) NYJ tackles at Arrowhead (protecting Geno Smith) B) ARI tackles at Seattle (protecting Gardner Minshew II) C) IND interior vs Minnesota A-gap blitzes D) LV line at San Francisco vs wide-9 edge rush.",
+      "Which Week 9 offensive line faces the toughest silent-count pass-rush test? A) NYJ tackles at Arrowhead (protecting Geno Smith) B) ARI tackles at Seattle (protecting Gardner Minshew II) C) BUF line at Minnesota vs A-gap blitzes D) LV line at San Francisco vs wide-9 edge rush.",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
@@ -281,7 +281,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Poll / Hook",
     headline: "2026 Alpha WR Red-Zone Call Hook",
     copy:
-      "One receiver needs a touchdown inside the 15-yard line with the game on the line in Week 9: Mike Evans (SF WR) from Brock Purdy, DK Metcalf (PIT WR) from Aaron Rodgers, Amon-Ra St. Brown (DET WR) from Jared Goff, or Justin Jefferson (MIN WR) from Carson Wentz?",
+      "One receiver needs a touchdown inside the 15-yard line with the game on the line in Week 9: Mike Evans (SF WR) from Brock Purdy, Davante Adams (LAR WR) from Matthew Stafford, Amon-Ra St. Brown (DET WR) from Jared Goff, or Justin Jefferson (MIN WR) from Carson Wentz?",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
@@ -290,7 +290,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "IG / Threads Carousel",
     headline: "8-Slide Week 9 Film & Matchup Blueprint Carousel",
     copy:
-      "8-Slide Carousel covering DET @ GB, LV @ SF (Mike Evans), NYJ @ KC (Geno Smith), ARI @ SEA (Sam Darnold), LAR @ WAS (Jayden Daniels + Stefon Diggs), 1Q Scripted Touches, Kicking/Sack Pricing Gaps, and Week 9 DraftKings/FanDuel Stacking Rules.",
+      "8-Slide Carousel covering DET @ MIA, LV @ SF (Mike Evans), NYJ @ KC (Geno Smith), ARI @ SEA (Sam Darnold), LAR @ WAS (Jayden Daniels + Stefon Diggs), 1Q Scripted Touches, Kicking/Sack Pricing Gaps, and Week 9 DraftKings/FanDuel Stacking Rules.",
     ctaUrl: "https://www.galaxysportsedge.com/fantasy/dfs",
     paywallSafe: true,
   },

@@ -35,50 +35,52 @@ ETC_PATTERN = re.compile(r"\betc" + r"\.", re.IGNORECASE)
 
 OFFICIAL_VERIFIED_LEDGER: dict[str, Any] = {
     "record": "47-19-1",
-    "wins": 62,
-    "losses": 23,
+    "wins": 47,
+    "losses": 19,
     "pushes": 1,
-    "win_pct": 72.9,
-    "net_units": 26.50,
+    "win_pct": 71.21,
+    "net_units": 24.92,
+    "base_record": "38-13-1",
+    "base_net_units": 22.85,
     "pre_week_8_segment": {"record": "16-5-0", "net_units": 10.45},
-    "week_8_audited_settlement": {"record": "46-18-1", "net_units": 16.05},
+    "week_8_audited_settlement": {"record": "31-14-1", "net_units": 14.47},
     "paywall_checkout_url": "https://www.galaxysportsedge.com/packages",
     "dfs_optimizer_url": "https://www.galaxysportsedge.com/fantasy/dfs",
 }
 
 WEEK9_PUBLIC_GAME_ENVIRONMENT_HOOKS: list[dict[str, Any]] = [
     {
-        "matchup": "MIN @ DET",
-        "window": "Sunday 1:00 PM ET (Ford Field Indoor)",
+        "matchup": "DET @ MIA",
+        "window": "Sunday 1:00 PM ET (Hard Rock Stadium Outdoor)",
         "public_environment_angle": (
-            "NFC North indoor track meet featuring Brian Flores' simulated A-gap pressure looks against "
-            "Detroit's play-action protection and condensed bunch formations. Both offenses rank top-6 in "
-            "neutral script efficiency, creating high snap-volume leverage in the intermediate middle of the field."
+            "Interconference track meet featuring Detroit's play-action protection and condensed bunch formations "
+            "against Miami's speed-based RPO and perimeter motion attack. High snap-volume leverage in the "
+            "intermediate middle of the field for Amon-Ra St. Brown and Jahmyr Gibbs."
         ),
-        "trench_and_scheme_watch": "Interior pass-pro slide communication on silent count vs blitz-look safety rotations.",
+        "trench_and_scheme_watch": "Interior pass-pro slide communication vs blitz-look safety rotations.",
         "official_tickets_status": "GATED_BEHIND_PAYWALL",
         "unlock_url": "https://www.galaxysportsedge.com/packages",
     },
     {
-        "matchup": "WAS @ NYG",
-        "window": "Sunday 1:00 PM ET (MetLife Stadium Outdoor)",
+        "matchup": "NYG @ PHI",
+        "window": "Sunday 1:00 PM ET (Lincoln Financial Field Outdoor)",
         "public_environment_angle": (
-            "Divisional rematch where Washington's up-tempo no-huddle RPO spacing tests New York's defensive "
-            "front four and single-high man coverage outside the numbers. Early-down rushing efficiency and "
-            "red-zone play-action bootlegs dictate total drive volume."
+            "NFC East divisional battle where Philadelphia's inside-zone rushing attack with Saquon Barkley "
+            "and Joe Milton tests New York's defensive front four and single-high man coverage outside the numbers."
         ),
         "trench_and_scheme_watch": "Edge rush containment on mobile quarterback rollouts vs slot option routes.",
         "official_tickets_status": "GATED_BEHIND_PAYWALL",
         "unlock_url": "https://www.galaxysportsedge.com/packages",
     },
     {
-        "matchup": "DET / NFC North & Afternoon Slate Window",
-        "window": "Sunday 4:05 PM / 4:25 PM ET Late Window",
+        "matchup": "BUF @ MIN",
+        "window": "Monday 8:15 PM ET (U.S. Bank Stadium Indoor MNF)",
         "public_environment_angle": (
-            "Late-window matchups feature sharp contrast between two-high quarters shells forcing checkdowns "
-            "and aggressive Cover-1 man defenses surrendering explosive play-action post and corner routes."
+            "Monday Night Football indoor showcase featuring Brian Flores' simulated A-gap pressure looks against "
+            "Josh Allen and Buffalo's 12-personnel play-action attack, while Carson Wentz and Justin Jefferson "
+            "attack Buffalo's two-high quarters shell."
         ),
-        "trench_and_scheme_watch": "Second-half pass-rush stamina and 1Q scripted opening-drive pass rates.",
+        "trench_and_scheme_watch": "Road silent-count communication in a loud dome and 1Q scripted opening-drive pass rates.",
         "official_tickets_status": "GATED_BEHIND_PAYWALL",
         "unlock_url": "https://www.galaxysportsedge.com/packages",
     },
@@ -158,7 +160,7 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
             ),
             "cta_paywall_and_follow_45_60s": (
                 "Visual: Galaxy Sports Edge prop explorer and 47-19-1 verified banner. "
-                "Voiceover: 'Our verified engine is 47-19-1 (+26.50 units) this season. Follow for daily film breakdowns and unlock every official Week 9 play and player prop at galaxysportsedge.com/packages.'"
+                "Voiceover: 'Our verified engine is 47-19-1 (+24.92 units) this season. Follow for daily film breakdowns and unlock every official Week 9 play and player prop at galaxysportsedge.com/packages.'"
             ),
         },
         "caption": (
@@ -189,7 +191,7 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
             ),
             "cta_paywall_and_follow_45_60s": (
                 "Visual: Galaxy Sports Edge 360-degree board view (1Q, 1H, Kicking, IDP, Full Game). "
-                "Voiceover: 'We review all 77 market types on every game—and our verified record sits at 47-19-1 (+26.50 units). Follow us and grab full Week 9 access at galaxysportsedge.com/packages.'"
+                "Voiceover: 'We review all 77 market types on every game—and our verified record sits at 47-19-1 (+24.92 units). Follow us and grab full Week 9 access at galaxysportsedge.com/packages.'"
             ),
         },
         "caption": (
@@ -308,7 +310,7 @@ REVENUE_STREAM_ATTRIBUTION_MATRIX: list[dict[str, Any]] = [
     {
         "stream_id": "REV-06",
         "channel": "CapperTek Verified Record Syndication & Leaderboard Funnel",
-        "endpoint_or_id": "CapperTek Verified Tracker (47-19-1, 72.9%, +26.50u)",
+        "endpoint_or_id": "CapperTek Verified Tracker (47-19-1, 71.2%, +24.92u)",
         "monetization_mechanism": "Third-party verified record syndication driving high-intent organic bettors to /packages.",
         "posthog_events": ["cappertek_referral_landed", "package_checkout_started"],
         "status": "ACTIVE_PRODUCTION",
@@ -386,7 +388,7 @@ def main() -> int:
         "# Week 9 Plays, 360-Degree Board, DraftKings/FanDuel DFS, Short-Form Video & Multi-Stream Revenue Execution Packet",
         "",
         f"- **Generated At (UTC):** `{packet['generated_at_utc']}`",
-        "- **Official New Engine Verified Record:** **`47-19-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**",
+        "- **Official New Engine Verified Record:** **`47-19-1` (`71.2%`, `+24.92 Units` | Base `38-13-1`, `+22.85 Units`)**",
         "- **Paywall & Copy Compliance:** `0` Free Paid Picks Leaked · `0` Robotic Math Jargon on Public Surfaces · Official Plays & Full DFS Lineups Gated at `https://www.galaxysportsedge.com/packages` and `/fantasy/dfs`",
         "",
         "---",

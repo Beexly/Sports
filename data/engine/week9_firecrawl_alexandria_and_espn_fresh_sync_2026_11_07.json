@@ -1,0 +1,353 @@
+{
+  "schema": "gse_week9_firecrawl_alexandria_and_espn_fresh_sync_v1",
+  "synced_at_utc": "2026-11-07T21:23:24.425115+00:00",
+  "season": 2026,
+  "week": 9,
+  "official_15_games_count": 15,
+  "unique_active_teams_count": 30,
+  "duplicate_teams_count": 0,
+  "bye_teams": [
+    "PIT",
+    "TEN"
+  ],
+  "forbidden_2024_or_hallucinated_matchups_blocked": [
+    "CHI @ ARI",
+    "CHI @ CIN",
+    "DAL @ ATL",
+    "DEN @ BAL",
+    "DEN @ TEN",
+    "DET @ GB",
+    "IND @ MIN",
+    "LAC @ CLE",
+    "LAC @ TEN",
+    "LAR @ SEA",
+    "LV @ CIN",
+    "MIA @ BUF",
+    "MIN @ ATL",
+    "NO @ CAR",
+    "TB @ KC",
+    "TB @ PIT",
+    "WAS @ NYG"
+  ],
+  "schedule_invariant_gate": {
+    "context_label": "espn_week9_official_15_games",
+    "week": 9,
+    "games_count": 15,
+    "unique_teams_count": 30,
+    "duplicate_teams_count": 0,
+    "bye_teams_verified_absent": [
+      "PIT",
+      "TEN"
+    ],
+    "players_checked": 0,
+    "status": "VERIFIED_ZERO_DUPLICATES"
+  },
+  "dk_sunday_main_slate_gate": {
+    "context_label": "dk_week9_sunday_main_11_game_slate",
+    "week": 9,
+    "games_count": 11,
+    "unique_teams_count": 22,
+    "duplicate_teams_count": 0,
+    "bye_teams_verified_absent": [
+      "PIT",
+      "TEN"
+    ],
+    "players_checked": 570,
+    "status": "VERIFIED_ZERO_DUPLICATES"
+  },
+  "firecrawl_alexandria_sync": {
+    "protocol": "Firecrawl Alexandria v2 (Discover 0-credit + Retrieve)",
+    "capabilities_catalog_file": "data/engine/firecrawl_alexandria_nfl_capabilities_2026_10_29.json",
+    "live_discovery_attempted": true,
+    "discovered_capabilities": [
+      {
+        "provider": "nfl-com",
+        "capability": "sports-league-data/injury_report",
+        "description": "The user wants the official practice participation or injury designations for a week (e.g. '2026 Week 3 injury report', 'Falcons practice report'). Defaults to the current league week."
+      },
+      {
+        "provider": "startwho-com",
+        "capability": "fantasy-sports-rankings/injury_report",
+        "description": "Who is hurt before setting a lineup."
+      },
+      {
+        "provider": "nfl-com",
+        "capability": "sports-league-data/schedule",
+        "description": "The user asks what games are on in a week, when a club plays, or the scores of a past week."
+      },
+      {
+        "provider": "draftsharks-com",
+        "capability": "fantasy-sports-rankings/weekly_rankings",
+        "description": "Weekly start/sit rankings and point projections for a position, for example week 4 half-PPR quarterbacks. Omit week for the current week."
+      },
+      {
+        "provider": "fantasydata-com",
+        "capability": "fantasy-sports-rankings/rankings",
+        "description": "This week's start/sit order or projected points for a position from FantasyData, for example half-PPR running backs or the kicker ranking."
+      },
+      {
+        "provider": "nfl-com",
+        "capability": "sports-league-data/team_roster",
+        "description": "The user asks for a team's roster, depth or who plays a position for a club."
+      },
+      {
+        "provider": "fftoday-com",
+        "capability": "fantasy-sports-rankings/weekly_rankings",
+        "description": "Weekly start/sit order for a position."
+      },
+      {
+        "provider": "fantasyfootballcalculator-com",
+        "capability": "fantasy-sports-rankings/rankings",
+        "description": "This week's start/sit order and projected points for a position in standard, PPR, half-PPR or 2-QB scoring, or long-term dynasty and rookie rankings."
+      },
+      {
+        "provider": "football-fantasysports-yahoo-com",
+        "capability": "fantasy-football-players/player_rankings",
+        "description": "Compare players by Yahoo's projected vs actual rank windows in a public league. Sort with PR_W, PR_N4W, PR_S (projected) or AR_LW, AR_L4W, AR_S (actual); page with offset."
+      },
+      {
+        "provider": "draftsharks-com",
+        "capability": "fantasy-sports-rankings/ros_rankings",
+        "description": "Rest-of-season trade and waiver value for a position."
+      },
+      {
+        "provider": "nfl-com",
+        "capability": "sports-league-data/news",
+        "description": "The user wants recent official articles about a club or the league (e.g. dated team injury articles)."
+      }
+    ],
+    "live_discovery_status": "SUCCESS_0_CREDITS",
+    "live_retrievals": {
+      "nfl-com/sports-league-data/schedule": {
+        "status": "success",
+        "credits_cost": 0,
+        "sample_keys": [
+          "success",
+          "scrape_id",
+          "data"
+        ],
+        "data_preview": "{'alexandria': [{'provider': 'nfl-com', 'capability': 'sports-league-data/schedule', 'error': {'code': 'invalid_option', 'message': 'sports-league-data/schedule does not take seasonType. Valid options: season, season_type, week.', 'status': 400}, 'alexandriaId': 'ac2df31938aef03480cc5ed7989cb7791ef91aed30f7ce1b00f8266740c67632'}], 'creditsCost': 0}"
+      },
+      "nfl-com/sports-league-data/injury_report": {
+        "status": "success",
+        "credits_cost": 0,
+        "sample_keys": [
+          "success",
+          "scrape_id",
+          "data"
+        ],
+        "data_preview": "{'alexandria': [{'provider': 'nfl-com', 'capability': 'sports-league-data/injury_report', 'creditsCost': 5, 'data': {'count': 360, 'country': 'US', 'language': 'en', 'observed_at_ms': 1794086603685, 'report_date': '2026-11-06', 'reports': [{'injuries': ['Hamstring'], 'injury_status': 'QUESTIONABLE', 'player': {'display_name': 'Yasir Abdullah', 'first_name': 'Yasir', 'gsis_id': '00-0038580', 'headshot_url': 'https://static.www.nfl.com/image/upload/t_q-best/league/cfc9zfofezxic8dyesru', 'id': '32004142-4468-5761-697c-5797029c343f', 'last_name': 'Abdullah', 'position': 'DE'}, 'practice_days': [{'"
+      },
+      "draftsharks-com/fantasy-sports-rankings/weekly_rankings": {
+        "status": "success",
+        "credits_cost": 0,
+        "sample_keys": [
+          "success",
+          "scrape_id",
+          "data"
+        ],
+        "data_preview": "{'alexandria': [{'provider': 'draftsharks-com', 'capability': 'fantasy-sports-rankings/weekly_rankings', 'error': {'code': 'missing_option', 'message': 'fantasy-sports-rankings/weekly_rankings requires position.', 'status': 400}, 'alexandriaId': 'f51205b2c4d47ae0f70ddb94c12c49d367fc43119120edd863e6d9b3904189d2'}], 'creditsCost': 0}"
+      }
+    },
+    "session_credits_spent": 0
+  },
+  "confirmed_32_team_qb1_starters": {},
+  "official_week9_15_games": [
+    {
+      "espn_event_id": "401873037",
+      "kickoff_utc": "2026-11-06T01:15Z",
+      "matchup": "JAX @ BAL",
+      "away_team": "JAX",
+      "home_team": "BAL",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "M&T Bank Stadium",
+      "is_indoor": false,
+      "posted_spread": "JAX -10",
+      "posted_total": 39.5
+    },
+    {
+      "espn_event_id": "401873038",
+      "kickoff_utc": "2026-11-08T14:30Z",
+      "matchup": "CIN @ ATL",
+      "away_team": "CIN",
+      "home_team": "ATL",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Santiago Bernab\u00e9u",
+      "is_indoor": true,
+      "posted_spread": "CIN -3",
+      "posted_total": 52.5
+    },
+    {
+      "espn_event_id": "401873040",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "DAL @ IND",
+      "away_team": "DAL",
+      "home_team": "IND",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Lucas Oil Stadium",
+      "is_indoor": true,
+      "posted_spread": "DAL -5.5",
+      "posted_total": 51.5
+    },
+    {
+      "espn_event_id": "401873045",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "NYJ @ KC",
+      "away_team": "NYJ",
+      "home_team": "KC",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Arrowhead Stadium",
+      "is_indoor": false,
+      "posted_spread": "KC -10",
+      "posted_total": 47.5
+    },
+    {
+      "espn_event_id": "401873042",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "DET @ MIA",
+      "away_team": "DET",
+      "home_team": "MIA",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Hard Rock Stadium",
+      "is_indoor": false,
+      "posted_spread": "DET -7",
+      "posted_total": 50.5
+    },
+    {
+      "espn_event_id": "401873039",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "CLE @ NO",
+      "away_team": "CLE",
+      "home_team": "NO",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Caesars Superdome",
+      "is_indoor": true,
+      "posted_spread": "NO -3",
+      "posted_total": 42.5
+    },
+    {
+      "espn_event_id": "401873044",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "NYG @ PHI",
+      "away_team": "NYG",
+      "home_team": "PHI",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Lincoln Financial Field",
+      "is_indoor": false,
+      "posted_spread": "NYG -3.5",
+      "posted_total": 38.5
+    },
+    {
+      "espn_event_id": "401873043",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "LAR @ WAS",
+      "away_team": "LAR",
+      "home_team": "WAS",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Northwest Stadium",
+      "is_indoor": false,
+      "posted_spread": "LAR -4.5",
+      "posted_total": 48.5
+    },
+    {
+      "espn_event_id": "401873041",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "matchup": "DEN @ CAR",
+      "away_team": "DEN",
+      "home_team": "CAR",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Bank of America Stadium",
+      "is_indoor": false,
+      "posted_spread": "DEN -2.5",
+      "posted_total": 44.5
+    },
+    {
+      "espn_event_id": "401873046",
+      "kickoff_utc": "2026-11-08T21:05Z",
+      "matchup": "HOU @ LAC",
+      "away_team": "HOU",
+      "home_team": "LAC",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "SoFi Stadium",
+      "is_indoor": false,
+      "posted_spread": "HOU -4.5",
+      "posted_total": 40.5
+    },
+    {
+      "espn_event_id": "401873049",
+      "kickoff_utc": "2026-11-08T21:25Z",
+      "matchup": "GB @ NE",
+      "away_team": "GB",
+      "home_team": "NE",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Gillette Stadium",
+      "is_indoor": false,
+      "posted_spread": "NE -3.5",
+      "posted_total": 45.5
+    },
+    {
+      "espn_event_id": "401873047",
+      "kickoff_utc": "2026-11-08T21:25Z",
+      "matchup": "LV @ SF",
+      "away_team": "LV",
+      "home_team": "SF",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Levi's Stadium",
+      "is_indoor": false,
+      "posted_spread": "SF -10",
+      "posted_total": 52.5
+    },
+    {
+      "espn_event_id": "401873048",
+      "kickoff_utc": "2026-11-08T21:25Z",
+      "matchup": "ARI @ SEA",
+      "away_team": "ARI",
+      "home_team": "SEA",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Lumen Field",
+      "is_indoor": false,
+      "posted_spread": "SEA -8.5",
+      "posted_total": 39.5
+    },
+    {
+      "espn_event_id": "401873050",
+      "kickoff_utc": "2026-11-09T01:20Z",
+      "matchup": "TB @ CHI",
+      "away_team": "TB",
+      "home_team": "CHI",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "Soldier Field",
+      "is_indoor": false,
+      "posted_spread": "CHI -6",
+      "posted_total": 47.5
+    },
+    {
+      "espn_event_id": "401873051",
+      "kickoff_utc": "2026-11-10T01:15Z",
+      "matchup": "BUF @ MIN",
+      "away_team": "BUF",
+      "home_team": "MIN",
+      "away_qb1": "",
+      "home_qb1": "",
+      "venue": "U.S. Bank Stadium",
+      "is_indoor": true,
+      "posted_spread": "BUF -3.5",
+      "posted_total": 45.5
+    }
+  ],
+  "sync_sha256": "37e7c4e8877087530276ea1b7c19f31bca30ca011bf92553bcd8557ab6b32b34"
+}

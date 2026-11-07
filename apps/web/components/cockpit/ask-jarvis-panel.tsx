@@ -140,7 +140,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
         </div>
         <div className="flex items-center gap-3">
           <p className="hidden text-[9px] uppercase tracking-widest text-ion-3/60 sm:block">
-            Composite 86.12/100 · Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)
+            Composite 86.12/100 · Ledger 36-13-1 · +20.14u Verified | All-in 47-19-1 (+24.92u)
           </p>
           {active && (
             <button
@@ -171,7 +171,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                 Composite 86.12/100
               </span>
               <span className="rounded border border-titanium/50 bg-carbon px-2 py-0.5 font-mono text-[9px] text-ion-2">
-                36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)
+                36-13-1 · +20.14u Verified | All-in 47-19-1 (+24.92u)
               </span>
               <span className="rounded border border-titanium/50 bg-carbon px-2 py-0.5 font-mono text-[9px] text-ion-3">
                 Geno Smith = NYJ QB · Mike Evans = SF WR

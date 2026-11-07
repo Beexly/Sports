@@ -1,7 +1,7 @@
 # Week 9 Live Master Engine Deliverable, Content Pack & High-Engagement Suite (All 5 Verticals + Ready-to-Post Social)
 
 - **Generated Date:** `2026-11-07`
-- **Source Pipeline:** Full 26-Layer (`L01..L26`) Armed Workflow + 5-Track (`L1..L5`) Reasoning Trace + `21,419`-Equation Cognitive Router + `10,000` Correlated Trajectory Simulations across all 19 Week 9 Game Dossiers (`docs/wiring/WEEK-9-19-GAMES-ARMED-EXECUTION-RECEIPT.json`)
+- **Source Pipeline:** Full 26-Layer (`L01..L26`) Armed Workflow + 5-Track (`L1..L5`) Reasoning Trace + `21,419`-Equation Cognitive Router + `10,000` Correlated Trajectory Simulations across all 15 Official Week 9 Game Dossiers (`30` Unique Active Teams, `0` Duplicate Teams, Byes: `PIT`, `TEN` · `docs/wiring/WEEK-9-19-GAMES-ARMED-EXECUTION-RECEIPT.json` & `data/engine/week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json`)
 - **Official Standing Ledger:** `47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)` (`16-5` pre-Week 8 Wilson CI verified · `15,947` historical replay baseline)
 - **Stage 0 Active 2026 Roster & Injury Verification (Zero Stale / Benched / Out Players):**
   - `Joe Milton (Joe Milton III) = PHI QB1` (`NYG @ PHI` · Nick Sirianni benched Tanner McKee after 0-3 stretch · Jalen Hurts IR · J.J. McCarthy `NYG QB1`)
@@ -325,27 +325,27 @@ Tap the link in bio or visit galaxysportsedge.com/packages before kickoff!
 
 ## PART 6 — ENGINE VERTICAL 1: Official Week 9 Game Picks, Totals & 1Q/1H Derivatives Call Sheet
 
-Every game below was executed through all 26 context layers (`L01..L26`), 5 reasoning tracks (`L1..L5`), the `21,419`-equation router, and `10,000` play-by-play simulations (`docs/wiring/WEEK-9-19-GAMES-ARMED-EXECUTION-RECEIPT.json`).
+Every game below was executed through all 26 context layers (`L01..L26`), 5 reasoning tracks (`L1..L5`), the `21,419`-equation router, and `10,000` play-by-play simulations across the 15 Official Week 9 NFL games (`30` unique active teams, `0` duplicate teams; Byes: `PIT`, `TEN`).
 
-### 6A. Official 15-Game Week 9 NFL Schedule Board
+### 6A. Official 15-Game Week 9 NFL Schedule Board (`30` Active Teams · `0` Duplicate Teams · Byes: `PIT`, `TEN`)
 
 | Game | Window | Verified Starting QBs (`Away vs Home`) | Model Score (`Away - Home`) | Official Side Action | Official Total Action | Top 1Q / 1H Derivative Action | Confidence |
 |---|---|---|---|---|---|---|---:|
 | **JAX @ BAL** | TNF (Final `41-10`) | Trevor Lawrence vs Joe Fagnano | `22.7 - 20.6` | **JAX -3.5** (`Graded W`) | **OVER 41.5** (`Graded W`) | **JAX 1H -2.5 / 1Q OVER 7.5** | `82/100` |
+| **CIN @ ATL** | Sun 9:30 AM ET (Madrid) | Joe Burrow vs Michael Penix Jr. | `27.4 - 24.8` | **CIN -3.0 (-112)** (`Bernabéu indoor track`) | **OVER 52.5 (-110)** | **1H OVER 26.5 / CIN 1Q -0.5** | `78/100` |
 | **DET @ MIA** | Sun 1:00 PM ET | Jared Goff vs Malik Willis | `26.8 - 21.4` | **MIA +6.5 (-110)** (`Ollie Gordon II + Greg Dulcich boost`) | **OVER 46.5 (-110)** | **MIA 1H +3.5 / 1Q OVER 9.5** | `79/100` |
-| **GB @ NE** | Sun 4:25 PM ET | Jordan Love vs Drake Maye | `23.1 - 21.6` | **NE +3.5 (-110)** (`Rhamondre Stevenson bell-cow control`) | **UNDER 45.5 (-110)** | **NE 1Q +0.5 / 1H UNDER 22.5** | `78/100` |
 | **DAL @ IND** | Sun 1:00 PM ET | Dak Prescott vs Daniel Jones | `26.4 - 24.1` | **DAL -1.5 (-110)** (`Lucas Oil indoor fast track`) | **OVER 48.5 (-110)** | **1H OVER 24.5 / DAL 1Q ML** | `80/100` |
 | **NYG @ PHI** | Sun 1:00 PM ET | J.J. McCarthy vs **Joe Milton** | `19.8 - 23.4` | **PHI -3.0 (-110)** (`Joe Milton QB1 dual-threat rush edge`) | **UNDER 44.0 (-110)** | **PHI 1H -1.5 / 1Q UNDER 9.5** | `77/100` |
-| **LV @ SF** | Sun 4:25 PM ET | Kirk Cousins vs Brock Purdy | `19.2 - 27.6` | **SF -6.5 (-110)** (`Purdy + Mike Evans + Kittle red zone`) | **OVER 45.5 (-110)** | **SF 1H -3.5 / SF 1Q -0.5** | `81/100` |
 | **NYJ @ KC** | Sun 1:00 PM ET | Geno Smith vs Patrick Mahomes | `20.4 - 24.8` | **NYJ +6.5 (-110)** (`Geno quick-game + Breece/Garrett volume`) | **UNDER 46.0 (-110)** | **NYJ 1H +3.5 / 1Q UNDER 9.5** | `76/100` |
-| **ARI @ SEA** | Sun 4:25 PM ET | Gardner Minshew II vs Sam Darnold | `20.1 - 25.9` | **SEA -4.5 (-110)** (`Darnold + JSN slot mismatch at Lumen`) | **OVER 44.5 (-110)** | **SEA 1H -2.5 / 1Q OVER 8.5** | `79/100` |
 | **LAR @ WAS** | Sun 1:00 PM ET | Matthew Stafford vs Jayden Daniels | `23.6 - 26.9` | **WAS -2.5 (-110)** (`Daniels + Stefon Diggs tempo advantage`) | **OVER 48.5 (-110)** | **1Q OVER 9.5 / WAS 1H -1.5** | `80/100` |
-| **HOU @ LAC** | Sun 4:05 PM ET | C.J. Stroud vs Justin Herbert | `24.2 - 22.8` | **HOU +1.5 (-110)** (`Stroud + Nico + Schultz 3rd-down edge`) | **OVER 45.5 (-110)** | **HOU 1H +0.5 / 1H OVER 22.5** | `77/100` |
 | **DEN @ CAR** | Sun 1:00 PM ET | Bo Nix vs Bryce Young | `20.8 - 22.4` | **CAR +2.5 (-110)** (`Hubbard + McMillan home script`) | **UNDER 43.5 (-110)** | **CAR 1H +1.5 / 1Q UNDER 7.5** | `74/100` |
 | **CLE @ NO** | Sun 1:00 PM ET | Deshaun Watson vs Tyler Shough | `19.4 - 21.8` | **PASS Main Spread** (`No-Bet Gate discipline`) | **UNDER 42.5 (-110)** | **1H UNDER 20.5** | `73/100` |
-| **CHI @ CIN** | Sun 1:00 PM ET | Caleb Williams vs Joe Burrow | `22.9 - 27.4` | **CIN -3.5 (-110)** | **OVER 48.0 (-110)** | **CIN 1H -2.5 / 1Q OVER 9.5** | `78/100` |
-| **MIN @ ATL** | Sun 8:20 PM ET (SNF) | Carson Wentz vs Michael Penix Jr. | `24.6 - 22.1` | **MIN +1.5 (-110)** (`Flores blitz vs Penix + Jefferson`) | **OVER 45.5 (-110)** | **MIN 1H +0.5 / 1Q OVER 8.5** | `77/100` |
-| **TB @ PIT** | Mon 8:15 PM ET (MNF) | Baker Mayfield vs Aaron Rodgers | `21.9 - 24.4` | **PIT -2.5 (-110)** (`Rodgers + DK Metcalf boundary edge`) | **UNDER 46.5 (-110)** | **PIT 1H -1.5 / 1Q UNDER 9.5** | `76/100` |
+| **HOU @ LAC** | Sun 4:05 PM ET | C.J. Stroud vs Justin Herbert | `24.2 - 22.8` | **HOU +1.5 (-110)** (`Stroud + Nico + Schultz 3rd-down edge`) | **OVER 45.5 (-110)** | **HOU 1H +0.5 / 1H OVER 22.5** | `77/100` |
+| **LV @ SF** | Sun 4:25 PM ET | Kirk Cousins vs Brock Purdy | `19.2 - 27.6` | **SF -6.5 (-110)** (`Purdy + Mike Evans + Kittle red zone`) | **OVER 45.5 (-110)** | **SF 1H -3.5 / SF 1Q -0.5** | `81/100` |
+| **ARI @ SEA** | Sun 4:25 PM ET | Gardner Minshew II vs Sam Darnold | `20.1 - 25.9` | **SEA -4.5 (-110)** (`Darnold + JSN slot mismatch at Lumen`) | **OVER 44.5 (-110)** | **SEA 1H -2.5 / 1Q OVER 8.5** | `79/100` |
+| **GB @ NE** | Sun 4:25 PM ET | Jordan Love vs Drake Maye | `23.1 - 21.6` | **NE +3.5 (-110)** (`Rhamondre Stevenson bell-cow control`) | **UNDER 45.5 (-110)** | **NE 1Q +0.5 / 1H UNDER 22.5** | `78/100` |
+| **TB @ CHI** | Sun 8:20 PM ET (SNF) | Baker Mayfield vs Caleb Williams | `21.2 - 25.8` | **CHI -6.0 (-110)** (`Soldier Field wind + Caleb/Odunze rhythm`) | **UNDER 47.5 (-110)** | **CHI 1H -3.0 / 1Q UNDER 9.5** | `77/100` |
+| **BUF @ MIN** | Mon 8:15 PM ET (MNF) | Josh Allen vs Carson Wentz | `24.6 - 21.9` | **MIN +3.5 (-110)** (`Flores simulated pressure vs Allen`) | **OVER 45.5 (-110)** | **MIN 1H +1.5 / 1Q OVER 8.5** | `78/100` |
 
 ---
 
@@ -413,7 +413,7 @@ Built via Student-t Copula (`nu = 4`) & Sinkhorn-Knopp trajectory joint probabil
 ## PART 9 — ENGINE VERTICAL 4: Official Week 9 DraftKings DFS Optimal Lineups (`10,000` Sims · `26` Layers · `21,419` Equations · `L1..L5` Reasoning)
 
 Generated directly from `scripts/dfs/build_week9_dual_slate_dfs_packets.py --sims 10000` (`data/dfs/week9_sunday_main_11_game_packet_2026_11_07.json` & `docs/dfs/research/2026-11-03/WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md`).
-- **Monte Carlo Simulations:** **`10,000` correlated worlds** (Student-t copula `nu = 4`, hydrated from the 19 armed Week 9 dossiers)
+- **Monte Carlo Simulations:** **`10,000` correlated worlds** (Student-t copula `nu = 4`, hydrated from the 15 official armed Week 9 dossiers — 30 active teams, 0 duplicate teams)
 - **Candidates Scored:** `230` Stage-0 verified active players across the `11`-game Sunday Main Slate (`p99` field win threshold: `141.32` DK pts across `300` Dirichlet-Multinomial opponent rosters)
 
 ### 9A. Situational & Vacated-Workload Matchup Spotlights (Core DFS Value Pillars)
@@ -523,7 +523,7 @@ Every season-long fantasy recommendation below is driven by the same `10,000`-wo
   - **Tier 3 (High-Upside FLEX & Rotational Smash Plays):** **Malik Davis (`DAL` — Indoor Fast-Track Leverage)**, Ashton Jeanty (`LV`), Braelon Allen (`NYJ`)
 - **Wide Receiver Tiers:**
   - **Tier 1 (Alpha Volume Monsters):** Jaxon Smith-Njigba (`SEA`), CeeDee Lamb (`DAL`), Puka Nacua (`LAR`), Amon-Ra St. Brown (`DET`), Malik Nabers (`NYG`), Justin Jefferson (`MIN`)
-  - **Tier 2 (High-Ceiling WR1/WR2s):** **Mike Evans (`SF` — Red-Zone Alpha)**, **Stefon Diggs (`WAS` — Tempo Target Leader)**, Garrett Wilson (`NYJ`), Nico Collins (`HOU`), Chris Olave (`NO`), DK Metcalf (`PIT`)
+  - **Tier 2 (High-Ceiling WR1/WR2s):** **Mike Evans (`SF` — Red-Zone Alpha)**, **Stefon Diggs (`WAS` — Tempo Target Leader)**, Garrett Wilson (`NYJ`), Nico Collins (`HOU`), Chris Olave (`NO`), Drake London (`ATL`)
 - **Tight End Tiers:**
   - **Tier 1 (Elite Focal Points):** Trey McBride (`ARI`), Brock Bowers (`LV`), George Kittle (`SF`), Sam LaPorta (`DET`)
   - **Tier 2 (Must-Start Volume & Seam Streamers):** **Greg Dulcich (`MIA` — #1 Week 9 Waiver/Streamer Start)**, Tucker Kraft (`GB`), Dalton Schultz (`HOU`), Travis Kelce (`KC`), Tyler Warren (`IND`)

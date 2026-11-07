@@ -316,7 +316,7 @@ VERIFIED_STARTING_QBS = {
     "DEN": "Bo Nix",
     "NE": "Drake Maye",
     "MIA": "Malik Willis",
-    "PHI": "Tanner McKee",
+    "PHI": "Joe Milton",
     "WAS": "Jayden Daniels",
     "CHI": "Caleb Williams",
     "SEA": "Sam Darnold",

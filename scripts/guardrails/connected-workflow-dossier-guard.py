@@ -35,6 +35,9 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
     assert_zero_roster_contamination,
     load_stage0_game_roster_allowlist,
 )
+from intelligence.data_sources.firecrawl_alexandria_live_sync import (  # noqa: E402
+    assert_zero_duplicate_teams_or_players_on_slate,
+)
 
 PERCENT_CONF_RE = re.compile(r"\b(?:confidence|conf)\s*[:=]?\s*\d+(?:\.\d+)?\s*%", re.IGNORECASE)
 
@@ -48,6 +51,10 @@ BANNED_WEB_STOREFRONT_PHRASES = (
     "31-11 banner is retracted",
     "TNF card 14-6",
     "tau_hat (+11.16pp",
+    "MIA @ BUF",
+    "DET @ GB",
+    "IND @ MIN",
+    "TB @ KC",
 )
 
 WEB_STOREFRONT_CRITICAL_FILES = (
@@ -55,6 +62,7 @@ WEB_STOREFRONT_CRITICAL_FILES = (
     "apps/web/components/redline/redline-world.tsx",
     "apps/web/components/packages/paywall-reveal-card.tsx",
     "apps/web/lib/packages/catalog.ts",
+    "apps/web/lib/engine/engine-live-bridge.ts",
 )
 
 
@@ -89,6 +97,24 @@ def verify_web_storefront_human_copy() -> None:
                 "GUARD_FAIL: apps/web/app/api/packages/checkout/route.ts must use inline price_data "
                 "(never static [{ price: pkg.stripePriceId }]) so Stripe Checkout never displays stale prior-week product names."
             )
+
+    w9_dossiers = sorted((REPO_ROOT / "data" / "engine").glob("connected_workflow_dossier_*_week9.json"))
+    if w9_dossiers:
+        matchups: list[str] = []
+        for dp in w9_dossiers:
+            d_obj = json.loads(dp.read_text(encoding="utf-8"))
+            m_str = str(d_obj.get("matchup") or "")
+            if m_str:
+                matchups.append(m_str)
+        if len(matchups) != 15:
+            raise RuntimeError(
+                f"GUARD_FAIL: Expected strictly 15 Week 9 dossiers in data/engine/, found {len(matchups)}"
+            )
+        assert_zero_duplicate_teams_or_players_on_slate(
+            matchups,
+            week=9,
+            context_label="connected-workflow-dossier-guard:data/engine/connected_workflow_dossier_*_week9.json",
+        )
 
 
 

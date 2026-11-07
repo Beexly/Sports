@@ -1,0 +1,2389 @@
+{
+  "report_type": "CADENCE_V3_0_PRE_KICKOFF_OVERLAY_AND_TICKET_MINT",
+  "version": "v3.0",
+  "phase": "INJURY_WEATHER_OVERLAY",
+  "week": 9,
+  "season": 2026,
+  "cadence_window": {
+    "day": "Fri",
+    "ct_time": "16:30",
+    "label": "final pre-kickoff overlay + sealed ticket minting"
+  },
+  "generated_at_utc": "2026-11-06T22:48:08.068945+00:00",
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true
+    },
+    "unchanged": true,
+    "verification_level": "partial (v25 import chain unavailable in this interpreter; lineage checks are the independent ones)",
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: 'unchanged' asserts byte-identity with the active seal center, not independent reproducibility. EPA-dropoff table hash and coach-mind canonical digest were NOT re-checked here (numpy import failure in this interpreter); they were verified unchanged in the TNF v2.5 run on 2026-11-05 (seal unchanged: true)."
+  },
+  "no_reestimation": {
+    "tau": 0.42,
+    "cost_matrix_reestimated": false,
+    "team_ratings_reestimated": false,
+    "epa_table_reestimated": false,
+    "repaired": false,
+    "resimulated": false,
+    "note": "Sealed inputs read verbatim. Overlay is identity for Sunday slate."
+  },
+  "inputs": {
+    "full_slate_packet": "data/engine/week9_full_slate_connected_dossiers_2026_11_06.json",
+    "full_slate_sha256": "39eb913d0dec13db8422f731d5b0b4150b2b43913488361953e7e24f0595d02d",
+    "full_slate_generated_at": "2026-11-06T15:59:16.880156+00:00",
+    "injuries_csv_sha256": "7ac1a6b6f69974ff172cea271f28dc01fca23c49ee170bcef7c1f4ac42549072",
+    "injuries_rows": 2725,
+    "week9_rows": 266,
+    "week9_designations": [
+      {
+        "team": "BAL",
+        "player": "Lamar Jackson",
+        "status": "Out"
+      },
+      {
+        "team": "BAL",
+        "player": "Tyler Huntley",
+        "status": "Out"
+      },
+      {
+        "team": "BAL",
+        "player": "Jaylinn Hawkins",
+        "status": "Out"
+      },
+      {
+        "team": "BAL",
+        "player": "Nate Wiggins",
+        "status": "Questionable"
+      },
+      {
+        "team": "BAL",
+        "player": "Adam Randall",
+        "status": "Questionable"
+      },
+      {
+        "team": "JAX",
+        "player": "Travon Walker",
+        "status": "Questionable"
+      },
+      {
+        "team": "JAX",
+        "player": "Bhayshul Tuten",
+        "status": "Questionable"
+      }
+    ],
+    "writeups_stale": "data/packages/live-slate-writeups.json is Week 8 (generated 2026-10-29); Week 9 sealed calls live in dossiers, so tickets are minted from dossiers, not writeups."
+  },
+  "summary": {
+    "sunday_games": 13,
+    "tickets_minted": 78,
+    "playable": 11,
+    "max_abs_overlay_points_delta": 0.0
+  },
+  "games": [
+    {
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday International Madrid (Sun 9:30 AM ET)",
+      "kickoff_utc": "2026-11-08T14:30Z",
+      "venue": "Santiago Bernabeu Stadium (Madrid)",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "CIN -3.0",
+          "decision": "PLAY",
+          "confidence": "70/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "ATL +3.0",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 52.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 52.5",
+          "decision": "PASS",
+          "confidence": "58/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "CIN ML",
+          "decision": "PLAY",
+          "confidence": "69/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "ATL ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "venue": "Lucas Oil Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "DAL -5.5",
+          "decision": "PASS",
+          "confidence": "61/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "IND +5.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 51.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 51.5",
+          "decision": "PLAY",
+          "confidence": "72/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "DAL ML",
+          "decision": "PASS",
+          "confidence": "59/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "IND ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "venue": "GEHA Field at Arrowhead Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "NYJ +10.0",
+          "decision": "PASS",
+          "confidence": "62/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "KC -10.0",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 47.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 47.5",
+          "decision": "PASS",
+          "confidence": "55/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "NYJ ML",
+          "decision": "PASS",
+          "confidence": "62/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "KC ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "venue": "Hard Rock Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "DET -7.0",
+          "decision": "PLAY",
+          "confidence": "70/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "MIA +7.0",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 50.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 50.5",
+          "decision": "PASS",
+          "confidence": "62/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "DET ML",
+          "decision": "PASS",
+          "confidence": "62/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "MIA ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "venue": "Caesars Superdome",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "CLE +3.0",
+          "decision": "PASS",
+          "confidence": "61/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "NO -3.0",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 42.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 42.5",
+          "decision": "PLAY",
+          "confidence": "71/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "CLE ML",
+          "decision": "PASS",
+          "confidence": "63/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "NO ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "venue": "Lincoln Financial Field",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "NYG -3.5",
+          "decision": "PASS",
+          "confidence": "64/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "PHI +3.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 38.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 38.5",
+          "decision": "PASS",
+          "confidence": "64/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "NYG ML",
+          "decision": "PASS",
+          "confidence": "62/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "PHI ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": null,
+      "venue": "Northwest Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "LAR -4.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "WAS +4.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 48.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 48.5",
+          "decision": "PASS",
+          "confidence": "59/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "LAR ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "WAS ML",
+          "decision": "PASS",
+          "confidence": "55/100"
+        }
+      ]
+    },
+    {
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Early (Sun 1:00 PM ET)",
+      "kickoff_utc": "2026-11-08T18:00Z",
+      "venue": "Bank of America Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "DEN -2.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "CAR +2.5",
+          "decision": "PASS",
+          "confidence": "52/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 44.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 44.5",
+          "decision": "PLAY",
+          "confidence": "70/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "DEN ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "CAR ML",
+          "decision": "PASS",
+          "confidence": "57/100"
+        }
+      ]
+    },
+    {
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Late (Sun 4:05 PM ET)",
+      "kickoff_utc": "2026-11-08T21:05Z",
+      "venue": "SoFi Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "HOU -4.5",
+          "decision": "PLAY",
+          "confidence": "68/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "LAC +4.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 40.5",
+          "decision": "PASS",
+          "confidence": "53/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 40.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "HOU ML",
+          "decision": "PASS",
+          "confidence": "60/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "LAC ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Late (Sun 4:25 PM ET)",
+      "kickoff_utc": "2026-11-08T21:25Z",
+      "venue": "Gillette Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "GB +3.5",
+          "decision": "PASS",
+          "confidence": "60/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "NE -3.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 45.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 45.5",
+          "decision": "PASS",
+          "confidence": "63/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "GB ML",
+          "decision": "PASS",
+          "confidence": "63/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "NE ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Late (Sun 4:25 PM ET)",
+      "kickoff_utc": "2026-11-08T21:25Z",
+      "venue": "Levi's Stadium",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "LV +10.0",
+          "decision": "PASS",
+          "confidence": "56/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "SF -10.0",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 52.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 52.5",
+          "decision": "PLAY",
+          "confidence": "65/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "LV ML",
+          "decision": "PASS",
+          "confidence": "59/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "SF ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Late (Sun 4:25 PM ET)",
+      "kickoff_utc": "2026-11-08T21:25Z",
+      "venue": "Lumen Field",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "ARI +8.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "SEA -8.5",
+          "decision": "PASS",
+          "confidence": "53/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 39.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 39.5",
+          "decision": "PLAY",
+          "confidence": "72/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "ARI ML",
+          "decision": "PASS",
+          "confidence": "54/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "SEA ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    },
+    {
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "window": "Sunday Night Football (Sun 8:20 PM ET)",
+      "kickoff_utc": "2026-11-09T01:20Z",
+      "venue": "Soldier Field",
+      "canonical_designations": [],
+      "overlay_points_delta": 0.0,
+      "overlay_note": "No canonical report_status designations for Sunday teams; 7 Week-9 designations exist but all belong to TNF teams BAL/JAX. Practice status alone is not a game designation and was not promoted.",
+      "s5_game_lines": [
+        {
+          "market": "Spread",
+          "selection": "TB +6.0",
+          "decision": "PLAY",
+          "confidence": "66/100"
+        },
+        {
+          "market": "Spread",
+          "selection": "CHI -6.0",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Over 47.5",
+          "decision": "PASS",
+          "confidence": "51/100"
+        },
+        {
+          "market": "Total",
+          "selection": "Under 47.5",
+          "decision": "PASS",
+          "confidence": "56/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "TB ML",
+          "decision": "PLAY",
+          "confidence": "67/100"
+        },
+        {
+          "market": "Moneyline",
+          "selection": "CHI ML",
+          "decision": "PASS",
+          "confidence": "51/100"
+        }
+      ]
+    }
+  ],
+  "tickets": [
+    {
+      "ticket_id": "TICK-2026-W9-CIN-ATL-SPREAD-CIN--3.0",
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "CIN -3.0",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "70/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CIN-ATL-SPREAD-ATL-+3.0",
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "ATL +3.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CIN-ATL-TOTAL-Over-52.5",
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 52.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CIN-ATL-TOTAL-Under-52.5",
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 52.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "58/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CIN-ATL-MONEYLINE-CIN-ML",
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "CIN ML",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "69/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CIN-ATL-MONEYLINE-ATL-ML",
+      "matchup": "CIN @ ATL",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "ATL ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DAL-IND-SPREAD-DAL--5.5",
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "DAL -5.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "61/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DAL-IND-SPREAD-IND-+5.5",
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "IND +5.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DAL-IND-TOTAL-Over-51.5",
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 51.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DAL-IND-TOTAL-Under-51.5",
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 51.5",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "72/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DAL-IND-MONEYLINE-DAL-ML",
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "DAL ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "59/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DAL-IND-MONEYLINE-IND-ML",
+      "matchup": "DAL @ IND",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "IND ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYJ-KC-SPREAD-NYJ-+10.0",
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "NYJ +10.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "62/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYJ-KC-SPREAD-KC--10.0",
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "KC -10.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYJ-KC-TOTAL-Over-47.5",
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 47.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYJ-KC-TOTAL-Under-47.5",
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 47.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "55/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYJ-KC-MONEYLINE-NYJ-ML",
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "NYJ ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "62/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYJ-KC-MONEYLINE-KC-ML",
+      "matchup": "NYJ @ KC",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "KC ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DET-MIA-SPREAD-DET--7.0",
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "DET -7.0",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "70/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DET-MIA-SPREAD-MIA-+7.0",
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "MIA +7.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DET-MIA-TOTAL-Over-50.5",
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 50.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DET-MIA-TOTAL-Under-50.5",
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 50.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "62/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DET-MIA-MONEYLINE-DET-ML",
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "DET ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "62/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DET-MIA-MONEYLINE-MIA-ML",
+      "matchup": "DET @ MIA",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "MIA ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CLE-NO-SPREAD-CLE-+3.0",
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "CLE +3.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "61/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CLE-NO-SPREAD-NO--3.0",
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "NO -3.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CLE-NO-TOTAL-Over-42.5",
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 42.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CLE-NO-TOTAL-Under-42.5",
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 42.5",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "71/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CLE-NO-MONEYLINE-CLE-ML",
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "CLE ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "63/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-CLE-NO-MONEYLINE-NO-ML",
+      "matchup": "CLE @ NO",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "NO ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYG-PHI-SPREAD-NYG--3.5",
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "NYG -3.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "64/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYG-PHI-SPREAD-PHI-+3.5",
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "PHI +3.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYG-PHI-TOTAL-Over-38.5",
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 38.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYG-PHI-TOTAL-Under-38.5",
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 38.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "64/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYG-PHI-MONEYLINE-NYG-ML",
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "NYG ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "62/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-NYG-PHI-MONEYLINE-PHI-ML",
+      "matchup": "NYG @ PHI",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "PHI ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LAR-WAS-SPREAD-LAR--4.5",
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "LAR -4.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LAR-WAS-SPREAD-WAS-+4.5",
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "WAS +4.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LAR-WAS-TOTAL-Over-48.5",
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 48.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LAR-WAS-TOTAL-Under-48.5",
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 48.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "59/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LAR-WAS-MONEYLINE-LAR-ML",
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "LAR ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LAR-WAS-MONEYLINE-WAS-ML",
+      "matchup": "LAR @ WAS",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "WAS ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "55/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DEN-CAR-SPREAD-DEN--2.5",
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "DEN -2.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DEN-CAR-SPREAD-CAR-+2.5",
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "CAR +2.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "52/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DEN-CAR-TOTAL-Over-44.5",
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 44.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DEN-CAR-TOTAL-Under-44.5",
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 44.5",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "70/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DEN-CAR-MONEYLINE-DEN-ML",
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "DEN ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-DEN-CAR-MONEYLINE-CAR-ML",
+      "matchup": "DEN @ CAR",
+      "slot": "SUN_EARLY",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "CAR ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "57/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-HOU-LAC-SPREAD-HOU--4.5",
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "HOU -4.5",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "68/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-HOU-LAC-SPREAD-LAC-+4.5",
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "LAC +4.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-HOU-LAC-TOTAL-Over-40.5",
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 40.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "53/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-HOU-LAC-TOTAL-Under-40.5",
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 40.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-HOU-LAC-MONEYLINE-HOU-ML",
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "HOU ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "60/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-HOU-LAC-MONEYLINE-LAC-ML",
+      "matchup": "HOU @ LAC",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "LAC ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-GB-NE-SPREAD-GB-+3.5",
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "GB +3.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "60/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-GB-NE-SPREAD-NE--3.5",
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "NE -3.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-GB-NE-TOTAL-Over-45.5",
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 45.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-GB-NE-TOTAL-Under-45.5",
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 45.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "63/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-GB-NE-MONEYLINE-GB-ML",
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "GB ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "63/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-GB-NE-MONEYLINE-NE-ML",
+      "matchup": "GB @ NE",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "NE ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LV-SF-SPREAD-LV-+10.0",
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "LV +10.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "56/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LV-SF-SPREAD-SF--10.0",
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "SF -10.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LV-SF-TOTAL-Over-52.5",
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 52.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LV-SF-TOTAL-Under-52.5",
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 52.5",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "65/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LV-SF-MONEYLINE-LV-ML",
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "LV ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "59/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-LV-SF-MONEYLINE-SF-ML",
+      "matchup": "LV @ SF",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "SF ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-ARI-SEA-SPREAD-ARI-+8.5",
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "ARI +8.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-ARI-SEA-SPREAD-SEA--8.5",
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "SEA -8.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "53/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-ARI-SEA-TOTAL-Over-39.5",
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 39.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-ARI-SEA-TOTAL-Under-39.5",
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 39.5",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "72/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-ARI-SEA-MONEYLINE-ARI-ML",
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "ARI ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "54/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-ARI-SEA-MONEYLINE-SEA-ML",
+      "matchup": "ARI @ SEA",
+      "slot": "SUN_LATE",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "SEA ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-TB-CHI-SPREAD-TB-+6.0",
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "TB +6.0",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "66/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-TB-CHI-SPREAD-CHI--6.0",
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "kind": "spread",
+      "selection": "CHI -6.0",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-TB-CHI-TOTAL-Over-47.5",
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Over 47.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-TB-CHI-TOTAL-Under-47.5",
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "kind": "total",
+      "selection": "Under 47.5",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "56/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-TB-CHI-MONEYLINE-TB-ML",
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "TB ML",
+      "sealed_decision": "PLAY",
+      "sealed_confidence": "67/100",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    },
+    {
+      "ticket_id": "TICK-2026-W9-TB-CHI-MONEYLINE-CHI-ML",
+      "matchup": "TB @ CHI",
+      "slot": "SNF",
+      "week": 9,
+      "season": 2026,
+      "kind": "moneyline",
+      "selection": "CHI ML",
+      "sealed_decision": "PASS",
+      "sealed_confidence": "51/100",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "identity overlay (no Sunday designations)",
+      "repriced": false,
+      "seal": {
+        "merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "unchanged": true
+      }
+    }
+  ],
+  "ticket_count": 78,
+  "publication": {
+    "published": false,
+    "reason": "Internal sealed artifacts. Class B conjunction gate (stage 5) already ran inside dossiers; overlay adds no new publication."
+  },
+  "sha256_merkle": "1290a79212ef98b6fc5d77cc58fd676478603bbc03971d0d142cf797d8fb1ebc"
+}
