@@ -14,4 +14,6 @@ Recounts (every JSONL line parsed; 0 unparseable anywhere):
 - brain/feeds/unified_mind_staging_waves1_to_12: 6,250 lines, 5,899 trainer_ready (94.4%).
 - **Staging total: 14,040 lines, 13,265 trainer_ready-flagged (94.48%), 0 corrupt lines.**
 
-Note on totals: the files overlap by design (the unified feed aggregates waves 1–12; the batch file restates batch 3/4), so 14,040 is a line total across files, NOT a deduplicated record count. The manifests' two headline claims that could be checked exactly, checked out exactly — a cleaner result than most of tonight's fleet numbers.
+Note on totals: the files overlap by design (the unified feed aggregates waves 1–12; the batch file restates batch 3/4), so 14,040 is a line total across files, NOT a deduplicated record count. Deduplication across files (keyed by sha256, else content hash, else id): **6,240 unique records** account for the 14,040 lines — 7,741 lines are re-statements of a record already present in another staging file (the unified feed re-states the wave files, as designed) and 59 lines carry none of the three keys. So the in-repo mind corpus is ~6.2K unique records in staging form, not 14K.
+
+The manifests' two headline claims that could be checked exactly, checked out exactly — a cleaner result than most of tonight's fleet numbers.
