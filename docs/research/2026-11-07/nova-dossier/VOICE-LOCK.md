@@ -34,3 +34,13 @@ An A/B (Callirrhoe vs Zephyr, both under the amended style, on the opening + clo
 
 ## SUPERSEDING DECISION — Garrett, Oct 28, 2026, 14:07 CT (bible §47)
 Garrett heard the A/B (both voices under the §45 amended style, opening + closing lines) and picked **Voice B — Zephyr**. PRODUCTION VOICE IS NOW: Zephyr + the §45 amended style text, pasted verbatim every generation. Callirrhoe is retired as the production voice; its canonical takes stay on file as history only. Every other term of this lock stands (single speech block, Speaker 1, Gemini 3.8 Flash TTS, AI Studio UI free route, QA before delivery). The manifesto re-records chunked under Zephyr as v5 — the launch cut.
+
+## UPDATE — Garrett, Nov 7, 2026, 15:04 CT (B1 pick)
+Context: Nov 7 production drifted — the day's Higgsfield takes and AI Studio voice take were generated with Callirrhoe + the ORIGINAL Oct 28 style text, against the §47 decision above (drift found and owned by Motif, Nov 7). Corrective A/B: three takes, one generation each, AI Studio, Gemini 3.8 Flash TTS, single speech block, Speaker 1.
+- A1 — Callirrhoe + original style (control), Script A. File: candidates/scriptA-callirrhoe-current-style.wav
+- A2 — Callirrhoe + adjusted style (below), Script A. File: candidates/scriptA-callirrhoe-adjusted-feminine.wav
+- B1 — Zephyr + adjusted style (below), Script B. File: candidates/scriptB-zephyr-adjusted-feminine.wav
+Garrett's direction, Nov 7, 14:59 CT: the voice slightly MORE FEMININE. Garrett heard all three and picked **B1** (👍 on the B1 take at 15:04 CT, then "B1" in chat).
+PRODUCTION VOICE IS NOW: **Zephyr + the adjusted style text**, pasted verbatim every generation:
+"A real woman in her late 20s recording a casual TikTok: warm and clearly feminine, a touch higher and lighter than an alto, soft around the edges but confident, slight smile and dry humor, natural pauses and breaths, conversational, a little smoky underneath, not bubbly cheerleader, not an announcer, no sales voice."
+This adjusted style text REPLACES the §45 style text for production; Zephyr as the voice identity is re-confirmed (§47 stands). Script B — "All right, Saturday. The card is set, every matchup worked. Full board is live — come argue with me in the replies." — is the approved line for the next game-day video. Status: interim production direction; the AI-personality/humanization deep research running Nov 7 may refine the spec, and any change after it lands is a new Garrett decision, never a silent edit.
