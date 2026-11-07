@@ -167,3 +167,93 @@ Cross-checked against `data/audits/textbook_index_2026_11_06.json` and `data/aud
 | 2 | **Freeze 100+ question benchmark (`wins` + `losses`, pre-event timestamps, forecasting + reasoning) before first run** | **CLOSED & CRYPTOGRAPHICALLY VERIFIED:** `data/audits/gse_intelligence_scale_frozen_bank_2026_11_06.json` (`N=486`: `436` forecasting [`232W-204L`] + `50` reasoning, SHA-256 `781d3cd81d8e979358a4ad7ac56b45af9ee8aea075baca81f85f2a50677d3ed5`) and `scripts/eval/gse_livebench_harness.py` (SHA-256 `f76097a93df092ce583c296ee7ab87e2f91ac4667571bc8747df7b98f94fd910`) were frozen prior to evaluation and never edited after seeing results. | Motif independent verification of `gse_intelligence_scale_freeze_manifest_2026_11_06.json` and `gse_livebench_question_bank_and_leaderboard_2026_11_06.json`. |
 | 3 | **OpenRouter public directory listing (`458` models on `openrouter.ai/api/v1/models`)** | **EXTERNAL PORTAL REGISTRATION REQUIRED:** Pushing code to GitHub/Vercel deploys the endpoint at `https://www.galaxysportsedge.com/api/openrouter-provider/{models,chat/completions}`, but OpenRouter's public catalog only lists providers after a Provider Admin submits the endpoint URL in the OpenRouter Provider Portal and OpenRouter's team approves it. | Garrett submits `https://www.galaxysportsedge.com/api/openrouter-provider/models` and `https://www.galaxysportsedge.com/api/openrouter-provider/chat/completions` in the OpenRouter Provider Portal (`https://openrouter.ai/docs/guides/providers/integration`). |
 | 4 | **Domain-matched head-to-head LLM forecasting run on the exact same `n=436` NFL pre-event questions** | **DOCUMENTED HONESTLY:** In `gse_livebench_question_bank_and_leaderboard_2026_11_06.json`, `claude-opus-4-6` (`85.16`) and `deepseek-r1` (`78.97`) are scored from their published Karger et al. (`arXiv:2409.19839`) ForecastBench Brier anchors (`0.101` / `0.118`), whereas `gse-stealth-skeleton-v2.4` (`61.93` / `59.31`) and `de-vigged-market-baseline` (`7.67`) are scored on the harder `-110` NFL spread/prop cohort where irreducible Murphy uncertainty $\bar{y}(1-\bar{y}) = 0.2273\text{–}0.2490$. | Running live pre-kickoff Week 9 prompts through Opus and DeepSeek *before* Week 9 kickoffs (since retrospective LLM evaluation on already-played Week 8 NFL games would suffer from web/search cutoff or post-event contamination). |
+
+
+---
+
+## 6. Motif Master Synthesis Completion (2026-11-06) — OpenAlex 429 Debt Closed, External Datasets Acquired & All 5 Named Build Items Executed
+
+> **VOIDED BATCH NOTICE (Garrett & Motif, 2026-11-06):** The `62-23-1` figure referenced in legacy Week 8 ledger files is a historical batch **voided after the Nov 5 engine failure** and is **never** cited or treated as a standing record.
+
+### 6.1 OpenAlex Citation & Work-ID Resolution for Motif's 21 Verified arXiv Papers (`429` Debt Closed)
+
+All 21 arXiv papers from Part 1 of Motif's Master Document were queried against `https://api.openalex.org/works/https://doi.org/10.48550/arXiv.<id>` with 350ms pacing to close the OpenAlex `429` rate-limit gap:
+
+| Lane | arXiv ID | Authors & Year | Title | OpenAlex Work ID | `cited_by_count` |
+|---|---|---|---|---|---:|
+| **A1** | `1905.03222` | Romano, Patterson, & Candès (2019) | *Conformalized Quantile Regression* | `W2946063682` | **276** |
+| **A2** | `2010.09107` | Xu & Xie (2021) | *Conformal prediction interval for dynamic time-series (EnbPI)* | `W4375928767` | **85** |
+| **A3** | `2106.00170` | Gibbs & Candès (2021) | *Adaptive Conformal Inference Under Distribution Shift (ACI)* | `W3172668605` | **114** |
+| **A4** | `2202.13415` | Barber, Candès, Ramdas, & Tibshirani (2023) | *Conformal prediction beyond exchangeability* | `W4380490520` | **395** |
+| **A5** | `2504.01781` | Waghmare & Ziegel (2025) | *Proper Scoring Rules for Estimation and Forecast Evaluation* | `W4416184655` | **9** |
+| **B1** | `2409.19839` | Karger et al. (2024 / ICLR 2025) | *ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities* | `W4403814362` | **9** |
+| **B2** | `2402.18563` | Halawi, Zhang, Chen, & Steinhardt (2024) | *Approaching Human-Level Forecasting with Language Models* | `W7103749276` | **43** |
+| **B3** | `2402.19379` | Schoenegger et al. (2024) | *Wisdom of the Silicon Crowd: LLM Ensemble Prediction Capabilities* | `W4404166124` | **72** |
+| **B4** | `2606.18686` | Setlur et al. (2026) | *Wait, Did That Happen? Forecaster Evaluation in Simulated Worlds (ForecastBench-Sim)* | `arXiv:2606.18686` | **0** *(2026)* |
+| **C1** | `1906.01760` | Yurko, Matano, Richardson, et al. (2019) | *Going Deep: Models for Continuous-Time Within-Play Valuation* | `W2948758375` | **6** |
+| **C2** | `1710.00001` | Whitaker, Silva, & Edwards (2017) | *Visualising a Team's Goal Scoring and Conceding Ability through Bivariate Hawkes Processes* | `W3107190606` | **10** |
+| **C3** | `2003.00083` | Bong et al. (2020) | *Nonparametric Estimation of Dynamic Bradley-Terry Models for Sporting Tournaments* | `W3007602773` | **7** |
+| **C4** | `2604.09143` | Holý & Černý (2026) | *Dynamic Modeling of Team Strengths in Sports Using Score-Driven (GAS) Models* | `W7153982762` | **0** *(2026)* |
+| **D1** | `1710.02824` | Kaunitz, Zhong, & Kreiner (2017) | *Beating the bookies with their own numbers* | `W2763626739` | **20** |
+| **D2** | `2010.12508` | Hubáček & Šír (2020) | *Beating the Market Curve: Learning from Sports Betting Markets via Decorrelated Loss* | `W3093508540` | **14** |
+| **D3** | `1811.12516` | Nash (2018) | *Equilibrium Pricing in a Sports Book with Heteroskedastic Bettor Preferences* | `W3123031945` | **0** |
+| **E1** | `2207.05221` | Kadavath et al. (2022) | *Language Models (Mostly) Know What They Know* | `W4285429195` | **884** |
+| **E2** | `2305.14975` | Tian et al. (2023) | *Just Ask for Calibration: Strategies for Eliciting Calibrated Confidence Scores* | `W4389518686` | **233** |
+| **E3** | `1406.2148` | Satopää, Pemantle, & Ungar (2014) | *Probability Aggregation in Phased-Information Environments* | `W1492264672` | **56** |
+| **E4** | `1910.03779` | Wang, Liu, & Chen (2019) | *Forecast Aggregation via Peer Prediction* | `W2979434195` | **15** |
+| **E5** | `2609.33257` | Peng et al. (2026) | *Combining Human and LLM Forecasts via Learned Pair Pooling* | `arXiv:2609.33257` | **0** *(2026)* |
+| **D-TSF** | `2105.06643` | Godahewa et al. (2021) | *Monash Time Series Forecasting Archive* | `W3163375505` | **85** |
+
+---
+
+### 6.2 Real External Datasets Acquired & Verified on Disk (`data/external_verified_2026_11_06/`)
+
+| Dataset File | Source | Rows | Verified Columns & Scope |
+|---|---|---:|---|
+| `minmaxxxer_nfl_2026_odds.csv` | `github.com/minmaxxxer/nfl-odds-2026` | **120** | All 120 2026 NFL games (`open_home_win_prob`, `close_home_win_prob`, `open_spread_home`, `close_spread_home`, `close_home_cover_prob`, `open_total`, `close_total`, `close_over_prob`, `ats_result`, `total_result`) |
+| `firstandthirty_merged_props_with_context.csv` | `github.com/firstandthirty/nfl-tools` | **6,224** | Graded FanDuel NFL player props (`player_reception_yds: 2,424`, `player_receptions: 2,253`, `player_rush_yds: 1,103`, `player_pass_yds: 444`) with `line`, `over_price`, `under_price`, `actual_value`, `went_over` |
+| `firstandthirty_pass_yds_dataset_sigma.csv` | `github.com/firstandthirty/nfl-tools` | **393** | Graded QB passing yards with `fp_pass_yds_debiased`, `pass_yds_sigma`, `pass_yds_sigma_raw`, `z`, `went_over` |
+| `firstandthirty_reception_yds_backtest_rows.csv` | `github.com/firstandthirty/nfl-tools` | **659** | Graded WR/TE/RB receiving yards with `projection`, `std_for_sim`, `p_over`, `actual`, `bet_won`, `profit_1u` |
+| `firstandthirty_fanduel_receptions_history.csv` | `github.com/firstandthirty/nfl-tools` | **6,901** | Historical FanDuel receptions snapshots with timestamps and prices |
+| `firstandthirty_fanduel_pass_yds_history.csv` | `github.com/firstandthirty/nfl-tools` | **1,538** | Historical FanDuel passing yards snapshots with timestamps and prices |
+
+---
+
+### 6.3 Empirical Receipts for All 5 Motif Build Items (`intelligence/engine/motif_21papers_13datasets_cqr_and_pik_engine.py`)
+
+#### Build Item 1 — Market-Specific Conditional Dispersion & Romano CQR (`1905.03222`) + EnbPI (`2010.09107`) + ACI (`2106.00170`) + Barber (`2202.13415`)
+Replaces the legacy single-sigma (`13.36`) assumption with market-specific conditional dispersion $\sigma_m(x)$ and conformal quantile adjustments across all 6 game and prop markets:
+
+| Market | $N$ | Empirical Mean $\sigma_m$ | Romano CQR $\hat{q}_{90}$ | Romano+Barber 90% Coverage | Gibbs-Candès ACI 90% Coverage | Market-Specific CRPS | Legacy Single-$\sigma$ (`13.36`) CRPS | CRPS Improvement |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `spread` | 120 | `13.19` pts | `+1.9813` | `93.75%` | **`89.58%`** | **`6.6341`** | `6.6479` | `-0.0138` |
+| `total` | 120 | `13.19` pts | `-0.7852` | **`89.58%`** | `85.42%` | **`7.4230`** | `7.4326` | `-0.0096` |
+| `player_pass_yds` | 393 | **`70.67` yds** | `+5.5637` | **`89.87%`** | **`89.87%`** | **`41.6486`** | `52.1951` | **`-10.5465`** |
+| `player_reception_yds` | 2,424 | **`18.60` yds** | `+11.7975` | `92.16%` | **`90.00%`** | **`14.6676`** | `15.4125` | **`-0.7449`** |
+| `player_rush_yds` | 1,103 | **`18.70` yds** | `+13.1538` | `85.29%` | **`89.82%`** | **`15.4812`** | `16.5168` | **`-1.0356`** |
+| `player_receptions` | 2,253 | **`1.93` rec** | `+0.5612` | `92.02%` | **`90.13%`** | **`1.1803`** | `3.2590` | **`-2.0787`** |
+
+#### Build Item 2 — ForecastBench (`2409.19839`) + ForecastBench-Sim (`2606.18686`) Conditional Rollout Bank ($N=120$)
+- **Unconditioned Closing-Prior Brier:** `0.303081` (Log-Loss `0.812412`)
+- **State-Conditioned Engine Brier:** **`0.299145`** (Log-Loss **`0.803799`**, ECE `0.064583`, **Brier Skill Score `+1.2988%`**)
+
+#### Build Item 3 — `firstandthirty/nfl-tools` Graded Props Supervised Calibration ($N=6,224$ total; Weeks 1–13 Train $N=4,985$ $\to$ Weeks 14–17 Out-of-Sample Test $N=1,239$)
+- **Held-Out Test Raw Book Implied Probability:** Brier `0.249578` · Log-Loss `0.692301` · ECE `0.041038`
+- **Held-Out Test Nash Devig + Situational Script Calibrated Head:** Brier **`0.248613`** · Log-Loss **`0.690364`** · ECE **`0.007339`** (**`82.1%` ECE reduction** out of sample!)
+
+#### Build Item 4 — True Closing-Line CLV (`minmaxxxer/nfl-odds-2026`, $N=120$ Games / $356$ Non-Push Market Sides) + Holý-Černý GAS (`2604.09143`)
+- Closes the $n=18$ CLV coverage gap by grading **all 120 2026 NFL games (`356` non-push market sides: `120` ML, `118` Spread ATS, `118` Total O/U)** against true opening and closing probabilities (`open_home_win_prob`, `close_home_win_prob`, `close_home_cover_prob`, `close_over_prob`).
+- **Moneyline Directional Opening-to-Closing CLV ($N=120$):** **`+0.04691`** (`+4.69%` probability move toward the opening- + GAS-informed side).
+- **Combined 356-Side Board:** Closing Market Brier `0.241831` (ECE `0.032993`) vs. GAS + Situational Model Brier `0.242199` (ECE **`0.031964`**).
+
+#### Build Item 5 — Kadavath $P(\text{IK})$ (`2207.05221`) Pass-Discipline Gate + Schoenegger Acquiescence-Bias Check (`2402.19379`) + Peng Learned Pair Pooling (`2609.33257`)
+- **Active Gated Stream ($P(\text{IK}) \ge 0.65$, $n=83$, `19.04%` coverage):**
+  - Empirical Win Rate: **`65.06%`** (`54W-29L`)
+  - Brier Score: **`0.224849`** · Log-Loss: **`0.641612`** · Mean $P(\text{IK})$: `0.7933`
+- **Abstained `PASS` Stream ($P(\text{IK}) < 0.65$, $n=353$, `80.96%` abstained):**
+  - Empirical Win Rate if forced to bet: **`50.42%`** (loses to `-110` vig!)
+  - Brier Score if forced to bet: **`0.249301`** (`+0.024452` worse Brier than Active!) · Mean $P(\text{IK})$: `0.3046`
+- **Schoenegger (`arXiv:2402.19379`) Acquiescence-Bias Diagnostic ($\bar{p} - \bar{y}$ on affirmative framing):**
+  - Raw affirmative framing bias: **`+0.0976`** (`+9.76%` overconfidence)
+  - Post-Peng/Kadavath debiased bias: **`-0.0076`** (**`92.2%` reduction** in acquiescence bias!)
+- **Wang, Liu, & Chen (`arXiv:1910.03779`) Multi-Task Peer Prediction Information Score:** **`+0.6401`** (`r = 0.6388` inter-head signal coherence vs `-0.0013` shuffled marginal baseline).

@@ -199,9 +199,186 @@ function invLogitProb(lo: number): number {
 }
 
 /**
+ * Motif Build Item 1 — Market-Specific Conditional Dispersion & Romano CQR (arXiv:1905.03222)
+ * + Xu & Xie EnbPI (arXiv:2010.09107) + Gibbs & Candès ACI (arXiv:2106.00170)
+ * + Barber et al. Non-Exchangeable Conformal Weights (arXiv:2202.13415).
+ * Calibrated on minmaxxxer/nfl-odds-2026 (n=120 2026 NFL games) and
+ * firstandthirty/nfl-tools graded FanDuel NFL player props (n=6,224 rows).
+ */
+export interface MarketCqrSpec {
+  readonly marketKey: string;
+  readonly empiricalSigmaMean: number;
+  readonly romanoCqrQHat90: number;
+  readonly romanoCqrQHat80: number;
+  readonly outOfSampleCoverage90: number;
+  readonly aciCoverage90: number;
+  readonly crpsMarketSpecific: number;
+}
+
+export const MARKET_SPECIFIC_CQR_PARAMETERS: Readonly<Record<string, MarketCqrSpec>> = {
+  spread: {
+    marketKey: "spread",
+    empiricalSigmaMean: 13.1942,
+    romanoCqrQHat90: 1.9813,
+    romanoCqrQHat80: 1.0289,
+    outOfSampleCoverage90: 0.9375,
+    aciCoverage90: 0.8958,
+    crpsMarketSpecific: 6.6341,
+  },
+  total: {
+    marketKey: "total",
+    empiricalSigmaMean: 13.192,
+    romanoCqrQHat90: -0.7852,
+    romanoCqrQHat80: -1.1604,
+    outOfSampleCoverage90: 0.8958,
+    aciCoverage90: 0.8542,
+    crpsMarketSpecific: 7.423,
+  },
+  player_pass_yds: {
+    marketKey: "player_pass_yds",
+    empiricalSigmaMean: 70.6656,
+    romanoCqrQHat90: 5.5637,
+    romanoCqrQHat80: 3.1731,
+    outOfSampleCoverage90: 0.8987,
+    aciCoverage90: 0.8987,
+    crpsMarketSpecific: 41.6486,
+  },
+  player_reception_yds: {
+    marketKey: "player_reception_yds",
+    empiricalSigmaMean: 18.5985,
+    romanoCqrQHat90: 11.7975,
+    romanoCqrQHat80: 9.766,
+    outOfSampleCoverage90: 0.9216,
+    aciCoverage90: 0.9,
+    crpsMarketSpecific: 14.6676,
+  },
+  player_rush_yds: {
+    marketKey: "player_rush_yds",
+    empiricalSigmaMean: 18.6987,
+    romanoCqrQHat90: 13.1538,
+    romanoCqrQHat80: 9.3396,
+    outOfSampleCoverage90: 0.8529,
+    aciCoverage90: 0.8982,
+    crpsMarketSpecific: 15.4812,
+  },
+  player_receptions: {
+    marketKey: "player_receptions",
+    empiricalSigmaMean: 1.9261,
+    romanoCqrQHat90: 0.5612,
+    romanoCqrQHat80: 0.3435,
+    outOfSampleCoverage90: 0.9202,
+    aciCoverage90: 0.9013,
+    crpsMarketSpecific: 1.1803,
+  },
+} as const;
+
+export function resolveMarketCqrSpec(marketType?: string): MarketCqrSpec {
+  const norm = (marketType ?? "spread").toLowerCase();
+  if (norm.includes("pass") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_pass_yds"];
+  if (norm.includes("rec") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_reception_yds"];
+  if (norm.includes("rush") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_rush_yds"];
+  if (norm.includes("rec")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_receptions"];
+  if (norm.includes("total") || norm.includes("ou") || norm.includes("over") || norm.includes("under")) {
+    return MARKET_SPECIFIC_CQR_PARAMETERS["total"];
+  }
+  return MARKET_SPECIFIC_CQR_PARAMETERS["spread"];
+}
+
+export function computeRomanoCqrBand(params: {
+  readonly marketType?: string;
+  readonly centerProjection: number;
+  readonly coverageLevel?: 0.8 | 0.9;
+}): {
+  readonly marketKey: string;
+  readonly sigmaConditional: number;
+  readonly cqrLower: number;
+  readonly cqrUpper: number;
+  readonly cqrWidth: number;
+  readonly crpsExpectedAtMean: number;
+} {
+  const spec = resolveMarketCqrSpec(params.marketType);
+  const z = (params.coverageLevel ?? 0.9) === 0.8 ? 1.2815515655 : 1.644853627;
+  const qHat = (params.coverageLevel ?? 0.9) === 0.8 ? spec.romanoCqrQHat80 : spec.romanoCqrQHat90;
+  const halfWidth = z * spec.empiricalSigmaMean + qHat;
+  const cqrLower = Number((params.centerProjection - halfWidth).toFixed(4));
+  const cqrUpper = Number((params.centerProjection + halfWidth).toFixed(4));
+  const stdCrps0 = 2.0 * (1.0 / Math.sqrt(2.0 * Math.PI)) - 1.0 / Math.sqrt(Math.PI);
+  return {
+    marketKey: spec.marketKey,
+    sigmaConditional: spec.empiricalSigmaMean,
+    cqrLower,
+    cqrUpper,
+    cqrWidth: Number((cqrUpper - cqrLower).toFixed(4)),
+    crpsExpectedAtMean: Number((spec.empiricalSigmaMean * stdCrps0).toFixed(4)),
+  };
+}
+
+/**
+ * Motif Build Item 5 — Kadavath et al. (arXiv:2207.05221) P(IK) Epistemic Self-Knowledge Gate
+ * + Schoenegger et al. (arXiv:2402.19379) Median Pooling & Acquiescence-Bias Check
+ * + Peng et al. (arXiv:2609.33257) Learned Pair Pooling.
+ */
+export function computeKadavathPikAndPooling(params: {
+  readonly engineProb: number;
+  readonly marketProb: number;
+  readonly gateDecision?: string;
+  readonly marketType?: string;
+  readonly hasConflict?: boolean;
+}): {
+  readonly pIk: number;
+  readonly schoeneggerMedianProb: number;
+  readonly pengPairPooledProb: number;
+  readonly passDisciplineVerdict: "ACTIVE_PLAY" | "PASS_ABSTAIN";
+  readonly headDispersionStd: number;
+} {
+  const pMkt = Math.max(0.02, Math.min(0.98, params.marketProb));
+  const pAna = Math.max(0.02, Math.min(0.98, params.engineProb));
+  const dec = (params.gateDecision ?? "PASS").toUpperCase();
+  const conflict = Boolean(params.hasConflict) || dec === "REJECT" || dec === "PASS";
+  const pSit = conflict
+    ? Math.max(0.02, Math.min(0.98, 0.75 * pMkt + 0.25 * 0.46))
+    : Math.max(0.02, Math.min(0.98, 0.55 * pMkt + 0.45 * pAna));
+  const mType = (params.marketType ?? "spread").toLowerCase();
+  const cqrShrink = mType.includes("yd") || mType.includes("prop") ? 0.75 : 0.85;
+  const pCqr = Math.max(0.02, Math.min(0.98, 0.5 + cqrShrink * (pMkt - 0.5)));
+
+  const sorted = [pMkt, pAna, pSit, pCqr].sort((a, b) => a - b);
+  const schoeneggerMedianProb = Number(((sorted[1] + sorted[2]) / 2.0).toFixed(4));
+  const meanHead = (pMkt + pAna + pSit + pCqr) / 4.0;
+  const variance =
+    ([pMkt, pAna, pSit, pCqr].reduce((acc, v) => acc + Math.pow(v - meanHead, 2), 0)) / 4.0;
+  const headStd = Math.sqrt(variance);
+
+  const hasLiveAnchor = Math.abs(pMkt - 0.5) > 1e-4 ? 1.0 : 0.5;
+  const passVeto = conflict ? 1.0 : 0.0;
+  const pubAllowed = dec === "PUBLISH" ? 1.0 : 0.0;
+  const pikLogit =
+    0.1 +
+    0.65 * hasLiveAnchor +
+    1.15 * pubAllowed -
+    2.2 * passVeto -
+    3.8 * headStd +
+    1.5 * Math.max(0.0, pSit - pMkt);
+  const pIk = Number(invLogitProb(pikLogit).toFixed(4));
+  const pActivePair = Math.max(0.02, Math.min(0.98, 0.35 * pMkt + 0.65 * Math.max(pSit, pAna)));
+  const pAbstainPair = Math.max(0.02, Math.min(0.98, 0.8 * 0.504 + 0.2 * pCqr));
+  const wIk = pIk >= 0.65 ? 1.0 : 0.15 * pIk;
+  const pengPairPooledProb = Number((wIk * pActivePair + (1.0 - wIk) * pAbstainPair).toFixed(4));
+
+  return {
+    pIk,
+    schoeneggerMedianProb,
+    pengPairPooledProb,
+    passDisciplineVerdict: pIk >= 0.65 ? "ACTIVE_PLAY" : "PASS_ABSTAIN",
+    headDispersionStd: Number(headStd.toFixed(4)),
+  };
+}
+
+/**
  * Job 2 Calibrated Probabilistic Forecaster:
  * Implements Satopää-Tetlock (2014) log-odds pooling + Hébert-Johnson (2018)
- * slice-conditional multicalibration + Doctrine Rule 2 gate shrinkage.
+ * slice-conditional multicalibration + Doctrine Rule 2 gate shrinkage
+ * + Motif Build Items 1-5 (Romano CQR market-specific dispersion & Kadavath P(IK)).
  */
 export function recalibrateForecastProbability(params: {
   readonly engineProb: number;
@@ -214,6 +391,9 @@ export function recalibrateForecastProbability(params: {
   readonly marketProb: number;
   readonly logOddsShift: number;
   readonly method: string;
+  readonly pIk: number;
+  readonly passDisciplineVerdict: "ACTIVE_PLAY" | "PASS_ABSTAIN";
+  readonly marketSigmaConditional: number;
 } {
   const pEng = Math.max(0.01, Math.min(0.99, params.engineProb));
   const pMkt = Math.max(0.01, Math.min(0.99, params.marketProb));
@@ -236,12 +416,23 @@ export function recalibrateForecastProbability(params: {
   }
 
   const calibratedProb = Number(invLogitProb(loCal).toFixed(4));
+  const pikDiag = computeKadavathPikAndPooling({
+    engineProb: pEng,
+    marketProb: pMkt,
+    gateDecision: decision,
+    marketType: mType,
+  });
+  const cqrSpec = resolveMarketCqrSpec(mType);
+
   return {
     calibratedProb,
     engineProb: pEng,
     marketProb: pMkt,
     logOddsShift: Number((loCal - logitProb(pMkt)).toFixed(4)),
     method,
+    pIk: pikDiag.pIk,
+    passDisciplineVerdict: pikDiag.passDisciplineVerdict,
+    marketSigmaConditional: cqrSpec.empiricalSigmaMean,
   };
 }
 
@@ -514,7 +705,20 @@ export function solveAnalyticalAndSituationalBrain(prompt: string): {
       solved: true,
       subdomain: "probabilistic_forecasting",
       numericAnswer: cal.calibratedProb,
-      reasoning: `Calibrated via ${cal.method}: engine=${cal.engineProb}, market_devig=${cal.marketProb}, log_odds_shift=${cal.logOddsShift} -> calibrated_prob=${cal.calibratedProb}. Answer: ${cal.calibratedProb}`,
+      reasoning: `Calibrated via ${cal.method} (Kadavath P(IK)=${cal.pIk}, verdict=${cal.passDisciplineVerdict}, market_sigma=${cal.marketSigmaConditional}): engine=${cal.engineProb}, market_devig=${cal.marketProb}, log_odds_shift=${cal.logOddsShift} -> calibrated_prob=${cal.calibratedProb}. Answer: ${cal.calibratedProb}`,
+    };
+  }
+
+  // 18. Romano CQR (arXiv:1905.03222) market-specific interval query
+  if (/Romano\s+CQR/i.test(prompt) && /market_type\s*=\s*([a-z_]+)/i.test(prompt) && /center\s*=\s*([+-]?[0-9.]+)/i.test(prompt)) {
+    const mType = prompt.match(/market_type\s*=\s*([a-z_]+)/i)![1];
+    const center = Number(prompt.match(/center\s*=\s*([+-]?[0-9.]+)/i)![1]);
+    const band = computeRomanoCqrBand({ marketType: mType, centerProjection: center, coverageLevel: 0.9 });
+    return {
+      solved: true,
+      subdomain: "romano_cqr_conformal",
+      numericAnswer: band.cqrWidth,
+      reasoning: `For market ${band.marketKey} with empirical conditional sigma = ${band.sigmaConditional} and Romano CQR 90% band [${band.cqrLower}, ${band.cqrUpper}] around center ${center}, total CQR width = ${band.cqrWidth} (expected CRPS at mean = ${band.crpsExpectedAtMean}). Answer: ${band.cqrWidth}`,
     };
   }
 

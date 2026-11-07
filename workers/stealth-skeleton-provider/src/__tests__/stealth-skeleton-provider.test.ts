@@ -3,9 +3,12 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, it } from "node:test";
 import {
+  MARKET_SPECIFIC_CQR_PARAMETERS,
   STEALTH_SKELETON_MODELS,
   STEALTH_SKELETON_MODELS_V2_4,
   compileCrowdRlhfDpoGrpoEntry,
+  computeKadavathPikAndPooling,
+  computeRomanoCqrBand,
   enforceCrownIpFirewall,
   executeMathematicalOperatorVerification,
   getStealthSkeletonMcpManifest,
@@ -251,5 +254,47 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     const fcContent = forecastBody.choices[0].message.content;
     assert.ok(!fcContent.includes("Response for:"));
     assert.match(fcContent, /Answer:\s*0\.6121/);
+  });
+
+  it("enforces Motif Build Items 1-5: market-specific Romano CQR bands and Kadavath P(IK) pass-discipline gate", async () => {
+    // 1. Market-specific conditional dispersion replaces single-sigma 13.36 defect
+    assert.equal(Object.keys(MARKET_SPECIFIC_CQR_PARAMETERS).length, 6);
+    const passBand = computeRomanoCqrBand({
+      marketType: "player_pass_yds",
+      centerProjection: 245.5,
+      coverageLevel: 0.9,
+    });
+    assert.equal(passBand.marketKey, "player_pass_yds");
+    assert.equal(passBand.sigmaConditional, 70.6656);
+    assert.ok(passBand.cqrWidth > 200, "Passing yards 90% CQR band must reflect ~70.67 yd sigma, not 13.36");
+
+    const recCountBand = computeRomanoCqrBand({
+      marketType: "player_receptions",
+      centerProjection: 5.5,
+      coverageLevel: 0.9,
+    });
+    assert.equal(recCountBand.marketKey, "player_receptions");
+    assert.equal(recCountBand.sigmaConditional, 1.9261);
+    assert.ok(recCountBand.cqrWidth < 10, "Receptions 90% CQR band must reflect ~1.93 rec sigma, not 13.36");
+
+    // 2. Kadavath P(IK) (arXiv:2207.05221) gates active published plays vs rejected/PASS plays
+    const activeDiag = computeKadavathPikAndPooling({
+      engineProb: 0.65,
+      marketProb: 0.52,
+      gateDecision: "PUBLISH",
+      marketType: "spread",
+    });
+    assert.equal(activeDiag.passDisciplineVerdict, "ACTIVE_PLAY");
+    assert.ok(activeDiag.pIk >= 0.65, `Expected P(IK) >= 0.65 on PUBLISH, got ${activeDiag.pIk}`);
+
+    const passDiag = computeKadavathPikAndPooling({
+      engineProb: 0.665,
+      marketProb: 0.5,
+      gateDecision: "REJECT",
+      marketType: "total",
+      hasConflict: true,
+    });
+    assert.equal(passDiag.passDisciplineVerdict, "PASS_ABSTAIN");
+    assert.ok(passDiag.pIk < 0.5, `Expected P(IK) < 0.50 on REJECT/conflict, got ${passDiag.pIk}`);
   });
 });

@@ -267,3 +267,5 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 **Next role (Builder / Verifier):**
 - Execute Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`, `IND @ MIN`) & MNF (`TB @ KC`) full 5-stage + JEV snap-by-snap workflow at T-85m lock.
 
+
+- **2026-11-07 (AGY — Motif 5 Build Items & OpenAlex/Dataset Completion):** Wired all 5 Motif build items (`intelligence/engine/motif_21papers_13datasets_cqr_and_pik_engine.py`, `data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json`, `workers/stealth-skeleton-provider/src/index.ts`) on real downloaded external datasets (`minmaxxxer/nfl-odds-2026` n=120 games, `firstandthirty/nfl-tools` n=6,224 graded props), resolved OpenAlex 429 citation debt for all 21 arXiv papers, and preserved SHA-256 immutability of the v1 frozen bank and harness.

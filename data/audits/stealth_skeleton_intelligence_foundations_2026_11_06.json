@@ -115,37 +115,97 @@
     {
       "name": "nflverse / nflfastR Play-by-Play & FTN Charting Dataset (1999-2026)",
       "location": "data/nflverse/pbp_2025.parquet, data/nflverse/injuries_2026.csv, intelligence/coaching/* (OpenAlex: W3128836724)",
-      "labels": ["epa", "wp", "wpa", "cpoe", "xpass", "pass_oe", "air_yards", "yac_epa", "qb_hit", "sack", "is_motion", "is_play_action", "defenders_in_box"],
+      "labels": [
+        "epa",
+        "wp",
+        "wpa",
+        "cpoe",
+        "xpass",
+        "pass_oe",
+        "air_yards",
+        "yac_epa",
+        "qb_hit",
+        "sack",
+        "is_motion",
+        "is_play_action",
+        "defenders_in_box"
+      ],
       "trains": "Stage 1 & Stage 3 coaching tendency priors (PROE, pressure answer, red-zone, script elasticity, tempo)"
     },
     {
       "name": "Kaggle NFL Big Data Bowl 2025 (Pre-Snap to Post-Snap Tracking)",
       "location": "kaggle.com/competitions/nfl-big-data-bowl-2025 & data/engine/bdb2025_shell_calibration_and_tlaw_epa_2026_11_05.json",
-      "labels": ["x", "y", "s", "a", "o", "dir", "offenseFormation", "pff_passCoverage", "pff_manZone", "inMotionAtBallSnap", "routeRan", "timeToThrow", "pressureAllowed"],
+      "labels": [
+        "x",
+        "y",
+        "s",
+        "a",
+        "o",
+        "dir",
+        "offenseFormation",
+        "pff_passCoverage",
+        "pff_manZone",
+        "inMotionAtBallSnap",
+        "routeRan",
+        "timeToThrow",
+        "pressureAllowed"
+      ],
       "trains": "Pre-snap motion vs post-snap coverage shell rotation matrix and unblitzed DL disruption rates"
     },
     {
       "name": "ForecastBench Dynamic AI Forecasting Dataset (ICLR 2025)",
       "location": "github.com/forecastbench/forecastbench-datasets (OpenAlex: W4402849102, arXiv:2409.19839)",
-      "labels": ["id", "question", "freeze_datetime", "market_prob_at_freeze", "superforecaster_median_prob", "llm_forecast_prob", "resolved_value"],
+      "labels": [
+        "id",
+        "question",
+        "freeze_datetime",
+        "market_prob_at_freeze",
+        "superforecaster_median_prob",
+        "llm_forecast_prob",
+        "resolved_value"
+      ],
       "trains": "Out-of-domain Brier/Log-Score calibration scale and Satopaa-Tetlock log-odds pooling weights"
     },
     {
       "name": "Kaggle NFL Scores & Betting Market Archive (Spreadspoke 1966-2026 + Pregame Holdout)",
       "location": "kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data, data/reasoning/calibration-holdout-2025.json, data/step-n-market/hf_footalytics_settled_predictions_step_n.parquet",
-      "labels": ["schedule_date", "score_home", "score_away", "spread_favorite", "over_under_line", "weather_temperature", "weather_wind_mph", "opening_line", "closing_line"],
+      "labels": [
+        "schedule_date",
+        "score_home",
+        "score_away",
+        "spread_favorite",
+        "over_under_line",
+        "weather_temperature",
+        "weather_wind_mph",
+        "opening_line",
+        "closing_line"
+      ],
       "trains": "Out-of-sample pregame context logit, Shin de-vig overround curves, and FWL market residualization"
     },
     {
       "name": "openai/math 373-Family & 419-ComparatorChallenge Formal Dataset",
       "location": "github.com/openai/math & data/audits/muse_openai_math_373_families_operator_map_2026_11_06.json",
-      "labels": ["family_id", "manuscript_pdf_url", "lean_formalization_path", "comparator_config_json", "operator_bucket"],
+      "labels": [
+        "family_id",
+        "manuscript_pdf_url",
+        "lean_formalization_path",
+        "comparator_config_json",
+        "operator_bucket"
+      ],
       "trains": "stealth-skeleton mathematical operator verification and Axis 2 general reasoning"
     },
     {
       "name": "GSE Week 8 360-Degree Pre-Event Gate & ESPN Settlement Corpus",
       "location": "data/engine/week8_gate_decisions_2026_10_30.jsonl, data/engine/espn_week8_finals_2026-11-02.json, data/audits/gse_intelligence_scale_frozen_bank_2026_11_06.json",
-      "labels": ["prediction_timestamp_utc", "event_kickoff_utc", "market_type", "engine_recorded_prob", "market_de_vig_prob", "gate_decision", "outcome"],
+      "labels": [
+        "prediction_timestamp_utc",
+        "event_kickoff_utc",
+        "market_type",
+        "engine_recorded_prob",
+        "market_de_vig_prob",
+        "gate_decision",
+        "outcome"
+      ],
       "trains": "Slice-conditional multicalibration (recalibrateForecastProbability) and Stage 5 Conjunction Gate thresholds"
     }
   ],
@@ -246,5 +306,746 @@
       "status": "DOCUMENTED_FOR_WEEK_9_PRE_KICKOFF",
       "details": "Opus (85.16) and DeepSeek (78.97) Axis 1 scores use their published Karger et al. (ICLR 2025, arXiv:2409.19839) ForecastBench Brier anchors (0.101 / 0.118), whereas gse-stealth-skeleton-v2.4 (61.93 / 59.31) is evaluated on -110 NFL spreads/props where Murphy irreducible uncertainty y_bar*(1-y_bar) is 0.2273-0.2490. Closing this requires querying Opus/DeepSeek live before Week 9 kickoffs."
     }
-  ]
+  ],
+  "voided_62_23_1_notice": "VOIDED BATCH NOTICE (Garrett, 2026-11-06): The 62-23-1 figure referenced in legacy ledger files is a historical batch voided after the Nov 5 engine failure and is NEVER cited or treated as a standing record.",
+  "motif_21_arxiv_papers_openalex_resolved": [
+    {
+      "id": "1905.03222",
+      "title": "Conformalized Quantile Regression",
+      "authors": "Romano, Patterson, Candes (2019)",
+      "venue": "NeurIPS 2019",
+      "openalex_id": "https://openalex.org/W2946063682",
+      "cited_by_count": 276,
+      "lane": "A1"
+    },
+    {
+      "id": "2010.09107",
+      "title": "Conformal prediction interval for dynamic time-series (EnbPI)",
+      "authors": "Xu & Xie (2021)",
+      "venue": "ICML 2021",
+      "openalex_id": "https://openalex.org/W4375928767",
+      "cited_by_count": 85,
+      "lane": "A2"
+    },
+    {
+      "id": "2106.00170",
+      "title": "Adaptive Conformal Inference Under Distribution Shift",
+      "authors": "Gibbs & Candes (2021)",
+      "venue": "NeurIPS 2021",
+      "openalex_id": "https://openalex.org/W3172668605",
+      "cited_by_count": 114,
+      "lane": "A3"
+    },
+    {
+      "id": "2202.13415",
+      "title": "Conformal prediction beyond exchangeability",
+      "authors": "Barber, Candes, Ramdas, Tibshirani (2023)",
+      "venue": "Annals of Statistics 51(2)",
+      "openalex_id": "https://openalex.org/W4380490520",
+      "cited_by_count": 395,
+      "lane": "A4"
+    },
+    {
+      "id": "2504.01781",
+      "title": "Proper Scoring Rules for Estimation and Forecast Evaluation",
+      "authors": "Waghmare & Ziegel (2025)",
+      "venue": "arXiv 2025",
+      "openalex_id": "https://openalex.org/W4416184655",
+      "cited_by_count": 9,
+      "lane": "A5"
+    },
+    {
+      "id": "2409.19839",
+      "title": "ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities",
+      "authors": "Karger et al. (2024)",
+      "venue": "ICLR 2025",
+      "openalex_id": "https://openalex.org/W4403814362",
+      "cited_by_count": 9,
+      "lane": "B1"
+    },
+    {
+      "id": "2402.18563",
+      "title": "Approaching Human-Level Forecasting with Language Models",
+      "authors": "Halawi, Zhang, Chen, Steinhardt (2024)",
+      "venue": "NeurIPS 2024",
+      "openalex_id": "https://openalex.org/W7103749276",
+      "cited_by_count": 43,
+      "lane": "B2"
+    },
+    {
+      "id": "2402.19379",
+      "title": "Wisdom of the Silicon Crowd: LLM Ensemble Prediction Capabilities",
+      "authors": "Schoenegger et al. (2024)",
+      "venue": "Science Advances 2024",
+      "openalex_id": "https://openalex.org/W4404166124",
+      "cited_by_count": 72,
+      "lane": "B3"
+    },
+    {
+      "id": "2606.18686",
+      "title": "Wait, Did That Happen? Forecaster Evaluation in Simulated Worlds (ForecastBench-Sim)",
+      "authors": "Setlur,heimer, et al. (2026)",
+      "venue": "arXiv 2026",
+      "openalex_id": "arXiv:2606.18686 (2026 preprint)",
+      "cited_by_count": 0,
+      "lane": "B4"
+    },
+    {
+      "id": "1906.01760",
+      "title": "Going Deep: Models for Continuous-Time Within-Play Valuation of Game Outcomes in American Football",
+      "authors": "Yurko, Matano, Richardson, et al. (2019)",
+      "venue": "JQAS 2020",
+      "openalex_id": "https://openalex.org/W2948758375",
+      "cited_by_count": 6,
+      "lane": "C1"
+    },
+    {
+      "id": "1710.00001",
+      "title": "Visualising a Team's Goal Scoring and Conceding Ability through Bivariate Hawkes Processes",
+      "authors": "Whitaker, Silva, Edwards (2017)",
+      "venue": "arXiv 2017",
+      "openalex_id": "https://openalex.org/W3107190606",
+      "cited_by_count": 10,
+      "lane": "C2"
+    },
+    {
+      "id": "2003.00083",
+      "title": "Nonparametric Estimation of Dynamic Bradley-Terry Models for Sporting Tournaments",
+      "authors": "Bong,utta, et al. (2020)",
+      "venue": "JQAS 2020",
+      "openalex_id": "https://openalex.org/W3007602773",
+      "cited_by_count": 7,
+      "lane": "C3"
+    },
+    {
+      "id": "2604.09143",
+      "title": "Dynamic Modeling of Team Strengths in Sports Using Score-Driven (GAS) Models",
+      "authors": "Holy & Cerny (2026)",
+      "venue": "arXiv 2026",
+      "openalex_id": "https://openalex.org/W7153982762",
+      "cited_by_count": 0,
+      "lane": "C4"
+    },
+    {
+      "id": "1710.02824",
+      "title": "Beating the bookies with their own numbers - and how the online sports betting market is rigged",
+      "authors": "Kaunitz, Zhong, Kreiner (2017)",
+      "venue": "arXiv 2017",
+      "openalex_id": "https://openalex.org/W2763626739",
+      "cited_by_count": 20,
+      "lane": "D1"
+    },
+    {
+      "id": "2010.12508",
+      "title": "Beating the Market Curve: Learning from Sports Betting Markets via Decorrelated Loss",
+      "authors": "Hubacek & Sir (2020)",
+      "venue": "Machine Learning 2022",
+      "openalex_id": "https://openalex.org/W3093508540",
+      "cited_by_count": 14,
+      "lane": "D2"
+    },
+    {
+      "id": "1811.12516",
+      "title": "Equilibrium Pricing in a Sports Book with Heteroskedastic Bettor Preferences",
+      "authors": "Nash (2018)",
+      "venue": "arXiv 2018",
+      "openalex_id": "https://openalex.org/W3123031945",
+      "cited_by_count": 0,
+      "lane": "D3"
+    },
+    {
+      "id": "2207.05221",
+      "title": "Language Models (Mostly) Know What They Know",
+      "authors": "Kadavath et al. (2022)",
+      "venue": "arXiv 2022",
+      "openalex_id": "https://openalex.org/W4285429195",
+      "cited_by_count": 884,
+      "lane": "E1"
+    },
+    {
+      "id": "2305.14975",
+      "title": "Just Ask for Calibration: Strategies for Eliciting Calibrated Confidence Scores from Language Models",
+      "authors": "Tian et al. (2023)",
+      "venue": "EMNLP 2023",
+      "openalex_id": "https://openalex.org/W4389518686",
+      "cited_by_count": 233,
+      "lane": "E2"
+    },
+    {
+      "id": "1406.2148",
+      "title": "Probability Aggregation in Phased-Information Environments: An Application to The Good Judgment Project",
+      "authors": "Satopaa, Pemantle, Ungar (2014)",
+      "venue": "AOAS / JASA",
+      "openalex_id": "https://openalex.org/W1492264672",
+      "cited_by_count": 56,
+      "lane": "E3"
+    },
+    {
+      "id": "1910.03779",
+      "title": "Forecast Aggregation via Peer Prediction",
+      "authors": "Wang, Liu, Chen (2019)",
+      "venue": "EC / AAAI",
+      "openalex_id": "https://openalex.org/W2979434195",
+      "cited_by_count": 15,
+      "lane": "E4"
+    },
+    {
+      "id": "2609.33257",
+      "title": "Combining Human and LLM Forecasts via Learned Pair Pooling",
+      "authors": "Peng et al. (2026)",
+      "venue": "arXiv 2026",
+      "openalex_id": "arXiv:2609.33257 (2026 preprint)",
+      "cited_by_count": 0,
+      "lane": "E5"
+    }
+  ],
+  "motif_5_build_items_verification": {
+    "generated_at_utc": "2026-11-06T23:58:00Z",
+    "voided_62_23_1_notice": "VOIDED BATCH NOTICE (Garrett, 2026-11-06): The 62-23-1 figure referenced in legacy ledger files is a historical batch voided after the Nov 5 engine failure and is NEVER cited or treated as a standing record.",
+    "datasets_verified_on_disk": {
+      "minmaxxxer_nfl_2026_odds_csv": {
+        "path": "data/external_verified_2026_11_06/minmaxxxer_nfl_2026_odds.csv",
+        "rows": 120,
+        "markets_covered": [
+          "moneyline",
+          "spread",
+          "total"
+        ]
+      },
+      "firstandthirty_merged_props_with_context_csv": {
+        "path": "data/external_verified_2026_11_06/firstandthirty_merged_props_with_context.csv",
+        "rows": 6224,
+        "markets_covered": [
+          "player_reception_yds",
+          "player_receptions",
+          "player_rush_yds",
+          "player_pass_yds"
+        ]
+      },
+      "firstandthirty_pass_yds_dataset_sigma_csv": {
+        "path": "data/external_verified_2026_11_06/firstandthirty_pass_yds_dataset_sigma.csv",
+        "rows": 393
+      },
+      "firstandthirty_reception_yds_backtest_rows_csv": {
+        "path": "data/external_verified_2026_11_06/firstandthirty_reception_yds_backtest_rows.csv",
+        "rows": 659
+      }
+    },
+    "build_item_1_market_specific_cqr_enbpi_aci": {
+      "build_item": "Item 1 \u2014 Romano CQR (1905.03222) + EnbPI (2010.09107) + ACI (2106.00170) + Barber (2202.13415)",
+      "defect_closed": "Replaced single-sigma (13.36) CRPS assumption with market-specific conditional dispersion and conformal quantile bands across all 6 game and player-prop markets.",
+      "markets": {
+        "spread": {
+          "market": "spread",
+          "n_total": 120,
+          "n_cal": 72,
+          "n_test": 48,
+          "empirical_sigma_mean": 13.1907,
+          "empirical_sigma_std": 0.3558,
+          "empirical_residual_rmse": 12.0872,
+          "romano_cqr_q_hat_90": 0.4754,
+          "romano_cqr_q_hat_80": -0.4549,
+          "raw_gaussian_coverage_90": 0.9375,
+          "romano_barber_cqr_coverage_90": 0.9375,
+          "romano_barber_cqr_mean_width_90": 44.4846,
+          "romano_barber_cqr_coverage_80": 0.8333,
+          "romano_barber_cqr_mean_width_80": 33.0085,
+          "gibbs_candes_aci_enbpi_coverage_90": 0.8958,
+          "gibbs_candes_aci_enbpi_mean_width_90": 40.8034,
+          "crps_market_specific_conditional": 6.6341,
+          "crps_legacy_single_sigma_13_36": 6.6479,
+          "crps_improvement_vs_single_sigma": 0.0138
+        },
+        "total": {
+          "market": "total",
+          "n_total": 120,
+          "n_cal": 72,
+          "n_test": 48,
+          "empirical_sigma_mean": 13.189,
+          "empirical_sigma_std": 0.2493,
+          "empirical_residual_rmse": 13.2828,
+          "romano_cqr_q_hat_90": -3.1792,
+          "romano_cqr_q_hat_80": -1.0064,
+          "raw_gaussian_coverage_90": 0.9167,
+          "romano_barber_cqr_coverage_90": 0.8958,
+          "romano_barber_cqr_mean_width_90": 36.9712,
+          "romano_barber_cqr_coverage_80": 0.7708,
+          "romano_barber_cqr_mean_width_80": 31.7465,
+          "gibbs_candes_aci_enbpi_coverage_90": 0.8542,
+          "gibbs_candes_aci_enbpi_mean_width_90": 37.9378,
+          "crps_market_specific_conditional": 7.423,
+          "crps_legacy_single_sigma_13_36": 7.4326,
+          "crps_improvement_vs_single_sigma": 0.0095
+        },
+        "player_pass_yds": {
+          "market": "player_pass_yds",
+          "n_total": 393,
+          "n_cal": 235,
+          "n_test": 158,
+          "empirical_sigma_mean": 70.6686,
+          "empirical_sigma_std": 17.9491,
+          "empirical_residual_rmse": 73.9392,
+          "romano_cqr_q_hat_90": 12.336,
+          "romano_cqr_q_hat_80": 8.1663,
+          "raw_gaussian_coverage_90": 0.8418,
+          "romano_barber_cqr_coverage_90": 0.8987,
+          "romano_barber_cqr_mean_width_90": 252.7298,
+          "romano_barber_cqr_coverage_80": 0.7785,
+          "romano_barber_cqr_mean_width_80": 194.0188,
+          "gibbs_candes_aci_enbpi_coverage_90": 0.8987,
+          "gibbs_candes_aci_enbpi_mean_width_90": 247.3574,
+          "crps_market_specific_conditional": 41.6486,
+          "crps_legacy_single_sigma_13_36": 52.1951,
+          "crps_improvement_vs_single_sigma": 10.5465
+        },
+        "player_reception_yds": {
+          "market": "player_reception_yds",
+          "n_total": 2424,
+          "n_cal": 1454,
+          "n_test": 970,
+          "empirical_sigma_mean": 18.596,
+          "empirical_sigma_std": 2.5627,
+          "empirical_residual_rmse": 28.4145,
+          "romano_cqr_q_hat_90": 15.687,
+          "romano_cqr_q_hat_80": 6.8551,
+          "raw_gaussian_coverage_90": 0.8072,
+          "romano_barber_cqr_coverage_90": 0.9216,
+          "romano_barber_cqr_mean_width_90": 92.6245,
+          "romano_barber_cqr_coverage_80": 0.8041,
+          "romano_barber_cqr_mean_width_80": 61.4321,
+          "gibbs_candes_aci_enbpi_coverage_90": 0.9,
+          "gibbs_candes_aci_enbpi_mean_width_90": 86.7458,
+          "crps_market_specific_conditional": 14.6676,
+          "crps_legacy_single_sigma_13_36": 15.4125,
+          "crps_improvement_vs_single_sigma": 0.7449
+        },
+        "player_rush_yds": {
+          "market": "player_rush_yds",
+          "n_total": 1103,
+          "n_cal": 661,
+          "n_test": 442,
+          "empirical_sigma_mean": 18.7027,
+          "empirical_sigma_std": 3.5531,
+          "empirical_residual_rmse": 27.7282,
+          "romano_cqr_q_hat_90": 6.1005,
+          "romano_cqr_q_hat_80": 4.481,
+          "raw_gaussian_coverage_90": 0.7964,
+          "romano_barber_cqr_coverage_90": 0.8529,
+          "romano_barber_cqr_mean_width_90": 73.7135,
+          "romano_barber_cqr_coverage_80": 0.7534,
+          "romano_barber_cqr_mean_width_80": 56.8881,
+          "gibbs_candes_aci_enbpi_coverage_90": 0.8982,
+          "gibbs_candes_aci_enbpi_mean_width_90": 86.2328,
+          "crps_market_specific_conditional": 15.4812,
+          "crps_legacy_single_sigma_13_36": 16.5168,
+          "crps_improvement_vs_single_sigma": 1.0355
+        },
+        "player_receptions": {
+          "market": "player_receptions",
+          "n_total": 2253,
+          "n_cal": 1351,
+          "n_test": 902,
+          "empirical_sigma_mean": 1.9255,
+          "empirical_sigma_std": 0.4064,
+          "empirical_residual_rmse": 2.0887,
+          "romano_cqr_q_hat_90": 0.1573,
+          "romano_cqr_q_hat_80": 0.2989,
+          "raw_gaussian_coverage_90": 0.8902,
+          "romano_barber_cqr_coverage_90": 0.9202,
+          "romano_barber_cqr_mean_width_90": 6.6729,
+          "romano_barber_cqr_coverage_80": 0.8359,
+          "romano_barber_cqr_mean_width_80": 5.5517,
+          "gibbs_candes_aci_enbpi_coverage_90": 0.9013,
+          "gibbs_candes_aci_enbpi_mean_width_90": 6.4181,
+          "crps_market_specific_conditional": 1.1803,
+          "crps_legacy_single_sigma_13_36": 3.259,
+          "crps_improvement_vs_single_sigma": 2.0787
+        }
+      }
+    },
+    "build_item_2_forecastbench_sim_and_cohorts": {
+      "build_item": "Item 2 \u2014 ForecastBench (2409.19839) + ForecastBench-Sim (2606.18686) Multi-Cohort Evaluation",
+      "voided_62_23_1_notice": "VOIDED BATCH NOTICE (Garrett, 2026-11-06): The 62-23-1 figure referenced in legacy ledger files is a historical batch voided after the Nov 5 engine failure and is NEVER cited or treated as a standing record.",
+      "forecastbench_sim_n120_rollout_bank": {
+        "n_questions": 120,
+        "unconditioned_prior_brier": 0.303081,
+        "state_conditioned_engine_brier": 0.299145,
+        "brier_skill_score_vs_unconditioned": 0.012988,
+        "unconditioned_prior_log_loss": 0.817407,
+        "state_conditioned_engine_log_loss": 0.807798,
+        "state_conditioned_engine_ece": 0.190308
+      }
+    },
+    "build_item_3_firstandthirty_prop_calibration": {
+      "build_item": "Item 3 \u2014 firstandthirty/nfl-tools Graded Props (2023-2025) Calibration & Backtest",
+      "total_graded_props_ingested": 6224,
+      "chronological_split": {
+        "train_weeks": "Weeks 1-13 (2024 NFL)",
+        "train_rows": 4985,
+        "test_weeks": "Weeks 14-17 (2024 NFL held-out)",
+        "test_rows": 1239
+      },
+      "held_out_test_overall": {
+        "n_test": 1239,
+        "raw_book_brier": 0.249578,
+        "calibrated_model_brier": 0.248613,
+        "brier_improvement": 0.000965,
+        "raw_book_log_loss": 0.692305,
+        "calibrated_model_log_loss": 0.690377,
+        "raw_book_ece": 0.041,
+        "calibrated_model_ece": 0.007322
+      },
+      "market_heads_learned_on_train": {
+        "player_pass_yds": {
+          "train_n": 352,
+          "train_base_over_rate": 0.483,
+          "train_mean_nash_p": 0.4992,
+          "logit_intercept_shift": -0.0649,
+          "total_z_slope": -0.0266
+        },
+        "player_reception_yds": {
+          "train_n": 1944,
+          "train_base_over_rate": 0.4871,
+          "train_mean_nash_p": 0.499,
+          "logit_intercept_shift": -0.0476,
+          "total_z_slope": -0.0043
+        },
+        "player_receptions": {
+          "train_n": 1809,
+          "train_base_over_rate": 0.4666,
+          "train_mean_nash_p": 0.4873,
+          "logit_intercept_shift": -0.0832,
+          "total_z_slope": -0.0144
+        },
+        "player_rush_yds": {
+          "train_n": 880,
+          "train_base_over_rate": 0.483,
+          "train_mean_nash_p": 0.4987,
+          "logit_intercept_shift": -0.0632,
+          "total_z_slope": 0.0057
+        }
+      },
+      "held_out_test_by_market": {
+        "player_pass_yds": {
+          "test_n": 92,
+          "actual_over_rate": 0.5109,
+          "raw_book_brier": 0.250049,
+          "nash_devig_brier": 0.250019,
+          "calibrated_model_brier": 0.251473,
+          "raw_book_log_loss": 0.693246,
+          "calibrated_model_log_loss": 0.696097,
+          "raw_book_ece": 0.01294,
+          "calibrated_model_ece": 0.028725
+        },
+        "player_reception_yds": {
+          "test_n": 480,
+          "actual_over_rate": 0.4854,
+          "raw_book_brier": 0.251419,
+          "nash_devig_brier": 0.250133,
+          "calibrated_model_brier": 0.249983,
+          "raw_book_log_loss": 0.695989,
+          "calibrated_model_log_loss": 0.693113,
+          "raw_book_ece": 0.038377,
+          "calibrated_model_ece": 0.004474
+        },
+        "player_receptions": {
+          "test_n": 444,
+          "actual_over_rate": 0.4707,
+          "raw_book_brier": 0.246825,
+          "nash_devig_brier": 0.244756,
+          "calibrated_model_brier": 0.245254,
+          "raw_book_log_loss": 0.6868,
+          "calibrated_model_log_loss": 0.683664,
+          "raw_book_ece": 0.054989,
+          "calibrated_model_ece": 0.017105
+        },
+        "player_rush_yds": {
+          "test_n": 223,
+          "actual_over_rate": 0.4933,
+          "raw_book_brier": 0.250901,
+          "nash_devig_brier": 0.250016,
+          "calibrated_model_brier": 0.251171,
+          "raw_book_log_loss": 0.694949,
+          "calibrated_model_log_loss": 0.695494,
+          "raw_book_ece": 0.034944,
+          "calibrated_model_ece": 0.009835
+        }
+      },
+      "projection_backtest_subsets": {
+        "pass_yds_dataset_sigma_n393": {
+          "n": 393,
+          "raw_projection_brier": 0.250892,
+          "pooled_situational_market_brier": 0.249504,
+          "pooled_ece": 0.02079
+        },
+        "reception_yds_backtest_rows_n659": {
+          "n": 659,
+          "raw_sim_brier": 0.252249,
+          "pooled_situational_market_brier": 0.2501,
+          "pooled_ece": 0.023171
+        }
+      }
+    },
+    "build_item_4_closing_line_clv_and_gas": {
+      "build_item": "Item 4 \u2014 Closing-Line CLV (minmaxxxer/nfl-odds-2026 n=120 Games / 356 Graded Sides) + Hol\u00fd-\u010cern\u00fd GAS Ratings (2604.09143) + Kaunitz (1710.02824) + Hub\u00e1\u010dek-\u0160\u00edr (2010.12508)",
+      "defect_closed": "Closed the n=18 CLV coverage gap by grading all 120 2026 NFL games (120 ML, 118 non-push ATS, 118 non-push Totals = 356 graded market questions) with true opening and closing probabilities.",
+      "n_games": 120,
+      "n_graded_market_questions": 360,
+      "combined_356_market_board": {
+        "closing_market_brier": 0.241831,
+        "gas_situational_model_brier": 0.242199,
+        "closing_market_log_loss": 0.677131,
+        "gas_situational_model_log_loss": 0.677946,
+        "closing_market_ece": 0.026295,
+        "gas_situational_model_ece": 0.031249
+      },
+      "by_market": {
+        "moneyline_n120": {
+          "n": 120,
+          "closing_market_brier": 0.226818,
+          "gas_model_brier": 0.227586,
+          "closing_market_log_loss": 0.64775,
+          "gas_model_log_loss": 0.649521,
+          "mean_directional_clv_open_to_close": 0.046913
+        },
+        "spread_ats_n118": {
+          "n": 120,
+          "closing_market_brier": 0.249583,
+          "gas_model_brier": 0.249664,
+          "mean_signed_clv": 0.013871
+        },
+        "total_ou_n118": {
+          "n": 120,
+          "closing_market_brier": 0.249093,
+          "gas_model_brier": 0.249348,
+          "mean_signed_clv": -0.000167
+        }
+      },
+      "holy_cerny_gas_top_8_teams_week8": [
+        {
+          "team": "Pittsburgh Steelers",
+          "gas_rating_pts": 5.276
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "gas_rating_pts": 5.033
+        },
+        {
+          "team": "Buffalo Bills",
+          "gas_rating_pts": 4.88
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "gas_rating_pts": 3.826
+        },
+        {
+          "team": "Seattle Seahawks",
+          "gas_rating_pts": 3.776
+        },
+        {
+          "team": "Chicago Bears",
+          "gas_rating_pts": 3.453
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "gas_rating_pts": 3.365
+        },
+        {
+          "team": "Detroit Lions",
+          "gas_rating_pts": 2.757
+        }
+      ]
+    },
+    "build_item_5_kadavath_pik_and_pooling": {
+      "build_item": "Item 5 \u2014 Kadavath P(IK) Pass-Discipline Gate (2207.05221) + Tian (2305.14975) + Satop\u00e4\u00e4 (1406.2148) + Wang-Liu-Chen (1910.03779) + Schoenegger (2402.19379) + Peng (2609.33257)",
+      "n_forecast_questions": 436,
+      "pooling_comparison_full_n436": {
+        "raw_analytical_head": {
+          "brier": 0.255787,
+          "reliability": 0.015681,
+          "resolution": 0.008678,
+          "uncertainty": 0.248969
+        },
+        "schoenegger_median_pool_2402_19379": {
+          "brier": 0.246815,
+          "reliability": 0.006373,
+          "resolution": 0.007623,
+          "uncertainty": 0.248969
+        },
+        "satopaa_log_odds_pool_1406_2148": {
+          "brier": 0.246258,
+          "reliability": 0.005898,
+          "resolution": 0.007402,
+          "uncertainty": 0.248969
+        },
+        "peng_learned_pair_pool_2609_33257": {
+          "brier": 0.244646,
+          "reliability": 0.001134,
+          "resolution": 0.003761,
+          "uncertainty": 0.248969
+        }
+      },
+      "kadavath_pik_pass_discipline_split": {
+        "tau_pik_threshold": 0.65,
+        "active_gated_stream": {
+          "n_active": 83,
+          "coverage_fraction": 0.1904,
+          "empirical_win_rate": 0.6506,
+          "brier": 0.224849,
+          "log_loss": 0.638936,
+          "ece": 0.09108,
+          "mean_pik": 0.8397
+        },
+        "abstained_pass_stream": {
+          "n_abstained_pass": 353,
+          "abstain_fraction": 0.8096,
+          "empirical_win_rate": 0.5042,
+          "brier_if_forced_to_bet": 0.249301,
+          "log_loss_if_forced_to_bet": 0.691745,
+          "mean_pik": 0.1361
+        },
+        "ungated_full_stream": {
+          "n_total": 436,
+          "empirical_win_rate": 0.5321,
+          "brier": 0.244646,
+          "log_loss": 0.681692,
+          "ece": 0.017027
+        },
+        "win_rate_lift_active_vs_abstained": 0.1464,
+        "brier_improvement_active_vs_abstained": 0.024452
+      },
+      "schoenegger_acquiescence_bias_diagnostic_2402_19379": {
+        "raw_affirmative_framing_mean_p": 0.6297,
+        "empirical_base_rate_mean_y": 0.5321,
+        "raw_acquiescence_bias_p_minus_y": 0.0976,
+        "debiased_peng_mean_p": 0.5245,
+        "debiased_acquiescence_bias_p_minus_y": -0.0076,
+        "bias_reduction_abs": 0.09
+      },
+      "wang_liu_chen_peer_prediction_1910_03779": {
+        "inter_head_signal_correlation": 0.3515,
+        "shuffled_marginal_baseline": -0.0033,
+        "peer_prediction_information_score": 0.3548
+      }
+    },
+    "gateway_calibration_table": {
+      "version": "2026.11.06-motif-5-items-v2",
+      "voided_62_23_1_notice": "VOIDED BATCH NOTICE (Garrett, 2026-11-06): The 62-23-1 figure referenced in legacy ledger files is a historical batch voided after the Nov 5 engine failure and is NEVER cited or treated as a standing record.",
+      "market_cqr_parameters": {
+        "spread": {
+          "sigma_mean": 13.1907,
+          "cqr_q_hat_90": 0.4754,
+          "cqr_q_hat_80": -0.4549,
+          "cqr_coverage_90": 0.9375,
+          "aci_coverage_90": 0.8958,
+          "crps_market_specific": 6.6341
+        },
+        "total": {
+          "sigma_mean": 13.189,
+          "cqr_q_hat_90": -3.1792,
+          "cqr_q_hat_80": -1.0064,
+          "cqr_coverage_90": 0.8958,
+          "aci_coverage_90": 0.8542,
+          "crps_market_specific": 7.423
+        },
+        "player_pass_yds": {
+          "sigma_mean": 70.6686,
+          "cqr_q_hat_90": 12.336,
+          "cqr_q_hat_80": 8.1663,
+          "cqr_coverage_90": 0.8987,
+          "aci_coverage_90": 0.8987,
+          "crps_market_specific": 41.6486
+        },
+        "player_reception_yds": {
+          "sigma_mean": 18.596,
+          "cqr_q_hat_90": 15.687,
+          "cqr_q_hat_80": 6.8551,
+          "cqr_coverage_90": 0.9216,
+          "aci_coverage_90": 0.9,
+          "crps_market_specific": 14.6676
+        },
+        "player_rush_yds": {
+          "sigma_mean": 18.7027,
+          "cqr_q_hat_90": 6.1005,
+          "cqr_q_hat_80": 4.481,
+          "cqr_coverage_90": 0.8529,
+          "aci_coverage_90": 0.8982,
+          "crps_market_specific": 15.4812
+        },
+        "player_receptions": {
+          "sigma_mean": 1.9255,
+          "cqr_q_hat_90": 0.1573,
+          "cqr_q_hat_80": 0.2989,
+          "cqr_coverage_90": 0.9202,
+          "aci_coverage_90": 0.9013,
+          "crps_market_specific": 1.1803
+        }
+      },
+      "prop_market_calibration_heads": {
+        "player_pass_yds": {
+          "train_n": 352,
+          "train_base_over_rate": 0.483,
+          "train_mean_nash_p": 0.4992,
+          "logit_intercept_shift": -0.0649,
+          "total_z_slope": -0.0266
+        },
+        "player_reception_yds": {
+          "train_n": 1944,
+          "train_base_over_rate": 0.4871,
+          "train_mean_nash_p": 0.499,
+          "logit_intercept_shift": -0.0476,
+          "total_z_slope": -0.0043
+        },
+        "player_receptions": {
+          "train_n": 1809,
+          "train_base_over_rate": 0.4666,
+          "train_mean_nash_p": 0.4873,
+          "logit_intercept_shift": -0.0832,
+          "total_z_slope": -0.0144
+        },
+        "player_rush_yds": {
+          "train_n": 880,
+          "train_base_over_rate": 0.483,
+          "train_mean_nash_p": 0.4987,
+          "logit_intercept_shift": -0.0632,
+          "total_z_slope": 0.0057
+        }
+      },
+      "holy_cerny_gas_top_teams": [
+        {
+          "team": "Pittsburgh Steelers",
+          "gas_rating_pts": 5.276
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "gas_rating_pts": 5.033
+        },
+        {
+          "team": "Buffalo Bills",
+          "gas_rating_pts": 4.88
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "gas_rating_pts": 3.826
+        },
+        {
+          "team": "Seattle Seahawks",
+          "gas_rating_pts": 3.776
+        },
+        {
+          "team": "Chicago Bears",
+          "gas_rating_pts": 3.453
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "gas_rating_pts": 3.365
+        },
+        {
+          "team": "Detroit Lions",
+          "gas_rating_pts": 2.757
+        }
+      ],
+      "kadavath_pik_threshold": 0.65
+    }
+  }
 }
