@@ -648,8 +648,8 @@ export function computeCausalDeconfoundedSkillVector(
     0.12 * (input.qbReadOptionEdgeFreezeRate ?? 0.19) +
     0.1 * (input.garbageTimeSoftShellRate ?? 0.12);
 
-  const zVec = vals.map((_, i) => (flags[i] ? 1.0 : 0.0));
-  const zMean = zVec.reduce((a, b) => a + b, 0) / nSnaps;
+  const zVec: number[] = vals.map((_, i) => (flags[i] ? 1.0 : 0.0));
+  const zMean = zVec.reduce((a: number, b: number) => a + b, 0) / nSnaps;
   const zCentered = zVec.map((z) => z - zMean);
   const zzSum = zCentered.reduce((acc, zc) => acc + zc * zc, 0) + 1e-6;
   const zySum = zCentered.reduce((acc, zc, i) => acc + zc * ((vals[i] ?? 0) - rawObserved), 0);
@@ -1174,10 +1174,10 @@ import {
 export * from "./openai-ecosystem-jules-opendots-bridge";
 
 export interface UniversalNfl360DossierOverrides {
-  readonly qb?: UniversalQbMetricsInput;
-  readonly receiving?: UniversalReceivingMetricsInput;
-  readonly rushing?: UniversalRushingMetricsInput;
-  readonly trench?: UniversalTrenchMetricsInput;
+  readonly qb?: UniversalQbInput;
+  readonly receiving?: UniversalReceivingInput;
+  readonly rushing?: UniversalRushingInput;
+  readonly trench?: UniversalTrenchInput;
   readonly defenseIdp?: UniversalDefenseAndIdpInput;
   readonly situational?: UniversalSituationalContextInput;
   readonly causalSkill?: CausalDeconfoundedSkillInput;
