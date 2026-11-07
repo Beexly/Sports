@@ -7,11 +7,11 @@
   "max_prop_win_prob": 0.7582,
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "stage1a_receipt_sha256": "e65c645a6d90165f71464bac669501b251057cbcc74493bb6f9bd693335d9433",
-    "stage1b_receipt_sha256": "131928bf6b23f71de758d86f093fb2ade90ea81f7f16efa9ac861ffdfb77d0d0",
-    "stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c",
-    "stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff",
-    "stage5_receipt_sha256": "2aea426c83f5f4b1d7f9b195ad1b52e822087dd179457dd75091c66de964ce12"
+    "stage1a_receipt_sha256": "83eed0f0ffd67b8d63a4bbc4dfd9f58cee1bcd1b696af3f3f6dc9b6e61aa4ec2",
+    "stage1b_receipt_sha256": "6daab070845363b7753209c32042d3582525c5d36778d87a4ae8cb45b52550f1",
+    "stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e",
+    "stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c",
+    "stage5_receipt_sha256": "a6d5c0b51f455a1bf24c284a600b4969a858b04dab35707d55fe1f243fa81e60"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -5833,13 +5833,246 @@
         "scheme_verdict": "With Lamar Jackson (IR - thumb surgery) and Tyler Huntley (Out for season - turf toe) both excluded, undrafted rookie Joe Fagnano starts at QB1 for Baltimore (-0.4308 EPA/dropback on 24 W8 dropbacks) with Jacoby Brissett acquired 2026-11-04 from ARI as emergency QB2. Todd Monken is forced into a heavy Derrick Henry ground script (159 carries, 632 yds, 8 TDs; 2.52 YBC/att) + quick-game/screen releases to Zay Flowers and Mark Andrews against Jacksonville's 30.9% blitz / 34.78% PA-blitz front."
       }
     },
-    "pbp_reproductions_2026_summary": {},
-    "bdb2025_coverage_shell_summary": {},
-    "stage1a_receipt_sha256": "e65c645a6d90165f71464bac669501b251057cbcc74493bb6f9bd693335d9433"
+    "pbp_reproductions_2026_summary": {
+      "generated_at": "2026-11-05",
+      "data_window": "2026 regular season weeks 1-8 (nflverse pbp); FTN charting weeks 1-7",
+      "f6_bal_shell_and_tlaw": {
+        "bal_light_box_rate": 0.7795,
+        "bal_light_box_rate_all_plays": 0.7064,
+        "bal_light_box_sample_all_plays": 419,
+        "bal_light_box_rank": 2,
+        "bal_light_box_sample": 263,
+        "bal_dime_rate": 0.307,
+        "bal_two_high_rate": 0.595,
+        "tlaw_epa_per_dropback": 0.2878,
+        "tlaw_epa_vs_light_box": 0.3521,
+        "tlaw_epa_vs_heavy_box": 0.1091,
+        "tlaw_split_note": "Box-count split (<=6 vs >=7) is computed; the two-high rate itself validates at 59.5% via Sharp middle-open, but a per-shell EPA split is still not public.",
+        "tlaw_light_sample": 137,
+        "tlaw_heavy_sample": 56,
+        "jax_blitz_rate": 0.309,
+        "jax_pressure_rate": 0.1667,
+        "jax_play_action_blitz_rate": 0.3478,
+        "jax_under_center_pressure_rate": 0.275,
+        "w2_note": "Backside A-gap / Fire Zone identification is film-derived; public data yields only blitz/pressure rates, not gap or coverage-family attribution.",
+        "qb_location_values": [
+          "0",
+          "P",
+          "S",
+          "U"
+        ],
+        "bal_dime_proxy": "FTN n_defense_box <= 5 share of defensive plays (30.7%); no free team-level dime charting exists",
+        "bal_dime_note": "nflverse pbp/FTN carry no defensive personnel (DB count); dime rate is not derivable from public data.",
+        "bal_two_high_proxy": "Sharp Football middle-open rate, updated 2026-10-27 (charting proxy for two-high shells)",
+        "bal_two_high_note": "Public nflverse/FTN charting has no coverage-shell field; two-high rate requires All-22 tracking or PFF/FTN proprietary charting.",
+        "bal_ybc_att": 2.5195,
+        "jax_ybc_att": 1.92,
+        "rb_ybc_source": "Pro-Football-Reference 2026 Advanced Rushing (YBC/Att), measured"
+      },
+      "w2_jax_pressure": {
+        "jax_blitz_rate": 0.309,
+        "jax_pressure_rate": 0.1667,
+        "jax_play_action_blitz_rate": 0.3478,
+        "jax_under_center_pressure_rate": 0.275,
+        "w2_note": "Backside A-gap / Fire Zone identification is film-derived; public data yields only blitz/pressure rates, not gap or coverage-family attribution.",
+        "qb_location_values": [
+          "0",
+          "P",
+          "S",
+          "U"
+        ]
+      },
+      "w8_zay_flowers_mof": {
+        "flowers_targets": 58,
+        "flowers_mof_targets": 22,
+        "flowers_mof_target_share": 0.3793,
+        "flowers_receptions": 40,
+        "flowers_yards": 608,
+        "flowers_mof_receptions": 14,
+        "flowers_mof_yards": 258,
+        "bal_mof_attempt_share": 0.2581,
+        "bal_mof_completion_rate": 0.6406
+      },
+      "w10_catchable_ball": {
+        "trevor_lawrence": {
+          "dropbacks": 210,
+          "epa_per_dropback": 0.2878,
+          "catchable_ball_rate": 0.7047,
+          "catchable_sample": 193,
+          "charting_weeks": "1-7 (FTN public file stops at week 7)"
+        },
+        "bal_qbs": {
+          "Fagnano": {
+            "dropbacks": 24,
+            "epa_per_dropback": -0.4308,
+            "catchable_ball_rate": null,
+            "catchable_sample": 0,
+            "charting_weeks": "1-7 (FTN public file stops at week 7)"
+          },
+          "Jackson": {
+            "dropbacks": 102,
+            "epa_per_dropback": 0.3557,
+            "catchable_ball_rate": 0.7228,
+            "catchable_sample": 101,
+            "charting_weeks": "1-7 (FTN public file stops at week 7)"
+          },
+          "Huntley": {
+            "dropbacks": 121,
+            "epa_per_dropback": -0.0316,
+            "catchable_ball_rate": 0.6897,
+            "catchable_sample": 116,
+            "charting_weeks": "1-7 (FTN public file stops at week 7)"
+          }
+        }
+      },
+      "w3_mismatch_manifesto": {
+        "epa_per_play": {
+          "jacksonville_offense": {
+            "value": 0.1636,
+            "rank": 3,
+            "of": 32
+          },
+          "baltimore_defense_allowed": {
+            "value": 0.0124,
+            "rank": 17,
+            "of": 32
+          },
+          "combined_sum": 0.176
+        },
+        "pass_yds_per_dropback": {
+          "jacksonville_offense": {
+            "value": 7.649,
+            "rank": 1,
+            "of": 32
+          },
+          "baltimore_defense_allowed": {
+            "value": 6.45,
+            "rank": 17,
+            "of": 32
+          },
+          "combined_sum": 14.099
+        },
+        "rush_yds_per_rush": {
+          "jacksonville_offense": {
+            "value": 4.464,
+            "rank": 12,
+            "of": 32
+          },
+          "baltimore_defense_allowed": {
+            "value": 3.837,
+            "rank": 7,
+            "of": 32
+          },
+          "combined_sum": 8.301
+        },
+        "pressure_rate_allowed": {
+          "jacksonville_offense": {
+            "value": 0.1622,
+            "rank": 20,
+            "of": 32
+          },
+          "baltimore_defense_allowed": {
+            "value": 0.17,
+            "rank": 7,
+            "of": 32
+          },
+          "combined_sum": 0.3322
+        },
+        "explosive_rate": {
+          "jacksonville_offense": {
+            "value": 0.1106,
+            "rank": 4,
+            "of": 32
+          },
+          "baltimore_defense_allowed": {
+            "value": 0.0832,
+            "rank": 10,
+            "of": 32
+          },
+          "combined_sum": 0.1938
+        },
+        "note": "RB YBC/rush unavailable: 2026 nflverse pbp has no yards-before-contact field. Rushing yards per rush is the substituted metric."
+      },
+      "week9_game_scripts": {
+        "path": "data\\engine\\week9_game_scripts_2026.json",
+        "games_staged": 15
+      },
+      "reproducibility": {
+        "reproduced": [
+          "BAL light-box rate",
+          "TLaw box-split EPA/dropback",
+          "JAX blitz/pressure rates",
+          "Zay Flowers MOF profile",
+          "BAL MOF pass profile",
+          "Catchable Ball Rate",
+          "Mismatch Manifesto components"
+        ],
+        "not_reproducible": [
+          "BAL dime rate (no def personnel)",
+          "BAL two-high rate (no coverage shell field)",
+          "shell-split TLaw EPA delta",
+          "RB YBC/rush (no YBC field)",
+          "A-gap/Fire Zone attribution (film only)"
+        ]
+      },
+      "proxy_sources": {
+        "rb_ybc": "https://www.pro-football-reference.com/years/2026/rushing_advanced.htm",
+        "two_high": "https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-schemes/",
+        "dime": "data/nflverse/ftn_charting_2026.parquet"
+      },
+      "matchup_team_tendencies_2026": {
+        "JAX": {
+          "team": "JAX",
+          "proe": 0.024,
+          "neutral_pace_sec": 26.8,
+          "dc_blitz_rate": 0.309,
+          "dc_man_rate": 0.285,
+          "ol_pressure_allowed": 0.6208,
+          "off_epa": 0.015,
+          "def_epa": -0.0244,
+          "pass_epa": 0.2703,
+          "rush_epa": 0.0403,
+          "comp_rate": 0.658,
+          "sack_rate_allowed": 0.0607,
+          "pa_rate": 0.2371,
+          "motion_rate": 0.6394,
+          "rpo_rate": 0.0085,
+          "screen_rate": 0.0928
+        },
+        "BAL": {
+          "team": "BAL",
+          "proe": -0.018,
+          "neutral_pace_sec": 27.6,
+          "dc_blitz_rate": 0.245,
+          "dc_man_rate": 0.245,
+          "ol_pressure_allowed": 0.6349,
+          "off_epa": 0.134,
+          "def_epa": -0.0955,
+          "pass_epa": 0.0821,
+          "rush_epa": -0.0427,
+          "comp_rate": 0.645,
+          "sack_rate_allowed": 0.0884,
+          "pa_rate": 0.2511,
+          "motion_rate": 0.6502,
+          "rpo_rate": 0.0423,
+          "screen_rate": 0.0731
+        }
+      }
+    },
+    "bdb2025_coverage_shell_summary": {
+      "total_bdb_plays": 16124,
+      "shell_distribution": {
+        "MOFC (Single-High)": 9621,
+        "MOFO (Two-High)": 5614,
+        "RedZone/GoalLine/Other": 889
+      },
+      "matchup": "JAX@BAL"
+    },
+    "stage1a_receipt_sha256": "83eed0f0ffd67b8d63a4bbc4dfd9f58cee1bcd1b696af3f3f6dc9b6e61aa4ec2"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "e65c645a6d90165f71464bac669501b251057cbcc74493bb6f9bd693335d9433",
+    "parent_stage1a_receipt_sha256": "83eed0f0ffd67b8d63a4bbc4dfd9f58cee1bcd1b696af3f3f6dc9b6e61aa4ec2",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -5855,8 +6088,8 @@
     },
     "cognitive_router_4stage_execution": {
       "stage_a_context_mask_bits_total": 288,
-      "stage_a_context_mask_bits_active": 288,
-      "stage_a_signal_families_active": 258,
+      "stage_a_context_mask_bits_active": 246,
+      "stage_a_signal_families_active": 276,
       "stage_b_category_counts": {
         "E": 85,
         "F": 122,
@@ -5918,12 +6151,12 @@
         }
       },
       "stage_c_selected_premises_count": 25,
-      "stage_d_james_stein_shrinkage": 0.916978,
-      "stage_d_james_stein_shrinkage_factor": 0.916978,
-      "stage_d_unclamped_log_odds_delta": 1.096888,
-      "stage_d_raw_log_odds_delta": 1.096888,
-      "stage_d_clamped_log_odds_delta": 0.35,
-      "stage_d_capped_log_odds_delta": 0.35,
+      "stage_d_james_stein_shrinkage": 0.8892,
+      "stage_d_james_stein_shrinkage_factor": 0.8892,
+      "stage_d_unclamped_log_odds_delta": 0.050607,
+      "stage_d_raw_log_odds_delta": 0.050607,
+      "stage_d_clamped_log_odds_delta": 0.045,
+      "stage_d_capped_log_odds_delta": 0.045,
       "marchenko_pastur_effective_rank_shrinkage": 0.96809,
       "stage_d_cap_limit": 0.35,
       "mcp_cognitive_router_ts_telemetry": {
@@ -5940,9 +6173,9 @@
           0
         ],
         "stage_c_selected_count": 25,
-        "stage_d_james_stein_shrinkage": 0.916978,
-        "stage_d_unclamped_log_odds_delta": 1.096888,
-        "stage_d_clamped_log_odds_delta": 0.35,
+        "stage_d_james_stein_shrinkage": 0.8892,
+        "stage_d_unclamped_log_odds_delta": 0.050607,
+        "stage_d_clamped_log_odds_delta": 0.045,
         "stage_d_clamped": true,
         "tau_hat_coach_prior_bonus": 0.0072,
         "marchenko_pastur_rank_shrinkage": 0.96809,
@@ -5992,7 +6225,8 @@
             "spectralScore": 0.816,
             "shrunkLogOddsDelta": 0.196417
           }
-        ]
+        ],
+        "stage_a_active_bits": 246
       }
     },
     "master_situational_reasoning_aggregator": {
@@ -7874,11 +8108,11 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "131928bf6b23f71de758d86f093fb2ade90ea81f7f16efa9ac861ffdfb77d0d0"
+    "stage1b_receipt_sha256": "6daab070845363b7753209c32042d3582525c5d36778d87a4ae8cb45b52550f1"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "131928bf6b23f71de758d86f093fb2ade90ea81f7f16efa9ac861ffdfb77d0d0",
+    "parent_stage1b_receipt_sha256": "6daab070845363b7753209c32042d3582525c5d36778d87a4ae8cb45b52550f1",
     "away": "JAX",
     "home": "BAL",
     "week": 9,
@@ -11417,11 +11651,11 @@
       "bal_cover_plus_7_5_prob": 0.2289,
       "over_41_5_prob": 0.3363
     },
-    "stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c"
+    "stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c",
+    "parent_stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -16635,11 +16869,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff"
+    "stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c",
+    "parent_stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -21853,11 +22087,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff"
+    "stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff",
+    "parent_stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7582,
@@ -24566,11 +24800,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "2aea426c83f5f4b1d7f9b195ad1b52e822087dd179457dd75091c66de964ce12"
+    "stage5_receipt_sha256": "a6d5c0b51f455a1bf24c284a600b4969a858b04dab35707d55fe1f243fa81e60"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff",
+    "parent_stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7582,
@@ -27279,8 +27513,8 @@
         }
       }
     },
-    "stage5_receipt_sha256": "2aea426c83f5f4b1d7f9b195ad1b52e822087dd179457dd75091c66de964ce12"
+    "stage5_receipt_sha256": "a6d5c0b51f455a1bf24c284a600b4969a858b04dab35707d55fe1f243fa81e60"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {},
-  "master_bundle_sha256": "dcc1a7b17fcc3b17e3874d95c17f44559c9e76bdb425b1e5fb883472288d09f1"
+  "master_bundle_sha256": "8739b0504465bd219abe0dba70a09c9f2a74051239aebb284b15678dc3a33204"
 }

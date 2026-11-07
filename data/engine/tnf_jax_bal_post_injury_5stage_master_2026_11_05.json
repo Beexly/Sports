@@ -2,15 +2,15 @@
   "schema": "gse_post_injury_5stage_master_v2",
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "stage1a_receipt_sha256": "e65c645a6d90165f71464bac669501b251057cbcc74493bb6f9bd693335d9433",
-    "stage1b_receipt_sha256": "131928bf6b23f71de758d86f093fb2ade90ea81f7f16efa9ac861ffdfb77d0d0",
-    "stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c",
-    "stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff",
-    "stage5_receipt_sha256": "2aea426c83f5f4b1d7f9b195ad1b52e822087dd179457dd75091c66de964ce12"
+    "stage1a_receipt_sha256": "83eed0f0ffd67b8d63a4bbc4dfd9f58cee1bcd1b696af3f3f6dc9b6e61aa4ec2",
+    "stage1b_receipt_sha256": "6daab070845363b7753209c32042d3582525c5d36778d87a4ae8cb45b52550f1",
+    "stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e",
+    "stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c",
+    "stage5_receipt_sha256": "a6d5c0b51f455a1bf24c284a600b4969a858b04dab35707d55fe1f243fa81e60"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "131928bf6b23f71de758d86f093fb2ade90ea81f7f16efa9ac861ffdfb77d0d0",
+    "parent_stage1b_receipt_sha256": "6daab070845363b7753209c32042d3582525c5d36778d87a4ae8cb45b52550f1",
     "away": "JAX",
     "home": "BAL",
     "week": 9,
@@ -1736,6 +1736,19 @@
           ],
           "cqr_ess_gate_passed": true,
           "roster_truth_player_adjustments": {
+            "Travis Etienne Jr.": {
+              "canonical_team": "JAX",
+              "player_gp": 6,
+              "team_gp": 8,
+              "naive_per_team_gp_rate": 47.25,
+              "true_per_player_gp_rate": 63.0,
+              "denominator_correction_delta": 15.75,
+              "ir_return_ramp_mult": 0.62,
+              "practice_squad_elevation": false,
+              "elevation_snap_cap_mult": 1.0,
+              "roster_truth_adjusted_rate": 39.06,
+              "source_conflict_detected": false
+            },
             "Parker Washington": {
               "canonical_team": "JAX",
               "player_gp": 8,
@@ -1903,6 +1916,19 @@
             "subsystem": "nfl_roster_truth_and_wave3_line_level",
             "build_cards_wired": 68,
             "roster_truth_player_adjustments": {
+              "Travis Etienne Jr.": {
+                "canonical_team": "JAX",
+                "player_gp": 6,
+                "team_gp": 8,
+                "naive_per_team_gp_rate": 47.25,
+                "true_per_player_gp_rate": 63.0,
+                "denominator_correction_delta": 15.75,
+                "ir_return_ramp_mult": 0.62,
+                "practice_squad_elevation": false,
+                "elevation_snap_cap_mult": 1.0,
+                "roster_truth_adjusted_rate": 39.06,
+                "source_conflict_detected": false
+              },
               "Parker Washington": {
                 "canonical_team": "JAX",
                 "player_gp": 8,
@@ -3523,11 +3549,11 @@
       "bal_cover_plus_7_5_prob": 0.2289,
       "over_41_5_prob": 0.3363
     },
-    "stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c"
+    "stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "b80bb6b7be44571bb9fbd5037b65ccf1c18f906239e328aed39e6162c0a4f66c",
+    "parent_stage2_receipt_sha256": "d162a087b34a90983d9836fa890a55257f5b68d2ceb615b8d001a5862cf2045e",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -8741,11 +8767,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff"
+    "stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "c822250da52dc3a9da3d9d3e27e765163f424e84028304734c2f2acbde9ea5ff",
+    "parent_stage3_4_receipt_sha256": "f5f6abb73f19cc6acacee52808a863445b1c2d5052ad59e4855cea1a07b0100c",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7582,
@@ -11454,6 +11480,6 @@
         }
       }
     },
-    "stage5_receipt_sha256": "2aea426c83f5f4b1d7f9b195ad1b52e822087dd179457dd75091c66de964ce12"
+    "stage5_receipt_sha256": "a6d5c0b51f455a1bf24c284a600b4969a858b04dab35707d55fe1f243fa81e60"
   }
 }
