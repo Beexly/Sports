@@ -28,6 +28,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 from scipy.optimize import Bounds, LinearConstraint, milp
+from scipy.sparse import csc_matrix
 from scipy.stats import gamma, nbinom, norm, t as student_t
 
 
@@ -120,7 +121,8 @@ def optimize_dfs_portfolio(
 
     integrality = np.zeros(total_vars, dtype=np.int32)
     integrality[:n] = 1
-    integrality[n : n + num_pairs] = 1
+    # z_{ij} in [0, 1] is automatically integral at any vertex where x_i, x_j in {0, 1}
+    integrality[n : n + num_pairs] = 0
     integrality[n + num_pairs :] = 1
 
     lb = np.zeros(total_vars, dtype=np.float64)
@@ -234,9 +236,15 @@ def optimize_dfs_portfolio(
             l_vec.append(-np.inf)
             u_vec.append(float(max_overlap))
 
-        A = np.vstack(rows)
+        A = csc_matrix(np.vstack(rows))
         constraints = LinearConstraint(A, l_vec, u_vec)
-        res = milp(c=c, integrality=integrality, bounds=Bounds(lb, ub), constraints=constraints)
+        res = milp(
+            c=c,
+            integrality=integrality,
+            bounds=Bounds(lb, ub),
+            constraints=constraints,
+            options={"mip_rel_gap": 0.005, "time_limit": 1.5},
+        )
         if not res.success or res.x is None:
             break
 

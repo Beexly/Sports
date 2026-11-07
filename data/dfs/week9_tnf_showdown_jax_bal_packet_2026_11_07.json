@@ -1,0 +1,306 @@
+{
+  "slate_name": "week9_tnf_showdown_jax_bal",
+  "stage0_removed": [
+    {
+      "name": "Tyler Huntley",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "config exclusion: OUT FOR SEASON - severe turf toe (DK export still shows Q)"
+    },
+    {
+      "name": "Skylar Thompson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status OUT"
+    },
+    {
+      "name": "Tyler Huntley",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "config exclusion: OUT FOR SEASON - severe turf toe (DK export still shows Q)"
+    },
+    {
+      "name": "Skylar Thompson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status OUT"
+    },
+    {
+      "name": "Adam Randall",
+      "team": "BAL",
+      "position": "RB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Durham Smythe",
+      "team": "BAL",
+      "position": "TE",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Adam Randall",
+      "team": "BAL",
+      "position": "RB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Durham Smythe",
+      "team": "BAL",
+      "position": "TE",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Quinn Ewers",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Nick Mullens",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Joey Aguilar",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Quinn Ewers",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Nick Mullens",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Joey Aguilar",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    }
+  ],
+  "situational_flags": {
+    "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation.",
+    "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as 100% healthy bell-cow RB1; Greg Dulcich ($3,100) is full-go TE1 against DET middle-of-field funnel while Will Kacmarek is LP.",
+    "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches and checkdown targets onto Rhamondre Stevenson ($6,100) vs GB light boxes.",
+    "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Jake Ferguson DNP and KaVontae Turpin DNP; Malik Davis ($4,000) active rotational/explosive matchup leverage against IND interior run defense.",
+    "PHI": "Nick Sirianni benched Tanner McKee (0-3) and named Joe Milton ($4,100) Week 9 starting QB vs NYG."
+  },
+  "slate_identity": {
+    "row_count": 104,
+    "unique_games": [
+      "JAX@BAL 11/05/2026 08:15PM ET"
+    ],
+    "detected_nfl_week": 9,
+    "is_week8_retrospective_file": false,
+    "is_week9_live_file": true
+  },
+  "roster_structure": "1 CPT (1.5x) + 5 FLEX",
+  "candidates": 88,
+  "sims": 10000,
+  "opponent_rosters": 300,
+  "win_threshold_p99": 87.35,
+  "portfolio_size": 3,
+  "best_lineup_index": 1,
+  "lineups": [
+    {
+      "index": 1,
+      "salary": 49900,
+      "proj_sum": 93.48,
+      "win_prob_vs_p99_field": 0.4376,
+      "teams": [
+        "BAL",
+        "JAX"
+      ],
+      "players": [
+        {
+          "name": "Trevor Lawrence",
+          "position": "QB",
+          "slot": "CPT",
+          "team": "JAX",
+          "salary": 15900,
+          "projection": 31.05
+        },
+        {
+          "name": "Derrick Henry",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 10200,
+          "projection": 19.8
+        },
+        {
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 9800,
+          "projection": 17.3
+        },
+        {
+          "name": "Zay Flowers",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 10400,
+          "projection": 15.9
+        },
+        {
+          "name": "Chris Rodriguez Jr.",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 3400,
+          "projection": 6.2
+        },
+        {
+          "name": "Chris Moore",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 200,
+          "projection": 3.23
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "salary": 49700,
+      "proj_sum": 93.03,
+      "win_prob_vs_p99_field": 0.4376,
+      "teams": [
+        "BAL",
+        "JAX"
+      ],
+      "players": [
+        {
+          "name": "Derrick Henry",
+          "position": "RB",
+          "slot": "CPT",
+          "team": "BAL",
+          "salary": 15300,
+          "projection": 29.7
+        },
+        {
+          "name": "Trevor Lawrence",
+          "position": "QB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 10600,
+          "projection": 20.7
+        },
+        {
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 9800,
+          "projection": 17.3
+        },
+        {
+          "name": "Zay Flowers",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 10400,
+          "projection": 15.9
+        },
+        {
+          "name": "Chris Rodriguez Jr.",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 3400,
+          "projection": 6.2
+        },
+        {
+          "name": "Chris Moore",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 200,
+          "projection": 3.23
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "salary": 49500,
+      "proj_sum": 91.78,
+      "win_prob_vs_p99_field": 0.4376,
+      "teams": [
+        "BAL",
+        "JAX"
+      ],
+      "players": [
+        {
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "slot": "CPT",
+          "team": "JAX",
+          "salary": 14700,
+          "projection": 25.95
+        },
+        {
+          "name": "Trevor Lawrence",
+          "position": "QB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 10600,
+          "projection": 20.7
+        },
+        {
+          "name": "Derrick Henry",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 10200,
+          "projection": 19.8
+        },
+        {
+          "name": "Zay Flowers",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 10400,
+          "projection": 15.9
+        },
+        {
+          "name": "Chris Rodriguez Jr.",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 3400,
+          "projection": 6.2
+        },
+        {
+          "name": "Chris Moore",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 200,
+          "projection": 3.23
+        }
+      ]
+    }
+  ]
+}

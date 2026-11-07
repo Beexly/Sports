@@ -1,8 +1,8 @@
 {
   "schema": "gse.preflight_roster_gate.v1",
   "week": 9,
-  "as_of": "2026-11-04",
-  "verified_by": "web search 2026-11-04 (Ravens QB situation + Jacoby Brissett trade) + DraftKings export Status column (DKSalaries (2)/(3).csv)",
+  "as_of": "2026-11-07",
+  "verified_by": "web search 2026-11-07 (Eagles Joe Milton starting QB over Tanner McKee + Ravens QB situation + Jacoby Brissett trade) + DraftKings export Status column (DKSalaries (2)/(3).csv)",
   "note": "STAGE 0 source of truth. Entries here OVERRIDE stale DraftKings exports. Update before every slate; the gate refuses to run if as_of is older than max_age_days.",
   "max_age_days": 5,
   "blocked_statuses": [
@@ -45,6 +45,12 @@
       "name": "Jalen Hurts",
       "team": "PHI",
       "reason": "IR",
+      "position": "QB"
+    },
+    {
+      "name": "Tanner McKee",
+      "team": "PHI",
+      "reason": "Benched after 0-3 stretch — Joe Milton named PHI Week 9 starting QB by Nick Sirianni",
       "position": "QB"
     },
     {
@@ -100,6 +106,36 @@
       "team": "KC",
       "reason": "IR",
       "position": "WR"
+    },
+    {
+      "name": "Isaiah Likely",
+      "team": "NYG",
+      "reason": "Off-roster / IR denylist — not active for Week 9",
+      "position": "TE"
+    },
+    {
+      "name": "Tank Bigsby",
+      "team": "PHI",
+      "reason": "Off-roster denylist — not active on PHI Week 9 roster",
+      "position": "RB"
+    },
+    {
+      "name": "Justin Tucker",
+      "team": "BAL",
+      "reason": "Off-roster denylist — Tyler Loop is BAL K",
+      "position": "K"
+    },
+    {
+      "name": "TreVeyon Henderson",
+      "team": "NE",
+      "reason": "OUT - Illness / neurological recovery (DNP Week 9; Rhamondre Stevenson bell-cow RB1)",
+      "position": "RB"
+    },
+    {
+      "name": "Jaylen Wright",
+      "team": "MIA",
+      "reason": "OUT / DNP Week 9 practice report — Ollie Gordon II bell-cow RB1",
+      "position": "RB"
     }
   ],
   "traded_players": [
@@ -109,6 +145,20 @@
       "to": "BAL",
       "date": "2026-11-04",
       "note": "Acquired by BAL today (2026-11-04); removed from ARI on Sunday Main Slate. Emergency depth only behind Joe Fagnano on TNF while learning playbook on 24h notice."
+    },
+    {
+      "name": "Joe Milton",
+      "from": "DAL",
+      "to": "PHI",
+      "date": "2026-10-15",
+      "note": "Signed off DAL practice squad by PHI in October; named PHI Week 9 starting QB vs NYG over Tanner McKee by Nick Sirianni."
+    },
+    {
+      "name": "Joe Milton III",
+      "from": "DAL",
+      "to": "PHI",
+      "date": "2026-10-15",
+      "note": "Signed off DAL practice squad by PHI in October; named PHI Week 9 starting QB vs NYG over Tanner McKee by Nick Sirianni."
     }
   ],
   "confirmed_qb1": {
@@ -135,7 +185,7 @@
     "LV": "Kirk Cousins",
     "SF": "Brock Purdy",
     "NYG": "J.J. McCarthy",
-    "PHI": "Tanner McKee",
+    "PHI": "Joe Milton",
     "BUF": "Josh Allen",
     "MIN": "Carson Wentz",
     "TB": "Baker Mayfield",
@@ -147,7 +197,7 @@
   },
   "qb1_fallback_rule": "All 24 teams on the Week 9 TNF + Sunday Main Slate are explicitly verified in confirmed_qb1.",
   "situational_multipliers_unfitted": {
-    "note": "Baltimore QB3/Ankle + Same-Day Brissett Trade Situational Overlay. Joe Fagnano (undrafted rookie, taped ankle) starting on short notice.",
+    "note": "Week 9 Verified Situational & Injury Vacated-Workload Overlays (BAL QB3/Ankle, MIA Achane IR + Wright DNP -> Ollie Gordon II + Greg Dulcich, NE Henderson Out -> Rhamondre Stevenson, DAL Dome Pace + Ferguson/Turpin DNP -> Malik Davis, PHI Joe Milton QB1).",
     "BAL": {
       "WR": 0.85,
       "TE": 0.85,
@@ -155,9 +205,23 @@
     },
     "JAX": {
       "DST": 1.1
+    },
+    "MIA": {
+      "RB:Ollie Gordon II": 1.38,
+      "TE:Greg Dulcich": 1.78
+    },
+    "NE": {
+      "RB:Rhamondre Stevenson": 1.34
+    },
+    "DAL": {
+      "RB:Malik Davis": 1.55
     }
   },
   "situational_flags": {
-    "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation."
+    "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation.",
+    "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as 100% healthy bell-cow RB1; Greg Dulcich ($3,100) is full-go TE1 against DET middle-of-field funnel while Will Kacmarek is LP.",
+    "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches and checkdown targets onto Rhamondre Stevenson ($6,100) vs GB light boxes.",
+    "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Jake Ferguson DNP and KaVontae Turpin DNP; Malik Davis ($4,000) active rotational/explosive matchup leverage against IND interior run defense.",
+    "PHI": "Nick Sirianni benched Tanner McKee (0-3) and named Joe Milton ($4,100) Week 9 starting QB vs NYG."
   }
 }

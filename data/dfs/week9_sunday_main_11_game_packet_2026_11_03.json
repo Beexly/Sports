@@ -26,10 +26,28 @@
       "reason": "DK status IR"
     },
     {
+      "name": "Isaiah Likely",
+      "team": "NYG",
+      "position": "TE",
+      "reason": "config exclusion: Off-roster / IR denylist \u2014 not active for Week 9"
+    },
+    {
       "name": "Tank Bigsby",
       "team": "PHI",
       "position": "RB",
       "reason": "DK status IR"
+    },
+    {
+      "name": "Tanner McKee",
+      "team": "PHI",
+      "position": "QB",
+      "reason": "config exclusion: Benched after 0-3 stretch \u2014 Joe Milton named PHI Week 9 starting QB by Nick Sirianni"
+    },
+    {
+      "name": "TreVeyon Henderson",
+      "team": "NE",
+      "position": "RB",
+      "reason": "config exclusion: OUT - Illness / neurological recovery (DNP Week 9; Rhamondre Stevenson bell-cow RB1)"
     },
     {
       "name": "Jonathon Brooks",
@@ -54,6 +72,12 @@
       "team": "WAS",
       "position": "RB",
       "reason": "DK status D"
+    },
+    {
+      "name": "Jaylen Wright",
+      "team": "MIA",
+      "position": "RB",
+      "reason": "config exclusion: OUT / DNP Week 9 practice report \u2014 Ollie Gordon II bell-cow RB1"
     },
     {
       "name": "Trey Lance",
@@ -208,12 +232,6 @@
     {
       "name": "Brashard Smith",
       "team": "KC",
-      "position": "RB",
-      "reason": "DK status IR"
-    },
-    {
-      "name": "Malik Davis",
-      "team": "DAL",
       "position": "RB",
       "reason": "DK status IR"
     },
@@ -716,16 +734,10 @@
       "reason": "not confirmed QB1 (Geno Smith)"
     },
     {
-      "name": "Joe Milton III",
-      "team": "PHI",
-      "position": "QB",
-      "reason": "not confirmed QB1 (Tanner McKee)"
-    },
-    {
       "name": "Cole Payton",
       "team": "PHI",
       "position": "QB",
-      "reason": "not confirmed QB1 (Tanner McKee)"
+      "reason": "not confirmed QB1 (Joe Milton)"
     },
     {
       "name": "Drew Lock",
@@ -789,39 +801,217 @@
     "is_week8_retrospective_file": false,
     "is_week9_live_file": true
   },
-  "players_scored": 203,
+  "players_scored": 230,
   "games": 11,
-  "sims": 400,
+  "sims": 10000,
   "opponent_rosters": 300,
-  "win_threshold_p99": 133.06,
+  "win_threshold_p99": 135.44,
   "portfolio_size": 3,
+  "engine_provenance": {
+    "sims_per_game": 10000,
+    "layers_populated": 26,
+    "equations_executed": 21419,
+    "five_tracks_l5_verified": true,
+    "situational_flags": {
+      "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation.",
+      "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as 100% healthy bell-cow RB1; Greg Dulcich ($3,100) is full-go TE1 against DET middle-of-field funnel while Will Kacmarek is LP.",
+      "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches and checkdown targets onto Rhamondre Stevenson ($6,100) vs GB light boxes.",
+      "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Jake Ferguson DNP and KaVontae Turpin DNP; Malik Davis ($4,000) active rotational/explosive matchup leverage against IND interior run defense.",
+      "PHI": "Nick Sirianni benched Tanner McKee (0-3) and named Joe Milton ($4,100) Week 9 starting QB vs NYG."
+    },
+    "situational_and_vacated_role_spotlights": [
+      {
+        "player": "Rhamondre Stevenson",
+        "position": "RB",
+        "team": "NE",
+        "opponent": "GB",
+        "salary": 6100,
+        "projection": 28.07,
+        "sd": 18.91,
+        "value_per_1k": 4.6
+      },
+      {
+        "player": "Ollie Gordon II",
+        "position": "RB",
+        "team": "MIA",
+        "opponent": "DET",
+        "salary": 5600,
+        "projection": 29.07,
+        "sd": 19.45,
+        "value_per_1k": 5.19
+      },
+      {
+        "player": "Joe Milton III",
+        "position": "QB",
+        "team": "PHI",
+        "opponent": "NYG",
+        "salary": 4100,
+        "projection": 15.32,
+        "sd": 9.72,
+        "value_per_1k": 3.74
+      },
+      {
+        "player": "Malik Davis",
+        "position": "RB",
+        "team": "DAL",
+        "opponent": "IND",
+        "salary": 4000,
+        "projection": 19.67,
+        "sd": 13.88,
+        "value_per_1k": 4.92
+      },
+      {
+        "player": "Greg Dulcich",
+        "position": "TE",
+        "team": "MIA",
+        "opponent": "DET",
+        "salary": 3100,
+        "projection": 15.83,
+        "sd": 11.13,
+        "value_per_1k": 5.11
+      }
+    ],
+    "games_connected": {
+      "ARI@SEA": {
+        "dossier_file": "connected_workflow_dossier_ari_sea_week9.json",
+        "master_bundle_sha256": "55b0868af53b1b3bea386651a0c2587ff4e0e9316172a501981f117c96a2e3a4",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": -0.0138,
+        "reasoning_trace_log_odds_delta": 0.6385,
+        "athletes_hydrated": 27
+      },
+      "CLE@NO": {
+        "dossier_file": "connected_workflow_dossier_cle_no_week9.json",
+        "master_bundle_sha256": "8d5d3d392d3a8e9400bb3126fb918814e4616cd285aa3e6f825099478d0ca5b1",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": -0.0138,
+        "reasoning_trace_log_odds_delta": 0.6404,
+        "athletes_hydrated": 28
+      },
+      "DAL@IND": {
+        "dossier_file": "connected_workflow_dossier_dal_ind_week9.json",
+        "master_bundle_sha256": "e689b7e64626f70c04ee961e40c78d16ab56ca863df7e7718f5c9bb2def23fb6",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.638,
+        "athletes_hydrated": 27
+      },
+      "DEN@CAR": {
+        "dossier_file": "connected_workflow_dossier_den_car_week9.json",
+        "master_bundle_sha256": "67167cff92d151e9736347314eb1e2c3aa6d01ee3dac377a7b4eaba8e03c2d5e",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.6368,
+        "athletes_hydrated": 27
+      },
+      "DET@MIA": {
+        "dossier_file": "connected_workflow_dossier_det_mia_week9.json",
+        "master_bundle_sha256": "ee85d10c123de86701d198173c4c725bc42d56416dd09858642e71a24e4cfafc",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": -0.0138,
+        "reasoning_trace_log_odds_delta": 0.6312,
+        "athletes_hydrated": 26
+      },
+      "GB@NE": {
+        "dossier_file": "connected_workflow_dossier_gb_ne_week9.json",
+        "master_bundle_sha256": "6921ef526d52b7741cb0eb1850c45351319317b8094c9a52428e6a1d830a2a41",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.6369,
+        "athletes_hydrated": 28
+      },
+      "HOU@LAC": {
+        "dossier_file": "connected_workflow_dossier_hou_lac_week9.json",
+        "master_bundle_sha256": "a84b4f3bd6b82c0f081458f5c5f689e002068a371acf65c18b35aa704239d3d3",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.6355,
+        "athletes_hydrated": 28
+      },
+      "LAR@WAS": {
+        "dossier_file": "connected_workflow_dossier_lar_was_week9.json",
+        "master_bundle_sha256": "33d97da23d5d19713ac39d6b00e3b854f1a3d1d9bb06fa1c24f11266531b29cd",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.6327,
+        "athletes_hydrated": 28
+      },
+      "LV@SF": {
+        "dossier_file": "connected_workflow_dossier_lv_sf_week9.json",
+        "master_bundle_sha256": "8fda1e987eb27eb62fdfb01fbdb95d4c107aad663e3112726caa32fa2ab966bc",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.6411,
+        "athletes_hydrated": 28
+      },
+      "NYG@PHI": {
+        "dossier_file": "connected_workflow_dossier_nyg_phi_week9.json",
+        "master_bundle_sha256": "2d24a138e0ca9ba3104cde6c32599f430f76b81676f8d80602d9ef587d930c3d",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": -0.0138,
+        "reasoning_trace_log_odds_delta": 0.6303,
+        "athletes_hydrated": 28
+      },
+      "NYJ@KC": {
+        "dossier_file": "connected_workflow_dossier_nyj_kc_week9.json",
+        "master_bundle_sha256": "8f2ff71733035f7d9e108ad0d53b27aadc5af550f998b1af8213f799e970df32",
+        "layers_populated": 26,
+        "equations_executed": 21419,
+        "five_tracks_l5_verified": true,
+        "equation_gate_clamped_delta": 0.0223,
+        "reasoning_trace_log_odds_delta": 0.6394,
+        "athletes_hydrated": 27
+      }
+    }
+  },
   "submodular": {
     "selected_lineup_indices": [
       1,
-      2,
-      0
+      0,
+      2
     ],
     "marginal_win_prob_gains": [
-      0.7325,
-      0.1075,
-      0.0275
+      0.9305,
+      0.0455,
+      0.0054
     ],
-    "cumulative_portfolio_win_prob": 0.8675,
+    "cumulative_portfolio_win_prob": 0.9814,
     "nemhauser_wolsey_lower_bound_ratio": 0.632121
   },
   "best_lineup_index": 2,
   "lineups": [
     {
       "index": 1,
-      "salary": 49900,
-      "proj_sum": 160.09,
-      "win_prob_vs_p99_field": 0.725,
+      "salary": 49300,
+      "proj_sum": 196.9,
+      "win_prob_vs_p99_field": 0.9168,
       "teams": [
-        "ARI",
         "DET",
-        "GB",
-        "NYG",
-        "NYJ",
+        "HOU",
+        "LAC",
+        "LV",
+        "MIA",
+        "NE",
         "SEA"
       ],
       "players": [
@@ -831,7 +1021,7 @@
           "team": "DET",
           "opponent": "MIA",
           "salary": 10000,
-          "projection": 31.700000762939453
+          "projection": 38.849998474121094
         },
         {
           "player": "Jaxon Smith-Njigba",
@@ -839,136 +1029,39 @@
           "team": "SEA",
           "opponent": "ARI",
           "salary": 9300,
-          "projection": 31.510000228881836
+          "projection": 28.3700008392334
         },
         {
-          "player": "Josh Jacobs",
+          "player": "Rhamondre Stevenson",
           "position": "RB",
-          "team": "GB",
-          "opponent": "NE",
-          "salary": 6800,
-          "projection": 22.209999084472656
+          "team": "NE",
+          "opponent": "GB",
+          "salary": 6100,
+          "projection": 28.06999969482422
         },
         {
-          "player": "Isaiah Likely",
-          "position": "TE",
-          "team": "NYG",
-          "opponent": "PHI",
-          "salary": 5000,
-          "projection": 15.350000381469727
-        },
-        {
-          "player": "Omar Cooper Jr.",
-          "position": "WR",
-          "team": "NYJ",
-          "opponent": "KC",
-          "salary": 4900,
-          "projection": 14.100000381469727
-        },
-        {
-          "player": "Gardner Minshew II",
+          "player": "C.J. Stroud",
           "position": "QB",
-          "team": "ARI",
-          "opponent": "SEA",
-          "salary": 4500,
-          "projection": 20.030000686645508
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 5900,
+          "projection": 27.8700008392334
         },
         {
-          "player": "Adonai Mitchell",
-          "position": "WR",
-          "team": "NYJ",
-          "opponent": "KC",
-          "salary": 4500,
-          "projection": 13.619999885559082
-        },
-        {
-          "player": "Elijah Higgins",
-          "position": "TE",
-          "team": "ARI",
-          "opponent": "SEA",
-          "salary": 2500,
-          "projection": 4.460000038146973
-        },
-        {
-          "player": "Packers",
-          "position": "DST",
-          "team": "GB",
-          "opponent": "NE",
-          "salary": 2400,
-          "projection": 7.119999885559082
-        }
-      ]
-    },
-    {
-      "index": 2,
-      "salary": 49900,
-      "proj_sum": 160.02,
-      "win_prob_vs_p99_field": 0.7325,
-      "teams": [
-        "DET",
-        "GB",
-        "HOU",
-        "LV",
-        "MIA",
-        "SEA",
-        "SF"
-      ],
-      "players": [
-        {
-          "player": "Jahmyr Gibbs",
+          "player": "Ollie Gordon II",
           "position": "RB",
-          "team": "DET",
-          "opponent": "MIA",
-          "salary": 10000,
-          "projection": 31.700000762939453
-        },
-        {
-          "player": "Jaxon Smith-Njigba",
-          "position": "WR",
-          "team": "SEA",
-          "opponent": "ARI",
-          "salary": 9300,
-          "projection": 31.510000228881836
-        },
-        {
-          "player": "Josh Jacobs",
-          "position": "RB",
-          "team": "GB",
-          "opponent": "NE",
-          "salary": 6800,
-          "projection": 22.209999084472656
-        },
-        {
-          "player": "Kirk Cousins",
-          "position": "QB",
-          "team": "LV",
-          "opponent": "SF",
-          "salary": 5300,
-          "projection": 22.649999618530273
-        },
-        {
-          "player": "Deebo Samuel Sr.",
-          "position": "WR",
-          "team": "SF",
-          "opponent": "LV",
-          "salary": 5300,
-          "projection": 12.359999656677246
-        },
-        {
-          "player": "Caleb Douglas",
-          "position": "WR",
           "team": "MIA",
           "opponent": "DET",
-          "salary": 4200,
-          "projection": 12.579999923706055
+          "salary": 5600,
+          "projection": 29.06999969482422
         },
         {
-          "player": "Michael Mayer",
-          "position": "TE",
-          "team": "LV",
-          "opponent": "SF",
-          "salary": 3400,
-          "projection": 9.789999961853027
+          "player": "Xavier Hutchinson",
+          "position": "WR",
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 4000,
+          "projection": 12.90999984741211
         },
         {
           "player": "Dalton Schultz",
@@ -976,29 +1069,124 @@
           "team": "HOU",
           "opponent": "LAC",
           "salary": 3200,
-          "projection": 10.119999885559082
+          "projection": 14.850000381469727
         },
         {
-          "player": "Packers",
+          "player": "KeAndre Lambert-Smith",
+          "position": "WR",
+          "team": "LAC",
+          "opponent": "HOU",
+          "salary": 3000,
+          "projection": 10.890000343322754
+        },
+        {
+          "player": "Raiders",
           "position": "DST",
-          "team": "GB",
-          "opponent": "NE",
-          "salary": 2400,
-          "projection": 7.119999885559082
+          "team": "LV",
+          "opponent": "SF",
+          "salary": 2200,
+          "projection": 6.010000228881836
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "salary": 50000,
+      "proj_sum": 199.04,
+      "win_prob_vs_p99_field": 0.9305,
+      "teams": [
+        "DET",
+        "LAC",
+        "LV",
+        "MIA",
+        "NE",
+        "NYG"
+      ],
+      "players": [
+        {
+          "player": "Jahmyr Gibbs",
+          "position": "RB",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 10000,
+          "projection": 38.849998474121094
+        },
+        {
+          "player": "Malik Nabers",
+          "position": "WR",
+          "team": "NYG",
+          "opponent": "PHI",
+          "salary": 7300,
+          "projection": 23.149999618530273
+        },
+        {
+          "player": "Jared Goff",
+          "position": "QB",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 6600,
+          "projection": 29.760000228881836
+        },
+        {
+          "player": "Rhamondre Stevenson",
+          "position": "RB",
+          "team": "NE",
+          "opponent": "GB",
+          "salary": 6100,
+          "projection": 28.06999969482422
+        },
+        {
+          "player": "Jameson Williams",
+          "position": "WR",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 6100,
+          "projection": 17.399999618530273
+        },
+        {
+          "player": "Ollie Gordon II",
+          "position": "RB",
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 5600,
+          "projection": 29.06999969482422
+        },
+        {
+          "player": "Greg Dulcich",
+          "position": "TE",
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 3100,
+          "projection": 15.829999923706055
+        },
+        {
+          "player": "KeAndre Lambert-Smith",
+          "position": "WR",
+          "team": "LAC",
+          "opponent": "HOU",
+          "salary": 3000,
+          "projection": 10.890000343322754
+        },
+        {
+          "player": "Raiders",
+          "position": "DST",
+          "team": "LV",
+          "opponent": "SF",
+          "salary": 2200,
+          "projection": 6.010000228881836
         }
       ]
     },
     {
       "index": 3,
       "salary": 49900,
-      "proj_sum": 158.89,
-      "win_prob_vs_p99_field": 0.7225,
+      "proj_sum": 197.22,
+      "win_prob_vs_p99_field": 0.925,
       "teams": [
-        "ARI",
         "DET",
-        "GB",
-        "LV",
+        "HOU",
         "MIA",
+        "NE",
         "NYJ",
         "SEA"
       ],
@@ -1009,7 +1197,7 @@
           "team": "DET",
           "opponent": "MIA",
           "salary": 10000,
-          "projection": 31.700000762939453
+          "projection": 38.849998474121094
         },
         {
           "player": "Jaxon Smith-Njigba",
@@ -1017,63 +1205,63 @@
           "team": "SEA",
           "opponent": "ARI",
           "salary": 9300,
-          "projection": 31.510000228881836
+          "projection": 28.3700008392334
         },
         {
-          "player": "Josh Jacobs",
-          "position": "RB",
-          "team": "GB",
-          "opponent": "NE",
-          "salary": 6800,
-          "projection": 22.209999084472656
-        },
-        {
-          "player": "Ashton Jeanty",
-          "position": "RB",
-          "team": "LV",
-          "opponent": "SF",
-          "salary": 5900,
-          "projection": 17.3799991607666
-        },
-        {
-          "player": "Gardner Minshew II",
+          "player": "Jared Goff",
           "position": "QB",
-          "team": "ARI",
-          "opponent": "SEA",
-          "salary": 4500,
-          "projection": 20.030000686645508
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 6600,
+          "projection": 29.760000228881836
         },
         {
-          "player": "Adonai Mitchell",
-          "position": "WR",
-          "team": "NYJ",
-          "opponent": "KC",
-          "salary": 4500,
-          "projection": 13.619999885559082
+          "player": "Rhamondre Stevenson",
+          "position": "RB",
+          "team": "NE",
+          "opponent": "GB",
+          "salary": 6100,
+          "projection": 28.06999969482422
         },
         {
-          "player": "Caleb Douglas",
-          "position": "WR",
+          "player": "Ollie Gordon II",
+          "position": "RB",
           "team": "MIA",
           "opponent": "DET",
-          "salary": 4200,
-          "projection": 12.579999923706055
+          "salary": 5600,
+          "projection": 29.06999969482422
         },
         {
-          "player": "Teagan Quitoriano",
+          "player": "Xavier Hutchinson",
+          "position": "WR",
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 4000,
+          "projection": 12.90999984741211
+        },
+        {
+          "player": "Isaac TeSlaa",
+          "position": "WR",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 3100,
+          "projection": 9.59000015258789
+        },
+        {
+          "player": "Greg Dulcich",
           "position": "TE",
-          "team": "ARI",
-          "opponent": "SEA",
-          "salary": 2500,
-          "projection": 3.7300000190734863
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 3100,
+          "projection": 15.829999923706055
         },
         {
-          "player": "Raiders",
+          "player": "Jets",
           "position": "DST",
-          "team": "LV",
-          "opponent": "SF",
-          "salary": 2200,
-          "projection": 6.139999866485596
+          "team": "NYJ",
+          "opponent": "KC",
+          "salary": 2100,
+          "projection": 4.769999980926514
         }
       ]
     }

@@ -39,7 +39,12 @@ def load_config(path: str | Path = DEFAULT_CONFIG, today: date | None = None) ->
 
 
 def _norm(s: str) -> str:
-    return " ".join(str(s).lower().replace(".", "").split())
+    parts = [
+        w
+        for w in str(s).lower().replace(".", "").replace(",", "").split()
+        if w not in ("jr", "sr", "ii", "iii", "iv")
+    ]
+    return " ".join(parts)
 
 
 def apply_gate(
@@ -113,8 +118,9 @@ def apply_gate(
 
 def assert_lineup_clean(players: Iterable[str], cfg: dict) -> None:
     bad = []
+    confirmed_starters = {_norm(v) for v in cfg.get("confirmed_qb1", {}).values()}
     names = {_norm(p["name"]) for p in cfg["excluded_players"]}
-    names |= {_norm(p["name"]) for p in cfg["traded_players"]}
+    names |= ({_norm(p["name"]) for p in cfg["traded_players"]} - confirmed_starters)
     for n in players:
         if _norm(n) in names:
             bad.append(n)

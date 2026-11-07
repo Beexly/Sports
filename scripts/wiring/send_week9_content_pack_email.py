@@ -103,23 +103,27 @@ def _deliver_to_beexly_agent_bus(md_text: str) -> list[dict[str, Any]]:
         except Exception:
             pass
 
+        payload_obj: dict[str, Any] = {
+            "message": "feat(inbox): deliver Week 9 ready-to-post master content & engagement pack (all 5 engine verticals)",
+            "content": b64_content,
+        }
+        if sha_val:
+            payload_obj["sha"] = sha_val
+
         cmd = [
             "gh",
             "api",
             "--method",
             "PUT",
             f"repos/Beexly/agent-bus/contents/{remote_path}",
-            "-f",
-            "message=feat(inbox): deliver Week 9 ready-to-post content & engagement pack for Garrett",
-            "-f",
-            f"content={b64_content}",
+            "--input",
+            "-",
         ]
-        if sha_val:
-            cmd.extend(["-f", f"sha={sha_val}"])
 
         try:
             proc = subprocess.run(
                 cmd,
+                input=json.dumps(payload_obj),
                 cwd=str(REPO_ROOT),
                 capture_output=True,
                 text=True,

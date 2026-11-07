@@ -8,10 +8,10 @@
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "0223c5c84ff5a17fd6f11b90b58ed5a4ce858996913fb9ad3d4243deda5a3fd2",
     "stage1a_receipt_sha256": "99dcc7cb951c3ded74a6a78e41e42fb4cbc9105930abdd62646277eccd5e5dbf",
-    "stage1b_receipt_sha256": "092fa5b608dd6e09bd7d751c0717e82c41bb3b5c14911856b6cbfefd8f6d5fd0",
-    "stage2_receipt_sha256": "aac1c26004491a23aba632df4ac90eb1cf6dbc2ce4a0d80cef65202e3b4c3862",
-    "stage3_4_receipt_sha256": "541a272bf3ec19531c1063b7063438e9544e8a52f55ea84b2e5c5ade0b025903",
-    "stage5_receipt_sha256": "b62866eeca869d955cda081a27f1397deaf62385d902c9a7cbb8748cf2703e07"
+    "stage1b_receipt_sha256": "d659503a3f69d2a42eb8d46b3ee907246fdb9238b56f7f59a691dc2e951e75ea",
+    "stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
+    "stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee",
+    "stage5_receipt_sha256": "67be612ef754c1db02b5e248b010a715efcae6e898a28290725b0fb1f2f49ba9"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -6274,7 +6274,7 @@
     "cognitive_router_4stage_execution": {
       "stage_a_context_mask_bits_total": 288,
       "stage_a_context_mask_bits_active": 271,
-      "stage_a_signal_families_active": 271,
+      "stage_a_signal_families_active": 223,
       "stage_b_category_counts": {
         "E": 85,
         "F": 122,
@@ -6338,8 +6338,8 @@
       "stage_c_selected_premises_count": 25,
       "stage_d_james_stein_shrinkage": 0.916978,
       "stage_d_james_stein_shrinkage_factor": 0.916978,
-      "stage_d_unclamped_log_odds_delta": 0.232397,
-      "stage_d_raw_log_odds_delta": 0.232397,
+      "stage_d_unclamped_log_odds_delta": 0.0,
+      "stage_d_raw_log_odds_delta": 0.0,
       "stage_d_clamped_log_odds_delta": -0.036676,
       "stage_d_capped_log_odds_delta": -0.036676,
       "marchenko_pastur_effective_rank_shrinkage": 0.96809,
@@ -6359,7 +6359,7 @@
         ],
         "stage_c_selected_count": 25,
         "stage_d_james_stein_shrinkage": 0.916978,
-        "stage_d_unclamped_log_odds_delta": 0.232397,
+        "stage_d_unclamped_log_odds_delta": 0.0,
         "stage_d_clamped_log_odds_delta": -0.036676,
         "stage_d_clamped": true,
         "tau_hat_coach_prior_bonus": 0.0072,
@@ -6412,7 +6412,7 @@
           }
         ],
         "stage_a_active_bits": 271,
-        "stage_a_signal_families_active": 271
+        "stage_a_signal_families_active": 223
       }
     },
     "master_situational_reasoning_aggregator": {
@@ -8294,11 +8294,12 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "092fa5b608dd6e09bd7d751c0717e82c41bb3b5c14911856b6cbfefd8f6d5fd0"
+    "stage1b_receipt_sha256": "d659503a3f69d2a42eb8d46b3ee907246fdb9238b56f7f59a691dc2e951e75ea",
+    "equation_gate_12304_clamped_delta": -0.036676
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "092fa5b608dd6e09bd7d751c0717e82c41bb3b5c14911856b6cbfefd8f6d5fd0",
+    "parent_stage1b_receipt_sha256": "d659503a3f69d2a42eb8d46b3ee907246fdb9238b56f7f59a691dc2e951e75ea",
     "away": "JAX",
     "home": "BAL",
     "week": 9,
@@ -8320,6 +8321,8 @@
       "cholesky_6family_whitened_z_shift": -0.0312,
       "mega_sweep_5track_7step_epa_delta": -0.07779,
       "gsi_step2_health_net_epa_delta": -0.08128,
+      "eq_gate_12k_epa_shift": -0.000954,
+      "equation_gate_12304_clamped_delta": -0.038152,
       "roster_truth_player_adjustments": {
         "player_adjustments": {
           "Parker Washington": {
@@ -11495,7 +11498,7 @@
             "mean_clv_prob_delta": 0.054,
             "empirical_conformal_coverage": 0.8,
             "target_conformal_coverage": 0.9,
-            "official_verified_record_baseline": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
+            "official_verified_record_baseline": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
             "eval_gate_passed": true
           },
           "openai_cookbook": {
@@ -11865,8 +11868,8 @@
             "both_pairs_preserved_unsmoothed": true
           },
           "gse_live_performance": {
-            "settled_record": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
-            "voided_notice": "The 62-23-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
+            "settled_record": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
+            "voided_notice": "The 47-19-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
             "win_rate_pct": 72.9,
             "net_units": 26.5,
             "week9_tnf_brier": 0.168,
@@ -11970,6 +11973,8 @@
       "home_off_epa_adj": -0.2896,
       "away_off_epa_delta_situational": 0.0012,
       "home_off_epa_delta_situational": -0.0436,
+      "eq_gate_12k_epa_shift": -0.000954,
+      "equation_gate_12304_clamped_delta": -0.038152,
       "away_def_epa": -0.0244,
       "home_def_epa": -0.0955,
       "away_proe": 0.024,
@@ -12075,6 +12080,8 @@
         "cholesky_6family_whitened_z_shift": -0.0312,
         "mega_sweep_5track_7step_epa_delta": -0.07779,
         "gsi_step2_health_net_epa_delta": -0.08128,
+        "eq_gate_12k_epa_shift": -0.000954,
+        "equation_gate_12304_clamped_delta": -0.038152,
         "roster_truth_player_adjustments": {
           "player_adjustments": {
             "Parker Washington": {
@@ -15250,7 +15257,7 @@
               "mean_clv_prob_delta": 0.054,
               "empirical_conformal_coverage": 0.8,
               "target_conformal_coverage": 0.9,
-              "official_verified_record_baseline": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
+              "official_verified_record_baseline": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
               "eval_gate_passed": true
             },
             "openai_cookbook": {
@@ -15620,8 +15627,8 @@
               "both_pairs_preserved_unsmoothed": true
             },
             "gse_live_performance": {
-              "settled_record": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
-              "voided_notice": "The 62-23-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
+              "settled_record": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
+              "voided_notice": "The 47-19-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
               "win_rate_pct": 72.9,
               "net_units": 26.5,
               "week9_tnf_brier": 0.168,
@@ -16182,7 +16189,7 @@
       },
       "full_repo_279_family_situational_matrix": {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-        "generated_at_utc": "2026-11-07T13:43:42.335550+00:00",
+        "generated_at_utc": "2026-11-07T16:17:56.176587+00:00",
         "total_ts_modules_cataloged": 1464,
         "prediction_engine_ts_modules": 1455,
         "mcp_equations_server_ts_modules": 9,
@@ -17100,7 +17107,7 @@
           "probability_movement_cap": 0.12,
           "post_overlay_prob": 0.5073
         },
-        "receipt_sha256": "1021feeb2ee538bfc0a4f9c99f912c77a8f0fa5ca5f71093b1464a439d9eeaad",
+        "receipt_sha256": "d9cb4e2a4863154d56a20fb20384746c1b2527498cf88ba0d6c454053eb13808",
         "measured_primitives": {
           "measured_primitives_count": 3,
           "wr1_absorption": {
@@ -17156,19 +17163,6 @@
           ],
           "cqr_ess_gate_passed": true,
           "roster_truth_player_adjustments": {
-            "Travis Etienne Jr.": {
-              "canonical_team": "JAX",
-              "player_gp": 6,
-              "team_gp": 8,
-              "naive_per_team_gp_rate": 47.25,
-              "true_per_player_gp_rate": 63.0,
-              "denominator_correction_delta": 15.75,
-              "ir_return_ramp_mult": 0.62,
-              "practice_squad_elevation": false,
-              "elevation_snap_cap_mult": 1.0,
-              "roster_truth_adjusted_rate": 39.06,
-              "source_conflict_detected": false
-            },
             "Parker Washington": {
               "canonical_team": "JAX",
               "player_gp": 8,
@@ -17336,19 +17330,6 @@
             "subsystem": "nfl_roster_truth_and_wave3_line_level",
             "build_cards_wired": 68,
             "roster_truth_player_adjustments": {
-              "Travis Etienne Jr.": {
-                "canonical_team": "JAX",
-                "player_gp": 6,
-                "team_gp": 8,
-                "naive_per_team_gp_rate": 47.25,
-                "true_per_player_gp_rate": 63.0,
-                "denominator_correction_delta": 15.75,
-                "ir_return_ramp_mult": 0.62,
-                "practice_squad_elevation": false,
-                "elevation_snap_cap_mult": 1.0,
-                "roster_truth_adjusted_rate": 39.06,
-                "source_conflict_detected": false
-              },
               "Parker Washington": {
                 "canonical_team": "JAX",
                 "player_gp": 8,
@@ -17467,19 +17448,19 @@
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "bridge_version": "uncompressed_25k_v1.0",
         "monorepo_census_summary": {
-          "total_repo_files_indexed": 63179,
-          "docs_files_indexed": 11311,
+          "total_repo_files_indexed": 63262,
+          "docs_files_indexed": 11318,
           "arxiv_program_files_indexed": 1799,
-          "engine_docs_indexed": 3809,
+          "engine_docs_indexed": 3811,
           "packages_files_indexed": 5939,
           "packages_count": 25,
-          "intelligence_files_indexed": 936,
+          "intelligence_files_indexed": 947,
           "intelligence_domains_count": 35,
-          "scripts_files_indexed": 856,
-          "apps_files_indexed": 3544,
+          "scripts_files_indexed": 860,
+          "apps_files_indexed": 3540,
           "web_api_routes_indexed": 271,
           "formal_proof_files_indexed": 69,
-          "workers_files_indexed": 48,
+          "workers_files_indexed": 52,
           "canonical_textbooks_wired": 19,
           "master_equations_wired": 12304,
           "external_mounts": {
@@ -21563,7 +21544,7 @@
               "mean_clv_prob_delta": 0.054,
               "empirical_conformal_coverage": 0.8,
               "target_conformal_coverage": 0.9,
-              "official_verified_record_baseline": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
+              "official_verified_record_baseline": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
               "eval_gate_passed": true
             },
             "openai_cookbook": {
@@ -21933,8 +21914,8 @@
               "both_pairs_preserved_unsmoothed": true
             },
             "gse_live_performance": {
-              "settled_record": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
-              "voided_notice": "The 62-23-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
+              "settled_record": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
+              "voided_notice": "The 47-19-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
               "win_rate_pct": 72.9,
               "net_units": 26.5,
               "week9_tnf_brier": 0.168,
@@ -25406,7 +25387,7 @@
             "mean_clv_prob_delta": 0.054,
             "empirical_conformal_coverage": 0.8,
             "target_conformal_coverage": 0.9,
-            "official_verified_record_baseline": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
+            "official_verified_record_baseline": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06 \u2014 never a standing record)",
             "eval_gate_passed": true
           },
           "openai_cookbook": {
@@ -25776,8 +25757,8 @@
             "both_pairs_preserved_unsmoothed": true
           },
           "gse_live_performance": {
-            "settled_record": "62-23-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
-            "voided_notice": "The 62-23-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
+            "settled_record": "47-19-1 (VOIDED_BATCH_AFTER_NOV5_ENGINE_FAILURE_2026_11_06)",
+            "voided_notice": "The 47-19-1 batch was voided after the Nov 5 engine failure (Garrett, 2026-11-06) and is never cited as a standing record.",
             "win_rate_pct": 72.9,
             "net_units": 26.5,
             "week9_tnf_brier": 0.168,
@@ -26101,18 +26082,22 @@
       "bal_cover_plus_7_5_prob": 0.2003,
       "over_41_5_prob": 0.3905
     },
-    "stage2_receipt_sha256": "aac1c26004491a23aba632df4ac90eb1cf6dbc2ce4a0d80cef65202e3b4c3862",
+    "stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
     "armed_26_layer_trace_handoff": {
       "context_packet_id": "PKT-2026_09_JAX_BAL-20261105",
       "reasoning_trace_id": "TRC-2026_09_JAX_BAL-20261105",
       "equations_executed_26_layers": 21419,
       "reasoning_trace_cumulative_log_odds_delta": 0.640047,
+      "equation_gate_12304_clamped_delta": -0.036676,
+      "eq_gate_12k_epa_shift": -0.000954,
       "simulator_median_spread_home_trace_conditioned": 4.2601
-    }
+    },
+    "eq_gate_12k_epa_shift": -0.000954,
+    "equation_gate_12304_clamped_delta": -0.036676
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "aac1c26004491a23aba632df4ac90eb1cf6dbc2ce4a0d80cef65202e3b4c3862",
+    "parent_stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -31326,11 +31311,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "541a272bf3ec19531c1063b7063438e9544e8a52f55ea84b2e5c5ade0b025903"
+    "stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "aac1c26004491a23aba632df4ac90eb1cf6dbc2ce4a0d80cef65202e3b4c3862",
+    "parent_stage2_receipt_sha256": "dcd7c53ae37f19048d963d6fbd68e67f7db59979c0da750bb77a7fd83119c817",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.16,
@@ -36544,11 +36529,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "541a272bf3ec19531c1063b7063438e9544e8a52f55ea84b2e5c5ade0b025903"
+    "stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "541a272bf3ec19531c1063b7063438e9544e8a52f55ea84b2e5c5ade0b025903",
+    "parent_stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7593,
@@ -39257,11 +39242,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "b62866eeca869d955cda081a27f1397deaf62385d902c9a7cbb8748cf2703e07"
+    "stage5_receipt_sha256": "67be612ef754c1db02b5e248b010a715efcae6e898a28290725b0fb1f2f49ba9"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "541a272bf3ec19531c1063b7063438e9544e8a52f55ea84b2e5c5ade0b025903",
+    "parent_stage3_4_receipt_sha256": "6834dd86371e1ceda1ea162ab51daad08a3546ba001b37f00de26780a940cdee",
     "publishAllowed": false,
     "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
     "max_prop_win_prob": 0.7593,
@@ -41970,14 +41955,14 @@
         }
       }
     },
-    "stage5_receipt_sha256": "b62866eeca869d955cda081a27f1397deaf62385d902c9a7cbb8748cf2703e07"
+    "stage5_receipt_sha256": "67be612ef754c1db02b5e248b010a715efcae6e898a28290725b0fb1f2f49ba9"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {},
-  "master_bundle_sha256": "60e04515b27e60de96c3433e9b047f0c2f1a5406785a0e43bfdbd8cd494fa9fc",
+  "master_bundle_sha256": "283d76582c0a226d2e753fb2fe9c4519d36b01a7bbdda4987b432f398bf4d3b2",
   "armed_26_layer_workflow_receipt": {
     "game_id": "2026_09_JAX_BAL",
     "matchup": "JAX @ BAL",
-    "executed_at_utc": "2026-11-07T14:50:18.883004+00:00",
+    "executed_at_utc": "2026-11-07T16:17:56.263547+00:00",
     "context_packet_id": "PKT-2026_09_JAX_BAL-20261105",
     "context_packet_path": "data/context_packets/2026_09_JAX_BAL.json",
     "reasoning_trace_id": "TRC-2026_09_JAX_BAL-20261105",
@@ -41988,6 +41973,8 @@
     "weekly_cycle_7_steps_verified": true,
     "five_tracks_l5_verified": true,
     "reasoning_trace_cumulative_log_odds_delta": 0.640047,
+    "equation_gate_12304_clamped_delta": -0.036676,
+    "eq_gate_12k_epa_shift": -0.000954,
     "simulator_median_spread_home_trace_conditioned": 4.2601,
     "simulator_median_total": 49.54,
     "simulator_median_pace_sec": 26.87
