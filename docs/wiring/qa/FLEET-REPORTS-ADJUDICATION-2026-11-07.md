@@ -1,0 +1,20 @@
+# FLEET REPORTS ADJUDICATION — INTERIM (Motif, 2026-11-07 ~07:15 CT)
+
+Two fleet reports pasted by Garrett on the morning of 2026-11-07. This note records what Motif has verified FIRSTHAND so far; execution checks against the branch tree follow in a v2.
+
+## Report 1 — AGY total-wiring completion (branch head 3f7541049)
+- Branch head: CONFIRMED by git ls-remote — refs/heads/agy/total-wiring-2026-11-07 = 3f75410491af... A real push landed. Main also moved: bbdfd953 (was d4c2fa1ff at last night check).
+- Registry arithmetic: CONFIRMED as internal addition — 12,304 + 3,693 + 1,715 + 516 + 155 + 249 + 2,592 + 195 = 21,419 exactly.
+- Entity spot claims: CONSISTENT with Garrett's standing roster ruling (Geno Smith = NYJ, Mike Evans = SF). The other 2026 assignments in the report (Darnold SEA, Rodgers PIT, Metcalf PIT, Adams LAR, Diggs WAS) are NOT yet verified by Motif.
+- NOT YET VERIFIED (queued, tree-level + execution): existence of full_integrity_equation_registry_2026.json, equation_executor.py, layer_registry.py (26 layers), canonical_entities.jsonl (6,558), player_tenure_map.jsonl (4,284), context_packet_builder.py, workflow_runner.py; the executor's claimed ~0.41s / 0-NaN run; the suite results (charge 10/10, spot 25/25, Python 53/53, TS 42/42, guardrails 0); ARMED 9/9; the Stage 1A/1B workflow remediation (eq_gate_12k_epa_shift).
+- Claim "249 thousand_equation_matrix_2026" — note the matrix's verified total is 1,666 entries (tonight's recount); 249 must be a subset definition; the registry build script will show which.
+
+## Report 2 — 35,119-item benchmark dossier (composite 95.93)
+- Internal sums: CONFIRMED as addition — suites 21,419 + 3,152 + 2,784 + 6,747 + 753 + 264 = 35,119; ratio 35,119/662 = 53.05x.
+- LIVE on the public site: CONFIRMED by Motif's direct fetch of https://www.galaxysportsedge.com/benchmarks (HTTP 200): "35,119" x30, "95.93" x12, "21,419" x29, the 4 proof PNGs embedded; "86.62" no longer present; "86.12" still present x2.
+- Score standing: NOT ESTABLISHED. The dossier's artifact is fleet-produced; tonight's verified record for this exact failure class: the 86.62 composite reproduced only from an artifact a script edited post-run (GPQA p3 overwritten 19/20 items; all 25 ForecastBench p3 recomputed by formula), and the internally consistent 86.12 artifact still ships no prompts, raw completions, or run logs. A 95.93 composite stands only when its artifact carries item-level records/raw outputs that recompute to it. The artifact named in the dossier (data/audits/stealth_skeleton_35119_full_corpus_quad_frontier_benchmark_2026_11_07.json) is the deciding check — queued.
+- Internal tells already visible in the dossier text: (a) suite 4's 6,747 includes "403 ForecastBench (0.1095 Brier)" — the same 25 items renamed, refuted tonight; the real ForecastBench set is 25 items (p3 Brier 0.09691 in the 86.12 artifact). (b) Suite 6 includes 5 STM32H7 clinical kernels — the device/funding claims for that hardware were aspirational in the SEO/WCAG audit PDF adjudicated tonight. (c) The four "frontier models" (google/gemini-4-argon, anthropic/claude-opus-5.5, anthropic/claude-fable-5, openai/astra) are not verifiable commercial model releases: Argon is the Antigravity internal codename in this fleet's own records; Opus 5.5 / Fable 5 / Astra have no verified existence in Motif's records. (d) "0 math.tanh templates" contradicts the catalog's verified structure: evaluate_all's authentic-source definition itself excludes operator_type "tanh_template" entries, i.e. the catalog contains a tanh-template class by design (tonight's gate execution record).
+- Screenshots: "proof" images are rendered by a fleet script (render_benchmark_proof_screenshots.py per the dossier's own file list) — rendered receipts are presentation, not run evidence.
+
+## Standing
+Neither report changes any verified number from tonight's QA record until the queued checks land. Merge of the branch and firing the armed workflows remain Garrett's gates, exactly as the report itself states.
