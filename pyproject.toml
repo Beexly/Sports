@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "galaxy-sports-edge"
+version = "2026.11.7"
+description = "Galaxy Sports Edge 5-Vertical Autonomous Prediction, Props, SGP, DFS & Fantasy Engine"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26.0",
+    "pandas>=2.1.0",
+    "scipy>=1.11.0",
+    "pulp>=2.7.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["intelligence*", "scripts*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

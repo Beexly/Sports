@@ -57,6 +57,11 @@ from intelligence.external_charting.morning_sweep_2026_11_07 import (  # noqa: E
     get_qb_supporting_cast_scores,
     get_wpp_pass_protection_profiles,
 )
+from intelligence.dfs.dfs_literature_optimization_engine import (  # noqa: E402
+    eq_dfs_03_submodular_p99_marginal_gain,
+    evaluate_lineup_with_7_dfs_equations,
+    load_dfs_5000_page_corpus_summary,
+)
 
 MIN_AVG_PPG = 3.0  # below this a DK player has no usable role evidence this season
 DOWNLOADS = Path("C:/Users/Garrett/Downloads")
@@ -442,6 +447,8 @@ def build_classic_packet(
     cast_scores = get_qb_supporting_cast_scores()
     wpp_profiles = get_wpp_pass_protection_profiles()
     morning_sweep_summary = build_morning_sweep_summary()
+    dfs_corpus_summary = load_dfs_5000_page_corpus_summary()
+    marginal_gains = eq_dfs_03_submodular_p99_marginal_gain(lineup_scores, win_threshold)
     spotlights = []
     for _, r in opt_df.iterrows():
         if _norm_player_key(str(r["player"])) in spotlight_names:
@@ -459,6 +466,33 @@ def build_classic_packet(
                 "qb_supporting_cast_rank": cast_scores.get(tm_code, {}).get("rank"),
                 "team_wpp_total": wpp_profiles.get(tm_code, {}).get("total_wpp", 0.0),
             })
+
+    lineup_records = []
+    prior_player_lists: list[list[dict]] = []
+    for i, lu in enumerate(portfolio):
+        p_records = (
+            lu[["player", "position", "team", "opponent", "salary", "projection", "sd"]]
+            .round({"projection": 2, "sd": 2})
+            .to_dict("records")
+        )
+        eq_eval = evaluate_lineup_with_7_dfs_equations(
+            p_records,
+            prior_lineups=prior_player_lists,
+            submodular_marginal_gain=marginal_gains[i] if i < len(marginal_gains) else 0.0,
+        )
+        prior_player_lists.append(p_records)
+        lineup_records.append({
+            "index": i + 1,
+            "salary": int(lu["salary"].sum()),
+            "proj_sum": round(float(lu["projection"].sum()), 2),
+            "win_prob_vs_p99_field": round(float(win_prob[i]), 4),
+            "teams": sorted(set(lu["team"].astype(str))),
+            "literature_7_equation_audit": eq_eval,
+            "players": [
+                {k: v for k, v in rec.items() if k != "sd"}
+                for rec in p_records
+            ],
+        })
 
     return {
         "slate_name": "week9_sunday_main_11_game",
@@ -478,23 +512,12 @@ def build_classic_packet(
             "situational_flags": cfg.get("situational_flags", {}),
             "situational_and_vacated_role_spotlights": spotlights,
             "morning_analytics_sweep_2026_11_07": morning_sweep_summary,
+            "dfs_5000_page_literature_corpus": dfs_corpus_summary,
             "games_connected": players.attrs.get("engine_game_provenance", {}),
         },
         "submodular": {k: v for k, v in sub.items() if isinstance(v, (int, float, str, list))},
         "best_lineup_index": best_i + 1,
-        "lineups": [
-            {
-                "index": i + 1,
-                "salary": int(lu["salary"].sum()),
-                "proj_sum": round(float(lu["projection"].sum()), 2),
-                "win_prob_vs_p99_field": round(float(win_prob[i]), 4),
-                "teams": sorted(set(lu["team"].astype(str))),
-                "players": lu[["player", "position", "team", "opponent", "salary", "projection"]]
-                .round({"projection": 2})
-                .to_dict("records"),
-            }
-            for i, lu in enumerate(portfolio)
-        ],
+        "lineups": lineup_records,
     }
 
 

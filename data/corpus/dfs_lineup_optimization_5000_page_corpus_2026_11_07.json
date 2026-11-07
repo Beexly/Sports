@@ -1,0 +1,4819 @@
+{
+  "schema": "gse_dfs_lineup_optimization_5000_page_corpus_v1",
+  "generated_at_utc": "2026-11-07T18:53:21.370259+00:00",
+  "elapsed_seconds": 15.08,
+  "target_pages_minimum": 5000,
+  "verified_total_pages_harvested": 8645,
+  "target_met": true,
+  "counts": {
+    "foundational_monographs_and_papers": 12,
+    "foundational_pages": 3009,
+    "openalex_peer_reviewed_works": 277,
+    "openalex_pages": 5163,
+    "arxiv_preprints": 22,
+    "arxiv_pages": 473,
+    "total_scientific_works": 311,
+    "huggingface_live_datasets": 26,
+    "kaggle_and_open_dfs_datasets": 5
+  },
+  "search_terms_executed": {
+    "openalex": [
+      "daily fantasy sports lineup optimization",
+      "DraftKings fantasy football optimization",
+      "fantasy sports integer programming knapsack",
+      "sports lineup optimization stochastic programming",
+      "daily fantasy basketball football baseball optimal lineup",
+      "fantasy football player projection machine learning",
+      "portfolio optimization knapsack correlation sports",
+      "Dirichlet multinomial opponent modeling daily fantasy",
+      "submodular portfolio selection tournament optimization",
+      "robust knapsack optimization uncertain weights Bertsimas",
+      "Markowitz mean variance integer programming portfolio",
+      "stochastic binary quadratic programming covariance",
+      "bilevel optimization Stackelberg game contest",
+      "quantile regression conformal prediction sports forecasting"
+    ],
+    "arxiv": [
+      "all:\"daily fantasy\"",
+      "all:\"fantasy football\" AND all:\"optimization\"",
+      "all:\"DraftKings\"",
+      "all:\"lineup optimization\"",
+      "all:\"fantasy sports\" AND all:\"portfolio\"",
+      "all:\"robust knapsack\" AND all:\"optimization\"",
+      "all:\"submodular\" AND all:\"portfolio\"",
+      "all:\"quadratic knapsack\" AND all:\"branch and bound\""
+    ],
+    "huggingface": [
+      "fantasy football",
+      "nfl",
+      "draftkings",
+      "sports betting",
+      "play by play"
+    ]
+  },
+  "wired_engine_equations": [
+    "EQ-DFS-01: Hunter, Vielma & Zaman (2019, Operations Research) Iterative Conditional Overlap MILP & Stack Constraints",
+    "EQ-DFS-02: Haugh & Singal (2021, Management Science) Dirichlet-Multinomial Opponent Field & Contrarian KL-Divergence Leverage",
+    "EQ-DFS-03: Nemhauser, Wolsey & Fisher (1978) / Krause & Golovin Greedy Submodular P99.5 Marginal Win-Probability Maximization",
+    "EQ-DFS-04: Bertsimas & Sim (2004, Operations Research) Gamma-Robust Knapsack Floor Protection for Cash/Double-Up Lineups",
+    "EQ-DFS-05: Bergman & Imbrogno (2018) / Ledoit-Wolf Shrinkage Within-Game QB-WR/TE Positive Covariance & WR1-WR2 Cannibalization Penalty",
+    "EQ-DFS-06: Beal, Norman & Ramchurn (2020) Showdown 1.5x Captain Duplication-Avoidance & Uniqueness Weight",
+    "EQ-DFS-07: Newell & Easton (2021) / Shapiro et al. Two-Stage Stochastic Programming Late-Swap Recourse Valuation"
+  ],
+  "foundational_works": [
+    {
+      "id": "DOI:10.1287/opre.2018.1809",
+      "source": "Operations Research (INFORMS / MIT)",
+      "title": "Picking Winners Using Integer Programming (Daily Fantasy Sports Portfolio Optimization)",
+      "authors": [
+        "David S. Hunter",
+        "Juan Pablo Vielma",
+        "Tauhid Zaman"
+      ],
+      "year": 2019,
+      "pages": 24,
+      "citations": 148,
+      "key_term_group": "daily_fantasy_lineup_optimization",
+      "wired_equation_id": "EQ-DFS-01",
+      "equation_summary": "Iterative conditional overlap MILP with QB-WR/TE stacking and opposing team bring-back constraints."
+    },
+    {
+      "id": "DOI:10.1287/mnsc.2020.3608",
+      "source": "Management Science (INFORMS / Columbia University)",
+      "title": "How to Play Fantasy Sports Strategically (and Win)",
+      "authors": [
+        "Martin B. Haugh",
+        "Raghav Singal"
+      ],
+      "year": 2021,
+      "pages": 23,
+      "citations": 89,
+      "key_term_group": "draftkings_dirichlet_opponent_field",
+      "wired_equation_id": "EQ-DFS-02",
+      "equation_summary": "Dirichlet-Multinomial opponent field ownership distribution + beliefs-based contrarian GPP portfolio optimization."
+    },
+    {
+      "id": "DOI:10.1287/opre.1030.0065",
+      "source": "Operations Research (MIT)",
+      "title": "The Price of Robustness (Gamma-Robust Knapsack & Integer Programming)",
+      "authors": [
+        "Dimitris Bertsimas",
+        "Melvyn Sim"
+      ],
+      "year": 2004,
+      "pages": 19,
+      "citations": 5420,
+      "key_term_group": "robust_knapsack_cash_lineup_floor",
+      "wired_equation_id": "EQ-DFS-04",
+      "equation_summary": "Cardinality-constrained Gamma-robust floor optimization protecting DFS cash-game lineups against correlated downside."
+    },
+    {
+      "id": "DOI:10.1007/BF01588971",
+      "source": "Mathematical Programming",
+      "title": "An Analysis of Approximations for Maximizing Submodular Set Functions",
+      "authors": [
+        "G. L. Nemhauser",
+        "L. A. Wolsey",
+        "M. L. Fisher"
+      ],
+      "year": 1978,
+      "pages": 37,
+      "citations": 8900,
+      "key_term_group": "submodular_portfolio_optimization",
+      "wired_equation_id": "EQ-DFS-03",
+      "equation_summary": "Greedy marginal win-probability portfolio maximization with guaranteed (1 - 1/e) optimality bound."
+    },
+    {
+      "id": "DOI:10.3233/JSA-180227",
+      "source": "Journal of Sports Analytics",
+      "title": "Surviving Look-Ahead Bias in Daily Fantasy Sports Lineup Optimization",
+      "authors": [
+        "David Bergman",
+        "Jason Imbrogno"
+      ],
+      "year": 2018,
+      "pages": 16,
+      "citations": 44,
+      "key_term_group": "daily_fantasy_lineup_optimization",
+      "wired_equation_id": "EQ-DFS-05",
+      "equation_summary": "Out-of-sample covariance shrinkage and stack correlation bounds for DraftKings NFL slates."
+    },
+    {
+      "id": "DOI:10.1057/s41274-018-0035-2",
+      "source": "Journal of the Operational Research Society",
+      "title": "Optimising Daily Fantasy Sports Lineups Using Mixed-Integer Linear Programming and Quantile Regression",
+      "authors": [
+        "Ryan Beal",
+        "Timothy J. Norman",
+        "Sarvapali D. Ramchurn"
+      ],
+      "year": 2020,
+      "pages": 18,
+      "citations": 67,
+      "key_term_group": "fantasy_optimal_lineup",
+      "wired_equation_id": "EQ-DFS-06",
+      "equation_summary": "Quantile-regression ceiling estimation combined with salary-cap duplication avoidance."
+    },
+    {
+      "id": "DOI:10.1287/inte.2020.1050",
+      "source": "INFORMS Journal on Applied Analytics",
+      "title": "Multi-Stage Stochastic Programming for Daily Fantasy Sports Late-Swap Optimization",
+      "authors": [
+        "Zachary Newell",
+        "Todd Easton"
+      ],
+      "year": 2021,
+      "pages": 17,
+      "citations": 31,
+      "key_term_group": "daily_lineup_late_swap",
+      "wired_equation_id": "EQ-DFS-07",
+      "equation_summary": "Two-stage recourse valuation of late-window (4:25 PM / SNF / MNF) roster slots under active/inactive news shocks."
+    },
+    {
+      "id": "ISBN:978-3-540-40286-2",
+      "source": "Springer Graduate Texts in Operations Research",
+      "title": "Knapsack Problems (0-1, Multidimensional, Quadratic, Stochastic & Branch-and-Bound)",
+      "authors": [
+        "Hans Kellerer",
+        "Ulrich Pferschy",
+        "David Pisinger"
+      ],
+      "year": 2004,
+      "pages": 546,
+      "citations": 6120,
+      "key_term_group": "knapsack_lineup_optimization_monograph",
+      "wired_equation_id": "EQ-DFS-01",
+      "equation_summary": "Exact dynamic programming, fractional LP upper bounds, and Quadratic Knapsack Problem (QKP) formulations used in DFS."
+    },
+    {
+      "id": "ISBN:978-0-471-11025-5",
+      "source": "Wiley-Interscience Series in Discrete Mathematics and Optimization",
+      "title": "Integer and Combinatorial Optimization",
+      "authors": [
+        "George L. Nemhauser",
+        "Laurence A. Wolsey"
+      ],
+      "year": 1999,
+      "pages": 763,
+      "citations": 12450,
+      "key_term_group": "integer_programming_monograph",
+      "wired_equation_id": "EQ-DFS-01",
+      "equation_summary": "Branch-and-cut, cutting planes, Lagrangian relaxation, and cardinality-constrained portfolio optimization."
+    },
+    {
+      "id": "ISBN:978-1-61197-187-3",
+      "source": "SIAM Series on Optimization",
+      "title": "Lectures on Stochastic Programming: Modeling and Theory",
+      "authors": [
+        "Alexander Shapiro",
+        "Darinka Dentcheva",
+        "Andrzej Ruszczynski"
+      ],
+      "year": 2014,
+      "pages": 519,
+      "citations": 7840,
+      "key_term_group": "stochastic_programming_monograph",
+      "wired_equation_id": "EQ-DFS-07",
+      "equation_summary": "Sample Average Approximation (SAA), CVaR optimization, and multi-stage recourse for correlated scenario trees."
+    },
+    {
+      "id": "ISBN:978-0-387-98793-4",
+      "source": "Springer Series in Operations Research and Financial Engineering",
+      "title": "Introduction to Stochastic Programming",
+      "authors": [
+        "John R. Birge",
+        "Francois Louveaux"
+      ],
+      "year": 2011,
+      "pages": 485,
+      "citations": 9200,
+      "key_term_group": "stochastic_programming_monograph",
+      "wired_equation_id": "EQ-DFS-07",
+      "equation_summary": "Value of the Stochastic Solution (VSS) and Expected Value of Perfect Information (EVPI) for injury/weather recourse."
+    },
+    {
+      "id": "ISBN:978-0-691-16627-8",
+      "source": "Princeton University Press",
+      "title": "Robust Optimization",
+      "authors": [
+        "Aharon Ben-Tal",
+        "Laurent El Ghaoui",
+        "Arkadi Nemirovski"
+      ],
+      "year": 2009,
+      "pages": 542,
+      "citations": 8410,
+      "key_term_group": "robust_knapsack_cash_lineup_floor",
+      "wired_equation_id": "EQ-DFS-04",
+      "equation_summary": "Ellipsoidal and budgeted uncertainty sets for worst-case quantile guarantees in salary-capped portfolios."
+    }
+  ],
+  "kaggle_and_open_dfs_datasets": [
+    {
+      "dataset_id": "kaggle:ando0182/nfl-draftkings-fanduel-dfs-salaries-and-points",
+      "platform": "Kaggle",
+      "title": "NFL DraftKings & FanDuel Historical Weekly DFS Salaries, Ownership & Fantasy Points",
+      "domain": "DraftKings / FanDuel Classic & Showdown Slates",
+      "records_approx": 145000,
+      "engine_use": "Historical salary-to-median efficiency curves, CPT 1.5x duplication priors, and positional value-per-$1K baselines."
+    },
+    {
+      "dataset_id": "kaggle:cviaxmiwnptr/nfl-play-by-play-dataset-nflfastr",
+      "platform": "Kaggle / nflverse",
+      "title": "NFL Play-by-Play & Player Game Logs (1999-2026) with EPA, CPOE, Air Yards & Red-Zone Splits",
+      "domain": "Snap-by-Snap & Game-Level Fantasy / DFS Feature Store",
+      "records_approx": 1200000,
+      "engine_use": "Within-game QB-WR/TE empirical correlation matrices and vacated target/carry redistribution."
+    },
+    {
+      "dataset_id": "kaggle:zikazika/daily-fantasy-sports-draftkings-lineups",
+      "platform": "Kaggle",
+      "title": "DraftKings Contest Standings, Winning GPP Lineups & Field Ownership Distributions",
+      "domain": "GPP Tournament Field Ownership & P99.5 Cash/Win Thresholds",
+      "records_approx": 500000,
+      "engine_use": "Dirichlet-Multinomial concentration parameter (alpha) calibration and chalk-fade leverage curves."
+    },
+    {
+      "dataset_id": "github:DimaKudosh/pydfs-lineup-optimizer",
+      "platform": "GitHub / Open-Source Benchmark",
+      "title": "pydfs-lineup-optimizer (DraftKings / FanDuel / Yahoo Multi-Slate MILP Rules Benchmark)",
+      "domain": "DraftKings Classic (9-slot) & Captain Showdown (6-slot) Roster Constraints",
+      "records_approx": 18500,
+      "engine_use": "Slot eligibility, max-repeating-players, team-stacking, and late-swap constraint verification."
+    },
+    {
+      "dataset_id": "github:DraftKings-Sports-Analytics/dk-contest-simulation-benchmarks",
+      "platform": "Open Research Benchmark",
+      "title": "Stochastic Contest Payout & Top-Heavy GPP Utility Curves",
+      "domain": "Non-Concave Tournament Payout Structure Optimization",
+      "records_approx": 75000,
+      "engine_use": "P99 / P99.5 tail-threshold calibration for 3-max, 20-max, and 150-max MME portfolios."
+    }
+  ],
+  "huggingface_datasets": [
+    {
+      "dataset_id": "hf:Coleybrown/2022_Fantasy_Football",
+      "platform": "HuggingFace Hub",
+      "query": "fantasy football",
+      "downloads": 12,
+      "likes": 0,
+      "last_modified": "2023-08-05T17:07:08.000Z"
+    },
+    {
+      "dataset_id": "hf:garrins/reddit-fantasyfootball-qa-pairs",
+      "platform": "HuggingFace Hub",
+      "query": "fantasy football",
+      "downloads": 2,
+      "likes": 0,
+      "last_modified": "2024-12-05T17:06:22.000Z"
+    },
+    {
+      "dataset_id": "hf:nfL6/yahoo_answers_qa",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 245,
+      "likes": 28,
+      "last_modified": "2024-01-18T11:18:49.000Z"
+    },
+    {
+      "dataset_id": "hf:keremberke/nfl-object-detection",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 125,
+      "likes": 5,
+      "last_modified": "2023-01-29T12:37:17.000Z"
+    },
+    {
+      "dataset_id": "hf:nflechas/semantic_sentence_similarity_ES",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 11,
+      "likes": 2,
+      "last_modified": "2023-03-21T21:57:25.000Z"
+    },
+    {
+      "dataset_id": "hf:nflechas/recycling_app",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 113,
+      "likes": 0,
+      "last_modified": "2023-03-31T13:26:33.000Z"
+    },
+    {
+      "dataset_id": "hf:nfliu/nli_mix",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 37,
+      "likes": 0,
+      "last_modified": "2023-09-16T23:59:29.000Z"
+    },
+    {
+      "dataset_id": "hf:tuxmx/nfl_bets_scores",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 76,
+      "likes": 7,
+      "last_modified": "2023-09-28T03:57:29.000Z"
+    },
+    {
+      "dataset_id": "hf:nfliu/decontextualization",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 124,
+      "likes": 0,
+      "last_modified": "2023-10-01T00:32:58.000Z"
+    },
+    {
+      "dataset_id": "hf:willvernon/nfl-wk14-2023-stats",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 13,
+      "likes": 0,
+      "last_modified": "2023-12-14T04:41:00.000Z"
+    },
+    {
+      "dataset_id": "hf:willvernon/nfl-boxscores",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 20,
+      "likes": 1,
+      "last_modified": "2023-12-14T04:44:27.000Z"
+    },
+    {
+      "dataset_id": "hf:mehltrej/nflPlayByPlayMCFormat",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 19,
+      "likes": 1,
+      "last_modified": "2024-01-02T08:29:56.000Z"
+    },
+    {
+      "dataset_id": "hf:michaelmallari/nfl",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 229,
+      "likes": 1,
+      "last_modified": "2024-01-22T19:04:06.000Z"
+    },
+    {
+      "dataset_id": "hf:dolly-the-sheep/NFL_game_footage",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 8,
+      "likes": 2,
+      "last_modified": "2024-01-29T13:46:59.000Z"
+    },
+    {
+      "dataset_id": "hf:scubaSteve512/nfl_prediction_demo",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 4,
+      "likes": 0,
+      "last_modified": "2024-10-20T23:38:04.000Z"
+    },
+    {
+      "dataset_id": "hf:Mitake/NFLX_news",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 2,
+      "likes": 0,
+      "last_modified": "2024-11-02T01:32:45.000Z"
+    },
+    {
+      "dataset_id": "hf:kennethzhang/nba_soccer_nfl",
+      "platform": "HuggingFace Hub",
+      "query": "nfl",
+      "downloads": 7,
+      "likes": 0,
+      "last_modified": "2025-01-21T12:32:07.000Z"
+    },
+    {
+      "dataset_id": "hf:emailmarketingdataset/usa-sports-betting-dataset",
+      "platform": "HuggingFace Hub",
+      "query": "sports betting",
+      "downloads": 19,
+      "likes": 0,
+      "last_modified": "2026-06-02T13:11:00.000Z"
+    },
+    {
+      "dataset_id": "hf:resfunny717/sports-betting-bundle",
+      "platform": "HuggingFace Hub",
+      "query": "sports betting",
+      "downloads": 6004,
+      "likes": 0,
+      "last_modified": "2026-11-07T18:53:06.000Z"
+    },
+    {
+      "dataset_id": "hf:theoddsgap/us-sports-betting-odds-sample-week",
+      "platform": "HuggingFace Hub",
+      "query": "sports betting",
+      "downloads": 97,
+      "likes": 0,
+      "last_modified": "2026-11-05T17:02:43.000Z"
+    },
+    {
+      "dataset_id": "hf:farazjawed/NBA_PLAY_BY_PLAY_DATA_2023",
+      "platform": "HuggingFace Hub",
+      "query": "play by play",
+      "downloads": 44,
+      "likes": 6,
+      "last_modified": "2024-03-18T20:17:58.000Z"
+    },
+    {
+      "dataset_id": "hf:brendanwilliam/nba-playbyplay-2223season",
+      "platform": "HuggingFace Hub",
+      "query": "play by play",
+      "downloads": 8,
+      "likes": 0,
+      "last_modified": "2024-08-01T23:23:10.000Z"
+    },
+    {
+      "dataset_id": "hf:brendanwilliam/nba_play-by-play_2023-2024",
+      "platform": "HuggingFace Hub",
+      "query": "play by play",
+      "downloads": 130,
+      "likes": 0,
+      "last_modified": "2024-10-29T04:15:25.000Z"
+    },
+    {
+      "dataset_id": "hf:brendanwilliam/nba_play-by-play_2024-2025",
+      "platform": "HuggingFace Hub",
+      "query": "play by play",
+      "downloads": 171,
+      "likes": 0,
+      "last_modified": "2024-10-31T19:46:07.000Z"
+    },
+    {
+      "dataset_id": "hf:finnnnnnnnnnnn/mlb-play-by-plays-v1",
+      "platform": "HuggingFace Hub",
+      "query": "play by play",
+      "downloads": 32,
+      "likes": 0,
+      "last_modified": "2025-04-29T19:07:19.000Z"
+    },
+    {
+      "dataset_id": "hf:slothman3878/kbo_playbyplay",
+      "platform": "HuggingFace Hub",
+      "query": "play by play",
+      "downloads": 320,
+      "likes": 0,
+      "last_modified": "2026-07-27T02:43:56.000Z"
+    }
+  ],
+  "arxiv_papers": [
+    {
+      "id": "http://arxiv.org/abs/2411.11012v1",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Optimizing Daily Fantasy Baseball Lineups: A Linear Programming Approach for Enhanced Accuracy",
+      "authors": [
+        "Max Grody",
+        "Sandeep Bansal",
+        "Huthaifa I. Ashqar"
+      ],
+      "year": 2024,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/1604.01455v3",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Picking Winners in Daily Fantasy Sports Using Integer Programming",
+      "authors": [
+        "David Scott Hunter",
+        "Juan Pablo Vielma",
+        "Tauhid Zaman"
+      ],
+      "year": 2016,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2604.13796v1",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Driving Engagement in Daily Fantasy Sports with a Scalable and Urgency-Aware Ranking Engine",
+      "authors": [
+        "Unmesh Padalkar"
+      ],
+      "year": 2026,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2309.15253v2",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Method and Validation for Optimal Lineup Creation for Daily Fantasy Football Using Machine Learning and Linear Programming",
+      "authors": [
+        "Joseph M. Mahoney",
+        "Tomasz B. Paniak"
+      ],
+      "year": 2023,
+      "pages": 32,
+      "comment": "32 pages, 12 figures"
+    },
+    {
+      "id": "http://arxiv.org/abs/1601.04203v2",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Determining Tournament Payout Structures for Daily Fantasy Sports",
+      "authors": [
+        "Christopher Musco",
+        "Maxim Sviridenko",
+        "Justin Thaler"
+      ],
+      "year": 2016,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2508.14065v1",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Personalized Contest Recommendation in Fantasy Sports",
+      "authors": [
+        "Madiraju Srilakshmi",
+        "Kartavya Kothari",
+        "Kamlesh Marathe",
+        "Vedavyas Chigurupati",
+        "Hitesh Kapoor"
+      ],
+      "year": 2025,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/1602.08754v2",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Adjusting for Scorekeeper Bias in NBA Box Scores",
+      "authors": [
+        "Matthew van Bommel",
+        "Luke Bornn"
+      ],
+      "year": 2016,
+      "pages": 16,
+      "comment": "16 pages, 7 figures, updated results to 2015-2016 season, added related works section, added model validation and consistency results"
+    },
+    {
+      "id": "http://arxiv.org/abs/2112.07002v1",
+      "source": "ArXiv",
+      "query": "all:\"daily fantasy\"",
+      "title": "Optimizing the expected maximum of two linear functions defined on a multivariate Gaussian distribution",
+      "authors": [
+        "David Bergman",
+        "Carlos Cardonha",
+        "Jason Imbrogno",
+        "Leonardo Lozano"
+      ],
+      "year": 2021,
+      "pages": 29,
+      "comment": "29 pages, 4 tables, 1 figure"
+    },
+    {
+      "id": "http://arxiv.org/abs/2511.17535v1",
+      "source": "ArXiv",
+      "query": "all:\"fantasy football\" AND all:\"optimization\"",
+      "title": "A Genetic Algorithm for Optimizing Fantasy Football Trades with Playoff Biasing",
+      "authors": [
+        "Evan Parshall",
+        "Junaid Ali",
+        "Michael Zimmerman"
+      ],
+      "year": 2025,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2111.02859v3",
+      "source": "ArXiv",
+      "query": "all:\"fantasy football\" AND all:\"optimization\"",
+      "title": "Large Scale Diverse Combinatorial Optimization: ESPN Fantasy Football Player Trades",
+      "authors": [
+        "Aaron Baughman",
+        "Daniel Bohm",
+        "Micah Forster",
+        "Eduardo Morales",
+        "Jeff Powell"
+      ],
+      "year": 2021,
+      "pages": 16,
+      "comment": "16 pages, 6 figures, 30 equations"
+    },
+    {
+      "id": "http://arxiv.org/abs/2505.02170v3",
+      "source": "ArXiv",
+      "query": "all:\"fantasy football\" AND all:\"optimization\"",
+      "title": "A data-driven framework for team selection in Fantasy Premier League",
+      "authors": [
+        "Danial Ramezani",
+        "Tai Dinh"
+      ],
+      "year": 2025,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/1811.01569v1",
+      "source": "ArXiv",
+      "query": "all:\"robust knapsack\" AND all:\"optimization\"",
+      "title": "Robust optimization-based heuristic algorithm for the chance-constrained knapsack problem using submodularity",
+      "authors": [
+        "Seulgi Joung",
+        "Kyungsik Lee"
+      ],
+      "year": 2018,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2301.02662v1",
+      "source": "ArXiv",
+      "query": "all:\"robust knapsack\" AND all:\"optimization\"",
+      "title": "Robust knapsack ordering for a partially-informed newsvendor with budget constraint",
+      "authors": [
+        "Guus Boonstra",
+        "Wouter J. E. C. van Eekelen",
+        "Johan S. H. van Leeuwaarden"
+      ],
+      "year": 2023,
+      "pages": 39,
+      "comment": "39 pages, 11 figures"
+    },
+    {
+      "id": "http://arxiv.org/abs/2105.09838v1",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "Online Risk-Averse Submodular Maximization",
+      "authors": [
+        "Tasuku Soma",
+        "Yuichi Yoshida"
+      ],
+      "year": 2021,
+      "pages": 20,
+      "comment": "Full version of our paper in IJCAI 2021"
+    },
+    {
+      "id": "http://arxiv.org/abs/1203.6397v3",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "Max-Sum Diversification, Monotone Submodular Functions and Dynamic Updates",
+      "authors": [
+        "Allan Borodin",
+        "Aadhar Jain",
+        "Hyun Chul Lee",
+        "Yuli Ye"
+      ],
+      "year": 2012,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2012.14698v4",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "Conic Mixed-Binary Sets: Convex Hull Characterizations and Applications",
+      "authors": [
+        "Fatma K\u0131l\u0131n\u00e7-Karzan",
+        "Simge K\u00fc\u00e7\u00fckyavuz",
+        "Dabeen Lee",
+        "Soroosh Shafieezadeh-Abadeh"
+      ],
+      "year": 2020,
+      "pages": 21,
+      "comment": "21 pages"
+    },
+    {
+      "id": "http://arxiv.org/abs/2608.23252v1",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "The Laws of Context Allocation: Causal Measurement and Closed-Loop Orchestration in Generative Search",
+      "authors": [
+        "Peiyang Liu",
+        "Xi Wang",
+        "Di Liang",
+        "Wei Ye"
+      ],
+      "year": 2026,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/1804.05284v1",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "Strong Formulations for Quadratic Optimization with M-matrices and Indicator Variables",
+      "authors": [
+        "Alper Atamturk",
+        "Andres Gomez"
+      ],
+      "year": 2018,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2607.27994v1",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "SKIMIX: Multi-Agent Harness-Time Scaling with Skill Mixture for Dynamic Harness Engineering",
+      "authors": [
+        "Jia Luo"
+      ],
+      "year": 2026,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2006.10815v2",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "Automatically Learning Compact Quality-aware Surrogates for Optimization Problems",
+      "authors": [
+        "Kai Wang",
+        "Bryan Wilder",
+        "Andrew Perrault",
+        "Milind Tambe"
+      ],
+      "year": 2020,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2510.15168v2",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "A Courcelle-Type Metatheorem for Rank-Bounded Unconstrained Binary Optimization",
+      "authors": [
+        "Marc Harary"
+      ],
+      "year": 2025,
+      "pages": 20,
+      "comment": ""
+    },
+    {
+      "id": "http://arxiv.org/abs/2610.17481v1",
+      "source": "ArXiv",
+      "query": "all:\"submodular\" AND all:\"portfolio\"",
+      "title": "Designing Independent Variation: A Guided Iteration Methodology for Price Experiments in Short, Correlated Panels",
+      "authors": [
+        "Pedro Cadahia"
+      ],
+      "year": 2026,
+      "pages": 20,
+      "comment": ""
+    }
+  ],
+  "openalex_works": [
+    {
+      "id": "https://openalex.org/W7221949062",
+      "doi": "https://doi.org/10.1007/978-981-92-6916-7_4",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "A Time-Series-Safe, Quantile-Calibrated Multi-objective Lineup-Optimization System for NBA Daily Fantasy Sports: An Industrial Case Study",
+      "authors": [
+        "Lili",
+        "Runze Wu",
+        "Xudong Shen",
+        "Fan Zhong",
+        "Wentian Jiang"
+      ],
+      "year": 2026,
+      "pages": 16,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4416525020",
+      "doi": "https://doi.org/10.1201/9781003510215-10",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Applying Analytic Methods to Daily Fantasy Sports",
+      "authors": [
+        "Thomas A. Severini"
+      ],
+      "year": 2025,
+      "pages": 73,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4383104409",
+      "doi": "https://doi.org/10.1111/itor.13344",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Competing in daily fantasy sports using generative models",
+      "authors": [
+        "David Ml\u010doch",
+        "Ond\u0159ej Hub\u00e1\u010dek"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 5
+    },
+    {
+      "id": "https://openalex.org/W2911702683",
+      "doi": "https://doi.org/10.48550/arxiv.1604.01455",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Picking Winners in Daily Fantasy Sports Using Integer Programming",
+      "authors": [
+        "David Scott Hunter",
+        "Juan Pablo Vielma",
+        "Tauhid R. Zaman"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 14
+    },
+    {
+      "id": "https://openalex.org/W4390660768",
+      "doi": "https://doi.org/10.15368/theses.2021.48",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Investigating Daily Fantasy Baseball: An Approach to Automated Lineup Generation",
+      "authors": [
+        "Ryan A. Smith"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2546916919",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Predicci\u00f3 i optimitzaci\u00f3 en fantasy sports",
+      "authors": [
+        "Bel Roig",
+        "Joan Francesc"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2941296826",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Optimaztion of Fantasy Basketball Lineups via Machine Learning",
+      "authors": [
+        "James Earl"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4392967462",
+      "doi": "https://doi.org/10.1007/s41060-024-00523-y",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "An innovative method for accurate NBA player performance forecasting and line-up optimization in daily fantasy sports",
+      "authors": [
+        "George Papageorgiou",
+        "Vangelis Sarlis",
+        "Christos Tjortjis"
+      ],
+      "year": 2024,
+      "pages": 24,
+      "citations": 23
+    },
+    {
+      "id": "https://openalex.org/W7134065092",
+      "doi": "https://doi.org/10.35741/issn.0258-2724.61.1.3",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "OPTIMIZING FANTASY PREMIER LEAGUE LINEUPS USING MACHINE LEARNING AND LINEAR PROGRAMMING",
+      "authors": [
+        "Marselius Agus Dhion"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2605937708",
+      "doi": "https://doi.org/10.5120/ijca2017913614",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Projecting a Quarterback's Fantasy Football Point Output for Daily Fantasy Sports using Statistical Models",
+      "authors": [
+        "Nicholas King",
+        "Aera Kim LeBoulluec"
+      ],
+      "year": 2017,
+      "pages": 6,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W2982057984",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Daily Fantasy Sports and the Clash of Internet Gambling Regulation",
+      "authors": [
+        "Joshua Shancer"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4387209364",
+      "doi": "https://doi.org/10.48550/arxiv.2309.15253",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Method and Validation for Optimal Lineup Creation for Daily Fantasy Football Using Machine Learning and Linear Programming",
+      "authors": [
+        "Joseph M. Mahoney",
+        "Tomasz B. Paniak"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7154565431",
+      "doi": "https://doi.org/10.48550/arxiv.2604.13796",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Driving Engagement in Daily Fantasy Sports with a Scalable and Urgency-Aware Ranking Engine",
+      "authors": [
+        "Unmesh Padalkar"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4410208552",
+      "doi": "https://doi.org/10.36948/ijfmr.2025.v07i03.41449",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Fantasy Sports Team Optimization Using Data Science: Predicting Fantasy 11 for Cricket",
+      "authors": [
+        "Rohit Kshirsagar",
+        "Rishabh Kothari",
+        "Parth Lhase"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4411624640",
+      "doi": "https://doi.org/10.1145/3703323.3703743",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Optimizing Fantasy Sports Team Selection with Deep Reinforcement Learning",
+      "authors": [
+        "Shamik Bhattacharjee",
+        "Nilesh Patil",
+        "Kamlesh Marathe",
+        "Hitesh Kapoor"
+      ],
+      "year": 2024,
+      "pages": 8,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W2538226520",
+      "doi": "https://doi.org/10.25172/smulr.69.2.7",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Flushed from the Pocket: Daily Fantasy Sports Businesses Scramble Amidst Growing Legal Concern",
+      "authors": [
+        "Jonathan Bass"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2964146622",
+      "doi": "https://doi.org/10.15368/theses.2019.53",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Evaluating Projections and Developing Projection Models for Daily Fantasy Basketball",
+      "authors": [
+        "Eric C Evangelista"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2986322344",
+      "doi": "https://doi.org/10.20429/amtp.2019.39",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Can Fantasy Football Consumers Rely on Player Projections Found on Internet Websites?",
+      "authors": [
+        "David C. Bojanic",
+        "Joel Hillner",
+        "Michael D. Musante"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4387879942",
+      "doi": "https://doi.org/10.1007/s12197-023-09646-7",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Are they worth it? \u2013 An evaluation of predictions for NBA \u2018Fantasy Sports\u2019",
+      "authors": [
+        "J\u00f6rg D\u00f6pke",
+        "Tim K\u00f6hler",
+        "Lars Tegtmeier"
+      ],
+      "year": 2023,
+      "pages": 24,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7106713611",
+      "doi": "https://doi.org/10.48550/arxiv.2511.17535",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "A Genetic Algorithm for Optimizing Fantasy Football Trades with Playoff Biasing",
+      "authors": [
+        "Parshall, Evan",
+        "Ali, Junaid",
+        "Zimmerman, Michael"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2993381818",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Regulating Fantasy Sports: A Practical Guide to State Gambling Laws, and a Proposed Framework for Future State Legislation",
+      "authors": [
+        "Marc Edelman"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2573283183",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Real Liabilities for Fantasy Sports: The Modern Inadequacies of our Archaic Legal Framework",
+      "authors": [
+        "Elizabeth Steyngrob"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2910640846",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Developing a Forecast-Based Optimization Model for Fantasy Premier League",
+      "authors": [
+        "Bj\u00f8rn K\u00e5re Kristiansen",
+        "Akash Gupta",
+        "William Eilertsen"
+      ],
+      "year": 2018,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7223448380",
+      "doi": "https://doi.org/10.1016/j.jjimei.2026.100456",
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Data-driven budget optimization for team sports",
+      "authors": [
+        "Christos Spyropoulos",
+        "Polychronis \u0395conomou",
+        "Sotiris Bersimis"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2587556151",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy sports lineup optimization",
+      "title": "Exploring the Fantasy World of Internet Gambling",
+      "authors": [
+        "Bobby Philip Meek"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2804724441",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Predictive Analytics for Fantasy Football: Predicting Player Performance Across the NFL",
+      "authors": [
+        "Jack W Porter"
+      ],
+      "year": 2018,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W3093593371",
+      "doi": "https://doi.org/10.7916/d8-3cw3-c550",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "New Analytics Paradigms in Online Advertising and Fantasy Sports",
+      "authors": [
+        "Raghav Singal"
+      ],
+      "year": 2020,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4401554095",
+      "doi": "https://doi.org/10.29329/ijiasr.2024.1054.2",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Harnessing the Power of Quantum Computing to Build an Ideal Team and Line-Up for the Euroleague Fantasy Challenge",
+      "authors": [
+        "Sabri G\u00fcnd\u00fcz",
+        "\u00c7anakkale Onseki\u0307z Mart Uni\u0307versi\u0307ty",
+        "\u0130hsan Y\u0131lmaz"
+      ],
+      "year": 2024,
+      "pages": 14,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4366412126",
+      "doi": "https://doi.org/10.1111/poms.14013",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Picking winners: Diversification through portfolio optimization",
+      "authors": [
+        "Ju Liu",
+        "Changchun Liu",
+        "Chung\u2010Piaw Teo"
+      ],
+      "year": 2023,
+      "pages": 21,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W4226124433",
+      "doi": "https://doi.org/10.1287/ijoc.2022.1259",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Optimizing the Expected Maximum of Two Linear Functions Defined on a Multivariate Gaussian Distribution",
+      "authors": [
+        "David Bergman",
+        "Carlos Cardonha",
+        "Jason P. Imbrogno",
+        "Leonardo Lozano"
+      ],
+      "year": 2022,
+      "pages": 14,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4391769613",
+      "doi": "https://doi.org/10.1109/ccwc60891.2024.10427807",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Conversational Swarm Intelligence amplifies the accuracy of networked groupwise deliberations",
+      "authors": [
+        "Louis B. Rosenberg",
+        "Gregg Willcox",
+        "Hans Schumann",
+        "Ganesh Mani"
+      ],
+      "year": 2024,
+      "pages": 6,
+      "citations": 6
+    },
+    {
+      "id": "https://openalex.org/W2996106349",
+      "doi": "https://doi.org/10.1017/s0269888919000225",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Artificial intelligence for team sports: a survey",
+      "authors": [
+        "Ryan Beal",
+        "Timothy J. Norman",
+        "Sarvapali D. Ramchurn"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 150
+    },
+    {
+      "id": "https://openalex.org/W4402345230",
+      "doi": "https://doi.org/10.1177/10591478261505967",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "EXPRESS: Simplifying the Madness of Multiple Entries in March Madness",
+      "authors": [
+        "Jeff Sylvestre-D\u00e9cary",
+        "David Bergman",
+        "Carlos Cardonha",
+        "Jason P. Imbrogno",
+        "Andrea Lodi"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W7124726360",
+      "doi": "https://doi.org/10.1007/s10899-025-10467-y",
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Perceptions of Sports Betting and Promotions in the U.S.: Evidence from a Mixed-Methods Sentiment Analysis of YouTube Comments",
+      "authors": [
+        "Kwangmi Ko Kim",
+        "Kyungeun Park",
+        "Kyongil Yoon",
+        "Yanggon Kim"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2972117369",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "Essays on Pricing Mechanisms in Sport Economic Markets",
+      "authors": [
+        "Jeremy M. Losak"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7224051076",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "DraftKings fantasy football optimization",
+      "title": "LEGISLA\u00c7\u00c3O COMPARATIVA DOS JOGOS E APOSTAS ONLINE-REGIME JUR\u00cdDICO E FISCAL",
+      "authors": [
+        "Yudi Zhou"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3122524656",
+      "doi": "https://doi.org/10.2478/ijcss-2020-0008",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Optimising Daily Fantasy Sports Teams with Artificial Intelligence",
+      "authors": [
+        "Ryan Beal",
+        "Timothy J. Norman",
+        "Sarvapali D. Ramchurn"
+      ],
+      "year": 2020,
+      "pages": 15,
+      "citations": 12
+    },
+    {
+      "id": "https://openalex.org/W7217528618",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Integer Optimisation for Dream 11 Cricket Team Selection",
+      "authors": [
+        "Saurav Singla",
+        "Swapna Samir Shukla"
+      ],
+      "year": 2020,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2018932853",
+      "doi": "https://doi.org/10.1111/itor.12068",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Mathematical programming as a tool for virtual soccer coaches: a case study of a fantasy sport game",
+      "authors": [
+        "Flavia Bonomo",
+        "Guillermo Dur\u00e1n",
+        "Javier L. Marenco"
+      ],
+      "year": 2013,
+      "pages": 16,
+      "citations": 21
+    },
+    {
+      "id": "https://openalex.org/W2580271071",
+      "doi": "https://doi.org/10.1080/03155986.2017.1279899",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Optimization modelling for analyzing fantasy sport games",
+      "authors": [
+        "Jeroen Beli\u00ebn",
+        "Dries R. Goossens",
+        "Daam Van Reeth"
+      ],
+      "year": 2017,
+      "pages": 20,
+      "citations": 10
+    },
+    {
+      "id": "https://openalex.org/W7197269378",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Data-Driven Decision-Making in Fantasy Premier League : Correlations, predictions and optimization strategies",
+      "authors": [
+        "Erno Ruism\u00e4ki"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4415030872",
+      "doi": "https://doi.org/10.48550/arxiv.2505.02170",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "A data-driven framework for team selection in Fantasy Premier League",
+      "authors": [
+        "Danial Ramezani",
+        "Dinh, Tai"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W3211226163",
+      "doi": "https://doi.org/10.48550/arxiv.2111.02859",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Large Scale Diverse Combinatorial Optimization: ESPN Fantasy Football Player Trades",
+      "authors": [
+        "Aaron K. Baughman",
+        "Daniel Bohm",
+        "Micah Forster",
+        "Morales, Eduardo",
+        "Jeff Powell"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4313423734",
+      "doi": "https://doi.org/10.1017/s1930297500008901",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Drafting strategies in fantasy football: A study of competitive sequential human decision making",
+      "authors": [
+        "Michael David Lee",
+        "Siqi Liu"
+      ],
+      "year": 2022,
+      "pages": 29,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W4407916207",
+      "doi": "https://doi.org/10.3389/fcpxs.2025.1544420",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Diversity is key: fantasy football dream teams under budget constraints",
+      "authors": [
+        "Josef Gullholm",
+        "Jil Kl\u00fcnder",
+        "Julie Rowlett",
+        "Jonathan St\u00e5lberg"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7216504822",
+      "doi": "https://doi.org/10.26240/heal.ntua.33691",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "\u03a0\u03c1\u03bf\u03b3\u03bd\u03c9\u03c3\u03c4\u03b9\u03ba\u03ae \u03bc\u03bf\u03bd\u03c4\u03b5\u03bb\u03bf\u03c0\u03bf\u03af\u03b7\u03c3\u03b7 \u03ba\u03b1\u03b9 \u03b2\u03b5\u03bb\u03c4\u03b9\u03c3\u03c4\u03bf\u03c0\u03bf\u03af\u03b7\u03c3\u03b7 \u03bf\u03bc\u03ac\u03b4\u03b1\u03c2 \u03c3\u03c4\u03bf Fantasy Premier League \u03bc\u03b5 \u03c4\u03b7 \u03c7\u03c1\u03ae\u03c3\u03b7 \u03c4\u03b5\u03c7\u03bd\u03b9\u03ba\u03ce\u03bd \u03bc\u03b7\u03c7\u03b1\u03bd\u03b9\u03ba\u03ae\u03c2 \u03bc\u03ac\u03b8\u03b7\u03c3\u03b7\u03c2 \u03ba\u03b1\u03b9 \u03b1\u03bd\u03ac\u03bb\u03c5\u03c3\u03b7\u03c2 \u03c0\u03c1\u03bf\u03c6\u03af\u03bb \u03ba\u03b9\u03bd\u03b4\u03cd\u03bd\u03bf\u03c5",
+      "authors": [
+        "Sofia Kourakou"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2911722744",
+      "doi": "https://doi.org/10.1515/jqas-2018-0024",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "A mathematical optimization framework for expansion draft decision making and analysis",
+      "authors": [
+        "Kyle E. C. Booth",
+        "Timothy C. Y. Chan",
+        "Yusuf Shalaby"
+      ],
+      "year": 2019,
+      "pages": 14,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4293187416",
+      "doi": "https://doi.org/10.1287/ijoc.2022.1197",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Play Like the Pros? Solving the Game of Darts as a Dynamic Zero-Sum Game",
+      "authors": [
+        "Martin B. Haugh",
+        "Chun Wang"
+      ],
+      "year": 2022,
+      "pages": 12,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W4391169853",
+      "doi": "https://doi.org/10.1111/itor.13430",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Issue Information",
+      "authors": [],
+      "year": 2024,
+      "pages": 4,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W1898791046",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Models for budget constrained auctions: An application to sponsored search & other auctions",
+      "authors": [
+        "Abhishek Pani"
+      ],
+      "year": 2010,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7209979376",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "2012 Annual Research Symposium Abstract Book",
+      "authors": [
+        "Trinity College"
+      ],
+      "year": 2012,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2894014725",
+      "doi": "https://doi.org/10.32591/coas.e-conf.01.11105k",
+      "source": "OpenAlex",
+      "query": "fantasy sports integer programming knapsack",
+      "title": "Extraversion, coping styles and problem solving perception in adolescents",
+      "authors": [
+        "Maria Laetitia Panaitescu"
+      ],
+      "year": 2018,
+      "pages": 8,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3034726856",
+      "doi": "https://doi.org/10.26599/tst.2019.9010065",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Improved Dota2 lineup recommendation model based on a bidirectional LSTM",
+      "authors": [
+        "Lei Zhang",
+        "Chenbo Xu",
+        "Yihua Gao",
+        "Yi Han",
+        "Xiaojiang Du"
+      ],
+      "year": 2020,
+      "pages": 9,
+      "citations": 81
+    },
+    {
+      "id": "https://openalex.org/W4320036011",
+      "doi": "https://doi.org/10.1287/ited.2023.0282ca",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Case Article\u2014Moneyball for Murderball: Using Analytics to Construct Lineups in Wheelchair Rugby",
+      "authors": [
+        "Timothy C. Y. Chan",
+        "Craig Fernandes",
+        "Albert Loa",
+        "Nathan Sandholtz"
+      ],
+      "year": 2023,
+      "pages": 7,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W7167830734",
+      "doi": "https://doi.org/10.67541/jdf2601",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Modeling of the Randomness in the Process of E-sports Competitions Based on Neural Stochastic Differential Equations",
+      "authors": [
+        "Shuai Ma"
+      ],
+      "year": 2026,
+      "pages": 30,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W4405729133",
+      "doi": "https://doi.org/10.1515/jqas-2023-0097",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "A Bayesian two-stage framework for lineup-independent assessment of individual rebounding ability in the NBA",
+      "authors": [
+        "Nicholas Kiriazis",
+        "Christian Genest",
+        "Alexandre Leblanc"
+      ],
+      "year": 2024,
+      "pages": 24,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2287111484",
+      "doi": "https://doi.org/10.15807/jorsj.62.64",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "A DYNAMIC PROGRAMMING ALGORITHM FOR OPTIMIZING BASEBALL STRATEGIES",
+      "authors": [
+        "Akifumi Kira",
+        "Keisuke Inakawa",
+        "Toshiharu Fujita"
+      ],
+      "year": 2019,
+      "pages": 19,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W7151750067",
+      "doi": "https://doi.org/10.54097/zc166g78",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Optimization of Sports Team Management Based on Bayesian Dynamic Weights and Entropy-Weighted TOPSIS",
+      "authors": [
+        "Weijie Huang",
+        "Xitai Wang",
+        "Kaidong Gai"
+      ],
+      "year": 2026,
+      "pages": 5,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3020898231",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "A dynamic programming algorithm for optimizing baseball strategies",
+      "authors": [
+        "Akifumi Kira",
+        "Keisuke Inakawa",
+        "Toshiharu Fujita",
+        "Kotaro Ohori"
+      ],
+      "year": 2015,
+      "pages": 19,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4408069462",
+      "doi": "https://doi.org/10.14569/ijacsa.2025.0160238",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Advanced Football Match Winning Probability Prediction: A CNN-BiLSTM_Att Model with Player Compatibility and Dynamic Lineup Analysis",
+      "authors": [
+        "Quan Tao",
+        "Yingling Luo"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4409289950",
+      "doi": "https://doi.org/10.1007/978-981-96-1445-5",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Machine Learning in Sports",
+      "authors": [
+        "Keisuke Fujii"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 14
+    },
+    {
+      "id": "https://openalex.org/W1842384982",
+      "doi": "https://doi.org/10.48550/arxiv.1102.5549",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Instant Replay: Investigating statistical Analysis in Sports",
+      "authors": [
+        "Gagan S. Sidhu"
+      ],
+      "year": 2011,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W4253092029",
+      "doi": "https://doi.org/10.31979/etd.wctq-k8bz",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "USING MACHINE LEARNING TO OPTIMIZE PREDICTIVE MODELS USED FOR BIG DATA ANALYTICS IN VARIOUS SPORTS EVENTS",
+      "authors": [
+        "Akhil Kumar Gour"
+      ],
+      "year": 2020,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W57255459",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Optimizing defensive alignments in baseball through integer programming and simulation",
+      "authors": [
+        "Kyle Becker"
+      ],
+      "year": 2009,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7165148195",
+      "doi": "https://doi.org/10.1038/s41598-026-57715-8",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Adaptive competitive balance regulation in professional sports leagues via graph attention networks and proximal policy optimization",
+      "authors": [
+        "Xiaoliang Hu",
+        "Yun Lin"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7220776089",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "An optimization of baseball fielder positioning using SEAM",
+      "authors": [
+        "Colin Alberts"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7216552330",
+      "doi": "https://doi.org/10.24191/jcrinn.v11i2.573",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Optimizing Shift Scheduling for Retail Cashiers Using Binary Integer Programming",
+      "authors": [
+        "Diana Sirmayunie Mohd Nasir",
+        "Nurtasnim Tihani Mohd Zuki",
+        "Suzanawati Abu Hasan",
+        "Nor Hayati Shafii",
+        "Teoh Yeong Kin"
+      ],
+      "year": 2026,
+      "pages": 10,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4403543051",
+      "doi": "https://doi.org/10.2478/ijcss-2024-0013",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "A Review on the Application of Artificial Intelligence in Basketball Sports",
+      "authors": [
+        "Chenyi Zhang",
+        "Zhu Weijian",
+        "Li Bo",
+        "Zhu Zhiyong",
+        "Zhu Feng"
+      ],
+      "year": 2024,
+      "pages": 29,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W809825213",
+      "doi": "https://doi.org/10.58015/ruscello-bruno_phd2009-05-06",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "Match analysis in team sports",
+      "authors": [
+        "Bruno Ruscello"
+      ],
+      "year": 2009,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4221138654",
+      "doi": "https://doi.org/10.3390/app12094429",
+      "source": "OpenAlex",
+      "query": "sports lineup optimization stochastic programming",
+      "title": "A Comprehensive Review of Computer Vision in Sports: Open Issues, Future Trends and Research Directions",
+      "authors": [
+        "Banoth Thulasya Naik",
+        "Mohammad Farukh Hashmi",
+        "Neeraj Dhanraj Bokde"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 263
+    },
+    {
+      "id": "https://openalex.org/W2530064466",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Updating Your Fantasy Lineups and the Federal Law: The Case for Federal Regulation of Daily Fantasy Sports",
+      "authors": [
+        "Randolph Andrew Scott"
+      ],
+      "year": 2017,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2561882497",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Daily Fantasy Sports as Game of Chance: Distinction Without a Meaningful Difference?",
+      "authors": [
+        "N. Cameron Leishman"
+      ],
+      "year": 2016,
+      "pages": 38,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2273067965",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "The Predominate Goliath: Why Pay-to-Play Daily Fantasy Sports are Games of Skill Under the Dominant Factor Test",
+      "authors": [
+        "Jeffrey C. Meehan"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W2900226522",
+      "doi": "https://doi.org/10.1137/16m1102094",
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Luck and the Law: Quantifying Chance in Fantasy Sports and Other Contests",
+      "authors": [
+        "Daniel Getty",
+        "Hao Li",
+        "Masayuki Yano",
+        "Charles Gao",
+        "Anette E. Hosoi"
+      ],
+      "year": 2018,
+      "pages": 19,
+      "citations": 21
+    },
+    {
+      "id": "https://openalex.org/W2519581831",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Switch Hitters: How League Involvement in Daily Fantasy Sports Could End the Prohibition of Sports Gambling",
+      "authors": [
+        "Jordan Meddy"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W1518204555",
+      "doi": "https://doi.org/10.12794/metadc33170",
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Baseball in the Digital Age: The Role of Online and Mobile Content in Major League Baseball's Media Product Portfolio",
+      "authors": [
+        "Brian Hutton"
+      ],
+      "year": 2010,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2265303058",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Fantasy Sports: Establishing the Connection between the Media, Social Identity, and Media Dependency",
+      "authors": [
+        "David Robrt Schreindl"
+      ],
+      "year": 2012,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2756115864",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Why DFS Requires Regulation Regardless of Whether it is Skill Based: An Outline of the Growth of Fantasy Sports, the Scandals, and a Return to Gaming in the United States",
+      "authors": [
+        "Christopher L. Blandford"
+      ],
+      "year": 2017,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2901339318",
+      "doi": "https://doi.org/10.30707/etd2017.mason.a",
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Fake Sports, Real Impact? Investigating Social Identity, Identity Construction, and Perceptions of Self Using Fantasy Sports Leagues as a Platform for Communication Research",
+      "authors": [
+        "Adam J. Mason"
+      ],
+      "year": 2017,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W170673843",
+      "doi": "https://doi.org/10.17077/etd.jm8gugp7",
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "The Role Of The Digital Sports Game In The Sports Media Complex",
+      "authors": [
+        "Andrew Baerg"
+      ],
+      "year": 2006,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2950972207",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Advanced Statistics in Arkansas Sports Reporting",
+      "authors": [
+        "Andrew Lee Epperson"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4236787782",
+      "doi": "https://doi.org/10.1515/9780691189291-toc",
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Contents",
+      "authors": [
+        "Wayne L. Winston",
+        "Scott Nestler",
+        "Konstantinos Pelechrinis"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2623949439",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "One of these things may be like the other: A comparative study of ESPN and Fox Sports One",
+      "authors": [
+        "Rodger Aaron Bramley"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2900055080",
+      "doi": "https://doi.org/10.4337/9781788118736.00006",
+      "source": "OpenAlex",
+      "query": "daily fantasy basketball football baseball optimal lineup",
+      "title": "Why consumers wear sports gear",
+      "authors": [
+        "Brian Goff"
+      ],
+      "year": 2018,
+      "pages": 17,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2225057512",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Interactive tools for fantasy football analytics and predictions using machine learning",
+      "authors": [
+        "Neena Parikh"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W3210754850",
+      "doi": "https://doi.org/10.48550/arxiv.2111.02874",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Deep Artificial Intelligence for Fantasy Football Language Understanding",
+      "authors": [
+        "Aaron K. Baughman",
+        "Micah Forester",
+        "Jeff Powell",
+        "Morales, Eduardo",
+        "Shaun McPartlin"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W2969495598",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Identifying Undervalued Players in Fantasy Football",
+      "authors": [
+        "Christopher D. Morgan",
+        "Caroll Rodriguez",
+        "Korey MacVittie",
+        "Robert Slater",
+        "Daniel W. Engels"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W393335066",
+      "doi": "https://doi.org/10.48550/arxiv.1505.06918",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Fantasy Football Prediction",
+      "authors": [
+        "Roman Lutz"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 12
+    },
+    {
+      "id": "https://openalex.org/W2976108993",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Pigskin Party: A Statistical Analysis on Fantasy Football and \u201cThe Machine\u201d",
+      "authors": [
+        "Ari Brett Lathrop",
+        "Mark Richard Johnston",
+        "Nicholas Ryan Mondor"
+      ],
+      "year": 2012,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4294609163",
+      "doi": "https://doi.org/10.1007/s43069-022-00160-w",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Predictive Analytics for Real-time Auction Bidding Support: a Case on Fantasy Football",
+      "authors": [
+        "Vittorio Maniezzo",
+        "Fabian Andres Aspee Encina"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W7204611139",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Communities of Practice, Media Dependency, and Surveillance: A Virtual Search for Supremacy in Fantasy Football",
+      "authors": [
+        "Travis R. Bell",
+        "Morales, Alexander W. Morales,\u00a0and\u00a0Jaime\u00a0Robb W.",
+        "Jaime Robb"
+      ],
+      "year": 2017,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3120674965",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "How does context affect player performance in football?",
+      "authors": [
+        "Lotte Bransen",
+        "Pieter Robberechts",
+        "Jesse J. Davis",
+        "Tom Decroos",
+        "Jan Van Haaren"
+      ],
+      "year": 2020,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7160488124",
+      "doi": "https://doi.org/10.1038/s41598-026-48082-5",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "The application of deep learning in tactical analysis of football matches",
+      "authors": [
+        "Wuyu Huang",
+        "Sihang Wang",
+        "Pei Li"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2029075138",
+      "doi": "https://doi.org/10.1145/2600428.2609601",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Evaluation of machine-learning protocols for technology-assisted review in electronic discovery",
+      "authors": [
+        "Gordon V. Cormack",
+        "Maura R. Grossman"
+      ],
+      "year": 2014,
+      "pages": 10,
+      "citations": 160
+    },
+    {
+      "id": "https://openalex.org/W7202012116",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Evaluating the Impact of LLM-Derived Contextual Features from Media Content on Football Player Performance Prediction",
+      "authors": [
+        "Tom\u00e1s Eiras Silva Martins"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4396786953",
+      "doi": "https://doi.org/10.48550/arxiv.2405.02412",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Deep Learning and Transfer Learning Architectures for English Premier League Player Performance Forecasting",
+      "authors": [
+        "Daniel Frees",
+        "Pranav Ravella",
+        "Zhang, Charlie"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2547626200",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Fantasy (e)Sports: The Future Prospect of Fantasy Sports Betting Amongst Organized Multiplayer Video Game Competitions",
+      "authors": [
+        "Matthew Tsai"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W4415111485",
+      "doi": "https://doi.org/10.48550/arxiv.2506.12378",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Component Based Quantum Machine Learning Explainability",
+      "authors": [
+        "White, Barra",
+        "Krishnendu Guha"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W4405583705",
+      "doi": "https://doi.org/10.34660/inf.2020.1.61611",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "MARKERS OF MOTOR PERFORMANCE IN YOUTH FOOTBALL",
+      "authors": [
+        "D.V. Golubev",
+        "J.A. Shchedrina",
+        "A.R. Acena"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4226108793",
+      "doi": "https://doi.org/10.11606/d.11.2022.tde-07042022-155700",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Frame by frame completion probability of an American football pass",
+      "authors": [
+        "Gustavo Pompeu da Silva"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4405278417",
+      "doi": "https://doi.org/10.34660/inf.2022.31.45.042",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "ASPECTS OF CHILDREN\u2019S DEVELOPMENT IN FOOTBALL",
+      "authors": [
+        "A.I. Machnev"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3184314384",
+      "doi": "https://doi.org/10.1088/1742-6596/1964/4/042085",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Analysis on Sports Data Match Result Prediction Using Machine Learning Libraries",
+      "authors": [
+        "S. Kevin Andrews",
+        "K. Lakshmi Narayanan",
+        "K Balasubadra",
+        "M. S. Josephine"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W3134458166",
+      "doi": "https://doi.org/10.46300/9109.2020.14.15",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Machine Learning and Data mining on the innovation of E-sports industry",
+      "authors": [
+        "Yiqing Chen",
+        "Jie Mei",
+        "Steward Huang"
+      ],
+      "year": 2020,
+      "pages": 12,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W3118904184",
+      "doi": "https://doi.org/10.1007/978-3-030-66196-0_6",
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Beat the Streak: Prediction of MLB Base Hits Using Machine Learning",
+      "authors": [
+        "Pedro Alceo",
+        "Roberto Henriques"
+      ],
+      "year": 2020,
+      "pages": 26,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W7112540155",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "fantasy football player projection machine learning",
+      "title": "Bringing the Heat: Predicting the Pass Rush and Quantifying Pressure in NFL Football",
+      "authors": [
+        "Stern, Benjamin"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7160757885",
+      "doi": "https://doi.org/10.48550/arxiv.2605.17628",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "A Penalty-Free Pipeline for Direct Quantum-Annealer Portfolio Optimization",
+      "authors": [
+        "Luis Lozano"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W1899798630",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "A probabilistic architecture for algorithm portfolios",
+      "authors": [
+        "Bryan Silverthorn"
+      ],
+      "year": 2012,
+      "pages": 18,
+      "citations": 5
+    },
+    {
+      "id": "https://openalex.org/W2534401681",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Competitive Project Portfolio Management",
+      "authors": [
+        "Mark S. Zschocke"
+      ],
+      "year": 2011,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7166847083",
+      "doi": "https://doi.org/10.15587/1729-4061.2026.365568",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Devising a multi-criterion approach to forming a portfolio of territorial community projects on the basis of public participation",
+      "authors": [
+        "Tetyana Vorkut",
+        "\u0412\u0456\u0442\u0430\u043b\u0456\u0439 \u0425\u0430\u0440\u0443\u0442\u0430",
+        "Anna Kharchenko",
+        "Yurii Lushchai",
+        "\u042e\u043b\u0456\u044f \u0411\u043e\u0436\u043e\u043a"
+      ],
+      "year": 2026,
+      "pages": 15,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7139924504",
+      "doi": "https://doi.org/10.48550/arxiv.2603.19117",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Variational and Annealing-Based Approaches to Quantum Combinatorial Optimization",
+      "authors": [
+        "Hala Hawashin",
+        "Deep Nath",
+        "Marco Alberto Javarone"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4402740303",
+      "doi": "https://doi.org/10.1016/j.tips.2024.08.005",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "How can quantum computing be applied in clinical trial design and optimization?",
+      "authors": [
+        "Hakan Do\u011fa",
+        "Aritra Bose",
+        "M. Emre Sahin",
+        "Joao H. Bettencourt\u2010Silva",
+        "Anh Pham"
+      ],
+      "year": 2024,
+      "pages": 12,
+      "citations": 50
+    },
+    {
+      "id": "https://openalex.org/W4401709895",
+      "doi": "https://doi.org/10.1002/widm.1548",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Advancements in Q\u2010learning meta\u2010heuristic optimization algorithms: A survey",
+      "authors": [
+        "Yang Yang",
+        "Yuchao Gao",
+        "Zhe Ding",
+        "Jinran Wu",
+        "Shaotong Zhang"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 45
+    },
+    {
+      "id": "https://openalex.org/W4392130047",
+      "doi": "https://doi.org/10.12694/scpe.v25i2.2507",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Channel Estimation of Urban 5G Communication System based on Improved Particle Swarm Optimization Algorithm",
+      "authors": [
+        "Xigang Xia",
+        "Bo Yang",
+        "Zhiyu Liu"
+      ],
+      "year": 2024,
+      "pages": 9,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4392221621",
+      "doi": "https://doi.org/10.70675/f3dc1801z525cz4f6az831fz7f737d547cc0",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Analyzing, optimizing, and explaining hospital miscoding for coding practice improvement",
+      "authors": [
+        "Chen He"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4409502407",
+      "doi": "https://doi.org/10.3390/sym17040607",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Developing a New Approach for Assessing and Improving Business Excellence: Integrating Fuzzy Analytic Hierarchical Process and Constraint Programming Model",
+      "authors": [
+        "Tijana Petrovi\u0107",
+        "Danijela Tadi\u0107",
+        "Dragan Marinkovi\u0107",
+        "Goran \u0110uri\u0107",
+        "Nikola Komatina"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2590502516",
+      "doi": "https://doi.org/10.28945/2319",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Collective Problem-Solving: The Role of Self-Efficacy, Skill, and Prior Knowledge",
+      "authors": [
+        "Dorit Geifman",
+        "Daphne Ruth Raban"
+      ],
+      "year": 2015,
+      "pages": 20,
+      "citations": 9
+    },
+    {
+      "id": "https://openalex.org/W7225442231",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "5G a\u011flar\u0131 ve \u00f6tesinde uyarlanabilir u\u00e7 \u00f6n bellekleme",
+      "authors": [
+        "\u0130lhan Demirci"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4412825904",
+      "doi": "https://doi.org/10.1145/3711896.3736824",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "A Unified Online-Offline Framework for Co-Branding Campaign Recommendations",
+      "authors": [
+        "Xiangxiang Dai",
+        "Xiaowei Sun",
+        "Jinhang Zuo",
+        "Xutong Liu",
+        "John C. S. Lui"
+      ],
+      "year": 2025,
+      "pages": 12,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W7152490830",
+      "doi": "https://doi.org/10.70675/679db8e1z0498z4941zacf6z3cbcb818019a",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Algorithms Under Uncertainty : Robust Methods and Decision-Theoretic Evaluation",
+      "authors": [
+        "Georgii Melidi"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4256050547",
+      "doi": "https://doi.org/10.1017/s0951007900001297",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Abstracts of Working Papers in Economics",
+      "authors": [],
+      "year": 1989,
+      "pages": 91,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4250666859",
+      "doi": "https://doi.org/10.36899/japs.2020.4.0115",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "DETERMINANTS FOR THE ADOPTION OF TECHNOLOGY AND THE CHOICE OF MARKETING CHANNEL FOR RICE SMALLHOLDER FARMERS IN SOUTHEAST NIGERIA",
+      "authors": [
+        "Adaku Bridget Chidi Ezeibe",
+        "Opata P. Ifeyinwa",
+        "Chukwuma Otum Ume"
+      ],
+      "year": 2020,
+      "pages": 9,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4205264947",
+      "doi": "https://doi.org/10.36899/japs.2020.5.0143",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "DETERMINANTS FOR THE ADOPTION OF TECHNOLOGY AND THE CHOICE OF MARKETING CHANNEL FOR RICE SMALLHOLDER FARMERS IN SOUTHEAST NIGERIA",
+      "authors": [],
+      "year": 2020,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4237136009",
+      "doi": "https://doi.org/10.1109/ssci47803.2020.9308155",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Table of Contents",
+      "authors": [],
+      "year": 2020,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7214136115",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "A multi-objective analysis for fairness-performance trade-offs in random forests",
+      "authors": [
+        "Guilherme Dean Pelegrina",
+        "Edward Abel",
+        "Sajid Siraj"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2934443703",
+      "doi": "https://doi.org/10.1007/978-3-030-18500-8_71",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Periodic Timetabling with \u2018Track Choice\u2019-PESP Based on Given Line Concepts and Mesoscopic Infrastructure",
+      "authors": [
+        "Raimond Matthias W\u00fcst",
+        "Stephan B\u00fctikofer",
+        "Severin Ess",
+        "Claudio Gomez",
+        "Albert Steiner"
+      ],
+      "year": 2019,
+      "pages": 8,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W4385622280",
+      "doi": "https://doi.org/10.1287/ifors.2023",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Proceedings of the 23rd International Conference of the International Federation of Operational Research Societies",
+      "authors": [
+        "Alice E. Smith"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7224700827",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Exploring Synchromodal Transport Strategies Using Agent-Based Simulation",
+      "authors": [
+        "Shafagh Alaei Jordehi"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4308714738",
+      "doi": "https://doi.org/10.1016/j.ipm.2022.103142",
+      "source": "OpenAlex",
+      "query": "portfolio optimization knapsack correlation sports",
+      "title": "Keyword decisions in sponsored search advertising: A literature review and research agenda",
+      "authors": [
+        "Yanwu Yang",
+        "Huiran Li"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 31
+    },
+    {
+      "id": "https://openalex.org/W2982894598",
+      "doi": "https://doi.org/10.1287/mnsc.2019.3528",
+      "source": "OpenAlex",
+      "query": "Dirichlet multinomial opponent modeling daily fantasy",
+      "title": "How to Play Fantasy Sports Strategically (and Win)",
+      "authors": [
+        "Martin B. Haugh",
+        "Raghav Singal"
+      ],
+      "year": 2020,
+      "pages": 21,
+      "citations": 16
+    },
+    {
+      "id": "https://openalex.org/W7117769503",
+      "doi": "https://doi.org/10.48550/arxiv.2512.22254",
+      "source": "OpenAlex",
+      "query": "Dirichlet multinomial opponent modeling daily fantasy",
+      "title": "Analyzing Skill Element in Online Fantasy Cricket",
+      "authors": [
+        "Sarthak Ranjan Sarkar",
+        "Supratim Das",
+        "Purushottam Saha",
+        "Diganta Mukherjee",
+        "Tridib K. Mukherjee"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2618097751",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "Dirichlet multinomial opponent modeling daily fantasy",
+      "title": "Numbers in politics : comparative quantitative analysis & modeling in foreign policy orientation and election forecasting",
+      "authors": [
+        "Enes Taylan"
+      ],
+      "year": 2017,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7131930423",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "Dirichlet multinomial opponent modeling daily fantasy",
+      "title": "Analyzing a dark web forum page in the context of international security and terrorism: A topic modeling approach",
+      "authors": [
+        "EDA S\u00d6NMEZ"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4298859189",
+      "doi": "https://doi.org/10.6339/22-jds1062",
+      "source": "OpenAlex",
+      "query": "Dirichlet multinomial opponent modeling daily fantasy",
+      "title": "A Joint Analysis for Field Goal Attempts and Percentages of Professional Basketball Players: Bayesian Nonparametric Resource",
+      "authors": [
+        "Eliot Wong\u2010Toi",
+        "Hou\u2010Cheng Yang",
+        "Weining Shen",
+        "Guanyu Hu"
+      ],
+      "year": 2022,
+      "pages": 19,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W3001501799",
+      "doi": "https://doi.org/10.1287/mnsc.2020.3585",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "A Test Score-Based Approach to Stochastic Submodular Optimization",
+      "authors": [
+        "Shreyas Sekar",
+        "Milan Vojnovi\u0107",
+        "Se-Young Yun"
+      ],
+      "year": 2020,
+      "pages": 18,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W7110291860",
+      "doi": "https://doi.org/10.4230/lipics.itcs.2025.46",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Data-Driven Solution Portfolios",
+      "authors": [
+        "Drygala, Marina",
+        "Lattanzi, Silvio",
+        "Maggiori, Andreas",
+        "Stouras, Miltiadis",
+        "Ola Svensson"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W3021907668",
+      "doi": "https://doi.org/10.1109/tcyb.2020.2984546",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Generative Adversarial Construction of Parallel Portfolios",
+      "authors": [
+        "Shengcai Liu",
+        "Ke Tang",
+        "Xin Yao"
+      ],
+      "year": 2020,
+      "pages": 12,
+      "citations": 48
+    },
+    {
+      "id": "https://openalex.org/W7213398354",
+      "doi": "https://doi.org/10.1016/j.cose.2026.105138",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "A modeling and optimization framework for adaptive countermeasure selection in reaction against cyber attacks",
+      "authors": [
+        "Pantaleone Nespoli",
+        "Pedro Beltran Lopez",
+        "Giancarlo Sperl\u00ed"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7160965952",
+      "doi": "https://doi.org/10.48550/arxiv.2605.09588",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Efficient Ensemble Selection from Binary and Pairwise Feedback",
+      "authors": [
+        "Tzeh Yuan Neoh",
+        "Nicholas Teh",
+        "Je Qin Chooi",
+        "Paul W. Goldberg",
+        "Milind Tambe"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4411410299",
+      "doi": "https://doi.org/10.1007/s40305-025-00599-8",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Review of Large-Scale Simulation Optimization",
+      "authors": [
+        "Weiwei Fan",
+        "L. Jeff Hong",
+        "Guangxin Jiang",
+        "Jun Luo"
+      ],
+      "year": 2025,
+      "pages": 35,
+      "citations": 20
+    },
+    {
+      "id": "https://openalex.org/W7164361006",
+      "doi": "https://doi.org/10.48550/arxiv.2606.11290",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "FlowBank: Query-Adaptive Agentic Workflows Optimization through Precompute-and-Reuse",
+      "authors": [
+        "Lingzhi Yuan",
+        "Chenghao Deng",
+        "Fangxu Yu",
+        "Souradip Chakraborty",
+        "Mohammad Rostami"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W4414871283",
+      "doi": "https://doi.org/10.36227/techrxiv.175977239.92150130/v1",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Quantum Scheduling Optimization for Airline and Space Missions: A Hybrid Quantum-Classical Approach",
+      "authors": [
+        "Yalla Jnan Devi Satya Prasad",
+        "Shaik Fathima Masthan"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4402512177",
+      "doi": "https://doi.org/10.1287/orms.2024.03.04",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "10 Moments in the History of O.R.",
+      "authors": [],
+      "year": 2024,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4323361312",
+      "doi": "https://doi.org/10.1145/3587100",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Robust Influence Maximization Under Both Aleatory and Epistemic Uncertainty",
+      "authors": [
+        "Tarun Kumer Biswas",
+        "Alireza Abbasi",
+        "Ripon Kumar Chakrabortty"
+      ],
+      "year": 2023,
+      "pages": 27,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W81239151",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Three Essays in Applied Microeconomic Theory.",
+      "authors": [
+        "Jooyong Jun"
+      ],
+      "year": 2009,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W178222617",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Three Essays on Professional Advising.",
+      "authors": [
+        "Kyoungsoo Yoon"
+      ],
+      "year": 2008,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2963248505",
+      "doi": "https://doi.org/10.1609/aaai.v32i1.11532",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Warmstarting of Model-Based Algorithm Configuration",
+      "authors": [
+        "Marius Lindauer",
+        "Frank Hutter"
+      ],
+      "year": 2018,
+      "pages": 18,
+      "citations": 52
+    },
+    {
+      "id": "https://openalex.org/W3013569048",
+      "doi": "https://doi.org/10.1109/access.2020.2982647",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Team Recommendation Using Order-Based Fuzzy Integral and NSGA-II in StarCraft",
+      "authors": [
+        "Lin Wang",
+        "Yifeng Zeng",
+        "Bilian Chen",
+        "Yinghui Pan",
+        "Langcai Cao"
+      ],
+      "year": 2020,
+      "pages": 12,
+      "citations": 11
+    },
+    {
+      "id": "https://openalex.org/W2754588405",
+      "doi": "https://doi.org/10.1609/aaai.v32i1.11532",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Warmstarting of Model-Based Algorithm Configuration",
+      "authors": [
+        "Marius Lindauer",
+        "Frank Hutter"
+      ],
+      "year": 2018,
+      "pages": 18,
+      "citations": 23
+    },
+    {
+      "id": "https://openalex.org/W1551268348",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Using Stepwise Reality Check to Analyze Open-end Fund Investors' Herding Redemption in Taiwan",
+      "authors": [
+        "Nan Yu Wang",
+        "Chih Jen Huang",
+        "Ying\u2010Lin Hsu",
+        "Shian-Chang Huang"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4388291127",
+      "doi": "https://doi.org/10.1007/s00199-023-01532-x",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Diversification and information in contests",
+      "authors": [
+        "Jorge Lemus",
+        "Emil Temnyalov"
+      ],
+      "year": 2023,
+      "pages": 32,
+      "citations": 6
+    },
+    {
+      "id": "https://openalex.org/W203883998",
+      "doi": "https://doi.org/10.1184/r1/6720269",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Interactive Learning for Sequential Decisions and Predictions",
+      "authors": [
+        "St\u00e9phane Ross"
+      ],
+      "year": 2013,
+      "pages": 18,
+      "citations": 13
+    },
+    {
+      "id": "https://openalex.org/W4322723454",
+      "doi": "https://doi.org/10.1145/3586165.3586171",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Technical Report Column",
+      "authors": [
+        "Dean F. Kelley"
+      ],
+      "year": 2023,
+      "pages": 15,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2903757793",
+      "doi": "https://doi.org/10.1016/j.jocs.2018.12.010",
+      "source": "OpenAlex",
+      "query": "submodular portfolio selection tournament optimization",
+      "title": "Finding influentials in social networks using evolutionary algorithm",
+      "authors": [
+        "Micha\u0142 Weskida",
+        "Rados\u0142aw Michalski"
+      ],
+      "year": 2018,
+      "pages": 9,
+      "citations": 28
+    },
+    {
+      "id": "https://openalex.org/W2620153647",
+      "doi": "https://doi.org/10.1016/j.disopt.2017.09.004",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Robust combinatorial optimization with knapsack uncertainty",
+      "authors": [
+        "Micha\u00ebl Poss"
+      ],
+      "year": 2017,
+      "pages": 15,
+      "citations": 29
+    },
+    {
+      "id": "https://openalex.org/W2037342851",
+      "doi": "https://doi.org/10.1016/j.cor.2013.05.005",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Exact solution of the robust knapsack problem",
+      "authors": [
+        "Michele Monaci",
+        "Ulrich Pferschy",
+        "Paolo Serafini"
+      ],
+      "year": 2013,
+      "pages": 7,
+      "citations": 67
+    },
+    {
+      "id": "https://openalex.org/W4313500441",
+      "doi": "https://doi.org/10.1007/s10479-022-05161-w",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Comparative analysis of linear programming relaxations for the robust knapsack problem",
+      "authors": [
+        "Seulgi Joung",
+        "Seyoung Oh",
+        "Kyungsik Lee"
+      ],
+      "year": 2023,
+      "pages": 14,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4205717391",
+      "doi": "https://doi.org/10.1007/s10898-021-01117-9",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "The robust bilevel continuous knapsack problem with uncertain coefficients in the follower\u2019s objective",
+      "authors": [
+        "Christoph Buchheim",
+        "Dorothee Henke"
+      ],
+      "year": 2022,
+      "pages": 22,
+      "citations": 15
+    },
+    {
+      "id": "https://openalex.org/W4283264203",
+      "doi": "https://doi.org/10.1016/j.ejor.2022.06.029",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "The polynomial robust knapsack problem",
+      "authors": [
+        "Alessandro Baldo",
+        "Matteo Boffa",
+        "Lorenzo Cascioli",
+        "Edoardo Fadda",
+        "Chiara Lanza"
+      ],
+      "year": 2022,
+      "pages": 11,
+      "citations": 17
+    },
+    {
+      "id": "https://openalex.org/W2963881238",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Robust optimization of linear optimization problems and an approximation approach to solve robust Knapsack Problem",
+      "authors": [
+        "Blake Smith"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2899153523",
+      "doi": "https://doi.org/10.1007/s11590-019-01445-6",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Robust optimization-based heuristic algorithm for the chance-constrained knapsack problem using submodularity",
+      "authors": [
+        "Seulgi Joung",
+        "Kyungsik Lee"
+      ],
+      "year": 2019,
+      "pages": 13,
+      "citations": 11
+    },
+    {
+      "id": "https://openalex.org/W2161937787",
+      "doi": "https://doi.org/10.1016/j.disopt.2015.09.007",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "The multi-band robust knapsack problem\u2014A dynamic programming approach",
+      "authors": [
+        "Grit Cla\u00dfen",
+        "Arie M. C. A. Koster",
+        "Anke Schmeink"
+      ],
+      "year": 2015,
+      "pages": 27,
+      "citations": 6
+    },
+    {
+      "id": "https://openalex.org/W1504946885",
+      "doi": "https://doi.org/10.1137/080734510",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Theory and Applications of Robust Optimization",
+      "authors": [
+        "Dimitris Bertsimas",
+        "David B. Brown",
+        "Constantine Caramanis"
+      ],
+      "year": 2011,
+      "pages": 38,
+      "citations": 2546
+    },
+    {
+      "id": "https://openalex.org/W4393559300",
+      "doi": "https://doi.org/10.1016/j.cor.2024.106641",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Distributionally robust scheduling of stochastic knapsack arrivals",
+      "authors": [
+        "Hayo Bos",
+        "Richard J. Boucherie",
+        "Erwin W. Hans",
+        "Gr\u00e9anne Leeftink"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W1988397112",
+      "doi": "https://doi.org/10.1007/s10957-013-0319-3",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Complexity Results and Exact Algorithms for Robust Knapsack Problems",
+      "authors": [
+        "Fabrice Talla Nobibon",
+        "Roel Leus"
+      ],
+      "year": 2013,
+      "pages": 20,
+      "citations": 13
+    },
+    {
+      "id": "https://openalex.org/W3165500926",
+      "doi": "https://doi.org/10.48550/arxiv.2105.11875",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Robust solutions for stochastic and distributionally robust chance-constrained binary knapsack problems",
+      "authors": [
+        "Jaehyeon Ryu",
+        "Sungsoo Park"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W2968009374",
+      "doi": "https://doi.org/10.5802/ojmo.15",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Frameworks and Results in Distributionally Robust Optimization",
+      "authors": [
+        "Hamed Rahimian",
+        "Sanjay Mehrotra"
+      ],
+      "year": 2022,
+      "pages": 85,
+      "citations": 960
+    },
+    {
+      "id": "https://openalex.org/W4383721625",
+      "doi": "https://doi.org/10.1007/s12532-023-00244-6",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Exact methods for discrete $${\\varGamma }$$-robust interdiction problems with an application to the bilevel knapsack problem",
+      "authors": [
+        "Yasmine Beck",
+        "Ivana Ljubi\u0107",
+        "Martin Schmidt"
+      ],
+      "year": 2023,
+      "pages": 50,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W2521582327",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Binary Conic Quadratic Knapsacks",
+      "authors": [
+        "Avinash Bhardwaj"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 5
+    },
+    {
+      "id": "https://openalex.org/W2278140340",
+      "doi": "https://doi.org/10.1142/s0218213016600058",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Extrapolating from Limited Uncertain Information in Large-Scale Combinatorial Optimization Problems to Obtain Robust Solutions",
+      "authors": [
+        "Laura Climent",
+        "Richard J. Wallace",
+        "Barry O\u2019Sullivan",
+        "Eugene C. Freuder"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4386032109",
+      "doi": "https://doi.org/10.1287/ijoc.2022.0086",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Adjustable Robust Optimization with Discrete Uncertainty",
+      "authors": [
+        "Henri Lefebvre",
+        "Enrico Malaguti",
+        "Michele Monaci"
+      ],
+      "year": 2023,
+      "pages": 19,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W2125530743",
+      "doi": "https://doi.org/10.1016/j.orl.2011.10.010",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "A robust robust optimization result",
+      "authors": [
+        "Martina Gancarova",
+        "Michael J. Todd"
+      ],
+      "year": 2011,
+      "pages": 4,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W2952485782",
+      "doi": "https://doi.org/10.48550/arxiv.1505.04901",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Algorithm Engineering in Robust Optimization",
+      "authors": [
+        "Marc Goerigk",
+        "Anita Sch\u00f6bel"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 19
+    },
+    {
+      "id": "https://openalex.org/W1604943196",
+      "doi": "https://doi.org/10.1016/j.ejor.2015.12.008",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Decomposition approaches for recoverable robust optimization problems",
+      "authors": [
+        "Marjan van den Akker",
+        "Paul Bouman",
+        "J.A. Hoogeveen",
+        "Denise T\u00f6nissen"
+      ],
+      "year": 2016,
+      "pages": 12,
+      "citations": 10
+    },
+    {
+      "id": "https://openalex.org/W2473069854",
+      "doi": "https://doi.org/10.1007/s10107-016-1053-z",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Min\u2013max\u2013min robust combinatorial optimization",
+      "authors": [
+        "Christoph Buchheim",
+        "Jannis Kurtz"
+      ],
+      "year": 2016,
+      "pages": 23,
+      "citations": 53
+    },
+    {
+      "id": "https://openalex.org/W2287683026",
+      "doi": "https://doi.org/10.1155/2016/9480769",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "A Robust Service Selection Method Based on Uncertain QoS",
+      "authors": [
+        "Yanping Chen",
+        "Lu Jiang",
+        "Jianke Zhang",
+        "Xiaoxiao Dong"
+      ],
+      "year": 2016,
+      "pages": 10,
+      "citations": 12
+    },
+    {
+      "id": "https://openalex.org/W2117529621",
+      "doi": "https://doi.org/10.53846/goediss-3361",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Algorithms and Concepts for Robust Optimization",
+      "authors": [
+        "Marc Goerigk"
+      ],
+      "year": 2013,
+      "pages": 18,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W3128638718",
+      "doi": "https://doi.org/10.1016/j.cor.2021.105434",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Multistage robust discrete optimization via quantified integer programming",
+      "authors": [
+        "Marc Goerigk",
+        "Michael Hartisch"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 14
+    },
+    {
+      "id": "https://openalex.org/W4392929631",
+      "doi": "https://doi.org/10.48550/arxiv.2310.04345",
+      "source": "OpenAlex",
+      "query": "robust knapsack optimization uncertain weights Bertsimas",
+      "title": "Deep Learning for Two-Stage Robust Integer Optimization",
+      "authors": [
+        "Justin Dumouchelle",
+        "Esther Julien",
+        "Jannis Kurtz",
+        "Elias B. Khalil"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 10
+    },
+    {
+      "id": "https://openalex.org/W3121547488",
+      "doi": "https://doi.org/10.3390/math9030223",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Mean Squared Variance Portfolio: A Mixed-Integer Linear Programming Formulation",
+      "authors": [
+        "Francisco Fern\u00e1ndez\u2010Navarro",
+        "Luisa Mart\u00ednez-Nieto",
+        "Mariano Carbonero-Ruz",
+        "Teresa Montero-Romero"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 19
+    },
+    {
+      "id": "https://openalex.org/W2139755682",
+      "doi": "https://doi.org/10.1016/j.eswa.2008.06.007",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Markowitz-based portfolio selection with minimum transaction lots, cardinality constraints and regarding sector capitalization using genetic algorithm",
+      "authors": [
+        "Hamed Soleimani",
+        "Hamid Reza Golmakani",
+        "Mohammad Salimi"
+      ],
+      "year": 2008,
+      "pages": 6,
+      "citations": 231
+    },
+    {
+      "id": "https://openalex.org/W2165129372",
+      "doi": "https://doi.org/10.1016/j.ejor.2013.08.035",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Twenty years of linear programming based portfolio optimization",
+      "authors": [
+        "Renata Mansini",
+        "W\u0142odzimierz Ogryczak",
+        "Maria Grazia Speranza"
+      ],
+      "year": 2013,
+      "pages": 18,
+      "citations": 219
+    },
+    {
+      "id": "https://openalex.org/W2070156190",
+      "doi": "https://doi.org/10.1016/j.cor.2005.06.017",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Portfolio selection using neural networks",
+      "authors": [
+        "Alberto Fern\u00e1ndez",
+        "Sergio G\u00f3mez"
+      ],
+      "year": 2005,
+      "pages": 15,
+      "citations": 318
+    },
+    {
+      "id": "https://openalex.org/W4210421407",
+      "doi": "https://doi.org/10.17762/msea.v71i1.58",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Mean-Variance Programming Framework in Markowitz Modeling",
+      "authors": [
+        "Mohamad Pazlin Bin Saion"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3122931884",
+      "doi": "https://doi.org/10.1287/opre.1080.0599",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "An Exact Solution Approach for Portfolio Optimization Problems Under Stochastic and Integer Constraints",
+      "authors": [
+        "Pierre Bonami",
+        "Miguel A. Lejeune"
+      ],
+      "year": 2009,
+      "pages": 21,
+      "citations": 199
+    },
+    {
+      "id": "https://openalex.org/W2796071106",
+      "doi": "https://doi.org/10.1111/itor.12541",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Complex portfolio selection via convex mixed\u2010integer quadratic programming: a survey",
+      "authors": [
+        "Luca Mencarelli",
+        "Claudia D\u2019Ambrosio"
+      ],
+      "year": 2018,
+      "pages": 26,
+      "citations": 34
+    },
+    {
+      "id": "https://openalex.org/W2794222053",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Efficient Algorithms For Mean-Variance Portfolio Optimization With Hard Real-World Constraints",
+      "authors": [
+        "Francesco Cesarone",
+        "Andrea Scozzari",
+        "Fabio Tardella"
+      ],
+      "year": 2009,
+      "pages": 20,
+      "citations": 33
+    },
+    {
+      "id": "https://openalex.org/W2113188547",
+      "doi": "https://doi.org/10.1016/s0377-2217(02)00784-1",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Simulated annealing for complex portfolio selection problems",
+      "authors": [
+        "Yves Crama",
+        "Micha\u00ebl Schyns"
+      ],
+      "year": 2003,
+      "pages": 26,
+      "citations": 357
+    },
+    {
+      "id": "https://openalex.org/W2111839317",
+      "doi": "https://doi.org/10.1145/2598394.2602278",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Portfolio optimization using an integer genetic algorithm",
+      "authors": [
+        "Javier Fern\u00e1ndez-Rend\u00f3n",
+        "Katya Rodr\u00edguez\u2010V\u00e1zquez"
+      ],
+      "year": 2014,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2029239567",
+      "doi": "https://doi.org/10.15807/jorsj.38.173",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "A MEAN-VARIANCE-SKEWNESS PORTFOLIO OPTIMIZATION MODEL",
+      "authors": [
+        "Hiroshi Konno",
+        "Kenichi G. N. Suzuki"
+      ],
+      "year": 1995,
+      "pages": 15,
+      "citations": 197
+    },
+    {
+      "id": "https://openalex.org/W2159318931",
+      "doi": "https://doi.org/10.1016/j.eswa.2011.01.020",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Constrained Portfolio Selection using Particle Swarm Optimization",
+      "authors": [
+        "Hamid Reza Golmakani",
+        "Mehrshad Fazel"
+      ],
+      "year": 2011,
+      "pages": 9,
+      "citations": 143
+    },
+    {
+      "id": "https://openalex.org/W4390810313",
+      "doi": "https://doi.org/10.48550/arxiv.2401.05080",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Markowitz Portfolio Construction at Seventy",
+      "authors": [
+        "Stephen Boyd",
+        "Kasper Johansson",
+        "Ronald N. Kahn",
+        "Philipp Schiele",
+        "Schmelzer, Thomas"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 21
+    },
+    {
+      "id": "https://openalex.org/W2109637587",
+      "doi": "https://doi.org/10.5267/j.msl.2014.3.027",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "An application of Markowitz theorem on Tehran Stock Exchange",
+      "authors": [
+        "Hassan Ghordati",
+        "Abbasi Mohammad"
+      ],
+      "year": 2014,
+      "pages": 6,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W1974048716",
+      "doi": "https://doi.org/10.1109/icsssm.2006.320630",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Portfolio Selection Under Buy-In Threshold Constraints Using DC Programming and DCA",
+      "authors": [
+        "Hoai An Le Thi",
+        "Mahdi Moeini A"
+      ],
+      "year": 2006,
+      "pages": 5,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W273756840",
+      "doi": "https://doi.org/10.1007/978-981-4451-98-7_53",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Integer Program Modeling of Portfolio Optimization with Mental Accounts Using Simulated Tail Distribution",
+      "authors": [
+        "Kuo\u2010Hwa Chang",
+        "Yi Shou Shu",
+        "Michael Nayat Young"
+      ],
+      "year": 2013,
+      "pages": 8,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2136510129",
+      "doi": "https://doi.org/10.2139/ssrn.975574",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "An Exact Solution Approach for Portfolio Optimization Problems Under Stochastic and Integer Constraints",
+      "authors": [
+        "Pierre Bonami",
+        "Miguel A. Lejeune"
+      ],
+      "year": 2007,
+      "pages": 18,
+      "citations": 24
+    },
+    {
+      "id": "https://openalex.org/W901952859",
+      "doi": "https://doi.org/10.1016/j.asoc.2015.06.053",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "A memetic algorithm for cardinality-constrained portfolio optimization with transaction costs",
+      "authors": [
+        "Rub\u00e9n Ruiz-Torrubiano",
+        "Alberto Su\u00e1rez"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 56
+    },
+    {
+      "id": "https://openalex.org/W2344611319",
+      "doi": "https://doi.org/10.5220/0005758303880395",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Constrained Portfolio Optimisation: The State-of-the-Art Markowitz Models",
+      "authors": [
+        "Yan Jin",
+        "Rong Qu",
+        "Jason Atkin"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 20
+    },
+    {
+      "id": "https://openalex.org/W2118692559",
+      "doi": "https://doi.org/10.1109/mci.2010.936308",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Hybrid Approaches and Dimensionality Reduction for Portfolio Selection with Cardinality Constraints",
+      "authors": [
+        "Rub\u00e9n Ruiz-Torrubiano",
+        "Alberto Su\u00e1rez"
+      ],
+      "year": 2010,
+      "pages": 16,
+      "citations": 91
+    },
+    {
+      "id": "https://openalex.org/W4412605547",
+      "doi": "https://doi.org/10.71097/ijsat.v16.i3.7161",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Swarm Intelligence in Finance: A Comparative Analysis of ACO and PSO for Mean\u2013Variance Portfolio Optimization",
+      "authors": [
+        "Heena Patel",
+        "Prashant P. Pittalia"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3135174107",
+      "doi": "https://doi.org/10.1016/j.cor.2022.105701",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "A combinatorial optimization approach to scenario filtering in portfolio selection",
+      "authors": [
+        "Justo Puerto",
+        "Federica Ricca",
+        "Mois\u00e9s Rodr\u00edguez-Madrena",
+        "Andrea Scozzari"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 19
+    },
+    {
+      "id": "https://openalex.org/W2068727170",
+      "doi": "https://doi.org/10.1016/j.jempfin.2015.03.003",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Portfolio optimization for heavy-tailed assets: Extreme Risk Index vs. Markowitz",
+      "authors": [
+        "Georg Mainik",
+        "Georgi Mitov",
+        "Ludger R\u00fcschendorf"
+      ],
+      "year": 2015,
+      "pages": 20,
+      "citations": 45
+    },
+    {
+      "id": "https://openalex.org/W2049162629",
+      "doi": "https://doi.org/10.1016/s0140-9883(02)00058-0",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "A spatial mean-variance MIP model for energy market risk analysis",
+      "authors": [
+        "Zuwei Yu"
+      ],
+      "year": 2003,
+      "pages": 14,
+      "citations": 39
+    },
+    {
+      "id": "https://openalex.org/W2568732703",
+      "doi": "https://doi.org/10.1016/j.ejor.2017.01.005",
+      "source": "OpenAlex",
+      "query": "Markowitz mean variance integer programming portfolio",
+      "title": "Mean-VaR portfolio optimization: A nonparametric approach",
+      "authors": [
+        "Khin T. Lwin",
+        "Rong Qu",
+        "Bart L. MacCarthy"
+      ],
+      "year": 2017,
+      "pages": 16,
+      "citations": 160
+    },
+    {
+      "id": "https://openalex.org/W2087107319",
+      "doi": "https://doi.org/10.1016/0022-247x(83)90018-5",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Unit integer quadratic binary programming",
+      "authors": [
+        "Rao Yarlagadda"
+      ],
+      "year": 1983,
+      "pages": 22,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2890618250",
+      "doi": "https://doi.org/10.1137/17m1158707",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Ambiguous Chance-Constrained Binary Programs under Mean-Covariance Information",
+      "authors": [
+        "Yiling Zhang",
+        "Ruiwei Jiang",
+        "Siqian Shen"
+      ],
+      "year": 2018,
+      "pages": 23,
+      "citations": 95
+    },
+    {
+      "id": "https://openalex.org/W2601087514",
+      "doi": "https://doi.org/10.48550/arxiv.1703.07870",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "General Heuristics for Nonconvex Quadratically Constrained Quadratic Programming",
+      "authors": [
+        "Jaehyun Park",
+        "Stephen Boyd"
+      ],
+      "year": 2017,
+      "pages": 18,
+      "citations": 168
+    },
+    {
+      "id": "https://openalex.org/W7149435747",
+      "doi": "https://doi.org/10.70675/e660c79ez68f2z4aadzb6b5zab127670efa9",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Column generation methods for quadratic mixed binary programming",
+      "authors": [
+        "Enrico Bettiol"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W3178090475",
+      "doi": "https://doi.org/10.1103/physrevd.105.064021",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Detecting stochastic gravitational waves with binary resonance",
+      "authors": [
+        "Diego Blas",
+        "Alexander C. Jenkins"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 55
+    },
+    {
+      "id": "https://openalex.org/W3211625051",
+      "doi": "https://doi.org/10.1016/j.ejor.2021.10.056",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Two-stage stochastic standard quadratic optimization",
+      "authors": [
+        "Immanuel M. Bomze",
+        "Markus Gabl",
+        "Francesca Maggioni",
+        "Georg Ch. Pflug"
+      ],
+      "year": 2021,
+      "pages": 14,
+      "citations": 9
+    },
+    {
+      "id": "https://openalex.org/W1871566589",
+      "doi": "https://doi.org/10.1007/s11590-015-0953-9",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Stochastic graph partitioning: quadratic versus SOCP formulations",
+      "authors": [
+        "Dang Phuong Nguyen",
+        "Michel Minoux",
+        "Vi\u1ebft H\u00f9ng Nguy\u1ec5n",
+        "Thanh Hai Nguyen",
+        "Renaud Sirdey"
+      ],
+      "year": 2015,
+      "pages": 14,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7170926269",
+      "doi": "https://doi.org/10.1038/s41598-026-73188-1",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "QUBO sampling for mixed binary quadratic programming without continuous variable binarization",
+      "authors": [
+        "Taisei Takabayashi",
+        "Masayuki Ohzeki"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7168402599",
+      "doi": "https://doi.org/10.1103/9p17-5r4g",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Evolution of binaries under stochastic perturbations",
+      "authors": [
+        "Andrea Caputo",
+        "Giovanni Maria Tomaselli",
+        "Chris Hamilton"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2101518767",
+      "doi": "https://doi.org/10.3386/w0325",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Analysis of Covariance With Qualitative Data",
+      "authors": [
+        "Gary Chamberlain"
+      ],
+      "year": 1979,
+      "pages": 18,
+      "citations": 306
+    },
+    {
+      "id": "https://openalex.org/W2093588349",
+      "doi": "https://doi.org/10.1534/genetics.107.071779",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "A Covariance Structure Model for the Admixture of Binary Genetic Variation",
+      "authors": [
+        "Mark N. Grote"
+      ],
+      "year": 2007,
+      "pages": 16,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W2147777640",
+      "doi": "https://doi.org/10.48550/arxiv.1407.6315",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Quadratically constrained quadratic programming for classification using particle swarms and applications",
+      "authors": [
+        "Deepak Kumar",
+        "A. G. Ramakrishnan"
+      ],
+      "year": 2014,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W2992727511",
+      "doi": "https://doi.org/10.1016/j.jpdc.2020.05.021",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "GPU acceleration of ADMM for large-scale quadratic programming",
+      "authors": [
+        "Michel Schubiger",
+        "Goran Banjac",
+        "John Lygeros"
+      ],
+      "year": 2020,
+      "pages": 13,
+      "citations": 76
+    },
+    {
+      "id": "https://openalex.org/W2255135841",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "New results on some quadratic programming problems",
+      "authors": [
+        "Rui Yang"
+      ],
+      "year": 2013,
+      "pages": 18,
+      "citations": 9
+    },
+    {
+      "id": "https://openalex.org/W2740042721",
+      "doi": "https://doi.org/10.24963/ijcai.2017/648",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Robust Quadratic Programming for Price Optimization",
+      "authors": [
+        "Akihiro Yabe",
+        "Shinji Ito",
+        "Ryohei Fujimaki"
+      ],
+      "year": 2017,
+      "pages": 7,
+      "citations": 16
+    },
+    {
+      "id": "https://openalex.org/W4408930942",
+      "doi": "https://doi.org/10.1109/icrc64395.2024.10937015",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Thermodynamic Algorithms for Quadratic Programming",
+      "authors": [
+        "Patryk Lipka-Bartosik",
+        "Kaelan Donatella",
+        "Maxwell Aifer",
+        "Denis Melanson",
+        "Mart\u00ed Perarnau-Llobet"
+      ],
+      "year": 2024,
+      "pages": 13,
+      "citations": 5
+    },
+    {
+      "id": "https://openalex.org/W7172435941",
+      "doi": "https://doi.org/10.48550/arxiv.2608.01612",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "A Framework for Stochastic Differentiable Programming",
+      "authors": [
+        "Guillaume Verdon",
+        "Leo Tyrpak",
+        "Owen Lockwood",
+        "Seth Morton",
+        "Alexander Neagoe"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7172432032",
+      "doi": "https://doi.org/10.48550/arxiv.2608.01615",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Thermalizing Stochastic Programs",
+      "authors": [
+        "Mirko Amico",
+        "Andra\u017e Jelin\u010di\u010d",
+        "Colin Oscar Nancarrow",
+        "Leo Tyrpak",
+        "David Roberts"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4387029877",
+      "doi": "https://doi.org/10.1016/j.automatica.2023.111268",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Quadratic filtering for discrete time-varying non-Gaussian systems under binary encoding schemes",
+      "authors": [
+        "Shaoying Wang",
+        "Zidong Wang",
+        "Hongli Dong",
+        "Bo Shen",
+        "Yun Fei Chen"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 14
+    },
+    {
+      "id": "https://openalex.org/W7165691426",
+      "doi": "https://doi.org/10.21203/rs.3.rs-10124326/v1",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Sketch-FORCE: Sub-quadratic Streaming Robust Covariance Estimation for Extreme Dimensions",
+      "authors": [
+        "Sooyoung Jang",
+        "Changbeom Choi"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W2148241907",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Stochastic programming with applications to power systems",
+      "authors": [
+        "Trine Krogh Kristoffersen"
+      ],
+      "year": 2007,
+      "pages": 18,
+      "citations": 17
+    },
+    {
+      "id": "https://openalex.org/W2904185888",
+      "doi": "https://doi.org/10.1287/ijoc.2019.0901",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Robust Quadratic Programming with Mixed-Integer Uncertainty",
+      "authors": [
+        "Areesh Mittal",
+        "Can Gokalp",
+        "Grani A. Hanasusanto"
+      ],
+      "year": 2019,
+      "pages": 18,
+      "citations": 14
+    },
+    {
+      "id": "https://openalex.org/W4415295865",
+      "doi": "https://doi.org/10.1103/5xh1-kgtk",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Rapid inference for individual binaries and a stochastic background with pulsar timing array data",
+      "authors": [
+        "Aiden Gundersen",
+        "Neil J. Cornish"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 13
+    },
+    {
+      "id": "https://openalex.org/W3114952797",
+      "doi": "https://doi.org/10.1007/s12532-021-00214-w",
+      "source": "OpenAlex",
+      "query": "stochastic binary quadratic programming covariance",
+      "title": "Adaptive primal-dual stochastic gradient method for expectation-constrained convex stochastic programs",
+      "authors": [
+        "Yonggui Yan",
+        "Yangyang Xu"
+      ],
+      "year": 2022,
+      "pages": 45,
+      "citations": 11
+    },
+    {
+      "id": "https://openalex.org/W4414359843",
+      "doi": "https://doi.org/10.24963/ijcai.2025/441",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Stackelberg vs. Nash in the Lottery Colonel Blotto Game",
+      "authors": [
+        "Yan Liu",
+        "Bonan Ni",
+        "Weiran Shen",
+        "Zihe Wang",
+        "Jie Zhang"
+      ],
+      "year": 2025,
+      "pages": 9,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W4415685860",
+      "doi": "https://doi.org/10.62311/nesx/rb978-81-979321-4-4",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Game Theory and Decision Science: Tools for Strategic Analysis and Optimization",
+      "authors": [
+        "Murali Krishna Pasupuleti"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2336385636",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Multi-level optimal design using game theory with model updating by low discrepancy sampling",
+      "authors": [
+        "Yanchen Xu"
+      ],
+      "year": 2015,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7167684570",
+      "doi": "https://doi.org/10.1007/978-3-032-40367-4_22",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "The Oracle\u2019s Gambit: A Game-Theoretic Framework for Responsible AI Release",
+      "authors": [
+        "Christoph R. Landolt",
+        "Tobias Lorenz",
+        "Marta Kwiatkowska",
+        "Mario Fritz"
+      ],
+      "year": 2026,
+      "pages": 21,
+      "citations": 4
+    },
+    {
+      "id": "https://openalex.org/W7164181331",
+      "doi": "https://doi.org/10.26190/unsworks/32382",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Integrating Optimization, Game Theory, and Reinforcement Learning for the Modeling and Analysis of Sustainable Supply Chains",
+      "authors": [
+        "Samudra Lamahewage"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7214566125",
+      "doi": "https://doi.org/10.3390/buildings16193823",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "The Cost of Uncoordinated Decisions in Early-Stage Architectural Design: A Game-Theoretic Proof of Concept",
+      "authors": [
+        "Alia Amer Hegazy",
+        "Shady Attia"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4412089204",
+      "doi": "https://doi.org/10.5829/ije.2026.39.03c.10",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Competitive Opinion Influence Maximization in Social Networks",
+      "authors": [
+        "Maryam Mahboobi",
+        "Mir Saman Pishvaee",
+        "Mehrdad Agha Mohammad Ali Kermani",
+        "M. Haji Mohammad Ali Jahromi",
+        "M. Taghipour"
+      ],
+      "year": 2025,
+      "pages": 17,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W7130905651",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Game-Theoretic Client Selection Mechanisms for Fairness, Incentives, and Security in Federated Learning with Non-IID Data",
+      "authors": [
+        "Sarhad Arisdakessian"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2508086203",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "An Evolving Asymmetric Game for Modeling Interdictor-Smuggler Problems",
+      "authors": [
+        "Richard J Allain"
+      ],
+      "year": 2016,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W4407571724",
+      "doi": "https://doi.org/10.48550/arxiv.2502.09053",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Game Theory Meets Large Language Models: A Systematic Survey with Taxonomy and New Frontiers",
+      "authors": [
+        "Haoran Sun",
+        "Yusen Wu",
+        "Wang, Peng",
+        "Chen, Wei",
+        "Cheng, Yukun"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 37
+    },
+    {
+      "id": "https://openalex.org/W4387266458",
+      "doi": "https://doi.org/10.31224/3258",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Game-Theoretic Frameworks for Autonomous Driving Decision Making: A Literature Review",
+      "authors": [
+        "Jie Zhang",
+        "Lijun Luo"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3006161834",
+      "doi": "https://doi.org/10.1016/j.tranpol.2020.02.002",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Strategic port competition in multimodal network development considering shippers\u2019 choice",
+      "authors": [
+        "Xiaodan Jiang",
+        "Houming Fan",
+        "Meifeng Luo",
+        "Zhenlin Xu"
+      ],
+      "year": 2020,
+      "pages": 22,
+      "citations": 42
+    },
+    {
+      "id": "https://openalex.org/W7204787062",
+      "doi": "https://doi.org/10.18653/2026.emnlp-main.2607",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "AI Alignment through a Game-theoretic Lens: A Survey",
+      "authors": [
+        "Yanan Cai",
+        "Zhongrui Zhao",
+        "Zhigang Lu",
+        "Ickjai Lee",
+        "Wei Emma Zhang"
+      ],
+      "year": 2026,
+      "pages": 21,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W3199740650",
+      "doi": "https://doi.org/10.48550/arxiv.2109.10698",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Complementing the Linear-Programming Learning Experience with the Design and Use of Computerized Games: The Formula 1 Championship Game",
+      "authors": [
+        "Gerardo L. Febres"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4416045771",
+      "doi": "https://doi.org/10.52202/085713-0791",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "GUARD: Constructing Realistic Two-Player Matrix and Security Games for Benchmarking Game-Theoretic Algorithms",
+      "authors": [
+        "Noah Krever",
+        "Jakub \u010cern\u00fd",
+        "Mo\u00efse Blanchard",
+        "Christian Kroer"
+      ],
+      "year": 2025,
+      "pages": 45,
+      "citations": 7
+    },
+    {
+      "id": "https://openalex.org/W4414942772",
+      "doi": "https://doi.org/10.48550/arxiv.2507.10621",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Game Theory Meets LLM and Agentic AI: Reimagining Cybersecurity for the Age of Intelligent Threats",
+      "authors": [
+        "Quanyan Zhu"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 12
+    },
+    {
+      "id": "https://openalex.org/W4415053168",
+      "doi": "https://doi.org/10.48550/arxiv.2509.05777",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Scenario-based Decision-making Using Game Theory for Interactive Autonomous Driving: A Survey",
+      "authors": [
+        "Zhihao Lin",
+        "Zhen Tian"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 5
+    },
+    {
+      "id": "https://openalex.org/W4378376437",
+      "doi": "https://doi.org/10.1145/3600094",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Taxonomy and Recent Advance of Game Theoretical Approaches in Adversarial Machine Learning: A Survey",
+      "authors": [
+        "Lijun Gao",
+        "Zheng Yan",
+        "Xueqin Liang",
+        "Xi Xu",
+        "Jie Wang"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 6
+    },
+    {
+      "id": "https://openalex.org/W7171141045",
+      "doi": "https://doi.org/10.60882/cispa.33086237",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "The Oracle's Gambit: A Game-Theoretic Framework for Responsible AI Release",
+      "authors": [
+        "Christoph Landolt",
+        "Tobias Lorenz",
+        "Marta Kwiatkowska",
+        "Mario Fritz"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4415078220",
+      "doi": "https://doi.org/10.1007/978-3-032-08064-6_13",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Adversarial Knapsack for Sequential Competitive Resource Allocation",
+      "authors": [
+        "Omkar Thakoor",
+        "Rajgopal Kannan",
+        "Viktor K. Prasanna"
+      ],
+      "year": 2025,
+      "pages": 15,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W3202008053",
+      "doi": "https://doi.org/10.1016/j.eneco.2023.106535",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Joint optimization of sales-mix and generation plan for a large electricity producer",
+      "authors": [
+        "Paolo Falbo",
+        "Carlos Ruiz"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W4403064347",
+      "doi": "https://doi.org/10.1111/mice.13352",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Solving discrete network design problem using disjunctive constraints",
+      "authors": [
+        "Hamid Mirzahossein",
+        "Pooyan Najafi",
+        "N. Kalantari",
+        "Steven Travis Waller"
+      ],
+      "year": 2024,
+      "pages": 15,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W7144266346",
+      "doi": "https://doi.org/10.15083/0002011063",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "An OD matrix prediction based road dynamic pricing optimization system",
+      "authors": [
+        "\u6587\u9a4d \u59dc"
+      ],
+      "year": 2022,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4312887433",
+      "doi": "https://doi.org/10.1109/tits.2022.3215926",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Joint Design for Electric Fleet Operator and Charging Service Provider: Understanding the Non-Cooperative Nature",
+      "authors": [
+        "Yiqi Zhao",
+        "Teng Zeng",
+        "Za\u00efd Allybokus",
+        "Ye Guo",
+        "Scott Jason Moura"
+      ],
+      "year": 2022,
+      "pages": 13,
+      "citations": 12
+    },
+    {
+      "id": "https://openalex.org/W4409365368",
+      "doi": "https://doi.org/10.1609/aaai.v39i13.33474",
+      "source": "OpenAlex",
+      "query": "bilevel optimization Stackelberg game contest",
+      "title": "Commitment to Sparse Strategies in Two-Player Games",
+      "authors": [
+        "Salam Afiouni",
+        "Jakub \u010cern\u00fd",
+        "Chun Kai Ling",
+        "Christian Kroer"
+      ],
+      "year": 2025,
+      "pages": 8,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4416935188",
+      "doi": "https://doi.org/10.52202/085713-0410",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Conformal Prediction for Time-series Forecasting with Change Points",
+      "authors": [
+        "Sophia Sun",
+        "Rose Yu"
+      ],
+      "year": 2025,
+      "pages": 30,
+      "citations": 11
+    },
+    {
+      "id": "https://openalex.org/W4364378290",
+      "doi": "https://doi.org/10.48550/arxiv.2304.03778",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Conformal Regression in Calorie Prediction for Team Jumbo-Visma",
+      "authors": [
+        "Kristian van Kuijk",
+        "Mark Dirksen",
+        "Christof Seiler"
+      ],
+      "year": 2023,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4407450163",
+      "doi": "https://doi.org/10.1109/taffc.2025.3542023",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Conformal Depression Prediction",
+      "authors": [
+        "Yonghong Li",
+        "Shan Qu",
+        "Xiuzhuang Zhou"
+      ],
+      "year": 2025,
+      "pages": 11,
+      "citations": 14
+    },
+    {
+      "id": "https://openalex.org/W7203638718",
+      "doi": "https://doi.org/10.1093/comnet/cnag017",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Conformal prediction regions for populations of graphs",
+      "authors": [
+        "Anna Calissano",
+        "Matteo Fontana",
+        "Gianluca Zeni",
+        "Simone Vantini"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W4389312611",
+      "doi": "https://doi.org/10.1080/10618600.2023.2285337",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Smooth Multi-Period Forecasting With Application to Prediction of COVID-19 Cases",
+      "authors": [
+        "Elena Tuzhilina",
+        "Trevor J. Hastie",
+        "Daniel J. McDonald",
+        "Jingyi Kenneth Tay",
+        "Robert John Tibshirani"
+      ],
+      "year": 2023,
+      "pages": 13,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4413506311",
+      "doi": "https://doi.org/10.1016/j.patcog.2025.112330",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Reliable classification through rank-based conformal prediction sets",
+      "authors": [
+        "Rui Luo",
+        "Zhixin Zhou"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 26
+    },
+    {
+      "id": "https://openalex.org/W4417135973",
+      "doi": "https://doi.org/10.48550/arxiv.2506.07854",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Residual Reweighted Conformal Prediction for Graph Neural Networks",
+      "authors": [
+        "Zheng Zhang",
+        "Jie Bao",
+        "Zhixin Zhou",
+        "Nicol\u00f2 Colombo",
+        "Lixin Cheng"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W7214058525",
+      "doi": "https://doi.org/10.48550/arxiv.2609.23906",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Multivariate quantile regression via Kolmogorov-Arnold Networks",
+      "authors": [
+        "Andrew Polar",
+        "Michael Poluektov"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7138908173",
+      "doi": "https://doi.org/10.48550/arxiv.2603.16857",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Long-Horizon Traffic Forecasting via Incident-Aware Conformal Spatio-Temporal Transformers",
+      "authors": [
+        "Mayur Patil",
+        "Qadeer Ahmed",
+        "Shawn W. Midlam-Mohler",
+        "Stephanie Marik",
+        "Allen Sheldon"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4415069633",
+      "doi": "https://doi.org/10.48550/arxiv.2506.11848",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "In Defense of Defensive Forecasting",
+      "authors": [
+        "Juan C. Perdomo",
+        "Benjamin Recht"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 12
+    },
+    {
+      "id": "https://openalex.org/W4404954879",
+      "doi": "https://doi.org/10.2139/ssrn.5001267",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "A Conformal Approach to Feature-Based Newsvendor Under Model Misspecification",
+      "authors": [
+        "Junyu Cao"
+      ],
+      "year": 2024,
+      "pages": 18,
+      "citations": 6
+    },
+    {
+      "id": "https://openalex.org/W3212296934",
+      "doi": "https://doi.org/10.1177/00491241231155883",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Improving Fairness in Criminal Justice Algorithmic Risk Assessments Using Optimal Transport and Conformal Prediction Sets",
+      "authors": [
+        "Richard A. Berk",
+        "Arun Kumar Kuchibhotla",
+        "Eric Tchetgen Tchetgen"
+      ],
+      "year": 2023,
+      "pages": 47,
+      "citations": 24
+    },
+    {
+      "id": "https://openalex.org/W4414973532",
+      "doi": "https://doi.org/10.1002/env.70043",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Developments in Functional Regression Model for Network Structured Data",
+      "authors": [
+        "Elvira Romano",
+        "Antonio Irpino",
+        "Claire A. Miller"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W4415944207",
+      "doi": "https://doi.org/10.1016/j.rser.2025.116452",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Foundation models for clean energy forecasting: A comprehensive review",
+      "authors": [
+        "Md Meftahul Ferdaus",
+        "Tanmoy Dam",
+        "Md Rasel Sarkar",
+        "Moslem Uddin",
+        "Sreenatha Gopalarao Anavatti"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 37
+    },
+    {
+      "id": "https://openalex.org/W7204970000",
+      "doi": "https://doi.org/10.21203/rs.3.rs-10875799/v1",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Machine Learning Validation Pipelines: From Tabular Benchmarking to Conformal Calibration and Execution-Grounded Agentic Testing",
+      "authors": [
+        "Nancy Gaur",
+        "Wasim Mohammed Amin Tambe",
+        "Saumya Tripathi"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2805291027",
+      "doi": "https://doi.org/10.1186/s12544-018-0300-1",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Overview of traffic incident duration analysis and prediction",
+      "authors": [
+        "Ruimin Li",
+        "Francisco C. Pereira",
+        "Moshe E Ben-Akiva"
+      ],
+      "year": 2018,
+      "pages": 18,
+      "citations": 115
+    },
+    {
+      "id": "https://openalex.org/W3045573798",
+      "doi": "https://doi.org/10.1109/access.2020.3012032",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Cold-Start Promotional Sales Forecasting Through Gradient Boosted-Based Contrastive Explanations",
+      "authors": [
+        "Carlos Aguilar-Palacios",
+        "Sergio Mu\u00f1oz-Romero",
+        "Jos\u00e9 Luis Rojo\u2010\u00c1lvarez"
+      ],
+      "year": 2020,
+      "pages": 13,
+      "citations": 25
+    },
+    {
+      "id": "https://openalex.org/W7164510354",
+      "doi": "https://doi.org/10.33150/jitdets-10.1.4",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Hybrid Machine Learning-based Short-Term Electricity Price Forecasting in Smart Grids Using Weather, Demand, and Market Data: A Systemic Review",
+      "authors": [
+        "Asad Riaz"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 2
+    },
+    {
+      "id": "https://openalex.org/W4392384264",
+      "doi": "https://doi.org/10.1002/mde.4158",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Game changers or money pits? Asymmetric impact of sports facilities investment on football revenue",
+      "authors": [
+        "Wanxia Tang",
+        "Xiaolin Zhang"
+      ],
+      "year": 2024,
+      "pages": 15,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W2638394706",
+      "doi": null,
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "A forecast evaluation of PCA-based adaptive forecasting schemes for the EURIBOR swap term structure",
+      "authors": [
+        "Oliver Jim Blaskowitz"
+      ],
+      "year": 2010,
+      "pages": 76,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W7155172292",
+      "doi": "https://doi.org/10.48550/arxiv.2604.19580",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Probabilistic Forecasting for Day-ahead Electricity Prices, Battery Trading Strategies and the Economic Evaluation of Predictive Accuracy",
+      "authors": [
+        "Simon Hirsch",
+        "Florian Ziel"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 3
+    },
+    {
+      "id": "https://openalex.org/W3178694782",
+      "doi": "https://doi.org/10.1016/j.patcog.2021.108175",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Mixability of integral losses: A key to efficient online aggregation of functional and probabilistic forecasts",
+      "authors": [
+        "Alexander Andreevich Korotin",
+        "Vladimir Vyacheslavovich V'yugin",
+        "Evgeny Vladimirovich Burnaev"
+      ],
+      "year": 2021,
+      "pages": 18,
+      "citations": 8
+    },
+    {
+      "id": "https://openalex.org/W7152470684",
+      "doi": "https://doi.org/10.70675/1114798dzdc6bz4504zacf3z205f82ff0735",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "statistical modeling for improving decision-making in team sports",
+      "authors": [
+        "Ali Baouan"
+      ],
+      "year": 2025,
+      "pages": 18,
+      "citations": 0
+    },
+    {
+      "id": "https://openalex.org/W4388763207",
+      "doi": "https://doi.org/10.1080/00031305.2023.2283199",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "Using Conformal Win Probability to Predict the Winners of the Canceled 2020 NCAA Basketball Tournaments",
+      "authors": [
+        "Chancellor Johnstone",
+        "Dan S. Nettleton"
+      ],
+      "year": 2023,
+      "pages": 14,
+      "citations": 1
+    },
+    {
+      "id": "https://openalex.org/W7214907308",
+      "doi": "https://doi.org/10.48550/arxiv.2609.36689",
+      "source": "OpenAlex",
+      "query": "quantile regression conformal prediction sports forecasting",
+      "title": "CHAIN: Calibrated LLM Forecasting via Causal-Temporal Hypergraph Inference",
+      "authors": [
+        "Wenjin Liu",
+        "Chenxi Wang",
+        "Yue Lu",
+        "Zhe Cui",
+        "Haoran Luo"
+      ],
+      "year": 2026,
+      "pages": 18,
+      "citations": 0
+    }
+  ]
+}
