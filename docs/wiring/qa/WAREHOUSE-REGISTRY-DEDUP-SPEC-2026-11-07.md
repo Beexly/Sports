@@ -1,0 +1,9 @@
+# WAREHOUSE REGISTRY DEDUP — SPEC + VERIFIED COUNTS (Motif, 2026-11-07)
+
+Wave-6 prerequisite, prepared (not executed on the registry — the registry file is AGY's Wave-6 input and tonight is verification, not modification).
+
+Verified state (Motif re-audit, main via API, 2026-11-07 ~01:50 CT): intelligence/data/warehouse/ingestion_registry.jsonl = 21 rows, 10 distinct canonical_id, 10 distinct sha256. The ingester ran twice ~25s apart on 2026-10-17 (04:30–04:33Z) and both runs were appended; ESPN was logged 3x. Duplicate rows share the same sha256 per dataset — same payloads re-logged, not distinct ingestions.
+
+Counts: naive row-sum 158,607 records; **unique total 79,297** (dedupe key: canonical_id + sha256). Per-dataset unique: ESPN scoreboard 14; Sleeper players 12,229; nflverse PBP 49,492; nflverse schedules/lines 7,548; Kalshi 200; Polymarket 1,000; nflverse rosters 3,216; nflverse weekly stats 5,597; Open-Meteo 1 (its PASS row; a FAIL row with 0 also exists); NWS 0 (2 rows, both FAIL).
+
+Dedup pass spec for Wave 6: (1) group rows by (canonical_id, sha256); (2) within each group keep the row with the LATEST ingested_at and status PASS if any PASS exists in the group, else the latest row; (3) emit exactly 10 rows; (4) assert the kept rows' record counts sum to 79,297; (5) assert Open-Meteo resolves to its PASS row (1 record) and NWS to FAIL/0; (6) write the deduped registry as a NEW file (ingestion_registry_deduped.jsonl) — do not rewrite the original in place; the original is the audit trail of the double-run. Also flagged for Wave 6: every norm_parquet path in the registry points at C:\Users\Garrett\... (Windows host) — no normalized data exists in the repo; Wave 6's "counts verified vs registry" step must treat repo-side normalized data as absent until it is actually landed.
