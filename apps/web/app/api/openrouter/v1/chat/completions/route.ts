@@ -4,7 +4,7 @@ import {
   runJarvisJynxAutonomousBrainAsync,
   type StealthSkeletonModelId,
 } from "@/lib/jarvis/stealth-skeleton-brain";
-import { STEALTH_SKELETON_OPENROUTER_MODELS } from "../models/route";
+import { STEALTH_SKELETON_OPENROUTER_MODELS } from "../../models/route";
 
 export const dynamic = "force-dynamic";
 

@@ -281,14 +281,14 @@ export const MARKET_SPECIFIC_CQR_PARAMETERS: Readonly<Record<string, MarketCqrSp
 
 export function resolveMarketCqrSpec(marketType?: string): MarketCqrSpec {
   const norm = (marketType ?? "spread").toLowerCase();
-  if (norm.includes("pass") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_pass_yds"];
-  if (norm.includes("rec") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_reception_yds"];
-  if (norm.includes("rush") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_rush_yds"];
-  if (norm.includes("rec")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_receptions"];
+  if (norm.includes("pass") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_pass_yds"]!;
+  if (norm.includes("rec") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_reception_yds"]!;
+  if (norm.includes("rush") && norm.includes("yd")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_rush_yds"]!;
+  if (norm.includes("rec")) return MARKET_SPECIFIC_CQR_PARAMETERS["player_receptions"]!;
   if (norm.includes("total") || norm.includes("ou") || norm.includes("over") || norm.includes("under")) {
-    return MARKET_SPECIFIC_CQR_PARAMETERS["total"];
+    return MARKET_SPECIFIC_CQR_PARAMETERS["total"]!;
   }
-  return MARKET_SPECIFIC_CQR_PARAMETERS["spread"];
+  return MARKET_SPECIFIC_CQR_PARAMETERS["spread"]!;
 }
 
 export function computeRomanoCqrBand(params: {
@@ -350,7 +350,7 @@ export function computeKadavathPikAndPooling(params: {
   const pCqr = Math.max(0.02, Math.min(0.98, 0.5 + cqrShrink * (pMkt - 0.5)));
 
   const sorted = [pMkt, pAna, pSit, pCqr].sort((a, b) => a - b);
-  const schoeneggerMedianProb = Number(((sorted[1] + sorted[2]) / 2.0).toFixed(4));
+  const schoeneggerMedianProb = Number((((sorted[1] ?? 0.5) + (sorted[2] ?? 0.5)) / 2.0).toFixed(4));
   const meanHead = (pMkt + pAna + pSit + pCqr) / 4.0;
   const variance =
     ([pMkt, pAna, pSit, pCqr].reduce((acc, v) => acc + Math.pow(v - meanHead, 2), 0)) / 4.0;
@@ -576,22 +576,22 @@ export function solveAnalyticalAndSituationalBrain(prompt: string): {
     const mW = prompt.match(/w\s*=\s*\[([^\]]+)\]/i)!;
     const mR = prompt.match(/R\s*=\s*\[([^\]]+)\]/i)!;
     const alpha = mAlpha ? Number(mAlpha[1]) : 0.10;
-    const weights = mW[1].split(",").map((x) => Number(x.trim()));
-    const residuals = mR[1].split(",").map((x) => Number(x.trim()));
+    const weights = (mW[1] ?? "").split(",").map((x) => Number(x.trim()));
+    const residuals = (mR[1] ?? "").split(",").map((x) => Number(x.trim()));
     const target = 1.0 - alpha;
     let cum = 0.0;
-    let ans = residuals[residuals.length - 1];
+    let ans = residuals[residuals.length - 1] ?? 0;
     for (let i = 0; i < weights.length; i++) {
-      cum += weights[i];
+      cum += weights[i] ?? 0;
       if (cum >= target - 1e-9) {
-        ans = residuals[i];
+        ans = residuals[i] ?? ans;
         break;
       }
     }
     return {
       solved: true,
       subdomain: "conformal_prediction",
-      numericAnswer: ans,
+      numericAnswer: ans ?? 0,
       reasoning: `Accumulating normalized weights [${weights.join(", ")}] against target coverage 1 - alpha = ${target.toFixed(2)} reaches cumulative weight ${cum.toFixed(2)} at residual ${ans}. Answer: ${ans}`,
     };
   }
@@ -1382,29 +1382,29 @@ export function executeRealSinkhornKnoppMarginalAudit(
   for (let it = 0; it < Math.max(1, iterations); it++) {
     u = r.map((ri, i) => {
       let kv = 0;
-      for (let j = 0; j < 4; j++) kv += K[i][j] * v[j];
+      for (let j = 0; j < 4; j++) kv += (K[i]?.[j] ?? 0) * (v[j] ?? 1);
       return ri / Math.max(1e-18, kv);
     });
     v = c.map((cj, j) => {
       let ktu = 0;
-      for (let i = 0; i < 4; i++) ktu += K[i][j] * u[i];
+      for (let i = 0; i < 4; i++) ktu += (K[i]?.[j] ?? 0) * (u[i] ?? 1);
       return cj / Math.max(1e-18, ktu);
     });
   }
 
-  const P = K.map((row, i) => row.map((kij, j) => u[i] * kij * v[j]));
+  const P = K.map((row, i) => row.map((kij, j) => (u[i] ?? 1) * kij * (v[j] ?? 1)));
   let l1Err = 0;
   let lInfErr = 0;
   for (let i = 0; i < 4; i++) {
-    const rowSum = P[i].reduce((a, b) => a + b, 0);
-    const diff = Math.abs(rowSum - r[i]);
+    const rowSum = (P[i] ?? []).reduce((a, b) => a + b, 0);
+    const diff = Math.abs(rowSum - (r[i] ?? 0));
     l1Err += diff;
     if (diff > lInfErr) lInfErr = diff;
   }
   for (let j = 0; j < 4; j++) {
     let colSum = 0;
-    for (let i = 0; i < 4; i++) colSum += P[i][j];
-    const diff = Math.abs(colSum - c[j]);
+    for (let i = 0; i < 4; i++) colSum += P[i]?.[j] ?? 0;
+    const diff = Math.abs(colSum - (c[j] ?? 0));
     l1Err += diff;
     if (diff > lInfErr) lInfErr = diff;
   }
@@ -1414,7 +1414,7 @@ export function executeRealSinkhornKnoppMarginalAudit(
     l1MarginalResidual: Number(l1Err.toExponential(6)),
     lInfMarginalResidual: Number(lInfErr.toExponential(6)),
     converged: l1Err < 1e-6 && lInfErr < 1e-6,
-    transportPlanRow0: P[0].map((val) => Number(val.toFixed(6))),
+    transportPlanRow0: (P[0] ?? []).map((val) => Number(val.toFixed(6))),
   };
 }
 
@@ -1788,8 +1788,8 @@ export function executeStealthSkeletonMcpToolCall(
         primary_stack_team: primaryStackTeam,
         sinkhorn_stack_weights: sinkhorn.transportPlanRow0,
         sinkhorn_converged: sinkhorn.converged,
-        projected_ceiling_pts: Number((150.0 + sinkhorn.transportPlanRow0[0] * 105.0).toFixed(2)),
-        ownership_leverage_score: Number((0.75 + sinkhorn.transportPlanRow0[1] * 0.4).toFixed(4)),
+        projected_ceiling_pts: Number((150.0 + (sinkhorn.transportPlanRow0[0] ?? 0.25) * 105.0).toFixed(2)),
+        ownership_leverage_score: Number((0.75 + (sinkhorn.transportPlanRow0[1] ?? 0.25) * 0.4).toFixed(4)),
       },
     };
   }
@@ -2986,8 +2986,8 @@ export function computeTtpoMajorityVoteAsymmetry(rollouts: string[]): {
     counts.set(key, (counts.get(key) ?? 0) + 1);
   }
   const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-  const [majAns, majCount] = sorted[0];
-  const runnerUpCount = sorted.length > 1 ? sorted[1][1] : 0;
+  const [majAns, majCount] = sorted[0] ?? ["", 0];
+  const runnerUpCount = sorted.length > 1 ? (sorted[1]?.[1] ?? 0) : 0;
   const k = rollouts.length;
   const consensusRatio = Number((majCount / k).toFixed(4));
   const asymmetryMargin = Number(((majCount - runnerUpCount) / k).toFixed(4));
@@ -3142,7 +3142,7 @@ export function reasonOverPageIndexTree(
   readonly reasoningScore: number;
 } {
   const qLower = query.toLowerCase();
-  let bestSec = tree.children[0];
+  let bestSec: PageIndexTreeNode = tree.children[0] ?? tree;
   let bestSecScore = -1;
 
   for (const sec of tree.children) {
@@ -3153,7 +3153,7 @@ export function reasonOverPageIndexTree(
     }
   }
 
-  let bestSub = bestSec.children[0] ?? bestSec;
+  let bestSub: PageIndexTreeNode = bestSec.children[0] ?? bestSec;
   let bestSubScore = -1;
   for (const sub of bestSec.children) {
     const score = sub.keywords.reduce((acc, kw) => acc + (qLower.includes(kw) ? 3 : 0), 0);
