@@ -39,7 +39,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             Calibration Proof Room
           </h1>
           <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
-            We publish every settled ticket, every closing line comparison, and our exact settlement record by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our signal-path grades run conservative — a ticket shown in the 60s wins about 57 times in 100, not 65.
+            We publish every settled ticket, every closing line comparison, and our exact settlement record by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our signal-path grades run conservative: a ticket shown in the 60s wins about 57 times in 100, not 65.
           </p>
         </div>
 
