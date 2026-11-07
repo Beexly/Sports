@@ -1,6 +1,8 @@
 # Nova voice — LOCKED
 
-Locked by Garrett on Oct 28, 2026 at 10:41 CT. His deciding quote was on the Callirrhoe board line: "Yeah it's this one."
+**CURRENT PRODUCTION VOICE — READ THIS FIRST: Zephyr + the Nov 7, 2026 adjusted style text (see the UPDATE section at the end of this file). The Oct 28 Callirrhoe lock below is HISTORY — superseded Oct 28, 2026, 14:07 CT (§47) and updated Nov 7, 2026. Reading only this header is what caused the Nov 7 production drift. The latest dated section in this file governs.**
+
+Locked by Garrett on Oct 28, 2026 at 10:41 CT. His deciding quote was on the Callirrhoe board line: "Yeah it's this one." (Historical — superseded; see banner above.)
 
 Engine: Google AI Studio — Gemini 3.8 Flash TTS (gemini-3.8-flash-tts)
 Voice: Callirrhoe (UI description: Easy-going · Middle pitch)
