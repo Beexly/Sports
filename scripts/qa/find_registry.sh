@@ -1,3 +1,4 @@
+set -euo pipefail
 if [ -f data/engine/equation_execution_registry.jsonl ]; then
     echo "Found equation_execution_registry.jsonl"
 else
