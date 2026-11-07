@@ -144,3 +144,89 @@ export function scoreGseLiveBenchSubmission(
     tripleLedgerAnchorSha256,
   };
 }
+
+export interface AlwaysOnPickInput {
+  readonly pickId: string;
+  readonly sport: string;
+  readonly marketType: string;
+  readonly predictedProb: number;
+  readonly deViggedOpenProb: number;
+  readonly deViggedCloseProb: number;
+  readonly outcome: 0 | 1;
+  readonly difficultyWeight: number;
+  readonly conformalLower90: number;
+  readonly conformalUpper90: number;
+  readonly realizedMarginOrStat: number;
+  readonly preCommitTimestampUtc: string;
+  readonly kickoffTimestampUtc: string;
+}
+
+export interface AlwaysOnLiveBenchScorecard {
+  readonly totalEvaluated: number;
+  readonly meanDeVigClv: number;
+  readonly meanDifficultyAdjustedBrier: number;
+  readonly conformalCoverageRate90: number;
+  readonly preCommitMerkleRootSha256: string;
+}
+
+export function evaluateAlwaysOnLiveBenchScorecard(
+  picks: readonly AlwaysOnPickInput[]
+): AlwaysOnLiveBenchScorecard {
+  if (picks.length === 0) {
+    return {
+      totalEvaluated: 0,
+      meanDeVigClv: 0,
+      meanDifficultyAdjustedBrier: 0,
+      conformalCoverageRate90: 0,
+      preCommitMerkleRootSha256: createHash("sha256").update("empty").digest("hex"),
+    };
+  }
+
+  let clvSum = 0;
+  let brierSum = 0;
+  let coveredCount = 0;
+  const leafHashes: string[] = [];
+
+  for (const p of picks) {
+    const subMs = Date.parse(p.preCommitTimestampUtc);
+    const kickMs = Date.parse(p.kickoffTimestampUtc);
+    const receipt = scoreGseLiveBenchSubmission(
+      {
+        forecasterId: "gse-quad-frontier",
+        questionId: p.pickId,
+        track: "TOURNAMENT_AGENT",
+        domain: "NFL_LIVE",
+        submittedAtEpochMs: Number.isFinite(subMs) ? subMs : 0,
+        cutoffEpochMs: Number.isFinite(kickMs) ? kickMs : 1,
+        binaryProb: p.predictedProb,
+        submitMarketDeVigProb: p.deViggedOpenProb,
+        closeMarketDeVigProb: p.deViggedCloseProb,
+        cqrLower90: p.conformalLower90,
+        cqrUpper90: p.conformalUpper90,
+        continuousMean: (p.conformalLower90 + p.conformalUpper90) / 2,
+        continuousSigma: Math.max(1, (p.conformalUpper90 - p.conformalLower90) / 3.29),
+      },
+      {
+        questionId: p.pickId,
+        binaryOutcome: p.outcome,
+        continuousActual: p.realizedMarginOrStat,
+      }
+    );
+    clvSum += receipt.deviggedClvLogitDelta;
+    brierSum += receipt.brierScore * p.difficultyWeight;
+    if (receipt.cqrCovered90) coveredCount += 1;
+    leafHashes.push(receipt.tripleLedgerAnchorSha256);
+  }
+
+  const preCommitMerkleRootSha256 = createHash("sha256")
+    .update(leafHashes.join(":"))
+    .digest("hex");
+
+  return {
+    totalEvaluated: picks.length,
+    meanDeVigClv: Number((clvSum / picks.length).toFixed(6)),
+    meanDifficultyAdjustedBrier: Number((brierSum / picks.length).toFixed(6)),
+    conformalCoverageRate90: Number((coveredCount / picks.length).toFixed(6)),
+    preCommitMerkleRootSha256,
+  };
+}

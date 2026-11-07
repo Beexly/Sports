@@ -169,7 +169,7 @@ def load_classic_slate(csv_path: str | Path) -> pd.DataFrame:
         "game_id": raw["game_id"].astype(str),
         "salary": raw["Salary"].astype(int),
         "projection": raw["AvgPointsPerGame"].astype(float).round(3),
-        "status": raw["Status"].fillna("").astype(str) if "Status" in raw.columns else "",
+        "status": raw["Status"].astype(object).fillna("").astype(str) if "Status" in raw.columns else "",
         "role": "",
         "dk_id": raw["ID"].astype(str),
     }).reset_index(drop=True)
@@ -574,7 +574,7 @@ def build_showdown_packet(
     raw = raw[raw["Salary"].fillna(0) >= 200]
     # STAGE 0 GATE (Showdown): Status column, config exclusions, traded players, QB1 only.
     gate_in = pd.DataFrame({"name": raw["Name"].astype(str), "team": raw["TeamAbbrev"].astype(str),
-                            "position": raw["Position"].astype(str), "status": raw["Status"].fillna("").astype(str),
+                            "position": raw["Position"].astype(str), "status": raw["Status"].astype(object).fillna("").astype(str),
                             "salary": raw["Salary"]}, index=raw.index)
     cfg = load_gate_config()
     _clean, stage0_removed = apply_gate(gate_in, cfg)

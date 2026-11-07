@@ -126,6 +126,6 @@ export class CanonicalEntityResolver {
       );
     }
 
-    return windowMatches[0];
+    return windowMatches[0]!;
   }
 }

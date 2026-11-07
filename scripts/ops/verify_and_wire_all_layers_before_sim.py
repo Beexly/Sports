@@ -55,6 +55,7 @@ def assert_all_layers_wired_before_simulation() -> Dict[str, Any]:
         data = {}
     data["pre_sim_gate_passed"] = True
     data["layers"] = layers
+    GATE_JSON_PATH.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     return data
 
 

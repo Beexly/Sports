@@ -4,6 +4,7 @@ import {
   computeDynamicEquationCounts,
   runJarvisJynxAutonomousBrain,
 } from "@/lib/jarvis/stealth-skeleton-brain";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const dynamic = "force-dynamic";
 
@@ -59,19 +60,22 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const viewerEntitlements = await getViewerEntitlements();
     const body = (await req.json().catch(() => ({}))) as {
       question?: string;
       matchup?: string;
     };
+    const slateLabel = body.matchup ?? "NFL 2026 Week 9 Matchup Environment";
     const question = (body.question ?? "Summarize Week 9 trench and coverage matchup environments.").trim();
-    const brain = await runJarvisJynxAutonomousBrain({
+    const brain = runJarvisJynxAutonomousBrain({
+      prompt: `${question} [${slateLabel}]`,
       mode: "bet_predicting",
-      slateLabel: body.matchup ?? "NFL 2026 Week 9 Matchup Environment",
     });
 
     return NextResponse.json({
       ok: true,
       question,
+      entitlement_tier: viewerEntitlements.tier,
       quad_frontier_spine_used: [
         "google/gemini-4-argon",
         "anthropic/claude-opus-5.5",
@@ -83,9 +87,9 @@ export async function POST(req: Request) {
       environment_brief:
         "Matchup environment evaluated across all 26 situational and scheme layers (trench pass-block win rates, defensive two-high shell frequencies, red-zone script elasticity, and verified 2026 active rosters). Official member side, total, and player prop tickets remain gated inside the Pro Command Center.",
       slate_summary: {
-        slate_label: brain.slateLabel,
-        official_record: brain.officialRecord,
-        roster_rulings_verified: brain.standingRosterRulings,
+        slate_label: slateLabel,
+        official_record: brain.seasonLedger,
+        roster_rulings_verified: brain.standingRosterRuling,
       },
     });
   } catch (err) {
