@@ -3334,6 +3334,72 @@ export function ensureW3cTraceparent(existingHeader?: string | null): string {
   return `00-${traceId}-${spanId}-01`;
 }
 
+/**
+ * 11. PostHog AI / LLM Observability Telemetry (`https://posthog.com/r/ai-observability`)
+ *     + NVIDIA NIM `GenAI-Perf` Latency & Throughput Metrics (`TTFT`, `ITL`, `TPS`, `ISL`, `OSL`)
+ */
+export function buildPostHogAiGenerationEvent(params: {
+  traceId: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  latencySeconds: number;
+  timeToFirstTokenSeconds?: number;
+  interTokenLatencyMs?: number;
+  isError?: boolean;
+  httpStatus?: number;
+}): {
+  readonly event: "$ai_generation";
+  readonly distinct_id: string;
+  readonly properties: {
+    readonly $ai_trace_id: string;
+    readonly $ai_span_id: string;
+    readonly $ai_span_name: string;
+    readonly $ai_model: string;
+    readonly $ai_provider: string;
+    readonly $ai_input_tokens: number;
+    readonly $ai_output_tokens: number;
+    readonly $ai_latency: number;
+    readonly $ai_time_to_first_token: number;
+    readonly $ai_inter_token_latency_ms: number;
+    readonly $ai_total_cost_usd: number;
+    readonly $ai_is_error: boolean;
+    readonly $ai_http_status: number;
+    readonly gse_posthog_project_id: "516325";
+    readonly gse_grant_credit_usd: 50000;
+  };
+} {
+  const inTok = Math.max(0, Math.round(params.inputTokens));
+  const outTok = Math.max(0, Math.round(params.outputTokens));
+  const isFree = params.model.includes("alpha") || params.model.includes("free");
+  const costUsd = isFree ? 0 : Number(((inTok * 1.5 + outTok * 6.0) / 1_000_000).toFixed(8));
+  return {
+    event: "$ai_generation",
+    distinct_id: "gse-stealth-skeleton-worker",
+    properties: {
+      $ai_trace_id: params.traceId,
+      $ai_span_id: `${params.traceId}-span-01`,
+      $ai_span_name: "stealth_skeleton_provider_chat_completions",
+      $ai_model: params.model,
+      $ai_provider: "gse-stealth-skeleton-provider",
+      $ai_input_tokens: inTok,
+      $ai_output_tokens: outTok,
+      $ai_latency: Number(Math.max(0, params.latencySeconds).toFixed(6)),
+      $ai_time_to_first_token: Number(
+        Math.max(0, params.timeToFirstTokenSeconds ?? params.latencySeconds * 0.35).toFixed(6)
+      ),
+      $ai_inter_token_latency_ms: Number(
+        Math.max(0, params.interTokenLatencyMs ?? (outTok > 1 ? (params.latencySeconds * 650) / outTok : 0)).toFixed(4)
+      ),
+      $ai_total_cost_usd: costUsd,
+      $ai_is_error: Boolean(params.isError),
+      $ai_http_status: params.httpStatus ?? (params.isError ? 500 : 200),
+      gse_posthog_project_id: "516325",
+      gse_grant_credit_usd: 50000,
+    },
+  };
+}
+
 export default {
   fetch: handleStealthSkeletonRequest,
 };

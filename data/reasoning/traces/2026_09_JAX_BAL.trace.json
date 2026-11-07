@@ -18,8 +18,8 @@
         "L09_injuries_and_availability",
         "L12_trench_matchup_ol_vs_dl"
       ],
-      "pass_protection_system": "2_jet_one_you_two_me",
-      "trench_signal": 0.22386
+      "pass_protection_system": "2_JET",
+      "trench_signal": 0.209919
     },
     "coaching_scheme": {
       "order": 2,
@@ -27,9 +27,9 @@
         "offensive_line",
         "L11_coaching_minds_and_playcallers"
       ],
-      "offensive_scheme": "shanahan_wide_zone",
-      "defensive_shell": "cover_4_quarters_mod_push",
-      "coaching_scheme_signal": 0.234482
+      "offensive_scheme": "SHANAHAN_WIDE_ZONE",
+      "defensive_shell": "COVER_4_QUARTERS",
+      "coaching_scheme_signal": 0.220512
     },
     "scheme_matchup": {
       "order": 3,
@@ -39,7 +39,7 @@
         "L13_scheme_vs_scheme",
         "L17_player_vs_scheme"
       ],
-      "scheme_matchup_signal": 0.273155
+      "scheme_matchup_signal": 0.25918
     },
     "qb_behavior": {
       "order": 4,
@@ -49,7 +49,7 @@
         "scheme_matchup",
         "L21_qb_processing_and_pressure"
       ],
-      "qb_processing_signal": 0.413177
+      "qb_processing_signal": 0.399851
     },
     "trust_signals": {
       "order": 5,
@@ -61,34 +61,34 @@
         "L06_venue_surface_and_weather",
         "L10_biomechanics_and_return_to_play"
       ],
-      "trust_signal": 0.394427
+      "trust_signal": 0.381101
     }
   },
   "synthesis_levels": {
     "L1": {
       "name": "Raw Layer & Entity Hygiene",
       "status": "VERIFIED",
-      "delta": 0.22386
+      "delta": 0.209919
     },
     "L2": {
       "name": "Trench & Protection Mechanics",
       "status": "VERIFIED",
-      "delta": 0.234482
+      "delta": 0.220512
     },
     "L3": {
       "name": "Scheme vs Shell & Route Interaction",
       "status": "VERIFIED",
-      "delta": 0.273155
+      "delta": 0.25918
     },
     "L4": {
       "name": "QB Processing & Environment Synthesis",
       "status": "VERIFIED",
-      "delta": 0.30782
+      "delta": 0.294113
     },
     "L5": {
       "name": "Post-Reasoning Price Check & Pass Discipline",
       "status": "VERIFIED",
-      "delta": 0.652918
+      "delta": 0.640047
     }
   },
   "weighed_signals": [
@@ -157,7 +157,7 @@
     "weight_cap": 0.08,
     "applied_weight": 0.05
   },
-  "final_reasoning_delta": 0.652918,
+  "final_reasoning_delta": 0.640047,
   "weekly_cycle_7_steps": {
     "sequence_valid": true,
     "fixed_order": [
@@ -174,10 +174,10 @@
         "step_index": 1,
         "step_name": "1_usage",
         "player_gp_denominator_enforced": true,
-        "away_target_concentration_herfindahl": 0.2636,
-        "home_target_concentration_herfindahl": 0.2565,
-        "away_neutral_proe": 0.4052,
-        "home_neutral_proe": 0.2872,
+        "away_target_concentration_herfindahl": 0.262,
+        "home_target_concentration_herfindahl": 0.2548,
+        "away_neutral_proe": 0.3919,
+        "home_neutral_proe": 0.2732,
         "provenance": [
           "nflverse/nflverse-pbp",
           "ffverse/ffopportunity",
@@ -288,8 +288,8 @@
         "step_name": "3_matchups_available_players",
         "away_ol_immediate_zone_win_rate": 0.5789,
         "home_ol_immediate_zone_win_rate": 0.601,
-        "away_wr_brk_plus_braking_score": 0.615,
-        "home_wr_brk_plus_braking_score": 0.6392,
+        "away_wr_brk_plus_braking_score": 0.6087,
+        "home_wr_brk_plus_braking_score": 0.633,
         "away_def_ktd_tackle_translation": 0.6765,
         "home_def_ktd_tackle_translation": 0.707,
         "provenance": [
@@ -303,8 +303,8 @@
       "4_situations": {
         "step_index": 4,
         "step_name": "4_situations",
-        "away_scrack_scramble_plus_sack_epa": 0.1063,
-        "home_scrack_scramble_plus_sack_epa": 0.118,
+        "away_scrack_scramble_plus_sack_epa": 0.1,
+        "home_scrack_scramble_plus_sack_epa": 0.1117,
         "heckman_4th_down_selection_bias_adj": -0.0014,
         "surrender_index_conservatism_penalty": 0.0,
         "net_rest_differential_days": 0.0,
@@ -321,7 +321,7 @@
         "step_name": "5_venues_weather_referees",
         "is_indoor": false,
         "is_turf": false,
-        "wind_mph_effective": 9.5,
+        "wind_mph_effective": 8.0,
         "temp_f_effective": 62.0,
         "fg_make_prob_weather_delta": -0.0,
         "provenance": [
@@ -346,13 +346,13 @@
         "executed_after_steps_1_to_6": true,
         "market_weight_in_reasoning": 0.06,
         "market_is_headline_reason": false,
-        "pre_market_reasoning_epa_delta": -0.00736,
+        "pre_market_reasoning_epa_delta": -0.00741,
         "posted_home_spread": -2.5,
-        "final_post_price_check_epa_delta": -0.00606
+        "final_post_price_check_epa_delta": -0.00611
       }
     },
-    "pre_market_reasoning_epa_delta": -0.00736,
-    "final_post_step7_epa_delta": -0.00606
+    "pre_market_reasoning_epa_delta": -0.00741,
+    "final_post_step7_epa_delta": -0.00611
   },
   "five_tracks_l1_to_l5": {
     "all_5_tracks_reached_l5": true,
@@ -375,26 +375,26 @@
       },
       "5_scheme_matchup": {
         "track_id": "5_scheme_matchup",
-        "L1_surface_baseline": "Home off EPA=0.254 vs Away def EPA=0.010; Away off EPA=0.244 vs Home def EPA=-0.020",
-        "L2_scheme_trench_mechanics": "ExposingCoverageTells-BDB25 pre-snap shell disguise + Cover 7 bracket / Quarter Overload pressure answers; WR BRK+ Home=0.639 vs Away KTD=0.676",
-        "L3_health_and_fatigue_coupling": "Turf=False (Rupture Report mult=1.00) & wind=9.5 mph interaction with deep route tree.",
+        "L1_surface_baseline": "Home off EPA=0.240 vs Away def EPA=0.010; Away off EPA=0.231 vs Home def EPA=-0.020",
+        "L2_scheme_trench_mechanics": "ExposingCoverageTells-BDB25 pre-snap shell disguise + Cover 7 bracket / Quarter Overload pressure answers; WR BRK+ Home=0.633 vs Away KTD=0.676",
+        "L3_health_and_fatigue_coupling": "Turf=False (Rupture Report mult=1.00) & wind=8.0 mph interaction with deep route tree.",
         "L4_adversary_challenge": "Discounted garbage-time zone shell inflation via Heckman selection correction (`nfl4th-heckman`) and Frisch-Waugh-Lovell orthogonalization.",
-        "L5_track_verdict_delta": -0.05013,
+        "L5_track_verdict_delta": -0.05026,
         "checked_at_l3_l4_l5": true
       },
       "2_coaching_and_scheme": {
         "track_id": "2_coaching_and_scheme",
-        "L1_surface_baseline": "Home PROE=0.287, blitz=0.280 vs Away PROE=0.405, blitz=0.260",
+        "L1_surface_baseline": "Home PROE=0.273, blitz=0.280 vs Away PROE=0.392, blitz=0.260",
         "L2_scheme_trench_mechanics": "Optimal-NFL-Play-Simulator & nfl-coaching-decision-lab 4th-down/motion sequencing (heckman_adj=-0.0014)",
         "L3_health_and_fatigue_coupling": "Clemente-Sarmento ACWR workload Home=1.020 vs Away=1.060 under rest_diff=0.0d",
         "L4_adversary_challenge": "Audited Surrender-Index conservatism and Bertsekas rollout policy-iteration stability in 2-minute script transitions.",
-        "L5_track_verdict_delta": -0.02396,
+        "L5_track_verdict_delta": -0.02402,
         "checked_at_l3_l4_l5": true
       },
       "1_qb_behavior": {
         "track_id": "1_qb_behavior",
         "L1_surface_baseline": "Home QB tier=STARTER vs Away QB tier=STARTER",
-        "L2_scheme_trench_mechanics": "SCRACK (scramble+sack EPA) Home=0.1180 vs Away=0.1063; SpinLab hip-shoulder kinematic sequencing",
+        "L2_scheme_trench_mechanics": "SCRACK (scramble+sack EPA) Home=0.1117 vs Away=0.1000; SpinLab hip-shoulder kinematic sequencing",
         "L3_health_and_fatigue_coupling": "WHIM/KTH MPS_95 brain-strain exposure Home=0.2200, Away=0.2219; BCTT HR threshold=133.5 bpm",
         "L4_adversary_challenge": "Conditioned QB EPA on OL immediate-zone win rate (`OL -> scheme -> QB` causal chain) so QB credit is not confounded by clean-pocket variance.",
         "L5_track_verdict_delta": 0.0117,
@@ -428,7 +428,7 @@
   "book_equations_executed": {
     "BK-01": {
       "equations_matched_and_executed": 26,
-      "aggregate_log_odds_delta": 0.01429,
+      "aggregate_log_odds_delta": 0.014218,
       "sample_equation_ids": [
         "EQ_02082",
         "EQ_02115",
@@ -437,7 +437,7 @@
     },
     "BK-10": {
       "equations_matched_and_executed": 19,
-      "aggregate_log_odds_delta": 0.016091,
+      "aggregate_log_odds_delta": 0.015902,
       "sample_equation_ids": [
         "EQ_02091",
         "EQ_02124",
@@ -446,7 +446,7 @@
     },
     "BK-25": {
       "equations_matched_and_executed": 26,
-      "aggregate_log_odds_delta": 0.018968,
+      "aggregate_log_odds_delta": 0.018857,
       "sample_equation_ids": [
         "EQ_02106",
         "EQ_02137",
@@ -455,7 +455,7 @@
     },
     "Navier-Stokes": {
       "equations_matched_and_executed": 200,
-      "aggregate_log_odds_delta": 0.0596,
+      "aggregate_log_odds_delta": 0.058128,
       "sample_equation_ids": [
         "EQ_03034",
         "EQ_03035",
@@ -464,7 +464,7 @@
     },
     "Universal Phase-Transition": {
       "equations_matched_and_executed": 52,
-      "aggregate_log_odds_delta": 0.01393,
+      "aggregate_log_odds_delta": 0.013971,
       "sample_equation_ids": [
         "EQ_02998",
         "EQ_02999",
@@ -473,7 +473,7 @@
     },
     "Core NFL Schemes": {
       "equations_matched_and_executed": 2,
-      "aggregate_log_odds_delta": 0.011313,
+      "aggregate_log_odds_delta": 0.011171,
       "sample_equation_ids": [
         "EQ-SOV-NFL-GSE-SVA",
         "EQ-SOV-NFL-GSE-QPTSR"
@@ -481,7 +481,7 @@
     },
     "Hidden Game of Football": {
       "equations_matched_and_executed": 6,
-      "aggregate_log_odds_delta": 0.023459,
+      "aggregate_log_odds_delta": 0.023067,
       "sample_equation_ids": [
         "EQ-W8BOOK-001-EQ-CARROLL-LINEAR-WEIGHTS-EP",
         "EQ-W8BOOK-002-EQ-CARROLL-TURNOVER-45YDS",

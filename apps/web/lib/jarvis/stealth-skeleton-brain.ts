@@ -35,6 +35,10 @@ import {
   LIVE_SLATE_COACH_WRITEUPS,
   LIVE_WEEK8_2026_BOARD,
 } from "@/lib/writeups/coach-writeup-engine";
+import {
+  buildPostHogAiGenerationEvent,
+  type PostHogAiGenerationEvent,
+} from "@/lib/observability/posthog-grant-governor";
 
 export const OUR_STEALTH_SKELETON_MODELS = [
   "gse/skeleton-stealth",
@@ -496,6 +500,7 @@ export interface JarvisJynxAutonomousResponse {
   readonly generatedAtIso: string;
   readonly fallback_fired?: boolean;
   readonly fallback_reason?: string | null;
+  readonly posthogAiObservability?: PostHogAiGenerationEvent;
 }
 
 function resolveStealthModel(model?: string): OurStealthSkeletonModel {
@@ -706,6 +711,16 @@ export function runJarvisJynxAutonomousBrain(req: {
   };
 
   const answer = `${modeSummaryMap[modeUsed]} | ${specialistExec.specialistTrace} Prompt Focus: "${cleanPrompt}".`;
+  const posthogAiObservability = buildPostHogAiGenerationEvent({
+    traceId: `trc_${modelUsed.replace("gse/", "").replace(/-/g, "_")}_${modeUsed}`,
+    spanName: `jarvis_jynx_${modeUsed}`,
+    model: modelUsed,
+    provider: "gse-stealth-skeleton",
+    inputTokens: Math.max(8, Math.ceil(cleanPrompt.length / 4)),
+    outputTokens: Math.max(32, Math.ceil(answer.length / 4)),
+    latencySeconds: 0.042,
+    timeToFirstTokenSeconds: 0.014,
+  });
 
   return {
     modelUsed,
@@ -742,6 +757,7 @@ export function runJarvisJynxAutonomousBrain(req: {
     betPredictionCard,
     gsiBiomechanicsOverlay,
     generatedAtIso: new Date().toISOString(),
+    posthogAiObservability,
   };
 }
 

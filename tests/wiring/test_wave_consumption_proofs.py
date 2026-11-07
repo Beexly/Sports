@@ -299,3 +299,32 @@ def test_wave8_historical_fixture_e2e_and_feedback_pipe() -> None:
     assert feedback["trace_id"] == trace["trace_id"]
     assert (Path(__file__).resolve().parents[2] / "data" / "corpus" / "grading_feedback_records.jsonl").exists()
 
+
+def test_nim_genai_perf_and_posthog_mcp_wiring() -> None:
+    """
+    Verifies NVIDIA NIM GenAI-Perf empirical benchmark receipt + raw HTTP/SSE traces
+    and PostHog MCP / AI Observability wiring.
+    """
+    repo_root = Path(__file__).resolve().parents[2]
+    mcp_json = json.loads((repo_root / ".mcp.json").read_text(encoding="utf-8"))
+    assert "posthog" in mcp_json.get("mcpServers", {})
+    assert mcp_json["mcpServers"]["posthog"]["url"] == "https://mcp.posthog.com/mcp"
+
+    summary_path = repo_root / "data" / "audits" / "stealth_skeleton_nim_genai_perf_benchmark_2026_11_07.json"
+    raw_traces_path = repo_root / "data" / "audits" / "stealth_skeleton_nim_genai_perf_raw_traces_2026_11_07.jsonl"
+    assert summary_path.exists(), "Missing NIM GenAI-Perf summary JSON"
+    assert raw_traces_path.exists(), "Missing NIM GenAI-Perf raw traces JSONL"
+
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert summary["schema"] == "nvidia_nim_genai_perf_llm_benchmark_v1"
+    assert summary["models_tested_count"] == 8
+    assert summary["total_requests_executed"] == 16
+    assert summary["successful_http_200_count"] == 16
+    assert summary["metrics"]["time_to_first_token_ms"]["p50"] > 0
+    assert summary["metrics"]["request_latency_ms"]["p50"] > 0
+
+    raw_lines = [json.loads(line) for line in raw_traces_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(raw_lines) == 16
+    assert all(r["http_status"] == 200 and len(r["x_request_id"]) > 0 for r in raw_lines)
+
+

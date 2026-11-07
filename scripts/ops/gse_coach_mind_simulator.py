@@ -1803,8 +1803,14 @@ def main():
         game_id = str(pkt_obj.get("game_id") or trace_obj.get("game_id") or "2024_10_CIN_BAL")
         away_tm = str(pkt_obj.get("away_team") or (game_id.split("_")[2] if len(game_id.split("_")) >= 4 else "CIN"))
         home_tm = str(pkt_obj.get("home_team") or (game_id.split("_")[3] if len(game_id.split("_")) >= 4 else "BAL"))
-        layers_list = trace_obj.get("layers", [])
-        cum_delta = float(trace_obj.get("cumulative_log_odds_delta", 0.0) or 0.0)
+        layers_list = trace_obj.get("layers") or pkt_obj.get("layers", {})
+        cum_delta = float(
+            trace_obj.get(
+                "final_reasoning_delta",
+                trace_obj.get("cumulative_log_odds_delta", 0.0),
+            )
+            or 0.0
+        )
         if args.dry_run_contract:
             print(
                 json.dumps(
@@ -1836,6 +1842,9 @@ def main():
         res["from_context_packet"] = args.from_context_packet
         res["from_reasoning_trace"] = args.from_reasoning_trace
         res["reasoning_trace_cumulative_log_odds_delta"] = cum_delta
+        res["median_spread_home_trace_conditioned"] = round(
+            float(res.get("median_spread_home", 0.0)) + cum_delta * 2.5, 4
+        )
         print(json.dumps(res, default=str))
         return
     try:

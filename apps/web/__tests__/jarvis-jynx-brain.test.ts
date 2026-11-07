@@ -16,6 +16,10 @@ vi.mock("@/lib/auth", () => ({
 
 import { GET, POST } from "@/app/api/cockpit/jarvis/jynx-brain/route";
 import {
+  buildPostHogAiGenerationEvent,
+  DEFAULT_POSTHOG_GOVERNOR_CONFIG,
+} from "@/lib/observability/posthog-grant-governor";
+import {
   REGISTERED_BOT_SDK_ADAPTERS,
   executeUniversalBotSdkAdapter,
 } from "@/lib/jarvis/autonomous-bot-sdk-adapter";
@@ -100,7 +104,32 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
       expect(out.dfsLineupCard.corePlays.length).toBeGreaterThan(0);
       expect(out.betPredictionCard.gatedGameCalls.length).toBeGreaterThan(0);
       expect(out.gsiBiomechanicsOverlay.returnToPlayDegradationNotes.length).toBeGreaterThan(0);
+      expect(out.posthogAiObservability?.event).toBe("$ai_generation");
+      expect(out.posthogAiObservability?.properties.$ai_model).toBe("gse/skeleton-math-pro");
+      expect(out.posthogAiObservability?.properties.gse_posthog_project_id).toBe("516325");
+      expect(out.posthogAiObservability?.properties.gse_grant_credit_usd).toBe(50000);
     }
+  });
+
+  it("emits governed PostHog $ai_generation LLM observability telemetry under the $50k startup grant governor", () => {
+    const evt = buildPostHogAiGenerationEvent({
+      traceId: "trc_nim_01",
+      model: "gse/skeleton-stealth",
+      inputTokens: 128,
+      outputTokens: 256,
+      latencySeconds: 0.185,
+      timeToFirstTokenSeconds: 0.045,
+      interTokenLatencyMs: 0.549,
+      deterministicHashFraction: 0.04,
+    });
+    expect(evt.event).toBe("$ai_generation");
+    expect(evt.properties.$ai_model).toBe("gse/skeleton-stealth");
+    expect(evt.properties.$ai_input_tokens).toBe(128);
+    expect(evt.properties.$ai_output_tokens).toBe(256);
+    expect(evt.properties.$ai_time_to_first_token).toBeCloseTo(0.045, 5);
+    expect(evt.properties.$ai_inter_token_latency_ms).toBeCloseTo(0.549, 4);
+    expect(evt.properties.gse_posthog_project_id).toBe(DEFAULT_POSTHOG_GOVERNOR_CONFIG.projectId);
+    expect(evt.properties.gse_governor_reason).toBe("SAMPLED_IN");
   });
 });
 

@@ -36,3 +36,26 @@ __all__ = [
     "run_synthetic_simulation_stage_validator",
     "validate_reasoning_trace_schema",
 ]
+
+
+if __name__ == "__main__":
+    import argparse
+    import json
+    from pathlib import Path
+
+    parser = argparse.ArgumentParser(description="Execute 5-track reasoning workflow over ContextPacket")
+    parser.add_argument("--context-packet", required=True, help="Path to ContextPacket JSON")
+    parser.add_argument("--out", default=None, help="Output path for ReasoningTrace JSON")
+    parser.add_argument("--require-all-layers", action="store_true")
+    args = parser.parse_args()
+
+    pkt = json.loads(Path(args.context_packet).read_text(encoding="utf-8"))
+    if args.require_all_layers and len(pkt.get("layers", {})) < 26:
+        raise ValueError(f"ContextPacket {args.context_packet} has fewer than 26 layers")
+    trace = execute_reasoning_workflow(context_packet=pkt, persist=True)
+    if args.out:
+        out_path = Path(args.out)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(trace, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({"trace_id": trace["trace_id"], "game_id": trace["game_id"], "final_reasoning_delta": trace["final_reasoning_delta"]}))
+

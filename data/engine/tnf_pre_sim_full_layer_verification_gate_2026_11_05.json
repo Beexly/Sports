@@ -1,9 +1,9 @@
 {
   "schema": "gse_pre_sim_full_layer_verification_gate_v2",
-  "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
+  "stage0_receipt_sha256": "add05b418233688f823a36283928d9d3c55eba9c75e2c57ea6cb8c02216534c0",
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
-    "parent_stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
+    "parent_stage0_receipt_sha256": "add05b418233688f823a36283928d9d3c55eba9c75e2c57ea6cb8c02216534c0",
     "away": "JAX",
     "home": "BAL",
     "week": 9,
@@ -54,10 +54,10 @@
         "ol_pressure_allowed": 0.6208,
         "off_epa": 0.015,
         "def_epa": -0.0244,
-        "pass_epa": 0.2703,
-        "rush_epa": 0.0403,
+        "pass_epa": 0.2752,
+        "rush_epa": 0.0107,
         "comp_rate": 0.658,
-        "sack_rate_allowed": 0.0607,
+        "sack_rate_allowed": 0.0515,
         "pa_rate": 0.2371,
         "motion_rate": 0.6394,
         "rpo_rate": 0.0085,
@@ -72,10 +72,10 @@
         "ol_pressure_allowed": 0.6349,
         "off_epa": 0.134,
         "def_epa": -0.0955,
-        "pass_epa": 0.0821,
-        "rush_epa": -0.0427,
+        "pass_epa": 0.1857,
+        "rush_epa": -0.0289,
         "comp_rate": 0.645,
-        "sack_rate_allowed": 0.0884,
+        "sack_rate_allowed": 0.0822,
         "pa_rate": 0.2511,
         "motion_rate": 0.6502,
         "rpo_rate": 0.0423,
@@ -83,8 +83,8 @@
       }
     },
     "l1_to_l5_specialist_reasoning_trace": {
-      "trace_id": "2026-11-06T155541Z0000-e61e4688",
-      "content_hash": "f2a810142ab2b3f4ee82e6295630e9d46c15f5af588c83905f1d37dffcfd531e",
+      "trace_id": "2026-11-07T134341Z0000-1a6d9d2b",
+      "content_hash": "2b4d6dd5184559d99d44ce2261ab82d78ba0b4c7790961ac383907c1b4ecef4f",
       "depth_reached": "L5",
       "hierarchy_order": [
         "offensive_line",
@@ -104,19 +104,13 @@
       "breaking_conditions_met": false,
       "killed_legs": [],
       "recommendation": "Thesis survived L4 adversary (no breaking condition met). Proceed only with the checklist verdicts and weak-link flags attached; final sizing and publication remain downstream gates.",
-      "validated_corpus_hits_count": 5,
-      "validated_corpus_hits": [
-        "research_corpus/openalex/W7112540155",
-        "research_corpus/local_pdf/48ae0d16384ed704",
-        "research_corpus/arxiv/2305.10262v3",
-        "research_corpus/arxiv/2609.33664v2",
-        "research_corpus/arxiv/2604.01491v2"
-      ],
+      "validated_corpus_hits_count": 0,
+      "validated_corpus_hits": [],
       "validated_equations_count": 3,
       "l5_epa_signal_delta": -0.0069
     },
-    "coaching_modules_total": 52,
-    "coaching_modules_imported_and_verified": 52,
+    "coaching_modules_total": 57,
+    "coaching_modules_imported_and_verified": 57,
     "coaching_module_registry": {
       "adjustments": {
         "module": "intelligence.coaching.adjustments",
@@ -239,6 +233,25 @@
           "offensive_tendencies",
           "defensive_tendencies",
           "main"
+        ]
+      },
+      "core_nfl_schemes_and_systems": {
+        "module": "intelligence.coaching.core_nfl_schemes_and_systems",
+        "imported": true,
+        "public_callables_count": 13,
+        "public_callables": [
+          "dataclass",
+          "Dict",
+          "List",
+          "Optional",
+          "Tuple",
+          "OffensiveSchemeProfile",
+          "RouteConceptRule",
+          "PassProtectionEvaluation",
+          "evaluate_pass_protection_vs_blitz",
+          "CoverageMatchDiagnostic",
+          "evaluate_secondary_coverage_match",
+          "DownAndDistancePrior"
         ]
       },
       "dc_pressure": {
@@ -453,6 +466,25 @@
           "run_thaler_mental_accounting_and_sahni_hook_kernel"
         ]
       },
+      "mega_sweep_2026_11_06_wiring_engine": {
+        "module": "intelligence.coaching.mega_sweep_2026_11_06_wiring_engine",
+        "imported": true,
+        "public_callables_count": 25,
+        "public_callables": [
+          "Path",
+          "Any",
+          "Dict",
+          "List",
+          "Mapping",
+          "Optional",
+          "Sequence",
+          "Tuple",
+          "compute_gsi_step2_health_and_biomechanics",
+          "evaluate_5track_l1_to_l5_and_7step_weekly_cycle",
+          "load_mega_sweep_coverage_ledger",
+          "compute_double_dqn_fourth_down_q_values"
+        ]
+      },
       "ol_provider": {
         "module": "intelligence.coaching.ol_provider",
         "imported": true,
@@ -466,6 +498,25 @@
           "NflverseOLProvider",
           "weak_link_survival_for_grades",
           "ol_pass_set_report"
+        ]
+      },
+      "openai_math_721_manuscript_and_lean_engine": {
+        "module": "intelligence.coaching.openai_math_721_manuscript_and_lean_engine",
+        "imported": true,
+        "public_callables_count": 12,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "Sequence",
+          "sogge_local_smoothing_wave_focusing_kernel",
+          "bounded_treewidth_l1_graph_embedding_kernel",
+          "radial_pair_potential_temperature_singularity_kernel",
+          "amplitude_damping_and_atomic_gaussian_channel",
+          "fixed_width_cnf_exact_model_counter",
+          "lean_comparator_challenge_soundness_gate",
+          "evaluate_openai_math_721_pre_projection_overlay"
         ]
       },
       "pgwe_luck_audit": {
@@ -696,6 +747,25 @@
           "evaluate_end_of_half_clock_boundary"
         ]
       },
+      "sovereign_openai_eyi_execution_engine": {
+        "module": "intelligence.coaching.sovereign_openai_eyi_execution_engine",
+        "imported": true,
+        "public_callables_count": 16,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Mapping",
+          "Optional",
+          "Sequence",
+          "pade_exp_neg",
+          "mezard_parisi_cavity_susceptibility",
+          "mahler_dual_conformal_polytope_score",
+          "evaluate_virtual_icp_and_sulcal_waveguide_step",
+          "evaluate_zone1_coach_mind_v2_and_7_gse_metrics",
+          "evaluate_doctrine_symphony_proof_of_work"
+        ]
+      },
       "tempo": {
         "module": "intelligence.coaching.tempo",
         "imported": true,
@@ -755,6 +825,25 @@
           "nocedal_wright_lbfgs_trust_region_step",
           "cover_thomas_information_kl_jsd",
           "tsitsiklis_td_lambda_value_iteration"
+        ]
+      },
+      "universal_nfl_metric_and_situational_engine": {
+        "module": "intelligence.coaching.universal_nfl_metric_and_situational_engine",
+        "imported": true,
+        "public_callables_count": 20,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Mapping",
+          "Optional",
+          "Sequence",
+          "Tuple",
+          "compute_universal_qb_metrics",
+          "compute_universal_receiving_metrics",
+          "compute_universal_rushing_metrics",
+          "compute_universal_trench_metrics",
+          "compute_universal_defense_and_idp_metrics"
         ]
       },
       "universal_phase_transition_navier_stokes_sheaf_engine": {
@@ -834,7 +923,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-06T15:55:16.449029+00:00",
+      "generated_at_utc": "2026-11-07T13:43:41.220139+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -1602,16 +1691,16 @@
             "qb_questionable_conditional_dropoff": 0.1159,
             "team_load_scaling": {
               "JAX": {
-                "target_hhi": 0.1458,
-                "effective_n": 6.86,
-                "load_multiplier": 1.0393,
-                "scaled_qb_q_dropoff": 0.0984
+                "target_hhi": 0.1525,
+                "effective_n": 6.56,
+                "load_multiplier": 1.0629,
+                "scaled_qb_q_dropoff": 0.1007
               },
               "BAL": {
-                "target_hhi": 0.1447,
-                "effective_n": 6.91,
-                "load_multiplier": 1.0351,
-                "scaled_qb_q_dropoff": 0.098
+                "target_hhi": 0.1467,
+                "effective_n": 6.82,
+                "load_multiplier": 1.0425,
+                "scaled_qb_q_dropoff": 0.0987
               },
               "DET_reference": {
                 "target_hhi": 0.159,
@@ -2167,16 +2256,16 @@
           "qb_questionable_conditional_dropoff": 0.1159,
           "team_load_scaling": {
             "JAX": {
-              "target_hhi": 0.1458,
-              "effective_n": 6.86,
-              "load_multiplier": 1.0393,
-              "scaled_qb_q_dropoff": 0.0984
+              "target_hhi": 0.1525,
+              "effective_n": 6.56,
+              "load_multiplier": 1.0629,
+              "scaled_qb_q_dropoff": 0.1007
             },
             "BAL": {
-              "target_hhi": 0.1447,
-              "effective_n": 6.91,
-              "load_multiplier": 1.0351,
-              "scaled_qb_q_dropoff": 0.098
+              "target_hhi": 0.1467,
+              "effective_n": 6.82,
+              "load_multiplier": 1.0425,
+              "scaled_qb_q_dropoff": 0.0987
             },
             "DET_reference": {
               "target_hhi": 0.159,
@@ -2526,8 +2615,8 @@
         }
       },
       "intelligence_31_subpackages": {
-        "subpackages_connected_count": 49,
-        "total_intelligence_python_files": 558,
+        "subpackages_connected_count": 61,
+        "total_intelligence_python_files": 629,
         "subpackage_inventory": {
           "adjustment-layer": {
             "python_files": 4,
@@ -2548,9 +2637,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "coaching": {
-            "python_files": 62,
-            "top_level_functions": 331,
-            "top_level_classes": 21,
+            "python_files": 67,
+            "top_level_functions": 380,
+            "top_level_classes": 26,
             "status": "CONNECTED_AND_AUDITED"
           },
           "colab": {
@@ -2571,10 +2660,28 @@
             "top_level_classes": 9,
             "status": "CONNECTED_AND_AUDITED"
           },
-          "context": {
+          "common": {
             "python_files": 2,
-            "top_level_functions": 6,
+            "top_level_functions": 4,
             "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "context": {
+            "python_files": 4,
+            "top_level_functions": 8,
+            "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "corpus": {
+            "python_files": 1,
+            "top_level_functions": 2,
+            "top_level_classes": 1,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "data": {
+            "python_files": 1,
+            "top_level_functions": 0,
+            "top_level_classes": 1,
             "status": "CONNECTED_AND_AUDITED"
           },
           "data_loaders": {
@@ -2589,16 +2696,46 @@
             "top_level_classes": 1,
             "status": "CONNECTED_AND_AUDITED"
           },
+          "doctrine": {
+            "python_files": 6,
+            "top_level_functions": 45,
+            "top_level_classes": 13,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "engine": {
+            "python_files": 1,
+            "top_level_functions": 19,
+            "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
           "engines": {
             "python_files": 18,
             "top_level_functions": 218,
             "top_level_classes": 29,
             "status": "CONNECTED_AND_AUDITED"
           },
+          "equations": {
+            "python_files": 1,
+            "top_level_functions": 13,
+            "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "feedback": {
+            "python_files": 1,
+            "top_level_functions": 1,
+            "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
           "gates": {
             "python_files": 14,
             "top_level_functions": 105,
             "top_level_classes": 5,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "identity": {
+            "python_files": 1,
+            "top_level_functions": 0,
+            "top_level_classes": 2,
             "status": "CONNECTED_AND_AUDITED"
           },
           "ingest": {
@@ -2617,6 +2754,12 @@
             "python_files": 11,
             "top_level_functions": 37,
             "top_level_classes": 38,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "introspection_s0s1": {
+            "python_files": 11,
+            "top_level_functions": 43,
+            "top_level_classes": 5,
             "status": "CONNECTED_AND_AUDITED"
           },
           "jev": {
@@ -2679,6 +2822,12 @@
             "top_level_classes": 0,
             "status": "CONNECTED_AND_AUDITED"
           },
+          "ops": {
+            "python_files": 6,
+            "top_level_functions": 27,
+            "top_level_classes": 4,
+            "status": "CONNECTED_AND_AUDITED"
+          },
           "optimizer": {
             "python_files": 6,
             "top_level_functions": 16,
@@ -2728,9 +2877,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "reasoning": {
-            "python_files": 29,
-            "top_level_functions": 315,
-            "top_level_classes": 49,
+            "python_files": 58,
+            "top_level_functions": 352,
+            "top_level_classes": 51,
             "status": "CONNECTED_AND_AUDITED"
           },
           "reasoning_engine": {
@@ -2743,6 +2892,12 @@
             "python_files": 16,
             "top_level_functions": 77,
             "top_level_classes": 7,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "retrieval": {
+            "python_files": 2,
+            "top_level_functions": 3,
+            "top_level_classes": 5,
             "status": "CONNECTED_AND_AUDITED"
           },
           "roster": {
@@ -2791,6 +2946,12 @@
             "python_files": 10,
             "top_level_functions": 50,
             "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "telemetry": {
+            "python_files": 2,
+            "top_level_functions": 0,
+            "top_level_classes": 4,
             "status": "CONNECTED_AND_AUDITED"
           },
           "tests": {
@@ -3549,59 +3710,83 @@
         "two_high": "https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-schemes/",
         "dime": "data/nflverse/ftn_charting_2026.parquet"
       },
-      "matchup_team_tendencies_2026": {
+      "matchup_2026_pbp_splits": {
         "JAX": {
           "team": "JAX",
-          "proe": 0.024,
-          "neutral_pace_sec": 26.8,
-          "dc_blitz_rate": 0.309,
-          "dc_man_rate": 0.285,
-          "ol_pressure_allowed": 0.6208,
-          "off_epa": 0.015,
-          "def_epa": -0.0244,
-          "pass_epa": 0.2703,
-          "rush_epa": 0.0403,
-          "comp_rate": 0.658,
-          "sack_rate_allowed": 0.0607,
+          "games_played": 6,
+          "plays_per_game": 59.17,
+          "off_epa": 0.1553,
+          "def_epa": -0.0358,
+          "pass_epa": 0.2752,
+          "rush_epa": 0.0107,
+          "comp_rate": 0.6522,
+          "sack_rate_allowed": 0.0515,
+          "qb_hit_rate_allowed": 0.1546,
+          "def_sack_rate": 0.0493,
+          "def_comp_rate_allowed": 0.6604,
+          "pass_rate": 0.5465,
+          "proe": -0.0546,
+          "neutral_pace_sec": 28.2,
+          "dc_blitz_rate": 0.3184,
+          "dc_man_rate": 0.3649,
+          "def_light_box_rate": 0.1839,
+          "def_heavy_box_rate": 0.3229,
           "pa_rate": 0.2371,
           "motion_rate": 0.6394,
           "rpo_rate": 0.0085,
-          "screen_rate": 0.0928
+          "screen_rate": 0.0928,
+          "ol_slot_probs": [
+            0.8293,
+            0.7993,
+            0.8223,
+            0.7833,
+            0.8113
+          ]
         },
         "BAL": {
           "team": "BAL",
-          "proe": -0.018,
-          "neutral_pace_sec": 27.6,
-          "dc_blitz_rate": 0.245,
-          "dc_man_rate": 0.245,
-          "ol_pressure_allowed": 0.6349,
-          "off_epa": 0.134,
-          "def_epa": -0.0955,
-          "pass_epa": 0.0821,
-          "rush_epa": -0.0427,
-          "comp_rate": 0.645,
-          "sack_rate_allowed": 0.0884,
+          "games_played": 7,
+          "plays_per_game": 60.86,
+          "off_epa": 0.0814,
+          "def_epa": 0.0109,
+          "pass_epa": 0.1857,
+          "rush_epa": -0.0289,
+          "comp_rate": 0.7065,
+          "sack_rate_allowed": 0.0822,
+          "qb_hit_rate_allowed": 0.1598,
+          "def_sack_rate": 0.0653,
+          "def_comp_rate_allowed": 0.655,
+          "pass_rate": 0.5141,
+          "proe": -0.0835,
+          "neutral_pace_sec": 27.79,
+          "dc_blitz_rate": 0.3306,
+          "dc_man_rate": 0.3538,
+          "def_light_box_rate": 0.1959,
+          "def_heavy_box_rate": 0.2245,
           "pa_rate": 0.2511,
           "motion_rate": 0.6502,
           "rpo_rate": 0.0423,
-          "screen_rate": 0.0731
+          "screen_rate": 0.0731,
+          "ol_slot_probs": [
+            0.7982,
+            0.7682,
+            0.7912,
+            0.7522,
+            0.7802
+          ]
         }
       }
     },
     "bdb2025_coverage_shell_summary": {
-      "total_bdb_plays": 16124,
-      "shell_distribution": {
-        "MOFC (Single-High)": 9621,
-        "MOFO (Two-High)": 5614,
-        "RedZone/GoalLine/Other": 889
-      },
-      "matchup": "JAX@BAL"
+      "MOFC (Single-High)": 9621,
+      "MOFO (Two-High)": 5614,
+      "RedZone/GoalLine/Other": 889
     },
-    "stage1a_receipt_sha256": "83eed0f0ffd67b8d63a4bbc4dfd9f58cee1bcd1b696af3f3f6dc9b6e61aa4ec2"
+    "stage1a_receipt_sha256": "f0c27a115e2b0f0c2de819f9c5891c4d73246d080f71a453f2a3e35996fc0e56"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "83eed0f0ffd67b8d63a4bbc4dfd9f58cee1bcd1b696af3f3f6dc9b6e61aa4ec2",
+    "parent_stage1a_receipt_sha256": "f0c27a115e2b0f0c2de819f9c5891c4d73246d080f71a453f2a3e35996fc0e56",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -3617,8 +3802,8 @@
     },
     "cognitive_router_4stage_execution": {
       "stage_a_context_mask_bits_total": 288,
-      "stage_a_context_mask_bits_active": 246,
-      "stage_a_signal_families_active": 276,
+      "stage_a_context_mask_bits_active": 271,
+      "stage_a_signal_families_active": 271,
       "stage_b_category_counts": {
         "E": 85,
         "F": 122,
@@ -3631,61 +3816,61 @@
       "stage_c_spectral_cluster_orthogonalization": {
         "A": {
           "equations_in_cluster": 62,
-          "raw_delta_sum": 0.06058,
+          "raw_delta_sum": 0.07392,
           "effective_spectral_rank_r_eff": 7.318,
           "orthogonalization_scale": 0.3436,
-          "orthogonalized_delta_log_odds": 0.02081
+          "orthogonalized_delta_log_odds": 0.02539
         },
         "B": {
           "equations_in_cluster": 245,
-          "raw_delta_sum": 0.03315,
+          "raw_delta_sum": 0.04045,
           "effective_spectral_rank_r_eff": 7.931,
           "orthogonalization_scale": 0.1799,
-          "orthogonalized_delta_log_odds": 0.00597
+          "orthogonalized_delta_log_odds": 0.00728
         },
         "C": {
-          "equations_in_cluster": 64,
-          "raw_delta_sum": -0.04995,
-          "effective_spectral_rank_r_eff": 7.342,
-          "orthogonalization_scale": 0.3387,
-          "orthogonalized_delta_log_odds": -0.01692
+          "equations_in_cluster": 63,
+          "raw_delta_sum": -0.06003,
+          "effective_spectral_rank_r_eff": 7.33,
+          "orthogonalization_scale": 0.3411,
+          "orthogonalized_delta_log_odds": -0.02048
         },
         "D": {
-          "equations_in_cluster": 238,
-          "raw_delta_sum": 0.34337,
-          "effective_spectral_rank_r_eff": 7.925,
-          "orthogonalization_scale": 0.1825,
-          "orthogonalized_delta_log_odds": 0.06266
+          "equations_in_cluster": 231,
+          "raw_delta_sum": 0.40472,
+          "effective_spectral_rank_r_eff": 7.918,
+          "orthogonalization_scale": 0.1851,
+          "orthogonalized_delta_log_odds": 0.07493
         },
         "E": {
-          "equations_in_cluster": 85,
-          "raw_delta_sum": 0.02909,
-          "effective_spectral_rank_r_eff": 7.529,
-          "orthogonalization_scale": 0.2976,
-          "orthogonalized_delta_log_odds": 0.00866
+          "equations_in_cluster": 84,
+          "raw_delta_sum": 0.0348,
+          "effective_spectral_rank_r_eff": 7.522,
+          "orthogonalization_scale": 0.2992,
+          "orthogonalized_delta_log_odds": 0.01042
         },
         "F": {
-          "equations_in_cluster": 122,
-          "raw_delta_sum": 0.24483,
-          "effective_spectral_rank_r_eff": 7.711,
-          "orthogonalization_scale": 0.2514,
-          "orthogonalized_delta_log_odds": 0.06155
+          "equations_in_cluster": 121,
+          "raw_delta_sum": 0.29592,
+          "effective_spectral_rank_r_eff": 7.707,
+          "orthogonalization_scale": 0.2524,
+          "orthogonalized_delta_log_odds": 0.07468
         },
         "G": {
-          "equations_in_cluster": 850,
-          "raw_delta_sum": 0.51223,
-          "effective_spectral_rank_r_eff": 8.095,
-          "orthogonalization_scale": 0.0976,
-          "orthogonalized_delta_log_odds": 0.04999
+          "equations_in_cluster": 832,
+          "raw_delta_sum": 0.61009,
+          "effective_spectral_rank_r_eff": 8.094,
+          "orthogonalization_scale": 0.0986,
+          "orthogonalized_delta_log_odds": 0.06017
         }
       },
       "stage_c_selected_premises_count": 25,
-      "stage_d_james_stein_shrinkage": 0.8892,
-      "stage_d_james_stein_shrinkage_factor": 0.8892,
-      "stage_d_unclamped_log_odds_delta": 0.050607,
-      "stage_d_raw_log_odds_delta": 0.050607,
-      "stage_d_clamped_log_odds_delta": 0.045,
-      "stage_d_capped_log_odds_delta": 0.045,
+      "stage_d_james_stein_shrinkage": 0.916978,
+      "stage_d_james_stein_shrinkage_factor": 0.916978,
+      "stage_d_unclamped_log_odds_delta": 0.232397,
+      "stage_d_raw_log_odds_delta": 0.232397,
+      "stage_d_clamped_log_odds_delta": -0.036676,
+      "stage_d_capped_log_odds_delta": -0.036676,
       "marchenko_pastur_effective_rank_shrinkage": 0.96809,
       "stage_d_cap_limit": 0.35,
       "mcp_cognitive_router_ts_telemetry": {
@@ -3702,9 +3887,9 @@
           0
         ],
         "stage_c_selected_count": 25,
-        "stage_d_james_stein_shrinkage": 0.8892,
-        "stage_d_unclamped_log_odds_delta": 0.050607,
-        "stage_d_clamped_log_odds_delta": 0.045,
+        "stage_d_james_stein_shrinkage": 0.916978,
+        "stage_d_unclamped_log_odds_delta": 0.232397,
+        "stage_d_clamped_log_odds_delta": -0.036676,
         "stage_d_clamped": true,
         "tau_hat_coach_prior_bonus": 0.0072,
         "marchenko_pastur_rank_shrinkage": 0.96809,
@@ -3755,7 +3940,8 @@
             "shrunkLogOddsDelta": 0.196417
           }
         ],
-        "stage_a_active_bits": 246
+        "stage_a_active_bits": 271,
+        "stage_a_signal_families_active": 271
       }
     },
     "master_situational_reasoning_aggregator": {
@@ -4160,43 +4346,43 @@
         ],
         "tukey_fourth_spread_epa_fences": {
           "JAX": {
-            "n_plays": 553,
-            "median_epa": 0.0008,
-            "fourth_spread_iqr": 1.1988,
+            "n_plays": 482,
+            "median_epa": 0.0013,
+            "fourth_spread_iqr": 1.1978,
             "inner_fence": [
-              -2.3472,
-              2.4481
+              -2.3405,
+              2.4507
             ],
             "outer_fence": [
-              -4.1454,
-              4.2463
+              -4.1372,
+              4.2474
             ],
-            "outliers_beyond_inner_fence_count": 32,
-            "raw_mean_epa": 0.1226,
-            "tukey_fenced_mean_epa": 0.0473
+            "outliers_beyond_inner_fence_count": 25,
+            "raw_mean_epa": 0.1262,
+            "tukey_fenced_mean_epa": 0.0692
           },
           "BAL": {
-            "n_plays": 657,
-            "median_epa": -0.0493,
-            "fourth_spread_iqr": 1.1263,
+            "n_plays": 587,
+            "median_epa": -0.0359,
+            "fourth_spread_iqr": 1.1495,
             "inner_fence": [
-              -2.2386,
-              2.2665
+              -2.2547,
+              2.3431
             ],
             "outer_fence": [
-              -3.9281,
-              3.956
+              -3.9789,
+              4.0672
             ],
-            "outliers_beyond_inner_fence_count": 48,
-            "raw_mean_epa": 0.0004,
-            "tukey_fenced_mean_epa": 0.0103
+            "outliers_beyond_inner_fence_count": 40,
+            "raw_mean_epa": 0.0428,
+            "tukey_fenced_mean_epa": 0.0372
           }
         },
         "huff_levitin_simpsons_paradox_audit": {
-          "confounded_season_aggregate_pass_epa": 0.0821,
+          "confounded_season_aggregate_pass_epa": 0.1857,
           "weeks_1_to_7_excluded_qb_regime_epa": 0.1857,
           "week_8_9_active_qb1_joe_fagnano_epa": -0.4308,
-          "simpsons_confounder_gap_epa_per_dropback": 0.5129,
+          "simpsons_confounder_gap_epa_per_dropback": 0.6165,
           "huff_levitin_verdict": "Using season-aggregate BAL passing EPA commits a classic Huff/Levitin Simpson's Paradox confounding error (+0.49 EPA/dropback bias) by pooling excluded IR QBs with active rookie QB1 Joe Fagnano."
         },
         "zero_sum_nash_equilibrium_play_calling": {
@@ -5228,8 +5414,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 14.77,
-        "eb_shrunk_rush_yds_prior": 23.69,
+        "eb_shrunk_rec_yds_prior": 16.0,
+        "eb_shrunk_rush_yds_prior": 24.84,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5240,7 +5426,7 @@
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
         "eb_shrunk_rec_yds_prior": 27.43,
-        "eb_shrunk_rush_yds_prior": 33.0,
+        "eb_shrunk_rush_yds_prior": 32.57,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5250,8 +5436,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 19.07,
-        "eb_shrunk_rush_yds_prior": 61.43,
+        "eb_shrunk_rec_yds_prior": 20.0,
+        "eb_shrunk_rush_yds_prior": 62.07,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5261,8 +5447,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 21.14,
-        "eb_shrunk_rush_yds_prior": 27.36,
+        "eb_shrunk_rec_yds_prior": 21.23,
+        "eb_shrunk_rush_yds_prior": 28.31,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5272,8 +5458,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 29.29,
-        "eb_shrunk_rush_yds_prior": 16.29,
+        "eb_shrunk_rec_yds_prior": 30.46,
+        "eb_shrunk_rush_yds_prior": 17.54,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5283,8 +5469,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 38.54,
-        "eb_shrunk_rush_yds_prior": 17.69,
+        "eb_shrunk_rec_yds_prior": 39.75,
+        "eb_shrunk_rush_yds_prior": 19.16,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5294,8 +5480,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 34.29,
-        "eb_shrunk_rush_yds_prior": 16.29,
+        "eb_shrunk_rec_yds_prior": 35.23,
+        "eb_shrunk_rush_yds_prior": 17.54,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5305,8 +5491,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 61.54,
-        "eb_shrunk_rush_yds_prior": 20.16,
+        "eb_shrunk_rec_yds_prior": 66.66,
+        "eb_shrunk_rush_yds_prior": 21.84,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5316,8 +5502,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 40.46,
-        "eb_shrunk_rush_yds_prior": 17.54,
+        "eb_shrunk_rec_yds_prior": 39.25,
+        "eb_shrunk_rush_yds_prior": 19.0,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5327,8 +5513,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 26.2,
-        "eb_shrunk_rush_yds_prior": 22.8,
+        "eb_shrunk_rec_yds_prior": 29.11,
+        "eb_shrunk_rush_yds_prior": 25.33,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5338,8 +5524,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 48.0,
-        "eb_shrunk_rush_yds_prior": 18.54,
+        "eb_shrunk_rec_yds_prior": 50.66,
+        "eb_shrunk_rush_yds_prior": 19.25,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5349,8 +5535,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 23.77,
-        "eb_shrunk_rush_yds_prior": 17.54,
+        "eb_shrunk_rec_yds_prior": 24.75,
+        "eb_shrunk_rush_yds_prior": 19.0,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5360,8 +5546,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 20.62,
-        "eb_shrunk_rush_yds_prior": 18.15,
+        "eb_shrunk_rec_yds_prior": 22.34,
+        "eb_shrunk_rush_yds_prior": 19.25,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5371,8 +5557,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 22.91,
-        "eb_shrunk_rush_yds_prior": 19.0,
+        "eb_shrunk_rec_yds_prior": 22.18,
+        "eb_shrunk_rush_yds_prior": 20.73,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5382,8 +5568,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 28.1,
-        "eb_shrunk_rush_yds_prior": 22.8,
+        "eb_shrunk_rec_yds_prior": 29.78,
+        "eb_shrunk_rush_yds_prior": 25.33,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5393,8 +5579,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 29.64,
-        "eb_shrunk_rush_yds_prior": 20.73,
+        "eb_shrunk_rec_yds_prior": 31.1,
+        "eb_shrunk_rush_yds_prior": 22.8,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5404,8 +5590,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 28.09,
-        "eb_shrunk_rush_yds_prior": 20.73,
+        "eb_shrunk_rec_yds_prior": 30.9,
+        "eb_shrunk_rush_yds_prior": 22.8,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5426,8 +5612,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 14.77,
-        "eb_shrunk_rush_yds_prior": 17.54,
+        "eb_shrunk_rec_yds_prior": 16.0,
+        "eb_shrunk_rush_yds_prior": 19.0,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5437,8 +5623,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 14.77,
-        "eb_shrunk_rush_yds_prior": 17.54,
+        "eb_shrunk_rec_yds_prior": 16.0,
+        "eb_shrunk_rush_yds_prior": 19.0,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5448,8 +5634,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 13.71,
-        "eb_shrunk_rush_yds_prior": 16.29,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5459,8 +5645,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 14.77,
-        "eb_shrunk_rush_yds_prior": 17.54,
+        "eb_shrunk_rec_yds_prior": 16.0,
+        "eb_shrunk_rush_yds_prior": 19.0,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5481,8 +5667,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 13.71,
-        "eb_shrunk_rush_yds_prior": 16.29,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5492,8 +5678,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 13.71,
-        "eb_shrunk_rush_yds_prior": 16.29,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5503,8 +5689,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 19.4,
-        "eb_shrunk_rush_yds_prior": 28.6,
+        "eb_shrunk_rec_yds_prior": 21.56,
+        "eb_shrunk_rush_yds_prior": 30.33,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5525,8 +5711,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 18.09,
-        "eb_shrunk_rush_yds_prior": 20.73,
+        "eb_shrunk_rec_yds_prior": 19.9,
+        "eb_shrunk_rush_yds_prior": 22.8,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5536,8 +5722,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 16.54,
-        "eb_shrunk_rush_yds_prior": 33.62,
+        "eb_shrunk_rec_yds_prior": 16.5,
+        "eb_shrunk_rush_yds_prior": 33.0,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5547,8 +5733,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 19.2,
-        "eb_shrunk_rush_yds_prior": 25.2,
+        "eb_shrunk_rec_yds_prior": 21.33,
+        "eb_shrunk_rush_yds_prior": 27.44,
         "pocket_depth_adjusted_catch_rate": 0.6072,
         "physics_completion_prob": 0.21
       },
@@ -5580,8 +5766,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 28.69,
-        "eb_shrunk_rush_yds_prior": 55.39,
+        "eb_shrunk_rec_yds_prior": 26.5,
+        "eb_shrunk_rush_yds_prior": 51.34,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5591,8 +5777,8 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 16.75,
-        "eb_shrunk_rush_yds_prior": 19.09,
+        "eb_shrunk_rec_yds_prior": 18.27,
+        "eb_shrunk_rush_yds_prior": 20.82,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
       },
@@ -5602,7 +5788,7 @@
         "features_generated": 204,
         "foundational_equations_applied": 21,
         "total_equations_evaluated_for_athlete": 213,
-        "eb_shrunk_rec_yds_prior": 28.57,
+        "eb_shrunk_rec_yds_prior": 27.43,
         "eb_shrunk_rush_yds_prior": 32.57,
         "pocket_depth_adjusted_catch_rate": 0.66,
         "physics_completion_prob": 0.21
@@ -5637,6 +5823,6 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "6daab070845363b7753209c32042d3582525c5d36778d87a4ae8cb45b52550f1"
+    "stage1b_receipt_sha256": "65b53128f2ecb7d0a981551d37d5caa10cda488d089b2c5618bdf1e49db6364c"
   }
 }

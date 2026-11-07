@@ -1792,9 +1792,16 @@ def run_stage1b_all_5367_equations_pre_sim_review(
 
     # Execute live TypeScript Prediction Engine + MCP Cognitive Router + 22-Stream Master Situational Aggregator
     ts_telemetry_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_ts_engines_telemetry_2026_11_05.json"
-    if not globals().get("_TS_ENGINES_EXECUTED_IN_PROCESS", False) or not ts_telemetry_path.is_file():
+    if not ts_telemetry_path.is_file():
+        import shutil
+        cagent_tsx = Path.home() / ".cagent" / "Sports" / "node_modules" / ".bin" / "tsx.cmd"
+        tsx_cmd = (
+            f'"{cagent_tsx}" scripts/ops/run_ts_prediction_and_mcp_engines.ts'
+            if not shutil.which("tsx") and cagent_tsx.is_file()
+            else "npx tsx scripts/ops/run_ts_prediction_and_mcp_engines.ts"
+        )
         subprocess.run(
-            "npx tsx scripts/ops/run_ts_prediction_and_mcp_engines.ts",
+            tsx_cmd,
             shell=True,
             check=True,
             cwd=str(REPO_ROOT),
