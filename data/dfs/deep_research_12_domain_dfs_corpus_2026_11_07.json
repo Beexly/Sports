@@ -1,0 +1,1458 @@
+{
+  "schema_version": "2.0.0",
+  "generated_at_utc": "2026-11-07T20:09:14.756558+00:00",
+  "total_orthogonal_domains": 12,
+  "total_active_dfs_equations": 19,
+  "graduate_books_count": 20,
+  "graduate_books_total_pages": 8102,
+  "openalex_multi_citation_works_count": 112,
+  "openalex_estimated_pages": 3076,
+  "downloaded_arxiv_pdfs_on_disk_count": 12,
+  "downloaded_arxiv_pdfs_total_bytes": 67982208,
+  "combined_deep_research_pages": 11840,
+  "graduate_books_catalog": [
+    {
+      "book_id": "DFS-BK-01",
+      "title": "Computational Optimal Transport",
+      "authors": "Gabriel Peyr\u00e9 & Marco Cuturi (2019)",
+      "publisher": "Foundations and Trends in Machine Learning / Now Publishers",
+      "pages": 256,
+      "linked_equations": [
+        "EQ-DFS-16",
+        "Gate G1"
+      ],
+      "dfs_application": "Multi-marginal Sinkhorn-Knopp & Bregman-Dykstra projections coupling team implied totals, target shares, and red-zone TD shares."
+    },
+    {
+      "book_id": "DFS-BK-02",
+      "title": "Determinantal Point Processes for Machine Learning",
+      "authors": "Alex Kulesza & Ben Taskar (2012)",
+      "publisher": "Foundations and Trends in Machine Learning",
+      "pages": 168,
+      "linked_equations": [
+        "EQ-DFS-09",
+        "EQ-DFS-04"
+      ],
+      "dfs_application": "Log-determinant L-ensemble Gram matrix repulsion across multi-entry GPP lineups to span orthogonal game-script modes."
+    },
+    {
+      "book_id": "DFS-BK-03",
+      "title": "Modelling Extremal Events for Insurance and Finance",
+      "authors": "Paul Embrechts, Claudia Kl\u00fcppelberg & Thomas Mikosch (1997)",
+      "publisher": "Springer Stochastic Modelling and Applied Probability",
+      "pages": 648,
+      "linked_equations": [
+        "EQ-DFS-10",
+        "EQ-DFS-07"
+      ],
+      "dfs_application": "Pickands-Balkema-de Haan theorem and Generalized Pareto Distribution (GPD) for modeling p99.9 Milly-Maker ceiling eruptions."
+    },
+    {
+      "book_id": "DFS-BK-04",
+      "title": "An Introduction to Statistical Modeling of Extreme Values",
+      "authors": "Stuart Coles (2001)",
+      "publisher": "Springer Series in Statistics",
+      "pages": 209,
+      "linked_equations": [
+        "EQ-DFS-10"
+      ],
+      "dfs_application": "Peaks-Over-Threshold (POT) maximum likelihood estimation of positional tail shape index xi_i."
+    },
+    {
+      "book_id": "DFS-BK-05",
+      "title": "Dependence Modeling with Copulas",
+      "authors": "Harry Joe (2014)",
+      "publisher": "Chapman & Hall/CRC Monographs on Statistics and Applied Probability",
+      "pages": 480,
+      "linked_equations": [
+        "EQ-DFS-11",
+        "EQ-DFS-02"
+      ],
+      "dfs_application": "Asymmetric upper-tail dependence coefficients lambda_U via Gumbel-Hougaard and Student-t copulas for QB-WR-BringBack stacks."
+    },
+    {
+      "book_id": "DFS-BK-06",
+      "title": "Analyzing Dependent Data with Vine Copulas",
+      "authors": "Claudia Czado (2019)",
+      "publisher": "Springer Lecture Notes in Statistics",
+      "pages": 254,
+      "linked_equations": [
+        "EQ-DFS-11"
+      ],
+      "dfs_application": "Canonical Vine (C-Vine) pair-copula conditioning trees anchored on the game-environment root node."
+    },
+    {
+      "book_id": "DFS-BK-07",
+      "title": "Introduction to Stochastic Programming (2nd Edition)",
+      "authors": "John R. Birge & Fran\u00e7ois Louveaux (2011)",
+      "publisher": "Springer Series in Operations Research and Financial Engineering",
+      "pages": 512,
+      "linked_equations": [
+        "EQ-DFS-13"
+      ],
+      "dfs_application": "Two-stage and multi-stage stochastic binary knapsack recourse for DraftKings 1:00 PM -> 4:25 PM Late-Swap optimization."
+    },
+    {
+      "book_id": "DFS-BK-08",
+      "title": "Lectures on Stochastic Programming: Modeling and Theory (3rd Edition)",
+      "authors": "Alexander Shapiro, Darinka Dentcheva & Andrzej Ruszczy\u0144ski (2021)",
+      "publisher": "SIAM / MPS Series on Optimization",
+      "pages": 508,
+      "linked_equations": [
+        "EQ-DFS-13",
+        "EQ-DFS-08"
+      ],
+      "dfs_application": "Non-anticipativity constraints, risk-averse CVaR recourse, and sample average approximation (SAA) error bounds."
+    },
+    {
+      "book_id": "DFS-BK-09",
+      "title": "Behavioral Game Theory: Experiments in Strategic Interaction",
+      "authors": "Colin F. Camerer (2003)",
+      "publisher": "Princeton University Press",
+      "pages": 568,
+      "linked_equations": [
+        "EQ-DFS-12",
+        "EQ-DFS-01"
+      ],
+      "dfs_application": "Level-k Cognitive Hierarchy and Quantal Response Equilibrium (QRE) modeling of public DFS field herding."
+    },
+    {
+      "book_id": "DFS-BK-10",
+      "title": "Quantal Response Equilibrium: A Stochastic Theory of Games",
+      "authors": "Jacob K. Goeree, Charles A. Holt & Thomas R. Palfrey (2016)",
+      "publisher": "Princeton University Press",
+      "pages": 296,
+      "linked_equations": [
+        "EQ-DFS-12"
+      ],
+      "dfs_application": "Logit precision parameter estimation across naive value chasers, optimizer chalk, and contrarian pivots."
+    },
+    {
+      "book_id": "DFS-BK-11",
+      "title": "The Theory of Dispersion Models",
+      "authors": "Bent J\u00f8rgensen (1997)",
+      "publisher": "Chapman & Hall/CRC Monographs on Statistics and Applied Probability",
+      "pages": 252,
+      "linked_equations": [
+        "EQ-DFS-14",
+        "EQ-DFS-03"
+      ],
+      "dfs_application": "Tweedie exponential dispersion models (1 < p < 2) unifying exact point-mass at zero P(Y=0) with continuous Gamma fantasy scoring."
+    },
+    {
+      "book_id": "DFS-BK-12",
+      "title": "The Elements of Hawkes Processes",
+      "authors": "Patrick J. Laub, Thomas Taimre & Philip K. Pollett (2021)",
+      "publisher": "Springer",
+      "pages": 128,
+      "linked_equations": [
+        "EQ-DFS-15"
+      ],
+      "dfs_application": "Self-exciting and mutually exciting point processes for explosive-play drive momentum and red-zone TD cascades."
+    },
+    {
+      "book_id": "DFS-BK-13",
+      "title": "The Kelly Capital Growth Investment Criterion: Theory and Practice",
+      "authors": "Leonard C. MacLean, Edward O. Thorp & William T. Ziemba (2011)",
+      "publisher": "World Scientific Handbook in Financial Economics Series",
+      "pages": 860,
+      "linked_equations": [
+        "EQ-DFS-18"
+      ],
+      "dfs_application": "Fractional Kelly bankroll allocation across Cash 50/50, Single-Entry, 3-Max, and 150-Max GPP tournaments under drawdown constraints."
+    },
+    {
+      "book_id": "DFS-BK-14",
+      "title": "Generalized Expected Utility Theory: The Rank-Dependent Model",
+      "authors": "John Quiggin (1993)",
+      "publisher": "Kluwer Academic Publishers",
+      "pages": 224,
+      "linked_equations": [
+        "EQ-DFS-17"
+      ],
+      "dfs_application": "Rank-dependent probability weighting over top-0.1% heavy-tailed GPP payout structures."
+    },
+    {
+      "book_id": "DFS-BK-15",
+      "title": "A Tutorial on Thompson Sampling",
+      "authors": "Daniel J. Russo, Benjamin Van Roy, Abbas Kazerouni, Ian Osband & Zheng Wen (2018)",
+      "publisher": "Foundations and Trends in Machine Learning",
+      "pages": 96,
+      "linked_equations": [
+        "EQ-DFS-19"
+      ],
+      "dfs_application": "Correlated posterior regime sampling for multi-entry lineup portfolio generation."
+    },
+    {
+      "book_id": "DFS-BK-16",
+      "title": "Integer Programming",
+      "authors": "Laurence A. Wolsey (2020, 2nd Edition)",
+      "publisher": "Wiley Series in Discrete Mathematics and Optimization",
+      "pages": 336,
+      "linked_equations": [
+        "EQ-DFS-04",
+        "Gate G4",
+        "Gate G5"
+      ],
+      "dfs_application": "Branch-and-cut, valid inequalities, and submodular knapsack formulations for Classic and Showdown MILP."
+    },
+    {
+      "book_id": "DFS-BK-17",
+      "title": "Robust Optimization",
+      "authors": "Aharon Ben-Tal, Laurent El Ghaoui & Arkadi Nemirovski (2009)",
+      "publisher": "Princeton Series in Applied Mathematics",
+      "pages": 576,
+      "linked_equations": [
+        "EQ-DFS-08",
+        "EQ-DFS-05"
+      ],
+      "dfs_application": "Ellipsoidal and conic uncertainty sets for cash-game floor protection and injury-shock immunization."
+    },
+    {
+      "book_id": "DFS-BK-18",
+      "title": "Algorithmic Learning in a Random World (2nd Edition)",
+      "authors": "Vladimir Vovk, Alexander Gammerman & Glenn Shafer (2022)",
+      "publisher": "Springer",
+      "pages": 496,
+      "linked_equations": [
+        "EQ-DFS-05"
+      ],
+      "dfs_application": "Distribution-free conformal prediction lower bounds for DFS cash-game safety."
+    },
+    {
+      "book_id": "DFS-BK-19",
+      "title": "Computer Age Statistical Inference: Algorithms, Evidence, and Data Science",
+      "authors": "Bradley Efron & Trevor Hastie (2021)",
+      "publisher": "Cambridge University Press",
+      "pages": 515,
+      "linked_equations": [
+        "Gate G2"
+      ],
+      "dfs_application": "James-Stein and Empirical Bayes shrinkage preventing 1-game WR4/TE3 flukes from distorting MILP selection."
+    },
+    {
+      "book_id": "DFS-BK-20",
+      "title": "Quantitative Risk Management: Concepts, Techniques and Tools (Revised Edition)",
+      "authors": "Alexander J. McNeil, R\u00fcdiger Frey & Paul Embrechts (2015)",
+      "publisher": "Princeton Series in Finance",
+      "pages": 720,
+      "linked_equations": [
+        "EQ-DFS-10",
+        "EQ-DFS-11"
+      ],
+      "dfs_application": "Joint EVT-Copula tail risk and Expected Shortfall optimization across correlated multi-entry portfolios."
+    }
+  ],
+  "downloaded_pdf_receipts": [
+    {
+      "arxiv_id": "1505.05116",
+      "title": "Data-driven distributionally robust optimization using the Wasserstein metric: Performance guarantees and tractable reformulations (Esfahani & Kuhn, Mathematical Programming 2018)",
+      "domain": "Domain 1: Wasserstein DRO & Knapsack Ambiguity Sets (EQ-DFS-08)",
+      "url": "https://arxiv.org/pdf/1505.05116.pdf",
+      "filename": "arxiv_1505_05116_esfahani_kuhn_wasserstein_dro.pdf",
+      "pages": 52,
+      "downloaded": true,
+      "local_path": "data\\corpus\\pdfs\\dfs_fantasy\\arxiv_1505_05116_esfahani_kuhn_wasserstein_dro.pdf",
+      "size_bytes": 1461979
+    },
+    {
+      "arxiv_id": "1207.6083",
+      "title": "Determinantal Point Processes for Machine Learning (Kulesza & Taskar, Foundations and Trends in Machine Learning 2012 Monograph)",
+      "domain": "Domain 2: k-DPP & Submodular Portfolio Repulsion (EQ-DFS-09)",
+      "url": "https://arxiv.org/pdf/1207.6083.pdf",
+      "filename": "arxiv_1207_6083_kulesza_taskar_determinantal_point_processes_book.pdf",
+      "pages": 168,
+      "downloaded": true,
+      "local_path": "data\\corpus\\pdfs\\dfs_fantasy\\arxiv_1207_6083_kulesza_taskar_determinantal_point_processes_book.pdf",
+      "size_bytes": 6735810
+    },
+    {
+      "arxiv_id": "1803.00567",
+      "title": "Computational Optimal Transport (Peyr\u00e9 & Cuturi, Foundations and Trends in Machine Learning 2019 Monograph)",
+      "domain": "Domain 10: Multi-Marginal Entropic Optimal Transport & Sinkhorn Scaling (EQ-DFS-16)",
+      "url": "https://arxiv.org/pdf/1803.00567.pdf",
+      "filename": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book.pdf",
+      "pages": 256,
+      "downloaded": true,
+      "local_path": "data\\corpus\\pdfs\\dfs_fantasy\\arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book.pdf",
+      "size_bytes": 42429657
+    },
+    {
+      "arxiv_id": "1707.02038",
+      "title": "A Tutorial on Thompson Sampling (Russo, Van Roy, Kazerouni, Osband & Wen, Foundations and Trends in Machine Learning 2018 Monograph)",
+      "domain": "Domain 12: Combinatorial Thompson Sampling & Regime Exploration (EQ-DFS-19)",
+      "url": "https://arxiv.org/pdf/1707.02038.pdf",
+      "filename": "arxiv_1707_02038_russo_van_roy_thompson_sampling_book.pdf",
+      "pages": 96,
+      "downloaded": true,
+      "local_path": "data\\corpus\\pdfs\\dfs_fantasy\\arxiv_1707_02038_russo_van_roy_thompson_sampling_book.pdf",
+      "size_bytes": 3259310
+    },
+    {
+      "arxiv_id": "1507.02822",
+      "title": "Hawkes Processes (Laub, Taimre & Pollett, 2015 / Springer Monograph Foundation)",
+      "domain": "Domain 8: Hawkes Self-Exciting Drive & Touchdown Cascades (EQ-DFS-15)",
+      "url": "https://arxiv.org/pdf/1507.02822.pdf",
+      "filename": "arxiv_1507_02822_laub_taimre_pollett_hawkes_processes.pdf",
+      "pages": 48,
+      "downloaded": true,
+      "local_path": "data\\corpus\\pdfs\\dfs_fantasy\\arxiv_1507_02822_laub_taimre_pollett_hawkes_processes.pdf",
+      "size_bytes": 1555575
+    },
+    {
+      "arxiv_id": "1605.00276",
+      "title": "Quantifying Distributional Model Risk via Optimal Transport (Blanchet & Murthy, Mathematics of Operations Research 2019)",
+      "domain": "Domain 1: Wasserstein Profile Inference & Distributional Robustness (EQ-DFS-08)",
+      "url": "https://arxiv.org/pdf/1605.00276.pdf",
+      "filename": "arxiv_1605_00276_blanchet_murthy_distributional_model_risk.pdf",
+      "pages": 42,
+      "downloaded": true,
+      "local_path": "data\\corpus\\pdfs\\dfs_fantasy\\arxiv_1605_00276_blanchet_murthy_distributional_model_risk.pdf",
+      "size_bytes": 871918
+    }
+  ],
+  "frontier_19_equations": [
+    {
+      "eq_id": "EQ-DFS-08",
+      "name": "Wasserstein Distributionally Robust Knapsack Ambiguity Penalty",
+      "domain": "Distributionally Robust Optimization (DRO) & Optimal Transport Duality",
+      "formula_latex": "\\sup_{\\mathbb{Q} \\in \\mathcal{B}_{\\varepsilon_W}(\\hat{\\mathbb{P}}_N)} \\mathbb{E}_{\\mathbb{Q}}[-\\langle u, x \\rangle] = -\\langle \\hat{\\mu}, x \\rangle + \\varepsilon_W \\|\\Sigma^{1/2} x\\|_2 + \\gamma_{\\text{own}}\\varepsilon_{\\text{own}}\\|\\text{diag}(\\hat{\\sigma}_{\\text{own}})x\\|_\\infty",
+      "citations": [
+        "Mohajerin Esfahani, P., & Kuhn, D. (2018). Data-driven distributionally robust optimization using the Wasserstein metric. Mathematical Programming, 171(1), 115-166.",
+        "Blanchet, J., & Murthy, K. (2019). Quantifying distributional model risk via optimal transport. Mathematics of Operations Research, 44(2), 565-600.",
+        "Blanchet, J., Chen, L., & Zhou, X. Y. (2022). Distributionally robust mean-variance portfolio selection with Wasserstein distances. Management Science, 68(9), 6382-6410."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-09",
+      "name": "k-Determinantal Point Process (k-DPP) Log-Determinant Gram Portfolio Repulsion",
+      "domain": "Submodular Combinatorial Optimization & Quantum Fermionic Point Processes",
+      "formula_latex": "\\mathcal{F}_{\\text{DPP}}(S) = \\log \\det\\left(L_S + \\epsilon I_{|S|}\\right), \\quad L_{m,m'} = q_m \\, \\phi_m^\\top \\Sigma_{\\text{env}} \\phi_{m'} \\, q_{m'}",
+      "citations": [
+        "Kulesza, A., & Taskar, B. (2012). Determinantal Point Processes for Machine Learning. Foundations and Trends in Machine Learning (Book, 168 pp.).",
+        "Nemhauser, G. L., Wolsey, L. A., & Fisher, M. L. (1978). An analysis of approximations for maximizing submodular set functions\u2014I. Mathematical Programming, 14(1), 265-294.",
+        "Gillenwater, J., Kulesza, A., & Taskar, B. (2012). Near-optimal MAP inference for determinantal point processes. NeurIPS."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-10",
+      "name": "Pickands-Balkema-de Haan EVT & Generalized Pareto (GPD) p99.9 Milly-Maker Tail Exceedance",
+      "domain": "Extreme Value Theory (EVT) & Peaks-Over-Threshold Asymptotics",
+      "formula_latex": "x_{0.999, i} = u_i + \\frac{\\beta_i}{\\xi_i}\\left[\\left(\\frac{0.001}{\\zeta_{u,i}}\\right)^{-\\xi_i} - 1\\right], \\quad 1 - G_{\\xi,\\beta}(y) = \\left(1 + \\frac{\\xi y}{\\beta}\\right)^{-1/\\xi}",
+      "citations": [
+        "Embrechts, P., Kl\u00fcppelberg, C., & Mikosch, T. (1997). Modelling Extremal Events for Insurance and Finance. Springer (Book, 648 pp.).",
+        "Coles, S. (2001). An Introduction to Statistical Modeling of Extreme Values. Springer (Book, 209 pp.).",
+        "Pickands, J. (1975). Statistical inference using extreme order statistics. Annals of Statistics, 3(1), 119-131."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-11",
+      "name": "Canonical Vine (C-Vine) Pair-Copula & Gumbel-Hougaard Asymmetric Upper-Tail Dependence",
+      "domain": "High-Dimensional Vine Copulas & Asymmetric Tail Co-Movements",
+      "formula_latex": "C_\\theta^{\\text{Gumbel}}(u,v) = \\exp\\left(-\\left[(-\\ln u)^\\theta + (-\\ln v)^\\theta\\right]^{1/\\theta}\\right), \\quad \\lambda_U = 2 - 2^{1/\\theta}, \\quad \\theta = \\frac{1}{1-\\tau}",
+      "citations": [
+        "Bedford, T., & Cooke, R. M. (2002). Vines\u2014a new graphical model for dependent random variables. Annals of Statistics, 30(4), 1031-1068.",
+        "Aas, K., Czado, C., Frigessi, A., & Bakken, H. (2009). Pair-copula constructions of multiple dependence. Insurance: Mathematics and Economics, 44(2), 182-198.",
+        "Joe, H. (2014). Dependence Modeling with Copulas. Chapman & Hall/CRC (Book, 480 pp.).",
+        "Czado, C. (2019). Analyzing Dependent Data with Vine Copulas. Springer (Book, 254 pp.)."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-12",
+      "name": "Level-k Cognitive Hierarchy & Quantal Response Equilibrium (QRE) Ownership Fixed Point",
+      "domain": "Behavioral Game Theory, Bounded Rationality & Rank-Order Contest Theory",
+      "formula_latex": "\\pi_i^{\\text{field}} = \\sum_{k=0}^{K} \\frac{e^{-\\tau}\\tau^k}{k!} \\frac{\\exp(\\lambda_k U_i(\\bar{\\pi}^{(0:k-1)}))}{\\sum_j \\exp(\\lambda_k U_j(\\bar{\\pi}^{(0:k-1)}))}",
+      "citations": [
+        "Camerer, C. F., Ho, T. H., & Chong, J. K. (2004). A cognitive hierarchy model of games. Quarterly Journal of Economics, 119(3), 861-898.",
+        "McKelvey, R. D., & Palfrey, T. R. (1995). Quantal response equilibria for normal form games. Games and Economic Behavior, 10(1), 6-38.",
+        "Lazear, E. P., & Rosen, S. (1981). Rank-order tournaments as optimum labor contracts. Journal of Political Economy, 89(5), 841-864."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-13",
+      "name": "Two-Stage Stochastic Integer Programming with Late-Swap Recourse & Progressive Hedging",
+      "domain": "Multi-Stage Stochastic Integer Programming & Non-Anticipativity Decomposition",
+      "formula_latex": "\\text{EV}_{\\text{recourse}}(x_1) = \\mathbb{E}_{\\omega_1}\\left[f_1(x_1,\\omega_1) + \\max_{x_2(\\omega_1)\\in\\mathcal{X}_2(x_1)} \\mathbb{E}_{\\omega_2|\\omega_1}\\left[V_{\\text{GPP}}(S_1 + S_2(x_2(\\omega_1)))\\right]\\right]",
+      "citations": [
+        "Rockafellar, R. T., & Wets, R. J.-B. (1991). Scenarios and policy aggregation in optimization under uncertainty. Mathematics of Operations Research, 16(1), 119-147.",
+        "Birge, J. R., & Louveaux, F. (2011). Introduction to Stochastic Programming (2nd ed.). Springer (Book, 512 pp.).",
+        "Shapiro, A., Dentcheva, D., & Ruszczy\u0144ski, A. (2021). Lectures on Stochastic Programming (3rd ed.). SIAM (Book, 508 pp.)."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-14",
+      "name": "Tweedie Compound Poisson-Gamma Exact Zero-Inflated Semicontinuous Density",
+      "domain": "Exponential Dispersion Models & Actuarial Semicontinuous Processes",
+      "formula_latex": "\\text{Var}(Y) = \\phi \\mu^p \\ (1<p<2), \\quad \\mathbb{P}(Y_i = 0) = \\exp\\left(-\\frac{\\mu_i^{2-p}}{\\phi_i(2-p)}\\right)",
+      "citations": [
+        "J\u00f8rgensen, B. (1997). The Theory of Dispersion Models. Chapman & Hall/CRC (Book, 252 pp.).",
+        "Dunn, P. K., & Smyth, G. K. (2005). Series evaluation of Tweedie exponential dispersion model densities. Statistics and Computing, 15(4), 267-280.",
+        "Tweedie, M. C. K. (1984). An index which distinguishes between some important exponential families. Indian Statistical Institute."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-15",
+      "name": "Hawkes Self-Exciting Drive Momentum & Touchdown Cascade Intensity",
+      "domain": "Mutually Exciting Point Processes & Stochastic Intensity Jump Processes",
+      "formula_latex": "\\lambda_t = \\mu_0 + \\sum_{t_k < t} \\alpha_{\\text{expl}} \\exp(-\\beta_{\\text{decay}}(t - t_k)), \\quad \\mathcal{B}_{\\text{cascade}} = \\frac{1}{1 - \\alpha_{\\text{expl}}/\\beta_{\\text{decay}}}",
+      "citations": [
+        "Hawkes, A. G. (1971). Spectra of some self-exciting and mutually exciting point processes. Biometrika, 58(1), 83-90.",
+        "Laub, P. J., Taimre, T., & Pollett, P. K. (2021). The Elements of Hawkes Processes. Springer (Book, 128 pp.).",
+        "Bacry, E., Mastromatteo, I., & Muzy, J. F. (2015). Hawkes processes in finance. Market Microstructure and Liquidity, 1(01)."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-16",
+      "name": "Multi-Marginal Entropic Optimal Transport & Bregman-Dykstra 4-Tensor Coupling",
+      "domain": "Computational Optimal Transport & Multi-Marginal Kullback-Leibler Projections",
+      "formula_latex": "\\min_{\\Gamma \\in \\Pi(\\mu_1,\\dots,\\mu_4)} \\langle C, \\Gamma \\rangle - \\varepsilon H(\\Gamma), \\quad \\Gamma_{i_1 i_2 i_3 i_4} = K_{i_1 i_2 i_3 i_4} \\prod_{m=1}^4 u_{i_m}^{(m)}",
+      "citations": [
+        "Peyr\u00e9, G., & Cuturi, M. (2019). Computational Optimal Transport. Foundations and Trends in Machine Learning (Book, 256 pp.).",
+        "Benamou, J. D., Carlier, G., Cuturi, M., Nenna, L., & Peyr\u00e9, G. (2015). Iterative Bregman projections for regularized transportation problems. SIAM J. Sci. Comput., 37(2), A1111-A1138.",
+        "Cuturi, M. (2013). Sinkhorn distances: Lightspeed computation of optimal transport. NeurIPS."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-17",
+      "name": "Quiggin Rank-Dependent Expected Utility (RDEU) & Prelec Compound Invariance Weighting",
+      "domain": "Non-Expected Utility Theory & Top-Heavy Contest Payout Curve Optimization",
+      "formula_latex": "U_{\\text{RDEU}}(x) = \\int_0^\\infty u(w) \\, d\\left[-w_{\\text{Prelec}}\\big(1 - F_x(w)\\big)\\right], \\quad w_{\\text{Prelec}}(p) = \\exp\\big(-(-\\ln p)^\\alpha\\big)",
+      "citations": [
+        "Quiggin, J. (1982). A theory of anticipated utility. Journal of Economic Behavior & Organization, 3(4), 323-343.",
+        "Tversky, A., & Kahneman, D. (1992). Advances in prospect theory: Cumulative representation of uncertainty. Journal of Risk and Uncertainty, 5(4), 297-323.",
+        "Prelec, D. (1998). The probability weighting function. Econometrica, 66(3), 497-527."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-18",
+      "name": "Fractional Kelly Capital Growth for Multi-Contest Tournament Allocation",
+      "domain": "Stochastic Portfolio Theory, Logarithmic Utility & Drawdown-Constrained Growth",
+      "formula_latex": "f^* = \\arg\\max_{f \\in \\Delta} \\mathbb{E}\\left[\\ln\\left(1 + \\kappa_{\\text{frac}} \\sum_{c=1}^C f_c R_c\\right)\\right] \\quad \\text{s.t.} \\quad \\mathbb{P}(W_T < (1-\\delta)W_0) \\le \\alpha",
+      "citations": [
+        "Kelly, J. L. (1956). A new interpretation of information rate. Bell System Technical Journal, 35(4), 917-926.",
+        "MacLean, L. C., Thorp, E. O., & Ziemba, W. T. (2011). The Kelly Capital Growth Investment Criterion: Theory and Practice. World Scientific (Book, 860 pp.).",
+        "Thorp, E. O. (2006). The Kelly criterion in blackjack, sports betting, and the stock market. Handbook of Asset and Liability Management."
+      ]
+    },
+    {
+      "eq_id": "EQ-DFS-19",
+      "name": "Correlated Combinatorial Thompson Sampling for Multi-Entry Regime Exploration",
+      "domain": "Bayesian Combinatorial Multi-Armed Bandits & Posterior Regime Sampling",
+      "formula_latex": "\\theta^{(k)} \\sim \\mathcal{N}\\left(\\hat{\\theta}_{\\text{Stage2}}, \\Sigma_{\\text{regime}}\\right), \\quad x^{(k)} = \\arg\\max_{x \\in \\mathcal{X}_{\\text{DK}}} \\langle \\theta^{(k)}, x \\rangle + \\lambda_{\\text{DPP}} \\Delta_k \\log\\det(L)",
+      "citations": [
+        "Russo, D. J., Van Roy, B., Kazerouni, A., Osband, I., & Wen, Z. (2018). A Tutorial on Thompson Sampling. Foundations and Trends in Machine Learning (Book, 96 pp.).",
+        "Chen, W., Wang, Y., & Yuan, Y. (2013). Combinatorial multi-armed bandit: General framework and applications. ICML."
+      ]
+    }
+  ],
+  "openalex_multi_citation_works": [
+    {
+      "openalex_id": "https://openalex.org/W2968009374",
+      "doi": "https://doi.org/10.5802/ojmo.15",
+      "title": "Frameworks and Results in Distributionally Robust Optimization",
+      "publication_year": 2022,
+      "cited_by_count": 960,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 85
+    },
+    {
+      "openalex_id": "https://openalex.org/W4392877631",
+      "doi": "https://doi.org/10.1016/j.physrep.2024.03.002",
+      "title": "A review on Quantum Approximate Optimization Algorithm and its variants",
+      "publication_year": 2024,
+      "cited_by_count": 549,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 66
+    },
+    {
+      "openalex_id": "https://openalex.org/W2926425062",
+      "doi": "https://doi.org/10.1016/j.compchemeng.2019.03.034",
+      "title": "Optimization under uncertainty in the era of big data and deep learning: When machine learning meets mathematical programming",
+      "publication_year": 2019,
+      "cited_by_count": 359,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 15
+    },
+    {
+      "openalex_id": "https://openalex.org/W2987963462",
+      "doi": "https://doi.org/10.1007/s10107-019-01445-5",
+      "title": "On distributionally robust chance constrained programs with Wasserstein distance",
+      "publication_year": 2019,
+      "cited_by_count": 266,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 41
+    },
+    {
+      "openalex_id": "https://openalex.org/W4392868640",
+      "doi": "https://doi.org/10.1016/j.ejor.2024.03.020",
+      "title": "A survey of contextual optimization methods for decision-making under uncertainty",
+      "publication_year": 2024,
+      "cited_by_count": 237,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 19
+    },
+    {
+      "openalex_id": "https://openalex.org/W4286494325",
+      "doi": "https://doi.org/10.1287/opre.2022.2330",
+      "title": "Technical Note\u2014Data-Driven Chance Constrained Programs over Wasserstein Balls",
+      "publication_year": 2022,
+      "cited_by_count": 141,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 15
+    },
+    {
+      "openalex_id": "https://openalex.org/W4281921893",
+      "doi": "https://doi.org/10.1016/j.ejco.2022.100030",
+      "title": "Chance-constrained optimization under limited distributional information: A review of reformulations based on sampling and distributional robustness",
+      "publication_year": 2022,
+      "cited_by_count": 76,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3042376903",
+      "doi": "https://doi.org/10.48550/arxiv.2007.09530",
+      "title": "A Distributionally Robust Approach to Fair Classification",
+      "publication_year": 2020,
+      "cited_by_count": 65,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W3128377704",
+      "doi": "https://doi.org/10.1007/s10107-020-01605-y",
+      "title": "Distributionally robust chance-constrained programs with right-hand side uncertainty under Wasserstein ambiguity",
+      "publication_year": 2021,
+      "cited_by_count": 59,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 32
+    },
+    {
+      "openalex_id": "https://openalex.org/W4327969835",
+      "doi": "https://doi.org/10.3390/en16062814",
+      "title": "Opening of Ancillary Service Markets to Distributed Energy Resources: A Review",
+      "publication_year": 2023,
+      "cited_by_count": 52,
+      "domain": "Domain 1: Wasserstein DRO & Knapsack",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2799670133",
+      "doi": "https://doi.org/10.1002/smj.2904",
+      "title": "Towards a Theory of Ecosystems",
+      "publication_year": 2018,
+      "cited_by_count": 4377,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 22
+    },
+    {
+      "openalex_id": "https://openalex.org/W2159339834",
+      "doi": "https://doi.org/10.1146/annurev-economics-080213-041221",
+      "title": "Copulas in Econometrics",
+      "publication_year": 2014,
+      "cited_by_count": 87,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 22
+    },
+    {
+      "openalex_id": "https://openalex.org/W2286694939",
+      "doi": "https://doi.org/10.2139/ssrn.2600242",
+      "title": "Endogenous Market Making and Network Formation",
+      "publication_year": 2015,
+      "cited_by_count": 78,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W3197548413",
+      "doi": "https://doi.org/10.1145/3471158.3472260",
+      "title": "User Fairness, Item Fairness, and Diversity for Rankings in Two-Sided Markets",
+      "publication_year": 2021,
+      "cited_by_count": 71,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 19
+    },
+    {
+      "openalex_id": "https://openalex.org/W4394856673",
+      "doi": "https://doi.org/10.1007/s00291-024-00752-4",
+      "title": "Assortment optimization: a systematic literature review",
+      "publication_year": 2024,
+      "cited_by_count": 42,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 63
+    },
+    {
+      "openalex_id": "https://openalex.org/W2900364890",
+      "doi": "https://doi.org/10.3390/su10114014",
+      "title": "The Contribution of Technological and Non-Technological Innovation to Environmental Performance. An Analysis with a Complementary Approach",
+      "publication_year": 2018,
+      "cited_by_count": 35,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2753574082",
+      "doi": "https://doi.org/10.1115/1.4038070",
+      "title": "Ranking Ideas for Diversity and Quality",
+      "publication_year": 2017,
+      "cited_by_count": 25,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W3210798385",
+      "doi": "https://doi.org/10.1016/j.iedeen.2021.100170",
+      "title": "The relationship between R&D subsidy and R&D cooperation in eco-innovative companies. An analysis taking a complementarity approach",
+      "publication_year": 2021,
+      "cited_by_count": 23,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W4405473071",
+      "doi": "https://doi.org/10.3390/jmse12122313",
+      "title": "Multi-Criteria Optimization of Wind Turbines in an Offshore Wind Farm with Monopile Foundation Considering Structural Integrity and Energy Generation",
+      "publication_year": 2024,
+      "cited_by_count": 19,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W4221028451",
+      "doi": "https://doi.org/10.1016/j.jksuci.2022.02.010",
+      "title": "Clus-DR: Cluster-based pre-trained model for diverse recommendation generation",
+      "publication_year": 2022,
+      "cited_by_count": 12,
+      "domain": "Domain 2: Determinantal Point Processes & Submodular",
+      "estimated_pages": 15
+    },
+    {
+      "openalex_id": "https://openalex.org/W1504946885",
+      "doi": "https://doi.org/10.1137/080734510",
+      "title": "Theory and Applications of Robust Optimization",
+      "publication_year": 2011,
+      "cited_by_count": 2546,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 38
+    },
+    {
+      "openalex_id": "https://openalex.org/W2097259059",
+      "doi": "https://doi.org/10.1162/rest.91.1.1",
+      "title": "On Modeling and Interpreting the Economics of Catastrophic Climate Change",
+      "publication_year": 2009,
+      "cited_by_count": 1813,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 19
+    },
+    {
+      "openalex_id": "https://openalex.org/W2049322469",
+      "doi": "https://doi.org/10.1017/s0021900200001832",
+      "title": "Limiting dependence structures for tail events, with applications to credit derivatives",
+      "publication_year": 2006,
+      "cited_by_count": 923,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 24
+    },
+    {
+      "openalex_id": "https://openalex.org/W2040373108",
+      "doi": "https://doi.org/10.1111/rssb.12016",
+      "title": "Large Covariance Estimation by Thresholding Principal Orthogonal Complements",
+      "publication_year": 2013,
+      "cited_by_count": 900,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 78
+    },
+    {
+      "openalex_id": "https://openalex.org/W1567605768",
+      "doi": "https://doi.org/10.1093/icc/11.5.895",
+      "title": "Market force, ecology and evolution",
+      "publication_year": 2002,
+      "cited_by_count": 497,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 59
+    },
+    {
+      "openalex_id": "https://openalex.org/W2799948621",
+      "doi": "https://doi.org/10.1088/1361-6633/ab42fb",
+      "title": "Multifractal analysis of financial markets: a review",
+      "publication_year": 2019,
+      "cited_by_count": 447,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3022547221",
+      "doi": "https://doi.org/10.1093/rfs/hhs104",
+      "title": "Is the Potential for International Diversification Disappearing? A Dynamic Copula Approach",
+      "publication_year": 2012,
+      "cited_by_count": 412,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 41
+    },
+    {
+      "openalex_id": "https://openalex.org/W2086597188",
+      "doi": "https://doi.org/10.1137/1110037",
+      "title": "On Some Limit Theorems Similar to the Arc-Sin Law",
+      "publication_year": 1965,
+      "cited_by_count": 410,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2100298399",
+      "doi": "https://doi.org/10.1016/s0927-5398(00)00011-6",
+      "title": "Sensitivity analysis of Values at Risk",
+      "publication_year": 2000,
+      "cited_by_count": 394,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 21
+    },
+    {
+      "openalex_id": "https://openalex.org/W4399532349",
+      "doi": "https://doi.org/10.32614/cran.package.performanceanalytics",
+      "title": "PerformanceAnalytics: Econometric Tools for Performance and Risk Analysis",
+      "publication_year": 2007,
+      "cited_by_count": 389,
+      "domain": "Domain 3: Extreme Value Theory & Generalized Pareto",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W1992105816",
+      "doi": "https://doi.org/10.1016/j.insmatheco.2007.02.001",
+      "title": "Pair-copula constructions of multiple dependence",
+      "publication_year": 2007,
+      "cited_by_count": 2082,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 17
+    },
+    {
+      "openalex_id": "https://openalex.org/W2030338847",
+      "doi": "https://doi.org/10.1016/j.csda.2012.08.010",
+      "title": "Selecting and estimating regular vine copulae and application to financial returns",
+      "publication_year": 2012,
+      "cited_by_count": 764,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 18
+    },
+    {
+      "openalex_id": "https://openalex.org/W1964166103",
+      "doi": "https://doi.org/10.1016/j.jmva.2012.02.021",
+      "title": "A review of copula models for economic time series",
+      "publication_year": 2012,
+      "cited_by_count": 595,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 15
+    },
+    {
+      "openalex_id": "https://openalex.org/W2617169092",
+      "doi": "https://doi.org/10.1002/2016wr020242",
+      "title": "Multivariate C opula A nalysis T oolbox (MvCAT): Describing dependence and underlying uncertainty using a B ayesian framework",
+      "publication_year": 2017,
+      "cited_by_count": 365,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 18
+    },
+    {
+      "openalex_id": "https://openalex.org/W2102831107",
+      "doi": "https://doi.org/10.5194/hess-17-1281-2013",
+      "title": "Multivariate return periods in hydrology: a critical and practical review focusing on synthetic design hydrograph estimation",
+      "publication_year": 2013,
+      "cited_by_count": 324,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 16
+    },
+    {
+      "openalex_id": "https://openalex.org/W2114336414",
+      "doi": "https://doi.org/10.1016/j.jmva.2009.08.002",
+      "title": "Tail dependence functions and vine copulas",
+      "publication_year": 2009,
+      "cited_by_count": 278,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 19
+    },
+    {
+      "openalex_id": "https://openalex.org/W1520841927",
+      "doi": "https://doi.org/10.1016/j.eneco.2016.01.012",
+      "title": "Uncertainty and Crude Oil Returns",
+      "publication_year": 2015,
+      "cited_by_count": 259,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3210004592",
+      "doi": "https://doi.org/10.1146/annurev-statistics-040220-101153",
+      "title": "Vine Copula Based Modeling",
+      "publication_year": 2021,
+      "cited_by_count": 229,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 25
+    },
+    {
+      "openalex_id": "https://openalex.org/W2806466534",
+      "doi": "https://doi.org/10.3390/w10060718",
+      "title": "Compound Extremes in Hydroclimatology: A Review",
+      "publication_year": 2018,
+      "cited_by_count": 191,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2069719474",
+      "doi": "https://doi.org/10.1109/tr.2012.2194351",
+      "title": "Optimal Design for Degradation Tests Based on Gamma Processes With Random Effects",
+      "publication_year": 2012,
+      "cited_by_count": 176,
+      "domain": "Domain 4: Vine Copulas & Asymmetric Tail Dependence",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2182449241",
+      "doi": "https://doi.org/10.1016/j.tourman.2015.03.007",
+      "title": "Progress and prospects for event tourism research",
+      "publication_year": 2015,
+      "cited_by_count": 1267,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 39
+    },
+    {
+      "openalex_id": "https://openalex.org/W2018348502",
+      "doi": "https://doi.org/10.1177/0003122411433763",
+      "title": "Hot Spots and Hot Moments in Scientific Collaborations and Social Movements",
+      "publication_year": 2012,
+      "cited_by_count": 219,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 24
+    },
+    {
+      "openalex_id": "https://openalex.org/W2134766906",
+      "doi": "https://doi.org/10.2139/ssrn.1553645",
+      "title": "Behavioral Economics as Applied to Firms: A Primer",
+      "publication_year": 2010,
+      "cited_by_count": 162,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2272678924",
+      "doi": "https://doi.org/10.1093/joclec/nhp014",
+      "title": "MERGER SIMULATION IN COMPETITION POLICY: A SURVEY",
+      "publication_year": 2009,
+      "cited_by_count": 99,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 43
+    },
+    {
+      "openalex_id": "https://openalex.org/W2143476932",
+      "doi": "https://doi.org/10.1016/j.jebo.2013.12.010",
+      "title": "Bounded rationality and group size in Tullock contests: Experimental evidence",
+      "publication_year": 2014,
+      "cited_by_count": 95,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3124420160",
+      "doi": "https://doi.org/10.2307/3657500",
+      "title": "The Law and Economics of Critical Race Theory",
+      "publication_year": 2003,
+      "cited_by_count": 72,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3201456691",
+      "doi": "https://doi.org/10.16997/book55",
+      "title": "AI for Everyone? Critical Perspectives",
+      "publication_year": 2021,
+      "cited_by_count": 68,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2482464320",
+      "doi": "https://doi.org/10.4135/9781473957800",
+      "title": "Age Studies: A Sociological Examination of How We Age and are Aged through the Life Course",
+      "publication_year": 2016,
+      "cited_by_count": 62,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2021997376",
+      "doi": "https://doi.org/10.1088/0034-4885/49/10/002",
+      "title": "Chaotic dynamics applied to information processing",
+      "publication_year": 1986,
+      "cited_by_count": 45,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 88
+    },
+    {
+      "openalex_id": "https://openalex.org/W4220959459",
+      "doi": "https://doi.org/10.1098/rsif.2021.0725",
+      "title": "Inequality between identity groups and social unrest",
+      "publication_year": 2022,
+      "cited_by_count": 32,
+      "domain": "Domain 5: QRE & Cognitive Hierarchy Tournaments",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3128388750",
+      "doi": "https://doi.org/10.3389/fceng.2020.622241",
+      "title": "A Review of Stochastic Programming Methods for Optimization of Process Systems Under Uncertainty",
+      "publication_year": 2021,
+      "cited_by_count": 194,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2899763619",
+      "doi": "https://doi.org/10.1016/j.cor.2018.11.010",
+      "title": "Hyper-heuristic approaches for strategic mine planning under uncertainty",
+      "publication_year": 2018,
+      "cited_by_count": 83,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2300715002",
+      "doi": "https://doi.org/10.1016/j.ejor.2016.02.040",
+      "title": "Logistics capacity planning: A stochastic bin packing formulation and a progressive hedging meta-heuristic",
+      "publication_year": 2016,
+      "cited_by_count": 74,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W4367316720",
+      "doi": "https://doi.org/10.1016/j.cor.2023.106262",
+      "title": "A machine learning optimization approach for last-mile delivery and third-party logistics",
+      "publication_year": 2023,
+      "cited_by_count": 71,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2890419533",
+      "doi": "https://doi.org/10.1016/j.cie.2018.09.030",
+      "title": "Uncertainty in advance scheduling problem in operating room planning",
+      "publication_year": 2018,
+      "cited_by_count": 53,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 17
+    },
+    {
+      "openalex_id": "https://openalex.org/W2735565138",
+      "doi": "https://doi.org/10.1016/j.ejor.2017.07.025",
+      "title": "A mean-risk mixed integer nonlinear program for transportation network protection",
+      "publication_year": 2017,
+      "cited_by_count": 34,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W4396760524",
+      "doi": "https://doi.org/10.1016/j.ejor.2024.05.011",
+      "title": "Multistage Stochastic optimization for mid-term integrated generation and maintenance scheduling of cascaded hydroelectric system with renewable energy uncertainty",
+      "publication_year": 2024,
+      "cited_by_count": 30,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 21
+    },
+    {
+      "openalex_id": "https://openalex.org/W4386326396",
+      "doi": "https://doi.org/10.1287/ijoc.2022.0175",
+      "title": "Fast Continuous and Integer L-Shaped Heuristics Through Supervised Learning",
+      "publication_year": 2023,
+      "cited_by_count": 25,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 21
+    },
+    {
+      "openalex_id": "https://openalex.org/W3215990786",
+      "doi": "https://doi.org/10.1007/s10479-021-04388-3",
+      "title": "Stage-t scenario dominance for risk-averse multi-stage stochastic mixed-integer programs",
+      "publication_year": 2021,
+      "cited_by_count": 22,
+      "domain": "Domain 6: Stochastic Integer Programming & Progressive Hedging",
+      "estimated_pages": 35
+    },
+    {
+      "openalex_id": "https://openalex.org/W4403053017",
+      "doi": "https://doi.org/10.1016/j.aap.2024.107801",
+      "title": "Uncertainty-aware probabilistic graph neural networks for road-level traffic crash prediction",
+      "publication_year": 2024,
+      "cited_by_count": 68,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2901858685",
+      "doi": "https://doi.org/10.1111/rssa.12419",
+      "title": "Multiperil Rate Making for Property Insurance Using Longitudinal Data",
+      "publication_year": 2018,
+      "cited_by_count": 32,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 22
+    },
+    {
+      "openalex_id": "https://openalex.org/W3017089585",
+      "doi": "https://doi.org/10.1214/19-aoas1299",
+      "title": "Regression for copula-linked compound distributions with applications in modeling aggregate insurance claims",
+      "publication_year": 2020,
+      "cited_by_count": 24,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 24
+    },
+    {
+      "openalex_id": "https://openalex.org/W3110499712",
+      "doi": "https://doi.org/10.1080/07350015.2020.1835668",
+      "title": "Nonparametric Copula Estimation for Mixed Insurance Claim Data",
+      "publication_year": 2020,
+      "cited_by_count": 15,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3048660436",
+      "doi": "https://doi.org/10.1007/s10182-020-00375-4",
+      "title": "On Poisson-exponential-Tweedie models for ultra-overdispersed count data",
+      "publication_year": 2020,
+      "cited_by_count": 14,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 23
+    },
+    {
+      "openalex_id": "https://openalex.org/W2973184920",
+      "doi": "https://doi.org/10.5018/economics-ejournal.ja.2019-45",
+      "title": "Dividend payout ratio follows a Tweedie distribution: international evidence",
+      "publication_year": 2019,
+      "cited_by_count": 11,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4417065230",
+      "doi": "https://doi.org/10.1175/aies-d-25-0083.1",
+      "title": "Stop Using Root-Mean-Square Error as a Precipitation Target!",
+      "publication_year": 2026,
+      "cited_by_count": 9,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4405315002",
+      "doi": "https://doi.org/10.1371/journal.pone.0315327",
+      "title": "Geographically weighted regression analysis for nonnegative continuous outcomes: An application to Taiwan dengue data",
+      "publication_year": 2024,
+      "cited_by_count": 7,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4382631569",
+      "doi": "https://doi.org/10.1093/nargab/lqad062",
+      "title": "Genome-wide association study of a semicontinuous trait: illustration of the impact of the modeling strategy through the study of Neutrophil Extracellular Traps levels",
+      "publication_year": 2023,
+      "cited_by_count": 7,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4399061726",
+      "doi": "https://doi.org/10.48550/arxiv.2405.14990",
+      "title": "Dispersion Modeling in Zero-inflated Tweedie Models with Applications to Insurance Claim Data Analysis",
+      "publication_year": 2024,
+      "cited_by_count": 5,
+      "domain": "Domain 7: Tweedie Compound Poisson-Gamma",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W3111605943",
+      "doi": "https://doi.org/10.1016/j.ijforecast.2021.11.001",
+      "title": "Forecasting: theory and practice",
+      "publication_year": 2022,
+      "cited_by_count": 1186,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 167
+    },
+    {
+      "openalex_id": "https://openalex.org/W2949377321",
+      "doi": "https://doi.org/10.1145/2783258.2783401",
+      "title": "SEISMIC",
+      "publication_year": 2015,
+      "cited_by_count": 611,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W1936685714",
+      "doi": "https://doi.org/10.1007/s12311-015-0724-2",
+      "title": "Consensus Paper: Cerebellar Development",
+      "publication_year": 2015,
+      "cited_by_count": 510,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 40
+    },
+    {
+      "openalex_id": "https://openalex.org/W2232870322",
+      "doi": "https://doi.org/10.1080/01621459.2015.1077710",
+      "title": "Randomized Controlled Field Trials of Predictive Policing",
+      "publication_year": 2015,
+      "cited_by_count": 471,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2962817261",
+      "doi": "https://doi.org/10.48550/arxiv.1612.09328",
+      "title": "The Neural Hawkes Process: A Neurally Self-Modulating Multivariate Point Process",
+      "publication_year": 2016,
+      "cited_by_count": 386,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2122583776",
+      "doi": "https://doi.org/10.1088/0741-3335/36/2/001",
+      "title": "An overview of charge-exchange spectroscopy as a plasma diagnostic",
+      "publication_year": 1994,
+      "cited_by_count": 359,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 38
+    },
+    {
+      "openalex_id": "https://openalex.org/W2109275736",
+      "doi": "https://doi.org/10.1029/2001jb001580",
+      "title": "Subcritical and supercritical regimes in epidemic models of earthquake aftershocks",
+      "publication_year": 2002,
+      "cited_by_count": 352,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W3021902975",
+      "doi": "https://doi.org/10.1088/0034-4885/50/5/001",
+      "title": "Optical effects of ion implantation",
+      "publication_year": 1987,
+      "cited_by_count": 292,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 58
+    },
+    {
+      "openalex_id": "https://openalex.org/W3028571922",
+      "doi": "https://doi.org/10.1145/3433000",
+      "title": "A Survey of Information Cascade Analysis",
+      "publication_year": 2021,
+      "cited_by_count": 281,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 36
+    },
+    {
+      "openalex_id": "https://openalex.org/W4280523766",
+      "doi": "https://doi.org/10.1016/j.physrep.2022.04.002",
+      "title": "Network resilience",
+      "publication_year": 2022,
+      "cited_by_count": 270,
+      "domain": "Domain 8: Hawkes Self-Exciting Point Processes",
+      "estimated_pages": 108
+    },
+    {
+      "openalex_id": "https://openalex.org/W3090449556",
+      "doi": "https://doi.org/10.1007/978-3-030-58577-8_7",
+      "title": "UNITER: UNiversal Image-TExt Representation Learning",
+      "publication_year": 2020,
+      "cited_by_count": 2246,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 17
+    },
+    {
+      "openalex_id": "https://openalex.org/W1594039573",
+      "doi": "https://doi.org/10.1109/tpami.2016.2615921",
+      "title": "Optimal Transport for Domain Adaptation",
+      "publication_year": 2016,
+      "cited_by_count": 1120,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2036996178",
+      "doi": "https://doi.org/10.1137/141000439",
+      "title": "Iterative Bregman Projections for Regularized Transportation Problems",
+      "publication_year": 2015,
+      "cited_by_count": 729,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W1629559917",
+      "doi": "https://doi.org/10.48550/arxiv.1310.4375",
+      "title": "Fast Computation of Wasserstein Barycenters",
+      "publication_year": 2013,
+      "cited_by_count": 520,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2735418187",
+      "doi": "https://doi.org/10.1109/msp.2017.2695801",
+      "title": "Optimal Mass Transport: Signal processing and machine-learning applications",
+      "publication_year": 2017,
+      "cited_by_count": 506,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 17
+    },
+    {
+      "openalex_id": "https://openalex.org/W2969738732",
+      "doi": "https://doi.org/10.1287/educ.2019.0198",
+      "title": "Wasserstein Distributionally Robust Optimization: Theory and Applications in Machine Learning",
+      "publication_year": 2019,
+      "cited_by_count": 417,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 37
+    },
+    {
+      "openalex_id": "https://openalex.org/W2724892359",
+      "doi": "https://doi.org/10.1090/mcom/3303",
+      "title": "Scaling algorithms for unbalanced optimal transport problems",
+      "publication_year": 2017,
+      "cited_by_count": 379,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 47
+    },
+    {
+      "openalex_id": "https://openalex.org/W2617032573",
+      "doi": "https://doi.org/10.48550/arxiv.1705.08848",
+      "title": "Joint Distribution Optimal Transportation for Domain Adaptation",
+      "publication_year": 2017,
+      "cited_by_count": 359,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W3159456488",
+      "doi": "https://doi.org/10.48550/arxiv.1803.00567",
+      "title": "Computational Optimal Transport",
+      "publication_year": 2018,
+      "cited_by_count": 304,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2534420330",
+      "doi": "https://doi.org/10.1137/16m1106018",
+      "title": "Stabilized Sparse Scaling Algorithms for Entropy Regularized Transport Problems",
+      "publication_year": 2019,
+      "cited_by_count": 250,
+      "domain": "Domain 9: Multi-Marginal Optimal Transport & Sinkhorn",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4226526415",
+      "doi": "https://doi.org/10.1287/mnsc.2022.4397",
+      "title": "Explaining Excess Entry in Winner-Take-All Markets",
+      "publication_year": 2022,
+      "cited_by_count": 9,
+      "domain": "Domain 10: Rank-Dependent Expected Utility & Prospect Theory",
+      "estimated_pages": 20
+    },
+    {
+      "openalex_id": "https://openalex.org/W7213980540",
+      "doi": "https://doi.org/10.1017/eec.2026.10057",
+      "title": "Recovering subjective probability distributions: a Bayesian approach",
+      "publication_year": 2026,
+      "cited_by_count": 0,
+      "domain": "Domain 10: Rank-Dependent Expected Utility & Prospect Theory",
+      "estimated_pages": 25
+    },
+    {
+      "openalex_id": "https://openalex.org/W2995662622",
+      "doi": "https://doi.org/10.18725/oparu-23006",
+      "title": "Theoretical and empirical essays on the differential effects of information on microeconomic decision making",
+      "publication_year": 2019,
+      "cited_by_count": 0,
+      "domain": "Domain 10: Rank-Dependent Expected Utility & Prospect Theory",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2950156331",
+      "doi": "https://doi.org/10.48550/arxiv.1212.2129",
+      "title": "Online Portfolio Selection: A Survey",
+      "publication_year": 2012,
+      "cited_by_count": 74,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2311865451",
+      "doi": "https://doi.org/10.3905/joi.2016.25.3.118",
+      "title": "Risk-Constrained Kelly Gambling",
+      "publication_year": 2016,
+      "cited_by_count": 33,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 17
+    },
+    {
+      "openalex_id": "https://openalex.org/W2904714767",
+      "doi": "https://doi.org/10.1609/aaai.v33i01.33011134",
+      "title": "The Kelly Growth Optimal Portfolio with Ensemble Learning",
+      "publication_year": 2019,
+      "cited_by_count": 25,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2761315471",
+      "doi": "https://doi.org/10.3390/risks6020053",
+      "title": "A General Framework for Portfolio Theory\u2014Part I: Theory and Various Models",
+      "publication_year": 2018,
+      "cited_by_count": 25,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W1506373683",
+      "doi": "https://doi.org/10.3390/e17063724",
+      "title": "Tail Risk Constraints and Maximum Entropy",
+      "publication_year": 2015,
+      "cited_by_count": 23,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W3010667575",
+      "doi": "https://doi.org/10.1007/s11538-020-00729-8",
+      "title": "Adaptive Bet-Hedging Revisited: Considerations of Risk and Time Horizon",
+      "publication_year": 2020,
+      "cited_by_count": 22,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2336052368",
+      "doi": "https://doi.org/10.1109/allerton.2015.7447000",
+      "title": "On Kelly betting: Some limitations",
+      "publication_year": 2015,
+      "cited_by_count": 22,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2764016935",
+      "doi": "https://doi.org/10.1016/j.ifacol.2017.08.167",
+      "title": "On Drawdown-Modulated Feedback Control in Stock Trading",
+      "publication_year": 2017,
+      "cited_by_count": 20,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W2108347065",
+      "doi": "https://doi.org/10.1080/14697680902991619",
+      "title": "Analysis of Kelly-optimal portfolios",
+      "publication_year": 2009,
+      "cited_by_count": 18,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 14
+    },
+    {
+      "openalex_id": "https://openalex.org/W1544360792",
+      "doi": "https://doi.org/10.1002/int.21734",
+      "title": "An Intelligent Trading System with Fuzzy Rules and Fuzzy Capital Management",
+      "publication_year": 2015,
+      "cited_by_count": 15,
+      "domain": "Domain 11: Kelly Capital Growth & Portfolio Allocation",
+      "estimated_pages": 21
+    },
+    {
+      "openalex_id": "https://openalex.org/W2996106349",
+      "doi": "https://doi.org/10.1017/s0269888919000225",
+      "title": "Artificial intelligence for team sports: a survey",
+      "publication_year": 2019,
+      "cited_by_count": 150,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4392967462",
+      "doi": "https://doi.org/10.1007/s41060-024-00523-y",
+      "title": "An innovative method for accurate NBA player performance forecasting and line-up optimization in daily fantasy sports",
+      "publication_year": 2024,
+      "cited_by_count": 23,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 24
+    },
+    {
+      "openalex_id": "https://openalex.org/W2911702683",
+      "doi": "https://doi.org/10.48550/arxiv.1604.01455",
+      "title": "Picking Winners in Daily Fantasy Sports Using Integer Programming",
+      "publication_year": 2016,
+      "cited_by_count": 14,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W4383104409",
+      "doi": "https://doi.org/10.1111/itor.13344",
+      "title": "Competing in daily fantasy sports using generative models",
+      "publication_year": 2023,
+      "cited_by_count": 5,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 18
+    },
+    {
+      "openalex_id": "https://openalex.org/W4366412126",
+      "doi": "https://doi.org/10.1111/poms.14013",
+      "title": "Picking winners: Diversification through portfolio optimization",
+      "publication_year": 2023,
+      "cited_by_count": 3,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 21
+    },
+    {
+      "openalex_id": "https://openalex.org/W4387879942",
+      "doi": "https://doi.org/10.1007/s12197-023-09646-7",
+      "title": "Are they worth it? \u2013 An evaluation of predictions for NBA \u2018Fantasy Sports\u2019",
+      "publication_year": 2023,
+      "cited_by_count": 1,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 24
+    },
+    {
+      "openalex_id": "https://openalex.org/W4387209364",
+      "doi": "https://doi.org/10.48550/arxiv.2309.15253",
+      "title": "Method and Validation for Optimal Lineup Creation for Daily Fantasy Football Using Machine Learning and Linear Programming",
+      "publication_year": 2023,
+      "cited_by_count": 0,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2964146622",
+      "doi": "https://doi.org/10.15368/theses.2019.53",
+      "title": "Evaluating Projections and Developing Projection Models for Daily Fantasy Basketball",
+      "publication_year": 2019,
+      "cited_by_count": 0,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2910640846",
+      "doi": null,
+      "title": "Developing a Forecast-Based Optimization Model for Fantasy Premier League",
+      "publication_year": 2018,
+      "cited_by_count": 0,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 28
+    },
+    {
+      "openalex_id": "https://openalex.org/W2546916919",
+      "doi": null,
+      "title": "Predicci\u00f3 i optimitzaci\u00f3 en fantasy sports",
+      "publication_year": 2016,
+      "cited_by_count": 0,
+      "domain": "Domain 12: Daily Fantasy Sports & Combinatorial Bandits",
+      "estimated_pages": 28
+    }
+  ]
+}

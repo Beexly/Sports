@@ -264,4 +264,51 @@ def test_c11_cpp20_native_kernels_and_c4_architecture_suite() -> None:
         assert (c4_dir / rel).is_file(), f"Missing C4 file: {rel}"
 
 
+def test_deep_research_12_domains_20_books_and_19_dfs_equations() -> None:
+    corpus_file = REPO_ROOT / "data" / "dfs" / "deep_research_12_domain_dfs_corpus_2026_11_07.json"
+    dataset_file = REPO_ROOT / "data" / "dfs" / "deep_research_12_domain_empirical_dfs_dataset_2026_11_07.json"
+    curated_pool_file = REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+    report_file = (
+        REPO_ROOT
+        / "docs"
+        / "dfs"
+        / "research"
+        / "2026-11-07"
+        / "DEEP-RESEARCH-12-DOMAIN-19-EQUATION-DFS-MASTER-SYNTHESIS-2026-11-07.md"
+    )
+
+    assert corpus_file.is_file()
+    assert dataset_file.is_file()
+    assert curated_pool_file.is_file()
+    assert report_file.is_file()
+
+    corpus = json.loads(corpus_file.read_text(encoding="utf-8"))
+    assert corpus["total_orthogonal_domains"] == 12
+    assert corpus["total_active_dfs_equations"] == 19
+    assert corpus["graduate_books_count"] == 20
+    assert corpus["combined_deep_research_pages"] >= 8000
+    assert corpus["downloaded_arxiv_pdfs_on_disk_count"] >= 10
+
+    dataset = json.loads(dataset_file.read_text(encoding="utf-8"))
+    assert set(dataset["positional_evt_gpd_and_tweedie_profiles"].keys()) == {"QB", "RB", "WR", "TE"}
+    assert dataset["empirical_c_vine_upper_tail_dependence_lambda_u"]["qb_to_wr1_upper_tail_lambda_u_q85"] > 0.25
+
+    pool = json.loads(curated_pool_file.read_text(encoding="utf-8"))
+    assert pool["frontier_19_equations_summary"]["total_dfs_equations_active"] == 19
+    first_player_metrics = pool["curated_dfs_player_pool"][0]["frontier_19_equation_metrics"]
+    for key in (
+        "eq_dfs_08_wasserstein_dro_robust_ev",
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling",
+        "eq_dfs_11_gumbel_upper_tail_lambda_u",
+        "eq_dfs_12_qre_equilibrium_ownership",
+        "eq_dfs_12_level3_cognitive_leverage",
+        "eq_dfs_13_late_swap_recourse_option_ev",
+        "eq_dfs_14_tweedie_exact_zero_prob",
+        "eq_dfs_15_hawkes_cascade_multiplier",
+        "eq_dfs_17_quiggin_prelec_rdeu_score",
+    ):
+        assert key in first_player_metrics
+
+
+
 

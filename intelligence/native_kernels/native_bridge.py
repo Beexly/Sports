@@ -89,6 +89,33 @@ def _load_library() -> Optional[ctypes.CDLL]:
         ]
         lib.gse_cpp_simulate_student_t_dfs_worlds.restype = ctypes.c_int
 
+        # 5. gse_c_evt_gpd_tweedie_and_wasserstein_dro
+        lib.gse_c_evt_gpd_tweedie_and_wasserstein_dro.argtypes = [
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_double,
+            ctypes.c_double,
+            ctypes.c_size_t,
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+        ]
+        lib.gse_c_evt_gpd_tweedie_and_wasserstein_dro.restype = ctypes.c_int
+
+        # 6. gse_c_level_k_qre_ownership_fixed_point
+        lib.gse_c_level_k_qre_ownership_fixed_point.argtypes = [
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_double,
+            ctypes.c_size_t,
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+        ]
+        lib.gse_c_level_k_qre_ownership_fixed_point.restype = ctypes.c_int
+
         _LIB = lib
         return _LIB
     except OSError:
@@ -252,3 +279,80 @@ def cpp_simulate_student_t_dfs_worlds(
             }
 
     raise RuntimeError("Native C++20 kernel execution failed or DLL missing")
+
+
+def c_evt_gpd_tweedie_and_wasserstein_dro(
+    mean_fpts: np.ndarray,
+    std_fpts: np.ndarray,
+    p90_threshold: np.ndarray,
+    gpd_xi: np.ndarray,
+    wasserstein_eps: float = 0.18,
+    tweedie_p: float = 1.52,
+) -> Dict[str, np.ndarray]:
+    lib = _load_library()
+    means = np.ascontiguousarray(mean_fpts, dtype=np.float64)
+    stds = np.ascontiguousarray(std_fpts, dtype=np.float64)
+    p90s = np.ascontiguousarray(p90_threshold, dtype=np.float64)
+    xis = np.ascontiguousarray(gpd_xi, dtype=np.float64)
+    n = means.size
+
+    out_p999 = np.zeros(n, dtype=np.float64)
+    out_zero = np.zeros(n, dtype=np.float64)
+    out_dro = np.zeros(n, dtype=np.float64)
+
+    if lib is not None and n > 0:
+        status = lib.gse_c_evt_gpd_tweedie_and_wasserstein_dro(
+            means.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            stds.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            p90s.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            xis.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            ctypes.c_double(wasserstein_eps),
+            ctypes.c_double(tweedie_p),
+            ctypes.c_size_t(n),
+            out_p999.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            out_zero.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            out_dro.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+        )
+        if status == 0:
+            return {
+                "p999_evt": out_p999,
+                "tweedie_zero_prob": out_zero,
+                "wasserstein_dro_ev": out_dro,
+            }
+
+    raise RuntimeError("Native C11 EVT/Tweedie/Wasserstein kernel failed")
+
+
+def c_level_k_qre_ownership_fixed_point(
+    projections: np.ndarray,
+    salaries: np.ndarray,
+    naive_fppg: np.ndarray,
+    poisson_tau: float = 1.5,
+) -> Dict[str, np.ndarray]:
+    lib = _load_library()
+    proj_arr = np.ascontiguousarray(projections, dtype=np.float64)
+    sal_arr = np.ascontiguousarray(salaries, dtype=np.float64)
+    fppg_arr = np.ascontiguousarray(naive_fppg, dtype=np.float64)
+    n = proj_arr.size
+
+    out_own = np.zeros(n, dtype=np.float64)
+    out_edge = np.zeros(n, dtype=np.float64)
+
+    if lib is not None and n > 0:
+        status = lib.gse_c_level_k_qre_ownership_fixed_point(
+            proj_arr.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            sal_arr.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            fppg_arr.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            ctypes.c_double(poisson_tau),
+            ctypes.c_size_t(n),
+            out_own.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            out_edge.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+        )
+        if status == 0:
+            return {
+                "qre_ownership": out_own,
+                "level3_edge": out_edge,
+            }
+
+    raise RuntimeError("Native C11 Level-k QRE kernel failed")
+

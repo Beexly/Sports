@@ -1,0 +1,61 @@
+{
+  "schema_version": "2.0.0",
+  "generated_at_utc": "2026-11-07T20:09:26.088929+00:00",
+  "source_parquet": "data/nflverse/player_stats_2025.parquet",
+  "total_player_weeks_analyzed": 130054,
+  "positional_evt_gpd_and_tweedie_profiles": {
+    "QB": {
+      "sample_player_weeks": 16974,
+      "mean_dk_ppr": 14.214,
+      "std_dk_ppr": 9.306,
+      "p90_threshold_u": 26.72,
+      "p99_empirical": 37.871,
+      "p999_empirical": 44.351,
+      "eq_dfs_10_gpd_shape_xi": 0.08,
+      "eq_dfs_10_gpd_scale_beta": 4.6055,
+      "eq_dfs_14_empirical_zero_or_near_zero_rate": 0.0768,
+      "dk_300_100_milestone_hit_rate": 0.1627
+    },
+    "RB": {
+      "sample_player_weeks": 35293,
+      "mean_dk_ppr": 9.254,
+      "std_dk_ppr": 8.757,
+      "p90_threshold_u": 21.8,
+      "p99_empirical": 37.1,
+      "p999_empirical": 50.7,
+      "eq_dfs_10_gpd_shape_xi": 0.08,
+      "eq_dfs_10_gpd_scale_beta": 6.388,
+      "eq_dfs_14_empirical_zero_or_near_zero_rate": 0.089,
+      "dk_300_100_milestone_hit_rate": 0.0924
+    },
+    "TE": {
+      "sample_player_weeks": 25616,
+      "mean_dk_ppr": 6.25,
+      "std_dk_ppr": 6.21,
+      "p90_threshold_u": 14.4,
+      "p99_empirical": 28.4,
+      "p999_empirical": 38.539,
+      "eq_dfs_10_gpd_shape_xi": 0.08,
+      "eq_dfs_10_gpd_scale_beta": 5.5566,
+      "eq_dfs_14_empirical_zero_or_near_zero_rate": 0.1101,
+      "dk_300_100_milestone_hit_rate": 0.0208
+    },
+    "WR": {
+      "sample_player_weeks": 52171,
+      "mean_dk_ppr": 9.111,
+      "std_dk_ppr": 8.409,
+      "p90_threshold_u": 20.8,
+      "p99_empirical": 36.5,
+      "p999_empirical": 48.1,
+      "eq_dfs_10_gpd_shape_xi": 0.08,
+      "eq_dfs_10_gpd_scale_beta": 6.6542,
+      "eq_dfs_14_empirical_zero_or_near_zero_rate": 0.0924,
+      "dk_300_100_milestone_hit_rate": 0.0835
+    }
+  },
+  "empirical_c_vine_upper_tail_dependence_lambda_u": {
+    "qb_to_wr1_upper_tail_lambda_u_q85": 0.4421,
+    "qb_to_te1_upper_tail_lambda_u_q85": 0.3208,
+    "qb_to_rb1_upper_tail_lambda_u_q85": 0.1653
+  }
+}

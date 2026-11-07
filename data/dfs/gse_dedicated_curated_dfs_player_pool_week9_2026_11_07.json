@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-11-07T19:53:10.099486+00:00",
+  "generated_at_utc": "2026-11-07T20:06:23.404654+00:00",
   "pipeline_stage": "stage_2_and_3_curated_gse_dfs_player_pool_and_second_stage_dfs_sims",
   "total_slate_candidates_evaluated": 228,
   "accepted_curated_pool_count": 121,
@@ -12,6 +12,18 @@
     "WR": 36,
     "TE": 19,
     "DST": 11
+  },
+  "frontier_19_equations_summary": {
+    "total_dfs_equations_active": 19,
+    "new_frontier_equations_added": 12,
+    "eq_dfs_13_late_swap_eligible_pool_count": 43,
+    "eq_dfs_18_kelly_contest_allocation": {
+      "cash_50_50_double_up_fraction": 0.45,
+      "single_entry_and_3_max_gpp_fraction": 0.35,
+      "mme_20_to_150_max_gpp_fraction": 0.2,
+      "fractional_kelly_multiplier_kappa": 0.35,
+      "max_drawdown_95pct_bound": 0.12
+    }
   },
   "curated_dfs_player_pool": [
     {
@@ -42,6 +54,18 @@
         "sim_p90_ceiling": 44.88,
         "sim_p99_slate_breaker": 64.67,
         "dk_300_100_yd_bonus_prob": 0.7763
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 3.25,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 180.96,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.75485,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 45.57
       }
     },
     {
@@ -72,6 +96,18 @@
         "sim_p90_ceiling": 46.9,
         "sim_p99_slate_breaker": 67.17,
         "dk_300_100_yd_bonus_prob": 0.8019
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 2.8,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 220.2,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 11.8,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.7778,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 56.45
       }
     },
     {
@@ -102,6 +138,18 @@
         "sim_p90_ceiling": 43.39,
         "sim_p99_slate_breaker": 61.55,
         "dk_300_100_yd_bonus_prob": 0.7683
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 3.59,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 173.66,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.73572,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 43.49
       }
     },
     {
@@ -132,6 +180,18 @@
         "sim_p90_ceiling": 41.11,
         "sim_p99_slate_breaker": 58.98,
         "dk_300_100_yd_bonus_prob": 0.7422
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.1,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 187.21,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.7022,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 46.01
       }
     },
     {
@@ -162,6 +222,18 @@
         "sim_p90_ceiling": 36.77,
         "sim_p99_slate_breaker": 53.44,
         "dk_300_100_yd_bonus_prob": 0.6446
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.07,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 162.49,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.62036,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 37.04
       }
     },
     {
@@ -192,6 +264,18 @@
         "sim_p90_ceiling": 36.87,
         "sim_p99_slate_breaker": 52.02,
         "dk_300_100_yd_bonus_prob": 0.6499
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.05,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 163.06,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.62256,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 37.33
       }
     },
     {
@@ -222,6 +306,18 @@
         "sim_p90_ceiling": 39.63,
         "sim_p99_slate_breaker": 56.71,
         "dk_300_100_yd_bonus_prob": 0.7184
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.43,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 155.23,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 8.3,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.67724,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 37.48
       }
     },
     {
@@ -252,6 +348,18 @@
         "sim_p90_ceiling": 33.96,
         "sim_p99_slate_breaker": 48.64,
         "dk_300_100_yd_bonus_prob": 0.577
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.71,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 121.94,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 7.26,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.551,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 26.23
       }
     },
     {
@@ -282,6 +390,18 @@
         "sim_p90_ceiling": 30.27,
         "sim_p99_slate_breaker": 43.61,
         "dk_300_100_yd_bonus_prob": 0.4522
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.53,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 104.7,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 6.14,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.43485,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 19.92
       }
     },
     {
@@ -312,6 +432,18 @@
         "sim_p90_ceiling": 39.81,
         "sim_p99_slate_breaker": 56.0,
         "dk_300_100_yd_bonus_prob": 0.7207
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.39,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 156.11,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.68042,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 37.76
       }
     },
     {
@@ -342,6 +474,18 @@
         "sim_p90_ceiling": 36.07,
         "sim_p99_slate_breaker": 50.94,
         "dk_300_100_yd_bonus_prob": 0.6223
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.23,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 137.78,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.60445,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 30.83
       }
     },
     {
@@ -372,6 +516,18 @@
         "sim_p90_ceiling": 31.56,
         "sim_p99_slate_breaker": 44.96,
         "dk_300_100_yd_bonus_prob": 0.4887
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.25,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 132.81,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 6.89,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.47898,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 26.26
       }
     },
     {
@@ -402,6 +558,18 @@
         "sim_p90_ceiling": 30.12,
         "sim_p99_slate_breaker": 43.36,
         "dk_300_100_yd_bonus_prob": 0.4514
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.57,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 124.61,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.42946,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 23.68
       }
     },
     {
@@ -432,6 +600,18 @@
         "sim_p90_ceiling": 36.05,
         "sim_p99_slate_breaker": 51.07,
         "dk_300_100_yd_bonus_prob": 0.6367
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.24,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 137.68,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.60398,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 31.18
       }
     },
     {
@@ -462,6 +642,18 @@
         "sim_p90_ceiling": 38.42,
         "sim_p99_slate_breaker": 54.93,
         "dk_300_100_yd_bonus_prob": 0.6866
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.7,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 171.89,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.65467,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 40.51
       }
     },
     {
@@ -492,6 +684,18 @@
         "sim_p90_ceiling": 33.12,
         "sim_p99_slate_breaker": 47.46,
         "dk_300_100_yd_bonus_prob": 0.5515
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.9,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 141.7,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 7.39,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.52723,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 29.79
       }
     },
     {
@@ -522,6 +726,18 @@
         "sim_p90_ceiling": 37.16,
         "sim_p99_slate_breaker": 52.82,
         "dk_300_100_yd_bonus_prob": 0.4803
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.99,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 149.81,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 8.68,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.62886,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 29.37
       }
     },
     {
@@ -552,6 +768,18 @@
         "sim_p90_ceiling": 29.67,
         "sim_p99_slate_breaker": 41.77,
         "dk_300_100_yd_bonus_prob": 0.4312
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.67,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 122.05,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 6.29,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.41299,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 22.68
       }
     },
     {
@@ -582,6 +810,18 @@
         "sim_p90_ceiling": 26.32,
         "sim_p99_slate_breaker": 37.24,
         "dk_300_100_yd_bonus_prob": 0.2919
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.39,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 102.96,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.27674,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 15.88
       }
     },
     {
@@ -612,6 +852,18 @@
         "sim_p90_ceiling": 36.05,
         "sim_p99_slate_breaker": 50.28,
         "dk_300_100_yd_bonus_prob": 0.4429
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.24,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 144.1,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 8.33,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.60398,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 27.13
       }
     },
     {
@@ -642,6 +894,18 @@
         "sim_p90_ceiling": 43.47,
         "sim_p99_slate_breaker": 63.51,
         "dk_300_100_yd_bonus_prob": 0.7618
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 3.57,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 174.05,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 9.38,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.7368,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 43.38
       }
     },
     {
@@ -672,6 +936,18 @@
         "sim_p90_ceiling": 28.36,
         "sim_p99_slate_breaker": 40.47,
         "dk_300_100_yd_bonus_prob": 0.3787
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.95,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 114.58,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.36239,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 19.99
       }
     },
     {
@@ -702,6 +978,18 @@
         "sim_p90_ceiling": 23.05,
         "sim_p99_slate_breaker": 32.55,
         "dk_300_100_yd_bonus_prob": 0.15
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.04,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 84.34,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 4.17,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.1341,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 9.67
       }
     },
     {
@@ -732,6 +1020,18 @@
         "sim_p90_ceiling": 46.91,
         "sim_p99_slate_breaker": 68.24,
         "dk_300_100_yd_bonus_prob": 0.7029
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 2.8,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 200.0,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.7779,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 47.73
       }
     },
     {
@@ -762,6 +1062,18 @@
         "sim_p90_ceiling": 29.17,
         "sim_p99_slate_breaker": 41.02,
         "dk_300_100_yd_bonus_prob": 0.4035
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.78,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 119.2,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.39413,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 21.44
       }
     },
     {
@@ -792,6 +1104,18 @@
         "sim_p90_ceiling": 35.8,
         "sim_p99_slate_breaker": 52.02,
         "dk_300_100_yd_bonus_prob": 0.4292
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.29,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 142.81,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.59808,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 26.48
       }
     },
     {
@@ -822,6 +1146,18 @@
         "sim_p90_ceiling": 32.94,
         "sim_p99_slate_breaker": 46.56,
         "dk_300_100_yd_bonus_prob": 0.543
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.94,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 122.44,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.52194,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 25.53
       }
     },
     {
@@ -852,6 +1188,18 @@
         "sim_p90_ceiling": 24.73,
         "sim_p99_slate_breaker": 34.7,
         "dk_300_100_yd_bonus_prob": 0.2119
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.72,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 93.91,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 4.71,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.2066,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 12.52
       }
     },
     {
@@ -882,6 +1230,18 @@
         "sim_p90_ceiling": 15.91,
         "sim_p99_slate_breaker": 26.52,
         "dk_300_100_yd_bonus_prob": 0.0437
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.17,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 43.67,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 6e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.04
       }
     },
     {
@@ -912,6 +1272,18 @@
         "sim_p90_ceiling": 35.3,
         "sim_p99_slate_breaker": 50.43,
         "dk_300_100_yd_bonus_prob": 0.5517
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.41,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 140.24,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 8.09,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.58593,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 29.48
       }
     },
     {
@@ -942,6 +1314,18 @@
         "sim_p90_ceiling": 25.57,
         "sim_p99_slate_breaker": 36.3,
         "dk_300_100_yd_bonus_prob": 0.2488
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.55,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 86.32,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.2438,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 12.37
       }
     },
     {
@@ -972,6 +1356,18 @@
         "sim_p90_ceiling": 24.89,
         "sim_p99_slate_breaker": 34.76,
         "dk_300_100_yd_bonus_prob": 0.2181
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.69,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 94.82,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.21368,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 12.81
       }
     },
     {
@@ -1002,6 +1398,18 @@
         "sim_p90_ceiling": 37.18,
         "sim_p99_slate_breaker": 53.47,
         "dk_300_100_yd_bonus_prob": 0.4826
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.98,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 149.91,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.62929,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 29.46
       }
     },
     {
@@ -1032,6 +1440,18 @@
         "sim_p90_ceiling": 30.34,
         "sim_p99_slate_breaker": 43.57,
         "dk_300_100_yd_bonus_prob": 0.4615
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.52,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 109.69,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.43734,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 21.08
       }
     },
     {
@@ -1062,6 +1482,18 @@
         "sim_p90_ceiling": 22.64,
         "sim_p99_slate_breaker": 32.35,
         "dk_300_100_yd_bonus_prob": 0.135
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.12,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 82.0,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.11747,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 8.99
       }
     },
     {
@@ -1092,6 +1524,18 @@
         "sim_p90_ceiling": 32.7,
         "sim_p99_slate_breaker": 46.7,
         "dk_300_100_yd_bonus_prob": 0.336
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.99,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 126.85,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.51478,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 20.9
       }
     },
     {
@@ -1122,6 +1566,18 @@
         "sim_p90_ceiling": 39.3,
         "sim_p99_slate_breaker": 57.97,
         "dk_300_100_yd_bonus_prob": 0.7222
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.5,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 153.61,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 8.21,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.67129,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 37.2
       }
     },
     {
@@ -1152,6 +1608,18 @@
         "sim_p90_ceiling": 29.3,
         "sim_p99_slate_breaker": 41.59,
         "dk_300_100_yd_bonus_prob": 0.4116
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.75,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 119.94,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.39909,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 21.79
       }
     },
     {
@@ -1182,6 +1650,18 @@
         "sim_p90_ceiling": 35.64,
         "sim_p99_slate_breaker": 50.5,
         "dk_300_100_yd_bonus_prob": 0.4427
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.33,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 141.99,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.59424,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 26.73
       }
     },
     {
@@ -1212,6 +1692,18 @@
         "sim_p90_ceiling": 25.57,
         "sim_p99_slate_breaker": 36.18,
         "dk_300_100_yd_bonus_prob": 0.2408
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.55,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 86.32,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.2438,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 12.19
       }
     },
     {
@@ -1242,6 +1734,18 @@
         "sim_p90_ceiling": 24.44,
         "sim_p99_slate_breaker": 34.32,
         "dk_300_100_yd_bonus_prob": 0.2007
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.78,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 77.46,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 4.37,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.1938,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 10.08
       }
     },
     {
@@ -1272,6 +1776,18 @@
         "sim_p90_ceiling": 43.45,
         "sim_p99_slate_breaker": 62.9,
         "dk_300_100_yd_bonus_prob": 0.6388
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 3.57,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 182.19,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 10.69,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.73653,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 41.33
       }
     },
     {
@@ -1302,6 +1818,18 @@
         "sim_p90_ceiling": 32.54,
         "sim_p99_slate_breaker": 46.3,
         "dk_300_100_yd_bonus_prob": 0.5403
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.03,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 120.48,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 6.32,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.50993,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 25.06
       }
     },
     {
@@ -1332,6 +1860,18 @@
         "sim_p90_ceiling": 16.89,
         "sim_p99_slate_breaker": 27.61,
         "dk_300_100_yd_bonus_prob": 0.0611
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.03,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 49.25,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 2.2,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00074,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.91
       }
     },
     {
@@ -1362,6 +1902,18 @@
         "sim_p90_ceiling": 33.45,
         "sim_p99_slate_breaker": 47.62,
         "dk_300_100_yd_bonus_prob": 0.3579
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.82,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 130.71,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.53675,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 22.19
       }
     },
     {
@@ -1392,6 +1944,18 @@
         "sim_p90_ceiling": 17.22,
         "sim_p99_slate_breaker": 27.66,
         "dk_300_100_yd_bonus_prob": 0.067
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.99,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 45.39,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 2.02,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00141,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.73
       }
     },
     {
@@ -1422,6 +1986,18 @@
         "sim_p90_ceiling": 29.69,
         "sim_p99_slate_breaker": 42.59,
         "dk_300_100_yd_bonus_prob": 0.4272
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.66,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 106.51,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 5.52,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.41373,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 19.7
       }
     },
     {
@@ -1452,6 +2028,18 @@
         "sim_p90_ceiling": 17.51,
         "sim_p99_slate_breaker": 28.63,
         "dk_300_100_yd_bonus_prob": 0.0732
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.94,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 52.78,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00232,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.5
       }
     },
     {
@@ -1482,6 +2070,18 @@
         "sim_p90_ceiling": 25.72,
         "sim_p99_slate_breaker": 35.48,
         "dk_300_100_yd_bonus_prob": 0.1064
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.52,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 90.92,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 5.03,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.25042,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 9.02
       }
     },
     {
@@ -1512,6 +2112,18 @@
         "sim_p90_ceiling": 28.85,
         "sim_p99_slate_breaker": 41.07,
         "dk_300_100_yd_bonus_prob": 0.3867
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.85,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 102.39,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.38176,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 18.04
       }
     },
     {
@@ -1542,6 +2154,18 @@
         "sim_p90_ceiling": 39.61,
         "sim_p99_slate_breaker": 57.07,
         "dk_300_100_yd_bonus_prob": 0.7115
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 4.43,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 155.13,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.67688,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 37.26
       }
     },
     {
@@ -1572,6 +2196,18 @@
         "sim_p90_ceiling": 22.96,
         "sim_p99_slate_breaker": 32.57,
         "dk_300_100_yd_bonus_prob": 0.1456
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.06,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 83.82,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.1304,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 9.49
       }
     },
     {
@@ -1602,6 +2238,18 @@
         "sim_p90_ceiling": 33.65,
         "sim_p99_slate_breaker": 48.56,
         "dk_300_100_yd_bonus_prob": 0.3539
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.78,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 131.74,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.54241,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 22.25
       }
     },
     {
@@ -1632,6 +2280,18 @@
         "sim_p90_ceiling": 13.65,
         "sim_p99_slate_breaker": 22.91,
         "dk_300_100_yd_bonus_prob": 0.0172
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.49,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 27.89,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.02,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.37
       }
     },
     {
@@ -1662,6 +2322,18 @@
         "sim_p90_ceiling": 26.4,
         "sim_p99_slate_breaker": 36.94,
         "dk_300_100_yd_bonus_prob": 0.2922
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.37,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 103.42,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 5.24,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.28023,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 15.96
       }
     },
     {
@@ -1692,6 +2364,18 @@
         "sim_p90_ceiling": 18.49,
         "sim_p99_slate_breaker": 30.44,
         "dk_300_100_yd_bonus_prob": 0.0997
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.8,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 49.66,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 2.57,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00868,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.8
       }
     },
     {
@@ -1722,6 +2406,18 @@
         "sim_p90_ceiling": 26.13,
         "sim_p99_slate_breaker": 36.65,
         "dk_300_100_yd_bonus_prob": 0.1172
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.43,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 93.03,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.26845,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 9.61
       }
     },
     {
@@ -1752,6 +2448,18 @@
         "sim_p90_ceiling": 16.2,
         "sim_p99_slate_breaker": 26.91,
         "dk_300_100_yd_bonus_prob": 0.0468
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.13,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 40.39,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.74,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00014,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.89
       }
     },
     {
@@ -1782,6 +2490,18 @@
         "sim_p90_ceiling": 24.59,
         "sim_p99_slate_breaker": 35.93,
         "dk_300_100_yd_bonus_prob": 0.2137
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.75,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 81.51,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.20041,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 10.91
       }
     },
     {
@@ -1812,6 +2532,18 @@
         "sim_p90_ceiling": 21.64,
         "sim_p99_slate_breaker": 30.11,
         "dk_300_100_yd_bonus_prob": 0.1044
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.3,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 76.31,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 3.72,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.08003,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 7.51
       }
     },
     {
@@ -1842,6 +2574,18 @@
         "sim_p90_ceiling": 36.15,
         "sim_p99_slate_breaker": 50.96,
         "dk_300_100_yd_bonus_prob": 0.4414
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.21,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 144.61,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 8.36,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.60631,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 27.18
       }
     },
     {
@@ -1872,6 +2616,18 @@
         "sim_p90_ceiling": 28.41,
         "sim_p99_slate_breaker": 40.77,
         "dk_300_100_yd_bonus_prob": 0.3747
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.94,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 100.24,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.36439,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 17.4
       }
     },
     {
@@ -1902,6 +2658,18 @@
         "sim_p90_ceiling": 17.71,
         "sim_p99_slate_breaker": 28.62,
         "dk_300_100_yd_bonus_prob": 0.0791
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.92,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 47.79,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 2.16,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00316,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.2
       }
     },
     {
@@ -1932,6 +2700,18 @@
         "sim_p90_ceiling": 17.28,
         "sim_p99_slate_breaker": 29.25,
         "dk_300_100_yd_bonus_prob": 0.0696
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.98,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 51.47,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 2.33,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00157,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.3
       }
     },
     {
@@ -1962,6 +2742,18 @@
         "sim_p90_ceiling": 28.03,
         "sim_p99_slate_breaker": 40.45,
         "dk_300_100_yd_bonus_prob": 0.1726
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.03,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 102.81,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.34905,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 12.53
       }
     },
     {
@@ -1992,6 +2784,18 @@
         "sim_p90_ceiling": 16.9,
         "sim_p99_slate_breaker": 28.0,
         "dk_300_100_yd_bonus_prob": 0.0624
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.03,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 43.82,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.93,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00076,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.5
       }
     },
     {
@@ -2022,6 +2826,18 @@
         "sim_p90_ceiling": 27.07,
         "sim_p99_slate_breaker": 38.12,
         "dk_300_100_yd_bonus_prob": 0.1439
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.23,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 97.87,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.30905,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 11.02
       }
     },
     {
@@ -2052,6 +2868,18 @@
         "sim_p90_ceiling": 16.31,
         "sim_p99_slate_breaker": 26.92,
         "dk_300_100_yd_bonus_prob": 0.0498
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.11,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 40.93,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00019,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.0
       }
     },
     {
@@ -2082,6 +2910,18 @@
         "sim_p90_ceiling": 22.95,
         "sim_p99_slate_breaker": 32.48,
         "dk_300_100_yd_bonus_prob": 0.1467
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.06,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 73.47,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.12999,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 8.34
       }
     },
     {
@@ -2112,6 +2952,18 @@
         "sim_p90_ceiling": 17.37,
         "sim_p99_slate_breaker": 28.85,
         "dk_300_100_yd_bonus_prob": 0.0718
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.96,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 51.98,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00184,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.4
       }
     },
     {
@@ -2142,6 +2994,18 @@
         "sim_p90_ceiling": 13.71,
         "sim_p99_slate_breaker": 22.97,
         "dk_300_100_yd_bonus_prob": 0.0166
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.48,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 31.13,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.51
       }
     },
     {
@@ -2172,6 +3036,18 @@
         "sim_p90_ceiling": 32.22,
         "sim_p99_slate_breaker": 45.92,
         "dk_300_100_yd_bonus_prob": 0.5303
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.1,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 113.81,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.50007,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 23.45
       }
     },
     {
@@ -2202,6 +3078,18 @@
         "sim_p90_ceiling": 22.93,
         "sim_p99_slate_breaker": 31.73,
         "dk_300_100_yd_bonus_prob": 0.1411
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.07,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 73.38,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 3.62,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.12917,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 8.2
       }
     },
     {
@@ -2232,6 +3120,18 @@
         "sim_p90_ceiling": 22.53,
         "sim_p99_slate_breaker": 31.57,
         "dk_300_100_yd_bonus_prob": 0.1329
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.14,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 71.41,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.11311,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 7.78
       }
     },
     {
@@ -2262,6 +3162,18 @@
         "sim_p90_ceiling": 16.41,
         "sim_p99_slate_breaker": 26.8,
         "dk_300_100_yd_bonus_prob": 0.0535
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.1,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 46.51,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00024,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.5
       }
     },
     {
@@ -2292,6 +3204,18 @@
         "sim_p90_ceiling": 34.36,
         "sim_p99_slate_breaker": 48.55,
         "dk_300_100_yd_bonus_prob": 0.3849
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.62,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 135.4,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.5618,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 23.81
       }
     },
     {
@@ -2322,6 +3246,18 @@
         "sim_p90_ceiling": 18.09,
         "sim_p99_slate_breaker": 29.5,
         "dk_300_100_yd_bonus_prob": 0.0887
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.86,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 49.65,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00536,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.57
       }
     },
     {
@@ -2352,6 +3288,18 @@
         "sim_p90_ceiling": 16.41,
         "sim_p99_slate_breaker": 27.6,
         "dk_300_100_yd_bonus_prob": 0.0527
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.1,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 46.51,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00024,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.48
       }
     },
     {
@@ -2382,6 +3330,18 @@
         "sim_p90_ceiling": 17.28,
         "sim_p99_slate_breaker": 28.08,
         "dk_300_100_yd_bonus_prob": 0.0685
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.98,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 44.01,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00157,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.65
       }
     },
     {
@@ -2412,6 +3372,18 @@
         "sim_p90_ceiling": 34.7,
         "sim_p99_slate_breaker": 49.47,
         "dk_300_100_yd_bonus_prob": 0.5447
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.54,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 137.15,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.57073,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 28.65
       }
     },
     {
@@ -2442,6 +3414,18 @@
         "sim_p90_ceiling": 14.32,
         "sim_p99_slate_breaker": 24.47,
         "dk_300_100_yd_bonus_prob": 0.0246
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.39,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 31.17,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.21,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.75
       }
     },
     {
@@ -2472,6 +3456,18 @@
         "sim_p90_ceiling": 18.36,
         "sim_p99_slate_breaker": 30.3,
         "dk_300_100_yd_bonus_prob": 0.0972
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.82,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 50.98,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00748,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.87
       }
     },
     {
@@ -2502,6 +3498,18 @@
         "sim_p90_ceiling": 14.85,
         "sim_p99_slate_breaker": 24.9,
         "dk_300_100_yd_bonus_prob": 0.0269
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.32,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 37.63,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.55,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.18
       }
     },
     {
@@ -2532,6 +3540,18 @@
         "sim_p90_ceiling": 16.47,
         "sim_p99_slate_breaker": 27.06,
         "dk_300_100_yd_bonus_prob": 0.0514
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.09,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 46.86,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00028,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.47
       }
     },
     {
@@ -2562,6 +3582,18 @@
         "sim_p90_ceiling": 15.42,
         "sim_p99_slate_breaker": 25.41,
         "dk_300_100_yd_bonus_prob": 0.0356
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.24,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 40.87,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 1e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.63
       }
     },
     {
@@ -2592,6 +3624,18 @@
         "sim_p90_ceiling": 17.13,
         "sim_p99_slate_breaker": 28.01,
         "dk_300_100_yd_bonus_prob": 0.0651
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.0,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 43.31,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00119,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 3.52
       }
     },
     {
@@ -2622,6 +3666,18 @@
         "sim_p90_ceiling": 14.03,
         "sim_p99_slate_breaker": 24.53,
         "dk_300_100_yd_bonus_prob": 0.0232
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.43,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 29.75,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.13,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.63
       }
     },
     {
@@ -2652,6 +3708,18 @@
         "sim_p90_ceiling": 18.23,
         "sim_p99_slate_breaker": 29.34,
         "dk_300_100_yd_bonus_prob": 0.0922
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.84,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 50.34,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0064,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.71
       }
     },
     {
@@ -2682,6 +3750,18 @@
         "sim_p90_ceiling": 15.02,
         "sim_p99_slate_breaker": 25.36,
         "dk_300_100_yd_bonus_prob": 0.0324
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.29,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 38.6,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.4
       }
     },
     {
@@ -2712,6 +3792,18 @@
         "sim_p90_ceiling": 22.83,
         "sim_p99_slate_breaker": 32.44,
         "dk_300_100_yd_bonus_prob": 0.1466
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.09,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 69.94,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.1251,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 7.94
       }
     },
     {
@@ -2742,6 +3834,18 @@
         "sim_p90_ceiling": 33.3,
         "sim_p99_slate_breaker": 46.92,
         "dk_300_100_yd_bonus_prob": 0.3535
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 5.86,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 129.94,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 7.45,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.53245,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 21.93
       }
     },
     {
@@ -2772,6 +3876,18 @@
         "sim_p90_ceiling": 16.03,
         "sim_p99_slate_breaker": 26.69,
         "dk_300_100_yd_bonus_prob": 0.046
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.15,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 39.56,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 8e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.81
       }
     },
     {
@@ -2802,6 +3918,18 @@
         "sim_p90_ceiling": 15.51,
         "sim_p99_slate_breaker": 25.68,
         "dk_300_100_yd_bonus_prob": 0.0368
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.23,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 37.01,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 1e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.41
       }
     },
     {
@@ -2832,6 +3960,18 @@
         "sim_p90_ceiling": 22.58,
         "sim_p99_slate_breaker": 31.85,
         "dk_300_100_yd_bonus_prob": 0.1326
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.13,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 81.66,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.11509,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 8.88
       }
     },
     {
@@ -2862,6 +4002,18 @@
         "sim_p90_ceiling": 13.48,
         "sim_p99_slate_breaker": 22.54,
         "dk_300_100_yd_bonus_prob": 0.0148
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.51,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 26.26,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.05,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.23
       }
     },
     {
@@ -2892,6 +4044,18 @@
         "sim_p90_ceiling": 15.73,
         "sim_p99_slate_breaker": 26.23,
         "dk_300_100_yd_bonus_prob": 0.0389
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.2,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 42.64,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 3e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.84
       }
     },
     {
@@ -2922,6 +4086,18 @@
         "sim_p90_ceiling": 15.13,
         "sim_p99_slate_breaker": 25.23,
         "dk_300_100_yd_bonus_prob": 0.0343
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.28,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 33.97,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.16
       }
     },
     {
@@ -2952,6 +4128,18 @@
         "sim_p90_ceiling": 17.38,
         "sim_p99_slate_breaker": 28.23,
         "dk_300_100_yd_bonus_prob": 0.0727
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 8.96,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 52.04,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00187,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 4.42
       }
     },
     {
@@ -2982,6 +4170,18 @@
         "sim_p90_ceiling": 13.85,
         "sim_p99_slate_breaker": 22.99,
         "dk_300_100_yd_bonus_prob": 0.0185
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.46,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 27.99,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.42
       }
     },
     {
@@ -3012,6 +4212,18 @@
         "sim_p90_ceiling": 31.19,
         "sim_p99_slate_breaker": 43.87,
         "dk_300_100_yd_bonus_prob": 0.2761
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.33,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 119.08,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.46672,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 17.9
       }
     },
     {
@@ -3042,6 +4254,18 @@
         "sim_p90_ceiling": 29.65,
         "sim_p99_slate_breaker": 41.66,
         "dk_300_100_yd_bonus_prob": 0.4129
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 6.67,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 106.31,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.41224,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 19.34
       }
     },
     {
@@ -3072,6 +4296,18 @@
         "sim_p90_ceiling": 12.26,
         "sim_p99_slate_breaker": 18.41,
         "dk_300_100_yd_bonus_prob": 0.0098
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.68,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 20.56,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.83
       }
     },
     {
@@ -3102,6 +4338,18 @@
         "sim_p90_ceiling": 16.5,
         "sim_p99_slate_breaker": 24.47,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.09,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 44.3,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.82,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0003,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.32
       }
     },
     {
@@ -3132,6 +4380,18 @@
         "sim_p90_ceiling": 14.57,
         "sim_p99_slate_breaker": 24.25,
         "dk_300_100_yd_bonus_prob": 0.0254
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.36,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 36.03,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.4631,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.3934,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.05
       }
     },
     {
@@ -3162,6 +4422,18 @@
         "sim_p90_ceiling": 15.67,
         "sim_p99_slate_breaker": 25.97,
         "dk_300_100_yd_bonus_prob": 0.0385
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.2,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 36.49,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 2e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.42
       }
     },
     {
@@ -3192,6 +4464,18 @@
         "sim_p90_ceiling": 11.78,
         "sim_p99_slate_breaker": 16.92,
         "dk_300_100_yd_bonus_prob": 0.0059
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.73,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 18.84,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.64
       }
     },
     {
@@ -3222,6 +4506,18 @@
         "sim_p90_ceiling": 15.89,
         "sim_p99_slate_breaker": 23.4,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.17,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 41.09,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.65,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 5e-05,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.23
       }
     },
     {
@@ -3252,6 +4548,18 @@
         "sim_p90_ceiling": 15.25,
         "sim_p99_slate_breaker": 25.7,
         "dk_300_100_yd_bonus_prob": 0.0367
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.26,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 34.53,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.59,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.25
       }
     },
     {
@@ -3282,6 +4590,18 @@
         "sim_p90_ceiling": 12.29,
         "sim_p99_slate_breaker": 18.03,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.68,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 22.09,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.66
       }
     },
     {
@@ -3312,6 +4632,18 @@
         "sim_p90_ceiling": 11.53,
         "sim_p99_slate_breaker": 17.19,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.73,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 19.75,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.59
       }
     },
     {
@@ -3342,6 +4674,18 @@
         "sim_p90_ceiling": 24.59,
         "sim_p99_slate_breaker": 34.7,
         "dk_300_100_yd_bonus_prob": 0.2044
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.75,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 78.16,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 4.42,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.20041,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 10.26
       }
     },
     {
@@ -3372,6 +4716,18 @@
         "sim_p90_ceiling": 23.83,
         "sim_p99_slate_breaker": 33.29,
         "dk_300_100_yd_bonus_prob": 0.1779
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 7.9,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 74.61,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.16714,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 9.21
       }
     },
     {
@@ -3402,6 +4758,18 @@
         "sim_p90_ceiling": 15.24,
         "sim_p99_slate_breaker": 25.62,
         "dk_300_100_yd_bonus_prob": 0.034
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.26,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 34.48,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 2.18
       }
     },
     {
@@ -3432,6 +4800,18 @@
         "sim_p90_ceiling": 16.29,
         "sim_p99_slate_breaker": 24.07,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.12,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 43.2,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.76,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00018,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.29
       }
     },
     {
@@ -3462,6 +4842,18 @@
         "sim_p90_ceiling": 12.34,
         "sim_p99_slate_breaker": 18.32,
         "dk_300_100_yd_bonus_prob": 0.0097
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.67,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 20.93,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.3867,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.84
       }
     },
     {
@@ -3492,6 +4884,18 @@
         "sim_p90_ceiling": 16.87,
         "sim_p99_slate_breaker": 25.19,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.03,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 46.26,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.00071,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.38
       }
     },
     {
@@ -3522,6 +4926,18 @@
         "sim_p90_ceiling": 16.09,
         "sim_p99_slate_breaker": 23.45,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.14,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 42.14,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0001,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.26
       }
     },
     {
@@ -3552,6 +4968,18 @@
         "sim_p90_ceiling": 11.72,
         "sim_p99_slate_breaker": 17.09,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.73,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 19.94,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.59
       }
     },
     {
@@ -3582,6 +5010,18 @@
         "sim_p90_ceiling": 11.31,
         "sim_p99_slate_breaker": 16.67,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.73,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 19.53,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.0,
+        "eq_dfs_13_is_late_swap_4pm_window": false,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.58
       }
     },
     {
@@ -3612,6 +5052,18 @@
         "sim_p90_ceiling": 15.15,
         "sim_p99_slate_breaker": 22.43,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.28,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 37.18,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 1.44,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 1.11
       }
     },
     {
@@ -3642,6 +5094,18 @@
         "sim_p90_ceiling": 11.6,
         "sim_p99_slate_breaker": 17.11,
         "dk_300_100_yd_bonus_prob": 0.0
+      },
+      "frontier_19_equation_metrics": {
+        "eq_dfs_08_wasserstein_dro_robust_ev": 9.73,
+        "eq_dfs_10_evt_gpd_p999_milly_ceiling": 19.82,
+        "eq_dfs_11_gumbel_upper_tail_lambda_u": 0.2829,
+        "eq_dfs_12_qre_equilibrium_ownership": 0.0744,
+        "eq_dfs_12_level3_cognitive_leverage": 6.127,
+        "eq_dfs_13_late_swap_recourse_option_ev": 0.54,
+        "eq_dfs_13_is_late_swap_4pm_window": true,
+        "eq_dfs_14_tweedie_exact_zero_prob": 0.0,
+        "eq_dfs_15_hawkes_cascade_multiplier": 1.2319,
+        "eq_dfs_17_quiggin_prelec_rdeu_score": 0.59
       }
     }
   ],

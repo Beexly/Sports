@@ -109,6 +109,59 @@ GSE_API gse_status_t gse_c_dk_ppr_milestone_scoring(
     double* out_bonus_rate
 );
 
+/**
+ * EQ-DFS-10 & EQ-DFS-14: Pickands-Balkema-de Haan EVT Generalized Pareto (GPD)
+ * p99.9 Milly-Maker Tail Exceedance + Tweedie Compound Poisson-Gamma Zero-Probability
+ * & Wasserstein DRO Ambiguity-Adjusted Score (EQ-DFS-08).
+ *
+ * @param mean_fpts          Input [n_players] mean projected fantasy points
+ * @param std_fpts           Input [n_players] standard deviation of fantasy points
+ * @param p90_threshold      Input [n_players] empirical p90 threshold u_i
+ * @param gpd_xi             Input [n_players] GPD tail shape parameter xi_i (>0 heavy tail)
+ * @param wasserstein_eps    Wasserstein ambiguity ball radius epsilon_W
+ * @param tweedie_p          Tweedie power index p in (1, 2) (e.g. 1.52)
+ * @param n_players          Number of players
+ * @param out_p999_evt       Output [n_players] EVT-GPD 99.9th percentile ceiling
+ * @param out_zero_prob      Output [n_players] Tweedie exact point-mass at zero P(Y=0)
+ * @param out_dro_robust_ev  Output [n_players] Wasserstein DRO lower-bound robust EV
+ * @return GSE_STATUS_OK on success
+ */
+GSE_API gse_status_t gse_c_evt_gpd_tweedie_and_wasserstein_dro(
+    const double* mean_fpts,
+    const double* std_fpts,
+    const double* p90_threshold,
+    const double* gpd_xi,
+    double wasserstein_eps,
+    double tweedie_p,
+    size_t n_players,
+    double* out_p999_evt,
+    double* out_zero_prob,
+    double* out_dro_robust_ev
+);
+
+/**
+ * EQ-DFS-12: Level-k Cognitive Hierarchy & Quantal Response Equilibrium (QRE)
+ * Field Ownership Fixed-Point Solver (Camerer, Ho & Chong 2004; McKelvey & Palfrey 1995).
+ *
+ * @param projections        Input [n_players] GSE player projections
+ * @param salaries           Input [n_players] DraftKings salaries
+ * @param naive_fppg         Input [n_players] historical box-score FPPG (Level-0 anchor)
+ * @param poisson_tau        Cognitive hierarchy Poisson mean thinking steps (e.g. 1.5)
+ * @param n_players          Number of players
+ * @param out_qre_ownership  Output [n_players] equilibrium field ownership probability
+ * @param out_level3_edge    Output [n_players] GSE Level-3 best-response leverage score
+ * @return GSE_STATUS_OK on success
+ */
+GSE_API gse_status_t gse_c_level_k_qre_ownership_fixed_point(
+    const double* projections,
+    const double* salaries,
+    const double* naive_fppg,
+    double poisson_tau,
+    size_t n_players,
+    double* out_qre_ownership,
+    double* out_level3_edge
+);
+
 #ifdef __cplusplus
 }
 #endif

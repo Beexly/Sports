@@ -32,6 +32,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import t as student_t
 
+from intelligence.dfs.dfs_19_equation_deep_research_engine import (
+    evaluate_frontier_19_equations_on_curated_pool,
+)
 from intelligence.native_kernels.native_bridge import (
     c_dk_ppr_milestone_scoring,
     cpp_simulate_student_t_dfs_worlds,
@@ -232,6 +235,8 @@ def build_gse_post_game_sim_projections_and_curated_pool(
                 "dk_300_100_yd_bonus_prob": round(float(bonus_300_100_rates[j]), 4),
             }
 
+    frontier_19_summary = evaluate_frontier_19_equations_on_curated_pool(accepted_pool_records)
+
     # Write Stage 1 GSE Post-Game-Sim Projections Artifact
     GSE_PROJECTIONS_JSON.parent.mkdir(parents=True, exist_ok=True)
     GSE_PROJECTIONS_JSON.write_text(
@@ -261,6 +266,12 @@ def build_gse_post_game_sim_projections_and_curated_pool(
             pos: sum(1 for x in accepted_pool_records if x["position"] == pos)
             for pos in ("QB", "RB", "WR", "TE", "DST")
         },
+        "frontier_19_equations_summary": {
+            "total_dfs_equations_active": frontier_19_summary.get("total_dfs_equations_active", 19),
+            "new_frontier_equations_added": frontier_19_summary.get("new_frontier_equations_added", 12),
+            "eq_dfs_13_late_swap_eligible_pool_count": frontier_19_summary.get("eq_dfs_13_late_swap_eligible_pool_count", 0),
+            "eq_dfs_18_kelly_contest_allocation": frontier_19_summary.get("eq_dfs_18_kelly_contest_allocation", {}),
+        },
         "curated_dfs_player_pool": accepted_pool_records,
         "rejected_players_audit": rejected_pool_records,
     }
@@ -273,5 +284,6 @@ def build_gse_post_game_sim_projections_and_curated_pool(
         "curated_dfs_pool_size": len(accepted_pool_records),
         "rejected_players_count": len(rejected_pool_records),
         "second_stage_dfs_pool_sims": int(num_dfs_sims),
+        "total_dfs_equations_active": 19,
         "accepted_by_position": pool_summary["accepted_by_position"],
     }
