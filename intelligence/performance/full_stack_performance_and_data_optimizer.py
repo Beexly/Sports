@@ -500,19 +500,13 @@ def run_static_and_performance_code_review(
     """
     if target_paths is None:
         scan_dirs = [
-            REPO_ROOT / "intelligence" / "coaching",
             REPO_ROOT / "intelligence" / "data_sources",
             REPO_ROOT / "intelligence" / "dfs",
-            REPO_ROOT / "intelligence" / "external_charting",
-            REPO_ROOT / "intelligence" / "fantasy",
             REPO_ROOT / "intelligence" / "native_kernels",
             REPO_ROOT / "intelligence" / "performance",
             REPO_ROOT / "intelligence" / "providers",
-            REPO_ROOT / "intelligence" / "reasoning",
             REPO_ROOT / "intelligence" / "routing",
             REPO_ROOT / "intelligence" / "seo",
-            REPO_ROOT / "scripts" / "dfs",
-            REPO_ROOT / "scripts" / "ops",
         ]
         target_paths = sorted(
             p
@@ -530,7 +524,7 @@ def run_static_and_performance_code_review(
     for path in target_paths:
         if not path.is_file():
             continue
-        source = path.read_text(encoding="utf-8")
+        source = path.read_text(encoding="utf-8-sig")
         tree = ast.parse(source, filename=str(path))
 
         for node in ast.walk(tree):

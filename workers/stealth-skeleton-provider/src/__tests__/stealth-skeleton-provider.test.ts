@@ -22,9 +22,11 @@ import {
   evaluateUpstreamMaasLicenseGate,
   executeMathematicalOperatorVerification,
   executeRealSinkhornKnoppMarginalAudit,
+  executeLive18AuthorityCognitiveSelfImprovementLoop,
   getStealthSkeletonMcpManifest,
   handleStealthSkeletonRequest,
   healToolCallGrammar,
+  projectPavaMonotoneQuantiles,
   reasonOverPageIndexTree,
   redactGdprPiiFromPrompt,
   resolveOpenRouterTrafficRouting,
@@ -835,5 +837,75 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     );
     const passKBody = (await passKRes.json()) as { choices: Array<{ message: { content: string } }> };
     assert.ok(passKBody.choices[0].message.content.includes("0.991667"));
+  });
+
+  it("exposes Understand-Anything GraphRAG & Session-Librarian endpoints and enforces PAVA monotone quantiles in the 18-Authority Self-Improvement Loop", async () => {
+    const pava = projectPavaMonotoneQuantiles([-2.0, 12.0, 9.0, 15.0, 14.0]);
+    assert.deepEqual(pava, [0, 10.5, 10.5, 14.5, 14.5]);
+
+    const loopOut = executeLive18AuthorityCognitiveSelfImprovementLoop({
+      prompt: "Analyze Two-Stage DFS Pipeline",
+      primaryCandidate: "Stage 1 10,000-world sim -> Stage 2 Student-t (nu=4) DFS pool. Answer: 98",
+      contextTrace: ["root -> sec-1 -> sub-1"],
+      mathSummary: "Sinkhorn-Knopp L1=0.0",
+      subdomain: "two_stage_dfs",
+    });
+    assert.equal(loopOut.pavaMonotoneQuantilesVerified, true);
+    assert.equal(loopOut.sessionLibrarianImmunizationsEnforced, 12);
+    assert.equal(loopOut.understandAnythingSubgraphMatched, true);
+    assert.equal(loopOut.latchTwoRobotCooperativeAstarSolved, true);
+    assert.equal(loopOut.foresightDepth6ExpectimaxScore, 89.2);
+
+    const graphRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/understand/graph", { method: "GET" })
+    );
+    assert.equal(graphRes.status, 200);
+    const graphBody = (await graphRes.json()) as {
+      status: string;
+      knowledge_graph: { total_nodes: number; total_layers: number };
+    };
+    assert.equal(graphBody.status, "OK");
+    assert.ok(graphBody.knowledge_graph.total_nodes >= 180);
+    assert.equal(graphBody.knowledge_graph.total_layers, 9);
+
+    const chatRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/understand/chat?q=dfs+pipeline", { method: "GET" })
+    );
+    assert.equal(chatRes.status, 200);
+    const chatBody = (await chatRes.json()) as { skill: string; matched_nodes: unknown[] };
+    assert.equal(chatBody.skill, "understand-chat");
+    assert.ok(chatBody.matched_nodes.length >= 3);
+
+    const explainRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/understand/explain?target=engine.py", { method: "GET" })
+    );
+    assert.equal(explainRes.status, 200);
+    const explainBody = (await explainRes.json()) as { skill: string; contained_symbols_count: number };
+    assert.equal(explainBody.skill, "understand-explain");
+    assert.ok(explainBody.contained_symbols_count >= 5);
+
+    const diffRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/understand/diff", { method: "GET" })
+    );
+    assert.equal(diffRes.status, 200);
+    const diffBody = (await diffRes.json()) as {
+      skill: string;
+      one_hop_blast_radius_verified: boolean;
+    };
+    assert.equal(diffBody.skill, "understand-diff");
+    assert.equal(diffBody.one_hop_blast_radius_verified, true);
+
+    const immRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/session-librarian/immunizations", { method: "GET" })
+    );
+    assert.equal(immRes.status, 200);
+    const immBody = (await immRes.json()) as {
+      skill: string;
+      immunization_rules_count: number;
+      mutation_safety_status: string;
+    };
+    assert.equal(immBody.skill, "session-librarian");
+    assert.equal(immBody.immunization_rules_count, 12);
+    assert.equal(immBody.mutation_safety_status, "READ_ONLY_DISCOVERY_AND_PLAN_ONLY_ZERO_MUTATIONS");
   });
 });

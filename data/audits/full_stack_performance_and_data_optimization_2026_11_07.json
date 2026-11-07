@@ -1,6 +1,6 @@
 {
   "schema": "gse_full_stack_performance_and_data_optimization_v1",
-  "generated_at_utc": "2026-11-07T23:13:49.805251+00:00",
+  "generated_at_utc": "2026-11-07T23:44:13.870458+00:00",
   "skills_applied": [
     "application-performance-performance-optimization",
     "performance-engineer",
@@ -12,44 +12,46 @@
     "vector-index-tuning"
   ],
   "python_and_native_hot_path_profile": {
-    "schedule_invariant_gate_avg_us": 2036.608,
+    "schedule_invariant_gate_avg_us": 1073.951,
     "schedule_invariant_gate_status": "VERIFIED_ZERO_DUPLICATES",
-    "dfs_19_equation_engine_ms": 108.784,
+    "dfs_19_equation_engine_ms": 56.721,
     "dfs_19_equation_count": 19,
-    "native_c_cpp_10k_worlds_ms": 42.695,
-    "python_numpy_10k_worlds_ms": 39.059,
-    "native_speedup_factor": 0.91,
-    "memory_current_kb": 5725.71,
-    "memory_peak_kb": 8618.32,
+    "native_c_cpp_10k_worlds_ms": 17.593,
+    "python_numpy_10k_worlds_ms": 18.412,
+    "native_speedup_factor": 1.05,
+    "memory_current_kb": 5741.73,
+    "memory_peak_kb": 8634.07,
     "p50_budget_target_ms": 200.0,
     "p95_budget_target_ms": 1000.0,
     "passes_latency_budget": true,
     "cprofile_top_functions_excerpt": [
-      "         29856 function calls in 0.365 seconds",
+      "         30492 function calls in 0.187 seconds",
       "",
       "   Ordered by: cumulative time",
-      "   List reduced from 162 to 12 due to restriction <12>",
+      "   List reduced from 183 to 12 due to restriction <12>",
       "",
       "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
-      "      100    0.066    0.001    0.202    0.002 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:159(assert_zero_duplicate_teams_or_players_on_slate)",
-      "        1    0.020    0.020    0.109    0.109 C:\\Users\\Garrett\\Sports\\intelligence\\dfs\\dfs_19_equation_deep_research_engine.py:202(evaluate_frontier_19_equations_on_curated_pool)",
-      "     1500    0.054    0.000    0.094    0.000 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:97(_normalize_matchup_tuple)",
-      "        1    0.000    0.000    0.077    0.077 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:307(c_evt_gpd_tweedie_and_wasserstein_dro)",
-      "        4    0.001    0.000    0.076    0.019 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:28(_load_library)",
-      "        1    0.011    0.011    0.071    0.071 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\shutil.py:1489(which)",
-      "        1    0.042    0.042    0.042    0.042 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:258(cpp_simulate_student_t_dfs_worlds)",
-      "      602    0.001    0.000    0.039    0.000 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\shutil.py:1474(_access_check)",
-      "      602    0.038    0.000    0.038    0.000 {built-in method nt._path_exists}",
-      "     3015    0.022    0.000    0.022    0.000 {method 'upper' of 'str' objects}",
-      "      603    0.011    0.000    0.018    0.000 <frozen ntpath>:99(join)",
-      "     3007    0.017    0.000    0.017    0.000 {method 'append' of 'list' objects}"
+      "      100    0.034    0.000    0.107    0.001 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:163(assert_zero_duplicate_teams_or_players_on_slate)",
+      "        1    0.018    0.018    0.057    0.057 C:\\Users\\Garrett\\Sports\\intelligence\\dfs\\dfs_19_equation_deep_research_engine.py:202(evaluate_frontier_19_equations_on_curated_pool)",
+      "     1500    0.029    0.000    0.051    0.000 C:\\Users\\Garrett\\Sports\\intelligence\\data_sources\\firecrawl_alexandria_live_sync.py:97(_normalize_matchup_tuple)",
+      "        1    0.000    0.000    0.027    0.027 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:307(c_evt_gpd_tweedie_and_wasserstein_dro)",
+      "        4    0.001    0.000    0.027    0.007 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:28(_load_library)",
+      "        1    0.004    0.004    0.023    0.023 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\shutil.py:1489(which)",
+      "        1    0.017    0.017    0.017    0.017 C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\native_bridge.py:258(cpp_simulate_student_t_dfs_worlds)",
+      "     3015    0.012    0.000    0.012    0.000 {method 'upper' of 'str' objects}",
+      "      602    0.000    0.000    0.011    0.000 C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\shutil.py:1474(_access_check)",
+      "      602    0.011    0.000    0.011    0.000 {built-in method nt._path_exists}",
+      "     3063    0.009    0.000    0.009    0.000 {method 'strip' of 'str' objects}",
+      "     3007    0.008    0.000    0.008    0.000 {method 'append' of 'list' objects}"
     ]
   },
   "spark_and_duckdb_optimization": {
+    "measurement_mode": "live_dk_slate_partition_skew_measurement",
+    "slate_rows_analyzed": 570,
     "data_size_gb": 24.0,
     "optimal_partition_count_128mb": 192,
     "live_disk_rows_scanned": 3295,
-    "live_scan_latency_ms": 25.04,
+    "live_scan_latency_ms": 8.164,
     "spark_aqe_configs": {
       "spark.sql.adaptive.enabled": "true",
       "spark.sql.adaptive.coalescePartitions.enabled": "true",
@@ -78,6 +80,11 @@
     }
   },
   "postgresql17_and_sql_optimization": {
+    "measurement_mode": "live_sqlite_relational_query_plan_and_index_benchmark",
+    "rows_benchmarked": 2400,
+    "explain_query_plan_after_index": "SEARCH p USING INDEX idx_picks_id_season_week (season=? AND week=? AND id=?) | SEARCH s USING INDEX idx_snapshots_pick_id (pick_id=?) LEFT-JOIN",
+    "query_p95_before_ms": 8.48,
+    "query_p95_after_ms": 0.123,
     "database_engine": "PostgreSQL 17 (Neon neondb) + Live Relational Explain/Timing Benchmark",
     "heap_size_gb": 4.2,
     "dead_tuple_ratio": 0.0,
@@ -102,9 +109,9 @@
         "SEARCH p USING INDEX idx_picks_id_season_week (season=? AND week=? AND id=?)",
         "SEARCH s USING INDEX idx_snapshots_pick_id (pick_id=?) LEFT-JOIN"
       ],
-      "query_p95_before_ms": 50.446,
-      "query_p95_after_ms": 1.208,
-      "speedup_factor": 41.78
+      "query_p95_before_ms": 8.48,
+      "query_p95_after_ms": 0.123,
+      "speedup_factor": 68.7
     },
     "passes_db_p95_budget_under_100ms": true
   },
@@ -115,9 +122,9 @@
     "embedding_dim": 64,
     "top_k": 10,
     "recall_at_10_mean": 1.0,
-    "latency_p50_ms": 2.2698,
-    "latency_p95_ms": 3.2669,
-    "exact_batch_ms": 38.7687,
+    "latency_p50_ms": 0.3833,
+    "latency_p95_ms": 0.4014,
+    "exact_batch_ms": 5.1911,
     "fp32_memory_bytes": 1048576,
     "sq8_memory_bytes": 262152,
     "memory_compression_ratio": 4.0,
@@ -144,8 +151,10 @@
       "intelligence\\seo\\seo_and_lcp_optimization_engine.py"
     ],
     "files_reviewed_count": 17,
-    "total_ast_nodes_inspected": 37314,
-    "issues_found_count": 4,
+    "files_inspected_count": 17,
+    "total_ast_nodes_inspected": 40182,
+    "total_ast_nodes_walked": 40182,
+    "issues_found_count": 5,
     "critical_count": 0,
     "high_count": 0,
     "issues": [
@@ -172,7 +181,14 @@
       },
       {
         "file": "intelligence\\routing\\stealth_skeleton_external_eval_and_distillation.py",
-        "line": 824,
+        "line": 484,
+        "severity": "MEDIUM",
+        "category": "Performance",
+        "title": "Triple-nested O(N^3) loop detected"
+      },
+      {
+        "file": "intelligence\\routing\\stealth_skeleton_external_eval_and_distillation.py",
+        "line": 1106,
         "severity": "MEDIUM",
         "category": "Performance",
         "title": "Triple-nested O(N^3) loop detected"
@@ -180,5 +196,5 @@
     ],
     "quality_gate_passed": true
   },
-  "audit_sha256": "521a2daae70e8bdb790a8589af3d46f89b7440b1b89f990c935e3cd7d462187c"
+  "audit_sha256": "132cd03e28a42c71e65684814a9382bb5e9d37e69bb22870d7b379327eaa14dd"
 }

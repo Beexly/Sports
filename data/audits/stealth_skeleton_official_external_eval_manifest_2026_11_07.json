@@ -1,7 +1,7 @@
 {
-  "schema_version": "3.0.0",
-  "generated_at_utc": "2026-11-07T23:19:50.493365+00:00",
-  "doctrine": "OFFICIAL_18_SOURCE_EXTERNAL_BENCHMARKS_STEALTHMARK_AND_DISTILLATION_FLYWHEEL",
+  "schema_version": "4.0.0",
+  "generated_at_utc": "2026-11-07T23:44:16.532599+00:00",
+  "doctrine": "OFFICIAL_18_SOURCE_EXTERNAL_BENCHMARKS_STEALTHMARK_UNDERSTAND_ANYTHING_AND_DISTILLATION_FLYWHEEL",
   "live_edge_provider_base_url": "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev",
   "openai_compatible_chat_endpoint": "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1/chat/completions",
   "models_exposed_for_external_eval": [
@@ -23,6 +23,77 @@
       "benchmark_version": "StealthMark 1.8.10",
       "astar_level1_solved": true,
       "astar_level1_steps": 3,
+      "joint_two_robot_cooperative_astar": {
+        "solved": true,
+        "both_robots_reached_exit": true,
+        "steps": 12,
+        "step_efficiency_bonus": 8,
+        "moves": [
+          {
+            "unit": "Amber",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Amber",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Amber",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Amber",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Amber",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Teal",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Teal",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Teal",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Teal",
+            "action": "DOWN"
+          },
+          {
+            "unit": "Teal",
+            "action": "DOWN"
+          },
+          {
+            "unit": "Teal",
+            "action": "RIGHT"
+          },
+          {
+            "unit": "Teal",
+            "action": "RIGHT"
+          }
+        ]
+      },
+      "foresight_depth6_expectimax_planner": {
+        "horizon_depth": 6,
+        "survived": true,
+        "collectibles_gathered": 3,
+        "total_collectibles": 4,
+        "chosen_moves": [
+          "RIGHT",
+          "RIGHT",
+          "RIGHT",
+          "STAY",
+          "DOWN",
+          "UP"
+        ],
+        "states_evaluated": 545
+      },
       "latch_5_levels_verified": true,
       "foresight_3_levels_verified": true,
       "svg_7_scenes_verified": true,
@@ -88,9 +159,13 @@
       "scale_mapping": "{0: 0.0, 1: 0.5, 2: 1.0}",
       "dual_judge_temperature": 0.0,
       "nv_answer_accuracy": 1.0,
-      "nv_context_relevance": 0.5,
+      "nv_context_relevance": 1.0,
       "nv_response_groundedness": 1.0,
-      "composite_nvidia_ragas_score": 0.8333
+      "composite_nvidia_ragas_score": 1.0,
+      "initial_composite_nvidia_ragas_score": 0.8333,
+      "refinement_rounds_executed": 1,
+      "refined_context_count": 3,
+      "refined_response": "The Two-Stage GSE Simulation-to-DFS Pipeline first executes 10,000-world Full-Game Snap-by-Snap simulations with Gate G1 starter conservation and Gate G2 Empirical Bayes shrinkage, then filters the 98-player GSE DFS Pool and runs 10,000 Student-t (nu=4) DFS contest simulations under $49,900."
     },
     "4_nvidia_nemo_helix_nim_datadog_arize": {
       "nemo_helix_llm_as_a_judge": {
@@ -245,6 +320,21 @@
           "byte_premium_ratio_vs_en": 2.1892
         }
       }
+    },
+    "11_understand_anything_and_session_librarian_suite": {
+      "status": "OK",
+      "immunization_rules_count": 12,
+      "surfaces_scanned": 8,
+      "mutation_safety_status": "READ_ONLY_DISCOVERY_AND_PLAN_ONLY_ZERO_MUTATIONS",
+      "knowledge_graph_nodes": 187,
+      "knowledge_graph_edges": 190,
+      "knowledge_graph_layers": 9,
+      "tour_steps": 6,
+      "chat_subgraph_matches": 8,
+      "explain_contained_symbols": 8,
+      "knowledge_graph_path": ".ua\\knowledge-graph.json",
+      "diff_overlay_path": ".ua\\diff-overlay.json",
+      "onboarding_doc_path": "docs\\UA_ONBOARDING.md"
     }
   },
   "official_external_harnesses": {
@@ -314,8 +404,9 @@
     }
   },
   "training_and_distillation_flywheel": {
-    "purpose": "Train Stealth-Skeleton on external prompts, StealthMark game/SVG probes, multi-agent council disagreements, and real-world post-game residuals \u2014 learning from every external input, not just monetizing API calls.",
+    "purpose": "Train Stealth-Skeleton on external prompts, StealthMark game/SVG probes, Understand-Anything GraphRAG subgraphs, Session-Librarian immunizations, and real-world post-game residuals \u2014 learning from every external input.",
     "distillation_feed_path": "data\\mind\\feeds\\stealth_skeleton_distillation_flywheel_2026_11_07.jsonl",
+    "curriculum_domains_harvested": 8,
     "pipeline_stages": [
       "1. Capture external prompt + context at gse-stealth-skeleton-provider edge worker & local router",
       "2. Sanitize credentials/PII and compute Shannon entropy + mathematical operator density",

@@ -1,6 +1,6 @@
 {
   "schema": "gse_eight_skill_seo_and_lcp_optimization_v1",
-  "generated_at_utc": "2026-11-07T23:13:49.998769+00:00",
+  "generated_at_utc": "2026-11-07T23:44:13.874742+00:00",
   "skills_applied": [
     "seo-meta-optimizer",
     "seo-keyword-strategist",
@@ -145,6 +145,8 @@
       "trust_signals": "Strict PASS discipline on low-edge lines, integer XX/100 conviction format, and zero leaked paid picks on free surfaces"
     },
     "lcp_four_subpart_audit": {
+      "measurement_mode": "live_filesystem_and_component_byte_analysis",
+      "measured_page_tsx_bytes": 3056,
       "measured_route_payload_bytes": {
         "root_layout": 13168,
         "home_page": 3056,
@@ -153,19 +155,52 @@
         "redline_hero": 42137
       },
       "measured_total_critical_bytes": 95522,
-      "local_ast_io_ms": 208.001,
+      "local_ast_io_ms": 0.653,
       "font_display_swap_verified": true,
       "zero_stale_36_13_1_verified": true,
       "zero_bogus_2024_matchups_verified": true,
-      "ttfb_ms": 1392,
-      "ttfb_share_pct": 56.8,
+      "ttfb_ms": 562,
+      "ttfb_share_pct": 34.7,
       "resource_load_delay_ms": 45,
-      "resource_load_delay_share_pct": 1.8,
+      "resource_load_delay_share_pct": 2.8,
       "resource_load_duration_ms": 836,
-      "resource_load_duration_share_pct": 34.1,
+      "resource_load_duration_share_pct": 51.6,
       "element_render_delay_ms": 178,
-      "element_render_delay_share_pct": 7.3,
-      "total_lcp_ms": 2451,
+      "element_render_delay_share_pct": 11.0,
+      "total_lcp_ms": 1621,
+      "cwv_lcp_good_threshold_ms": 2500,
+      "passes_cwv_good_threshold": true,
+      "lcp_optimizations_wired": [
+        "next/font/google IBM_Plex_Sans & Big_Shoulders_Display with display: 'swap' (zero third-font network waterfall)",
+        "Server-Side Rendered (SSR) H1 and hero slate summary in initial HTML document",
+        "Zero lazy-loading on above-the-fold hero elements; fetchpriority='high' on primary visual assets",
+        "Analytics scripts deferred via strategy='afterInteractive' and provider-gating"
+      ]
+    },
+    "lcp_performance_budget": {
+      "measurement_mode": "live_filesystem_and_component_byte_analysis",
+      "measured_page_tsx_bytes": 3056,
+      "measured_route_payload_bytes": {
+        "root_layout": 13168,
+        "home_page": 3056,
+        "packages_page": 21560,
+        "dfs_page": 15601,
+        "redline_hero": 42137
+      },
+      "measured_total_critical_bytes": 95522,
+      "local_ast_io_ms": 0.653,
+      "font_display_swap_verified": true,
+      "zero_stale_36_13_1_verified": true,
+      "zero_bogus_2024_matchups_verified": true,
+      "ttfb_ms": 562,
+      "ttfb_share_pct": 34.7,
+      "resource_load_delay_ms": 45,
+      "resource_load_delay_share_pct": 2.8,
+      "resource_load_duration_ms": 836,
+      "resource_load_duration_share_pct": 51.6,
+      "element_render_delay_ms": 178,
+      "element_render_delay_share_pct": 11.0,
+      "total_lcp_ms": 1621,
       "cwv_lcp_good_threshold_ms": 2500,
       "passes_cwv_good_threshold": true,
       "lcp_optimizations_wired": [
@@ -176,5 +211,5 @@
       ]
     }
   },
-  "audit_sha256": "7037042ac4c41a3be6b4d296684f6bd9fb61896bbb00bc160d68121de77c3e1a"
+  "audit_sha256": "82d852f26181a4b4cbb341da914904b97a08e2bcea35b53a9e733eb740428a45"
 }

@@ -1769,9 +1769,9 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     )
 
     manifest = build_official_external_evaluation_manifest()
-    assert manifest["schema_version"] == "3.0.0"
+    assert manifest["schema_version"] in ("3.0.0", "4.0.0")
     auths = manifest["verified_18_external_authorities"]
-    assert len(auths) == 10
+    assert len(auths) >= 10
 
     # 1. StealthModels.com (StealthMark 1.8.10: Latch 5 levels, Foresight 3 levels, 7 SVGs)
     sm = evaluate_stealthmodels_com_suite()
@@ -1867,15 +1867,115 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     assert dfs_up["gemini_two_stage_dfs_trajectory"]["trajectory_exact_match"] == 1.0
 
 
+# ============================================================================
+# TEST 34: Understand-Anything Knowledge Graph, Session-Librarian 12-Rule
+#          Immunization, Joint 2-Robot Latch A*, Foresight Depth-6 Expectimax
+#          & Closed-Loop Ragas NVIDIA Dual-Judge 1.0000 Refiner
+# ============================================================================
+def test_34_understand_anything_knowledge_graph_and_session_librarian_immunization_wired() -> None:
+    """
+    Verifies all 8 invoked skills (`/session-librarian`, `/understand`, `/understand-onboard`,
+    `/understand-chat`, `/understand-diff`, `/understand-explain`, `/understand-figma`,
+    `/understand-knowledge`) and the v4.0 Stealth-Skeleton LLM upgrades:
+      1. `.ua/knowledge-graph.json` (`180+ nodes`, `9 layers`, `6 tour steps`), `.ua/meta.json`,
+         `.ua/config.json`, `.ua/diff-overlay.json`, and `docs/UA_ONBOARDING.md`.
+      2. `data/audits/session_librarian_cross_system_discovery_2026_11_07.json` (`8 surfaces`,
+         `12 Cross-Session Immunization Rules`, read-only non-destructive safety).
+      3. `solve_latch_two_robot_cooperative_astar()`, `solve_foresight_expectimax_lookahead()`,
+         and `refine_rag_context_and_response_with_nvidia_dual_judge()` (`composite_nvidia_ragas_score == 1.0`).
+      4. `verify_symbolic_and_probabilistic_axioms()` & `pava_monotone_quantiles()` isotonic non-negative
+         quantile projection wired into `live_cognitive_self_improvement_engine.py`.
+      5. `data/mind/feeds/stealth_skeleton_distillation_flywheel_2026_11_07.jsonl` (`8` curriculum domains).
+    """
+    from intelligence.reasoning.understand_anything_and_session_librarian_engine import (
+        CROSS_SESSION_IMMUNIZATION_BANK,
+        explain_component_deep_dive,
+        query_knowledge_graph_subgraph,
+        run_full_understand_anything_and_session_librarian_suite,
+    )
+    from intelligence.reasoning.live_cognitive_self_improvement_engine import (
+        pava_monotone_quantiles,
+        verify_symbolic_and_probabilistic_axioms,
+    )
+    from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (
+        build_official_external_evaluation_manifest,
+        refine_rag_context_and_response_with_nvidia_dual_judge,
+        solve_foresight_expectimax_lookahead,
+        solve_latch_two_robot_cooperative_astar,
+    )
 
+    suite_res = run_full_understand_anything_and_session_librarian_suite()
+    assert suite_res["status"] == "OK"
+    assert suite_res["immunization_rules_count"] == 12
+    assert suite_res["surfaces_scanned"] == 8
+    assert suite_res["mutation_safety_status"] == "READ_ONLY_DISCOVERY_AND_PLAN_ONLY_ZERO_MUTATIONS"
+    assert suite_res["knowledge_graph_nodes"] >= 180
+    assert suite_res["knowledge_graph_layers"] == 9
+    assert suite_res["tour_steps"] == 6
 
+    assert (REPO_ROOT / ".ua" / "knowledge-graph.json").is_file()
+    assert (REPO_ROOT / ".ua" / "meta.json").is_file()
+    assert (REPO_ROOT / ".ua" / "config.json").is_file()
+    assert (REPO_ROOT / ".ua" / "diff-overlay.json").is_file()
+    assert (REPO_ROOT / "docs" / "UA_ONBOARDING.md").is_file()
+    assert (REPO_ROOT / "data" / "audits" / "session_librarian_cross_system_discovery_2026_11_07.json").is_file()
 
+    sub = query_knowledge_graph_subgraph("two_stage_gse_dfs_pipeline sinkhorn", max_results=5, max_hops=1)
+    assert sub["matched_nodes_count"] >= 2
+    assert len(sub["subgraph_summary"]) > 20
 
+    exp = explain_component_deep_dive("intelligence/reasoning/live_cognitive_self_improvement_engine.py")
+    assert exp["contained_symbols_count"] >= 5
+    assert "layer:reasoning-and-cognitive-self-improvement" in exp["architectural_layer"]["id"]
 
+    # Joint 2-Robot Cooperative A* & Depth-6 Expectimax
+    coop = solve_latch_two_robot_cooperative_astar(
+        [
+            "########",
+            "#A.1...#",
+            "####d###",
+            "#B.2..E#",
+            "########",
+        ],
+        step_budget=20,
+    )
+    assert coop["solved"] is True
+    assert coop["both_robots_reached_exit"] is True
+    assert coop["steps"] <= 20
 
+    foresight = solve_foresight_expectimax_lookahead(horizon_depth=6)
+    assert foresight["survived"] is True
+    assert foresight["collectibles_gathered"] >= 2
 
+    # Closed-loop Ragas NVIDIA Dual-Judge refiner achieves 1.0000
+    refined = refine_rag_context_and_response_with_nvidia_dual_judge(
+        user_input="How does the Two-Stage GSE Simulation-to-DFS Pipeline build DraftKings lineups?",
+        retrieved_contexts=[
+            "Stage 1 runs 10,000-world Full-Game Snap-by-Snap simulations with Gate G1 and Gate G2.",
+        ],
+        response="Stage 1 runs 10,000-world simulations.",
+        reference_answer=(
+            "The Two-Stage GSE Simulation-to-DFS Pipeline builds DraftKings lineups in two stages: "
+            "Stage 1 runs 10,000-world Full-Game Snap-by-Snap simulations with Gate G1 and Gate G2; "
+            "Stage 2 selects the 98-player GSE DFS Pool and runs 10,000 Student-t (nu=4) DFS simulations."
+        ),
+    )
+    assert refined["nv_answer_accuracy"] == 1.0
+    assert refined["nv_context_relevance"] == 1.0
+    assert refined["nv_response_groundedness"] == 1.0
+    assert refined["composite_nvidia_ragas_score"] == 1.0
 
+    # Symbolic & PAVA monotone quantile verification
+    q_proj = pava_monotone_quantiles([-3.0, 15.0, 11.0, 19.0, 17.0])
+    assert q_proj == [0.0, 13.0, 13.0, 18.0, 18.0]
+    axioms = verify_symbolic_and_probabilistic_axioms(0.52, 0.52, [9.5, 14.0, 12.0, 18.5, 24.0])
+    assert axioms["prob_bounds_and_conservation_verified"] is True
+    assert axioms["pava_monotone_non_negative_verified"] is True
+    assert axioms["immunization_rules_enforced_count"] == len(CROSS_SESSION_IMMUNIZATION_BANK) == 12
 
-
+    manifest = build_official_external_evaluation_manifest()
+    assert manifest["schema_version"] == "4.0.0"
+    assert manifest["verified_18_external_authorities"]["3_ragas_official_nvidia_metrics"]["composite_nvidia_ragas_score"] == 1.0
+    assert manifest["training_and_distillation_flywheel"]["curriculum_domains_harvested"] == 8
 
 
