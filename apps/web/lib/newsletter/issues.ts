@@ -85,14 +85,14 @@ export const ISSUES: readonly NewsletterIssue[] = [
   {
     slug: "004-week-8-sweep-and-week-9-stage-0-gate",
     number: 4,
-    title: "Board Meeting 004: 7-of-7 Max-Play Sweep, 47-19-1 Ledger & Week 9 Slate Preview",
+    title: "Board Meeting 004: Week 8 Settlement Review, Verified 36-13-1 Ledger & Week 9 Slate Preview",
     publishedAt: "2026-11-04T18:00:00.000Z",
     lede:
-      "How our football desk swept all 7 top-conviction 1.00u releases in Week 8 (22-8-1, +12.40u) to reach 47-19-1 (72.9% · +24.92u overall), plus our roster and injury check for Thursday Night Football (JAX @ BAL) and the 11-game Sunday Main Slate.",
+      "How our verified ledger stands at 36-13-1 (73.5% · +20.14u), with the all-in secondary view at 47-19-1 (+24.92u), plus our roster and injury check for Thursday Night Football (JAX @ BAL) and the 11-game Sunday Main Slate.",
     sections: [
       {
         heading: "Verified Week 8 Settled Review",
-        body: "Week 8 settled at 22-8-1 (+12.40u), highlighted by a 7-0 sweep on 1.00u max-conviction releases (Rams -6.5, Steelers -3.5, Jets ML, Chiefs ML, Cardinals +7.0, Devontez Walker Over 0.5 Rec Yds, Sione Vaki Over 4.5 Rush Yds). Our official verified NFL ledger now stands at 47-19-1 (72.9 out of 100 win rate, +24.92u).",
+        body: "Our official verified NFL ledger stands at 36-13-1 (73.5% · +20.14u, MAIN + DERIVATIVE + TNF SINGLE-STAKE; all-in secondary 47-19-1 · +24.92u). The TNF CAR@GB official card settled 14-6-1 (+7.19u) and Sunday Nov 1 settled 6-2-0 (+2.50u) on the main card. The NYJ ML leg was pulled Nov 1 for Oct 30 freeze identity contamination and is voided, not counted.",
       },
       {
         heading: "Week 9 Roster & Injury Verification",

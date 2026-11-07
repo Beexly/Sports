@@ -5,22 +5,22 @@
  * 1. Stage 0 Live Roster / Transaction / Starter Gate (Week 9: Lamar Jackson OUT, Tyler Huntley OUT,
  *    Joe Fagnano / Jacoby Brissett BAL QB, Travis Etienne Jr. OUT / Chris Rodriguez Jr. JAX RB1, Kyler Murray IR on ARI,
  *    Sam Darnold SEA QB1, Geno Smith NYJ QB1, Mike Evans SF WR1, Carson Wentz MIN QB1, J.J. McCarthy NYG QB1, Tanner McKee PHI QB1).
- * 2. Official Verified Ledger: 47-19-1 (72.9%, +24.92u) through Week 8.
+ * 2. Official Verified Ledger: 36-13-1 (73.5%, +20.14u) through Week 8 (MAIN + DERIVATIVE + TNF SINGLE-STAKE; all-in secondary 47-19-1, +24.92u).
  * 3. Thaler (1985) Segregated Gains & Bundle Valuation ($52 standalone -> $29 All-Access, $23 surplus).
  * 4. Server-Side Entitlement Redaction: Never ship unredacted locked SGP legs or locked DFS lineups
  *    into the DOM behind a CSS blur when `isUnlocked === false`.
  */
 
 export const OFFICIAL_VERIFIED_LEDGER_2026 = {
-  asOfDate: "2026-11-05",
-  overallRecord: "47-19-1",
-  overallWinPct: "72.9",
-  overallNetUnits: "+24.92u",
+  asOfDate: "2026-11-02",
+  overallRecord: "36-13-1",
+  overallWinPct: "73.5",
+  overallNetUnits: "+20.14u",
   preWeek8Record: "16-5-0",
   preWeek8NetUnits: "+10.45u",
-  week8Record: "46-18-1",
-  week8NetUnits: "+16.05u",
-  week8MaxPlaySweep: "7-0 (+7.00u)",
+  week8Record: "20-8-1",
+  week8NetUnits: "+9.69u",
+  week8MaxPlaySweep: "verified legs 14-6-1 (TNF) + 6-2-0 (Sun)",
 } as const;
 
 export const FREE_TNF_GAME_ENVIRONMENT_ANALYTICS = {

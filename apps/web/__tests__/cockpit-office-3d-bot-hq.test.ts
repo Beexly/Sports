@@ -74,7 +74,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
         agent: "360 Market & Optimal Lineup Agent",
         model: "gse/skeleton-forecast",
         status: "GRADING_BOARD",
-        task: "Season Ledger 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) · 14-player DFS Core Pool locked",
+        task: "Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · 14-player DFS Core Pool locked",
       },
       {
         desk: "Creative Studio Desk",
@@ -117,7 +117,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
     const body = await res.json();
     expect(body.modelUsed).toBe("gse/skeleton-math-pro");
     expect(body.seasonLedger).toBe(
-      "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)"
+      "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)"
     );
   });
 
@@ -166,7 +166,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
     expect(componentSrc).not.toContain(voidedBatch);
     expect(botHqPageSrc).not.toContain(voidedBatch);
     expect(componentSrc).toContain(
-      "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)"
+      "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)"
     );
     expect(componentSrc).toContain("Geno Smith = NYJ QB");
     expect(componentSrc).toContain("Mike Evans = SF WR");

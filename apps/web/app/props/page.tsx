@@ -9,7 +9,7 @@ const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
   title: "NFL Player Props | Galaxy Sports Edge",
-  description: "Official verified record 47-19-1 (+24.92u; Base 38-13-1, +22.85u). Locked player props and the 360-degree watchlist from the sealed card.",
+  description: "Official verified record 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)). Locked player props and the 360-degree watchlist from the sealed card.",
 };
 
 export default function PropsPage(): JSX.Element {
@@ -21,7 +21,7 @@ export default function PropsPage(): JSX.Element {
     <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />
       <main className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">47-19-1 (+24.92u; Base 38-13-1, +22.85u)</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u))</p>
         <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Locked props</h1>
         <div className="mt-10">
           <SealedTable rows={props} freeLimit={2} />

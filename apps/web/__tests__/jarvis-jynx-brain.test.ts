@@ -51,7 +51,7 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     expect(res.modelUsed).toBe("gse/skeleton-stealth");
     expect(res.jynxRoutingLane).toContain("stealth_skeleton");
     expect(res.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
-    expect(res.seasonLedger).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
+    expect(res.seasonLedger).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
     expect(res.standingRosterRuling).toMatchObject({
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
@@ -143,7 +143,7 @@ describe("/api/cockpit/jarvis/jynx-brain route", () => {
     expect(body.status).toBe("ONLINE");
     expect(body.defaultModel).toBe("gse/skeleton-stealth");
     expect(body.models).toEqual(OUR_STEALTH_SKELETON_MODELS);
-    expect(body.seasonLedger).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
+    expect(body.seasonLedger).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
     expect(body.standingRosterRuling).toMatchObject({
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
@@ -169,7 +169,7 @@ describe("/api/cockpit/jarvis/jynx-brain route", () => {
     const body = await res.json();
     expect(body.modelUsed).toBe("gse/skeleton-council");
     expect(body.modeUsed).toBe("dfs_picking");
-    expect(body.seasonLedger).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
+    expect(body.seasonLedger).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
     expect(body.dfsLineupCard.corePlays.length).toBeGreaterThan(0);
   });
 });
@@ -293,7 +293,7 @@ describe("Universal Autonomous Bot SDK Adapter (OpenMuse, OpenDots, CopilotKit, 
       expect(envelope.protocol).toBe(proto.protocol);
       expect(envelope.ourModelUsed).toBe("gse/skeleton-stealth");
       expect(envelope.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
-      expect(envelope.seasonLedgerOfRecord).toBe("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
+      expect(envelope.seasonLedgerOfRecord).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
       expect(envelope.standingRosterRuling).toMatchObject({
         genoSmith: "NYJ QB",
         mikeEvans: "SF WR",

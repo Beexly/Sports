@@ -3,23 +3,26 @@
  *
  * Typed Content-OS & Multi-Stream Revenue / Short-Form Video / DFS / Week 9 Commercial Posture surface.
  * Strictly adheres to:
- *  - Official New Engine Verified Record (`47-19-1`, `72.9%`, `+26.50 Units` entering Week 9:
- *    `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
+ *  - Official New Engine Verified Record (36-13-1, 73.5%, +20.14u entering Week 9:
+ *    16-5-0 +10.45u pre-TNF prior + 14-6-1 +7.19u TNF CAR@GB + 6-2-0 +2.50u Sun Nov 1).
+ *    All-in secondary view 47-19-1 (+24.92u) is labeled secondary wherever it appears.
  *  - Customer-Facing Human Copy Doctrine (natural football-film & matchup analysis; zero internal pipeline jargon).
  *  - Paywall Protection Doctrine (public previews share game-environment analytics; official plays & full DFS lineups stay behind `/packages` and `/fantasy/dfs`).
  */
 
 export interface OfficialVerifiedRecordSummary {
-  readonly record: "47-19-1";
-  readonly wins: 62;
-  readonly losses: 23;
+  readonly record: "36-13-1";
+  readonly wins: 36;
+  readonly losses: 13;
   readonly pushes: 1;
-  readonly winRateLabel: "72.9%";
-  readonly netUnits: 26.5;
+  readonly winRateLabel: "73.5%";
+  readonly netUnits: 20.14;
   readonly preWeek8Record: "16-5-0";
   readonly preWeek8Units: 10.45;
-  readonly week8SettledRecord: "46-18-1";
-  readonly week8SettledUnits: 16.05;
+  readonly tnfRecord: "14-6-1";
+  readonly tnfUnits: 7.19;
+  readonly sundayRecord: "6-2-0";
+  readonly sundayUnits: 2.5;
   readonly paywallCheckoutUrl: "https://www.galaxysportsedge.com/packages";
   readonly dfsHubUrl: "https://www.galaxysportsedge.com/fantasy/dfs";
 }
@@ -58,16 +61,18 @@ export interface DfsAndPlaysCommercialPosture {
 }
 
 const VERIFIED_RECORD_SUMMARY: OfficialVerifiedRecordSummary = {
-  record: "47-19-1",
-  wins: 62,
-  losses: 23,
+  record: "36-13-1",
+  wins: 36,
+  losses: 13,
   pushes: 1,
-  winRateLabel: "72.9%",
-  netUnits: 26.5,
+  winRateLabel: "73.5%",
+  netUnits: 20.14,
   preWeek8Record: "16-5-0",
   preWeek8Units: 10.45,
-  week8SettledRecord: "46-18-1",
-  week8SettledUnits: 16.05,
+  tnfRecord: "14-6-1",
+  tnfUnits: 7.19,
+  sundayRecord: "6-2-0",
+  sundayUnits: 2.5,
   paywallCheckoutUrl: "https://www.galaxysportsedge.com/packages",
   dfsHubUrl: "https://www.galaxysportsedge.com/fantasy/dfs",
 };
@@ -86,7 +91,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "When an offensive tackle loses that initial half-step against a wide-9 speed rusher, the quarterback must get the ball out in under 2.4 seconds to his slot receiver or tight end.",
     ctaPaywallAndFollow45To60s:
-      "We broke down every Week 9 trench matchup for our 47-19-1 (+24.92u) verified card. Follow now and unlock the full Week 9 board at galaxysportsedge.com/packages.",
+      "We broke down every Week 9 trench matchup for our verified 36-13-1 (+20.14u) card. Follow now and unlock the full Week 9 board at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalFilmBreakdownV1",
     paywallSafe: true,
   },
@@ -103,7 +108,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Against disguised post-snap safety rotations, running back checkdowns and underneath tight end option routes spike while deep boundary throws stall.",
     ctaPaywallAndFollow45To60s:
-      "Our verified engine is 47-19-1 (+26.50 units) entering Week 9. Follow for daily film analysis and unlock every official Week 9 play at galaxysportsedge.com/packages.",
+      "Our verified engine is 36-13-1 (73.5%, +20.14u) entering Week 9. Follow for daily film analysis and unlock every official Week 9 play at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalSafetySpinV1",
     paywallSafe: true,
   },
@@ -120,7 +125,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Offenses that script high early-down pass rates in the opening quarter create concentrated early receiving volume before defensive adjustments at halftime.",
     ctaPaywallAndFollow45To60s:
-      "We review all 77 market types on every game—backed by our 47-19-1 (+24.92u) verified record. Unlock full Week 9 access at galaxysportsedge.com/packages.",
+      "We review all 77 market types on every game—backed by our verified 36-13-1 (+20.14u) record. Unlock full Week 9 access at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalFirstQuarterScriptV1",
     paywallSafe: true,
   },
@@ -154,7 +159,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "On the defensive side, when a premier edge rusher faces a backup tackle against a pass-heavy game script, half-sack clearance opportunities climb sharply.",
     ctaPaywallAndFollow45To60s:
-      "Our 360-degree Week 9 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the 47-19-1 (+24.92u) card at galaxysportsedge.com/packages.",
+      "Our 360-degree Week 9 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the verified 36-13-1 (+20.14u) card at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalKickingAndIdpEdgeV1",
     paywallSafe: true,
   },
@@ -204,7 +209,7 @@ const REVENUE_ATTRIBUTION_MATRIX: readonly RevenueStreamAttributionItem[] = [
   {
     streamId: "REV-06",
     channel: "CapperTek Verified Leaderboard Funnel",
-    identifierOrUrl: "CapperTek Verified Tracker (47-19-1, +24.92u)",
+    identifierOrUrl: "CapperTek Verified Tracker (36-13-1, +20.14u)",
     monetizationRole: "Verified third-party record distribution driving high-intent subscribers to /packages.",
     posthogEvents: ["cappertek_referral_landed", "package_checkout_started"],
     active: true,
@@ -258,7 +263,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Thread",
     headline: "Week 9 Flagship 12-Post Film & Matchup Environment Thread",
     copy:
-      "NFL Week 9 Film & Matchup Environment Thread: DET @ GB slot/seam duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and IND @ MIN (Carson Wentz play-action vs Flores simulated pressure). Verified 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u).",
+      "NFL Week 9 Film & Matchup Environment Thread: DET @ GB slot/seam duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and IND @ MIN (Carson Wentz play-action vs Flores simulated pressure). Verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },

@@ -116,8 +116,8 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
     }
   });
 
-  it("grounds every plugin tab in real GSE/GSI data: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u), Geno Smith NYJ, Mike Evans SF, 257 PDFs, 25 books, 12,304 equations", () => {
-    expect(componentSrc).toContain("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
+  it("grounds every plugin tab in real GSE/GSI data: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u), Geno Smith NYJ, Mike Evans SF, 257 PDFs, 25 books, 12,304 equations", () => {
+    expect(componentSrc).toContain("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
     expect(componentSrc).toContain("Geno Smith = NYJ QB");
     expect(componentSrc).toContain("Mike Evans = SF WR");
     expect(componentSrc).toContain("257 Unique PDFs / 503 Files");

@@ -10,7 +10,7 @@ const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
   title: "Locked NFL Board | Galaxy Sports Edge",
-  description: "Official verified NFL record 47-19-1 (+24.92u; Base 38-13-1, +22.85u). Locked plays from the sealed card only.",
+  description: "Official verified NFL record 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 · +24.92u). Locked plays from the sealed card only.",
   alternates: { canonical: "/picks" },
 };
 
@@ -21,7 +21,7 @@ export default function PicksPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Official verified NFL record</p>
-        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">47-19-1 (+24.92u; Base 38-13-1, +22.85u)</h1>
+        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">36-13-1 (73.5% · +20.14u)</h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#C4BFB6]">
           {card.counts.evaluated} markets evaluated. These {locked.length} rows are the only publish-allowed main lines and priced derivative on the sealed card.
         </p>

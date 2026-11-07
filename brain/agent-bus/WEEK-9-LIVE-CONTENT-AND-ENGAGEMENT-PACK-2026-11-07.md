@@ -2,7 +2,7 @@
 
 - **Generated Date:** `2026-11-07`
 - **Source Pipeline:** Full 26-Layer (`L01..L26`) Armed Workflow + 5-Track Reasoning Trace + Trajectory Simulation across all 19 Week 9 Game Dossiers (`docs/wiring/WEEK-9-19-GAMES-ARMED-EXECUTION-RECEIPT.json`)
-- **Official Standing Ledger:** `47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)` (`16-5` pre-Week 8 Wilson CI verified · `15,947` historical replay baseline)
+- **Official Standing Ledger:** Verified `36-13-1 (73.5%) · +20.14u` (MAIN + DERIVATIVE + TNF SINGLE-STAKE); all-in secondary `47-19-1 (+24.92u)` (`16-5` pre-Week 8 Wilson CI verified · `15,947` historical replay baseline)
 - **Stage 0 Active 2026 Roster Verification:**
   - `Geno Smith = NYJ QB` (`NYJ @ KC`)
   - `Mike Evans = SF WR` (`LV @ SF` · Brock Purdy `SF QB` · Kirk Cousins `LV QB`)

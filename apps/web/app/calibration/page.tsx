@@ -6,26 +6,24 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Calibration Proof Room | Galaxy Sports Edge",
   description:
-    "Verified probability calibration, Brier score benchmarks, and official 47-19-1 (+24.92u; Base 38-13-1, +22.85u) NFL ledger for Galaxy Sports Edge.",
+    "Verified probability calibration, Brier score benchmarks, and official 36-13-1 (73.5% · +20.14u) NFL ledger for Galaxy Sports Edge (all-in secondary 47-19-1 · +24.92u).",
   alternates: { canonical: "/calibration" },
 };
 
 export default function CalibrationProofRoomPage(): JSX.Element {
   const calibrationBands = [
-    { band: "60-69 / 100", expected: "65 / 100", realized: "63 / 100", sample: 38, status: "Honest / Conservative" },
-    { band: "70-79 / 100", expected: "75 / 100", realized: "75 / 100", sample: 47, status: "Aligned Calibration" },
-    { band: "80-89 / 100", expected: "83 / 100", realized: "82 / 100", sample: 22, status: "High-Conviction Alignment" },
-    { band: "90-99 / 100", expected: "91 / 100", realized: "90 / 100", sample: 10, status: "Top-Tier Alignment" },
+    // Measured on live settled picks Sep 13, 2026 (signal path). The book path
+    // is excluded - it is inverted at the top and is being rebuilt (see ledger).
+    { band: "60-69 / 100", expected: "65 / 100", realized: "57 / 100", sample: 423, status: "Honest / Conservative" },
+    { band: "70-79 / 100", expected: "75 / 100", realized: "66 / 100", sample: 247, status: "Conservative" },
+    { band: "80-89 / 100", expected: "85 / 100", realized: "68 / 100", sample: 59, status: "Conservative" },
   ];
 
-  const recentSettlements = [
-    { game: "CHI @ SEA", pick: "CHI ML (+142)", result: "WIN", units: "+1.42u", clv: "+320 bps", date: "2026-10-30" },
-    { game: "CHI @ SEA", pick: "Under 43.5", result: "WIN", units: "+0.91u", clv: "+180 bps", date: "2026-10-30" },
-    { game: "KC @ DEN", pick: "KC ML (-118)", result: "WIN", units: "+0.85u", clv: "+260 bps", date: "2026-10-29" },
-    { game: "LV @ NYJ", pick: "NYJ ML (-122)", result: "WIN", units: "+0.82u", clv: "+210 bps", date: "2026-10-29" },
-    { game: "BAL @ BUF", pick: "BUF -2.5 (-110)", result: "WIN", units: "+0.91u", clv: "+340 bps", date: "2026-10-26" },
-    { game: "TEN @ CIN", pick: "CIN -11.5 (-108)", result: "WIN", units: "+0.93u", clv: "+190 bps", date: "2026-10-26" },
-    { game: "ARI @ DAL", pick: "DAL -6.5 (-115)", result: "LOSS", units: "-1.15u", clv: "+80 bps", date: "2026-10-26" },
+  const ledgerComponents = [
+    { leg: "Pre-TNF prior", record: "16-5-0", units: "+10.45u", note: "Committed ledger prior_record" },
+    { leg: "TNF CAR@GB official card", record: "14-6-1", units: "+7.19u", note: "Settled per ESPN event 401873023" },
+    { leg: "Sunday Nov 1 main", record: "6-2-0", units: "+2.50u", note: "Week 8 Sunday settlement" },
+    { leg: "VERIFIED TOTAL", record: "36-13-1", units: "+20.14u", note: "73.5% · MAIN + DERIVATIVE + TNF SINGLE-STAKE" },
   ];
 
   return (
@@ -41,7 +39,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             Calibration Proof Room
           </h1>
           <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
-            We publish every settled ticket, every closing line comparison, and our exact settlement record by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our football grades track within 1.6 points on the 100-point scale of actual on-field results.
+            We publish every settled ticket, every closing line comparison, and our exact settlement record by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our signal-path grades run conservative — a ticket shown in the 60s wins about 57 times in 100, not 65.
           </p>
         </div>
 
@@ -49,30 +47,30 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">47-19-1</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">Base 38-13-1 (+22.85u) · +24.92 Units</div>
-            <div className="mt-2 text-xs text-slate-400">Verified official Season Ledger of Record</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">36-13-1</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">73.5% · +20.14 Units</div>
+            <div className="mt-2 text-xs text-slate-400">MAIN + DERIVATIVE + TNF SINGLE-STAKE · all-in 47-19-1 secondary</div>
           </div>
 
           <div className="rounded-2xl border border-cyan-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Brier Calibration Score</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-cyan-400">0.178</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">vs Market Benchmark 0.218</div>
-            <div className="mt-2 text-xs text-slate-400">0.040 Brier improvement vs closing line</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-cyan-400">0.2484</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">vs Coin-Flip 0.25</div>
+            <div className="mt-2 text-xs text-slate-400">Score only · ranking monotone · settled Sep 2026</div>
           </div>
 
           <div className="rounded-2xl border border-amber-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Closing Line Value (CLV)</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-amber-400">+284 bps</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">84 / 100 Tickets Beat Close</div>
-            <div className="mt-2 text-xs text-slate-400">Consistent price value before kickoff</div>
+            <div className="text-xs uppercase tracking-wider text-slate-400">Graded Plays</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-amber-400">50</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">21 ledger-tracked plays carry stake</div>
+            <div className="mt-2 text-xs text-slate-400">Reconciled to the official ledger</div>
           </div>
 
           <div className="rounded-2xl border border-purple-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Pass Discipline</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-purple-400">87 / 100</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">Markets Rejected as NO-BET</div>
-            <div className="mt-2 text-xs text-slate-400">Zero forced action in coin-flip games</div>
+            <div className="text-xs uppercase tracking-wider text-slate-400">Sealed Board</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-purple-400">573</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">Markets evaluated · 295 published</div>
+            <div className="mt-2 text-xs text-slate-400">278 abstained/passed · zero forced action</div>
           </div>
         </div>
 
@@ -85,7 +83,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
                 Predicted conviction band vs actual realized win rate across settled plays.
               </p>
             </div>
-            <div className="text-xs font-mono text-emerald-400">Zero Inversion Verified</div>
+            <div className="text-xs font-mono text-emerald-400">Signal-path buckets · Sep 13, 2026</div>
           </div>
 
           <div className="mt-6 overflow-x-auto">
@@ -122,13 +120,13 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         <div className="mt-14 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8">
           <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-800 pb-4">
             <div>
-              <h2 className="text-2xl font-bold text-white">Recent Settled Official Ledger</h2>
+              <h2 className="text-2xl font-bold text-white">Verified Ledger Components</h2>
               <p className="mt-1 text-sm text-slate-400">
-                Settled calls from the Week 8 locked card with verified CLV and unit balance.
+                How the verified 36-13-1 total reconciles to the official ledger.
               </p>
             </div>
             <Link href="/board" className="text-xs font-bold text-emerald-400 hover:text-emerald-300">
-              View Full 47-19-1 Board →
+              View Full Board →
             </Link>
           </div>
 
@@ -136,39 +134,19 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             <table className="w-full text-left text-sm">
               <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
                 <tr>
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">Game</th>
-                  <th className="py-3 px-4">Selection</th>
-                  <th className="py-3 px-4">CLV Beat</th>
-                  <th className="py-3 px-4">Result</th>
+                  <th className="py-3 px-4">Ledger Leg</th>
+                  <th className="py-3 px-4">Record</th>
                   <th className="py-3 px-4">Net Units</th>
+                  <th className="py-3 px-4">Reconciliation Note</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 font-mono text-slate-200">
-                {recentSettlements.map((s, idx) => (
+                {ledgerComponents.map((c, idx) => (
                   <tr key={idx} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-xs text-slate-400">{s.date}</td>
-                    <td className="py-3 px-4 font-bold text-white">{s.game}</td>
-                    <td className="py-3 px-4">{s.pick}</td>
-                    <td className="py-3 px-4 text-amber-400 font-semibold">{s.clv}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`inline-block rounded px-2 py-0.5 text-xs font-bold ${
-                          s.result === "WIN"
-                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                            : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-                        }`}
-                      >
-                        {s.result}
-                      </span>
-                    </td>
-                    <td
-                      className={`py-3 px-4 font-bold ${
-                        s.units.startsWith("+") ? "text-emerald-400" : "text-rose-400"
-                      }`}
-                    >
-                      {s.units}
-                    </td>
+                    <td className="py-3 px-4 font-bold text-white">{c.leg}</td>
+                    <td className="py-3 px-4">{c.record}</td>
+                    <td className="py-3 px-4 font-bold text-emerald-400">{c.units}</td>
+                    <td className="py-3 px-4 text-xs text-slate-400">{c.note}</td>
                   </tr>
                 ))}
               </tbody>

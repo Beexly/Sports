@@ -105,10 +105,10 @@ export default function ResearchPortalPage(): JSX.Element {
   ];
 
   const processMetrics = [
-    { label: "Official Verified Record", value: "47-19-1", sub: "Base 38-13-1 (+22.85u) · +24.92u" },
-    { label: "Week 8 Settled Sweep", value: "22-8-1", sub: "7-of-7 Max Plays (+12.40u)" },
-    { label: "Markets Passed", value: "87.2%", sub: "No Forced Action on Coinflips" },
-    { label: "Closing Line Beat", value: "+2.84%", sub: "84.2% Beat Closing Number" },
+    { label: "Official Verified Record", value: "36-13-1", sub: "73.5% · +20.14u · all-in 47-19-1 secondary" },
+    { label: "TNF CAR@GB Wedge", value: "14-6-1", sub: "+7.19u on the official TNF card" },
+    { label: "Main Slate Evaluated", value: "573", sub: "295 published · 278 abstained/passed" },
+    { label: "Graded Plays", value: "50", sub: "36 wins · 13 losses · 1 push" },
     { label: "32-Team Roster Checks", value: "100%", sub: "Verified Starters & Injury Tags" },
   ];
 
@@ -147,7 +147,7 @@ export default function ResearchPortalPage(): JSX.Element {
             Discipline First: Why Passing Beats Forcing Action
           </h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
-            The fastest way to lose money in sports betting is betting every game on TV. We review over 1,800 main lines, quarter/half derivatives, and player props every week, and we reject 87.2% of the board so our members only play spots where the film and the number line up:
+            The fastest way to lose money in sports betting is betting every game on TV. We review over 1,800 main lines, quarter/half derivatives, and player props every week, and we abstain or pass anything without clear value so our members only play spots where the film and the number line up:
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

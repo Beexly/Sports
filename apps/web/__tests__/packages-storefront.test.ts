@@ -9,7 +9,9 @@ import { POST as checkoutRoute } from "@/app/api/packages/checkout/route";
 import { GET as unlockRoute } from "@/app/api/packages/unlock/route";
 
 describe("Galaxy Picks storefront catalog", () => {
-  it("enforces the official Season Ledger of Record (47-19-1 / +24.92u; Base 38-13-1 / +22.85u) and standing roster ruling", () => {
+  it("enforces the official Season Ledger of Record (verified 36-13-1 / +20.14u; all-in secondary 47-19-1 / +24.92u; base 38-13-1 / +22.85u) and standing roster ruling", () => {
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord).toBe("36-13-1");
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedUnits).toBe("+20.14u");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.baseRecord).toBe("38-13-1");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.baseUnits).toBe("+22.85u");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsRecord).toBe("47-19-1");
