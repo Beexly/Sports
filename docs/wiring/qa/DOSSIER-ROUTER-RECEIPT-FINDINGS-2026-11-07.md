@@ -1,0 +1,11 @@
+# DOSSIER ROUTER-RECEIPT FINDINGS (Motif, 2026-11-07)
+
+The 19 data/engine/connected_workflow_dossier_*.json files (Week 9) each carry a stage1b_5367_equations_pre_sim_review receipt. Checked closely on the JAX@BAL dossier (the TNF game), with the arithmetic done:
+
+1. **The receipt's router is a DIFFERENT implementation than the Python gate's.** Its Stage C clusters are the matrix's letter categories A–G (62/245/64/238/85/122/850 = 1,666 — matching the matrix category counts exactly), with per-cluster effective spectral ranks ~7.3–8.1 and orthogonalized deltas. The gate's Stage C clusters on catalog cluster strings with top-25 representatives. The receipt's Stage A reports 258 active families — the MATRIX's family coverage (see MATRIX-FAMILY-COVERAGE-RECOMPUTE), not the gate's activation (263 on tonight's sample). Conclusion: the dossiers' router receipts describe a run over the 1,666-entry matrix (almost certainly the TypeScript side named in the receipt: mcp_cognitive_router_ts_telemetry), not over the 12,304 catalog through equation_gate.py. Two router implementations exist; only the Python one was executed and verified tonight.
+
+2. **The "5,367" in the receipt schema name does not survive its own inventory.** The same receipt's equation_corpus_inventory totals "total_equations_and_scientific_premises_reviewed: 12,304" and lists the matrix at 1,666 + GSE-213 at 213 + 25 TS operators. Nothing in the inventory sums to 5,367 (the brain's 5,367 = 1,666 + 3,742 crosswalk records − 41, per RECOMPUTE-QUEUE-CLOSE-EQCOUNT — a different construction sharing only the 1,666). The schema name is a label; its own contents refute it.
+
+3. **Stage D hit the cap:** raw/unclamped log-odds delta 1.096888, James-Stein factor 0.916978, clamped to exactly 0.35 (the Stage-D cap). The receipt is internally consistent on this point (raw × shrinkage ≈ 1.0058 pre-clamp is NOT what is printed — printed unclamped = raw, i.e. the receipt records the pre-shrinkage value in both fields; the clamped output 0.35 is the cap either way). Minor internal duplication noted, not a contradiction of the output.
+
+Filed so the morning wiring work does not treat the dossier receipts as executions of the Python catalog gate: they are matrix-router receipts with a borrowed schema name.
