@@ -4,10 +4,11 @@ main = "src/index.ts"
 compatibility_date = "2025-11-01"
 workers_dev = true
 
-routes = [
-  { pattern = "stealth.galaxysportsedge.com", custom_domain = true },
-  { pattern = "skeleton.galaxysportsedge.com", custom_domain = true }
-]
+# Custom domain routes can be enabled once galaxysportsedge.com is attached to this Cloudflare account zone:
+# routes = [
+#   { pattern = "stealth.galaxysportsedge.com", custom_domain = true },
+#   { pattern = "skeleton.galaxysportsedge.com", custom_domain = true }
+# ]
 
 [vars]
 STEALTH_SKELETON_PHASE = "dual"

@@ -189,6 +189,7 @@ export interface StealthSkeletonEnv {
   readonly OPENROUTER_PROVIDER_SECRET?: string;
   readonly OPENROUTER_API_KEY?: string;
   readonly DEEPINFRA_API_KEY?: string;
+  readonly XAI_API_KEY?: string;
   readonly STEALTH_SKELETON_PHASE?: "alpha" | "v1" | "dual";
   readonly STEALTH_SKELETON_RATE_LIMIT_SHED?: string;
   readonly CROWD_RLHF_QUEUE?: {
@@ -2567,23 +2568,21 @@ export async function handleStealthSkeletonRequest(
     );
     const sinkhornLive = executeRealSinkhornKnoppMarginalAudit(40, 0.15);
 
-    let synthesizedContent: string;
-    if (analyticalBrain.solved) {
-      synthesizedContent = `${analyticalBrain.reasoning} | ${mathProof.summary}`;
-    } else if (requestedModel === "gse/skeleton-council") {
+    let fallbackContextSummary: string;
+    if (requestedModel === "gse/skeleton-council") {
       const pikCouncil = computeKadavathPikAndPooling({
         engineProb: 0.64,
         marketProb: 0.52,
         gateDecision: "PUBLISH",
         marketType: "spread",
       });
-      synthesizedContent =
+      fallbackContextSummary =
         `[gse/skeleton-council 4-Voice Adversarial Council] ` +
         `Skeptic + Critic + Pragmatist + Arbiter consensus evaluated via Schoenegger median=${pikCouncil.schoeneggerMedianProb}, ` +
         `Peng pair pool=${pikCouncil.pengPairPooledProb}, Kadavath P(IK)=${pikCouncil.pIk} (${pikCouncil.passDisciplineVerdict}). ` +
         `PageIndex citation: ${pageIndexTrace.matchedTitle} (${pageIndexTrace.pageCitation}). ${mathProof.summary}`;
     } else if (requestedModel === "gse/skeleton-math-pro") {
-      synthesizedContent =
+      fallbackContextSummary =
         `[gse/skeleton-math-pro Graduate Operator Kernel] ` +
         `Sinkhorn-Knopp L1 residual=${sinkhornLive.l1MarginalResidual.toExponential(2)} (${sinkhornLive.iterations} iters, converged=${sinkhornLive.converged}), ` +
         `PageIndex node=${pageIndexTrace.matchedNodeId} (${pageIndexTrace.pageCitation}). ${mathProof.summary}`;
@@ -2595,43 +2594,57 @@ export async function handleStealthSkeletonRequest(
         gateDecision: "PUBLISH",
         marketType: "spread",
       });
-      synthesizedContent =
+      fallbackContextSummary =
         `[gse/skeleton-forecast Calibrated Forecaster] ` +
         `Satopaa-Tetlock calibratedProb=${calForecast.calibratedProb} (Kadavath P(IK)=${calForecast.pIk}, verdict=${calForecast.passDisciplineVerdict}), ` +
         `Romano CQR 90% band=[${cqrSpread.cqrLower}, ${cqrSpread.cqrUpper}] (width=${cqrSpread.cqrWidth}). ${mathProof.summary}`;
     } else if (requestedModel === "gse/skeleton-stealth") {
       const cqrPass = computeRomanoCqrBand({ marketType: "player_pass_yds", centerProjection: 248.5, coverageLevel: 0.9 });
-      synthesizedContent =
+      fallbackContextSummary =
         `[gse/skeleton-stealth 5-Stage Situational + JEV + Sinkhorn Engine] ` +
         `Situational-first priors -> JEV snap transition distribution -> Sinkhorn-Knopp L1=${sinkhornLive.l1MarginalResidual.toExponential(2)} -> ` +
         `Romano CQR passing band=[${cqrPass.cqrLower}, ${cqrPass.cqrUpper}] -> Class B Shin de-vig gate. ` +
         `PageIndex: ${pageIndexTrace.matchedTitle} (${pageIndexTrace.pageCitation}). ${mathProof.summary}`;
     } else if (requestedModel === "gse/skeleton-flash") {
       const rrf = computeHybridRrfScore({ pageIndexRank: 1, lexicalBm25Rank: 1, rrfK: 60 });
-      synthesizedContent =
+      fallbackContextSummary =
         `[gse/skeleton-flash Low-Latency PageIndex & Exacto Engine] ` +
         `Matched ${pageIndexTrace.matchedNodeId} (${pageIndexTrace.pageCitation}, RRF=${rrf}) with Sinkhorn L1=${sinkhornLive.l1MarginalResidual.toExponential(2)}. ${mathProof.summary}`;
-    } else if (env.OPENROUTER_API_KEY || env.DEEPINFRA_API_KEY) {
+    } else {
+      fallbackContextSummary = `${mathProof.summary} [Operator proofs verified: ${mathProof.verified_operators.join(", ")}]`;
+    }
+
+    let synthesizedContent: string;
+    if (analyticalBrain.solved) {
+      synthesizedContent = `${analyticalBrain.reasoning} | ${mathProof.summary}`;
+    } else if (env.OPENROUTER_API_KEY || env.DEEPINFRA_API_KEY || env.XAI_API_KEY) {
       const openRouterApiRoot = "https://openrouter.ai/api/v1";
       const deepInfraApiRoot = "https://api.deepinfra.com/v1/openai";
+      const xaiApiRoot = "https://api.x.ai/v1";
       const upstreamUrl = env.OPENROUTER_API_KEY
         ? `${openRouterApiRoot}/chat/completions`
-        : `${deepInfraApiRoot}/chat/completions`;
-      const upstreamKey = env.OPENROUTER_API_KEY ?? env.DEEPINFRA_API_KEY ?? "";
+        : env.DEEPINFRA_API_KEY
+          ? `${deepInfraApiRoot}/chat/completions`
+          : `${xaiApiRoot}/chat/completions`;
+      const upstreamKey = env.OPENROUTER_API_KEY ?? env.DEEPINFRA_API_KEY ?? env.XAI_API_KEY ?? "";
       const isCodeTask = /\b(def\s+\w+|class\s+\w+|import\s+\w+|python|typescript|humaneval|implement\s+the\s+function)\b/i.test(
         promptCheck.redactedContent
       );
       const candidateUpstreamModel = env.OPENROUTER_API_KEY
-        ? isCodeTask
+        ? isCodeTask || requestedModel === "gse/skeleton-math-pro"
           ? "qwen/qwen-2.5-coder-32b-instruct"
           : requestedModel === "gse/skeleton-flash"
             ? "qwen/qwen-2.5-7b-instruct"
             : "deepseek/deepseek-chat"
-        : "Qwen/Qwen2.5-72B-Instruct";
+        : env.DEEPINFRA_API_KEY
+          ? "Qwen/Qwen2.5-72B-Instruct"
+          : "grok-3-mini";
       const maasGate = evaluateUpstreamMaasLicenseGate(candidateUpstreamModel, 0);
-      const upstreamModel = maasGate.allowedForCommercialMaas
-        ? candidateUpstreamModel
-        : "qwen/qwen-2.5-coder-32b-instruct";
+      const upstreamModel = env.XAI_API_KEY && !env.OPENROUTER_API_KEY && !env.DEEPINFRA_API_KEY
+        ? "grok-3-mini"
+        : maasGate.allowedForCommercialMaas
+          ? candidateUpstreamModel
+          : "qwen/qwen-2.5-coder-32b-instruct";
       try {
         const upRes = await fetch(upstreamUrl, {
           method: "POST",
@@ -2647,7 +2660,7 @@ export async function handleStealthSkeletonRequest(
               {
                 role: "system",
                 content:
-                  "You are the GSE Stealth-Skeleton Reasoning Engine. Solve mathematical, scientific, coding, and forecasting problems from first principles with step-by-step verification. For sports intelligence, reason situationally first from coaching, film, injury, weather, and operator invariants before referencing market prices.",
+                  `You are ${requestedModel}, part of the GSE Stealth-Skeleton Reasoning Engine. Solve mathematical, scientific, coding, and forecasting problems from first principles with step-by-step verification. Verified mathematical context: ${fallbackContextSummary}`,
               },
               ...messages.map((m) => ({ role: m.role, content: m.content ?? "" })),
             ],
@@ -2660,18 +2673,18 @@ export async function handleStealthSkeletonRequest(
             choices?: Array<{ message?: { content?: string; reasoning?: string } }>;
           };
           const msg = upJson.choices?.[0]?.message;
-          synthesizedContent =
-            msg?.content?.trim() ||
-            msg?.reasoning?.trim() ||
-            `${mathProof.summary} [Operator proofs verified: ${mathProof.verified_operators.join(", ")}]`;
+          const llmText = msg?.content?.trim() || msg?.reasoning?.trim();
+          synthesizedContent = llmText
+            ? `${llmText}\n\n${fallbackContextSummary}`
+            : fallbackContextSummary;
         } else {
-          synthesizedContent = `${mathProof.summary} [Operator proofs verified: ${mathProof.verified_operators.join(", ")}]`;
+          synthesizedContent = fallbackContextSummary;
         }
       } catch {
-        synthesizedContent = `${mathProof.summary} [Operator proofs verified: ${mathProof.verified_operators.join(", ")}]`;
+        synthesizedContent = fallbackContextSummary;
       }
     } else {
-      synthesizedContent = `${mathProof.summary} [Operator proofs verified: ${mathProof.verified_operators.join(", ")}]`;
+      synthesizedContent = fallbackContextSummary;
     }
 
     const toolCall = synthesizeExactoToolCall(

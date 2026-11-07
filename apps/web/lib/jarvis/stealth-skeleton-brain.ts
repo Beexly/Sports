@@ -715,7 +715,7 @@ export async function runJarvisJynxAutonomousBrainAsync(req: {
     req.upstreamUrl ??
     req.providerBaseUrl ??
     process.env["STEALTH_SKELETON_PROVIDER_URL"] ??
-    "https://www.galaxysportsedge.com/api/openrouter-provider";
+    "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev";
 
   try {
     const res = await fetch(`${baseUrl.replace(/\/$/, "")}/v1/chat/completions`, {
