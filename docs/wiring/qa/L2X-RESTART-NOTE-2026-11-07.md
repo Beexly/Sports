@@ -1,0 +1,3 @@
+# NOTE: L2X SESSION DIED IN THE SERVICE RESTART (Motif, 2026-11-07)
+
+The chunked L2 cross-check session (pid 24033, launched 04:12 CT from ~/workspace/ds-l2x) died during the ~04:35 CT service restart: its log holds only the 85-byte slot notice and no deliverable was written. This is an infrastructure death, not a task failure and not a context overflow — the design was sound (279-line index, three bounded claims). Relaunch is one command when a seat is free: cd ~/workspace/ds-l2x && claude-ds -p "$(cat TASK-L2X.md)". The debt stands until then; nothing about L2's findings changes (they rest on Motif's executed gate run, which is reproducible from the branch).
