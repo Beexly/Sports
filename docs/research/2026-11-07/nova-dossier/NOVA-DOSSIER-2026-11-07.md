@@ -14,6 +14,8 @@ Any agent should be able to pick Nova up cold from this file: who she is, what i
   5. `NOVA-UPDATE-V2-2026-11-07.md` — the Nov 7 prompt-architecture update (frozen identity block, motion beats, de-polish grade, route findings), verbatim
   6. `NOVA-REALISM-RESEARCH-PACKET-2026-11-07.md` — the realism research packet + 15-point defect checklist every take is graded against, verbatim
   7. `NOVA-CHARACTER-SPEC-2026-11-07.md` — the script+voice+character spec built from the Nov 7 deep-research run (§9a), added Nov 7, 2026
+  8. `NOVA-GROWTH-LEDGER.md` — the growth & performance ledger (automatic tracking, LIVE Nov 7, 2026; §10)
+  9. `NOVA-TRACKING-PROTOCOL.md` — the binding event protocol every producing/posting agent follows for the ledger
 
 ---
 
@@ -125,7 +127,7 @@ Earlier media (Oct 27–28): stills and batches live locally — `nova-face-mast
 
 ## 9. Pending items (with owners)
 
-- **(a) Deep research — AI personality / humanization** (owner: Motif research lane; RUNNING as of Nov 7 ~15:00 CT). Scope per Garrett's Nov 7 order: not scripts only — "anything and everything that's making them real": the mind, personality, reasoning, movement, processing, **empathy**, inflection, two-way conversation, a character that maintains itself, evolves, grows, learns, supports, helps (§2). Primary sources only (books, PDFs, arXiv, Kaggle, OpenAlex, universities), hard data, provenance traced to origin. Deliverable: ONE document + a resulting **script+voice+character spec**. **SPEC LANDED (Nov 7, 2026): `docs/research/2026-11-07/nova-dossier/NOVA-CHARACTER-SPEC-2026-11-07.md` (38,893 B), companion file 7 in this folder.** The full research report itself is a research-library item (Google Drive); it is not in this repo. Also PENDING with it: Google Drive upload of this dossier + research-library placement of the research document.
+- **(a) Deep research — AI personality / humanization** (owner: Motif research lane; RUNNING as of Nov 7 ~15:00 CT). Scope per Garrett's Nov 7 order: not scripts only — "anything and everything that's making them real": the mind, personality, reasoning, movement, processing, **empathy**, inflection, two-way conversation, a character that maintains itself, evolves, grows, learns, supports, helps (§2). Primary sources only (books, PDFs, arXiv, Kaggle, OpenAlex, universities), hard data, provenance traced to origin. Deliverable: ONE document + a resulting **script+voice+character spec**. **SPEC LANDED (Nov 7, 2026): `docs/research/2026-11-07/nova-dossier/NOVA-CHARACTER-SPEC-2026-11-07.md` (38,893 B), companion file 7 in this folder.** The full research report itself is a research-library item (Google Drive); it is not in this repo. Google Drive upload of this dossier + research-library placement of the research document: DONE Nov 7, 2026 (§10).
 - **(b) Voice — SETTLED Nov 7, 15:04 CT** (§4): Garrett picked B1 (Zephyr + adjusted style text). Follow-ons in motion: Higgsfield take 4 (Script B, rugged format, steady camera) in production; VOICE-LOCK.md updated (Nov 7 UPDATE section) and this dossier updated the same day. Closed unless the §9a research spec prompts a new Garrett decision.
 - **(c) Repo conflict** (owner: Garrett's ruling). `data/content-os/creators/NOVA_SOUL.md` and `docs/nova-production-spec.md` on main conflict with the locked Nova (§0). This dossier is canonical meanwhile; the two files need Garrett's word to fix, retire, or re-point at this dossier. Not edited by this push.
 - **(d) LoRA status verification** (owner: Motif, unassigned date). Training assets exist locally (§5d); whether a trained Nova LoRA exists and works is unverified. Closing this = locating the Oct 28 Kaggle run's artifact and test-rendering against the frozen identity block.
@@ -135,13 +137,14 @@ Earlier media (Oct 27–28): stills and batches live locally — `nova-face-mast
 
 ## 10. Where everything lives
 
-- **This dossier (repo):** Beexly/Sports, branch `motif/nova-dossier-2026-11-07`, folder `docs/research/2026-11-07/nova-dossier/` (7 files, §0). Merges to main are Garrett's gate.
+- **This dossier (repo):** Beexly/Sports, branch `motif/nova-dossier-2026-11-07`, folder `docs/research/2026-11-07/nova-dossier/` (9 files, §0). Merges to main are Garrett's gate.
 - **The bible (source of truth, full history):** local `~/workspace/gse-money-prep/persona-nova-bible.md` (§§1–57) + verbatim copy in this folder.
 - **Nova's home (local, Motif's VM):** `~/workspace/gse-content-os/personas/nova/` — **~1.8 GB, 225 media files** (mp4/jpg/png/wav/mp3). Media does NOT go to the repo; this dossier + the index below is the map. Key subfolders: `voice/` (VOICE-LOCK.md, `locked/` canonical takes, `candidates/` incl. today's A/B), `lora/`, `motion/` (EchoMimicV3 runbook + Oct 28 tests), stills/portrait folders (§8), `diagnostic/`.
 - **Research docs (local originals):** `NOVA-UPDATE-V2-2026-11-07.md`, `NOVA-REALISM-RESEARCH-PACKET-2026-11-07.md`, `AI-CHARACTER-REPOS-2026-11-07.md` (+ RAW/RAW2 sweep files), `launch-test-package.md` — all in Nova's home; the two Nov 7 docs are copied into this folder.
 - **Fleet note:** `~/workspace/vendor/agent-bus/outbox/from-motif/NOVA-DOSSIER-NOTE-2026-11-07.md` points every agent here.
 - **Daily record:** `~/memory/2026-11-07.md` carries the day's full Nova run log (Flow wall, removal ladder, Higgsfield reopening, takes, rulings, this dossier).
-- **Google Drive:** dossier + research library placement PENDING (§9a) — lands with the deep-research deliverable.
+- **Google Drive:** LANDED Nov 7, 2026, in the canonical research-library root (folder `1mp82cTGHf-10vnL1XlJgL9XmQ3gkeRF2`): this dossier (Drive id `1Gqd8jgfETStS8ttxP3Lt-qIaKl0Vi9Y6`), `NOVA-CHARACTER-SPEC-2026-11-07.md` (id `168f4YB8O9laJktaFK-Yq-eMpgfnRJFqG`), and the full deep-research report as `AI-PERSONALITY-HUMANIZATION-DEEP-RESEARCH-2026-11-07.md` (id `1t9CzObL-v0obADKfcee1tfGXUlFNq8tk`).
+- **Growth tracking (LIVE — Garrett's order Nov 7, 2026, 15:10 CT):** `NOVA-GROWTH-LEDGER.md` + `NOVA-TRACKING-PROTOCOL.md` in this folder (local originals in `personas/nova/tracking/`). Kept current automatically by cron `nova-growth-tracking-daily` (~21:08 CT) and cron `nova-growth-review-weekly` (Sun ~20:08 CT). Garrett never maintains the ledger; tracking never authorizes a post or a change to Nova.
 - **Accounts (identifiers only, no credentials anywhere in this dossier):** Higgsfield @brutalistplanet1398 (Google OAuth, baxley.garrett@gmail.com); Google Flow/AI Studio under the same Google account (Ultra tier). Credential VALUES are never written to repo, bus, or memory — Secure Vault / destination-side use only.
 
 ## 11. Rules that bind every agent working on Nova
