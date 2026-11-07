@@ -2,7 +2,7 @@
 
 - **Generated At (UTC):** `2026-11-06T20:04:07.495780+00:00`
 - **Overall Review Verdict:** **`PASS_100_PCT_ZERO_SKIP`**
-- **Official New Engine Verified Record:** **`62-23-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**
+- **Official New Engine Verified Record:** **`47-19-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**
 
 ---
 

@@ -75,7 +75,7 @@ Aggregate of SiriusXM nightly pulls. Sources marked `SXM:` per item. All host cl
 
 ## Prop angles (Oct 20 update)
 
-- SXM: RotoWire (Oct 20) — TNF (Bears at Patriots): A.J. Brown receiving line 66.5 yards (best price BetRivers per RotoWire's prop tool); Hunter Henry OVER 33.5 receiving yards; Drake Maye rushing 29.5 yards and 6+ attempts at ~even money. Stated note: 14 straight primetime underdogs have covered.
+- SXM: RotoWire (Oct 20) — TNF (Bears at Patriots): A.J. Brown receiving line 66.5 yards (best price BetRivers per RotoWire's prop tool); Hunter Henry OVER 33.5 receiving yards; Drake Maye rushing 29.5 yards and 6+ attempts at ~even money. Stated note: 14 straight primetime underdogs have covered. [PULLED_NOV_1_EXCLUDED]
 - SXM: RotoWire (Oct 20) — Erickson likes UNDER 53.5 in Packers–Lions. MNF lookback: Daniels rushing UNDER hit (held to 10 yards; no line stated); White and Ekeler receptions props both went OVER (no lines stated).
 - SXM: FFM (Oct 20) — Brawley's Daniels rushing prop LOST Monday (SF kept him in the pocket; no line stated). Kenneth Walker rushing OVER vs Seattle discussed (line expected ~90; no bet locked).
 

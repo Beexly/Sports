@@ -523,3 +523,51 @@ describe("askJarvis('what-is-memory-status') — derived from the memory status 
     expect(answer.supportingState.join("\n")).toContain("Memory wired: NO");
   });
 });
+
+describe("askJarvisLive async provider & provenance contract (Wave 8 W8-02)", () => {
+  it("routes through stealth-skeleton-brain and attaches packet_id, trace_id, and ledger_sha citations", async () => {
+    const summary = makeSummary();
+    const live = await askJarvisLive("picks", summary, {
+      game_id: "2026_W09_JAX_BAL",
+    });
+    expect(live.intent).toBe("picks");
+    expect(live.packet_id).toContain("pkt_2026_w09_jax_bal");
+    expect(live.trace_id).toContain("trc_2026_w09_jax_bal");
+    expect(live.ledger_sha).toHaveLength(64);
+    expect(live.citations).toContain(`packet_id:${live.packet_id}`);
+    expect(live.citations).toContain(`trace_id:${live.trace_id}`);
+    expect(live.citations).toContain(`ledger_sha:${live.ledger_sha}`);
+    expect(live.fallback_fired).toBe(false);
+    expect(live.fallback_reason).toBeNull();
+  });
+
+  it("explicitly logs fallback_fired: true, fallback_reason, and fallback_timestamp_utc when fallback occurs", async () => {
+    const summary = makeSummary();
+    const live = await askJarvisLive("How is JAX vs BAL looking?", summary, {
+      game_id: "2026_W09_JAX_BAL",
+      forceFallbackReason: "provider_timeout_simulated",
+    });
+    expect(live.fallback_fired).toBe(true);
+    expect(live.fallback_reason).toBe("provider_timeout_simulated");
+    expect(live.fallback_timestamp_utc).toBeTruthy();
+    expect(live.packet_id).toContain("pkt_2026_w09_jax_bal");
+    expect(live.trace_id).toContain("trc_2026_w09_jax_bal");
+    expect(live.ledger_sha).toHaveLength(64);
+    expect(live.supportingState.join(" ")).toContain("FALLBACK_FIRED: true");
+  });
+
+  it("unifies /api/openrouter/v1/models and STEALTH_SKELETON_MODELS with exact 9-model V2.4 parity", async () => {
+    const req = new Request("http://localhost/api/openrouter/v1/models");
+    const response = await getOpenRouterModels(req);
+    const payload = await response.json();
+    const routeIds = payload.data.map((m: { id: string }) => m.id);
+    const brainIds = STEALTH_SKELETON_MODELS.map((m) => m.id);
+    expect(routeIds).toHaveLength(9);
+    expect(routeIds).toEqual(brainIds);
+    expect(routeIds).toContain("gse/stealth-skeleton-alpha");
+    expect(routeIds).toContain("gse/skeleton-v1-fast");
+    expect(routeIds).toContain("gse/skeleton-math-pro");
+    expect(routeIds).toContain("gse/skeleton-flash");
+  });
+});
+

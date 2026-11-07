@@ -696,7 +696,7 @@ GCP_34_GITHUB_REPOS: List[Dict[str, Any]] = [
         "url": "https://github.com/GoogleCloudPlatform/bank-of-anthos",
         "domain": "double_entry_financial_ledger_jwt_auth_and_transactional_invariants",
         "equations_and_premises": [
-            "EQ-BANK-OF-ANTHOS-LEDGER-INVARIANT: sum_{tx in Ledger} (Credit_tx - Debit_tx) == 0; mirrors GSE's immutable 62-23-1 (+26.50u) unit settlement ledger",
+            "EQ-BANK-OF-ANTHOS-LEDGER-INVARIANT: sum_{tx in Ledger} (Credit_tx - Debit_tx) == 0; mirrors GSE's immutable 47-19-1 (+24.92u) unit settlement ledger",
         ],
     },
     {

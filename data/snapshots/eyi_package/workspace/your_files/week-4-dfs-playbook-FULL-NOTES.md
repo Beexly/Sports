@@ -64,9 +64,9 @@ Ranked by total mentions across all 18 processed feeds. "Bullish" includes stack
 | 10 | **Brenton Strange** (JAX TE) | 8 / 0 / 0 | **100%** | $3,200; Fantasy Alarm "smash stream DFS play of the week"; CIN bleeds TE yards; Mayo "easy pay-down"; ETR value. Note: rankers cooler (RotoBaller TE18) than writers. |
 | 11 | **Aaron Jones Sr.** (MIN) | 8 / 0 / 1 | 89% | 58.4% touch share; MIA allows most FPG to RBs; 17%+ pOwn; 925 "top click"; Occupy "best game script"; Spags 29% sim win rate. Bearish: Kunath (low efficiency). ⚠️ Salary conflict $6,700/$6,000/$5,900. |
 | 12 | **James Cook** (BUF) | 7 / 0 / 1 | 88% | 6.0 YPC leads all RBs; 24.2 proj touches (2nd on slate); 8–10% pOwn "highest matchup rating" (RotoBaller). Bearish: Spags "don't want to chase." |
-| 13 | **Christian McCaffrey** (SF) | 7 / 0 / 1 | 88% | Occupy "favorite play on the slate"; RotoGrinders "chalk of the chalk"; FantasyLabs top median/ceiling/floor, 88% bargain rating. Bearish: Spags "overrated at 34%." |
+| 13 | **Christian McCaffrey** (SF) | 7 / 0 / 1 | 88% | Occupy "favorite play on the slate"; RotoGrinders "chalk of the chalk"; FantasyLabs top median/ceiling/floor, 88% bargain rating. Bearish: Spags "overrated at 34%." | [PULLED_NOV_1_EXCLUDED]
 | 14 | **Stroud–Collins / HOU vs DAL stack** | 7 / 0 / 0 | **100%** | Dome, 48.5 total (steamed up); Collins cleared/active; DAL 3rd-most FP to QBs. Harris flagship stack [transcript]. Mild tension: Koerner props Stroud UNDER 32.5 attempts. |
-| 15 | **Trey McBride** (ARI) | 7 / 0 / 0 | **100%** | FantasyPros PPR TE1 (17.4); 4th-most targets of ANY NFL player; SI's flagship prop Over 6.5 rec (-147). ETR/JM pairs Bowers+McBride as signature leverage. "No published source is fading him." |
+| 15 | **Trey McBride** (ARI) | 7 / 0 / 0 | **100%** | FantasyPros PPR TE1 (17.4); 4th-most targets of ANY NFL player; SI's flagship prop Over 6.5 rec (-147). ETR/JM pairs Bowers+McBride as signature leverage. "No published source is fading him." | [PULLED_NOV_1_EXCLUDED]
 | 16 | **Brock Bowers** (LV) | 6 / 0 / 0 | **100%** | 43.3% target share in debut (highest single-game TE rate this season); Sharp/Hribar core play; CBS anytime-TD. 10%+ pOwn (4for4). |
 | 17 | **Dak–Lamb stack** (DAL @ HOU) | 5 / 0 / 1 | 83% | "Bedrock of high-ceiling cash and GPP builds" (Bender); Impemba's best QB/WR stack; Kunath core. Bearish: Fantasy Life CRASH spot for Dak. |
 | 18 | **Mahomes (+ Kelce)** (KC @ LV) | 6 / 0 / 1 | 86% | Impemba's "NFL DFS QB Play of the Week"; RotoGrinders "my guy"; 21.4 proj at 5.4% pOwn. Bearish: Tambo (Mayo) fades Mahomes. |
@@ -221,7 +221,7 @@ Three distinct reads in 48 hours — documented, not resolved by guessing:
 
 ### Intra-outlet tensions (same shop, opposite reads)
 - **SBR vs SBR (10/4):** best-bets card takes **Panthers +3.5** (-105) while SBR's ATS expert gives **Lions -3.5** four stars. Same outlet, opposite sides of SNF — a stay-away, not a signal.
-- **Fantasy Alarm vs Fantasy Alarm:** QB picks (Impemba) hard-fade Drake Maye ("It's a fade for me") while Fantasy Alarm Best Bets takes Patriots team total OVER 19.5 on a "Maye bounce-back." Same outlet, opposite Maye reads — GPP-only territory.
+- **Fantasy Alarm vs Fantasy Alarm:** QB picks (Impemba) hard-fade Drake Maye ("It's a fade for me") while Fantasy Alarm Best Bets takes Patriots team total OVER 19.5 on a "Maye bounce-back." Same outlet, opposite Maye reads — GPP-only territory. [PULLED_NOV_1_EXCLUDED]
 - **Rankers vs writers:** Brenton Strange is FantasyPros cheat-sheet CORE but RotoBaller TE18 / Athlon TE16; T.J. Hockenson is 10%+ owned per 4for4 and a FFballers "escape hatch" but RotoWire TE28; Zach Ertz has a Goedert-out narrative but RotoWire TE30 / Athlon TE34 with a 42% route rate; Tucker Kraft is Cooper's bounce-back but TouchdownWire SIT and rankers cool. These are role-vs-ranking gaps, not flips — but they mark exactly where "consensus" is thinnest.
 
 ### Feed-vs-feed conflicts (unresolved)
@@ -249,7 +249,7 @@ Three distinct reads in 48 hours — documented, not resolved by guessing:
 - **Jordan Addison** — Jefferson ruled OUT → from Ratcliffe conditional fade to 18%+ owned WR (4for4).
 - **Tyson Bagent** — from "Keenum or Bagent?" uncertainty to Spags' "#1 value" + 925's "top QB value" + RotoGrinders "cheapy I would play"; Bagent+Burden+K. Raymond = Spags' #1 ROI stack.
 - **Tetairoa McMillan** — Coker likely OUT (Schefter 10/4) + Legette IR → SNF smash spot.
-- **Trey McBride** — SI's flagship Over 6.5 rec prop; zero fades published; ETR/JM signature TE pairing.
+- **Trey McBride** — SI's flagship Over 6.5 rec prop; zero fades published; ETR/JM signature TE pairing. [PULLED_NOV_1_EXCLUDED]
 - **Jeremiyah Love** — W3 backfield takeover (21 carries vs Allgeier's 2) → FantasyPros core + RotoBaller cash value.
 - **T.J. Hockenson** — ownership lane (10%+) rising on Jefferson news; rankers lagging.
 - **Kalif Raymond** — $3,600 "cheat code" (Kunath); Occupy "most popular WR by far"; Harris "still a buy."
@@ -284,7 +284,7 @@ Three distinct reads in 48 hours — documented, not resolved by guessing:
 1. **Brian Thomas Jr.:** benched/hard fade (games-1pm Sun AM, Harris 37% snaps, RotoWire "out of consideration") vs strategy shells 1&2 (both start him) vs CoverTheSlate value list. The benching is the newest fact — shells are stale on this until resolved.
 2. **Jonathan Taylor rushing yards:** SI Betting UNDER 90.5 (-112; "3.9 YPC collapse, elite WAS run D") vs Sports Injury Central OVER 90.5 (-113; "22 carries/game, banged-up WAS front"). Genuine 50/50; London game off main slate regardless.
 3. **Puka Nacua workload:** Schefter "Rams do not intend to limit" vs Pelissero "stricter snap count than usual" (both Sun AM). Direct reporter conflict; rain leg rebuilt Sun AM.
-4. **Drake Maye:** Impemba HARD FADE (1 TD/6 INT, 9.2 FPPG) + Harris "tailspin" + Kunath vs Ratcliffe "willing to give Maye another shot" + Fantasy Alarm Best Bets "Maye bounce-back" (NE TT over 19.5). Two-against-three with one outlet on both sides — pure GPP territory.
+4. **Drake Maye:** Impemba HARD FADE (1 TD/6 INT, 9.2 FPPG) + Harris "tailspin" + Kunath vs Ratcliffe "willing to give Maye another shot" + Fantasy Alarm Best Bets "Maye bounce-back" (NE TT over 19.5). Two-against-three with one outlet on both sides — pure GPP territory. [PULLED_NOV_1_EXCLUDED]
 5. **DST chalk:** Vikings unanimous #1 (every ranker) vs Mayo "Rams $2.6K the Chalk D" — different salary/context (likely FD-flavored); on DK the Vikings are the chalk.
 6. **Kyler Murray:** DK Network stacks #5 (worst pass D matchup) + Orfield 6% exposure ("wants more") vs Spags EMPHATIC fade ("No fucking chance") + RotoGrinders mild fade + Kunath fade.
 7. **Dak Prescott:** Bender "bedrock of high-ceiling builds" + Impemba #4 QB + DK Network Millionaire pick vs Fantasy Life CRASH spot.
@@ -798,7 +798,7 @@ Never treat any salary here as final; confirm in-app.
 ## Tier 2 — Mid-range workload plays
 
 **5. Aaron Jones, MIN vs MIA — $6,000 DK (VERIFY — see flag above)**
-- Workload: 40 carries over last two games with Jordan Mason out; 90+ total yards in
+- Workload: 40 carries over last two games with Jordan Mason out; 90+ total yards in [PULLED_NOV_1_EXCLUDED]
   both; 5 catches last week; 58.4% touch share last two weeks (SI).
 - Game script: near game-flow-proof via receiving work; Miami allows the MOST
   (32.9 FPG, DK Network) / 3rd-most (SI) fantasy points to RBs — elite matchup either way.
@@ -2199,7 +2199,7 @@ Notable: SportsLine PropBetGuy — Darren Waller prop among best bets (aligns wi
 Mostly expert-pick/score-prediction article links (NFL.com AroundTheNFL panel, azcentral, Athlon, Pride of Detroit, Bengals Wire, Saints Wire, MileHighReport, SI's Ed Kracz on Eagles-Rams). Notable: @AthlonSports — "Arizona swept the ESPN and NFL.com panel and got Pete Prisco's vote in Week 4, leaving Mike Florio as the only national expert siding with..." (Giants). @Covers — "NFL Survivor pool picks & predictions: Week 4's safest, best & most strategic plays."
 
 ## X pull 13 — anytime TD (19 posts, Oct 2-4; accepted at 19 after X search blocked)
-Notable: @Covers_josh (verified) — Week 4 TDs YTD +8.75 units: LAR Higbee +331, SEA Barner +275, LV Bowers +195, CAR Tremayne +750. @Ryanbet001 — ATD list: Tyler Warren +165, Trey McBride +150, Michael Wilson +220, Isaiah Likely +280. @DingerGrid — Saquon +122, Cook -125, Henry -198, McBride +160. @Lineups_US — "NFL Week 4 TD Picks: Sadiq & Lemon Anytime TD Bets." @_TJKC_ — "Lions-Panthers TD Picks: Williams & Waller Anytime TD Bets" (SNF). @PropaholicsApp — 5 anytime TD plays, 4/5 last week.
+Notable: @Covers_josh (verified) — Week 4 TDs YTD +8.75 units: LAR Higbee +331, SEA Barner +275, LV Bowers +195, CAR Tremayne +750. @Ryanbet001 — ATD list: Tyler Warren +165, Trey McBride +150, Michael Wilson +220, Isaiah Likely +280. @DingerGrid — Saquon +122, Cook -125, Henry -198, McBride +160. @Lineups_US — "NFL Week 4 TD Picks: Sadiq & Lemon Anytime TD Bets." @_TJKC_ — "Lions-Panthers TD Picks: Williams & Waller Anytime TD Bets" (SNF). @PropaholicsApp — 5 anytime TD plays, 4/5 last week. [PULLED_NOV_1_EXCLUDED]
 
 ## X pull 14 — ownership/chalk (12 posts so far, session died mid-run; resumed)
 New: @CoverTheSlate props card — Puka over 6.5 receptions, P. Washington over 73.5 yards, Kincaid under 4.5 receptions, Jordan Love over 241.5 pass yards; ATTD parlay James Cook + Ja'Marr Chase + JSN; Either/Or First TD: Henry or Jackson, Cook or Allen. @CoverTheSlate — "NFL Week 4 DraftKings Ownership: Chalk vs. Leverage" article. @Jeff_Mans — "NFL Week 4 Fantasy Points Allowed Update" (defenses allowing most FP to each position). @4for4football — SharpStack "Market-Based Projections update alongside the betting market." @GeoffLambert77 — goingfor2.com DK ownership + FP projections.
@@ -2697,7 +2697,7 @@ Thursday night (Steelers-Browns) picks excluded — that game already played.
     Reasoning: 22 targets = same as McLaurin, more catches (13); Mariota feeds him vs softer coverage.
     https://www.si.com/betting/colts-vs-commanders-best-prop-bets-for-nfl-london-game-in-week-4-fade-jonathan-taylor-01m3ysmyf256
 
-16. **Trey McBride Over 6.5 receptions** (-147, DraftKings) — SI Betting.
+16. **Trey McBride Over 6.5 receptions** (-147, DraftKings) — SI Betting. [PULLED_NOV_1_EXCLUDED]
     Reasoning: 26 catches on 34 targets; 9/8/9 in three games; target leader every week.
     https://www.si.com/betting/cardinals-vs-giants-best-nfl-prop-bets-and-anytime-touchdown-scorer-picks-for-nfl-week-4-money-on-mcbride-01m3x1rc9fx0
 
@@ -2727,7 +2727,7 @@ Thursday night (Steelers-Browns) picks excluded — that game already played.
 
 ## CONSENSUS / CROSS-SOURCE READS
 
-- **Trey McBride over receptions** is the single most unified prop: SI's flagship over 6.5 (-147) on a 9/8/9-catch, 34-target start. No published source is fading him.
+- **Trey McBride over receptions** is the single most unified prop: SI's flagship over 6.5 (-147) on a 9/8/9-catch, 34-target start. No published source is fading him. [PULLED_NOV_1_EXCLUDED]
 - **Jaguars +2.5** has two models aligned: Covers AI (26-24) and SBR's AI (27-24) both project Jacksonville winning outright in the 51.5-total game.
 - **Jonathan Taylor rushing yards is the week's great debate**: SI says UNDER 90.5 (efficiency collapse + elite WAS run D) vs SIC says OVER 90.5 (volume + banged-up WAS front). True coin-flip, bet accordingly.
 - **Lions-Panthers is conflicted inside one shop**: SBR's best-bets card takes Panthers +3.5 while SBR's ATS expert gives Lions -3.5 four stars. Sunday night is a stay-away on the spread.

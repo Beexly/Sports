@@ -137,7 +137,7 @@ def main() -> None:
     tree_build_ms = round((time.perf_counter() - t0) * 1000.0, 3)
 
     questions = [
-        ("What is the Pass 3 100-point composite intelligence score?", "86.62"),
+        ("What is the Pass 3 100-point composite intelligence score?", "86.12"),
         ("What is the verified Season Ledger of Record overall and units?", "47-19-1"),
         ("Which team is Geno Smith assigned to under the standing roster ruling?", "NYJ"),
         ("Which team is Mike Evans assigned to under the standing roster ruling?", "SF"),

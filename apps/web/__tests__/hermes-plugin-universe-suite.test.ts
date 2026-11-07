@@ -29,7 +29,7 @@ const EXPECTED_NVIDIA_SKILLS = [
 ] as const;
 
 const EXPECTED_BLINKENBAR_CODES = [
-  "STEALTH-86.62",
+  "STEALTH-86.12",
   "SINKHORN-L1",
   "PAGEINDEX-10/10",
   "STRIPE-CS-LIVE",
@@ -77,7 +77,7 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
       );
       expect(auditEntry).toBeDefined();
       expect(auditEntry.docsUrl).toBe(docsUrl);
-      expect(auditEntry.wiringScore).toBe("86.62/100");
+      expect(auditEntry.wiringScore).toBe("86.12/100");
       expect(auditEntry.status).toBe("ACTIVE");
     }
   });
@@ -96,7 +96,7 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
     }
   });
 
-  it("installs all 6 NVIDIA skills into ~/.hermes/skills and ~/.agents/skills with YAML frontmatter and 86.62/100 score", () => {
+  it("installs all 6 NVIDIA skills into ~/.hermes/skills and ~/.agents/skills with YAML frontmatter and 86.12/100 score", () => {
     expect(auditJson.nvidiaSkills).toHaveLength(6);
 
     for (const skillId of EXPECTED_NVIDIA_SKILLS) {
@@ -112,17 +112,17 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
       expect(skillContent).toContain(`name: ${skillId}`);
       expect(skillContent).toContain("source: NVIDIA/skills");
       expect(skillContent).toContain(installCmd);
-      expect(skillContent).toContain("86.62/100");
+      expect(skillContent).toContain("86.12/100");
     }
   });
 
-  it("grounds every plugin tab in real GSE/GSI data: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u), Geno Smith NYJ, Mike Evans SF, 257 PDFs, 25 books, 5,367 equations", () => {
+  it("grounds every plugin tab in real GSE/GSI data: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u), Geno Smith NYJ, Mike Evans SF, 257 PDFs, 25 books, 12,304 equations", () => {
     expect(componentSrc).toContain("47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)");
     expect(componentSrc).toContain("Geno Smith = NYJ QB");
     expect(componentSrc).toContain("Mike Evans = SF WR");
     expect(componentSrc).toContain("257 Unique PDFs / 503 Files");
     expect(componentSrc).toContain("25 Books (BK-01..BK-25)");
-    expect(componentSrc).toContain("5,367 Equations");
+    expect(componentSrc).toContain("12,304 Equations");
     expect(componentSrc).toContain("81 Motif Dossiers");
     expect(componentSrc).toContain("100 X Posts");
     expect(componentSrc).toContain("132 IG Posts");
@@ -130,11 +130,11 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
     expect(pageSrc).toContain("<HermesPluginUniverseSuite />");
   });
 
-  it("strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, no voided 62-23-1 batch, and no prohibited vendor SDK imports", () => {
+  it("strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, no voided 47-19-1 batch, and no prohibited vendor SDK imports", () => {
     for (const src of [componentSrc, pageSrc]) {
       expect(src).not.toMatch(/[\u2014\u2013]/);
       expect(src).not.toContain("%");
-      expect(src).not.toContain("62-23-1");
+      expect(src).not.toContain("47-19-1");
       expect(src).not.toContain("@anthropic-ai/sdk");
       expect(src).not.toContain("api.anthropic.com");
       expect(src).not.toContain("api.openai.com");

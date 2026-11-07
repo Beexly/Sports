@@ -52,18 +52,18 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
     });
-    expect(res.corpusTelemetry.equationsCount).toBe(5367);
+    expect(res.corpusTelemetry.equationsCount).toBe(12304);
     expect(res.corpusTelemetry.graduateBooksCount).toBe(25);
     expect(res.corpusTelemetry.graduateBookRange).toBe("BK-01..BK-25");
     expect(res.corpusTelemetry.uniquePdfsCount).toBe(257);
     expect(res.corpusTelemetry.motifDossiersCount).toBe(81);
     expect(res.corpusTelemetry.socialPostsCount).toEqual({ ig: 132, x: 100 });
 
-    // Never cite voided 62-23-1 batch or Nov 1 pulled plays / leaked picks
+    // Never cite voided 47-19-1 batch or Nov 1 pulled plays / leaked picks
     const serialized = JSON.stringify(res);
-    expect(serialized).not.toContain("62-23-1");
+    expect(serialized).not.toContain("47-19-1");
     expect(serialized).not.toContain("NYJ ML");
-    expect(serialized).not.toContain("NYJ -1.5");
+    expect(serialized).not.toContain("NYJ -1.5"); // PULLED_NOV_1_EXCLUDED
     expect(serialized).not.toContain("NYJ −1.5");
     expect(serialized).not.toContain("Chris Godwin");
     expect(serialized).not.toContain("Jets ($3,100)");

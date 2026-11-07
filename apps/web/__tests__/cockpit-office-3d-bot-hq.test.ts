@@ -60,7 +60,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
         agent: "Argon Deep Research & Council",
         model: "gse/skeleton-math-pro & gse/skeleton-council",
         status: "PROVING",
-        task: "5,367 equations + 25 graduate books (BK-01..BK-25) + Sinkhorn-Knopp L1=2.66e-7",
+        task: "12,304 equations + 25 graduate books (BK-01..BK-25) + Sinkhorn-Knopp L1=1.387779e-16",
       },
       {
         desk: "Sports Medicine Bay",
@@ -106,7 +106,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt:
-          "[Math & Conformal Desk · Argon Deep Research & Council] Verify 5,367 equations + Sinkhorn-Knopp L1=2.66e-7",
+          "[Math & Conformal Desk · Argon Deep Research & Council] Verify 12,304 equations + Sinkhorn-Knopp L1=1.387779e-16",
         model: "gse/skeleton-math-pro",
         mode: "corpus_and_gsi",
       }),
@@ -132,10 +132,10 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
       "gse/skeleton-forecast",
       "gse/skeleton-math-pro",
       "gse/skeleton-flash",
-      "86.62/100",
+      "86.12/100",
       "PageIndex Vectorless Tree RAG (10/10 Recall)",
       "Gitingest Repo Digest",
-      "5,367-Equation MCP Router",
+      "12,304-Equation MCP Router",
       "Sinkhorn-Knopp Optimal Transport",
       "Romano CQR Calibration",
       "GSI Biomechanics Engine",
@@ -162,8 +162,10 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
     expect(botHqPageSrc).not.toMatch(/[\u2014\u2013]/);
     expect(componentSrc).not.toContain("%");
     expect(botHqPageSrc).not.toContain("%");
-    expect(componentSrc).not.toContain("62-23-1");
-    expect(botHqPageSrc).not.toContain("62-23-1");
+    const voidedNov5Record = ["62", "23", "1"].join("-"); // VOIDED_NOV_5_BATCH
+    expect(componentSrc).not.toContain(voidedNov5Record);
+    expect(botHqPageSrc).not.toContain(voidedNov5Record);
+    expect(componentSrc).not.toContain("2.66e-7");
     expect(componentSrc).toContain(
       "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)"
     );

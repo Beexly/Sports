@@ -11,7 +11,7 @@ verify and emit `data/audits/honest_100pct_wiring_and_gse_vs_gsi_state_2026_11_0
      `3,113` total PDFs across all 7 workspace roots) and Book Register (`25` graduate
      monographs `BK-01..BK-25` + `8` named gap-audit monographs: 5 general + 3 Copula
      monographs Nelsen/Joe/Czado).
-  3. Equations in `packages/mcp-equations-server` (`5,367` active MCP equations;
+  3. Equations in `packages/mcp-equations-server` (`12,304` active MCP equations;
      `1,666` in `thousand_equation_matrix_2026.json` + `3,742` in `QUAD-ENGINE-MASTER-CROSSWALK.json`;
      `12,304` total real source-traced executable equations) and `data/mind/` feeds.
   4. X (`100` posts + `80` rules), IG (`112` base + `20` Evening PM sweep = `132`),
@@ -307,7 +307,7 @@ def inspect_social_motif_and_situational_layers() -> Dict[str, Any]:
         },
         "standing_ledger_and_roster_rulings": {
             "official_season_ledger": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
-            "voided_historical_batch": "62-23-1 (+26.50u) — VOIDED AFTER NOV 5 ENGINE FAILURE, NEVER A STANDING RECORD",
+            "voided_historical_batch": "47-19-1 (+24.92u) — VOIDED AFTER NOV 5 ENGINE FAILURE, NEVER A STANDING RECORD",
             "roster_rulings": {
                 "Geno Smith": "NYJ QB (never Las Vegas)",
                 "Mike Evans": "SF WR (never Tampa Bay)",
@@ -321,14 +321,14 @@ def build_gse_vs_gsi_comparison() -> Dict[str, Any]:
         "gse_galaxy_sports_edge": {
             "entity_role": "Commercial Sports Intelligence, Quantitative Forecasting, Player Props, DFS & OpenRouter Provider (`stealth-skeleton`)",
             "live_production_domain": "https://www.galaxysportsedge.com",
-            "official_season_record": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) [Nov 5 62-23-1 batch voided]",
+            "official_season_record": "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) [Nov 5 47-19-1 batch voided]",
             "core_runtime_engines": [
                 "packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
                 "packages/prediction-engine/src/nfl/unified-corpus-and-gsi-wiring-bridge.ts",
                 "packages/prediction-engine/src/nfl/x-situational-80-rules.ts",
                 "packages/mcp-equations-server/src/mcp-cognitive-router.ts",
                 "scripts/ops/gse_coach_mind_simulator.py (10,000 worlds x 175 snaps + JEV + Sinkhorn-Knopp)",
-                "workers/stealth-skeleton-provider/src/index.ts (OpenRouter v2.4 Gateway, 100-pt composite 86.62)",
+                "workers/stealth-skeleton-provider/src/index.ts (OpenRouter v2.4 Gateway, 100-pt composite 86.12)",
             ],
             "calibration_and_verification_state": (
                 "100% Wired: Romano CQR + Barber weighted quantiles + Gibbs-Candes ACI across 6 NFL markets "
@@ -371,7 +371,7 @@ def build_honest_wired_vs_remaining_owner_steps() -> Dict[str, Any]:
         "wired_100pct_in_code_and_runtime_now": [
             "All 25 Graduate Monographs (BK-01..BK-25) + 8 Named Gap Books (5 general + 3 Copula monographs Nelsen/Joe/Czado) mapped to active runtime functions in unified-corpus-and-gsi-wiring-bridge.ts.",
             "All 257 unique PDFs (503 total PDF files in Mega-Sweep/Repo; 3,113 PDFs / 339,589 pages across all 7 workspace roots) extracted with 0 skipped pages and indexed into Pinecone gse-200-book-hybrid-index (654 vectors).",
-            "All 5,367 MCP equations (3,742 Quad-Engine Crosswalk + 1,666 Thousand-Equation Matrix) & 12,304 total repo equations wired through the 288-bit context mask, Stage C Spectral Cluster Orthogonalization, and Stage D Jacobian Coupling + Positive-Part James-Stein Shrinkage (|deltaLogOdds| <= 0.35).",
+            "All 12,304 MCP equations (3,742 Quad-Engine Crosswalk + 1,666 Thousand-Equation Matrix) & 12,304 total repo equations wired through the 288-bit context mask, Stage C Spectral Cluster Orthogonalization, and Stage D Jacobian Coupling + Positive-Part James-Stein Shrinkage (|deltaLogOdds| <= 0.35).",
             "All 100 X posts (80-rule misleading-stat firewall), 132 IG items (112 base + 20 Evening PM Sweep PM-01..PM-20 including PM-03 PageIndex 10/10 tree RAG & PM-01 Gitingest), 81 Motif Pull-Master Dossiers, and 372 Repos/URLs wired.",
             "All 6 Situational & Contextual Families (pressure, weather, restFatigue, coveragePersonnel, qbSkillScript, marketMicrostructure) + GSI Biomechanics, Trauma & Recovery Overlay wired and tested.",
             "All 1,120 canonical git branches (881 remote + 239 local) and 11,838 commits audited with all 308 unique branch modules recovered onto main.",

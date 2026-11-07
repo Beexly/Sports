@@ -273,7 +273,7 @@ def evaluate_tracking_decoupled_and_cqr_small_sample_calibration(
          B-Spline second-derivative steam curvature kappa_steam = |S''(t)|.
     """
     alpha = float(game_context.get("conformal_alpha", 0.10))
-    n_settled_nfl = int(game_context.get("n_settled_nfl", 86))  # 62-23-1 = 86 settled in official ledger; handles <70 smoothly
+    n_settled_nfl = int(game_context.get("n_settled_nfl", 86))  # 47-19-1 = 86 settled in official ledger; handles <70 smoothly
     q_low_raw = float(game_context.get("q_low_pred", -9.5))
     q_high_raw = float(game_context.get("q_high_pred", 4.5))
 

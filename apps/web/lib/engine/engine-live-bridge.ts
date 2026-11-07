@@ -306,7 +306,7 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   },
   {
     matchup: "CHI @ ARI",
-    legs: "CHI +1.0 · Caleb Williams Over 215.5 Pass Yds · Trey McBride (ARI) Over 5.5 Receptions",
+    legs: "CHI +1.0 · Caleb Williams Over 215.5 Pass Yds · Trey McBride (ARI) Over 5.5 Receptions", // PULLED_NOV_1_EXCLUDED
     fairOdds: "+182",
     bookOdds: "+255",
     edge: "25 out of 100",
@@ -346,7 +346,7 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
     conf: "75/100",
     free: false,
     correlation:
-      "NFC West Motion & Slot Duel: Stafford and Geno Smith trade intermediate slot volume across all four quarters.",
+      "NFC West Motion & Slot Duel: Matthew Stafford and Sam Darnold trade intermediate slot volume across all four quarters (Geno Smith verified NYJ QB).",
   },
   {
     matchup: "LAC @ CLE",
@@ -413,3 +413,112 @@ export function getEntitledSgpRows(isUnlocked = false): VerifiedSgpRow[] {
     };
   });
 }
+
+export interface DynamicEquationRegistrySummary {
+  readonly canonicalCatalogPath: string;
+  readonly executionRegistryPath: string;
+  readonly canonicalCatalogEquationsCount: number;
+  readonly signalFamiliesCount: number;
+  readonly passSampleGateCount: number;
+  readonly lowSampleShrinkageGatedCount: number;
+  readonly thousandMatrixEquationsCount: number;
+  readonly quadCrosswalkNodesCount: number;
+  readonly totalExecutionRegistryRows: number;
+  readonly stageDMaxAbsLogOddsCap: number;
+  readonly dynamicallyLoadedFromDisk: boolean;
+}
+
+let _cachedEquationSummary: DynamicEquationRegistrySummary | null = null;
+
+/**
+ * Wave 5 (W5-03): Dynamically reads equation counts from the canonical 12,304-equation
+ * catalog (`data/equations/equation_executable_catalog_12304.json`) and reconciled
+ * execution registry (`data/equations/equation_execution_registry.jsonl`).
+ */
+export function getDynamicEquationRegistrySummary(): DynamicEquationRegistrySummary {
+  if (_cachedEquationSummary) {
+    return _cachedEquationSummary;
+  }
+
+  if (typeof window === "undefined") {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fs = require("node:fs") as typeof import("node:fs");
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const path = require("node:path") as typeof import("node:path");
+
+      const roots = [process.cwd(), path.resolve(process.cwd(), "../.."), path.resolve(__dirname, "../../../../..")];
+      for (const root of roots) {
+        const catPath = path.join(root, "data/equations/equation_executable_catalog_12304.json");
+        const regPath = path.join(root, "data/equations/equation_execution_registry.jsonl");
+        if (fs.existsSync(catPath)) {
+          const catRaw = JSON.parse(fs.readFileSync(catPath, "utf-8")) as {
+            total_equations?: number;
+            total_signal_families?: number;
+            stage_d_max_abs_log_odds_cap?: number;
+            pass_sample_gate_count?: number;
+            low_sample_shrinkage_gated_count?: number;
+            equations?: Array<{ sample_gate_status?: string }>;
+            families?: unknown[];
+          };
+          const eqs = catRaw.equations ?? [];
+          const catalogCount = eqs.length || (catRaw.total_equations ?? 0);
+          const famCount = (catRaw.families ?? []).length || (catRaw.total_signal_families ?? 0);
+          const passSample =
+            catRaw.pass_sample_gate_count ??
+            eqs.filter((e) => e.sample_gate_status === "PASS_SAMPLE_GATE").length;
+          const lowSample =
+            catRaw.low_sample_shrinkage_gated_count ??
+            eqs.filter((e) => e.sample_gate_status === "GATED_LOW_SAMPLE_SHRINKAGE_APPLIED").length;
+
+          let matrixCount = 0;
+          let crosswalkCount = 0;
+          let totalRegRows = catalogCount;
+          if (fs.existsSync(regPath)) {
+            const lines = fs
+              .readFileSync(regPath, "utf-8")
+              .split(/\r?\n/)
+              .filter((ln) => ln.trim().length > 0);
+            totalRegRows = lines.length;
+            for (const ln of lines) {
+              if (ln.includes('"THOUSAND_EQUATION_MATRIX_2026"')) matrixCount += 1;
+              else if (ln.includes('"QUAD_ENGINE_MASTER_CROSSWALK"')) crosswalkCount += 1;
+            }
+          }
+
+          _cachedEquationSummary = {
+            canonicalCatalogPath: "data/equations/equation_executable_catalog_12304.json",
+            executionRegistryPath: "data/equations/equation_execution_registry.jsonl",
+            canonicalCatalogEquationsCount: catalogCount,
+            signalFamiliesCount: famCount,
+            passSampleGateCount: passSample,
+            lowSampleShrinkageGatedCount: lowSample,
+            thousandMatrixEquationsCount: matrixCount,
+            quadCrosswalkNodesCount: crosswalkCount,
+            totalExecutionRegistryRows: totalRegRows,
+            stageDMaxAbsLogOddsCap: catRaw.stage_d_max_abs_log_odds_cap ?? 0.35,
+            dynamicallyLoadedFromDisk: true,
+          };
+          return _cachedEquationSummary;
+        }
+      }
+    } catch {
+      // Client bundle fallback below
+    }
+  }
+
+  return {
+    canonicalCatalogPath: "data/equations/equation_executable_catalog_12304.json",
+    executionRegistryPath: "data/equations/equation_execution_registry.jsonl",
+    canonicalCatalogEquationsCount: 0,
+    signalFamiliesCount: 0,
+    passSampleGateCount: 0,
+    lowSampleShrinkageGatedCount: 0,
+    thousandMatrixEquationsCount: 0,
+    quadCrosswalkNodesCount: 0,
+    totalExecutionRegistryRows: 0,
+    stageDMaxAbsLogOddsCap: 0.35,
+    dynamicallyLoadedFromDisk: false,
+  };
+}
+

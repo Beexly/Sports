@@ -75,7 +75,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
     thoughtBubble:
       "Routing Week 9 situational priors across all 6 desks via 288-bit context mask.",
     memoryState:
-      "Episodic + Semantic Vault synced · 288-bit context mask active · 86.62/100 composite",
+      "Episodic + Semantic Vault synced · 288-bit context mask active · 86.12/100 composite",
     gridPos: { col: 0, row: 0, x: 180, y: 120 },
     accentHex: "#38bdf8",
     accentClass: "border-accent-500/60 bg-accent-950/30 text-accent-400",
@@ -146,12 +146,12 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
     agentName: "Argon Deep Research & Council",
     model: "gse/skeleton-math-pro & gse/skeleton-council",
     status: "PROVING",
-    task: "5,367 equations + 25 graduate books (BK-01..BK-25) + Sinkhorn-Knopp L1=2.66e-7",
-    activeToolCall: "sinkhorn_reallocate_weights(epsilon=1e-3, l1_tol=1e-7)",
+    task: "12,304 equations + 25 graduate books (BK-01..BK-25) + Sinkhorn-Knopp L1=1.387779e-16",
+    activeToolCall: "sinkhorn_reallocate_weights(epsilon=0.15, l1_tol=1e-12)",
     thoughtBubble:
-      "Converging Sinkhorn-Knopp optimal transport L1=2.66e-7 + Romano CQR intervals.",
+      "Converging Sinkhorn-Knopp optimal transport L1=1.387779e-16 + Romano CQR intervals.",
     memoryState:
-      "5,367 equations wired · 25 graduate textbooks (BK-01..BK-25) · James-Stein cap 0.35",
+      "12,304 equations wired · 25 graduate textbooks (BK-01..BK-25) · James-Stein cap 0.35",
     gridPos: { col: 2, row: 0, x: 820, y: 120 },
     accentHex: "#34d399",
     accentClass: "border-emerald-500/60 bg-emerald-950/30 text-emerald-400",
@@ -168,11 +168,11 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
         tool: "sinkhorn_reallocate_weights",
         latencyMs: 27,
         status: "OK",
-        summary: "Optimal transport marginal convergence residual L1=2.66e-7",
+        summary: "Optimal transport marginal convergence residual L1=1.387779e-16 (< 1e-12 tol)",
       },
     ],
     logs: [
-      "[MATH-01] 5,367-equation router + 25 graduate books (BK-01..BK-25) active in memory.",
+      "[MATH-01] 12,304-equation router + 25 graduate books (BK-01..BK-25) active in memory.",
       "[MATH-02] Positive-Part James-Stein shrinkage capped at |delta log-odds| <= 0.35.",
       "[MATH-03] Barber weighted conformal prediction + FWL market residualization verified.",
     ],
@@ -323,7 +323,7 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     label: "OpenRouter Provider (/v1/chat/completions)",
     subtitle: "OpenAI-Compatible Universal Gateway",
     protocol: "REST / SSE Stream",
-    scoreLabel: "86.62/100 Scale",
+    scoreLabel: "86.12/100 Scale",
     costLabel: "$0.00 Free Lane",
     x: 90,
     y: 260,
@@ -345,8 +345,8 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     layer: "MODELS",
     label: "gse/skeleton-stealth",
     subtitle: "Flagship Situational & Biomechanics Brain",
-    protocol: "86.62/100 Composite Scale",
-    scoreLabel: "86.62/100",
+    protocol: "86.12/100 Composite Scale",
+    scoreLabel: "86.12/100",
     costLabel: "$0.00",
     x: 370,
     y: 55,
@@ -356,8 +356,8 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     layer: "MODELS",
     label: "gse/skeleton-council",
     subtitle: "4-Voice Adversarial Conjunction Arbiter",
-    protocol: "86.62/100 Composite Scale",
-    scoreLabel: "86.62/100",
+    protocol: "86.12/100 Composite Scale",
+    scoreLabel: "86.12/100",
     costLabel: "$0.00",
     x: 370,
     y: 135,
@@ -367,8 +367,8 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     layer: "MODELS",
     label: "gse/skeleton-forecast",
     subtitle: "10,000-World PBP & 360 Market Calibrator",
-    protocol: "86.62/100 Composite Scale",
-    scoreLabel: "86.62/100",
+    protocol: "86.12/100 Composite Scale",
+    scoreLabel: "86.12/100",
     costLabel: "$0.00",
     x: 370,
     y: 215,
@@ -377,9 +377,9 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     id: "node-model-math",
     layer: "MODELS",
     label: "gse/skeleton-math-pro",
-    subtitle: "5,367-Equation & Sinkhorn-Knopp Prover",
-    protocol: "86.62/100 Composite Scale",
-    scoreLabel: "86.62/100",
+    subtitle: "12,304-Equation & Sinkhorn-Knopp Prover",
+    protocol: "86.12/100 Composite Scale",
+    scoreLabel: "86.12/100",
     costLabel: "$0.00",
     x: 370,
     y: 295,
@@ -389,8 +389,8 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     layer: "MODELS",
     label: "gse/skeleton-flash",
     subtitle: "Low-Latency PBP Parser & Creative Studio",
-    protocol: "86.62/100 Composite Scale",
-    scoreLabel: "86.62/100",
+    protocol: "86.12/100 Composite Scale",
+    scoreLabel: "86.12/100",
     costLabel: "$0.00",
     x: 370,
     y: 375,
@@ -421,10 +421,10 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
   {
     id: "node-plugin-equations",
     layer: "PLUGINS",
-    label: "5,367-Equation MCP Router",
+    label: "12,304-Equation MCP Router",
     subtitle: "288-Bit Mask -> Spectral -> Jacobian",
     protocol: "MCP Plugin",
-    scoreLabel: "5,367 Active",
+    scoreLabel: "12,304 Active",
     costLabel: "$0.00",
     x: 650,
     y: 180,
@@ -433,9 +433,9 @@ export const OMNIROUTE_NODES: readonly OmniRouteNode[] = [
     id: "node-plugin-sinkhorn",
     layer: "PLUGINS",
     label: "Sinkhorn-Knopp Optimal Transport",
-    subtitle: "Marginal Coupler (L1=2.66e-7)",
+    subtitle: "Marginal Coupler (L1=1.387779e-16)",
     protocol: "Vectorized Math",
-    scoreLabel: "L1=2.66e-7",
+    scoreLabel: "L1=1.387779e-16",
     costLabel: "$0.00",
     x: 650,
     y: 248,
@@ -529,7 +529,7 @@ const INITIAL_BUS_MESSAGES: readonly HermesBusMessage[] = [
     channel: "brain/agent-bus#sinkhorn-ot",
     topic: "OPTIMAL_TRANSPORT_CONVERGED",
     payload:
-      "5,367 equations + 25 graduate books (BK-01..BK-25) coupled. Sinkhorn-Knopp L1=2.66e-7 verified.",
+      "12,304 equations + 25 graduate books (BK-01..BK-25) coupled. Sinkhorn-Knopp L1=1.387779e-16 verified.",
     receiptHash: "0x3e81..a940",
   },
   {
@@ -789,7 +789,7 @@ export function CockpitOffice3dBotHq({
                 6/6 Desks Active
               </span>
               <span className="rounded border border-plasma/40 bg-plasma/15 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-plasma">
-                86.62/100 Composite Scale
+                86.12/100 Composite Scale
               </span>
             </div>
             <p className="mt-0.5 font-mono text-[10px] text-ion-3">
@@ -1243,7 +1243,7 @@ export function CockpitOffice3dBotHq({
               </h3>
               <p className="mt-0.5 text-xs text-ion-2">
                 Live node-graph connecting Ingress Gateways, 5 Native GSE
-                Stealth-Skeleton Models (86.62/100 Composite Scale),
+                Stealth-Skeleton Models (86.12/100 Composite Scale),
                 Intelligence & RAG Plugins, and Zero-Waste Execution Lanes.
               </p>
             </div>
@@ -1252,7 +1252,7 @@ export function CockpitOffice3dBotHq({
                 Ingress: 4 Gateways
               </span>
               <span className="rounded border border-plasma/40 bg-plasma/15 px-2.5 py-1 text-plasma">
-                Models: 5 Native (86.62/100)
+                Models: 5 Native (86.12/100)
               </span>
               <span className="rounded border border-emerald-500/40 bg-emerald-950/30 px-2.5 py-1 text-emerald-400">
                 Plugins: 6 RAG/Math Nodes

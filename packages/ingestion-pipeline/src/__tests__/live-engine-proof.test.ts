@@ -339,7 +339,7 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
     const tierSideResult = classifyEpistemicTier(candidateSide);
     expect(tierSideResult.tier).toBe("APEX_CERTAINTY");
 
-    // Caleb Williams Over 224.5 Pass Yards
+    // Caleb Williams Over 224.5 Pass Yards // PULLED_NOV_1_EXCLUDED
     const caleb_actual_yards_sample = [210, 245, 260, 230, 280, 215, 250, 275, 240, 265];
     const qLower = 228.0;
     const qUpper = 278.0;
@@ -348,7 +348,7 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
 
     const candidateProp: EpistemicCandidate = {
       candidateId: "CAND_CALEB_PASS_YDS",
-      selection: "Caleb Williams Over 224.5 Passing Yards",
+      selection: "Caleb Williams Over 224.5 Passing Yards", // PULLED_NOV_1_EXCLUDED
       marketType: "PLAYER_PROP",
       marketLine: 224.5,
       side: "OVER",

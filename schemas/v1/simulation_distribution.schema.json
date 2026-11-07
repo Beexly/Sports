@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/simulation_distribution.schema.json",
+  "title": "GSE Synthetic Fixture Simulation Distribution Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "distribution_id",
+    "schema_version",
+    "packet_id",
+    "trace_id",
+    "game_id",
+    "mode",
+    "win_prob_home",
+    "win_prob_away",
+    "spread_quantiles",
+    "total_quantiles",
+    "correlation_matrix",
+    "layer_sensitivity_hash"
+  ],
+  "properties": {
+    "distribution_id": { "type": "string", "minLength": 5 },
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "packet_id": { "type": "string", "minLength": 5 },
+    "trace_id": { "type": "string", "minLength": 5 },
+    "game_id": { "type": "string", "minLength": 3 },
+    "mode": {
+      "type": "string",
+      "const": "SYNTHETIC_FIXTURE_ONLY"
+    },
+    "win_prob_home": { "type": "number", "minimum": 0, "maximum": 1 },
+    "win_prob_away": { "type": "number", "minimum": 0, "maximum": 1 },
+    "spread_quantiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p05", "p25", "p50", "p75", "p95"],
+      "properties": {
+        "p05": { "type": "number" },
+        "p25": { "type": "number" },
+        "p50": { "type": "number" },
+        "p75": { "type": "number" },
+        "p95": { "type": "number" }
+      }
+    },
+    "total_quantiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p05", "p25", "p50", "p75", "p95"],
+      "properties": {
+        "p05": { "type": "number" },
+        "p25": { "type": "number" },
+        "p50": { "type": "number" },
+        "p75": { "type": "number" },
+        "p95": { "type": "number" }
+      }
+    },
+    "correlation_matrix": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "layer_sensitivity_hash": {
+      "type": "string",
+      "minLength": 16
+    }
+  }
+}

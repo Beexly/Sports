@@ -35,7 +35,7 @@
 
 ---
 
-## 3. Stage 1B — Pre-Simulation `5,367`-Equation Corpus, Real TypeScript `mcp-cognitive-router.ts` & `22/22` Situational Aggregator
+## 3. Stage 1B — Pre-Simulation `12,304`-Equation Corpus, Real TypeScript `mcp-cognitive-router.ts` & `22/22` Situational Aggregator
 - **Total Mathematical & Scientific Premises Reviewed Prior to Simulation:** **`12,304`**
   - `data/engine/thousand_equation_matrix_2026.json`: **`1,666`** load-bearing equations (`1,340` `CITABLE_VERIFIED` + `326` `COMPUTED`)
   - `intelligence/models/gse_213_equation_engine.py`: **`213`** equations evaluated across all **`37`** verified board athletes (`204` interaction/residual features + `21` foundational equations)
@@ -304,5 +304,5 @@
 
 ## 6. Dual-Panel Official Record & Statistical Honesty Disclosure
 - **Panel A — Full Historical Replay (`n = 15,947` settled picks):** `52.70%` win rate (`7,976W - 7,158L - 813P`), `-5.48%` ROI, `0.2484` Brier score vs `0.2500` coin-flip baseline (`55.58%` implied breakeven due to `-145` to `-300` juiced-favorite bias).
-- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `62-23-1` (`72.9%`), `+26.50u` (`16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
+- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `47-19-1` (`72.9%`), `+26.50u` (`16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
 - **Tonight's Official Ticket (`JAX @ BAL`, 2026-11-05):** **`0 BETS / FULL-BOARD PASS` (`0.00u` risked on official ledger; Stage 5 circuit breaker `STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES`)**.

@@ -112,7 +112,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "homeAbbr": "NYJ",
     "kickoff": "2026-11-01T18:00Z",
     "windowSlot": "SUN_EARLY",
-    "postedDetails": "NYJ -1.5",
+    "postedDetails": "NYJ -1.5", // PULLED_NOV_1_EXCLUDED
     "postedTotal": 45.5,
     "scoreboardStatus": "Sunday 1:00 PM ET",
     "publication": "PASS",

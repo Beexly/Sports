@@ -43,7 +43,7 @@ describe("calibration-map & signed call sheet tickets", () => {
     const signed = signCallSheetTickets(brief.calls, {
       "SF-personnel": {
         marketLabel:
-          "Brandin Cooks OVER 24.5 Receiving Yards & George Kittle OVER 71.5 Receiving Yards",
+          "Brandin Cooks OVER 24.5 Receiving Yards & George Kittle OVER 71.5 Receiving Yards", // PULLED_NOV_1_EXCLUDED
         rawModelProb: 0.68,
         americanOdds: -115,
         opposingAmericanOdds: -105,

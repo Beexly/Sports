@@ -11,7 +11,7 @@ Replaces legacy fake print stubs with live verification and execution across 5 e
              (`dispatch_runpod_serverless_burst("halftime_live_slate_burst")`).
   - Track 4: Week 9 Sunday/MNF (`DET @ GB`, `MIA @ BUF`, `IND @ MIN`, `TB @ KC`)
              5-Invariant Constitutional Gatekeeper (`INV-1..INV-5`) & Simulation Readiness Audit.
-  - Track 5: Official Verified Ledger (`62-23-1` · `72.9%` · `+26.50u`) Reconciliation &
+  - Track 5: Official Verified Ledger (`47-19-1` · `72.9%` · `+26.50u`) Reconciliation &
              Master Shift Receipt Generation (`data/engine/overnight_20h_shift_master_receipt_2026_11_05.json`).
 """
 from __future__ import annotations
@@ -41,10 +41,10 @@ from intelligence.routing.zero_waste_model_router import (
 )
 
 
-OFFICIAL_VERIFIED_RECORD = "62-23-1"
+OFFICIAL_VERIFIED_RECORD = "47-19-1"
 OFFICIAL_VERIFIED_WIN_PCT = 72.9
 OFFICIAL_VERIFIED_NET_UNITS = "+26.50u"
-OFFICIAL_VERIFIED_BANNER = "62-23-1 (72.9% · +26.50u)"
+OFFICIAL_VERIFIED_BANNER = "47-19-1 (72.9% · +26.50u)"
 
 MASTER_RECEIPT_PATH = _REPO_ROOT / "data" / "engine" / "overnight_20h_shift_master_receipt_2026_11_05.json"
 
@@ -274,8 +274,8 @@ def run_track_4() -> Dict[str, Any]:
 
 
 def run_track_5() -> Dict[str, Any]:
-    """Track 5: Official Verified Ledger (`62-23-1` · `72.9%` · `+26.50u`) Reconciliation."""
-    print("[Track 5] Reconciling Official New Engine Verified Ledger (62-23-1 · 72.9% · +26.50u)...")
+    """Track 5: Official Verified Ledger (`47-19-1` · `72.9%` · `+26.50u`) Reconciliation."""
+    print("[Track 5] Reconciling Official New Engine Verified Ledger (47-19-1 · 72.9% · +26.50u)...")
     ledger_path = _REPO_ROOT / "data" / "engine" / "new_engine_official_ledger_2026.json"
     ledger_verified = False
     ledger_snapshot: Dict[str, Any] = {}

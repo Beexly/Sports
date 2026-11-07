@@ -27,7 +27,7 @@ used for absence claims (it is partial by construction).
 The round-2 audit placed the hardcoded 2.66e-7 at
 `apps/web/lib/jarvis/autonomous-bot-sdk-adapter.ts:197` (HEAD 7b8784e2c).
 At current main the adapter carries no 2.66e-7 — consistent with the
-walkthrough doc: the code literals ("86.62/100", 5367, 2.66e-7) were replaced
+walkthrough doc: the code literals ("86.12/100", 12304, 2.66e-7) were replaced
 with live computation. What remains is worse in one way: the value survives
 as *display copy* in the cockpit component and the public benchmarks page,
 detached from any computation at all.

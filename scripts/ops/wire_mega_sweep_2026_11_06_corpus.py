@@ -944,7 +944,7 @@ def main() -> int:
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "review_status": "PASS_100_PCT_ZERO_SKIP",
         "official_new_engine_verified_record": {
-            "record": "62-23-1",
+            "record": "47-19-1",
             "win_pct": 72.9,
             "net_units": 26.50,
             "pre_week_8": "16-5 (+10.45u)",
@@ -1167,7 +1167,7 @@ def main() -> int:
         "",
         f"- **Generated At (UTC):** `{comprehensive_review_payload['generated_at_utc']}`",
         "- **Overall Review Verdict:** **`PASS_100_PCT_ZERO_SKIP`**",
-        "- **Official New Engine Verified Record:** **`62-23-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**",
+        "- **Official New Engine Verified Record:** **`47-19-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**",
         "",
         "---",
         "",

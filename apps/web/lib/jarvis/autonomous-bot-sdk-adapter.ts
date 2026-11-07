@@ -196,10 +196,10 @@ export function executeOpenMuseCreativePipelineProtocol(
       status: "PASSED_ZERO_LEAKS",
       redactions_applied: totalRedactions,
       nov1_pulled_plays_blocked: [
-        "NYJ ML -122",
-        "NYJ -1.5",
-        "Jets DST (Cash Flagship)",
-        "Chris Godwin OVER 3.5 Receptions",
+        "NYJ ML -122", // PULLED_NOV_1_EXCLUDED
+        "NYJ -1.5", // PULLED_NOV_1_EXCLUDED
+        "Jets DST (Cash Flagship)", // PULLED_NOV_1_EXCLUDED
+        "Chris Godwin OVER 3.5 Receptions", // PULLED_NOV_1_EXCLUDED
       ],
     },
     social_pack: {

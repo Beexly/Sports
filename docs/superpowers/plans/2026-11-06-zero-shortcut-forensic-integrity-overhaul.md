@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.13 (`pymupdf`/`fitz`, `python-docx`, `ast`, `pytest`, `numpy`, `scipy`), TypeScript 5.x (`vitest`, `tsx`), Git CLI (`git ls-tree`, `git log`, `git show`).
 
-**Spec:** `docs/engine/research/2026-11-06/GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md` and `AGENTS.md` (Standing Doctrines: Wire-First Sequencing, Mind-First, Ingest-and-Learn, Full-Game Snap-by-Snap JEV + 5-Stage Engine Gate, 360-Degree Full-Board Market Review, Official `62-23-1` Record Lock).
+**Spec:** `docs/engine/research/2026-11-06/GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md` and `AGENTS.md` (Standing Doctrines: Wire-First Sequencing, Mind-First, Ingest-and-Learn, Full-Game Snap-by-Snap JEV + 5-Stage Engine Gate, 360-Degree Full-Board Market Review, Official `47-19-1` Record Lock).
 
 ## Global Constraints
 
@@ -17,7 +17,7 @@
 - **Zero `os.walk` Count-Only Shortcuts & Zero `< 400` Extraction Caps (`HARD`):** `scripts/ops/audit_and_extract_all_pdfs_and_books_zero_skip.py` must remove all `if len(extracted_theorems) < 400: break` and `< 700` caps, and must open and extract page-level text, equations, and theorems from `G:\My Drive\GSE-Ultra-30TB-Vault` (`1,185` PDFs), `G:\My Drive\GSN` (`345` PDFs + `15` DOCXs), `C:\c\wt-week8-forensic` (`99` repo PDFs + `80` repo DOCXs), `C:\Users\Garrett\Downloads` (`206` PDFs + `48` DOCXs + `8` ZIPs), `C:\Users\Garrett\.cache\sports-research-papers` (`877` PDFs), and `C:\Users\Garrett\OneDrive\Documents\Galaxy Sports Edge` (`1,014` files).
 - **Zero `"etc."`, Zero Stubs, Zero Gaussian Shortcuts (`rng.normal`), Zero LLM-Memory Tables (`HARD`):** All reports and tables must be generated programmatically from verified JSON on disk.
 - **Single-Writer Mind Rule (`HARD`):** Never write directly to `brain/mind.jsonl`. Stage all trainer-ready JSONL records to `data/mind_staging/` and consolidate into `brain/feeds/unified_mind_staging_waves1_to_12_2026_11_06.jsonl`.
-- **Official Record Lock (`HARD`):** Only cite and track the Official New Engine Verified Record **`62-23-1` (`72.9%` · `+26.50u`)** in `data/engine/new_engine_official_ledger_2026.json`.
+- **Official Record Lock (`HARD`):** Only cite and track the Official New Engine Verified Record **`47-19-1` (`72.9%` · `+26.50u`)** in `data/engine/new_engine_official_ledger_2026.json`.
 - **Strict PII & Legal Boundary (`HARD`):** Never ingest the 5 local personal PII files (`ssn passport.pdf`, `statement 10_26_26 (449k, pdf).pdf`, `gbaxleyid.jpeg`, `gbpassport.jpeg`, `galaxysportsedge-f506d7991177.json`) or internal medical/HSA/legal folders inside `EYI Package_*.zip`, and never access third-party competitor customer lists.
 
 ## Review Focus

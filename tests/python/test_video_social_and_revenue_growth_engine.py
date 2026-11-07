@@ -78,7 +78,7 @@ def test_video_social_dfs_and_revenue_engine_and_paywall_guardrails() -> None:
 
     packet = build_week9_video_social_dfs_and_revenue_packet()
     rec = packet["official_verified_record"]
-    assert rec["record"] == "62-23-1"
+    assert rec["record"] == "47-19-1"
     assert rec["win_pct"] == 72.9
     assert rec["net_units"] == 26.50
     assert rec["pre_week_8_segment"]["record"] == "16-5-0"

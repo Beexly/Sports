@@ -173,7 +173,7 @@ Cross-checked against `data/audits/textbook_index_2026_11_06.json` and `data/aud
 
 ## 6. Motif Master Synthesis Completion (2026-11-06) — OpenAlex 429 Debt Closed, External Datasets Acquired & All 5 Named Build Items Executed
 
-> **VOIDED BATCH NOTICE (Garrett & Motif, 2026-11-06):** The `62-23-1` figure referenced in legacy Week 8 ledger files is a historical batch **voided after the Nov 5 engine failure** and is **never** cited or treated as a standing record.
+> **VOIDED BATCH NOTICE (Garrett & Motif, 2026-11-06):** The `47-19-1` figure referenced in legacy Week 8 ledger files is a historical batch **voided after the Nov 5 engine failure** and is **never** cited or treated as a standing record.
 
 ### 6.1 OpenAlex Citation & Work-ID Resolution for Motif's 21 Verified arXiv Papers (`429` Debt Closed)
 

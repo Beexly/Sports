@@ -1,0 +1,12 @@
+{
+  "canonical_dataset_id": "DS_NWS_STADIUM_FORECAST",
+  "landing_status": "NAMED_EXTERNAL_GAP_WEATHER_API",
+  "record_count": 0,
+  "actual_landed_rows": 0,
+  "raw_file": "intelligence/data/warehouse/raw/ds_nws_stadium_forecast_raw.json",
+  "nws_grid_id": "BOU",
+  "nws_grid_x": 63,
+  "nws_grid_y": 62,
+  "forecast_hourly_url": "https://api.weather.gov/gridpoints/BOU/63,62/forecast/hourly",
+  "remediation_note": "NWS /points GeoJSON metadata captured; live hourly gridpoint fetch requires external network access (NAMED_EXTERNAL_GAP_WEATHER_API)."
+}

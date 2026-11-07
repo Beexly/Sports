@@ -1,8 +1,7 @@
 /**
- * Ask Jarvis — deterministic question answering from OwnerSummary state.
- *
- * Pure function. No model call. No fabrication. Every answer is derived
- * entirely from the OwnerSummary produced by buildOwnerSummary().
+ * Ask Jarvis — live async provider/ledger question answering (`askJarvisLive`) +
+ * deterministic `OwnerSummary` state synthesis (`askJarvis`) with explicit `fallback_fired`
+ * logging and `packet_id + trace_id + ledger_sha` citations.
  *
  * Rules:
  *   - Never invent performance stats not present in the summary.
@@ -909,3 +908,144 @@ export async function askJarvisWithMemory(
     return base;
   }
 }
+
+// ─── Wave 8 (W8-03): Live Provider/Ledger Pipeline Routing ───────────────────
+
+import {
+  runJarvisJynxAutonomousBrainAsync,
+  resolvePacketAndTraceProvenance,
+  type JarvisJynxAutonomousResponse,
+  type JarvisJynxBrainMode,
+} from "../jarvis/stealth-skeleton-brain";
+
+export interface AskJarvisLiveOptions {
+  readonly gameId?: string;
+  readonly packetId?: string;
+  readonly traceId?: string;
+  readonly ledgerSha?: string;
+  readonly mode?: JarvisJynxBrainMode;
+  readonly model?: string;
+  readonly providerBaseUrl?: string;
+  readonly upstreamUrl?: string;
+}
+
+export interface JarvisLiveAnswer extends JarvisAnswer {
+  readonly packet_id: string;
+  readonly trace_id: string;
+  readonly ledger_sha: string;
+  readonly citations: readonly string[];
+  readonly fallback_fired: boolean;
+  readonly fallback_reason: string | null;
+  readonly fallback_timestamp_utc: string | null;
+  readonly providerBrainResponse: JarvisJynxAutonomousResponse | null;
+}
+
+function resolveIntentFromQuestionOrIntent(question: JarvisIntent | string): JarvisIntent {
+  if ((JARVIS_INTENT_ORDER as readonly string[]).includes(question)) {
+    return question as JarvisIntent;
+  }
+  const normalized = question.trim().toLowerCase();
+  for (const intent of JARVIS_INTENT_ORDER) {
+    if (JARVIS_QUESTIONS[intent].toLowerCase() === normalized) {
+      return intent;
+    }
+  }
+  if (normalized.includes("pick")) return "picks";
+  if (normalized.includes("launch")) return "launch-ready";
+  if (normalized.includes("performance") || normalized.includes("win rate")) return "performance";
+  if (normalized.includes("block")) return "blocked";
+  if (normalized.includes("decision")) return "decisions";
+  if (normalized.includes("worker") || normalized.includes("cron")) return "workers";
+  if (normalized.includes("memory")) return "what-is-memory-status";
+  if (normalized.includes("wired")) return "what-is-wired";
+  return "what-is-jarvis";
+}
+
+/**
+ * Wave 8 (`W8-03`) async live question router that combines `askJarvisWithMemory`
+ * with the async Stealth-Skeleton provider/ledger pipeline (`stealth-skeleton-brain.ts`).
+ * Explicitly logs `fallback_fired: true`, `fallback_reason`, and `fallback_timestamp_utc`
+ * whenever fallback occurs, and attaches `packet_id`, `trace_id`, and `ledger_sha` citations.
+ */
+export async function askJarvisLive(
+  question: JarvisIntent | string,
+  context: OwnerSummary,
+  options?: AskJarvisLiveOptions,
+): Promise<JarvisLiveAnswer> {
+  const intent = resolveIntentFromQuestionOrIntent(question);
+  const baseAnswer = await askJarvisWithMemory(intent, context);
+  const promptText =
+    typeof question === "string" && !(JARVIS_INTENT_ORDER as readonly string[]).includes(question)
+      ? question
+      : JARVIS_QUESTIONS[intent];
+
+  try {
+    const brainRes = await runJarvisJynxAutonomousBrainAsync({
+      prompt: promptText,
+      mode: options?.mode,
+      model: options?.model,
+      gameId: options?.gameId,
+      packetId: options?.packetId,
+      traceId: options?.traceId,
+      ledgerSha: options?.ledgerSha,
+      providerBaseUrl: options?.providerBaseUrl,
+      upstreamUrl: options?.upstreamUrl,
+    });
+
+    const citations = [brainRes.packet_id, brainRes.trace_id, brainRes.ledger_sha] as const;
+    const citationLine = `Citations: packet_id=${brainRes.packet_id} · trace_id=${brainRes.trace_id} · ledger_sha=${brainRes.ledger_sha}`;
+    const fallbackLines = brainRes.fallback_fired
+      ? [
+          `[FALLBACK] fallback_fired=true · reason=${brainRes.fallback_reason ?? "provider_fallback"} · timestamp=${brainRes.fallback_timestamp_utc ?? brainRes.generatedAtIso}`,
+        ]
+      : [];
+
+    return {
+      ...baseAnswer,
+      answer: `${baseAnswer.answer} [${citationLine}]`,
+      supportingState: [
+        ...baseAnswer.supportingState,
+        citationLine,
+        ...fallbackLines,
+      ],
+      packet_id: brainRes.packet_id,
+      trace_id: brainRes.trace_id,
+      ledger_sha: brainRes.ledger_sha,
+      citations,
+      fallback_fired: brainRes.fallback_fired,
+      fallback_reason: brainRes.fallback_reason,
+      fallback_timestamp_utc: brainRes.fallback_timestamp_utc,
+      providerBrainResponse: brainRes,
+    };
+  } catch (err) {
+    const prov = resolvePacketAndTraceProvenance({
+      gameId: options?.gameId,
+      packetId: options?.packetId,
+      traceId: options?.traceId,
+      ledgerSha: options?.ledgerSha,
+    });
+    const ts = new Date().toISOString();
+    const reason = `ask_jarvis_live_pipeline_exception:${err instanceof Error ? err.message : "unknown_error"}`;
+    const citations = [prov.packet_id, prov.trace_id, prov.ledger_sha] as const;
+    const citationLine = `Citations: packet_id=${prov.packet_id} · trace_id=${prov.trace_id} · ledger_sha=${prov.ledger_sha}`;
+
+    return {
+      ...baseAnswer,
+      answer: `${baseAnswer.answer} [${citationLine}]`,
+      supportingState: [
+        ...baseAnswer.supportingState,
+        citationLine,
+        `[FALLBACK] fallback_fired=true · reason=${reason} · timestamp=${ts}`,
+      ],
+      packet_id: prov.packet_id,
+      trace_id: prov.trace_id,
+      ledger_sha: prov.ledger_sha,
+      citations,
+      fallback_fired: true,
+      fallback_reason: reason,
+      fallback_timestamp_utc: ts,
+      providerBrainResponse: null,
+    };
+  }
+}
+

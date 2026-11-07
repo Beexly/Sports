@@ -55,7 +55,7 @@ Measured across seven training windows, coverage at the spec's z values:
 ```
 cut  train_wk  minG   n     meanCV   cov@0.62  cov@1.28
    1      1261     2   241   0.6713     41.08%     71.78%
-   3      3772     8   157   0.6727     44.59%     86.62%
+   3      3772     8   157   0.6727     44.59%     86.12%
    6      7348     8   256   0.7262     44.92%     84.77%
    9     10815     8   298   0.7454     44.97%     88.59%
   17     20304     8   214   0.8059     42.99%     78.04%

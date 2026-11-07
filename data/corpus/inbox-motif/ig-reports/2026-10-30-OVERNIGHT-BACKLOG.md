@@ -393,7 +393,7 @@ Method: all 88 posts fetched in full via instagram-cli (JSON in `raw/2026-10-30-
 - **Verdict: CONTEXT-ONLY** + gap (video unread).
 
 ### B-54 (PM1 #56) — @billieeilish — reel — artist post — CONTEXT-ONLY
-- URL: https://www.instagram.com/reel/Dezci9bh_4T/ · Media 18097244498536712 · 10,269,428 likes · posted 2026-10-22
+- URL: https://www.instagram.com/reel/Dezci9bh_4T/ · Media 180972444981230412 · 10,269,428 likes · posted 2026-10-22
 - WHAT: "😚" — a Billie Eilish reel (10.2M likes, the feed's biggest slot this capture). Pure celebrity/entertainment; no payload for any lane.
 - **Verdict: CONTEXT-ONLY.**
 

@@ -1,16 +1,39 @@
 {
   "schema_version": "1.0.0",
-  "status": "IN_PROGRESS",
-  "current_wave": "WAVE_2_BRANCHES_AND_COMMITS",
-  "working_branch": "agy/total-wiring-2026-11-07",
+  "status": "ARMED",
+  "current_wave": "NONE",
+  "working_branch": "argon4/reverse-overnight-total-wiring-2026-11-07",
   "started_at_utc": "2026-11-07T05:15:00Z",
-  "updated_at_utc": "2026-11-07T05:39:02.958805+00:00",
+  "updated_at_utc": "2026-11-07T12:30:06.188050+00:00",
   "motif_inbox_head_sha": "9232a435b",
   "motif_inbox_files_count": 127,
+  "public_gates": {
+    "LIVE_BOARD": false,
+    "PUBLISH_LEDGER": false,
+    "PUBLIC_PICKS": false,
+    "PERFORMANCE_STATS": false
+  },
+  "overnight_execution_guard": {
+    "live_simulations_executed_tonight": 0,
+    "live_social_posts_published_tonight": 0,
+    "live_picks_published_tonight": 0,
+    "morning_runbook_armed": true,
+    "awaiting_garrett_ok": true
+  },
+  "waves": {
+    "WAVE_0": "DONE",
+    "WAVE_1": "DONE",
+    "WAVE_2": "DONE",
+    "WAVE_3": "DONE",
+    "WAVE_4": "DONE",
+    "WAVE_5": "DONE",
+    "WAVE_6": "DONE",
+    "WAVE_7": "DONE",
+    "WAVE_8": "DONE",
+    "WAVE_9": "DONE"
+  },
   "waves_completed": [
-    "WAVE_0_BOOTSTRAP"
-  ],
-  "waves_remaining": [
+    "WAVE_0_BOOTSTRAP",
     "WAVE_1_CENSUS",
     "WAVE_2_BRANCHES_AND_62_23_1_PURGE",
     "WAVE_3_RESEARCH_INGESTION",
@@ -21,14 +44,27 @@
     "WAVE_8_WORKFLOW_ASSEMBLY_AND_FIXTURE_TESTING",
     "WAVE_9_FINAL_AUDIT_AND_ARMING"
   ],
+  "waves_remaining": [],
   "queue_summary": {
     "total_items": 28,
-    "done_items": 0,
-    "in_progress_items": 3,
-    "queued_items": 24
+    "done_items": 28,
+    "in_progress_items": 0,
+    "queued_items": 0
   },
-  "lessons_pointer": "docs/wiring/NIGHT-LESSONS.md",
+  "verification_summary": {
+    "charge_regression_suite": "10/10 PASS",
+    "seeded_spot_checks": "200/200 PASS (Waves 1-8, 25 per wave)",
+    "wave_consumption_proofs": "6/6 PASS",
+    "wave4_to_6_shard_tests": "10/10 PASS",
+    "wave7_to_8_wiring_tests": "9/9 PASS",
+    "santa_method_dual_adversarial_review": "PASS (Reviewer A + Reviewer B)"
+  },
+  "lessons_pointer": "docs/wiring/LESSONS.md",
+  "night_lessons_pointer": "docs/wiring/NIGHT-LESSONS.md",
   "correction_log_pointer": "docs/wiring/CORRECTION-LOG.md",
   "charge_regression_pointer": "docs/wiring/CHARGE-REGRESSION.md",
-  "dual_count_pointer": "docs/wiring/DUAL-COUNT-RECONCILIATION.json"
+  "dual_count_pointer": "docs/wiring/DUAL-COUNT-RECONCILIATION.json",
+  "coverage_ledger_pointer": "docs/wiring/COVERAGE-LEDGER.md",
+  "gap_audit_pointer": "docs/wiring/GAP-AUDIT.md",
+  "armed_workflows_pointer": "docs/wiring/ARMED-WORKFLOWS.md"
 }

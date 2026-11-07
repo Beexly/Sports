@@ -188,7 +188,7 @@ def build_programmatic_walkthrough() -> Dict[str, Any]:
     lines.append("")
 
     # Section 5: Workstream 5 & 6 — Official Ledger & All 19 Week 9 Connected Workflow Dossiers
-    lines.append("## 5. Workstreams 5 & 6 — Official `62-23-1` Record Lock & All 19 Week 9 Connected Workflow Dossiers")
+    lines.append("## 5. Workstreams 5 & 6 — Official `47-19-1` Record Lock & All 19 Week 9 Connected Workflow Dossiers")
     lines.append("")
     lines.append(
         f"- **Official New Engine Verified Record:** **`{vr['record']}` (`{vr['win_pct']}%` · `{vr['net_units']}`)** in [new_engine_official_ledger_2026.json](file:///C:/c/wt-week8-forensic/data/engine/new_engine_official_ledger_2026.json) and [catalog.ts](file:///C:/c/wt-week8-forensic/apps/web/lib/packages/catalog.ts)"

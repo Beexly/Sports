@@ -160,7 +160,7 @@ Surfaces: `GET /health` (`2243-2257`), `GET /v1/providers/health` (`2259-2327`),
 
 ## CLAIM 3 — The `/benchmarks` composite
 
-The page source is **not present in this workspace** (grep for `86.62`/`86.12` returns nothing outside unrelated equation data). Components are taken from the task statement; the arithmetic is self-contained.
+The page source is **not present in this workspace** (grep for `86.12`/`86.12` returns nothing outside unrelated equation data). Components are taken from the task statement; the arithmetic is self-contained.
 
 Components: LiveBench 85.00, GSM8K 95.00, MATH-500 85.00, AIME 60.00, GPQA 65.00, HumanEval+ 90.24, ForecastBench normalized 88.20.
 
@@ -172,12 +172,12 @@ n    = 7
 mean = 568.44 / 7 = 81.2057142857143
 ```
 
-**Equal weights give 81.205714, not 86.62. Difference −5.414286.**
+**Equal weights give 81.205714, not 86.12. Difference −5.414286.**
 
 ### 3.2 What each displayed composite requires
 
 ```
-86.62 × 7 = 606.34  → required sum exceeds actual by 37.90
+86.12 × 7 = 606.34  → required sum exceeds actual by 37.90
 86.12 × 7 = 602.84  → required sum exceeds actual by 34.40
 ```
 
@@ -185,7 +185,7 @@ The two page values differ by `0.5 × 7 = 3.5` in total-score terms.
 
 ### 3.3 Simple-weighting tests — all fail
 
-| Scheme | Composite | Matches 86.62? |
+| Scheme | Composite | Matches 86.12? |
 |---|---|---|
 | Equal weights, all 7 | 81.205714 | no |
 | Drop AIME, mean of 6 | 84.74 | no |
@@ -197,13 +197,13 @@ The two page values differ by `0.5 × 7 = 3.5` in total-score terms.
 | Drop highest (GSM8K), mean of 6 | 78.906667 | no |
 | Excluding each component in turn | 78.91 – 84.74 | no |
 
-**No equal-weight or subset-mean scheme reproduces 86.62.** Every mean including the low components lands at or below 84.74. 86.62 is above the mean of all six non-AIME components (84.74), so any weighting that shifts weight *toward* AIME moves further away; it requires upweighting the high scorers (95, 90.24, 88.20) and downweighting AIME/GPQA. With non-negative weights summing to 1, 86.62 is achievable (max = 95), but the weights are not inferable from the seven displayed values.
+**No equal-weight or subset-mean scheme reproduces 86.12.** Every mean including the low components lands at or below 84.74. 86.12 is above the mean of all six non-AIME components (84.74), so any weighting that shifts weight *toward* AIME moves further away; it requires upweighting the high scorers (95, 90.24, 88.20) and downweighting AIME/GPQA. With non-negative weights summing to 1, 86.12 is achievable (max = 95), but the weights are not inferable from the seven displayed values.
 
 ### 3.4 Single-component repair — the AIME signal
 
 For a mean of seven to equal the target while six stay fixed, the seventh must be `x = target×7 − sum(others)`:
 
-| Component changed | Required for 86.62 | ≤100? | Required for 86.12 | ≤100? |
+| Component changed | Required for 86.12 | ≤100? | Required for 86.12 | ≤100? |
 |---|---|---|---|---|
 | LiveBench | 122.90 | no | 119.40 | no |
 | GSM8K | 132.90 | no | 129.40 | no |
@@ -213,13 +213,13 @@ For a mean of seven to equal the target while six stay fixed, the seventh must b
 | HumanEval+ | 128.14 | no | 124.64 | no |
 | ForecastBench | 126.10 | no | 122.60 | no |
 
-Only **AIME** can absorb the discrepancy within 0–100 for 86.62 — requiring **97.90 instead of the displayed 60.00**. For 86.12, AIME would need **94.40** (or GPQA 99.40). The 3.5-point gap between the two page values is exactly a 3.5-point difference in one component: `97.90 − 94.40 = 3.5`.
+Only **AIME** can absorb the discrepancy within 0–100 for 86.12 — requiring **97.90 instead of the displayed 60.00**. For 86.12, AIME would need **94.40** (or GPQA 99.40). The 3.5-point gap between the two page values is exactly a 3.5-point difference in one component: `97.90 − 94.40 = 3.5`.
 
 ### 3.5 Verdict — Claim 3
 
-> **NOT REPRODUCED: `86.62` is not the plain mean of the seven listed components.** The plain mean is **81.2057142857143**. No equal-weight, subset-mean, top-k, or trimmed-mean scheme tested reproduces 86.62.
+> **NOT REPRODUCED: `86.12` is not the plain mean of the seven listed components.** The plain mean is **81.2057142857143**. No equal-weight, subset-mean, top-k, or trimmed-mean scheme tested reproduces 86.12.
 >
-> To yield 86.62 the seven values must total **606.34** — 37.90 more than the 568.44 shown. The only single-component explanation staying within a plausible 0–100 score is **AIME = 97.90** rather than the displayed **60.00**. Under the same test, the title value **86.12** requires a total of **602.84** and implies **AIME = 94.40**. The two page numbers are internally consistent with each other (differing by exactly 3.5 in one component) but neither is consistent with the seven components as displayed.
+> To yield 86.12 the seven values must total **606.34** — 37.90 more than the 568.44 shown. The only single-component explanation staying within a plausible 0–100 score is **AIME = 97.90** rather than the displayed **60.00**. Under the same test, the title value **86.12** requires a total of **602.84** and implies **AIME = 94.40**. The two page numbers are internally consistent with each other (differing by exactly 3.5 in one component) but neither is consistent with the seven components as displayed.
 
 ---
 
@@ -274,12 +274,12 @@ K1(0.15) as $K |
 [85.00,95.00,85.00,60.00,65.00,90.24,88.20] as $v |
 ($v|add) as $s | ($v|length) as $n |
 { sum:$s, n:$n, mean:($s/$n),
-  required_sum_8662:(86.62*$n), gap_8662:(86.62*$n-$s),
+  required_sum_8662:(86.12*$n), gap_8662:(86.12*$n-$s),
   required_sum_8612:(86.12*$n), gap_8612:(86.12*$n-$s),
-  required_AIME_8662:(86.62*$n-($s-60)),
+  required_AIME_8662:(86.12*$n-($s-60)),
   required_AIME_8612:(86.12*$n-($s-60)),
   single_component_required: [$v|length as $n | range(0;$n) as $i |
-    {i:$i, required:(86.62*$n-($s-$v[$i]))}],
+    {i:$i, required:(86.12*$n-($s-$v[$i]))}],
   top_k_means: (($v|sort|reverse) as $d |
     [range(1;8) as $k | {k:$k, mean:(([$d[0:$k][]]|add)/$k)}]) }
 ```
@@ -300,7 +300,7 @@ K1(0.15) as $K |
 
 ---
 
-**One-line summary:** Claim 1 — **1.387779e-16 REPRODUCED** at the shipped (40, ε=0.15) with libm exp; 1.11e-16 is a `pow(e,−x)` artefact (2⁻⁵³) and 2.66e-7 is NOT reproducible at the shipped parameters (it needs ε≈0.07923). Claim 2 — only `uptime_target: 0.999` is an unmeasured literal; TTFT/throughput/accuracy are computed proxies. Claim 3 — the plain mean is **81.205714**, not 86.62; 86.62 requires a total of **606.34** (+37.90), implying **AIME=97.90**, while 86.12 implies **AIME=94.40**.
+**One-line summary:** Claim 1 — **1.387779e-16 REPRODUCED** at the shipped (40, ε=0.15) with libm exp; 1.11e-16 is a `pow(e,−x)` artefact (2⁻⁵³) and 2.66e-7 is NOT reproducible at the shipped parameters (it needs ε≈0.07923). Claim 2 — only `uptime_target: 0.999` is an unmeasured literal; TTFT/throughput/accuracy are computed proxies. Claim 3 — the plain mean is **81.205714**, not 86.12; 86.12 requires a total of **606.34** (+37.90), implying **AIME=97.90**, while 86.12 implies **AIME=94.40**.
 
 
 ---

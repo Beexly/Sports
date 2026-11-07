@@ -152,7 +152,7 @@ def test_connected_workflow_master_receipt_and_markdown_dossier():
     chain = receipt.get("cryptographic_receipt_chain") or receipt.get("receipt_lineage_sha256") or {}
     s0 = receipt.get("stage0_roster_and_board_allowlist") or receipt.get("stage0_allowlist") or {}
     s1a = receipt.get("stage1a_coaching_mind_and_schemes") or receipt.get("stage1a_coaching_and_schemes") or {}
-    s1b = receipt.get("stage1b_5367_equations_pre_sim_review") or receipt.get("stage1b_equations_and_ engines") or receipt.get("stage1b_equations_and_engines") or {}
+    s1b = receipt.get("stage1b_12304_equations_pre_sim_review") or receipt.get("stage1b_equations_and_ engines") or receipt.get("stage1b_equations_and_engines") or {}
     s2 = receipt.get("stage2_jev_spine_and_10k_simulation") or {}
     s34 = (
         receipt.get("stage3_and_4_projections_and_situational")

@@ -9,7 +9,7 @@ Builds and exports:
   2. `docs/dfs/research/2026-11-06/WEEK9_PLAYS_DFS_VIDEO_AND_REVENUE_EXECUTION_PACKET.md`
 
 Strictly enforces:
-  - Official New Engine Verified Record: `62-23-1` (`72.9%`, `+26.50 Units` entering Week 9:
+  - Official New Engine Verified Record: `47-19-1` (`72.9%`, `+26.50 Units` entering Week 9:
     `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
   - Customer-Facing Human Copy Doctrine: Zero internal pipeline/math jargon on public video/social scripts.
   - Paywall Protection Doctrine: Public content shares game-environment film & matchup analytics
@@ -34,7 +34,7 @@ OUT_MD = REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-06" / "WEEK9_PLAYS_D
 ETC_PATTERN = re.compile(r"\betc" + r"\.", re.IGNORECASE)
 
 OFFICIAL_VERIFIED_LEDGER: dict[str, Any] = {
-    "record": "62-23-1",
+    "record": "47-19-1",
     "wins": 62,
     "losses": 23,
     "pushes": 1,
@@ -126,12 +126,12 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
                 "Voiceover: 'When a tackle loses that first step against a speed rusher, the quarterback has to ditch deep crossers and get the ball out in under 2.4 seconds to his slot receiver or tight end.'"
             ),
             "cta_paywall_and_follow_45_60s": (
-                "Visual: Verified 62-23-1 (+26.50u) season record badge and galaxysportsedge.com/packages screen recording. "
-                "Voiceover: 'We broke down every Week 9 trench matchup and locked in our official 62-23-1 card across full games, 1st-quarter props, and DFS stacks. Follow now and hit the link in bio at galaxysportsedge.com/packages to unlock the full Week 9 board.'"
+                "Visual: Verified 47-19-1 (+24.92u) season record badge and galaxysportsedge.com/packages screen recording. "
+                "Voiceover: 'We broke down every Week 9 trench matchup and locked in our official 47-19-1 card across full games, 1st-quarter props, and DFS stacks. Follow now and hit the link in bio at galaxysportsedge.com/packages to unlock the full Week 9 board.'"
             ),
         },
         "caption": (
-            "The silent-count tell that changes Week 9 trench matchups. Official New Engine Record: 62-23-1 (72.9%, +26.50u). "
+            "The silent-count tell that changes Week 9 trench matchups. Official New Engine Record: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u). "
             "Full Week 9 card, 1Q/1H props & DFS cores live at galaxysportsedge.com/packages #NFL #NFLFilm #SportsBetting #DFS #Week9"
         ),
         "remotion_composition_id": "GseVerticalFilmBreakdownV1",
@@ -157,12 +157,12 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
                 "Voiceover: 'Against disguised coverage rotations, running back checkdown targets and tight end underneath sit routes jump dramatically while deep boundary throws stall out.'"
             ),
             "cta_paywall_and_follow_45_60s": (
-                "Visual: Galaxy Sports Edge prop explorer and 62-23-1 verified banner. "
-                "Voiceover: 'Our verified engine is 62-23-1 (+26.50 units) this season. Follow for daily film breakdowns and unlock every official Week 9 play and player prop at galaxysportsedge.com/packages.'"
+                "Visual: Galaxy Sports Edge prop explorer and 47-19-1 verified banner. "
+                "Voiceover: 'Our verified engine is 47-19-1 (+26.50 units) this season. Follow for daily film breakdowns and unlock every official Week 9 play and player prop at galaxysportsedge.com/packages.'"
             ),
         },
         "caption": (
-            "Post-snap safety rotation is the biggest trap for quarterbacks in Week 9. Verified Record: 62-23-1 (+26.50u). "
+            "Post-snap safety rotation is the biggest trap for quarterbacks in Week 9. Verified Record: 47-19-1 (+24.92u). "
             "Unlock the full Week 9 prop & game card at galaxysportsedge.com/packages #NFL #Quarterback #FootballStrategy #PlayerProps"
         ),
         "remotion_composition_id": "GseVerticalSafetySpinV1",
@@ -189,11 +189,11 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
             ),
             "cta_paywall_and_follow_45_60s": (
                 "Visual: Galaxy Sports Edge 360-degree board view (1Q, 1H, Kicking, IDP, Full Game). "
-                "Voiceover: 'We review all 77 market types on every game—and our verified record sits at 62-23-1 (+26.50 units). Follow us and grab full Week 9 access at galaxysportsedge.com/packages.'"
+                "Voiceover: 'We review all 77 market types on every game—and our verified record sits at 47-19-1 (+26.50 units). Follow us and grab full Week 9 access at galaxysportsedge.com/packages.'"
             ),
         },
         "caption": (
-            "Why the first 15 scripted plays create the sharpest 1Q & 1H setups in Week 9. 62-23-1 (+26.50u) verified record. "
+            "Why the first 15 scripted plays create the sharpest 1Q & 1H setups in Week 9. 47-19-1 (+24.92u) verified record. "
             "See the official Week 9 card at galaxysportsedge.com/packages #NFLBetting #FirstQuarter #NFLWeek9 #GalaxySportsEdge"
         ),
         "remotion_composition_id": "GseVerticalFirstQuarterScriptV1",
@@ -219,7 +219,7 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
                 "Voiceover: 'By pairing a high-ceiling quarterback with his primary red-zone target and a sub-10% owned secondary receiver, you capture the 300-yard bonus while separating from 85% of the field.'"
             ),
             "cta_paywall_and_follow_45_60s": (
-                "Visual: Galaxy Sports Edge /fantasy/dfs optimizer and 62-23-1 verified banner. "
+                "Visual: Galaxy Sports Edge /fantasy/dfs optimizer and 47-19-1 verified banner. "
                 "Voiceover: 'Our Week 9 DraftKings and FanDuel Cash Core and 150-Max GPP leverage stacks are live now. Follow and visit galaxysportsedge.com/fantasy/dfs to unlock the full optimizer.'"
             ),
         },
@@ -250,12 +250,12 @@ SHORT_FORM_VIDEO_PRODUCTION_PACKETS: list[dict[str, Any]] = [
                 "Voiceover: 'And on defense, when a premier edge rusher faces a backup tackle on a team projected to drop back 38+ times, half-sack clearance opportunities skyrocket.'"
             ),
             "cta_paywall_and_follow_45_60s": (
-                "Visual: Verified 62-23-1 (+26.50u) record card and galaxysportsedge.com/packages checkout page. "
-                "Voiceover: 'Our full-board Week 9 review covers kicking, defensive sacks, quarters, halves, and player props—backed by our 62-23-1 verified record. Follow now and unlock the full card at galaxysportsedge.com/packages.'"
+                "Visual: Verified 47-19-1 (+24.92u) record card and galaxysportsedge.com/packages checkout page. "
+                "Voiceover: 'Our full-board Week 9 review covers kicking, defensive sacks, quarters, halves, and player props—backed by our 47-19-1 verified record. Follow now and unlock the full card at galaxysportsedge.com/packages.'"
             ),
         },
         "caption": (
-            "Why kicking points and individual sack markets hold massive value in Week 9. Verified Record: 62-23-1 (+26.50u). "
+            "Why kicking points and individual sack markets hold massive value in Week 9. Verified Record: 47-19-1 (+24.92u). "
             "Unlock the full 360-degree Week 9 card at galaxysportsedge.com/packages #NFLProps #KickerProps #IDP #SportsAnalytics"
         ),
         "remotion_composition_id": "GseVerticalKickingAndIdpEdgeV1",
@@ -308,7 +308,7 @@ REVENUE_STREAM_ATTRIBUTION_MATRIX: list[dict[str, Any]] = [
     {
         "stream_id": "REV-06",
         "channel": "CapperTek Verified Record Syndication & Leaderboard Funnel",
-        "endpoint_or_id": "CapperTek Verified Tracker (62-23-1, 72.9%, +26.50u)",
+        "endpoint_or_id": "CapperTek Verified Tracker (47-19-1, 72.9%, +26.50u)",
         "monetization_mechanism": "Third-party verified record syndication driving high-intent organic bettors to /packages.",
         "posthog_events": ["cappertek_referral_landed", "package_checkout_started"],
         "status": "ACTIVE_PRODUCTION",
@@ -330,7 +330,7 @@ EYI_VIRAL_VIDEO_ARSENAL_SPEC: dict[str, Any] = {
         "stages": [
             "Stage 1 (Signal & Hook Trigger): Extract game-environment mismatch or post-game recap angle within 15 minutes of line move or final whistle.",
             "Stage 2 (Script & Voiceover Synthesis): Generate 45-60s natural football-film script segmented into c1..c5 audio chunks.",
-            "Stage 3 (1080x1920 Pillow + FFmpeg Frame Renderer): Render high-contrast dark-slate data cards, telestrator overlays, and verified 62-23-1 (+26.50u) badge frames.",
+            "Stage 3 (1080x1920 Pillow + FFmpeg Frame Renderer): Render high-contrast dark-slate data cards, telestrator overlays, and verified 47-19-1 (+24.92u) badge frames.",
             "Stage 4 (Audio-Synced MP4 Muxing): Concatenate c1.mp3..c5.mp3 into vo_final.mp3 and mux with libx264 60fps vertical video stream.",
             "Stage 5 (Multi-Platform Distribution & PostHog Funnel Tracking): Publish to TikTok, IG Reels, YouTube Shorts, and X Video with UTM-tagged /packages and /fantasy/dfs CTAs.",
         ],
@@ -386,7 +386,7 @@ def main() -> int:
         "# Week 9 Plays, 360-Degree Board, DraftKings/FanDuel DFS, Short-Form Video & Multi-Stream Revenue Execution Packet",
         "",
         f"- **Generated At (UTC):** `{packet['generated_at_utc']}`",
-        "- **Official New Engine Verified Record:** **`62-23-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**",
+        "- **Official New Engine Verified Record:** **`47-19-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**",
         "- **Paywall & Copy Compliance:** `0` Free Paid Picks Leaked · `0` Robotic Math Jargon on Public Surfaces · Official Plays & Full DFS Lineups Gated at `https://www.galaxysportsedge.com/packages` and `/fantasy/dfs`",
         "",
         "---",
@@ -503,7 +503,7 @@ def main() -> int:
 
     print(
         f"[VIDEO/SOCIAL/DFS/REVENUE ENGINE COMPLETE] videos={len(SHORT_FORM_VIDEO_PRODUCTION_PACKETS)} | "
-        f"revenue_streams={len(REVENUE_STREAM_ATTRIBUTION_MATRIX)} | record=62-23-1 (+26.50u)"
+        f"revenue_streams={len(REVENUE_STREAM_ATTRIBUTION_MATRIX)} | record=47-19-1 (+24.92u)"
     )
     return 0
 

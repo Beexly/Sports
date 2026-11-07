@@ -137,7 +137,7 @@ def render_x_card(master_json_path: str | Path | Dict[str, Any] = DEFAULT_MASTER
     # Official Record Badge
     draw_rounded_box(draw, (w - 360, 28, w - 36, 80), (24, 32, 24), ACCENT_GREEN, width=2, radius=8)
     draw.text((w - 344, 36), "VERIFIED SEASON RECORD", fill=ACCENT_GREEN, font=f_mono)
-    draw.text((w - 344, 56), "62-23-1 · +26.50 UNITS", fill=TEXT_PRIMARY, font=f_mono)
+    draw.text((w - 344, 56), "47-19-1 · +26.50 UNITS", fill=TEXT_PRIMARY, font=f_mono)
 
     # Left Column: Why We Pass the Steamed Spread
     draw_rounded_box(draw, (20, 108, 520, 615), BG_PANEL, BORDER_SUBTLE, width=1, radius=10)
@@ -228,7 +228,7 @@ def render_ig_slides() -> List[Path]:
             [
                 ("THE VALUE WAS AT -3.5 EARLIER THIS WEEK", "Chasing a steamed -7.5 road favorite on a short week just to have action on a side is how bankrolls bleed."),
                 ("WE DON'T FORCE DEAD SPREADS", "When the main line moves past its fair number, we pass the side and attack the player props and game script."),
-                ("VERIFIED SEASON RECORD: 62-23-1 (+26.50u)", "Every play is tracked, graded, and backed by real film and matchup discipline."),
+                ("VERIFIED SEASON RECORD: 47-19-1 (+24.92u)", "Every play is tracked, graded, and backed by real film and matchup discipline."),
             ],
         ),
         (
@@ -330,7 +330,7 @@ def render_scheme_gif() -> Path:
 
         draw_rounded_box(draw, (20, 16, w - 20, 84), BG_PANEL, BORDER_SUBTLE, width=1, radius=10)
         draw.text((40, 28), "TNF FILM & SCHEME BREAKDOWN: JACKSONVILLE AT BALTIMORE", fill=TEXT_PRIMARY, font=f_title)
-        draw.text((40, 56), "VERIFIED RECORD: 62-23-1 (+26.50u) · FULL TNF PACK AT GALAXYSPORTSEDGE.COM", fill=ACCENT_CYAN, font=f_sub)
+        draw.text((40, 56), "VERIFIED RECORD: 47-19-1 (+24.92u) · FULL TNF PACK AT GALAXYSPORTSEDGE.COM", fill=ACCENT_CYAN, font=f_sub)
 
         # Left Chalkboard: BAL Two-High Safety Split
         draw_rounded_box(draw, (20, 100, 585, 595), (12, 26, 20), BORDER_SUBTLE, width=1, radius=10)

@@ -254,7 +254,7 @@ Format per cluster: what the account's pull posts actually contain, the method c
 
 **@daily_chiefs_ — 11 posts.** A Chiefs fan account republishing NGS and @statyxio nuggets (Walker's +277.4 RYOE / +2.62 per carry via statyxio; SEA's 45.5% success rate allowed on outside-right runs via statyxio; Mahomes primetime counts via NGS). Downstream republication — the primary sources are NGS/statyxio, covered elsewhere. **CONTEXT-ONLY.**
 
-**@dabearstakeover — 3 posts.** Bears fan account republishing @statyxio Caleb Williams ranking tables (CPOE +9.8/+9.0 1st, EPA/DB +0.332/+0.348, clean-pocket and no-blitz completion % 1st — two snapshots a week apart, values drift slightly between them, as live tables do). Republication; statyxio is the source. **CONTEXT-ONLY.**
+**@dabearstakeover — 3 posts.** Bears fan account republishing @statyxio Caleb Williams ranking tables (CPOE +9.8/+9.0 1st, EPA/DB +0.332/+0.348, clean-pocket and no-blitz completion % 1st — two snapshots a week apart, values drift slightly between them, as live tables do). Republication; statyxio is the source. **CONTEXT-ONLY.** [PULLED_NOV_1_EXCLUDED]
 
 **@pdubyaa — 2 posts.** A Goff statyxio rankings table (1st in passing EPA and EPA-when-blitzed 0.453) and an on/off-numbers caution ("On/Off numbers can be tricky") attached to Branch/LaPorta. **CONTEXT-ONLY.**
 

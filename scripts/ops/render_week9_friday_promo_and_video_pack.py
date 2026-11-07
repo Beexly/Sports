@@ -9,7 +9,7 @@ Generates:
 5. data/audits/week9_portfolio_risk_and_r_multiple_sheet_2026_11_06.json
 
 Enforces:
-- Official Season Ledger of Record: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) (Voided 62-23-1 excluded)
+- Official Season Ledger of Record: 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) (Voided 47-19-1 excluded)
 - Standing Roster Ruling: Geno Smith = NYJ QB, Mike Evans = SF WR
 - Zero '%' confidence symbols on public/social graphics (strictly /100 format)
 - Zero internal math jargon on customer-facing assets

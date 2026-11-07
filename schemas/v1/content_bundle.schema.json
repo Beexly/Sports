@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/content_bundle.schema.json",
+  "title": "GSE Placeholder Content Validation Bundle Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bundle_id",
+    "schema_version",
+    "packet_id",
+    "trace_id",
+    "game_id",
+    "mode",
+    "redaction_guard_passed",
+    "entity_resolution_passed",
+    "sections"
+  ],
+  "properties": {
+    "bundle_id": { "type": "string", "minLength": 5 },
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "packet_id": { "type": "string", "minLength": 5 },
+    "trace_id": { "type": "string", "minLength": 5 },
+    "game_id": { "type": "string", "minLength": 3 },
+    "mode": {
+      "type": "string",
+      "const": "PLACEHOLDER_VALIDATION_ONLY"
+    },
+    "redaction_guard_passed": {
+      "type": "boolean",
+      "const": true
+    },
+    "entity_resolution_passed": {
+      "type": "boolean",
+      "const": true
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["section_id", "title", "body", "citations"],
+        "properties": {
+          "section_id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "body": { "type": "string", "minLength": 1 },
+          "citations": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

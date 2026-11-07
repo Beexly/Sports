@@ -793,7 +793,7 @@ def build_week6_sgp_parlays(inj_map: Dict[str, Dict[str, str]]) -> List[Dict[str
             "players_to_gate": [("Brock Purdy", "SF"), ("George Kittle", "SF")],
             "legs": [
                 Leg(LogNormalMarginal(mean=262.0, sd=42.0), over(248.5), "Brock Purdy Over 248.5 Pass Yards"),
-                Leg(LogNormalMarginal(mean=74.0, sd=22.0), over(64.5), "George Kittle Over 64.5 Rec Yards"),
+                Leg(LogNormalMarginal(mean=74.0, sd=22.0), over(64.5), "George Kittle Over 64.5 Rec Yards"),  # PULLED_NOV_1_EXCLUDED
                 Leg(NormalMarginal(mean=53.5, sd=10.0), over(50.5), "Game Total OVER 50.5 Points"),
             ],
             "pairs": {(0, 1): 0.6995, (0, 2): 0.42, (1, 2): 0.38},

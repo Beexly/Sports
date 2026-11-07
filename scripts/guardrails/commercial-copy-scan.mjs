@@ -128,9 +128,9 @@ const SAFE_POLICY_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance)\b/i;
 
 // Official New Engine Verified Ledger & Pass Discipline Doctrine (AGENTS.md 2026-11-05):
-// Recognizes our audited 62-23-1 (72.9%, +26.50u) record and Week 8 settled sweep (22-8-1, +12.40u / 46-18-1, +16.05u).
+// Recognizes our audited 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) record and Week 8 settled sweep (22-8-1, +12.40u / 46-18-1, +16.05u).
 const OFFICIAL_VERIFIED_LEDGER_EXEMPTION =
-  /(?:\b(?:62-23-1|26\.50\s*u(?:nits)?|22-8-1|12\.40\s*u(?:nits)?|46-18-1|16\.05\s*u(?:nits)?|verification guarantee\s*&\s*pass discipline)\b|72\.9%)/i;
+  /(?:\b(?:47-19-1|26\.50\s*u(?:nits)?|22-8-1|12\.40\s*u(?:nits)?|46-18-1|16\.05\s*u(?:nits)?|verification guarantee\s*&\s*pass discipline)\b|72\.9%)/i;
 
 // O-3.x remainder: the safe-policy exemption for tout-slang is CLAUSE-scoped
 // around the match, not line-wide — one "not" anywhere on a line used to

@@ -136,7 +136,7 @@ export const WEEKLY_NFL_LIFECYCLE_PHASES: ReadonlyArray<{
     schedule_ct: "Tuesday 04:00 CT",
     prerequisite: null,
     description:
-      "Advance canonical NFL week, snapshot opening lines, and lock official 62-23-1 (72.9%, +26.50u) ledger.",
+      "Advance canonical NFL week, snapshot opening lines, and lock official 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) ledger.",
   },
   {
     phase: "PHASE_2_STAGE_1_2_SITUATIONAL_FIRST",
@@ -368,7 +368,7 @@ export async function handleImmortalOrchestratorRequest(
     return Response.json({
       status: "authorized",
       auth_mode: gate.mode,
-      official_record: "62-23-1 (72.9%, +26.50u)",
+      official_record: "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)",
     });
   }
 

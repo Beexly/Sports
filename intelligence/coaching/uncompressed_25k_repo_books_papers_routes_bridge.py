@@ -441,7 +441,7 @@ INTELLIGENCE_35_DOMAINS_REGISTRY: Dict[str, str] = {
     "trust": "Conjunction gate pass-discipline & unpriced-market blockers",
     "newregime": "Coordinator/HC firing, interim play-caller & mid-season trade regime-shift detectors",
     "staking": "Fractional Kelly, CVaR portfolio cap & correlation-adjusted unit sizing",
-    "doctrine": "Standing GSE doctrine enforcers (Wire-First, Reasoning-First, 62-23-1 Ledger Lock)",
+    "doctrine": "Standing GSE doctrine enforcers (Wire-First, Reasoning-First, 47-19-1 Ledger Lock)",
     "qb": "QB tier EPA adjustments (Starter vs QB2 Backup vs Emergency QB3 UDFA)",
     "voice_brain": "Natural film-room narrative synthesis with zero robotic math-dump jargon",
     "combining": "Log-linear opinion pooling, Dawid-Skene & Barycenter probability combination",

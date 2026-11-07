@@ -44,7 +44,7 @@ const BLOCKED_PATTERNS = [
 ];
 
 const SAFE_CONTEXT =
-  /\b(no|not|never|without|blocked|avoid|policy|do not|dont|must not|cannot|can't|forbidden|guardrails?|source rights|rights permit|cleared|nflverse|aggregate|aggregates|not raw|record|ledger|board|card|62-23-1|ingest|learned)\b/i;
+  /\b(no|not|never|without|blocked|avoid|policy|do not|dont|must not|cannot|can't|forbidden|guardrails?|source rights|rights permit|cleared|nflverse|aggregate|aggregates|not raw|record|ledger|board|card|47-19-1|ingest|learned)\b/i;
 
 function rel(filePath) {
   return relative(ROOT, filePath).split(sep).join("/");

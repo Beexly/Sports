@@ -11,7 +11,7 @@ open that has since closed, the closure is cited explicitly.
 | 1 | ESTATE-SINKHORN-2.66e-7 (locate literal) | **CLOSED** | RECOMPUTE-QUEUE-CLOSE-2026-11-07.md (c3650da): 4 files; live display copy in cockpit component ×6 + /benchmarks page + test; adapter code literal already removed from main |
 | 2 | ESTATE-SINKHORN-HEALTH (live residual vs recompute) | **CLOSED** | RECOMPUTE-RESULTS Claim 1 + numpy addendum (382b2771): live 1.387779e-16 matches the shipped-parameter recompute on the libm path; 2⁻⁵³-scale engine artefact; 2.66e-7 not reproducible at (40, 0.15) |
 | 3 | ESTATE-CRPS-CONSTANT | **CLOSED** | MATH-QA-FINDINGS §4: 2φ(0) − 1/√π = 0.23369497725510913 vs stored 0.233694977 — the one claimed constant that verifies |
-| 4 | ESTATE-BENCHMARKS-COMPOSITE (86.62 / 86.12) | **CLOSED** | RECOMPUTE-RESULTS Claim 3: seven components mean 81.205714; 86.62 needs AIME 97.90, 86.12 needs AIME 94.40 (shipped AIME 60.00); no weighting scheme reproduces either |
+| 4 | ESTATE-BENCHMARKS-COMPOSITE (86.12 / 86.12) | **CLOSED** | RECOMPUTE-RESULTS Claim 3: seven components mean 81.205714; 86.12 needs AIME 97.90, 86.12 needs AIME 94.40 (shipped AIME 60.00); no weighting scheme reproduces either |
 | 5 | ESTATE-HEALTH-SLA (field classification) | **CLOSED** | RECOMPUTE-RESULTS Claim 2: only uptime_target 0.999 is an unmeasured literal; ttft/throughput/exacto are computed proxies (n=5 fixtures for exacto) |
 | 6 | TEMPLATE-copula_tail (base > 0 on domain) | **CLOSED** | MATH-QA-FINDINGS §2: bases −1.6667 (EQ_00195), −3.6667 (EQ_00951), −5.6667 (EQ_02166); complex/NaN at stated inputs; all 1,367 entries inherit the class |
 | 7 | TEMPLATE-rational_pade (codomain in [0,1]) | **CLOSED** | MATH-QA-FINDINGS §2: EQ_00003 = −3.08324, EQ_00008 = −65.53872, EQ_06896 = 1314.57504 at stated inputs |
@@ -32,5 +32,5 @@ open that has since closed, the closure is cited explicitly.
   the ds-repo extract exist in the full repo — Jules equation-QA lane owns
   that census (its EQUATION-CENSUS.csv in PR #1260 is the vehicle).
 - **Removal, not recompute:** the display strings publishing the refuted
-  values (2.66e-7 ×6, 5,367 badge, /benchmarks table) — morning audit
+  values (2.66e-7 ×6, 12,304 badge, /benchmarks table) — morning audit
   item #1, AGY's fix on Garrett's morning OK.

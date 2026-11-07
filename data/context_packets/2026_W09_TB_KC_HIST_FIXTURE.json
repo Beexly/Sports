@@ -1,0 +1,922 @@
+{
+  "packet_id": "pkt_2026_w09_tb_kc_hist_fixture_89dddd5e903c",
+  "schema_version": "1.0.0",
+  "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+  "season": 2026,
+  "week": 9,
+  "home_team": "KC",
+  "away_team": "TB",
+  "kickoff_utc": "2026-11-03T01:15:00Z",
+  "as_of_utc": "2026-11-02T21:00:00Z",
+  "entity_resolution_verified": true,
+  "resolved_entities": [
+    {
+      "canonical_id": "00-0033873",
+      "full_name": "Patrick Mahomes",
+      "team": "KC",
+      "position": "QB"
+    },
+    {
+      "canonical_id": "00-0030506",
+      "full_name": "Travis Kelce",
+      "team": "KC",
+      "position": "TE"
+    },
+    {
+      "canonical_id": "00-0034855",
+      "full_name": "Baker Mayfield",
+      "team": "TB",
+      "position": "QB"
+    },
+    {
+      "canonical_id": "00-0030565",
+      "full_name": "Geno Smith",
+      "team": "NYJ",
+      "position": "QB"
+    },
+    {
+      "canonical_id": "00-0031408",
+      "full_name": "Mike Evans",
+      "team": "SF",
+      "position": "WR"
+    }
+  ],
+  "layers": [
+    {
+      "layer_id": 1,
+      "layer_slug": "layer_01_freshness_reality",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 01 (layer_01_freshness_reality) verified active within SLA freshness window.",
+      "inputs": [
+        "as_of_utc",
+        "kickoff_utc",
+        "feed_age_minutes",
+        "entity_resolution_verified"
+      ],
+      "source_datasets": [
+        "nflverse_schedules",
+        "gse_warehouse_manifest_v1",
+        "stage0_roster_hygiene"
+      ],
+      "freshness_rule": "as_of_utc < kickoff_utc AND feed_age <= 90m pre-lock",
+      "consumer": "trust_signals",
+      "signals": {
+        "pre_kickoff_lead_minutes": 255.0,
+        "temporal_leakage_clear": true,
+        "feed_freshness_score": 0.925,
+        "standing_roster_truth_verified": true,
+        "geno_smith_team": "NYJ",
+        "mike_evans_team": "SF"
+      },
+      "uncertainty_width_delta": 0.00175,
+      "citations": [
+        "intelligence/reasoning/layers/layer_01_freshness_reality.py",
+        "docs/wiring/CORRECTION-LOG.md#stage0-roster-ruling"
+      ]
+    },
+    {
+      "layer_id": 2,
+      "layer_slug": "layer_02_totals_baselines",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 02 (layer_02_totals_baselines) verified active within SLA freshness window.",
+      "inputs": [
+        "league_mean_total",
+        "home_off_epa_baseline",
+        "away_off_epa_baseline",
+        "dynamic_kickoff_return_rate"
+      ],
+      "source_datasets": [
+        "nflverse_pbp_2026",
+        "nflverse_team_epa_baselines"
+      ],
+      "freshness_rule": "<= 24h weekly rolling Tuesday post-MNF recalibration",
+      "consumer": "L3_structural_valuation",
+      "signals": {
+        "structural_total_baseline": 45.938,
+        "structural_spread_home_margin": 2.964,
+        "dynamic_kickoff_drive_start_ydline": 30.02,
+        "scoring_environment_z": 0.2212
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_02_totals_baselines.py",
+        "packages/prediction-engine/src/tweedie-baseline.ts"
+      ]
+    },
+    {
+      "layer_id": 3,
+      "layer_slug": "layer_03_venue_physical_environment",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 03 (layer_03_venue_physical_environment) verified active within SLA freshness window.",
+      "inputs": [
+        "is_dome",
+        "wind_mph",
+        "temp_f",
+        "precip_prob",
+        "surface_type",
+        "altitude_ft"
+      ],
+      "source_datasets": [
+        "open_meteo_hourly_forecast",
+        "nfl_stadium_geometry_registry"
+      ],
+      "freshness_rule": "<= 3h pre-kickoff synoptic + mesoscale wind update",
+      "consumer": "L3_structural_valuation",
+      "signals": {
+        "weather_total_delta_pts": -0.145,
+        "deep_pass_completion_penalty": -0.0035,
+        "fg_make_prob_50plus_delta": 0.0014,
+        "surface_speed_multiplier": 1.0
+      },
+      "uncertainty_width_delta": 0.0025,
+      "citations": [
+        "intelligence/reasoning/layers/layer_03_venue_physical_environment.py",
+        "packages/prediction-engine/src/weather/"
+      ]
+    },
+    {
+      "layer_id": 4,
+      "layer_slug": "layer_04_schedule_situations",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 04 (layer_04_schedule_situations) verified active within SLA freshness window.",
+      "inputs": [
+        "home_rest_days",
+        "away_rest_days",
+        "away_timezone_shift_hours",
+        "is_divisional"
+      ],
+      "source_datasets": [
+        "nflverse_schedules",
+        "intelligence_coaching_rest_days"
+      ],
+      "freshness_rule": "<= 7d static schedule + flex kickoff confirmation",
+      "consumer": "L2_interaction_synthesis",
+      "signals": {
+        "net_rest_days_home_minus_away": 0,
+        "rest_spread_adjustment_pts": 0.0,
+        "circadian_fourth_quarter_drag": 0.0,
+        "divisional_familiarity_total_dampener": 0.0
+      },
+      "uncertainty_width_delta": 0.0015,
+      "citations": [
+        "intelligence/reasoning/layers/layer_04_schedule_situations.py",
+        "intelligence/coaching/rest_days.py"
+      ]
+    },
+    {
+      "layer_id": 5,
+      "layer_slug": "layer_05_health_replacement",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 05 (layer_05_health_replacement) verified active within SLA freshness window.",
+      "inputs": [
+        "home_ol_starters_active",
+        "away_ol_starters_active",
+        "home_injury_war_lost",
+        "away_injury_war_lost"
+      ],
+      "source_datasets": [
+        "nfl_official_injury_reports",
+        "gsi_rtp_trauma_registry"
+      ],
+      "freshness_rule": "<= 90m pre-kickoff active/inactive declaration gate",
+      "consumer": "offensive_line",
+      "signals": {
+        "home_ol_continuity_score": 1.0,
+        "away_ol_continuity_score": 0.76,
+        "net_injury_war_advantage_home": 0.24,
+        "trench_cluster_degradation_flag": false
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_05_health_replacement.py",
+        "intelligence/coaching/ol_provider.py"
+      ]
+    },
+    {
+      "layer_id": 6,
+      "layer_slug": "layer_06_roster_usage",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 06 (layer_06_roster_usage) verified active within SLA freshness window.",
+      "inputs": [
+        "home_wr1_target_share",
+        "away_wr1_target_share",
+        "home_rb1_opportunity_share",
+        "strict_player_gp_denominator"
+      ],
+      "source_datasets": [
+        "nflverse_snap_counts_2026",
+        "nflverse_player_stats_active_gp"
+      ],
+      "freshness_rule": "<= 24h post-practice participation & depth chart lock",
+      "consumer": "L1_signal_extraction",
+      "signals": {
+        "home_target_concentration_hhi": 0.2156,
+        "away_target_concentration_hhi": 0.19,
+        "home_rb1_weighted_opportunities": 18.02,
+        "strict_player_gp_denominator_enforced": true
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_06_roster_usage.py",
+        "packages/prediction-engine/src/player-rate-posteriors.ts"
+      ]
+    },
+    {
+      "layer_id": 7,
+      "layer_slug": "layer_07_player_traits_form",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 07 (layer_07_player_traits_form) verified active within SLA freshness window.",
+      "inputs": [
+        "home_qb_ttt_sec",
+        "away_qb_ttt_sec",
+        "home_qb_p2s_rate",
+        "away_qb_p2s_rate",
+        "home_qb_cpoe_ewma",
+        "away_qb_cpoe_ewma"
+      ],
+      "source_datasets": [
+        "nflverse_nextgen_stats_passing",
+        "gse_qb_visual_cognitive_load"
+      ],
+      "freshness_rule": "<= 48h rolling 4-week exponentially weighted form",
+      "consumer": "qb_behavior",
+      "signals": {
+        "home_qb_ttt_sec": 2.82,
+        "away_qb_ttt_sec": 2.59,
+        "net_qb_sack_avoidance_edge_home": 0.042,
+        "net_qb_cpoe_form_delta_home": 2.6
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_07_player_traits_form.py",
+        "intelligence/coaching/qb_visual_cognitive_load.py"
+      ]
+    },
+    {
+      "layer_id": 8,
+      "layer_slug": "layer_08_player_vs_player",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 08 (layer_08_player_vs_player) verified active within SLA freshness window.",
+      "inputs": [
+        "home_edge1_pass_rush_win_rate",
+        "away_lt_pass_block_win_rate",
+        "away_edge1_pass_rush_win_rate",
+        "home_lt_pass_block_win_rate",
+        "wr1_vs_cb1_separation_delta"
+      ],
+      "source_datasets": [
+        "nflverse_nextgen_stats_receiving",
+        "gse_trench_pocket_physics"
+      ],
+      "freshness_rule": "<= 48h weekly alignment & shadow cornerback projection",
+      "consumer": "offensive_line",
+      "signals": {
+        "home_edge_vs_away_lt_mismatch": 0.11,
+        "away_edge_vs_home_lt_mismatch": 0.113,
+        "wr1_cb1_separation_yards_delta": 0.42,
+        "isolated_boundary_win_prob": 0.5956
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_08_player_vs_player.py",
+        "intelligence/coaching/trench_pocket_physics.py"
+      ]
+    },
+    {
+      "layer_id": 9,
+      "layer_slug": "layer_09_unit_vs_unit",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 09 (layer_09_unit_vs_unit) verified active within SLA freshness window.",
+      "inputs": [
+        "home_ol_ybc_per_rush",
+        "away_dl_stuff_rate",
+        "away_ol_ybc_per_rush",
+        "home_dl_stuff_rate",
+        "home_ol_pocket_time_sec",
+        "away_ol_pocket_time_sec"
+      ],
+      "source_datasets": [
+        "gse_trench_pocket_physics",
+        "nflverse_pbp_2026_rushing"
+      ],
+      "freshness_rule": "<= 24h post-injury OL 5-man unit combination projection",
+      "consumer": "offensive_line",
+      "signals": {
+        "home_trench_run_push_index": 1.2705,
+        "away_trench_run_push_index": 0.9298,
+        "net_pocket_integrity_sec_home": 0.27,
+        "ol_unit_dominance_edge_home": 0.5162
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_09_unit_vs_unit.py",
+        "intelligence/coaching/trench_pocket_physics.py"
+      ]
+    },
+    {
+      "layer_id": 10,
+      "layer_slug": "layer_10_scheme",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 10 (layer_10_scheme) verified active within SLA freshness window.",
+      "inputs": [
+        "home_off_scheme",
+        "away_def_primary_shell",
+        "home_protection_family",
+        "rushers_weak_slide_side",
+        "rushers_strong_man_side",
+        "protection_adjustment_call",
+        "primary_formation_tag",
+        "primary_route_concept"
+      ],
+      "source_datasets": [
+        "core_nfl_schemes_and_systems",
+        "fourth_and_film_formation_taxonomy"
+      ],
+      "freshness_rule": "<= 24h coordinator tendency & film dossier sync",
+      "consumer": "coaching_scheme",
+      "signals": {
+        "offensive_schemes_catalog_count": 8,
+        "route_concepts_catalog_count": 11,
+        "home_scheme_id": "WEST_COAST",
+        "home_scheme_target_ttt_sec": 2.38,
+        "pass_protection_slide_rule": "Center breaks slide (JOKER/OPPOSITE) to take Mike; RB takes 2nd strong edge",
+        "pass_protection_overload_side": "4_STRONG_OVERLOAD",
+        "pressure_disruption_prob_delta": 0.032,
+        "coverage_shell_rule": "BANJO stack switch + RAT/LAB motion bump (tells QB man coverage pre-snap)",
+        "gruden_formation_tag": "11_1X4_SPLIT",
+        "gruden_formation_rule": "Chiefs 1x4 passing split: 4 eligibles to field + 1 stud isolated boundary",
+        "s_words_count": 6,
+        "t_words_count": 5
+      },
+      "uncertainty_width_delta": 0.0015,
+      "citations": [
+        "intelligence/coaching/core_nfl_schemes_and_systems.py",
+        "intelligence/reasoning/layers/layer_10_scheme.py"
+      ]
+    },
+    {
+      "layer_id": 11,
+      "layer_slug": "layer_11_coach_mind",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 11 (layer_11_coach_mind) verified active within SLA freshness window.",
+      "inputs": [
+        "home_proe_neutral",
+        "away_proe_neutral",
+        "home_opening15_epa_per_play",
+        "home_fourth_down_go_over_expected",
+        "scripted_third_down_ydstogo"
+      ],
+      "source_datasets": [
+        "core_nfl_schemes_and_systems",
+        "intelligence_coaching_proe",
+        "intelligence_coaching_coach_risk"
+      ],
+      "freshness_rule": "<= 24h rolling play-caller tenure & PROE+ update",
+      "consumer": "coaching_scheme",
+      "signals": {
+        "home_proe_neutral": 0.038,
+        "away_proe_neutral": -0.012,
+        "home_opening15_epa_per_play": 0.145,
+        "fourth_down_aggressiveness_delta": 0.082,
+        "third_down_immediate_conversion_prior": 0.45,
+        "fourth_and_short_conversion_prior": 0.6,
+        "scheme_originator_anchor": "Bill Walsh",
+        "referee_sub_window_sec": [
+          7.0,
+          10.0
+        ]
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/coaching/core_nfl_schemes_and_systems.py",
+        "intelligence/coaching/proe.py",
+        "intelligence/coaching/coach_risk.py"
+      ]
+    },
+    {
+      "layer_id": 12,
+      "layer_slug": "layer_12_coach_vs_coach",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 12 (layer_12_coach_vs_coach) verified active within SLA freshness window.",
+      "inputs": [
+        "home_hc_2h_adjustment_epa",
+        "away_dc_disguise_rate",
+        "coaching_tree_familiarity",
+        "script_elasticity_delta"
+      ],
+      "source_datasets": [
+        "intelligence_coaching_adjustments",
+        "intelligence_coaching_script_elasticity"
+      ],
+      "freshness_rule": "<= 7d coaching staff matchup & tree familiarity index",
+      "consumer": "coaching_scheme",
+      "signals": {
+        "net_2h_adjustment_epa_home": 0.0604,
+        "away_dc_pre_post_snap_disguise_rate": 0.345,
+        "coaching_tree_familiarity_flag": true,
+        "halftime_script_elasticity_score": 0.052
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_12_coach_vs_coach.py",
+        "intelligence/coaching/adjustments.py",
+        "intelligence/coaching/script_elasticity.py"
+      ]
+    },
+    {
+      "layer_id": 13,
+      "layer_slug": "layer_13_coach_vs_player",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 13 (layer_13_coach_vs_player) verified active within SLA freshness window.",
+      "inputs": [
+        "dc_star_wr_double_rate",
+        "dc_simulated_pressure_rate",
+        "qb_epa_vs_sim_pressure",
+        "rb_pass_pro_pickup_grade"
+      ],
+      "source_datasets": [
+        "intelligence_coaching_dc_pressure",
+        "intelligence_coaching_qb_disguise_blitz_matrix"
+      ],
+      "freshness_rule": "<= 48h opponent game-plan bracket & pressure tendency",
+      "consumer": "qb_behavior",
+      "signals": {
+        "wr1_bracket_suppression_factor": -0.0896,
+        "wr2_te1_funnel_target_boost": 0.102,
+        "qb_sim_pressure_vulnerability_epa": 0.013,
+        "rb_blitz_pickup_reliability": 0.78
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_13_coach_vs_player.py",
+        "intelligence/coaching/dc_pressure.py",
+        "intelligence/coaching/qb_disguise_blitz_matrix.py"
+      ]
+    },
+    {
+      "layer_id": 14,
+      "layer_slug": "layer_14_player_vs_scheme",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 14 (layer_14_player_vs_scheme) verified active within SLA freshness window.",
+      "inputs": [
+        "away_def_primary_shell",
+        "qb_yprr_delta_vs_shell",
+        "rb_epa_vs_light_box",
+        "light_box_rate_faced",
+        "primary_route_concept"
+      ],
+      "source_datasets": [
+        "core_nfl_schemes_and_systems",
+        "nflverse_coverage_shell_splits"
+      ],
+      "freshness_rule": "<= 48h player vs coverage shell & box-count split matrix",
+      "consumer": "qb_behavior",
+      "signals": {
+        "target_coverage_shell": "COVER_1_PLUG",
+        "qb_epa_split_vs_shell": 0.0,
+        "rb_counter_run_epa_vs_two_high": -0.016,
+        "route_concept_beater_active": false,
+        "rb_release_match_rule": "RB weak -> Plugger aborts rush and drops into low-hole RAT window (robs Mesh/Dig)"
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/coaching/core_nfl_schemes_and_systems.py",
+        "intelligence/reasoning/layers/layer_14_player_vs_scheme.py"
+      ]
+    },
+    {
+      "layer_id": 15,
+      "layer_slug": "layer_15_scheme_vs_scheme",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 15 (layer_15_scheme_vs_scheme) verified active within SLA freshness window.",
+      "inputs": [
+        "home_off_scheme",
+        "away_def_primary_shell",
+        "away_off_scheme",
+        "home_def_primary_shell"
+      ],
+      "source_datasets": [
+        "core_nfl_schemes_and_systems"
+      ],
+      "freshness_rule": "<= 24h structural scheme interaction matrix",
+      "consumer": "scheme_matchup",
+      "signals": {
+        "home_scheme_vs_away_shell_epa_boost": 0.025,
+        "away_scheme_vs_home_shell_epa_boost": 0.045,
+        "quarters_mills_post_dig_epa_unmatched": 0.089,
+        "cover1_plug_rat_banjo_rule": "BANJO stack switch + RAT/LAB motion bump (tells QB man coverage pre-snap) | RB weak -> Plugger aborts rush and drops into low-hole RAT window (robs Mesh/Dig)",
+        "net_scheme_interaction_epa_home": -0.02
+      },
+      "uncertainty_width_delta": 0.0015,
+      "citations": [
+        "intelligence/coaching/core_nfl_schemes_and_systems.py",
+        "intelligence/reasoning/layers/layer_15_scheme_vs_scheme.py"
+      ]
+    },
+    {
+      "layer_id": 16,
+      "layer_slug": "layer_16_scheme_vs_team",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 16 (layer_16_scheme_vs_team) verified active within SLA freshness window.",
+      "inputs": [
+        "home_12p_rate",
+        "away_big_nickel_match_grade",
+        "away_def_4q_snap_fatigue_threshold",
+        "home_no_sub_tempo_rate"
+      ],
+      "source_datasets": [
+        "core_nfl_schemes_and_systems",
+        "nflverse_personnel_grouping_rates"
+      ],
+      "freshness_rule": "<= 48h 60-minute personnel & defensive sub-package endurance audit",
+      "consumer": "scheme_matchup",
+      "signals": {
+        "sixty_minute_execution_capacity_home": 0.6625,
+        "no_sub_tempo_trap_epa_boost": 0.0336,
+        "under_center_3step_timing_edge_sec": 0.28,
+        "condensed_12_snug_formation_rule": "Z aligns condensed within 2 yards of U to crack DE or run rub",
+        "heavy_12_13_target_ttt_sec": 2.62
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/coaching/core_nfl_schemes_and_systems.py",
+        "intelligence/reasoning/layers/layer_16_scheme_vs_team.py"
+      ]
+    },
+    {
+      "layer_id": 17,
+      "layer_slug": "layer_17_pace_tempo",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 17 (layer_17_pace_tempo) verified active within SLA freshness window.",
+      "inputs": [
+        "home_neutral_sec_per_snap",
+        "away_neutral_sec_per_snap",
+        "home_trailing_hurry_up_sec",
+        "away_trailing_hurry_up_sec"
+      ],
+      "source_datasets": [
+        "intelligence_coaching_tempo",
+        "nflverse_pbp_2026"
+      ],
+      "freshness_rule": "<= 24h situation-neutral pace & clock runoff audit",
+      "consumer": "L3_structural_valuation",
+      "signals": {
+        "combined_neutral_sec_per_snap": 27.1,
+        "projected_combined_plays": 127.52,
+        "pace_total_points_adjustment": 0.517
+      },
+      "uncertainty_width_delta": 0.0015,
+      "citations": [
+        "intelligence/reasoning/layers/layer_17_pace_tempo.py",
+        "intelligence/coaching/tempo.py"
+      ]
+    },
+    {
+      "layer_id": 18,
+      "layer_slug": "layer_18_game_script_state",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 18 (layer_18_game_script_state) verified active within SLA freshness window.",
+      "inputs": [
+        "home_lead_prob_q3",
+        "home_four_minute_offense_epa",
+        "away_two_minute_drill_epa",
+        "blowout_tail_prob"
+      ],
+      "source_datasets": [
+        "intelligence_coaching_situational_wp",
+        "intelligence_coaching_drive_dire_situations"
+      ],
+      "freshness_rule": "<= 24h game-script Markov transition tensor",
+      "consumer": "L3_structural_valuation",
+      "signals": {
+        "home_lead_prob_q3": 0.58,
+        "four_minute_kill_clock_efficiency": 0.6364,
+        "two_minute_comeback_elasticity": 0.5528,
+        "garbage_time_pass_volume_inflation": 1.428
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_18_game_script_state.py",
+        "intelligence/coaching/situational_wp.py",
+        "intelligence/coaching/drive_dire_situations.py"
+      ]
+    },
+    {
+      "layer_id": 19,
+      "layer_slug": "layer_19_micro_in_game",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 19 (layer_19_micro_in_game) verified active within SLA freshness window.",
+      "inputs": [
+        "home_motion_at_snap_rate",
+        "away_motion_at_snap_rate",
+        "home_avg_target_separation_yds",
+        "dynamic_kickoff_avg_start_ydline"
+      ],
+      "source_datasets": [
+        "nflverse_ftn_charting_2026",
+        "core_nfl_schemes_and_systems"
+      ],
+      "freshness_rule": "<= 48h FTN charting motion-at-snap & Dynamic Kickoff field position",
+      "consumer": "L2_interaction_synthesis",
+      "signals": {
+        "home_motion_at_snap_epa_delta": 0.0496,
+        "away_motion_at_snap_epa_delta": 0.0308,
+        "home_avg_target_separation_yds": 3.18,
+        "dynamic_kickoff_avg_start_ydline": 29.8,
+        "dynamic_kickoff_concussion_reduction_pct": -43.0
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_19_micro_in_game.py",
+        "intelligence/coaching/core_nfl_schemes_and_systems.py"
+      ]
+    },
+    {
+      "layer_id": 20,
+      "layer_slug": "layer_20_outside_game_human_signals",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "WAIVED_WITH_REASON",
+      "status_reason": "Historical MNF fixture evaluation: live Friday podium sentiment feed waived with explicit epistemic widening.",
+      "inputs": [
+        "coach_speak_deflection_index",
+        "beat_reporter_injury_optimism_z",
+        "contract_incentive_active"
+      ],
+      "source_datasets": [
+        "intelligence_coaching_coach_speak_probe",
+        "gse_beat_reporter_verified_feeds"
+      ],
+      "freshness_rule": "<= 12h Friday/Saturday podium transcript & beat check",
+      "consumer": "trust_signals",
+      "signals": {
+        "coach_speak_deflection_index": 0.24,
+        "beat_reporter_injury_optimism_z": 0.35,
+        "hidden_snap_count_limit_risk": 0.0795,
+        "human_motivation_reliability_weight": 0.1
+      },
+      "uncertainty_width_delta": 0.025,
+      "citations": [
+        "intelligence/reasoning/layers/layer_20_outside_game_human_signals.py",
+        "intelligence/coaching/coach_speak_emotional_deflection_probe.py"
+      ]
+    },
+    {
+      "layer_id": 21,
+      "layer_slug": "layer_21_history",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 21 (layer_21_history) verified active within SLA freshness window.",
+      "inputs": [
+        "same_coaching_regime_meetings",
+        "historical_ats_margin_regime_cleaned",
+        "tenures_overlap_weight"
+      ],
+      "source_datasets": [
+        "intelligence_coaching_tenures",
+        "intelligence_reasoning_precedents"
+      ],
+      "freshness_rule": "Seasonal coaching tenure & roster continuity decay tau",
+      "consumer": "trust_signals",
+      "signals": {
+        "same_coaching_regime_meetings": 2,
+        "regime_cleaned_historical_margin_adj": 0.378,
+        "stale_history_contamination_rejected": true
+      },
+      "uncertainty_width_delta": 0.0015,
+      "citations": [
+        "intelligence/reasoning/layers/layer_21_history.py",
+        "intelligence/coaching/tenures.py",
+        "intelligence/reasoning/precedents.py"
+      ]
+    },
+    {
+      "layer_id": 22,
+      "layer_slug": "layer_22_officials",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 22 (layer_22_officials) verified active within SLA freshness window.",
+      "inputs": [
+        "referee_crew_id",
+        "crew_offensive_holding_z",
+        "crew_dpi_rate_z",
+        "crew_home_penalty_bias_yds"
+      ],
+      "source_datasets": [
+        "nfl_officiating_crew_assignments_2026"
+      ],
+      "freshness_rule": "<= 72h Wednesday NFL officiating crew assignment release",
+      "consumer": "L2_interaction_synthesis",
+      "signals": {
+        "referee_crew_id": "CREW_CHEFERS_2026",
+        "offensive_holding_drive_kill_delta": -0.147,
+        "dpi_explosive_extension_delta": 0.11,
+        "referee_total_points_delta": -0.037
+      },
+      "uncertainty_width_delta": 0.0015,
+      "citations": [
+        "intelligence/reasoning/layers/layer_22_officials.py",
+        "packages/prediction-engine/src/signals/"
+      ]
+    },
+    {
+      "layer_id": 23,
+      "layer_slug": "layer_23_market",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 23 (layer_23_market) verified active within SLA freshness window.",
+      "inputs": [
+        "market_home_ml_decimal",
+        "market_away_ml_decimal",
+        "opening_spread_home",
+        "current_spread_home",
+        "market_total_points",
+        "sgp_quoted_hold_pct"
+      ],
+      "source_datasets": [
+        "nfl_odds_2026_closing_snapshots",
+        "packages_prediction_engine_shin_devig"
+      ],
+      "freshness_rule": "<= 15m pre-decision live consensus book screen",
+      "consumer": "L5_synthesis",
+      "signals": {
+        "market_enters_last_verified": true,
+        "shin_devig_home_win_prob": 0.713578,
+        "shin_devig_away_win_prob": 0.286422,
+        "shin_insider_parameter_z": 0.044917,
+        "line_move_velocity_pts": 0.0,
+        "crossed_key_number_3_or_7": false,
+        "sgp_copula_hold_check_passed": true
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_23_market.py",
+        "packages/prediction-engine/src/shin-devig.ts",
+        "intelligence/reasoning/market_priors.py"
+      ]
+    },
+    {
+      "layer_id": 24,
+      "layer_slug": "layer_24_gsi_cross_domain_methods",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 24 (layer_24_gsi_cross_domain_methods) verified active within SLA freshness window.",
+      "inputs": [
+        "raw_structural_edge_prob",
+        "market_shin_prob",
+        "high_ankle_rtp_players_active",
+        "hamstring_rtp_players_active",
+        "sinkhorn_iterations",
+        "sinkhorn_epsilon"
+      ],
+      "source_datasets": [
+        "core_nfl_schemes_and_systems",
+        "intelligence_coaching_biomech_kinetic_translation",
+        "workers_stealth_skeleton_provider_cqr"
+      ],
+      "freshness_rule": "Runtime execution-verified mathematical & GSI epidemiological invariants",
+      "consumer": "L3_structural_valuation",
+      "signals": {
+        "romano_cqr_90_half_width_pts": 22.1779,
+        "kadavath_pik_confidence": 0.855,
+        "fwl_orthogonal_residual_edge": 0.0222,
+        "sinkhorn_l1_marginal_residual": 1.387779e-16,
+        "sinkhorn_tolerance_gate_passed": true,
+        "gaussian_process_kernel_lengthscale": 1.42,
+        "copula_tail_dependence_lambda": 0.184,
+        "james_stein_shrinkage_factor": 0.74,
+        "pose_3d_hip_drop_asymmetry_deg": 3.5,
+        "high_ankle_lateral_cut_degradation_pct": 14.0,
+        "hamstring_burst_2h_cap_pct": 11.5,
+        "gsi_cte_deceased_cohort_n": 878,
+        "gsi_cte_donated_sample_rate": 0.9149,
+        "gsi_cte_unconditioned_lower_bound_rate": 0.2449,
+        "dynamic_kickoff_concussion_reduction_pct": -43.0
+      },
+      "uncertainty_width_delta": 0.001,
+      "citations": [
+        "intelligence/coaching/core_nfl_schemes_and_systems.py",
+        "intelligence/coaching/biomech_kinetic_translation.py",
+        "docs/wiring/qa/RECOMPUTE-QUEUE-STATUS-2026-11-07.md#row-2-sinkhorn-1.387779e-16"
+      ]
+    },
+    {
+      "layer_id": 25,
+      "layer_slug": "layer_25_missingness_contradiction",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 25 (layer_25_missingness_contradiction) verified active within SLA freshness window.",
+      "inputs": [
+        "waived_layers",
+        "missing_layers",
+        "signal_conflict_count"
+      ],
+      "source_datasets": [
+        "gse_layer_completeness_monitor"
+      ],
+      "freshness_rule": "Real-time synchronous audit across Layers 01..24",
+      "consumer": "L4_adversary",
+      "signals": {
+        "waived_layer_count": 1,
+        "missing_upstream_layer_count": 0,
+        "signal_conflict_count": 0,
+        "epistemic_penalty_width_pts": 0.45,
+        "abstain_recommended": false
+      },
+      "uncertainty_width_delta": 0.012,
+      "citations": [
+        "intelligence/reasoning/layers/layer_25_missingness_contradiction.py",
+        "intelligence/reasoning/escalation.py"
+      ]
+    },
+    {
+      "layer_id": 26,
+      "layer_slug": "layer_26_adversary_synthesis",
+      "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+      "as_of_utc": "2026-11-02T21:00:00Z",
+      "status": "ACTIVE",
+      "status_reason": "Layer 26 (layer_26_adversary_synthesis) verified active within SLA freshness window.",
+      "inputs": [
+        "breaking_conditions_met",
+        "correlated_sgp_legs_killed",
+        "ol_to_scheme_to_qb_verified",
+        "crossed_key_number_3_or_7"
+      ],
+      "source_datasets": [
+        "intelligence_reasoning_adversary",
+        "intelligence_reasoning_levels"
+      ],
+      "freshness_rule": "Mandatory L4 adversary review before L5 synthesis output",
+      "consumer": "L5_synthesis",
+      "signals": {
+        "adversary_veto_fired": false,
+        "killed_correlated_legs_count": 0,
+        "dependency_hierarchy_order": [
+          "offensive_line",
+          "coaching_scheme",
+          "qb_behavior",
+          "trust_signals",
+          "scheme_matchup"
+        ],
+        "ol_to_scheme_to_qb_verified": true,
+        "synthesis_gate_verdict": "SYNTHESIS_CLEARED_FIXTURE_ONLY"
+      },
+      "uncertainty_width_delta": 0.002,
+      "citations": [
+        "intelligence/reasoning/layers/layer_26_adversary_synthesis.py",
+        "intelligence/reasoning/adversary.py",
+        "intelligence/reasoning/levels.py"
+      ]
+    }
+  ],
+  "completeness_summary": {
+    "total_layers": 26,
+    "active_layers": 25,
+    "waived_layers": 1,
+    "missing_upstream_layers": 0,
+    "aggregate_uncertainty_width": 0.08125
+  }
+}

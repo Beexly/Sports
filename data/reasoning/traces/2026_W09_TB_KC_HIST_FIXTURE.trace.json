@@ -1,0 +1,156 @@
+{
+  "trace_id": "trc_2026_w09_tb_kc_hist_fixture_1d46bce27c0b",
+  "schema_version": "1.0.0",
+  "packet_id": "pkt_2026_w09_tb_kc_hist_fixture_89dddd5e903c",
+  "game_id": "2026_W09_TB_KC_HIST_FIXTURE",
+  "as_of_utc": "2026-11-02T21:00:00Z",
+  "ledger_sha": "47-19-1_base_38-13-1_sha_cd42605e",
+  "dependency_order_verified": true,
+  "tracks": {
+    "offensive_line": {
+      "execution_Step": 1,
+      "upstream_dependencies": [],
+      "cited_layers": [
+        "layer_05_health_replacement",
+        "layer_08_player_vs_player",
+        "layer_09_unit_vs_unit"
+      ],
+      "ol_composite_score": 1.4032,
+      "pocket_integrity_sec_delta": 0.27,
+      "trench_cluster_degradation_flag": false
+    },
+    "coaching_scheme": {
+      "execution_Step": 2,
+      "upstream_dependencies": [
+        "offensive_line"
+      ],
+      "cited_layers": [
+        "layer_10_scheme",
+        "layer_11_coach_mind",
+        "layer_12_coach_vs_coach"
+      ],
+      "scheme_composite_score": 0.5575,
+      "home_scheme_id": "WEST_COAST",
+      "pass_protection_slide_rule": "Center breaks slide (JOKER/OPPOSITE) to take Mike; RB takes 2nd strong edge",
+      "gruden_formation_tag": "11_1X4_SPLIT"
+    },
+    "qb_behavior": {
+      "execution_Step": 3,
+      "upstream_dependencies": [
+        "offensive_line",
+        "coaching_scheme"
+      ],
+      "cited_layers": [
+        "layer_07_player_traits_form",
+        "layer_13_coach_vs_player",
+        "layer_14_player_vs_scheme"
+      ],
+      "qb_composite_score": 0.8114,
+      "home_qb_ttt_sec": 2.82,
+      "route_concept_beater_active": false
+    },
+    "trust_signals": {
+      "execution_Step": 4,
+      "upstream_dependencies": [
+        "offensive_line",
+        "coaching_scheme",
+        "qb_behavior"
+      ],
+      "cited_layers": [
+        "layer_01_freshness_reality",
+        "layer_20_outside_game_human_signals",
+        "layer_21_history"
+      ],
+      "trust_composite_score": 0.9051,
+      "temporal_leakage_clear": true,
+      "standing_roster_truth_verified": true
+    },
+    "scheme_matchup": {
+      "execution_Step": 5,
+      "upstream_dependencies": [
+        "offensive_line",
+        "coaching_scheme",
+        "qb_behavior"
+      ],
+      "cited_layers": [
+        "layer_15_scheme_vs_scheme",
+        "layer_16_scheme_vs_team"
+      ],
+      "scheme_matchup_score": 0.1125,
+      "cover1_plug_rat_banjo_rule": "BANJO stack switch + RAT/LAB motion bump (tells QB man coverage pre-snap) | RB weak -> Plugger aborts rush and drops into low-hole RAT window (robs Mesh/Dig)",
+      "sixty_minute_execution_capacity_home": 0.6625
+    }
+  },
+  "levels": {
+    "L1_signal_extraction": {
+      "extracted_layer_count": 26,
+      "active_layers": 25,
+      "waived_layers": 1,
+      "missing_upstream_layers": 0,
+      "baseline_total": 45.938,
+      "baseline_home_margin": 2.964
+    },
+    "L2_interaction_synthesis": {
+      "ol_to_scheme_coupling": 0.78228,
+      "scheme_to_qb_coupling": 0.45236,
+      "weather_and_rest_delta_pts": -0.145,
+      "micro_motion_epa_delta": 0.0496
+    },
+    "L3_structural_valuation": {
+      "fwl_orthogonal_residual_edge": 0.0222,
+      "romano_cqr_90_half_width_pts": 22.1779,
+      "kadavath_pik_confidence": 0.855,
+      "sinkhorn_l1_marginal_residual": 1.387779e-16,
+      "pace_projected_plays": 127.52
+    },
+    "L4_adversary": {
+      "adversary_veto_fired": false,
+      "crossed_key_number_3_or_7": false,
+      "epistemic_penalty_width_pts": 0.45,
+      "abstain_recommended": false
+    },
+    "L5_synthesis": {
+      "hierarchy_order": [
+        "offensive_line",
+        "coaching_scheme",
+        "qb_behavior",
+        "trust_signals",
+        "scheme_matchup"
+      ],
+      "ol_before_scheme_before_qb": true,
+      "market_entered_last": true,
+      "shin_devig_home_win_prob": 0.713578,
+      "synthesis_gate_verdict": "SYNTHESIS_CLEARED_FIXTURE_ONLY"
+    }
+  },
+  "layer_citations": [
+    "layer_01_freshness_reality",
+    "layer_02_totals_baselines",
+    "layer_03_venue_physical_environment",
+    "layer_04_schedule_situations",
+    "layer_05_health_replacement",
+    "layer_06_roster_usage",
+    "layer_07_player_traits_form",
+    "layer_08_player_vs_player",
+    "layer_09_unit_vs_unit",
+    "layer_10_scheme",
+    "layer_11_coach_mind",
+    "layer_12_coach_vs_coach",
+    "layer_13_coach_vs_player",
+    "layer_14_player_vs_scheme",
+    "layer_15_scheme_vs_scheme",
+    "layer_16_scheme_vs_team",
+    "layer_17_pace_tempo",
+    "layer_18_game_script_state",
+    "layer_19_micro_in_game",
+    "layer_20_outside_game_human_signals",
+    "layer_21_history",
+    "layer_22_officials",
+    "layer_23_market",
+    "layer_24_gsi_cross_domain_methods",
+    "layer_25_missingness_contradiction",
+    "layer_26_adversary_synthesis"
+  ],
+  "fallback_fired": false,
+  "fallback_reason": null
+}

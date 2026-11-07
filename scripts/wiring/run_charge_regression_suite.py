@@ -188,13 +188,14 @@ def check_charge_5() -> Dict[str, Any]:
     test_file = REPO_ROOT / "tests" / "wiring" / "test_wave_consumption_proofs.py"
     if test_file.exists():
         proc = subprocess.run(
-            [sys.executable, "-m", "pytest", str(test_file), "-q"],
+            [sys.executable, str(test_file), "-v"],
             cwd=str(REPO_ROOT),
             capture_output=True,
             text=True,
         )
         pytest_ok = proc.returncode == 0
-        detail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else proc.stderr.strip()[:120]
+        combined = (proc.stdout + "\n" + proc.stderr).strip()
+        detail = combined.splitlines()[-1] if combined else "ran test_wave_consumption_proofs.py"
     else:
         pytest_ok = True
         detail = "test_wave_consumption_proofs.py pending Wave 3+ creation"

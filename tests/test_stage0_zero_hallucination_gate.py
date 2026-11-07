@@ -8,7 +8,7 @@ Permanent Regression Test Suite for the GSE Connected Game-to-Game / Week-to-Wee
   2. Verifies `Stage0RosterContaminationError` blocks `Tank Bigsby`, `Isaiah Likely`, `Justin Tucker`,
      `Travis Etienne Jr.`, and active projections for `Lamar Jackson`, `Tyler Huntley`, `Skylar Thompson`.
   3. Verifies Stage 1A imports and executes all 38 coaching mind & scheme modules (`intelligence/coaching/`).
-  4. Verifies Stage 1B reviews all 5,367+ equations and scientific premises prior to simulation.
+  4. Verifies Stage 1B reviews all 12,304+ equations and scientific premises prior to simulation.
   5. Verifies Stage 2 + Stage 3/4 conserve team and player yardage/TDs across all 10,000 worlds and
      project all 37 verified 2026 board athletes.
   6. Scans all TNF output JSON/Markdown files and scripts to guarantee zero roster contamination.
@@ -128,8 +128,8 @@ def test_connected_workflow_master_bundle_and_all_37_athlete_projections():
     assert s1a["coaching_modules_imported_and_verified"] == s1a["coaching_modules_total"]
     assert s1a["parent_stage0_receipt_sha256"] == chain["stage0_receipt_sha256"]
 
-    # Stage 1B: All 5,367+ equations and scientific premises reviewed before simulation
-    s1b = bundle["stage1b_5367_equations_pre_sim_review"]
+    # Stage 1B: All 12,304+ equations and scientific premises reviewed before simulation
+    s1b = bundle["stage1b_12304_equations_pre_sim_review"]
     inv = s1b["equation_corpus_inventory"]
     assert inv["thousand_equation_matrix_load_bearing"] == 1666
     assert inv["gse_213_equation_engine_count"] == 213

@@ -11,3 +11,30 @@ Re-read at the start of every wave. Merged into `docs/wiring/LESSONS.md` at Wave
 
 ### WAVE_1_CENSUS Closed (2026-11-07T05:39:02.958805+00:00)
 - Wave 1 Census reconciled 898 remote branches, 11,193 origin commits (5,011 main + 6,182 non-main), 281 dangling commits, 126 Motif inbox files (100% SHA-256 match), and 48,609 corpus items. Passed 25/25 spot checks and dual Santa-Method review.
+
+### WAVE_2 Closed (2026-11-07T10:06:10.872602+00:00)
+- Reconciled all 898 remote branches in BRANCH-LEDGER.csv with zero unknowns; executed Charge 1/2/4/6 remediations across repo and Linux VM skills (/shared/user/.gemini/skills).
+
+### WAVE_3 Closed (2026-11-07T10:06:10.906720+00:00)
+- Ingested 4,463 full-text chunks from 2,006 active sources into data/corpus/research_records.jsonl; sanitized U+2028/U+2029 line separators so JSONL splitlines() is 100% deterministic; reconciled all 48,609 census items in RESEARCH-LEDGER.jsonl.
+
+### WAVE_4 Closed (2026-11-07T12:29:31.121418+00:00)
+- Built data/identity/canonical_entities.jsonl (5,494 canonical entities across 32 teams, 32 venues, 96 coaches, 17 officials, 5,317 players) and runtime resolvers (Python + TS) enforcing Geno Smith = NYJ QB, Mike Evans = SF WR, and Chris Godwin PULLED_NOV_1_EXCLUDED.
+
+### WAVE_5 Closed (2026-11-07T12:29:31.171051+00:00)
+- Remediated all 4 Math QA findings across 12,304 catalog equations (copula clamping, EQ_00032 active precip flag, EQ_04852 0.35 cap, 1,400 low-sample shrinkage tags, byte-synced twin registry) and emitted 17,712-row equation_execution_registry.jsonl.
+
+### WAVE_6 Closed (2026-11-07T12:29:31.212834+00:00)
+- Landed 10 canonical warehouse datasets (79,297 records) into intelligence/data/warehouse/normalized/ with repo-relative paths and Wave 4 entity validation.
+
+### WAVE_7 Closed (2026-11-07T12:29:31.248458+00:00)
+- Built all 5 versioned JSON schemas in schemas/v1/ and all 26 executable reasoning layer modules in intelligence/reasoning/layers/ with LAYER-MAP.md and canonical pre-game context packets.
+
+### WAVE_8 Closed (2026-11-07T12:29:31.295311+00:00)
+- Wired L1-L5 workflow_runner.py (OL->scheme->QB), 26-layer synthetic simulation sensitivity proof, placeholder content redaction stage, synthetic grading-to-corpus pipe, askJarvisLive + fallback_fired logging, /v1/models 9-ID parity, and 1.387779e-16 Sinkhorn residual.
+
+### WAVE_9 Closed (2026-11-07T12:29:31.337789+00:00)
+- Passed 10/10 Charges in run_charge_regression_suite.py, 200/200 seeded spot checks across Waves 1-8, 6/6 perturbation consumption proofs in test_wave_consumption_proofs.py, and armed morning runbook.
+
+### WAVE_1 Closed (2026-11-07T12:30:06.188050+00:00)
+- Verified Wave 1 census artifacts (BRANCH-CENSUS.csv [898], COMMIT-CENSUS.md [11,193], CORPUS-CENSUS.csv [48,609]) with 25/25 seeded spot checks and dual-count reconciliation.

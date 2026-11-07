@@ -10,7 +10,7 @@ This directory contains formal MADR-format Architecture Decision Records (ADRs) 
 | [0002](0002-situational-first-5-stage-pre-projection-and-jev-simulation-pipeline.md) | Situational-First 5-Stage Engine Gate & Full-Game Snap-by-Snap JEV Trajectory Pipeline | Accepted | 2026-11-06 |
 | [0003](0003-gsi-cross-domain-sports-medicine-and-decision-intelligence-expansion.md) | Galaxy Sports Institute (GSI) Cross-Domain Sports Medicine & Enterprise Decision Intelligence Expansion | Accepted | 2026-11-06 |
 | [0004](0004-hardware-aware-laptop-execution-pinecone-hybrid-and-bazel-monorepo.md) | Hardware-Aware Laptop Execution (`i7-1255U` + `Iris Xe`), Pinecone Hybrid Index & Bazel Monorepo Build Optimization | Accepted | 2026-11-06 |
-| [0005](0005-week9-plays-360-board-and-draftkings-fanduel-dfs-engine.md) | Week 9 Plays (`62-23-1` Baseline), 360-Degree Full-Board Market Review & DraftKings/FanDuel DFS Engine | Accepted | 2026-11-06 |
+| [0005](0005-week9-plays-360-board-and-draftkings-fanduel-dfs-engine.md) | Week 9 Plays (`47-19-1` Baseline), 360-Degree Full-Board Market Review & DraftKings/FanDuel DFS Engine | Accepted | 2026-11-06 |
 | [0006](0006-multi-channel-video-social-follower-growth-and-ad-affiliate-revenue-engine.md) | Multi-Channel Short-Form Video Production, Social Follower Flywheel & Ad/Affiliate Revenue Attribution Engine | Accepted | 2026-11-06 |
 
 ## ADR Lifecycle Rules

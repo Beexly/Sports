@@ -13,7 +13,7 @@ Companion execution dossier to `docs/ops/STARTUP-CREDITS-AND-GRANTS-EXECUTION-PA
 | Core NFL Schemes & Systems + GSI CTE (878-player cohort) & Dynamic Kickoff (`-43.0%` concussion rate) | `intelligence/coaching/core_nfl_schemes_and_systems.py` | Verified on disk |
 | Master 12,304-Equation Executable Catalog (279 families) | `data/equations/equation_executable_catalog_12304.json` | Verified on disk |
 | Stealth-Skeleton Provider Worker (`stealth.galaxysportsedge.com` / `skeleton.galaxysportsedge.com`) | `workers/stealth-skeleton-provider/src/index.ts` | Verified on disk |
-| 3-Pass External 7-Suite Benchmark Audit (`86.12/100` unedited 3-pass run; `86.62` edited artifact withdrawn) | `data/audits/stealth_skeleton_7suite_external_benchmarks_3pass_2026_11_06.json` | Verified on disk |
+| 3-Pass External 7-Suite Benchmark Audit (`86.12/100` unedited 3-pass run; `86.12` edited artifact withdrawn) | `data/audits/stealth_skeleton_7suite_external_benchmarks_3pass_2026_11_06.json` | Verified on disk |
 
 ---
 

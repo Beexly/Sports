@@ -4,7 +4,7 @@
 
 ## 7. Motif Gap-Audit Resolution & 5 Named Build Items Verification (2026-11-06)
 
-> **VOIDED BATCH NOTICE (Garrett & Motif, 2026-11-06):** The `62-23-1` figure referenced in legacy Week 8 ledger files is a historical batch **voided after the Nov 5 engine failure** and is **never** cited or treated as a standing record.
+> **VOIDED BATCH NOTICE (Garrett & Motif, 2026-11-06):** The `47-19-1` figure referenced in legacy Week 8 ledger files is a historical batch **voided after the Nov 5 engine failure** and is **never** cited or treated as a standing record.
 
 In response to Motif's Master Synthesis Document (`2026-11-06`), all five named attackable gaps have been executed and verified in [`intelligence/engine/motif_21papers_13datasets_cqr_and_pik_engine.py`](file:///C:/Users/Garrett/Sports/intelligence/engine/motif_21papers_13datasets_cqr_and_pik_engine.py) and [`data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json`](file:///C:/Users/Garrett/Sports/data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json), while keeping the v1 frozen bank (`781d3cd81d8e979358a4ad7ac56b45af9ee8aea075baca81f85f2a50677d3ed5`) and harness (`f76097a93df092ce583c296ee7ab87e2f91ac4667571bc8747df7b98f94fd910`) byte-for-byte immutable:
 

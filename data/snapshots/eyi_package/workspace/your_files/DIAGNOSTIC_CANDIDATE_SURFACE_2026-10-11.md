@@ -14,7 +14,7 @@ Every lean below is **research only**. None of these have passed the final check
 
 **OVER 19.5 — Deshaun Watson (CLE @ NYJ)** — We project 20.9. Nobody wants to bet a Browns quarterback, which is exactly why the line is soft.
 
-**OVER 19.5 — Drake Maye (LV @ NE)** — We project 20.8. Home game, close spread, young quarterback who has to throw to win.
+**OVER 19.5 — Drake Maye (LV @ NE)** — We project 20.8. Home game, close spread, young quarterback who has to throw to win. [PULLED_NOV_1_EXCLUDED]
 
 ---
 
@@ -38,7 +38,7 @@ Every lean below is **research only**. None of these have passed the final check
 
 **OVER — Tucker Kraft (GB)** — We project above the line. Tight ends eat in the red zone and nobody schemes for the second option.
 
-**OVER — Trey McBride (ARI)** — We project above the line. Target monster playing at home in a shootout.
+**OVER — Trey McBride (ARI)** — We project above the line. Target monster playing at home in a shootout. [PULLED_NOV_1_EXCLUDED]
 
 **OVER — Rome Odunze (CHI)** — We project slightly above the line. Barely a lean, but the rookie keeps getting force-fed.
 

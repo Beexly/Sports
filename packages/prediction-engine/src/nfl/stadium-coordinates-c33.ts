@@ -24,7 +24,7 @@ export interface StadiumCoordinates {
 
 export const STADIUM_COORDINATES: Readonly<Record<string, StadiumCoordinates>> = {
   ARI: { team: "ARI", stadium: "State Farm Stadium", city: "Glendale", state: "Arizona", lat: 33.5270393, lon: -112.2617088, osmType: "relation", osmId: "21437660", source: "nominatim.openstreetmap.org/search?q=State%20Farm%20Stadium%2C%20Glendale%2C%20Arizona" },
-  ATL: { team: "ATL", stadium: "Mercedes-Benz Stadium", city: "Atlanta", state: "Georgia", lat: 33.7554123, lon: -84.4008493, osmType: "way", osmId: "536744534", source: "nominatim.openstreetmap.org/search?q=Mercedes-Benz%20Stadium%2C%20Atlanta%2C%20Georgia" },
+  ATL: { team: "ATL", stadium: "Mercedes-Benz Stadium", city: "Atlanta", state: "Georgia", lat: 33.7554123, lon: -84.4008493, osmType: "way", osmId: "1230444534", source: "nominatim.openstreetmap.org/search?q=Mercedes-Benz%20Stadium%2C%20Atlanta%2C%20Georgia" },
   BAL: { team: "BAL", stadium: "M&T Bank Stadium", city: "Baltimore", state: "Maryland", lat: 39.2779734, lon: -76.6226651, osmType: "way", osmId: "1171329996", source: "nominatim.openstreetmap.org/search?q=M%26T%20Bank%20Stadium%2C%20Baltimore%2C%20Maryland" },
   BUF: { team: "BUF", stadium: "Highmark Stadium", city: "Orchard Park", state: "New York", lat: 42.7730293, lon: -78.7921925, osmType: "way", osmId: "1339149058", source: "nominatim.openstreetmap.org/search?q=Highmark%20Stadium%2C%20Orchard%20Park%2C%20New%20York" },
   CAR: { team: "CAR", stadium: "Bank of America Stadium", city: "Charlotte", state: "North Carolina", lat: 35.225774, lon: -80.8528276, osmType: "way", osmId: "180768146", source: "nominatim.openstreetmap.org/search?q=Bank%20of%20America%20Stadium%2C%20Charlotte%2C%20North%20Carolina" },

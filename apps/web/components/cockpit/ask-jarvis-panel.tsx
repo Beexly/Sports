@@ -43,7 +43,7 @@ const QUICK_AUTONOMOUS_MODES: readonly {
   {
     id: "corpus_and_gsi",
     label: "Full Corpus & GSI",
-    prompt: "Synthesize 5,367 equations, 25 graduate books (BK-01..BK-25), 257 PDFs, 81 Motif dossiers, and GSI trauma curves",
+    prompt: "Synthesize 12,304 equations, 25 graduate books (BK-01..BK-25), 257 PDFs, 81 Motif dossiers, and GSI trauma curves",
   },
 ];
 
@@ -140,7 +140,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
         </div>
         <div className="flex items-center gap-3">
           <p className="hidden text-[9px] uppercase tracking-widest text-ion-3/60 sm:block">
-            Composite 86.62/100 · Ledger 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)
+            Composite 86.12/100 · Ledger 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)
           </p>
           {active && (
             <button
@@ -168,7 +168,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                 OUR MODEL: {selectedModel}
               </span>
               <span className="rounded border border-titanium/50 bg-carbon px-2 py-0.5 font-mono text-[9px] text-ion-2">
-                Composite 86.62/100
+                Composite 86.12/100
               </span>
               <span className="rounded border border-titanium/50 bg-carbon px-2 py-0.5 font-mono text-[9px] text-ion-2">
                 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)
@@ -178,7 +178,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
               </span>
             </div>
             <p className="mt-1.5 text-xs text-ion-2">
-              Jarvis x Jynx Autonomous Brain · 5,367 Equations · 25 Graduate Books (BK-01..BK-25) · 257 PDFs · 81 Motif Dossiers · GSI Biomechanics
+              Jarvis x Jynx Autonomous Brain · 12,304 Equations · 25 Graduate Books (BK-01..BK-25) · 257 PDFs · 81 Motif Dossiers · GSI Biomechanics
             </p>
           </div>
 

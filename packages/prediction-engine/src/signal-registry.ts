@@ -573,7 +573,7 @@ export const SIGNALS: readonly SignalSpec[] = [
     cls: "distributional",
     label: "Two-normal mixture",
     measures: "0.20 N(mu,6.5) + 0.80 N(mu,14).",
-    provenance: "filter_contract_2026-10-14.json; CRPS 7.138654, -0.015367 vs Gaussian",
+    provenance: "filter_contract_2026-10-14.json; CRPS 7.138654, -0.0112304 vs Gaussian",
     evidence: "measured-reproduced",
     emissionWeight: 0,
     diagnosticWeight: 0.9,

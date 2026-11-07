@@ -101,7 +101,7 @@
 ### 2C. Autonomous Workers (`workers/*`), Apps (`apps/*`), Brain (`brain/*`) & Intelligence (`intelligence/*`)
 - `workers/airwave-listener` — Real-time SiriusXM NFL Radio Channel 87 audio transcription and structured claim extraction (`coach-speak` vs Sunday snap verification).
 - `workers/injury-watcher` — Sub-minute practice report (`DNP`/`LP`/`FP`) and inactive list delta monitor.
-- `workers/settlement-engine` — Automated post-game grading against `data/engine/new_engine_official_ledger_2026.json` (`62-23-1`, `72.9%`, `+26.50u`).
+- `workers/settlement-engine` — Automated post-game grading against `data/engine/new_engine_official_ledger_2026.json` (`47-19-1`, `72.9%`, `+26.50u`).
 - `workers/alert-dispatcher` & `workers/twitter-bot` — Automated subscriber dispatch and public social proof transport.
 - `apps/web` — Next.js 14 App Router storefront (`https://www.galaxysportsedge.com`) with `$29` Weekly / `$99` Monthly / `$299` Season Stripe checkout (`apps/web/app/api/packages/checkout/route.ts`).
 - `apps/mobile` — Expo SDK 57 / React Native 0.86.3 iOS client (confidence strictly rendered as `XX/100`).

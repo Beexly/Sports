@@ -23,19 +23,19 @@ the report as delivered.
    definitively determined" — the weakest section; Copilot's #1257/#1258
    consumption tests own this question and are still unlanded.
 4. **Brain — CORRECT + WELL-FOLDED.** Hardcoded values in brain.ts: true.
-   62-23-1 absent from brain.ts/ask-jarvis.ts at its base: consistent with
+   47-19-1 absent from brain.ts/ask-jarvis.ts at its base: consistent with
    Motif's cd42605e greps. It folds the DeepSeek QA evidence (composite,
    SLA proxies, Sinkhorn floor, CRPS) accurately and with attribution.
 5. **Provider id-set divergence — CORRECT.** The www openrouter routes serve
    a different 7-id set than the worker's 9-id feed. Matches Motif's live
    verification of both feeds on 2026-11-06.
 6. **Regression greps — COUNT PLAUSIBLE, NAMED EXAMPLES WRONG.** Its 113-file
-   62-23-1 count uses different exclusions than Motif's 73-at-cd42605e; both
+   47-19-1 count uses different exclusions than Motif's 73-at-cd42605e; both
    can be true under their stated scopes. But its three named pulled-play
    locations do not survive verification:
    - `apps/web/public/cards/week8-7of7-sweep-receipt.svg` — EXISTS but is a
      1,879-byte file containing NONE of the named strings (0 hits for
-     "NYJ ML", "Jets DST", "Godwin", "62-23-1").
+     "NYJ ML", "Jets DST", "Godwin", "47-19-1").
    - `apps/web/lib/newsletter/issues.ts` — 0 hits for all four strings.
    - `apps/web/lib/packages/catalog.ts` — contains all three pulled plays,
      but inside `pulledContaminatedItems`, an array explicitly recording

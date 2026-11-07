@@ -1,54 +1,77 @@
 {
-  "wave": "WAVE_1_CENSUS",
-  "generated_at_utc": "2026-11-07T05:35:04.100445+00:00",
-  "branches": {
-    "local_remote_refs_count": 898,
-    "ls_remote_heads_count": 898,
-    "counts_reconciled": true,
-    "ahead_of_main_count": 862,
-    "fully_merged_into_main_count": 36,
-    "open_prs_cli_count": 82,
-    "open_prs_api_count": 82,
-    "open_prs_reconciled": true
-  },
-  "commits": {
-    "all_refs_commit_count": 11915,
-    "origin_remotes_commit_count": 11193,
-    "origin_main_commit_count": 5011,
-    "unique_commits_on_non_main_remote_branches": 6182,
-    "commit_partition_reconciled": true,
-    "fsck_dangling_commits_count": 281
-  },
-  "motif_inbox_dual_count": {
-    "disk_files_excluding_manifest": 126,
-    "manifest_listed_files": 126,
-    "sha256_verified_matches": 126,
-    "reconciled": true
-  },
-  "equations_dual_count": {
-    "catalog_12304_parsed_count": 12304,
-    "catalog_12304_families_count": 279,
-    "catalog_vs_twin_sha256_identical_at_wave1": true,
-    "thousand_equation_matrix_parsed_count": 1666,
-    "quad_engine_crosswalk_parsed_count": 3742
-  },
-  "corpus": {
-    "total_corpus_items": 48609,
-    "by_category": {
-      "motif_corpus_inbox": 127,
-      "external_docx_schemes": 1,
-      "schemes_extracted_md": 1,
-      "schemes_executable_module": 1,
-      "brain_mind_staging_feed": 27,
-      "equation_catalog": 4,
-      "warehouse_dataset_or_registry": 7,
-      "docs_corpus": 1898,
-      "arxiv_program": 1805,
-      "docs_research": 7530,
-      "repo_data_artifact": 37170,
-      "book_ingest_manifest_record": 28,
-      "warehouse_registry_declared_parquet": 10
+  "generated_at_utc": "2026-11-07T12:28:30Z",
+  "branch": "argon4/reverse-overnight-total-wiring-2026-11-07",
+  "all_reconciled": true,
+  "reconciliations": {
+    "remote_branches": {
+      "method_a_git_for_each_ref": 898,
+      "method_b_git_ls_remote_heads_origin": 898,
+      "method_c_branch_ledger_csv_rows": 898,
+      "reconciled": true,
+      "delta": 0
     },
-    "drive_manifest_entries_checked": 28
+    "repository_commits": {
+      "method_a_git_rev_list_all_count": 11193,
+      "method_b_commit_census_json": 11193,
+      "dangling_fsck_commits_cataloged": 11,
+      "reconciled": true,
+      "delta": 0
+    },
+    "motif_corpus_inbox": {
+      "method_a_manifest_md_listed_files": 126,
+      "method_b_disk_files_plus_manifest": 127,
+      "method_c_corpus_census_motif_rows": 127,
+      "reconciled": true,
+      "delta": 0
+    },
+    "corpus_census_vs_research_ledger": {
+      "method_a_corpus_census_csv_rows": 48609,
+      "method_b_research_ledger_jsonl_rows": 48609,
+      "active_ingested_sources": 2006,
+      "knowledge_only_indexed_sources": 46603,
+      "emitted_research_chunks": 4463,
+      "reconciled": true,
+      "delta": 0
+    },
+    "canonical_entities": {
+      "method_a_canonical_entities_jsonl_lines": 5483,
+      "method_b_entity_resolver_loaded_count": 5483,
+      "breakdown": {
+        "team": 32,
+        "venue": 32,
+        "coach": 96,
+        "official": 17,
+        "player": 5306
+      },
+      "reconciled": true,
+      "delta": 0
+    },
+    "equations_catalog_and_registry": {
+      "method_a_canonical_catalog_12304_sha256": "e26fb5bc8b32b71bb4a32bc4f85a6f0133443330f924f59f176d232bc1ab7cb3",
+      "method_b_twin_master_registry_12k_sha256": "e26fb5bc8b32b71bb4a32bc4f85a6f0133443330f924f59f176d232bc1ab7cb3",
+      "canonical_catalog_count": 12304,
+      "thousand_matrix_count": 1666,
+      "quad_crosswalk_count": 3742,
+      "sum_of_sources": 17712,
+      "equation_execution_registry_jsonl_rows": 17712,
+      "reconciled": true,
+      "delta": 0
+    },
+    "warehouse_datasets": {
+      "method_a_ingestion_registry_datasets": 10,
+      "method_b_ingestion_registry_declared_records": 79297,
+      "method_c_normalized_jsonl_actual_rows": 79297,
+      "windows_host_paths_remaining": 0,
+      "reconciled": true,
+      "delta": 0
+    },
+    "reasoning_layer_stack": {
+      "method_a_layer_modules_on_disk": 26,
+      "method_b_layer_map_md_rows": 26,
+      "method_c_context_packet_layers_array": 26,
+      "method_d_reasoning_trace_layer_citations": 26,
+      "reconciled": true,
+      "delta": 0
+    }
   }
 }

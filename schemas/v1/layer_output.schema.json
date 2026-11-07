@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxysportsedge.com/schemas/v1/layer_output.schema.json",
+  "title": "GSE Reasoning Layer Output Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "layer_id",
+    "layer_slug",
+    "game_id",
+    "as_of_utc",
+    "status",
+    "status_reason",
+    "inputs",
+    "source_datasets",
+    "freshness_rule",
+    "consumer",
+    "signals",
+    "uncertainty_width_delta",
+    "citations"
+  ],
+  "properties": {
+    "layer_id": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 26,
+      "description": "Canonical 1-indexed reasoning layer identifier (1..26)."
+    },
+    "layer_slug": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Snake-case module slug for the reasoning layer."
+    },
+    "game_id": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Canonical game identifier (e.g. 2026_W09_JAX_BAL)."
+    },
+    "as_of_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp at which layer signals were evaluated."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "WAIVED_WITH_REASON", "MISSING_UPSTREAM"],
+      "description": "Execution status of the layer."
+    },
+    "status_reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human- and machine-auditable explanation for status."
+    },
+    "inputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "List of input feature keys consumed by this layer."
+    },
+    "source_datasets": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Authoritative datasets backing this layer."
+    },
+    "freshness_rule": {
+      "type": "string",
+      "minLength": 1,
+      "description": "SLA freshness window required before kickoff."
+    },
+    "consumer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Downstream reasoning track or synthesizer consuming this layer."
+    },
+    "signals": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Structured quantitative and structural signals emitted by this layer."
+    },
+    "uncertainty_width_delta": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Non-negative epistemic uncertainty width widening when data is waived or missing."
+    },
+    "citations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Provenance citations (modules, equations, dossiers, or dataset hashes)."
+    }
+  }
+}

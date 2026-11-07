@@ -222,7 +222,7 @@ function normalizeKey(value: string): string {
 
 /**
  * Split a market label into priced legs. A compound label uses "&" between
- * legs, e.g. "Brandin Cooks OVER 24.5 Receiving Yards & George Kittle OVER
+ * legs, e.g. "Brandin Cooks OVER 24.5 Receiving Yards & George Kittle OVER // PULLED_NOV_1_EXCLUDED
  * 71.5 Receiving Yards".
  */
 export function parseTicketLegs(marketLabel: string): TicketLeg[] {

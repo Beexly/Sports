@@ -220,12 +220,14 @@ Optimizer gained min_salary / max_per_team. scripts/ops/verify_week9_packets_sta
 confirmed_qb1 is a highest-salary heuristic. BAL/JAX multipliers are unfitted analyst judgment, not JEV output.
 injuries_2026.csv still stops at week 8. Packets remain research artifacts, not publishable (no 5-stage/JEV pass).
 
-**Next role (Builder):** preflight-roster-gate.ts mirror, gate the pick/prop/SGP pipelines (un_full_gse_slate_pipeline.ts,
+**Next role (Builder):** preflight-roster-gate.ts mirror, gate the pick/prop/SGP pipelines (
+un_full_gse_slate_pipeline.ts,
 gse_coach_mind_simulator.py), then Components 1-4 of the approved plan.
 
 ## 2026-11-05 - Stage 0 gate on pick/sim pipelines (Antigravity)
 
-**Done:** un_full_gse_slate_pipeline.ts and gse_coach_mind_simulator.py now hard-refuse unless a fresh roster config for their
+**Done:** 
+un_full_gse_slate_pipeline.ts and gse_coach_mind_simulator.py now hard-refuse unless a fresh roster config for their
 week exists (both are Week-8-hardcoded, so both refuse today; explicit non-publishable override STAGE0_RETROSPECTIVE=1).
 TS mirror packages/prediction-engine/src/nfl/preflight-roster-gate.ts; excluded QBs feed QB1-out into the injury map in live mode.
 
@@ -254,7 +256,7 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 **Changed:**
 - Wired the uncompressed 24,957-file monorepo, 12 canonical textbook families, 1,791 ArXiv papers, 25 packages, 35 intelligence domains (`intelligence/coaching/uncompressed_25k_repo_books_papers_routes_bridge.py`), all 83 X-Situational rules + 3 measured primitives + 6-family Cholesky aggregator + 288-bit / 279-family / 12,304-equation cognitive router (`intelligence/coaching/full_repo_279_family_situational_reasoning_matrix.py`), the entire Google Drive (`G:\My Drive`, 3,700+ files) & OneDrive (`1,014` files) omni-situational engine (`intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py`), Wave 10 GCP 188 products + 34 GitHub repos (`intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py`), and Wave 11 27-Downloads X-Layer-2 compiler + all 51 `Q1-Q51` features + 165 rescued X-intel items (`intelligence/coaching/x_situational_layer2_compiler.py`) live into `compile_stage1_to_stage2_simulation_priors()` in `scripts/ops/gse_connected_game_workflow.py`.
 - Remediated all 11 Smoking Guns (`SG-1` through `SG-11`) across `scripts/ops/gse_coach_mind_simulator.py`, `scripts/ops/week8_forensic_kernels.py`, `scripts/ops/solve_showdown_dfs_milp.py`, `scripts/ops/run_halftime_live_simulator.py`, `scripts/ops/render_tnf_social_cards.py`, `scripts/guardrails/connected-workflow-dossier-guard.py`, `intelligence/routing/runpod_gpu_orchestrator.py`, and `scripts/ops/runpod_serverless_sim_handler.py`.
-- Quarantined finished TNF package (`forSale: false`) and teasers on `apps/web` (`catalog.ts`, `packages/page.tsx`, `redline-world.tsx`), pivoting cleanly to Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`, `IND @ MIN`) & MNF (`TB @ KC`) while preserving the Official Verified Season Record at `62-23-1` (`72.9%`, `+26.50u`).
+- Quarantined finished TNF package (`forSale: false`) and teasers on `apps/web` (`catalog.ts`, `packages/page.tsx`, `redline-world.tsx`), pivoting cleanly to Week 9 Sunday Main Slate (`DET @ GB`, `MIA @ BUF`, `IND @ MIN`) & MNF (`TB @ KC`) while preserving the Official Verified Season Record at `47-19-1` (`72.9%`, `+26.50u`).
 
 **Proven:**
 - `python -m pytest tests/test_week9_forensic_autopsy_fixes.py -v` — 23 passed in 9.23s (`0` failures).

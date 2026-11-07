@@ -520,7 +520,7 @@ export function evaluateSiriusXmRadioReactionSignals(
         spreadHomeDelta: 0.25,
         processFadeFlag: null,
         usageFloorBoostPlayer: "Caleb Williams & Rome Odunze / D'Andre Swift",
-        injuryBackfieldNote: "Caleb Williams graded as legitimate top-5 trajectory under Ben Johnson's motion/play-action crossers.",
+        injuryBackfieldNote: "Caleb Williams graded as legitimate top-5 trajectory under Ben Johnson's motion/play-action crossers.", // PULLED_NOV_1_EXCLUDED
         radioTakeawaySummary:
           "Caleb Williams continues his ascent into top-tier pocket + play-action efficiency, keeping Chicago live inside the number at Seattle.",
       };

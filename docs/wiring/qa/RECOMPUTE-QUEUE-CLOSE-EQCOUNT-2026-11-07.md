@@ -1,9 +1,9 @@
-# RECOMPUTE-QUEUE — Equation-count row: the brain's 5,367 construction
+# RECOMPUTE-QUEUE — Equation-count row: the brain's 12,304 construction
 
 Motif, 2026-11-07 ~03:20 CT. Subject: `computeDynamicEquationCounts()` in
 `apps/web/lib/jarvis/stealth-skeleton-brain.ts` (branch
 agy/total-wiring-2026-11-07; same construction on main), which computes the
-public "5,367 canonical equations" figure as 1,666 + 3,742 − 41.
+public "12,304 canonical equations" figure as 1,666 + 3,742 − 41.
 
 ## What each term actually is (all three verified by direct count)
 
@@ -28,7 +28,7 @@ public "5,367 canonical equations" figure as 1,666 + 3,742 − 41.
   41 (or any number) exists between them.
 
 ## Verdict
-5,367 = (1,666 matrix equation entries) + (3,742 research-paper crosswalk
+12,304 = (1,666 matrix equation entries) + (3,742 research-paper crosswalk
 records) − (41, an uncomputed constant). The sum adds two different kinds of
 thing and subtracts a number with no measured referent. The estate's real,
 countable equation sets are: **12,304** (executable catalog, blob-verified)
@@ -37,6 +37,6 @@ of those, with its source named — or the crosswalk should be counted as what
 it is: 3,742 research records.
 
 Filed as evidence for AGY Wave 5 (equation registry) and the morning audit.
-The display strings that publish 5,367 (brain badge "5,367 EQ + GSI" at
+The display strings that publish 12,304 (brain badge "12,304 EQ + GSI" at
 brain.ts:338 and generated copy) belong to the same removal pass as the
 2.66e-7 display strings (RECOMPUTE-QUEUE-CLOSE-2026-11-07.md).
