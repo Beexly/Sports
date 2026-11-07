@@ -10,7 +10,7 @@ Recounts (every JSONL line parsed; 0 unparseable anywhere):
 - mind_2026_11_06_mega_sweep_corpus.jsonl: 710 lines, 710 trainer_ready.
 - mind_2026_11_06_zero_skip_theorems: 2,949 lines, 2,949 trainer_ready.
 - downloads_225 corpus: 510 lines, 510 ready. wave8: 115/115. wave10: 240/240. wave11: 100/100. wave12: 169/169.
-- master_aggregator_tnf_jax_bal: 31 lines, **0 flagged trainer_ready**. wave13 sheaf/navier-stokes: 114 lines, **0 flagged** — either a different record schema or unflagged; flagged here, not resolved tonight.
+- master_aggregator_tnf_jax_bal: 31 lines, **0 flagged trainer_ready**. wave13 sheaf/navier-stokes: 114 lines, **0 flagged** — RESOLVED on inspection: both files simply use different record schemas that have no trainer_ready field at all (wave13 = document-chunk records with sha256 provenance; the aggregator file = runtime stream records). Not unflagged mind records — different record types sharing the staging folder.
 - brain/feeds/unified_mind_staging_waves1_to_12: 6,250 lines, 5,899 trainer_ready (94.4%).
 - **Staging total: 14,040 lines, 13,265 trainer_ready-flagged (94.48%), 0 corrupt lines.**
 
