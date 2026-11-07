@@ -389,6 +389,33 @@ def build_classic_packet(
     opt_df["projection"] = mu
     opt_df["sd"] = sd
 
+    # Execute Two-Stage GSE Simulation-to-DFS Pipeline FIRST (Stage 1 Game Sims -> Stage 2 Curated Pool -> Stage 3 Dedicated DFS Sims + 19 Equations)
+    # so the MILP optimizer directly consumes the curated pool and 19-equation metrics!
+    two_stage_dfs_receipt: dict = {}
+    if len(players) >= 60:
+        two_stage_dfs_receipt = build_gse_post_game_sim_projections_and_curated_pool(
+            players, num_dfs_sims=sims, seed=seed
+        )
+        accepted_idx_set = set(two_stage_dfs_receipt.get("accepted_indices", []))
+        curated_by_name = {
+            str(r.get("player") or r.get("name") or ""): r
+            for r in two_stage_dfs_receipt.get("curated_pool_records", [])
+        }
+        if accepted_idx_set:
+            for r_idx in opt_df.index:
+                if r_idx not in accepted_idx_set:
+                    opt_df.at[r_idx, "projection"] = min(float(opt_df.at[r_idx, "projection"]), 2.5)
+                else:
+                    p_nm = str(opt_df.at[r_idx, "player"])
+                    c_rec = curated_by_name.get(p_nm)
+                    if c_rec:
+                        f19 = c_rec.get("frontier_19_equation_metrics") or {}
+                        late_ev = float(f19.get("eq_dfs_13_late_swap_recourse_option_ev", 0.0))
+                        # Incorporate bounded two-stage late-swap recourse option value into optimizer objective
+                        opt_df.at[r_idx, "projection"] = round(
+                            float(opt_df.at[r_idx, "projection"]) + 0.08 * late_ev, 3
+                        )
+
     # Generate Unified Week 9 Season-Long Fantasy & DFS Rankings Dossier
     if len(players) >= 60:
         try:
@@ -485,33 +512,10 @@ def build_classic_packet(
     dfs_corpus_summary = load_dfs_5000_page_corpus_summary()
     marginal_gains = eq_dfs_03_submodular_p99_marginal_gain(lineup_scores, win_threshold)
 
-    # Execute Two-Stage GSE Simulation-to-DFS Pipeline (Game Sims -> GSE Player Projections -> Curated Pool -> Dedicated DFS Sims)
-    two_stage_dfs_receipt: dict = {}
+    # Finalize Two-Stage GSE Simulation-to-DFS Pipeline Receipt with Portfolio k-DPP Diversity (EQ-DFS-09)
     enterprise_status: dict = {}
     external_eval_manifest: dict = {}
     run_improvement_receipt: dict = {}
-    if len(players) >= 60:
-        two_stage_dfs_receipt = build_gse_post_game_sim_projections_and_curated_pool(
-            players, num_dfs_sims=sims, seed=seed
-        )
-        enterprise_status = verify_enterprise_programs_and_services()
-        external_eval_manifest = build_official_external_evaluation_manifest()
-        run_improvement_receipt = record_and_learn_from_engine_run(
-            run_type="two_stage_gse_sim_to_dfs_dual_slate_week9",
-            metrics={
-                "total_slate_players_projected": two_stage_dfs_receipt.get("total_slate_players_projected", len(players)),
-                "curated_dfs_pool_size": two_stage_dfs_receipt.get("curated_dfs_pool_size", 0),
-                "rejected_sub_floor_traps": two_stage_dfs_receipt.get("rejected_players_count", 0),
-                "submodular_p99_coverage": round(float(sum(marginal_gains)), 4),
-                "best_lineup_win_prob": round(float(win_prob[best_i]), 4),
-            },
-            improvements_applied=[
-                "Stage 1 GSE Post-Game-Sim Player Projections extracted before DFS pool selection",
-                "Stage 2 Dedicated Curated GSE DFS Player Pool isolated (hard-blocking sub-floor WR4s & punt road-dog DSTs)",
-                "Stage 3 Dedicated 10,000-World Second-Stage DFS Pool Simulations with +3pt 300/100-yd bonus tracking",
-                "Stealth-Skeleton Official External Evaluation Manifest & SFT/DPO/GRPO Distillation Flywheel updated",
-            ],
-        )
     spotlights = []
     for _, r in opt_df.iterrows():
         if _norm_player_key(str(r["player"])) in spotlight_names:
@@ -557,6 +561,44 @@ def build_classic_packet(
             ],
         })
 
+    if len(players) >= 60:
+        two_stage_dfs_receipt = build_gse_post_game_sim_projections_and_curated_pool(
+            players, num_dfs_sims=sims, seed=seed, portfolio_lineups=lineup_records
+        )
+        # Strip transient bulk arrays from packet receipt summary
+        two_stage_dfs_receipt = {
+            k: v
+            for k, v in two_stage_dfs_receipt.items()
+            if k not in ("accepted_indices", "curated_pool_records")
+        }
+        enterprise_status = verify_enterprise_programs_and_services()
+        external_eval_manifest = build_official_external_evaluation_manifest()
+        run_improvement_receipt = record_and_learn_from_engine_run(
+            run_type="two_stage_gse_sim_to_dfs_dual_slate_week9",
+            metrics={
+                "total_slate_players_projected": two_stage_dfs_receipt.get("total_slate_players_projected", len(players)),
+                "curated_dfs_pool_size": two_stage_dfs_receipt.get("curated_dfs_pool_size", 0),
+                "rejected_sub_floor_traps": two_stage_dfs_receipt.get("rejected_players_count", 0),
+                "submodular_p99_coverage": round(float(sum(marginal_gains)), 4),
+                "best_lineup_win_prob": round(float(win_prob[best_i]), 4),
+            },
+            improvements_applied=[
+                "Stage 1 GSE Post-Game-Sim Player Projections extracted before DFS pool selection",
+                "Stage 2 Dedicated Curated GSE DFS Player Pool isolated (hard-blocking sub-floor WR4s & punt road-dog DSTs)",
+                "Stage 3 Dedicated 10,000-World Second-Stage DFS Pool Simulations with +3pt 300/100-yd bonus tracking",
+                "Stealth-Skeleton Official External Evaluation Manifest & SFT/DPO/GRPO Distillation Flywheel updated",
+                "Stage 4 Live 18-Authority Cognitive & Tactical Upgrade (Latch stack-relay synergy, Foresight field-evasion, Stax atomic rubric)",
+            ],
+        )
+
+    from intelligence.reasoning.live_cognitive_self_improvement_engine import (
+        apply_live_18_authority_dfs_pool_and_lineup_upgrade,
+    )
+    live_18_auth_dfs = apply_live_18_authority_dfs_pool_and_lineup_upgrade(
+        player_pool=players.to_dict("records"),
+        lineups=lineup_records,
+    )
+
     return {
         "slate_name": "week9_sunday_main_11_game",
         "stage0_removed": players.attrs.get("stage0_removed", []),
@@ -577,6 +619,7 @@ def build_classic_packet(
             "morning_analytics_sweep_2026_11_07": morning_sweep_summary,
             "dfs_5000_page_literature_corpus": dfs_corpus_summary,
             "two_stage_gse_dfs_pipeline": two_stage_dfs_receipt,
+            "live_18_authority_cognitive_upgrade": live_18_auth_dfs,
             "enterprise_ecosystem_and_cloud_router": enterprise_status,
             "stealth_skeleton_official_external_eval": {
                 "live_edge_provider_base_url": external_eval_manifest.get("live_edge_provider_base_url"),
@@ -959,6 +1002,37 @@ def build_all(
             jp = out_dir / f"{name}_packet_{suffix}.json"
             jp.write_text(json.dumps(packet, indent=2), encoding="utf-8")
             written.append(str(jp))
+
+    receipt_path = out_dir / "two_stage_gse_dfs_execution_receipt_2026_11_07.json"
+    receipt_path.write_text(
+        json.dumps(
+            {
+                "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "two_stage_gse_dfs_pipeline": classic.get("two_stage_gse_dfs_pipeline", {}),
+                "spotlights": classic.get("spotlights", []),
+                "lineups": classic.get("lineups", []),
+            },
+            indent=2,
+            allow_nan=False,
+        ),
+        encoding="utf-8",
+    )
+    written.append(str(receipt_path))
+
+    dual_slate_path = out_dir / "week9_dual_slate_dfs_simulations_and_lineups_2026.json"
+    dual_slate_path.write_text(
+        json.dumps(
+            {
+                "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "classic": classic,
+                "showdown": showdown,
+            },
+            indent=2,
+            allow_nan=False,
+        ),
+        encoding="utf-8",
+    )
+    written.append(str(dual_slate_path))
 
     main_md = docs_dir / "WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md"
     main_md.write_text(

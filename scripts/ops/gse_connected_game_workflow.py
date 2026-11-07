@@ -968,7 +968,11 @@ def _devig_two_way(odds_a: float, odds_b: float) -> tuple[float, float, float]:
     return pa / overround, pb / overround, overround - 1.0
 
 
-def _quantiles_from_vec(vec: np.ndarray, cqr_interval_width_mult: float = 1.0) -> dict[str, float]:
+def _quantiles_from_vec(
+    vec: np.ndarray,
+    cqr_interval_width_mult: float = 1.0,
+    allow_negative: bool = False,
+) -> dict[str, float]:
     p50_raw = float(np.percentile(vec, 50))
     p10_raw = float(np.percentile(vec, 10))
     p25_raw = float(np.percentile(vec, 25))
@@ -979,11 +983,16 @@ def _quantiles_from_vec(vec: np.ndarray, cqr_interval_width_mult: float = 1.0) -
     p25_cqr = p50_raw - (p50_raw - p25_raw) * mult
     p75_cqr = p50_raw + (p75_raw - p50_raw) * mult
     p90_cqr = p50_raw + (p90_raw - p50_raw) * mult
-    if vec.size > 0 and float(np.min(vec)) >= 0.0:
+    mean_val = float(np.mean(vec))
+    if not allow_negative:
+        mean_val = max(0.0, mean_val)
         p10_cqr = max(0.0, p10_cqr)
         p25_cqr = max(0.0, p25_cqr)
+        p50_raw = max(0.0, p50_raw)
+        p75_cqr = max(0.0, p75_cqr)
+        p90_cqr = max(0.0, p90_cqr)
     return {
-        "mean": round(float(np.mean(vec)), 2),
+        "mean": round(mean_val, 2),
         "std": round(float(np.std(vec)), 2),
         "p10": round(p10_cqr, 2),
         "p25": round(p25_cqr, 2),
@@ -2354,6 +2363,28 @@ def compile_stage1_to_stage2_simulation_priors(
     qb2x2_home_shift = float(home_qb_2x2.get("epa_shift_vs_baseline", 0.0)) * 0.08
     eq_gate_12k_epa_shift = float(np.clip(float(eq_gate_12k.get("clamped_log_odds_delta", 0.0)) * 0.025, -0.020, 0.020))
 
+    from intelligence.reasoning.live_cognitive_self_improvement_engine import (
+        compute_live_18_authority_situational_and_tactical_upgrade,
+    )
+    live_18_authority_upgrade = compute_live_18_authority_situational_and_tactical_upgrade(
+        {
+            "away": away_tm,
+            "home": home_tm,
+            "away_proe": float(aw_pbp_st.get("proe", 0.024)),
+            "home_proe": float(hm_pbp_st.get("proe", -0.018)),
+            "away_pressure_rate": float(aw_pbp_st.get("dc_blitz_rate", 0.305)),
+            "home_pressure_rate": float(hm_pbp_st.get("dc_blitz_rate", 0.295)),
+            "weather_wind_mph": weather_wind_mph,
+            "is_indoor": bool(env_cfg.get("is_indoor", False)),
+            "home_qb_tier": home_qb_tier,
+            "away_qb_tier": away_qb_tier,
+            "ol_starters_out": int(merged_game_context.get("home_ol_starters_out", 0) or 0),
+            "posted_total": float(env_cfg.get("posted_total", 45.5)),
+        }
+    )
+    away_18auth_epa = float(live_18_authority_upgrade.get("away_epa_18_authority_delta", 0.0))
+    home_18auth_epa = float(live_18_authority_upgrade.get("home_epa_18_authority_delta", 0.0))
+
     away_off_epa_delta_sit = float(
         np.clip(
             0.25 * gdrive_epa_delta
@@ -2368,7 +2399,8 @@ def compile_stage1_to_stage2_simulation_priors(
             - 0.25 * mega_sweep_epa_delta
             - 0.20 * gsi_step2_health_delta
             - eq_gate_12k_epa_shift
-            + qb2x2_away_shift,
+            + qb2x2_away_shift
+            + 0.20 * away_18auth_epa,
             -0.065,
             0.065,
         )
@@ -2387,7 +2419,8 @@ def compile_stage1_to_stage2_simulation_priors(
             + 0.25 * mega_sweep_epa_delta
             + 0.20 * gsi_step2_health_delta
             + eq_gate_12k_epa_shift
-            + qb2x2_home_shift,
+            + qb2x2_home_shift
+            + 0.20 * home_18auth_epa,
             -0.075,
             0.065,
         )
@@ -2606,6 +2639,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "equation_gate_12304_clamped_delta": round(float(eq_gate_12k.get("clamped_log_odds_delta", 0.0)), 6),
         "roster_truth_player_adjustments": roster_truth_player_adjustments,
         "pre_projection_universal_and_deep_priors": pre_projection_universal_and_deep_priors,
+        "live_18_authority_cognitive_upgrade": live_18_authority_upgrade,
     }
 
     away_wr1_share = 9.1 if wr1_is_decoy_trap else 25.8
@@ -2614,6 +2648,7 @@ def compile_stage1_to_stage2_simulation_priors(
 
     return {
         "stage1_parameter_coupling_verified": True,
+        "live_18_authority_cognitive_upgrade": live_18_authority_upgrade,
         "away_off_epa": round(away_off_epa, 4),
         "home_off_epa": round(home_off_epa, 4),
         "away_off_epa_adj": away_off_epa_adj,
@@ -2881,7 +2916,7 @@ def run_stage2_jev_spine_and_10k_world_simulation(
             "jax_score": _quantiles_from_vec(vecs_a["away_score"], cqr_mult),
             "bal_score": _quantiles_from_vec(vecs_a["home_score"], cqr_mult),
             "total_points": _quantiles_from_vec(vecs_a["total_pts_out"], cqr_mult),
-            "home_margin_bal_minus_jax": _quantiles_from_vec(vecs_a["home_margin_out"], cqr_mult),
+            "home_margin_bal_minus_jax": _quantiles_from_vec(vecs_a["home_margin_out"], cqr_mult, allow_negative=True),
             "away_win_prob": round(float(np.mean(vecs_a["away_score"] > vecs_a["home_score"])), 4),
             "home_win_prob": round(float(np.mean(vecs_a["home_score"] > vecs_a["away_score"])), 4),
             "jax_win_prob": round(float(np.mean(vecs_a["away_score"] > vecs_a["home_score"])), 4),

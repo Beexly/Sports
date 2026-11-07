@@ -127,6 +127,10 @@ class AnalysisEngine:
             if trace.adversary_report is None:
                 self._run_l4(req, ctx, trace)  # ensure the report exists
             run_l5_synthesis(trace, trace.adversary_report)
+            from .live_cognitive_self_improvement_engine import (
+                run_live_18_authority_cognitive_upgrade_on_trace,
+            )
+            run_live_18_authority_cognitive_upgrade_on_trace(trace, ctx)
 
         return self._finalize(trace)
 

@@ -1823,6 +1823,50 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     assert auths["9_arxiv_2606_25057_and_hf_ch11_5_contamination"]["contamination_free_verified"] is True
     assert "latex_math" in auths["10_hf_catherine_arnett_multilingual_byte_premium"]["script_fertility_and_byte_premium"]
 
+    # 7. Verify Live 18-Authority Cognitive & Tactical Self-Improvement Engine is wired into:
+    #    (a) Stage 1 -> Stage 2 Simulation Priors (`compile_stage1_to_stage2_simulation_priors`)
+    #    (b) Two-Stage Sim-to-DFS Pool & Lineup Optimizer (`apply_live_18_authority_dfs_pool_and_lineup_upgrade`)
+    #    (c) L1 -> L5 Reasoning Engine (`run_live_18_authority_cognitive_upgrade_on_trace`)
+    from intelligence.reasoning.live_cognitive_self_improvement_engine import (
+        apply_live_18_authority_dfs_pool_and_lineup_upgrade,
+        compute_live_18_authority_situational_and_tactical_upgrade,
+    )
+
+    priors = compile_stage1_to_stage2_simulation_priors(
+        stage1a_receipt={"away": "DET", "home": "MIA", "away_qb1_starter": "Jared Goff", "home_qb1_starter": "Tua Tagovailoa"},
+        stage1b_receipt={"weather_wind_mph": 8.0},
+    )
+    assert "live_18_authority_cognitive_upgrade" in priors
+    assert "live_18_authority_cognitive_upgrade" in priors["combined_load_bearing_priors"]
+    up_s2 = priors["live_18_authority_cognitive_upgrade"]
+    assert up_s2["gemini_agent_trajectory_verification"]["trajectory_in_order_match"] == 1.0
+    assert up_s2["counterfactual_perturbation_stress_test"]["counterfactual_worlds_tested"] == 8
+    assert 0.70 <= up_s2["counterfactual_perturbation_stress_test"]["counterfactual_stability_multiplier"] <= 1.0
+    assert sum(up_s2["scenario_bradley_terry_routing"]["bradley_terry_specialist_weights"].values()) == pytest.approx(1.0, abs=1e-3)
+
+    dfs_up = apply_live_18_authority_dfs_pool_and_lineup_upgrade(
+        player_pool=[
+            {"name": "Jared Goff", "position": "QB", "team": "DET", "salary": 6800, "projection": 21.4},
+            {"name": "Amon-Ra St. Brown", "position": "WR", "team": "DET", "salary": 8100, "projection": 19.8},
+            {"name": "De'Von Achane", "position": "RB", "team": "MIA", "salary": 7600, "projection": 18.9},
+        ],
+        lineups=[
+            {
+                "players": [
+                    {"name": "Jared Goff", "position": "QB", "team": "DET", "salary": 6800, "projection": 21.4},
+                    {"name": "Amon-Ra St. Brown", "position": "WR", "team": "DET", "salary": 8100, "projection": 19.8},
+                    {"name": "De'Von Achane", "position": "RB", "team": "MIA", "salary": 7600, "projection": 18.9},
+                    {"name": "Rhamondre Stevenson", "position": "RB", "team": "NE", "salary": 6100, "projection": 16.5},
+                    {"name": "Dalton Schultz", "position": "TE", "team": "HOU", "salary": 3200, "projection": 11.2},
+                ]
+            }
+        ],
+    )
+    assert dfs_up["status"] == "VERIFIED_18_AUTHORITY_DFS_SELF_IMPROVEMENT"
+    assert dfs_up["all_lineups_stax_verified"] is True
+    assert dfs_up["gemini_two_stage_dfs_trajectory"]["trajectory_exact_match"] == 1.0
+
+
 
 
 
