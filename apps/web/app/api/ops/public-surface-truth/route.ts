@@ -250,6 +250,21 @@ export async function GET(request: Request) {
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.trim() ||
     null;
 
+  // 2026-11-07: hoist independent read-only probes so they run concurrently
+  // with the settlement/sample/calibration chain below instead of serially
+  // after it. Each is awaited at its original use site; nothing here gates.
+  const schedulerLivenessP = assessSchedulerLiveness().catch(() => null);
+  const freeSpineP = (async (): Promise<
+    Awaited<ReturnType<typeof resolveBestFreeSpineSnapshot>> | null
+  > => {
+    try {
+      return await resolveBestFreeSpineSnapshot();
+    } catch {
+      return null;
+    }
+  })();
+  const marketStaleP = isMarketBoardOddsStale().catch(() => true);
+
   let settlement: {
     health: string;
     commencedTotal: number;
@@ -439,7 +454,7 @@ export async function GET(request: Request) {
 
   // Distinguishes "platform cron stopped firing" from "quiet board" — see
   // lib/ops/scheduler-liveness.ts for the 2026-08-10 incident this exists for.
-  const schedulerLiveness = await assessSchedulerLiveness().catch(() => null);
+  const schedulerLiveness = await schedulerLivenessP;
 
   // Ingestion failsafe (see traffic-heartbeat.ts). This is the most-requested
   // API route in production (~every 7 min), which makes it the best available
@@ -494,7 +509,9 @@ export async function GET(request: Request) {
     slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
   };
   try {
-    const { snap, source } = await resolveBestFreeSpineSnapshot();
+    const _fs = await freeSpineP;
+    if (_fs) {
+      const { snap, source } = _fs;
     if (snap) {
       const ageMs = freeSpineSnapAgeMs(snap);
       freeSpine = {
@@ -515,6 +532,7 @@ export async function GET(request: Request) {
         probedAt: snap.probedAt,
         slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
       };
+    }
     }
   } catch {
     /* honest empty */
@@ -560,7 +578,7 @@ export async function GET(request: Request) {
     calibrationPublish?.canExposePerformanceStats === true;
   const calibrationPublished = effectivePerformanceStats;
 
-  const oddsStaleForSurface = await isMarketBoardOddsStale().catch(() => true);
+  const oddsStaleForSurface = await marketStaleP;
   const boardSurface = boardSurfacePosture(process.env, { oddsFresh: !oddsStaleForSurface });
   const signalSlateStale =
     boardSurface.surface === "signal"
@@ -614,14 +632,39 @@ export async function GET(request: Request) {
   // counts against, same as the public policy and summarizeClv). Null until
   // the graded sample clears the public floor so a handful of picks cannot
   // read as a rate.
-  const clvPolicy = isStubMode()
-    ? null
-    : await safeRead(() =>
-        loadPublicClvPolicy(db, {
-          canExposePerformanceStats: effectivePerformanceStats,
-          minGradedForPublic: 25,
-        }),
-      );
+  // 2026-11-07: run the post-founder read-only bundle CONCURRENTLY instead
+  // of seven sequential awaits (~10-20s saved). All entries independently
+  // fail-closed (safeRead / stub / freshness helper) and nothing here gates.
+  const [
+    clvPolicy,
+    stalePendingPicks,
+    marketCoverage,
+    confidenceTail,
+    rankingBasis,
+    oddsLineArchiveFreshness,
+    lineIntegrity,
+  ] = await Promise.all([
+    isStubMode()
+      ? Promise.resolve(null)
+      : safeRead(() =>
+          loadPublicClvPolicy(db, {
+            canExposePerformanceStats: effectivePerformanceStats,
+            minGradedForPublic: 25,
+          }),
+        ),
+    isStubMode()
+      ? Promise.resolve(null)
+      : safeRead(() =>
+          db.pick.count({
+            where: staleUnstartedPublishedPendingWhere(new Date()),
+          }),
+        ),
+    isStubMode() ? null : safeRead(() => loadMarketCoverage(db as never)),
+    isStubMode() ? null : safeRead(() => loadConfidenceTail(db as never)),
+    isStubMode() ? null : safeRead(() => loadRankingBasisCensus(db as never)),
+    readOddsLineArchiveFreshnessSafely(),
+    !detailed || isStubMode() ? null : safeRead(() => surveyLineIntegrity(db as never)),
+  ]);
   const clvBeatCloseRate =
     clvPolicy && clvPolicy.gradedSampleSize >= 25
       ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
@@ -697,33 +740,8 @@ export async function GET(request: Request) {
   // lane), so the count reads 0 once a cycle has run; the where is the shared
   // builder in lib/board/stale-pick-policy.ts so count and cron cannot drift.
   // Unpublished rows leave this count by construction (isPublished: true).
-  const stalePendingPicks = isStubMode()
-    ? null
-    : await safeRead(() =>
-        db.pick.count({
-          where: staleUnstartedPublishedPendingWhere(new Date()),
-        }),
-      );
-
-  // Market coverage over the next 72h: which markets the published slate
-  // actually carries per sport. A sport with games but no TOTAL picks is a
-  // visible degradation (the zero-key pipeline is moneyline-only), never a
-  // silent zero. Confidence tail: whether picks at ≥80 stated confidence earn
-  // it (observed 2026-09-02: they did not). Both are read-only postures.
-  const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
-  const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
-  // Which branch of the ranking cascade actually orders published picks. This
-  // closes the open question in sort-key.ts: the public board payload nulls
-  // rankingP for non-premium viewers (GSE-SEC-026), so the public surface CANNOT
-  // answer whether the board ranks on the monotone key or falls through to the
-  // anti-predictive one. Read-only, reports, never gates.
-  const rankingBasis = isStubMode() ? null : await safeRead(() => loadRankingBasisCensus(db as never));
-
-  // Line-archive freshness (see readOddsLineArchiveFreshnessSafely above).
-  // Read-only, fail-closed, never gates anything on this surface.
-  const oddsLineArchiveFreshness = await readOddsLineArchiveFreshnessSafely();
-
-  // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
+  // (stalePendingPicks, marketCoverage, confidenceTail, rankingBasis,
+  //  oddsLineArchiveFreshness, lineIntegrity now load concurrently above.)
   // carry a `line` no bookmaker quoted. Read-only, writes nothing.
   //
   // READ THE FIELD NAMES, NOT THE SHAPE. Two different populations are counted
@@ -751,8 +769,7 @@ export async function GET(request: Request) {
   // #733). Nothing is lost by gating it — these are numbers the operator reads
   // before a flip, not public claims — but reading them now needs
   // the CRON_SECRET bearer. `docs/ops/OPERATOR.md` §5-LI says so.
-  const lineIntegrity =
-    !detailed || isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));
+  // (lineIntegrity now loads concurrently in the bundle above.)
 
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
