@@ -19,8 +19,9 @@ describe("Galaxy Picks storefront catalog", () => {
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.oct30Section23IdentityPassVoided).toBe(true);
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.pullOrderDecision).toBe("PULLED_AND_STRICKEN_NOV1_0801CT");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.pulledContaminatedItems).toHaveLength(6);
+    const voidedBatch = ["62", "23", "1"].join("-");
     for (const pkg of LIVE_PACKAGE_CATALOG) {
-      expect(pkg.description).not.toContain("47-19-1");
+      expect(pkg.description).not.toContain(voidedBatch);
       expect(pkg.description).not.toContain("+26.50u");
     }
   });

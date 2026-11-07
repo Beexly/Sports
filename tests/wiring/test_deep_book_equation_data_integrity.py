@@ -181,5 +181,10 @@ def test_zero_stale_rosters_and_clean_repo_relative_paths() -> None:
     wh_reg = (REPO_ROOT / "intelligence" / "data" / "warehouse" / "ingestion_registry.jsonl").read_text(encoding="utf-8")
     assert "C:\\Users\\Garrett" not in wh_reg and "C:/Users/Garrett" not in wh_reg
 
+    wh_dedup_path = REPO_ROOT / "intelligence" / "data" / "warehouse" / "ingestion_registry_deduped.jsonl"
+    if wh_dedup_path.exists():
+        wh_dedup = wh_dedup_path.read_text(encoding="utf-8")
+        assert "C:\\Users\\Garrett" not in wh_dedup and "C:/Users/Garrett" not in wh_dedup
+
     cc_txt = (REPO_ROOT / "docs" / "wiring" / "CORPUS-CENSUS.csv").read_text(encoding="utf-8")
     assert "C:/Users/Garrett/Sports/" not in cc_txt

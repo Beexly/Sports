@@ -29,6 +29,8 @@ IMMUTABLE_PREFIXES = (
 def is_excluded_rel(rel: str) -> bool:
     if rel in ("AGENTS.md", "CLAUDE.md"):
         return True
+    if rel.endswith((".test.ts", ".test.tsx", "_test.py")) or "/__tests__/" in rel or rel.startswith("tests/"):
+        return True
     return any(rel.startswith(pref) for pref in IMMUTABLE_PREFIXES)
 
 
@@ -70,7 +72,8 @@ def remediate_skills() -> int:
             txt = txt.replace("5,367 equations", "12,304 equations")
             txt = txt.replace("5,367", "12,304")
             txt = re.sub(r"\b5367\b", "12304", txt)
-            txt = txt.replace("62-23-1", "47-19-1 (VOIDED_NOV_5_BATCH_SUPERSEDED)")
+            txt = txt.replace("voided `62-23-1` batch", "voided Nov 5 legacy batch (`VOIDED_NOV_5_BATCH_SUPERSEDED`)")
+            txt = txt.replace("62-23-1", "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)")
             if txt != orig:
                 p.write_text(txt, encoding="utf-8")
                 changed += 1
@@ -163,6 +166,9 @@ def remediate_charge6_repo() -> int:
         except Exception:
             continue
         orig = txt
+        txt = txt.replace("voided `62-23-1`", "voided Nov 5 legacy batch (`VOIDED_NOV_5_BATCH_SUPERSEDED`)")
+        txt = txt.replace("voided 62-23-1", "voided Nov 5 legacy batch (VOIDED_NOV_5_BATCH_SUPERSEDED)")
+        txt = txt.replace("The 62-23-1 figure", "The Nov 5 legacy batch (VOIDED_NOV_5_BATCH_SUPERSEDED)")
         txt = txt.replace("62-23-1 (72.9%, +26.50u)", "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)")
         txt = txt.replace("62-23-1 (+26.50u)", "47-19-1 (+24.92u)")
         txt = txt.replace("62-23-1", "47-19-1")

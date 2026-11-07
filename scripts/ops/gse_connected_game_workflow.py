@@ -1678,8 +1678,14 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         },
         "trench_and_pocket_physics": trench_jax_vs_bal,
         "scheme_matchup_synthesis": scheme_matchup,
-        "pbp_reproductions_2026_summary": pbp_repro.get("reproductions", {}),
-        "bdb2025_coverage_shell_summary": bdb_shell.get("coverage_family_summary", {}),
+        "pbp_reproductions_2026_summary": pbp_repro.get("reproductions")
+        or {
+            **{k: v for k, v in pbp_repro.items() if k not in ("schema", "official_ledger")},
+            "matchup_2026_pbp_splits": {away: aw_st, home: hm_st},
+        },
+        "bdb2025_coverage_shell_summary": bdb_shell.get("coverage_family_summary")
+        or bdb_shell.get("shell_distribution")
+        or bdb_shell,
     }
     stage1a["stage1a_receipt_sha256"] = _sha256_obj(stage1a)
     return stage1a
@@ -1707,7 +1713,32 @@ def run_stage1b_all_5367_equations_pre_sim_review(
     matrix_data = json.loads(matrix_path.read_text(encoding="utf-8"))
     equations_1666 = matrix_data.get("equations", [])
 
-    # Build 288-bit active context mask for JAX @ BAL Week 9 TNF
+    away_tm_1b = str(stage1a_receipt.get("away") or stage0_allowlist.get("away") or "JAX").upper()
+    home_tm_1b = str(stage1a_receipt.get("home") or stage0_allowlist.get("home") or "BAL").upper()
+    wk_1b = int(stage1a_receipt.get("week") or stage0_allowlist.get("week") or 9)
+    env_1b = _get_matchup_env(away_tm_1b, home_tm_1b, wk_1b)
+    pbp_ftn_1b = _get_2026_team_pbp_ftn_stats()
+    aw_qb1_1b = str(stage1a_receipt.get("away_qb1_starter") or "Trevor Lawrence")
+    hm_qb1_1b = str(stage1a_receipt.get("home_qb1_starter") or "Joe Fagnano")
+    aw_tier_1b = str(env_1b.get("away_qb_tier", "QB1")).upper()
+    hm_tier_1b = "EMERGENCY_QB3_UDFA" if "Fagnano" in hm_qb1_1b else str(env_1b.get("home_qb_tier", "QB1")).upper()
+    matchup_ctx_1b = build_dynamic_matchup_situational_context(
+        away_tm=away_tm_1b,
+        home_tm=home_tm_1b,
+        week=wk_1b,
+        away_qb1=aw_qb1_1b,
+        home_qb1=hm_qb1_1b,
+        away_qb_tier=aw_tier_1b,
+        home_qb_tier=hm_tier_1b,
+        verified_board_athletes=stage0_allowlist.get("verified_board_athletes") or {},
+        team_pbp_stats=pbp_ftn_1b,
+    )
+    eq_gate_12k_1b = evaluate_12304_equations_cognitive_router(matchup_ctx_1b)
+    epa_diff_1b = float(stage1a_receipt.get("base_home_off_epa", 0.0)) - float(stage1a_receipt.get("base_away_off_epa", 0.0))
+    wind_1b = float(env_1b.get("wind_mph", 6.0))
+    is_indoor_1b = bool(env_1b.get("is_indoor", False))
+
+    # Build matchup-conditioned 288-bit active context mask
     active_bits_count = 0
     category_counts: dict[str, int] = {}
     category_active_counts: dict[str, int] = {}
@@ -1720,16 +1751,23 @@ def run_stage1b_all_5367_equations_pre_sim_review(
         category_counts[cat] = category_counts.get(cat, 0) + 1
         fam_idx = eq.get("signalFamilyIdx")
         if fam_idx is not None:
+            f_int = int(fam_idx)
+            # Filter weather-only bits on indoor domes & high-wind-only bits in calm weather
+            if is_indoor_1b and (f_int % 29 == 0):
+                continue
+            if wind_1b < 12.0 and (f_int % 37 == 0):
+                continue
             signal_families_seen.add(str(fam_idx))
-            active_bit_indices.add(int(fam_idx) % 288)
+            active_bit_indices.add(f_int % 288)
         category_active_counts[cat] = category_active_counts.get(cat, 0) + 1
         w_prior = float(eq.get("priorWeight", 0.5))
         raw_lo = float(eq.get("rawLogOddsDelta", 0.08))
         jac = float(eq.get("jacobianSensitivity", 1.0))
         sign = 1.0 if cat in ("A", "B", "D", "F") else (-0.5 if cat == "C" else 0.25)
-        category_raw_deltas.setdefault(cat, []).append(sign * w_prior * raw_lo * jac * 0.015)
+        matchup_mod = 1.0 + 1.85 * epa_diff_1b - (0.015 * max(0.0, wind_1b - 10.0) if not is_indoor_1b else 0.0)
+        category_raw_deltas.setdefault(cat, []).append(sign * w_prior * raw_lo * jac * 0.015 * matchup_mod)
 
-    active_bits_count = max(len(active_bit_indices), int(matrix_data.get("context_mask_bits", 288)))
+    active_bits_count = len(active_bit_indices)
 
     # Stage C: Spectral Cluster Orthogonalization per Category (effective rank r_eff = (tr Sigma)^2 / tr(Sigma^2))
     stage_c_clusters: dict[str, dict[str, Any]] = {}
@@ -1769,12 +1807,17 @@ def run_stage1b_all_5367_equations_pre_sim_review(
         if ts_telemetry_path.is_file()
         else {}
     )
-    ts_router = ts_telemetry.get("mcp_cognitive_router", {})
+    ts_router = dict(ts_telemetry.get("mcp_cognitive_router", {}))
 
-    # Stage D: Real TypeScript `mcp-cognitive-router.ts` Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage
-    js_factor = float(ts_router.get("stage_d_james_stein_shrinkage", 0.916978))
-    raw_total_log_odds = float(ts_router.get("stage_d_unclamped_log_odds_delta", 1.096888))
-    capped_log_odds = float(ts_router.get("stage_d_clamped_log_odds_delta", 0.35))
+    # Stage D: Matchup-Conditioned Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage
+    js_factor = float(eq_gate_12k_1b.get("james_stein_shrinkage_factor", ts_router.get("stage_d_james_stein_shrinkage", 0.916978)))
+    raw_total_log_odds = float(eq_gate_12k_1b.get("unclamped_log_odds_delta", sum(orthogonalized_vec)))
+    capped_log_odds = float(eq_gate_12k_1b.get("clamped_log_odds_delta", max(-0.35, min(0.35, raw_total_log_odds * js_factor))))
+    ts_router["stage_a_active_bits"] = active_bits_count
+    ts_router["stage_a_signal_families_active"] = int(eq_gate_12k_1b.get("families_active", len(signal_families_seen)))
+    ts_router["stage_d_james_stein_shrinkage"] = round(js_factor, 6)
+    ts_router["stage_d_unclamped_log_odds_delta"] = round(raw_total_log_odds, 6)
+    ts_router["stage_d_clamped_log_odds_delta"] = round(capped_log_odds, 6)
     mp_rank_shrinkage = float(
         ts_router.get(
             "marchenko_pastur_effective_rank_shrinkage",
@@ -1921,7 +1964,7 @@ def run_stage1b_all_5367_equations_pre_sim_review(
         "cognitive_router_4stage_execution": {
             "stage_a_context_mask_bits_total": 288,
             "stage_a_context_mask_bits_active": active_bits_count,
-            "stage_a_signal_families_active": len(signal_families_seen),
+            "stage_a_signal_families_active": int(eq_gate_12k_1b.get("families_active", len(signal_families_seen))),
             "stage_b_category_counts": category_counts,
             "stage_c_spectral_cluster_orthogonalization": stage_c_clusters,
             "stage_c_selected_premises_count": int(ts_router.get("stage_c_selected_count", 35)),
@@ -2437,6 +2480,7 @@ def compile_stage1_to_stage2_simulation_priors(
     cholesky_epa_shift = float(np.clip(0.012 * cholesky_whitened_z_shift, -0.040, 0.040))
     qb2x2_away_shift = float(away_qb_2x2.get("epa_shift_vs_baseline", 0.0)) * 0.08
     qb2x2_home_shift = float(home_qb_2x2.get("epa_shift_vs_baseline", 0.0)) * 0.08
+    eq_gate_12k_epa_shift = float(np.clip(float(eq_gate_12k.get("clamped_log_odds_delta", 0.0)) * 0.025, -0.020, 0.020))
 
     away_off_epa_delta_sit = float(
         np.clip(
@@ -2451,6 +2495,7 @@ def compile_stage1_to_stage2_simulation_priors(
             + 0.20 * recovered_199_epa_delta
             - 0.25 * mega_sweep_epa_delta
             - 0.20 * gsi_step2_health_delta
+            - eq_gate_12k_epa_shift
             + qb2x2_away_shift,
             -0.065,
             0.065,
@@ -2469,6 +2514,7 @@ def compile_stage1_to_stage2_simulation_priors(
             - 0.20 * recovered_199_epa_delta
             + 0.25 * mega_sweep_epa_delta
             + 0.20 * gsi_step2_health_delta
+            + eq_gate_12k_epa_shift
             + qb2x2_home_shift,
             -0.075,
             0.065,

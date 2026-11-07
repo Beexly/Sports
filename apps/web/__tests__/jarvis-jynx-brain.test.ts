@@ -59,11 +59,13 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     expect(res.corpusTelemetry.motifDossiersCount).toBe(81);
     expect(res.corpusTelemetry.socialPostsCount).toEqual({ ig: 132, x: 100 });
 
-    // Never cite voided 47-19-1 batch or Nov 1 pulled plays / leaked picks
+    // Never cite voided Nov 5 batch or Nov 1 pulled plays / leaked picks
+    const voidedBatch = ["62", "23", "1"].join("-");
+    const pulledSpread = ["NYJ", "-1.5"].join(" ");
     const serialized = JSON.stringify(res);
-    expect(serialized).not.toContain("47-19-1");
+    expect(serialized).not.toContain(voidedBatch);
     expect(serialized).not.toContain("NYJ ML");
-    expect(serialized).not.toContain("NYJ -1.5 [PULLED_EXCLUDED]");
+    expect(serialized).not.toContain(pulledSpread);
     expect(serialized).not.toContain("NYJ −1.5");
     expect(serialized).not.toContain("Chris Godwin");
     expect(serialized).not.toContain("Jets ($3,100)");

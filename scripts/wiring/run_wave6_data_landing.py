@@ -390,6 +390,27 @@ def rewrite_ingestion_registry(built: Dict[str, Dict[str, Any]]) -> Dict[str, An
 
     reg_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
 
+    dedup_path = WH_DIR / "ingestion_registry_deduped.jsonl"
+    if dedup_path.exists():
+        d_lines = [line for line in dedup_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        new_d_lines: List[str] = []
+        for line in d_lines:
+            rec = json.loads(line)
+            cid = rec["canonical_id"]
+            if cid in built:
+                p_path = built[cid]["path"]
+                rec["norm_parquet"] = str(p_path.relative_to(REPO_ROOT)).replace("\\", "/")
+            if cid in raw_map:
+                rec["raw_path"] = raw_map[cid]
+            elif "raw_path" in rec:
+                raw_val = str(rec["raw_path"]).replace("\\", "/")
+                if "intelligence/data/warehouse/" in raw_val:
+                    rec["raw_path"] = "intelligence/data/warehouse/" + raw_val.split("intelligence/data/warehouse/", 1)[1]
+                else:
+                    del rec["raw_path"]
+            new_d_lines.append(json.dumps(rec))
+        dedup_path.write_text("\n".join(new_d_lines) + "\n", encoding="utf-8")
+
     # Verify sum of the 9 core datasets == 79,297 (+ 1 NWS forecast = 79,298)
     core_9_sum = sum(v["records"] for k, v in built.items() if k != "DS_NWS_STADIUM_FORECAST")
     total_10_sum = sum(v["records"] for v in built.values())

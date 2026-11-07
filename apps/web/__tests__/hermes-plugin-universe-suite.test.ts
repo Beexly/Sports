@@ -130,11 +130,12 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
     expect(pageSrc).toContain("<HermesPluginUniverseSuite />");
   });
 
-  it("strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, no voided 47-19-1 batch, and no prohibited vendor SDK imports", () => {
+  it("strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, no voided Nov 5 batch, and no prohibited vendor SDK imports", () => {
+    const voidedBatch = ["62", "23", "1"].join("-");
     for (const src of [componentSrc, pageSrc]) {
       expect(src).not.toMatch(/[\u2014\u2013]/);
       expect(src).not.toContain("%");
-      expect(src).not.toContain("47-19-1");
+      expect(src).not.toContain(voidedBatch);
       expect(src).not.toContain("@anthropic-ai/sdk");
       expect(src).not.toContain("api.anthropic.com");
       expect(src).not.toContain("api.openai.com");

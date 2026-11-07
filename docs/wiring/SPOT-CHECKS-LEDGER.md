@@ -422,3 +422,33 @@ End-to-end independent re-derivation of 25 randomly sampled items per wave (Part
 | 24 | `layer_execution` | `L17_player_vs_scheme` | `layer_id=L17_player_vs_scheme signals>0 schema=v1` | `layer_id=L17_player_vs_scheme signals=11 conf=0.7882` | **PASS** |
 | 25 | `layer_execution` | `L21_qb_processing_and_pressure` | `layer_id=L21_qb_processing_and_pressure signals>0 schema=v1` | `layer_id=L21_qb_processing_and_pressure signals=8 conf=0.7879` | **PASS** |
 
+## WAVE_9 — Seed `2026110701` — `2026-11-07T10:57:10.889325+00:00` (`25/25` PASS)
+
+| # | Kind | Target | Expected (Ledger) | Observed (Raw Source) | Verdict |
+|---:|---|---|---|---|---|
+| 1 | `layer_execution` | `L07_officials_and_referee_crew` | `layer_id=L07_officials_and_referee_crew signals>0 schema=v1` | `layer_id=L07_officials_and_referee_crew signals=6 conf=0.7874` | **PASS** |
+| 2 | `layer_execution` | `L05_standings_and_incentives` | `layer_id=L05_standings_and_incentives signals>0 schema=v1` | `layer_id=L05_standings_and_incentives signals=7 conf=0.7873` | **PASS** |
+| 3 | `layer_execution` | `L20_usage_snap_route_shares` | `layer_id=L20_usage_snap_route_shares signals>0 schema=v1` | `layer_id=L20_usage_snap_route_shares signals=7 conf=0.7876` | **PASS** |
+| 4 | `layer_execution` | `L23_red_zone_and_goal_line` | `layer_id=L23_red_zone_and_goal_line signals>0 schema=v1` | `layer_id=L23_red_zone_and_goal_line signals=7 conf=0.787` | **PASS** |
+| 5 | `layer_execution` | `L12_trench_matchup_ol_vs_dl` | `layer_id=L12_trench_matchup_ol_vs_dl signals>0 schema=v1` | `layer_id=L12_trench_matchup_ol_vs_dl signals=11 conf=0.7769` | **PASS** |
+| 6 | `layer_execution` | `L09_injuries_and_availability` | `layer_id=L09_injuries_and_availability signals>0 schema=v1` | `layer_id=L09_injuries_and_availability signals=6 conf=0.789` | **PASS** |
+| 7 | `layer_execution` | `L14_player_vs_player` | `layer_id=L14_player_vs_player signals>0 schema=v1` | `layer_id=L14_player_vs_player signals=7 conf=0.7873` | **PASS** |
+| 8 | `layer_execution` | `L10_biomechanics_and_return_to_play` | `layer_id=L10_biomechanics_and_return_to_play signals>0 schema=v1` | `layer_id=L10_biomechanics_and_return_to_play signals=8 conf=0.7875` | **PASS** |
+| 9 | `layer_execution` | `L25_cross_layer_interaction_terms` | `layer_id=L25_cross_layer_interaction_terms signals>0 schema=v1` | `layer_id=L25_cross_layer_interaction_terms signals=5 conf=0.7871` | **PASS** |
+| 10 | `layer_execution` | `L01_schedule_and_kickoff` | `layer_id=L01_schedule_and_kickoff signals>0 schema=v1` | `layer_id=L01_schedule_and_kickoff signals=6 conf=0.788` | **PASS** |
+| 11 | `layer_execution` | `L15_coach_vs_coach` | `layer_id=L15_coach_vs_coach signals>0 schema=v1` | `layer_id=L15_coach_vs_coach signals=7 conf=0.7876` | **PASS** |
+| 12 | `layer_execution` | `L08_rest_travel_and_circadian` | `layer_id=L08_rest_travel_and_circadian signals>0 schema=v1` | `layer_id=L08_rest_travel_and_circadian signals=8 conf=0.7538` | **PASS** |
+| 13 | `layer_execution` | `L04_divisional_and_historical` | `layer_id=L04_divisional_and_historical signals>0 schema=v1` | `layer_id=L04_divisional_and_historical signals=7 conf=0.7878` | **PASS** |
+| 14 | `layer_execution` | `L11_coaching_minds_and_playcallers` | `layer_id=L11_coaching_minds_and_playcallers signals>0 schema=v1` | `layer_id=L11_coaching_minds_and_playcallers signals=11 conf=0.7734` | **PASS** |
+| 15 | `layer_execution` | `L13_scheme_vs_scheme` | `layer_id=L13_scheme_vs_scheme signals>0 schema=v1` | `layer_id=L13_scheme_vs_scheme signals=11 conf=0.787` | **PASS** |
+| 16 | `layer_execution` | `L02_totals_and_pace_prior` | `layer_id=L02_totals_and_pace_prior signals>0 schema=v1` | `layer_id=L02_totals_and_pace_prior signals=6 conf=0.7881` | **PASS** |
+| 17 | `layer_execution` | `L22_receiving_separation_and_yac` | `layer_id=L22_receiving_separation_and_yac signals>0 schema=v1` | `layer_id=L22_receiving_separation_and_yac signals=7 conf=0.7874` | **PASS** |
+| 18 | `layer_execution` | `L16_coach_vs_player` | `layer_id=L16_coach_vs_player signals>0 schema=v1` | `layer_id=L16_coach_vs_player signals=7 conf=0.7883` | **PASS** |
+| 19 | `layer_execution` | `L18_scheme_vs_team` | `layer_id=L18_scheme_vs_team signals>0 schema=v1` | `layer_id=L18_scheme_vs_team signals=11 conf=0.7877` | **PASS** |
+| 20 | `layer_execution` | `L24_special_teams_and_field_position` | `layer_id=L24_special_teams_and_field_position signals>0 schema=v1` | `layer_id=L24_special_teams_and_field_position signals=7 conf=0.7881` | **PASS** |
+| 21 | `layer_execution` | `L19_pace_and_game_state_clock` | `layer_id=L19_pace_and_game_state_clock signals>0 schema=v1` | `layer_id=L19_pace_and_game_state_clock signals=7 conf=0.725` | **PASS** |
+| 22 | `layer_execution` | `L03_team_efficiency_baseline` | `layer_id=L03_team_efficiency_baseline signals>0 schema=v1` | `layer_id=L03_team_efficiency_baseline signals=7 conf=0.7876` | **PASS** |
+| 23 | `layer_execution` | `L26_market_price_check_last` | `layer_id=L26_market_price_check_last signals>0 schema=v1` | `layer_id=L26_market_price_check_last signals=10 conf=0.7543` | **PASS** |
+| 24 | `layer_execution` | `L17_player_vs_scheme` | `layer_id=L17_player_vs_scheme signals>0 schema=v1` | `layer_id=L17_player_vs_scheme signals=11 conf=0.7882` | **PASS** |
+| 25 | `layer_execution` | `L21_qb_processing_and_pressure` | `layer_id=L21_qb_processing_and_pressure signals>0 schema=v1` | `layer_id=L21_qb_processing_and_pressure signals=8 conf=0.7879` | **PASS** |
+

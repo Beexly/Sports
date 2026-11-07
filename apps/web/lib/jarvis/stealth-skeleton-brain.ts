@@ -44,6 +44,37 @@ export const OUR_STEALTH_SKELETON_MODELS = [
   "gse/skeleton-flash",
 ] as const;
 
+export const QUAD_FRONTIER_SOVEREIGN_SPINE = [
+  {
+    pillarId: "google/gemini-4-argon",
+    displayName: "Google Argon 4 (Gemini 4 Argon)",
+    contextWindow: 2_000_000,
+    sheafWeightPrior: 0.26,
+    role: "2M-Context Full Corpus, 21,419-Equation & 26-Layer (L01..L26) Situational Synthesis",
+  },
+  {
+    pillarId: "anthropic/claude-opus-5.5",
+    displayName: "Anthropic Claude Opus 5.5",
+    contextWindow: 1_000_000,
+    sheafWeightPrior: 0.25,
+    role: "Adversarial Theorem Proving, Navier-Stokes 32-Run Spectral & GSI STM32H7 256KB SRAM Verifier",
+  },
+  {
+    pillarId: "anthropic/claude-fable-5",
+    displayName: "Anthropic Claude Fable 5",
+    contextWindow: 1_000_000,
+    sheafWeightPrior: 0.27,
+    role: "Flagship Sovereign Orchestrator, Cellular Sheaf Laplacian Merger & 4-Voice Council Arbiter",
+  },
+  {
+    pillarId: "openai/astra",
+    displayName: "OpenAI Astra",
+    contextWindow: 512_000,
+    sheafWeightPrior: 0.22,
+    role: "Snell (ICLR 2025) Compute-Optimal Test-Time Scaling (N=4->16->64), ASTRA Reliability & Romano CQR",
+  },
+] as const;
+
 export type OurStealthSkeletonModel = (typeof OUR_STEALTH_SKELETON_MODELS)[number];
 export type StealthSkeletonModelId = OurStealthSkeletonModel;
 
