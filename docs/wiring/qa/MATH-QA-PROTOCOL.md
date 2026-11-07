@@ -64,7 +64,7 @@ Decisive tests: **[measured]** EQ_00418 ("kelly-saturation-hardening") is an exp
 
 Use only fields the catalog actually carries:
 
-1. **Emission reach** (highest weight): does any entry's `real_source_file` resolve to code on a published path (provider worker, web app)? Entries citing the thousand-matrix or provider outrank internal-only citations. **[measured]** Only 1,666 entries cite the matrix file at all; 8 of those locators resolve to press-conference `EQ-MC-…` IDs, not equations.
+1. **Emission reach** (highest weight): does any entry's `real_source_file` resolve to code on a published path (provider worker, web app)? Entries citing the thousand-matrix or provider outrank internal-only citations. **[measured]** Only 1,666 entries cite the matrix file at all; 1,098 of them carry `EQ-MC-…` locators rather than equation IDs, and only 1 of the 2,577 distinct cited source files exists in the catalog's own checkout.
 2. **Output type**: templates whose codomain claims probability/entropy/quantile (per §1) outrank pure scores — a wrong probability publishes; a wrong score merely ranks.
 3. **Gate status**: entries with `gate_status` asserting verified/passed outrank unasserted ones — an asserted-but-wrong entry is worse than an unasserted one because downstream consumers trust it. The header's `zero_dead_or_stubbed_verified` / `all_parameter_bindings_valid` / `authentic_source_verified_count = 12304` claims are themselves audit targets (Findings).
 4. **Template class**: order by §1 class risk — calibration/probability > conformal > copula (NaN risk) > transport > rating/Kelly (absent-by-construction: the risk is the *label*, not the math) > the rest.

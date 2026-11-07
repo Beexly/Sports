@@ -25,7 +25,7 @@ All 12,304 entries: `gate_status = VALIDATED`, `executable_status = ACTIVE_WIRED
 All 12,304 expressions embed a `/* … */` comment carrying a LaTeX fragment unrelated to the executable expression. Truncation: the lane counted 8,535/12,304 "ending mid-word" under its rule; Motif's recount (comment body ends in a bare letter with no closing punctuation) gives **9,174**. Either way, ~70–75% of the fragments are cut mid-token (e.g. EQ_00008 ends `T_{\text{pocke`; EQ_00009 ends `\beta_2 (\text{RB\_C`). The lane's "1,715 contain LaTeX" is superseded: **all 12,304** carry the LaTeX-bearing comment; its "1,908 contain `=`" is not used (the `=` lives in the comment, not the math).
 
 **F-06 — Provenance does not resolve [CONFIRMED in substance; lane counts corrected].**
-2,577 distinct `real_source_file` values; 12,304 distinct (file, locator) pairs (every entry claims a unique source location). Motif's recount: **1,685** entries name the thousand-matrix file (the lane said 1,666 cite the matrix; 1,658 locators resolve; 8 resolve to press-conference `EQ-MC-…` IDs). The remaining ~10.6k entries cite files that are not the matrix; whether each exists in the full repo is a mechanical census owned by the Jules equation-QA lane — from this checkout, only the matrix file's presence is verified. A 12,304-count "authentic source verified" header over 2,577 rotating file names paired 1:1 with unique locators is, at minimum, unverified as stated.
+2,577 distinct `real_source_file` values; 12,304 distinct (file, locator) pairs (every entry claims a unique source location). Motif's census in the ds-repo checkout (2026-11-07): exactly **1,666** entries cite the matrix file — the lane's count was right; an earlier Motif recount of 1,685 swept in 19 entries citing five *other* files with "matrix" in their names (e.g. a Tropp matrix-concentration PDF) and is withdrawn. Of the 1,666 matrix citations, **1,098 carry `EQ-MC-…` locators** and 568 carry `EQ-…` locators (the lane's "8 resolve to EQ-MC IDs" is superseded). **Only 1 of the 2,577 distinct cited files exists in this checkout** — the matrix itself; the other 2,576 cited paths are absent here, so 10,638 entries cite files this checkout cannot produce. Whether those paths exist elsewhere in the full repo is the mechanical census the Jules equation-QA lane owns; the header's `authentic_source_verified_count = 12304` is not supported by anything visible from the catalog's own checkout. A 12,304-count "authentic source verified" header over 2,577 rotating file names paired 1:1 with unique locators is, at minimum, unverified as stated.
 
 **F-07 — Thousand-matrix family coverage gap [CONFIRMED, exact].**
 The 1,666-entry matrix carries only **258 distinct `signalFamilyIdx`** values (range 12–276). **21 indices absent: 0–11, 17, 262–265, 268, 275, 277–278** — against a claimed 279 families.
@@ -87,7 +87,7 @@ A `rational_pade` template: at spread = −10, market_anchor_prob = 0.6, total =
 | Matrix signalFamilyIdx | 258, 21 absent (list) | 258, same 21 absent | CONFIRMED |
 | (file, locator) pairs distinct | 12,304 | 12,304 | CONFIRMED |
 | Distinct source files | 2,577 | 2,577 | CONFIRMED |
-| Matrix citations | 1,666 cite / 1,658 resolve | 1,685 name the matrix file | CORRECTED (counting rule differs; F-06) |
+| Matrix citations | 1,666 cite / 1,658 resolve | 1,666 cite exactly; 1,098 carry EQ-MC locators; only 1 of 2,577 cited files present in checkout | CONFIRMED + EXTENDED (F-06); an interim Motif count of 1,685 was wrong (substring sweep) and is withdrawn |
 | Comments truncated | 8,535 mid-word | 9,174 (Motif rule) | CLASS CONFIRMED, count rule-dependent |
 | "1,715 contain LaTeX" | 1,715 | all 12,304 carry LaTeX comment | SUPERSEDED |
 | EQ_00003 → −3.08324 | yes | −3.08324 at (−10, 0, 0) | CONFIRMED |
@@ -104,7 +104,7 @@ A `rational_pade` template: at spread = −10, market_anchor_prob = 0.6, total =
 ## 5. Gap audit
 
 - **Not semantically verified:** the remaining ~12,290 entries individually — by design (§3 of the protocol: the generative units are the 9 templates and 30 triples, both now covered; per-entry review audits decoration).
-- **Not resolved from this checkout:** whether the ~10.6k non-matrix `real_source_file` citations exist in the full repo (Jules equation-QA lane owns that census).
+- **Not resolved from this checkout:** whether the 2,576 absent cited paths exist elsewhere in the full repo (only 1 of 2,577 cited files is present here; Jules equation-QA lane owns that census).
 - **Not run:** the numpy re-run of RECOMPUTE-RESULTS Appendix A (jq/libm used there; decisive comparisons are engine-robust).
 - **Not traced:** where the `2.66e-7` literal lives in the wider estate (absent from this repo's provider source; lane 3 §1.2).
 - **Deliverable history:** the originating lane (DeepSeek run 2) completed this analysis but could not write files (session permission mode); this file and MATH-QA-PROTOCOL.md were landed by Motif from its log, with every number re-verified or corrected above. RECOMPUTE-QUEUE.jsonl carries the executable follow-ups.
