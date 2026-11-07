@@ -2,6 +2,12 @@ name = "gse-stealth-skeleton-provider"
 account_id = "46f1c1d1c65d19f3f983713b3a8ab67c"
 main = "src/index.ts"
 compatibility_date = "2025-11-01"
+workers_dev = true
+
+routes = [
+  { pattern = "stealth.galaxysportsedge.com", custom_domain = true },
+  { pattern = "skeleton.galaxysportsedge.com", custom_domain = true }
+]
 
 [vars]
 STEALTH_SKELETON_PHASE = "dual"

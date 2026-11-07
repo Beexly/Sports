@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { computeDynamicCompositeBenchmarkScore } from "@/lib/jarvis/stealth-skeleton-brain";
+import { STEALTH_SKELETON_MODELS_V2_4 } from "../../../../../../../workers/stealth-skeleton-provider/src/index";
 
 export const dynamic = "force-dynamic";
 
@@ -336,17 +337,33 @@ export const STEALTH_SKELETON_OPENROUTER_MODELS = [
 ] as const;
 
 export async function GET(req: Request): Promise<NextResponse> {
-  const keyValid = verifyApiKey(req);
+  if (!verifyApiKey(req)) {
+    return NextResponse.json(
+      { error: { message: "Invalid OpenRouter provider API key", code: 401 } },
+      { status: 401 },
+    );
+  }
+  const url = new URL(req.url);
+  if (url.searchParams.get("format") === "legacy") {
+    return NextResponse.json(
+      {
+        object: "list",
+        data: STEALTH_SKELETON_OPENROUTER_MODELS,
+      },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=60",
+          "Access-Control-Allow-Origin": "*",
+          "X-GSE-Provider-Version": "2.4.0",
+          "X-GSE-Zero-Data-Retention": "enforced",
+        },
+      },
+    );
+  }
   return NextResponse.json(
     {
-      object: "list",
-      provider: "Galaxy Sports Institute (GSI) · Stealth & Proprietary Foundation Models",
-      version: "2.4.0",
-      authenticated_probe: keyValid,
-      zero_data_retention: true,
-      benchmarks_url: "https://www.galaxysportsedge.com/benchmarks",
-      data_policy_url: "https://www.galaxysportsedge.com/data-policy",
-      data: STEALTH_SKELETON_OPENROUTER_MODELS,
+      data: STEALTH_SKELETON_MODELS_V2_4,
     },
     {
       status: 200,
