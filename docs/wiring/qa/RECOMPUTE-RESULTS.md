@@ -301,3 +301,25 @@ K1(0.15) as $K |
 ---
 
 **One-line summary:** Claim 1 — **1.387779e-16 REPRODUCED** at the shipped (40, ε=0.15) with libm exp; 1.11e-16 is a `pow(e,−x)` artefact (2⁻⁵³) and 2.66e-7 is NOT reproducible at the shipped parameters (it needs ε≈0.07923). Claim 2 — only `uptime_target: 0.999` is an unmeasured literal; TTFT/throughput/accuracy are computed proxies. Claim 3 — the plain mean is **81.205714**, not 86.62; 86.62 requires a total of **606.34** (+37.90), implying **AIME=97.90**, while 86.12 implies **AIME=94.40**.
+
+
+---
+
+## ADDENDUM (2026-11-07, Motif) — the owed numpy re-run, and a correction to §1.6's framing
+
+The gap audit above left one item open: "a numpy re-run of Appendix A is still owed." It has now been run (Motif, this host, numpy float64, Appendix A transcribed exactly: same r, c, cost, eps=0.15, 40 sequential u-then-v updates):
+
+```
+numpy L1 @ (40, 0.15) = 1.1102230246251565e-16   (= 2^-53 exactly)
+jq / platform libm exp = 1.3877787807814457e-16  (lane 3, §1.4)
+live worker endpoint    = 1.387779e-16           (toExponential(6) of the libm-path value)
+```
+
+**What this changes:** §1.6 calls 1.11e-16 a "rounding artefact" of a lower-fidelity pow path and 1.387779e-16 "the correct value for the code as written." That is stronger than the evidence supports. numpy's vectorized `exp` is a legitimate IEEE-754 binary64 implementation, and on this matrix it lands on 2^-53 — the same value lane 3 attributed to the pow(e_rounded) path. Two independent, legitimate exp implementations therefore produce the two different 1e-16 values; **neither is "the" correct last-ULP value.** The residual at these parameters sits exactly at the machine floor (§4 point 2 of the methods note already says this: below ~1e-15, exact digits are a fingerprint of the arithmetic, not of the algorithm).
+
+**Precise verdict, restated:**
+- Both 1e-16 values are engine-path-dependent renderings of the same fact: the iteration has converged to machine precision. The deployed worker (V8) reports the libm-path value, 1.387779e-16.
+- The decisive claim is untouched and robust across every exp path tested (libm, pow-e, pow-2, numpy): **2.66e-7 is NOT reproducible at (40, 0.15)** — it requires epsilon ~= 0.07923.
+- Anywhere the estate quotes a 1e-16-class residual, it should quote the magnitude ("< 1e-15, machine floor") rather than exact digits, per §4 point 2.
+
+**Gap audit update:** the numpy re-run item is CLOSED by this addendum. Remaining open items from the original audit: the 2.66e-7 literal's location in the wider estate (not in this repo's provider source), and the /benchmarks page source + weighting code (absent from this checkout).
