@@ -1,0 +1,143 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "snapshot": false,
+  "small_model": "stealth-skeleton/gse/skeleton-fast",
+  "model": "stealth-skeleton/gse/skeleton-frontier",
+  "provider": {
+    "stealth-skeleton": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Galaxy Science Institute (Stealth-Skeleton)",
+      "options": {
+        "baseURL": "https://www.galaxysportsedge.com/api/openrouter/v1",
+        "apiKey": "{env:STEALTH_SKELETON_API_KEY}"
+      },
+      "models": {
+        "gse/skeleton-frontier": {
+          "name": "Stealth-Skeleton Frontier v2.4 (GSI/GSE)",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 16384
+          }
+        },
+        "gse/skeleton-alpha": {
+          "name": "Stealth-Skeleton Alpha v2.4 (Agentic/Coding)",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 16384
+          }
+        },
+        "gse/skeleton-council": {
+          "name": "Stealth-Skeleton 4-Voice Council v2.4",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 16384
+          }
+        },
+        "gse/skeleton-gsi-med": {
+          "name": "Stealth-Skeleton GSI Biomechanics & Neuro-Trauma v2.4",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 16384
+          }
+        },
+        "gse/skeleton-fast": {
+          "name": "Stealth-Skeleton Fast v2.4 (Low-Latency Sub-Agent)",
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": true,
+          "limit": {
+            "context": 65536,
+            "output": 8192
+          }
+        }
+      }
+    },
+    "omniroute": {
+      "name": "OmniRoute",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:20128/v1",
+        "apiKey": "{env:OMNIROUTE_API_KEY}"
+      },
+      "models": {
+        "auto/best-coding": {
+          "name": "Auto Best Coding",
+          "reasoning": true,
+          "tool_call": true
+        },
+        "auto/best-reasoning": {
+          "name": "Auto Best Reasoning",
+          "reasoning": true,
+          "tool_call": true
+        },
+        "auto/coding:free": {
+          "name": "Auto Coding Free",
+          "tool_call": true
+        }
+      }
+    },
+    "experientiallabs": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "ExperientialLabs",
+      "options": {
+        "baseURL": "https://api.experientiallabs.ai/v1",
+        "apiKey": "{env:EXPLABS_API_KEY}"
+      },
+      "models": {
+        "gemini-4-argon": {
+          "name": "gemini-4-argon",
+          "tool_call": true,
+          "limit": {
+            "context": 1048576,
+            "output": 32768
+          }
+        },
+        "qwen3.8-flash-next-uncensored": {
+          "name": "qwen3.8-flash-next-uncensored"
+        },
+        "glm-5.3-flash-abliterated": {
+          "name": "glm-5.3-flash-abliterated",
+          "tool_call": true
+        }
+      }
+    },
+    "aimlapi": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "AI/ML API",
+      "options": {
+        "baseURL": "https://api.aimlapi.com/v1",
+        "apiKey": "{env:AIMLAPI_KEY}"
+      },
+      "models": {
+        "alibaba/qwen-max": {
+          "name": "Qwen Max"
+        },
+        "alibaba/qwen3-coder-480b-a35b-instruct": {
+          "name": "Qwen3 Coder 480B"
+        }
+      }
+    }
+  },
+  "mcp": {
+    "omniroute": {
+      "type": "remote",
+      "url": "http://localhost:20128/api/mcp/stream",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer {env:OMNIROUTE_API_KEY}"
+      }
+    }
+  }
+}

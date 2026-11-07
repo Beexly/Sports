@@ -403,6 +403,8 @@ export interface GsiBiomechanicsAndTraumaOverlayResult {
   readonly neurologicalCircadianAutonomicRecoveryIndex: number;
   readonly compositeBiomechanicalEfficiencyMultiplier: number;
   readonly recommendedSnapShareCap: number;
+  readonly cteUnconditionedCohortLowerBoundRate: number;
+  readonly dynamicKickoffConcussionReductionPct: number;
 }
 
 function clamp(v: number, lo: number, hi: number): number {
@@ -510,8 +512,55 @@ export function evaluateGsiBiomechanicsAndTraumaOverlay(
     neurologicalCircadianAutonomicRecoveryIndex,
     compositeBiomechanicalEfficiencyMultiplier,
     recommendedSnapShareCap,
+    cteUnconditionedCohortLowerBoundRate: Number((215 / 878).toFixed(4)),
+    dynamicKickoffConcussionReductionPct: -43.0,
   };
 }
+
+export const CORE_NFL_SCHEMES_AND_FOURTH_FILM_TAXONOMY = {
+  offensiveSchemes: [
+    "WEST_COAST",
+    "AIR_CORYELL",
+    "AIR_RAID",
+    "ERHARDT_PERKINS",
+    "SHANAHAN_MCVAY_OUTSIDE_ZONE",
+    "POWER_GAP_SMASHMOUTH",
+    "RPO_SPREAD_OPTION",
+    "HEAVY_12_13_PERSONNEL_MODERN",
+  ],
+  routeConcepts: [
+    "MESH_92",
+    "LEVELS",
+    "FLOOD_SAIL",
+    "SMASH_7_HITCH",
+    "FOUR_VERTICALS_989",
+    "STICK_80",
+    "DAGGER",
+    "Y_CROSS_95",
+    "DOUBLE_CHINA",
+    "GHOST_EP",
+    "MILLS",
+  ],
+  passProtectionsAndBlitzAdjustments: {
+    slideSystems: ["5_0_BOB", "FULL_SLIDE", "HALF_SLIDE_2_JET_3_JET", "62_63_64_68_H2"],
+    oneYouTwoMeRule: "Center + backside G/T slide to 3 weak gaps; play-side G/T + RB man-block 3 strong targets",
+    fourWeakBlitzCounters: ["TOM_TACKLE_OVER_ME", "FAN_OUTWARD_HOT_INSIDE", "HOT_SIGHT_ADJUST"],
+    fourStrongBlitzCounters: ["JOKER_OPPOSITE_CENTER_BREAKS_SLIDE", "STAY_TE_7MAN_MAX"],
+  },
+  secondaryCoverageRules: {
+    cover1Plug: "Single-high FS + LB Plugger reads RB (strong=blitz B-gap, weak=low-hole RAT); motion triggers BANJO/RAT/LAB",
+    cover2FirmerVsFloated: "Firmer hard 5-yd jam & trail vs Floated 10-12 yd sink baiting hole shot",
+    cover3BuzzAndHook: "Buzz 6-8 yds to numbers; Hook 10-12 yds, 1 yd outside hash",
+    cover4QuartersTripsMatch: "Strong 4-on-3 BOX (MOD #1, QF #2, Hook #3 with PUSH call on fast RB flare, Safety poaches #3 vert) + Weak 3-on-2 TRIANGLE",
+    splitFieldCounterRunVulnerabilityEpaDelta: 0.068,
+  },
+  grudenAndFourthFilmFormations: {
+    personnel21Tags: ["21_SPLIT", "21_I", "21_STRONG", "21_WEAK", "TAG_SLOT", "TAG_ZOOM", "TAG_STAR", "TAG_SUN"],
+    personnel12SWords: ["12_SOLO", "12_CLASSY", "12_SNUG", "12_SPECIAL", "12_SINK", "12_SPROUT"],
+    personnel11TripsTWords: ["11_TRIPS", "11_TROUGH", "11_TROUT", "11_TRUMP", "11_TRIO", "11_1X4_SPLIT"],
+    fourthAndFilmReference: "https://www.youtube.com/watch?v=sRaIlyv95hs | https://go.fourthandfilm.com/t/zx786nf",
+  },
+} as const;
 
 /* ========================================================================== */
 /* UNIFIED CORPUS, EQUATIONS, SOCIAL/MOTIF & GSI BRIDGE                       */

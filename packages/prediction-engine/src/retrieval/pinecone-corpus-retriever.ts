@@ -144,7 +144,8 @@ export class PineconeBM25HybridCorpusRetrieverTS {
       return 0;
     }
     const tfMap = this.docTermFreqs[docIndex];
-    const docLen = this.docLengths[docIndex];
+    const docLen = this.docLengths[docIndex] ?? 0;
+    if (!tfMap) return 0;
     const normDenom = this.k1 * (1.0 - this.b + this.b * (docLen / Math.max(this.avgDocLength, 1e-9)));
 
     let score = 0;
@@ -178,7 +179,7 @@ export class PineconeBM25HybridCorpusRetrieverTS {
       }
       const idx = Math.abs(h) % dimension;
       const sign = (h & 1) === 0 ? 1.0 : -1.0;
-      vec[idx] += sign;
+      vec[idx] = (vec[idx] ?? 0) + sign;
     }
     const norm = Math.sqrt(vec.reduce((acc, v) => acc + v * v, 0)) || 1.0;
     return vec.map((v) => Number((v / norm).toFixed(6)));
@@ -210,7 +211,7 @@ export class PineconeBM25HybridCorpusRetrieverTS {
     const n = Math.min(a.length, b.length);
     let sum = 0;
     for (let i = 0; i < n; i++) {
-      sum += a[i] * b[i];
+      sum += (a[i] ?? 0) * (b[i] ?? 0);
     }
     return sum;
   }
@@ -218,11 +219,15 @@ export class PineconeBM25HybridCorpusRetrieverTS {
   public static sparseDotProduct(a: SparseVectorTS, b: SparseVectorTS): number {
     const mapA = new Map<number, number>();
     for (let i = 0; i < a.indices.length; i++) {
-      mapA.set(a.indices[i], a.values[i] ?? 0);
+      const idxA = a.indices[i];
+      if (idxA !== undefined) {
+        mapA.set(idxA, a.values[i] ?? 0);
+      }
     }
     let sum = 0;
     for (let i = 0; i < b.indices.length; i++) {
-      const valA = mapA.get(b.indices[i]);
+      const idxB = b.indices[i];
+      const valA = idxB !== undefined ? mapA.get(idxB) : undefined;
       if (valA !== undefined) {
         sum += valA * (b.values[i] ?? 0);
       }
@@ -244,6 +249,7 @@ export class PineconeBM25HybridCorpusRetrieverTS {
     const results: HybridSearchResultTS[] = [];
     for (let idx = 0; idx < this.documents.length; idx++) {
       const doc = this.documents[idx];
+      if (!doc) continue;
       const ns = doc.namespace ?? 'gse-200-book-corpus';
       if (namespace && ns !== namespace) continue;
 
@@ -252,7 +258,7 @@ export class PineconeBM25HybridCorpusRetrieverTS {
       const dSparse = this.deterministicSparseVector(combined);
       const denseSim = Math.max(0, PineconeBM25HybridCorpusRetrieverTS.denseDotProduct(qDense, dDense));
       const sparseSim = Math.max(0, PineconeBM25HybridCorpusRetrieverTS.sparseDotProduct(qSparse, dSparse));
-      const bm25Raw = bm25Scores[idx];
+      const bm25Raw = bm25Scores[idx] ?? 0;
       const lexicalCombined = 0.5 * sparseSim + 0.5 * (bm25Raw / maxBm25);
       const hybridScore = this.computeHybridConvexScore(denseSim, lexicalCombined);
 

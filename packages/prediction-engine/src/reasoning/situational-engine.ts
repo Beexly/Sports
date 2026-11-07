@@ -58,6 +58,7 @@ export interface GameContext {
   readonly workloadRatio?: number;
   readonly officiatingPenaltyRate?: number;
   readonly officiatingCrewPenaltyRate?: number;
+  readonly refereeCrewFlagsPerGame?: number;
   readonly precipitationRateMmHr?: number;
   readonly offensivePaceSec?: number;
   readonly surfaceTractionCoeff?: number;

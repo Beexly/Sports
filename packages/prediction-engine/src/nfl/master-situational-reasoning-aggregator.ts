@@ -780,15 +780,15 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
   }
   if (input.targetFunnelInput) {
     result.targetFunnel = evaluateTargetFunnelMatchup(input.targetFunnelInput);
-    mark("15C:evaluateTargetFunnelMatchup", true, result.targetFunnel.primaryFunnelClassification);
+    mark("15C:evaluateTargetFunnelMatchup", true, result.targetFunnel.classification);
   }
   if (input.rushConceptInput) {
     result.rushConcept = computeRushConceptZoneGapMatchup(input.rushConceptInput);
-    mark("15D:computeRushConceptZoneGapMatchup", true, `${result.rushConcept.conceptYardsAdjustment} yds delta`);
+    mark("15D:computeRushConceptZoneGapMatchup", true, `${result.rushConcept.rushYardsAdjustment} yds delta`);
   }
   if (input.conformalAbstentionInput) {
     result.conformalAbstention = evaluateConformalSelectiveAbstention(input.conformalAbstentionInput);
-    mark("15E:evaluateConformalSelectiveAbstention", true, result.conformalAbstention.decision);
+    mark("15E:evaluateConformalSelectiveAbstention", true, result.conformalAbstention.verdict);
   }
   if (input.borghesiRosenInput) {
     result.borghesiRosen = computeBorghesiWeatherAndRosenQbBackupTransition(input.borghesiRosenInput);
@@ -796,7 +796,7 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
   }
   if (input.katsCusumInput) {
     result.katsCusum = detectKatsMarketCusumAndHarmonicRegime(input.katsCusumInput);
-    mark("15G:detectKatsMarketCusumAndHarmonicRegime", true, `drift=${result.katsCusum.cusumChangePointDetected}`);
+    mark("15G:detectKatsMarketCusumAndHarmonicRegime", true, `drift=${result.katsCusum.changePointDetected}`);
   }
   if (input.stage0Check) {
     const cfg = loadStage0Config(input.stage0Check.configPath);

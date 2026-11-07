@@ -177,5 +177,5 @@ export function metricBirthCertificate(metricId: string): GseMetricBirthCertific
 export function outOfSampleBacktestPassed(metricId: string): boolean {
   const cert = metricBirthCertificate(metricId);
   if (!cert) return false;
-  return cert.status === "PRODUCTION" && cert.validationMethods.some((method) => method.includes("walk-forward"));
+  return cert.status === "APPROVED" && cert.validationMethods.some((method) => method.includes("walk-forward"));
 }

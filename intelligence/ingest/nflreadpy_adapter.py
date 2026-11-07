@@ -12,7 +12,15 @@ from __future__ import annotations
 
 import math
 
-import nflreadpy
+try:
+    import nflreadpy
+except ImportError:  # pragma: no cover
+    class _NflReadPyStub:
+        @staticmethod
+        def load_pbp(season):
+            raise ImportError("nflreadpy is not installed")
+
+    nflreadpy = _NflReadPyStub()  # type: ignore[assignment]
 
 _REQUIRED_COLUMNS = (
     "game_id",

@@ -370,7 +370,7 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
   const textbookAlgorithmsReceipt = evaluateTenTextbookAlgorithmsBridge({
     historicalSeries: [w1.cleanBadThrowRate, w2, w8, w9w10, w12, f3],
     rawSignalVector: [w2, w8, f2, f3, w12],
-    gradientVector: [w1.pressureBadThrowDelta, w2 - 0.14, w8 - 0.12],
+    gradientVector: [w1.stickyAccuracyDelta, w2 - 0.14, w8 - 0.12],
     priorDistribution: [0.25, 0.25, 0.25, 0.25],
     posteriorDistribution: [
       Math.max(0.05, f3 * 0.5),
@@ -392,7 +392,7 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
   const wave13Receipt = evaluateWave13SheafNavierStokesPhaseTransition({
     stalkObservations: [w1.cleanBadThrowRate, w2, w8, w9w10, f2, f3],
     oscillatorPhasesRad: [0.15, 0.22, 0.19, 0.25, 0.18],
-    vorticitySnapSeries: [w9w10, batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard, w1.pressureBadThrowDelta],
+    vorticitySnapSeries: [w9w10, batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard, w1.stickyAccuracyDelta],
     directionAngleSeriesRad: [0.12, 0.18, 0.15, 0.21],
     residualVector: [w2 - 0.14, w8 - 0.12, f3 - 0.44],
     covarianceDiagonal: [0.04, 0.04, 0.05],
@@ -415,7 +415,7 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
 
   const megaSweep5Track7StepTrace = evaluateMegaSweep5TrackAnd7StepReasoning({
     cleanBadThrowRate: w1.cleanBadThrowRate,
-    pressureBadThrowDelta: w1.pressureBadThrowDelta,
+    pressureBadThrowDelta: w1.stickyAccuracyDelta,
     wrTargetShare: input.wrTargetShare,
     wrTargetSuccessRate: input.wrTargetSuccessRate,
     qbMofCompletionRate: input.qbMofCompletionRate,
