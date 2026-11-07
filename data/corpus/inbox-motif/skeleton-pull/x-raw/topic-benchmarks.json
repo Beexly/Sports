@@ -1,0 +1,118 @@
+{
+  "created_at": 1794012386,
+  "completed_at": 1794012405,
+  "id": "e56cad10-0e68-9ba9-a919-ef075fdef99d",
+  "max_output_tokens": null,
+  "model": "grok-4.3",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_e56cad10-0e68-9ba9-a919-ef075fdef99d",
+      "summary": [
+        {
+          "text": "Preparing to run x_keyword_search with the exact query string MMLU OR GPQA OR SWE-bench OR HumanEval OR leaderboard.\n\nThe search will return the 8 most recent substantive posts about LLM benchmarks, evaluation harnesses, or leaderboard results. Each post must include its status ID, GMT timestamp, full verbatim text, outbound links, and a note on any image or chart. Posts will be numbered newest first. If Latest mode returns nothing, the query will be retried in Top mode.",
+          "type": "summary_text"
+        }
+      ],
+      "type": "reasoning",
+      "status": "completed"
+    },
+    {
+      "call_id": "xs_call-ac7da43e-a27a-4d97-a829-f0d2013a6ba9-0",
+      "input": "{\"query\":\"MMLU OR GPQA OR SWE-bench OR HumanEval OR leaderboard\",\"limit\":\"8\",\"mode\":\"Latest\"}",
+      "name": "x_keyword_search",
+      "type": "custom_tool_call",
+      "id": "ctc_e56cad10-0e68-9ba9-a919-ef075fdef99d_call-ac7da43e-a27a-4d97-a829-f0d2013a6ba9-0",
+      "status": "failed"
+    },
+    {
+      "id": "tco_e56cad10-0e68-9ba9-a919-ef075fdef99d_call-ac7da43e-a27a-4d97-a829-f0d2013a6ba9-0",
+      "summary": [],
+      "type": "reasoning",
+      "status": "completed"
+    },
+    {
+      "call_id": "xs_call-ac7da43e-a27a-4d97-a829-f0d2013a6ba9-1",
+      "input": "{\"query\":\"MMLU OR GPQA OR SWE-bench OR HumanEval OR leaderboard\",\"limit\":\"8\",\"mode\":\"Top\"}",
+      "name": "x_keyword_search",
+      "type": "custom_tool_call",
+      "id": "ctc_e56cad10-0e68-9ba9-a919-ef075fdef99d_call-ac7da43e-a27a-4d97-a829-f0d2013a6ba9-1",
+      "status": "failed"
+    },
+    {
+      "id": "tco_e56cad10-0e68-9ba9-a919-ef075fdef99d_call-ac7da43e-a27a-4d97-a829-f0d2013a6ba9-1",
+      "summary": [],
+      "type": "reasoning",
+      "status": "completed"
+    },
+    {
+      "content": [
+        {
+          "type": "output_text",
+          "text": "Post 1 to Post 8: no posts available (tool rate limited)",
+          "logprobs": [],
+          "annotations": []
+        }
+      ],
+      "id": "msg_e56cad10-0e68-9ba9-a919-ef075fdef99d",
+      "role": "assistant",
+      "type": "message",
+      "status": "completed"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "previous_response_id": null,
+  "reasoning": {
+    "effort": "low",
+    "summary": "detailed"
+  },
+  "temperature": 0.7,
+  "text": {
+    "format": {
+      "type": "text"
+    }
+  },
+  "tool_choice": "auto",
+  "tools": [
+    {
+      "type": "x_search"
+    }
+  ],
+  "top_p": 0.95,
+  "usage": {
+    "input_tokens": 6364,
+    "input_tokens_details": {
+      "cached_tokens": 5248
+    },
+    "output_tokens": 1230,
+    "output_tokens_details": {
+      "reasoning_tokens": 1148
+    },
+    "total_tokens": 7594,
+    "num_sources_used": 0,
+    "num_server_side_tools_used": 0,
+    "cost_in_usd_ticks": 55196000,
+    "context_details": {
+      "input_tokens": 2443,
+      "output_tokens": 553
+    }
+  },
+  "user": null,
+  "incomplete_details": null,
+  "status": "completed",
+  "store": true,
+  "metadata": {
+    "system_fingerprint": "fp_eb3c003fc66c14ed"
+  },
+  "background": false,
+  "service_tier": "default",
+  "truncation": "disabled",
+  "top_logprobs": 0,
+  "presence_penalty": 0.0,
+  "frequency_penalty": 0.0,
+  "prompt_cache_key": null,
+  "max_tool_calls": null,
+  "safety_identifier": null,
+  "error": null,
+  "instructions": null
+}
