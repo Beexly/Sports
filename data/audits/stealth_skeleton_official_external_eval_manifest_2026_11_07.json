@@ -1,0 +1,71 @@
+{
+  "schema_version": "2.0.0",
+  "generated_at_utc": "2026-11-07T19:33:45.943392+00:00",
+  "doctrine": "OFFICIAL_EXTERNAL_BENCHMARKS_AND_INPUT_DISTILLATION_FLYWHEEL",
+  "live_edge_provider_base_url": "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev",
+  "openai_compatible_chat_endpoint": "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1/chat/completions",
+  "models_exposed_for_external_eval": [
+    "gse/stealth-skeleton-alpha",
+    "gse/skeleton-v1",
+    "gse/skeleton-v1-fast",
+    "gse/skeleton-math-pro",
+    "gse/skeleton-forecast",
+    "gse/skeleton-council"
+  ],
+  "official_external_harnesses": {
+    "1_eleutherai_lm_evaluation_harness_hf_v2": {
+      "organization": "EleutherAI / HuggingFace Open LLM Leaderboard v2",
+      "cli_command": "lm_eval --model local-chat-completions --model_args model=gse/stealth-skeleton-alpha,base_url=https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1/chat/completions --tasks mmlu_pro,gpqa_diamond,leaderboard_math_hard,leaderboard_ifeval,leaderboard_musr,leaderboard_bbh --batch_size auto --output_path data/public_benchmarks/lm_eval_official_results",
+      "tasks": [
+        "mmlu_pro",
+        "gpqa_diamond",
+        "leaderboard_math_hard",
+        "leaderboard_ifeval",
+        "leaderboard_musr",
+        "leaderboard_bbh"
+      ],
+      "zero_internal_bias": true
+    },
+    "2_iclr_2025_official_livebench": {
+      "organization": "LiveBench.ai (ICLR 2025 Spotlight \u2014 Monthly Contamination-Free Questions)",
+      "cli_command": "python gen_api_answer.py --model gse/stealth-skeleton-alpha --openai-api-base https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1 --bench-name live_bench",
+      "categories": [
+        "coding",
+        "mathematics",
+        "reasoning",
+        "data_analysis",
+        "language",
+        "instruction_following"
+      ],
+      "verified_scorecard": "data/audits/stealth_skeleton_openrouter_8suite_livebench_2026_11_07.json",
+      "zero_internal_bias": true
+    },
+    "3_lmsys_arena_hard_auto": {
+      "organization": "LMSYS Org (Chatbot Arena / Arena-Hard-Auto v0.1)",
+      "cli_command": "python gen_answer.py --setting-file config/gen_answer_config.yaml --endpoint-url https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1",
+      "evaluation_protocol": "Pairwise blind judge comparison against frontier baselines",
+      "zero_internal_bias": true
+    },
+    "4_forecastbench_probabilistic_calibration": {
+      "organization": "ForecastBench.org (Future Unresolved Event Brier Calibration)",
+      "evaluation_protocol": "Pre-registered probabilistic predictions graded strictly after real-world event resolution (impossible to overfit or memorize)",
+      "model_id": "gse/skeleton-forecast",
+      "zero_internal_bias": true
+    },
+    "5_openrouter_live_traffic_and_distillation": {
+      "organization": "OpenRouter Global Model Routing Network",
+      "purpose": "External developer & user traffic exposure + continuous prompt/reasoning harvesting into SFT/DPO/GRPO training flywheel",
+      "distillation_feed_path": "data\\mind\\feeds\\stealth_skeleton_distillation_flywheel_2026_11_07.jsonl"
+    }
+  },
+  "training_and_distillation_flywheel": {
+    "purpose": "Train Stealth-Skeleton on external prompts, multi-agent council disagreements, and real-world post-game residuals \u2014 learning from every external input, not just monetizing API calls.",
+    "pipeline_stages": [
+      "1. Capture external prompt + context at gse-stealth-skeleton-provider edge worker & local router",
+      "2. Sanitize credentials/PII and compute Shannon entropy + mathematical operator density",
+      "3. Generate DPO/GRPO preference tuple (Chosen = 26-Layer + 21,419-Equation synthesized output; Rejected = unconditioned single-pass baseline)",
+      "4. Emit trainer-ready JSONL shards to data/mind/feeds/stealth_skeleton_distillation_flywheel_2026_11_07.jsonl",
+      "5. Dispatch LoRA / QLoRA / GRPO weight updates to RunPod & NVIDIA Inception GPUs"
+    ]
+  }
+}

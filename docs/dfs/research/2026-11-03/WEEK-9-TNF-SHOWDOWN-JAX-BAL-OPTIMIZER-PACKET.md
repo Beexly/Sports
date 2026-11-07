@@ -1,6 +1,6 @@
 # Week 9 TNF Showdown JAX@BAL — Optimizer Packet
 
-**Generated:** 2026-11-07T16:23:09Z
+**Generated:** 2026-11-07T19:33:41Z
 **Source salary export:** `C:\Users\Garrett\Downloads\DKSalaries (3).csv`
 **Archived copy:** `data/dfs/dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv`
 
@@ -21,11 +21,11 @@
 ## Full Engine Parameters (`10,000` Sims + `26` Layers + `21,419` Equations + 5-Track `L1..L5` Reasoning)
 
 - roster structure: 1 CPT (1.5x) + 5 FLEX
-- candidates scored: 88
+- candidates scored: 45
 - Monte Carlo sims: 10000
 - 26-Layer ContextPacket + L1..L5 ReasoningTrace + 21,419-Equation Cognitive Router: `VERIFIED (26 layers, 21419 equations)`
 - adversarial field rosters: 300
-- p99 field win threshold: 87.35 points
+- p99 field win threshold: 104.2 points
 - portfolio size: 3
 
 ## Situational & Vacated-Workload Matchup Spotlights
@@ -36,44 +36,44 @@
 
 | # | Salary | Proj | Win prob vs p99 | Teams |
 |---|---|---|---|---|
-| 1 | $49,900 | 93.48 | 0.4376 | BAL, JAX |
-| 2 | $49,700 | 93.03 | 0.4376 | BAL, JAX |
-| 3 | $49,500 | 91.78 | 0.4376 | BAL, JAX |
+| 1 | $49,500 | 104.35 | 0.4999 | BAL, JAX |
+| 2 | $49,900 | 101.77 | 0.4655 | BAL, JAX |
+| 3 | $49,600 | 100.19 | 0.4454 | BAL, JAX |
 
 ## Rosters
 
-### Lineup 1 — $49,900 / proj 93.48
+### Lineup 1 — $49,500 / proj 104.35
 
 | Slot | Player | Pos | Team | Salary | Proj |
 |---|---|---|---|---:|---:|
-| CPT | Trevor Lawrence | QB | JAX | $15,900 | 31.05 |
-| FLEX | Derrick Henry | RB | BAL | $10,200 | 19.80 |
-| FLEX | Bhayshul Tuten | RB | JAX | $9,800 | 17.30 |
-| FLEX | Zay Flowers | WR | BAL | $10,400 | 15.90 |
-| FLEX | Chris Rodriguez Jr. | RB | JAX | $3,400 | 6.20 |
-| FLEX | Chris Moore | WR | BAL | $200 | 3.23 |
+| CPT | Trevor Lawrence | QB | JAX | $15,900 | 37.76 |
+| FLEX | Derrick Henry | RB | BAL | $10,200 | 18.81 |
+| FLEX | Brenton Strange | TE | JAX | $7,400 | 14.08 |
+| FLEX | Brian Thomas Jr. | WR | JAX | $6,400 | 13.40 |
+| FLEX | Jaguars | DST | JAX | $5,800 | 11.40 |
+| FLEX | Rashod Bateman | WR | BAL | $3,800 | 8.90 |
 
-### Lineup 2 — $49,700 / proj 93.03
-
-| Slot | Player | Pos | Team | Salary | Proj |
-|---|---|---|---|---:|---:|
-| CPT | Derrick Henry | RB | BAL | $15,300 | 29.70 |
-| FLEX | Trevor Lawrence | QB | JAX | $10,600 | 20.70 |
-| FLEX | Bhayshul Tuten | RB | JAX | $9,800 | 17.30 |
-| FLEX | Zay Flowers | WR | BAL | $10,400 | 15.90 |
-| FLEX | Chris Rodriguez Jr. | RB | JAX | $3,400 | 6.20 |
-| FLEX | Chris Moore | WR | BAL | $200 | 3.23 |
-
-### Lineup 3 — $49,500 / proj 91.78
+### Lineup 2 — $49,900 / proj 101.77
 
 | Slot | Player | Pos | Team | Salary | Proj |
 |---|---|---|---|---:|---:|
-| CPT | Bhayshul Tuten | RB | JAX | $14,700 | 25.95 |
-| FLEX | Trevor Lawrence | QB | JAX | $10,600 | 20.70 |
-| FLEX | Derrick Henry | RB | BAL | $10,200 | 19.80 |
-| FLEX | Zay Flowers | WR | BAL | $10,400 | 15.90 |
-| FLEX | Chris Rodriguez Jr. | RB | JAX | $3,400 | 6.20 |
-| FLEX | Chris Moore | WR | BAL | $200 | 3.23 |
+| CPT | Derrick Henry | RB | BAL | $15,300 | 28.22 |
+| FLEX | Trevor Lawrence | QB | JAX | $10,600 | 25.18 |
+| FLEX | Parker Washington | WR | JAX | $9,400 | 16.68 |
+| FLEX | Brenton Strange | TE | JAX | $7,400 | 14.08 |
+| FLEX | Mark Andrews | TE | BAL | $4,400 | 10.40 |
+| FLEX | Josh Cameron | WR | JAX | $2,800 | 7.22 |
+
+### Lineup 3 — $49,600 / proj 100.19
+
+| Slot | Player | Pos | Team | Salary | Proj |
+|---|---|---|---|---:|---:|
+| CPT | Brian Thomas Jr. | WR | JAX | $9,600 | 20.10 |
+| FLEX | Trevor Lawrence | QB | JAX | $10,600 | 25.18 |
+| FLEX | Bhayshul Tuten | RB | JAX | $9,800 | 16.43 |
+| FLEX | Parker Washington | WR | JAX | $9,400 | 16.68 |
+| FLEX | Jaguars | DST | JAX | $5,800 | 11.40 |
+| FLEX | Mark Andrews | TE | BAL | $4,400 | 10.40 |
 
 ## Engine Provenance
 

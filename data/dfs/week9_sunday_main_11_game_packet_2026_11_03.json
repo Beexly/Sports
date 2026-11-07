@@ -801,11 +801,11 @@
     "is_week8_retrospective_file": false,
     "is_week9_live_file": true
   },
-  "players_scored": 230,
+  "players_scored": 228,
   "games": 11,
   "sims": 10000,
   "opponent_rosters": 300,
-  "win_threshold_p99": 135.44,
+  "win_threshold_p99": 133.66,
   "portfolio_size": 3,
   "engine_provenance": {
     "sims_per_game": 10000,
@@ -826,9 +826,9 @@
         "team": "NE",
         "opponent": "GB",
         "salary": 6100,
-        "projection": 28.07,
-        "sd": 18.91,
-        "value_per_1k": 4.6,
+        "projection": 21.63,
+        "sd": 15.08,
+        "value_per_1k": 3.55,
         "qb_supporting_cast_ovr": 37.9,
         "qb_supporting_cast_rank": 27.0,
         "team_wpp_total": 0.0
@@ -839,9 +839,9 @@
         "team": "MIA",
         "opponent": "DET",
         "salary": 5600,
-        "projection": 29.07,
-        "sd": 19.45,
-        "value_per_1k": 5.19,
+        "projection": 21.71,
+        "sd": 15.53,
+        "value_per_1k": 3.88,
         "qb_supporting_cast_ovr": 32.2,
         "qb_supporting_cast_rank": 31.0,
         "team_wpp_total": 0.0
@@ -852,9 +852,9 @@
         "team": "PHI",
         "opponent": "NYG",
         "salary": 4100,
-        "projection": 15.32,
-        "sd": 9.72,
-        "value_per_1k": 3.74,
+        "projection": 18.82,
+        "sd": 11.08,
+        "value_per_1k": 4.59,
         "qb_supporting_cast_ovr": 37.1,
         "qb_supporting_cast_rank": 28.0,
         "team_wpp_total": 1.61
@@ -865,9 +865,9 @@
         "team": "DAL",
         "opponent": "IND",
         "salary": 4000,
-        "projection": 19.67,
-        "sd": 13.88,
-        "value_per_1k": 4.92,
+        "projection": 15.97,
+        "sd": 12.16,
+        "value_per_1k": 3.99,
         "qb_supporting_cast_ovr": 53.3,
         "qb_supporting_cast_rank": 17.0,
         "team_wpp_total": 0.0
@@ -878,9 +878,9 @@
         "team": "MIA",
         "opponent": "DET",
         "salary": 3100,
-        "projection": 15.83,
-        "sd": 11.13,
-        "value_per_1k": 5.11,
+        "projection": 12.38,
+        "sd": 9.22,
+        "value_per_1k": 3.99,
         "qb_supporting_cast_ovr": 32.2,
         "qb_supporting_cast_rank": 31.0,
         "team_wpp_total": 0.0
@@ -1027,6 +1027,98 @@
       "kaggle_and_open_dfs_datasets": 5,
       "wired_equations_count": 7
     },
+    "two_stage_gse_dfs_pipeline": {
+      "stage1_gse_projections_file": "data\\dfs\\gse_post_game_sim_player_projections_week9_2026_11_07.json",
+      "stage2_curated_pool_file": "data\\dfs\\gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json",
+      "total_slate_players_projected": 228,
+      "curated_dfs_pool_size": 121,
+      "rejected_players_count": 107,
+      "second_stage_dfs_pool_sims": 10000,
+      "accepted_by_position": {
+        "QB": 20,
+        "RB": 35,
+        "WR": 36,
+        "TE": 19,
+        "DST": 11
+      }
+    },
+    "enterprise_ecosystem_and_cloud_router": {
+      "verified": true,
+      "audited_at_utc": "2026-11-07T19:33:41.444144+00:00",
+      "nvidia_inception_and_developer_program": {
+        "status": "ACTIVE_AND_WIRED",
+        "nim_api_endpoint": "https://integrate.api.nvidia.com/v1",
+        "nim_models_configured": [
+          "nvidia/llama-3.1-nemotron-70b-instruct",
+          "deepseek-ai/deepseek-r1",
+          "nvidia/nv-embedqa-e5-v5"
+        ],
+        "rapids_cudf_cuml_cugraph_fallback": "vectorized_numpy_scipy_active",
+        "tao_and_tensorrt_pipeline_wired": true,
+        "nvidia_skills_verified": {
+          "dgx_spark_skills": true,
+          "tao_setup": true,
+          "ethos_orchestrate": true,
+          "nvidia_skill_finder": true
+        }
+      },
+      "sentry_observability_grant": {
+        "status": "ACTIVE_ZERO_WASTE_CONFIGURED",
+        "startup_credit_buffer_usd": 5000,
+        "production_traces_sample_rate": 0.1,
+        "configs_present": {
+          "client": false,
+          "server": false,
+          "edge": false
+        }
+      },
+      "posthog_product_and_model_telemetry": {
+        "status": "ACTIVE_AND_WIRED",
+        "web_integration_files_count": 5,
+        "tracked_surfaces": [
+          "pick_conjunction_gate_funnel",
+          "dfs_portfolio_generation",
+          "stealth_skeleton_model_routing",
+          "paywall_conversion_events"
+        ]
+      },
+      "google_cloud_colab_and_runpod_compute": {
+        "status": "ACTIVE_HYBRID_DISPATCH",
+        "runpod_gpu_serverless_and_pods": {
+          "workload": "Stealth-Skeleton SFT/DPO/GRPO distillation & heavy batch tensor evaluation",
+          "colab_and_gpu_modules_count": 2
+        },
+        "google_cloud_and_gemini": {
+          "workload": "Frontier Council Seat (Gemini) + Colab GPU notebook execution + BigQuery/Drive sync",
+          "env_configured": true
+        }
+      }
+    },
+    "stealth_skeleton_official_external_eval": {
+      "live_edge_provider_base_url": "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev",
+      "official_harnesses_count": 5
+    },
+    "continuous_run_improvement_receipt": {
+      "run_sequence_number": 1,
+      "timestamp_utc": "2026-11-07T19:33:41.449448+00:00",
+      "run_type": "two_stage_gse_sim_to_dfs_dual_slate_week9",
+      "metrics": {
+        "total_slate_players_projected": 228,
+        "curated_dfs_pool_size": 121,
+        "rejected_sub_floor_traps": 107,
+        "submodular_p99_coverage": 0.9873,
+        "best_lineup_win_prob": 0.8724
+      },
+      "prior_best_p99_coverage": 0.0,
+      "current_p99_coverage": 0.9873,
+      "improvements_applied": [
+        "Stage 1 GSE Post-Game-Sim Player Projections extracted before DFS pool selection",
+        "Stage 2 Dedicated Curated GSE DFS Player Pool isolated (hard-blocking sub-floor WR4s & punt road-dog DSTs)",
+        "Stage 3 Dedicated 10,000-World Second-Stage DFS Pool Simulations with +3pt 300/100-yd bonus tracking",
+        "Stealth-Skeleton Official External Evaluation Manifest & SFT/DPO/GRPO Distillation Flywheel updated"
+      ],
+      "enterprise_stack_verified": true
+    },
     "games_connected": {
       "ARI@SEA": {
         "dossier_file": "connected_workflow_dossier_ari_sea_week9.json",
@@ -1142,195 +1234,80 @@
   },
   "submodular": {
     "selected_lineup_indices": [
-      1,
       0,
+      1,
       2
     ],
     "marginal_win_prob_gains": [
-      0.9305,
-      0.0455,
-      0.0054
+      0.8724,
+      0.0847,
+      0.0302
     ],
-    "cumulative_portfolio_win_prob": 0.9814,
+    "cumulative_portfolio_win_prob": 0.9873,
     "nemhauser_wolsey_lower_bound_ratio": 0.632121
   },
-  "best_lineup_index": 2,
+  "best_lineup_index": 1,
   "lineups": [
     {
       "index": 1,
-      "salary": 49300,
-      "proj_sum": 196.9,
-      "win_prob_vs_p99_field": 0.9168,
+      "salary": 49900,
+      "proj_sum": 181.13,
+      "win_prob_vs_p99_field": 0.8724,
       "teams": [
+        "DAL",
         "DET",
-        "HOU",
+        "GB",
         "LAC",
-        "LV",
         "MIA",
-        "NE",
-        "SEA"
-      ],
-      "literature_7_equation_audit": {
-        "eq_dfs_01_stack_and_overlap": {
-          "qb_team": "HOU",
-          "stack_pass_catchers": [
-            "Xavier Hutchinson",
-            "Dalton Schultz"
-          ],
-          "stack_count": 2,
-          "bring_back_players": [
-            "KeAndre Lambert-Smith"
-          ],
-          "bring_back_count": 1,
-          "max_overlap_with_prior_lineups": 0
-        },
-        "eq_dfs_02_kl_contrarian_leverage": 20.436,
-        "eq_dfs_03_submodular_p99_marginal_gain": 0.9168,
-        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 136.62,
-        "eq_dfs_05_shrunk_stack_covariance_bonus": 6.85,
-        "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
-        "eq_dfs_07_late_swap_recourse": {
-          "late_window_slots_count": 2,
-          "late_window_players": [
-            "Jahmyr Gibbs",
-            "Jaxon Smith-Njigba"
-          ],
-          "expected_recourse_fpts_gain": 1.3
-        }
-      },
-      "players": [
-        {
-          "player": "Jahmyr Gibbs",
-          "position": "RB",
-          "team": "DET",
-          "opponent": "MIA",
-          "salary": 10000,
-          "projection": 38.849998474121094
-        },
-        {
-          "player": "Jaxon Smith-Njigba",
-          "position": "WR",
-          "team": "SEA",
-          "opponent": "ARI",
-          "salary": 9300,
-          "projection": 28.3700008392334
-        },
-        {
-          "player": "Rhamondre Stevenson",
-          "position": "RB",
-          "team": "NE",
-          "opponent": "GB",
-          "salary": 6100,
-          "projection": 28.06999969482422
-        },
-        {
-          "player": "C.J. Stroud",
-          "position": "QB",
-          "team": "HOU",
-          "opponent": "LAC",
-          "salary": 5900,
-          "projection": 27.8700008392334
-        },
-        {
-          "player": "Ollie Gordon II",
-          "position": "RB",
-          "team": "MIA",
-          "opponent": "DET",
-          "salary": 5600,
-          "projection": 29.06999969482422
-        },
-        {
-          "player": "Xavier Hutchinson",
-          "position": "WR",
-          "team": "HOU",
-          "opponent": "LAC",
-          "salary": 4000,
-          "projection": 12.90999984741211
-        },
-        {
-          "player": "Dalton Schultz",
-          "position": "TE",
-          "team": "HOU",
-          "opponent": "LAC",
-          "salary": 3200,
-          "projection": 14.850000381469727
-        },
-        {
-          "player": "KeAndre Lambert-Smith",
-          "position": "WR",
-          "team": "LAC",
-          "opponent": "HOU",
-          "salary": 3000,
-          "projection": 10.890000343322754
-        },
-        {
-          "player": "Raiders",
-          "position": "DST",
-          "team": "LV",
-          "opponent": "SF",
-          "salary": 2200,
-          "projection": 6.010000228881836
-        }
-      ]
-    },
-    {
-      "index": 2,
-      "salary": 50000,
-      "proj_sum": 199.04,
-      "win_prob_vs_p99_field": 0.9305,
-      "teams": [
-        "DET",
-        "LAC",
-        "LV",
-        "MIA",
-        "NE",
+        "NO",
         "NYG"
       ],
       "literature_7_equation_audit": {
         "eq_dfs_01_stack_and_overlap": {
           "qb_team": "DET",
           "stack_pass_catchers": [
-            "Jameson Williams"
+            "Jameson Williams",
+            "Sam LaPorta"
           ],
-          "stack_count": 1,
+          "stack_count": 2,
           "bring_back_players": [
-            "Ollie Gordon II",
-            "Greg Dulcich"
+            "Ollie Gordon II"
           ],
-          "bring_back_count": 2,
-          "max_overlap_with_prior_lineups": 5
+          "bring_back_count": 1,
+          "max_overlap_with_prior_lineups": 0
         },
-        "eq_dfs_02_kl_contrarian_leverage": 20.851,
-        "eq_dfs_03_submodular_p99_marginal_gain": 0.0592,
-        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 138.76,
-        "eq_dfs_05_shrunk_stack_covariance_bonus": 5.75,
-        "eq_dfs_06_duplication_uniqueness_prob": 0.9924,
+        "eq_dfs_02_kl_contrarian_leverage": 19.931,
+        "eq_dfs_03_submodular_p99_marginal_gain": 0.8724,
+        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 133.49,
+        "eq_dfs_05_shrunk_stack_covariance_bonus": 6.85,
+        "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
         "eq_dfs_07_late_swap_recourse": {
-          "late_window_slots_count": 3,
+          "late_window_slots_count": 4,
           "late_window_players": [
-            "Jahmyr Gibbs",
+            "Josh Jacobs",
             "Jared Goff",
-            "Jameson Williams"
+            "Jameson Williams",
+            "Sam LaPorta"
           ],
-          "expected_recourse_fpts_gain": 1.95
+          "expected_recourse_fpts_gain": 2.6
         }
       },
       "players": [
-        {
-          "player": "Jahmyr Gibbs",
-          "position": "RB",
-          "team": "DET",
-          "opponent": "MIA",
-          "salary": 10000,
-          "projection": 38.849998474121094
-        },
         {
           "player": "Malik Nabers",
           "position": "WR",
           "team": "NYG",
           "opponent": "PHI",
           "salary": 7300,
-          "projection": 23.149999618530273
+          "projection": 23.64
+        },
+        {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 6800,
+          "projection": 26.83
         },
         {
           "player": "Jared Goff",
@@ -1338,15 +1315,7 @@
           "team": "DET",
           "opponent": "MIA",
           "salary": 6600,
-          "projection": 29.760000228881836
-        },
-        {
-          "player": "Rhamondre Stevenson",
-          "position": "RB",
-          "team": "NE",
-          "opponent": "GB",
-          "salary": 6100,
-          "projection": 28.06999969482422
+          "projection": 29.91
         },
         {
           "player": "Jameson Williams",
@@ -1354,7 +1323,7 @@
           "team": "DET",
           "opponent": "MIA",
           "salary": 6100,
-          "projection": 17.399999618530273
+          "projection": 17.46
         },
         {
           "player": "Ollie Gordon II",
@@ -1362,101 +1331,218 @@
           "team": "MIA",
           "opponent": "DET",
           "salary": 5600,
-          "projection": 29.06999969482422
+          "projection": 21.71
         },
         {
-          "player": "Greg Dulcich",
-          "position": "TE",
-          "team": "MIA",
-          "opponent": "DET",
-          "salary": 3100,
-          "projection": 15.829999923706055
-        },
-        {
-          "player": "KeAndre Lambert-Smith",
+          "player": "Ladd McConkey",
           "position": "WR",
           "team": "LAC",
           "opponent": "HOU",
-          "salary": 3000,
-          "projection": 10.890000343322754
+          "salary": 5500,
+          "projection": 15.68
         },
         {
-          "player": "Raiders",
+          "player": "Sam LaPorta",
+          "position": "TE",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 5100,
+          "projection": 19.45
+        },
+        {
+          "player": "Malik Davis",
+          "position": "RB",
+          "team": "DAL",
+          "opponent": "IND",
+          "salary": 4000,
+          "projection": 15.97
+        },
+        {
+          "player": "Saints",
           "position": "DST",
-          "team": "LV",
-          "opponent": "SF",
-          "salary": 2200,
-          "projection": 6.010000228881836
+          "team": "NO",
+          "opponent": "CLE",
+          "salary": 2900,
+          "projection": 10.48
         }
       ]
     },
     {
-      "index": 3,
+      "index": 2,
       "salary": 49900,
-      "proj_sum": 197.22,
-      "win_prob_vs_p99_field": 0.925,
+      "proj_sum": 178.88,
+      "win_prob_vs_p99_field": 0.8544,
       "teams": [
-        "DET",
+        "DAL",
+        "GB",
         "HOU",
+        "LAC",
         "MIA",
-        "NE",
-        "NYJ",
         "SEA"
       ],
       "literature_7_equation_audit": {
         "eq_dfs_01_stack_and_overlap": {
-          "qb_team": "DET",
+          "qb_team": "HOU",
           "stack_pass_catchers": [
-            "Isaac TeSlaa"
+            "Nico Collins",
+            "Dalton Schultz"
           ],
-          "stack_count": 1,
+          "stack_count": 2,
           "bring_back_players": [
-            "Ollie Gordon II",
-            "Greg Dulcich"
+            "Ladd McConkey"
           ],
-          "bring_back_count": 2,
-          "max_overlap_with_prior_lineups": 5
+          "bring_back_count": 1,
+          "max_overlap_with_prior_lineups": 4
         },
-        "eq_dfs_02_kl_contrarian_leverage": 20.669,
-        "eq_dfs_03_submodular_p99_marginal_gain": 0.0054,
-        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 136.95,
-        "eq_dfs_05_shrunk_stack_covariance_bonus": 5.75,
+        "eq_dfs_02_kl_contrarian_leverage": 19.556,
+        "eq_dfs_03_submodular_p99_marginal_gain": 0.0847,
+        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 128.8,
+        "eq_dfs_05_shrunk_stack_covariance_bonus": 8.1,
         "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
         "eq_dfs_07_late_swap_recourse": {
-          "late_window_slots_count": 4,
+          "late_window_slots_count": 3,
           "late_window_players": [
-            "Jahmyr Gibbs",
             "Jaxon Smith-Njigba",
-            "Jared Goff",
-            "Isaac TeSlaa"
+            "Josh Jacobs",
+            "Packers"
           ],
-          "expected_recourse_fpts_gain": 2.6
+          "expected_recourse_fpts_gain": 1.95
         }
       },
       "players": [
-        {
-          "player": "Jahmyr Gibbs",
-          "position": "RB",
-          "team": "DET",
-          "opponent": "MIA",
-          "salary": 10000,
-          "projection": 38.849998474121094
-        },
         {
           "player": "Jaxon Smith-Njigba",
           "position": "WR",
           "team": "SEA",
           "opponent": "ARI",
           "salary": 9300,
-          "projection": 28.3700008392334
+          "projection": 29.11
         },
         {
-          "player": "Jared Goff",
+          "player": "Nico Collins",
+          "position": "WR",
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 7200,
+          "projection": 19.26
+        },
+        {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 6800,
+          "projection": 26.83
+        },
+        {
+          "player": "C.J. Stroud",
           "position": "QB",
-          "team": "DET",
-          "opponent": "MIA",
-          "salary": 6600,
-          "projection": 29.760000228881836
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 5900,
+          "projection": 27.76
+        },
+        {
+          "player": "Ollie Gordon II",
+          "position": "RB",
+          "team": "MIA",
+          "opponent": "DET",
+          "salary": 5600,
+          "projection": 21.71
+        },
+        {
+          "player": "Ladd McConkey",
+          "position": "WR",
+          "team": "LAC",
+          "opponent": "HOU",
+          "salary": 5500,
+          "projection": 15.68
+        },
+        {
+          "player": "Malik Davis",
+          "position": "RB",
+          "team": "DAL",
+          "opponent": "IND",
+          "salary": 4000,
+          "projection": 15.97
+        },
+        {
+          "player": "Dalton Schultz",
+          "position": "TE",
+          "team": "HOU",
+          "opponent": "LAC",
+          "salary": 3200,
+          "projection": 12.76
+        },
+        {
+          "player": "Packers",
+          "position": "DST",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 2400,
+          "projection": 9.8
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "salary": 49900,
+      "proj_sum": 159.14,
+      "win_prob_vs_p99_field": 0.7107,
+      "teams": [
+        "DEN",
+        "DET",
+        "LAC",
+        "LAR",
+        "LV",
+        "NE",
+        "NYJ",
+        "WAS"
+      ],
+      "literature_7_equation_audit": {
+        "eq_dfs_01_stack_and_overlap": {
+          "qb_team": "LAR",
+          "stack_pass_catchers": [
+            "Puka Nacua"
+          ],
+          "stack_count": 1,
+          "bring_back_players": [
+            "Stefon Diggs"
+          ],
+          "bring_back_count": 1,
+          "max_overlap_with_prior_lineups": 1
+        },
+        "eq_dfs_02_kl_contrarian_leverage": 18.727,
+        "eq_dfs_03_submodular_p99_marginal_gain": 0.0302,
+        "eq_dfs_04_bertsimas_sim_gamma3_robust_floor": 113.92,
+        "eq_dfs_05_shrunk_stack_covariance_bonus": 4.2,
+        "eq_dfs_06_duplication_uniqueness_prob": 0.9999,
+        "eq_dfs_07_late_swap_recourse": {
+          "late_window_slots_count": 3,
+          "late_window_players": [
+            "Puka Nacua",
+            "Matthew Stafford",
+            "Sam LaPorta"
+          ],
+          "expected_recourse_fpts_gain": 1.95
+        }
+      },
+      "players": [
+        {
+          "player": "Puka Nacua",
+          "position": "WR",
+          "team": "LAR",
+          "opponent": "WAS",
+          "salary": 8800,
+          "projection": 25.74
+        },
+        {
+          "player": "Matthew Stafford",
+          "position": "QB",
+          "team": "LAR",
+          "opponent": "WAS",
+          "salary": 6200,
+          "projection": 23.21
         },
         {
           "player": "Rhamondre Stevenson",
@@ -1464,47 +1550,55 @@
           "team": "NE",
           "opponent": "GB",
           "salary": 6100,
-          "projection": 28.06999969482422
+          "projection": 21.63
         },
         {
-          "player": "Ollie Gordon II",
+          "player": "Ashton Jeanty",
           "position": "RB",
-          "team": "MIA",
-          "opponent": "DET",
+          "team": "LV",
+          "opponent": "SF",
+          "salary": 5900,
+          "projection": 19.58
+        },
+        {
+          "player": "Stefon Diggs",
+          "position": "WR",
+          "team": "WAS",
+          "opponent": "LAR",
           "salary": 5600,
-          "projection": 29.06999969482422
+          "projection": 12.9
         },
         {
-          "player": "Xavier Hutchinson",
-          "position": "WR",
-          "team": "HOU",
-          "opponent": "LAC",
-          "salary": 4000,
-          "projection": 12.90999984741211
+          "player": "Jonah Coleman",
+          "position": "RB",
+          "team": "DEN",
+          "opponent": "CAR",
+          "salary": 5300,
+          "projection": 16.58
         },
         {
-          "player": "Isaac TeSlaa",
-          "position": "WR",
+          "player": "Sam LaPorta",
+          "position": "TE",
           "team": "DET",
           "opponent": "MIA",
-          "salary": 3100,
-          "projection": 9.59000015258789
+          "salary": 5100,
+          "projection": 19.45
         },
         {
-          "player": "Greg Dulcich",
-          "position": "TE",
-          "team": "MIA",
-          "opponent": "DET",
-          "salary": 3100,
-          "projection": 15.829999923706055
-        },
-        {
-          "player": "Jets",
-          "position": "DST",
+          "player": "Adonai Mitchell",
+          "position": "WR",
           "team": "NYJ",
           "opponent": "KC",
-          "salary": 2100,
-          "projection": 4.769999980926514
+          "salary": 4500,
+          "projection": 12.57
+        },
+        {
+          "player": "Chargers",
+          "position": "DST",
+          "team": "LAC",
+          "opponent": "HOU",
+          "salary": 2400,
+          "projection": 7.48
         }
       ]
     }

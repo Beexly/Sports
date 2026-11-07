@@ -93,3 +93,93 @@ def test_python_packaging_pyproject_and_init_files():
             if "__pycache__" in py_file.parts:
                 continue
             assert (py_file.parent / "__init__.py").is_file(), f"Missing __init__.py in {py_file.parent}"
+
+
+def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
+    classic_pkt = json.loads(
+        (REPO_ROOT / "data" / "dfs" / "week9_sunday_main_11_game_packet_2026_11_07.json").read_text(encoding="utf-8")
+    )
+    showdown_pkt = json.loads(
+        (REPO_ROOT / "data" / "dfs" / "week9_tnf_showdown_jax_bal_packet_2026_11_07.json").read_text(encoding="utf-8")
+    )
+    fantasy_pkt = json.loads(
+        (REPO_ROOT / "data" / "fantasy" / "week9_unified_fantasy_and_dfs_rankings_2026_11_07.json").read_text(encoding="utf-8")
+    )
+
+    banned_sub_floor_traps = {
+        "isaac teslaa",
+        "keandre lambert-smith",
+        "keandre lambert smith",
+        "omar cooper jr.",
+        "omar cooper",
+        "xavier hutchinson",
+        "chris moore",
+    }
+    banned_punt_dsts = {"jets", "raiders"}
+
+    qbs_used = set()
+    for lu in classic_pkt["lineups"]:
+        # EQ-DFS-06: No $50,000 exact duplication cap
+        assert lu["salary"] <= 49900
+        for p in lu["players"]:
+            nm_low = str(p["player"]).lower().strip()
+            assert nm_low not in banned_sub_floor_traps, f"Sub-floor trap leaked into Classic lineup: {nm_low}"
+            if p["position"] == "DST":
+                assert nm_low not in banned_punt_dsts, f"Punt road-dog DST leaked into Classic lineup: {nm_low}"
+            if p["position"] == "QB":
+                qbs_used.add(nm_low)
+    # 3 distinct QBs across the 3-Max Classic portfolio
+    assert len(qbs_used) == 3
+
+    # Showdown checks: 3 distinct Captains, zero Chris Moore $200 traps, max_overlap <= 4
+    cpts_used = set()
+    player_sets = []
+    for lu in showdown_pkt["lineups"]:
+        assert lu["salary"] <= 49900
+        names = set()
+        for p in lu["players"]:
+            nm_low = str(p["name"]).lower().strip()
+            assert nm_low not in banned_sub_floor_traps, f"Sub-floor trap leaked into Showdown lineup: {nm_low}"
+            names.add(nm_low)
+            if p["slot"] == "CPT":
+                cpts_used.add(nm_low)
+        for prev_set in player_sets:
+            assert len(names.intersection(prev_set)) <= 4, "Showdown lineups exceed max_overlap=4"
+        player_sets.append(names)
+    assert len(cpts_used) == 3
+
+    # Unified Fantasy rankings checks
+    assert set(fantasy_pkt["positional_rankings"].keys()) == {"QB", "RB", "WR", "TE", "DST"}
+    assert (
+        REPO_ROOT
+        / "docs"
+        / "fantasy"
+        / "research"
+        / "2026-11-07"
+        / "WEEK-9-FANTASY-FOOTBALL-AND-DFS-UNIFIED-ENGINE-DOSSIER-2026-11-07.md"
+    ).is_file()
+
+    # Two-Stage GSE Simulation-to-DFS Pipeline checks
+    prov = classic_pkt["engine_provenance"]
+    two_stage = prov["two_stage_gse_dfs_pipeline"]
+    assert two_stage["curated_dfs_pool_size"] >= 50
+    assert two_stage["rejected_players_count"] >= 40
+    assert two_stage["second_stage_dfs_pool_sims"] == 10000
+    assert (REPO_ROOT / two_stage["stage1_gse_projections_file"]).is_file()
+    assert (REPO_ROOT / two_stage["stage2_curated_pool_file"]).is_file()
+
+    # Enterprise Ecosystem (NVIDIA Inception, NVIDIA Developer, Sentry, PostHog, RunPod, Google Cloud)
+    ent = prov["enterprise_ecosystem_and_cloud_router"]
+    assert ent["verified"] is True
+    assert ent["nvidia_inception_and_developer_program"]["status"] == "ACTIVE_AND_WIRED"
+    assert ent["sentry_observability_grant"]["startup_credit_buffer_usd"] == 5000
+    assert ent["posthog_product_and_model_telemetry"]["status"] == "ACTIVE_AND_WIRED"
+    assert ent["google_cloud_colab_and_runpod_compute"]["status"] == "ACTIVE_HYBRID_DISPATCH"
+
+    # Continuous Run Self-Improvement Ledger & Stealth-Skeleton External Eval + Distillation Flywheel
+    assert prov["continuous_run_improvement_receipt"]["run_sequence_number"] >= 1
+    assert (REPO_ROOT / "data" / "engine" / "continuous_run_improvement_ledger.jsonl").is_file()
+    assert (REPO_ROOT / "data" / "audits" / "stealth_skeleton_official_external_eval_manifest_2026_11_07.json").is_file()
+    assert (REPO_ROOT / "data" / "mind" / "feeds" / "stealth_skeleton_distillation_flywheel_2026_11_07.jsonl").is_file()
+
+

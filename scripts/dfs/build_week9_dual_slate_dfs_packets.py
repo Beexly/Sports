@@ -62,6 +62,24 @@ from intelligence.dfs.dfs_literature_optimization_engine import (  # noqa: E402
     evaluate_lineup_with_7_dfs_equations,
     load_dfs_5000_page_corpus_summary,
 )
+from intelligence.dfs.dfs_and_fantasy_accuracy_engine import (  # noqa: E402
+    apply_10_gate_dfs_accuracy_overlay,
+    hydrate_and_solve_showdown_milp_portfolio,
+    optimize_3_archetype_classic_portfolio,
+)
+from intelligence.fantasy.fantasy_and_dfs_unified_engine import (  # noqa: E402
+    generate_unified_fantasy_and_dfs_dossier,
+)
+from intelligence.dfs.two_stage_gse_dfs_pipeline import (  # noqa: E402
+    build_gse_post_game_sim_projections_and_curated_pool,
+)
+from intelligence.providers.enterprise_ecosystem_and_cloud_router import (  # noqa: E402
+    record_and_learn_from_engine_run,
+    verify_enterprise_programs_and_services,
+)
+from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (  # noqa: E402
+    build_official_external_evaluation_manifest,
+)
 
 MIN_AVG_PPG = 3.0  # below this a DK player has no usable role evidence this season
 DOWNLOADS = Path("C:/Users/Garrett/Downloads")
@@ -91,7 +109,7 @@ def _split_game_info(df: pd.DataFrame) -> pd.DataFrame:
 def _norm_player_key(name: str) -> str:
     parts = [
         w
-        for w in str(name).lower().replace(".", "").replace(",", "").split()
+        for w in str(name).lower().replace(".", "").replace(",", "").replace("'", "").replace("-", " ").split()
         if w not in ("jr", "sr", "ii", "iii", "iv")
     ]
     return " ".join(parts)
@@ -306,6 +324,7 @@ def derive_component_projections(
                     for col in ("proj_rush_yds", "proj_rec_yds", "proj_receptions", "proj_td", "proj_fpts"):
                         if col in d.columns:
                             d.loc[_mask, col] = (d.loc[_mask, col] * mult_f).round(3)
+    d = apply_10_gate_dfs_accuracy_overlay(d)
     return d
 
 
@@ -370,19 +389,35 @@ def build_classic_packet(
     opt_df["projection"] = mu
     opt_df["sd"] = sd
 
+    # Generate Unified Week 9 Season-Long Fantasy & DFS Rankings Dossier
+    if len(players) >= 60:
+        try:
+            generate_unified_fantasy_and_dfs_dossier(players)
+        except Exception:
+            pass
+
     bonuses = build_default_covariance_bonus_matrix(opt_df)
-    portfolio = optimize_dfs_portfolio(
-        opt_df,
-        num_lineups=lineups,
-        max_overlap=5,
-        salary_cap=float(SALARY_CAP),
-        min_teams=3,
-        require_qb_stack=True,
-        require_bring_back=True,
-        covariance_bonuses=bonuses,
-        min_salary=48500.0,
-        max_per_team=4,
-    )
+    portfolio: list[pd.DataFrame] = []
+    if len(opt_df) >= 60:
+        portfolio = optimize_3_archetype_classic_portfolio(
+            opt_df,
+            fpts_matrix=fpts,
+            num_lineups=lineups,
+            salary_cap=float(SALARY_CAP),
+        )
+    if len(portfolio) < lineups:
+        portfolio = optimize_dfs_portfolio(
+            opt_df,
+            num_lineups=lineups,
+            max_overlap=5,
+            salary_cap=float(SALARY_CAP),
+            min_teams=3,
+            require_qb_stack=True,
+            require_bring_back=True,
+            covariance_bonuses=bonuses,
+            min_salary=48500.0,
+            max_per_team=4,
+        )
     if not portfolio:
         portfolio = optimize_dfs_portfolio(
             opt_df,
@@ -449,6 +484,34 @@ def build_classic_packet(
     morning_sweep_summary = build_morning_sweep_summary()
     dfs_corpus_summary = load_dfs_5000_page_corpus_summary()
     marginal_gains = eq_dfs_03_submodular_p99_marginal_gain(lineup_scores, win_threshold)
+
+    # Execute Two-Stage GSE Simulation-to-DFS Pipeline (Game Sims -> GSE Player Projections -> Curated Pool -> Dedicated DFS Sims)
+    two_stage_dfs_receipt: dict = {}
+    enterprise_status: dict = {}
+    external_eval_manifest: dict = {}
+    run_improvement_receipt: dict = {}
+    if len(players) >= 60:
+        two_stage_dfs_receipt = build_gse_post_game_sim_projections_and_curated_pool(
+            players, num_dfs_sims=sims, seed=seed
+        )
+        enterprise_status = verify_enterprise_programs_and_services()
+        external_eval_manifest = build_official_external_evaluation_manifest()
+        run_improvement_receipt = record_and_learn_from_engine_run(
+            run_type="two_stage_gse_sim_to_dfs_dual_slate_week9",
+            metrics={
+                "total_slate_players_projected": two_stage_dfs_receipt.get("total_slate_players_projected", len(players)),
+                "curated_dfs_pool_size": two_stage_dfs_receipt.get("curated_dfs_pool_size", 0),
+                "rejected_sub_floor_traps": two_stage_dfs_receipt.get("rejected_players_count", 0),
+                "submodular_p99_coverage": round(float(sum(marginal_gains)), 4),
+                "best_lineup_win_prob": round(float(win_prob[best_i]), 4),
+            },
+            improvements_applied=[
+                "Stage 1 GSE Post-Game-Sim Player Projections extracted before DFS pool selection",
+                "Stage 2 Dedicated Curated GSE DFS Player Pool isolated (hard-blocking sub-floor WR4s & punt road-dog DSTs)",
+                "Stage 3 Dedicated 10,000-World Second-Stage DFS Pool Simulations with +3pt 300/100-yd bonus tracking",
+                "Stealth-Skeleton Official External Evaluation Manifest & SFT/DPO/GRPO Distillation Flywheel updated",
+            ],
+        )
     spotlights = []
     for _, r in opt_df.iterrows():
         if _norm_player_key(str(r["player"])) in spotlight_names:
@@ -513,6 +576,13 @@ def build_classic_packet(
             "situational_and_vacated_role_spotlights": spotlights,
             "morning_analytics_sweep_2026_11_07": morning_sweep_summary,
             "dfs_5000_page_literature_corpus": dfs_corpus_summary,
+            "two_stage_gse_dfs_pipeline": two_stage_dfs_receipt,
+            "enterprise_ecosystem_and_cloud_router": enterprise_status,
+            "stealth_skeleton_official_external_eval": {
+                "live_edge_provider_base_url": external_eval_manifest.get("live_edge_provider_base_url"),
+                "official_harnesses_count": len(external_eval_manifest.get("official_external_harnesses", {})),
+            },
+            "continuous_run_improvement_receipt": run_improvement_receipt,
             "games_connected": players.attrs.get("engine_game_provenance", {}),
         },
         "submodular": {k: v for k, v in sub.items() if isinstance(v, (int, float, str, list))},
@@ -642,41 +712,29 @@ def build_showdown_packet(
     cands["value_ratio"] = cands["projection"] / cands["salary"].clip(lower=1)
     cands = cands.drop_duplicates(subset=["name", "slot"]).reset_index(drop=True)
 
-    base = _greedy_showdown_lineup(cands)
-    if base is None:
-        raise SystemExit("no feasible showdown lineup under the cap")
-
-    portfolios: list[pd.DataFrame] = []
-    pool = cands.copy()
-    for _ in range(lineups):
-        lu = _greedy_showdown_lineup(pool)
-        if lu is None:
-            break
-        lu = _improve_showdown_lineup(lu, pool)
-        portfolios.append(lu)
-        # forbid exact repeats by dropping the CPT used so the next pass differs
-        used_cpt = lu[lu["slot"] == "CPT"]["name"].astype(str).iloc[0]
-        pool = pool[~((pool["slot"] == "CPT") & (pool["name"].astype(str) == used_cpt))]
+    ath_map, _showdown_prov = _load_slate_engine_dossiers(cands["game_id"].unique().tolist())
+    portfolios, draws, cands = hydrate_and_solve_showdown_milp_portfolio(
+        cands,
+        ath_map=ath_map,
+        num_lineups=lineups,
+        sims=sims,
+        seed=seed,
+        salary_cap=SALARY_CAP,
+    )
+    if not portfolios:
+        base = _greedy_showdown_lineup(cands)
+        if base is None:
+            raise SystemExit("no feasible showdown lineup under the cap")
+        portfolios = [base]
 
     for _lu in portfolios:
         assert_lineup_clean(_lu["name"].tolist(), cfg)
 
-    # --- simulation: one-factor within-team correlation, sigma = 0.55 * mean --
     rng = np.random.default_rng(seed)
-    names = cands["name"].astype(str).to_numpy()
-    proj = cands["projection"].astype(float).to_numpy()
-    team = cands["team"].astype(str).to_numpy()
-    sigma = np.maximum(proj * SIGMA_FRACTION, 0.5)
-    team_factor = {t: rng.standard_normal(sims) for t in np.unique(team)}
-    draws = np.empty((sims, len(cands)))
-    for i in range(len(cands)):
-        common = team_factor[team[i]]
-        draws[:, i] = proj[i] + sigma[i] * (0.6 * common + 0.8 * rng.standard_normal(sims))
-    draws = np.clip(draws, 0.0, None)
-
-    idx = {n: i for i, n in enumerate(names)}
+    slot_idx = {(str(cands.loc[i, "name"]), str(cands.loc[i, "slot"])): i for i in range(len(cands))}
     lineup_scores = np.vstack([
-        draws[:, [idx[str(n)] for n in lu["name"]]].sum(axis=1) for lu in portfolios
+        draws[:, [slot_idx[(str(r["name"]), str(r["slot"]))] for _, r in lu.iterrows()]].sum(axis=1)
+        for lu in portfolios
     ])
 
     # field: sample 1 CPT + 5 FLEX per opponent, weighted by salary share, under cap

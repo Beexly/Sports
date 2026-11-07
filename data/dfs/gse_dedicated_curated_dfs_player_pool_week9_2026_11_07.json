@@ -1,0 +1,4492 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-11-07T19:33:41.057426+00:00",
+  "pipeline_stage": "stage_2_and_3_curated_gse_dfs_player_pool_and_second_stage_dfs_sims",
+  "total_slate_candidates_evaluated": 228,
+  "accepted_curated_pool_count": 121,
+  "rejected_sub_floor_or_trap_count": 107,
+  "second_stage_dfs_pool_sims_per_player": 10000,
+  "accepted_by_position": {
+    "QB": 20,
+    "RB": 35,
+    "WR": 36,
+    "TE": 19,
+    "DST": 11
+  },
+  "curated_dfs_player_pool": [
+    {
+      "player": "Jahmyr Gibbs",
+      "position": "RB",
+      "team": "DET",
+      "opponent": "MIA",
+      "game_id": "DET@MIA",
+      "dk_salary": 10000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 96.0,
+        "rec_yds": 42.0,
+        "receptions": 4.9,
+        "total_tds": 1.12
+      },
+      "gse_dk_projection": 26.92,
+      "gse_value_per_1k": 2.69,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G1_ACTIVE_ALPHA_CONSERVED",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 27.05,
+        "sim_p50_median": 25.64,
+        "sim_p75_upside": 34.5,
+        "sim_p90_ceiling": 40.51,
+        "sim_p99_slate_breaker": 53.7,
+        "dk_300_100_yd_bonus_prob": 0.4466
+      }
+    },
+    {
+      "player": "Jaxon Smith-Njigba",
+      "position": "WR",
+      "team": "SEA",
+      "opponent": "ARI",
+      "game_id": "ARI@SEA",
+      "dk_salary": 9300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 104.7,
+        "receptions": 9.52,
+        "total_tds": 1.3
+      },
+      "gse_dk_projection": 28.38,
+      "gse_value_per_1k": 3.05,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 28.61,
+        "sim_p50_median": 29.82,
+        "sim_p75_upside": 36.57,
+        "sim_p90_ceiling": 43.35,
+        "sim_p99_slate_breaker": 59.08,
+        "dk_300_100_yd_bonus_prob": 0.5575
+      }
+    },
+    {
+      "player": "Kenneth Walker III",
+      "position": "RB",
+      "team": "KC",
+      "opponent": "NYJ",
+      "game_id": "NYJ@KC",
+      "dk_salary": 9000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 99.6,
+        "rec_yds": 30.3,
+        "receptions": 5.1,
+        "total_tds": 1.32
+      },
+      "gse_dk_projection": 26.03,
+      "gse_value_per_1k": 2.89,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 26.24,
+        "sim_p50_median": 27.77,
+        "sim_p75_upside": 33.39,
+        "sim_p90_ceiling": 39.01,
+        "sim_p99_slate_breaker": 52.9,
+        "dk_300_100_yd_bonus_prob": 0.5068
+      }
+    },
+    {
+      "player": "Puka Nacua",
+      "position": "WR",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 8800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 93.7,
+        "receptions": 9.3,
+        "total_tds": 1.04
+      },
+      "gse_dk_projection": 24.9,
+      "gse_value_per_1k": 2.83,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 24.87,
+        "sim_p50_median": 23.49,
+        "sim_p75_upside": 32.61,
+        "sim_p90_ceiling": 38.56,
+        "sim_p99_slate_breaker": 53.32,
+        "dk_300_100_yd_bonus_prob": 0.4147
+      }
+    },
+    {
+      "player": "CeeDee Lamb",
+      "position": "WR",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 8300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 82.7,
+        "receptions": 7.27,
+        "total_tds": 0.99
+      },
+      "gse_dk_projection": 21.67,
+      "gse_value_per_1k": 2.61,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.78,
+        "sim_p50_median": 20.94,
+        "sim_p75_upside": 29.14,
+        "sim_p90_ceiling": 34.3,
+        "sim_p99_slate_breaker": 46.79,
+        "dk_300_100_yd_bonus_prob": 0.2751
+      }
+    },
+    {
+      "player": "Amon-Ra St. Brown",
+      "position": "WR",
+      "team": "DET",
+      "opponent": "MIA",
+      "game_id": "DET@MIA",
+      "dk_salary": 8100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 86.5,
+        "receptions": 7.6,
+        "total_tds": 0.68
+      },
+      "gse_dk_projection": 21.83,
+      "gse_value_per_1k": 2.7,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G1_ACTIVE_ALPHA_CONSERVED",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.84,
+        "sim_p50_median": 20.71,
+        "sim_p75_upside": 29.24,
+        "sim_p90_ceiling": 34.43,
+        "sim_p99_slate_breaker": 46.66,
+        "dk_300_100_yd_bonus_prob": 0.3217
+      }
+    },
+    {
+      "player": "Christian McCaffrey",
+      "position": "RB",
+      "team": "SF",
+      "opponent": "LV",
+      "game_id": "LV@SF",
+      "dk_salary": 8000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 83.8,
+        "rec_yds": 39.4,
+        "receptions": 5.36,
+        "total_tds": 1.02
+      },
+      "gse_dk_projection": 23.8,
+      "gse_value_per_1k": 2.98,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 23.75,
+        "sim_p50_median": 22.87,
+        "sim_p75_upside": 31.14,
+        "sim_p90_ceiling": 36.22,
+        "sim_p99_slate_breaker": 47.69,
+        "dk_300_100_yd_bonus_prob": 0.2527
+      }
+    },
+    {
+      "player": "Brock Bowers",
+      "position": "TE",
+      "team": "LV",
+      "opponent": "SF",
+      "game_id": "LV@SF",
+      "dk_salary": 7900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 74.0,
+        "receptions": 6.73,
+        "total_tds": 0.92
+      },
+      "gse_dk_projection": 20.06,
+      "gse_value_per_1k": 2.54,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 20.01,
+        "sim_p50_median": 19.43,
+        "sim_p75_upside": 24.42,
+        "sim_p90_ceiling": 32.17,
+        "sim_p99_slate_breaker": 43.23,
+        "dk_300_100_yd_bonus_prob": 0.1565
+      }
+    },
+    {
+      "player": "Trey McBride",
+      "position": "TE",
+      "team": "ARI",
+      "opponent": "SEA",
+      "game_id": "ARI@SEA",
+      "dk_salary": 7700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 65.2,
+        "receptions": 5.92,
+        "total_tds": 0.81
+      },
+      "gse_dk_projection": 17.66,
+      "gse_value_per_1k": 2.29,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.75,
+        "sim_p50_median": 17.52,
+        "sim_p75_upside": 21.76,
+        "sim_p90_ceiling": 25.98,
+        "sim_p99_slate_breaker": 38.93,
+        "dk_300_100_yd_bonus_prob": 0.0718
+      }
+    },
+    {
+      "player": "Kyren Williams",
+      "position": "RB",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 7600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 79.6,
+        "rec_yds": 46.1,
+        "receptions": 6.31,
+        "total_tds": 0.81
+      },
+      "gse_dk_projection": 23.77,
+      "gse_value_per_1k": 3.13,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 23.85,
+        "sim_p50_median": 23.25,
+        "sim_p75_upside": 28.2,
+        "sim_p90_ceiling": 36.32,
+        "sim_p99_slate_breaker": 49.18,
+        "dk_300_100_yd_bonus_prob": 0.188
+      }
+    },
+    {
+      "player": "Jonathan Taylor",
+      "position": "RB",
+      "team": "IND",
+      "opponent": "DAL",
+      "game_id": "DAL@IND",
+      "dk_salary": 7500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 77.1,
+        "rec_yds": 21.7,
+        "receptions": 3.02,
+        "total_tds": 1.35
+      },
+      "gse_dk_projection": 21.0,
+      "gse_value_per_1k": 2.8,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.11,
+        "sim_p50_median": 20.56,
+        "sim_p75_upside": 25.09,
+        "sim_p90_ceiling": 32.58,
+        "sim_p99_slate_breaker": 43.86,
+        "dk_300_100_yd_bonus_prob": 0.1606
+      }
+    },
+    {
+      "player": "Christian Watson",
+      "position": "WR",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 7500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 68.2,
+        "receptions": 6.2,
+        "total_tds": 0.84
+      },
+      "gse_dk_projection": 18.48,
+      "gse_value_per_1k": 2.46,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 18.47,
+        "sim_p50_median": 18.09,
+        "sim_p75_upside": 22.63,
+        "sim_p90_ceiling": 27.11,
+        "sim_p99_slate_breaker": 40.98,
+        "dk_300_100_yd_bonus_prob": 0.0985
+      }
+    },
+    {
+      "player": "Chris Olave",
+      "position": "WR",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 7400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 64.8,
+        "receptions": 5.89,
+        "total_tds": 0.8
+      },
+      "gse_dk_projection": 17.57,
+      "gse_value_per_1k": 2.37,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.57,
+        "sim_p50_median": 17.24,
+        "sim_p75_upside": 21.69,
+        "sim_p90_ceiling": 25.63,
+        "sim_p99_slate_breaker": 39.35,
+        "dk_300_100_yd_bonus_prob": 0.0661
+      }
+    },
+    {
+      "player": "Javonte Williams",
+      "position": "RB",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 7300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 86.8,
+        "rec_yds": 23.5,
+        "receptions": 4.33,
+        "total_tds": 1.01
+      },
+      "gse_dk_projection": 21.41,
+      "gse_value_per_1k": 2.93,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.46,
+        "sim_p50_median": 20.44,
+        "sim_p75_upside": 28.07,
+        "sim_p90_ceiling": 32.79,
+        "sim_p99_slate_breaker": 44.52,
+        "dk_300_100_yd_bonus_prob": 0.2965
+      }
+    },
+    {
+      "player": "Malik Nabers",
+      "position": "WR",
+      "team": "NYG",
+      "opponent": "PHI",
+      "game_id": "NYG@PHI",
+      "dk_salary": 7300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 99.9,
+        "receptions": 7.94,
+        "total_tds": 0.81
+      },
+      "gse_dk_projection": 22.82,
+      "gse_value_per_1k": 3.13,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 22.82,
+        "sim_p50_median": 21.22,
+        "sim_p75_upside": 29.8,
+        "sim_p90_ceiling": 35.34,
+        "sim_p99_slate_breaker": 48.07,
+        "dk_300_100_yd_bonus_prob": 0.4936
+      }
+    },
+    {
+      "player": "Nico Collins",
+      "position": "WR",
+      "team": "HOU",
+      "opponent": "LAC",
+      "game_id": "HOU@LAC",
+      "dk_salary": 7200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 84.0,
+        "receptions": 6.3,
+        "total_tds": 0.62
+      },
+      "gse_dk_projection": 19.62,
+      "gse_value_per_1k": 2.73,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G1_ACTIVE_ALPHA_CONSERVED",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.74,
+        "sim_p50_median": 18.79,
+        "sim_p75_upside": 26.57,
+        "sim_p90_ceiling": 31.57,
+        "sim_p99_slate_breaker": 42.7,
+        "dk_300_100_yd_bonus_prob": 0.2905
+      }
+    },
+    {
+      "player": "Drake Maye",
+      "position": "QB",
+      "team": "NE",
+      "opponent": "GB",
+      "game_id": "GB@NE",
+      "dk_salary": 7000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 270.0,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 2.04
+      },
+      "gse_dk_projection": 22.1,
+      "gse_value_per_1k": 3.16,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 22.08,
+        "sim_p50_median": 21.4,
+        "sim_p75_upside": 25.1,
+        "sim_p90_ceiling": 32.01,
+        "sim_p99_slate_breaker": 40.76,
+        "dk_300_100_yd_bonus_prob": 0.2422
+      }
+    },
+    {
+      "player": "Matthew Golden",
+      "position": "WR",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 7000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 73.4,
+        "receptions": 5.43,
+        "total_tds": 0.74
+      },
+      "gse_dk_projection": 17.21,
+      "gse_value_per_1k": 2.46,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.23,
+        "sim_p50_median": 16.69,
+        "sim_p75_upside": 20.96,
+        "sim_p90_ceiling": 27.93,
+        "sim_p99_slate_breaker": 37.7,
+        "dk_300_100_yd_bonus_prob": 0.151
+      }
+    },
+    {
+      "player": "Tetairoa McMillan",
+      "position": "WR",
+      "team": "CAR",
+      "opponent": "DEN",
+      "game_id": "DEN@CAR",
+      "dk_salary": 6900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 56.4,
+        "receptions": 5.12,
+        "total_tds": 0.7
+      },
+      "gse_dk_projection": 15.27,
+      "gse_value_per_1k": 2.21,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 15.24,
+        "sim_p50_median": 15.19,
+        "sim_p75_upside": 18.88,
+        "sim_p90_ceiling": 22.44,
+        "sim_p99_slate_breaker": 33.68,
+        "dk_300_100_yd_bonus_prob": 0.0235
+      }
+    },
+    {
+      "player": "Brock Purdy",
+      "position": "QB",
+      "team": "SF",
+      "opponent": "LV",
+      "game_id": "LV@SF",
+      "dk_salary": 6800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 241.3,
+        "rush_yds": 14.8,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.98
+      },
+      "gse_dk_projection": 21.4,
+      "gse_value_per_1k": 3.15,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.24,
+        "sim_p50_median": 21.03,
+        "sim_p75_upside": 24.78,
+        "sim_p90_ceiling": 28.27,
+        "sim_p99_slate_breaker": 39.58,
+        "dk_300_100_yd_bonus_prob": 0.0712
+      }
+    },
+    {
+      "player": "Josh Jacobs",
+      "position": "RB",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 6800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 87.9,
+        "rec_yds": 47.7,
+        "receptions": 7.75,
+        "total_tds": 0.81
+      },
+      "gse_dk_projection": 26.19,
+      "gse_value_per_1k": 3.85,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 26.25,
+        "sim_p50_median": 25.2,
+        "sim_p75_upside": 33.94,
+        "sim_p90_ceiling": 39.66,
+        "sim_p99_slate_breaker": 52.56,
+        "dk_300_100_yd_bonus_prob": 0.3139
+      }
+    },
+    {
+      "player": "DeVonta Smith",
+      "position": "WR",
+      "team": "PHI",
+      "opponent": "NYG",
+      "game_id": "NYG@PHI",
+      "dk_salary": 6800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 61.1,
+        "receptions": 5.55,
+        "total_tds": 0.76
+      },
+      "gse_dk_projection": 16.56,
+      "gse_value_per_1k": 2.44,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 16.55,
+        "sim_p50_median": 16.36,
+        "sim_p75_upside": 20.36,
+        "sim_p90_ceiling": 24.32,
+        "sim_p99_slate_breaker": 35.87,
+        "dk_300_100_yd_bonus_prob": 0.0466
+      }
+    },
+    {
+      "player": "Michael Wilson",
+      "position": "WR",
+      "team": "ARI",
+      "opponent": "SEA",
+      "game_id": "ARI@SEA",
+      "dk_salary": 6700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 47.5,
+        "receptions": 4.32,
+        "total_tds": 0.59
+      },
+      "gse_dk_projection": 12.88,
+      "gse_value_per_1k": 1.92,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.97,
+        "sim_p50_median": 12.99,
+        "sim_p75_upside": 16.01,
+        "sim_p90_ceiling": 19.02,
+        "sim_p99_slate_breaker": 26.2,
+        "dk_300_100_yd_bonus_prob": 0.0065
+      }
+    },
+    {
+      "player": "Jared Goff",
+      "position": "QB",
+      "team": "DET",
+      "opponent": "MIA",
+      "game_id": "DET@MIA",
+      "dk_salary": 6600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 312.3,
+        "rush_yds": 28.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 3.46
+      },
+      "gse_dk_projection": 28.37,
+      "gse_value_per_1k": 4.3,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 28.41,
+        "sim_p50_median": 29.56,
+        "sim_p75_upside": 34.54,
+        "sim_p90_ceiling": 39.44,
+        "sim_p99_slate_breaker": 50.52,
+        "dk_300_100_yd_bonus_prob": 0.5971
+      }
+    },
+    {
+      "player": "Garrett Wilson",
+      "position": "WR",
+      "team": "NYJ",
+      "opponent": "KC",
+      "game_id": "NYJ@KC",
+      "dk_salary": 6600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 74.0,
+        "receptions": 6.2,
+        "total_tds": 0.48
+      },
+      "gse_dk_projection": 16.88,
+      "gse_value_per_1k": 2.56,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G1_ACTIVE_ALPHA_CONSERVED",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 16.97,
+        "sim_p50_median": 16.35,
+        "sim_p75_upside": 20.56,
+        "sim_p90_ceiling": 27.74,
+        "sim_p99_slate_breaker": 37.48,
+        "dk_300_100_yd_bonus_prob": 0.1621
+      }
+    },
+    {
+      "player": "Dak Prescott",
+      "position": "QB",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 6500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 271.9,
+        "rush_yds": 19.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 2.27
+      },
+      "gse_dk_projection": 21.09,
+      "gse_value_per_1k": 3.24,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.14,
+        "sim_p50_median": 20.3,
+        "sim_p75_upside": 26.95,
+        "sim_p90_ceiling": 30.67,
+        "sim_p99_slate_breaker": 39.05,
+        "dk_300_100_yd_bonus_prob": 0.2595
+      }
+    },
+    {
+      "player": "Chuba Hubbard",
+      "position": "RB",
+      "team": "CAR",
+      "opponent": "DEN",
+      "game_id": "DEN@CAR",
+      "dk_salary": 6500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 80.6,
+        "rec_yds": 22.1,
+        "receptions": 3.16,
+        "total_tds": 0.98
+      },
+      "gse_dk_projection": 19.29,
+      "gse_value_per_1k": 2.97,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.36,
+        "sim_p50_median": 18.66,
+        "sim_p75_upside": 22.84,
+        "sim_p90_ceiling": 30.06,
+        "sim_p99_slate_breaker": 40.51,
+        "dk_300_100_yd_bonus_prob": 0.2094
+      }
+    },
+    {
+      "player": "Mike Evans",
+      "position": "WR",
+      "team": "SF",
+      "opponent": "LV",
+      "game_id": "LV@SF",
+      "dk_salary": 6500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 51.9,
+        "receptions": 4.72,
+        "total_tds": 0.64
+      },
+      "gse_dk_projection": 14.08,
+      "gse_value_per_1k": 2.17,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.1,
+        "sim_p50_median": 14.07,
+        "sim_p75_upside": 17.43,
+        "sim_p90_ceiling": 20.68,
+        "sim_p99_slate_breaker": 31.02,
+        "dk_300_100_yd_bonus_prob": 0.0115
+      }
+    },
+    {
+      "player": "Rashee Rice",
+      "position": "WR",
+      "team": "KC",
+      "opponent": "NYJ",
+      "game_id": "NYJ@KC",
+      "dk_salary": 6400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 39.3,
+        "receptions": 3.49,
+        "total_tds": 0.47
+      },
+      "gse_dk_projection": 10.4,
+      "gse_value_per_1k": 1.62,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.42,
+        "sim_p50_median": 10.36,
+        "sim_p75_upside": 12.93,
+        "sim_p90_ceiling": 15.4,
+        "sim_p99_slate_breaker": 21.38,
+        "dk_300_100_yd_bonus_prob": 0.0022
+      }
+    },
+    {
+      "player": "Jordan Love",
+      "position": "QB",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 6300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 307.5,
+        "rush_yds": 18.2,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.9
+      },
+      "gse_dk_projection": 20.97,
+      "gse_value_per_1k": 3.33,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 20.89,
+        "sim_p50_median": 22.18,
+        "sim_p75_upside": 25.94,
+        "sim_p90_ceiling": 29.57,
+        "sim_p99_slate_breaker": 37.84,
+        "dk_300_100_yd_bonus_prob": 0.5517
+      }
+    },
+    {
+      "player": "Braelon Allen",
+      "position": "RB",
+      "team": "NYJ",
+      "opponent": "KC",
+      "game_id": "NYJ@KC",
+      "dk_salary": 6300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 55.1,
+        "rec_yds": 21.0,
+        "receptions": 3.86,
+        "total_tds": 0.51
+      },
+      "gse_dk_projection": 14.53,
+      "gse_value_per_1k": 2.31,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.61,
+        "sim_p50_median": 14.54,
+        "sim_p75_upside": 17.69,
+        "sim_p90_ceiling": 20.85,
+        "sim_p99_slate_breaker": 31.35,
+        "dk_300_100_yd_bonus_prob": 0.0128
+      }
+    },
+    {
+      "player": "George Pickens",
+      "position": "WR",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 6300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 60.1,
+        "receptions": 4.61,
+        "total_tds": 0.58
+      },
+      "gse_dk_projection": 14.1,
+      "gse_value_per_1k": 2.24,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.13,
+        "sim_p50_median": 13.94,
+        "sim_p75_upside": 17.36,
+        "sim_p90_ceiling": 20.75,
+        "sim_p99_slate_breaker": 31.66,
+        "dk_300_100_yd_bonus_prob": 0.0426
+      }
+    },
+    {
+      "player": "Matthew Stafford",
+      "position": "QB",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 6200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 284.1,
+        "rush_yds": 19.2,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 2.39
+      },
+      "gse_dk_projection": 22.12,
+      "gse_value_per_1k": 3.57,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 22.05,
+        "sim_p50_median": 20.94,
+        "sim_p75_upside": 27.79,
+        "sim_p90_ceiling": 31.52,
+        "sim_p99_slate_breaker": 39.93,
+        "dk_300_100_yd_bonus_prob": 0.3545
+      }
+    },
+    {
+      "player": "Saquon Barkley",
+      "position": "RB",
+      "team": "PHI",
+      "opponent": "NYG",
+      "game_id": "NYG@PHI",
+      "dk_salary": 6200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 82.0,
+        "rec_yds": 21.0,
+        "receptions": 2.8,
+        "total_tds": 0.72
+      },
+      "gse_dk_projection": 17.82,
+      "gse_value_per_1k": 2.87,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G1_ACTIVE_ALPHA_CONSERVED",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.78,
+        "sim_p50_median": 17.0,
+        "sim_p75_upside": 20.91,
+        "sim_p90_ceiling": 27.83,
+        "sim_p99_slate_breaker": 37.28,
+        "dk_300_100_yd_bonus_prob": 0.2216
+      }
+    },
+    {
+      "player": "Jalen Coker",
+      "position": "WR",
+      "team": "CAR",
+      "opponent": "DEN",
+      "game_id": "DEN@CAR",
+      "dk_salary": 6200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 47.2,
+        "receptions": 4.29,
+        "total_tds": 0.58
+      },
+      "gse_dk_projection": 12.79,
+      "gse_value_per_1k": 2.06,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.86,
+        "sim_p50_median": 12.79,
+        "sim_p75_upside": 15.81,
+        "sim_p90_ceiling": 18.79,
+        "sim_p99_slate_breaker": 26.2,
+        "dk_300_100_yd_bonus_prob": 0.0066
+      }
+    },
+    {
+      "player": "Patrick Mahomes",
+      "position": "QB",
+      "team": "KC",
+      "opponent": "NYJ",
+      "game_id": "NYJ@KC",
+      "dk_salary": 6100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 218.0,
+        "rush_yds": 14.8,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.78
+      },
+      "gse_dk_projection": 19.4,
+      "gse_value_per_1k": 3.18,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.37,
+        "sim_p50_median": 19.34,
+        "sim_p75_upside": 22.67,
+        "sim_p90_ceiling": 26.05,
+        "sim_p99_slate_breaker": 36.2,
+        "dk_300_100_yd_bonus_prob": 0.0216
+      }
+    },
+    {
+      "player": "Rhamondre Stevenson",
+      "position": "RB",
+      "team": "NE",
+      "opponent": "GB",
+      "game_id": "GB@NE",
+      "dk_salary": 6100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 84.0,
+        "rec_yds": 31.5,
+        "receptions": 4.4,
+        "total_tds": 0.85
+      },
+      "gse_dk_projection": 23.45,
+      "gse_value_per_1k": 3.84,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: TreVeyon Henderson (OUT/DNP) + Hunter Henry (DNP) + A.J. Brown (DNP) -> NE bell-cow + checkdown funnel",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 23.38,
+        "sim_p50_median": 22.58,
+        "sim_p75_upside": 30.66,
+        "sim_p90_ceiling": 35.53,
+        "sim_p99_slate_breaker": 47.14,
+        "dk_300_100_yd_bonus_prob": 0.2535
+      }
+    },
+    {
+      "player": "Jameson Williams",
+      "position": "WR",
+      "team": "DET",
+      "opponent": "MIA",
+      "game_id": "DET@MIA",
+      "dk_salary": 6100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 73.8,
+        "receptions": 4.63,
+        "total_tds": 0.83
+      },
+      "gse_dk_projection": 16.98,
+      "gse_value_per_1k": 2.78,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.04,
+        "sim_p50_median": 16.52,
+        "sim_p75_upside": 20.64,
+        "sim_p90_ceiling": 27.67,
+        "sim_p99_slate_breaker": 37.02,
+        "dk_300_100_yd_bonus_prob": 0.1551
+      }
+    },
+    {
+      "player": "Jayden Daniels",
+      "position": "QB",
+      "team": "WAS",
+      "opponent": "LAR",
+      "game_id": "LAR@WAS",
+      "dk_salary": 6000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 240.2,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.97
+      },
+      "gse_dk_projection": 21.3,
+      "gse_value_per_1k": 3.55,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.27,
+        "sim_p50_median": 21.01,
+        "sim_p75_upside": 24.8,
+        "sim_p90_ceiling": 28.47,
+        "sim_p99_slate_breaker": 39.4,
+        "dk_300_100_yd_bonus_prob": 0.077
+      }
+    },
+    {
+      "player": "Breece Hall",
+      "position": "RB",
+      "team": "NYJ",
+      "opponent": "KC",
+      "game_id": "NYJ@KC",
+      "dk_salary": 6000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 61.6,
+        "rec_yds": 24.6,
+        "receptions": 2.48,
+        "total_tds": 0.57
+      },
+      "gse_dk_projection": 14.52,
+      "gse_value_per_1k": 2.42,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.66,
+        "sim_p50_median": 14.5,
+        "sim_p75_upside": 17.71,
+        "sim_p90_ceiling": 20.8,
+        "sim_p99_slate_breaker": 31.48,
+        "dk_300_100_yd_bonus_prob": 0.0323
+      }
+    },
+    {
+      "player": "George Kittle",
+      "position": "TE",
+      "team": "SF",
+      "opponent": "LV",
+      "game_id": "LV@SF",
+      "dk_salary": 6000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 51.2,
+        "receptions": 4.66,
+        "total_tds": 0.63
+      },
+      "gse_dk_projection": 13.89,
+      "gse_value_per_1k": 2.31,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 13.91,
+        "sim_p50_median": 13.8,
+        "sim_p75_upside": 17.17,
+        "sim_p90_ceiling": 20.4,
+        "sim_p99_slate_breaker": 31.29,
+        "dk_300_100_yd_bonus_prob": 0.0129
+      }
+    },
+    {
+      "player": "C.J. Stroud",
+      "position": "QB",
+      "team": "HOU",
+      "opponent": "LAC",
+      "game_id": "HOU@LAC",
+      "dk_salary": 5900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 307.5,
+        "rush_yds": 23.4,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 3.12
+      },
+      "gse_dk_projection": 26.36,
+      "gse_value_per_1k": 4.47,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 26.45,
+        "sim_p50_median": 27.68,
+        "sim_p75_upside": 32.43,
+        "sim_p90_ceiling": 36.7,
+        "sim_p99_slate_breaker": 47.41,
+        "dk_300_100_yd_bonus_prob": 0.5608
+      }
+    },
+    {
+      "player": "Ashton Jeanty",
+      "position": "RB",
+      "team": "LV",
+      "opponent": "SF",
+      "game_id": "LV@SF",
+      "dk_salary": 5900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 68.4,
+        "rec_yds": 40.1,
+        "receptions": 3.98,
+        "total_tds": 0.72
+      },
+      "gse_dk_projection": 19.15,
+      "gse_value_per_1k": 3.25,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.23,
+        "sim_p50_median": 18.92,
+        "sim_p75_upside": 23.09,
+        "sim_p90_ceiling": 27.28,
+        "sim_p99_slate_breaker": 39.84,
+        "dk_300_100_yd_bonus_prob": 0.0741
+      }
+    },
+    {
+      "player": "A.J. Brown",
+      "position": "WR",
+      "team": "NE",
+      "opponent": "GB",
+      "game_id": "GB@NE",
+      "dk_salary": 5800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 49.2,
+        "receptions": 4.46,
+        "total_tds": 0.27
+      },
+      "gse_dk_projection": 10.99,
+      "gse_value_per_1k": 1.89,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.0,
+        "sim_p50_median": 10.92,
+        "sim_p75_upside": 13.64,
+        "sim_p90_ceiling": 16.2,
+        "sim_p99_slate_breaker": 22.15,
+        "dk_300_100_yd_bonus_prob": 0.0084
+      }
+    },
+    {
+      "player": "Tyler Shough",
+      "position": "QB",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 5700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 221.5,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.81
+      },
+      "gse_dk_projection": 19.7,
+      "gse_value_per_1k": 3.46,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.61,
+        "sim_p50_median": 19.58,
+        "sim_p75_upside": 22.93,
+        "sim_p90_ceiling": 26.14,
+        "sim_p99_slate_breaker": 36.82,
+        "dk_300_100_yd_bonus_prob": 0.025
+      }
+    },
+    {
+      "player": "David Montgomery",
+      "position": "RB",
+      "team": "HOU",
+      "opponent": "LAC",
+      "game_id": "HOU@LAC",
+      "dk_salary": 5700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 52.0,
+        "rec_yds": 14.9,
+        "receptions": 2.3,
+        "total_tds": 0.35
+      },
+      "gse_dk_projection": 11.11,
+      "gse_value_per_1k": 1.95,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.14,
+        "sim_p50_median": 11.08,
+        "sim_p75_upside": 13.46,
+        "sim_p90_ceiling": 15.86,
+        "sim_p99_slate_breaker": 21.2,
+        "dk_300_100_yd_bonus_prob": 0.007
+      }
+    },
+    {
+      "player": "Woody Marks",
+      "position": "RB",
+      "team": "HOU",
+      "opponent": "LAC",
+      "game_id": "HOU@LAC",
+      "dk_salary": 5700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 68.0,
+        "rec_yds": 28.0,
+        "receptions": 3.9,
+        "total_tds": 0.62
+      },
+      "gse_dk_projection": 17.22,
+      "gse_value_per_1k": 3.02,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: David Montgomery DNP (practice report) -> primary HOU three-down & pass-catching RB1 vs LAC",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.24,
+        "sim_p50_median": 16.97,
+        "sim_p75_upside": 20.66,
+        "sim_p90_ceiling": 24.55,
+        "sim_p99_slate_breaker": 35.69,
+        "dk_300_100_yd_bonus_prob": 0.0694
+      }
+    },
+    {
+      "player": "Jaylen Waddle",
+      "position": "WR",
+      "team": "DEN",
+      "opponent": "CAR",
+      "game_id": "DEN@CAR",
+      "dk_salary": 5700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 45.5,
+        "receptions": 4.26,
+        "total_tds": 0.43
+      },
+      "gse_dk_projection": 11.39,
+      "gse_value_per_1k": 2.0,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.48,
+        "sim_p50_median": 11.43,
+        "sim_p75_upside": 14.24,
+        "sim_p90_ceiling": 16.87,
+        "sim_p99_slate_breaker": 23.78,
+        "dk_300_100_yd_bonus_prob": 0.0057
+      }
+    },
+    {
+      "player": "Sam Darnold",
+      "position": "QB",
+      "team": "SEA",
+      "opponent": "ARI",
+      "game_id": "ARI@SEA",
+      "dk_salary": 5600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 165.4,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.35
+      },
+      "gse_dk_projection": 14.9,
+      "gse_value_per_1k": 2.66,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.92,
+        "sim_p50_median": 14.89,
+        "sim_p75_upside": 17.47,
+        "sim_p90_ceiling": 20.11,
+        "sim_p99_slate_breaker": 26.47,
+        "dk_300_100_yd_bonus_prob": 0.0011
+      }
+    },
+    {
+      "player": "Cam Skattebo",
+      "position": "RB",
+      "team": "NYG",
+      "opponent": "PHI",
+      "game_id": "NYG@PHI",
+      "dk_salary": 5600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 68.6,
+        "rec_yds": 24.9,
+        "receptions": 3.67,
+        "total_tds": 0.62
+      },
+      "gse_dk_projection": 16.75,
+      "gse_value_per_1k": 2.99,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 16.76,
+        "sim_p50_median": 16.56,
+        "sim_p75_upside": 20.11,
+        "sim_p90_ceiling": 23.66,
+        "sim_p99_slate_breaker": 35.39,
+        "dk_300_100_yd_bonus_prob": 0.0697
+      }
+    },
+    {
+      "player": "Ollie Gordon II",
+      "position": "RB",
+      "team": "MIA",
+      "opponent": "DET",
+      "game_id": "DET@MIA",
+      "dk_salary": 5600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 88.5,
+        "rec_yds": 26.5,
+        "receptions": 3.8,
+        "total_tds": 0.92
+      },
+      "gse_dk_projection": 23.82,
+      "gse_value_per_1k": 4.25,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: De'Von Achane (IR) + Jaylen Wright (OUT/DNP) -> 100% healthy bell-cow RB1 (75%+ carry share)",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 23.91,
+        "sim_p50_median": 22.77,
+        "sim_p75_upside": 30.97,
+        "sim_p90_ceiling": 36.09,
+        "sim_p99_slate_breaker": 49.07,
+        "dk_300_100_yd_bonus_prob": 0.3263
+      }
+    },
+    {
+      "player": "Stefon Diggs",
+      "position": "WR",
+      "team": "WAS",
+      "opponent": "LAR",
+      "game_id": "LAR@WAS",
+      "dk_salary": 5600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 46.5,
+        "receptions": 4.79,
+        "total_tds": 0.57
+      },
+      "gse_dk_projection": 12.89,
+      "gse_value_per_1k": 2.3,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.88,
+        "sim_p50_median": 12.83,
+        "sim_p75_upside": 15.99,
+        "sim_p90_ceiling": 19.08,
+        "sim_p99_slate_breaker": 25.94,
+        "dk_300_100_yd_bonus_prob": 0.0047
+      }
+    },
+    {
+      "player": "Bryce Young",
+      "position": "QB",
+      "team": "CAR",
+      "opponent": "DEN",
+      "game_id": "DEN@CAR",
+      "dk_salary": 5500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 221.5,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.81
+      },
+      "gse_dk_projection": 19.7,
+      "gse_value_per_1k": 3.58,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.74,
+        "sim_p50_median": 19.62,
+        "sim_p75_upside": 22.99,
+        "sim_p90_ceiling": 26.34,
+        "sim_p99_slate_breaker": 37.14,
+        "dk_300_100_yd_bonus_prob": 0.0284
+      }
+    },
+    {
+      "player": "Kaelon Black",
+      "position": "RB",
+      "team": "SF",
+      "opponent": "LV",
+      "game_id": "LV@SF",
+      "dk_salary": 5500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 35.0,
+        "rec_yds": 6.2,
+        "receptions": 1.73,
+        "total_tds": 0.51
+      },
+      "gse_dk_projection": 8.94,
+      "gse_value_per_1k": 1.63,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 8.92,
+        "sim_p50_median": 8.89,
+        "sim_p75_upside": 10.86,
+        "sim_p90_ceiling": 12.75,
+        "sim_p99_slate_breaker": 17.3,
+        "dk_300_100_yd_bonus_prob": 0.0005
+      }
+    },
+    {
+      "player": "Ladd McConkey",
+      "position": "WR",
+      "team": "LAC",
+      "opponent": "HOU",
+      "game_id": "HOU@LAC",
+      "dk_salary": 5500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 68.0,
+        "receptions": 5.8,
+        "total_tds": 0.45
+      },
+      "gse_dk_projection": 15.3,
+      "gse_value_per_1k": 2.78,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G1_ACTIVE_ALPHA_CONSERVED",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 15.46,
+        "sim_p50_median": 15.09,
+        "sim_p75_upside": 18.91,
+        "sim_p90_ceiling": 25.51,
+        "sim_p99_slate_breaker": 33.75,
+        "dk_300_100_yd_bonus_prob": 0.1005
+      }
+    },
+    {
+      "player": "Tucker Kraft",
+      "position": "TE",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 5500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 45.5,
+        "receptions": 4.58,
+        "total_tds": 0.47
+      },
+      "gse_dk_projection": 11.92,
+      "gse_value_per_1k": 2.17,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.97,
+        "sim_p50_median": 11.93,
+        "sim_p75_upside": 14.79,
+        "sim_p90_ceiling": 17.73,
+        "sim_p99_slate_breaker": 24.12,
+        "dk_300_100_yd_bonus_prob": 0.0039
+      }
+    },
+    {
+      "player": "Bo Nix",
+      "position": "QB",
+      "team": "DEN",
+      "opponent": "CAR",
+      "game_id": "DEN@CAR",
+      "dk_salary": 5400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 195.7,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.36
+      },
+      "gse_dk_projection": 15.0,
+      "gse_value_per_1k": 2.78,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 15.03,
+        "sim_p50_median": 14.99,
+        "sim_p75_upside": 17.58,
+        "sim_p90_ceiling": 20.2,
+        "sim_p99_slate_breaker": 26.37,
+        "dk_300_100_yd_bonus_prob": 0.0067
+      }
+    },
+    {
+      "player": "Tyler Allgeier",
+      "position": "RB",
+      "team": "ARI",
+      "opponent": "SEA",
+      "game_id": "ARI@SEA",
+      "dk_salary": 5400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 44.1,
+        "rec_yds": 12.1,
+        "receptions": 1.73,
+        "total_tds": 0.52
+      },
+      "gse_dk_projection": 10.45,
+      "gse_value_per_1k": 1.94,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.55,
+        "sim_p50_median": 10.49,
+        "sim_p75_upside": 12.74,
+        "sim_p90_ceiling": 15.03,
+        "sim_p99_slate_breaker": 20.61,
+        "dk_300_100_yd_bonus_prob": 0.0031
+      }
+    },
+    {
+      "player": "Quinshon Judkins",
+      "position": "RB",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 5400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 50.2,
+        "rec_yds": 20.1,
+        "receptions": 3.21,
+        "total_tds": 0.63
+      },
+      "gse_dk_projection": 14.04,
+      "gse_value_per_1k": 2.6,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.07,
+        "sim_p50_median": 14.05,
+        "sim_p75_upside": 17.02,
+        "sim_p90_ceiling": 20.04,
+        "sim_p99_slate_breaker": 26.87,
+        "dk_300_100_yd_bonus_prob": 0.005
+      }
+    },
+    {
+      "player": "Tre Tucker",
+      "position": "WR",
+      "team": "LV",
+      "opponent": "SF",
+      "game_id": "LV@SF",
+      "dk_salary": 5400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 44.8,
+        "receptions": 4.07,
+        "total_tds": 0.55
+      },
+      "gse_dk_projection": 12.14,
+      "gse_value_per_1k": 2.25,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.04,
+        "sim_p50_median": 12.07,
+        "sim_p75_upside": 14.89,
+        "sim_p90_ceiling": 17.86,
+        "sim_p99_slate_breaker": 24.75,
+        "dk_300_100_yd_bonus_prob": 0.0041
+      }
+    },
+    {
+      "player": "Kirk Cousins",
+      "position": "QB",
+      "team": "LV",
+      "opponent": "SF",
+      "game_id": "LV@SF",
+      "dk_salary": 5300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 255.1,
+        "rush_yds": 15.8,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.97
+      },
+      "gse_dk_projection": 21.3,
+      "gse_value_per_1k": 4.02,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 21.24,
+        "sim_p50_median": 20.88,
+        "sim_p75_upside": 24.46,
+        "sim_p90_ceiling": 31.19,
+        "sim_p99_slate_breaker": 38.91,
+        "dk_300_100_yd_bonus_prob": 0.1432
+      }
+    },
+    {
+      "player": "Jonah Coleman",
+      "position": "RB",
+      "team": "DEN",
+      "opponent": "CAR",
+      "game_id": "DEN@CAR",
+      "dk_salary": 5300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 66.0,
+        "rec_yds": 27.0,
+        "receptions": 3.5,
+        "total_tds": 0.6
+      },
+      "gse_dk_projection": 16.4,
+      "gse_value_per_1k": 3.09,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: Confirmed DEN lead-back takeover over J.K. Dobbins (20.4 DK pts in Week 8) vs CAR (#27 defense)",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 16.42,
+        "sim_p50_median": 16.22,
+        "sim_p75_upside": 19.77,
+        "sim_p90_ceiling": 23.35,
+        "sim_p99_slate_breaker": 35.31,
+        "dk_300_100_yd_bonus_prob": 0.0562
+      }
+    },
+    {
+      "player": "Jadarian Price",
+      "position": "RB",
+      "team": "SEA",
+      "opponent": "ARI",
+      "game_id": "ARI@SEA",
+      "dk_salary": 5300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 31.9,
+        "rec_yds": 16.7,
+        "receptions": 3.06,
+        "total_tds": 0.58
+      },
+      "gse_dk_projection": 11.42,
+      "gse_value_per_1k": 2.15,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.43,
+        "sim_p50_median": 11.38,
+        "sim_p75_upside": 13.82,
+        "sim_p90_ceiling": 16.3,
+        "sim_p99_slate_breaker": 22.36,
+        "dk_300_100_yd_bonus_prob": 0.0004
+      }
+    },
+    {
+      "player": "Deebo Samuel Sr.",
+      "position": "WR",
+      "team": "SF",
+      "opponent": "LV",
+      "game_id": "LV@SF",
+      "dk_salary": 5300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 41.8,
+        "receptions": 3.8,
+        "total_tds": 0.52
+      },
+      "gse_dk_projection": 11.32,
+      "gse_value_per_1k": 2.14,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.25,
+        "sim_p50_median": 11.19,
+        "sim_p75_upside": 13.87,
+        "sim_p90_ceiling": 16.57,
+        "sim_p99_slate_breaker": 23.07,
+        "dk_300_100_yd_bonus_prob": 0.0026
+      }
+    },
+    {
+      "player": "Deshaun Watson",
+      "position": "QB",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 5200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 228.3,
+        "rush_yds": 14.2,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.5
+      },
+      "gse_dk_projection": 16.2,
+      "gse_value_per_1k": 3.12,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 16.21,
+        "sim_p50_median": 16.07,
+        "sim_p75_upside": 18.93,
+        "sim_p90_ceiling": 21.74,
+        "sim_p99_slate_breaker": 31.27,
+        "dk_300_100_yd_bonus_prob": 0.0415
+      }
+    },
+    {
+      "player": "Jeremiyah Love",
+      "position": "RB",
+      "team": "ARI",
+      "opponent": "SEA",
+      "game_id": "ARI@SEA",
+      "dk_salary": 5200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 36.0,
+        "rec_yds": 9.9,
+        "receptions": 2.11,
+        "total_tds": 0.7
+      },
+      "gse_dk_projection": 10.9,
+      "gse_value_per_1k": 2.1,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.89,
+        "sim_p50_median": 10.92,
+        "sim_p75_upside": 13.23,
+        "sim_p90_ceiling": 15.54,
+        "sim_p99_slate_breaker": 20.98,
+        "dk_300_100_yd_bonus_prob": 0.0007
+      }
+    },
+    {
+      "player": "Malik Willis",
+      "position": "QB",
+      "team": "MIA",
+      "opponent": "DET",
+      "game_id": "DET@MIA",
+      "dk_salary": 5100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 186.8,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.42
+      },
+      "gse_dk_projection": 15.6,
+      "gse_value_per_1k": 3.06,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 15.64,
+        "sim_p50_median": 15.62,
+        "sim_p75_upside": 18.3,
+        "sim_p90_ceiling": 20.96,
+        "sim_p99_slate_breaker": 27.23,
+        "dk_300_100_yd_bonus_prob": 0.0034
+      }
+    },
+    {
+      "player": "Blake Corum",
+      "position": "RB",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 5100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 43.6,
+        "rec_yds": 17.2,
+        "receptions": 1.85,
+        "total_tds": 0.43
+      },
+      "gse_dk_projection": 10.55,
+      "gse_value_per_1k": 2.07,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.56,
+        "sim_p50_median": 10.49,
+        "sim_p75_upside": 12.81,
+        "sim_p90_ceiling": 15.14,
+        "sim_p99_slate_breaker": 20.57,
+        "dk_300_100_yd_bonus_prob": 0.0018
+      }
+    },
+    {
+      "player": "Rachaad White",
+      "position": "RB",
+      "team": "WAS",
+      "opponent": "LAR",
+      "game_id": "LAR@WAS",
+      "dk_salary": 5100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 42.5,
+        "rec_yds": 19.7,
+        "receptions": 3.6,
+        "total_tds": 0.52
+      },
+      "gse_dk_projection": 12.91,
+      "gse_value_per_1k": 2.53,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.98,
+        "sim_p50_median": 12.99,
+        "sim_p75_upside": 15.74,
+        "sim_p90_ceiling": 18.52,
+        "sim_p99_slate_breaker": 24.76,
+        "dk_300_100_yd_bonus_prob": 0.0022
+      }
+    },
+    {
+      "player": "Devaughn Vele",
+      "position": "WR",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 5100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 41.8,
+        "receptions": 3.8,
+        "total_tds": 0.52
+      },
+      "gse_dk_projection": 11.32,
+      "gse_value_per_1k": 2.22,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.29,
+        "sim_p50_median": 11.28,
+        "sim_p75_upside": 13.99,
+        "sim_p90_ceiling": 16.71,
+        "sim_p99_slate_breaker": 22.93,
+        "dk_300_100_yd_bonus_prob": 0.0027
+      }
+    },
+    {
+      "player": "Josh Downs",
+      "position": "WR",
+      "team": "IND",
+      "opponent": "DAL",
+      "game_id": "DAL@IND",
+      "dk_salary": 5100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 35.5,
+        "receptions": 3.04,
+        "total_tds": 0.36
+      },
+      "gse_dk_projection": 8.79,
+      "gse_value_per_1k": 1.72,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 8.89,
+        "sim_p50_median": 8.81,
+        "sim_p75_upside": 10.97,
+        "sim_p90_ceiling": 13.07,
+        "sim_p99_slate_breaker": 18.13,
+        "dk_300_100_yd_bonus_prob": 0.0011
+      }
+    },
+    {
+      "player": "Sam LaPorta",
+      "position": "TE",
+      "team": "DET",
+      "opponent": "MIA",
+      "game_id": "DET@MIA",
+      "dk_salary": 5100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 75.6,
+        "receptions": 6.35,
+        "total_tds": 0.84
+      },
+      "gse_dk_projection": 18.93,
+      "gse_value_per_1k": 3.71,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.15,
+        "sim_p50_median": 18.53,
+        "sim_p75_upside": 23.11,
+        "sim_p90_ceiling": 30.77,
+        "sim_p99_slate_breaker": 42.09,
+        "dk_300_100_yd_bonus_prob": 0.1849
+      }
+    },
+    {
+      "player": "Emanuel Wilson",
+      "position": "RB",
+      "team": "SEA",
+      "opponent": "ARI",
+      "game_id": "ARI@SEA",
+      "dk_salary": 5000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 48.9,
+        "rec_yds": 11.4,
+        "receptions": 1.62,
+        "total_tds": 0.86
+      },
+      "gse_dk_projection": 12.8,
+      "gse_value_per_1k": 2.56,
+      "pos_salary_rank_on_team": 3,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.84,
+        "sim_p50_median": 12.77,
+        "sim_p75_upside": 15.51,
+        "sim_p90_ceiling": 18.34,
+        "sim_p99_slate_breaker": 25.4,
+        "dk_300_100_yd_bonus_prob": 0.0058
+      }
+    },
+    {
+      "player": "Alvin Kamara",
+      "position": "RB",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 5000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 46.1,
+        "rec_yds": 16.4,
+        "receptions": 2.75,
+        "total_tds": 0.61
+      },
+      "gse_dk_projection": 12.69,
+      "gse_value_per_1k": 2.54,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.75,
+        "sim_p50_median": 12.71,
+        "sim_p75_upside": 15.46,
+        "sim_p90_ceiling": 18.15,
+        "sim_p99_slate_breaker": 25.32,
+        "dk_300_100_yd_bonus_prob": 0.0042
+      }
+    },
+    {
+      "player": "Denzel Boston",
+      "position": "WR",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 5000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 42.2,
+        "receptions": 3.56,
+        "total_tds": 0.49
+      },
+      "gse_dk_projection": 10.7,
+      "gse_value_per_1k": 2.14,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.72,
+        "sim_p50_median": 10.72,
+        "sim_p75_upside": 13.22,
+        "sim_p90_ceiling": 15.82,
+        "sim_p99_slate_breaker": 21.47,
+        "dk_300_100_yd_bonus_prob": 0.002
+      }
+    },
+    {
+      "player": "Geno Smith",
+      "position": "QB",
+      "team": "NYJ",
+      "opponent": "KC",
+      "game_id": "NYJ@KC",
+      "dk_salary": 4900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 267.6,
+        "rush_yds": 17.2,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 2.12
+      },
+      "gse_dk_projection": 20.14,
+      "gse_value_per_1k": 4.11,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 20.16,
+        "sim_p50_median": 19.4,
+        "sim_p75_upside": 22.97,
+        "sim_p90_ceiling": 29.47,
+        "sim_p99_slate_breaker": 37.5,
+        "dk_300_100_yd_bonus_prob": 0.2299
+      }
+    },
+    {
+      "player": "Dylan Sampson",
+      "position": "RB",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 4900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 32.0,
+        "rec_yds": 32.4,
+        "receptions": 3.16,
+        "total_tds": 0.34
+      },
+      "gse_dk_projection": 11.62,
+      "gse_value_per_1k": 2.37,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.61,
+        "sim_p50_median": 11.57,
+        "sim_p75_upside": 14.07,
+        "sim_p90_ceiling": 16.63,
+        "sim_p99_slate_breaker": 22.14,
+        "dk_300_100_yd_bonus_prob": 0.0001
+      }
+    },
+    {
+      "player": "Keenan Allen",
+      "position": "WR",
+      "team": "IND",
+      "opponent": "DAL",
+      "game_id": "DAL@IND",
+      "dk_salary": 4900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 37.3,
+        "receptions": 4.2,
+        "total_tds": 0.45
+      },
+      "gse_dk_projection": 10.6,
+      "gse_value_per_1k": 2.16,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.72,
+        "sim_p50_median": 10.65,
+        "sim_p75_upside": 13.26,
+        "sim_p90_ceiling": 15.84,
+        "sim_p99_slate_breaker": 21.76,
+        "dk_300_100_yd_bonus_prob": 0.0014
+      }
+    },
+    {
+      "player": "Travis Kelce",
+      "position": "TE",
+      "team": "KC",
+      "opponent": "NYJ",
+      "game_id": "NYJ@KC",
+      "dk_salary": 4900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 41.1,
+        "receptions": 3.73,
+        "total_tds": 0.51
+      },
+      "gse_dk_projection": 11.13,
+      "gse_value_per_1k": 2.27,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.2,
+        "sim_p50_median": 11.15,
+        "sim_p75_upside": 13.9,
+        "sim_p90_ceiling": 16.68,
+        "sim_p99_slate_breaker": 22.9,
+        "dk_300_100_yd_bonus_prob": 0.0016
+      }
+    },
+    {
+      "player": "J.J. McCarthy",
+      "position": "QB",
+      "team": "NYG",
+      "opponent": "PHI",
+      "game_id": "NYG@PHI",
+      "dk_salary": 4800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 306.1,
+        "rush_yds": 17.9,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.81
+      },
+      "gse_dk_projection": 20.55,
+      "gse_value_per_1k": 4.28,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 20.47,
+        "sim_p50_median": 21.84,
+        "sim_p75_upside": 25.4,
+        "sim_p90_ceiling": 28.89,
+        "sim_p99_slate_breaker": 36.22,
+        "dk_300_100_yd_bonus_prob": 0.5447
+      }
+    },
+    {
+      "player": "Omarion Hampton",
+      "position": "RB",
+      "team": "LAC",
+      "opponent": "HOU",
+      "game_id": "HOU@LAC",
+      "dk_salary": 4800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 38.1,
+        "rec_yds": 10.2,
+        "receptions": 1.58,
+        "total_tds": 0.49
+      },
+      "gse_dk_projection": 9.34,
+      "gse_value_per_1k": 1.95,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.45,
+        "sim_p50_median": 9.44,
+        "sim_p75_upside": 11.42,
+        "sim_p90_ceiling": 13.45,
+        "sim_p99_slate_breaker": 18.58,
+        "dk_300_100_yd_bonus_prob": 0.001
+      }
+    },
+    {
+      "player": "J.K. Dobbins",
+      "position": "RB",
+      "team": "DEN",
+      "opponent": "CAR",
+      "game_id": "DEN@CAR",
+      "dk_salary": 4800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 36.0,
+        "rec_yds": 8.9,
+        "receptions": 2.26,
+        "total_tds": 0.85
+      },
+      "gse_dk_projection": 11.87,
+      "gse_value_per_1k": 2.47,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.91,
+        "sim_p50_median": 11.91,
+        "sim_p75_upside": 14.48,
+        "sim_p90_ceiling": 17.0,
+        "sim_p99_slate_breaker": 23.45,
+        "dk_300_100_yd_bonus_prob": 0.0007
+      }
+    },
+    {
+      "player": "DeMario Douglas",
+      "position": "WR",
+      "team": "NE",
+      "opponent": "GB",
+      "game_id": "GB@NE",
+      "dk_salary": 4800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 36.8,
+        "receptions": 3.32,
+        "total_tds": 0.43
+      },
+      "gse_dk_projection": 9.6,
+      "gse_value_per_1k": 2.0,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.57,
+        "sim_p50_median": 9.56,
+        "sim_p75_upside": 11.91,
+        "sim_p90_ceiling": 14.23,
+        "sim_p99_slate_breaker": 19.65,
+        "dk_300_100_yd_bonus_prob": 0.0008
+      }
+    },
+    {
+      "player": "Ryan Flournoy",
+      "position": "WR",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 4800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 42.8,
+        "receptions": 3.84,
+        "total_tds": 0.42
+      },
+      "gse_dk_projection": 10.62,
+      "gse_value_per_1k": 2.21,
+      "pos_salary_rank_on_team": 3,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.71,
+        "sim_p50_median": 10.59,
+        "sim_p75_upside": 13.23,
+        "sim_p90_ceiling": 15.81,
+        "sim_p99_slate_breaker": 22.24,
+        "dk_300_100_yd_bonus_prob": 0.0037
+      }
+    },
+    {
+      "player": "Malik Washington",
+      "position": "WR",
+      "team": "MIA",
+      "opponent": "DET",
+      "game_id": "DET@MIA",
+      "dk_salary": 4700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 37.3,
+        "receptions": 3.38,
+        "total_tds": 0.45
+      },
+      "gse_dk_projection": 9.9,
+      "gse_value_per_1k": 2.11,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.94,
+        "sim_p50_median": 9.91,
+        "sim_p75_upside": 12.26,
+        "sim_p90_ceiling": 14.64,
+        "sim_p99_slate_breaker": 20.53,
+        "dk_300_100_yd_bonus_prob": 0.0006
+      }
+    },
+    {
+      "player": "Harold Fannin Jr.",
+      "position": "TE",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 4700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 40.4,
+        "receptions": 3.67,
+        "total_tds": 0.5
+      },
+      "gse_dk_projection": 10.95,
+      "gse_value_per_1k": 2.33,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.96,
+        "sim_p50_median": 10.91,
+        "sim_p75_upside": 13.55,
+        "sim_p90_ceiling": 16.19,
+        "sim_p99_slate_breaker": 22.49,
+        "dk_300_100_yd_bonus_prob": 0.0014
+      }
+    },
+    {
+      "player": "MarShawn Lloyd",
+      "position": "RB",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 4600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 28.0,
+        "rec_yds": 16.7,
+        "receptions": 3.01,
+        "total_tds": 0.28
+      },
+      "gse_dk_projection": 9.14,
+      "gse_value_per_1k": 1.99,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.15,
+        "sim_p50_median": 9.16,
+        "sim_p75_upside": 11.16,
+        "sim_p90_ceiling": 12.99,
+        "sim_p99_slate_breaker": 17.79,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Devin Singletary",
+      "position": "RB",
+      "team": "NYG",
+      "opponent": "PHI",
+      "game_id": "NYG@PHI",
+      "dk_salary": 4600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 34.0,
+        "rec_yds": 25.8,
+        "receptions": 3.82,
+        "total_tds": 0.32
+      },
+      "gse_dk_projection": 11.7,
+      "gse_value_per_1k": 2.54,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.7,
+        "sim_p50_median": 11.67,
+        "sim_p75_upside": 14.28,
+        "sim_p90_ceiling": 16.78,
+        "sim_p99_slate_breaker": 23.48,
+        "dk_300_100_yd_bonus_prob": 0.0002
+      }
+    },
+    {
+      "player": "KC Concepcion Jr.",
+      "position": "WR",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 4600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 37.2,
+        "receptions": 3.53,
+        "total_tds": 0.4
+      },
+      "gse_dk_projection": 9.65,
+      "gse_value_per_1k": 2.1,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.64,
+        "sim_p50_median": 9.6,
+        "sim_p75_upside": 11.89,
+        "sim_p90_ceiling": 14.32,
+        "sim_p99_slate_breaker": 19.82,
+        "dk_300_100_yd_bonus_prob": 0.0007
+      }
+    },
+    {
+      "player": "Tyler Warren",
+      "position": "TE",
+      "team": "IND",
+      "opponent": "DAL",
+      "game_id": "DAL@IND",
+      "dk_salary": 4600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 42.8,
+        "receptions": 5.44,
+        "total_tds": 0.53
+      },
+      "gse_dk_projection": 12.89,
+      "gse_value_per_1k": 2.8,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 13.0,
+        "sim_p50_median": 12.92,
+        "sim_p75_upside": 16.11,
+        "sim_p90_ceiling": 19.07,
+        "sim_p99_slate_breaker": 26.22,
+        "dk_300_100_yd_bonus_prob": 0.0029
+      }
+    },
+    {
+      "player": "Gardner Minshew II",
+      "position": "QB",
+      "team": "ARI",
+      "opponent": "SEA",
+      "game_id": "ARI@SEA",
+      "dk_salary": 4500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 219.1,
+        "rush_yds": 14.0,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.79
+      },
+      "gse_dk_projection": 19.5,
+      "gse_value_per_1k": 4.33,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 19.54,
+        "sim_p50_median": 19.5,
+        "sim_p75_upside": 22.92,
+        "sim_p90_ceiling": 26.25,
+        "sim_p99_slate_breaker": 36.88,
+        "dk_300_100_yd_bonus_prob": 0.0244
+      }
+    },
+    {
+      "player": "Kendre Miller",
+      "position": "RB",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 4500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 28.8,
+        "rec_yds": 8.0,
+        "receptions": 2.01,
+        "total_tds": 0.79
+      },
+      "gse_dk_projection": 10.42,
+      "gse_value_per_1k": 2.32,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.43,
+        "sim_p50_median": 10.39,
+        "sim_p75_upside": 12.61,
+        "sim_p90_ceiling": 14.8,
+        "sim_p99_slate_breaker": 20.8,
+        "dk_300_100_yd_bonus_prob": 0.0004
+      }
+    },
+    {
+      "player": "Elijah Mitchell",
+      "position": "RB",
+      "team": "PHI",
+      "opponent": "NYG",
+      "game_id": "NYG@PHI",
+      "dk_salary": 4500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 29.8,
+        "rec_yds": 23.2,
+        "receptions": 3.1,
+        "total_tds": 0.28
+      },
+      "gse_dk_projection": 10.04,
+      "gse_value_per_1k": 2.23,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.0,
+        "sim_p50_median": 9.97,
+        "sim_p75_upside": 12.13,
+        "sim_p90_ceiling": 14.31,
+        "sim_p99_slate_breaker": 19.28,
+        "dk_300_100_yd_bonus_prob": 0.0001
+      }
+    },
+    {
+      "player": "Adonai Mitchell",
+      "position": "WR",
+      "team": "NYJ",
+      "opponent": "KC",
+      "game_id": "NYJ@KC",
+      "dk_salary": 4500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 58.0,
+        "receptions": 4.4,
+        "total_tds": 0.42
+      },
+      "gse_dk_projection": 12.72,
+      "gse_value_per_1k": 2.83,
+      "pos_salary_rank_on_team": 3,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: Full-time NYJ perimeter WR2 after 7-142-1TD eruption in Week 8 (replacing 0-target Omar Cooper Jr.)",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 12.78,
+        "sim_p50_median": 12.63,
+        "sim_p75_upside": 15.76,
+        "sim_p90_ceiling": 18.91,
+        "sim_p99_slate_breaker": 29.06,
+        "dk_300_100_yd_bonus_prob": 0.033
+      }
+    },
+    {
+      "player": "Hunter Henry",
+      "position": "TE",
+      "team": "NE",
+      "opponent": "GB",
+      "game_id": "GB@NE",
+      "dk_salary": 4500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 33.9,
+        "receptions": 3.01,
+        "total_tds": 0.39
+      },
+      "gse_dk_projection": 8.72,
+      "gse_value_per_1k": 1.94,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 8.67,
+        "sim_p50_median": 8.64,
+        "sim_p75_upside": 10.73,
+        "sim_p90_ceiling": 12.87,
+        "sim_p99_slate_breaker": 17.84,
+        "dk_300_100_yd_bonus_prob": 0.0004
+      }
+    },
+    {
+      "player": "Xavier Worthy",
+      "position": "WR",
+      "team": "KC",
+      "opponent": "NYJ",
+      "game_id": "NYJ@KC",
+      "dk_salary": 4400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 37.0,
+        "receptions": 4.38,
+        "total_tds": 0.34
+      },
+      "gse_dk_projection": 10.1,
+      "gse_value_per_1k": 2.3,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.11,
+        "sim_p50_median": 10.11,
+        "sim_p75_upside": 12.6,
+        "sim_p90_ceiling": 15.02,
+        "sim_p99_slate_breaker": 20.55,
+        "dk_300_100_yd_bonus_prob": 0.0009
+      }
+    },
+    {
+      "player": "Dallas Goedert",
+      "position": "TE",
+      "team": "PHI",
+      "opponent": "NYG",
+      "game_id": "NYG@PHI",
+      "dk_salary": 4400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 36.3,
+        "receptions": 3.36,
+        "total_tds": 0.45
+      },
+      "gse_dk_projection": 9.84,
+      "gse_value_per_1k": 2.24,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.81,
+        "sim_p50_median": 9.77,
+        "sim_p75_upside": 12.19,
+        "sim_p90_ceiling": 14.62,
+        "sim_p99_slate_breaker": 19.7,
+        "dk_300_100_yd_bonus_prob": 0.0004
+      }
+    },
+    {
+      "player": "Caleb Douglas",
+      "position": "WR",
+      "team": "MIA",
+      "opponent": "DET",
+      "game_id": "DET@MIA",
+      "dk_salary": 4200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 41.8,
+        "receptions": 3.8,
+        "total_tds": 0.52
+      },
+      "gse_dk_projection": 11.33,
+      "gse_value_per_1k": 2.7,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 11.36,
+        "sim_p50_median": 11.3,
+        "sim_p75_upside": 14.03,
+        "sim_p90_ceiling": 16.69,
+        "sim_p99_slate_breaker": 23.12,
+        "dk_300_100_yd_bonus_prob": 0.0028
+      }
+    },
+    {
+      "player": "Juwan Johnson",
+      "position": "TE",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 4200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 33.3,
+        "receptions": 3.02,
+        "total_tds": 0.41
+      },
+      "gse_dk_projection": 9.02,
+      "gse_value_per_1k": 2.15,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.02,
+        "sim_p50_median": 9.0,
+        "sim_p75_upside": 11.19,
+        "sim_p90_ceiling": 13.23,
+        "sim_p99_slate_breaker": 18.44,
+        "dk_300_100_yd_bonus_prob": 0.0006
+      }
+    },
+    {
+      "player": "Joe Milton III",
+      "position": "QB",
+      "team": "PHI",
+      "opponent": "NYG",
+      "game_id": "NYG@PHI",
+      "dk_salary": 4100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": 224.0,
+        "rush_yds": 38.5,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 1.55
+      },
+      "gse_dk_projection": 18.26,
+      "gse_value_per_1k": 4.45,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: Named PHI Week 9 starting QB by Nick Sirianni ($4,100 salary + dual-threat Konami rushing floor vs NYG)",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 18.15,
+        "sim_p50_median": 18.08,
+        "sim_p75_upside": 21.24,
+        "sim_p90_ceiling": 24.21,
+        "sim_p99_slate_breaker": 34.19,
+        "dk_300_100_yd_bonus_prob": 0.0317
+      }
+    },
+    {
+      "player": "Malik Davis",
+      "position": "RB",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 4000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 62.0,
+        "rec_yds": 24.5,
+        "receptions": 3.4,
+        "total_tds": 0.65
+      },
+      "gse_dk_projection": 16.95,
+      "gse_value_per_1k": 4.24,
+      "pos_salary_rank_on_team": 3,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: Active DAL rotational/explosive back on Lucas Oil indoor fast track (48.5 total) with Ferguson & Turpin DNP",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 17.03,
+        "sim_p50_median": 16.91,
+        "sim_p75_upside": 20.48,
+        "sim_p90_ceiling": 24.16,
+        "sim_p99_slate_breaker": 36.77,
+        "dk_300_100_yd_bonus_prob": 0.0336
+      }
+    },
+    {
+      "player": "Jake Ferguson",
+      "position": "TE",
+      "team": "DAL",
+      "opponent": "IND",
+      "game_id": "DAL@IND",
+      "dk_salary": 3900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 26.2,
+        "receptions": 3.91,
+        "total_tds": 0.24
+      },
+      "gse_dk_projection": 7.96,
+      "gse_value_per_1k": 2.04,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.98,
+        "sim_p50_median": 7.91,
+        "sim_p75_upside": 9.91,
+        "sim_p90_ceiling": 11.89,
+        "sim_p99_slate_breaker": 16.4,
+        "dk_300_100_yd_bonus_prob": 0.0003
+      }
+    },
+    {
+      "player": "Seahawks",
+      "position": "DST",
+      "team": "SEA",
+      "opponent": "ARI",
+      "game_id": "ARI@SEA",
+      "dk_salary": 3800,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 10.69,
+      "gse_value_per_1k": 2.81,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=54.5, opp_wpp=-4.0, proj=10.69",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.74,
+        "sim_p50_median": 10.7,
+        "sim_p75_upside": 13.01,
+        "sim_p90_ceiling": 15.36,
+        "sim_p99_slate_breaker": 21.2,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Malachi Fields",
+      "position": "WR",
+      "team": "NYG",
+      "opponent": "PHI",
+      "game_id": "NYG@PHI",
+      "dk_salary": 3700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 46.9,
+        "receptions": 3.07,
+        "total_tds": 0.28
+      },
+      "gse_dk_projection": 9.46,
+      "gse_value_per_1k": 2.56,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.46,
+        "sim_p50_median": 9.46,
+        "sim_p75_upside": 11.76,
+        "sim_p90_ceiling": 13.98,
+        "sim_p99_slate_breaker": 19.09,
+        "dk_300_100_yd_bonus_prob": 0.0052
+      }
+    },
+    {
+      "player": "Tyler Higbee",
+      "position": "TE",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 3700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 40.7,
+        "receptions": 4.03,
+        "total_tds": 0.34
+      },
+      "gse_dk_projection": 10.17,
+      "gse_value_per_1k": 2.75,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.13,
+        "sim_p50_median": 10.08,
+        "sim_p75_upside": 12.63,
+        "sim_p90_ceiling": 15.06,
+        "sim_p99_slate_breaker": 20.84,
+        "dk_300_100_yd_bonus_prob": 0.0026
+      }
+    },
+    {
+      "player": "Chig Okonkwo",
+      "position": "TE",
+      "team": "WAS",
+      "opponent": "LAR",
+      "game_id": "LAR@WAS",
+      "dk_salary": 3600,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 30.5,
+        "receptions": 2.87,
+        "total_tds": 0.29
+      },
+      "gse_dk_projection": 7.63,
+      "gse_value_per_1k": 2.12,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.65,
+        "sim_p50_median": 7.63,
+        "sim_p75_upside": 9.49,
+        "sim_p90_ceiling": 11.31,
+        "sim_p99_slate_breaker": 15.88,
+        "dk_300_100_yd_bonus_prob": 0.0002
+      }
+    },
+    {
+      "player": "Texans",
+      "position": "DST",
+      "team": "HOU",
+      "opponent": "LAC",
+      "game_id": "HOU@LAC",
+      "dk_salary": 3500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 10.3,
+      "gse_value_per_1k": 2.94,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=20.3, opp_wpp=-4.0, proj=10.3",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.29,
+        "sim_p50_median": 10.25,
+        "sim_p75_upside": 12.53,
+        "sim_p90_ceiling": 14.72,
+        "sim_p99_slate_breaker": 20.19,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Michael Mayer",
+      "position": "TE",
+      "team": "LV",
+      "opponent": "SF",
+      "game_id": "LV@SF",
+      "dk_salary": 3400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 36.8,
+        "receptions": 3.82,
+        "total_tds": 0.4
+      },
+      "gse_dk_projection": 9.92,
+      "gse_value_per_1k": 2.92,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.92,
+        "sim_p50_median": 9.92,
+        "sim_p75_upside": 12.23,
+        "sim_p90_ceiling": 14.61,
+        "sim_p99_slate_breaker": 19.89,
+        "dk_300_100_yd_bonus_prob": 0.0009
+      }
+    },
+    {
+      "player": "Lions",
+      "position": "DST",
+      "team": "DET",
+      "opponent": "MIA",
+      "game_id": "DET@MIA",
+      "dk_salary": 3400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 7.9,
+      "gse_value_per_1k": 2.32,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=32.2, opp_wpp=-4.0, proj=7.9",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.94,
+        "sim_p50_median": 7.89,
+        "sim_p75_upside": 9.61,
+        "sim_p90_ceiling": 11.33,
+        "sim_p99_slate_breaker": 15.52,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Rams",
+      "position": "DST",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 3300,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 7.4,
+      "gse_value_per_1k": 2.24,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=33.4, opp_wpp=-4.0, proj=7.4",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.38,
+        "sim_p50_median": 7.33,
+        "sim_p75_upside": 8.94,
+        "sim_p90_ceiling": 10.6,
+        "sim_p99_slate_breaker": 14.91,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Dalton Schultz",
+      "position": "TE",
+      "team": "HOU",
+      "opponent": "LAC",
+      "game_id": "HOU@LAC",
+      "dk_salary": 3200,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 54.0,
+        "receptions": 5.1,
+        "total_tds": 0.4
+      },
+      "gse_dk_projection": 13.9,
+      "gse_value_per_1k": 4.34,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: Primary HOU red-zone & intermediate seam outlet with Brevin Jordan LP and David Montgomery DNP",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 14.02,
+        "sim_p50_median": 13.89,
+        "sim_p75_upside": 17.25,
+        "sim_p90_ceiling": 20.66,
+        "sim_p99_slate_breaker": 31.12,
+        "dk_300_100_yd_bonus_prob": 0.0185
+      }
+    },
+    {
+      "player": "Greg Dulcich",
+      "position": "TE",
+      "team": "MIA",
+      "opponent": "DET",
+      "game_id": "DET@MIA",
+      "dk_salary": 3100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 52.0,
+        "receptions": 4.8,
+        "total_tds": 0.42
+      },
+      "gse_dk_projection": 13.52,
+      "gse_value_per_1k": 4.36,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G2_VACATED_CATALYST: Full-go MIA TE1 (82% route participation) vs DET middle-of-field funnel with Will Kacmarek LP",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 13.49,
+        "sim_p50_median": 13.42,
+        "sim_p75_upside": 16.71,
+        "sim_p90_ceiling": 19.96,
+        "sim_p99_slate_breaker": 30.39,
+        "dk_300_100_yd_bonus_prob": 0.0138
+      }
+    },
+    {
+      "player": "Mason Taylor",
+      "position": "TE",
+      "team": "NYJ",
+      "opponent": "KC",
+      "game_id": "NYJ@KC",
+      "dk_salary": 3100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 35.5,
+        "receptions": 4.46,
+        "total_tds": 0.31
+      },
+      "gse_dk_projection": 9.87,
+      "gse_value_per_1k": 3.18,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.89,
+        "sim_p50_median": 9.82,
+        "sim_p75_upside": 12.23,
+        "sim_p90_ceiling": 14.75,
+        "sim_p99_slate_breaker": 20.49,
+        "dk_300_100_yd_bonus_prob": 0.0011
+      }
+    },
+    {
+      "player": "Patriots",
+      "position": "DST",
+      "team": "NE",
+      "opponent": "GB",
+      "game_id": "GB@NE",
+      "dk_salary": 3100,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 10.62,
+      "gse_value_per_1k": 3.43,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=47.4, opp_wpp=-4.0, proj=10.62",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.69,
+        "sim_p50_median": 10.68,
+        "sim_p75_upside": 12.9,
+        "sim_p90_ceiling": 15.14,
+        "sim_p99_slate_breaker": 21.31,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Colby Parkinson",
+      "position": "TE",
+      "team": "LAR",
+      "opponent": "WAS",
+      "game_id": "LAR@WAS",
+      "dk_salary": 3000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": 0.0,
+        "rec_yds": 28.0,
+        "receptions": 3.86,
+        "total_tds": 0.23
+      },
+      "gse_dk_projection": 8.03,
+      "gse_value_per_1k": 2.68,
+      "pos_salary_rank_on_team": 2,
+      "accuracy_gate_note": "",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 8.03,
+        "sim_p50_median": 7.98,
+        "sim_p75_upside": 9.97,
+        "sim_p90_ceiling": 11.94,
+        "sim_p99_slate_breaker": 16.26,
+        "dk_300_100_yd_bonus_prob": 0.0004
+      }
+    },
+    {
+      "player": "Broncos",
+      "position": "DST",
+      "team": "DEN",
+      "opponent": "CAR",
+      "game_id": "DEN@CAR",
+      "dk_salary": 3000,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 10.95,
+      "gse_value_per_1k": 3.65,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=50.7, opp_wpp=-4.0, proj=10.95",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.95,
+        "sim_p50_median": 10.92,
+        "sim_p75_upside": 13.3,
+        "sim_p90_ceiling": 15.62,
+        "sim_p99_slate_breaker": 21.59,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Saints",
+      "position": "DST",
+      "team": "NO",
+      "opponent": "CLE",
+      "game_id": "CLE@NO",
+      "dk_salary": 2900,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 10.45,
+      "gse_value_per_1k": 3.6,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=41.0, opp_wpp=-4.0, proj=10.45",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 10.45,
+        "sim_p50_median": 10.44,
+        "sim_p75_upside": 12.67,
+        "sim_p90_ceiling": 14.95,
+        "sim_p99_slate_breaker": 20.36,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Browns",
+      "position": "DST",
+      "team": "CLE",
+      "opponent": "NO",
+      "game_id": "CLE@NO",
+      "dk_salary": 2700,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 7.59,
+      "gse_value_per_1k": 2.81,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=44.7, opp_wpp=2.26, proj=7.59",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.61,
+        "sim_p50_median": 7.62,
+        "sim_p75_upside": 9.25,
+        "sim_p90_ceiling": 10.89,
+        "sim_p99_slate_breaker": 14.69,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Eagles",
+      "position": "DST",
+      "team": "PHI",
+      "opponent": "NYG",
+      "game_id": "NYG@PHI",
+      "dk_salary": 2500,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 7.3,
+      "gse_value_per_1k": 2.92,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=36.7, opp_wpp=-4.0, proj=7.3",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.38,
+        "sim_p50_median": 7.34,
+        "sim_p75_upside": 8.85,
+        "sim_p90_ceiling": 10.4,
+        "sim_p99_slate_breaker": 14.94,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Packers",
+      "position": "DST",
+      "team": "GB",
+      "opponent": "NE",
+      "game_id": "GB@NE",
+      "dk_salary": 2400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 9.8,
+      "gse_value_per_1k": 4.08,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=37.9, opp_wpp=-4.0, proj=9.8",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 9.88,
+        "sim_p50_median": 9.85,
+        "sim_p75_upside": 11.9,
+        "sim_p90_ceiling": 14.08,
+        "sim_p99_slate_breaker": 19.63,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    },
+    {
+      "player": "Chargers",
+      "position": "DST",
+      "team": "LAC",
+      "opponent": "HOU",
+      "game_id": "HOU@LAC",
+      "dk_salary": 2400,
+      "gse_post_game_sim_stats": {
+        "pass_yds": NaN,
+        "rush_yds": NaN,
+        "rec_yds": NaN,
+        "receptions": NaN,
+        "total_tds": 0.1
+      },
+      "gse_dk_projection": 7.5,
+      "gse_value_per_1k": 3.12,
+      "pos_salary_rank_on_team": 1,
+      "accuracy_gate_note": "G3_TRENCH_DST: opp_cast=40.8, opp_wpp=-4.0, proj=7.5",
+      "pool_status": "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL",
+      "second_stage_dfs_pool_sim": {
+        "dfs_pool_sims": 10000,
+        "sim_mean": 7.53,
+        "sim_p50_median": 7.49,
+        "sim_p75_upside": 9.12,
+        "sim_p90_ceiling": 10.79,
+        "sim_p99_slate_breaker": 14.51,
+        "dk_300_100_yd_bonus_prob": 0.0
+      }
+    }
+  ],
+  "rejected_players_audit": [
+    {
+      "player": "Zach Charbonnet",
+      "position": "RB",
+      "team": "SEA",
+      "dk_salary": 5800,
+      "gse_dk_projection": 6.11,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (6.11 < 8.5 DK pts)"
+    },
+    {
+      "player": "Mike Washington Jr.",
+      "position": "RB",
+      "team": "LV",
+      "dk_salary": 5200,
+      "gse_dk_projection": 7.49,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (7.49 < 8.5 DK pts)"
+    },
+    {
+      "player": "Justin Herbert",
+      "position": "QB",
+      "team": "LAC",
+      "dk_salary": 5000,
+      "gse_dk_projection": 11.7,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE QB starter floor (11.7 < 14.5 DK pts)"
+    },
+    {
+      "player": "Seth McGowan",
+      "position": "RB",
+      "team": "IND",
+      "dk_salary": 5000,
+      "gse_dk_projection": 5.82,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (5.82 < 8.5 DK pts)"
+    },
+    {
+      "player": "Emmett Johnson",
+      "position": "RB",
+      "team": "KC",
+      "dk_salary": 4900,
+      "gse_dk_projection": 7.66,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (7.66 < 8.5 DK pts)"
+    },
+    {
+      "player": "Omar Cooper Jr.",
+      "position": "WR",
+      "team": "NYJ",
+      "dk_salary": 4900,
+      "gse_dk_projection": 3.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_SUB_FLOOR_TRAP_BLOCKED: NYJ rotational WR (pulled in Week 8 at 09:10 CT; 0 catches while Adonai Mitchell went 7/142/1TD)"
+    },
+    {
+      "player": "Daniel Jones",
+      "position": "QB",
+      "team": "IND",
+      "dk_salary": 4700,
+      "gse_dk_projection": 11.91,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE QB starter floor (11.91 < 14.5 DK pts)"
+    },
+    {
+      "player": "Bam Knight",
+      "position": "RB",
+      "team": "ARI",
+      "dk_salary": 4700,
+      "gse_dk_projection": 3.3,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (3.3 < 8.5 DK pts)"
+    },
+    {
+      "player": "Kimani Vidal",
+      "position": "RB",
+      "team": "LAC",
+      "dk_salary": 4700,
+      "gse_dk_projection": 7.5,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (7.5 < 8.5 DK pts)"
+    },
+    {
+      "player": "Makai Lemon",
+      "position": "WR",
+      "team": "PHI",
+      "dk_salary": 4700,
+      "gse_dk_projection": 8.42,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (8.42 < 8.5 DK pts)"
+    },
+    {
+      "player": "Dontayvion Wicks",
+      "position": "WR",
+      "team": "PHI",
+      "dk_salary": 4600,
+      "gse_dk_projection": 8.19,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (8.19 < 8.5 DK pts)"
+    },
+    {
+      "player": "Sione Vaki",
+      "position": "RB",
+      "team": "DET",
+      "dk_salary": 4500,
+      "gse_dk_projection": 5.29,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (5.29 < 8.5 DK pts)"
+    },
+    {
+      "player": "Marvin Harrison Jr.",
+      "position": "WR",
+      "team": "HOU",
+      "dk_salary": 4500,
+      "gse_dk_projection": 5.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.6 < 8.5 DK pts)"
+    },
+    {
+      "player": "DJ Giddens",
+      "position": "RB",
+      "team": "IND",
+      "dk_salary": 4400,
+      "gse_dk_projection": 4.45,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (4.45 < 8.5 DK pts)"
+    },
+    {
+      "player": "Austin Ekeler",
+      "position": "RB",
+      "team": "WAS",
+      "dk_salary": 4400,
+      "gse_dk_projection": 5.94,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (5.94 < 8.5 DK pts)"
+    },
+    {
+      "player": "Courtland Sutton",
+      "position": "WR",
+      "team": "DEN",
+      "dk_salary": 4400,
+      "gse_dk_projection": 7.79,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (7.79 < 8.5 DK pts)"
+    },
+    {
+      "player": "Tyler Goodson",
+      "position": "RB",
+      "team": "DAL",
+      "dk_salary": 4300,
+      "gse_dk_projection": 8.23,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (8.23 < 8.5 DK pts)"
+    },
+    {
+      "player": "George Holani",
+      "position": "RB",
+      "team": "SEA",
+      "dk_salary": 4300,
+      "gse_dk_projection": 6.54,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (6.54 < 8.5 DK pts)"
+    },
+    {
+      "player": "Isaiah Davis",
+      "position": "RB",
+      "team": "NYJ",
+      "dk_salary": 4300,
+      "gse_dk_projection": 3.15,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (3.15 < 8.5 DK pts)"
+    },
+    {
+      "player": "Quentin Johnston",
+      "position": "WR",
+      "team": "LAC",
+      "dk_salary": 4300,
+      "gse_dk_projection": 5.18,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.18 < 8.5 DK pts)"
+    },
+    {
+      "player": "Keaton Mitchell",
+      "position": "RB",
+      "team": "LAC",
+      "dk_salary": 4200,
+      "gse_dk_projection": 7.29,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (7.29 < 8.5 DK pts)"
+    },
+    {
+      "player": "Darius Cooper",
+      "position": "WR",
+      "team": "PHI",
+      "dk_salary": 4200,
+      "gse_dk_projection": 6.07,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (6.07 < 8.5 DK pts)"
+    },
+    {
+      "player": "Corey Kiner",
+      "position": "RB",
+      "team": "NE",
+      "dk_salary": 4100,
+      "gse_dk_projection": 5.75,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (5.75 < 8.5 DK pts)"
+    },
+    {
+      "player": "Rashid Shaheed",
+      "position": "WR",
+      "team": "SEA",
+      "dk_salary": 4100,
+      "gse_dk_projection": 6.2,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (6.2 < 8.5 DK pts)"
+    },
+    {
+      "player": "Antonio Williams",
+      "position": "WR",
+      "team": "WAS",
+      "dk_salary": 4100,
+      "gse_dk_projection": 7.64,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (7.64 < 8.5 DK pts)"
+    },
+    {
+      "player": "Lan Larison",
+      "position": "RB",
+      "team": "NE",
+      "dk_salary": 4000,
+      "gse_dk_projection": 5.93,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (5.93 < 8.5 DK pts)"
+    },
+    {
+      "player": "Kaleb Johnson",
+      "position": "RB",
+      "team": "GB",
+      "dk_salary": 4000,
+      "gse_dk_projection": 5.19,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (5.19 < 8.5 DK pts)"
+    },
+    {
+      "player": "Jordan James",
+      "position": "RB",
+      "team": "SF",
+      "dk_salary": 4000,
+      "gse_dk_projection": 3.07,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (3.07 < 8.5 DK pts)"
+    },
+    {
+      "player": "Kyle Juszczyk",
+      "position": "RB",
+      "team": "SF",
+      "dk_salary": 4000,
+      "gse_dk_projection": 4.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (4.6 < 8.5 DK pts)"
+    },
+    {
+      "player": "Dylan Laube",
+      "position": "RB",
+      "team": "LV",
+      "dk_salary": 4000,
+      "gse_dk_projection": 3.52,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (3.52 < 8.5 DK pts)"
+    },
+    {
+      "player": "CJ Donaldson",
+      "position": "RB",
+      "team": "NO",
+      "dk_salary": 4000,
+      "gse_dk_projection": 4.29,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (4.29 < 8.5 DK pts)"
+    },
+    {
+      "player": "Audric Estime",
+      "position": "RB",
+      "team": "CLE",
+      "dk_salary": 4000,
+      "gse_dk_projection": 7.9,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (7.9 < 8.5 DK pts)"
+    },
+    {
+      "player": "DJ Herman",
+      "position": "RB",
+      "team": "MIA",
+      "dk_salary": 4000,
+      "gse_dk_projection": 6.67,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (6.67 < 8.5 DK pts)"
+    },
+    {
+      "player": "Jacob Saylors",
+      "position": "RB",
+      "team": "DET",
+      "dk_salary": 4000,
+      "gse_dk_projection": 4.33,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (4.33 < 8.5 DK pts)"
+    },
+    {
+      "player": "Hunter Luepke",
+      "position": "RB",
+      "team": "DAL",
+      "dk_salary": 4000,
+      "gse_dk_projection": 3.27,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (3.27 < 8.5 DK pts)"
+    },
+    {
+      "player": "AJ Dillon",
+      "position": "RB",
+      "team": "CAR",
+      "dk_salary": 4000,
+      "gse_dk_projection": 4.37,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (4.37 < 8.5 DK pts)"
+    },
+    {
+      "player": "Pierre Strong Jr.",
+      "position": "RB",
+      "team": "GB",
+      "dk_salary": 4000,
+      "gse_dk_projection": 4.2,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE RB touch/snap floor (4.2 < 8.5 DK pts)"
+    },
+    {
+      "player": "Xavier Hutchinson",
+      "position": "WR",
+      "team": "HOU",
+      "dk_salary": 4000,
+      "gse_dk_projection": 3.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_SUB_FLOOR_TRAP_BLOCKED: HOU WR4 rotational piece behind Nico Collins, Marvin Harrison Jr., and Dalton Schultz"
+    },
+    {
+      "player": "Tre' Harris",
+      "position": "WR",
+      "team": "LAC",
+      "dk_salary": 4000,
+      "gse_dk_projection": 6.72,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (6.72 < 8.5 DK pts)"
+    },
+    {
+      "player": "Brandin Cooks",
+      "position": "WR",
+      "team": "SF",
+      "dk_salary": 3900,
+      "gse_dk_projection": 3.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (3.1 < 8.5 DK pts)"
+    },
+    {
+      "player": "Cooper Kupp",
+      "position": "WR",
+      "team": "SEA",
+      "dk_salary": 3800,
+      "gse_dk_projection": 5.98,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.98 < 8.5 DK pts)"
+    },
+    {
+      "player": "AJ Barner",
+      "position": "TE",
+      "team": "SEA",
+      "dk_salary": 3800,
+      "gse_dk_projection": 6.36,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (6.36 < 7.5 DK pts)"
+    },
+    {
+      "player": "Chiefs",
+      "position": "DST",
+      "team": "KC",
+      "dk_salary": 3700,
+      "gse_dk_projection": 5.93,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE Trench/Matchup DST floor (5.93 < 6.0 DK pts)"
+    },
+    {
+      "player": "Jacob Cowing",
+      "position": "WR",
+      "team": "SF",
+      "dk_salary": 3600,
+      "gse_dk_projection": 4.26,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Efton Chism III",
+      "position": "WR",
+      "team": "NE",
+      "dk_salary": 3600,
+      "gse_dk_projection": 5.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.1 < 8.5 DK pts)"
+    },
+    {
+      "player": "Treylon Burks",
+      "position": "WR",
+      "team": "WAS",
+      "dk_salary": 3600,
+      "gse_dk_projection": 7.27,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (7.27 < 8.5 DK pts)"
+    },
+    {
+      "player": "49ers",
+      "position": "DST",
+      "team": "SF",
+      "dk_salary": 3600,
+      "gse_dk_projection": 4.86,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE Trench/Matchup DST floor (4.86 < 6.0 DK pts)"
+    },
+    {
+      "player": "Kyle Williams",
+      "position": "WR",
+      "team": "NE",
+      "dk_salary": 3500,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Tank Dell",
+      "position": "WR",
+      "team": "HOU",
+      "dk_salary": 3500,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Darnell Mooney",
+      "position": "WR",
+      "team": "NYG",
+      "dk_salary": 3500,
+      "gse_dk_projection": 7.48,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (7.48 < 8.5 DK pts)"
+    },
+    {
+      "player": "Savion Williams",
+      "position": "WR",
+      "team": "GB",
+      "dk_salary": 3500,
+      "gse_dk_projection": 6.88,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (6.88 < 8.5 DK pts)"
+    },
+    {
+      "player": "Eli Raridon",
+      "position": "TE",
+      "team": "NE",
+      "dk_salary": 3500,
+      "gse_dk_projection": 5.52,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.52 < 7.5 DK pts)"
+    },
+    {
+      "player": "Kayshon Boutte",
+      "position": "WR",
+      "team": "HOU",
+      "dk_salary": 3400,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR5_SHRINKAGE"
+    },
+    {
+      "player": "Jalen Nailor",
+      "position": "WR",
+      "team": "LV",
+      "dk_salary": 3400,
+      "gse_dk_projection": 7.27,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (7.27 < 8.5 DK pts)"
+    },
+    {
+      "player": "Hollywood Brown",
+      "position": "WR",
+      "team": "PHI",
+      "dk_salary": 3400,
+      "gse_dk_projection": 3.3,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR5_SHRINKAGE"
+    },
+    {
+      "player": "Konata Mumpfield",
+      "position": "WR",
+      "team": "LAR",
+      "dk_salary": 3300,
+      "gse_dk_projection": 5.71,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.71 < 8.5 DK pts)"
+    },
+    {
+      "player": "Jordan Watkins",
+      "position": "WR",
+      "team": "SF",
+      "dk_salary": 3300,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR6_SHRINKAGE"
+    },
+    {
+      "player": "Tory Horton",
+      "position": "WR",
+      "team": "SEA",
+      "dk_salary": 3300,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Chris Bell",
+      "position": "WR",
+      "team": "MIA",
+      "dk_salary": 3300,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (4.4 < 8.5 DK pts)"
+    },
+    {
+      "player": "Oronde Gadsden II",
+      "position": "TE",
+      "team": "LAC",
+      "dk_salary": 3300,
+      "gse_dk_projection": 5.08,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.08 < 7.5 DK pts)"
+    },
+    {
+      "player": "Darren Waller",
+      "position": "TE",
+      "team": "CAR",
+      "dk_salary": 3300,
+      "gse_dk_projection": 7.08,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (7.08 < 7.5 DK pts)"
+    },
+    {
+      "player": "Marvin Mims Jr.",
+      "position": "WR",
+      "team": "DEN",
+      "dk_salary": 3200,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Jalen Royals",
+      "position": "WR",
+      "team": "KC",
+      "dk_salary": 3200,
+      "gse_dk_projection": 3.39,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (3.39 < 8.5 DK pts)"
+    },
+    {
+      "player": "Bryce Lance",
+      "position": "WR",
+      "team": "NO",
+      "dk_salary": 3200,
+      "gse_dk_projection": 3.81,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (3.81 < 8.5 DK pts)"
+    },
+    {
+      "player": "John Metchie III",
+      "position": "WR",
+      "team": "CAR",
+      "dk_salary": 3200,
+      "gse_dk_projection": 5.02,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.02 < 8.5 DK pts)"
+    },
+    {
+      "player": "Cowboys",
+      "position": "DST",
+      "team": "DAL",
+      "dk_salary": 3200,
+      "gse_dk_projection": 3.8,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE Trench/Matchup DST floor (3.8 < 6.0 DK pts)"
+    },
+    {
+      "player": "Tutu Atwell",
+      "position": "WR",
+      "team": "LAR",
+      "dk_salary": 3100,
+      "gse_dk_projection": 3.95,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (3.95 < 8.5 DK pts)"
+    },
+    {
+      "player": "Isaac TeSlaa",
+      "position": "WR",
+      "team": "DET",
+      "dk_salary": 3100,
+      "gse_dk_projection": 3.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_SUB_FLOOR_TRAP_BLOCKED: DET WR4 (<18% route share with Amon-Ra, Jamo, LaPorta, Gibbs active; 0 catches in W8)"
+    },
+    {
+      "player": "Kevin Coleman Jr.",
+      "position": "WR",
+      "team": "MIA",
+      "dk_salary": 3100,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Laquon Treadwell",
+      "position": "WR",
+      "team": "IND",
+      "dk_salary": 3100,
+      "gse_dk_projection": 4.89,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (4.89 < 8.5 DK pts)"
+    },
+    {
+      "player": "Dyami Brown",
+      "position": "WR",
+      "team": "WAS",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.79,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "KeAndre Lambert-Smith",
+      "position": "WR",
+      "team": "LAC",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_SUB_FLOOR_TRAP_BLOCKED: LAC WR4 ($3,000, 2.4 season PPG; behind Ladd McConkey, Quentin Johnston, Tre Harris)"
+    },
+    {
+      "player": "Jerry Jeudy",
+      "position": "WR",
+      "team": "CLE",
+      "dk_salary": 3000,
+      "gse_dk_projection": 5.37,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (5.37 < 8.5 DK pts)"
+    },
+    {
+      "player": "Ryan Miller",
+      "position": "WR",
+      "team": "NE",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.0,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR5_SHRINKAGE"
+    },
+    {
+      "player": "Bo Melton",
+      "position": "WR",
+      "team": "GB",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.35,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Jack Bech",
+      "position": "WR",
+      "team": "LV",
+      "dk_salary": 3000,
+      "gse_dk_projection": 4.0,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE WR target/route floor (4.0 < 8.5 DK pts)"
+    },
+    {
+      "player": "Cody White",
+      "position": "WR",
+      "team": "LV",
+      "dk_salary": 3000,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Malik Benson",
+      "position": "WR",
+      "team": "LV",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.16,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR7_SHRINKAGE"
+    },
+    {
+      "player": "Theo Wease Jr.",
+      "position": "WR",
+      "team": "LAC",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR6_SHRINKAGE"
+    },
+    {
+      "player": "Charlie Jones",
+      "position": "WR",
+      "team": "NYG",
+      "dk_salary": 3000,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Isaiah Bond",
+      "position": "WR",
+      "team": "CLE",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.86,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Isaiah Williams",
+      "position": "WR",
+      "team": "NYJ",
+      "dk_salary": 3000,
+      "gse_dk_projection": 4.4,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR4_SHRINKAGE"
+    },
+    {
+      "player": "Jonathan Mingo",
+      "position": "WR",
+      "team": "DAL",
+      "dk_salary": 3000,
+      "gse_dk_projection": 3.99,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_WR5_SHRINKAGE"
+    },
+    {
+      "player": "Noah Gray",
+      "position": "TE",
+      "team": "KC",
+      "dk_salary": 2900,
+      "gse_dk_projection": 4.88,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (4.88 < 7.5 DK pts)"
+    },
+    {
+      "player": "Brevyn Spann-Ford",
+      "position": "TE",
+      "team": "DAL",
+      "dk_salary": 2900,
+      "gse_dk_projection": 3.93,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (3.93 < 7.5 DK pts)"
+    },
+    {
+      "player": "Evan Engram",
+      "position": "TE",
+      "team": "DEN",
+      "dk_salary": 2800,
+      "gse_dk_projection": 5.51,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.51 < 7.5 DK pts)"
+    },
+    {
+      "player": "Kenyon Sadiq",
+      "position": "TE",
+      "team": "NYJ",
+      "dk_salary": 2800,
+      "gse_dk_projection": 6.53,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (6.53 < 7.5 DK pts)"
+    },
+    {
+      "player": "Noah Fant",
+      "position": "TE",
+      "team": "NO",
+      "dk_salary": 2700,
+      "gse_dk_projection": 5.7,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.7 < 7.5 DK pts)"
+    },
+    {
+      "player": "Davis Allen",
+      "position": "TE",
+      "team": "LAR",
+      "dk_salary": 2700,
+      "gse_dk_projection": 4.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE3_SHRINKAGE"
+    },
+    {
+      "player": "Tommy Tremble",
+      "position": "TE",
+      "team": "CAR",
+      "dk_salary": 2600,
+      "gse_dk_projection": 5.89,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.89 < 7.5 DK pts)"
+    },
+    {
+      "player": "Panthers",
+      "position": "DST",
+      "team": "CAR",
+      "dk_salary": 2600,
+      "gse_dk_projection": 4.92,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE Trench/Matchup DST floor (4.92 < 6.0 DK pts)"
+    },
+    {
+      "player": "Foster Moreau",
+      "position": "TE",
+      "team": "HOU",
+      "dk_salary": 2500,
+      "gse_dk_projection": 3.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_SUB_FLOOR_TRAP_BLOCKED: HOU blocking TE2 behind Dalton Schultz"
+    },
+    {
+      "player": "Will Mallory",
+      "position": "TE",
+      "team": "IND",
+      "dk_salary": 2500,
+      "gse_dk_projection": 5.61,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.61 < 7.5 DK pts)"
+    },
+    {
+      "player": "Elijah Higgins",
+      "position": "TE",
+      "team": "ARI",
+      "dk_salary": 2500,
+      "gse_dk_projection": 4.23,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (4.23 < 7.5 DK pts)"
+    },
+    {
+      "player": "Teagan Quitoriano",
+      "position": "TE",
+      "team": "ARI",
+      "dk_salary": 2500,
+      "gse_dk_projection": 3.9,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE3_SHRINKAGE"
+    },
+    {
+      "player": "Jonnu Smith",
+      "position": "TE",
+      "team": "GB",
+      "dk_salary": 2500,
+      "gse_dk_projection": 3.33,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE4_SHRINKAGE"
+    },
+    {
+      "player": "Charlie Kolar",
+      "position": "TE",
+      "team": "LAC",
+      "dk_salary": 2500,
+      "gse_dk_projection": 4.77,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (4.77 < 7.5 DK pts)"
+    },
+    {
+      "player": "John Bates",
+      "position": "TE",
+      "team": "WAS",
+      "dk_salary": 2500,
+      "gse_dk_projection": 3.88,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE3_SHRINKAGE"
+    },
+    {
+      "player": "Eli Stowers",
+      "position": "TE",
+      "team": "PHI",
+      "dk_salary": 2500,
+      "gse_dk_projection": 4.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE3_SHRINKAGE"
+    },
+    {
+      "player": "Zach Ertz",
+      "position": "TE",
+      "team": "PHI",
+      "dk_salary": 2500,
+      "gse_dk_projection": 4.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE6_SHRINKAGE"
+    },
+    {
+      "player": "Theo Johnson",
+      "position": "TE",
+      "team": "NYG",
+      "dk_salary": 2500,
+      "gse_dk_projection": 5.39,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE TE route participation floor (5.39 < 7.5 DK pts)"
+    },
+    {
+      "player": "Brock Wright",
+      "position": "TE",
+      "team": "DET",
+      "dk_salary": 2500,
+      "gse_dk_projection": 3.6,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_SUB_FLOOR_TRAP_BLOCKED: DET blocking TE2 behind Sam LaPorta"
+    },
+    {
+      "player": "James Mitchell",
+      "position": "TE",
+      "team": "DAL",
+      "dk_salary": 2500,
+      "gse_dk_projection": 4.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE4_SHRINKAGE"
+    },
+    {
+      "player": "Mitchell Evans",
+      "position": "TE",
+      "team": "CAR",
+      "dk_salary": 2500,
+      "gse_dk_projection": 3.3,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE3_SHRINKAGE"
+    },
+    {
+      "player": "Nate Adkins",
+      "position": "TE",
+      "team": "DEN",
+      "dk_salary": 2500,
+      "gse_dk_projection": 4.1,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "G2_EB_TE3_SHRINKAGE"
+    },
+    {
+      "player": "Commanders",
+      "position": "DST",
+      "team": "WAS",
+      "dk_salary": 2300,
+      "gse_dk_projection": 5.7,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE Trench/Matchup DST floor (5.7 < 6.0 DK pts)"
+    },
+    {
+      "player": "Colts",
+      "position": "DST",
+      "team": "IND",
+      "dk_salary": 2300,
+      "gse_dk_projection": 4.42,
+      "pool_status": "REJECTED_FROM_GSE_DFS_POOL",
+      "reject_reason": "Below GSE Trench/Matchup DST floor (4.42 < 6.0 DK pts)"
+    }
+  ]
+}

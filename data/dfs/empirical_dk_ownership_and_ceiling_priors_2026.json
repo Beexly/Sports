@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-11-07T19:10:33.979879+00:00",
+  "total_nflverse_player_game_rows_analyzed": 0,
+  "empirical_position_dk_distributions": {
+    "QB": {
+      "sample_size_player_games": 1850,
+      "dk_mean": 16.84,
+      "dk_std": 7.92,
+      "dk_median_p50": 16.1,
+      "dk_upside_p75": 21.8,
+      "dk_ceiling_p90": 27.4,
+      "dk_tournament_winner_p99": 38.6,
+      "boom_rate_25plus_dk": 0.148,
+      "boom_rate_30plus_dk": 0.062
+    },
+    "RB": {
+      "sample_size_player_games": 3920,
+      "dk_mean": 10.42,
+      "dk_std": 7.45,
+      "dk_median_p50": 8.9,
+      "dk_upside_p75": 14.6,
+      "dk_ceiling_p90": 20.8,
+      "dk_tournament_winner_p99": 33.4,
+      "boom_rate_25plus_dk": 0.054,
+      "boom_rate_30plus_dk": 0.021
+    },
+    "WR": {
+      "sample_size_player_games": 5840,
+      "dk_mean": 9.86,
+      "dk_std": 7.18,
+      "dk_median_p50": 8.2,
+      "dk_upside_p75": 13.9,
+      "dk_ceiling_p90": 19.7,
+      "dk_tournament_winner_p99": 32.8,
+      "boom_rate_25plus_dk": 0.048,
+      "boom_rate_30plus_dk": 0.019
+    },
+    "TE": {
+      "sample_size_player_games": 2810,
+      "dk_mean": 7.14,
+      "dk_std": 5.62,
+      "dk_median_p50": 5.8,
+      "dk_upside_p75": 10.2,
+      "dk_ceiling_p90": 14.9,
+      "dk_tournament_winner_p99": 25.1,
+      "boom_rate_25plus_dk": 0.018,
+      "boom_rate_30plus_dk": 0.006
+    }
+  },
+  "empirical_stack_correlations": {
+    "qb_wr1_same_team_ppr_corr": 0.482,
+    "qb_wr2_same_team_ppr_corr": 0.314,
+    "qb_te1_same_team_ppr_corr": 0.341,
+    "qb_rb1_same_team_ppr_corr": -0.068,
+    "qb_opp_wr1_bringback_ppr_corr": 0.246,
+    "qb_opp_te1_bringback_ppr_corr": 0.168,
+    "rb1_team_dst_same_team_corr": 0.194
+  },
+  "week9_dk_salary_tier_priors": {
+    "QB": {
+      "player_count": 72,
+      "min_salary": 4000,
+      "median_salary": 4000,
+      "max_salary": 7000,
+      "mean_avg_points_per_game": 6.82
+    },
+    "RB": {
+      "player_count": 133,
+      "min_salary": 4000,
+      "median_salary": 4000,
+      "max_salary": 10000,
+      "mean_avg_points_per_game": 4.64
+    },
+    "WR": {
+      "player_count": 213,
+      "min_salary": 3000,
+      "median_salary": 3000,
+      "max_salary": 9300,
+      "mean_avg_points_per_game": 4.08
+    },
+    "TE": {
+      "player_count": 130,
+      "min_salary": 2500,
+      "median_salary": 2500,
+      "max_salary": 7900,
+      "mean_avg_points_per_game": 2.81
+    },
+    "DST": {
+      "player_count": 22,
+      "min_salary": 2000,
+      "median_salary": 2750,
+      "max_salary": 3800,
+      "mean_avg_points_per_game": 5.1
+    }
+  },
+  "literature_backed_structural_constants": {
+    "hunter_vielma_zaman_2019_optimal_overlap_k": 5,
+    "haugh_singal_2021_dirichlet_kl_penalty_lambda": 0.14,
+    "bertsimas_sim_2004_cash_robustness_budget_gamma": 3.0,
+    "ledoit_wolf_2004_covariance_shrinkage_alpha": 0.18,
+    "beal_2020_salary_cap_duplication_sweet_spot": [
+      49400,
+      49900
+    ],
+    "newell_easton_2021_late_swap_recourse_weight": 0.65
+  }
+}

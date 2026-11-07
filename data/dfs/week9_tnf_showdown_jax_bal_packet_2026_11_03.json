@@ -115,18 +115,18 @@
     "is_week9_live_file": true
   },
   "roster_structure": "1 CPT (1.5x) + 5 FLEX",
-  "candidates": 88,
+  "candidates": 45,
   "sims": 10000,
   "opponent_rosters": 300,
-  "win_threshold_p99": 87.35,
+  "win_threshold_p99": 104.2,
   "portfolio_size": 3,
   "best_lineup_index": 1,
   "lineups": [
     {
       "index": 1,
-      "salary": 49900,
-      "proj_sum": 93.48,
-      "win_prob_vs_p99_field": 0.4376,
+      "salary": 49500,
+      "proj_sum": 104.35,
+      "win_prob_vs_p99_field": 0.4999,
       "teams": [
         "BAL",
         "JAX"
@@ -138,7 +138,7 @@
           "slot": "CPT",
           "team": "JAX",
           "salary": 15900,
-          "projection": 31.05
+          "projection": 37.76
         },
         {
           "name": "Derrick Henry",
@@ -146,47 +146,47 @@
           "slot": "FLEX",
           "team": "BAL",
           "salary": 10200,
-          "projection": 19.8
+          "projection": 18.81
         },
         {
-          "name": "Bhayshul Tuten",
-          "position": "RB",
+          "name": "Brenton Strange",
+          "position": "TE",
           "slot": "FLEX",
           "team": "JAX",
-          "salary": 9800,
-          "projection": 17.3
+          "salary": 7400,
+          "projection": 14.08
         },
         {
-          "name": "Zay Flowers",
+          "name": "Brian Thomas Jr.",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 6400,
+          "projection": 13.4
+        },
+        {
+          "name": "Jaguars",
+          "position": "DST",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 5800,
+          "projection": 11.4
+        },
+        {
+          "name": "Rashod Bateman",
           "position": "WR",
           "slot": "FLEX",
           "team": "BAL",
-          "salary": 10400,
-          "projection": 15.9
-        },
-        {
-          "name": "Chris Rodriguez Jr.",
-          "position": "RB",
-          "slot": "FLEX",
-          "team": "JAX",
-          "salary": 3400,
-          "projection": 6.2
-        },
-        {
-          "name": "Chris Moore",
-          "position": "WR",
-          "slot": "FLEX",
-          "team": "BAL",
-          "salary": 200,
-          "projection": 3.23
+          "salary": 3800,
+          "projection": 8.9
         }
       ]
     },
     {
       "index": 2,
-      "salary": 49700,
-      "proj_sum": 93.03,
-      "win_prob_vs_p99_field": 0.4376,
+      "salary": 49900,
+      "proj_sum": 101.77,
+      "win_prob_vs_p99_field": 0.4655,
       "teams": [
         "BAL",
         "JAX"
@@ -198,7 +198,7 @@
           "slot": "CPT",
           "team": "BAL",
           "salary": 15300,
-          "projection": 29.7
+          "projection": 28.22
         },
         {
           "name": "Trevor Lawrence",
@@ -206,7 +206,67 @@
           "slot": "FLEX",
           "team": "JAX",
           "salary": 10600,
-          "projection": 20.7
+          "projection": 25.18
+        },
+        {
+          "name": "Parker Washington",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 9400,
+          "projection": 16.68
+        },
+        {
+          "name": "Brenton Strange",
+          "position": "TE",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 7400,
+          "projection": 14.08
+        },
+        {
+          "name": "Mark Andrews",
+          "position": "TE",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 4400,
+          "projection": 10.4
+        },
+        {
+          "name": "Josh Cameron",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 2800,
+          "projection": 7.22
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "salary": 49600,
+      "proj_sum": 100.19,
+      "win_prob_vs_p99_field": 0.4454,
+      "teams": [
+        "BAL",
+        "JAX"
+      ],
+      "players": [
+        {
+          "name": "Brian Thomas Jr.",
+          "position": "WR",
+          "slot": "CPT",
+          "team": "JAX",
+          "salary": 9600,
+          "projection": 20.1
+        },
+        {
+          "name": "Trevor Lawrence",
+          "position": "QB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 10600,
+          "projection": 25.18
         },
         {
           "name": "Bhayshul Tuten",
@@ -214,91 +274,31 @@
           "slot": "FLEX",
           "team": "JAX",
           "salary": 9800,
-          "projection": 17.3
+          "projection": 16.43
         },
         {
-          "name": "Zay Flowers",
+          "name": "Parker Washington",
           "position": "WR",
           "slot": "FLEX",
-          "team": "BAL",
-          "salary": 10400,
-          "projection": 15.9
+          "team": "JAX",
+          "salary": 9400,
+          "projection": 16.68
         },
         {
-          "name": "Chris Rodriguez Jr.",
-          "position": "RB",
+          "name": "Jaguars",
+          "position": "DST",
           "slot": "FLEX",
           "team": "JAX",
-          "salary": 3400,
-          "projection": 6.2
+          "salary": 5800,
+          "projection": 11.4
         },
         {
-          "name": "Chris Moore",
-          "position": "WR",
+          "name": "Mark Andrews",
+          "position": "TE",
           "slot": "FLEX",
           "team": "BAL",
-          "salary": 200,
-          "projection": 3.23
-        }
-      ]
-    },
-    {
-      "index": 3,
-      "salary": 49500,
-      "proj_sum": 91.78,
-      "win_prob_vs_p99_field": 0.4376,
-      "teams": [
-        "BAL",
-        "JAX"
-      ],
-      "players": [
-        {
-          "name": "Bhayshul Tuten",
-          "position": "RB",
-          "slot": "CPT",
-          "team": "JAX",
-          "salary": 14700,
-          "projection": 25.95
-        },
-        {
-          "name": "Trevor Lawrence",
-          "position": "QB",
-          "slot": "FLEX",
-          "team": "JAX",
-          "salary": 10600,
-          "projection": 20.7
-        },
-        {
-          "name": "Derrick Henry",
-          "position": "RB",
-          "slot": "FLEX",
-          "team": "BAL",
-          "salary": 10200,
-          "projection": 19.8
-        },
-        {
-          "name": "Zay Flowers",
-          "position": "WR",
-          "slot": "FLEX",
-          "team": "BAL",
-          "salary": 10400,
-          "projection": 15.9
-        },
-        {
-          "name": "Chris Rodriguez Jr.",
-          "position": "RB",
-          "slot": "FLEX",
-          "team": "JAX",
-          "salary": 3400,
-          "projection": 6.2
-        },
-        {
-          "name": "Chris Moore",
-          "position": "WR",
-          "slot": "FLEX",
-          "team": "BAL",
-          "salary": 200,
-          "projection": 3.23
+          "salary": 4400,
+          "projection": 10.4
         }
       ]
     }
