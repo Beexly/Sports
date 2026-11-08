@@ -392,3 +392,33 @@ Automated execution log of `scripts/wiring/run_charge_regression_suite.py` acros
 | 9 | Every Drive/library claim reconciled to exact listing in CORPUS-CENSUS.csv with SHA/drive_id | **PASS** | `{"corpus_census_present": true}` |
 | 10 | Automated perturbation consumption tests present in tests/wiring/test_wave_consumption_proofs.py | **PASS** | `{"consumption_test_file_present": true}` |
 
+## WAVE_OVERNIGHT_RECONCILED_2026_11_07 — `2026-11-08T03:52:59.736987+00:00` (`8/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **FAIL** | `{"active_hits": 3, "sample_hits": ["intelligence/dfs/dfs_and_fantasy_accuracy_engine.py:17 (Jets DST)", "intelligence/dfs/dfs_and_fantasy_accuracy_engine.py:214 (Jets DST)", "apps/` |
+| 5 | Verifiable test suite execution | **PASS** | `{"detail": "10 passed in 55.98s"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL manifests + Two-Host zero local paths | **FAIL** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_present": true, "runtime_downloads_path_hits": 1}` |
+| 10 | Automated perturbation, 21,419-AST, 279-family L4/L5, and GSI sandbox isolation proofs present | **PASS** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_present": true, "gsi_sandbox_quarantined": true}` |
+
+## WAVE_OVERNIGHT_RECONCILED_2026_11_07 — `2026-11-08T03:56:11.353938+00:00` (`10/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **PASS** | `{"active_hits": 0, "sample_hits": []}` |
+| 5 | Verifiable test suite execution | **PASS** | `{"detail": "10 passed in 49.11s"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL manifests + Two-Host zero local paths | **PASS** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_present": true, "runtime_downloads_path_hits": 0}` |
+| 10 | Automated perturbation, 21,419-AST, 279-family L4/L5, and GSI sandbox isolation proofs present | **PASS** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_present": true, "gsi_sandbox_quarantined": true}` |
+

@@ -288,6 +288,8 @@ def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, 
     bindings = extract_normalized_game_state_bindings(game_ctx)
 
     authentic_count = 0
+    held_below_min_sample = 0
+    active_above_min_sample = 0
     total_val = 0.0
     by_track: Dict[str, float] = {}
     by_step: Dict[str, float] = {}
@@ -295,16 +297,26 @@ def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, 
     for eq in equations:
         if eq.get("real_source_file") and eq.get("real_source_locator") and eq.get("operator_type") != "tanh_template":
             authentic_count += 1
-        val = evaluate_single_catalog_equation(eq, game_ctx, bindings)
+        raw_val = evaluate_single_catalog_equation(eq, game_ctx, bindings)
+        n_obs = int(eq.get("sample_size_n", 100))
+        min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", 30)))
+        if n_obs < min_n:
+            held_below_min_sample += 1
+            val = 0.0
+        else:
+            active_above_min_sample += 1
+            val = raw_val
         total_val += val
         tr = str(eq.get("reasoning_track") or "1_qb_behavior")
         st = str(eq.get("weekly_cycle_step") or "1_usage")
         by_track[tr] = by_track.get(tr, 0.0) + val
         by_step[st] = by_step.get(st, 0.0) + val
 
-    n_eq = max(1, len(equations))
+    n_eq = max(1, active_above_min_sample)
     return {
         "evaluated_count": len(equations),
+        "active_above_min_sample_size_count": active_above_min_sample,
+        "held_below_min_sample_size_count": held_below_min_sample,
         "authentic_source_verified_count": authentic_count,
         "composite_epa_delta": round(total_val / float(n_eq), 6),
         "reasoning_track_sums": {k: round(v, 4) for k, v in sorted(by_track.items())},
@@ -330,17 +342,24 @@ def evaluate_12304_equations_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[
     evaluated_premises: List[Tuple[float, float, float, str, int]] = []
     domain_totals: Dict[str, float] = {d: 0.0 for d in SIX_DOMAINS}
 
+    held_below_min_sample = 0
     for eq in equations:
         coeffs = eq["coefficients"]
-        val = evaluate_single_catalog_equation(eq, game_ctx, bindings)
+        raw_val = evaluate_single_catalog_equation(eq, game_ctx, bindings)
         fam_id = int(eq["family_id"])
         n_obs = int(eq["sample_size_n"])
+        min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", MIN_SAMPLE_N)))
+        if n_obs < min_n:
+            held_below_min_sample += 1
+            val = 0.0
+        else:
+            val = raw_val
+            if n_obs > family_max_n[fam_id]:
+                family_max_n[fam_id] = n_obs
         family_displacements[fam_id] += val
-        if n_obs > family_max_n[fam_id]:
-            family_max_n[fam_id] = n_obs
         domain_totals[eq["domain"]] += val
 
-        sim_score = min(0.9999, 0.50 + 0.45 * min(1.0, abs(val) * 8.0))
+        sim_score = 0.0 if n_obs < min_n else min(0.9999, 0.50 + 0.45 * min(1.0, abs(val) * 8.0))
         evaluated_premises.append(
             (sim_score, val, float(coeffs["jacobian_sensitivity"]), str(eq["cluster"]), fam_id)
         )

@@ -239,7 +239,7 @@ const FALLBACK_SEED_CROSSWALK: QuadEngineCrosswalkNode[] = [
       {
         engine: "DOCX_OMML",
         externalId: "Belichick-OMML-001",
-        localPath: "C:\\Users\\Garrett\\Downloads\\Master Execution Report_ The Belichick.docx",
+        localPath: "external/downloads/Master Execution Report_ The Belichick.docx",
       },
     ],
     domain: "COACH_SCHEME",

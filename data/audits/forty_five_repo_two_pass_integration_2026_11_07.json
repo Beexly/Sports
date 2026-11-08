@@ -1,0 +1,323 @@
+{
+  "generated_at_utc": "2026-11-08T01:05:00Z",
+  "two_pass_status": "PASS_ALL_45_REPOS_VERIFIED",
+  "batch1_12_repos_status": "PASS_ALL_12_REPOS_VERIFIED",
+  "batch2_33_repos_count": 33,
+  "total_repos_integrated": 45,
+  "total_skills_in_vault": 309,
+  "batch2_clusters": {
+    "cluster1_worktrunk_tuios_chromiumoxide_clowder_rea": {
+      "worktrunk_safe": true,
+      "worktrunk_blocked_concurrent": true,
+      "tuios": {
+        "active_panes": 1,
+        "latest_inbox_entry": {
+          "seq": 1,
+          "pane_id": "pane_gse_1",
+          "agent_name": "jev-snap-worker",
+          "state": "running",
+          "summary": "Simulating 10,000 worlds"
+        }
+      },
+      "chromiumoxide_cdp": {
+        "id": 1,
+        "sessionId": "cdp_session_dk_prop_tab",
+        "method": "Page.captureSnapshot",
+        "params": {},
+        "network_blocked_patterns": [
+          "*://*.doubleclick.net/*",
+          "*://*.google-analytics.com/*",
+          "*://*.hotjar.com/*",
+          "*://*.facebook.net/*"
+        ]
+      },
+      "clowder_iron_laws": {
+        "iron_laws_passed": true,
+        "violated_patterns": [],
+        "cross_model_verified": true,
+        "clear_stance_verified": true,
+        "passed": true
+      },
+      "rea_epistemic_provenance": {
+        "dll_path": "C:\\Users\\Garrett\\Sports\\intelligence\\native_kernels\\bin\\libgse_native_kernels.dll",
+        "pe_mz_header_verified": true,
+        "dll_sha256": "85c541fa78931971",
+        "tier_counts": {
+          "OBSERVATION": 1,
+          "INFERENCE": 0,
+          "DERIVATION": 1,
+          "UNKNOWN": 0
+        },
+        "unverified_observation_promotions": 0,
+        "provenance_sound": true
+      }
+    },
+    "cluster2_ruview_archify_agent_teams_unleash": {
+      "ruview_csi": {
+        "samples": 400,
+        "dominant_frequency_hz": 0.3,
+        "cadence_per_minute": 18.0,
+        "signal_rms": 0.631,
+        "classification": "RESPIRATORY_RECOVERY_BAND"
+      },
+      "archify": {
+        "mermaid_diagram": "flowchart LR\n  Stage1_Situational_Ingest[\"Stage1_Situational_Ingest\"] -->|Stage 1| Stage2_80Rule_Cognitive_Router[\"Stage2_80Rule_Cognitive_Router\"]\n  Stage2_80Rule_Cognitive_Router[\"Stage2_80Rule_Cognitive_Router\"] -->|Stage 2| Stage3_JEV_10000_World_PBP[\"Stage3_JEV_10000_World_PBP\"]\n  Stage3_JEV_10000_World_PBP[\"Stage3_JEV_10000_World_PBP\"] -->|Stage 3| Stage4_Barber_Conformal_Calibration[\"Stage4_Barber_Conformal_Calibration\"]\n  Stage4_Barber_Conformal_Calibration[\"Stage4_Barber_Conformal_Calibration\"] -->|Stage 4| Stage5_DeVig_Conjunction_Gate[\"Stage5_DeVig_Conjunction_Gate\"]",
+        "edge_count": 4,
+        "test_functions": 12,
+        "assertion_count": 69,
+        "mock_count": 0,
+        "test_value_score": 100.0,
+        "high_value_suite": true
+      },
+      "agent_teams": {
+        "wrapped_block": "<<<AGENT_BLOCK agent=jarvis-ceo ref=TASK-45-REPO>>>\nAll 45 repositories verified across Personal, GSE, and GSI.\n<<<END_AGENT_BLOCK>>>",
+        "ratchet_passed": true,
+        "ratchet_violations": []
+      },
+      "unleash": {
+        "feature": "CALIBRATION_ADJUSTMENTS_ENABLED",
+        "stickiness_id": "2026_09_SEA_WAS",
+        "bucket": 70,
+        "rollout_percentage": 100,
+        "enabled": true,
+        "reason": "GRADUAL_ROLLOUT_MATCH"
+      }
+    },
+    "cluster3_windmill_rustdesk_trivy_brew_magpie_nakama": {
+      "windmill_cache_hits_on_replay": 2,
+      "windmill_final_state": {
+        "game": "SEA@WAS",
+        "ingest_context": {
+          "weather_wind_mph": 11,
+          "base": "SEA@WAS"
+        },
+        "compute_edge": 0.053
+      },
+      "rustdesk_governor": {
+        "rtt_ms": 22.0,
+        "packet_loss_pct": 0.1,
+        "target_fps": 60,
+        "compression_tier": "LOSSLESS_RAW_TELEMETRY",
+        "quantization_bits": 16
+      },
+      "trivy_security_and_sbom": {
+        "secret_findings": [],
+        "clean_of_secrets": true,
+        "cyclonedx_sbom": {
+          "bomFormat": "CycloneDX",
+          "specVersion": "1.5",
+          "version": 1,
+          "components": [
+            {
+              "type": "library",
+              "name": "ruff",
+              "version": "0.17.4",
+              "purl": "pkg:pypi/ruff@0.17.4"
+            },
+            {
+              "type": "library",
+              "name": "statsmodels",
+              "version": "0.15.0",
+              "purl": "pkg:pypi/statsmodels@0.15.0"
+            },
+            {
+              "type": "library",
+              "name": "onnxruntime",
+              "version": "1.21.0",
+              "purl": "pkg:pypi/onnxruntime@1.21.0"
+            }
+          ]
+        },
+        "sbom_component_count": 3
+      },
+      "homebrew_doctor": {
+        "doctor_status": "YOUR_SYSTEM_IS_READY_TO_BREW",
+        "verified_bottle_count": 1,
+        "bottles": [
+          {
+            "artifact": "libgse_native_kernels.dll",
+            "bytes": 514109,
+            "sha256": "85c541fa78931971",
+            "verified": true
+          }
+        ]
+      },
+      "magpie_router": {
+        "task_complexity": "workhorse_pbp_parse",
+        "selected_model": "omniroute/auto/coding:free",
+        "held_cooldown_count": 0
+      },
+      "nakama_verify_bs": {
+        "org_isolated": true,
+        "voided_or_unverified_claims": [],
+        "verify_bs_passed": true
+      }
+    },
+    "cluster4_memory_doop_dsh_tensorflow_system_design": {
+      "mcp_memory_decay": {
+        "active_memories": [
+          {
+            "id": "mem_1",
+            "topic": "flores_blitz_tendency",
+            "stability_hours": 72.0,
+            "reinforcements": 3,
+            "retention_score": 0.9355
+          }
+        ],
+        "active_count": 1,
+        "pruned_count": 1
+      },
+      "doop_crdt": {
+        "visible_elements": {
+          "card_jsn_over": {
+            "x": 24.0,
+            "y": 48.0,
+            "w": 320.0,
+            "h": 180.0
+          }
+        },
+        "total_tracked": 1,
+        "overlapping_pairs": [],
+        "collision_free": true
+      },
+      "dsh_go_pins_and_mirror": {
+        "pins_verified": true,
+        "pin_mismatches": [],
+        "server_row_count": 2,
+        "mobile_mirrored_row_count": 1,
+        "never_added_rows": true
+      },
+      "tensorflow_zero_footprint": {
+        "reduce_logsumexp": 1.811521,
+        "focal_loss": 0.042091,
+        "brier_score": 0.101959,
+        "calibrated_probs": [
+          0.6768,
+          0.4034,
+          0.7478,
+          0.2776
+        ]
+      },
+      "system_design_primer": {
+        "shard_assignments": {
+          "SEA@WAS": "worker-avx2-01",
+          "KC@BUF": "worker-avx2-01",
+          "GSI-COHORT-01": "worker-avx2-01"
+        },
+        "daily_quota": 16,
+        "remaining_credits": 5,
+        "allow_request": true,
+        "circuit_breaker_state": "CLOSED"
+      }
+    },
+    "cluster5_algorithms_ytdlp_autogpt_csnotes": {
+      "awesome_python_and_pbl_runbook": {
+        "approved_packages": [
+          "ruff",
+          "statsmodels",
+          "numpy"
+        ],
+        "restricted_packages": [],
+        "native_accelerated_count": 3,
+        "all_licenses_cleared": true,
+        "total_runbook_steps": 2,
+        "manual_founder_steps": 0,
+        "zero_founder_steps_verified": true
+      },
+      "pagerank_and_kalman": {
+        "pagerank": {
+          "BUF": 0.1795,
+          "KC": 0.1259,
+          "SEA": 0.2785,
+          "WAS": 0.4161
+        },
+        "kalman_smoothed_series": [
+          0.12,
+          0.2379,
+          0.1141,
+          0.1365,
+          0.163,
+          0.159,
+          0.1684
+        ],
+        "variance_reduction_ratio": 0.8969
+      },
+      "ytdlp_zero_video_cues": {
+        "stated_cues": [
+          "RUN_HEAVY_STATED",
+          "FAST_TEMPO_STATED"
+        ],
+        "sunday_neutral_pass_rate": 0.66,
+        "tuesday_vs_sunday_deception": true,
+        "video_bytes_written_to_disk": 0
+      },
+      "autogpt_perf_and_deadlock": {
+        "baseline_median_ms": 14.1,
+        "candidate_median_ms": 4.05,
+        "speedup_pct": 71.28,
+        "perf_regression_detected": false,
+        "deadlock_cycle_detected": false,
+        "hellogithub_leverage_score": 85.64
+      }
+    },
+    "cluster6_toolregistry_treg_deerflow_calibre_statsmodels_imageai": {
+      "toolregistry_schemas": [
+        "tool_name",
+        "openai_schema",
+        "anthropic_schema",
+        "gemini_schema",
+        "mcp_schema"
+      ],
+      "treg_proxy": {
+        "endpoint_id": "odds_api_v4",
+        "agent_saw_raw_secret": false,
+        "secret_injected_at_edge": true,
+        "response": "Upstream odds_api_v4 OK for {\"regions\": \"us\", \"sport\": \"americanfootball_nfl\"}"
+      },
+      "deerflow_blocking_io_guard": {
+        "passed": true,
+        "violation_count": 0,
+        "violations": []
+      },
+      "calibre_catalog": {
+        "catalog_size": 2,
+        "entries": [
+          {
+            "canonical_id": "arxiv:2410.11234",
+            "title": "Optimal Transport in Stochastic Play-by-Play Trees",
+            "bucket": "docs/arxiv-program/",
+            "opf_ready": true
+          },
+          {
+            "canonical_id": "doi:10.1038/s41591-026-0001-x",
+            "title": "Tendon Viscoelastic Strain Under Eccentric Fatigue",
+            "bucket": "docs/engine/",
+            "opf_ready": true
+          }
+        ]
+      },
+      "statsmodels_econometrics": {
+        "statsmodels_version": "0.15.0",
+        "r_squared": 0.9156,
+        "ortho_situational_coef": 9.685,
+        "ortho_situational_hc3_se": 1.9563,
+        "ortho_situational_pvalue": 1e-06,
+        "collinear_fallback": false,
+        "fdr_bh_rejected_count": 3,
+        "fdr_bh_corrected_pvalues": [
+          0.005,
+          0.02,
+          0.03167,
+          0.3,
+          0.61
+        ]
+      },
+      "imageai_nms_and_box_count": {
+        "raw_detections": 9,
+        "kept_after_nms": 8,
+        "defenders_in_box": 8,
+        "box_classification": "HEAVY_BOX_8_PLUS"
+      }
+    }
+  }
+}

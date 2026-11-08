@@ -907,5 +907,45 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     assert.equal(immBody.skill, "session-librarian");
     assert.equal(immBody.immunization_rules_count, 12);
     assert.equal(immBody.mutation_safety_status, "READ_ONLY_DISCOVERY_AND_PLAN_ONLY_ZERO_MUTATIONS");
+
+    const trivialJevRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/jev/skill-select?turn=thanks%2C+that+worked", {
+        method: "GET",
+      })
+    );
+    assert.equal(trivialJevRes.status, 200);
+    const trivialJevBody = (await trivialJevRes.json()) as {
+      status: string;
+      needs_skill: number;
+      skills: unknown[];
+      latency_ms: number;
+      skipped: string;
+    };
+    assert.equal(trivialJevBody.status, "ok");
+    assert.equal(trivialJevBody.needs_skill, 0.0);
+    assert.equal(trivialJevBody.skills.length, 0);
+    assert.equal(trivialJevBody.latency_ms, 0);
+    assert.equal(trivialJevBody.skipped, "trivial");
+
+    const doItJevRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/jev/skill-select?turn=do+it", { method: "GET" })
+    );
+    const doItJevBody = (await doItJevRes.json()) as { skipped?: string };
+    assert.equal(doItJevBody.skipped, undefined);
+
+    const nflJevRes = await handleStealthSkeletonRequest(
+      new Request(
+        "https://stealth.galaxysportsedge.com/v1/jev/skill-select?turn=Run+NFL+Week+9+game+simulation+and+understand+knowledge+graph",
+        { method: "GET" }
+      )
+    );
+    const nflJevBody = (await nflJevRes.json()) as {
+      status: string;
+      needs_skill: number;
+      skills: Array<{ name: string; match: number }>;
+    };
+    assert.equal(nflJevBody.status, "ok");
+    assert.ok(nflJevBody.needs_skill >= 0.5);
+    assert.ok(nflJevBody.skills.some((s) => s.name === "gse-connected-game-workflow" && s.match >= 0.5));
   });
 });

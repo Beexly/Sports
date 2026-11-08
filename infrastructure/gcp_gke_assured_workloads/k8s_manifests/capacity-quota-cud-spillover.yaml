@@ -1,0 +1,35 @@
+# CUD Exhaustion / Scale-Up Cap via CapacityQuota (GKE 1.36.2+) & Rollout-Scoped PDB
+# Generated via `gke-compute-classes` & `gke-cluster-autoscaler` skills.
+apiVersion: autoscaling.x-k8s.io/v1beta1
+kind: CapacityQuota
+metadata:
+  name: gse-cud-aligned-capacity-cap
+  labels:
+    purpose: "example-template-do-not-deploy"
+    created-with-google-skill: "gke-compute-classes"
+spec:
+  selector:
+    matchLabels:
+      cloud.google.com/compute-class: gse-ai-inference-ccc
+      cloud.google.com/machine-family: g2
+  limits:
+    resources:
+      cpu: 128
+      memory: 512Gi
+      nvidia.com/gpu: 16
+---
+# Rollout-scoped PodDisruptionBudget: apply ONLY during planned ComputeClass migration window
+# because maxUnavailable: 0 (disruptionsAllowed: 0) blocks Cluster Autoscaler scale-down if left permanently.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: gse-inference-migration-pdb
+  namespace: gse-engine
+  labels:
+    lifecycle-scope: "migration-window-only"
+    created-with-google-skill: "gke-compute-classes"
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gse-situational-engine

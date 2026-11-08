@@ -1,0 +1,979 @@
+{
+  "schema_version": "1.0.0",
+  "generated_date": "2026-11-07",
+  "new_batch_34_count": 34,
+  "prior_batch_73_count": 73,
+  "total_cataloged_repos_count": 107,
+  "all_install_permitted_in_prod_false": true,
+  "rejected_security_policy_repos": [
+    "Blur009/Blur-AutoClicker",
+    "itbrowser-net/undetectable-fingerprint-browser"
+  ],
+  "new_34_repos": [
+    {
+      "repo_id": "REPO-NEW-01",
+      "repo_slug": "Blur009/Blur-AutoClicker",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "REJECTED_SECURITY_POLICY_AUTOCLICKER",
+      "domain": "security_policy_blocked",
+      "install_permitted_in_prod": false,
+      "notes": "Desktop GUI auto-clicker binary/automation tool; explicitly rejected by security policy."
+    },
+    {
+      "repo_id": "REPO-NEW-02",
+      "repo_slug": "itbrowser-net/undetectable-fingerprint-browser",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "REJECTED_SECURITY_POLICY_ANTI_BOT_SPOOFING",
+      "domain": "security_policy_blocked",
+      "install_permitted_in_prod": false,
+      "notes": "Anti-bot browser fingerprint spoofing tool; explicitly rejected by security policy."
+    },
+    {
+      "repo_id": "REPO-NEW-03",
+      "repo_slug": "nflverse/nflverse-data",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "nfl_pbp_and_roster_data",
+      "install_permitted_in_prod": false,
+      "notes": "Official nflverse release assets for play-by-play, rosters, and participation."
+    },
+    {
+      "repo_id": "REPO-NEW-04",
+      "repo_slug": "nflverse/nflfastR",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "epa_wp_cp_models",
+      "install_permitted_in_prod": false,
+      "notes": "EPA, WP, CP, and xYAC model reference specifications."
+    },
+    {
+      "repo_id": "REPO-NEW-05",
+      "repo_slug": "nflverse/nflseedR",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "season_simulation_methodology",
+      "install_permitted_in_prod": false,
+      "notes": "Monte Carlo schedule and division tiebreaker reference logic."
+    },
+    {
+      "repo_id": "REPO-NEW-06",
+      "repo_slug": "LeeSharpe/nfldata",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "historical_lines_and_draft_capital",
+      "install_permitted_in_prod": false,
+      "notes": "Historical market spreads/totals and coaching/draft metadata."
+    },
+    {
+      "repo_id": "REPO-NEW-07",
+      "repo_slug": "benbaldwin/nfl4th",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "fourth_down_decision_wp",
+      "install_permitted_in_prod": false,
+      "notes": "4th-down go/FG/punt win probability branch estimation."
+    },
+    {
+      "repo_id": "REPO-NEW-08",
+      "repo_slug": "greerreNFL/nfl_coverage_classifier",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "pre_post_snap_shell_classification",
+      "install_permitted_in_prod": false,
+      "notes": "MOFC vs MOFO coverage shell tracking features."
+    },
+    {
+      "repo_id": "REPO-NEW-09",
+      "repo_slug": "statsbomb/open-data",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "spatial_event_schema",
+      "install_permitted_in_prod": false,
+      "notes": "Event-stream spatial coordinate schema reference."
+    },
+    {
+      "repo_id": "REPO-NEW-10",
+      "repo_slug": "PySport/kloppy",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "tracking_data_standardization",
+      "install_permitted_in_prod": false,
+      "notes": "Tracking data coordinate normalization reference."
+    },
+    {
+      "repo_id": "REPO-NEW-11",
+      "repo_slug": "DimaKudosh/pydfs-lineup-optimizer",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "milp_knapsack_constraints",
+      "install_permitted_in_prod": false,
+      "notes": "Reference MILP constraint formulations for salary-cap lineups."
+    },
+    {
+      "repo_id": "REPO-NEW-12",
+      "repo_slug": "DraftFast/draftfast",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "showdown_captain_constraints",
+      "install_permitted_in_prod": false,
+      "notes": "Showdown Captain 1.5x salary/scoring rule structure reference."
+    },
+    {
+      "repo_id": "REPO-NEW-13",
+      "repo_slug": "breeko/DFS-Optimizer",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "stacking_exposure_rules",
+      "install_permitted_in_prod": false,
+      "notes": "QB + pass-catcher and bring-back stacking constraint patterns."
+    },
+    {
+      "repo_id": "REPO-NEW-14",
+      "repo_slug": "chanzer0/NFL-DFS-Tools",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "ownership_leverage_heuristics",
+      "install_permitted_in_prod": false,
+      "notes": "GPP ownership leverage and correlation matrix patterns."
+    },
+    {
+      "repo_id": "REPO-NEW-15",
+      "repo_slug": "SharpFootball/nfl-tendencies-reference",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "neutral_pace_and_proe",
+      "install_permitted_in_prod": false,
+      "notes": "Situation-neutral pace and early-down pass rate reference."
+    },
+    {
+      "repo_id": "REPO-NEW-16",
+      "repo_slug": "SumerSports/sumer-tracking-notebooks",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "bdb_route_separation_metrics",
+      "install_permitted_in_prod": false,
+      "notes": "Big Data Bowl route separation and tackle probability notebooks."
+    },
+    {
+      "repo_id": "REPO-NEW-17",
+      "repo_slug": "ritchieng/machine-learning-from-scratch",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "numerical_ml_primitives",
+      "install_permitted_in_prod": false,
+      "notes": "Educational ML algorithm reference implementations."
+    },
+    {
+      "repo_id": "REPO-NEW-18",
+      "repo_slug": "ageron/handson-ml3",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "ensemble_calibration_notebooks",
+      "install_permitted_in_prod": false,
+      "notes": "Gradient boosting and isotonic/sigmoid calibration notebooks."
+    },
+    {
+      "repo_id": "REPO-NEW-19",
+      "repo_slug": "rasbt/machine-learning-book",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "statistical_learning_reference",
+      "install_permitted_in_prod": false,
+      "notes": "PyTorch and scikit-learn model evaluation patterns."
+    },
+    {
+      "repo_id": "REPO-NEW-20",
+      "repo_slug": "probml/pyprobml",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "murphy_probabilistic_ml_code",
+      "install_permitted_in_prod": false,
+      "notes": "Companion code to Kevin Murphy Probabilistic Machine Learning (BK-10)."
+    },
+    {
+      "repo_id": "REPO-NEW-21",
+      "repo_slug": "cvxgrp/cvxpy",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "convex_conic_portfolio_optimization",
+      "install_permitted_in_prod": false,
+      "notes": "Boyd & Vandenberghe convex optimization modeling reference (BK-02)."
+    },
+    {
+      "repo_id": "REPO-NEW-22",
+      "repo_slug": "POT/POT",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "sinkhorn_entropic_optimal_transport",
+      "install_permitted_in_prod": false,
+      "notes": "Python Optimal Transport Sinkhorn-Knopp and Wasserstein barycenter reference."
+    },
+    {
+      "repo_id": "REPO-NEW-23",
+      "repo_slug": "angelopoulos/conformal-prediction",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "romano_barber_conformal_intervals",
+      "install_permitted_in_prod": false,
+      "notes": "Conformal risk control and CQR tutorial notebooks."
+    },
+    {
+      "repo_id": "REPO-NEW-24",
+      "repo_slug": "martinResearch/vine-copula-sports",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "c_vine_d_vine_sgp_tail_dependence",
+      "install_permitted_in_prod": false,
+      "notes": "Pair-copula constructions for correlated parlay pricing."
+    },
+    {
+      "repo_id": "REPO-NEW-25",
+      "repo_slug": "hudson-and-thames/mlfinlab-reference",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "lopez_de_prado_afml_purge_embargo",
+      "install_permitted_in_prod": false,
+      "notes": "Purged K-fold CV, fractional differentiation, and meta-labeling notes."
+    },
+    {
+      "repo_id": "REPO-NEW-26",
+      "repo_slug": "CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "hierarchical_bayesian_poisson_gamma",
+      "install_permitted_in_prod": false,
+      "notes": "Bayesian hierarchical shrinkage and empirical Bayes examples."
+    },
+    {
+      "repo_id": "REPO-NEW-27",
+      "repo_slug": "pymc-devs/pymc-examples",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "bayesian_sports_rating_models",
+      "install_permitted_in_prod": false,
+      "notes": "Hierarchical rugby/football scoring and Bradley-Terry-Luce examples."
+    },
+    {
+      "repo_id": "REPO-NEW-28",
+      "repo_slug": "stanford-oval/storm",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "multi_source_synthesis_pipeline",
+      "install_permitted_in_prod": false,
+      "notes": "Structured knowledge synthesis reference patterns."
+    },
+    {
+      "repo_id": "REPO-NEW-29",
+      "repo_slug": "langchain-ai/langgraph",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "stateful_dag_orchestration",
+      "install_permitted_in_prod": false,
+      "notes": "Directed acyclic graph agent state transition patterns."
+    },
+    {
+      "repo_id": "REPO-NEW-30",
+      "repo_slug": "stanfordnlp/dspy",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "declarative_prompt_compilation",
+      "install_permitted_in_prod": false,
+      "notes": "Offline prompt metric optimization reference (dspy-gepa)."
+    },
+    {
+      "repo_id": "REPO-NEW-31",
+      "repo_slug": "BerriAI/litellm",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "multi_provider_gateway_schema",
+      "install_permitted_in_prod": false,
+      "notes": "OpenAI-compatible routing schema reference."
+    },
+    {
+      "repo_id": "REPO-NEW-32",
+      "repo_slug": "vllm-project/vllm",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "paged_attention_serving",
+      "install_permitted_in_prod": false,
+      "notes": "High-throughput local LLM serving architecture reference."
+    },
+    {
+      "repo_id": "REPO-NEW-33",
+      "repo_slug": "ggerganov/llama.cpp",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "gguf_quantized_inference",
+      "install_permitted_in_prod": false,
+      "notes": "Local CPU/GPU quantized inference reference."
+    },
+    {
+      "repo_id": "REPO-NEW-34",
+      "repo_slug": "openai/evals",
+      "batch": "new_34_batch_2026_11_07",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "deterministic_eval_harnesses",
+      "install_permitted_in_prod": false,
+      "notes": "Structured benchmark and grading harness patterns."
+    }
+  ],
+  "prior_73_repos": [
+    {
+      "repo_id": "REPO-PRIOR-001",
+      "repo_slug": "Al Sweigart \u2014 The Recursive Book of Recursion (2022)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "dynamic_programming_bellman_recursion_and_tree_search",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-002",
+      "repo_slug": "Norman Matloff \u2014 The Art of R Programming (No Starch Press)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "vectorized_matrix_algebra_and_statistical_computing",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-003",
+      "repo_slug": "Stefan Jansen \u2014 Machine Learning for Algorithmic Trading on Financial Markets (2020)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "algorithmic_market_microstructure_alpha_factors_and_kelly_sizing",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-004",
+      "repo_slug": "Schroeder, Mayer & Ward \u2014 The Book of Dash: Build Dashboards with Python and Plotly (2022)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "interactive_telemetry_visualization_and_callback_dags",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-005",
+      "repo_slug": "K. Todorov \u2014 Quantify QE: Quantitative Easing Market Impact & Liquidity Microstructure",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "market_liquidity_price_impact_and_order_flow_imbalance",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-006",
+      "repo_slug": "Quantitative Finance & Probability Brainteasers / Stochastic Calculus Compendium (QuantInterview.pdf)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "martingales_stopping_times_and_closed_form_probability",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-007",
+      "repo_slug": "Francois Chollet \u2014 Deep Learning with Python (Manning, 2017)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "representation_learning_regularization_and_sequence_models",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-008",
+      "repo_slug": "Igor Iric \u2014 GitHub for Next-Generation Coders (2024)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "reproducible_git_worktree_ci_and_cryptographic_provenance",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-009",
+      "repo_slug": "Mary Jackson & Mike Staunton \u2014 Advanced Modelling in Finance (Portfolio Optimization & Option Pricing)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "markowitz_mean_variance_and_lognormal_milestone_pricing",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-010",
+      "repo_slug": "Svetlin Nakov & Preslav Dobrikov \u2014 Programming = ++Algorithms; (Combinatorics, Graphs & Dynamic Programming)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "combinatorial_optimization_network_flows_and_knapsack_dfs",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-011",
+      "repo_slug": "davidovg/Monte-Carlo \u2014 Variance-Reduced Monte Carlo Simulation Methods",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "antithetic_variates_control_variates_and_stratified_pbp_mc",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-012",
+      "repo_slug": "davidovg/C-Drafts \u2014 Low-Level Systems & Memory-Aligned Numerical Kernels",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "cache_aligned_numerical_arrays_and_bitwise_context_masks",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-013",
+      "repo_slug": "davidovg/Algorithms \u2014 Graph Shortest Paths, Spectral Clustering & Convex Solvers",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "graph_algorithms_and_spectral_decomposition",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-014",
+      "repo_slug": "davidovg/Kitchen_Sinking \u2014 Random Kitchen Sinks (Rahimi & Recht Random Fourier Features)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "random_fourier_features_and_kernel_ridge_approximation",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-015",
+      "repo_slug": "Towards AI RAG Book Ch 02 \u2014 Transformers Architectures (Multi-Head Self-Attention)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "transformer_attention_and_contextual_retrieval",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-016",
+      "repo_slug": "Towards AI RAG Book Ch 02 \u2014 Understanding Transformer Positional Encoding & LayerNorm",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "transformer_attention_and_contextual_retrieval",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-017",
+      "repo_slug": "Towards AI RAG Book Ch 04 \u2014 Structured Prompt Engineering & Constrained Output Calibration",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "structured_cognitive_routing_and_prompt_calibration",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-018",
+      "repo_slug": "Towards AI RAG Book Ch 05 \u2014 Building Hybrid RAG & Tool-Augmented Reasoning Pipelines",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "hybrid_bm25_dense_retrieval_and_agent_pipelines",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-019",
+      "repo_slug": "towardsai/ragbook-notebooks \u2014 Complete Retrieval-Augmented Generation Notebook Suite",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "hybrid_bm25_dense_retrieval_and_agent_pipelines",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-020",
+      "repo_slug": "Jim Dowling \u2014 Building Machine Learning Systems with a Feature Store (O'Reilly / mlfs-book)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "point_in_time_feature_store_and_zero_leakage_asof_joins",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-021",
+      "repo_slug": "EbookFoundation/free-programming-books \u2014 Canonical Computer Science & Quantitative Engineering Index",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "computer_science_and_numerical_engineering_canon",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-022",
+      "repo_slug": "programthink/books \u2014 Critical Epistemology, Cognitive Bias & Adversarial Red-Team Analysis",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "cognitive_debiasing_and_red_team_falsification",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-023",
+      "repo_slug": "frappe/books \u2014 Double-Entry Ledger Accounting & Immutable Audit Trail Architecture",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "double_entry_unit_ledger_and_bankroll_audit_invariants",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-024",
+      "repo_slug": "linsa-io/books \u2014 Quantitative Systems & Engineering Knowledge Base",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "systems_architecture_and_knowledge_indexing",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-025",
+      "repo_slug": "knowsuchagency/pdf-to-podcast \u2014 Document-to-Dialogue Distillation & Multi-Voice Synthesis",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "document_parsing_and_adversarial_dialogue_distillation",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-026",
+      "repo_slug": "The Rust Programming Language (Ownership, Borrow Checker & Typestate Invariants)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "single_writer_ownership_and_compile_time_typestate_safety",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-027",
+      "repo_slug": "PaddlePaddle/book \u2014 Deep Learning Fundamentals (Recommender Systems, Sequence RNNs & Gradient Ranking)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "sequence_modeling_and_pairwise_ranking_losses",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-028",
+      "repo_slug": "wx-chevalier/Awesome-Books-Notes \u2014 Distributed Systems, Math & Machine Learning Notes",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "distributed_systems_and_mathematical_foundations",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-029",
+      "repo_slug": "bumzy/book \u2014 Algorithmic Engineering & Data Structure Reference",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "algorithmic_data_structures_and_complexity_bounds",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-030",
+      "repo_slug": "rbwet/sports-quant \u2014 Quantitative Sports Betting Pricing, Shin De-Vigging & CLV Analytics",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "sports_quant_shin_devig_and_clv_pricing",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-031",
+      "repo_slug": "yestoi/sports-harness \u2014 Backtesting Harness & Walk-Forward Validation for Sports Models",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "walk_forward_backtesting_and_brier_log_loss_calibration",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-032",
+      "repo_slug": "MIT 6.S191 Introduction to Deep Learning \u2014 Evidential Uncertainty & Sequence Attention Labs",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "evidential_deep_learning_and_epistemic_uncertainty",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-033",
+      "repo_slug": "UnravelSports/unravelsports \u2014 Graph Neural Networks & Spatio-Temporal Tracking Analytics",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "spatio_temporal_player_tracking_graphs_and_pitch_control",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-034",
+      "repo_slug": "smerdov/eSports_Sensors_Dataset \u2014 Multimodal Biometric, HRV & Cognitive Arousal Telemetry",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "biometric_autonomic_fatigue_and_reaction_latency",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-035",
+      "repo_slug": "NingK1ng/Sports-Matter \u2014 Multi-Sport Quantitative Analytics & Matchup Feature Engineering",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "opponent_adjusted_efficiency_and_elo_ratings",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-036",
+      "repo_slug": "Yogapriya2512/A-Simple-Chatbot- \u2014 Intent Classification & Slot-Filling Dialogue State Machine",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "intent_routing_and_deterministic_state_machines",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-037",
+      "repo_slug": "khushboo-agarwal/Action-Recognition \u2014 Spatio-Temporal Pose & Optical Flow Action Classification",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "kinematic_action_recognition_and_route_break_detection",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-038",
+      "repo_slug": "imclab/SportsDataAnalytics \u2014 Play-by-Play Event Sequence Mining & Win Probability Curves",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "event_sequence_mining_and_markov_win_probability",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-039",
+      "repo_slug": "haris-sujethan/live-sportsbook-arbitrage \u2014 Cross-Book Synthetic Best-Line & Two-Way Market Efficiency",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "cross_book_arbitrage_synthetic_hold_and_steam_detection",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-040",
+      "repo_slug": "saiemgilani/Sports-Research-Papers \u2014 SportsDataVerse Academic Football/Basketball Analytics Canon (Saiem Gilani)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "academic_sports_analytics_epa_wpa_and_expected_yards",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-041",
+      "repo_slug": "hagrin/sports \u2014 Historical Matchup Database Normalization & Elo/Bradley-Terry Rating Pipelines",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "bradley_terry_paired_comparisons_and_schedule_strength",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-042",
+      "repo_slug": "Abdulhamid97Mousa/mosaic_multigrid \u2014 Multigrid PDE Relaxation & Spatial Field Potential Solvers",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "multigrid_spatial_field_control_and_poisson_pde_solvers",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-043",
+      "repo_slug": "harrywaugh/ActivityTrackingWithSensorFusion \u2014 Extended Kalman Filter (EKF) & Madgwick IMU Sensor Fusion",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "kalman_sensor_fusion_and_player_kinematic_state_tracking",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-044",
+      "repo_slug": "sealneaward/research-notes \u2014 Statistical Learning, Causal Inference & Quantitative Research Compendium",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "causal_identification_and_double_machine_learning",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-045",
+      "repo_slug": "clandgrebe/predicting-nba-games-ml \u2014 Rolling Pace-Adjusted Four-Factor & Rest-Disadvantage ML Pipeline",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "pace_adjusted_efficiency_and_short_rest_fatigue_features",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-046",
+      "repo_slug": "Ron Yurko (CMU) \u2014 Intro to Sports Analytics Research (nflWAR, Expected Points, WP & Multilevel Tracking Models)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "cmu_yurko_nflwar_multilevel_replacement_level_and_ep_wp",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-047",
+      "repo_slug": "akulkarnii/nflmetrics \u2014 NFL Play-by-Play CPOE, EPA/Play, Success Rate & Trench Win-Rate Aggregator",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "nfl_epa_cpoe_success_rate_and_situational_splits",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-048",
+      "repo_slug": "Reddit r/sportsbetting \u2014 'I Stopped Buying Picks and Built My Own Model' (Closing Line Value, De-Vig Discipline & Pass-Rate Architecture)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "market_first_devig_discipline_clv_and_pass_rate_governance",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-049",
+      "repo_slug": "throwawayhub25/Sports-Betting-Model \u2014 End-to-End Automated Odds Ingestion, Probability Calibration & Kelly Sizing Pipeline",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "automated_odds_calibration_isotonic_platt_and_kelly_execution",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-050",
+      "repo_slug": "Sheldon M. Ross \u2014 Introduction to Probability Models, 10th Ed. (Academic Press)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "ross_nonhomogeneous_poisson_ctmc_renewal_reward_and_martingales",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-051",
+      "repo_slug": "Sheldon M. Ross \u2014 Introduction to Probability Models, 10th Ed. (Solutions Manual \u2014 Closed-Form Derivations)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "ross_nonhomogeneous_poisson_ctmc_renewal_reward_and_martingales",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-052",
+      "repo_slug": "E. T. Jaynes \u2014 Probability Theory: The Logic of Science (Cambridge University Press)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "jaynes_maximum_entropy_principle_cox_theorems_and_evidence_log_odds",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-053",
+      "repo_slug": "Jos\u00e9 Unpingco \u2014 Python for Probability, Statistics, and Machine Learning (Springer, 2nd/3rd Ed.)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "unpingco_conditional_expectation_L2_projection_and_bootstrap_ci",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-054",
+      "repo_slug": "ahmedbahaaeldin/From-0-to-Research-Scientist-resources-guide \u2014 Mathematical Foundations, Optimization & Deep Learning Research Canon",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "research_scientist_mathematical_and_statistical_learning_curriculum",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-055",
+      "repo_slug": "yashnarkhede/Data-Scientist-Books \u2014 Master Data Science & Statistical Modeling Textbook Repository",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "data_science_statistical_modeling_and_imbalanced_learning_canon",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-056",
+      "repo_slug": "Jason Brownlee \u2014 Imbalanced Classification with Python (Cost-Sensitive Learning, Focal Loss, SMOTE & PR-AUC)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "brownlee_imbalanced_classification_brier_skill_score_and_rare_event_calibration",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-057",
+      "repo_slug": "Jason Brownlee \u2014 Data Preparation for Machine Learning (Quantile Transforms, Iterative Imputation & Zero-Leakage Pipelines)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "brownlee_feature_scaling_iterative_imputation_and_leakage_free_pipelines",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-058",
+      "repo_slug": "Jason Brownlee \u2014 Ensemble Learning Algorithms with Python (Stacking, Blending & Bayesian Model Averaging)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "ensemble_stacking_and_variance_reduction",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-059",
+      "repo_slug": "Jason Brownlee \u2014 Introduction to Time Series Forecasting with Python (ARIMA, SARIMAX & Walk-Forward Validation)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "time_series_stationarity_arimax_and_walk_forward_splits",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-060",
+      "repo_slug": "Jason Brownlee \u2014 Probability for Machine Learning (Maximum Likelihood, Cross-Entropy, KL/JS Divergence & Bayes Theorem)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "information_theory_jensen_shannon_divergence_and_mle",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-061",
+      "repo_slug": "Jason Brownlee \u2014 Statistical Methods for Machine Learning (Parametric/Non-Parametric Tests, Mann-Whitney U & Bootstrap)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "nonparametric_hypothesis_testing_and_effect_sizes",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-062",
+      "repo_slug": "Jason Brownlee \u2014 Linear Algebra for Machine Learning (LU, QR, Cholesky, SVD & Moore-Penrose Pseudoinverse)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "matrix_factorizations_svd_cholesky_and_pseudoinverse",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-063",
+      "repo_slug": "Jason Brownlee \u2014 Optimization for Machine Learning (BFGS, Nelder-Mead, Differential Evolution & Conjugate Gradient)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "quasi_newton_bfgs_and_global_optimization",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-064",
+      "repo_slug": "Jason Brownlee \u2014 Master Machine Learning Algorithms (From-Scratch Mathematical Derivations of 10 Core Algorithms)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "first_principles_ml_algorithms_lda_nb_cart_and_lvq",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-065",
+      "repo_slug": "Jason Brownlee \u2014 Machine Learning Mastery with Python (Production Model Pipelines & Calibration Diagnostics)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "production_ml_pipelines_and_reliability_curves",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-066",
+      "repo_slug": "Jason Brownlee \u2014 Deep Learning with Python (MLP, CNN, LSTM Sequence Models & Learning Rate Schedules)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "sequence_lstm_gates_and_cosine_annealing",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-067",
+      "repo_slug": "Jason Brownlee \u2014 Deep Learning for Time Series Forecasting (Temporal Convolutions, Encoder-Decoder & Multi-Step Horizons)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "multi_horizon_temporal_forecasting",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-068",
+      "repo_slug": "Jason Brownlee \u2014 Better Deep Learning (Weight Initialization, Batch/Layer Norm, Mixup & Polyak Averaging)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "polyak_ruppert_averaging_and_temperature_scaling",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-069",
+      "repo_slug": "Kevin P. Murphy \u2014 Machine Learning: A Probabilistic Perspective (GitHub Mirror in yashnarkhede/Data-Scientist-Books)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "murphy_probabilistic_ml_dirichlet_multinomial_graphical_models_and_kalman_ssm",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-070",
+      "repo_slug": "Paul D. McNicholas & Peter A. Tait \u2014 Data Science with Julia (Finite Mixture Models, EM & Parsimonious Gaussian Mixtures)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "mcnicholas_finite_gaussian_mixture_em_and_bic_model_selection",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-071",
+      "repo_slug": "Hongshik Ahn \u2014 Probability and Statistics for Data Science (Moment Generating Functions, CLT, Order Statistics & GLM Deviance)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "moment_generating_functions_order_statistics_and_deviance",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-072",
+      "repo_slug": "Paul Deitel & Harvey Deitel \u2014 Intro to Python for Computer Science and Data Science (Functional Pipelines & Simulation)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "reproducible_scientific_python_simulation_engineering",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    },
+    {
+      "repo_id": "REPO-PRIOR-073",
+      "repo_slug": "Tilman M. Davies \u2014 The Book of R: A First Course in Programming and Statistics (No Starch Press)",
+      "batch": "prior_73_batch_2026_11_05",
+      "status": "QUARANTINED_READ_ONLY_REFERENCE",
+      "domain": "statistical_computing_linear_models_and_categorical_contingency_tests",
+      "install_permitted_in_prod": false,
+      "notes": "Ingested as read-only mathematical/statistical reference only; zero third-party runtime code execution."
+    }
+  ]
+}

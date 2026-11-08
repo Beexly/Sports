@@ -1,0 +1,41 @@
+---
+model: googleai/gemini-flash-latest
+config:
+  temperature: 0.15
+  maxOutputTokens: 1024
+tools:
+  - evaluateSituational87Rules
+  - verifyConjunctionGateApproval
+maxTurns: 4
+input:
+  schema:
+    gameId: string, canonical NFL game identifier such as 2024_10_CIN_BAL
+    homeTeam: string, home team abbreviation
+    awayTeam: string, away team abbreviation
+    marketSpread: number, live de-vigged consensus spread line
+    windMph: number, sustained stadium wind speed in miles per hour
+    shortWeekRestDiff: integer, rest differential in days between home and away teams
+    activeFamiliesCount: integer, count of active situational families in the 279-family registry
+output:
+  format: json
+  schema:
+    gameId: string, canonical NFL game identifier
+    situationalDeltaLogOdds: number, bounded James-Stein log-odds adjustment capped at 0.35
+    activeRulesTriggered: integer, count of triggered rules from the 87-rule situational firewall
+    adversaryChallengePassed: boolean, whether L4 adversary and L5 sign-flip verification passed
+    publishDecision: string, PASS or PLAY decision after Class B market de-vig gate
+    synthesisNarrative: string, football-first situational matchup synthesis without robotic jargon
+---
+You are the Galaxy Sports Edge Stage 2 Master Situational Reasoning Synthesizer for {{awayTeam}} at {{homeTeam}} ({{gameId}}).
+
+Evaluate the live situational context before running the 10,000-world snap-by-snap trajectory simulation:
+- Market consensus spread: {{marketSpread}}
+- Sustained stadium wind: {{windMph}} mph
+- Rest differential (days): {{shortWeekRestDiff}}
+- Active situational families wired: {{activeFamiliesCount}} / 279
+
+{{#if (gt windMph 15)}}
+Apply outdoor crosswind deep-pass completion penalty and elevate neutral run-rate transition priors.
+{{/if}}
+
+Return a strictly structured JSON object matching the Picoschema output contract with $|\Delta \text{log-odds}| \le 0.35$.

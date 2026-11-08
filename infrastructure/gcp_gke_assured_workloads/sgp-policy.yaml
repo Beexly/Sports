@@ -1,0 +1,45 @@
+# Semantic Governance Policy (SGP), Model Armor Template & Assured Workloads Custom Cloud Control CEL Rules
+# Generated via `google-cloud-solution-multi-agent-security` & `assuredworkloads-frameworks-author`.
+apiVersion: security.cloud.google.com/v1alpha1
+kind: SemanticGovernancePolicy
+metadata:
+  name: gse-multi-agent-gateway-sgp
+  namespace: gse-engine
+  labels:
+    created-with-google-skill: "google-cloud-solution-multi-agent-security"
+spec:
+  gateways:
+    ingress:
+      trafficDirection: CLIENT_TO_AGENT
+      modelArmorTemplate: projects/gse-sovereign-prod/locations/us-central1/templates/gse-model-armor-strict
+    egress:
+      trafficDirection: AGENT_TO_ANYWHERE
+      iapRole: roles/iap.egressor
+      celCondition: >-
+        has(request.auth) &&
+        has(request.mcp_tool) &&
+        request.mcp_tool in ['evaluateSituational87Rules', 'verifyConjunctionGateApproval', 'execute21419EquationRegistry']
+  modelArmorSettings:
+    piAndJailbreakFilterSettings:
+      filterEnforcement: ENFORCE
+      confidenceLevel: MEDIUM_AND_ABOVE
+    sdpFilterSettings:
+      basicConfig:
+        filterEnforcement: ENFORCE
+    raiSettings:
+      raiFilters:
+        - filterType: DANGEROUS
+          confidenceLevel: MEDIUM_AND_ABOVE
+  assuredWorkloadsCustomCloudControls:
+    - controlId: gse_storage_bucket_ubla_and_cmek_detective
+      location: global
+      actionType: DETECTIVE
+      targetResourceTypes:
+        - storage.googleapis.com/Bucket
+      celExpression: >-
+        has(resource.iamConfiguration) &&
+        has(resource.iamConfiguration.uniformBucketLevelAccess) &&
+        resource.iamConfiguration.uniformBucketLevelAccess.enabled == true &&
+        has(resource.encryption) &&
+        has(resource.encryption.defaultKmsKeyName) &&
+        resource.encryption.defaultKmsKeyName != ""

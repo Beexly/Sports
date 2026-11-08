@@ -3,7 +3,7 @@
 intelligence/coaching/live_books_and_pdfs_executable_engine.py
 ==============================================================
 Executable Mathematical Algorithms & Domain Engines Compiled Directly from the
-Books and Research PDFs in `C:/Users/Garrett/Downloads/` and the GSE Corpus:
+Books and Research PDFs in `external/downloads/` and the GSE Corpus:
 
 1. `vmls_kkt_constrained_boxscore_reconciler`:
    - Source: Boyd & Vandenberghe, *Introduction to Applied Linear Algebra: Vectors,

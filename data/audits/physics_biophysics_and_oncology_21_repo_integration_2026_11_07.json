@@ -1,0 +1,277 @@
+{
+  "generated_at_utc": "2026-11-08T01:00:00Z",
+  "wave": "WAVE_4_PHYSICS_BIOPHYSICS_QUANTUM_MICROCLIMATE_AND_SPATIAL_ONCOLOGY",
+  "total_urls_reviewed": 22,
+  "unique_repositories_integrated": 21,
+  "duplicate_urls_deduplicated": [
+    "https://github.com/quantumlib/Cirq"
+  ],
+  "hardware_telemetry": {
+    "host": "Beexly",
+    "cpu_arch": "AMD64",
+    "gpu": "Intel(R) Iris(R) Xe Graphics (CPU/Vectorized NumPy Replacement Active)",
+    "c_drive_free_gb": 6.04,
+    "zero_disk_bloat_gh_api_inspection": true
+  },
+  "two_pass_status": "PASS_ALL_21_UNIQUE_REPOS_VERIFIED",
+  "repos": {
+    "1_genesis_world": {
+      "normal_force_n": 393.0457072657,
+      "tangential_force_n": -255.4797097227,
+      "shear_to_normal_ratio": 0.65,
+      "elastic_energy_j": 1.135757,
+      "neohookean_strain_energy_j_m3": 4706.5263,
+      "pk1_stress_frobenius_pa": 30536.4339,
+      "d_fn_d_delta": 36094.9165395904,
+      "d_fn_d_kn": 0.0013145341,
+      "d_ft_d_mu": -393.0457072657,
+      "contact_active": true
+    },
+    "2_unity_ml_agents": {
+      "steps": 4,
+      "advantages": [
+        2.69696,
+        1.808,
+        0.23654,
+        -0.49547
+      ],
+      "returns": [
+        3.69696,
+        2.608,
+        2.13654,
+        -0.29547
+      ],
+      "ppo_clipped_surrogate_objective": 0.005,
+      "clipped_ratio_fraction": 0.0,
+      "intrinsic_curiosity_reward": 0.01813,
+      "sac_mean_soft_q_target": 1.75091
+    },
+    "3_nuysoft_mock_and_anti_potemkin": {
+      "mock_quarantined": true,
+      "clean_slate_passed": true,
+      "sample_mock_row": {
+        "line": -14.5,
+        "market": "spread",
+        "_mock_watermark": "MOCK_FIXTURE_76a4516e4817beca"
+      }
+    },
+    "4_webgl_fluid_simulation": {
+      "peak_vorticity": 0.55043,
+      "rms_divergence_before_projection": 0.277409,
+      "rms_divergence_after_projection": 0.077497,
+      "incompressibility_reduction_ratio": 0.7206,
+      "max_velocity_magnitude": 0.87975
+    },
+    "5_jolt_physics": {
+      "collision_detected": true,
+      "toi_s": 0.01748,
+      "impulse_ns": 974.042,
+      "xpbd_delta_lambda": 1.6029,
+      "xpbd_contact_force_n": 11131.28,
+      "ke_pre_j": 5233.93,
+      "ke_post_j": 707.07,
+      "energy_dissipated_j": 4526.86,
+      "peak_head_accel_g": 125.02,
+      "hic_15": 678.09,
+      "concussion_protocol_flag": true
+    },
+    "6_bullet3_featherstone": {
+      "num_links": 3,
+      "articulated_inertias_kg_m2": [
+        0.1862,
+        0.0756,
+        0.0097
+      ],
+      "joint_accelerations_rad_s2": [
+        160.305,
+        92.451,
+        -115.247
+      ],
+      "next_joint_angles_rad": [
+        0.4265,
+        0.7433,
+        0.2571
+      ],
+      "end_effector_speed_m_s": 9.8577
+    },
+    "7_fluidx3d_lbm": {
+      "grid_shape": [
+        16,
+        32
+      ],
+      "steps": 20,
+      "tau": 0.62,
+      "kinematic_viscosity_lu": 0.04,
+      "initial_total_mass": 512.0,
+      "final_total_mass": 512.0,
+      "mass_conservation_rel_error": 0.0,
+      "d3q19_3d_mass_conservation_rel_error": 0.0,
+      "d3q19_fp16_bytes_per_cell": 55
+    },
+    "8_markov_junior_wfc": {
+      "sequence": [
+        "INSIDE_ZONE",
+        "QUICK_RPO",
+        "INSIDE_ZONE",
+        "PLAY_ACTION",
+        "INSIDE_ZONE",
+        "PLAY_ACTION",
+        "INSIDE_ZONE",
+        "PLAY_ACTION"
+      ],
+      "markov_rewritten_script": [
+        "INSIDE_ZONE",
+        "QUICK_RPO",
+        "INSIDE_ZONE",
+        "PLAY_ACTION",
+        "INSIDE_ZONE",
+        "PLAY_ACTION",
+        "INSIDE_ZONE",
+        "PLAY_ACTION"
+      ],
+      "markov_rewrite_steps": 0,
+      "initial_mean_shannon_entropy": 1.13549,
+      "final_mean_shannon_entropy": 0.0,
+      "adjacency_constraints_satisfied": true
+    },
+    "9_quantumlib_cirq_qaoa": {
+      "num_qubits": 4,
+      "hilbert_space_dim": 16,
+      "state_vector_norm": 1.0,
+      "uniform_expected_ising_energy": -0.0,
+      "qaoa_expected_ising_energy": -1.57232,
+      "exact_ground_state_energy": -3.1,
+      "modal_bitstring": "1111",
+      "modal_probability": 0.33884
+    },
+    "10_nvidia_warp_spatial_hash_adjoint": {
+      "num_particles": 4,
+      "active_hash_cells": 2,
+      "neighbor_pair_count": 3,
+      "potential_energy_loss": 21.28754,
+      "adjoint_grad_p0_x": 1.896842,
+      "fd_grad_p0_x": 1.896842,
+      "adjoint_vs_fd_abs_error": 0.0
+    },
+    "11_openai_mujoco_py_impedance": {
+      "contact_force": 598.124,
+      "reference_acceleration": 170.7407,
+      "q_ddot": [
+        149.9946,
+        19.891
+      ],
+      "q_vel_next": [
+        -0.45,
+        0.4995
+      ],
+      "q_pos_next": [
+        0.0977,
+        -0.1975
+      ]
+    },
+    "12_handright_ocr_stress": {
+      "input_text": "SEA WR Jaxon Smith-Njigba FULL PRACTICE - Active Week 9",
+      "glyph_count": 55,
+      "mean_baseline_offset_px": 1.269,
+      "max_rotation_deg": 6.56,
+      "mean_bezier_arc_length_px": 19.369,
+      "extracted_tokens": [
+        "SEA",
+        "WR",
+        "Jaxon",
+        "Smith-Njigba",
+        "FULL",
+        "PRACTICE",
+        "-",
+        "Active",
+        "Week",
+        "9"
+      ],
+      "ocr_token_recovery_rate": 1.0
+    },
+    "13_awesome_open_geoscience_kriging_air_density": {
+      "kriged_estimate": 18.05,
+      "kriging_variance": 0.28238,
+      "weights_sum": 1.0,
+      "barometric_pressure_hpa": 834.28,
+      "air_density_kg_m3": 0.995,
+      "drag_ratio_vs_sea_level": 0.8122,
+      "fg_and_deep_pass_carry_bonus_yds": 4.13
+    },
+    "14_forcefieldx_amoeba_fep": {
+      "amoeba_14_7_vdw_kcal_mol": -0.17943,
+      "lennard_jones_12_6_kcal_mol": -0.17877,
+      "induced_dipole_debye_eq": 0.116,
+      "polarization_energy_kcal_mol": -1.54078,
+      "total_nonbonded_kcal_mol": -1.72021,
+      "zwanzig_fep_delta_g_kcal_mol": 1.15528
+    },
+    "15_nichemapr_homotherm_wbgt": {
+      "wet_bulb_temp_c": 28.72,
+      "globe_temp_c": 43.15,
+      "wbgt_c": 32.03,
+      "q_storage_watts": 657.55,
+      "predicted_core_temp_c": 42.12,
+      "q4_explosive_output_multiplier": 0.75,
+      "exertional_heat_risk_tier": "HIGH_CRAMP_FATIGUE_RISK"
+    },
+    "16_neuroconstruct_3d_cable": {
+      "segment_length_um": 130.0,
+      "frustum_surface_area_um2": 1633.659,
+      "frustum_volume_um3": 1655.41,
+      "axial_resistance_mohm": 16.16417,
+      "electrotonic_lambda_um": 816.5,
+      "total_synaptic_arrival_delay_ms": 0.54
+    },
+    "17_apbs_pdb2pqr_electrostatics": {
+      "ph": 6.5,
+      "net_protein_charge_e": 0.5231,
+      "histidine_protonated_charge_e": 0.2575,
+      "debye_screening_length_angstrom": 7.9319,
+      "screened_electrostatic_dg_kcal_mol": -0.10088,
+      "nonlinear_pb_sinh_phi": -0.16441
+    },
+    "18_jaxley_hodgkin_huxley": {
+      "duration_ms": 25.0,
+      "spike_count": 2,
+      "firing_rate_hz": 80.0,
+      "peak_membrane_potential_mv": 39.597,
+      "distal_compartment_potential_mv": -59.415,
+      "d_peak_v_d_gk_mv_per_s_cm2": -197.68,
+      "final_gate_states": {
+        "m": 0.0588,
+        "h": 0.4129,
+        "n": 0.4205
+      }
+    },
+    "19_oncostreams_model_analysis": {
+      "filename": "sim_force=Spring_Force_k=0.5_lambda_core=1.2_step=400.dat",
+      "delta_t": 0.025,
+      "step": 400,
+      "kappa": 0.5
+    },
+    "20_oncostreams_active_matter_swarm": {
+      "num_agents": 6,
+      "initial_polar_order_phi": 0.99849,
+      "final_polar_order_phi": 1.0,
+      "initial_nematic_order_s2": 0.99397,
+      "final_nematic_order_s2": 1.0,
+      "oncostream_collective_corridor_formed": true,
+      "nfl_backside_cutback_vulnerability": true
+    },
+    "21_spatial_continuum_oncology_cri": {
+      "cri_score": 0.835,
+      "risk_tier": "TIER 3 (HIGH RESISTANCE & SANCTUARY RISK)",
+      "components": {
+        "S": 1.0,
+        "G": 0.5,
+        "M": 1.0
+      },
+      "stokes_radius_nm": 0.5411,
+      "effective_diffusivity_um2_s": 58.568,
+      "screening_length_lambda_um": 306.8,
+      "sanctuary_shell_delta_r_um": 99.55,
+      "pde_mean_tumor_density_after_step": 0.13807
+    }
+  }
+}

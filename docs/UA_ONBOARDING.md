@@ -1,10 +1,10 @@
 # Galaxy Sports Edge (GSE) & Stealth-Skeleton Autonomous Intelligence Engine — Architecture & Knowledge Graph Onboarding Guide
 
-- **Analyzed At:** `2026-11-07T23:44:15.990755+00:00`
-- **Git Commit:** `eefe63e7222aacf4edc49d14598ae80288f6f92a`
+- **Analyzed At:** `2026-11-08T00:26:06.911281+00:00`
+- **Git Commit:** `5e7e6a1b1adf48497e6813ad7ca7e6367b288246`
 - **Languages:** `python, typescript, c, cpp, sql, markdown`
 - **Frameworks:** `Next.js, Cloudflare Workers, Pytest, Vitest, Bazel, NumPy/SciPy`
-- **Knowledge Graph Nodes / Edges / Layers:** `187 nodes` / `190 edges` / `9 layers`
+- **Knowledge Graph Nodes / Edges / Layers:** `189 nodes` / `192 edges` / `9 layers`
 
 ## 1. Project Overview
 
@@ -121,13 +121,13 @@ Examine `workers/stealth-skeleton-provider/src/index.ts` and `apps/web/lib/write
 - **`packages/prediction-engine/src/nfl/x-situational-80-rules.ts`** (`1094 lines`): x-situational-80-rules.ts (1094 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
 - **`packages/mcp-equations-server/src/mcp-cognitive-router.ts`** (`633 lines`): mcp-cognitive-router.ts (633 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
 - **`scripts/ops/gse_connected_game_workflow.py`** (`5150 lines`): gse_connected_game_workflow.py (5150 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
-- **`intelligence/reasoning/live_cognitive_self_improvement_engine.py`** (`598 lines`): live_cognitive_self_improvement_engine.py (598 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
+- **`intelligence/reasoning/live_cognitive_self_improvement_engine.py`** (`777 lines`): live_cognitive_self_improvement_engine.py (777 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
 - **`intelligence/routing/stealth_skeleton_external_eval_and_distillation.py`** (`1666 lines`): stealth_skeleton_external_eval_and_distillation.py (1666 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
 - **`intelligence/reasoning/understand_anything_and_session_librarian_engine.py`** (`1192 lines`): understand_anything_and_session_librarian_engine.py (1192 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
 - **`intelligence/dfs/dfs_and_fantasy_accuracy_engine.py`** (`673 lines`): dfs_and_fantasy_accuracy_engine.py (673 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
 - **`scripts/dfs/build_week9_dual_slate_dfs_packets.py`** (`1089 lines`): build_week9_dual_slate_dfs_packets.py (1089 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
 - **`scripts/ops/dfs_stochastic_milp_optimizer.py`** (`612 lines`): dfs_stochastic_milp_optimizer.py (612 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
-- **`workers/stealth-skeleton-provider/src/index.ts`** (`4196 lines`): index.ts (4196 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.
+- **`workers/stealth-skeleton-provider/src/index.ts`** (`4337 lines`): index.ts (4337 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.
 - **`apps/web/lib/writeups/coach-writeup-engine.ts`** (`2600 lines`): coach-writeup-engine.ts (2600 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
 - **`apps/web/components/redline/redline-world.tsx`** (`853 lines`): redline-world.tsx (853 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
 - **`intelligence/performance/full_stack_performance_and_data_optimizer.py`** (`654 lines`): full_stack_performance_and_data_optimizer.py (654 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
@@ -150,7 +150,7 @@ Examine `workers/stealth-skeleton-provider/src/index.ts` and `apps/web/lib/write
 
 ## 6. Recent Diff & Blast-Radius Overlay (`/understand-diff`)
 
-- **Changed Files (`HEAD~1..HEAD`):** `62`
-- **Changed Graph Nodes:** `87`
-- **1-Hop Affected Nodes:** `13`
+- **Changed Files (`HEAD~1..HEAD`):** `18`
+- **Changed Graph Nodes:** `50`
+- **1-Hop Affected Nodes:** `6`
 - **Blast Radius Risk Score:** `1.0`

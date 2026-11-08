@@ -2290,10 +2290,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         },
         {
-          "description": "Chris Godwin Receptions",
+          "description": "Cade Otton Receptions",
           "pickType": "PLAYER_PROP",
-          "selection": "Chris Godwin OVER 4.5 Receptions",
-          "line": 4.5,
+          "selection": "Cade Otton OVER 3.5 Receptions",
+          "line": 3.5,
           "confidence": "78/100",
           "expectedClv": 0.064,
           "decision": "PLAY"

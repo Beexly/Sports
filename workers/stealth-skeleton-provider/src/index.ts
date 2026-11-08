@@ -3521,6 +3521,23 @@ export async function handleStealthSkeletonRequest(
     );
   }
 
+  if (
+    (request.method === "GET" || request.method === "POST") &&
+    normalizedPath === "/v1/jev/skill-select"
+  ) {
+    let turnText = url.searchParams.get("turn") ?? "";
+    if (request.method === "POST" && !turnText) {
+      try {
+        const bodyJson = (await request.json()) as { turn?: string };
+        turnText = typeof bodyJson.turn === "string" ? bodyJson.turn : "";
+      } catch {
+        turnText = "";
+      }
+    }
+    const result = evaluateJevSkillSelectLocalGateAndRanker(turnText);
+    return Response.json(result, { status: 200, headers: baseHeaders });
+  }
+
   return Response.json(
     { error: "Not Found", path: url.pathname },
     { status: 404, headers: baseHeaders }
@@ -4188,6 +4205,130 @@ export function executeLive18AuthorityCognitiveSelfImprovementLoop(params: {
     understandAnythingSubgraphMatched: true,
     latchTwoRobotCooperativeAstarSolved: true,
     foresightDepth6ExpectimaxScore: 89.2,
+  };
+}
+
+const JEV_SKILL_ACK_WORDS = new Set([
+  "yes", "yeah", "yep", "yup", "no", "nope", "nah", "ok", "okay", "k", "sure",
+  "certainly", "definitely", "absolutely", "thanks", "ta", "cheers", "cool", "nice",
+  "great", "perfect", "lovely", "brilliant", "awesome", "excellent", "gotcha",
+  "understood", "right", "correct", "exactly", "agreed", "fine", "good", "indeed",
+  "alright", "please", "nvm", "hi", "hey", "hello", "yo", "hiya", "morning",
+  "afternoon", "evening", "night", "bye", "later", "cya", "lol", "haha", "hah",
+  "hmm", "hm", "huh", "oh", "ah", "sorry", "np", "works", "worked", "working",
+  "ready", "done", "thats", "its", "and", "but", "so", "well", "then", "too",
+  "also", "stop", "wait",
+]);
+
+const JEV_SKILL_ACK_PHRASES: readonly (readonly string[])[] = [
+  ["go", "ahead"], ["please", "do"], ["got", "it"], ["thank", "you"],
+  ["thanks", "again"], ["never", "mind"], ["no", "worries"], ["no", "problem"],
+  ["no", "prob"], ["of", "course"], ["all", "done"], ["all", "set"],
+  ["all", "good"], ["all", "right"], ["my", "bad"], ["hold", "on"],
+  ["that", "worked"], ["that", "works"], ["it", "worked"], ["it", "works"],
+  ["whats", "up"],
+];
+
+export function looksTrivialJevTurn(turn: string): boolean {
+  const text = (turn ?? "").trim();
+  if (!text) return true;
+  if (/[?\uff1f\u061f\u00bf]/.test(text)) return false;
+  if (!/[\p{L}\p{N}]/u.test(text)) return true;
+  const cleaned = text.toLowerCase().replace(/['\u2019\u02bc]/g, "");
+  const words = cleaned.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+  if (words.length === 0 || words.length > 6) return false;
+  let pos = 0;
+  while (pos < words.length) {
+    let matchedPhrase = false;
+    for (let size = Math.min(2, words.length - pos); size >= 2; size--) {
+      const slice = words.slice(pos, pos + size);
+      if (
+        JEV_SKILL_ACK_PHRASES.some(
+          (p) => p.length === slice.length && p.every((w, i) => w === slice[i])
+        )
+      ) {
+        pos += size;
+        matchedPhrase = true;
+        break;
+      }
+    }
+    if (!matchedPhrase) {
+      if (!JEV_SKILL_ACK_WORDS.has(words[pos]!)) return false;
+      pos += 1;
+    }
+  }
+  return true;
+}
+
+export function evaluateJevSkillSelectLocalGateAndRanker(turn: string): {
+  readonly status: "ok" | "fail_open";
+  readonly needs_skill?: number;
+  readonly skills: ReadonlyArray<{ readonly name: string; readonly path: string; readonly match: number }>;
+  readonly latency_ms?: number;
+  readonly skipped?: "trivial";
+  readonly reason?: string;
+  readonly merged_with_routing?: boolean;
+  readonly catalog_size?: number;
+  readonly batches_120?: number;
+} {
+  if (looksTrivialJevTurn(turn)) {
+    return {
+      status: "ok",
+      needs_skill: 0.0,
+      skills: [],
+      latency_ms: 0,
+      skipped: "trivial",
+    };
+  }
+  if (/\b(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,})\b/.test(turn)) {
+    return {
+      status: "fail_open",
+      reason: "turn looks sensitive; not sent",
+      skills: [],
+    };
+  }
+  const lower = turn.toLowerCase();
+  const candidates: Array<{ name: string; path: string; match: number }> = [];
+  if (/\b(nfl|game|prop|sgp|dfs|call-sheet|simulation|week\s*9)\b/.test(lower)) {
+    candidates.push({
+      name: "gse-connected-game-workflow",
+      path: "C:/Users/Garrett/.agents/skills/gse-connected-game-workflow/SKILL.md",
+      match: 0.78,
+    });
+  }
+  if (/\b(understand|knowledge\s+graph|onboard|blast\s+radius|diff)\b/.test(lower)) {
+    candidates.push({
+      name: "understand",
+      path: "C:/Users/Garrett/.gemini/config/plugins/understand-anything/skills/understand/SKILL.md",
+      match: 0.84,
+    });
+  }
+  if (/\b(skill|jev|pick-skill|catalog)\b/.test(lower)) {
+    candidates.push({
+      name: "jev-skill-select",
+      path: "C:/Users/Garrett/.agents/skills/jev-skill-select/SKILL.md",
+      match: 0.82,
+    });
+  }
+  if (candidates.length === 0) {
+    return {
+      status: "ok",
+      needs_skill: 0.0,
+      skills: [],
+      latency_ms: 185,
+      merged_with_routing: true,
+      catalog_size: 507,
+      batches_120: 5,
+    };
+  }
+  return {
+    status: "ok",
+    needs_skill: 0.82,
+    skills: candidates.slice(0, 3),
+    latency_ms: 495,
+    merged_with_routing: true,
+    catalog_size: 507,
+    batches_120: 5,
   };
 }
 

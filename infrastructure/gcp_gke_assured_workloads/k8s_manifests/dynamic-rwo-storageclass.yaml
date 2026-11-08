@@ -1,0 +1,14 @@
+# Dynamic StorageClass for Cross-Generation ComputeClass Fallbacks (Gen3 PD + Gen4 Hyperdisk)
+# Generated via `gke-compute-classes` & `gke-storage-troubleshooting` skills.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dynamic-rwo
+  labels:
+    created-with-google-skill: "gke-compute-classes"
+provisioner: pd.csi.storage.gke.io
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+parameters:
+  type: dynamic
+  use-allowed-disk-topology: "true"

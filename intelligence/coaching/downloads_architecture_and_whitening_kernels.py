@@ -2,7 +2,7 @@
 downloads_architecture_and_whitening_kernels.py
 ===============================================
 Production port of all executable Python/CUDA scripts, pricing/whitening equations,
-and architecture specifications from `C:\\Users\\Garrett\\Downloads\\`:
+and architecture specifications from `external/downloads/`:
 
 1. `conformal_whitening_live_pipeline.py` & `gsi_whitepaper_camera_ready.tex` (WP-05):
    - Multi-frame rolling covariance tensor, regularized Cholesky whitening Z_t = L_t^{-1}(X_t - mu_{t,K}),
@@ -211,7 +211,7 @@ def run_conformal_whitening_live_pipeline_kernel(
 
 class GSEFullSlateSimulator:
     """
-    Ported from `C:\\Users\\Garrett\\Downloads\\gpp_architecture.py` and
+    Ported from `external/downloads/gpp_architecture.py` and
     `Quantitative Bitemporal Simulation Architectures for DraftKings NFL Optimization.docx`.
     """
 
@@ -1454,7 +1454,7 @@ def evaluate_cuda_mastermind_entropy_kernel(
     coefs: Optional[Sequence[float]] = None,
 ) -> Dict[str, Any]:
     """
-    Ported from `C:\\Users\\Garrett\\Downloads\\kernel.cu`:
+    Ported from `external/downloads/kernel.cu`:
     Evaluates the 14-outcome Shannon-entropy weighted scoring kernel over the S=1,296
     state space (`-0.5 * p^2 + 5.5 * p + m` outcome index in 0..13):
         scores[k] = sum_{j=0}^{13} (-p_j * (log2(count_j) - log2(n))) * coefs[j]

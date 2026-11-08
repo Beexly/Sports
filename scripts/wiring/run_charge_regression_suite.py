@@ -73,7 +73,7 @@ def scan_external_dir(base: Path, needle: str) -> List[str]:
 def check_charge_1() -> Dict[str, Any]:
     """Charge 1: 86.62 is an edited artifact, not a run. Raw outputs committed or 86.62 literals swept."""
     raw_lines = git_grep_lines("86.62", ["apps/web", "apps/mobile", "packages", "workers", "intelligence"])
-    raw_lines += scan_external_dir(Path(r"C:\Users\Garrett\.agents\skills"), "86.62")
+    raw_lines += scan_external_dir(Path.home() / ".agents" / "skills", "86.62")
 
     hits: List[str] = []
     for ln in raw_lines:
@@ -114,7 +114,7 @@ def check_charge_2() -> Dict[str, Any]:
     """Charge 2: '5,367 equations' typed-in literal swept from brain/bridge/skills/apps/packages/workers/intelligence/scripts."""
     target_paths = ["apps", "packages", "workers", "intelligence", "scripts"]
     raw_lines = git_grep_lines("5,367", target_paths) + git_grep_lines("5367", target_paths)
-    raw_lines += scan_external_dir(Path(r"C:\Users\Garrett\.agents\skills"), "5,367")
+    raw_lines += scan_external_dir(Path.home() / ".agents" / "skills", "5,367")
 
     hits: List[str] = []
     for ln in raw_lines:
@@ -298,26 +298,58 @@ def check_charge_8() -> Dict[str, Any]:
 
 
 def check_charge_9() -> Dict[str, Any]:
-    """Charge 9: Drive/library claims reconciled in CORPUS-CENSUS.csv with SHA-256 / drive_id."""
+    """Charge 9: Drive/library claims reconciled in CORPUS-CENSUS.csv + Google Drive/Docs & BK-DL manifests + Two-Host Rule."""
     corpus_census = WIRING_DIR / "CORPUS-CENSUS.csv"
-    exists = corpus_census.exists() and corpus_census.stat().st_size > 1000
+    gdrive_manifest = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "google-drive-and-docs-verified-manifest.json"
+    bk_dl_index = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "bk-dl-deduplicated-provenance-index.json"
+    quarantine_manifest = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "external-github-repos-quarantine-manifest.json"
+    dl_win = str(Path.home() / "Downloads")
+    dl_posix = dl_win.replace("\\", "/")
+    runtime_dl_hits = (
+        git_grep_lines(dl_win, ["intelligence", "packages", "apps", "workers"])
+        + git_grep_lines(dl_posix, ["intelligence", "packages", "apps", "workers"])
+    )
+    exists = (
+        corpus_census.exists()
+        and corpus_census.stat().st_size > 1000
+        and gdrive_manifest.exists()
+        and bk_dl_index.exists()
+        and quarantine_manifest.exists()
+        and len(runtime_dl_hits) == 0
+    )
     return {
         "charge": 9,
-        "name": "Every Drive/library claim reconciled to exact listing in CORPUS-CENSUS.csv with SHA/drive_id",
+        "name": "Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL manifests + Two-Host zero local paths",
         "status": "PASS" if exists else "FAIL",
-        "corpus_census_present": exists,
+        "corpus_census_present": corpus_census.exists(),
+        "google_drive_manifest_present": gdrive_manifest.exists(),
+        "bk_dl_index_present": bk_dl_index.exists(),
+        "quarantine_manifest_present": quarantine_manifest.exists(),
+        "runtime_downloads_path_hits": len(runtime_dl_hits),
     }
 
 
 def check_charge_10() -> Dict[str, Any]:
-    """Charge 10: Every 'wired' claim carries an automated consumption test proof."""
+    """Charge 10: Every 'wired' claim carries an automated consumption test proof + AST/279-family/GSI-sandbox guards."""
     test_file = REPO_ROOT / "tests" / "wiring" / "test_wave_consumption_proofs.py"
-    exists = test_file.exists()
+    ast_test = REPO_ROOT / "tests" / "unit" / "test_equation_executor_ast_and_bounds.py"
+    fam_test = REPO_ROOT / "tests" / "unit" / "test_family_consumption_279_and_l4_l5.py"
+    gsi_sandbox = REPO_ROOT / "research" / "gsi_sandbox" / "physics_biophysics_and_oncology_21_repo_sandbox.py"
+    old_gsi = REPO_ROOT / "intelligence" / "ecosystem" / "physics_biophysics_and_oncology_21_repo_engine.py"
+    exists = (
+        test_file.exists()
+        and ast_test.exists()
+        and fam_test.exists()
+        and gsi_sandbox.exists()
+        and not old_gsi.exists()
+    )
     return {
         "charge": 10,
-        "name": "Automated perturbation consumption tests present in tests/wiring/test_wave_consumption_proofs.py",
+        "name": "Automated perturbation, 21,419-AST, 279-family L4/L5, and GSI sandbox isolation proofs present",
         "status": "PASS" if exists else "PENDING_WAVE_3_TO_8",
         "consumption_test_file_present": exists,
+        "ast_and_279_family_tests_present": ast_test.exists() and fam_test.exists(),
+        "gsi_sandbox_quarantined": gsi_sandbox.exists() and not old_gsi.exists(),
     }
 
 

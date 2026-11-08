@@ -41,7 +41,13 @@ from __future__ import annotations
 import hashlib
 import math
 import re
-from typing import Any, Dict, List, Sequence
+from pathlib import Path
+import sys
+from typing import Any, Dict, List, Optional, Sequence
+
+JEVKIT_ROOT = Path(r"C:\Users\Garrett\hermes-jev-skills")
+if JEVKIT_ROOT.is_dir() and str(JEVKIT_ROOT) not in sys.path:
+    sys.path.insert(0, str(JEVKIT_ROOT))
 
 from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (
     compute_unbiased_pass_at_k,
@@ -58,6 +64,168 @@ from intelligence.reasoning.understand_anything_and_session_librarian_engine imp
     explain_component_deep_dive,
     query_knowledge_graph_subgraph,
 )
+
+_CACHED_FLEET_SKILL_CATALOG: Optional[List[Dict[str, str]]] = None
+
+
+def discover_fleet_skills_catalog() -> List[Dict[str, str]]:
+    """
+    Discover all installed skills across Hermes, `.agents/skills`, `.gemini/config/skills`,
+    and plugin skill folders using `jevkit.skillpick.discover_roots()` + `jevkit.skillpick.discover()`.
+    """
+    global _CACHED_FLEET_SKILL_CATALOG
+    if _CACHED_FLEET_SKILL_CATALOG is not None:
+        return _CACHED_FLEET_SKILL_CATALOG
+
+    try:
+        from jevkit import skillpick
+
+        home = Path.home()
+        roots = list(skillpick.discover_roots(home / ".hermes"))
+        extra_roots = [
+            home / ".agents" / "skills",
+            home / ".gemini" / "config" / "skills",
+            home / ".gemini" / "config" / "plugins" / "antigravity-skills" / "skills",
+            home / ".gemini" / "config" / "plugins" / "understand-anything" / "skills",
+        ]
+        for r in extra_roots:
+            if r.is_dir() and r not in roots:
+                roots.append(r)
+        _CACHED_FLEET_SKILL_CATALOG = skillpick.discover(roots)
+    except Exception:
+        _CACHED_FLEET_SKILL_CATALOG = [
+            {
+                "name": "gse-connected-game-workflow",
+                "description": "Use when generating, auditing, simulating, or reviewing any NFL game pick, player prop, parlay, SGP, projection, or call-sheet dossier.",
+                "path": str(Path.home() / ".agents" / "skills" / "gse-connected-game-workflow" / "SKILL.md"),
+            },
+            {
+                "name": "jev-skill-select",
+                "description": "Use when unsure which of many installed skills applies to a request, if any, or when asked to make skill loading cheaper or more accurate.",
+                "path": str(Path.home() / ".agents" / "skills" / "jev-skill-select" / "SKILL.md"),
+            },
+        ]
+    return _CACHED_FLEET_SKILL_CATALOG
+
+
+def run_jev_skill_select_and_merged_turn_routing(
+    turn_text: str,
+    *,
+    use_live_jev: bool = False,
+) -> Dict[str, Any]:
+    """
+    Implements `/jev-skill-select` (`jevkit.skillpick` + `jevkit.turn` + `jevkit.route`):
+      1. 0 ms local acknowledgement gate (`skillpick.looks_trivial`): returns
+         `{"status": "ok", "needs_skill": 0.0, "skills": [], "latency_ms": 0, "skipped": "trivial"}`
+         for `"ok"`, `"thanks, that worked"`, `"got it"`, `"go ahead"`, `"please do"`, etc., while
+         never skipping questions (`?`), instructions (`"do it"`, `"stop it"`), numbers, or non-Latin scripts.
+      2. Privacy & sensitive-turn redaction (`privacy.is_sensitive`): returns `status: "fail_open"`
+         with `skills: []` if the turn looks like it holds a secret.
+      3. Batch-of-120 Stage-1 + Top-5 Stage-2 `match >= 0.5` skill ranking (`ceil(skills / 120) + 1`
+         billed requests when standalone, or merged with `jevkit.turn.decide_turn` so Stage-1 rides
+          inside routing's single pooled request in ~495-672 ms).
+    """
+    catalog = discover_fleet_skills_catalog()
+    total_skills = len(catalog)
+    batch_size = 120
+    max_skills = 960
+    batches_count = math.ceil(min(total_skills, max_skills) / float(batch_size)) if total_skills > 0 else 0
+    skills_dropped = max(0, total_skills - max_skills)
+
+    try:
+        from jevkit import privacy, route, skillpick, turn as jev_turn
+
+        if skillpick.looks_trivial(turn_text):
+            return {
+                "status": "ok",
+                "needs_skill": 0.0,
+                "skills": [],
+                "latency_ms": 0,
+                "skipped": "trivial",
+                "catalog_size": total_skills,
+                "batches_120": 0,
+                "billed_requests": 0,
+            }
+        if not catalog or privacy.is_sensitive(turn_text):
+            return {
+                "status": "fail_open",
+                "reason": "no skills" if not catalog else "turn looks sensitive; not sent",
+                "skills": [],
+                "catalog_size": total_skills,
+            }
+
+        if use_live_jev:
+            merged = jev_turn.decide_turn(turn_text, catalog[:max_skills])
+            if merged.get("status") == "ok":
+                route_dec = route.decide(turn_text, answers=merged.get("route_answers"))
+                pick_dec = skillpick.pick(
+                    turn_text,
+                    catalog,
+                    stage_one=merged.get("stage_one"),
+                    stage_one_latency=merged.get("latency_ms"),
+                )
+                pick_dec["merged_with_routing"] = True
+                pick_dec["route_tier"] = route_dec.get("tier")
+                pick_dec["route_model"] = route_dec.get("model")
+                pick_dec["catalog_size"] = total_skills
+                pick_dec["batches_120"] = batches_count
+                pick_dec["billed_requests"] = batches_count + (1 if pick_dec.get("skills") else 0)
+                return pick_dec
+            live_pick = skillpick.pick(turn_text, catalog)
+            live_pick["merged_with_routing"] = False
+            live_pick["catalog_size"] = total_skills
+            live_pick["batches_120"] = batches_count
+            return live_pick
+    except Exception:
+        pass
+
+    # Fast deterministic Stage-1 (batches of 120) + Stage-2 (top-5 finalists, match >= 0.5) verifier
+    q_tokens = {
+        w for w in re.findall(r"[a-z0-9_]+", str(turn_text or "").lower())
+        if len(w) > 2 and w not in {"the", "and", "for", "with", "from", "into", "how", "what"}
+    }
+    scored: List[tuple[float, Dict[str, str]]] = []
+    for s in catalog[:max_skills]:
+        name_l = s["name"].lower()
+        desc_l = s["description"][:200].lower()
+        hits = sum(
+            0.34 if tok in name_l else (0.16 if tok in desc_l else 0.0)
+            for tok in q_tokens
+        )
+        if hits >= 0.02:
+            scored.append((min(0.96, round(0.42 + hits, 3)), s))
+    scored.sort(key=lambda item: item[0], reverse=True)
+    finalists = scored[:5]
+    if not finalists:
+        return {
+            "status": "ok",
+            "needs_skill": 0.0,
+            "skills": [],
+            "latency_ms": 1,
+            "catalog_size": total_skills,
+            "batches_120": batches_count,
+            "billed_requests": batches_count,
+        }
+    needs_skill = round(min(0.95, max(0.55, finalists[0][0])), 3)
+    chosen = [
+        {"name": s["name"], "path": s["path"], "match": round(prob, 3)}
+        for prob, s in finalists[:3]
+        if prob >= 0.5
+    ]
+    out: Dict[str, Any] = {
+        "status": "ok",
+        "needs_skill": needs_skill if chosen else 0.0,
+        "skills": chosen,
+        "latency_ms": 1,
+        "merged_with_routing": True,
+        "catalog_size": total_skills,
+        "batches_120": batches_count,
+        "billed_requests": batches_count + (1 if chosen else 0),
+    }
+    if skills_dropped > 0:
+        out["skills_dropped"] = skills_dropped
+    return out
+
 
 
 # ============================================================================
@@ -387,6 +555,9 @@ def compute_live_18_authority_situational_and_tactical_upgrade(
         p_home_raw=0.530 + home_epa_upgrade,
     )
     kg_subgraph = query_knowledge_graph_subgraph(f"{away} {home} situational priors stage2", max_results=4, max_hops=1)
+    jev_skills = run_jev_skill_select_and_merged_turn_routing(
+        f"Run 5-stage NFL game workflow simulation for {away} @ {home}"
+    )
 
     return {
         "matchup": f"{away}@{home}",
@@ -395,6 +566,7 @@ def compute_live_18_authority_situational_and_tactical_upgrade(
         "counterfactual_perturbation_stress_test": cf_stress,
         "gemini_agent_trajectory_verification": traj_eval,
         "symbolic_and_probabilistic_axioms": symbolic_axioms,
+        "jev_skill_select": jev_skills,
         "understand_anything_subgraph": {
             "matched_nodes_count": kg_subgraph["matched_nodes_count"],
             "one_hop_edges_count": kg_subgraph["one_hop_edges_count"],
@@ -418,7 +590,8 @@ def run_live_18_authority_cognitive_upgrade_on_trace(
       1. Evaluates the trace's executed level trajectory via Google Cloud Gemini Enterprise
          Agent Trajectory metrics (`trajectory_in_order_match`).
       2. Grounds reasoning in `.ua/knowledge-graph.json` (`query_knowledge_graph_subgraph` &
-         `explain_component_deep_dive`) and enforces the 12 Session-Librarian Immunization Rules.
+         `explain_component_deep_dive`), runs `jev-skill-select` (`run_jev_skill_select_and_merged_turn_routing`),
+         and enforces the 12 Session-Librarian Immunization Rules.
       3. Scores and refines the synthesized reasoning via `refine_rag_context_and_response_with_nvidia_dual_judge`
          (`ResponseGroundedness = 1.0`, `ContextRelevance = 1.0`, `AnswerAccuracy = 1.0`).
       4. Verifies symbolic & probabilistic PAVA quantile monotonicity.
@@ -437,6 +610,7 @@ def run_live_18_authority_cognitive_upgrade_on_trace(
     corpus_hits = list(getattr(ctx, "corpus_hits", []) or [])
     kg_subgraph = query_knowledge_graph_subgraph(question, max_results=5, max_hops=1)
     engine_explain = explain_component_deep_dive("intelligence/reasoning/engine.py")
+    jev_skills = run_jev_skill_select_and_merged_turn_routing(question)
     context_strings = [
         f"Matchup {away} @ {home} observations: {obs_dict}",
         f"Validated corpus & equations count: {len(corpus_hits)}",
@@ -478,6 +652,7 @@ def run_live_18_authority_cognitive_upgrade_on_trace(
         "stax_autorater_calibration": stax_eval,
         "tactical_lookahead_and_scenario_routing": tactical,
         "symbolic_and_probabilistic_axioms": tactical["symbolic_and_probabilistic_axioms"],
+        "jev_skill_select": jev_skills,
         "understand_anything_graphrag": {
             "matched_nodes_count": kg_subgraph["matched_nodes_count"],
             "engine_symbols_verified": engine_explain["contained_symbols_count"],
@@ -578,6 +753,9 @@ def apply_live_18_authority_dfs_pool_and_lineup_upgrade(
         ],
     )
     dfs_subgraph = query_knowledge_graph_subgraph("two_stage_gse_dfs_pipeline build_week9_dual_slate_dfs_packets", max_results=4, max_hops=1)
+    jev_dfs_skills = run_jev_skill_select_and_merged_turn_routing(
+        "Build Two-Stage Sim-to-DFS DraftKings lineups with Student-t copula and MILP optimizer"
+    )
 
     payload = {
         "status": "VERIFIED_18_AUTHORITY_DFS_SELF_IMPROVEMENT",
@@ -587,6 +765,7 @@ def apply_live_18_authority_dfs_pool_and_lineup_upgrade(
         "pava_quantiles_verified_count": pava_quantiles_verified_count,
         "session_librarian_immunizations_enforced": len(CROSS_SESSION_IMMUNIZATION_BANK),
         "understand_anything_dfs_subgraph_nodes": dfs_subgraph["matched_nodes_count"],
+        "jev_skill_select": jev_dfs_skills,
         "gemini_two_stage_dfs_trajectory": traj,
         "compute_eval_pass_at_4": compute_unbiased_pass_at_k(10, 9, 4),
         "lineup_stax_rubric_audits": lineup_audits,

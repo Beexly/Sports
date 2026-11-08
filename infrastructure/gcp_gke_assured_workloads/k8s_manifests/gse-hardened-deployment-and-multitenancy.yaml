@@ -1,0 +1,248 @@
+# Hardened GKE Deployment, Namespace Multitenancy (RBAC, ResourceQuota, LimitRange, NetworkPolicy) & Kueue Batch HPC
+# Generated via `gke-manifest-generation`, `gke-app-onboarding`, `gke-multitenancy`, and `gke-batch-hpc`.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gse-engine
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    goog-k8s-cluster-name: gse-inference-us-central1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gse-engine-ksa
+  namespace: gse-engine
+  annotations:
+    iam.gke.io/return-principal-id-as-email: "true"
+---
+# Multitenancy RBAC: Scoped to Google Group (never system:authenticated)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gse-engine-developer-role
+  namespace: gse-engine
+rules:
+  - apiGroups: ["", "apps", "batch"]
+    resources: ["pods", "pods/log", "deployments", "services", "jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gse-engine-developer-binding
+  namespace: gse-engine
+subjects:
+  - kind: Group
+    name: "gse-quant-engineering@galaxysportsedge.com"
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: gse-engine-developer-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Multitenancy ResourceQuota & LimitRange (mandatory `default` and `defaultRequest` whenever `min`/`max` is set)
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: gse-engine-quota
+  namespace: gse-engine
+spec:
+  hard:
+    requests.cpu: "32"
+    requests.memory: 128Gi
+    limits.cpu: "64"
+    limits.memory: 256Gi
+    pods: "50"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: gse-engine-limitrange
+  namespace: gse-engine
+spec:
+  limits:
+    - type: Container
+      default:
+        cpu: "1000m"
+        memory: "2Gi"
+      defaultRequest:
+        cpu: "500m"
+        memory: "1Gi"
+      min:
+        cpu: "100m"
+        memory: "128Mi"
+      max:
+        cpu: "16000m"
+        memory: "64Gi"
+---
+# Multitenancy NetworkPolicy: Default-deny ingress/egress + explicit UDP/TCP 53 kube-dns allowance
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gse-engine-default-deny-with-dns
+  namespace: gse-engine
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: gse-engine
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+# PSS Restricted Hardened Deployment with /tmp & /dev/shm emptyDir and 3 probes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gse-situational-engine
+  namespace: gse-engine
+  labels:
+    app.kubernetes.io/name: gse-situational-engine
+    app.kubernetes.io/version: "5.3.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gse-situational-engine
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gse-situational-engine
+    spec:
+      serviceAccountName: gse-engine-ksa
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 60
+      nodeSelector:
+        cloud.google.com/compute-class: gse-ai-inference-ccc
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gse-engine
+          image: us-central1-docker.pkg.dev/gse-sovereign-prod/gse-containers/gse-situational-engine:v5.3.0
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gse-ai-credentials
+                  key: gemini-api-key
+          resources:
+            requests:
+              cpu: "2000m"
+              memory: "8Gi"
+            limits:
+              cpu: "2000m"
+              memory: "8Gi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
+            - name: dshm
+              mountPath: /dev/shm
+      volumes:
+        - name: tmp-dir
+          emptyDir: {}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi
+---
+# Kueue LocalQueue + JobSet for 10,000-world x 175-snap Trajectory Batch Simulation (`gke-batch-hpc`)
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: LocalQueue
+metadata:
+  name: gse-trajectory-local-queue
+  namespace: gse-engine
+spec:
+  clusterQueue: gse-trajectory-cluster-queue
+---
+apiVersion: jobset.x-k8s.io/v1alpha2
+kind: JobSet
+metadata:
+  name: gse-10k-world-trajectory-sim
+  namespace: gse-engine
+  labels:
+    kueue.x-k8s.io/queue-name: gse-trajectory-local-queue
+  annotations:
+    kueue.gke.io/tpu-enforce-slice-deletion: "true"
+    slice.gke.io/retry-on-failure: "true"
+spec:
+  replicatedJobs:
+    - name: workers
+      replicas: 1
+      template:
+        spec:
+          parallelism: 4
+          completions: 4
+          backoffLimit: 2
+          template:
+            spec:
+              restartPolicy: OnFailure
+              serviceAccountName: gse-engine-ksa
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 10000
+                seccompProfile:
+                  type: RuntimeDefault
+              containers:
+                - name: trajectory-worker
+                  image: us-central1-docker.pkg.dev/gse-sovereign-prod/gse-containers/gse-trajectory-worker:v5.3.0
+                  command: ["python", "scripts/ops/gse_coach_mind_simulator.py"]
+                  resources:
+                    requests:
+                      cpu: "4000m"
+                      memory: "16Gi"
+                    limits:
+                      cpu: "4000m"
+                      memory: "16Gi"
+                  securityContext:
+                    allowPrivilegeEscalation: false
+                    readOnlyRootFilesystem: true
+                    capabilities:
+                      drop:
+                        - ALL

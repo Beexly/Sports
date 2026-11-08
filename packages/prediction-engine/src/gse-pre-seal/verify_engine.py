@@ -903,7 +903,7 @@ def run_all_tests() -> dict:
     # --- Test 6: collect_circa.py sharp-move detector ---
     # The detector lives in collect_circa.py. Run its synthetic test inline.
     try:
-        sys.path.insert(0, str(Path("C:/Users/Garrett/Downloads")))
+        sys.path.insert(0, str(Path("external/downloads")))
         import time as _time
         from collect_circa import detect_sharp_moves
 

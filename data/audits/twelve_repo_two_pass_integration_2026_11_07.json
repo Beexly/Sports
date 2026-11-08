@@ -1,0 +1,268 @@
+{
+  "generated_at_utc": "2026-11-07T23:55:00Z",
+  "two_pass_status": "PASS_ALL_12_REPOS_VERIFIED",
+  "repos": {
+    "1_vercel_agent_browser": {
+      "snapshot": {
+        "snapshot_text": "- main \"DraftKings NFL Week 9 Board & GSI Biomechanics Console\"\n  - heading \"NFL Week 9 Player Props\"\n  - button \"Jaxon Smith-Njigba Over 93.5 Rec Yds (-114)\" [@e1]\n  - textbox \"Wager Amount\" [@e2] value=\"100\"\n  - link \"GSI Tendon Strain Telemetry FHIR Feed\" [@e3]",
+        "interactive_ref_count": 3,
+        "refs": {
+          "@e1": {
+            "role": "button",
+            "name": "Jaxon Smith-Njigba Over 93.5 Rec Yds (-114)",
+            "value": "",
+            "frame_id": "root",
+            "loader_id": "main-loader",
+            "session_id": "main-session"
+          },
+          "@e2": {
+            "role": "textbox",
+            "name": "Wager Amount",
+            "value": "100",
+            "frame_id": "root",
+            "loader_id": "main-loader",
+            "session_id": "main-session"
+          },
+          "@e3": {
+            "role": "link",
+            "name": "GSI Tendon Strain Telemetry FHIR Feed",
+            "value": "",
+            "frame_id": "root",
+            "loader_id": "main-loader",
+            "session_id": "main-session"
+          }
+        },
+        "snapshot_chars": 264,
+        "estimated_raw_html_chars": 4200,
+        "token_reduction_ratio": 0.9371
+      },
+      "cve_check": {
+        "browser_version": "136.0.7103.48",
+        "major_milestone": 136,
+        "min_safe_milestone": 135,
+        "is_vulnerable": false,
+        "status": "SAFE"
+      }
+    },
+    "2_cloudflare_security_audit": {
+      "validator_dir": "C:\\Users\\Garrett\\.agents\\skills\\cloudflare-security-audit",
+      "playbooks_installed": [
+        "AI-AND-LLM.md",
+        "ATTACK-CLASSES.md",
+        "CLIENT-SIDE.md",
+        "CLOUD-AND-DEPLOYMENT.md",
+        "DATA-ISOLATION-AND-LIFECYCLE.md",
+        "DESKTOP-MOBILE-AND-LOCAL-IPC.md",
+        "HUNTING.md",
+        "MEMORY-SAFETY-AND-BINARY.md",
+        "PROTOCOLS-RPC-AND-MESSAGING.md",
+        "RECONNAISSANCE.md",
+        "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md",
+        "SKILL.md",
+        "SUPPLY-CHAIN-AND-RELEASE.md",
+        "VALIDATION-AND-REPORTING.md",
+        "WEB-PROTOCOL-AND-AUTH.md"
+      ],
+      "playbook_count": 15,
+      "validate_findings_exit_code": 0,
+      "validate_findings_output": "PASS: 1 findings valid | VALIDATION PASSED",
+      "validate_ledger_exit_code": 0,
+      "validate_ledger_output": "PASS: 1 coverage units valid | LEDGER VALIDATION PASSED",
+      "audited_file_count": 5
+    },
+    "3_google_skills": {
+      "google_skills_installed": 167,
+      "eval_flywheel_ready": true
+    },
+    "4_mattpocock_skills": {
+      "modules_analyzed": 2,
+      "average_depth_ratio": 170.56,
+      "modules": [
+        {
+          "file": "intelligence\\dfs\\two_stage_gse_dfs_pipeline.py",
+          "non_empty_loc": 273,
+          "public_exports": 1,
+          "depth_ratio_loc_per_export": 273.0,
+          "classification": "DEEP_MODULE"
+        },
+        {
+          "file": "intelligence\\ecosystem\\twelve_repo_frontier_integration_engine.py",
+          "non_empty_loc": 1022,
+          "public_exports": 15,
+          "depth_ratio_loc_per_export": 68.13,
+          "classification": "DEEP_MODULE"
+        }
+      ]
+    },
+    "5_meta_astryx": {
+      "dense_compression": {
+        "dense_payload": "{\"$s\":\"astryx.v1\",\"k\":[\"g\",\"m\",\"c\",\"s\",\"mp\",\"p\",\"fp\",\"e\",\"cf\",\"ok\",\"cc\",\"bl\",\"ka\"],\"r\":[[\"2026_09_SEA_WAS\",\"SEA @ WAS\",\"player_receiving_yds\",\"Jaxon Smith-Njigba OVER 93.5\",-114,0.642,0.532,0.11,\"86/100\",true],{\"i\":[10,\"GSI-ACL-RETURN-TO-PLAY-2026\",11,1845.2,12,3.4,8,\"84/100\",9,true]}]}",
+        "raw_chars": 406,
+        "dense_chars": 287,
+        "compression_savings_pct": 29.31
+      },
+      "lossless_roundtrip": true,
+      "spoken_a11y": {
+        "spoken_phrase": "Seahawks at Commanders receiver matchup card, rating 86 out of 100, Jaxon Smith-Njigba Over 93.5 Receiving Yards, article, verified",
+        "passed": true,
+        "leaked_jargon": [],
+        "has_raw_pct_confidence": false
+      }
+    },
+    "6_prometheus": {
+      "alerts": [
+        {
+          "alert": "GseConjunctionGateTooLoose",
+          "metric": "gse_conjunction_gate_pass_ratio{slate=\"2026_week9\"}",
+          "value": 0.184,
+          "op": ">",
+          "threshold": 0.35,
+          "severity": "critical",
+          "state": "OK"
+        },
+        {
+          "alert": "GsiKinematicResidualHigh",
+          "metric": "gsi_kinematic_ode_residual{cohort=\"nfl_soft_tissue\"}",
+          "value": 0.0012,
+          "op": ">",
+          "threshold": 0.01,
+          "severity": "warning",
+          "state": "OK"
+        }
+      ],
+      "openmetrics_preview": [
+        "# HELP gse_c_drive_free_gigabytes Free disk space on C:",
+        "# TYPE gse_c_drive_free_gigabytes gauge",
+        "gse_c_drive_free_gigabytes{host=\"garrett\"} 6.03",
+        "# HELP gse_conjunction_gate_pass_ratio Fraction of board clearing conjunction gate",
+        "# TYPE gse_conjunction_gate_pass_ratio gauge",
+        "gse_conjunction_gate_pass_ratio{slate=\"2026_week9\"} 0.184",
+        "# HELP gse_jev_simulated_snaps_total Total simulated snaps",
+        "# TYPE gse_jev_simulated_snaps_total counter",
+        "gse_jev_simulated_snaps_total{week=\"9\"} 1750000.0",
+        "# HELP gsi_kinematic_ode_residual Biomechanical ODE solver residual"
+      ]
+    },
+    "7_sherlock": {
+      "verified_insider": {
+        "handle": "adamschefter",
+        "claimed_domain": "NFL_INJURY_DESK",
+        "matched_sites": [
+          "X_BeatDesk"
+        ],
+        "probe_latency_ms": 42.0,
+        "is_impersonator_or_unverified": false,
+        "trust_tier": "VERIFIED_PRIMARY_SOURCE",
+        "allow_autonomous_line_move_trigger": true
+      },
+      "blocked_impersonator": {
+        "handle": "adamschefter_official99",
+        "claimed_domain": "NFL_INJURY_DESK",
+        "matched_sites": [],
+        "probe_latency_ms": 42.0,
+        "is_impersonator_or_unverified": true,
+        "trust_tier": "UNVERIFIED_QUARANTINE",
+        "allow_autonomous_line_move_trigger": false
+      },
+      "verified_gsi_orcid": {
+        "handle": "0000-0002-1825-0097",
+        "claimed_domain": "GSI_ORCID_PROVENANCE",
+        "matched_sites": [
+          "ORCID_Science"
+        ],
+        "probe_latency_ms": 42.0,
+        "is_impersonator_or_unverified": false,
+        "trust_tier": "VERIFIED_PRIMARY_SOURCE",
+        "allow_autonomous_line_move_trigger": true
+      }
+    },
+    "8_openmausbot": {
+      "trimmed": true,
+      "query_result": {
+        "result_id": "res_1",
+        "total_matching_lines": 10,
+        "offset": 0,
+        "limit": 5,
+        "lines": [
+          "L40: Line 40: EQ-NFL-0040 Sinkhorn optimal transport snap transition weight = 0.4000",
+          "L41: Line 41: EQ-NFL-0041 Sinkhorn optimal transport snap transition weight = 0.4100",
+          "L42: Line 42: EQ-NFL-0042 Sinkhorn optimal transport snap transition weight = 0.4200",
+          "L43: Line 43: EQ-NFL-0043 Sinkhorn optimal transport snap transition weight = 0.4300",
+          "L44: Line 44: EQ-NFL-0044 Sinkhorn optimal transport snap transition weight = 0.4400"
+        ]
+      },
+      "dreams": [
+        {
+          "type": "DREAM",
+          "topic": "gsi_hamstring_fatigue",
+          "supporting_sessions": 2,
+          "confidence": 0.9,
+          "synthesized_rule": "[DREAM:gsi_hamstring_fatigue] Cross-verified across 2 runs: Short-week road travel + Q4 snap share >78% elevates eccentric hamstring load by 19%; Sprint deceleration asymmetry >6% precedes soft-tissue DNP within 10 days"
+        },
+        {
+          "type": "DREAM",
+          "topic": "week9_bye_guard",
+          "supporting_sessions": 2,
+          "confidence": 0.95,
+          "synthesized_rule": "[DREAM:week9_bye_guard] Cross-verified across 2 runs: PIT and TEN are on Week 9 bye and must never enter main-slate pools; Alias normalization WSH->WAS prevents duplicate matchup ingestion"
+        }
+      ]
+    },
+    "9_astral_ruff": {
+      "ruff_version": "ruff 0.17.4",
+      "audited_files": 1,
+      "elapsed_ms": 637.65,
+      "violation_count": 0,
+      "diagnostics": [],
+      "passed": true
+    },
+    "10_zed_sumtree_rope": {
+      "summary": {
+        "byte_len": 4710,
+        "line_count": 58,
+        "token_estimate": 1177
+      },
+      "locate_line_35": {
+        "target_line": 35,
+        "tree_hops": 6,
+        "chunk_start_line": 35,
+        "chunk_start_byte": 2816,
+        "chunk_preview": "horn optimal transport snap transition weight = 0.3600\nLine 37: EQ-NFL-0037 Sinkhorn optimal transport snap transition w"
+      }
+    },
+    "11_billion_context": {
+      "ccr_pointer": "[acp-stored id=\"ccr_fetch_week9_pbp_1bf8c28cb511dd64\" tool=\"fetch_week9_pbp\" chars=4710 preview=\"Line 1: EQ-NFL-0001 Sinkhorn optimal transport snap transition weight = 0.0100 Line 2: EQ-NFL-0002 Sinkhorn optimal transport snap transition weight = 0.0200 Line 3: EQ-NFL-0003 Sinkhorn optimal transport snap transition weight = 0.0300 Lin...\"]",
+      "hybrid_gse_top1": {
+        "id": "EQ-GSE-DFS-14",
+        "domain": "GSE",
+        "bm25_norm": 1.0,
+        "fuzzy_norm": 1.0,
+        "hybrid_score": 1.0,
+        "text": "Level-k Quantal Response Equilibrium field ownership fixed-point contraction for DraftKings GPP"
+      },
+      "hybrid_gsi_top1": {
+        "id": "EQ-GSI-BIO-07",
+        "domain": "GSI",
+        "bm25_norm": 1.0,
+        "fuzzy_norm": 1.0,
+        "hybrid_score": 1.0,
+        "text": "Achilles and hamstring eccentric force-velocity tendon strain differential equation under fatigue"
+      }
+    },
+    "12_dsx_nvke": {
+      "gse_svid_verified": true,
+      "gsi_svid_verified": true,
+      "node_contract": {
+        "node_name": "Beexly",
+        "cpu_arch": "AMD64",
+        "native_avx2_dll_present": true,
+        "native_avx2_dll_bytes": 514109,
+        "c_drive_free_gb": 6.03,
+        "c_drive_total_gb": 475.85,
+        "local_execution_lane": "INTEL_AVX2_NATIVE_DLL_PLUS_DUCKDB",
+        "burst_gpu_lane": "RUNPOD_COLAB_SPIFFE_ATTESTED",
+        "contract_ready": true
+      }
+    }
+  }
+}

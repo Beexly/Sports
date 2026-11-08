@@ -1894,7 +1894,9 @@ def test_34_understand_anything_knowledge_graph_and_session_librarian_immunizati
         run_full_understand_anything_and_session_librarian_suite,
     )
     from intelligence.reasoning.live_cognitive_self_improvement_engine import (
+        discover_fleet_skills_catalog,
         pava_monotone_quantiles,
+        run_jev_skill_select_and_merged_turn_routing,
         verify_symbolic_and_probabilistic_axioms,
     )
     from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (
@@ -1977,5 +1979,24 @@ def test_34_understand_anything_knowledge_graph_and_session_librarian_immunizati
     assert manifest["schema_version"] == "4.0.0"
     assert manifest["verified_18_external_authorities"]["3_ragas_official_nvidia_metrics"]["composite_nvidia_ragas_score"] == 1.0
     assert manifest["training_and_distillation_flywheel"]["curriculum_domains_harvested"] == 8
+
+    # Jev Skill Select (`jevkit.skillpick` + `jevkit.turn`)
+    fleet_catalog = discover_fleet_skills_catalog()
+    assert len(fleet_catalog) >= 150
+    trivial_pick = run_jev_skill_select_and_merged_turn_routing("thanks, that worked")
+    assert trivial_pick["status"] == "ok"
+    assert trivial_pick["needs_skill"] == 0.0
+    assert trivial_pick["skills"] == []
+    assert trivial_pick["latency_ms"] == 0
+    assert trivial_pick.get("skipped") == "trivial"
+
+    active_pick = run_jev_skill_select_and_merged_turn_routing(
+        "Run gse-connected-game-workflow and jev-skill-select for NFL Week 9"
+    )
+    assert active_pick["status"] == "ok"
+    assert active_pick["needs_skill"] >= 0.5
+    assert len(active_pick["skills"]) >= 1
+    assert active_pick["skills"][0]["match"] >= 0.5
+
 
 

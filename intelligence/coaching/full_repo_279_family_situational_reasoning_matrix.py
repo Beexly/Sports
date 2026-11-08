@@ -130,10 +130,23 @@ X_SITUATIONAL_83_RULES_CATALOG: List[Dict[str, Any]] = [
 ]
 
 
+EMISSION_FIREWALL_7_RULE_IDS = ("7.9", "7.10", "8.11", "8.12", "8.13", "8.14", "8.15")
+X_SITUATIONAL_80_CATALOG_RULES: List[Dict[str, Any]] = [
+    r for r in X_SITUATIONAL_83_RULES_CATALOG if r["id"] not in EMISSION_FIREWALL_7_RULE_IDS
+]
+X_EMISSION_FIREWALL_7_RULES: List[Dict[str, Any]] = [
+    r for r in X_SITUATIONAL_83_RULES_CATALOG if r["id"] in EMISSION_FIREWALL_7_RULE_IDS
+]
+X_RECONCILED_87_RULES_CATALOG: List[Dict[str, Any]] = X_SITUATIONAL_83_RULES_CATALOG
+
+
 def evaluate_all_80_x_situational_rules(game_ctx: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Executes all 83 X-Situational Rules (`x-situational-80-rules.ts` Records 1.1–8.15)
-    against `game_ctx`, returning per-rule evaluations and theme aggregates.
+    Executes all 87 reconciled rules across the two-tier situational architecture:
+      - 80 Situational Catalog Rules (`1.1..7.8`, `8.1..8.10`)
+      - 7 Emission-Firewall Rules (`7.9`, `7.10`, `8.11..8.15`)
+      - 85 Situational + Misleading-Stat Rules (`80 + 5`)
+      - 87 Total Reconciled Rules (`80 + 7`)
     """
     qb_ctx = game_ctx.get("qb_context") or {}
     wr1_ctx = game_ctx.get("wr1_injury_context") or {}
@@ -143,9 +156,11 @@ def evaluate_all_80_x_situational_rules(game_ctx: Dict[str, Any]) -> Dict[str, A
     is_decoy = bool(wr1_ctx.get("is_decoy_risk", True))
 
     evaluated_rules: List[Dict[str, Any]] = []
+    situational_catalog_80_records: List[Dict[str, Any]] = []
+    emission_firewall_7_records: List[Dict[str, Any]] = []
     theme_deltas: Dict[str, float] = {}
 
-    for rec in X_SITUATIONAL_83_RULES_CATALOG:
+    for rec in X_RECONCILED_87_RULES_CATALOG:
         rid = rec["id"]
         ev = rec["evaluator"]
         val = 0.0
@@ -180,24 +195,38 @@ def evaluate_all_80_x_situational_rules(game_ctx: Dict[str, Any]) -> Dict[str, A
             gate_status = "accepted_conditioned"
 
         sign = 1 if val > 0 else (-1 if val < 0 else 0)
-        evaluated_rules.append(
-            {
-                "recordId": rid,
-                "theme": rec["theme"],
-                "evaluator": ev,
-                "name": rec["name"],
-                "value": round(val, 4),
-                "sign": sign,
-                "gateStatus": gate_status,
-            }
-        )
+        tier = "emission_firewall_7" if rid in EMISSION_FIREWALL_7_RULE_IDS else "situational_catalog_80"
+        item = {
+            "recordId": rid,
+            "tier": tier,
+            "theme": rec["theme"],
+            "evaluator": ev,
+            "name": rec["name"],
+            "value": round(val, 4),
+            "sign": sign,
+            "gateStatus": gate_status,
+        }
+        evaluated_rules.append(item)
+        if rid in EMISSION_FIREWALL_7_RULE_IDS:
+            emission_firewall_7_records.append(item)
+        else:
+            situational_catalog_80_records.append(item)
         if ev != "gate":
             theme_deltas[rec["theme"]] = round(theme_deltas.get(rec["theme"], 0.0) + val, 4)
 
     return {
+        "evaluated_count": len(situational_catalog_80_records),
+        "firewall_rules_evaluated_count": len(emission_firewall_7_records),
+        "total_rules_evaluated": len(evaluated_rules),
+        "situational_catalog_80_rules_count": len(situational_catalog_80_records),
+        "emission_firewall_7_rules_count": len(emission_firewall_7_records),
+        "situational_plus_misleading_85_rules_count": len(situational_catalog_80_records) + 5,
+        "total_reconciled_rules_count": len(evaluated_rules),
         "x_situational_80_rules_count": len(evaluated_rules),
         "misleading_stat_firewall_rules_count": 15,
         "theme_deltas": theme_deltas,
+        "situational_catalog_80_rules": situational_catalog_80_records,
+        "emission_firewall_7_rules": emission_firewall_7_records,
         "records": evaluated_rules,
     }
 

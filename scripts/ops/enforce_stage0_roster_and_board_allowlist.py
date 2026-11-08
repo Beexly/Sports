@@ -421,9 +421,19 @@ def load_stage0_game_roster_allowlist(
     matchup_key = f"{away}@{home}"
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
-    if not pbp_path.is_file():
-        raise Stage0RosterContaminationError(f"STAGE0_FAIL: 2026 PBP parquet missing: {pbp_path}")
-    pbp = pd.read_parquet(pbp_path)
+    slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
+    pbp: pd.DataFrame | None = None
+    if pbp_path.is_file():
+        try:
+            pbp = pd.read_parquet(pbp_path)
+        except Exception:
+            pbp = None
+    if pbp is None and slim_csv_path.is_file():
+        pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
+    if pbp is None:
+        raise Stage0RosterContaminationError(
+            f"STAGE0_FAIL: 2026 PBP parquet ({pbp_path}) and clean-checkout slim fallback ({slim_csv_path}) both missing"
+        )
     if "LAR" in (away, home):
         pbp = pbp.copy()
         pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR"})

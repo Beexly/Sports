@@ -3,7 +3,7 @@ Downloads Social Sweeps (X-100, IG-50), SiriusXM Radio, Pregame Data Packs,
 DFS DKSalaries & Content-OS Wiring Module (Track C — 2026-11-05)
 ================================================================================
 Ingests, cross-verifies, and evaluates the social/matchup/radio/DFS/Content-OS
-corpus from `C:\\Users\\Garrett\\Downloads\\`:
+corpus from `external/downloads/`:
 
 1. Social & Charting Sweeps:
    - `2026-11-02-X-100-DOCUMENTED.md` (101 X dossiers)
@@ -46,8 +46,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping
 
 
-DOWNLOADS_DIR = Path(r"C:\Users\Garrett\Downloads")
-REPO_ROOT = Path(r"C:\c\wt-week8-forensic")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DOWNLOADS_DIR = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 

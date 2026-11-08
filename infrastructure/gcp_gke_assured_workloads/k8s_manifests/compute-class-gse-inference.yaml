@@ -1,0 +1,64 @@
+# EXAMPLE TEMPLATE - DO NOT DEPLOY without aligning CUDs and Specific Reservations
+# Generated via `gke-compute-classes` skill (verified against GoogleCloudPlatform/cluster-autoscaler).
+# AI/ML Inference Priority Order: Reservations -> On-Demand -> DWS FlexStart -> Spot (never Spot-first for low-latency inference).
+apiVersion: cloud.google.com/v1
+kind: ComputeClass
+metadata:
+  name: gse-ai-inference-ccc
+  labels:
+    purpose: "example-template-do-not-deploy"
+    workload-tier: "ai-inference"
+    created-with-google-skill: "gke-compute-classes"
+spec:
+  # IMPORTANT: Align machineFamily with your existing CUDs/Reservations
+  priorities:
+    # Priority 1: Specific Reservation (Committed GPU/Compute Capacity)
+    - machineFamily: g2
+      gpu:
+        type: nvidia-l4
+        count: 1
+        driverVersion: default
+      reservations:
+        affinity: Specific
+        specific:
+          - name: gse-l4-inference-reservation
+      storage:
+        bootDiskSize: 100
+        bootDiskType: pd-balanced
+    # Priority 2: On-Demand L4 fallback with AnyThenFail reservation affinity
+    - machineFamily: g2
+      gpu:
+        type: nvidia-l4
+        count: 1
+        driverVersion: default
+      reservations:
+        affinity: AnyThenFail
+      storage:
+        bootDiskSize: 100
+        bootDiskType: pd-balanced
+    # Priority 3: DWS FlexStart fallback
+    - machineFamily: g2
+      gpu:
+        type: nvidia-l4
+        count: 1
+        driverVersion: default
+      flexStart:
+        enabled: true
+      storage:
+        bootDiskSize: 100
+        bootDiskType: pd-balanced
+    # Priority 4: Spot fallback (last resort only)
+    - machineFamily: g2
+      gpu:
+        type: nvidia-l4
+        count: 1
+        driverVersion: default
+      spot: true
+      storage:
+        bootDiskSize: 100
+        bootDiskType: pd-balanced
+  nodePoolAutoCreation:
+    enabled: true
+  whenUnsatisfiable: ScaleUpAnyway
+  activeMigration:
+    optimizeRulePriority: true

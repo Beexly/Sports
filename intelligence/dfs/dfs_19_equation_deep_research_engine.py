@@ -63,6 +63,10 @@ from intelligence.native_kernels.native_bridge import (
     is_native_kernel_loaded,
 )
 
+DFS_35_CONTEST_9570_LINEUP_ATTRIBUTION = (
+    "Establish The Run (ETR) / Mike Leone (2026-09-06) — 35-contest, 9,570-lineup empirical audit of ETR Solver sims"
+)
+
 FRONTIER_19_DFS_EQUATIONS_CATALOG: List[Dict[str, Any]] = [
     {
         "eq_id": "EQ-DFS-08",

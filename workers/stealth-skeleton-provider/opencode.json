@@ -127,6 +127,71 @@
             "output_per_1m_usd": 0.0,
             "cache_read_per_1m_usd": 0.0
           }
+        },
+        "stealth/crouton-alpha": {
+          "id": "stealth/crouton-alpha",
+          "name": "Stealth Crouton Alpha (OpenCode Free High-Reasoning Adversarial Verification & Audit Brain)",
+          "context_length": 131072,
+          "max_output_tokens": 16384,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "glm-5.3-flash-free": {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash-Free (OpenCode Free High-Throughput Schema, PBP & Equation Verification Model)",
+          "context_length": 131072,
+          "max_output_tokens": 16384,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "qwen3.8-flash": {
+          "id": "qwen3.8-flash",
+          "name": "Qwen 3.8 Flash (OpenCode Fast Math, Code & Structured Output Model)",
+          "context_length": 131072,
+          "max_output_tokens": 16384,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "gpt-6-luna": {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna (OpenCode / OpenRouter Multi-Brain Verification & Situational Critique Model)",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "deepseek-1017": {
+          "id": "deepseek-1017",
+          "name": "DeepSeek 1017 (Adversarial Santa-Method Dual-Brain Mathematical & Code Reviewer)",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
         }
       }
     },
@@ -134,6 +199,59 @@
       "name": "OpenRouter GSE Stealth-Skeleton Gateway",
       "api": "https://openrouter.ai/api/v1",
       "models": {
+        "prism-ml/ternary-bonsai-2-27b": {
+          "id": "prism-ml/ternary-bonsai-2-27b",
+          "name": "PrismML Ternary Bonsai 2 27B (Qwen3.8-27B Ternary 8.5GB Reasoning Model, xhigh effort, 262K ctx)",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "tool_call": true,
+          "reasoning": true,
+          "reasoning_effort": "xhigh",
+          "pricing": {
+            "input_per_1m_usd": 0.075,
+            "output_per_1m_usd": 0.5,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "recursive/flint-v1.0:free": {
+          "id": "recursive/flint-v1.0:free",
+          "name": "Recursive Flint v1.0 Free (OpenRouter Free Recursive Verification & Code Audit Model)",
+          "context_length": 131072,
+          "max_output_tokens": 16384,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "deepseek/deepseek-1017": {
+          "id": "deepseek/deepseek-1017",
+          "name": "DeepSeek 1017 (OpenRouter Adversarial Verification & Equation Audit Model)",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
+        "gpt-6-luna": {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna (OpenRouter Multi-Brain Verification & Situational Critique Model)",
+          "context_length": 262144,
+          "max_output_tokens": 32768,
+          "tool_call": true,
+          "reasoning": true,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          }
+        },
         "gse/stealth-skeleton-alpha": {
           "id": "gse/stealth-skeleton-alpha",
           "name": "GSE Stealth-Skeleton Alpha (Free Execution-Verified Coding & Math Engine)",

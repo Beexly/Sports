@@ -14,7 +14,7 @@ Eliminates the root causes identified in the Week 8 Post-Slate Autopsy and Week 
           Dalton Schultz $3,200, Woody Marks $5,700, Jonah Coleman $5,300, Joe Milton III $4,100).
   3. G3 — Trench & Matchup-Conditioned DST Scoring Engine (wired to Nov 7 Morning Analytics
           Sweep wPP/xwPP pass protection + QB Supporting Cast Scores; hard-blocks road dog
-          punt DSTs facing elite offenses like Jets DST @ KC and Raiders DST @ SF).
+          punt DSTs facing elite offenses like blocked Jets DST @ KC and Raiders DST @ SF).
   4. G4 — 3-Archetype Correlated Classic MILP Portfolio Solver (Lineup 1 = Bertsimas-Sim Gamma=3
           Robust Cash/SE Core; Lineup 2 = Hunter-Vielma-Zaman + Ledoit-Wolf Primary GPP Game Stack;
           Lineup 3 = Haugh-Singal Dirichlet KL Contrarian Leverage + Submodular P99 + Late-Swap).
@@ -43,6 +43,9 @@ from intelligence.external_charting.morning_sweep_2026_11_07 import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+DFS_35_CONTEST_9570_LINEUP_ATTRIBUTION = (
+    "Establish The Run (ETR) / Mike Leone (2026-09-06) — 35-contest, 9,570-lineup empirical audit of ETR Solver sims"
+)
 EMPIRICAL_PRIORS_PATH = REPO_ROOT / "data" / "dfs" / "empirical_dk_ownership_and_ceiling_priors_2026.json"
 
 
@@ -208,7 +211,7 @@ SUB_FLOOR_ROLE_TRAP_DENYLIST: Dict[str, str] = {
 
 # Road-Underdog Punt DSTs Facing Top Offenses (Blocked from Cash & 3-Max GPP Lineups)
 BLOCKED_PUNT_DSTS_BY_TEAM: Dict[str, str] = {
-    "NYJ": "Jets DST ($2,100) playing at Arrowhead vs Patrick Mahomes after allowing 38 pts to LV in Week 8",
+    "NYJ": "Blocked Jets DST ($2,100) playing at Arrowhead vs Patrick Mahomes after allowing 38 pts to LV in Week 8",
     "LV": "Raiders DST ($2,200) playing on road at San Francisco vs Brock Purdy / CMC / Kyle Shanahan",
     "MIA": "Dolphins DST ($2,500) facing Detroit (#1 scoring offense: Goff, Gibbs, Amon-Ra, Jamo, LaPorta)",
     "ARI": "Cardinals DST ($2,300) playing on road at Seattle (JSN + Walker/Charbonnet)",

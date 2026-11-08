@@ -29,7 +29,7 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import minimize
 
-DB_PATH = Path("C:/Users/Garrett/Downloads/circa_observations.db")
+DB_PATH = Path("external/downloads/circa_observations.db")
 OUT_PATH = Path("C:/Users/Garrett/Sports/docs/ops/hawkes-regime-2026-10-26.json")
 
 

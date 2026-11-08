@@ -51,6 +51,9 @@ from intelligence.dfs.dfs_and_fantasy_accuracy_engine import (
 REPO_ROOT = Path(__file__).resolve().parents[2]
 GSE_PROJECTIONS_JSON = REPO_ROOT / "data" / "dfs" / "gse_post_game_sim_player_projections_week9_2026_11_07.json"
 GSE_CURATED_POOL_JSON = REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+DFS_35_CONTEST_9570_LINEUP_ATTRIBUTION = (
+    "Establish The Run (ETR) / Mike Leone (2026-09-06) — 35-contest, 9,570-lineup empirical audit of ETR Solver sims"
+)
 
 
 def _safe_num(val: Any, default: float = 0.0) -> float:

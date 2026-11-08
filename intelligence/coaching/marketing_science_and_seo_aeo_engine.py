@@ -1,7 +1,7 @@
 """
 Live Kernel 22: Marketing Science (INDEX-MARKETING.md 24 Works) & Elite SEO / AEO / GEO AI-Agent Discovery Engine
 =================================================================================================================
-Wires the entire Marketing Science library (`C:\\Users\\Garrett\\Downloads\\INDEX-MARKETING.md`, 24 canonical papers,
+Wires the entire Marketing Science library (`external/downloads/INDEX-MARKETING.md`, 24 canonical papers,
 textbooks, and open-source production libraries) plus the Search Engine Optimization (SEO), Answer Engine
 Optimization (AEO), and Generative Engine Optimization (GEO) AI-Agent Discovery Engine directly into the live
 GSE Reasoning Engine, Connected Game Workflow (`gse_connected_game_workflow.py`), and `apps/web`.

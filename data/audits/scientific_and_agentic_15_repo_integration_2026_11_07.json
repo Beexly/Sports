@@ -1,0 +1,378 @@
+{
+  "generated_at_utc": "2026-11-08T01:12:00Z",
+  "two_pass_status": "PASS_ALL_15_REPOS_VERIFIED",
+  "repos": {
+    "1_tensorflow": {
+      "xla_int8_engine": {
+        "output_shape": [
+          8,
+          4
+        ],
+        "max_abs_quant_error": 0.020462,
+        "weight_sqnr_db": 44.69,
+        "memory_compression_ratio": 4.0,
+        "onnxruntime_available": true,
+        "onnxruntime_version": "1.30.0",
+        "disk_saved_mb_vs_tensorflow": 550.0
+      },
+      "pr_review_idempotency": {
+        "idempotent": true,
+        "public_jargon_violation": false,
+        "line_count": 1
+      }
+    },
+    "2_system_design_primer": {
+      "cache_hit_verification": {
+        "source": "cache",
+        "data": {
+          "matchup": "select props from was @ sea",
+          "count": 1840
+        },
+        "api_calls_used": 1
+      },
+      "hits": 1
+    },
+    "3_awesome_python": {
+      "c_drive_free_gb": 6.04,
+      "evaluated_count": 4,
+      "results": [
+        {
+          "name": "statsmodels",
+          "category": "econometrics",
+          "health_score": 99.55,
+          "install_size_mb": 11.3,
+          "verdict": "KEEP_SHORTLIST",
+          "recommended_replacement": null
+        },
+        {
+          "name": "onnxruntime",
+          "category": "inference",
+          "health_score": 99.69,
+          "install_size_mb": 14.0,
+          "verdict": "KEEP_SHORTLIST",
+          "recommended_replacement": null
+        },
+        {
+          "name": "tensorflow",
+          "category": "inference",
+          "health_score": 54.94,
+          "install_size_mb": 550.0,
+          "verdict": "REPLACE_WITH_ZERO_BLOAT_ALTERNATIVE",
+          "recommended_replacement": "onnxruntime + TFLite INT8 NumPy kernel"
+        },
+        {
+          "name": "calibre-desktop",
+          "category": "corpus_fts",
+          "health_score": 52.63,
+          "install_size_mb": 450.0,
+          "verdict": "REPLACE_WITH_ZERO_BLOAT_ALTERNATIVE",
+          "recommended_replacement": "sqlite3 FTS5 CalibreZeroBloatFts5Library"
+        }
+      ],
+      "adr_0001_shortlist": {
+        "econometrics": [
+          "statsmodels"
+        ],
+        "inference": [
+          "onnxruntime"
+        ]
+      }
+    },
+    "4_project_based_learning": {
+      "state": {
+        "https://legacy.dead-feed.example/v1": {
+          "strikes": 2,
+          "status": "CONFIRMED_DEAD_2_STRIKES",
+          "last_code": 404,
+          "license": "open"
+        },
+        "https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events": {
+          "strikes": 0,
+          "status": "HEALTHY_ACTIVE",
+          "license": "open"
+        },
+        "https://commercial-charting.example/ftn": {
+          "strikes": 0,
+          "status": "LEARN_ONLY_NON_COMMERCIAL",
+          "license": "research_only"
+        },
+        "https://untested-biomechanics-sensor.example/v2": {
+          "strikes": 0,
+          "status": "UNTESTED \u2014 QUEUED FOR EVALUATION",
+          "license": "open"
+        }
+      },
+      "redirect_updates": [],
+      "confirmed_dead": [
+        "https://legacy.dead-feed.example/v1"
+      ],
+      "learn_only_non_commercial": [
+        "https://commercial-charting.example/ftn"
+      ],
+      "untested_queued": [
+        "https://untested-biomechanics-sensor.example/v2"
+      ]
+    },
+    "5_the_algorithms_python": {
+      "fracdiff": {
+        "optimal_degree_d": 0.5,
+        "memory_correlation_with_level": 0.9429,
+        "adf_t_stat": 0.1033,
+        "stationary_series": [
+          14.84375,
+          15.0,
+          15.15625,
+          14.8125,
+          15.21875,
+          15.4375,
+          15.625,
+          15.78125
+        ]
+      },
+      "cvar_kelly": {
+        "decimal_net_odds_b": 0.9091,
+        "full_kelly": 0.1285,
+        "quarter_kelly": 0.03212,
+        "unit_expected_shortfall_95": 1.0,
+        "final_recommended_bankroll_fraction": 0.03
+      }
+    },
+    "6_yt_dlp": {
+      "yt_dlp_module_version": "2026.10.26",
+      "yt_dlp_cli_available": true,
+      "zero_video_bytes_written_to_disk": true,
+      "sponsorblock_summary": {
+        "skip_ranges": [
+          [
+            0.0,
+            20.0,
+            "sponsor"
+          ]
+        ],
+        "merged_skip_intervals": [
+          [
+            0.0,
+            20.0
+          ]
+        ],
+        "poi_highlights": [],
+        "skipped_seconds": 20.0,
+        "effective_content_seconds": 100.0
+      },
+      "retained_cue_count": 2,
+      "gse_tuesday_presser_signals": [
+        "Tuesday presser: RB1 was limited with hamstring tightness, we will monitor snap count in red zone."
+      ],
+      "gsi_lecture_signals": [
+        "GSI biomechanics note: eccentric tendon strain and force plate asymmetry dropped below 3%."
+      ]
+    },
+    "7_autogpt": {
+      "perf_compare": {
+        "verdict": "faster",
+        "exit_code": 0,
+        "baseline": {
+          "count": 12,
+          "p50": 152.5,
+          "p95": 160.9,
+          "p99": 161.78
+        },
+        "candidate": {
+          "count": 12,
+          "p50": 92.0,
+          "p95": 95.45,
+          "p99": 95.89
+        },
+        "p50_diff_ci95": [
+          -66.0,
+          -57.0
+        ],
+        "p95_diff_ci95": [
+          -68.0,
+          -61.0
+        ]
+      },
+      "sentry_grant_guard": {
+        "total_incoming_spans": 22,
+        "health_pings_dropped": 2,
+        "billable_spans_retained": 2,
+        "traces_sample_rate": 0.1,
+        "credit_burn_reduction_pct": 90.91
+      },
+      "multi_expert_quorum": {
+        "decision": "APPROVE",
+        "publish_allowed": true,
+        "approval_count": 2,
+        "weighted_probability": 0.5809
+      }
+    },
+    "8_cs_notes": {
+      "sliding_window_max_k3": [
+        2.0,
+        3.2,
+        3.2,
+        4.1,
+        4.1
+      ],
+      "streaming_median": 2.9,
+      "spike_detected": true,
+      "consistent_hash_shard": "shard-c"
+    },
+    "9_hellogithub": {
+      "accepted_count": 3,
+      "zero_plaintext_credentials": true,
+      "markdown_table": "| Repository | Stars | Language | Target Domain | Leverage Verdict |\n|---|---:|---|---|---|\n| `statsmodels/statsmodels` | 11,747 | Python | GSE + GSI Econometrics | LIVE_INSTALLED_0.15.0 |\n| `yt-dlp/yt-dlp` | 206,022 | Python | GSE Presser + GSI Lectures | LIVE_INSTALLED_2026.10.26 |\n| `Oaklight/ToolRegistry` | 67 | Python | MCP / Agent Tool Schema Governance | RECURSIVE_DIFF_UPGRADED |"
+    },
+    "10_oaklight_toolregistry": {
+      "toolregistry_version": "0.19.0",
+      "schema_change_kind": "compatible",
+      "schema_diff_summary": {
+        "added_optional": [
+          "situational.dome"
+        ],
+        "added_required": [],
+        "removed": [],
+        "type_changed_breaking": [],
+        "type_widened_compatible": [
+          "situational.wind_mph: integer->number"
+        ],
+        "required_relaxed_compatible": []
+      },
+      "rrf_top2": [
+        [
+          "EQ-GSE-SGP-01",
+          0.03252247488101534
+        ],
+        [
+          "EQ-GSI-BIO-07",
+          0.03252247488101534
+        ]
+      ]
+    },
+    "11_superdesigndev_treg": {
+      "frontmatter": {
+        "title": "NFL Week 9 Situational Overlay",
+        "sources": [
+          "packages/prediction-engine/src/no-bet-gate.ts"
+        ]
+      },
+      "codemap_drift_verification": {
+        "frontmatter": {
+          "title": "NFL Week 9 Situational Overlay",
+          "sources": [
+            "packages/prediction-engine/src/no-bet-gate.ts"
+          ]
+        },
+        "referenced_sources": [
+          "packages/prediction-engine/src/no-bet-gate.ts"
+        ],
+        "missing_sources": [],
+        "codemap_in_sync": true,
+        "public_jargon_violation": false
+      },
+      "free_workhorse_route": {
+        "task_type": "pbp_schema_verification",
+        "tier": "ZERO_WASTE_WORKHORSE_FREE",
+        "endpoint": "omniroute/auto/coding:free",
+        "fallback_endpoint": "qwen/qwen-2.5-coder-32b-instruct:free",
+        "estimated_cost_usd": 0.0,
+        "rationale": "Workhorse parsing/verification routed to $0.00 free endpoint without intelligence compression"
+      },
+      "frontier_jev_route": {
+        "task_type": "jev_snap_simulation",
+        "tier": "FRONTIER_REASONING",
+        "endpoint": "~typesafe/jev-latest",
+        "estimated_cost_usd": 0.0,
+        "rationale": "Deep situational snap synthesis / 5-stage conjunction gate arbitration"
+      }
+    },
+    "12_bytedance_deer_flow": {
+      "first_delivery_dropped": false,
+      "duplicate_redelivery_dropped": true,
+      "checkpoint_recovery": {
+        "run_id": "run_week9_sea",
+        "next_stage_to_execute": 3,
+        "completed_stages": [
+          1,
+          2
+        ],
+        "is_complete": false,
+        "latest_artifacts": {
+          "mask_bits": 288
+        }
+      },
+      "blocking_io_scan": {
+        "clean": true,
+        "violation_count": 0,
+        "violations": []
+      }
+    },
+    "13_kovidgoyal_calibre": {
+      "gse_fts5_hits": [
+        {
+          "code": "BK-14-SGP-COPULA",
+          "domain": "GSE",
+          "title": "Student-t Copula & Tail Dependence in Same-Game Parlays",
+          "snippet": "[Student]-[t] [copula] joint tail dependence and Sinkhorn optimal transport for NFL SGP pricing.",
+          "bm25_score": -6.5894
+        }
+      ],
+      "gsi_fts5_hits": [
+        {
+          "code": "GSI-PAPER-2026-09",
+          "domain": "GSI",
+          "title": "Eccentric Hamstring Force-Velocity Asymmetry Under Short-Week Fatigue",
+          "snippet": "High-speed sprint deceleration asymmetry and [eccentric] [hamstring] tendon [strain] telemetry.",
+          "bm25_score": -4.1239
+        }
+      ]
+    },
+    "14_statsmodels": {
+      "full_board_fdr_by": {
+        "statsmodels_version": "0.15.0",
+        "method": "fdr_by",
+        "alpha": 0.05,
+        "total_tested": 22,
+        "naive_uncorrected_positives": 4,
+        "approved_count": 2,
+        "pass_rejected_count": 20,
+        "approved": [
+          {
+            "prop_id": "JSN_OVER_93.5_REC_YDS",
+            "p_value": 0.0004,
+            "raw_edge": 0.082,
+            "q_value": 0.032479,
+            "publish_allowed": true
+          },
+          {
+            "prop_id": "GSI_HAMSTRING_ASYMMETRY_BIOMARKER",
+            "p_value": 0.0008,
+            "raw_edge": 0.095,
+            "q_value": 0.032479,
+            "publish_allowed": true
+          }
+        ],
+        "bonferroni_threshold": 0.002273
+      },
+      "robust_huber_hac": {
+        "rlm_intercept": 0.03604,
+        "rlm_slope": 2.01234,
+        "ols_slope": 4.40238,
+        "newey_west_hac_slope_se": 1.43933,
+        "outlier_downweighted_min_weight": 0.0063,
+        "collinear_guard_triggered": false
+      }
+    },
+    "15_imageai": {
+      "ap_metrics": {
+        "average_precision": 0.877,
+        "peak_f1": 0.90276
+      },
+      "all22_box_state": {
+        "nms_retained_defenders": 8,
+        "defenders_in_trench_box": 8,
+        "sam_hoppen_box_classification": "HEAVY_BOX_8_PLUS"
+      }
+    }
+  }
+}

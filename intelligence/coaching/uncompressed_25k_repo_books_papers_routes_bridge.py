@@ -34,7 +34,7 @@ bridge across:
      - `workers/*` (37+ Cloudflare & X/Twitter transport workers)
      - `gse-ml-service/*` (38+ FastAPI / ML inference modules)
   2. All Textbooks, Research Books, and PDF Corpora across Repo, Google Drive (`G:\\My Drive`),
-     OneDrive (`C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge`), and `Downloads`:
+     and the committed repo-relative `bk-dl-deduplicated-provenance-index.json`:
      - 17 Textbooks & Quantitative Finance / Sports Analytics Books in `GSE-Ultra-30TB-Vault\\downloads-archive-2026-11-03`
      - 1,185 PDFs in `G:\\My Drive\\GSE-Ultra-30TB-Vault` (`research-corpus-2026-11-03\\pdfs` [1,117], `deep-corpus-2026-11-04\\pdfs` [52])
      - 337 PDFs + 58 Paper Dossiers + 702 Markdown Specs in `G:\\My Drive\\GSN`
@@ -50,9 +50,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-GDRIVE_ROOT = Path(r"G:\My Drive")
-ONEDRIVE_ROOT = Path(r"C:\Users\Garrett\OneDrive\Documents\Galaxy Sports Edge")
-DOWNLOADS_ROOT = Path(r"C:\Users\Garrett\Downloads")
+GDRIVE_ROOT = REPO_ROOT / "data" / "corpus"
+ONEDRIVE_ROOT = REPO_ROOT / "docs" / "data-sources"
+DOWNLOADS_ROOT = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07"
 
 IGNORE_DIRS = {
     "node_modules",

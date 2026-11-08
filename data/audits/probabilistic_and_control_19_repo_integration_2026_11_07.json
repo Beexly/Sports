@@ -1,0 +1,502 @@
+{
+  "generated_at_utc": "2026-11-07T23:59:00Z",
+  "two_pass_status": "PASS_ALL_19_UNIQUE_REPOS_20_URLS_VERIFIED",
+  "hardware_telemetry": {
+    "node_name": "Beexly",
+    "cpu_arch": "AMD64",
+    "c_drive_free_gb": 2.66,
+    "zero_disk_bloat_enforced": true
+  },
+  "repos": {
+    "1_ourownstory_neural_prophet": {
+      "n_obs": 24,
+      "rmse": 0.0025,
+      "r2_score": 0.9998,
+      "base_slope_k0": 0.48051,
+      "changepoint_deltas": [
+        0.02189,
+        0.03837,
+        0.03697
+      ],
+      "dominant_structural_break_t": 0.5333,
+      "ar_weights": [
+        0.00192,
+        -0.00652
+      ],
+      "fitted_last": 0.6278,
+      "components_last": {
+        "trend": 0.5232,
+        "seasonality": 0.0456,
+        "ar_net": 0.0,
+        "covariates": 0.059
+      }
+    },
+    "2_teamhg_memex_eli5": {
+      "base_mse": 0.0,
+      "top_feature": "pressure_rate_over_expected",
+      "ranked_features": [
+        {
+          "feature": "pressure_rate_over_expected",
+          "importance_mean": 4.285559,
+          "importance_std": 0.635442,
+          "structural_weight": 2.501059,
+          "taylor_instance_contribution": -0.31313
+        },
+        {
+          "feature": "separation_score_1st_read",
+          "importance_mean": 2.117993,
+          "importance_std": 0.258166,
+          "structural_weight": -1.087348,
+          "taylor_instance_contribution": 1.086385
+        },
+        {
+          "feature": "neutral_pace_sec",
+          "importance_mean": 0.003523,
+          "importance_std": 0.000425,
+          "structural_weight": 0.07643,
+          "taylor_instance_contribution": -0.024295
+        }
+      ],
+      "80_rule_firewall_clean": true,
+      "banned_features_detected": []
+    },
+    "3_tanu_n_prabhu_python": {
+      "matrix_dim": 32,
+      "naive_loop_ms": 4.3667,
+      "avx2_blas_ms": 0.04215,
+      "speedup_factor": 103.61,
+      "max_abs_error": 5.329070518200751e-15,
+      "numerical_parity": true
+    },
+    "4_lumiwealth_lumibot": {
+      "approved_order": {
+        "ticket_id": "GSE-WK9-JSN-OVER",
+        "status": "FILLED_PARITY_VERIFIED",
+        "raw_kelly_pct": 0.18078,
+        "capped_fraction_pct": 0.03,
+        "stake_dollars": 300.0,
+        "stake_units": 3.0
+      },
+      "rejected_pass_order": {
+        "ticket_id": "GSE-WK9-NO-EDGE",
+        "status": "PASS_CONJUNCTION_GATE",
+        "stake_units": 0.0,
+        "stake_dollars": 0.0
+      },
+      "compliance_hold_order": {
+        "ticket_id": "POLY-HOLD-TEST",
+        "status": "REJECTED_COMPLIANCE_HOLD",
+        "stake_units": 0.0,
+        "stake_dollars": 0.0
+      }
+    },
+    "5_stanfordmlgroup_ngboost_x2": {
+      "fit_metrics": {
+        "score_rule": "logscore",
+        "initial_nll": 4.6461,
+        "final_nll": 3.31174,
+        "initial_crps": 14.61127,
+        "mean_crps": 2.74114,
+        "nll_improved": true,
+        "crps_improved": true
+      },
+      "crps_natural_grad_metrics": {
+        "score_rule": "crps",
+        "initial_nll": 4.6461,
+        "final_nll": 3.93456,
+        "initial_crps": 14.61127,
+        "mean_crps": 5.20361,
+        "nll_improved": true,
+        "crps_improved": true
+      },
+      "sample_predicted_mu": [
+        75.566,
+        79.93,
+        87.008
+      ],
+      "sample_predicted_sigma": [
+        10.704,
+        10.674,
+        10.682
+      ]
+    },
+    "6_pymc_devs_pymc": {
+      "partial_pooling": {
+        "hyper_mu0": 4.6067,
+        "hyper_tau": 0.4696,
+        "shrinkage_factors": [
+          0.125,
+          0.7143,
+          0.1481,
+          0.1739
+        ],
+        "posterior_means": [
+          4.7758,
+          5.2619,
+          4.3454,
+          4.5186
+        ],
+        "posterior_stds": [
+          0.166,
+          0.3969,
+          0.1807,
+          0.1958
+        ]
+      },
+      "nuts_hmc": {
+        "posterior_mean": [
+          1.2979,
+          -0.8352
+        ],
+        "posterior_std": [
+          0.962,
+          0.8589
+        ],
+        "accept_rate": 1.0,
+        "uturn_early_stops": 9,
+        "max_r_hat": 1.1194,
+        "min_ess": 19.64
+      }
+    },
+    "7_pyro_ppl_pyro": {
+      "initial_elbo": -6.8753,
+      "final_elbo": 0.9014,
+      "elbo_improved": true,
+      "guide_loc": [
+        2.0,
+        -1.2
+      ],
+      "guide_scale": [
+        0.6,
+        0.6
+      ],
+      "sticking_the_landing": true
+    },
+    "8_jmschrei_pomegranate": {
+      "log_evidence": -18.45832,
+      "viterbi_path": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        2
+      ],
+      "posterior_state_probs_last": [
+        0.0,
+        0.00527,
+        0.99473
+      ],
+      "posterior_row_sums_valid": true,
+      "baum_welch": {
+        "initial_log_evidence": -18.45832,
+        "final_log_evidence": -7.47168,
+        "baum_welch_improved": true,
+        "learned_means": [
+          28.4667,
+          22.85,
+          17.3
+        ],
+        "learned_stds": [
+          0.4922,
+          0.35,
+          0.3742
+        ]
+      },
+      "mixture_model": {
+        "weights": [
+          0.3739,
+          0.6261
+        ],
+        "means": [
+          17.2992,
+          26.2041
+        ],
+        "stds": [
+          0.3739,
+          2.8087
+        ],
+        "log_likelihood_improved": true
+      }
+    },
+    "9_pgmpy_pgmpy": {
+      "minimal_backdoor_adjustment_set": [
+        "TrailingGameScript"
+      ],
+      "do_calculus": {
+        "p_y1_do_x1": 0.551,
+        "p_y1_do_x0": 0.491,
+        "causal_ate": 0.06,
+        "naive_observational_diff": -0.23674,
+        "confounding_bias_removed": -0.29674
+      },
+      "variable_elimination": {
+        "query_var": "Y",
+        "evidence": {
+          "X": 1
+        },
+        "posterior_probs": [
+          0.60924,
+          0.39076
+        ]
+      }
+    },
+    "10_uber_orbit": {
+      "final_level": 27.5358,
+      "final_damped_slope": 0.1325,
+      "residual_sigma": 0.598,
+      "forecast": [
+        27.7002,
+        30.1272,
+        25.7001
+      ],
+      "lower_90": [
+        26.7165,
+        29.0849,
+        24.6025
+      ],
+      "upper_90": [
+        28.6839,
+        31.1694,
+        26.7977
+      ]
+    },
+    "11_probml_dynamax": {
+      "timesteps": 15,
+      "log_marginal_likelihood": -13.3961,
+      "filtered_mean_last": [
+        11.9815,
+        2.9498,
+        7.853,
+        0.5185
+      ],
+      "smoothed_mean_last": [
+        11.9815,
+        2.9498,
+        7.853,
+        0.5185
+      ],
+      "mean_filtered_cov_trace": 0.902524,
+      "mean_smoothed_cov_trace": 0.466869,
+      "rts_reduced_uncertainty": true,
+      "huber_outliers_gated": 0,
+      "ukf_filtered_mean_last": [
+        11.9522,
+        3.1548,
+        7.8494,
+        0.5796
+      ],
+      "ukf_mean_cov_trace": 0.686835
+    },
+    "12_nixtla_hierarchicalforecast": {
+      "method": "mint_shrink",
+      "shrinkage_lambda": 0.6773,
+      "base_forecasts": [
+        258.0,
+        94.5,
+        68.0,
+        56.5,
+        51.0
+      ],
+      "reconciled_forecasts": [
+        265.5436,
+        92.8427,
+        66.5423,
+        55.6603,
+        50.4983
+      ],
+      "coherence_violation_before": 12.0,
+      "coherence_violation_after": 0.0,
+      "is_coherent": true
+    },
+    "13_openturns_openturns": {
+      "sobol": {
+        "output_variance": 1.155633,
+        "first_order_sobol": [
+          0.8895,
+          0.1398,
+          0.0206
+        ],
+        "total_order_sobol": [
+          0.8895,
+          0.1398,
+          0.0206
+        ],
+        "dominant_variable_index": 0
+      },
+      "form_reliability": {
+        "hasofer_lind_beta": 2.60788,
+        "form_failure_probability": 0.004555,
+        "sorm_curvatures": [
+          0.01277
+        ],
+        "sorm_failure_probability": 0.004481,
+        "design_point_physical": [
+          2006.3258,
+          1994.4605
+        ],
+        "importance_factors": [
+          0.5167,
+          0.4833
+        ]
+      }
+    },
+    "14_sktime_skpro": {
+      "mean_crps": 6.03284,
+      "pinball_losses": {
+        "q10": 1.95326,
+        "q50": 4.3376,
+        "q90": 1.59615
+      },
+      "nominal_coverage": 0.9,
+      "empirical_coverage": 0.85,
+      "calibration_gap": 0.05,
+      "harrell_c_index": 1.0
+    },
+    "15_jax_ml_oryx": {
+      "forward_y": [
+        1.01655,
+        1.58931,
+        2.63322
+      ],
+      "roundtrip_max_error": 3.3306690738754696e-16,
+      "log_prob_y": [
+        -0.6917,
+        -0.53621,
+        -1.65926
+      ]
+    },
+    "16_mit_acl_mppi_numba": {
+      "num_rollouts_per_iter": 512,
+      "horizon_steps": 20,
+      "initial_mean_cost": 86.1958,
+      "optimized_free_energy_cost": 59.7016,
+      "start_dist_to_goal": 4.8374,
+      "final_dist_to_goal": 0.8145,
+      "min_obstacle_clearance": 0.0241,
+      "collision_free": true,
+      "optimal_control_first_step": [
+        3.1723,
+        0.2119
+      ]
+    },
+    "17_dfki_ric_movement_primitives": {
+      "dmp": {
+        "goal_target": 2.4,
+        "final_position": 2.4012,
+        "goal_convergence_error": 0.0012,
+        "imitation_rmse": 0.02925
+      },
+      "promp": {
+        "conditioned_time_index": 25,
+        "target_via_point": 1.15,
+        "posterior_mean_at_via_point": 1.1487,
+        "posterior_std_at_via_point": 0.00997,
+        "via_point_error": 0.001334
+      }
+    },
+    "18_wiseodd_probabilistic_models": {
+      "cavi_gmm": {
+        "n_components": 2,
+        "cluster_means": [
+          [
+            -3.0645,
+            -3.0126
+          ],
+          [
+            3.0923,
+            3.0909
+          ]
+        ],
+        "cluster_counts": [
+          30,
+          30
+        ],
+        "initial_elbo": -186.8607,
+        "final_elbo": -186.8607,
+        "elbo_monotonic": true
+      },
+      "gaussian_process": {
+        "posterior_mean": [
+          1.0058,
+          0.7923
+        ],
+        "posterior_std": [
+          0.08,
+          0.0834
+        ]
+      },
+      "rbm_and_score_matching": {
+        "initial_recon_mse": 0.24899,
+        "final_recon_mse": 0.24783,
+        "rbm_recon_improved": true,
+        "rbm_free_energy": -2.7497,
+        "ebm_score_matching_mu": [
+          0.014,
+          0.0395
+        ],
+        "ebm_hyvarinen_objective": -0.101
+      }
+    },
+    "19_rakhimov_scram": {
+      "top_gate": "SGP_Ticket_Fails",
+      "minimal_cut_set_count": 4,
+      "minimal_cut_sets": [
+        [
+          "Bracket_Double_Coverage"
+        ],
+        [
+          "Early_Blowout_Run_Script"
+        ],
+        [
+          "LT_Injury_Pressure_Spike"
+        ],
+        [
+          "Kicker_Missed_FG",
+          "RedZone_Stall"
+        ]
+      ],
+      "single_point_failures": [
+        "Bracket_Double_Coverage",
+        "Early_Blowout_Run_Script",
+        "LT_Injury_Pressure_Spike"
+      ],
+      "top_event_probability": 0.417308,
+      "dominant_birnbaum_event": "LT_Injury_Pressure_Spike",
+      "importance_measures": {
+        "Bracket_Double_Coverage": {
+          "basic_prob": 0.15,
+          "birnbaum_importance": 0.68552,
+          "fussell_vesely": 0.35945,
+          "risk_achievement_worth": 2.3963
+        },
+        "Early_Blowout_Run_Script": {
+          "basic_prob": 0.12,
+          "birnbaum_importance": 0.66215,
+          "fussell_vesely": 0.28756,
+          "risk_achievement_worth": 2.3963
+        },
+        "Kicker_Missed_FG": {
+          "basic_prob": 0.2,
+          "birnbaum_importance": 0.15334,
+          "fussell_vesely": 0.11982,
+          "risk_achievement_worth": 1.294
+        },
+        "LT_Injury_Pressure_Spike": {
+          "basic_prob": 0.18,
+          "birnbaum_importance": 0.7106,
+          "fussell_vesely": 0.43134,
+          "risk_achievement_worth": 2.3963
+        },
+        "RedZone_Stall": {
+          "basic_prob": 0.25,
+          "birnbaum_importance": 0.12267,
+          "fussell_vesely": 0.11982,
+          "risk_achievement_worth": 1.2205
+        }
+      }
+    }
+  }
+}

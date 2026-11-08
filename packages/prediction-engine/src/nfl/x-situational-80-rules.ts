@@ -1091,4 +1091,29 @@ export function evaluateXSituationalRecordById(
   return { recordId: record.id, theme: record.theme, evaluator: record.evaluator, value, sign, gateStatus, lesson: record.lesson };
 }
 
+export const X_EMISSION_FIREWALL_7_RECORD_CATALOG: readonly XSituationalRecord[] = [
+  { id: "7.9", theme: 7, title: "GSE Emission Firewall", lesson: "Unpriced Prop Board Circuit Breaker: zero two-sided juice requires mandatory PASS.", evaluator: "market", expected: "negative" },
+  { id: "7.10", theme: 7, title: "GSE Emission Firewall", lesson: "Immutable Pregame Direction Freeze (Rule H3 Anti-Flip): pregame direction cannot silently flip without new verified injury/weather.", evaluator: "market", expected: "negative" },
+  { id: "8.11", theme: 8, title: "GSE Misleading-Stat Firewall", lesson: "Play-Clock-at-Snap pooled without down stratification is a proven down confound (pooled t=-3.63 collapses to t=+0.02 within down).", evaluator: "gate", expected: "negative" },
+  { id: "8.12", theme: 8, title: "GSE Misleading-Stat Firewall", lesson: "Disguise collapse hazard without pre-snap spatial width normalization is confounded by formation width.", evaluator: "gate", expected: "negative" },
+  { id: "8.13", theme: 8, title: "GSE Misleading-Stat Firewall", lesson: "Cumulative season rushing yards are confounded by carry volume (R^2~0.99); de-confound to per-carry RYOE rate.", evaluator: "gate", expected: "negative" },
+  { id: "8.14", theme: 8, title: "GSE Misleading-Stat Firewall", lesson: "Stunt/twist pressure rate without OL slide/chip protection context overstates pass-rush disruption.", evaluator: "gate", expected: "negative" },
+  { id: "8.15", theme: 8, title: "GSE Misleading-Stat Firewall", lesson: "Right-censored career cohorts and relative-risk claims without base-rate denominators create spurious edges.", evaluator: "gate", expected: "negative" },
+];
+
+export const X_RECONCILED_87_RECORD_CATALOG: readonly XSituationalRecord[] = [
+  ...X_SITUATIONAL_80_RECORD_CATALOG,
+  ...X_EMISSION_FIREWALL_7_RECORD_CATALOG,
+];
+
+export function getReconciledSituationalRuleCensus() {
+  return {
+    situational_catalog_80_rules_count: X_SITUATIONAL_80_RECORD_CATALOG.length,
+    emission_firewall_7_rules_count: X_EMISSION_FIREWALL_7_RECORD_CATALOG.length,
+    misleading_stat_firewall_15_rules_count: MISLEADING_PATTERNS.length,
+    situational_plus_misleading_85_rules_count: X_SITUATIONAL_80_RECORD_CATALOG.length + 5,
+    total_reconciled_rules_count: X_RECONCILED_87_RECORD_CATALOG.length,
+  };
+}
+
 export { mean, sigmoid, clamp, clamp01 };

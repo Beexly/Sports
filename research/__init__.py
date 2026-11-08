@@ -1,1 +1,1 @@
-"""GSE & GSI Research Package."""
+"""Isolated Research Sandbox Package."""

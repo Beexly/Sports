@@ -212,6 +212,10 @@ def execute_single_layer(
 
     signals: Dict[str, Any] = {
         "equation_batch_log_odds_delta": round(eq_delta + base_val * 0.1, 6),
+        "family_consumption_receipts_count": int(eq_batch.get("family_consumption_receipts_count", 0)),
+        "family_consumption_receipts": list(eq_batch.get("family_consumption_receipts", [])),
+        "equations_active_above_min_sample": int(eq_batch.get("equations_active_above_min_sample", 0)),
+        "equations_held_below_min_sample": int(eq_batch.get("equations_held_below_min_sample", 0)),
         "home_team_id": home_ent["current_team_id"],
         "away_team_id": away_ent["current_team_id"],
         "warehouse_records_verified": int(wh_summary.get("all_datasets_total_records", 79298)),

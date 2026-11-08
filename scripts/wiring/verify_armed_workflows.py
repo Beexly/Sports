@@ -137,6 +137,8 @@ def check_armed() -> Dict[str, Any]:
         metcalf = resolver.resolve_entity("DK Metcalf", entity_type="player", as_of_date="2026-11-06")
         adams = resolver.resolve_entity("Davante Adams", entity_type="player", as_of_date="2026-11-06")
         diggs = resolver.resolve_entity("Stefon Diggs", entity_type="player", as_of_date="2026-11-06")
+        milton = resolver.resolve_entity("Joe Milton III", entity_type="player", as_of_date="2026-11-06")
+        brissett = resolver.resolve_entity("Jacoby Brissett", entity_type="player", as_of_date="2026-11-06")
         rosters_ok = (
             darnold.get("current_team_id") == "SEA"
             and rodgers.get("current_team_id") == "PIT"
@@ -145,10 +147,12 @@ def check_armed() -> Dict[str, Any]:
             and metcalf.get("current_team_id") == "PIT"
             and adams.get("current_team_id") == "LAR"
             and diggs.get("current_team_id") == "WAS"
+            and milton.get("current_team_id") == "PHI"
+            and brissett.get("current_team_id") == "BAL"
         )
 
         eq_counts = get_dynamic_equation_registry_counts()
-        eqs_ok = eq_counts["total_cataloged"] >= 21419 and eq_counts["placeholder_formula_specs"] == 0
+        eqs_ok = eq_counts["total_cataloged"] == 21419 and eq_counts["placeholder_formula_specs"] == 0
 
         wh = WarehouseLoader()
         wh_meta = wh.verify_all_10_datasets()
@@ -158,14 +162,44 @@ def check_armed() -> Dict[str, Any]:
         corpus_hits = reader.query("Cover 4 Quarters MOD PUSH 2-Jet pass protection trench", top_k=5)
         corpus_ok = len(corpus_hits) >= 1 and int(w3_data.get("research_ledger_count", 0)) >= 48609
 
-        pkt = build_context_packet(game_id="2024_10_CIN_BAL", as_of_utc="2024-11-07T00:00:00Z", persist=False)
-        trace = execute_reasoning_workflow(pkt, write_to_disk=False)
+        # Launch -> Doctor -> Drive -> Evidence -> Cleanup verification contract (OpenMausBot pattern)
+        pkt = build_context_packet(game_id="2024_10_CIN_BAL", as_of_utc="2024-11-07T00:00:00Z", persist=True)
+        trace = execute_reasoning_workflow(pkt, write_to_disk=True)
         layers_dict = pkt.get("layers", {})
-        total_eq_eval = sum(
+        layer_eq_eval = sum(
             int(l_val.get("provenance", {}).get("equations_executed", 0))
             for l_val in layers_dict.values()
         )
-        workflow_ok = len(layers_dict) == 26 and total_eq_eval >= 21419 and bool(trace.get("trace_id"))
+        total_eq_eval = int(
+            trace.get("family_consumption_census", {}).get("equations_evaluated_total", layer_eq_eval)
+        )
+        consumed_fams = int(
+            trace.get("family_consumption_census", {}).get(
+                "consumed_families",
+                trace.get("family_consumption_census", {}).get("accounted_families", 0),
+            )
+        )
+        l4_l5_ok = bool(
+            trace.get("l4_l5_deterministic_audit", {}).get(
+                "all_5_tracks_l4_l5_verified",
+                trace.get("l4_l5_deterministic_audit", {}).get("all_5_tracks_verified", False),
+            )
+        )
+        workflow_ok = (
+            len(layers_dict) == 26
+            and total_eq_eval == 21419
+            and bool(trace.get("trace_id"))
+            and consumed_fams == 279
+            and l4_l5_ok
+        )
+
+        gdrive_manifest_ok = (
+            REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "google-drive-and-docs-verified-manifest.json"
+        ).exists() and (
+            REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "bk-dl-deduplicated-provenance-index.json"
+        ).exists() and (
+            REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "external-github-repos-quarantine-manifest.json"
+        ).exists()
 
         sim_cmd = subprocess.run(
             [
@@ -184,13 +218,23 @@ def check_armed() -> Dict[str, Any]:
         sim_contract_ok = sim_cmd.returncode == 0 and "ARMED_CONTRACT_VALIDATED" in sim_cmd.stdout
 
         checks["stage_8_live_runtime_execution_proofs"] = {
-            "armed": bool(rosters_ok and eqs_ok and wh_ok and corpus_ok and workflow_ok and sim_contract_ok),
+            "armed": bool(rosters_ok and eqs_ok and wh_ok and corpus_ok and workflow_ok and sim_contract_ok and gdrive_manifest_ok),
             "rosters_2026_verified": rosters_ok,
             "equations_21419_zero_placeholders_verified": eqs_ok,
             "equations_evaluated_in_live_trace": total_eq_eval,
+            "families_279_consumed_in_trace": int(trace.get("family_consumption_census", {}).get("consumed_families", 0)),
+            "l4_l5_all_5_tracks_verified": bool(trace.get("l4_l5_deterministic_audit", {}).get("all_5_tracks_l4_l5_verified", False)),
+            "google_drive_and_docs_manifest_verified": gdrive_manifest_ok,
             "warehouse_10_datasets_verified": wh_ok,
             "corpus_records_verified": int(w3_data.get("research_ledger_count", 0)),
             "simulator_cli_handoff_contract_verified": sim_contract_ok,
+            "verification_contract": {
+                "launch": "build_context_packet(2024_10_CIN_BAL, persist=True)",
+                "doctor": "validate_context_packet_schema + validate_reasoning_trace_schema",
+                "drive": "gse_coach_mind_simulator.py --dry-run-contract",
+                "evidence": "ARMED_CONTRACT_VALIDATED",
+                "cleanup": "preserved_canonical_fixture_on_disk",
+            },
         }
     except Exception as exc:
         checks["stage_8_live_runtime_execution_proofs"] = {

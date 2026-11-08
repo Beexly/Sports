@@ -2,7 +2,7 @@
 Wave 8 Live Executable Books, PDFs & GitHub Sports-Quant Engine
 ================================================================
 Compiles every chapter, equation, algorithm, and statistical model from the Wave 8
-local football books/PDFs in ``C:\\Users\\Garrett\\Downloads\\`` (1,184 pages) AND
+local football books/PDFs in ``external/downloads/`` (1,184 pages) AND
 all 38 unique GitHub books, Colab notebooks, and sports-quant/analytics repositories
 into live, deterministic, executable mathematical kernels inside the GSE Connected
 Game Workflow (Stage 1A, Stage 1B, Stage 3/4, Stage 5, Markdown Dossier, and

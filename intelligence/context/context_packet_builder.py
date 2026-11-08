@@ -32,14 +32,22 @@ def _get_dynamic_team_pbp_priors() -> Dict[str, Dict[str, float]]:
 
     priors: Dict[str, Dict[str, float]] = {}
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
-    if pbp_path.is_file():
+    slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
+    if pbp_path.is_file() or slim_csv_path.is_file():
         try:
             import pandas as pd
 
-            pbp = pd.read_parquet(
-                pbp_path,
-                columns=["game_id", "posteam", "defteam", "play_type", "epa", "sack", "qb_hit", "xpass"],
-            )
+            cols = ["game_id", "posteam", "defteam", "play_type", "epa", "sack", "qb_hit", "xpass"]
+            pbp = None
+            if pbp_path.is_file():
+                try:
+                    pbp = pd.read_parquet(pbp_path, columns=cols)
+                except Exception:
+                    pbp = None
+            if pbp is None and slim_csv_path.is_file():
+                pbp = pd.read_csv(slim_csv_path, compression="gzip", usecols=cols, low_memory=False)
+            if pbp is None:
+                raise RuntimeError("No PBP source available")
             pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR"})
             pbp["defteam"] = pbp["defteam"].replace({"LA": "LAR"})
             plays = pbp[pbp["play_type"].isin(["pass", "run"]) & pbp["posteam"].notna()]
