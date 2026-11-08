@@ -1,0 +1,4898 @@
+{
+  "release_id": "GSE-WEEK9-LIVE-SIMULATIONS-RELEASED-0740-CST-2026-11-08",
+  "released_at_utc": "2026-11-08T14:10:55.920465+00:00",
+  "status": "RELEASED_LIVE",
+  "seal_verified_coach_mindset_hash": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+  "tau_coach_fourth_down": 0.42,
+  "games_simulated_count": 15,
+  "worlds_per_game": 10000,
+  "snaps_per_world": 175,
+  "total_game_worlds_simulated": 150000,
+  "total_pbp_snaps_simulated": 26250000,
+  "causal_looped_funnel_summary": {
+    "stage1_summary": {
+      "books_compiled": 503,
+      "equations_compiled": 21419,
+      "total_metrics_feeding_stats": 114,
+      "players_compiled": 128
+    },
+    "stage2_summary": {
+      "canonical_projections_lock_hash": "a701b73f467bbf2779eb2665db4bb8edd3b9824a7f5303287e90705878d0a737",
+      "week9_games_projected": 15,
+      "canonical_player_projections_count": 135
+    },
+    "stage3a_summary": {
+      "games_evaluated": 15,
+      "prop_tickets_evaluated": 258,
+      "top_game_discrepancy": {
+        "game_id": "2026_09_DEN_CAR",
+        "matchup": "DEN@CAR",
+        "home_team": "CAR",
+        "away_team": "DEN",
+        "home_ml_american": 235,
+        "away_ml_american": -290,
+        "human_plain_english_game_summary": "In DEN at CAR, our 10,000 simulated games project a final score of DEN 20.6, CAR 15.7 (Total 36.4 vs. the book's 43.0, a -6.65-point gap; fair spread CAR +4.89 vs. book -3.5).",
+        "pass_id": "PASS_2_PROJECTIONS_PLUS_EQUATIONS_TO_MARKETS_AND_DISCREPANCIES",
+        "gse_canonical_total": 36.35,
+        "book_total_line": 43.0,
+        "total_discrepancy_pts": -6.65,
+        "gse_canonical_home_margin": -4.89,
+        "gse_fair_spread_home": 4.89,
+        "book_spread_home": -3.5,
+        "spread_discrepancy_pts": -8.39,
+        "devigged_book_home_win_prob": 0.2864,
+        "lab_bias_corrected_book_home_win_prob": 0.2944,
+        "gse_canonical_home_win_prob": 0.3085,
+        "win_prob_discrepancy_edge": 0.0221,
+        "conformal_total_90_interval": [
+          26.5,
+          46.2
+        ],
+        "grok2_conformal_diagnostic_residual_flagged": true,
+        "heavy_juice_firewall_blocked": true,
+        "recommended_total_action": "UNDER",
+        "recommended_spread_action": "AWAY_COVER",
+        "projected_winner": "AWAY",
+        "projected_loser": "HOME"
+      }
+    },
+    "stage3b_summary": {
+      "total_pool_players": 135,
+      "counts_by_position": {
+        "QB": 30,
+        "RB": 30,
+        "WR": 30,
+        "TE": 30,
+        "DST": 15
+      }
+    },
+    "stage4_and_stage5_summary": {
+      "lineups_constructed": 6,
+      "iterations_executed": 8,
+      "total_simulated_lineup_worlds": 120000,
+      "initial_mean_cvar_099_dk_pts": 249.87,
+      "final_mean_cvar_099_dk_pts": 260.53,
+      "cvar_099_improvement_dk_pts": 10.66,
+      "monotonic_cvar_improvement_verified": true
+    }
+  },
+  "games": [
+    {
+      "rank": 1,
+      "game_id": "2026_09_JAX_BAL",
+      "matchup": "JAX @ BAL",
+      "window": "TNF",
+      "kickoff_note": "Jacoby Brissett starts for BAL; TNF final archived",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": 0.0163,
+      "projected_away_score": 21.97,
+      "projected_home_score": 23.69,
+      "projected_total_mean": 45.66,
+      "projected_total_quantiles": {
+        "p10": 30.21,
+        "p25": 37.92,
+        "p50": 45.63,
+        "p75": 54.39,
+        "p90": 62.1
+      },
+      "book_total_line": 44.5,
+      "total_discrepancy_pts": 1.16,
+      "recommended_total_action": "PASS",
+      "projected_home_margin_mean": 1.72,
+      "projected_margin_quantiles": {
+        "p10": -16.38,
+        "p25": -6.54,
+        "p50": 1.27,
+        "p75": 11.11,
+        "p90": 17.99
+      },
+      "gse_fair_spread_home": -1.72,
+      "book_spread_home": -3.5,
+      "spread_discrepancy_pts": -1.78,
+      "recommended_spread_action": "AWAY_COVER",
+      "gse_home_win_prob": 0.5754,
+      "devigged_book_home_win_prob": 0.6092,
+      "win_prob_edge": -0.0338,
+      "projected_winner": "BAL",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        35.81,
+        55.51
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 260.4,
+        "home_pass_yds_mean": 241.3,
+        "away_rush_yds_mean": 117.4,
+        "home_rush_yds_mean": 117.7,
+        "away_wr1_yds_mean": 73.7,
+        "home_wr1_yds_mean": 62.7,
+        "away_wr1_longest_rec_mean": 29.0,
+        "home_wr1_longest_rec_mean": 25.3,
+        "away_rb1_yds_mean": 49.2,
+        "home_rb1_yds_mean": 73.0,
+        "away_rb1_longest_rush_mean": 16.7,
+        "home_rb1_longest_rush_mean": 23.1,
+        "away_sacks_mean": 2.51,
+        "home_sacks_mean": 2.27
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 191.0,
+          "p25": 224.0,
+          "p50": 260.0,
+          "p75": 297.0,
+          "p90": 331.0,
+          "mean": 260.41
+        },
+        "home_pass_yds": {
+          "p10": 174.0,
+          "p25": 206.0,
+          "p50": 241.0,
+          "p75": 276.0,
+          "p90": 309.0,
+          "mean": 241.27
+        },
+        "away_rush_yds": {
+          "p10": 73.0,
+          "p25": 92.0,
+          "p50": 115.0,
+          "p75": 141.0,
+          "p90": 164.0,
+          "mean": 117.37
+        },
+        "home_rush_yds": {
+          "p10": 74.0,
+          "p25": 92.0,
+          "p50": 115.0,
+          "p75": 141.0,
+          "p90": 164.0,
+          "mean": 117.71
+        },
+        "away_wr1_yds": {
+          "p10": 54.04,
+          "p25": 63.38,
+          "p50": 73.56,
+          "p75": 84.03,
+          "p90": 93.65,
+          "mean": 73.68
+        },
+        "home_wr1_yds": {
+          "p10": 45.24,
+          "p25": 53.56,
+          "p50": 62.66,
+          "p75": 71.76,
+          "p90": 80.34,
+          "mean": 62.73
+        },
+        "away_wr1_longest_rec": {
+          "p10": 20.97,
+          "p25": 24.51,
+          "p50": 28.59,
+          "p75": 33.15,
+          "p90": 37.43,
+          "mean": 28.99
+        },
+        "home_wr1_longest_rec": {
+          "p10": 18.0,
+          "p25": 21.14,
+          "p50": 24.99,
+          "p75": 29.02,
+          "p90": 33.17,
+          "mean": 25.31
+        },
+        "away_rb1_yds": {
+          "p10": 30.58,
+          "p25": 38.54,
+          "p50": 48.18,
+          "p75": 59.07,
+          "p90": 68.71,
+          "mean": 49.17
+        },
+        "home_rb1_yds": {
+          "p10": 45.88,
+          "p25": 57.04,
+          "p50": 71.3,
+          "p75": 87.42,
+          "p90": 101.68,
+          "mean": 72.98
+        },
+        "away_rb1_longest_rush": {
+          "p10": 10.6,
+          "p25": 13.0,
+          "p50": 16.26,
+          "p75": 19.79,
+          "p90": 23.35,
+          "mean": 16.69
+        },
+        "home_rb1_longest_rush": {
+          "p10": 14.78,
+          "p25": 18.06,
+          "p50": 22.44,
+          "p75": 27.5,
+          "p90": 32.34,
+          "mean": 23.11
+        },
+        "away_1q_score": {
+          "p10": 2.2,
+          "p25": 3.5,
+          "p50": 4.6,
+          "p75": 6.0,
+          "p90": 7.4,
+          "mean": 4.73
+        },
+        "home_1q_score": {
+          "p10": 2.5,
+          "p25": 3.7,
+          "p50": 4.9,
+          "p75": 6.3,
+          "p90": 7.8,
+          "mean": 5.09
+        },
+        "away_1h_score": {
+          "p10": 4.9,
+          "p25": 7.9,
+          "p50": 10.4,
+          "p75": 13.6,
+          "p90": 16.6,
+          "mean": 10.66
+        },
+        "home_1h_score": {
+          "p10": 5.5,
+          "p25": 8.3,
+          "p50": 11.1,
+          "p75": 14.3,
+          "p90": 17.5,
+          "mean": 11.48
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": -0.0,
+          "p50": 1.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.77
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.49
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 3.0,
+          "p50": 7.0,
+          "p75": 12.0,
+          "p90": 16.0,
+          "mean": 7.97
+        },
+        "home_kicking_pts": {
+          "p10": 3.0,
+          "p25": 6.0,
+          "p50": 10.0,
+          "p75": 15.0,
+          "p90": 18.0,
+          "mean": 10.41
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.77
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.85
+        }
+      },
+      "distribution_id": "dist_2026_09_JAX_BAL_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-REC-109",
+          "player_name": "Brian Thomas Jr.",
+          "team": "JAX",
+          "position": "WR",
+          "market_type": "Receiving Yards",
+          "direction": "OVER",
+          "line": 58.5,
+          "projected_value": 97.4,
+          "edge_percentage": 0.665,
+          "causal_equation_plain_english": "Projected Routes (31.3) x Yards Per Route Run (2.28 overall, 2.65 vs Man) x Separation & Coverage Multiplier (SSP 3.4 yds, Burn Rate 42%) = 97.4 Projected Receiving Yards (vs 58.5 line)",
+          "human_plain_english_rationale": "We like Brian Thomas Jr. OVER 58.5 Receiving Yards against BAL. He runs a route on 92% of dropbacks (31.3 projected routes) and commands first-read looks on 31% of throws. Because he creates 3.4 yards of separation at the top of his route and wins 42% of his man-coverage reps (2.65 yards per route vs man), multiplying his route volume by his efficiency projects 97.4 receiving yards."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-110",
+          "player_name": "Brian Thomas Jr.",
+          "team": "JAX",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 6.0,
+          "edge_percentage": 0.333,
+          "causal_equation_plain_english": "Projected Routes (31.3) x Target Rate (30.8%) x Catchable Ball Rate (78%) = 6.0 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Brian Thomas Jr. OVER 4.5 Receptions. As the first read on 31% of dropbacks with an 78% catchable target rate and 3.4 yards of route separation, he projects for 6.0 catches against BAL."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-100",
+          "player_name": "Derrick Henry",
+          "team": "BAL",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 84.5,
+          "projected_value": 109.5,
+          "edge_percentage": 0.296,
+          "causal_equation_plain_english": "Projected Carries (19.5) x [Yards Before Contact (1.4 yds) + Yards After Contact (3.8 yds)] x Trench & Elusiveness Multiplier (1.06x) = 109.5 Projected Rushing Yards (vs 84.5 line)",
+          "human_plain_english_rationale": "We like Derrick Henry OVER 84.5 Rushing Yards against JAX. He creates his own yardage after contact (3.8 yards after contact per carry, 105.3 Elusive Rating) and hits explosive 5+ yard gains over expectation on 22.0% of his runs. Taking 19.5 projected carries times (1.4 yards before contact + 3.8 yards after contact) gives us 109.5 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-111",
+          "player_name": "Brian Thomas Jr.",
+          "team": "JAX",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 27.1,
+          "edge_percentage": 0.26,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.6 yds) x Separation Catch Factor (0.79 from 3.4 yds cushion)] + Yards After Catch in Space (13.2 yds) = 27.1 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Brian Thomas Jr. OVER 21.5 Longest Reception against BAL. BAL plays single-high coverage on 32% of snaps, leaving Brian Thomas Jr. with one-on-one leverage outside. He generates 3.4 yards of separation at his route break and wins 42% of his man-coverage stems. When you multiply his deep target depth (17.6 air yards) by his 79% deep-window conversion rate and add 13.2 yards after the catch in open grass, our equation projects a 27.1-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-102",
+          "player_name": "Justice Hill",
+          "team": "BAL",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 16.5,
+          "projected_value": 20.6,
+          "edge_percentage": 0.248,
+          "causal_equation_plain_english": "Projected Carries (4.2) x [Yards Before Contact (2.1 yds) + Yards After Contact (2.8 yds)] x Trench & Elusiveness Multiplier (0.88x) = 20.6 Projected Rushing Yards (vs 16.5 line)",
+          "human_plain_english_rationale": "We like Justice Hill OVER 16.5 Rushing Yards against JAX. He creates his own yardage after contact (2.8 yards after contact per carry, 39.8 Elusive Rating) and hits explosive 5+ yard gains over expectation on 8.0% of his runs. Taking 4.2 projected carries times (2.1 yards before contact + 2.8 yards after contact) gives us 20.6 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-119",
+          "player_name": "Kyle Van Noy",
+          "team": "BAL",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.28,
+          "edge_percentage": 0.202,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (22.0%) / Opponent Pass-Block Grade (0.68)] x Stunt Speed Factor (350ms / 260ms) = 0.28 Expected Sacks -> 29.8% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Kyle Van Noy UNDER 0.25 Sacks against JAX (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 22.0% of snaps and knifes through stunts in 260 milliseconds against an offensive line grading at 0.68. Across 36 projected dropbacks, he projects for 0.28 sacks with a 29.8% chance of getting at least a half-sack."
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "game_id": "2026_09_CIN_ATL",
+      "matchup": "CIN @ ATL",
+      "window": "SUN_MADRID_0930_ET",
+      "kickoff_note": "Madrid International Series neutral field",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0847,
+      "projected_away_score": 25.76,
+      "projected_home_score": 23.27,
+      "projected_total_mean": 49.03,
+      "projected_total_quantiles": {
+        "p10": 32.93,
+        "p25": 40.37,
+        "p50": 48.83,
+        "p75": 56.27,
+        "p90": 66.93
+      },
+      "book_total_line": 47.5,
+      "total_discrepancy_pts": 1.53,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": -2.49,
+      "projected_margin_quantiles": {
+        "p10": -19.27,
+        "p25": -11.74,
+        "p50": -2.26,
+        "p75": 5.27,
+        "p90": 14.75
+      },
+      "gse_fair_spread_home": 2.49,
+      "book_spread_home": 1.5,
+      "spread_discrepancy_pts": -0.99,
+      "recommended_spread_action": "PASS",
+      "gse_home_win_prob": 0.4156,
+      "devigged_book_home_win_prob": 0.4675,
+      "win_prob_edge": -0.0519,
+      "projected_winner": "CIN",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        39.18,
+        58.88
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 295.5,
+        "home_pass_yds_mean": 258.6,
+        "away_rush_yds_mean": 113.0,
+        "home_rush_yds_mean": 117.8,
+        "away_wr1_yds_mean": 76.8,
+        "home_wr1_yds_mean": 67.2,
+        "away_wr1_longest_rec_mean": 30.0,
+        "home_wr1_longest_rec_mean": 26.8,
+        "away_rb1_yds_mean": 70.1,
+        "home_rb1_yds_mean": 73.0,
+        "away_rb1_longest_rush_mean": 22.3,
+        "home_rb1_longest_rush_mean": 23.2,
+        "away_sacks_mean": 2.8,
+        "home_sacks_mean": 2.42
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 223.0,
+          "p25": 256.0,
+          "p50": 294.0,
+          "p75": 334.0,
+          "p90": 370.0,
+          "mean": 295.47
+        },
+        "home_pass_yds": {
+          "p10": 185.0,
+          "p25": 220.0,
+          "p50": 258.0,
+          "p75": 297.0,
+          "p90": 332.0,
+          "mean": 258.62
+        },
+        "away_rush_yds": {
+          "p10": 69.0,
+          "p25": 88.0,
+          "p50": 111.0,
+          "p75": 136.0,
+          "p90": 158.0,
+          "mean": 113.04
+        },
+        "home_rush_yds": {
+          "p10": 75.0,
+          "p25": 94.0,
+          "p50": 116.0,
+          "p75": 140.0,
+          "p90": 163.0,
+          "mean": 117.8
+        },
+        "away_wr1_yds": {
+          "p10": 57.98,
+          "p25": 66.56,
+          "p50": 76.44,
+          "p75": 86.84,
+          "p90": 96.2,
+          "mean": 76.82
+        },
+        "home_wr1_yds": {
+          "p10": 48.1,
+          "p25": 57.2,
+          "p50": 67.08,
+          "p75": 77.22,
+          "p90": 86.32,
+          "mean": 67.24
+        },
+        "away_wr1_longest_rec": {
+          "p10": 21.96,
+          "p25": 25.53,
+          "p50": 29.62,
+          "p75": 34.07,
+          "p90": 38.42,
+          "mean": 29.99
+        },
+        "home_wr1_longest_rec": {
+          "p10": 19.17,
+          "p25": 22.5,
+          "p50": 26.52,
+          "p75": 30.78,
+          "p90": 35.01,
+          "mean": 26.85
+        },
+        "away_rb1_yds": {
+          "p10": 42.78,
+          "p25": 54.56,
+          "p50": 68.82,
+          "p75": 84.32,
+          "p90": 97.96,
+          "mean": 70.08
+        },
+        "home_rb1_yds": {
+          "p10": 46.5,
+          "p25": 58.28,
+          "p50": 71.92,
+          "p75": 86.8,
+          "p90": 101.06,
+          "mean": 73.04
+        },
+        "away_rb1_longest_rush": {
+          "p10": 13.9,
+          "p25": 17.5,
+          "p50": 21.8,
+          "p75": 26.55,
+          "p90": 31.28,
+          "mean": 22.3
+        },
+        "home_rb1_longest_rush": {
+          "p10": 14.8,
+          "p25": 18.32,
+          "p50": 22.7,
+          "p75": 27.48,
+          "p90": 32.24,
+          "mean": 23.21
+        },
+        "away_1q_score": {
+          "p10": 2.9,
+          "p25": 4.0,
+          "p50": 5.5,
+          "p75": 6.9,
+          "p90": 8.3,
+          "mean": 5.52
+        },
+        "home_1q_score": {
+          "p10": 2.6,
+          "p25": 3.6,
+          "p50": 5.0,
+          "p75": 6.4,
+          "p90": 7.5,
+          "mean": 5.02
+        },
+        "away_1h_score": {
+          "p10": 6.6,
+          "p25": 9.1,
+          "p50": 12.4,
+          "p75": 15.7,
+          "p90": 18.8,
+          "mean": 12.45
+        },
+        "home_1h_score": {
+          "p10": 5.9,
+          "p25": 8.0,
+          "p50": 11.2,
+          "p75": 14.4,
+          "p90": 17.0,
+          "mean": 11.33
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.5,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.85
+        },
+        "home_fg_made": {
+          "p10": -0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 5.0,
+          "mean": 2.2
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 4.0,
+          "p50": 8.0,
+          "p75": 13.0,
+          "p90": 17.0,
+          "mean": 8.65
+        },
+        "home_kicking_pts": {
+          "p10": 2.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 13.0,
+          "p90": 17.0,
+          "mean": 9.44
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.82
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.68,
+          "p50": 1.02,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.95
+        }
+      },
+      "distribution_id": "dist_2026_09_CIN_ATL_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-RB-RUSH-160",
+          "player_name": "Bijan Robinson",
+          "team": "ATL",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 82.5,
+          "projected_value": 112.8,
+          "edge_percentage": 0.367,
+          "causal_equation_plain_english": "Projected Carries (18.0) x [Yards Before Contact (2.1 yds) + Yards After Contact (3.7 yds)] x Trench & Elusiveness Multiplier (1.06x) = 112.8 Projected Rushing Yards (vs 82.5 line)",
+          "human_plain_english_rationale": "We like Bijan Robinson OVER 82.5 Rushing Yards against CIN. He creates his own yardage after contact (3.7 yards after contact per carry, 78.6 Elusive Rating) and hits explosive 5+ yard gains over expectation on 26.0% of his runs. Taking 18.0 projected carries times (2.1 yards before contact + 3.7 yards after contact) gives us 112.8 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-164",
+          "player_name": "Ja'Marr Chase",
+          "team": "CIN",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 28.9,
+          "edge_percentage": 0.344,
+          "causal_equation_plain_english": "[Deep Target Air Depth (18.0 yds) x Separation Catch Factor (0.82 from 3.7 yds cushion)] + Yards After Catch in Space (14.1 yds) = 28.9 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Ja'Marr Chase OVER 21.5 Longest Reception against ATL. ATL plays single-high coverage on 22% of snaps, leaving Ja'Marr Chase with one-on-one leverage outside. He generates 3.7 yards of separation at his route break and wins 45% of his man-coverage stems. When you multiply his deep target depth (18.0 air yards) by his 82% deep-window conversion rate and add 14.1 yards after the catch in open grass, our equation projects a 28.9-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-173",
+          "player_name": "Grady Jarrett",
+          "team": "ATL",
+          "position": "DT",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.2,
+          "edge_percentage": 0.279,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (18.0%) / Opponent Pass-Block Grade (0.72)] x Stunt Speed Factor (350ms / 290ms) = 0.20 Expected Sacks -> 22.1% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Grady Jarrett UNDER 0.25 Sacks against CIN (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 18.0% of snaps and knifes through stunts in 290 milliseconds against an offensive line grading at 0.72. Across 36 projected dropbacks, he projects for 0.20 sacks with a 22.1% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-163",
+          "player_name": "Ja'Marr Chase",
+          "team": "CIN",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 6.5,
+          "projected_value": 8.1,
+          "edge_percentage": 0.246,
+          "causal_equation_plain_english": "Projected Routes (32.6) x Target Rate (36.4%) x Catchable Ball Rate (85%) = 8.1 Projected Receptions (vs 6.5 line)",
+          "human_plain_english_rationale": "We are on Ja'Marr Chase OVER 6.5 Receptions. As the first read on 38% of dropbacks with an 85% catchable target rate and 3.7 yards of route separation, he projects for 8.1 catches against ATL."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-158",
+          "player_name": "Chase Brown",
+          "team": "CIN",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 62.5,
+          "projected_value": 73.5,
+          "edge_percentage": 0.176,
+          "causal_equation_plain_english": "Projected Carries (15.0) x [Yards Before Contact (1.7 yds) + Yards After Contact (3.2 yds)] x Trench & Elusiveness Multiplier (1.00x) = 73.5 Projected Rushing Yards (vs 62.5 line)",
+          "human_plain_english_rationale": "We like Chase Brown OVER 62.5 Rushing Yards against ATL. He creates his own yardage after contact (3.2 yards after contact per carry, 51.6 Elusive Rating) and hits explosive 5+ yard gains over expectation on 16.0% of his runs. Taking 15.0 projected carries times (1.7 yards before contact + 3.2 yards after contact) gives us 73.5 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-RB-LONGEST-159",
+          "player_name": "Chase Brown",
+          "team": "CIN",
+          "position": "RB",
+          "market_type": "Longest Rush",
+          "direction": "UNDER",
+          "line": 26.6,
+          "projected_value": 29.6,
+          "edge_percentage": 0.1,
+          "causal_equation_plain_english": "Base Carry Burst (12.0 yds) + [Explosive Boom Rate (16.0%) x 35.0 yds] + [Elusive Tackle-Breaking Bonus (51.6 / 25)] = 29.6 Projected Longest Rush (vs 26.6 line)",
+          "human_plain_english_rationale": "We like Chase Brown UNDER 26.6 Longest Rush. Across 15 projected carries, he generates a 5+ yard explosive gain over blocking expectation on 16.0% of his touches and averages 3.2 yards after contact. Combining his second-level burst with his tackle-breaking rate projects a 29.6-yard longest run."
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "game_id": "2026_09_CLE_NO",
+      "matchup": "CLE @ NO",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "Superdome indoor track; Myles Garrett interior stunt advantage",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.034,
+      "projected_away_score": 18.84,
+      "projected_home_score": 21.79,
+      "projected_total_mean": 40.63,
+      "projected_total_quantiles": {
+        "p10": 22.89,
+        "p25": 31.11,
+        "p50": 39.33,
+        "p75": 49.98,
+        "p90": 55.77
+      },
+      "book_total_line": 41.5,
+      "total_discrepancy_pts": -0.87,
+      "recommended_total_action": "PASS",
+      "projected_home_margin_mean": 2.95,
+      "projected_margin_quantiles": {
+        "p10": -13.76,
+        "p25": -5.7,
+        "p50": 3.49,
+        "p75": 11.56,
+        "p90": 19.62
+      },
+      "gse_fair_spread_home": -2.95,
+      "book_spread_home": 1.0,
+      "spread_discrepancy_pts": 3.95,
+      "recommended_spread_action": "HOME_COVER",
+      "gse_home_win_prob": 0.5873,
+      "devigged_book_home_win_prob": 0.4826,
+      "win_prob_edge": 0.1047,
+      "projected_winner": "NO",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        30.78,
+        50.48
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 203.1,
+        "home_pass_yds_mean": 247.9,
+        "away_rush_yds_mean": 75.2,
+        "home_rush_yds_mean": 125.5,
+        "away_wr1_yds_mean": 52.8,
+        "home_wr1_yds_mean": 33.9,
+        "away_wr1_longest_rec_mean": 22.0,
+        "home_wr1_longest_rec_mean": 15.8,
+        "away_rb1_yds_mean": 46.6,
+        "home_rb1_yds_mean": 86.9,
+        "away_rb1_longest_rush_mean": 16.0,
+        "home_rb1_longest_rush_mean": 26.9,
+        "away_sacks_mean": 2.57,
+        "home_sacks_mean": 2.32
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 137.0,
+          "p25": 168.0,
+          "p50": 202.0,
+          "p75": 237.0,
+          "p90": 269.0,
+          "mean": 203.1
+        },
+        "home_pass_yds": {
+          "p10": 178.0,
+          "p25": 211.0,
+          "p50": 248.0,
+          "p75": 283.0,
+          "p90": 318.0,
+          "mean": 247.91
+        },
+        "away_rush_yds": {
+          "p10": 43.9,
+          "p25": 57.0,
+          "p50": 73.0,
+          "p75": 91.0,
+          "p90": 110.0,
+          "mean": 75.21
+        },
+        "home_rush_yds": {
+          "p10": 81.0,
+          "p25": 101.0,
+          "p50": 124.0,
+          "p75": 148.0,
+          "p90": 172.0,
+          "mean": 125.49
+        },
+        "away_wr1_yds": {
+          "p10": 35.62,
+          "p25": 43.68,
+          "p50": 52.52,
+          "p75": 61.62,
+          "p90": 69.94,
+          "mean": 52.8
+        },
+        "home_wr1_yds": {
+          "p10": 24.33,
+          "p25": 28.84,
+          "p50": 33.89,
+          "p75": 38.68,
+          "p90": 43.46,
+          "mean": 33.88
+        },
+        "away_wr1_longest_rec": {
+          "p10": 14.97,
+          "p25": 17.97,
+          "p50": 21.65,
+          "p75": 25.56,
+          "p90": 29.44,
+          "mean": 21.98
+        },
+        "home_wr1_longest_rec": {
+          "p10": 10.93,
+          "p25": 12.94,
+          "p50": 15.38,
+          "p75": 18.2,
+          "p90": 21.08,
+          "mean": 15.78
+        },
+        "away_rb1_yds": {
+          "p10": 27.22,
+          "p25": 35.34,
+          "p50": 45.26,
+          "p75": 56.42,
+          "p90": 68.2,
+          "mean": 46.63
+        },
+        "home_rb1_yds": {
+          "p10": 56.08,
+          "p25": 69.93,
+          "p50": 85.85,
+          "p75": 102.47,
+          "p90": 119.08,
+          "mean": 86.88
+        },
+        "away_rb1_longest_rush": {
+          "p10": 9.7,
+          "p25": 12.26,
+          "p50": 15.57,
+          "p75": 19.19,
+          "p90": 22.94,
+          "mean": 16.02
+        },
+        "home_rb1_longest_rush": {
+          "p10": 17.5,
+          "p25": 21.44,
+          "p50": 26.28,
+          "p75": 31.63,
+          "p90": 36.93,
+          "mean": 26.87
+        },
+        "away_1q_score": {
+          "p10": 1.7,
+          "p25": 2.6,
+          "p50": 4.1,
+          "p75": 5.2,
+          "p90": 6.5,
+          "mean": 4.04
+        },
+        "home_1q_score": {
+          "p10": 1.9,
+          "p25": 3.3,
+          "p50": 4.9,
+          "p75": 6.0,
+          "p90": 7.5,
+          "mean": 4.69
+        },
+        "away_1h_score": {
+          "p10": 3.8,
+          "p25": 6.0,
+          "p50": 9.1,
+          "p75": 11.7,
+          "p90": 14.6,
+          "mean": 9.12
+        },
+        "home_1h_score": {
+          "p10": 4.2,
+          "p25": 7.5,
+          "p50": 11.0,
+          "p75": 13.6,
+          "p90": 16.9,
+          "mean": 10.59
+        },
+        "away_fg_made": {
+          "p10": 1.0,
+          "p25": 2.0,
+          "p50": 3.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.76
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.79
+        },
+        "away_kicking_pts": {
+          "p10": 4.0,
+          "p25": 7.0,
+          "p50": 10.0,
+          "p75": 14.0,
+          "p90": 18.0,
+          "mean": 10.57
+        },
+        "home_kicking_pts": {
+          "p10": 1.0,
+          "p25": 3.0,
+          "p50": 7.0,
+          "p75": 12.0,
+          "p90": 17.0,
+          "mean": 7.99
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.79
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.87
+        }
+      },
+      "distribution_id": "dist_2026_09_CLE_NO_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-IDP-SACK-189",
+          "player_name": "Carl Granderson",
+          "team": "NO",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.25,
+          "edge_percentage": 0.229,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (21.0%) / Opponent Pass-Block Grade (0.70)] x Stunt Speed Factor (350ms / 270ms) = 0.25 Expected Sacks -> 27.1% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Carl Granderson UNDER 0.25 Sacks against CLE (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 21.0% of snaps and knifes through stunts in 270 milliseconds against an offensive line grading at 0.70. Across 36 projected dropbacks, he projects for 0.25 sacks with a 27.1% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-183",
+          "player_name": "Chris Olave",
+          "team": "NO",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 25.5,
+          "edge_percentage": 0.186,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.0 yds) x Separation Catch Factor (0.77 from 3.2 yds cushion)] + Yards After Catch in Space (12.4 yds) = 25.5 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Chris Olave OVER 21.5 Longest Reception against CLE. CLE plays single-high coverage on 22% of snaps, leaving Chris Olave with one-on-one leverage outside. He generates 3.2 yards of separation at his route break and wins 36% of his man-coverage stems. When you multiply his deep target depth (17.0 air yards) by his 77% deep-window conversion rate and add 12.4 yards after the catch in open grass, our equation projects a 25.5-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-176",
+          "player_name": "Alvin Kamara",
+          "team": "NO",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 64.5,
+          "projected_value": 76.1,
+          "edge_percentage": 0.18,
+          "causal_equation_plain_english": "Projected Carries (15.0) x [Yards Before Contact (1.6 yds) + Yards After Contact (3.1 yds)] x Trench & Elusiveness Multiplier (1.06x) = 76.1 Projected Rushing Yards (vs 64.5 line)",
+          "human_plain_english_rationale": "We like Alvin Kamara OVER 64.5 Rushing Yards against CLE. He creates his own yardage after contact (3.1 yards after contact per carry, 66.8 Elusive Rating) and hits explosive 5+ yard gains over expectation on 18.0% of his runs. Taking 15.0 projected carries times (1.6 yards before contact + 3.1 yards after contact) gives us 76.1 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-174",
+          "player_name": "Nick Chubb",
+          "team": "CLE",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 52.5,
+          "projected_value": 61.6,
+          "edge_percentage": 0.173,
+          "causal_equation_plain_english": "Projected Carries (14.0) x [Yards Before Contact (1.4 yds) + Yards After Contact (3.0 yds)] x Trench & Elusiveness Multiplier (1.00x) = 61.6 Projected Rushing Yards (vs 52.5 line)",
+          "human_plain_english_rationale": "We like Nick Chubb OVER 52.5 Rushing Yards against NO. He creates his own yardage after contact (3.0 yards after contact per carry, 48.0 Elusive Rating) and hits explosive 5+ yard gains over expectation on 12.0% of his runs. Taking 14.0 projected carries times (1.4 yards before contact + 3.0 yards after contact) gives us 61.6 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-REC-181",
+          "player_name": "Chris Olave",
+          "team": "NO",
+          "position": "WR",
+          "market_type": "Receiving Yards",
+          "direction": "OVER",
+          "line": 62.5,
+          "projected_value": 68.9,
+          "edge_percentage": 0.102,
+          "causal_equation_plain_english": "Projected Routes (30.6) x Yards Per Route Run (2.25 overall, 2.50 vs Man) x Separation & Coverage Multiplier (SSP 3.2 yds, Burn Rate 36%) = 68.9 Projected Receiving Yards (vs 62.5 line)",
+          "human_plain_english_rationale": "We like Chris Olave OVER 62.5 Receiving Yards against CLE. He runs a route on 90% of dropbacks (30.6 projected routes) and commands first-read looks on 28% of throws. Because he creates 3.2 yards of separation at the top of his route and wins 36% of his man-coverage reps (2.50 yards per route vs man), multiplying his route volume by his efficiency projects 68.9 receiving yards."
+        },
+        {
+          "ticket_id": "TKT-RB-LONGEST-175",
+          "player_name": "Nick Chubb",
+          "team": "CLE",
+          "position": "RB",
+          "market_type": "Longest Rush",
+          "direction": "UNDER",
+          "line": 24.5,
+          "projected_value": 27.2,
+          "edge_percentage": 0.1,
+          "causal_equation_plain_english": "Base Carry Burst (12.0 yds) + [Explosive Boom Rate (12.0%) x 35.0 yds] + [Elusive Tackle-Breaking Bonus (48.0 / 25)] = 27.2 Projected Longest Rush (vs 24.5 line)",
+          "human_plain_english_rationale": "We like Nick Chubb UNDER 24.5 Longest Rush. Across 14 projected carries, he generates a 5+ yard explosive gain over blocking expectation on 12.0% of his touches and averages 3.0 yards after contact. Combining his second-level burst with his tackle-breaking rate projects a 27.2-yard longest run."
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "game_id": "2026_09_DAL_IND",
+      "matchup": "DAL @ IND",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "Lucas Oil fast indoor surface; high PROE shootout script",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0752,
+      "projected_away_score": 22.14,
+      "projected_home_score": 24.45,
+      "projected_total_mean": 46.59,
+      "projected_total_quantiles": {
+        "p10": 29.53,
+        "p25": 37.32,
+        "p50": 45.11,
+        "p75": 56.26,
+        "p90": 64.05
+      },
+      "book_total_line": 48.5,
+      "total_discrepancy_pts": -1.91,
+      "recommended_total_action": "UNDER",
+      "projected_home_margin_mean": 2.31,
+      "projected_margin_quantiles": {
+        "p10": -13.85,
+        "p25": -6.96,
+        "p50": 2.9,
+        "p75": 10.72,
+        "p90": 20.59
+      },
+      "gse_fair_spread_home": -2.31,
+      "book_spread_home": -2.5,
+      "spread_discrepancy_pts": -0.19,
+      "recommended_spread_action": "PASS",
+      "gse_home_win_prob": 0.5858,
+      "devigged_book_home_win_prob": 0.5635,
+      "win_prob_edge": 0.0223,
+      "projected_winner": "IND",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        36.74,
+        56.44
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 249.2,
+        "home_pass_yds_mean": 242.8,
+        "away_rush_yds_mean": 94.3,
+        "home_rush_yds_mean": 118.1,
+        "away_wr1_yds_mean": 64.8,
+        "home_wr1_yds_mean": 63.1,
+        "away_wr1_longest_rec_mean": 26.0,
+        "home_wr1_longest_rec_mean": 25.5,
+        "away_rb1_yds_mean": 58.5,
+        "home_rb1_yds_mean": 73.2,
+        "away_rb1_longest_rush_mean": 19.2,
+        "home_rb1_longest_rush_mean": 23.2,
+        "away_sacks_mean": 2.69,
+        "home_sacks_mean": 2.35
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 179.0,
+          "p25": 213.0,
+          "p50": 248.0,
+          "p75": 286.0,
+          "p90": 320.0,
+          "mean": 249.22
+        },
+        "home_pass_yds": {
+          "p10": 175.0,
+          "p25": 205.0,
+          "p50": 242.0,
+          "p75": 279.0,
+          "p90": 312.0,
+          "mean": 242.83
+        },
+        "away_rush_yds": {
+          "p10": 57.0,
+          "p25": 72.75,
+          "p50": 92.0,
+          "p75": 114.0,
+          "p90": 134.0,
+          "mean": 94.28
+        },
+        "home_rush_yds": {
+          "p10": 76.0,
+          "p25": 94.0,
+          "p50": 116.0,
+          "p75": 140.0,
+          "p90": 163.0,
+          "mean": 118.11
+        },
+        "away_wr1_yds": {
+          "p10": 46.54,
+          "p25": 55.38,
+          "p50": 64.48,
+          "p75": 74.36,
+          "p90": 83.2,
+          "mean": 64.8
+        },
+        "home_wr1_yds": {
+          "p10": 45.5,
+          "p25": 53.3,
+          "p50": 62.92,
+          "p75": 72.54,
+          "p90": 81.12,
+          "mean": 63.14
+        },
+        "away_wr1_longest_rec": {
+          "p10": 18.59,
+          "p25": 21.86,
+          "p50": 25.64,
+          "p75": 29.85,
+          "p90": 33.91,
+          "mean": 25.98
+        },
+        "home_wr1_longest_rec": {
+          "p10": 18.1,
+          "p25": 21.26,
+          "p50": 25.12,
+          "p75": 29.28,
+          "p90": 33.26,
+          "mean": 25.47
+        },
+        "away_rb1_yds": {
+          "p10": 35.34,
+          "p25": 45.11,
+          "p50": 57.04,
+          "p75": 70.68,
+          "p90": 83.08,
+          "mean": 58.46
+        },
+        "home_rb1_yds": {
+          "p10": 47.12,
+          "p25": 58.28,
+          "p50": 71.92,
+          "p75": 86.8,
+          "p90": 101.06,
+          "mean": 73.23
+        },
+        "away_rb1_longest_rush": {
+          "p10": 12.01,
+          "p25": 14.87,
+          "p50": 18.61,
+          "p75": 22.98,
+          "p90": 27.22,
+          "mean": 19.21
+        },
+        "home_rb1_longest_rush": {
+          "p10": 15.03,
+          "p25": 18.39,
+          "p50": 22.65,
+          "p75": 27.49,
+          "p90": 32.16,
+          "mean": 23.22
+        },
+        "away_1q_score": {
+          "p10": 2.2,
+          "p25": 3.3,
+          "p50": 4.8,
+          "p75": 6.2,
+          "p90": 7.2,
+          "mean": 4.74
+        },
+        "home_1q_score": {
+          "p10": 2.5,
+          "p25": 3.9,
+          "p50": 5.1,
+          "p75": 6.5,
+          "p90": 8.0,
+          "mean": 5.27
+        },
+        "away_1h_score": {
+          "p10": 5.0,
+          "p25": 7.5,
+          "p50": 10.8,
+          "p75": 14.0,
+          "p90": 16.2,
+          "mean": 10.7
+        },
+        "home_1h_score": {
+          "p10": 5.7,
+          "p25": 8.7,
+          "p50": 11.6,
+          "p75": 14.7,
+          "p90": 18.0,
+          "mean": 11.9
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 5.0,
+          "mean": 2.22
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 3.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.63
+        },
+        "away_kicking_pts": {
+          "p10": 3.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 13.0,
+          "p90": 18.0,
+          "mean": 9.39
+        },
+        "home_kicking_pts": {
+          "p10": 4.0,
+          "p25": 7.0,
+          "p50": 11.0,
+          "p75": 16.0,
+          "p90": 19.0,
+          "mean": 10.93
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.8
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 1.02,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.91
+        }
+      },
+      "distribution_id": "dist_2026_09_DAL_IND_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-RB-RUSH-192",
+          "player_name": "Jonathan Taylor",
+          "team": "IND",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 84.5,
+          "projected_value": 108.9,
+          "edge_percentage": 0.289,
+          "causal_equation_plain_english": "Projected Carries (18.0) x [Yards Before Contact (2.0 yds) + Yards After Contact (3.6 yds)] x Trench & Elusiveness Multiplier (1.06x) = 108.9 Projected Rushing Yards (vs 84.5 line)",
+          "human_plain_english_rationale": "We like Jonathan Taylor OVER 84.5 Rushing Yards against DAL. He creates his own yardage after contact (3.6 yards after contact per carry, 80.8 Elusive Rating) and hits explosive 5+ yard gains over expectation on 24.0% of his runs. Taking 18.0 projected carries times (2.0 yards before contact + 3.6 yards after contact) gives us 108.9 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-196",
+          "player_name": "CeeDee Lamb",
+          "team": "DAL",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 27.6,
+          "edge_percentage": 0.284,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.6 yds) x Separation Catch Factor (0.80 from 3.5 yds cushion)] + Yards After Catch in Space (13.5 yds) = 27.6 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like CeeDee Lamb OVER 21.5 Longest Reception against IND. IND plays single-high coverage on 22% of snaps, leaving CeeDee Lamb with one-on-one leverage outside. He generates 3.5 yards of separation at his route break and wins 42% of his man-coverage stems. When you multiply his deep target depth (17.6 air yards) by his 80% deep-window conversion rate and add 13.5 yards after the catch in open grass, our equation projects a 27.6-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-205",
+          "player_name": "Laiatu Latu",
+          "team": "IND",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.28,
+          "edge_percentage": 0.206,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (22.0%) / Opponent Pass-Block Grade (0.69)] x Stunt Speed Factor (350ms / 260ms) = 0.28 Expected Sacks -> 29.4% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Laiatu Latu UNDER 0.25 Sacks against DAL (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 22.0% of snaps and knifes through stunts in 260 milliseconds against an offensive line grading at 0.69. Across 36 projected dropbacks, he projects for 0.28 sacks with a 29.4% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-195",
+          "player_name": "CeeDee Lamb",
+          "team": "DAL",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 6.5,
+          "projected_value": 7.6,
+          "edge_percentage": 0.169,
+          "causal_equation_plain_english": "Projected Routes (32.3) x Target Rate (34.0%) x Catchable Ball Rate (86%) = 7.6 Projected Receptions (vs 6.5 line)",
+          "human_plain_english_rationale": "We are on CeeDee Lamb OVER 6.5 Receptions. As the first read on 35% of dropbacks with an 86% catchable target rate and 3.5 yards of route separation, he projects for 7.6 catches against IND."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-190",
+          "player_name": "Rico Dowdle",
+          "team": "DAL",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 54.5,
+          "projected_value": 61.8,
+          "edge_percentage": 0.134,
+          "causal_equation_plain_english": "Projected Carries (13.0) x [Yards Before Contact (1.9 yds) + Yards After Contact (2.8 yds)] x Trench & Elusiveness Multiplier (0.88x) = 61.8 Projected Rushing Yards (vs 54.5 line)",
+          "human_plain_english_rationale": "We like Rico Dowdle OVER 54.5 Rushing Yards against IND. He creates his own yardage after contact (2.8 yards after contact per carry, 28.9 Elusive Rating) and hits explosive 5+ yard gains over expectation on 9.0% of his runs. Taking 13.0 projected carries times (1.9 yards before contact + 2.8 yards after contact) gives us 61.8 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-198",
+          "player_name": "Michael Pittman Jr.",
+          "team": "IND",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 5.1,
+          "edge_percentage": 0.133,
+          "causal_equation_plain_english": "Projected Routes (29.9) x Target Rate (26.8%) x Catchable Ball Rate (80%) = 5.1 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Michael Pittman Jr. OVER 4.5 Receptions. As the first read on 26% of dropbacks with an 80% catchable target rate and 2.6 yards of route separation, he projects for 5.1 catches against DAL."
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "game_id": "2026_09_DEN_CAR",
+      "matchup": "DEN @ CAR",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "DEN -290 ML blocked by Heavy-Juice Firewall; evaluate spread/total/props",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.019,
+      "projected_away_score": 20.62,
+      "projected_home_score": 15.73,
+      "projected_total_mean": 36.35,
+      "projected_total_quantiles": {
+        "p10": 20.16,
+        "p25": 26.52,
+        "p50": 35.53,
+        "p75": 44.55,
+        "p90": 52.34
+      },
+      "book_total_line": 40.5,
+      "total_discrepancy_pts": -4.15,
+      "recommended_total_action": "UNDER",
+      "projected_home_margin_mean": -4.89,
+      "projected_margin_quantiles": {
+        "p10": -22.49,
+        "p25": -14.8,
+        "p50": -3.79,
+        "p75": 3.9,
+        "p90": 11.58
+      },
+      "gse_fair_spread_home": 4.89,
+      "book_spread_home": 6.5,
+      "spread_discrepancy_pts": 1.61,
+      "recommended_spread_action": "HOME_COVER",
+      "gse_home_win_prob": 0.3085,
+      "devigged_book_home_win_prob": 0.2864,
+      "win_prob_edge": 0.0221,
+      "projected_winner": "DEN",
+      "heavy_juice_firewall_blocked": true,
+      "conformal_total_90_interval": [
+        26.5,
+        46.2
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 198.2,
+        "home_pass_yds_mean": 194.2,
+        "away_rush_yds_mean": 82.9,
+        "home_rush_yds_mean": 78.8,
+        "away_wr1_yds_mean": 51.5,
+        "home_wr1_yds_mean": 50.5,
+        "away_wr1_longest_rec_mean": 21.6,
+        "home_wr1_longest_rec_mean": 21.3,
+        "away_rb1_yds_mean": 51.4,
+        "home_rb1_yds_mean": 48.8,
+        "away_rb1_longest_rush_mean": 17.3,
+        "home_rb1_longest_rush_mean": 16.5,
+        "away_sacks_mean": 2.41,
+        "home_sacks_mean": 2.3
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 136.0,
+          "p25": 165.0,
+          "p50": 197.0,
+          "p75": 230.0,
+          "p90": 262.0,
+          "mean": 198.15
+        },
+        "home_pass_yds": {
+          "p10": 132.0,
+          "p25": 160.0,
+          "p50": 193.0,
+          "p75": 226.0,
+          "p90": 258.0,
+          "mean": 194.15
+        },
+        "away_rush_yds": {
+          "p10": 50.0,
+          "p25": 64.0,
+          "p50": 81.0,
+          "p75": 100.0,
+          "p90": 118.0,
+          "mean": 82.88
+        },
+        "home_rush_yds": {
+          "p10": 48.0,
+          "p25": 61.0,
+          "p50": 77.0,
+          "p75": 95.0,
+          "p90": 112.0,
+          "mean": 78.78
+        },
+        "away_wr1_yds": {
+          "p10": 35.36,
+          "p25": 42.9,
+          "p50": 51.22,
+          "p75": 59.8,
+          "p90": 68.12,
+          "mean": 51.52
+        },
+        "home_wr1_yds": {
+          "p10": 34.32,
+          "p25": 41.6,
+          "p50": 50.18,
+          "p75": 58.76,
+          "p90": 67.08,
+          "mean": 50.48
+        },
+        "away_wr1_longest_rec": {
+          "p10": 14.79,
+          "p25": 17.72,
+          "p50": 21.23,
+          "p75": 25.11,
+          "p90": 28.88,
+          "mean": 21.57
+        },
+        "home_wr1_longest_rec": {
+          "p10": 14.5,
+          "p25": 17.38,
+          "p50": 20.91,
+          "p75": 24.73,
+          "p90": 28.54,
+          "mean": 21.26
+        },
+        "away_rb1_yds": {
+          "p10": 31.0,
+          "p25": 39.68,
+          "p50": 50.22,
+          "p75": 62.0,
+          "p90": 73.16,
+          "mean": 51.39
+        },
+        "home_rb1_yds": {
+          "p10": 29.76,
+          "p25": 37.82,
+          "p50": 47.74,
+          "p75": 58.9,
+          "p90": 69.44,
+          "mean": 48.84
+        },
+        "away_rb1_longest_rush": {
+          "p10": 10.77,
+          "p25": 13.47,
+          "p50": 16.78,
+          "p75": 20.62,
+          "p90": 24.51,
+          "mean": 17.3
+        },
+        "home_rb1_longest_rush": {
+          "p10": 10.29,
+          "p25": 12.89,
+          "p50": 16.09,
+          "p75": 19.65,
+          "p90": 23.42,
+          "mean": 16.54
+        },
+        "away_1q_score": {
+          "p10": 2.1,
+          "p25": 3.0,
+          "p50": 4.2,
+          "p75": 5.9,
+          "p90": 7.0,
+          "mean": 4.43
+        },
+        "home_1q_score": {
+          "p10": 0.7,
+          "p25": 1.8,
+          "p50": 3.3,
+          "p75": 4.8,
+          "p90": 6.0,
+          "mean": 3.39
+        },
+        "away_1h_score": {
+          "p10": 4.7,
+          "p25": 6.7,
+          "p50": 9.5,
+          "p75": 13.3,
+          "p90": 15.9,
+          "mean": 9.99
+        },
+        "home_1h_score": {
+          "p10": 1.7,
+          "p25": 4.1,
+          "p50": 7.5,
+          "p75": 10.8,
+          "p90": 13.5,
+          "mean": 7.64
+        },
+        "away_fg_made": {
+          "p10": 1.0,
+          "p25": 2.0,
+          "p50": 3.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 3.02
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 2.02
+        },
+        "away_kicking_pts": {
+          "p10": 4.0,
+          "p25": 8.0,
+          "p50": 11.0,
+          "p75": 15.0,
+          "p90": 19.0,
+          "mean": 11.5
+        },
+        "home_kicking_pts": {
+          "p10": 1.0,
+          "p25": 4.0,
+          "p50": 8.0,
+          "p75": 11.0,
+          "p90": 16.0,
+          "mean": 7.92
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.78
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.82
+        }
+      },
+      "distribution_id": "dist_2026_09_DEN_CAR_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-IDP-SACK-221",
+          "player_name": "Jadeveon Clowney",
+          "team": "CAR",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.2,
+          "edge_percentage": 0.277,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (19.0%) / Opponent Pass-Block Grade (0.74)] x Stunt Speed Factor (350ms / 290ms) = 0.20 Expected Sacks -> 22.3% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Jadeveon Clowney UNDER 0.25 Sacks against DEN (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 19.0% of snaps and knifes through stunts in 290 milliseconds against an offensive line grading at 0.74. Across 36 projected dropbacks, he projects for 0.20 sacks with a 22.3% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-208",
+          "player_name": "Chuba Hubbard",
+          "team": "CAR",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 66.5,
+          "projected_value": 80.0,
+          "edge_percentage": 0.203,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (1.8 yds) + Yards After Contact (3.2 yds)] x Trench & Elusiveness Multiplier (1.00x) = 80.0 Projected Rushing Yards (vs 66.5 line)",
+          "human_plain_english_rationale": "We like Chuba Hubbard OVER 66.5 Rushing Yards against DEN. He creates his own yardage after contact (3.2 yards after contact per carry, 60.0 Elusive Rating) and hits explosive 5+ yard gains over expectation on 18.0% of his runs. Taking 16.0 projected carries times (1.8 yards before contact + 3.2 yards after contact) gives us 80.0 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-215",
+          "player_name": "Diontae Johnson",
+          "team": "CAR",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 25.5,
+          "edge_percentage": 0.186,
+          "causal_equation_plain_english": "[Deep Target Air Depth (16.8 yds) x Separation Catch Factor (0.77 from 3.2 yds cushion)] + Yards After Catch in Space (12.6 yds) = 25.5 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Diontae Johnson OVER 21.5 Longest Reception against DEN. DEN plays single-high coverage on 22% of snaps, leaving Diontae Johnson with one-on-one leverage outside. He generates 3.2 yards of separation at his route break and wins 38% of his man-coverage stems. When you multiply his deep target depth (16.8 air yards) by his 77% deep-window conversion rate and add 12.6 yards after the catch in open grass, our equation projects a 25.5-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-QB-INT-219",
+          "player_name": "Bryce Young",
+          "team": "CAR",
+          "position": "QB",
+          "market_type": "Pass Interceptions",
+          "direction": "OVER",
+          "line": 0.5,
+          "projected_value": 1.04,
+          "edge_percentage": 0.147,
+          "causal_equation_plain_english": "34.0 Pass Attempts x Throw-Into-Leverage Risk (TLV 0.36, Disguise Read 280ms) = 1.04 Expected INTs (64.7% probability of 1+ INT)",
+          "human_plain_english_rationale": "We are on Bryce Young OVER 0.5 Interceptions against DEN. With a 280-millisecond post-snap read speed and a 0.36 tight-window throw variance against DEN's disguised shells, our simulation gives him a 64.7% probability of throwing at least one interception."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-220",
+          "player_name": "Nik Bonitto",
+          "team": "DEN",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.35,
+          "edge_percentage": 0.143,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (25.0%) / Opponent Pass-Block Grade (0.67)] x Stunt Speed Factor (350ms / 240ms) = 0.35 Expected Sacks -> 35.7% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Nik Bonitto UNDER 0.25 Sacks against CAR (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 25.0% of snaps and knifes through stunts in 240 milliseconds against an offensive line grading at 0.67. Across 36 projected dropbacks, he projects for 0.35 sacks with a 35.7% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-214",
+          "player_name": "Diontae Johnson",
+          "team": "CAR",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 6.2,
+          "edge_percentage": 0.127,
+          "causal_equation_plain_english": "Projected Routes (31.3) x Target Rate (30.0%) x Catchable Ball Rate (82%) = 6.2 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on Diontae Johnson OVER 5.5 Receptions. As the first read on 30% of dropbacks with an 82% catchable target rate and 3.2 yards of route separation, he projects for 6.2 catches against DEN."
+        }
+      ]
+    },
+    {
+      "rank": 6,
+      "game_id": "2026_09_DET_MIA",
+      "matchup": "DET @ MIA",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "Highest total on Sunday main slate; Gibbs & St. Brown elite YPRR",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0996,
+      "projected_away_score": 28.83,
+      "projected_home_score": 23.66,
+      "projected_total_mean": 52.49,
+      "projected_total_quantiles": {
+        "p10": 36.07,
+        "p25": 43.47,
+        "p50": 51.89,
+        "p75": 62.48,
+        "p90": 69.89
+      },
+      "book_total_line": 50.5,
+      "total_discrepancy_pts": 1.99,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": -5.17,
+      "projected_margin_quantiles": {
+        "p10": -23.69,
+        "p25": -14.22,
+        "p50": -4.74,
+        "p75": 2.78,
+        "p90": 12.26
+      },
+      "gse_fair_spread_home": 5.17,
+      "book_spread_home": 3.5,
+      "spread_discrepancy_pts": -1.67,
+      "recommended_spread_action": "AWAY_COVER",
+      "gse_home_win_prob": 0.3206,
+      "devigged_book_home_win_prob": 0.3836,
+      "win_prob_edge": -0.063,
+      "projected_winner": "DET",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        42.64,
+        62.34
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 280.4,
+        "home_pass_yds_mean": 267.6,
+        "away_rush_yds_mean": 157.1,
+        "home_rush_yds_mean": 111.6,
+        "away_wr1_yds_mean": 72.9,
+        "home_wr1_yds_mean": 69.6,
+        "away_wr1_longest_rec_mean": 28.7,
+        "home_wr1_longest_rec_mean": 27.6,
+        "away_rb1_yds_mean": 97.4,
+        "home_rb1_yds_mean": 69.2,
+        "away_rb1_longest_rush_mean": 29.8,
+        "home_rb1_longest_rush_mean": 22.1,
+        "away_sacks_mean": 2.36,
+        "home_sacks_mean": 2.49
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 208.0,
+          "p25": 242.0,
+          "p50": 279.0,
+          "p75": 318.0,
+          "p90": 353.0,
+          "mean": 280.38
+        },
+        "home_pass_yds": {
+          "p10": 195.0,
+          "p25": 230.0,
+          "p50": 267.0,
+          "p75": 306.0,
+          "p90": 342.0,
+          "mean": 267.61
+        },
+        "away_rush_yds": {
+          "p10": 105.0,
+          "p25": 129.0,
+          "p50": 155.0,
+          "p75": 184.0,
+          "p90": 211.0,
+          "mean": 157.1
+        },
+        "home_rush_yds": {
+          "p10": 68.0,
+          "p25": 87.0,
+          "p50": 109.0,
+          "p75": 134.0,
+          "p90": 157.0,
+          "mean": 111.55
+        },
+        "away_wr1_yds": {
+          "p10": 54.08,
+          "p25": 62.92,
+          "p50": 72.54,
+          "p75": 82.68,
+          "p90": 91.78,
+          "mean": 72.9
+        },
+        "home_wr1_yds": {
+          "p10": 50.7,
+          "p25": 59.8,
+          "p50": 69.42,
+          "p75": 79.56,
+          "p90": 88.92,
+          "mean": 69.58
+        },
+        "away_wr1_longest_rec": {
+          "p10": 20.89,
+          "p25": 24.27,
+          "p50": 28.18,
+          "p75": 32.6,
+          "p90": 36.94,
+          "mean": 28.66
+        },
+        "home_wr1_longest_rec": {
+          "p10": 19.7,
+          "p25": 23.36,
+          "p50": 27.3,
+          "p75": 31.73,
+          "p90": 35.82,
+          "mean": 27.63
+        },
+        "away_rb1_yds": {
+          "p10": 65.1,
+          "p25": 79.98,
+          "p50": 96.1,
+          "p75": 114.08,
+          "p90": 130.82,
+          "mean": 97.4
+        },
+        "home_rb1_yds": {
+          "p10": 42.16,
+          "p25": 53.94,
+          "p50": 67.58,
+          "p75": 83.08,
+          "p90": 97.34,
+          "mean": 69.16
+        },
+        "away_rb1_longest_rush": {
+          "p10": 19.73,
+          "p25": 24.09,
+          "p50": 29.26,
+          "p75": 35.02,
+          "p90": 40.59,
+          "mean": 29.84
+        },
+        "home_rb1_longest_rush": {
+          "p10": 13.89,
+          "p25": 17.26,
+          "p50": 21.5,
+          "p75": 26.31,
+          "p90": 31.0,
+          "mean": 22.12
+        },
+        "away_1q_score": {
+          "p10": 3.69,
+          "p25": 5.0,
+          "p50": 6.4,
+          "p75": 7.4,
+          "p90": 8.8,
+          "mean": 6.18
+        },
+        "home_1q_score": {
+          "p10": 2.7,
+          "p25": 3.6,
+          "p50": 5.1,
+          "p75": 6.5,
+          "p90": 7.6,
+          "mean": 5.11
+        },
+        "away_1h_score": {
+          "p10": 8.2,
+          "p25": 11.3,
+          "p50": 14.4,
+          "p75": 16.8,
+          "p90": 19.7,
+          "mean": 13.92
+        },
+        "home_1h_score": {
+          "p10": 6.1,
+          "p25": 8.2,
+          "p50": 11.5,
+          "p75": 14.7,
+          "p90": 17.1,
+          "mean": 11.53
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.39
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 2.22
+        },
+        "away_kicking_pts": {
+          "p10": 3.0,
+          "p25": 6.0,
+          "p50": 10.0,
+          "p75": 15.0,
+          "p90": 19.0,
+          "mean": 10.68
+        },
+        "home_kicking_pts": {
+          "p10": 3.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 14.0,
+          "p90": 17.0,
+          "mean": 9.56
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.84
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.8
+        }
+      },
+      "distribution_id": "dist_2026_09_DET_MIA_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-LONGEST-132",
+          "player_name": "Tyreek Hill",
+          "team": "MIA",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 28.2,
+          "edge_percentage": 0.312,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.6 yds) x Separation Catch Factor (0.81 from 3.6 yds cushion)] + Yards After Catch in Space (13.9 yds) = 28.2 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Tyreek Hill OVER 21.5 Longest Reception against DET. DET plays single-high coverage on 22% of snaps, leaving Tyreek Hill with one-on-one leverage outside. He generates 3.6 yards of separation at his route break and wins 45% of his man-coverage stems. When you multiply his deep target depth (17.6 air yards) by his 81% deep-window conversion rate and add 13.9 yards after the catch in open grass, our equation projects a 28.2-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-121",
+          "player_name": "Jahmyr Gibbs",
+          "team": "DET",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 78.5,
+          "projected_value": 100.2,
+          "edge_percentage": 0.276,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (2.2 yds) + Yards After Contact (3.6 yds)] x Trench & Elusiveness Multiplier (1.06x) = 100.2 Projected Rushing Yards (vs 78.5 line)",
+          "human_plain_english_rationale": "We like Jahmyr Gibbs OVER 78.5 Rushing Yards against MIA. He creates his own yardage after contact (3.6 yards after contact per carry, 65.6 Elusive Rating) and hits explosive 5+ yard gains over expectation on 25.0% of his runs. Taking 16.0 projected carries times (2.2 yards before contact + 3.6 yards after contact) gives us 100.2 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-141",
+          "player_name": "Chop Robinson",
+          "team": "MIA",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.22,
+          "edge_percentage": 0.26,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (20.0%) / Opponent Pass-Block Grade (0.74)] x Stunt Speed Factor (350ms / 280ms) = 0.22 Expected Sacks -> 24.0% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Chop Robinson UNDER 0.25 Sacks against DET (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 20.0% of snaps and knifes through stunts in 280 milliseconds against an offensive line grading at 0.74. Across 36 projected dropbacks, he projects for 0.22 sacks with a 24.0% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-128",
+          "player_name": "Amon-Ra St. Brown",
+          "team": "DET",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 6.5,
+          "projected_value": 7.7,
+          "edge_percentage": 0.185,
+          "causal_equation_plain_english": "Projected Routes (32.3) x Target Rate (34.0%) x Catchable Ball Rate (88%) = 7.7 Projected Receptions (vs 6.5 line)",
+          "human_plain_english_rationale": "We are on Amon-Ra St. Brown OVER 6.5 Receptions. As the first read on 35% of dropbacks with an 88% catchable target rate and 3.1 yards of route separation, he projects for 7.7 catches against MIA."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-135",
+          "player_name": "Sam LaPorta",
+          "team": "DET",
+          "position": "TE",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 17.5,
+          "projected_value": 20.2,
+          "edge_percentage": 0.154,
+          "causal_equation_plain_english": "[Deep Target Air Depth (13.9 yds) x Separation Catch Factor (0.68 from 2.2 yds cushion)] + Yards After Catch in Space (9.5 yds) = 20.2 Projected Longest Reception (vs 17.5 line)",
+          "human_plain_english_rationale": "We like Sam LaPorta OVER 17.5 Longest Reception against MIA. MIA plays single-high coverage on 22% of snaps, leaving Sam LaPorta with one-on-one leverage outside. He generates 2.2 yards of separation at his route break and wins 24% of his man-coverage stems. When you multiply his deep target depth (13.9 air yards) by his 68% deep-window conversion rate and add 9.5 yards after the catch in open grass, our equation projects a 20.2-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-125",
+          "player_name": "De'Von Achane",
+          "team": "MIA",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 64.5,
+          "projected_value": 74.2,
+          "edge_percentage": 0.15,
+          "causal_equation_plain_english": "Projected Carries (14.0) x [Yards Before Contact (1.9 yds) + Yards After Contact (3.4 yds)] x Trench & Elusiveness Multiplier (1.00x) = 74.2 Projected Rushing Yards (vs 64.5 line)",
+          "human_plain_english_rationale": "We like De'Von Achane OVER 64.5 Rushing Yards against DET. He creates his own yardage after contact (3.4 yards after contact per carry, 56.7 Elusive Rating) and hits explosive 5+ yard gains over expectation on 22.0% of his runs. Taking 14.0 projected carries times (1.9 yards before contact + 3.4 yards after contact) gives us 74.2 rushing yards."
+        }
+      ]
+    },
+    {
+      "rank": 7,
+      "game_id": "2026_09_LAR_WAS",
+      "matchup": "LAR @ WAS",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "Davante Adams + Puka Nacua vs Stefon Diggs + Jayden Daniels",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0749,
+      "projected_away_score": 23.95,
+      "projected_home_score": 27.8,
+      "projected_total_mean": 51.75,
+      "projected_total_quantiles": {
+        "p10": 35.55,
+        "p25": 42.98,
+        "p50": 51.43,
+        "p75": 61.05,
+        "p90": 69.5
+      },
+      "book_total_line": 49.5,
+      "total_discrepancy_pts": 2.25,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": 3.85,
+      "projected_margin_quantiles": {
+        "p10": -13.0,
+        "p25": -6.3,
+        "p50": 3.29,
+        "p75": 12.88,
+        "p90": 20.49
+      },
+      "gse_fair_spread_home": -3.85,
+      "book_spread_home": -2.5,
+      "spread_discrepancy_pts": 1.35,
+      "recommended_spread_action": "HOME_COVER",
+      "gse_home_win_prob": 0.6297,
+      "devigged_book_home_win_prob": 0.556,
+      "win_prob_edge": 0.0737,
+      "projected_winner": "WAS",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        41.9,
+        61.6
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 269.4,
+        "home_pass_yds_mean": 286.1,
+        "away_rush_yds_mean": 111.4,
+        "home_rush_yds_mean": 147.1,
+        "away_wr1_yds_mean": 70.1,
+        "home_wr1_yds_mean": 74.4,
+        "away_wr1_longest_rec_mean": 27.8,
+        "home_wr1_longest_rec_mean": 29.2,
+        "away_rb1_yds_mean": 69.0,
+        "home_rb1_yds_mean": 91.2,
+        "away_rb1_longest_rush_mean": 22.1,
+        "home_rb1_longest_rush_mean": 28.1,
+        "away_sacks_mean": 2.66,
+        "home_sacks_mean": 2.32
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 197.0,
+          "p25": 231.0,
+          "p50": 269.0,
+          "p75": 308.0,
+          "p90": 342.0,
+          "mean": 269.45
+        },
+        "home_pass_yds": {
+          "p10": 214.0,
+          "p25": 248.0,
+          "p50": 286.0,
+          "p75": 323.0,
+          "p90": 359.0,
+          "mean": 286.06
+        },
+        "away_rush_yds": {
+          "p10": 68.0,
+          "p25": 86.0,
+          "p50": 109.0,
+          "p75": 134.0,
+          "p90": 158.0,
+          "mean": 111.35
+        },
+        "home_rush_yds": {
+          "p10": 97.0,
+          "p25": 119.0,
+          "p50": 146.0,
+          "p75": 173.0,
+          "p90": 200.0,
+          "mean": 147.09
+        },
+        "away_wr1_yds": {
+          "p10": 51.22,
+          "p25": 60.06,
+          "p50": 69.94,
+          "p75": 80.08,
+          "p90": 88.92,
+          "mean": 70.06
+        },
+        "home_wr1_yds": {
+          "p10": 55.64,
+          "p25": 64.48,
+          "p50": 74.36,
+          "p75": 83.98,
+          "p90": 93.34,
+          "mean": 74.37
+        },
+        "away_wr1_longest_rec": {
+          "p10": 20.05,
+          "p25": 23.42,
+          "p50": 27.39,
+          "p75": 31.7,
+          "p90": 36.03,
+          "mean": 27.78
+        },
+        "home_wr1_longest_rec": {
+          "p10": 21.42,
+          "p25": 24.86,
+          "p50": 28.88,
+          "p75": 33.25,
+          "p90": 37.4,
+          "mean": 29.21
+        },
+        "away_rb1_yds": {
+          "p10": 42.16,
+          "p25": 53.32,
+          "p50": 67.58,
+          "p75": 83.08,
+          "p90": 97.96,
+          "mean": 69.04
+        },
+        "home_rb1_yds": {
+          "p10": 60.14,
+          "p25": 73.78,
+          "p50": 90.52,
+          "p75": 107.26,
+          "p90": 124.0,
+          "mean": 91.2
+        },
+        "away_rb1_longest_rush": {
+          "p10": 13.84,
+          "p25": 17.19,
+          "p50": 21.59,
+          "p75": 26.43,
+          "p90": 31.21,
+          "mean": 22.12
+        },
+        "home_rb1_longest_rush": {
+          "p10": 18.4,
+          "p25": 22.46,
+          "p50": 27.54,
+          "p75": 33.05,
+          "p90": 38.56,
+          "mean": 28.1
+        },
+        "away_1q_score": {
+          "p10": 2.7,
+          "p25": 3.6,
+          "p50": 5.1,
+          "p75": 6.5,
+          "p90": 7.6,
+          "mean": 5.13
+        },
+        "home_1q_score": {
+          "p10": 3.5,
+          "p25": 4.8,
+          "p50": 5.9,
+          "p75": 7.3,
+          "p90": 8.3,
+          "mean": 6.0
+        },
+        "away_1h_score": {
+          "p10": 6.2,
+          "p25": 8.1,
+          "p50": 11.5,
+          "p75": 14.7,
+          "p90": 17.0,
+          "mean": 11.58
+        },
+        "home_1h_score": {
+          "p10": 7.9,
+          "p25": 10.9,
+          "p50": 13.2,
+          "p75": 16.5,
+          "p90": 18.8,
+          "mean": 13.52
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 2.18
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 5.0,
+          "mean": 2.17
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 13.0,
+          "p90": 17.0,
+          "mean": 9.44
+        },
+        "home_kicking_pts": {
+          "p10": 3.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 14.0,
+          "p90": 19.0,
+          "mean": 9.93
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.79
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.91
+        }
+      },
+      "distribution_id": "dist_2026_09_LAR_WAS_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-LONGEST-260",
+          "player_name": "Puka Nacua",
+          "team": "LAR",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 27.8,
+          "edge_percentage": 0.293,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.3 yds) x Separation Catch Factor (0.81 from 3.6 yds cushion)] + Yards After Catch in Space (13.8 yds) = 27.8 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Puka Nacua OVER 21.5 Longest Reception against WAS. WAS plays single-high coverage on 22% of snaps, leaving Puka Nacua with one-on-one leverage outside. He generates 3.6 yards of separation at his route break and wins 44% of his man-coverage stems. When you multiply his deep target depth (17.3 air yards) by his 81% deep-window conversion rate and add 13.8 yards after the catch in open grass, our equation projects a 27.8-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-263",
+          "player_name": "Davante Adams",
+          "team": "LAR",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 27.1,
+          "edge_percentage": 0.26,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.0 yds) x Separation Catch Factor (0.80 from 3.5 yds cushion)] + Yards After Catch in Space (13.5 yds) = 27.1 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Davante Adams OVER 21.5 Longest Reception against WAS. WAS plays single-high coverage on 22% of snaps, leaving Davante Adams with one-on-one leverage outside. He generates 3.5 yards of separation at his route break and wins 42% of his man-coverage stems. When you multiply his deep target depth (17.0 air yards) by his 80% deep-window conversion rate and add 13.5 yards after the catch in open grass, our equation projects a 27.1-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-266",
+          "player_name": "Terry McLaurin",
+          "team": "WAS",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 27.0,
+          "edge_percentage": 0.256,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.6 yds) x Separation Catch Factor (0.79 from 3.4 yds cushion)] + Yards After Catch in Space (13.1 yds) = 27.0 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Terry McLaurin OVER 21.5 Longest Reception against LAR. LAR plays single-high coverage on 22% of snaps, leaving Terry McLaurin with one-on-one leverage outside. He generates 3.4 yards of separation at his route break and wins 40% of his man-coverage stems. When you multiply his deep target depth (17.6 air yards) by his 79% deep-window conversion rate and add 13.1 yards after the catch in open grass, our equation projects a 27.0-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-262",
+          "player_name": "Davante Adams",
+          "team": "LAR",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 6.9,
+          "edge_percentage": 0.255,
+          "causal_equation_plain_english": "Projected Routes (32.0) x Target Rate (31.6%) x Catchable Ball Rate (86%) = 6.9 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on Davante Adams OVER 5.5 Receptions. As the first read on 32% of dropbacks with an 86% catchable target rate and 3.5 yards of route separation, he projects for 6.9 catches against WAS."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-265",
+          "player_name": "Terry McLaurin",
+          "team": "WAS",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 6.8,
+          "edge_percentage": 0.236,
+          "causal_equation_plain_english": "Projected Routes (32.0) x Target Rate (31.6%) x Catchable Ball Rate (84%) = 6.8 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on Terry McLaurin OVER 5.5 Receptions. As the first read on 32% of dropbacks with an 84% catchable target rate and 3.4 yards of route separation, he projects for 6.8 catches against LAR."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-259",
+          "player_name": "Puka Nacua",
+          "team": "LAR",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 6.5,
+          "projected_value": 7.8,
+          "edge_percentage": 0.2,
+          "causal_equation_plain_english": "Projected Routes (32.6) x Target Rate (34.0%) x Catchable Ball Rate (88%) = 7.8 Projected Receptions (vs 6.5 line)",
+          "human_plain_english_rationale": "We are on Puka Nacua OVER 6.5 Receptions. As the first read on 35% of dropbacks with an 88% catchable target rate and 3.6 yards of route separation, he projects for 7.8 catches against WAS."
+        }
+      ]
+    },
+    {
+      "rank": 8,
+      "game_id": "2026_09_NYG_PHI",
+      "matchup": "NYG @ PHI",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "PHI -340 ML blocked by Heavy-Juice Firewall; Saquon Barkley TOVS ceiling",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0996,
+      "projected_away_score": 15.46,
+      "projected_home_score": 26.77,
+      "projected_total_mean": 42.23,
+      "projected_total_quantiles": {
+        "p10": 26.25,
+        "p25": 34.82,
+        "p50": 43.39,
+        "p75": 51.96,
+        "p90": 60.53
+      },
+      "book_total_line": 43.5,
+      "total_discrepancy_pts": -1.27,
+      "recommended_total_action": "UNDER",
+      "projected_home_margin_mean": 11.31,
+      "projected_margin_quantiles": {
+        "p10": -6.87,
+        "p25": 2.77,
+        "p50": 11.23,
+        "p75": 21.88,
+        "p90": 29.32
+      },
+      "gse_fair_spread_home": -11.31,
+      "book_spread_home": -7.5,
+      "spread_discrepancy_pts": 3.81,
+      "recommended_spread_action": "HOME_COVER",
+      "gse_home_win_prob": 0.8346,
+      "devigged_book_home_win_prob": 0.7409,
+      "win_prob_edge": 0.0937,
+      "projected_winner": "PHI",
+      "heavy_juice_firewall_blocked": true,
+      "conformal_total_90_interval": [
+        32.38,
+        52.08
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 182.8,
+        "home_pass_yds_mean": 254.7,
+        "away_rush_yds_mean": 57.4,
+        "home_rush_yds_mean": 151.3,
+        "away_wr1_yds_mean": 47.5,
+        "home_wr1_yds_mean": 66.2,
+        "away_wr1_longest_rec_mean": 20.3,
+        "home_wr1_longest_rec_mean": 26.4,
+        "away_rb1_yds_mean": 35.6,
+        "home_rb1_yds_mean": 93.8,
+        "away_rb1_longest_rush_mean": 13.0,
+        "home_rb1_longest_rush_mean": 28.8,
+        "away_sacks_mean": 2.51,
+        "home_sacks_mean": 2.2
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 116.0,
+          "p25": 146.0,
+          "p50": 181.0,
+          "p75": 217.0,
+          "p90": 249.0,
+          "mean": 182.79
+        },
+        "home_pass_yds": {
+          "p10": 187.0,
+          "p25": 218.0,
+          "p50": 253.0,
+          "p75": 291.0,
+          "p90": 326.0,
+          "mean": 254.69
+        },
+        "away_rush_yds": {
+          "p10": 32.0,
+          "p25": 42.0,
+          "p50": 56.0,
+          "p75": 70.0,
+          "p90": 85.0,
+          "mean": 57.41
+        },
+        "home_rush_yds": {
+          "p10": 103.0,
+          "p25": 125.0,
+          "p50": 150.0,
+          "p75": 177.0,
+          "p90": 201.0,
+          "mean": 151.26
+        },
+        "away_wr1_yds": {
+          "p10": 30.16,
+          "p25": 37.96,
+          "p50": 47.06,
+          "p75": 56.42,
+          "p90": 64.74,
+          "mean": 47.53
+        },
+        "home_wr1_yds": {
+          "p10": 48.62,
+          "p25": 56.68,
+          "p50": 65.78,
+          "p75": 75.66,
+          "p90": 84.76,
+          "mean": 66.22
+        },
+        "away_wr1_longest_rec": {
+          "p10": 13.25,
+          "p25": 16.27,
+          "p50": 19.9,
+          "p75": 23.88,
+          "p90": 27.93,
+          "mean": 20.31
+        },
+        "home_wr1_longest_rec": {
+          "p10": 19.04,
+          "p25": 22.15,
+          "p50": 25.97,
+          "p75": 30.24,
+          "p90": 34.25,
+          "mean": 26.42
+        },
+        "away_rb1_yds": {
+          "p10": 19.84,
+          "p25": 26.04,
+          "p50": 34.72,
+          "p75": 43.4,
+          "p90": 52.7,
+          "mean": 35.6
+        },
+        "home_rb1_yds": {
+          "p10": 63.86,
+          "p25": 77.5,
+          "p50": 93.0,
+          "p75": 109.74,
+          "p90": 124.62,
+          "mean": 93.78
+        },
+        "away_rb1_longest_rush": {
+          "p10": 7.61,
+          "p25": 9.83,
+          "p50": 12.57,
+          "p75": 15.7,
+          "p90": 18.93,
+          "mean": 13.0
+        },
+        "home_rb1_longest_rush": {
+          "p10": 19.33,
+          "p25": 23.34,
+          "p50": 28.18,
+          "p75": 33.65,
+          "p90": 38.89,
+          "mean": 28.76
+        },
+        "away_1q_score": {
+          "p10": 1.1,
+          "p25": 1.9,
+          "p50": 3.0,
+          "p75": 4.4,
+          "p90": 5.7,
+          "mean": 3.3
+        },
+        "home_1q_score": {
+          "p10": 2.8,
+          "p25": 4.1,
+          "p50": 5.8,
+          "p75": 7.4,
+          "p90": 8.6,
+          "mean": 5.78
+        },
+        "away_1h_score": {
+          "p10": 2.5,
+          "p25": 4.3,
+          "p50": 6.8,
+          "p75": 9.9,
+          "p90": 12.9,
+          "mean": 7.44
+        },
+        "home_1h_score": {
+          "p10": 6.2,
+          "p25": 9.3,
+          "p50": 13.0,
+          "p75": 16.8,
+          "p90": 19.5,
+          "mean": 13.04
+        },
+        "away_fg_made": {
+          "p10": 1.0,
+          "p25": 2.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 2.51
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.33
+        },
+        "away_kicking_pts": {
+          "p10": 4.0,
+          "p25": 7.0,
+          "p50": 8.0,
+          "p75": 12.0,
+          "p90": 15.0,
+          "mean": 9.42
+        },
+        "home_kicking_pts": {
+          "p10": 2.0,
+          "p25": 5.0,
+          "p50": 10.0,
+          "p75": 15.0,
+          "p90": 19.0,
+          "mean": 10.22
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.75
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.85
+        }
+      },
+      "distribution_id": "dist_2026_09_NYG_PHI_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-RB-RUSH-296",
+          "player_name": "Saquon Barkley",
+          "team": "PHI",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 92.5,
+          "projected_value": 129.6,
+          "edge_percentage": 0.401,
+          "causal_equation_plain_english": "Projected Carries (20.0) x [Yards Before Contact (2.2 yds) + Yards After Contact (3.8 yds)] x Trench & Elusiveness Multiplier (1.06x) = 129.6 Projected Rushing Yards (vs 92.5 line)",
+          "human_plain_english_rationale": "We like Saquon Barkley OVER 92.5 Rushing Yards against NYG. He creates his own yardage after contact (3.8 yards after contact per carry, 93.3 Elusive Rating) and hits explosive 5+ yard gains over expectation on 28.0% of his runs. Taking 20.0 projected carries times (2.2 yards before contact + 3.8 yards after contact) gives us 129.6 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-300",
+          "player_name": "Malik Nabers",
+          "team": "NYG",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 29.5,
+          "edge_percentage": 0.372,
+          "causal_equation_plain_english": "[Deep Target Air Depth (18.2 yds) x Separation Catch Factor (0.83 from 3.8 yds cushion)] + Yards After Catch in Space (14.4 yds) = 29.5 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Malik Nabers OVER 21.5 Longest Reception against PHI. PHI plays single-high coverage on 22% of snaps, leaving Malik Nabers with one-on-one leverage outside. He generates 3.8 yards of separation at his route break and wins 46% of his man-coverage stems. When you multiply his deep target depth (18.2 air yards) by his 83% deep-window conversion rate and add 14.4 yards after the catch in open grass, our equation projects a 29.5-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-302",
+          "player_name": "A.J. Brown",
+          "team": "PHI",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 7.5,
+          "edge_percentage": 0.364,
+          "causal_equation_plain_english": "Projected Routes (32.0) x Target Rate (33.2%) x Catchable Ball Rate (88%) = 7.5 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on A.J. Brown OVER 5.5 Receptions. As the first read on 34% of dropbacks with an 88% catchable target rate and 3.6 yards of route separation, he projects for 7.5 catches against NYG."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-303",
+          "player_name": "A.J. Brown",
+          "team": "PHI",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 28.1,
+          "edge_percentage": 0.307,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.6 yds) x Separation Catch Factor (0.81 from 3.6 yds cushion)] + Yards After Catch in Space (13.8 yds) = 28.1 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like A.J. Brown OVER 21.5 Longest Reception against NYG. NYG plays single-high coverage on 22% of snaps, leaving A.J. Brown with one-on-one leverage outside. He generates 3.6 yards of separation at his route break and wins 44% of his man-coverage stems. When you multiply his deep target depth (17.6 air yards) by his 81% deep-window conversion rate and add 13.8 yards after the catch in open grass, our equation projects a 28.1-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-299",
+          "player_name": "Malik Nabers",
+          "team": "NYG",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 6.5,
+          "projected_value": 8.2,
+          "edge_percentage": 0.262,
+          "causal_equation_plain_english": "Projected Routes (32.6) x Target Rate (36.4%) x Catchable Ball Rate (86%) = 8.2 Projected Receptions (vs 6.5 line)",
+          "human_plain_english_rationale": "We are on Malik Nabers OVER 6.5 Receptions. As the first read on 38% of dropbacks with an 86% catchable target rate and 3.8 yards of route separation, he projects for 8.2 catches against PHI."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-308",
+          "player_name": "Brian Burns",
+          "team": "NYG",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.32,
+          "edge_percentage": 0.169,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (24.0%) / Opponent Pass-Block Grade (0.68)] x Stunt Speed Factor (350ms / 250ms) = 0.32 Expected Sacks -> 33.1% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Brian Burns UNDER 0.25 Sacks against PHI (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 24.0% of snaps and knifes through stunts in 250 milliseconds against an offensive line grading at 0.68. Across 36 projected dropbacks, he projects for 0.32 sacks with a 33.1% chance of getting at least a half-sack."
+        }
+      ]
+    },
+    {
+      "rank": 9,
+      "game_id": "2026_09_NYJ_KC",
+      "matchup": "NYJ @ KC",
+      "window": "SUN_EARLY_1200_CST",
+      "kickoff_note": "Geno Smith starts at QB1 for NYJ; KC -275 ML blocked by Heavy-Juice Firewall",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": 0.035,
+      "projected_away_score": 19.39,
+      "projected_home_score": 28.39,
+      "projected_total_mean": 47.78,
+      "projected_total_quantiles": {
+        "p10": 32.48,
+        "p25": 40.1,
+        "p50": 47.71,
+        "p75": 56.37,
+        "p90": 63.99
+      },
+      "book_total_line": 44.0,
+      "total_discrepancy_pts": 3.78,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": 9.0,
+      "projected_margin_quantiles": {
+        "p10": -8.25,
+        "p25": 0.57,
+        "p50": 8.32,
+        "p75": 18.07,
+        "p90": 25.82
+      },
+      "gse_fair_spread_home": -9.0,
+      "book_spread_home": -6.5,
+      "spread_discrepancy_pts": 2.5,
+      "recommended_spread_action": "HOME_COVER",
+      "gse_home_win_prob": 0.787,
+      "devigged_book_home_win_prob": 0.7044,
+      "win_prob_edge": 0.0826,
+      "projected_winner": "KC",
+      "heavy_juice_firewall_blocked": true,
+      "conformal_total_90_interval": [
+        37.93,
+        57.63
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 242.9,
+        "home_pass_yds_mean": 304.0,
+        "away_rush_yds_mean": 100.2,
+        "home_rush_yds_mean": 142.8,
+        "away_wr1_yds_mean": 63.2,
+        "home_wr1_yds_mean": 79.1,
+        "away_wr1_longest_rec_mean": 25.5,
+        "home_wr1_longest_rec_mean": 30.6,
+        "away_rb1_yds_mean": 62.1,
+        "home_rb1_yds_mean": 88.6,
+        "away_rb1_longest_rush_mean": 20.1,
+        "home_rb1_longest_rush_mean": 27.4,
+        "away_sacks_mean": 2.55,
+        "home_sacks_mean": 2.31
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 171.0,
+          "p25": 205.0,
+          "p50": 242.0,
+          "p75": 282.0,
+          "p90": 315.0,
+          "mean": 242.95
+        },
+        "home_pass_yds": {
+          "p10": 231.0,
+          "p25": 265.0,
+          "p50": 303.0,
+          "p75": 343.0,
+          "p90": 378.0,
+          "mean": 304.04
+        },
+        "away_rush_yds": {
+          "p10": 61.0,
+          "p25": 77.0,
+          "p50": 98.0,
+          "p75": 121.0,
+          "p90": 143.0,
+          "mean": 100.23
+        },
+        "home_rush_yds": {
+          "p10": 93.0,
+          "p25": 115.0,
+          "p50": 141.0,
+          "p75": 168.0,
+          "p90": 195.0,
+          "mean": 142.82
+        },
+        "away_wr1_yds": {
+          "p10": 44.46,
+          "p25": 53.3,
+          "p50": 62.92,
+          "p75": 73.32,
+          "p90": 81.9,
+          "mean": 63.17
+        },
+        "home_wr1_yds": {
+          "p10": 60.06,
+          "p25": 68.9,
+          "p50": 78.78,
+          "p75": 89.18,
+          "p90": 98.28,
+          "mean": 79.05
+        },
+        "away_wr1_longest_rec": {
+          "p10": 17.74,
+          "p25": 21.13,
+          "p50": 25.14,
+          "p75": 29.43,
+          "p90": 33.46,
+          "mean": 25.46
+        },
+        "home_wr1_longest_rec": {
+          "p10": 22.73,
+          "p25": 26.1,
+          "p50": 30.23,
+          "p75": 34.7,
+          "p90": 39.15,
+          "mean": 30.6
+        },
+        "away_rb1_yds": {
+          "p10": 37.82,
+          "p25": 47.74,
+          "p50": 60.76,
+          "p75": 75.02,
+          "p90": 88.66,
+          "mean": 62.14
+        },
+        "home_rb1_yds": {
+          "p10": 57.66,
+          "p25": 71.3,
+          "p50": 87.42,
+          "p75": 104.16,
+          "p90": 120.9,
+          "mean": 88.55
+        },
+        "away_rb1_longest_rush": {
+          "p10": 12.47,
+          "p25": 15.66,
+          "p50": 19.51,
+          "p75": 24.09,
+          "p90": 28.65,
+          "mean": 20.15
+        },
+        "home_rb1_longest_rush": {
+          "p10": 17.86,
+          "p25": 21.89,
+          "p50": 26.73,
+          "p75": 32.22,
+          "p90": 37.65,
+          "mean": 27.37
+        },
+        "away_1q_score": {
+          "p10": 1.4,
+          "p25": 2.8,
+          "p50": 4.3,
+          "p75": 5.7,
+          "p90": 6.6,
+          "mean": 4.18
+        },
+        "home_1q_score": {
+          "p10": 3.2,
+          "p25": 4.6,
+          "p50": 6.1,
+          "p75": 7.6,
+          "p90": 9.1,
+          "mean": 6.1
+        },
+        "away_1h_score": {
+          "p10": 3.2,
+          "p25": 6.3,
+          "p50": 9.6,
+          "p75": 12.9,
+          "p90": 14.9,
+          "mean": 9.4
+        },
+        "home_1h_score": {
+          "p10": 7.2,
+          "p25": 10.4,
+          "p50": 13.8,
+          "p75": 17.2,
+          "p90": 20.4,
+          "mean": 13.73
+        },
+        "away_fg_made": {
+          "p10": -0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.81
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.69
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 4.0,
+          "p50": 8.0,
+          "p75": 11.0,
+          "p90": 15.0,
+          "mean": 7.81
+        },
+        "home_kicking_pts": {
+          "p10": 2.0,
+          "p25": 3.0,
+          "p50": 8.0,
+          "p75": 12.0,
+          "p90": 17.0,
+          "mean": 8.51
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.79
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.87
+        }
+      },
+      "distribution_id": "dist_2026_09_NYJ_KC_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-REC-314",
+          "player_name": "Garrett Wilson",
+          "team": "NYJ",
+          "position": "WR",
+          "market_type": "Receiving Yards",
+          "direction": "OVER",
+          "line": 72.5,
+          "projected_value": 110.4,
+          "edge_percentage": 0.523,
+          "causal_equation_plain_english": "Projected Routes (32.0) x Yards Per Route Run (2.35 overall, 2.70 vs Man) x Separation & Coverage Multiplier (SSP 3.4 yds, Burn Rate 42%) = 110.4 Projected Receiving Yards (vs 72.5 line)",
+          "human_plain_english_rationale": "We like Garrett Wilson OVER 72.5 Receiving Yards against KC. He runs a route on 94% of dropbacks (32.0 projected routes) and commands first-read looks on 32% of throws. Because he creates 3.4 yards of separation at the top of his route and wins 42% of his man-coverage reps (2.70 yards per route vs man), multiplying his route volume by his efficiency projects 110.4 receiving yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-319",
+          "player_name": "Travis Kelce",
+          "team": "KC",
+          "position": "TE",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 17.5,
+          "projected_value": 22.6,
+          "edge_percentage": 0.291,
+          "causal_equation_plain_english": "[Deep Target Air Depth (15.6 yds) x Separation Catch Factor (0.73 from 2.8 yds cushion)] + Yards After Catch in Space (11.2 yds) = 22.6 Projected Longest Reception (vs 17.5 line)",
+          "human_plain_english_rationale": "We like Travis Kelce OVER 17.5 Longest Reception against NYJ. NYJ plays single-high coverage on 22% of snaps, leaving Travis Kelce with one-on-one leverage outside. He generates 2.8 yards of separation at his route break and wins 30% of his man-coverage stems. When you multiply his deep target depth (15.6 air yards) by his 73% deep-window conversion rate and add 11.2 yards after the catch in open grass, our equation projects a 22.6-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-310",
+          "player_name": "Breece Hall",
+          "team": "NYJ",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 68.5,
+          "projected_value": 88.1,
+          "edge_percentage": 0.286,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (1.7 yds) + Yards After Contact (3.4 yds)] x Trench & Elusiveness Multiplier (1.06x) = 88.1 Projected Rushing Yards (vs 68.5 line)",
+          "human_plain_english_rationale": "We like Breece Hall OVER 68.5 Rushing Yards against KC. He creates his own yardage after contact (3.4 yards after contact per carry, 67.3 Elusive Rating) and hits explosive 5+ yard gains over expectation on 20.0% of his runs. Taking 16.0 projected carries times (1.7 yards before contact + 3.4 yards after contact) gives us 88.1 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-316",
+          "player_name": "Garrett Wilson",
+          "team": "NYJ",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 27.1,
+          "edge_percentage": 0.26,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.6 yds) x Separation Catch Factor (0.79 from 3.4 yds cushion)] + Yards After Catch in Space (13.2 yds) = 27.1 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Garrett Wilson OVER 21.5 Longest Reception against KC. KC plays single-high coverage on 32% of snaps, leaving Garrett Wilson with one-on-one leverage outside. He generates 3.4 yards of separation at his route break and wins 42% of his man-coverage stems. When you multiply his deep target depth (17.6 air yards) by his 79% deep-window conversion rate and add 13.2 yards after the catch in open grass, our equation projects a 27.1-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-312",
+          "player_name": "Kareem Hunt",
+          "team": "KC",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 72.5,
+          "projected_value": 90.0,
+          "edge_percentage": 0.241,
+          "causal_equation_plain_english": "Projected Carries (18.0) x [Yards Before Contact (1.8 yds) + Yards After Contact (3.2 yds)] x Trench & Elusiveness Multiplier (1.00x) = 90.0 Projected Rushing Yards (vs 72.5 line)",
+          "human_plain_english_rationale": "We like Kareem Hunt OVER 72.5 Rushing Yards against NYJ. He creates his own yardage after contact (3.2 yards after contact per carry, 51.7 Elusive Rating) and hits explosive 5+ yard gains over expectation on 16.0% of his runs. Taking 18.0 projected carries times (1.8 yards before contact + 3.2 yards after contact) gives us 90.0 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-315",
+          "player_name": "Garrett Wilson",
+          "team": "NYJ",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 6.8,
+          "edge_percentage": 0.236,
+          "causal_equation_plain_english": "Projected Routes (32.0) x Target Rate (31.6%) x Catchable Ball Rate (84%) = 6.8 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on Garrett Wilson OVER 5.5 Receptions. As the first read on 32% of dropbacks with an 84% catchable target rate and 3.4 yards of route separation, he projects for 6.8 catches against KC."
+        }
+      ]
+    },
+    {
+      "rank": 10,
+      "game_id": "2026_09_HOU_LAC",
+      "matchup": "HOU @ LAC",
+      "window": "SUN_LATE_1505_CST",
+      "kickoff_note": "SoFi indoor control; Herbert play-action vs DeMeco Ryans simulated pressure",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.1167,
+      "projected_away_score": 23.1,
+      "projected_home_score": 24.43,
+      "projected_total_mean": 47.53,
+      "projected_total_quantiles": {
+        "p10": 32.06,
+        "p25": 39.65,
+        "p50": 47.24,
+        "p75": 55.87,
+        "p90": 63.46
+      },
+      "book_total_line": 43.5,
+      "total_discrepancy_pts": 4.03,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": 1.33,
+      "projected_margin_quantiles": {
+        "p10": -15.66,
+        "p25": -7.9,
+        "p50": 1.87,
+        "p75": 9.63,
+        "p90": 18.47
+      },
+      "gse_fair_spread_home": -1.33,
+      "book_spread_home": -2.5,
+      "spread_discrepancy_pts": -1.17,
+      "recommended_spread_action": "AWAY_COVER",
+      "gse_home_win_prob": 0.553,
+      "devigged_book_home_win_prob": 0.5514,
+      "win_prob_edge": 0.0016,
+      "projected_winner": "LAC",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        37.68,
+        57.38
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 278.4,
+        "home_pass_yds_mean": 257.7,
+        "away_rush_yds_mean": 122.5,
+        "home_rush_yds_mean": 136.8,
+        "away_wr1_yds_mean": 38.0,
+        "home_wr1_yds_mean": 67.0,
+        "away_wr1_longest_rec_mean": 17.1,
+        "home_wr1_longest_rec_mean": 26.7,
+        "away_rb1_yds_mean": 84.8,
+        "home_rb1_yds_mean": 84.8,
+        "away_rb1_longest_rush_mean": 26.3,
+        "home_rb1_longest_rush_mean": 26.3,
+        "away_sacks_mean": 2.51,
+        "home_sacks_mean": 2.23
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 207.0,
+          "p25": 241.0,
+          "p50": 278.0,
+          "p75": 316.0,
+          "p90": 350.0,
+          "mean": 278.36
+        },
+        "home_pass_yds": {
+          "p10": 188.0,
+          "p25": 221.0,
+          "p50": 257.0,
+          "p75": 294.0,
+          "p90": 328.0,
+          "mean": 257.69
+        },
+        "away_rush_yds": {
+          "p10": 77.0,
+          "p25": 96.0,
+          "p50": 120.0,
+          "p75": 146.0,
+          "p90": 172.0,
+          "mean": 122.5
+        },
+        "home_rush_yds": {
+          "p10": 89.0,
+          "p25": 110.0,
+          "p50": 135.0,
+          "p75": 162.0,
+          "p90": 186.0,
+          "mean": 136.78
+        },
+        "away_wr1_yds": {
+          "p10": 28.29,
+          "p25": 32.94,
+          "p50": 37.99,
+          "p75": 43.19,
+          "p90": 47.83,
+          "mean": 38.04
+        },
+        "home_wr1_yds": {
+          "p10": 48.88,
+          "p25": 57.46,
+          "p50": 66.82,
+          "p75": 76.44,
+          "p90": 85.28,
+          "mean": 67.0
+        },
+        "away_wr1_longest_rec": {
+          "p10": 12.09,
+          "p25": 14.22,
+          "p50": 16.71,
+          "p75": 19.63,
+          "p90": 22.62,
+          "mean": 17.12
+        },
+        "home_wr1_longest_rec": {
+          "p10": 19.21,
+          "p25": 22.44,
+          "p50": 26.36,
+          "p75": 30.65,
+          "p90": 34.73,
+          "mean": 26.73
+        },
+        "away_rb1_yds": {
+          "p10": 53.31,
+          "p25": 66.46,
+          "p50": 83.08,
+          "p75": 101.08,
+          "p90": 119.08,
+          "mean": 84.81
+        },
+        "home_rb1_yds": {
+          "p10": 55.18,
+          "p25": 68.2,
+          "p50": 83.7,
+          "p75": 100.44,
+          "p90": 115.32,
+          "mean": 84.8
+        },
+        "away_rb1_longest_rush": {
+          "p10": 16.73,
+          "p25": 20.74,
+          "p50": 25.71,
+          "p75": 31.24,
+          "p90": 36.76,
+          "mean": 26.31
+        },
+        "home_rb1_longest_rush": {
+          "p10": 17.24,
+          "p25": 21.0,
+          "p50": 25.78,
+          "p75": 31.11,
+          "p90": 36.29,
+          "mean": 26.35
+        },
+        "away_1q_score": {
+          "p10": 2.4,
+          "p25": 3.4,
+          "p50": 5.0,
+          "p75": 6.5,
+          "p90": 7.7,
+          "mean": 4.94
+        },
+        "home_1q_score": {
+          "p10": 2.5,
+          "p25": 3.9,
+          "p50": 5.4,
+          "p75": 6.8,
+          "p90": 7.8,
+          "mean": 5.28
+        },
+        "away_1h_score": {
+          "p10": 5.3,
+          "p25": 7.8,
+          "p50": 11.2,
+          "p75": 14.6,
+          "p90": 17.3,
+          "mean": 11.14
+        },
+        "home_1h_score": {
+          "p10": 5.6,
+          "p25": 8.7,
+          "p50": 12.1,
+          "p75": 15.4,
+          "p90": 17.5,
+          "mean": 11.9
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 2.0,
+          "p90": 4.0,
+          "mean": 1.44
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 5.0,
+          "mean": 2.12
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 3.0,
+          "p50": 6.0,
+          "p75": 10.0,
+          "p90": 15.0,
+          "mean": 7.15
+        },
+        "home_kicking_pts": {
+          "p10": 2.0,
+          "p25": 4.0,
+          "p50": 9.0,
+          "p75": 14.0,
+          "p90": 18.0,
+          "mean": 9.32
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.76
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.85
+        }
+      },
+      "distribution_id": "dist_2026_09_HOU_LAC_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-CATCH-243",
+          "player_name": "Nico Collins",
+          "team": "HOU",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 7.9,
+          "edge_percentage": 0.436,
+          "causal_equation_plain_english": "Projected Routes (32.3) x Target Rate (34.8%) x Catchable Ball Rate (88%) = 7.9 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on Nico Collins OVER 5.5 Receptions. As the first read on 36% of dropbacks with an 88% catchable target rate and 3.8 yards of route separation, he projects for 7.9 catches against LAC."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-244",
+          "player_name": "Nico Collins",
+          "team": "HOU",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 29.3,
+          "edge_percentage": 0.363,
+          "causal_equation_plain_english": "[Deep Target Air Depth (18.0 yds) x Separation Catch Factor (0.83 from 3.8 yds cushion)] + Yards After Catch in Space (14.4 yds) = 29.3 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Nico Collins OVER 21.5 Longest Reception against LAC. LAC plays single-high coverage on 22% of snaps, leaving Nico Collins with one-on-one leverage outside. He generates 3.8 yards of separation at his route break and wins 46% of his man-coverage stems. When you multiply his deep target depth (18.0 air yards) by his 83% deep-window conversion rate and add 14.4 yards after the catch in open grass, our equation projects a 29.3-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-246",
+          "player_name": "Ladd McConkey",
+          "team": "LAC",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 5.7,
+          "edge_percentage": 0.267,
+          "causal_equation_plain_english": "Projected Routes (29.9) x Target Rate (28.4%) x Catchable Ball Rate (84%) = 5.7 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Ladd McConkey OVER 4.5 Receptions. As the first read on 28% of dropbacks with an 84% catchable target rate and 3.1 yards of route separation, he projects for 5.7 catches against HOU."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-240",
+          "player_name": "J.K. Dobbins",
+          "team": "LAC",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 68.5,
+          "projected_value": 84.8,
+          "edge_percentage": 0.238,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (1.9 yds) + Yards After Contact (3.4 yds)] x Trench & Elusiveness Multiplier (1.00x) = 84.8 Projected Rushing Yards (vs 68.5 line)",
+          "human_plain_english_rationale": "We like J.K. Dobbins OVER 68.5 Rushing Yards against HOU. He creates his own yardage after contact (3.4 yards after contact per carry, 63.0 Elusive Rating) and hits explosive 5+ yard gains over expectation on 22.0% of his runs. Taking 16.0 projected carries times (1.9 yards before contact + 3.4 yards after contact) gives us 84.8 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-253",
+          "player_name": "Joey Bosa",
+          "team": "LAC",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.32,
+          "edge_percentage": 0.169,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (24.0%) / Opponent Pass-Block Grade (0.68)] x Stunt Speed Factor (350ms / 250ms) = 0.32 Expected Sacks -> 33.1% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Joey Bosa UNDER 0.25 Sacks against HOU (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 24.0% of snaps and knifes through stunts in 250 milliseconds against an offensive line grading at 0.68. Across 36 projected dropbacks, he projects for 0.32 sacks with a 33.1% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-247",
+          "player_name": "Ladd McConkey",
+          "team": "LAC",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 24.5,
+          "edge_percentage": 0.14,
+          "causal_equation_plain_english": "[Deep Target Air Depth (16.2 yds) x Separation Catch Factor (0.76 from 3.1 yds cushion)] + Yards After Catch in Space (12.2 yds) = 24.5 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Ladd McConkey OVER 21.5 Longest Reception against HOU. HOU plays single-high coverage on 22% of snaps, leaving Ladd McConkey with one-on-one leverage outside. He generates 3.1 yards of separation at his route break and wins 36% of his man-coverage stems. When you multiply his deep target depth (16.2 air yards) by his 76% deep-window conversion rate and add 12.2 yards after the catch in open grass, our equation projects a 24.5-yard longest reception."
+        }
+      ]
+    },
+    {
+      "rank": 11,
+      "game_id": "2026_09_LV_SF",
+      "matchup": "LV @ SF",
+      "window": "SUN_LATE_1525_CST",
+      "kickoff_note": "Mike Evans starts at WR for SF alongside CMC; SF -280 ML blocked by firewall",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": 0.0864,
+      "projected_away_score": 20.11,
+      "projected_home_score": 28.01,
+      "projected_total_mean": 48.12,
+      "projected_total_quantiles": {
+        "p10": 31.66,
+        "p25": 40.03,
+        "p50": 48.76,
+        "p75": 56.44,
+        "p90": 64.12
+      },
+      "book_total_line": 46.5,
+      "total_discrepancy_pts": 1.62,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": 7.9,
+      "projected_margin_quantiles": {
+        "p10": -9.36,
+        "p25": -1.57,
+        "p50": 8.24,
+        "p75": 18.05,
+        "p90": 24.9
+      },
+      "gse_fair_spread_home": -7.9,
+      "book_spread_home": -6.5,
+      "spread_discrepancy_pts": 1.4,
+      "recommended_spread_action": "HOME_COVER",
+      "gse_home_win_prob": 0.7654,
+      "devigged_book_home_win_prob": 0.7086,
+      "win_prob_edge": 0.0568,
+      "projected_winner": "SF",
+      "heavy_juice_firewall_blocked": true,
+      "conformal_total_90_interval": [
+        38.27,
+        57.97
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 246.9,
+        "home_pass_yds_mean": 273.2,
+        "away_rush_yds_mean": 96.3,
+        "home_rush_yds_mean": 145.8,
+        "away_wr1_yds_mean": 64.2,
+        "home_wr1_yds_mean": 71.0,
+        "away_wr1_longest_rec_mean": 25.9,
+        "home_wr1_longest_rec_mean": 28.0,
+        "away_rb1_yds_mean": 59.7,
+        "home_rb1_yds_mean": 90.4,
+        "away_rb1_longest_rush_mean": 19.6,
+        "home_rb1_longest_rush_mean": 27.8,
+        "away_sacks_mean": 2.6,
+        "home_sacks_mean": 2.24
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 176.0,
+          "p25": 210.0,
+          "p50": 247.0,
+          "p75": 284.0,
+          "p90": 317.0,
+          "mean": 246.94
+        },
+        "home_pass_yds": {
+          "p10": 202.0,
+          "p25": 235.0,
+          "p50": 272.0,
+          "p75": 310.0,
+          "p90": 345.0,
+          "mean": 273.16
+        },
+        "away_rush_yds": {
+          "p10": 56.0,
+          "p25": 73.0,
+          "p50": 94.0,
+          "p75": 117.0,
+          "p90": 140.0,
+          "mean": 96.31
+        },
+        "home_rush_yds": {
+          "p10": 96.0,
+          "p25": 118.0,
+          "p50": 144.0,
+          "p75": 172.0,
+          "p90": 197.1,
+          "mean": 145.81
+        },
+        "away_wr1_yds": {
+          "p10": 45.76,
+          "p25": 54.6,
+          "p50": 64.22,
+          "p75": 73.84,
+          "p90": 82.42,
+          "mean": 64.21
+        },
+        "home_wr1_yds": {
+          "p10": 52.52,
+          "p25": 61.1,
+          "p50": 70.72,
+          "p75": 80.6,
+          "p90": 89.7,
+          "mean": 71.02
+        },
+        "away_wr1_longest_rec": {
+          "p10": 18.25,
+          "p25": 21.66,
+          "p50": 25.58,
+          "p75": 29.86,
+          "p90": 33.83,
+          "mean": 25.89
+        },
+        "home_wr1_longest_rec": {
+          "p10": 20.39,
+          "p25": 23.73,
+          "p50": 27.67,
+          "p75": 31.95,
+          "p90": 36.17,
+          "mean": 28.02
+        },
+        "away_rb1_yds": {
+          "p10": 34.72,
+          "p25": 45.26,
+          "p50": 58.28,
+          "p75": 72.54,
+          "p90": 86.8,
+          "mean": 59.72
+        },
+        "home_rb1_yds": {
+          "p10": 59.52,
+          "p25": 73.16,
+          "p50": 89.28,
+          "p75": 106.64,
+          "p90": 122.2,
+          "mean": 90.4
+        },
+        "away_rb1_longest_rush": {
+          "p10": 11.84,
+          "p25": 15.0,
+          "p50": 19.03,
+          "p75": 23.45,
+          "p90": 28.08,
+          "mean": 19.56
+        },
+        "home_rb1_longest_rush": {
+          "p10": 18.3,
+          "p25": 22.25,
+          "p50": 27.19,
+          "p75": 32.74,
+          "p90": 38.16,
+          "mean": 27.82
+        },
+        "away_1q_score": {
+          "p10": 1.7,
+          "p25": 3.0,
+          "p50": 4.4,
+          "p75": 5.9,
+          "p90": 6.8,
+          "mean": 4.35
+        },
+        "home_1q_score": {
+          "p10": 3.6,
+          "p25": 4.5,
+          "p50": 6.0,
+          "p75": 7.5,
+          "p90": 8.5,
+          "mean": 6.0
+        },
+        "away_1h_score": {
+          "p10": 3.9,
+          "p25": 6.7,
+          "p50": 10.0,
+          "p75": 13.2,
+          "p90": 15.3,
+          "mean": 9.8
+        },
+        "home_1h_score": {
+          "p10": 8.0,
+          "p25": 10.1,
+          "p50": 13.4,
+          "p75": 16.8,
+          "p90": 19.3,
+          "mean": 13.54
+        },
+        "away_fg_made": {
+          "p10": -0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.95
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.37
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 4.0,
+          "p50": 8.0,
+          "p75": 12.0,
+          "p90": 16.0,
+          "mean": 8.37
+        },
+        "home_kicking_pts": {
+          "p10": 3.0,
+          "p25": 6.0,
+          "p50": 10.0,
+          "p75": 15.0,
+          "p90": 19.0,
+          "mean": 10.49
+        },
+        "away_edge1_sacks": {
+          "p10": 0.0,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.76
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.89
+        }
+      },
+      "distribution_id": "dist_2026_09_LV_SF_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-CATCH-283",
+          "player_name": "Mike Evans",
+          "team": "SF",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 6.7,
+          "edge_percentage": 0.489,
+          "causal_equation_plain_english": "Projected Routes (31.3) x Target Rate (31.6%) x Catchable Ball Rate (85%) = 6.7 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Mike Evans OVER 4.5 Receptions. As the first read on 32% of dropbacks with an 85% catchable target rate and 3.4 yards of route separation, he projects for 6.7 catches against LV."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-281",
+          "player_name": "Brock Bowers",
+          "team": "LV",
+          "position": "TE",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 17.5,
+          "projected_value": 24.9,
+          "edge_percentage": 0.423,
+          "causal_equation_plain_english": "[Deep Target Air Depth (16.2 yds) x Separation Catch Factor (0.77 from 3.2 yds cushion)] + Yards After Catch in Space (12.4 yds) = 24.9 Projected Longest Reception (vs 17.5 line)",
+          "human_plain_english_rationale": "We like Brock Bowers OVER 17.5 Longest Reception against SF. SF plays single-high coverage on 22% of snaps, leaving Brock Bowers with one-on-one leverage outside. He generates 3.2 yards of separation at his route break and wins 36% of his man-coverage stems. When you multiply his deep target depth (16.2 air yards) by his 77% deep-window conversion rate and add 12.4 yards after the catch in open grass, our equation projects a 24.9-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-287",
+          "player_name": "George Kittle",
+          "team": "SF",
+          "position": "TE",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 17.5,
+          "projected_value": 23.8,
+          "edge_percentage": 0.36,
+          "causal_equation_plain_english": "[Deep Target Air Depth (15.9 yds) x Separation Catch Factor (0.75 from 3.0 yds cushion)] + Yards After Catch in Space (11.9 yds) = 23.8 Projected Longest Reception (vs 17.5 line)",
+          "human_plain_english_rationale": "We like George Kittle OVER 17.5 Longest Reception against LV. LV plays single-high coverage on 22% of snaps, leaving George Kittle with one-on-one leverage outside. He generates 3.0 yards of separation at his route break and wins 34% of his man-coverage stems. When you multiply his deep target depth (15.9 air yards) by his 75% deep-window conversion rate and add 11.9 yards after the catch in open grass, our equation projects a 23.8-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-277",
+          "player_name": "Jordan Mason",
+          "team": "SF",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 78.5,
+          "projected_value": 101.0,
+          "edge_percentage": 0.287,
+          "causal_equation_plain_english": "Projected Carries (17.0) x [Yards Before Contact (2.0 yds) + Yards After Contact (3.5 yds)] x Trench & Elusiveness Multiplier (1.06x) = 101.0 Projected Rushing Yards (vs 78.5 line)",
+          "human_plain_english_rationale": "We like Jordan Mason OVER 78.5 Rushing Yards against LV. He creates his own yardage after contact (3.5 yards after contact per carry, 69.5 Elusive Rating) and hits explosive 5+ yard gains over expectation on 24.0% of his runs. Taking 17.0 projected carries times (2.0 yards before contact + 3.5 yards after contact) gives us 101.0 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-284",
+          "player_name": "Mike Evans",
+          "team": "SF",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 26.9,
+          "edge_percentage": 0.251,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.3 yds) x Separation Catch Factor (0.79 from 3.4 yds cushion)] + Yards After Catch in Space (13.2 yds) = 26.9 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Mike Evans OVER 21.5 Longest Reception against LV. LV plays single-high coverage on 22% of snaps, leaving Mike Evans with one-on-one leverage outside. He generates 3.4 yards of separation at his route break and wins 41% of his man-coverage stems. When you multiply his deep target depth (17.3 air yards) by his 79% deep-window conversion rate and add 13.2 yards after the catch in open grass, our equation projects a 26.9-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-286",
+          "player_name": "George Kittle",
+          "team": "SF",
+          "position": "TE",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 5.6,
+          "edge_percentage": 0.244,
+          "causal_equation_plain_english": "Projected Routes (29.9) x Target Rate (26.8%) x Catchable Ball Rate (88%) = 5.6 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on George Kittle OVER 4.5 Receptions. As the first read on 26% of dropbacks with an 88% catchable target rate and 3.0 yards of route separation, he projects for 5.6 catches against LV."
+        }
+      ]
+    },
+    {
+      "rank": 12,
+      "game_id": "2026_09_ARI_SEA",
+      "matchup": "ARI @ SEA",
+      "window": "SUN_LATE_1525_CST",
+      "kickoff_note": "Sam Darnold starts at QB1 for SEA; NFC West divisional familiarity",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": 0.0198,
+      "projected_away_score": 21.87,
+      "projected_home_score": 24.5,
+      "projected_total_mean": 46.37,
+      "projected_total_quantiles": {
+        "p10": 30.44,
+        "p25": 38.15,
+        "p50": 45.86,
+        "p75": 53.56,
+        "p90": 64.6
+      },
+      "book_total_line": 47.0,
+      "total_discrepancy_pts": -0.63,
+      "recommended_total_action": "PASS",
+      "projected_home_margin_mean": 2.63,
+      "projected_margin_quantiles": {
+        "p10": -13.87,
+        "p25": -7.0,
+        "p50": 2.84,
+        "p75": 11.6,
+        "p90": 20.5
+      },
+      "gse_fair_spread_home": -2.63,
+      "book_spread_home": -2.5,
+      "spread_discrepancy_pts": 0.13,
+      "recommended_spread_action": "PASS",
+      "gse_home_win_prob": 0.5947,
+      "devigged_book_home_win_prob": 0.5598,
+      "win_prob_edge": 0.0349,
+      "projected_winner": "SEA",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        36.52,
+        56.22
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 241.3,
+        "home_pass_yds_mean": 258.9,
+        "away_rush_yds_mean": 109.1,
+        "home_rush_yds_mean": 111.9,
+        "away_wr1_yds_mean": 62.7,
+        "home_wr1_yds_mean": 67.3,
+        "away_wr1_longest_rec_mean": 25.3,
+        "home_wr1_longest_rec_mean": 26.9,
+        "away_rb1_yds_mean": 67.7,
+        "home_rb1_yds_mean": 69.4,
+        "away_rb1_longest_rush_mean": 21.7,
+        "home_rb1_longest_rush_mean": 22.1,
+        "away_sacks_mean": 2.55,
+        "home_sacks_mean": 2.44
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 173.0,
+          "p25": 205.0,
+          "p50": 241.0,
+          "p75": 277.0,
+          "p90": 310.0,
+          "mean": 241.28
+        },
+        "home_pass_yds": {
+          "p10": 190.0,
+          "p25": 221.0,
+          "p50": 258.0,
+          "p75": 296.0,
+          "p90": 329.0,
+          "mean": 258.91
+        },
+        "away_rush_yds": {
+          "p10": 69.0,
+          "p25": 86.0,
+          "p50": 107.0,
+          "p75": 130.0,
+          "p90": 153.0,
+          "mean": 109.12
+        },
+        "home_rush_yds": {
+          "p10": 70.0,
+          "p25": 88.0,
+          "p50": 111.0,
+          "p75": 133.0,
+          "p90": 156.0,
+          "mean": 111.91
+        },
+        "away_wr1_yds": {
+          "p10": 44.98,
+          "p25": 53.3,
+          "p50": 62.66,
+          "p75": 72.02,
+          "p90": 80.6,
+          "mean": 62.73
+        },
+        "home_wr1_yds": {
+          "p10": 49.4,
+          "p25": 57.46,
+          "p50": 67.08,
+          "p75": 76.96,
+          "p90": 85.54,
+          "mean": 67.32
+        },
+        "away_wr1_longest_rec": {
+          "p10": 17.88,
+          "p25": 21.11,
+          "p50": 24.91,
+          "p75": 29.16,
+          "p90": 33.19,
+          "mean": 25.31
+        },
+        "home_wr1_longest_rec": {
+          "p10": 19.35,
+          "p25": 22.55,
+          "p50": 26.6,
+          "p75": 30.82,
+          "p90": 35.11,
+          "mean": 26.92
+        },
+        "away_rb1_yds": {
+          "p10": 42.78,
+          "p25": 53.32,
+          "p50": 66.34,
+          "p75": 80.6,
+          "p90": 94.86,
+          "mean": 67.65
+        },
+        "home_rb1_yds": {
+          "p10": 43.4,
+          "p25": 54.56,
+          "p50": 68.82,
+          "p75": 82.46,
+          "p90": 96.72,
+          "mean": 69.39
+        },
+        "away_rb1_longest_rush": {
+          "p10": 13.77,
+          "p25": 17.09,
+          "p50": 21.18,
+          "p75": 25.73,
+          "p90": 30.27,
+          "mean": 21.69
+        },
+        "home_rb1_longest_rush": {
+          "p10": 14.04,
+          "p25": 17.39,
+          "p50": 21.58,
+          "p75": 26.19,
+          "p90": 30.67,
+          "mean": 22.1
+        },
+        "away_1q_score": {
+          "p10": 2.1,
+          "p25": 3.2,
+          "p50": 4.6,
+          "p75": 6.2,
+          "p90": 7.4,
+          "mean": 4.71
+        },
+        "home_1q_score": {
+          "p10": 2.8,
+          "p25": 3.7,
+          "p50": 5.2,
+          "p75": 6.7,
+          "p90": 7.8,
+          "mean": 5.26
+        },
+        "away_1h_score": {
+          "p10": 4.8,
+          "p25": 7.1,
+          "p50": 10.4,
+          "p75": 13.9,
+          "p90": 16.7,
+          "mean": 10.62
+        },
+        "home_1h_score": {
+          "p10": 6.4,
+          "p25": 8.4,
+          "p50": 11.7,
+          "p75": 15.1,
+          "p90": 17.5,
+          "mean": 11.87
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.32
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.42
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 14.0,
+          "p90": 18.0,
+          "mean": 9.66
+        },
+        "home_kicking_pts": {
+          "p10": 3.0,
+          "p25": 6.0,
+          "p50": 10.0,
+          "p75": 15.0,
+          "p90": 18.0,
+          "mean": 10.28
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.83
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.87
+        }
+      },
+      "distribution_id": "dist_2026_09_ARI_SEA_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-CATCH-347",
+          "player_name": "Marvin Harrison Jr.",
+          "team": "ARI",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 6.6,
+          "edge_percentage": 0.467,
+          "causal_equation_plain_english": "Projected Routes (31.3) x Target Rate (31.6%) x Catchable Ball Rate (84%) = 6.6 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Marvin Harrison Jr. OVER 4.5 Receptions. As the first read on 32% of dropbacks with an 84% catchable target rate and 3.4 yards of route separation, he projects for 6.6 catches against SEA."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-350",
+          "player_name": "Jaxon Smith-Njigba",
+          "team": "SEA",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 5.5,
+          "projected_value": 7.3,
+          "edge_percentage": 0.327,
+          "causal_equation_plain_english": "Projected Routes (32.0) x Target Rate (33.2%) x Catchable Ball Rate (86%) = 7.3 Projected Receptions (vs 5.5 line)",
+          "human_plain_english_rationale": "We are on Jaxon Smith-Njigba OVER 5.5 Receptions. As the first read on 34% of dropbacks with an 86% catchable target rate and 3.6 yards of route separation, he projects for 7.3 catches against ARI."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-351",
+          "player_name": "Jaxon Smith-Njigba",
+          "team": "SEA",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 28.3,
+          "edge_percentage": 0.316,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.9 yds) x Separation Catch Factor (0.81 from 3.6 yds cushion)] + Yards After Catch in Space (13.8 yds) = 28.3 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Jaxon Smith-Njigba OVER 21.5 Longest Reception against ARI. ARI plays single-high coverage on 22% of snaps, leaving Jaxon Smith-Njigba with one-on-one leverage outside. He generates 3.6 yards of separation at his route break and wins 44% of his man-coverage stems. When you multiply his deep target depth (17.9 air yards) by his 81% deep-window conversion rate and add 13.8 yards after the catch in open grass, our equation projects a 28.3-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-344",
+          "player_name": "Kenneth Walker III",
+          "team": "SEA",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 70.5,
+          "projected_value": 91.6,
+          "edge_percentage": 0.299,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (1.8 yds) + Yards After Contact (3.5 yds)] x Trench & Elusiveness Multiplier (1.06x) = 91.6 Projected Rushing Yards (vs 70.5 line)",
+          "human_plain_english_rationale": "We like Kenneth Walker III OVER 70.5 Rushing Yards against ARI. He creates his own yardage after contact (3.5 yards after contact per carry, 71.8 Elusive Rating) and hits explosive 5+ yard gains over expectation on 24.0% of his runs. Taking 16.0 projected carries times (1.8 yards before contact + 3.5 yards after contact) gives us 91.6 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-356",
+          "player_name": "Zaven Collins",
+          "team": "ARI",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.24,
+          "edge_percentage": 0.241,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (21.0%) / Opponent Pass-Block Grade (0.71)] x Stunt Speed Factor (350ms / 280ms) = 0.24 Expected Sacks -> 25.9% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Zaven Collins UNDER 0.25 Sacks against SEA (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 21.0% of snaps and knifes through stunts in 280 milliseconds against an offensive line grading at 0.71. Across 36 projected dropbacks, he projects for 0.24 sacks with a 25.9% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-348",
+          "player_name": "Marvin Harrison Jr.",
+          "team": "ARI",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 26.5,
+          "edge_percentage": 0.233,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.0 yds) x Separation Catch Factor (0.79 from 3.4 yds cushion)] + Yards After Catch in Space (13.1 yds) = 26.5 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Marvin Harrison Jr. OVER 21.5 Longest Reception against SEA. SEA plays single-high coverage on 22% of snaps, leaving Marvin Harrison Jr. with one-on-one leverage outside. He generates 3.4 yards of separation at his route break and wins 40% of his man-coverage stems. When you multiply his deep target depth (17.0 air yards) by his 79% deep-window conversion rate and add 13.1 yards after the catch in open grass, our equation projects a 26.5-yard longest reception."
+        }
+      ]
+    },
+    {
+      "rank": 13,
+      "game_id": "2026_09_GB_NE",
+      "matchup": "GB @ NE",
+      "window": "SUN_LATE_1525_CST",
+      "kickoff_note": "Jordan Love & Josh Jacobs vs Drake Maye; Tucker Kraft 1Q/full-game TE usage",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0236,
+      "projected_away_score": 25.05,
+      "projected_home_score": 19.75,
+      "projected_total_mean": 44.8,
+      "projected_total_quantiles": {
+        "p10": 28.28,
+        "p25": 36.18,
+        "p50": 44.09,
+        "p75": 54.33,
+        "p90": 59.9
+      },
+      "book_total_line": 44.5,
+      "total_discrepancy_pts": 0.3,
+      "recommended_total_action": "PASS",
+      "projected_home_margin_mean": -5.3,
+      "projected_margin_quantiles": {
+        "p10": -22.71,
+        "p25": -14.99,
+        "p50": -5.25,
+        "p75": 4.48,
+        "p90": 11.28
+      },
+      "gse_fair_spread_home": 5.3,
+      "book_spread_home": 4.5,
+      "spread_discrepancy_pts": -0.8,
+      "recommended_spread_action": "PASS",
+      "gse_home_win_prob": 0.3081,
+      "devigged_book_home_win_prob": 0.3425,
+      "win_prob_edge": -0.0344,
+      "projected_winner": "GB",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        34.95,
+        54.65
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 258.4,
+        "home_pass_yds_mean": 231.2,
+        "away_rush_yds_mean": 124.3,
+        "home_rush_yds_mean": 99.6,
+        "away_wr1_yds_mean": 67.2,
+        "home_wr1_yds_mean": 60.1,
+        "away_wr1_longest_rec_mean": 26.8,
+        "home_wr1_longest_rec_mean": 24.5,
+        "away_rb1_yds_mean": 77.1,
+        "home_rb1_yds_mean": 61.8,
+        "away_rb1_longest_rush_mean": 24.2,
+        "home_rb1_longest_rush_mean": 20.1,
+        "away_sacks_mean": 2.45,
+        "home_sacks_mean": 2.35
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 190.0,
+          "p25": 221.0,
+          "p50": 258.0,
+          "p75": 295.0,
+          "p90": 328.0,
+          "mean": 258.35
+        },
+        "home_pass_yds": {
+          "p10": 163.0,
+          "p25": 194.0,
+          "p50": 230.0,
+          "p75": 267.0,
+          "p90": 301.0,
+          "mean": 231.22
+        },
+        "away_rush_yds": {
+          "p10": 79.0,
+          "p25": 99.0,
+          "p50": 122.0,
+          "p75": 148.0,
+          "p90": 172.0,
+          "mean": 124.33
+        },
+        "home_rush_yds": {
+          "p10": 61.0,
+          "p25": 77.0,
+          "p50": 98.0,
+          "p75": 120.0,
+          "p90": 140.0,
+          "mean": 99.62
+        },
+        "away_wr1_yds": {
+          "p10": 49.4,
+          "p25": 57.46,
+          "p50": 67.08,
+          "p75": 76.7,
+          "p90": 85.28,
+          "mean": 67.17
+        },
+        "home_wr1_yds": {
+          "p10": 42.38,
+          "p25": 50.44,
+          "p50": 59.8,
+          "p75": 69.42,
+          "p90": 78.26,
+          "mean": 60.12
+        },
+        "away_wr1_longest_rec": {
+          "p10": 19.35,
+          "p25": 22.56,
+          "p50": 26.43,
+          "p75": 30.6,
+          "p90": 34.56,
+          "mean": 26.77
+        },
+        "home_wr1_longest_rec": {
+          "p10": 17.15,
+          "p25": 20.21,
+          "p50": 24.04,
+          "p75": 28.23,
+          "p90": 32.35,
+          "mean": 24.46
+        },
+        "away_rb1_yds": {
+          "p10": 48.98,
+          "p25": 61.38,
+          "p50": 75.64,
+          "p75": 91.76,
+          "p90": 106.64,
+          "mean": 77.09
+        },
+        "home_rb1_yds": {
+          "p10": 37.82,
+          "p25": 47.74,
+          "p50": 60.76,
+          "p75": 74.4,
+          "p90": 86.8,
+          "mean": 61.77
+        },
+        "away_rb1_longest_rush": {
+          "p10": 15.53,
+          "p25": 19.09,
+          "p50": 23.53,
+          "p75": 28.79,
+          "p90": 33.7,
+          "mean": 24.24
+        },
+        "home_rb1_longest_rush": {
+          "p10": 12.45,
+          "p25": 15.55,
+          "p50": 19.61,
+          "p75": 24.01,
+          "p90": 28.3,
+          "mean": 20.1
+        },
+        "away_1q_score": {
+          "p10": 2.6,
+          "p25": 4.1,
+          "p50": 5.5,
+          "p75": 6.9,
+          "p90": 8.0,
+          "mean": 5.38
+        },
+        "home_1q_score": {
+          "p10": 1.6,
+          "p25": 3.0,
+          "p50": 4.4,
+          "p75": 5.4,
+          "p90": 6.8,
+          "mean": 4.25
+        },
+        "away_1h_score": {
+          "p10": 5.9,
+          "p25": 9.2,
+          "p50": 12.4,
+          "p75": 15.6,
+          "p90": 18.1,
+          "mean": 12.14
+        },
+        "home_1h_score": {
+          "p10": 3.7,
+          "p25": 6.7,
+          "p50": 9.8,
+          "p75": 12.3,
+          "p90": 15.4,
+          "mean": 9.6
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 5.0,
+          "mean": 2.18
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 2.09
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 14.0,
+          "p90": 18.0,
+          "mean": 9.55
+        },
+        "home_kicking_pts": {
+          "p10": 2.0,
+          "p25": 4.0,
+          "p50": 8.0,
+          "p75": 12.0,
+          "p90": 16.0,
+          "mean": 8.73
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.36,
+          "mean": 0.8
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.83
+        }
+      },
+      "distribution_id": "dist_2026_09_GB_NE_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-CATCH-227",
+          "player_name": "Jayden Reed",
+          "team": "GB",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 5.6,
+          "edge_percentage": 0.244,
+          "causal_equation_plain_english": "Projected Routes (29.2) x Target Rate (28.4%) x Catchable Ball Rate (84%) = 5.6 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Jayden Reed OVER 4.5 Receptions. As the first read on 28% of dropbacks with an 84% catchable target rate and 3.3 yards of route separation, he projects for 5.6 catches against NE."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-222",
+          "player_name": "Josh Jacobs",
+          "team": "GB",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 76.5,
+          "projected_value": 93.6,
+          "edge_percentage": 0.224,
+          "causal_equation_plain_english": "Projected Carries (17.0) x [Yards Before Contact (1.7 yds) + Yards After Contact (3.4 yds)] x Trench & Elusiveness Multiplier (1.06x) = 93.6 Projected Rushing Yards (vs 76.5 line)",
+          "human_plain_english_rationale": "We like Josh Jacobs OVER 76.5 Rushing Yards against NE. He creates his own yardage after contact (3.4 yards after contact per carry, 76.3 Elusive Rating) and hits explosive 5+ yard gains over expectation on 20.0% of his runs. Taking 17.0 projected carries times (1.7 yards before contact + 3.4 yards after contact) gives us 93.6 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-231",
+          "player_name": "Tucker Kraft",
+          "team": "GB",
+          "position": "TE",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 17.5,
+          "projected_value": 21.4,
+          "edge_percentage": 0.223,
+          "causal_equation_plain_english": "[Deep Target Air Depth (14.8 yds) x Separation Catch Factor (0.72 from 2.6 yds cushion)] + Yards After Catch in Space (10.7 yds) = 21.4 Projected Longest Reception (vs 17.5 line)",
+          "human_plain_english_rationale": "We like Tucker Kraft OVER 17.5 Longest Reception against NE. NE plays single-high coverage on 22% of snaps, leaving Tucker Kraft with one-on-one leverage outside. He generates 2.6 yards of separation at his route break and wins 30% of his man-coverage stems. When you multiply his deep target depth (14.8 air yards) by his 72% deep-window conversion rate and add 10.7 yards after the catch in open grass, our equation projects a 21.4-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-237",
+          "player_name": "Keion White",
+          "team": "NE",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.26,
+          "edge_percentage": 0.222,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (22.0%) / Opponent Pass-Block Grade (0.71)] x Stunt Speed Factor (350ms / 270ms) = 0.26 Expected Sacks -> 27.8% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Keion White UNDER 0.25 Sacks against GB (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 22.0% of snaps and knifes through stunts in 270 milliseconds against an offensive line grading at 0.71. Across 36 projected dropbacks, he projects for 0.26 sacks with a 27.8% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-228",
+          "player_name": "Jayden Reed",
+          "team": "GB",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 25.8,
+          "edge_percentage": 0.2,
+          "causal_equation_plain_english": "[Deep Target Air Depth (16.6 yds) x Separation Catch Factor (0.78 from 3.3 yds cushion)] + Yards After Catch in Space (12.9 yds) = 25.8 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Jayden Reed OVER 21.5 Longest Reception against NE. NE plays single-high coverage on 22% of snaps, leaving Jayden Reed with one-on-one leverage outside. He generates 3.3 yards of separation at his route break and wins 40% of his man-coverage stems. When you multiply his deep target depth (16.6 air yards) by his 78% deep-window conversion rate and add 12.9 yards after the catch in open grass, our equation projects a 25.8-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-230",
+          "player_name": "Tucker Kraft",
+          "team": "GB",
+          "position": "TE",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 3.5,
+          "projected_value": 4.2,
+          "edge_percentage": 0.2,
+          "causal_equation_plain_english": "Projected Routes (27.9) x Target Rate (22.0%) x Catchable Ball Rate (85%) = 4.2 Projected Receptions (vs 3.5 line)",
+          "human_plain_english_rationale": "We are on Tucker Kraft OVER 3.5 Receptions. As the first read on 20% of dropbacks with an 85% catchable target rate and 2.6 yards of route separation, he projects for 4.2 catches against NE."
+        }
+      ]
+    },
+    {
+      "rank": 14,
+      "game_id": "2026_09_TB_CHI",
+      "matchup": "TB @ CHI",
+      "window": "SNF_1920_CST",
+      "kickoff_note": "Sunday Night Football at Soldier Field; lakefront wind completion adjustment",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.005,
+      "projected_away_score": 25.07,
+      "projected_home_score": 23.91,
+      "projected_total_mean": 48.98,
+      "projected_total_quantiles": {
+        "p10": 33.36,
+        "p25": 40.76,
+        "p50": 49.18,
+        "p75": 56.58,
+        "p90": 66.16
+      },
+      "book_total_line": 45.5,
+      "total_discrepancy_pts": 3.48,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": -1.16,
+      "projected_margin_quantiles": {
+        "p10": -17.87,
+        "p25": -10.32,
+        "p50": -0.8,
+        "p75": 8.71,
+        "p90": 15.36
+      },
+      "gse_fair_spread_home": 1.16,
+      "book_spread_home": -1.5,
+      "spread_discrepancy_pts": -2.66,
+      "recommended_spread_action": "AWAY_COVER",
+      "gse_home_win_prob": 0.4694,
+      "devigged_book_home_win_prob": 0.5261,
+      "win_prob_edge": -0.0567,
+      "projected_winner": "TB",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        39.13,
+        58.83
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 293.6,
+        "home_pass_yds_mean": 263.6,
+        "away_rush_yds_mean": 138.6,
+        "home_rush_yds_mean": 117.4,
+        "away_wr1_yds_mean": 76.3,
+        "home_wr1_yds_mean": 68.5,
+        "away_wr1_longest_rec_mean": 29.9,
+        "home_wr1_longest_rec_mean": 27.2,
+        "away_rb1_yds_mean": 85.9,
+        "home_rb1_yds_mean": 72.8,
+        "away_rb1_longest_rush_mean": 26.6,
+        "home_rb1_longest_rush_mean": 23.1,
+        "away_sacks_mean": 2.57,
+        "home_sacks_mean": 2.45
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 221.0,
+          "p25": 255.0,
+          "p50": 293.0,
+          "p75": 332.0,
+          "p90": 367.0,
+          "mean": 293.63
+        },
+        "home_pass_yds": {
+          "p10": 190.0,
+          "p25": 225.0,
+          "p50": 264.0,
+          "p75": 302.0,
+          "p90": 336.0,
+          "mean": 263.64
+        },
+        "away_rush_yds": {
+          "p10": 89.0,
+          "p25": 111.0,
+          "p50": 137.0,
+          "p75": 165.0,
+          "p90": 191.0,
+          "mean": 138.56
+        },
+        "home_rush_yds": {
+          "p10": 74.0,
+          "p25": 92.0,
+          "p50": 115.0,
+          "p75": 140.0,
+          "p90": 165.0,
+          "mean": 117.43
+        },
+        "away_wr1_yds": {
+          "p10": 57.46,
+          "p25": 66.3,
+          "p50": 76.18,
+          "p75": 86.32,
+          "p90": 95.42,
+          "mean": 76.34
+        },
+        "home_wr1_yds": {
+          "p10": 49.4,
+          "p25": 58.5,
+          "p50": 68.64,
+          "p75": 78.52,
+          "p90": 87.36,
+          "mean": 68.55
+        },
+        "away_wr1_longest_rec": {
+          "p10": 21.97,
+          "p25": 25.45,
+          "p50": 29.42,
+          "p75": 33.98,
+          "p90": 38.33,
+          "mean": 29.88
+        },
+        "home_wr1_longest_rec": {
+          "p10": 19.49,
+          "p25": 22.89,
+          "p50": 26.93,
+          "p75": 31.21,
+          "p90": 35.24,
+          "mean": 27.23
+        },
+        "away_rb1_yds": {
+          "p10": 55.18,
+          "p25": 68.82,
+          "p50": 84.94,
+          "p75": 102.3,
+          "p90": 118.42,
+          "mean": 85.91
+        },
+        "home_rb1_yds": {
+          "p10": 45.88,
+          "p25": 57.04,
+          "p50": 71.3,
+          "p75": 86.8,
+          "p90": 102.3,
+          "mean": 72.81
+        },
+        "away_rb1_longest_rush": {
+          "p10": 17.22,
+          "p25": 21.09,
+          "p50": 25.97,
+          "p75": 31.54,
+          "p90": 36.89,
+          "mean": 26.61
+        },
+        "home_rb1_longest_rush": {
+          "p10": 14.71,
+          "p25": 18.18,
+          "p50": 22.52,
+          "p75": 27.48,
+          "p90": 32.32,
+          "mean": 23.13
+        },
+        "away_1q_score": {
+          "p10": 2.9,
+          "p25": 3.9,
+          "p50": 5.3,
+          "p75": 6.7,
+          "p90": 7.8,
+          "mean": 5.39
+        },
+        "home_1q_score": {
+          "p10": 2.8,
+          "p25": 3.6,
+          "p50": 5.1,
+          "p75": 6.5,
+          "p90": 7.6,
+          "mean": 5.14
+        },
+        "away_1h_score": {
+          "p10": 6.6,
+          "p25": 8.8,
+          "p50": 12.0,
+          "p75": 15.2,
+          "p90": 17.7,
+          "mean": 12.16
+        },
+        "home_1h_score": {
+          "p10": 6.2,
+          "p25": 8.2,
+          "p50": 11.5,
+          "p75": 14.7,
+          "p90": 17.1,
+          "mean": 11.6
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.54
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 1.0,
+          "p50": 2.0,
+          "p75": 4.0,
+          "p90": 5.0,
+          "mean": 2.31
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 3.0,
+          "p50": 6.0,
+          "p75": 11.0,
+          "p90": 16.0,
+          "mean": 7.7
+        },
+        "home_kicking_pts": {
+          "p10": 3.0,
+          "p25": 5.0,
+          "p50": 9.0,
+          "p75": 14.0,
+          "p90": 18.0,
+          "mean": 9.83
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.83
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.87
+        }
+      },
+      "distribution_id": "dist_2026_09_TB_CHI_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-RB-RUSH-328",
+          "player_name": "D'Andre Swift",
+          "team": "CHI",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 66.5,
+          "projected_value": 89.9,
+          "edge_percentage": 0.352,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (1.9 yds) + Yards After Contact (3.3 yds)] x Trench & Elusiveness Multiplier (1.06x) = 89.9 Projected Rushing Yards (vs 66.5 line)",
+          "human_plain_english_rationale": "We like D'Andre Swift OVER 66.5 Rushing Yards against TB. He creates his own yardage after contact (3.3 yards after contact per carry, 65.5 Elusive Rating) and hits explosive 5+ yard gains over expectation on 20.0% of his runs. Taking 16.0 projected carries times (1.9 yards before contact + 3.3 yards after contact) gives us 89.9 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-326",
+          "player_name": "Bucky Irving",
+          "team": "TB",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 62.5,
+          "projected_value": 80.1,
+          "edge_percentage": 0.282,
+          "causal_equation_plain_english": "Projected Carries (14.0) x [Yards Before Contact (1.8 yds) + Yards After Contact (3.5 yds)] x Trench & Elusiveness Multiplier (1.06x) = 80.1 Projected Rushing Yards (vs 62.5 line)",
+          "human_plain_english_rationale": "We like Bucky Irving OVER 62.5 Rushing Yards against CHI. He creates his own yardage after contact (3.5 yards after contact per carry, 70.5 Elusive Rating) and hits explosive 5+ yard gains over expectation on 22.0% of his runs. Taking 14.0 projected carries times (1.8 yards before contact + 3.5 yards after contact) gives us 80.1 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-332",
+          "player_name": "Cade Otton",
+          "team": "TB",
+          "position": "TE",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 17.5,
+          "projected_value": 21.5,
+          "edge_percentage": 0.229,
+          "causal_equation_plain_english": "[Deep Target Air Depth (15.4 yds) x Separation Catch Factor (0.71 from 2.6 yds cushion)] + Yards After Catch in Space (10.6 yds) = 21.5 Projected Longest Reception (vs 17.5 line)",
+          "human_plain_english_rationale": "We like Cade Otton OVER 17.5 Longest Reception against CHI. CHI plays single-high coverage on 22% of snaps, leaving Cade Otton with one-on-one leverage outside. He generates 2.6 yards of separation at his route break and wins 28% of his man-coverage stems. When you multiply his deep target depth (15.4 air yards) by his 71% deep-window conversion rate and add 10.6 yards after the catch in open grass, our equation projects a 21.5-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-LONGEST-335",
+          "player_name": "DJ Moore",
+          "team": "CHI",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 25.5,
+          "edge_percentage": 0.186,
+          "causal_equation_plain_english": "[Deep Target Air Depth (16.8 yds) x Separation Catch Factor (0.77 from 3.2 yds cushion)] + Yards After Catch in Space (12.6 yds) = 25.5 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like DJ Moore OVER 21.5 Longest Reception against TB. TB plays single-high coverage on 22% of snaps, leaving DJ Moore with one-on-one leverage outside. He generates 3.2 yards of separation at his route break and wins 38% of his man-coverage stems. When you multiply his deep target depth (16.8 air yards) by his 77% deep-window conversion rate and add 12.6 yards after the catch in open grass, our equation projects a 25.5-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-340",
+          "player_name": "Yaya Diaby",
+          "team": "TB",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.32,
+          "edge_percentage": 0.169,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (24.0%) / Opponent Pass-Block Grade (0.68)] x Stunt Speed Factor (350ms / 250ms) = 0.32 Expected Sacks -> 33.1% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Yaya Diaby UNDER 0.25 Sacks against CHI (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 24.0% of snaps and knifes through stunts in 250 milliseconds against an offensive line grading at 0.68. Across 36 projected dropbacks, he projects for 0.32 sacks with a 33.1% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-331",
+          "player_name": "Cade Otton",
+          "team": "TB",
+          "position": "TE",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 4.5,
+          "projected_value": 5.0,
+          "edge_percentage": 0.111,
+          "causal_equation_plain_english": "Projected Routes (28.9) x Target Rate (25.2%) x Catchable Ball Rate (85%) = 5.0 Projected Receptions (vs 4.5 line)",
+          "human_plain_english_rationale": "We are on Cade Otton OVER 4.5 Receptions. As the first read on 24% of dropbacks with an 85% catchable target rate and 2.6 yards of route separation, he projects for 5.0 catches against CHI."
+        }
+      ]
+    },
+    {
+      "rank": 15,
+      "game_id": "2026_09_BUF_MIN",
+      "matchup": "BUF @ MIN",
+      "window": "MNF_1915_CST",
+      "kickoff_note": "Monday Night Football at U.S. Bank Stadium; Josh Allen vs Brian Flores blitz",
+      "worlds_simulated": 10000,
+      "snaps_per_world": 175,
+      "total_snaps_simulated": 1750000,
+      "context_layers_populated": 26,
+      "reasoning_cumulative_log_odds_delta": -0.0752,
+      "projected_away_score": 28.26,
+      "projected_home_score": 25.26,
+      "projected_total_mean": 53.52,
+      "projected_total_quantiles": {
+        "p10": 37.34,
+        "p25": 45.59,
+        "p50": 52.85,
+        "p75": 63.24,
+        "p90": 70.5
+      },
+      "book_total_line": 48.0,
+      "total_discrepancy_pts": 5.52,
+      "recommended_total_action": "OVER",
+      "projected_home_margin_mean": -3.0,
+      "projected_margin_quantiles": {
+        "p10": -20.2,
+        "p25": -10.59,
+        "p50": -3.94,
+        "p75": 5.58,
+        "p90": 13.14
+      },
+      "gse_fair_spread_home": 3.0,
+      "book_spread_home": 1.5,
+      "spread_discrepancy_pts": -1.5,
+      "recommended_spread_action": "AWAY_COVER",
+      "gse_home_win_prob": 0.4003,
+      "devigged_book_home_win_prob": 0.4675,
+      "win_prob_edge": -0.0672,
+      "projected_winner": "BUF",
+      "heavy_juice_firewall_blocked": false,
+      "conformal_total_90_interval": [
+        43.67,
+        63.37
+      ],
+      "qb_passing_and_skill_box_summary": {
+        "away_pass_yds_mean": 316.2,
+        "home_pass_yds_mean": 305.4,
+        "away_rush_yds_mean": 157.8,
+        "home_rush_yds_mean": 128.5,
+        "away_wr1_yds_mean": 82.2,
+        "home_wr1_yds_mean": 79.4,
+        "away_wr1_longest_rec_mean": 31.7,
+        "home_wr1_longest_rec_mean": 30.8,
+        "away_rb1_yds_mean": 97.8,
+        "home_rb1_yds_mean": 79.7,
+        "away_rb1_longest_rush_mean": 29.9,
+        "home_rb1_longest_rush_mean": 24.9,
+        "away_sacks_mean": 2.49,
+        "home_sacks_mean": 2.58
+      },
+      "full_board_360_prop_distributions": {
+        "away_pass_yds": {
+          "p10": 240.0,
+          "p25": 276.0,
+          "p50": 316.0,
+          "p75": 356.0,
+          "p90": 392.0,
+          "mean": 316.23
+        },
+        "home_pass_yds": {
+          "p10": 229.0,
+          "p25": 265.0,
+          "p50": 305.0,
+          "p75": 346.0,
+          "p90": 382.0,
+          "mean": 305.36
+        },
+        "away_rush_yds": {
+          "p10": 105.0,
+          "p25": 128.0,
+          "p50": 156.0,
+          "p75": 185.0,
+          "p90": 213.0,
+          "mean": 157.79
+        },
+        "home_rush_yds": {
+          "p10": 81.0,
+          "p25": 102.0,
+          "p50": 126.0,
+          "p75": 153.0,
+          "p90": 178.0,
+          "mean": 128.53
+        },
+        "away_wr1_yds": {
+          "p10": 62.4,
+          "p25": 71.76,
+          "p50": 82.16,
+          "p75": 92.56,
+          "p90": 101.92,
+          "mean": 82.22
+        },
+        "home_wr1_yds": {
+          "p10": 59.54,
+          "p25": 68.9,
+          "p50": 79.3,
+          "p75": 89.96,
+          "p90": 99.32,
+          "mean": 79.39
+        },
+        "away_wr1_longest_rec": {
+          "p10": 23.62,
+          "p25": 27.11,
+          "p50": 31.31,
+          "p75": 35.99,
+          "p90": 40.4,
+          "mean": 31.74
+        },
+        "home_wr1_longest_rec": {
+          "p10": 22.56,
+          "p25": 26.19,
+          "p50": 30.47,
+          "p75": 35.2,
+          "p90": 39.58,
+          "mean": 30.84
+        },
+        "away_rb1_yds": {
+          "p10": 65.1,
+          "p25": 79.36,
+          "p50": 96.72,
+          "p75": 114.7,
+          "p90": 132.06,
+          "mean": 97.83
+        },
+        "home_rb1_yds": {
+          "p10": 50.22,
+          "p25": 63.24,
+          "p50": 78.12,
+          "p75": 94.86,
+          "p90": 110.36,
+          "mean": 79.69
+        },
+        "away_rb1_longest_rush": {
+          "p10": 19.71,
+          "p25": 23.89,
+          "p50": 29.14,
+          "p75": 35.18,
+          "p90": 40.95,
+          "mean": 29.86
+        },
+        "home_rb1_longest_rush": {
+          "p10": 15.9,
+          "p25": 19.64,
+          "p50": 24.33,
+          "p75": 29.48,
+          "p90": 34.8,
+          "mean": 24.93
+        },
+        "away_1q_score": {
+          "p10": 3.4,
+          "p25": 4.8,
+          "p50": 5.9,
+          "p75": 7.3,
+          "p90": 8.7,
+          "mean": 6.06
+        },
+        "home_1q_score": {
+          "p10": 2.7,
+          "p25": 4.1,
+          "p50": 5.5,
+          "p75": 6.8,
+          "p90": 8.0,
+          "mean": 5.45
+        },
+        "away_1h_score": {
+          "p10": 7.7,
+          "p25": 10.8,
+          "p50": 13.3,
+          "p75": 16.5,
+          "p90": 19.7,
+          "mean": 13.67
+        },
+        "home_1h_score": {
+          "p10": 6.0,
+          "p25": 9.2,
+          "p50": 12.4,
+          "p75": 15.4,
+          "p90": 18.0,
+          "mean": 12.29
+        },
+        "away_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 3.0,
+          "p90": 4.0,
+          "mean": 1.54
+        },
+        "home_fg_made": {
+          "p10": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 2.0,
+          "p90": 4.0,
+          "mean": 1.53
+        },
+        "away_kicking_pts": {
+          "p10": 2.0,
+          "p25": 3.0,
+          "p50": 7.0,
+          "p75": 11.0,
+          "p90": 16.0,
+          "mean": 8.03
+        },
+        "home_kicking_pts": {
+          "p10": 2.0,
+          "p25": 4.0,
+          "p50": 6.0,
+          "p75": 11.0,
+          "p90": 16.0,
+          "mean": 7.71
+        },
+        "away_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.36,
+          "p90": 1.7,
+          "mean": 0.88
+        },
+        "home_edge1_sacks": {
+          "p10": 0.34,
+          "p25": 0.34,
+          "p50": 0.68,
+          "p75": 1.02,
+          "p90": 1.7,
+          "mean": 0.85
+        }
+      },
+      "distribution_id": "dist_2026_09_BUF_MIN_0740cst",
+      "top_plain_english_prop_plays": [
+        {
+          "ticket_id": "TKT-WR-LONGEST-148",
+          "player_name": "Justin Jefferson",
+          "team": "MIN",
+          "position": "WR",
+          "market_type": "Longest Reception",
+          "direction": "OVER",
+          "line": 21.5,
+          "projected_value": 28.9,
+          "edge_percentage": 0.344,
+          "causal_equation_plain_english": "[Deep Target Air Depth (17.9 yds) x Separation Catch Factor (0.82 from 3.8 yds cushion)] + Yards After Catch in Space (14.2 yds) = 28.9 Projected Longest Reception (vs 21.5 line)",
+          "human_plain_english_rationale": "We like Justin Jefferson OVER 21.5 Longest Reception against BUF. BUF plays single-high coverage on 22% of snaps, leaving Justin Jefferson with one-on-one leverage outside. He generates 3.8 yards of separation at his route break and wins 44% of his man-coverage stems. When you multiply his deep target depth (17.9 air yards) by his 82% deep-window conversion rate and add 14.2 yards after the catch in open grass, our equation projects a 28.9-yard longest reception."
+        },
+        {
+          "ticket_id": "TKT-WR-CATCH-147",
+          "player_name": "Justin Jefferson",
+          "team": "MIN",
+          "position": "WR",
+          "market_type": "Pass Receptions",
+          "direction": "OVER",
+          "line": 6.5,
+          "projected_value": 8.3,
+          "edge_percentage": 0.277,
+          "causal_equation_plain_english": "Projected Routes (33.3) x Target Rate (36.4%) x Catchable Ball Rate (86%) = 8.3 Projected Receptions (vs 6.5 line)",
+          "human_plain_english_rationale": "We are on Justin Jefferson OVER 6.5 Receptions. As the first read on 38% of dropbacks with an 86% catchable target rate and 3.8 yards of route separation, he projects for 8.3 catches against BUF."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-157",
+          "player_name": "Greg Rousseau",
+          "team": "BUF",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.29,
+          "edge_percentage": 0.198,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (23.0%) / Opponent Pass-Block Grade (0.70)] x Stunt Speed Factor (350ms / 260ms) = 0.29 Expected Sacks -> 30.2% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Greg Rousseau UNDER 0.25 Sacks against MIN (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 23.0% of snaps and knifes through stunts in 260 milliseconds against an offensive line grading at 0.70. Across 36 projected dropbacks, he projects for 0.29 sacks with a 30.2% chance of getting at least a half-sack."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-144",
+          "player_name": "Aaron Jones",
+          "team": "MIN",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 68.5,
+          "projected_value": 81.6,
+          "edge_percentage": 0.191,
+          "causal_equation_plain_english": "Projected Carries (16.0) x [Yards Before Contact (1.8 yds) + Yards After Contact (3.3 yds)] x Trench & Elusiveness Multiplier (1.00x) = 81.6 Projected Rushing Yards (vs 68.5 line)",
+          "human_plain_english_rationale": "We like Aaron Jones OVER 68.5 Rushing Yards against BUF. He creates his own yardage after contact (3.3 yards after contact per carry, 57.8 Elusive Rating) and hits explosive 5+ yard gains over expectation on 20.0% of his runs. Taking 16.0 projected carries times (1.8 yards before contact + 3.3 yards after contact) gives us 81.6 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-142",
+          "player_name": "James Cook",
+          "team": "BUF",
+          "position": "RB",
+          "market_type": "Rushing Yards",
+          "direction": "OVER",
+          "line": 65.5,
+          "projected_value": 76.5,
+          "edge_percentage": 0.168,
+          "causal_equation_plain_english": "Projected Carries (15.0) x [Yards Before Contact (2.0 yds) + Yards After Contact (3.1 yds)] x Trench & Elusiveness Multiplier (1.00x) = 76.5 Projected Rushing Yards (vs 65.5 line)",
+          "human_plain_english_rationale": "We like James Cook OVER 65.5 Rushing Yards against MIN. He creates his own yardage after contact (3.1 yards after contact per carry, 44.9 Elusive Rating) and hits explosive 5+ yard gains over expectation on 18.0% of his runs. Taking 15.0 projected carries times (2.0 yards before contact + 3.1 yards after contact) gives us 76.5 rushing yards."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-156",
+          "player_name": "Jonathan Greenard",
+          "team": "MIN",
+          "position": "EDGE",
+          "market_type": "Individual Sacks",
+          "direction": "UNDER",
+          "line": 0.25,
+          "projected_value": 0.34,
+          "edge_percentage": 0.151,
+          "causal_equation_plain_english": "[Pass-Rush Win Rate Under 2.5s (25.0%) / Opponent Pass-Block Grade (0.69)] x Stunt Speed Factor (350ms / 240ms) = 0.34 Expected Sacks -> 34.9% Probability of 0.5+ Sacks (clears 0.25 line)",
+          "human_plain_english_rationale": "We like Jonathan Greenard UNDER 0.25 Sacks against BUF (any half-sack or full sack cashes OVER 0.25). He wins his pass-rush rep in under 2.5 seconds on 25.0% of snaps and knifes through stunts in 240 milliseconds against an offensive line grading at 0.69. Across 36 projected dropbacks, he projects for 0.34 sacks with a 34.9% chance of getting at least a half-sack."
+        }
+      ]
+    }
+  ],
+  "execution_elapsed_ms": 18598.94,
+  "bundle_sha256": "4c73facfde449dbcc88582d653ded6930f69b019eccf0dc0af71d1ddef229bd4"
+}

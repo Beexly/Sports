@@ -502,8 +502,10 @@ def evaluate_competitor_floor_and_front_office_92_metrics(
                     "zone_void_exploitation_rate_zver": float(c92.get("zone_void_exploitation_rate", 0.215)),
                 },
                 "L19_pace_and_game_state_clock": {
-                    "proe_pass_rate_over_expected": 0.034,
-                    "neutral_situation_pace_sec_per_snap": 26.4,
+                    "proe_pass_rate_over_expected": float(c92.get("proe_pass_rate_over_expected", 0.034)),
+                    "neutral_situation_pace_sec_per_snap": float(
+                        c92.get("neutral_situation_pace_sec_per_snap", 26.4)
+                    ),
                 },
                 "L20_usage_snap_route_shares": {
                     "true_opportunity_value_score_tovs": float(c92.get("true_opportunity_value_score", 18.6)),

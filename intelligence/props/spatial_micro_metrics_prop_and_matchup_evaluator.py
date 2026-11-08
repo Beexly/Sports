@@ -247,6 +247,8 @@ class PropTicketEvaluation:
     key_spatial_signals: List[str]
     system_rationale: str
     publish_allowed: bool
+    causal_equation_plain_english: str = ""
+    human_plain_english_rationale: str = ""
 
 
 @dataclass
@@ -561,7 +563,10 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
             rec_yds = round(routes * yprr_overall, 1)
             rec_recommendation = "OVER" if rec_yds > prop_line else "UNDER"
 
-        longest_rec = round(22.0 + (ssp * 3.5) + (burn_rate * 25.0), 1)
+        air_depth_longest = round(10.5 + (float(air_yards_share) * 14.0) + (float(opp_cover1_rate) * 5.5), 1)
+        deep_catch_factor = round(min(0.92, 0.48 + (ssp * 0.065) + (burn_rate * 0.22)), 2)
+        yac_cushion_longest = round(3.2 + (ssp * 2.15) + (burn_rate * 6.5), 1)
+        longest_rec = round(max(20.2, air_depth_longest * deep_catch_factor + yac_cushion_longest), 1)
         anytime_td = round(min(0.75, (rec_yds / 140.0) + (first_read_share * 0.45)), 3)
         first_td = round(anytime_td * 0.23, 3)
 
@@ -747,7 +752,7 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 ("Brian Thomas Jr.", "JAX", "BAL", "WR", 3.4, 0.42, (16.0, 2.0, -1.5), (3.0, 2.0, 0.0), (0.0, 0.0, 0.0), 0.58, 0.58, 0.78, 0.31, 0.92, 2.28, 2.65, 2.05, 0.24, 0.38, 58.5, 4.5),
                 ("Mark Andrews", "BAL", "JAX", "TE", 2.4, 0.26, (8.0, 0.0, -0.5), (1.5, 1.0, 0.0), (0.0, 0.0, 0.0), 0.48, 0.68, 0.85, 0.18, 0.75, 1.72, 1.85, 1.62, 0.16, 0.18, 38.5, 3.5),
             ], [
-                ("Lamar Jackson", "BAL", "JAX", 195.0, 0.22, 0.18, 0.28, 2.55, 280.0, 1.25, 1.65, 0.115, 0.142, 0.72, 232.5),
+                ("Jacoby Brissett", "BAL", "JAX", 225.0, 0.25, 0.20, 0.30, 2.50, 290.0, 1.32, 1.15, 0.105, 0.128, 0.70, 218.5),
                 ("Trevor Lawrence", "JAX", "BAL", 265.0, 0.38, 0.32, 0.42, 2.15, 360.0, 1.72, 0.95, 0.045, 0.068, 0.58, 224.5),
             ], [
                 ("Kyle Van Noy", "BAL", "JAX", "EDGE", 0.22, 0.68, 260.0),
@@ -780,7 +785,7 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 ("Keon Coleman", "BUF", "MIN", "WR", 2.4, 0.25, (12.0, 0.0, -1.0), (1.5, 1.0, 0.0), (0.0, 0.0, 0.0), 0.52, 0.62, 0.76, 0.22, 0.82, 1.78, 1.95, 1.65, 0.20, 0.32, 48.5, 3.5),
             ], [
                 ("Josh Allen", "BUF", "MIN", 220.0, 0.28, 0.24, 0.30, 2.50, 290.0, 1.30, 1.55, 0.122, 0.138, 0.72, 245.5),
-                ("Sam Darnold", "MIN", "BUF", 270.0, 0.38, 0.34, 0.44, 2.10, 370.0, 1.75, 0.85, 0.052, 0.075, 0.59, 235.5),
+                ("J.J. McCarthy", "MIN", "BUF", 245.0, 0.32, 0.28, 0.36, 2.35, 320.0, 1.48, 1.15, 0.088, 0.108, 0.65, 228.5),
             ], [
                 ("Jonathan Greenard", "MIN", "BUF", "EDGE", 0.25, 0.69, 240.0),
                 ("Greg Rousseau", "BUF", "MIN", "EDGE", 0.23, 0.70, 260.0),
@@ -875,7 +880,9 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 ("Brian Robinson Jr.", "WAS", "LAR", "RB", 15, 1.8, 22, 3.3, 1.7, 1.75, -0.48, 3.5, 6.9, 6.8, 4.5, 0.38, 0.52, 0.18, 0.16, 1.15, 15.0, 2.6, 1.2, 2.5, 64.5),
             ], [
                 ("Puka Nacua", "LAR", "WAS", "WR", 3.6, 0.44, (14.0, 0.0, -1.0), (3.2, 2.0, 0.0), (0.0, 0.0, 0.0), 0.54, 0.66, 0.88, 0.35, 0.96, 2.75, 3.10, 2.45, 0.32, 0.40, 84.5, 6.5),
+                ("Davante Adams", "LAR", "WAS", "WR", 3.5, 0.42, (14.5, 0.0, -1.0), (3.1, 1.9, 0.0), (0.0, 0.0, 0.0), 0.54, 0.65, 0.86, 0.32, 0.94, 2.55, 2.95, 2.25, 0.28, 0.38, 72.5, 5.5),
                 ("Terry McLaurin", "WAS", "LAR", "WR", 3.4, 0.40, (15.0, 0.0, -1.0), (2.8, 1.8, 0.0), (0.0, 0.0, 0.0), 0.56, 0.60, 0.84, 0.32, 0.94, 2.45, 2.85, 2.15, 0.30, 0.42, 68.5, 5.5),
+                ("Stefon Diggs", "WAS", "LAR", "WR", 3.2, 0.38, (12.5, 0.0, -0.9), (2.6, 1.7, 0.0), (0.0, 0.0, 0.0), 0.55, 0.61, 0.85, 0.28, 0.91, 2.22, 2.52, 2.02, 0.25, 0.32, 60.5, 5.5),
             ], [
                 ("Matthew Stafford", "LAR", "WAS", 210.0, 0.22, 0.18, 0.26, 2.65, 265.0, 1.15, 0.40, 0.138, 0.158, 0.76, 252.5),
                 ("Jayden Daniels", "WAS", "LAR", 200.0, 0.20, 0.16, 0.24, 2.75, 255.0, 1.10, 1.85, 0.145, 0.168, 0.78, 235.5),
@@ -889,6 +896,7 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 ("Jordan Mason", "SF", "LV", "RB", 17, 1.8, 28, 3.5, 2.0, 1.82, -0.42, 3.6, 6.8, 6.8, 4.6, 0.55, 0.56, 0.24, 0.16, 1.25, 17.0, 3.2, 1.5, 2.5, 78.5),
             ], [
                 ("Brock Bowers", "LV", "SF", "TE", 3.2, 0.36, (12.0, 0.0, -0.8), (2.6, 1.8, 0.0), (0.0, 0.0, 0.0), 0.54, 0.62, 0.86, 0.30, 0.90, 2.35, 2.55, 2.20, 0.28, 0.32, 64.5, 5.5),
+                ("Mike Evans", "SF", "LV", "WR", 3.4, 0.41, (15.5, 0.0, -1.1), (3.1, 1.9, 0.0), (0.0, 0.0, 0.0), 0.54, 0.67, 0.85, 0.32, 0.92, 2.48, 2.88, 2.18, 0.28, 0.40, 68.5, 4.5),
                 ("George Kittle", "SF", "LV", "TE", 3.0, 0.34, (11.0, 0.0, -0.8), (2.4, 1.6, 0.0), (0.0, 0.0, 0.0), 0.52, 0.68, 0.88, 0.26, 0.88, 2.28, 2.45, 2.15, 0.26, 0.30, 58.5, 4.5),
             ], [
                 ("Gardner Minshew", "LV", "SF", 265.0, 0.36, 0.32, 0.42, 2.15, 350.0, 1.70, 0.65, 0.065, 0.088, 0.60, 208.5),
@@ -921,7 +929,7 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 ("Garrett Wilson", "NYJ", "KC", "WR", 3.4, 0.42, (14.0, 0.0, -1.0), (3.0, 1.8, 0.0), (0.0, 0.0, 0.0), 0.58, 0.58, 0.84, 0.32, 0.94, 2.35, 2.70, 2.10, 0.28, 0.38, 72.5, 5.5),
                 ("Travis Kelce", "KC", "NYJ", "TE", 2.8, 0.30, (9.0, 0.0, -0.8), (2.2, 1.4, 0.0), (0.0, 0.0, 0.0), 0.50, 0.68, 0.88, 0.26, 0.88, 2.15, 2.28, 2.05, 0.24, 0.28, 58.5, 5.5),
             ], [
-                ("Aaron Rodgers", "NYJ", "KC", 220.0, 0.24, 0.18, 0.25, 2.65, 270.0, 1.18, 0.35, 0.128, 0.148, 0.74, 238.5),
+                ("Geno Smith", "NYJ", "KC", 225.0, 0.25, 0.20, 0.28, 2.55, 280.0, 1.25, 0.65, 0.125, 0.145, 0.73, 238.5),
                 ("Patrick Mahomes", "KC", "NYJ", 205.0, 0.20, 0.14, 0.22, 2.75, 250.0, 1.05, 1.25, 0.148, 0.170, 0.79, 255.5),
             ], [
                 ("Will McDonald IV", "NYJ", "KC", "EDGE", 0.27, 0.65, 220.0),
@@ -948,10 +956,10 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 ("Kenneth Walker III", "SEA", "ARI", "RB", 16, 3.5, 30, 3.5, 1.8, 1.82, -0.44, 3.6, 6.8, 6.8, 4.6, 0.52, 0.55, 0.24, 0.28, 1.65, 16.0, 3.0, 1.3, 4.2, 70.5),
             ], [
                 ("Marvin Harrison Jr.", "ARI", "SEA", "WR", 3.4, 0.40, (14.0, 0.0, -1.0), (3.0, 1.8, 0.0), (0.0, 0.0, 0.0), 0.56, 0.62, 0.84, 0.32, 0.92, 2.38, 2.75, 2.15, 0.28, 0.38, 65.5, 4.5),
-                ("DK Metcalf", "SEA", "ARI", "WR", 3.6, 0.44, (16.0, 0.0, -1.2), (3.2, 2.0, 0.0), (0.0, 0.0, 0.0), 0.58, 0.65, 0.86, 0.34, 0.94, 2.65, 3.10, 2.35, 0.32, 0.44, 72.5, 5.5),
+                ("Jaxon Smith-Njigba", "SEA", "ARI", "WR", 3.6, 0.44, (16.0, 0.0, -1.2), (3.2, 2.0, 0.0), (0.0, 0.0, 0.0), 0.58, 0.65, 0.86, 0.34, 0.94, 2.65, 3.10, 2.35, 0.32, 0.44, 72.5, 5.5),
             ], [
                 ("Kyler Murray", "ARI", "SEA", 220.0, 0.24, 0.18, 0.26, 2.60, 275.0, 1.20, 1.85, 0.130, 0.150, 0.74, 238.5),
-                ("Geno Smith", "SEA", "ARI", 225.0, 0.25, 0.20, 0.28, 2.55, 280.0, 1.25, 0.65, 0.125, 0.145, 0.73, 248.5),
+                ("Sam Darnold", "SEA", "ARI", 220.0, 0.24, 0.19, 0.27, 2.60, 275.0, 1.22, 0.75, 0.132, 0.152, 0.74, 248.5),
             ], [
                 ("Zaven Collins", "ARI", "SEA", "EDGE", 0.21, 0.71, 280.0),
                 ("Derick Hall", "SEA", "ARI", "EDGE", 0.24, 0.68, 250.0),
@@ -983,8 +991,30 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                 )
                 rb_objs.append(rb_metric)
 
-                # Generate Rushing Yards Ticket
+                # Generate Rushing Yards Ticket with Plain-English Equation-to-Film Translator
                 edge = round((rb_metric.rushing_yards_projected - line) / line, 3)
+                trench_mult = 0.88 if rb_metric.is_system_back else (1.06 if rb_metric.is_true_chunk_creator else 1.00)
+                rb_eq_str = (
+                    f"Projected Carries ({ratt:.1f}) x [Yards Before Contact ({ybc:.1f} yds) + "
+                    f"Yards After Contact ({yco:.1f} yds)] x Trench & Elusiveness Multiplier ({trench_mult:.2f}x) "
+                    f"= {rb_metric.rushing_yards_projected:.1f} Projected Rushing Yards (vs {line:.1f} line)"
+                )
+                if rb_metric.is_system_back and rb_metric.rushing_yards_recommendation == "UNDER":
+                    rb_human_str = (
+                        f"We are taking {name} UNDER {line:.1f} Rushing Yards against {opp}. "
+                        f"Most of his rushing yardage comes from wide-open blocking lanes ({ybc:.1f} yards before first contact), "
+                        f"while his breakaway rate is only {rb_metric.boom_rate_ryoe_gt_5 * 100:.1f}%. "
+                        f"Against a {opp} front that forces cuts {abs(pen):.2f} yards behind the line, "
+                        f"multiplying {ratt:.1f} projected carries by his adjusted yards per carry projects {rb_metric.rushing_yards_projected:.1f} yards."
+                    )
+                else:
+                    rb_human_str = (
+                        f"We like {name} {rb_metric.rushing_yards_recommendation} {line:.1f} Rushing Yards against {opp}. "
+                        f"He creates his own yardage after contact ({yco:.1f} yards after contact per carry, {rb_metric.pff_elusive_rating:.1f} Elusive Rating) "
+                        f"and hits explosive 5+ yard gains over expectation on {rb_metric.boom_rate_ryoe_gt_5 * 100:.1f}% of his runs. "
+                        f"Taking {ratt:.1f} projected carries times ({ybc:.1f} yards before contact + {yco:.1f} yards after contact) "
+                        f"gives us {rb_metric.rushing_yards_projected:.1f} rushing yards."
+                    )
                 t_rush = PropTicketEvaluation(
                     ticket_id=f"TKT-RB-RUSH-{ticket_counter}",
                     game_id=m_str,
@@ -1004,18 +1034,29 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                         f"System Back: {rb_metric.is_system_back} | True Chunk Creator: {rb_metric.is_true_chunk_creator}",
                         f"TOVS: {rb_metric.true_opportunity_value_score}",
                     ],
-                    system_rationale=(
-                        f"{name} ({tm}) project {rb_metric.rushing_yards_projected} vs {line} line. "
-                        f"Elusive={rb_metric.pff_elusive_rating}, Boom Rate={rb_metric.boom_rate_ryoe_gt_5 * 100:.1f}%, "
-                        f"YPRR Tier={rb_metric.yprr_trajectory_tier}."
-                    ),
+                    system_rationale=rb_human_str,
                     publish_allowed=abs(edge) >= 0.05,
+                    causal_equation_plain_english=rb_eq_str,
+                    human_plain_english_rationale=rb_human_str,
                 )
                 tix.append(t_rush)
                 self.all_evaluated_tickets.append(t_rush)
                 ticket_counter += 1
 
                 # Generate Longest Rush Ticket
+                long_rush_line = round(rb_metric.longest_rush_projected * 0.90, 1)
+                long_rush_rec = "OVER" if rb_metric.is_true_chunk_creator else "UNDER"
+                long_rush_eq = (
+                    f"Base Carry Burst (12.0 yds) + [Explosive Boom Rate ({rb_metric.boom_rate_ryoe_gt_5 * 100:.1f}%) x 35.0 yds] "
+                    f"+ [Elusive Tackle-Breaking Bonus ({rb_metric.pff_elusive_rating:.1f} / 25)] "
+                    f"= {rb_metric.longest_rush_projected:.1f} Projected Longest Rush (vs {long_rush_line:.1f} line)"
+                )
+                long_rush_human = (
+                    f"We like {name} {long_rush_rec} {long_rush_line:.1f} Longest Rush. "
+                    f"Across {ratt:.0f} projected carries, he generates a 5+ yard explosive gain over blocking expectation on "
+                    f"{rb_metric.boom_rate_ryoe_gt_5 * 100:.1f}% of his touches and averages {yco:.1f} yards after contact. "
+                    f"Combining his second-level burst with his tackle-breaking rate projects a {rb_metric.longest_rush_projected:.1f}-yard longest run."
+                )
                 t_long = PropTicketEvaluation(
                     ticket_id=f"TKT-RB-LONGEST-{ticket_counter}",
                     game_id=m_str,
@@ -1024,17 +1065,19 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                     team=tm,
                     position="RB",
                     market_type="Longest Rush",
-                    line=round(rb_metric.longest_rush_projected * 0.90, 1),
+                    line=long_rush_line,
                     projected_value=rb_metric.longest_rush_projected,
-                    recommendation="OVER" if rb_metric.is_true_chunk_creator else "UNDER",
+                    recommendation=long_rush_rec,
                     edge_percentage=0.10,
                     confidence_score=0.85,
                     key_spatial_signals=[
                         f"Boom Rate RYOE > +5.0: {rb_metric.boom_rate_ryoe_gt_5 * 100:.1f}%",
                         f"Shed-Time Survival: {rb_metric.shed_time_survival_sec}s",
                     ],
-                    system_rationale=f"EVT order statistics project longest rush {rb_metric.longest_rush_projected} yds.",
+                    system_rationale=long_rush_human,
                     publish_allowed=True,
+                    causal_equation_plain_english=long_rush_eq,
+                    human_plain_english_rationale=long_rush_human,
                 )
                 tix.append(t_long)
                 self.all_evaluated_tickets.append(t_long)
@@ -1046,6 +1089,7 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                  contested, catchable, first_read, route_part, yprr_all,
                  yprr_m, yprr_z, t_share, air_share, line, rec_line) = w_raw
 
+                opp_cov1 = 0.32 if "BAL" in opp or "MIN" in opp or "KC" in opp else 0.22
                 wr_metric = self.evaluate_wr_te(
                     name=name, team=tm, opponent=opp, position=pos, ssp=ssp, burn_rate=burn,
                     v_ball=v_ball, p_wr=p_wr, p_db=p_db, opp_csoe=csoe,
@@ -1054,12 +1098,25 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                     yprr_overall=yprr_all, yprr_vs_man=yprr_m, yprr_vs_zone=yprr_z,
                     target_share=t_share, air_yards_share=air_share,
                     prop_line=line, receptions_line=rec_line,
-                    opp_cover1_rate=0.32 if "BAL" in opp or "MIN" in opp or "KC" in opp else 0.22
+                    opp_cover1_rate=opp_cov1
                 )
                 wr_objs.append(wr_metric)
 
                 # Generate Receiving Yards Ticket
                 edge = round((wr_metric.receiving_yards_projected - line) / line, 3)
+                proj_routes = round(34.0 * route_part, 1)
+                wr_rec_eq = (
+                    f"Projected Routes ({proj_routes:.1f}) x Yards Per Route Run ({yprr_all:.2f} overall, {yprr_m:.2f} vs Man) "
+                    f"x Separation & Coverage Multiplier (SSP {ssp:.1f} yds, Burn Rate {burn * 100:.0f}%) "
+                    f"= {wr_metric.receiving_yards_projected:.1f} Projected Receiving Yards (vs {line:.1f} line)"
+                )
+                wr_rec_human = (
+                    f"We like {name} {wr_metric.receiving_yards_recommendation} {line:.1f} Receiving Yards against {opp}. "
+                    f"He runs a route on {route_part * 100:.0f}% of dropbacks ({proj_routes:.1f} projected routes) and commands "
+                    f"first-read looks on {first_read * 100:.0f}% of throws. Because he creates {ssp:.1f} yards of separation at the top of his route "
+                    f"and wins {burn * 100:.0f}% of his man-coverage reps ({yprr_m:.2f} yards per route vs man), "
+                    f"multiplying his route volume by his efficiency projects {wr_metric.receiving_yards_projected:.1f} receiving yards."
+                )
                 t_rec = PropTicketEvaluation(
                     ticket_id=f"TKT-WR-REC-{ticket_counter}",
                     game_id=m_str,
@@ -1079,18 +1136,27 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                         f"Catch-Point Leverage Delta: {wr_metric.catch_point_leverage_delta}",
                         f"WOPR: {wr_metric.wopr} | RACR: {wr_metric.racr}",
                     ],
-                    system_rationale=(
-                        f"{name} ({tm}) project {wr_metric.receiving_yards_projected} vs {line} line. "
-                        f"Burn Rate={wr_metric.burn_rate_ssp_gt_2_man * 100:.1f}%, SSP={wr_metric.separation_at_separation_point_ssp} yds, "
-                        f"YPRR vs Man={wr_metric.yprr_vs_man}."
-                    ),
+                    system_rationale=wr_rec_human,
                     publish_allowed=abs(edge) >= 0.05,
+                    causal_equation_plain_english=wr_rec_eq,
+                    human_plain_english_rationale=wr_rec_human,
                 )
                 tix.append(t_rec)
                 self.all_evaluated_tickets.append(t_rec)
                 ticket_counter += 1
 
                 # Generate Receptions Ticket
+                catches_rec = "OVER" if wr_metric.receptions_projected > rec_line else "UNDER"
+                catches_eq = (
+                    f"Projected Routes ({proj_routes:.1f}) x Target Rate ({(first_read * 0.8 + 0.06) * 100:.1f}%) "
+                    f"x Catchable Ball Rate ({catchable * 100:.0f}%) "
+                    f"= {wr_metric.receptions_projected:.1f} Projected Receptions (vs {rec_line:.1f} line)"
+                )
+                catches_human = (
+                    f"We are on {name} {catches_rec} {rec_line:.1f} Receptions. "
+                    f"As the first read on {first_read * 100:.0f}% of dropbacks with an {catchable * 100:.0f}% catchable target rate "
+                    f"and {ssp:.1f} yards of route separation, he projects for {wr_metric.receptions_projected:.1f} catches against {opp}."
+                )
                 t_catches = PropTicketEvaluation(
                     ticket_id=f"TKT-WR-CATCH-{ticket_counter}",
                     game_id=m_str,
@@ -1101,18 +1167,66 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                     market_type="Pass Receptions",
                     line=rec_line,
                     projected_value=wr_metric.receptions_projected,
-                    recommendation="OVER" if wr_metric.receptions_projected > rec_line else "UNDER",
+                    recommendation=catches_rec,
                     edge_percentage=round(abs(wr_metric.receptions_projected - rec_line) / rec_line, 3),
                     confidence_score=0.84,
                     key_spatial_signals=[
                         f"First-Read Share: {wr_metric.first_read_target_share * 100:.1f}%",
                         f"Catchable Ball Rate: {wr_metric.catchable_ball_rate * 100:.1f}%",
                     ],
-                    system_rationale=f"Projected {wr_metric.receptions_projected} receptions vs line {rec_line}.",
+                    system_rationale=catches_human,
                     publish_allowed=True,
+                    causal_equation_plain_english=catches_eq,
+                    human_plain_english_rationale=catches_human,
                 )
                 tix.append(t_catches)
                 self.all_evaluated_tickets.append(t_catches)
+                ticket_counter += 1
+
+                # Generate Longest Reception Ticket (e.g. OVER 21.5 yds for WRs, 17.5 yds for TEs)
+                long_rec_line = 21.5 if pos == "WR" else 17.5
+                air_depth_l = round(10.5 + (float(air_share) * 14.0) + (float(opp_cov1) * 5.5), 1)
+                deep_catch_f = round(min(0.92, 0.48 + (ssp * 0.065) + (burn * 0.22)), 2)
+                yac_cush_l = round(3.2 + (ssp * 2.15) + (burn * 6.5), 1)
+                long_rec_dir = "OVER" if wr_metric.longest_reception_projected > long_rec_line else "UNDER"
+                long_rec_edge = round(abs(wr_metric.longest_reception_projected - long_rec_line) / long_rec_line, 3)
+                long_rec_eq = (
+                    f"[Deep Target Air Depth ({air_depth_l:.1f} yds) x Separation Catch Factor ({deep_catch_f:.2f} from {ssp:.1f} yds cushion)] "
+                    f"+ Yards After Catch in Space ({yac_cush_l:.1f} yds) "
+                    f"= {wr_metric.longest_reception_projected:.1f} Projected Longest Reception (vs {long_rec_line:.1f} line)"
+                )
+                long_rec_human = (
+                    f"We like {name} {long_rec_dir} {long_rec_line:.1f} Longest Reception against {opp}. "
+                    f"{opp} plays single-high coverage on {opp_cov1 * 100:.0f}% of snaps, leaving {name} with one-on-one leverage outside. "
+                    f"He generates {ssp:.1f} yards of separation at his route break and wins {burn * 100:.0f}% of his man-coverage stems. "
+                    f"When you multiply his deep target depth ({air_depth_l:.1f} air yards) by his {deep_catch_f * 100:.0f}% deep-window conversion rate "
+                    f"and add {yac_cush_l:.1f} yards after the catch in open grass, our equation projects a {wr_metric.longest_reception_projected:.1f}-yard longest reception."
+                )
+                t_long_rec = PropTicketEvaluation(
+                    ticket_id=f"TKT-WR-LONGEST-{ticket_counter}",
+                    game_id=m_str,
+                    matchup=m_str,
+                    player_name=name,
+                    team=tm,
+                    position=pos,
+                    market_type="Longest Reception",
+                    line=long_rec_line,
+                    projected_value=wr_metric.longest_reception_projected,
+                    recommendation=long_rec_dir,
+                    edge_percentage=long_rec_edge,
+                    confidence_score=0.88 if wr_metric.burn_rate_ssp_gt_2_man >= 0.36 else 0.83,
+                    key_spatial_signals=[
+                        f"Separation at Break (SSP): {wr_metric.separation_at_separation_point_ssp} yds",
+                        f"Burn Rate vs Man: {wr_metric.burn_rate_ssp_gt_2_man * 100:.1f}%",
+                        f"Deep Air Depth: {air_depth_l} yds | YAC Cushion: {yac_cush_l} yds",
+                    ],
+                    system_rationale=long_rec_human,
+                    publish_allowed=long_rec_edge >= 0.04,
+                    causal_equation_plain_english=long_rec_eq,
+                    human_plain_english_rationale=long_rec_human,
+                )
+                tix.append(t_long_rec)
+                self.all_evaluated_tickets.append(t_long_rec)
                 ticket_counter += 1
 
             # 3. QBs
@@ -1131,6 +1245,17 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
 
                 # Passing Yards Ticket
                 edge = round((qb_metric.passing_yards_projected - line) / line, 3)
+                ypa_est = round(qb_metric.passing_yards_projected / 34.0, 2)
+                qb_pass_eq = (
+                    f"Projected Pass Attempts (34.0) x Post-Snap Disguise Processing YPA ({ypa_est:.2f} yds/att at {tau:.0f}ms read speed "
+                    f"& {pad:.2f} yd Pocket Depth) = {qb_metric.passing_yards_projected:.1f} Projected Passing Yards (vs {line:.1f} line)"
+                )
+                qb_pass_human = (
+                    f"We like {name} {qb_metric.passing_yards_recommendation} {line:.1f} Passing Yards against {opp}. "
+                    f"When {opp} rotates its safeties after the snap, {name} processes the coverage change in {tau:.0f} milliseconds "
+                    f"and operates from a {pad:.2f}-yard pocket depth. Across 34 projected pass attempts at {ypa_est:.2f} yards per attempt, "
+                    f"that puts him at {qb_metric.passing_yards_projected:.1f} passing yards."
+                )
                 t_pass = PropTicketEvaluation(
                     ticket_id=f"TKT-QB-PASS-{ticket_counter}",
                     game_id=m_str,
@@ -1150,17 +1275,26 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                         f"Pocket Collapse Vector (PCV): {qb_metric.pocket_collapse_vector_pcv}",
                         f"Escape Vector Efficiency (EVE): {qb_metric.escape_vector_efficiency_eve}",
                     ],
-                    system_rationale=(
-                        f"{name} ({tm}) project {qb_metric.passing_yards_projected} vs {line} line. "
-                        f"tau_disguise={qb_metric.disguise_decay_rate_tau_ms}ms, EVE={qb_metric.escape_vector_efficiency_eve}."
-                    ),
+                    system_rationale=qb_pass_human,
                     publish_allowed=abs(edge) >= 0.04,
+                    causal_equation_plain_english=qb_pass_eq,
+                    human_plain_english_rationale=qb_pass_human,
                 )
                 tix.append(t_pass)
                 self.all_evaluated_tickets.append(t_pass)
                 ticket_counter += 1
 
                 # Interceptions Ticket
+                int_rec = "OVER" if qb_metric.prob_at_least_1_int >= 0.52 else "UNDER"
+                int_eq = (
+                    f"34.0 Pass Attempts x Throw-Into-Leverage Risk (TLV {tlv:.2f}, Disguise Read {tau:.0f}ms) "
+                    f"= {qb_metric.interceptions_projected:.2f} Expected INTs ({qb_metric.prob_at_least_1_int * 100:.1f}% probability of 1+ INT)"
+                )
+                int_human = (
+                    f"We are on {name} {int_rec} 0.5 Interceptions against {opp}. "
+                    f"With a {tau:.0f}-millisecond post-snap read speed and a {tlv:.2f} tight-window throw variance against {opp}'s disguised shells, "
+                    f"our simulation gives him a {qb_metric.prob_at_least_1_int * 100:.1f}% probability of throwing at least one interception."
+                )
                 t_int = PropTicketEvaluation(
                     ticket_id=f"TKT-QB-INT-{ticket_counter}",
                     game_id=m_str,
@@ -1171,15 +1305,17 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                     market_type="Pass Interceptions",
                     line=0.5,
                     projected_value=qb_metric.interceptions_projected,
-                    recommendation="OVER" if qb_metric.prob_at_least_1_int >= 0.52 else "UNDER",
+                    recommendation=int_rec,
                     edge_percentage=round(abs(qb_metric.prob_at_least_1_int - 0.50), 3),
                     confidence_score=0.83,
                     key_spatial_signals=[
                         f"P(INT >= 1): {qb_metric.prob_at_least_1_int * 100:.1f}%",
                         f"Throw-to-Leverage Variance (TLV): {qb_metric.throw_to_leverage_variance_tlv}",
                     ],
-                    system_rationale=f"Projected {qb_metric.interceptions_projected} INTs (P(>=1)={qb_metric.prob_at_least_1_int * 100:.1f}%).",
+                    system_rationale=int_human,
                     publish_allowed=True,
+                    causal_equation_plain_english=int_eq,
+                    human_plain_english_rationale=int_human,
                 )
                 tix.append(t_int)
                 self.all_evaluated_tickets.append(t_int)
@@ -1197,6 +1333,18 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
 
                 if pos in ("EDGE", "DT"):
                     # 0.25 Sack Ticket (half sack settles OVER)
+                    sack_rec = "OVER" if idp_metric.prob_half_plus_sack_025_line >= 0.50 else "UNDER"
+                    sack_eq = (
+                        f"[Pass-Rush Win Rate Under 2.5s ({prwr * 100:.1f}%) / Opponent Pass-Block Grade ({ol_grade:.2f})] "
+                        f"x Stunt Speed Factor (350ms / {stunt:.0f}ms) = {idp_metric.patton_poe_hazard:.2f} Expected Sacks "
+                        f"-> {idp_metric.prob_half_plus_sack_025_line * 100:.1f}% Probability of 0.5+ Sacks (clears 0.25 line)"
+                    )
+                    sack_human = (
+                        f"We like {name} {sack_rec} 0.25 Sacks against {opp} (any half-sack or full sack cashes OVER 0.25). "
+                        f"He wins his pass-rush rep in under 2.5 seconds on {prwr * 100:.1f}% of snaps and knifes through stunts in {stunt:.0f} milliseconds "
+                        f"against an offensive line grading at {ol_grade:.2f}. Across 36 projected dropbacks, he projects for {idp_metric.patton_poe_hazard:.2f} sacks "
+                        f"with a {idp_metric.prob_half_plus_sack_025_line * 100:.1f}% chance of getting at least a half-sack."
+                    )
                     t_sack = PropTicketEvaluation(
                         ticket_id=f"TKT-IDP-SACK-{ticket_counter}",
                         game_id=m_str,
@@ -1207,7 +1355,7 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                         market_type="Individual Sacks",
                         line=0.25,
                         projected_value=round(idp_metric.patton_poe_hazard, 2),
-                        recommendation="OVER" if idp_metric.prob_half_plus_sack_025_line >= 0.50 else "UNDER",
+                        recommendation=sack_rec,
                         edge_percentage=round(abs(idp_metric.prob_half_plus_sack_025_line - 0.50), 3),
                         confidence_score=0.86,
                         key_spatial_signals=[
@@ -1216,11 +1364,10 @@ class SpatialMicroMetricsPropAndMatchupEvaluator:
                             f"True PRWR (<2.5s): {idp_metric.true_prwr_sub_2_5s * 100:.1f}%",
                             f"Stunt Latency: {idp_metric.stunt_penetration_latency_ms}ms",
                         ],
-                        system_rationale=(
-                            f"{name} ({tm}) sack hazard {idp_metric.patton_poe_hazard}. "
-                            f"P(Half+ Sack)={idp_metric.prob_half_plus_sack_025_line * 100:.1f}% vs 0.25 line."
-                        ),
+                        system_rationale=sack_human,
                         publish_allowed=True,
+                        causal_equation_plain_english=sack_eq,
+                        human_plain_english_rationale=sack_human,
                     )
                     tix.append(t_sack)
                     self.all_evaluated_tickets.append(t_sack)

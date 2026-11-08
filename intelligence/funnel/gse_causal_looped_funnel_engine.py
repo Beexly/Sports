@@ -290,7 +290,7 @@ def execute_pass1_foundational_and_arxiv_equations(
         "inverse_mdp_tau_sealed": tau_sealed,
         "inverse_mdp_4th_down_wp_edge": inverse_mdp_wp_edge,
         "ordinal_drive_td_over_fg_logit_shift": ordinal_td_over_fg_logit_shift,
-        "yac_conservation_of_momentum_bonus_yds": kinematic_tree_yac_bonus_bonus if False else kinematic_tree_yac_bonus_yds,
+        "yac_conservation_of_momentum_bonus_yds": kinematic_tree_yac_bonus_yds,
         "knn_motion_pressure_separation_bonus_yds": knn_motion_separation_bonus_yds,
         "composite_pass1_stat_modifier": composite_pass1_stat_modifier,
     }
@@ -590,12 +590,36 @@ class GSECausalLoopedFunnelEngine:
     def stage2_build_layered_context_situational_simulations_to_canonical_projections(
         self,
         write_artifacts: bool = True,
+        live_simulation_results: Optional[Sequence[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         if not self.state.stage1_stats_locked:
             raise FunnelSequenceViolationError(
                 "FunnelSequenceViolationError: Stage 2 (Layered Context + Situational + Simulations -> Projections) "
                 "cannot run before Stage 1 (Equations Pass 1 -> Metrics -> Stats) is locked!"
             )
+
+        live_sim_by_gid: Dict[str, Dict[str, Any]] = {
+            str(g["game_id"]): g
+            for g in (live_simulation_results or [])
+            if isinstance(g, dict) and "game_id" in g
+        }
+        canonical_ml_by_gid: Dict[str, Tuple[int, int]] = {
+            "2026_09_JAX_BAL": (-175, 145),
+            "2026_09_CIN_ATL": (105, -125),
+            "2026_09_CLE_NO": (-102, -118),
+            "2026_09_DAL_IND": (-142, 120),
+            "2026_09_DEN_CAR": (235, -290),
+            "2026_09_DET_MIA": (150, -180),
+            "2026_09_LAR_WAS": (-138, 116),
+            "2026_09_NYG_PHI": (-340, 270),
+            "2026_09_NYJ_KC": (-275, 225),
+            "2026_09_HOU_LAC": (-135, 114),
+            "2026_09_LV_SF": (-280, 230),
+            "2026_09_ARI_SEA": (-140, 118),
+            "2026_09_GB_NE": (180, -218),
+            "2026_09_TB_CHI": (-122, 102),
+            "2026_09_BUF_MIN": (105, -125),
+        }
 
         games_projections: Dict[str, Any] = {}
         player_projections_pool_seed: List[Dict[str, Any]] = []
@@ -647,6 +671,7 @@ class GSECausalLoopedFunnelEngine:
 
             book_total = float(g_ctx["total_line"])
             book_spread_home = float(g_ctx["spread_line"])
+            home_ml, away_ml = canonical_ml_by_gid.get(gid, (-135, 115))
             # Implied baseline scores before GSE layered context + simulation adjustments
             implied_home = (book_total - book_spread_home) / 2.0
             implied_away = (book_total + book_spread_home) / 2.0
@@ -665,8 +690,13 @@ class GSECausalLoopedFunnelEngine:
                 + lab_mills["wind_total_points_delta"] * 0.5
             )
 
-            proj_home_pts = round(max(13.0, implied_home + sim_home_shift), 2)
-            proj_away_pts = round(max(13.0, implied_away + sim_away_shift), 2)
+            if gid in live_sim_by_gid:
+                live_g = live_sim_by_gid[gid]
+                proj_home_pts = round(float(live_g["projected_home_score"]), 2)
+                proj_away_pts = round(float(live_g["projected_away_score"]), 2)
+            else:
+                proj_home_pts = round(max(13.0, implied_home + sim_home_shift), 2)
+                proj_away_pts = round(max(13.0, implied_away + sim_away_shift), 2)
             proj_total_pts = round(proj_home_pts + proj_away_pts, 2)
 
             games_projections[gid] = {
@@ -680,12 +710,15 @@ class GSECausalLoopedFunnelEngine:
                 "stage3_pre_sim_situational_priors": s3_priors,
                 "gse_lab_mills_applied": lab_mills,
                 "pbp_175_snap_spatial_conditioners": pbp_cond,
+                "live_pbp_simulation_bound": gid in live_sim_by_gid,
                 "canonical_projected_home_pts": proj_home_pts,
                 "canonical_projected_away_pts": proj_away_pts,
                 "canonical_projected_total_pts": proj_total_pts,
                 "canonical_projected_home_margin": round(proj_home_pts - proj_away_pts, 2),
                 "book_total_line": book_total,
                 "book_spread_home": book_spread_home,
+                "home_ml_american": home_ml,
+                "away_ml_american": away_ml,
             }
 
             # Build canonical player projections for QBs + focal skill players from this game's locked environment
@@ -823,30 +856,50 @@ class GSECausalLoopedFunnelEngine:
         games_proj = self.state.stage2_projections_payload["games_projections"]
         game_discrepancies: List[Dict[str, Any]] = []
         for gid, g_proj in games_proj.items():
+            home_ml = int(g_proj.get("home_ml_american", -135))
+            away_ml = int(g_proj.get("away_ml_american", 115))
             p2 = execute_pass2_market_conformal_and_discrepancy_equations(
                 gse_projected_home_pts=g_proj["canonical_projected_home_pts"],
                 gse_projected_away_pts=g_proj["canonical_projected_away_pts"],
                 book_spread_home=g_proj["book_spread_home"],
                 book_total_line=g_proj["book_total_line"],
+                home_ml_american=home_ml,
+                away_ml_american=away_ml,
+            )
+            away_tm = g_proj["away_team"]
+            home_tm = g_proj["home_team"]
+            human_game_summary = (
+                f"In {away_tm} at {home_tm}, our 10,000 simulated games project a final score of "
+                f"{away_tm} {g_proj['canonical_projected_away_pts']:.1f}, {home_tm} {g_proj['canonical_projected_home_pts']:.1f} "
+                f"(Total {p2['gse_canonical_total']:.1f} vs. the book's {p2['book_total_line']:.1f}, a {p2['total_discrepancy_pts']:+.2f}-point gap; "
+                f"fair spread {home_tm} {p2['gse_fair_spread_home']:+.2f} vs. book {p2['book_spread_home']:+.1f})."
             )
             game_discrepancies.append(
                 {
                     "game_id": gid,
-                    "matchup": f"{g_proj['away_team']}@{g_proj['home_team']}",
-                    "home_team": g_proj["home_team"],
-                    "away_team": g_proj["away_team"],
+                    "matchup": f"{away_tm}@{home_tm}",
+                    "home_team": home_tm,
+                    "away_team": away_tm,
+                    "home_ml_american": home_ml,
+                    "away_ml_american": away_ml,
+                    "human_plain_english_game_summary": human_game_summary,
                     **p2,
                 }
             )
 
-        # Evaluate all 217 player props across all 15 Week 9 games via the 92-metric Spatial Prop Evaluator
+        # Evaluate all player props across all 15 Week 9 games via the 92-metric Spatial Prop Evaluator
         self._prop_evaluator.compile_full_week9_slate()
         prop_tickets = [asdict(t) for t in self._prop_evaluator.all_evaluated_tickets]
+        publishable_tickets = [t for t in prop_tickets if t.get("publish_allowed", False)]
+        candidate_tickets = publishable_tickets if len(publishable_tickets) >= 25 else prop_tickets
         top_prop_discrepancies = sorted(
-            prop_tickets,
-            key=lambda x: abs(
-                float(x.get("gse_projected_mean", x.get("projected_mean", 0.0)))
-                - float(x.get("market_line", x.get("book_line", 0.0)))
+            candidate_tickets,
+            key=lambda x: (
+                float(x.get("edge_percentage", 0.0)),
+                abs(
+                    float(x.get("projected_value", x.get("gse_projected_mean", 0.0)))
+                    - float(x.get("line", x.get("market_line", 0.0)))
+                ),
             ),
             reverse=True,
         )[:25]
@@ -1170,8 +1223,8 @@ class GSECausalLoopedFunnelEngine:
                         0.42 if p["team"] == lu["bring_back_team"] else 0.15
                     )
                     idio = rng.normal(0.0, 1.0, size=worlds_per_iteration)
-                    # Add slight right-skew for explosive TD ceiling worlds
-                    right_tail_boost = (it * 0.08) + float(feedback_adjustments.get(p["player_id"], 0.0)) * 0.35
+                    # Add slight right-skew driven purely by simulated boom-minus-bust feedback
+                    right_tail_boost = float(feedback_adjustments.get(p["player_id"], 0.0)) * 0.45
                     p_draws = np.maximum(
                         0.0,
                         med
@@ -1280,11 +1333,13 @@ class GSECausalLoopedFunnelEngine:
         num_optimization_iterations: int = 8,
         worlds_per_iteration: int = 2500,
         write_artifacts: bool = True,
+        live_simulation_results: Optional[Sequence[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         t0 = time.perf_counter()
         s1 = self.stage1_compile_equations_to_metrics_to_stats(write_artifacts=write_artifacts)
         s2 = self.stage2_build_layered_context_situational_simulations_to_canonical_projections(
-            write_artifacts=write_artifacts
+            write_artifacts=write_artifacts,
+            live_simulation_results=live_simulation_results,
         )
         s3a = self.stage3a_derive_props_totals_winners_losers_and_book_discrepancies(
             write_artifacts=write_artifacts

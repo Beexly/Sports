@@ -1383,15 +1383,21 @@ def simulate_matchup_pbp(
     spatial_pass_mu_delta_lut = np.zeros(2, dtype=np.float64)
     spatial_comp_delta_lut = np.zeros(2, dtype=np.float64)
     spatial_sack_delta_lut = np.zeros(2, dtype=np.float64)
-    if w1_w7_override is not None and (
-        "spatial_micro_pbp_conditioners" in w1_w7_override
-        or "spatial_micro_overrides" in w1_w7_override
-    ):
-        sp_cond = w1_w7_override.get("spatial_micro_pbp_conditioners")
-        if not isinstance(sp_cond, dict):
-            sp_cond = pre_proj_priors.get("spatial_micro_pbp_conditioners", {})
-        aw_sp = sp_cond.get("away_conditioners", {})
-        hm_sp = sp_cond.get("home_conditioners", {})
+    sp_cond_base = pre_proj_priors.get("spatial_micro_pbp_conditioners", {})
+    sp_cond_override = (
+        w1_w7_override.get("spatial_micro_pbp_conditioners")
+        if (w1_w7_override is not None and isinstance(w1_w7_override.get("spatial_micro_pbp_conditioners"), dict))
+        else {}
+    )
+    aw_sp = {
+        **(sp_cond_base.get("away_conditioners", {}) if isinstance(sp_cond_base, dict) else {}),
+        **(sp_cond_override.get("away_conditioners", {}) if isinstance(sp_cond_override, dict) else {}),
+    }
+    hm_sp = {
+        **(sp_cond_base.get("home_conditioners", {}) if isinstance(sp_cond_base, dict) else {}),
+        **(sp_cond_override.get("home_conditioners", {}) if isinstance(sp_cond_override, dict) else {}),
+    }
+    if aw_sp or hm_sp:
         spatial_rush_delta_lut = np.array(
             [
                 float(aw_sp.get("rush_yards_spatial_delta", 0.0)),
@@ -1796,6 +1802,45 @@ def simulate_matchup_pbp(
             [zero_td, zero_td],
             zero_td,
         )
+        # Post-loop world-level order statistics & 360-degree sub-market vectors
+        # (uses an isolated RNG so the 175-snap main loop RNG sequence is never altered)
+        order_rng = np.random.default_rng((int(seed) if seed is not None else 42) + 77777)
+        hm_wr1_longest_rec_vec = np.clip(
+            hm_wr1_yds_vec * order_rng.uniform(0.27, 0.39, size=n_sims)
+            + order_rng.gamma(shape=2.2, scale=2.1, size=n_sims),
+            0.0,
+            np.maximum(6.0, hm_wr1_yds_vec * 0.88),
+        )
+        aw_wr1_longest_rec_vec = np.clip(
+            aw_wr1_yds_vec * order_rng.uniform(0.27, 0.39, size=n_sims)
+            + order_rng.gamma(shape=2.2, scale=2.1, size=n_sims),
+            0.0,
+            np.maximum(6.0, aw_wr1_yds_vec * 0.88),
+        )
+        hm_rb1_longest_rush_vec = np.clip(
+            hm_rb1_yds_vec * order_rng.uniform(0.21, 0.33, size=n_sims)
+            + order_rng.gamma(shape=1.9, scale=1.8, size=n_sims),
+            0.0,
+            np.maximum(4.0, hm_rb1_yds_vec * 0.78),
+        )
+        aw_rb1_longest_rush_vec = np.clip(
+            aw_rb1_yds_vec * order_rng.uniform(0.21, 0.33, size=n_sims)
+            + order_rng.gamma(shape=1.9, scale=1.8, size=n_sims),
+            0.0,
+            np.maximum(4.0, aw_rb1_yds_vec * 0.78),
+        )
+        home_1q_score_vec = np.round(np.clip(home_score * 0.215, 0.0, home_score), 1)
+        away_1q_score_vec = np.round(np.clip(away_score * 0.215, 0.0, away_score), 1)
+        home_1h_score_vec = np.round(np.clip(home_score * 0.485, 0.0, home_score), 1)
+        away_1h_score_vec = np.round(np.clip(away_score * 0.485, 0.0, away_score), 1)
+        home_fg_made_vec = np.clip(np.round((home_score - home_pass_tds_tot * 7.0) / 3.8), 0.0, 5.0)
+        away_fg_made_vec = np.clip(np.round((away_score - away_pass_tds_tot * 7.0) / 3.8), 0.0, 5.0)
+        home_kicking_pts_vec = home_fg_made_vec * 3.0 + np.clip(np.round(home_score / 8.2), 0.0, 6.0)
+        away_kicking_pts_vec = away_fg_made_vec * 3.0 + np.clip(np.round(away_score / 8.2), 0.0, 6.0)
+        # Note: away_sacks is sacks taken by away QB (= home defense sacks); home_sacks is sacks taken by home QB (= away defense sacks)
+        home_edge1_sacks_vec = np.round(away_sacks * 0.34, 2)
+        away_edge1_sacks_vec = np.round(home_sacks * 0.34, 2)
+
         out["vectors"] = {
             "home_score": home_score,
             "away_score": away_score,
@@ -1828,6 +1873,20 @@ def simulate_matchup_pbp(
             "away_wr1_tds": aw_wr1_tds_vec,
             "home_rb1_yds": hm_rb1_yds_vec,
             "away_rb1_yds": aw_rb1_yds_vec,
+            "home_wr1_longest_rec": hm_wr1_longest_rec_vec,
+            "away_wr1_longest_rec": aw_wr1_longest_rec_vec,
+            "home_rb1_longest_rush": hm_rb1_longest_rush_vec,
+            "away_rb1_longest_rush": aw_rb1_longest_rush_vec,
+            "home_1q_score": home_1q_score_vec,
+            "away_1q_score": away_1q_score_vec,
+            "home_1h_score": home_1h_score_vec,
+            "away_1h_score": away_1h_score_vec,
+            "home_fg_made": home_fg_made_vec,
+            "away_fg_made": away_fg_made_vec,
+            "home_kicking_pts": home_kicking_pts_vec,
+            "away_kicking_pts": away_kicking_pts_vec,
+            "home_edge1_sacks": home_edge1_sacks_vec,
+            "away_edge1_sacks": away_edge1_sacks_vec,
             "jev_state_tensor_active": has_jev_tensor,
         }
         out["away_injuries_applied"] = list(away_inj)
@@ -1943,12 +2002,20 @@ def main():
     if args.week == 9:
         slate = [
             ("JAX", "BAL", ["RB1"],             ["QB1"],             "JAX +3.5",  +2.45, "JAX +18 (Brissett spot)", "STAGE0_QB1_OUT_BAL", 1),
-            ("DET", "GB",  [],                  [],                  "DET +2.5",  +1.90, "DET +12",                 "ELEVATED_SHARP_AGREE", 2),
-            ("LAC", "CLE", [],                  [],                  "LAC -1.5",  +2.10, "LAC +14",                 "MODEL_SHARP_ALIGN", 3),
-            ("WAS", "NYG", ["WR1"],             ["QB1"],             "WAS -3.5",  +2.85, "WAS +21 (Lock starts)",   "STAGE0_QB1_OUT_NYG", 4),
-            ("CHI", "ARI", [],                  ["QB1", "RB1"],      "CHI +1.0",  +2.30, "CHI +15 (Tune starts)",   "STAGE0_QB1_OUT_ARI", 5),
-            ("LA",  "SEA", [],                  [],                  "LA +1.5",   +1.75, "LA +9",                   "MODEL_ONLY", 6),
-            ("IND", "MIN", [],                  [],                  "MIN -5.0",  +1.65, "MIN +11 (Flores blitz)",  "ELEVATED_SHARP_AGREE", 7),
+            ("CIN", "ATL", [],                  [],                  "CIN -1.5",  +1.82, "CIN +11 (Madrid neutral)","MODEL_SHARP_ALIGN",  2),
+            ("CLE", "NO",  [],                  ["WR1"],             "CLE -1.0",  +2.05, "CLE +14 (Myles trench)",  "ELEVATED_SHARP_AGREE", 3),
+            ("DAL", "IND", [],                  [],                  "IND -2.5",  +1.70, "IND +10",                 "MODEL_SHARP_ALIGN",  4),
+            ("DEN", "CAR", [],                  ["QB_QUESTIONABLE"], "DEN -6.5",  +2.35, "DEN +16 (Surtain lock)",  "ELEVATED_SHARP_AGREE", 5),
+            ("DET", "MIA", [],                  [],                  "DET -3.5",  +2.20, "DET +15 (Gibbs/ARSB)",    "ELEVATED_SHARP_AGREE", 6),
+            ("LAR", "WAS", [],                  [],                  "LAR +2.5",  +1.95, "LAR +12 (Nacua/Puka)",    "MODEL_SHARP_ALIGN",  7),
+            ("NYG", "PHI", ["QB1"],             [],                  "NYG +7.5",  +1.40, "PHI -300 ML BLOCKED",     "HEAVY_JUICE_FIREWALL", 8),
+            ("NYJ", "KC",  [],                  [],                  "NYJ +6.5",  +1.88, "NYJ +13 (Geno Smith)",    "MODEL_SHARP_ALIGN",  9),
+            ("HOU", "LAC", ["WR1"],             [],                  "LAC -2.5",  +2.10, "LAC +14 (Herbert/Ladd)",  "ELEVATED_SHARP_AGREE", 10),
+            ("LV",  "SF",  [],                  [],                  "SF -6.5",   +2.25, "SF +17 (Mike Evans/CMC)", "ELEVATED_SHARP_AGREE", 11),
+            ("ARI", "SEA", [],                  [],                  "SEA -2.5",  +1.92, "SEA +12 (Darnold/JSN)",   "MODEL_SHARP_ALIGN",  12),
+            ("GB",  "NE",  [],                  [],                  "GB -4.5",   +2.15, "GB +14 (Love/Jacobs)",    "ELEVATED_SHARP_AGREE", 13),
+            ("TB",  "CHI", [],                  [],                  "CHI -1.5",  +1.80, "CHI +11 (SNF Soldier)",   "MODEL_SHARP_ALIGN",  14),
+            ("BUF", "MIN", [],                  [],                  "BUF -1.5",  +2.08, "BUF +13 (Allen vs Flores)","ELEVATED_SHARP_AGREE", 15),
         ]
     else:
         slate = [
