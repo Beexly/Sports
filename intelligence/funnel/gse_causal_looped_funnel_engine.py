@@ -624,9 +624,95 @@ class GSECausalLoopedFunnelEngine:
         games_projections: Dict[str, Any] = {}
         player_projections_pool_seed: List[Dict[str, Any]] = []
 
-        # Salary deterministic schedule by role
-        role_salaries = [7200, 6600, 6100, 7400, 6800, 5600]
+        # Salary deterministic schedule by role (calibrated so 9-man DK rosters land at $48,800-$49,900 <= $50,000)
+        role_salaries = [5600, 5400, 4600, 5800, 5300, 4500]
         role_positions = ["RB", "WR", "TE", "RB", "WR", "TE"]
+        true_player_positions: Dict[str, str] = {
+            "Amon-Ra St. Brown": "WR",
+            "Jahmyr Gibbs": "RB",
+            "Sam LaPorta": "TE",
+            "Tyreek Hill": "WR",
+            "De'Von Achane": "RB",
+            "Jaylen Waddle": "WR",
+            "Khalil Shakir": "WR",
+            "James Cook": "RB",
+            "Dalton Kincaid": "TE",
+            "Justin Jefferson": "WR",
+            "Aaron Jones": "RB",
+            "T.J. Hockenson": "TE",
+            "Stefon Diggs": "WR",
+            "Brian Robinson Jr.": "RB",
+            "Zach Ertz": "TE",
+            "Puka Nacua": "WR",
+            "Kyren Williams": "RB",
+            "Davante Adams": "WR",
+            "Travis Kelce": "TE",
+            "Kareem Hunt": "RB",
+            "Xavier Worthy": "WR",
+            "Garrett Wilson": "WR",
+            "Breece Hall": "RB",
+            "Tyler Conklin": "TE",
+            "Saquon Barkley": "RB",
+            "A.J. Brown": "WR",
+            "Dallas Goedert": "TE",
+            "Malik Nabers": "WR",
+            "Tyrone Tracy Jr.": "RB",
+            "Ja'Marr Chase": "WR",
+            "Chase Brown": "RB",
+            "Mike Gesicki": "TE",
+            "Bijan Robinson": "RB",
+            "Drake London": "WR",
+            "Kyle Pitts": "TE",
+            "Christian McCaffrey": "RB",
+            "Mike Evans": "WR",
+            "George Kittle": "TE",
+            "Brock Bowers": "TE",
+            "Jakobi Meyers": "WR",
+            "Alexander Mattison": "RB",
+            "Nico Collins": "WR",
+            "Joe Mixon": "RB",
+            "Dalton Schultz": "TE",
+            "Ladd McConkey": "WR",
+            "J.K. Dobbins": "RB",
+            "Jaxon Smith-Njigba": "WR",
+            "Kenneth Walker III": "RB",
+            "DK Metcalf": "WR",
+            "Marvin Harrison Jr.": "WR",
+            "James Conner": "RB",
+            "Trey McBride": "TE",
+            "CeeDee Lamb": "WR",
+            "Rico Dowdle": "RB",
+            "Jake Ferguson": "TE",
+            "Jonathan Taylor": "RB",
+            "Michael Pittman Jr.": "WR",
+            "Josh Downs": "WR",
+            "Josh Jacobs": "RB",
+            "Jayden Reed": "WR",
+            "Tucker Kraft": "TE",
+            "Rhamondre Stevenson": "RB",
+            "Hunter Henry": "TE",
+            "Derrick Henry": "RB",
+            "Zay Flowers": "WR",
+            "Mark Andrews": "TE",
+            "Travis Etienne Jr.": "RB",
+            "Brian Thomas Jr.": "WR",
+            "Evan Engram": "TE",
+            "Alvin Kamara": "RB",
+            "Chris Olave": "WR",
+            "Taysom Hill": "TE",
+            "Nick Chubb": "RB",
+            "Jerry Jeudy": "WR",
+            "David Njoku": "TE",
+            "Bucky Irving": "RB",
+            "Cade Otton": "TE",
+            "Rachaad White": "RB",
+            "D'Andre Swift": "RB",
+            "DJ Moore": "WR",
+            "Cole Kmet": "TE",
+            "Chuba Hubbard": "RB",
+            "Javonte Williams": "RB",
+            "Courtland Sutton": "WR",
+        }
 
         for idx, g_ctx in enumerate(WEEK9_15_GAMES_CONTEXT):
             gid = g_ctx["game_id"]
@@ -760,7 +846,7 @@ class GSECausalLoopedFunnelEngine:
                 p_tm = away if is_away_player else home
                 opp_tm = home if is_away_player else away
                 tm_pts = proj_away_pts if is_away_player else proj_home_pts
-                pos = role_positions[s_idx % len(role_positions)]
+                pos = true_player_positions.get(p_name, role_positions[s_idx % len(role_positions)])
                 sal = role_salaries[s_idx % len(role_salaries)]
                 base_pts = 15.6 if pos == "RB" else (16.2 if pos == "WR" else 12.1)
                 med_dk = round((base_pts + (tm_pts - 21.5) * 0.36) * env_mult, 2)
