@@ -1,0 +1,14 @@
+Refactor SkeleTrackV2 __init__ to group parameters in a config dataclass
+
+Refactored the `__init__` parameters of `SkeleTrackV2` in `intelligence/vision/skeletrack_v2.py` into a frozen dataclass named `SkeleTrackV2Config`.
+
+- Preserved identical behavior, attribute exposure, and instantiation side effects.
+- Maintained strict backwards compatibility: keyword-only arguments accept positional-to-keyword translation seamlessly.
+- Config argument gracefully merges with overrides, prioritizing overrides explicitly.
+
+Double-Checked:
+1. Checked for positional calling conventions via `grep` on `SkeleTrackV2(` across the codebase. Found zero positional invocations; all were using keyword arguments, preventing backwards incompatibility.
+2. The legacy constructor parameters were explicitly forced as keyword-only arguments (`*` unpack) to prevent bugs where a legacy string `model_path` argument binds positionally to the new `config` slot.
+3. Attempted to break the code by overriding attributes initialized via `config` with raw `kwargs`. Verified through unit tests that kwargs safely dominate config parameters as expected.
+
+Test results: `intelligence/vision/test_skeletrack_v2_config.py` passed 3/3 tests enforcing equivalence and overriding functionality.

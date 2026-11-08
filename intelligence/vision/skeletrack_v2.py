@@ -43,6 +43,7 @@ import math
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import cv2
@@ -715,6 +716,19 @@ class FieldHomographyCalibrator:
 # 4. SkeleTrackV2 Main Engine (Steps 1, 2, 3, 6, 7)
 # ============================================================================
 
+@dataclass(frozen=True)
+class SkeleTrackV2Config:
+    model_path: str = "yolov8n-pose.pt"
+    conf: float = 0.35
+    q_base: float = 2.0
+    r_base: float = 8.0
+    fps: float = 30.0
+    homography_calibrator: Optional[FieldHomographyCalibrator] = None
+    roster_joiner: Optional[RosterIdentityJoiner] = None
+    ocr_engine: Optional[JerseyOCREngine] = None
+    custom_detector: Optional[Callable[[np.ndarray, int], Dict[str, Any]]] = None
+
+
 class SkeleTrackV2:
     """
     Multi-person skeletal tracker with:
@@ -729,24 +743,38 @@ class SkeleTrackV2:
 
     def __init__(
         self,
-        model_path: str = "yolov8n-pose.pt",
-        conf: float = 0.35,
-        q_base: float = 2.0,
-        r_base: float = 8.0,
-        fps: float = 30.0,
+        config: Optional[SkeleTrackV2Config] = None,
+        *,
+        model_path: Optional[str] = None,
+        conf: Optional[float] = None,
+        q_base: Optional[float] = None,
+        r_base: Optional[float] = None,
+        fps: Optional[float] = None,
         homography_calibrator: Optional[FieldHomographyCalibrator] = None,
         roster_joiner: Optional[RosterIdentityJoiner] = None,
         ocr_engine: Optional[JerseyOCREngine] = None,
         custom_detector: Optional[Callable[[np.ndarray, int], Dict[str, Any]]] = None,
     ):
-        self.custom_detector = custom_detector
-        self.model = YOLO(model_path) if (custom_detector is None and YOLO is not None) else None
-        self.tracker = SupervisionByteTrack(frame_rate=int(round(fps))) if SupervisionByteTrack is not None else None
-        self.conf = conf
-        self.q_base = q_base
-        self.r_base = r_base
-        self.fps = fps
-        self.dt = 1.0 / fps
+        base_config = config or SkeleTrackV2Config()
+
+        c_model_path = model_path if model_path is not None else base_config.model_path
+        c_conf = conf if conf is not None else base_config.conf
+        c_q_base = q_base if q_base is not None else base_config.q_base
+        c_r_base = r_base if r_base is not None else base_config.r_base
+        c_fps = fps if fps is not None else base_config.fps
+        c_homography_calibrator = homography_calibrator if homography_calibrator is not None else base_config.homography_calibrator
+        c_roster_joiner = roster_joiner if roster_joiner is not None else base_config.roster_joiner
+        c_ocr_engine = ocr_engine if ocr_engine is not None else base_config.ocr_engine
+        c_custom_detector = custom_detector if custom_detector is not None else base_config.custom_detector
+
+        self.custom_detector = c_custom_detector
+        self.model = YOLO(c_model_path) if (c_custom_detector is None and YOLO is not None) else None
+        self.tracker = SupervisionByteTrack(frame_rate=int(round(c_fps))) if SupervisionByteTrack is not None else None
+        self.conf = c_conf
+        self.q_base = c_q_base
+        self.r_base = c_r_base
+        self.fps = c_fps
+        self.dt = 1.0 / c_fps
 
         self.kalmans: Dict[int, Dict[str, AdaptiveKalmanKeypoint]] = {}
         self.kalmans_3d: Dict[int, Dict[str, AdaptiveKalmanKeypoint3D]] = {}
