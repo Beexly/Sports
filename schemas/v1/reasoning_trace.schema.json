@@ -31,6 +31,14 @@
       "type": "array",
       "items": { "type": "string" }
     },
+    "layers_consumed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "all_26_layers_consumed": { "type": "boolean" },
+    "all_26_layers_consumed_by_tracks": { "type": "boolean" },
+    "consumed_layers_count": { "type": "integer", "minimum": 26 },
+    "layers_consumed_count": { "type": "integer", "minimum": 26 },
     "tracks": {
       "type": "object",
       "required": [
@@ -57,6 +65,9 @@
         "applied_weight": { "type": "number", "maximum": 0.10 }
       }
     },
+    "pre_family_279_reasoning_delta": { "type": "number" },
+    "family_279_shrunk_contribution": { "type": "number" },
+    "post_family_279_final_reasoning_delta": { "type": "number" },
     "final_reasoning_delta": { "type": "number" },
     "weekly_cycle_7_steps": { "type": "object" },
     "five_tracks_l1_to_l5": { "type": "object" },

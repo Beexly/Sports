@@ -13,7 +13,7 @@ Catalogs and wires:
    - `https://antigravity.google/docs/plugins/` (First-Party & Ecosystem Plugin Registry)
    - `https://antigravity.google/docs/marketplace` (Antigravity Skill & Plugin Marketplace)
 2. Connected Google Workspace Portal Connectors:
-   - Google Drive (`G:\\My Drive` + Web Portal OAuth Connector: `4,003` files + `395` Mega-Sweep PDFs + `41` `.md` wave files)
+   - Google Drive (`gdrive://MEGA-SWEEP-2026-11-06` + Web Portal OAuth Connector: `4,003` files + `395` Mega-Sweep PDFs + `41` `.md` wave files)
    - Google Docs (`.gdoc` / `.docx` OMML mathematical equation & research dossier ingestion)
    - Google Slides (`.gslides` / `.pptx` tactical presentation & pitch deck extraction)
 3. PostHog Wizard PR #1243 (`posthog/wizard-01a1b27de008`, run `01a1b27d-e008-7d7d-9800-dc0b7ba74b50`, commit `6d06d3a228207a7f6000170c08afd3de43482b39`)
@@ -128,7 +128,7 @@ def verify_antigravity_portal_and_posthog_wizard_integration() -> Dict[str, Any]
         google_drive_connected=True,
         google_docs_connected=True,
         google_slides_connected=True,
-        local_drive_mirror_path=r"G:\My Drive\MEGA-SWEEP-2026-11-06",
+        local_drive_mirror_path="gdrive://MEGA-SWEEP-2026-11-06",
         drive_total_files_indexed=4003,
         mega_sweep_unique_books_extracted=197,
         mega_sweep_pdf_files_scanned=395,

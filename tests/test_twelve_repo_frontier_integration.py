@@ -1,7 +1,7 @@
 r"""Comprehensive Multi-Pass Test Suite for the 12-Repository Frontier Integration Engine.
 
 Tests all 12 repositories across:
-  - Target A: Personal Hardware & Software Optimization (C:\Users\Garrett)
+  - Target A: Personal Hardware & Software Optimization (~)
   - Target B: Galaxy Sports Edge (GSE) Website & Prediction Engine
   - Target C: Galaxy Science Institute (GSI) Biomechanics, FHIR & Billion-Context Research
 """
@@ -262,6 +262,6 @@ def test_end_to_end_twelve_repo_two_pass_integration_receipt() -> None:
     assert receipt["two_pass_status"] == "PASS_ALL_12_REPOS_VERIFIED"
     assert len(receipt["repos"]) == 12
     assert (REPO_ROOT / ".zed" / "settings.json").exists()
-    assert Path(r"C:\Users\Garrett\.agents\skills\cloudflare-security-audit\SKILL.md").exists()
-    assert Path(r"C:\Users\Garrett\.agents\skills\vercel-agent-browser\SKILL.md").exists()
-    assert Path(r"C:\Users\Garrett\.agents\skills\astryx-dense-compression-protocol\SKILL.md").exists()
+    assert (Path.home() / ".agents" / "skills" / "cloudflare-security-audit" / "SKILL.md").exists()
+    assert (Path.home() / ".agents" / "skills" / "vercel-agent-browser" / "SKILL.md").exists()
+    assert (Path.home() / ".agents" / "skills" / "astryx-dense-compression-protocol" / "SKILL.md").exists()

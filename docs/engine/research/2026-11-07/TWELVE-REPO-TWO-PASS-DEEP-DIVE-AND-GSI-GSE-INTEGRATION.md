@@ -7,7 +7,7 @@
 
 ---
 
-## 1. Hardware & Personal Environment Telemetry (`Target A: C:\Users\Garrett`)
+## 1. Hardware & Personal Environment Telemetry (`Target A: ~`)
 
 Before integrating external architectures, we measured Garrett's live workstation telemetry:
 - **CPU:** `12th Gen Intel(R) Core(TM) i7-1255U` (`10 cores / 12 logical threads`, AVX2 native SIMD support)
@@ -17,8 +17,8 @@ Before integrating external architectures, we measured Garrett's live workstatio
 - **Immediate Zero-Founder-Step Remediation:**
   1. Purged non-destructive `pip` and `uv` package download caches, recovering gigabytes of `C:` headroom immediately.
   2. Installed native Rust **`ruff 0.17.4`** (`python -m ruff`) directly into the active environment (`0` manual steps).
-  3. Installed **`175` new skills** across `cloudflare-security-audit`, `vercel-agent-browser`, `vercel-dogfood-qa`, `vercel-webmcp-gen`, `google/skills` (`167` Cloud/BigQuery/Gemini Live/GKE/SecOps/Eval-Flywheel/Rust-Migration skills), `astryx-dense-compression-protocol`, and `openmausbot-*` (`create-verification-skill`, `data-dashboards`, `social-posts`) into `C:\Users\Garrett\.agents\skills` (bringing total installed skills to **`286`**).
-  4. Configured `C:\Users\Garrett\Sports\.zed\settings.json` with `file_scan_exclusions` for `data/nflverse/**`, `data/simulations/**`, and `node_modules/**`, preventing file-watcher RAM/disk exhaustion on the i7-1255U.
+  3. Installed **`175` new skills** across `cloudflare-security-audit`, `vercel-agent-browser`, `vercel-dogfood-qa`, `vercel-webmcp-gen`, `google/skills` (`167` Cloud/BigQuery/Gemini Live/GKE/SecOps/Eval-Flywheel/Rust-Migration skills), `astryx-dense-compression-protocol`, and `openmausbot-*` (`create-verification-skill`, `data-dashboards`, `social-posts`) into `~\.agents\skills` (bringing total installed skills to **`286`**).
+  4. Configured `~\Sports\.zed\settings.json` with `file_scan_exclusions` for `data/nflverse/**`, `data/simulations/**`, and `node_modules/**`, preventing file-watcher RAM/disk exhaustion on the i7-1255U.
 
 ---
 
@@ -27,7 +27,7 @@ Before integrating external architectures, we measured Garrett's live workstatio
 | # | Repository | Source Files Inspected | Pass 1 Integration (Direct Extraction) | Pass 2 Introspective Re-Evaluation & Replacement for Deferred Items |
 |---|---|---|---|---|
 | **1** | `vercel-labs/agent-browser` | `cli/src/native/snapshot.rs`, `cli/src/browser_security.rs`, `cli/src/mcp.rs` | Installed `vercel-agent-browser`, `vercel-dogfood-qa`, and `vercel-webmcp-gen` skills; ported `@e1..@eN` `INTERACTIVE_ROLES` accessibility tree distiller (`>80%` token reduction over raw HTML). | **Pass 2 Insight:** Live sportsbooks (DraftKings) and clinical portals (PubMed/ClinicalTrials) embed cross-origin iframes (OOPIFs) that silently invalidate refs on navigation. Added `(loader_id, session_id)` frame-state tracking to auto-invalidate stale `@eN` refs, plus `browser_security.rs` Chrome CVE milestone checking. |
-| **2** | `cloudflare/security-audit-skill` | `SKILL.md`, 13 domain `.md` playbooks, `validate-findings.cjs`, `validate-coverage-ledger.cjs`, `report-schema.json` | Installed full 13-playbook skill and Node CJS validators into `C:\Users\Garrett\.agents\skills\cloudflare-security-audit`. | **Pass 2 Insight:** Static markdown playbooks are passive unless enforced programmatically. Wired `CloudflareSecurityAuditValidator` to run `node validate-findings.cjs` and `node validate-coverage-ledger.cjs` directly against GSE & GSI tier-1 files (`VALIDATION PASSED`). |
+| **2** | `cloudflare/security-audit-skill` | `SKILL.md`, 13 domain `.md` playbooks, `validate-findings.cjs`, `validate-coverage-ledger.cjs`, `report-schema.json` | Installed full 13-playbook skill and Node CJS validators into `~\.agents\skills\cloudflare-security-audit`. | **Pass 2 Insight:** Static markdown playbooks are passive unless enforced programmatically. Wired `CloudflareSecurityAuditValidator` to run `node validate-findings.cjs` and `node validate-coverage-ledger.cjs` directly against GSE & GSI tier-1 files (`VALIDATION PASSED`). |
 | **3** | `google/skills` | `skills/cloud/*` (`bigquery-optimization`, `gemini-live-api`, `agent-platform-eval-flywheel`), `plugins/migrate-to-rust` | Installed `167` Google Cloud & Agent Platform skills (`google-*`) into `.agents/skills`. | **Pass 2 Insight:** Combined Google's `agent-platform-eval-flywheel` rubric with `google-migrate-to-rust` to audit which Python hotspots belong in `libgse_native_kernels.dll` vs. pure Python. |
 | **4** | `mattpocock/skills` | `setup-ts-deep-modules`, `software-factory`, `improve-codebase-architecture`, `chief-of-staff`, `triage`, `to-spec` | Verified all Matt Pocock skills in `.agents/skills` and wired `SkillVaultAndDeepModuleAnalyzer`. | **Pass 2 Insight:** Instead of treating "deep modules" as a qualitative code-review opinion, implemented Ousterhout's quantitative `depth_ratio = non_empty_loc / public_exports` analyzer across GSE & GSI modules. |
 | **5** | `meta/astryx` | `.claude/skills/dense-compression-protocol.md`, `internal/a11y-spec/src/spoken.ts`, `contract.ts` | Installed `astryx-dense-compression-protocol` skill and built `docsDense` 1:1 lossless key-compressed JSON encoder/decoder. | **Pass 2 Insight:** Adapted Astryx's `spoken.ts` deterministic screen-reader phrase builder into an automated **Customer-Facing Copy & Accessibility Gate** that rejects any UI widget whose spoken output leaks internal math jargon (`tau_hat`, `Romano CQR`, `Sinkhorn`) or raw `%` confidence (`confidence 85%` vs `85/100`). |

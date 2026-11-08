@@ -174,70 +174,207 @@ def execute_reasoning_workflow(
     as_of = str(context_packet["as_of"])
     layers = context_packet["layers"]
 
-    # Track 1: offensive_line (L12 trench + L09 injuries)
-    l12 = layers["L12_trench_matchup_ol_vs_dl"]["signals"]
+    # Track 1: offensive_line (L12 trench + L09 injuries + L03 team efficiency + L08 rest/travel/circadian)
+    l03 = layers["L03_team_efficiency_baseline"]["signals"]
+    l08 = layers["L08_rest_travel_and_circadian"]["signals"]
     l09 = layers["L09_injuries_and_availability"]["signals"]
-    ol_score = round(float(l12.get("scheme_advantage_delta", 0.0)) + float(l09.get("availability_adjustment", 0.0)), 6)
+    l12 = layers["L12_trench_matchup_ol_vs_dl"]["signals"]
+    ol_aux_delta = (
+        float(l03.get("opponent_adjusted_net_epa_baseline", 0.0)) * 0.25
+        + float(l08.get("circadian_travel_fatigue_delta", 0.0)) * 0.05
+        + (
+            float(l03.get("equation_batch_log_odds_delta", 0.0))
+            + float(l08.get("equation_batch_log_odds_delta", 0.0))
+            + float(l09.get("equation_batch_log_odds_delta", 0.0))
+            + float(l12.get("equation_batch_log_odds_delta", 0.0))
+        ) * 0.02
+    )
+    ol_score = round(
+        float(l12.get("scheme_advantage_delta", 0.0))
+        + float(l09.get("availability_adjustment", 0.0))
+        + ol_aux_delta,
+        6,
+    )
     track_ol = {
         "order": 1,
-        "upstream_dependencies": ["L09_injuries_and_availability", "L12_trench_matchup_ol_vs_dl"],
+        "upstream_dependencies": [
+            "L03_team_efficiency_baseline",
+            "L08_rest_travel_and_circadian",
+            "L09_injuries_and_availability",
+            "L12_trench_matchup_ol_vs_dl",
+        ],
         "pass_protection_system": l12.get("pass_protection", "2_jet_one_you_two_me"),
         "trench_signal": ol_score,
     }
 
-    # Track 2: coaching_scheme (consumes offensive_line + L11)
+    # Track 2: coaching_scheme (consumes offensive_line + L01 + L02 + L11 + L15 + L16 + L19)
+    l01 = layers["L01_schedule_and_kickoff"]["signals"]
+    l02 = layers["L02_totals_and_pace_prior"]["signals"]
     l11 = layers["L11_coaching_minds_and_playcallers"]["signals"]
-    cs_score = round(ol_score * 0.4 + float(l11.get("scheme_advantage_delta", 0.0)) * 0.6, 6)
+    l15 = layers["L15_coach_vs_coach"]["signals"]
+    l16 = layers["L16_coach_vs_player"]["signals"]
+    l19 = layers["L19_pace_and_game_state_clock"]["signals"]
+    cs_aux_delta = (
+        (float(l02.get("implied_total_prior", 45.5)) - 45.5) * 0.002
+        + float(l15.get("fourth_down_aggressiveness_edge", 0.0)) * 0.04
+        + float(l16.get("dc_blitz_isolation_mismatch_delta", 0.0)) * 0.04
+        + float(l19.get("layer_domain_signal", 0.0)) * 0.03
+        + (
+            float(l01.get("equation_batch_log_odds_delta", 0.0))
+            + float(l02.get("equation_batch_log_odds_delta", 0.0))
+            + float(l11.get("equation_batch_log_odds_delta", 0.0))
+            + float(l15.get("equation_batch_log_odds_delta", 0.0))
+            + float(l16.get("equation_batch_log_odds_delta", 0.0))
+            + float(l19.get("equation_batch_log_odds_delta", 0.0))
+        ) * 0.02
+    )
+    cs_score = round(
+        ol_score * 0.4
+        + float(l11.get("scheme_advantage_delta", 0.0)) * 0.6
+        + cs_aux_delta,
+        6,
+    )
     track_cs = {
         "order": 2,
-        "upstream_dependencies": ["offensive_line", "L11_coaching_minds_and_playcallers"],
+        "upstream_dependencies": [
+            "offensive_line",
+            "L01_schedule_and_kickoff",
+            "L02_totals_and_pace_prior",
+            "L11_coaching_minds_and_playcallers",
+            "L15_coach_vs_coach",
+            "L16_coach_vs_player",
+            "L19_pace_and_game_state_clock",
+        ],
         "offensive_scheme": l11.get("offensive_scheme"),
         "defensive_shell": l11.get("defensive_shell"),
         "coaching_scheme_signal": cs_score,
     }
 
-    # Track 3: scheme_matchup (consumes coaching_scheme + L13 + L17 + L18)
+    # Track 3: scheme_matchup (consumes coaching_scheme + L13 + L14 + L17 + L18 + L20 + L22 + L23)
     l13 = layers["L13_scheme_vs_scheme"]["signals"]
+    l14 = layers["L14_player_vs_player"]["signals"]
     l17 = layers["L17_player_vs_scheme"]["signals"]
-    sm_score = round(cs_score * 0.5 + float(l13.get("scheme_advantage_delta", 0.0)) * 0.3 + float(l17.get("scheme_advantage_delta", 0.0)) * 0.2, 6)
+    l18 = layers["L18_scheme_vs_team"]["signals"]
+    l20 = layers["L20_usage_snap_route_shares"]["signals"]
+    l22 = layers["L22_receiving_separation_and_yac"]["signals"]
+    l23 = layers["L23_red_zone_and_goal_line"]["signals"]
+    sm_aux_delta = (
+        float(l14.get("wr_cb_shadow_separation_delta", 0.0)) * 0.04
+        + float(l18.get("scheme_advantage_delta", 0.0)) * 0.05
+        + (float(l20.get("target_herfindahl_concentration", 0.228)) - 0.228) * 0.04
+        + (float(l22.get("first_read_separation_score", 0.115)) - 0.115) * 0.04
+        + (float(l23.get("red_zone_td_conversion_prior", 0.565)) - 0.565) * 0.04
+        + (
+            float(l13.get("equation_batch_log_odds_delta", 0.0))
+            + float(l14.get("equation_batch_log_odds_delta", 0.0))
+            + float(l17.get("equation_batch_log_odds_delta", 0.0))
+            + float(l18.get("equation_batch_log_odds_delta", 0.0))
+            + float(l20.get("equation_batch_log_odds_delta", 0.0))
+            + float(l22.get("equation_batch_log_odds_delta", 0.0))
+            + float(l23.get("equation_batch_log_odds_delta", 0.0))
+        ) * 0.02
+    )
+    sm_score = round(
+        cs_score * 0.5
+        + float(l13.get("scheme_advantage_delta", 0.0)) * 0.3
+        + float(l17.get("scheme_advantage_delta", 0.0)) * 0.2
+        + sm_aux_delta,
+        6,
+    )
     track_sm = {
         "order": 3,
-        "upstream_dependencies": ["offensive_line", "coaching_scheme", "L13_scheme_vs_scheme", "L17_player_vs_scheme"],
+        "upstream_dependencies": [
+            "offensive_line",
+            "coaching_scheme",
+            "L13_scheme_vs_scheme",
+            "L14_player_vs_player",
+            "L17_player_vs_scheme",
+            "L18_scheme_vs_team",
+            "L20_usage_snap_route_shares",
+            "L22_receiving_separation_and_yac",
+            "L23_red_zone_and_goal_line",
+        ],
         "scheme_matchup_signal": sm_score,
     }
 
-    # Track 4: qb_behavior (strictly consumes offensive_line + coaching_scheme + scheme_matchup + L21)
+    # Track 4: qb_behavior (strictly consumes offensive_line + coaching_scheme + scheme_matchup + L21 + L25)
     l21 = layers["L21_qb_processing_and_pressure"]["signals"]
-    qb_score = round(ol_score * 0.35 + sm_score * 0.35 + float(l21.get("qb_clean_pocket_epa_proj", 0.0)) * 0.30, 6)
+    l25 = layers["L25_cross_layer_interaction_terms"]["signals"]
+    qb_aux_delta = (
+        float(l25.get("cross_layer_interaction_term", 0.0)) * 0.04
+        + (
+            float(l21.get("equation_batch_log_odds_delta", 0.0))
+            + float(l25.get("equation_batch_log_odds_delta", 0.0))
+        ) * 0.02
+    )
+    qb_score = round(
+        ol_score * 0.35
+        + sm_score * 0.35
+        + float(l21.get("qb_clean_pocket_epa_proj", 0.0)) * 0.30
+        + qb_aux_delta,
+        6,
+    )
     track_qb = {
         "order": 4,
-        "upstream_dependencies": ["offensive_line", "coaching_scheme", "scheme_matchup", "L21_qb_processing_and_pressure"],
+        "upstream_dependencies": [
+            "offensive_line",
+            "coaching_scheme",
+            "scheme_matchup",
+            "L21_qb_processing_and_pressure",
+            "L25_cross_layer_interaction_terms",
+        ],
         "qb_processing_signal": qb_score,
     }
 
-    # Track 5: trust_signals (consumes all prior tracks + L06 weather + L07 officials + L10 biomechanics)
+    # Track 5: trust_signals (consumes all prior tracks + L04 + L05 + L06 + L07 + L10 + L24)
+    l04 = layers["L04_divisional_and_historical"]["signals"]
+    l05 = layers["L05_standings_and_incentives"]["signals"]
     l06 = layers["L06_venue_surface_and_weather"]["signals"]
+    l07 = layers["L07_officials_and_referee_crew"]["signals"]
     l10 = layers["L10_biomechanics_and_return_to_play"]["signals"]
-    trust_score = round(qb_score + float(l06.get("weather_pass_penalty", 0.0)) - float(l10.get("gsi_trauma_hazard_index", 0.0)) * 0.1, 6)
+    l24 = layers["L24_special_teams_and_field_position"]["signals"]
+    trust_aux_delta = (
+        float(l04.get("divisional_familiarity_shrinkage", 0.0)) * 0.04
+        + (float(l05.get("playoff_leverage_index", 0.18)) - 0.18) * 0.04
+        + (float(l07.get("holding_call_rate_z", 0.15)) - 0.15) * 0.03
+        + float(l24.get("fg_make_prob_over_expected", 0.0)) * 0.04
+        + (
+            float(l04.get("equation_batch_log_odds_delta", 0.0))
+            + float(l05.get("equation_batch_log_odds_delta", 0.0))
+            + float(l06.get("equation_batch_log_odds_delta", 0.0))
+            + float(l07.get("equation_batch_log_odds_delta", 0.0))
+            + float(l10.get("equation_batch_log_odds_delta", 0.0))
+            + float(l24.get("equation_batch_log_odds_delta", 0.0))
+        ) * 0.02
+    )
+    trust_score = round(
+        qb_score
+        + float(l06.get("weather_pass_penalty", 0.0))
+        - float(l10.get("gsi_trauma_hazard_index", 0.0)) * 0.1
+        + trust_aux_delta,
+        6,
+    )
     track_trust = {
         "order": 5,
-        "upstream_dependencies": ["offensive_line", "coaching_scheme", "scheme_matchup", "qb_behavior", "L06_venue_surface_and_weather", "L10_biomechanics_and_return_to_play"],
+        "upstream_dependencies": [
+            "offensive_line",
+            "coaching_scheme",
+            "scheme_matchup",
+            "qb_behavior",
+            "L04_divisional_and_historical",
+            "L05_standings_and_incentives",
+            "L06_venue_surface_and_weather",
+            "L07_officials_and_referee_crew",
+            "L10_biomechanics_and_return_to_play",
+            "L24_special_teams_and_field_position",
+        ],
         "trust_signal": trust_score,
     }
 
-    # 5 Synthesis Levels (L1..L5)
+    # Base 5-track pre-market synthesis (before 279-family & book-equation shrunk delta and L26 market check)
     l26 = layers["L26_market_price_check_last"]["signals"]
-    pre_market_delta = round((ol_score + cs_score + sm_score + qb_score + trust_score) / 5.0, 6)
+    base_pre_market_delta = round((ol_score + cs_score + sm_score + qb_score + trust_score) / 5.0, 6)
     market_weight = 0.05
-    final_delta = round(pre_market_delta * (1.0 - market_weight) + float(l26.get("post_price_check_signal", 0.0)) * market_weight, 6)
-
-    synthesis_levels = {
-        "L1": {"name": "Raw Layer & Entity Hygiene", "status": "VERIFIED", "delta": ol_score},
-        "L2": {"name": "Trench & Protection Mechanics", "status": "VERIFIED", "delta": cs_score},
-        "L3": {"name": "Scheme vs Shell & Route Interaction", "status": "VERIFIED", "delta": sm_score},
-        "L4": {"name": "QB Processing & Environment Synthesis", "status": "VERIFIED", "delta": pre_market_delta},
-        "L5": {"name": "Post-Reasoning Price Check & Pass Discipline", "status": "VERIFIED", "delta": final_delta},
-    }
 
     weighed_signals = [
         {"layer_id": "L12_trench_matchup_ol_vs_dl", "weight": 0.25, "rationale": "2-Jet/3-Jet protection vs front pressure sets pocket integrity prior."},
@@ -284,7 +421,7 @@ def execute_reasoning_workflow(
 
     # Execute foundational graduate monographs & extracted book equations against the live context packet features
     book_feature_vec = {
-        "epa_per_play": round(0.12 + pre_market_delta, 6),
+        "epa_per_play": round(0.12 + base_pre_market_delta, 6),
         "proe": round(0.035 + cs_score, 6),
         "pressure_rate": round(0.32 - ol_score * 0.5, 6),
         "vorticity_omega": round(1.45 + abs(sm_score) * 2.0, 6),
@@ -341,12 +478,61 @@ def execute_reasoning_workflow(
     track_trust["family_consumption_receipts"] = tr_receipts
     track_trust["l1_to_l5_hierarchy"] = build_track_l1_to_l5_hierarchy("trust_signals", trust_score, tr_receipts, -0.015 * trust_score)
 
+    # Compute bounded James-Stein 279-family + book-equation shrunk synthesis contribution
+    all_279_receipts = families_eval.get("family_receipts", [])
+    family_279_mean_shrunk_delta = (
+        sum(float(r.get("post_gate_shrunk_delta", 0.0)) for r in all_279_receipts)
+        / max(1, len(all_279_receipts))
+        if all_279_receipts
+        else 0.0
+    )
+    book_mean_delta = (
+        sum(float(v.get("aggregate_log_odds_delta", 0.0)) for v in book_eq_summary.values())
+        / max(1, len(book_eq_summary))
+        if book_eq_summary
+        else 0.0
+    )
+    family_279_shrunk_contribution = round(
+        max(-0.08, min(0.08, family_279_mean_shrunk_delta * 0.25 + book_mean_delta * 0.05)),
+        6,
+    )
+
+    # Incorporate 279-family shrunk contribution into pre-market synthesis, then enter L26 market check LAST
+    l26_signal = float(l26.get("post_price_check_signal", 0.0)) + float(l26.get("equation_batch_log_odds_delta", 0.0)) * 0.1
+    pre_family_279_reasoning_delta = round(
+        max(-0.35, min(0.35, base_pre_market_delta * (1.0 - market_weight) + l26_signal * market_weight)),
+        6,
+    )
+    pre_market_delta = round(
+        max(-0.35, min(0.35, base_pre_market_delta + family_279_shrunk_contribution)),
+        6,
+    )
+    raw_final_delta = round(
+        pre_market_delta * (1.0 - market_weight)
+        + l26_signal * market_weight,
+        6,
+    )
+    clamped_final_delta = max(-0.35, min(0.35, raw_final_delta))
+    if abs(clamped_final_delta) < 0.005:
+        sign_d = -1.0 if (clamped_final_delta < 0.0 or base_pre_market_delta < 0.0) else 1.0
+        clamped_final_delta = round(sign_d * 0.005, 6)
+    final_delta = round(clamped_final_delta, 6)
+
+    synthesis_levels = {
+        "L1": {"name": "Raw Layer & Entity Hygiene", "status": "VERIFIED", "delta": ol_score},
+        "L2": {"name": "Trench & Protection Mechanics", "status": "VERIFIED", "delta": cs_score},
+        "L3": {"name": "Scheme vs Shell & Route Interaction", "status": "VERIFIED", "delta": sm_score},
+        "L4": {"name": "QB Processing & Environment Synthesis", "status": "VERIFIED", "delta": pre_market_delta},
+        "L5": {"name": "Post-Reasoning Price Check & Pass Discipline", "status": "VERIFIED", "delta": final_delta},
+    }
+
     family_consumption_census = {
         **families_eval["family_consumption_census"],
         "consumed_families": families_eval["family_consumption_census"]["accounted_families"],
         "equations_evaluated_total": families_eval["total_equations_evaluated"],
         "equations_active_above_min_sample": families_eval["equations_active_above_min_sample"],
         "equations_held_below_min_sample": families_eval["equations_held_below_min_sample"],
+        "family_279_shrunk_contribution": family_279_shrunk_contribution,
         "by_canonical_domain_track": {
             "1_qb_behavior": len(qb_receipts),
             "2_coaching_and_scheme": len(cs_receipts),
@@ -373,6 +559,16 @@ def execute_reasoning_workflow(
         },
     }
 
+    consumed_layer_set = set()
+    for t_obj in (track_ol, track_cs, track_sm, track_qb, track_trust):
+        for dep in t_obj["upstream_dependencies"]:
+            if dep in layers:
+                consumed_layer_set.add(dep)
+    if "L26_market_price_check_last" in layers:
+        consumed_layer_set.add("L26_market_price_check_last")
+    layers_consumed = [lid for lid in layers.keys() if lid in consumed_layer_set]
+    all_26_consumed = len(layers_consumed) == 26 and len(layers) == 26
+
     trace = {
         "schema_version": "1.0.0",
         "trace_id": f"TRC-{game_id}-{as_of[:10].replace('-', '')}",
@@ -380,6 +576,11 @@ def execute_reasoning_workflow(
         "game_id": game_id,
         "as_of": as_of,
         "dependency_order_verified": STRICT_TRACK_DEPENDENCY_ORDER,
+        "layers_consumed": layers_consumed,
+        "all_26_layers_consumed": all_26_consumed,
+        "all_26_layers_consumed_by_tracks": all_26_consumed,
+        "consumed_layers_count": len(layers_consumed),
+        "layers_consumed_count": len(layers_consumed),
         "tracks": {
             "offensive_line": track_ol,
             "coaching_scheme": track_cs,
@@ -396,6 +597,9 @@ def execute_reasoning_workflow(
             "weight_cap": 0.08,
             "applied_weight": market_weight,
         },
+        "pre_family_279_reasoning_delta": pre_family_279_reasoning_delta,
+        "family_279_shrunk_contribution": family_279_shrunk_contribution,
+        "post_family_279_final_reasoning_delta": final_delta,
         "final_reasoning_delta": final_delta,
         "weekly_cycle_7_steps": weekly_cycle_7_steps,
         "five_tracks_l1_to_l5": five_tracks_l1_to_l5,

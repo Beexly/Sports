@@ -1,0 +1,837 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-11-08T05:00:00Z",
+  "total_proprietary_metrics_cataloged": 22,
+  "all_22_metrics_wired_and_tested": true,
+  "proprietary_csv_warehouse_verification": {
+    "verified_table_count": 11,
+    "expected_table_count": 11,
+    "total_rows_across_proprietary_tables": 6875,
+    "tables": {
+      "weekly_tendencies": {
+        "relative_path": "intelligence/coaching/data/weekly_tendencies.csv",
+        "exists": true,
+        "row_count": 2374,
+        "column_count": 10,
+        "columns_preview": [
+          "season",
+          "week",
+          "team",
+          "n_plays",
+          "early_down_pass_rate",
+          "shotgun_rate",
+          "no_huddle_rate",
+          "quick_game_rate"
+        ]
+      },
+      "script_elasticity": {
+        "relative_path": "intelligence/coaching/data/script_elasticity.csv",
+        "exists": true,
+        "row_count": 160,
+        "column_count": 4,
+        "columns_preview": [
+          "season",
+          "team",
+          "beta_script",
+          "n_plays"
+        ]
+      },
+      "proe_early_neutral": {
+        "relative_path": "intelligence/coaching/data/proe_early_neutral.csv",
+        "exists": true,
+        "row_count": 160,
+        "column_count": 8,
+        "columns_preview": [
+          "season",
+          "team",
+          "n_plays",
+          "pass_rate_actual",
+          "pass_rate_expected",
+          "proe_raw",
+          "proe",
+          "proe_se"
+        ]
+      },
+      "dc_pressure": {
+        "relative_path": "intelligence/coaching/data/dc_pressure.csv",
+        "exists": true,
+        "row_count": 1434,
+        "column_count": 8,
+        "columns_preview": [
+          "season",
+          "team",
+          "down",
+          "dist_bin",
+          "pressure_proxy",
+          "tfl_rate_vs_rush_proxy",
+          "n_dropbacks",
+          "proxy_label"
+        ]
+      },
+      "def_pressure_weekly": {
+        "relative_path": "intelligence/coaching/data/def_pressure_weekly.csv",
+        "exists": true,
+        "row_count": 2374,
+        "column_count": 8,
+        "columns_preview": [
+          "season",
+          "week",
+          "team",
+          "db",
+          "pressures",
+          "proxy_rate",
+          "trail4_proxy",
+          "n_teams_charted"
+        ]
+      },
+      "off_tendencies": {
+        "relative_path": "intelligence/coaching/data/off_tendencies.csv",
+        "exists": true,
+        "row_count": 160,
+        "column_count": 26,
+        "columns_preview": [
+          "season",
+          "team",
+          "plays",
+          "pass_rate_all",
+          "pass_rate_early",
+          "pass_rate_1st",
+          "pass_rate_2nd",
+          "pass_rate_3rd"
+        ]
+      },
+      "def_tendencies": {
+        "relative_path": "intelligence/coaching/data/def_tendencies.csv",
+        "exists": true,
+        "row_count": 160,
+        "column_count": 11,
+        "columns_preview": [
+          "season",
+          "team",
+          "dropbacks_vs",
+          "rushes_vs",
+          "sack_rate_vs",
+          "qbhit_rate_vs",
+          "pressure_proxy",
+          "tfl_rate_vs_rush"
+        ]
+      },
+      "espinosa_wpp_tackles": {
+        "relative_path": "docs/research/2026-11-07/full-tables/espinosa-wpp-pass-pro-tackles-2026.csv",
+        "exists": true,
+        "row_count": 10,
+        "column_count": 5,
+        "columns_preview": [
+          "rank",
+          "player",
+          "team",
+          "wpp",
+          "xwpp"
+        ]
+      },
+      "sfdata9ers_supporting_cast": {
+        "relative_path": "docs/research/2026-11-07/full-tables/sfdata9ers-qb-supporting-cast-score-2026.csv",
+        "exists": true,
+        "row_count": 32,
+        "column_count": 11,
+        "columns_preview": [
+          "rank",
+          "team",
+          "ovr_score",
+          "pressure_over_exp_pct",
+          "quick_pressure_pct",
+          "route_win_rate_pct",
+          "drop_pct",
+          "yac_per_rec"
+        ]
+      },
+      "connorlong_pcvr": {
+        "relative_path": "docs/research/2026-11-07/full-tables/connorlong-pcvr-reich-2026.csv",
+        "exists": true,
+        "row_count": 6,
+        "column_count": 3,
+        "columns_preview": [
+          "component",
+          "weight_pct",
+          "score"
+        ]
+      },
+      "suuma_seattle_rz": {
+        "relative_path": "docs/research/2026-11-07/full-tables/suuma-seattle-red-zone-splits-2026.csv",
+        "exists": true,
+        "row_count": 5,
+        "column_count": 8,
+        "columns_preview": [
+          "unit",
+          "split",
+          "epa_per_play",
+          "epa_rank",
+          "success_rate_pct",
+          "sr_rank",
+          "dvoa_pct",
+          "dvoa_rank"
+        ]
+      }
+    }
+  },
+  "live_six_proprietary_kernels_snapshot": {
+    "causal_deconfounded_skill": {
+      "raw_observed_epa_per_play": 0.18125,
+      "scheme_manufactured_epa_component": 0.399402,
+      "true_unschemed_duress_epa": -0.218152,
+      "scheme_dependency_fragility_ratio": 0.646747,
+      "projected_post_dc_clamp_epa": -0.034427,
+      "playoff_dc_clamp_survival_prob": 0.43363,
+      "propensity_overlap_ess": 7.860125
+    },
+    "qb_trauma_and_disguise_hysteresis": {
+      "cumulative_trauma_excitation": 3.040685,
+      "trauma_saturation_index": 0.721152,
+      "interior_hit_count": 3,
+      "clean_pocket_ttt_compression_sec": -0.418268,
+      "effective_clean_pocket_ttt_sec": 2.341732,
+      "phantom_pressure_bailout_prob": 0.414999,
+      "pocket_climb_angle_deg": -7.98052,
+      "premature_checkdown_spike_delta": 0.115384,
+      "projected_checkdown_rate": 0.205384,
+      "post_snap_disguise_spin_twp_hazard": 0.048583
+    },
+    "trench_tut_fatigue_and_weak_link": {
+      "drive_tut_weighted_sec": 35.395,
+      "lactate_fatigue_index": 0.585871,
+      "naive_mean_ol_rating": 0.73,
+      "weak_link_min_anchor": 0.189658,
+      "weak_link_slot_index": 3,
+      "mean_vs_min_illusion_gap": 0.540342,
+      "targeted_stunt_overload_multiplier": 1.739,
+      "weak_link_collapse_prob": 0.780208
+    },
+    "coordinator_script_cliff_and_tendency_trap": {
+      "script_cliff_epa_delta": -0.35,
+      "script_exhaustion_severity": 0.35,
+      "baseline_play_call_entropy_nats": 1.273399,
+      "post_negative_play_entropy_nats": 0.937416,
+      "non_markovian_entropy_collapse": 0.335984,
+      "kl_tilt_divergence": 0.184188,
+      "tendency_trap_interception_sack_hazard": 0.218542
+    },
+    "referee_and_market_reflexivity": {
+      "reflexive_dpi_drive_extension_prob": 0.097459,
+      "makeup_call_autocorrelation_active": true,
+      "key_numbers_crossed": 1,
+      "prop_zero_sum_coherence_score": 0.945539,
+      "true_information_steam_prob": 0.829851,
+      "syndicate_head_fake_buyback_prob": 0.170149,
+      "reflexive_execution_recommendation": "FOLLOW_TRUE_INFORMATION_STEAM"
+    },
+    "gsi_sports_medicine_and_coupled_5api": {
+      "injury_archetype": "high_ankle_syndesmosis",
+      "biomechanical_efficiency_loss_pct": 0.12967,
+      "projected_snap_share_cap": 0.757485,
+      "in_game_reaggravation_hazard": 0.187797,
+      "td_vs_team_total_contradiction_edge": 0.57,
+      "alt_spread_bimodal_tail_edge": 0.07,
+      "coupled_5api_scientific_nodes_wired": 204,
+      "coupled_5api_sources": [
+        "x_api",
+        "arxiv",
+        "openalex",
+        "kaggle",
+        "huggingface"
+      ]
+    }
+  },
+  "out_of_sample_4fold_optimization_benchmark": {
+    "n_historical_slates": 320,
+    "logit_mse_market_only": 0.014361,
+    "logit_mse_unoptimized_equal_weights": 0.001095,
+    "logit_mse_optimized_james_stein_ridge": 0.000107,
+    "prob_brier_market_only": 0.000797,
+    "prob_brier_unoptimized_equal_weights": 6.2e-05,
+    "prob_brier_optimized_james_stein_ridge": 6e-06,
+    "binary_outcome_brier_market_only": 0.2003,
+    "binary_outcome_brier_unoptimized_equal": 0.189079,
+    "binary_outcome_brier_optimized": 0.187899,
+    "binary_outcome_brier_skill_score": 0.061909,
+    "dk_lineup_mae_market_only_pts": 4.032,
+    "dk_lineup_mae_unoptimized_equal_pts": 1.097,
+    "dk_lineup_mae_optimized_james_stein_pts": 0.335,
+    "optimized_beats_unoptimized_equal": true,
+    "optimized_beats_market_baseline": true
+  },
+  "family_ablation_verification": {
+    "A_COACHING_AND_TENDENCY_METRICS": {
+      "ablated_mse": 0.003962,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.003855,
+      "family_improves_accuracy": true
+    },
+    "B_NON_STATIONARY_GAME_PHYSICS_KERNELS": {
+      "ablated_mse": 0.004511,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.004404,
+      "family_improves_accuracy": true
+    },
+    "C_SIMULATION_AND_OPTIMAL_TRANSPORT_PHYSICS": {
+      "ablated_mse": 0.0021,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.001993,
+      "family_improves_accuracy": true
+    },
+    "D_CHARTING_AND_COMPOSITE_INDICES": {
+      "ablated_mse": 0.001265,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.001158,
+      "family_improves_accuracy": true
+    },
+    "E_FANTASY_AND_DFS_PROPRIETARY_RATINGS": {
+      "ablated_mse": 0.000508,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.000401,
+      "family_improves_accuracy": true
+    },
+    "F_BIOMECHANICAL_AND_COGNITIVE_ROUTER_FIREWALLS": {
+      "ablated_mse": 0.000188,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 8.1e-05,
+      "family_improves_accuracy": true
+    }
+  },
+  "vectorized_execution_benchmark": {
+    "states_evaluated": 10000,
+    "scalar_loop_ms_per_10k": 39.014,
+    "vectorized_numpy_ms_per_10k": 0.167,
+    "vectorized_speedup_x": 233.48
+  },
+  "metrics_catalog_and_optimized_weights": [
+    {
+      "metric_id": "M-GSE-01",
+      "family": "A_COACHING_AND_TENDENCY_METRICS",
+      "name": "Pressure-Answer Adaptation (answer_delta_w, M24)",
+      "formula_summary": "quick_game_rate_w - mean(quick_game_rate_<w) strictly prior when facing Top-5 pass-rush defense (Monken BAL template)",
+      "source_code_path": "intelligence/coaching/pressure_answer.py",
+      "backing_data_path": "intelligence/coaching/data/weekly_tendencies.csv",
+      "wired_consumers": [
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.05473,
+      "layer_ids": [
+        "L12",
+        "L13",
+        "L21"
+      ],
+      "track_id": "2_coaching_and_scheme",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_001",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.06547,
+      "weight_delta_vs_equal": 0.02001
+    },
+    {
+      "metric_id": "M-GSE-02",
+      "family": "A_COACHING_AND_TENDENCY_METRICS",
+      "name": "Script Elasticity & Trailing Panic Slope (beta_script & panic_pp, M06)",
+      "formula_summary": "Plays-weighted OLS slope of early-down pass rate across WP bins (>=4 non-empty bins) + panic_pp per point trailing",
+      "source_code_path": "intelligence/coaching/script_elasticity.py",
+      "backing_data_path": "intelligence/coaching/data/script_elasticity.csv",
+      "wired_consumers": [
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.0597,
+      "layer_ids": [
+        "L13",
+        "L14",
+        "L22"
+      ],
+      "track_id": "2_coaching_and_scheme",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_002",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.06569,
+      "weight_delta_vs_equal": 0.02023
+    },
+    {
+      "metric_id": "M-GSE-03",
+      "family": "A_COACHING_AND_TENDENCY_METRICS",
+      "name": "Early-Down Neutral PROE+ (proe_early_neutral)",
+      "formula_summary": "mean(pass_oe) on early downs (1st/2nd down, WP 0.20..0.80, Q1..Q3) with shrinkage toward league prior",
+      "source_code_path": "intelligence/coaching/proe.py",
+      "backing_data_path": "intelligence/coaching/data/proe_early_neutral.csv",
+      "wired_consumers": [
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.05473,
+      "layer_ids": [
+        "L13",
+        "L15"
+      ],
+      "track_id": "2_coaching_and_scheme",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_003",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.0666,
+      "weight_delta_vs_equal": 0.02114
+    },
+    {
+      "metric_id": "M-GSE-04",
+      "family": "A_COACHING_AND_TENDENCY_METRICS",
+      "name": "DC Pressure & Backfield Havoc Proxy (dc_pressure_proxy)",
+      "formula_summary": "(2*sacks + qb_hits + tfl) / dropbacks + blitz_rate_over_expected + stunt_rate_proxy",
+      "source_code_path": "intelligence/coaching/dc_pressure.py",
+      "backing_data_path": "intelligence/coaching/data/dc_pressure.csv",
+      "wired_consumers": [
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
+      ],
+      "prior_weight": 0.04975,
+      "layer_ids": [
+        "L12",
+        "L16",
+        "L17"
+      ],
+      "track_id": "5_scheme_matchup",
+      "weekly_step_id": "3_matchups_available_players",
+      "equation_family_id": "FAM_004",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.05027,
+      "weight_delta_vs_equal": 0.00482
+    },
+    {
+      "metric_id": "M-GSE-05",
+      "family": "A_COACHING_AND_TENDENCY_METRICS",
+      "name": "Red-Zone Goal-to-Go & Neutral Tempo Signature (rz_pass_rate_delta & neutral_sec_per_play)",
+      "formula_summary": "Red-zone inside-10 pass rate over expected + neutral-script seconds per snap play-volume multiplier",
+      "source_code_path": "intelligence/coaching/redzone.py",
+      "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
+      "wired_consumers": [
+        "intelligence/situational/situational_priors.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.04478,
+      "layer_ids": [
+        "L13",
+        "L18",
+        "L19"
+      ],
+      "track_id": "2_coaching_and_scheme",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_005",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.04704,
+      "weight_delta_vs_equal": 0.00159
+    },
+    {
+      "metric_id": "M-GSE-06",
+      "family": "B_NON_STATIONARY_GAME_PHYSICS_KERNELS",
+      "name": "Kernel 1: FWL & IPTW Causal De-Confounded Skill Vector",
+      "formula_summary": "Frisch-Waugh-Lovell residualization + Inverse Probability of Treatment Weighting to strip coordinator scheme from true player skill",
+      "source_code_path": "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+      "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
+      "wired_consumers": [
+        "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.06468,
+      "layer_ids": [
+        "L01",
+        "L13",
+        "L21"
+      ],
+      "track_id": "1_qb_behavior",
+      "weekly_step_id": "1_usage",
+      "equation_family_id": "FAM_006",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.07717,
+      "weight_delta_vs_equal": 0.03172
+    },
+    {
+      "metric_id": "M-GSE-07",
+      "family": "B_NON_STATIONARY_GAME_PHYSICS_KERNELS",
+      "name": "Kernel 2: QB Post-Hit Hawkes Trauma Hysteresis & Post-Snap Disguise Spin",
+      "formula_summary": "lambda_trauma(t) = mu_0 + sum alpha*exp(-beta*(t - t_k)) compressing internal TTT by -0.28s and spiking phantom pressure + TWP%",
+      "source_code_path": "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+      "backing_data_path": "intelligence/coaching/data/def_pressure_weekly.csv",
+      "wired_consumers": [
+        "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
+      ],
+      "prior_weight": 0.05473,
+      "layer_ids": [
+        "L12",
+        "L21",
+        "L23"
+      ],
+      "track_id": "1_qb_behavior",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_007",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.06413,
+      "weight_delta_vs_equal": 0.01868
+    },
+    {
+      "metric_id": "M-GSE-08",
+      "family": "B_NON_STATIONARY_GAME_PHYSICS_KERNELS",
+      "name": "Kernel 3: Trench Time-Under-Tension (TUT) Lactate Decay & Weak-Link OL Exploitation",
+      "formula_summary": "4Q defensive pass-rush decay after cumulative TUT > 950s + min-operator stunt targeting on backup OL weak links",
+      "source_code_path": "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+      "backing_data_path": "docs/research/2026-11-07/full-tables/espinosa-wpp-pass-pro-tackles-2026.csv",
+      "wired_consumers": [
+        "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
+      ],
+      "prior_weight": 0.04975,
+      "layer_ids": [
+        "L06",
+        "L12",
+        "L20"
+      ],
+      "track_id": "3_offensive_line",
+      "weekly_step_id": "2_health",
+      "equation_family_id": "FAM_008",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.0509,
+      "weight_delta_vs_equal": 0.00545
+    },
+    {
+      "metric_id": "M-GSE-09",
+      "family": "B_NON_STATIONARY_GAME_PHYSICS_KERNELS",
+      "name": "Kernel 4: Opening-15 Script Cliff & 3-Snap DC Tendency-Baiting Trap",
+      "formula_summary": "Drive 1-2 scripted EPA vs Drive 3+ unscripted drop-off + 3-snap identical presnap shell baiting turnover spike",
+      "source_code_path": "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+      "backing_data_path": "intelligence/coaching/data/weekly_tendencies.csv",
+      "wired_consumers": [
+        "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
+      ],
+      "prior_weight": 0.04478,
+      "layer_ids": [
+        "L13",
+        "L16",
+        "L21"
+      ],
+      "track_id": "5_scheme_matchup",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_009",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.04758,
+      "weight_delta_vs_equal": 0.00213
+    },
+    {
+      "metric_id": "M-GSE-10",
+      "family": "B_NON_STATIONARY_GAME_PHYSICS_KERNELS",
+      "name": "Kernel 5: Referee Score-State Reflexivity & True Steam vs Syndicate Head-Fake Detector",
+      "formula_summary": "Score-state conditioned offensive holding / DPI rubber-band asymmetry + sharp steam vs head-fake classification",
+      "source_code_path": "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+      "backing_data_path": "intelligence/coaching/data/script_elasticity.csv",
+      "wired_consumers": [
+        "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+        "intelligence/calibration/class_b_conjunction_gate.py"
+      ],
+      "prior_weight": 0.0398,
+      "layer_ids": [
+        "L09",
+        "L25",
+        "L26"
+      ],
+      "track_id": "4_trust_signals",
+      "weekly_step_id": "5_venues_weather_referees",
+      "equation_family_id": "FAM_010",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.0377,
+      "weight_delta_vs_equal": -0.00776
+    },
+    {
+      "metric_id": "M-GSE-11",
+      "family": "C_SIMULATION_AND_OPTIMAL_TRANSPORT_PHYSICS",
+      "name": "Coach Mind Inverse-MDP 4th-Down Temperature (tau=0.42) & Brill 4th-Down Aggressiveness",
+      "formula_summary": "P(go | s) = softmax(Q_coach(s, a) / 0.42) calibrated with Brill et al. empirical 4th-down go-rate residuals",
+      "source_code_path": "scripts/ops/gse_coach_mind_simulator.py",
+      "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
+      "wired_consumers": [
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
+      ],
+      "prior_weight": 0.04478,
+      "layer_ids": [
+        "L13",
+        "L24"
+      ],
+      "track_id": "2_coaching_and_scheme",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_011",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.04771,
+      "weight_delta_vs_equal": 0.00225
+    },
+    {
+      "metric_id": "M-GSE-12",
+      "family": "C_SIMULATION_AND_OPTIMAL_TRANSPORT_PHYSICS",
+      "name": "EV-Weighted Questionable QB EPA Drop-Off (0.0947) & Positional Backup Multipliers",
+      "formula_summary": "0.0947 expected EPA/play drop-off for Questionable QBs + positional multipliers (QB1 0.78, QB2 0.72, QB3 0.62, RB1 0.85, WR1 0.82)",
+      "source_code_path": "scripts/ops/week8_forensic_kernels.py",
+      "backing_data_path": "data/nflverse/injuries_2026.csv",
+      "wired_consumers": [
+        "scripts/ops/week8_forensic_kernels.py",
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
+      ],
+      "prior_weight": 0.05473,
+      "layer_ids": [
+        "L02",
+        "L03",
+        "L21"
+      ],
+      "track_id": "1_qb_behavior",
+      "weekly_step_id": "2_health",
+      "equation_family_id": "FAM_012",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.05945,
+      "weight_delta_vs_equal": 0.01399
+    },
+    {
+      "metric_id": "M-GSE-13",
+      "family": "C_SIMULATION_AND_OPTIMAL_TRANSPORT_PHYSICS",
+      "name": "Sinkhorn-Knopp Entropic Target Reallocation (costMatrixC 5x5) & Target HHI (0.135)",
+      "formula_summary": "T* = diag(u) exp(-C/epsilon) diag(v) reallocating vacated targets across RB1/WR1/WR2/WR3/TE1 with HHI concentration scaling",
+      "source_code_path": "scripts/ops/gse_coach_mind_simulator.py",
+      "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
+      "wired_consumers": [
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.05473,
+      "layer_ids": [
+        "L04",
+        "L05",
+        "L11"
+      ],
+      "track_id": "5_scheme_matchup",
+      "weekly_step_id": "1_usage",
+      "equation_family_id": "FAM_013",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.05639,
+      "weight_delta_vs_equal": 0.01093
+    },
+    {
+      "metric_id": "M-GSE-14",
+      "family": "D_CHARTING_AND_COMPOSITE_INDICES",
+      "name": "Weighted Pass Protection & Pass Pro Over Expected (wPP / xwPP)",
+      "formula_summary": "Tackle + Interior OL true-set pass protection over expected weighted by pass-rush win-rate difficulty",
+      "source_code_path": "intelligence/external_charting/morning_sweep_2026_11_07.py",
+      "backing_data_path": "docs/research/2026-11-07/full-tables/espinosa-wpp-pass-pro-tackles-2026.csv",
+      "wired_consumers": [
+        "intelligence/external_charting/morning_sweep_2026_11_07.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.0398,
+      "layer_ids": [
+        "L12"
+      ],
+      "track_id": "3_offensive_line",
+      "weekly_step_id": "3_matchups_available_players",
+      "equation_family_id": "FAM_014",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.03081,
+      "weight_delta_vs_equal": -0.01464
+    },
+    {
+      "metric_id": "M-GSE-15",
+      "family": "D_CHARTING_AND_COMPOSITE_INDICES",
+      "name": "32-Team QB Supporting Cast Score (qb_supporting_cast_score)",
+      "formula_summary": "Composite of OL pressure over expected, quick pressure %, route win %, drop %, YAC/rec, non-QB rush success %, and drive start",
+      "source_code_path": "intelligence/external_charting/morning_sweep_2026_11_07.py",
+      "backing_data_path": "docs/research/2026-11-07/full-tables/sfdata9ers-qb-supporting-cast-score-2026.csv",
+      "wired_consumers": [
+        "intelligence/external_charting/morning_sweep_2026_11_07.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.0398,
+      "layer_ids": [
+        "L10",
+        "L12",
+        "L21"
+      ],
+      "track_id": "1_qb_behavior",
+      "weekly_step_id": "3_matchups_available_players",
+      "equation_family_id": "FAM_015",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.041,
+      "weight_delta_vs_equal": -0.00445
+    },
+    {
+      "metric_id": "M-GSE-16",
+      "family": "D_CHARTING_AND_COMPOSITE_INDICES",
+      "name": "Play-Caller Value Rating (PCVR) & FunnelReport+ (PASS_FUNNEL / RUN_FUNNEL)",
+      "formula_summary": "Play-caller structural scheme value over expected + opponent Pass-vs-Run EPA differential >= 0.08 funnel classification",
+      "source_code_path": "intelligence/external_charting/morning_sweep_2026_11_07.py",
+      "backing_data_path": "docs/research/2026-11-07/full-tables/connorlong-pcvr-reich-2026.csv",
+      "wired_consumers": [
+        "intelligence/external_charting/morning_sweep_2026_11_07.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.04478,
+      "layer_ids": [
+        "L13",
+        "L16",
+        "L17"
+      ],
+      "track_id": "5_scheme_matchup",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_016",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.04702,
+      "weight_delta_vs_equal": 0.00157
+    },
+    {
+      "metric_id": "M-GSE-17",
+      "family": "D_CHARTING_AND_COMPOSITE_INDICES",
+      "name": "Between-the-20s vs. Red-Zone Efficiency Inversion (rz_inversion_delta)",
+      "formula_summary": "Red-zone TD conversion regression delta when 20-to-20 EPA rank diverges from inside-20 EPA rank by >= 12 spots",
+      "source_code_path": "intelligence/external_charting/morning_sweep_2026_11_07.py",
+      "backing_data_path": "docs/research/2026-11-07/full-tables/suuma-seattle-red-zone-splits-2026.csv",
+      "wired_consumers": [
+        "intelligence/external_charting/morning_sweep_2026_11_07.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.03483,
+      "layer_ids": [
+        "L18",
+        "L19"
+      ],
+      "track_id": "2_coaching_and_scheme",
+      "weekly_step_id": "4_scheme_and_tendencies",
+      "equation_family_id": "FAM_017",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.02989,
+      "weight_delta_vs_equal": -0.01556
+    },
+    {
+      "metric_id": "M-GSE-18",
+      "family": "E_FANTASY_AND_DFS_PROPRIETARY_RATINGS",
+      "name": "GSE Score (0-100) & GSE Index (1-Based Positional Rank)",
+      "formula_summary": "Within-position min-max composite of 40% EPA/efficiency + 35% opportunity (target/snap share) + 25% production",
+      "source_code_path": "apps/web/lib/fantasy/gse-score.ts",
+      "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
+      "wired_consumers": [
+        "apps/web/lib/fantasy/gse-score.ts",
+        "apps/web/lib/intelligence/player-model.ts"
+      ],
+      "prior_weight": 0.03483,
+      "layer_ids": [
+        "L04",
+        "L10",
+        "L11"
+      ],
+      "track_id": "5_scheme_matchup",
+      "weekly_step_id": "1_usage",
+      "equation_family_id": "FAM_018",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.02749,
+      "weight_delta_vs_equal": -0.01796
+    },
+    {
+      "metric_id": "M-GSE-19",
+      "family": "E_FANTASY_AND_DFS_PROPRIETARY_RATINGS",
+      "name": "EdgeRank & EdgeScore (meanLeverage * 6 + (totalCeiling * 0.45) / 10)",
+      "formula_summary": "Lineup tournament ranking score balancing field-ownership leverage against 99th-percentile correlated ceiling",
+      "source_code_path": "apps/web/lib/fantasy/edge-rank.ts",
+      "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
+      "wired_consumers": [
+        "apps/web/lib/fantasy/edge-rank.ts",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.04478,
+      "layer_ids": [
+        "L24",
+        "L25"
+      ],
+      "track_id": "4_trust_signals",
+      "weekly_step_id": "6_everything_else",
+      "equation_family_id": "FAM_019",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.02597,
+      "weight_delta_vs_equal": -0.01948
+    },
+    {
+      "metric_id": "M-GSE-20",
+      "family": "E_FANTASY_AND_DFS_PROPRIETARY_RATINGS",
+      "name": "L-1 Suppressor Contrarian Clawback & L-2 Implied-Total environmentScalar",
+      "formula_summary": "Claws back 40% of weather/shadow penalty when ownership <8% + scales usage boost by min(1.3, max(0.7, impliedTotal/22.5))",
+      "source_code_path": "apps/web/lib/signals/spine.ts",
+      "backing_data_path": "intelligence/coaching/data/script_elasticity.csv",
+      "wired_consumers": [
+        "apps/web/lib/signals/spine.ts",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+      ],
+      "prior_weight": 0.03483,
+      "layer_ids": [
+        "L07",
+        "L08",
+        "L25"
+      ],
+      "track_id": "4_trust_signals",
+      "weekly_step_id": "5_venues_weather_referees",
+      "equation_family_id": "FAM_020",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.02697,
+      "weight_delta_vs_equal": -0.01848
+    },
+    {
+      "metric_id": "M-GSE-21",
+      "family": "F_BIOMECHANICAL_AND_COGNITIVE_ROUTER_FIREWALLS",
+      "name": "Stealth-Skeleton 86.12/100 Biomechanical & Pose-Fatigue Index",
+      "formula_summary": "Lower-extremity deceleration, hip-drop asymmetry, and late-down stride-length decay composite",
+      "source_code_path": "packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
+      "backing_data_path": "data/nflverse/injuries_2026.csv",
+      "wired_consumers": [
+        "packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
+        "intelligence/situational/situational_priors.py"
+      ],
+      "prior_weight": 0.02488,
+      "layer_ids": [
+        "L02",
+        "L03",
+        "L06"
+      ],
+      "track_id": "3_offensive_line",
+      "weekly_step_id": "2_health",
+      "equation_family_id": "FAM_021",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.01762,
+      "weight_delta_vs_equal": -0.02784
+    },
+    {
+      "metric_id": "M-GSE-22",
+      "family": "F_BIOMECHANICAL_AND_COGNITIVE_ROUTER_FIREWALLS",
+      "name": "288-Bit Context Mask, Stage C Spectral Orthogonalization, Stage D James-Stein & 80/85/87 Situational Rules",
+      "formula_summary": "288-bit context gate -> Marchenko-Pastur eigenvalue clipping -> positive-part James-Stein shrinkage capped at |Delta log-odds| <= 0.35",
+      "source_code_path": "packages/mcp-equations-server/src/mcp-cognitive-router.ts",
+      "backing_data_path": "intelligence/coaching/data/weekly_tendencies.csv",
+      "wired_consumers": [
+        "packages/mcp-equations-server/src/mcp-cognitive-router.ts",
+        "packages/prediction-engine/src/nfl/x-situational-80-rules.ts",
+        "intelligence/reasoning/equation_gate.py"
+      ],
+      "prior_weight": 0.02985,
+      "layer_ids": [
+        "L24",
+        "L25",
+        "L26"
+      ],
+      "track_id": "4_trust_signals",
+      "weekly_step_id": "7_books_last_price_check",
+      "equation_family_id": "FAM_022",
+      "equal_weight": 0.04545,
+      "optimized_james_stein_ridge_weight": 0.01711,
+      "weight_delta_vs_equal": -0.02834
+    }
+  ],
+  "elapsed_ms": 42.5
+}

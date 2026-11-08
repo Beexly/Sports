@@ -1,0 +1,599 @@
+{
+  "status": "PASS",
+  "executed_at_utc": "2026-11-08T08:43:48.133043+00:00",
+  "quarantine_and_pdfs_verification": {
+    "wave1_count": 16,
+    "wave2_count": 17,
+    "wave3_count": 40,
+    "wave4_count": 22,
+    "total_unique_packt_repos": 95,
+    "total_local_pdfs": 5,
+    "all_73_registered_in_quarantine_manifest": true,
+    "all_73_install_permitted_in_prod_false": true,
+    "all_95_registered_in_quarantine_manifest": true,
+    "all_95_install_permitted_in_prod_false": true,
+    "healthcare_repo_gsi_quarantined": true,
+    "redirect_aliases_verified": {
+      "PacktPublishing/-Easy-Statistics-Linear-and-Non-Linear-Regression": "PacktPublishing/Easy-Statistics-Linear-and-Non-Linear-Regression"
+    },
+    "pdfs_verified": [
+      {
+        "pdf_id": "PDF-AGENT-HARNESS-01",
+        "filename": "buildingaiagentsandagentharnessesfromscratch-sample.pdf",
+        "symbolic_path": "~/Downloads/buildingaiagentsandagentharnessesfromscratch-sample.pdf",
+        "sha256": "7f27dbcf2823034d7bcdcf273671afc31c49393cafb2f7a407cf6bd249de6908",
+        "valid_pdf_header": true,
+        "size_bytes": 1822690,
+        "verification_mode": "verified_local_pdf_bytes",
+        "core_theorems_count": 4
+      },
+      {
+        "pdf_id": "PDF-LLM-AS-CODE-02",
+        "filename": "2606.15874v1.pdf",
+        "symbolic_path": "~/Downloads/2606.15874v1.pdf",
+        "sha256": "785609f7dad50b9013e6c2acb8f3f8ca613e524a07a7b6a32b009d013cf5ffef",
+        "valid_pdf_header": true,
+        "size_bytes": 1032595,
+        "verification_mode": "verified_local_pdf_bytes",
+        "core_theorems_count": 5
+      },
+      {
+        "pdf_id": "PDF-SIM-INTRO-03",
+        "filename": "Introductory_Chapter_Computer_Simulation.pdf",
+        "symbolic_path": "~/Downloads/Introductory_Chapter_Computer_Simulation.pdf",
+        "sha256": "703d85662453484e349c653e0900a63366593c192811527bf063cb3def889a48",
+        "valid_pdf_header": true,
+        "size_bytes": 541468,
+        "verification_mode": "verified_local_pdf_bytes",
+        "core_theorems_count": 3
+      },
+      {
+        "pdf_id": "PDF-SHIFLET-COMP-SCI-04",
+        "filename": "preview-9781400850556_A23703988.pdf",
+        "symbolic_path": "~/Downloads/preview-9781400850556_A23703988.pdf",
+        "sha256": "5e94f22865cd6c12580d4f4df416882c85b1cde488dc0c6b6627f354cf671234",
+        "valid_pdf_header": true,
+        "size_bytes": 3449288,
+        "verification_mode": "verified_local_pdf_bytes",
+        "core_theorems_count": 3
+      },
+      {
+        "pdf_id": "PDF-JONES-SCI-SIM-R-05",
+        "filename": "9e4e58b0721d0a2c2e48c5a72cb206d0.pdf",
+        "symbolic_path": "~/Downloads/9e4e58b0721d0a2c2e48c5a72cb206d0.pdf",
+        "sha256": "22e9c0eb7d252fd7165a6969a3bf44a345c923068a17a9b2eeebdce26a9e415b",
+        "valid_pdf_header": true,
+        "size_bytes": 8673008,
+        "verification_mode": "verified_local_pdf_bytes",
+        "core_theorems_count": 3
+      }
+    ]
+  },
+  "pillar1_applied_conformal_prediction": {
+    "split_icp": {
+      "alpha": 0.1,
+      "finite_sample_quantile_level": 1.0,
+      "conformal_radius_q_hat": 12.0,
+      "lower_bounds": [
+        252.5,
+        266.0
+      ],
+      "upper_bounds": [
+        276.5,
+        290.0
+      ],
+      "mean_interval_width": 24.0
+    },
+    "weighted_cqr": {
+      "alpha": 0.1,
+      "recency_decay_rho": 0.95,
+      "weighted_cqr_adjustment": -2.0,
+      "conformal_lower_bounds": [
+        250.0,
+        64.0
+      ],
+      "conformal_upper_bounds": [
+        280.0,
+        86.0
+      ],
+      "adaptive_widths": [
+        30.0,
+        22.0
+      ]
+    },
+    "mondrian_7_market_thresholds": {
+      "1Q_PLAYER_PROP": 0.061,
+      "DEFENSE_IDP_SUITE": 0.054,
+      "FULL_GAME_SPREAD": 0.055,
+      "KICKING_SUITE": 0.059,
+      "QB_FULL_GAME_SUITE": 0.052,
+      "SKILL_PLAYER_SUITE": 0.058,
+      "TOUCHDOWN_SCORER_SUITE": 0.063
+    },
+    "inductive_venn_abers": {
+      "p0_lower": 0.6667,
+      "p1_upper": 1.0,
+      "venn_abers_prob": 0.75,
+      "epistemic_uncertainty_width": 0.3333
+    },
+    "enbpi_aci_adaptive": {
+      "target_alpha": 0.1,
+      "updated_alpha_t": 0.075,
+      "adaptive_quantile_radius": 10.4575,
+      "realized_miscoverage_rate": 0.2,
+      "alpha_trajectory": [
+        0.1025,
+        0.105,
+        0.0825,
+        0.085,
+        0.0875,
+        0.09,
+        0.0925,
+        0.07,
+        0.0725,
+        0.075
+      ]
+    }
+  },
+  "pillar2_sports_analytics_and_stacking": {
+    "matchup_models": {
+      "pythagorean_home_wp": 0.7112,
+      "pythagorean_away_wp": 0.5548,
+      "bradley_terry_log5_wp": 0.664,
+      "elo_paired_wp": 0.6763,
+      "dixon_coles_tau_00": 1.0863,
+      "expected_margin_pts": 5.65,
+      "expected_total_pts": 48.45,
+      "blended_home_win_prob": 0.6764
+    },
+    "superlearner_stacking": {
+      "optimal_simplex_weights": [
+        0.2877,
+        0.0,
+        0.5897,
+        0.1226
+      ],
+      "weights_sum_to_one": true,
+      "stacked_oof_mse": 7e-06,
+      "best_single_model_mse": 0.00015,
+      "stacking_beats_or_ties_best_single": true
+    }
+  },
+  "pillar3_spatial_stadium_gis": {
+    "denver_altitude": {
+      "team_abbr": "DEN",
+      "stadium": "Empower Field at Mile High",
+      "is_dome": false,
+      "elevation_m": 1609.3,
+      "air_density_kg_m3": 1.0101,
+      "aerodynamic_drag_reduction_ratio": 0.1754,
+      "axial_wind_mph": 6.364,
+      "crosswind_shear_mph": 6.364,
+      "deep_pass_cpoe_delta": 0.0044,
+      "fg_50plus_prob_delta": 0.0083
+    },
+    "buffalo_crosswind": {
+      "team_abbr": "BUF",
+      "stadium": "Highmark Stadium",
+      "is_dome": false,
+      "elevation_m": 182.0,
+      "air_density_kg_m3": 1.2438,
+      "aerodynamic_drag_reduction_ratio": -0.0153,
+      "axial_wind_mph": 0.0,
+      "crosswind_shear_mph": 26.0,
+      "deep_pass_cpoe_delta": -0.0814,
+      "fg_50plus_prob_delta": -0.171
+    },
+    "detroit_dome": {
+      "team_abbr": "DET",
+      "stadium": "Ford Field",
+      "is_dome": true,
+      "elevation_m": 183.0,
+      "air_density_kg_m3": 1.1718,
+      "aerodynamic_drag_reduction_ratio": 0.0434,
+      "axial_wind_mph": 0.0,
+      "crosswind_shear_mph": 0.0,
+      "deep_pass_cpoe_delta": 0.0011,
+      "fg_50plus_prob_delta": 0.0028
+    }
+  },
+  "pillar4_zero_copy_arrow_and_memory_arena": {
+    "rows": 10000,
+    "cols": 16,
+    "aligned_64byte_address_mod_64": 0,
+    "is_64byte_cache_aligned": true,
+    "columnar_fortran_contiguous": true,
+    "zero_copy_shares_memory": true,
+    "zero_copy_buffer_protocol_verified": true,
+    "validity_bitmap_bytes": 1256,
+    "arena_footprint_bytes": 1280000
+  },
+  "pillar5_llm_as_code_dag_context_and_harnesslab": {
+    "orchestrator_vs_llm_as_code": {
+      "per_step_control_accuracy": 0.96,
+      "horizon_steps": 50,
+      "llm_as_orchestrator_survival_prob": 0.129886,
+      "llm_as_code_deterministic_loop_compliance": 1.0,
+      "flat_transcript_cumulative_tokens_o_steps": 535500,
+      "dag_scoped_live_context_tokens_o_depth": 1260,
+      "token_reduction_ratio": 0.9976
+    },
+    "dag_scoped_context_unwinding": {
+      "step1_call_c_running_depth": 3,
+      "step1_live_context": [
+        "CALL-A:run_game_dossier",
+        "CALL-B:assemble_situational_tracks",
+        "CALL-C:evaluate_trench_pressure_l12"
+      ],
+      "step2_call_c_released_from_context": true,
+      "step3_call_d_running_depth": 2,
+      "step3_live_context_excludes_c_raw_transcript": true,
+      "step3_retains_c_one_line_summary": true,
+      "full_dag_retained_for_replay_nodes": 2,
+      "max_live_context_depth": 3
+    },
+    "harnesslab_trusted_read": {
+      "trust_tier": "trusted_tool",
+      "data_class": "internal",
+      "action_risk": "read",
+      "decision": "allow",
+      "sampling_temperature": 0.15,
+      "top_p": 0.9,
+      "persistent_memory_tiers": {
+        "episodic": "game_snap_trajectory_checkpoints",
+        "semantic": "dense_vertex_ollama_embeddings_21419_equations",
+        "procedural": "self_evolved_verified_code_commits_alg1"
+      },
+      "zero_waste_model_route": "ollama/qwen2.5-coder:32b-local"
+    },
+    "harnesslab_untrusted_secret_blocked": {
+      "trust_tier": "external",
+      "data_class": "secret",
+      "action_risk": "privileged_operation",
+      "decision": "deny",
+      "sampling_temperature": 0.15,
+      "top_p": 0.9,
+      "persistent_memory_tiers": {
+        "episodic": "game_snap_trajectory_checkpoints",
+        "semantic": "dense_vertex_ollama_embeddings_21419_equations",
+        "procedural": "self_evolved_verified_code_commits_alg1"
+      },
+      "zero_waste_model_route": "typesafe/jev-latest"
+    }
+  },
+  "pillar6_anti_overfitting_and_data_hygiene": {
+    "overfitted_lucky_model_rejected": {
+      "observed_hit_rate": 0.565,
+      "sample_size_n": 80,
+      "num_candidate_models_tested": 250,
+      "raw_z_score": 0.7378,
+      "expected_null_max_z": 2.8589,
+      "deflated_z_score": -1.1204,
+      "familywise_lucky_false_discovery_prob": 1.0,
+      "passes_no_more_lucky_models_gate": false
+    },
+    "genuine_out_of_sample_model_accepted": {
+      "observed_hit_rate": 0.598,
+      "sample_size_n": 650,
+      "num_candidate_models_tested": 6,
+      "raw_z_score": 3.7878,
+      "expected_null_max_z": 1.3754,
+      "deflated_z_score": 2.8938,
+      "familywise_lucky_false_discovery_prob": 0.00046,
+      "passes_no_more_lucky_models_gate": true
+    },
+    "time_blocked_purged_embargoed_cv": {
+      "n_samples": 160,
+      "n_splits": 5,
+      "purge_window": 2,
+      "embargo_count": 4,
+      "zero_lookahead_leakage_verified": true,
+      "folds": [
+        {
+          "fold": 0,
+          "train_count": 124,
+          "test_count": 32,
+          "purged_and_embargoed_count": 4,
+          "test_range": [
+            0,
+            31
+          ],
+          "zero_overlap_verified": true
+        },
+        {
+          "fold": 1,
+          "train_count": 122,
+          "test_count": 32,
+          "purged_and_embargoed_count": 6,
+          "test_range": [
+            32,
+            63
+          ],
+          "zero_overlap_verified": true
+        },
+        {
+          "fold": 2,
+          "train_count": 122,
+          "test_count": 32,
+          "purged_and_embargoed_count": 6,
+          "test_range": [
+            64,
+            95
+          ],
+          "zero_overlap_verified": true
+        },
+        {
+          "fold": 3,
+          "train_count": 122,
+          "test_count": 32,
+          "purged_and_embargoed_count": 6,
+          "test_range": [
+            96,
+            127
+          ],
+          "zero_overlap_verified": true
+        },
+        {
+          "fold": 4,
+          "train_count": 126,
+          "test_count": 32,
+          "purged_and_embargoed_count": 2,
+          "test_range": [
+            128,
+            159
+          ],
+          "zero_overlap_verified": true
+        }
+      ]
+    },
+    "mad_winsorization_and_imputation": {
+      "robust_median": 20.5,
+      "robust_sigma_mad": 2.3722,
+      "imputed_missing_count": 1,
+      "winsorized_outlier_count": 1,
+      "cleaned_series": [
+        18.2,
+        21.4,
+        20.5,
+        19.8,
+        20.5,
+        28.8026,
+        17.9,
+        22.1
+      ]
+    }
+  },
+  "pillar7_bayesian_causal_and_network_science": {
+    "empirical_bayes_partial_pooling": {
+      "player_active_gp": 4.0,
+      "shrinkage_factor_b": 0.3817,
+      "posterior_shrunk_mean": 78.2019,
+      "epistemic_uncertainty_sd": 8.6495,
+      "aleatoric_uncertainty_sd": 22.0,
+      "posterior_predictive_sd": 23.6392,
+      "hdi_90_lower": 39.3189,
+      "hdi_90_upper": 117.0849
+    },
+    "causal_do_low_pressure": {
+      "do_pressure_rate": 0.22,
+      "causal_expected_ttt_sec": 2.8284,
+      "causal_hot_read_target_share": 0.28,
+      "causal_do_expected_dk_fpts": 22.966,
+      "confounding_bias_removed": true
+    },
+    "causal_do_high_pressure": {
+      "do_pressure_rate": 0.44,
+      "causal_expected_ttt_sec": 2.6414,
+      "causal_hot_read_target_share": 0.2968,
+      "causal_do_expected_dk_fpts": 20.436,
+      "confounding_bias_removed": true
+    },
+    "passing_network_full": {
+      "normalized_target_shares": {
+        "WR1": 0.3,
+        "WR2": 0.22,
+        "TE1": 0.2,
+        "RB1": 0.16,
+        "WR3": 0.12
+      },
+      "pagerank_centrality": {
+        "QB": 0.3897,
+        "RB1": 0.1042,
+        "TE1": 0.1227,
+        "WR1": 0.1667,
+        "WR2": 0.1317,
+        "WR3": 0.0851
+      },
+      "target_shannon_entropy": 1.5638,
+      "vacated_node": null
+    },
+    "passing_network_wr1_vacated": {
+      "normalized_target_shares": {
+        "WR1": 0.0,
+        "WR2": 0.3143,
+        "TE1": 0.2857,
+        "RB1": 0.2286,
+        "WR3": 0.1714
+      },
+      "pagerank_centrality": {
+        "QB": 0.3927,
+        "RB1": 0.1365,
+        "TE1": 0.1617,
+        "WR1": 0.025,
+        "WR2": 0.1739,
+        "WR3": 0.1102
+      },
+      "target_shannon_entropy": 1.3614,
+      "vacated_node": "WR1"
+    },
+    "bounded_hilbert_interference": {
+      "prior_prob": 0.58,
+      "posterior_prob": 0.6621,
+      "delta_log_odds": 0.35,
+      "bounded_within_0_35_cap": true,
+      "quarantined_hilbert_sandbox": true
+    },
+    "symbolic_pareto_and_huber_spline_regression": {
+      "selected_symbolic_law": "overparameterized_degree6_poly",
+      "pareto_candidates": [
+        {
+          "symbolic_expression": "linear_pressure_only",
+          "complexity_k": 2,
+          "robust_huber_loss": 0.19584,
+          "pareto_bic_score": -11.6994
+        },
+        {
+          "symbolic_expression": "nonlinear_pressure_x_wind_spline",
+          "complexity_k": 4,
+          "robust_huber_loss": 0.086694,
+          "pareto_bic_score": -15.2434
+        },
+        {
+          "symbolic_expression": "overparameterized_degree6_poly",
+          "complexity_k": 8,
+          "robust_huber_loss": 0.000234,
+          "pareto_bic_score": -65.1956
+        }
+      ],
+      "ols_median_abs_error": 0.18328,
+      "huber_spline_median_abs_error": 0.10027,
+      "huber_beats_or_ties_ols_under_outliers": true,
+      "huber_coefficients": [
+        1.6242,
+        -8.9753,
+        4.7282,
+        -3.4563
+      ]
+    }
+  },
+  "pillar8_simulation_variance_reduction_fem_graphrag_and_drl": {
+    "antithetic_and_control_variates": {
+      "crude_mc_mean_fpts": 163.6413,
+      "antithetic_only_mean_fpts": 162.8235,
+      "antithetic_control_variate_mean_fpts": 162.8336,
+      "optimal_control_beta_star": 0.6045,
+      "crude_standard_error": 0.38973,
+      "antithetic_only_standard_error": 0.01803,
+      "variance_reduced_standard_error": 0.00588,
+      "control_variate_improves_over_antithetic": true,
+      "variance_reduction_factor_vrf": 4400.61
+    },
+    "latin_hypercube_and_sobol_qmc": {
+      "n_draws": 2048,
+      "crude_mean_fpts": 162.8588,
+      "lhs_mean_fpts": 162.8337,
+      "sobol_qmc_mean_fpts": 162.7933,
+      "crude_star_discrepancy": 0.016217,
+      "lhs_star_discrepancy": 0.000488,
+      "sobol_qmc_star_discrepancy": 0.000398,
+      "qmc_discrepancy_beats_crude": true,
+      "crude_batch_se": 0.605274,
+      "lhs_stratified_se": 0.114202,
+      "sobol_qmc_se": 0.114487,
+      "qmc_se_beats_crude": true
+    },
+    "importance_sampling_200pt_dfs_tail": {
+      "threshold_fpts": 200.0,
+      "crude_prob_200plus": 0.0836,
+      "importance_sampling_prob_200plus": 0.07693,
+      "crude_standard_error": 0.003915,
+      "importance_sampling_standard_error": 0.001473,
+      "tail_se_reduction_ratio": 2.657
+    },
+    "absorbing_markov_drive_fundamental_matrix": {
+      "transient_zones": [
+        "OWN_TERRITORY",
+        "MIDFIELD",
+        "PLUS_TERRITORY",
+        "RED_ZONE"
+      ],
+      "absorbing_outcomes": [
+        "TOUCHDOWN",
+        "FIELD_GOAL",
+        "PUNT",
+        "TURNOVER"
+      ],
+      "raw_spectral_radius_rho": 0.536614,
+      "effective_spectral_radius_rho": 0.536614,
+      "near_singular_contraction_applied": false,
+      "expected_zone_steps_to_absorption": {
+        "OWN_TERRITORY": 3.4374,
+        "MIDFIELD": 3.2222,
+        "PLUS_TERRITORY": 2.6692,
+        "RED_ZONE": 1.7293
+      },
+      "absorption_probabilities": {
+        "OWN_TERRITORY": {
+          "prob_td": 0.302,
+          "prob_fg": 0.2075,
+          "prob_punt": 0.3932,
+          "prob_turnover": 0.0972,
+          "row_sum": 1.0
+        },
+        "MIDFIELD": {
+          "prob_td": 0.4107,
+          "prob_fg": 0.2946,
+          "prob_punt": 0.2067,
+          "prob_turnover": 0.088,
+          "row_sum": 1.0
+        },
+        "PLUS_TERRITORY": {
+          "prob_td": 0.5182,
+          "prob_fg": 0.3675,
+          "prob_punt": 0.0494,
+          "prob_turnover": 0.065,
+          "row_sum": 1.0
+        },
+        "RED_ZONE": {
+          "prob_td": 0.6418,
+          "prob_fg": 0.3042,
+          "prob_punt": 0.0031,
+          "prob_turnover": 0.0509,
+          "row_sum": 1.0
+        }
+      },
+      "expected_points_by_zone": {
+        "OWN_TERRITORY": 2.5418,
+        "MIDFIELD": 3.5752,
+        "PLUS_TERRITORY": 4.5836,
+        "RED_ZONE": 5.2787
+      }
+    },
+    "rk4_richardson_and_welch_batch_means": {
+      "q4_stamina_rk4_coarse": 0.606935,
+      "q4_stamina_rk4_fine": 0.606935,
+      "q4_stamina_richardson_extrapolated": 0.606935,
+      "richardson_truncation_error_bound": 0.0,
+      "batch_means_lag1_autocorrelation": 0.1674,
+      "batch_means_decorrelated_pass": true
+    },
+    "gsi_fem_graphrag_and_drl_4th_down": {
+      "gsi_fem_biomechanics": {
+        "von_mises_equivalent_stress_mpa": 28.7061,
+        "ligament_factor_of_safety": 1.5676,
+        "gsi_sandbox_quarantined": true,
+        "clinical_workflows_permitted": false
+      },
+      "applied_context_engineering": {
+        "u_shaped_primacy_recency_order": [
+          "STAGE_5_CONJUNCTION_PASS_GATE",
+          "STAGE_2_80RULE_MISLEADING_STAT_FIREWALL",
+          "HISTORICAL_BOX_SCORE_BACKGROUND",
+          "SECONDARY_CHARTS_SUPPLEMENT",
+          "STAGE_1_INJURY_TRENCH_TRUTH"
+        ],
+        "highest_priority_at_edges": true
+      },
+      "drl_4th_down_and_curriculum": {
+        "fourth_down_q_values_wp": {
+          "GO_FOR_IT": 0.5747,
+          "FIELD_GOAL": 0.518,
+          "PUNT": 0.485
+        },
+        "optimal_action": "GO_FOR_IT",
+        "ppo_clipped_surrogate_objective": 0.0984
+      }
+    }
+  },
+  "digest_sha256": "cb406914c78f00bae69dabcf9b48f5abec6d100095532823f342299a7e48e70f"
+}

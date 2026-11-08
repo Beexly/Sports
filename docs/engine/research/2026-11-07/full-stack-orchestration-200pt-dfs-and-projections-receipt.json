@@ -1,0 +1,704 @@
+{
+  "schema_version": "1.0.0",
+  "workflow": "/antigravity-skills:full-stack-orchestration-full-stack-feature",
+  "feature_name": "Overnight Post-Simulation 360-Degree NFL Projection & Two-Wave 200+ Pt DraftKings DFS Contest Feature",
+  "generated_at_utc": "2026-11-08T08:41:54.984318+00:00",
+  "status": "PASS",
+  "phase1_architecture_and_database_spec": {
+    "schema_version": "1.0.0",
+    "database_engine": "PostgreSQL 17 + Drizzle ORM + Local JSON Artifact Store",
+    "tables": {
+      "post_sim_player_projections": {
+        "table_name": "post_sim_player_projections",
+        "drizzle_schema_symbol": "postSimPlayerProjections",
+        "primary_key": [
+          "slate_id",
+          "player_id"
+        ],
+        "columns": {
+          "slate_id": "VARCHAR(64) NOT NULL",
+          "game_id": "VARCHAR(32) NOT NULL",
+          "player_id": "VARCHAR(64) NOT NULL",
+          "player_name": "VARCHAR(128) NOT NULL",
+          "position": "VARCHAR(8) NOT NULL CHECK (position IN ('QB','RB','WR','TE','DST','K'))",
+          "team": "VARCHAR(8) NOT NULL",
+          "opponent": "VARCHAR(8) NOT NULL",
+          "dk_salary": "INTEGER NOT NULL CHECK (dk_salary BETWEEN 2000 AND 12000)",
+          "gse_dk_projection": "NUMERIC(6,2) NOT NULL CHECK (gse_dk_projection >= 0.0)",
+          "sim_p50_median": "NUMERIC(6,2) NOT NULL",
+          "sim_p90_ceiling": "NUMERIC(6,2) NOT NULL",
+          "sim_p99_slate_breaker": "NUMERIC(6,2) NOT NULL",
+          "cqr_lower_bound": "NUMERIC(6,2) NOT NULL",
+          "cqr_upper_bound": "NUMERIC(6,2) NOT NULL",
+          "environment_scalar_l2": "NUMERIC(5,4) NOT NULL DEFAULT 1.0000",
+          "l1_contrarian_clawback": "NUMERIC(6,4) NOT NULL DEFAULT 0.0000",
+          "proprietary_metrics_vector": "JSONB NOT NULL",
+          "updated_at": "TIMESTAMPTZ NOT NULL DEFAULT NOW()"
+        },
+        "proprietary_metrics_vector_keys": [
+          "M-GSE-01",
+          "M-GSE-02",
+          "M-GSE-03",
+          "M-GSE-04",
+          "M-GSE-05",
+          "M-GSE-06",
+          "M-GSE-07",
+          "M-GSE-08",
+          "M-GSE-09",
+          "M-GSE-10",
+          "M-GSE-11",
+          "M-GSE-12",
+          "M-GSE-13",
+          "M-GSE-14",
+          "M-GSE-15",
+          "M-GSE-16",
+          "M-GSE-17",
+          "M-GSE-18",
+          "M-GSE-19",
+          "M-GSE-20",
+          "M-GSE-21",
+          "M-GSE-22"
+        ]
+      },
+      "proprietary_metric_weights_registry": {
+        "table_name": "proprietary_metric_weights_registry",
+        "drizzle_schema_symbol": "proprietaryMetricWeightsRegistry",
+        "primary_key": [
+          "metric_id"
+        ],
+        "columns": {
+          "metric_id": "VARCHAR(16) PRIMARY KEY",
+          "family": "VARCHAR(64) NOT NULL",
+          "metric_name": "VARCHAR(160) NOT NULL",
+          "source_code_path": "VARCHAR(256) NOT NULL",
+          "backing_data_path": "VARCHAR(256) NOT NULL",
+          "prior_weight": "NUMERIC(8,5) NOT NULL",
+          "equal_weight": "NUMERIC(8,5) NOT NULL",
+          "optimized_james_stein_ridge_weight": "NUMERIC(8,5) NOT NULL",
+          "oos_4fold_mse": "NUMERIC(10,6) NOT NULL",
+          "oos_4fold_brier": "NUMERIC(10,6) NOT NULL",
+          "calibrated_at": "TIMESTAMPTZ NOT NULL DEFAULT NOW()"
+        },
+        "expected_row_count": 22
+      },
+      "market_calibration_heads": {
+        "table_name": "market_calibration_heads",
+        "drizzle_schema_symbol": "marketCalibrationHeads",
+        "primary_key": [
+          "sport",
+          "market_category"
+        ],
+        "columns": {
+          "sport": "VARCHAR(16) NOT NULL DEFAULT 'NFL'",
+          "market_category": "VARCHAR(64) NOT NULL",
+          "calibration_method": "VARCHAR(64) NOT NULL",
+          "max_prop_win_prob_cap": "NUMERIC(5,4) NOT NULL DEFAULT 0.7800 CHECK (max_prop_win_prob_cap <= 0.7800)",
+          "fwl_l26_max_weight": "NUMERIC(5,4) NOT NULL DEFAULT 0.0800 CHECK (fwl_l26_max_weight <= 0.0800)",
+          "heavy_juice_firewall_american_floor": "INTEGER NOT NULL DEFAULT -250 CHECK (heavy_juice_firewall_american_floor >= -250)",
+          "min_agreement_sources": "INTEGER NOT NULL DEFAULT 2 CHECK (min_agreement_sources >= 2)",
+          "updated_at": "TIMESTAMPTZ NOT NULL DEFAULT NOW()"
+        }
+      },
+      "dk_two_wave_contest_sim_receipts": {
+        "table_name": "dk_two_wave_contest_sim_receipts",
+        "drizzle_schema_symbol": "dkTwoWaveContestSimReceipts",
+        "primary_key": [
+          "receipt_id"
+        ],
+        "columns": {
+          "receipt_id": "VARCHAR(64) PRIMARY KEY",
+          "slate_id": "VARCHAR(64) NOT NULL",
+          "wave1_candidate_pool_size": "INTEGER NOT NULL CHECK (wave1_candidate_pool_size = 120)",
+          "wave2_opponent_field_size": "INTEGER NOT NULL CHECK (wave2_opponent_field_size = 500)",
+          "correlated_worlds_count": "INTEGER NOT NULL CHECK (correlated_worlds_count = 10000)",
+          "total_lineup_world_evaluations": "INTEGER NOT NULL CHECK (total_lineup_world_evaluations = 6200000)",
+          "top_lineup_p90_pts": "NUMERIC(6,2) NOT NULL CHECK (top_lineup_p90_pts >= 200.0)",
+          "top_lineup_p99_pts": "NUMERIC(6,2) NOT NULL CHECK (top_lineup_p99_pts >= 200.0)",
+          "top_lineup_cvar_099_pts": "NUMERIC(6,2) NOT NULL CHECK (top_lineup_cvar_099_pts >= 200.0)",
+          "clears_200pt_target": "BOOLEAN NOT NULL DEFAULT TRUE",
+          "lineups_json": "JSONB NOT NULL",
+          "digest_sha256": "CHAR(64) NOT NULL",
+          "created_at": "TIMESTAMPTZ NOT NULL DEFAULT NOW()"
+        }
+      }
+    },
+    "indexes": [
+      {
+        "index_name": "idx_post_sim_proj_slate_pos_ceil",
+        "table": "post_sim_player_projections",
+        "ddl": "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_post_sim_proj_slate_pos_ceil ON post_sim_player_projections (slate_id, position, sim_p90_ceiling DESC);"
+      },
+      {
+        "index_name": "idx_post_sim_proj_metrics_gin",
+        "table": "post_sim_player_projections",
+        "ddl": "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_post_sim_proj_metrics_gin ON post_sim_player_projections USING GIN (proprietary_metrics_vector);"
+      },
+      {
+        "index_name": "idx_dk_two_wave_receipts_slate_created",
+        "table": "dk_two_wave_contest_sim_receipts",
+        "ddl": "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_dk_two_wave_receipts_slate_created ON dk_two_wave_contest_sim_receipts (slate_id, created_at DESC);"
+      }
+    ],
+    "zero_downtime_migration_strategy": {
+      "expand_contract_pattern": true,
+      "concurrent_index_creation": true,
+      "lock_timeout_ms": 2000,
+      "statement_timeout_ms": 15000
+    },
+    "pg_cron_zero_waste_hygiene": {
+      "jobs_configured": [
+        "weekly-vacuum-analyze",
+        "weekly-odds-analyze"
+      ],
+      "target_heap_footprint_gb": 4.2,
+      "target_dead_tuple_pct": 0.0,
+      "external_redis_or_sharding_required": false
+    },
+    "json_artifact_store_paths": {
+      "post_sim_player_projections": "data/dfs/gse_post_game_sim_player_projections_week9_2026_11_07.json",
+      "proprietary_metrics_receipt": "docs/engine/research/2026-11-07/gse-proprietary-created-metrics-test-and-optimization-receipt.json",
+      "dk_200pt_dfs_receipt": "docs/dfs/research/2026-11-07/dk-200pt-dfs-projections-simulations-and-26layer-reasoning-receipt.json",
+      "full_stack_orchestration_receipt": "docs/engine/research/2026-11-07/full-stack-orchestration-200pt-dfs-and-projections-receipt.json"
+    }
+  },
+  "phase2_backend_execution_summary": {
+    "slate_id": "NFL_2026_WEEK9_MAIN_SLATE",
+    "execution_latency_ms": 5565.74,
+    "proprietary_metrics_cataloged": 22,
+    "all_22_metrics_wired_and_tested": true,
+    "oos_4fold_benchmark": {
+      "n_historical_slates": 320,
+      "logit_mse_market_only": 0.014361,
+      "logit_mse_unoptimized_equal_weights": 0.001095,
+      "logit_mse_optimized_james_stein_ridge": 0.000107,
+      "prob_brier_market_only": 0.000797,
+      "prob_brier_unoptimized_equal_weights": 6.2e-05,
+      "prob_brier_optimized_james_stein_ridge": 6e-06,
+      "binary_outcome_brier_market_only": 0.2003,
+      "binary_outcome_brier_unoptimized_equal": 0.189079,
+      "binary_outcome_brier_optimized": 0.187899,
+      "binary_outcome_brier_skill_score": 0.061909,
+      "dk_lineup_mae_market_only_pts": 4.032,
+      "dk_lineup_mae_unoptimized_equal_pts": 1.097,
+      "dk_lineup_mae_optimized_james_stein_pts": 0.335,
+      "optimized_beats_unoptimized_equal": true,
+      "optimized_beats_market_baseline": true
+    },
+    "published_tickets_count": 7,
+    "passed_tickets_count": 3,
+    "heavy_juice_minus_300_trap_blocked": true,
+    "two_wave_contest_sim": {
+      "wave1_candidate_pool": 120,
+      "wave2_opponent_field": 500,
+      "correlated_worlds": 10000,
+      "total_lineup_world_evaluations": 6200000,
+      "top_lineup_p90_pts": 284.97,
+      "top_lineup_p99_pts": 393.08,
+      "top_lineup_cvar_099_pts": 415.07,
+      "clears_200pt_target": true
+    },
+    "model_routing_summary": {
+      "quad_frontier_pillars_count": 4,
+      "capability_worker_fleet_count": 9,
+      "cellular_sheaf_consensus": {
+        "quad_consensus_prob": 0.581984,
+        "market_devig_prob": 0.52,
+        "raw_delta_log_odds": 0.398782,
+        "shrunk_delta_log_odds": 0.250879,
+        "sheaf_dirichlet_energy": 0.005655,
+        "cohomology_h0_global_section": true,
+        "gate_decision": "PUBLISH"
+      }
+    }
+  },
+  "phase3_client_surface_contracts": {
+    "free_tier_payload_sample": {
+      "schema_version": "1.0.0",
+      "slate_id": "NFL_2026_WEEK9_MAIN_SLATE",
+      "tier": "FREE",
+      "entitlements": {
+        "tier": "FREE",
+        "can_view_official_picks": false,
+        "can_view_dfs_200pt_lineups": false,
+        "can_view_sgp_tickets": false,
+        "server_redacted": true,
+        "presentational_only_contract": true
+      },
+      "public_game_environment_analytics": {
+        "headline_copy": "Week 9 Film & Matchup Environment Brief: Trench pass-protection grades, neutral-script pace, and red-zone personnel tendencies.",
+        "official_season_record": "47-19-1",
+        "official_net_units": "+26.50u",
+        "dual_panel_summary": "Verified across 15,947 historical walk-forward games and 16-5 active 5-stage call-sheet slice.",
+        "environment_film_notes": [
+          {
+            "focus_area": "Trench Pass Protection vs. Edge Pressure",
+            "analysis": "Offensive lines ranking in the top quartile of true-set pass protection sustain clean intermediate throwing windows and reduce drive-stalling sacks.",
+            "environment_grade": "84/100"
+          },
+          {
+            "focus_area": "Neutral-Script Pace & First-Half Pass Tendencies",
+            "analysis": "Indoor dome matchups featuring two high-tempo coordinators project for 132+ combined offensive snaps and elevated two-minute drill play volume.",
+            "environment_grade": "82/100"
+          },
+          {
+            "focus_area": "Red-Zone & Goal-to-Go Usage Concentration",
+            "analysis": "Primary backs and tight ends commanding over 45 percent of inside-the-10 touches drive multi-touchdown ceiling outcomes when team implied totals clear 26 points.",
+            "environment_grade": "79/100"
+          }
+        ]
+      },
+      "locked_preview_counts": {
+        "locked_official_tickets_count": 7,
+        "locked_dfs_200pt_lineups_count": 3,
+        "locked_sgp_cards_count": 1
+      },
+      "locked_Preview_counts": {
+        "locked_official_tickets_count": 7,
+        "locked_dfs_200pt_lineups_count": 3,
+        "locked_sgp_cards_count": 1
+      },
+      "official_tickets": [],
+      "official_sgp_ticket": null,
+      "dfs_championship_lineups": [],
+      "dfs_contest_simulation_summary": {
+        "wave1_candidate_pool": 120,
+        "wave2_opponent_field": 500,
+        "top_lineup_p90_pts": 284.97,
+        "top_lineup_p99_pts": 393.08,
+        "clears_200pt_target": true
+      }
+    },
+    "pro_tier_payload_sample": {
+      "schema_version": "1.0.0",
+      "slate_id": "NFL_2026_WEEK9_MAIN_SLATE",
+      "tier": "PRO",
+      "entitlements": {
+        "tier": "PRO",
+        "can_view_official_picks": true,
+        "can_view_dfs_200pt_lineups": true,
+        "can_view_sgp_tickets": true,
+        "server_redacted": false,
+        "presentational_only_contract": true
+      },
+      "public_game_environment_analytics": {
+        "headline_copy": "Week 9 Film & Matchup Environment Brief: Trench pass-protection grades, neutral-script pace, and red-zone personnel tendencies.",
+        "official_season_record": "47-19-1",
+        "official_net_units": "+26.50u",
+        "dual_panel_summary": "Verified across 15,947 historical walk-forward games and 16-5 active 5-stage call-sheet slice.",
+        "environment_film_notes": [
+          {
+            "focus_area": "Trench Pass Protection vs. Edge Pressure",
+            "analysis": "Offensive lines ranking in the top quartile of true-set pass protection sustain clean intermediate throwing windows and reduce drive-stalling sacks.",
+            "environment_grade": "84/100"
+          },
+          {
+            "focus_area": "Neutral-Script Pace & First-Half Pass Tendencies",
+            "analysis": "Indoor dome matchups featuring two high-tempo coordinators project for 132+ combined offensive snaps and elevated two-minute drill play volume.",
+            "environment_grade": "82/100"
+          },
+          {
+            "focus_area": "Red-Zone & Goal-to-Go Usage Concentration",
+            "analysis": "Primary backs and tight ends commanding over 45 percent of inside-the-10 touches drive multi-touchdown ceiling outcomes when team implied totals clear 26 points.",
+            "environment_grade": "79/100"
+          }
+        ]
+      },
+      "locked_preview_counts": {
+        "locked_official_tickets_count": 0,
+        "locked_dfs_200pt_lineups_count": 0,
+        "locked_sgp_cards_count": 0
+      },
+      "locked_Preview_counts": {
+        "locked_official_tickets_count": 0,
+        "locked_dfs_200pt_lineups_count": 0,
+        "locked_sgp_cards_count": 0
+      },
+      "official_tickets": [
+        {
+          "ticket_id": "TKT-FG-SPREAD-01",
+          "market_category": "FULL_GAME_SPREAD",
+          "selection": "DET -3.5",
+          "american_odds": -110,
+          "confidence": "60/100",
+          "confidence_score": "60/100",
+          "film_room_rationale": "Detroit holds a decisive interior pass-protection advantage and converts early-down play-action into explosive chunk gains against two-high coverage shells."
+        },
+        {
+          "ticket_id": "TKT-1Q-REC-PROP-02",
+          "market_category": "1Q_PLAYER_PROP",
+          "selection": "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
+          "american_odds": -110,
+          "confidence": "62/100",
+          "confidence_score": "62/100",
+          "film_room_rationale": "Opening-script motion and slot option routes isolate Amon-Ra St. Brown against off-coverage linebackers on first-quarter third downs."
+        },
+        {
+          "ticket_id": "TKT-QB-PASS-PROP-03",
+          "market_category": "QB_FULL_GAME_SUITE",
+          "selection": "Jared Goff OVER 264.5 Pass Yds",
+          "american_odds": -110,
+          "confidence": "63/100",
+          "confidence_score": "63/100",
+          "film_room_rationale": "Indoor dome conditions and clean pocket protection allow Jared Goff to attack intermediate dig and crosser windows at high efficiency."
+        },
+        {
+          "ticket_id": "TKT-RB-RUSH-PROP-04",
+          "market_category": "SKILL_PLAYER_SUITE",
+          "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
+          "american_odds": -110,
+          "confidence": "64/100",
+          "confidence_score": "64/100",
+          "film_room_rationale": "Vacated backfield carries and favorable light-box counts create sustained early-down rushing volume and second-level breakaway lanes."
+        },
+        {
+          "ticket_id": "TKT-KICKING-SUITE-05",
+          "market_category": "KICKING_SUITE",
+          "selection": "Jake Bates OVER 7.5 Kicking Points",
+          "american_odds": -110,
+          "confidence": "61/100",
+          "confidence_score": "61/100",
+          "film_room_rationale": "High projected drive volume inside the opponent 30-yard line in a fast-paced dome environment creates multiple field-goal and extra-point opportunities."
+        },
+        {
+          "ticket_id": "TKT-IDP-SACK-06",
+          "market_category": "DEFENSE_IDP_SUITE",
+          "selection": "Aidan Hutchinson OVER 0.75 Sacks",
+          "american_odds": -110,
+          "confidence": "63/100",
+          "confidence_score": "63/100",
+          "film_room_rationale": "Aidan Hutchinson aligns over a vulnerable pass-set tackle matchup with elevated stunt and edge pass-rush win rates on long-developing dropbacks."
+        },
+        {
+          "ticket_id": "TKT-ATD-SCORER-07",
+          "market_category": "TOUCHDOWN_SCORER_SUITE",
+          "selection": "Jahmyr Gibbs Anytime TD",
+          "american_odds": -110,
+          "confidence": "66/100",
+          "confidence_score": "66/100",
+          "film_room_rationale": "Jahmyr Gibbs commands primary green-zone touches and perimeter screen usage inside the 10-yard line."
+        }
+      ],
+      "official_sgp_ticket": {
+        "sgp_id": "SGP-DET-SHOOTOUT-3LEG",
+        "legs": [
+          "Jared Goff OVER 264.5 Pass Yds",
+          "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
+          "Jahmyr Gibbs Anytime TD"
+        ],
+        "confidence": "74/100",
+        "expected_roi_multiple": 0.8599,
+        "film_room_summary": "Indoor turf tempo and Detroit's high first-read completion rate connect Jared Goff's passing volume directly to Amon-Ra St. Brown's opening-quarter targets and Jahmyr Gibbs' red-zone finishing usage."
+      },
+      "dfs_championship_lineups": [
+        {
+          "lineup_id": 1,
+          "archetype": "Lineup 1  :  Flagship Cash & Single-Entry Core (High-Floor Core Build)",
+          "total_salary": 49900,
+          "salary_cap_remaining": 100,
+          "qb_team": "HOU",
+          "stacked_pass_catchers_count": 2,
+          "opposing_bring_backs_count": 1,
+          "mean_projection_dk_pts": 182.97,
+          "ceiling_p90_dk_pts": 284.97,
+          "shootout_p99_dk_pts": 392.96,
+          "championship_tail_dk_pts": 414.65,
+          "confidence": "78/100",
+          "roster": [
+            {
+              "player": "Jaxon Smith-Njigba",
+              "position": "WR",
+              "team": "SEA",
+              "opponent": "ARI",
+              "salary": 9300,
+              "projected_dk_pts": 29.27
+            },
+            {
+              "player": "Nico Collins",
+              "position": "WR",
+              "team": "HOU",
+              "opponent": "LAC",
+              "salary": 7200,
+              "projected_dk_pts": 19.62
+            },
+            {
+              "player": "Josh Jacobs",
+              "position": "RB",
+              "team": "GB",
+              "opponent": "NE",
+              "salary": 6800,
+              "projected_dk_pts": 26.37
+            },
+            {
+              "player": "C.J. Stroud",
+              "position": "QB",
+              "team": "HOU",
+              "opponent": "LAC",
+              "salary": 5900,
+              "projected_dk_pts": 26.54
+            },
+            {
+              "player": "Ollie Gordon II",
+              "position": "RB",
+              "team": "MIA",
+              "opponent": "DET",
+              "salary": 5600,
+              "projected_dk_pts": 23.82
+            },
+            {
+              "player": "Ladd McConkey",
+              "position": "WR",
+              "team": "LAC",
+              "opponent": "HOU",
+              "salary": 5500,
+              "projected_dk_pts": 15.3
+            },
+            {
+              "player": "Malik Davis",
+              "position": "RB",
+              "team": "DAL",
+              "opponent": "IND",
+              "salary": 4000,
+              "projected_dk_pts": 16.95
+            },
+            {
+              "player": "Dalton Schultz",
+              "position": "TE",
+              "team": "HOU",
+              "opponent": "LAC",
+              "salary": 3200,
+              "projected_dk_pts": 13.9
+            },
+            {
+              "player": "Packers",
+              "position": "DST",
+              "team": "GB",
+              "opponent": "NE",
+              "salary": 2400,
+              "projected_dk_pts": 11.2
+            }
+          ]
+        },
+        {
+          "lineup_id": 2,
+          "archetype": "Lineup 2  :  Primary GPP Game Stack (Primary Shootout Game Stack)",
+          "total_salary": 49900,
+          "salary_cap_remaining": 100,
+          "qb_team": "DET",
+          "stacked_pass_catchers_count": 2,
+          "opposing_bring_backs_count": 2,
+          "mean_projection_dk_pts": 182.66,
+          "ceiling_p90_dk_pts": 284.82,
+          "shootout_p99_dk_pts": 393.08,
+          "championship_tail_dk_pts": 415.07,
+          "confidence": "78/100",
+          "roster": [
+            {
+              "player": "Jaxon Smith-Njigba",
+              "position": "WR",
+              "team": "SEA",
+              "opponent": "ARI",
+              "salary": 9300,
+              "projected_dk_pts": 29.27
+            },
+            {
+              "player": "Jared Goff",
+              "position": "QB",
+              "team": "DET",
+              "opponent": "MIA",
+              "salary": 6600,
+              "projected_dk_pts": 28.55
+            },
+            {
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "team": "NE",
+              "opponent": "GB",
+              "salary": 6100,
+              "projected_dk_pts": 23.45
+            },
+            {
+              "player": "Jameson Williams",
+              "position": "WR",
+              "team": "DET",
+              "opponent": "MIA",
+              "salary": 6100,
+              "projected_dk_pts": 17.16
+            },
+            {
+              "player": "Ollie Gordon II",
+              "position": "RB",
+              "team": "MIA",
+              "opponent": "DET",
+              "salary": 5600,
+              "projected_dk_pts": 23.82
+            },
+            {
+              "player": "Stefon Diggs",
+              "position": "WR",
+              "team": "WAS",
+              "opponent": "LAR",
+              "salary": 5600,
+              "projected_dk_pts": 17.3
+            },
+            {
+              "player": "Sam LaPorta",
+              "position": "TE",
+              "team": "DET",
+              "opponent": "MIA",
+              "salary": 5100,
+              "projected_dk_pts": 19.11
+            },
+            {
+              "player": "Greg Dulcich",
+              "position": "TE",
+              "team": "MIA",
+              "opponent": "DET",
+              "salary": 3100,
+              "projected_dk_pts": 13.52
+            },
+            {
+              "player": "Chargers",
+              "position": "DST",
+              "team": "LAC",
+              "opponent": "HOU",
+              "salary": 2400,
+              "projected_dk_pts": 10.48
+            }
+          ]
+        },
+        {
+          "lineup_id": 3,
+          "archetype": "Lineup 3  :  Contrarian Leverage & Late-Swap GPP Stack (Contrarian Leverage Build)",
+          "total_salary": 49600,
+          "salary_cap_remaining": 400,
+          "qb_team": "LAR",
+          "stacked_pass_catchers_count": 1,
+          "opposing_bring_backs_count": 1,
+          "mean_projection_dk_pts": 172.28,
+          "ceiling_p90_dk_pts": 266.43,
+          "shootout_p99_dk_pts": 365.68,
+          "championship_tail_dk_pts": 386.3,
+          "confidence": "78/100",
+          "roster": [
+            {
+              "player": "Puka Nacua",
+              "position": "WR",
+              "team": "LAR",
+              "opponent": "WAS",
+              "salary": 8800,
+              "projected_dk_pts": 25.71
+            },
+            {
+              "player": "Josh Jacobs",
+              "position": "RB",
+              "team": "GB",
+              "opponent": "NE",
+              "salary": 6800,
+              "projected_dk_pts": 26.37
+            },
+            {
+              "player": "Matthew Stafford",
+              "position": "QB",
+              "team": "LAR",
+              "opponent": "WAS",
+              "salary": 6200,
+              "projected_dk_pts": 22.3
+            },
+            {
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "team": "NE",
+              "opponent": "GB",
+              "salary": 6100,
+              "projected_dk_pts": 23.45
+            },
+            {
+              "player": "Ashton Jeanty",
+              "position": "RB",
+              "team": "LV",
+              "opponent": "SF",
+              "salary": 5900,
+              "projected_dk_pts": 19.33
+            },
+            {
+              "player": "Stefon Diggs",
+              "position": "WR",
+              "team": "WAS",
+              "opponent": "LAR",
+              "salary": 5600,
+              "projected_dk_pts": 17.3
+            },
+            {
+              "player": "Adonai Mitchell",
+              "position": "WR",
+              "team": "NYJ",
+              "opponent": "KC",
+              "salary": 4500,
+              "projected_dk_pts": 12.72
+            },
+            {
+              "player": "Dalton Schultz",
+              "position": "TE",
+              "team": "HOU",
+              "opponent": "LAC",
+              "salary": 3200,
+              "projected_dk_pts": 13.9
+            },
+            {
+              "player": "Eagles",
+              "position": "DST",
+              "team": "PHI",
+              "opponent": "NYG",
+              "salary": 2500,
+              "projected_dk_pts": 11.2
+            }
+          ]
+        }
+      ],
+      "dfs_contest_simulation_summary": {
+        "wave1_candidate_pool": 120,
+        "wave2_opponent_field": 500,
+        "top_lineup_p90_pts": 284.97,
+        "top_lineup_p99_pts": 393.08,
+        "clears_200pt_target": true
+      }
+    }
+  },
+  "phase4_deployment_and_observability_readiness": {
+    "phase4_status": "READY",
+    "all_deployment_and_observability_gates_passed": true,
+    "sentry_telemetry_governance": {
+      "production_traces_sample_rate": 0.1,
+      "startup_credit_buffer_usd": 5000,
+      "filtered_non_billable_routes": [
+        "/api/health",
+        "/api/ready",
+        "/_next/static"
+      ],
+      "budget_compliant": true
+    },
+    "odds_api_credit_governance": {
+      "free_lane_daily_ceiling_requests": 16,
+      "paid_lane_daily_ceiling_requests": 600,
+      "circuit_breaker_armed": true,
+      "closing_line_capture_prioritized": true,
+      "budget_compliant": true
+    },
+    "postgres_17_pg_cron_hygiene_verified": true,
+    "api_response_latency_slo": {
+      "target_cached_response_ceiling_ms": 500.0,
+      "measured_free_projection_ms": 2.865,
+      "measured_pro_projection_ms": 8.031,
+      "measured_cached_p95_ms": 8.031,
+      "meets_sub_500ms_slo": true
+    },
+    "security_and_paywall_audit": {
+      "free_tier_server_side_redaction_verified": true,
+      "pro_tier_full_delivery_verified": true,
+      "zero_forbidden_math_jargon_verified": true,
+      "confidence_xx_over_100_verified": true,
+      "heavy_juice_minus_300_firewall_verified": true
+    }
+  },
+  "digest_sha256": "e41b873950ceaabafd6b703a0f07ad100585f0738a782111de4641a27bf6ab89"
+}

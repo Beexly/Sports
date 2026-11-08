@@ -254,3 +254,67 @@ def test_per_game_context_packet_and_trace_sub_1_second_budget() -> None:
     elapsed = time.perf_counter() - t0
     assert elapsed < 1.0, f"Per-game context packet + reasoning trace took {elapsed:.3f}s (> 1.0s budget)"
     assert trace["family_consumption_census"]["accounted_families"] == 279
+
+
+def test_edge_case_c3_fallback_parameter_binding_isolation() -> None:
+    from intelligence.equations.equation_executor import (
+        _AST_SCALAR_CLOSURE_CACHE,
+        _AST_USES_NAMED_BINDINGS,
+        _evaluate_equation_scalars_fast,
+        _PreNormalizedFeatureContext,
+        invalidate_equation_executor_caches,
+    )
+
+    inputs = {"epa_per_play": 0.14, "proe": -0.05, "pressure_rate": 0.29}
+    pre_ctx = _PreNormalizedFeatureContext(inputs, use_ast_executor=True)
+
+    # Evaluate an equation with fallback bindings NOT in inputs
+    rec_fallback = {
+        "equation_id": "EQ_TEST_C3_A",
+        "family": "FAM_000_GENERAL",
+        "_input_features_tuple": ("unprovided_binding_alpha", "unprovided_binding_beta", "proe"),
+        "_formula_spec_str": "0.5 * unprovided_binding_alpha - 0.25 * unprovided_binding_beta + 0.1 * proe",
+        "_formula_type_lower": "linear_logit",
+        "_prebound_weights": (0.5, -0.25, 0.1),
+        "_is_sub_min": False,
+    }
+    diag_a, delta_a, _ = _evaluate_equation_scalars_fast(rec_fallback, 1.0, pre_ctx)
+    assert math.isfinite(diag_a) and math.isfinite(delta_a)
+
+    # Confirm unprovided fallback bindings were cleaned up from pre_ctx.shared_ast_env
+    assert "unprovided_binding_alpha" not in pre_ctx.shared_ast_env
+    assert "unprovided_binding_beta" not in pre_ctx.shared_ast_env
+    assert pre_ctx.shared_ast_env["proe"] == -0.05
+
+    # Also verify evaluate_equation_spec cleans up temporary fallback bindings on _pre_ctx,
+    # supports 4+ parameter bindings (`bindings[3+]`), and never pops standard AST symbols (`x0`, `x1`, `x2`, `exp`)
+    res_spec = evaluate_equation_spec(
+        equation_id="EQ_TEST_C3_B",
+        family="FAM_000_GENERAL",
+        inputs=inputs,
+        parameter_bindings=["x1", "epa_per_play", "transient_custom_var_3", "transient_custom_var_4"],
+        formula_spec="0.3 * x0 + 0.2 * epa_per_play - 0.1 * transient_custom_var_3 + 0.05 * transient_custom_var_4",
+        use_ast_executor=True,
+        _pre_ctx=pre_ctx,
+    )
+    assert res_spec["executed_via"] == "compiled_ast"
+    assert "transient_custom_var_3" not in pre_ctx.shared_ast_env
+    assert "transient_custom_var_4" not in pre_ctx.shared_ast_env
+    assert "x0" in pre_ctx.shared_ast_env
+    assert "x1" in pre_ctx.shared_ast_env
+    assert "x_primary" in pre_ctx.shared_ast_env
+    assert "exp" not in pre_ctx.shared_ast_env
+
+    # Verify single-call context cache does not poison `ast_enabled` when toggling `use_ast_executor`
+    res_op = evaluate_equation_spec("EQ_00001", "FAM_001_OFFENSE", inputs, use_ast_executor=False)
+    assert res_op["executed_via"] == "operator_kernel"
+    res_ast = evaluate_equation_spec("EQ_00001", "FAM_001_OFFENSE", inputs)
+    assert res_ast["executed_via"] == "compiled_ast"
+
+    # Verify cache invalidation clears scalar closure and named-binding caches
+    assert len(_AST_SCALAR_CLOSURE_CACHE) > 0 or len(_AST_USES_NAMED_BINDINGS) > 0
+    invalidate_equation_executor_caches()
+    assert len(_AST_SCALAR_CLOSURE_CACHE) == 0
+    assert len(_AST_USES_NAMED_BINDINGS) == 0
+
+

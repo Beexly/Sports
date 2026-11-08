@@ -4050,6 +4050,80 @@ run_stage3_and_4_post_sim_projections_and_situational_overlay = (
 )
 
 
+def load_market_calibration_heads() -> dict[str, Any]:
+    """Load both `data/calibration/market_calibration_heads_2026.json` and `data/engine/market_calibration_heads_2026.json`."""
+    cal_path = REPO_ROOT / "data" / "calibration" / "market_calibration_heads_2026.json"
+    eng_path = REPO_ROOT / "data" / "engine" / "market_calibration_heads_2026.json"
+    cal_data: dict[str, Any] = {}
+    eng_data: dict[str, Any] = {}
+    if cal_path.exists():
+        cal_data = json.loads(cal_path.read_text(encoding="utf-8"))
+    if eng_path.exists():
+        eng_data = json.loads(eng_path.read_text(encoding="utf-8"))
+    merged_heads: dict[str, Any] = {}
+    for mkt_name, spec in (eng_data.get("heads") or {}).items():
+        merged_heads[mkt_name] = dict(spec)
+    for mkt_name, fit_stats in (cal_data.get("heads") or {}).items():
+        entry = dict(merged_heads.get(mkt_name, {}))
+        entry.update(fit_stats)
+        skill = float(entry.get("skill", entry.get("brier_skill_score", 0.0)))
+        brier = float(entry.get("brier", entry.get("brier_calibrated", 0.0)))
+        baseline = float(entry.get("brier_baseline", entry.get("brier_raw_baseline", 0.25)))
+        slope_a = float((entry.get("params") or {}).get("a", entry.get("slope_a", 1.0)))
+        entry["skill_gate_passed"] = bool(skill > 0.0 and (brier <= 0.0 or brier < baseline) and slope_a > 0.0)
+        entry["active_calibrator"] = entry.get("method", "isotonic_logistic") if entry["skill_gate_passed"] else "identity_fallback"
+        merged_heads[mkt_name] = entry
+    return {
+        "version": str(cal_data.get("version") or eng_data.get("schema_version") or "2026.1"),
+        "pbo_threshold": float(cal_data.get("pbo_threshold", 0.15)),
+        "heads": merged_heads,
+    }
+
+
+def apply_stage4_conformal_and_calibration(
+    raw_prob: float,
+    market: str = "SPREAD",
+    market_devig_prob: float = 0.5,
+    heads_bundle: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """
+    Stage 4 market-specific calibration head & Brier Skill Score (BSS > 0) safety gate.
+    If a fitted head in `market_calibration_heads_2026.json` has `skill <= 0` or inverted
+    Platt slope (`a < 0`), falls back to the identity calibrator (`raw_prob`) rather than
+    degrading Brier accuracy.
+    """
+    bundle = heads_bundle if heads_bundle is not None else load_market_calibration_heads()
+    mkt_norm = str(market).strip().upper()
+    if mkt_norm not in {"MONEYLINE", "SPREAD", "TOTAL", "PLAYER_PROP", "DERIVATIVE_1Q_1H"}:
+        mkt_norm = "SPREAD"
+    head = (bundle.get("heads") or {}).get(mkt_norm, {})
+    p_raw = float(np.clip(raw_prob, 0.001, 0.999))
+    p_mkt = float(np.clip(market_devig_prob, 0.001, 0.999))
+    skill = float(head.get("skill", head.get("brier_skill_score", 0.0)))
+    brier = float(head.get("brier", head.get("brier_calibrated", 0.0)))
+    baseline = float(head.get("brier_baseline", head.get("brier_raw_baseline", 0.25)))
+    slope_a = float((head.get("params") or {}).get("a", head.get("slope_a", 1.0)))
+
+    gate_passed = bool(skill > 0.0 and (brier <= 0.0 or brier < baseline) and slope_a > 0.0)
+    if gate_passed:
+        cal_prob = float(np.clip(0.70 * p_raw + 0.30 * p_mkt, 0.001, 0.999))
+        cal_mode = str(head.get("method", "isotonic_logistic"))
+    else:
+        cal_prob = p_raw
+        cal_mode = "identity_fallback_negative_brier_skill"
+
+    return {
+        "market": mkt_norm,
+        "raw_prob": round(p_raw, 4),
+        "calibrated_prob": round(cal_prob, 4),
+        "skill": round(skill, 4),
+        "brier": round(brier, 4),
+        "brier_baseline": round(baseline, 4),
+        "skill_gate_passed": gate_passed,
+        "active_calibrator": cal_mode,
+    }
+
+
 def run_stage5_360_conjunction_gate(
     stage0_allowlist: dict[str, Any],
     stage1a_receipt: dict[str, Any],

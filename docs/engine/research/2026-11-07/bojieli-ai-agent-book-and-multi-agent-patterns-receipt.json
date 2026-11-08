@@ -1,0 +1,700 @@
+{
+  "status": "PASS",
+  "executed_at_utc": "2026-11-08T08:43:54.088288+00:00",
+  "game_id_verified": "2024_10_CIN_BAL",
+  "corpus_and_sources_ingested": {
+    "ai_agents_in_depth_pdf": {
+      "filename": "AI-Agents-in-Depth-tr.pdf",
+      "resolved_via": "Path.home() / 'Downloads'",
+      "exists_locally": true,
+      "page_count": 390,
+      "file_size_bytes": 10516322,
+      "author": "Bojie Li (Turkish translation by @memisemre, v2.0)",
+      "core_formula_verified": "Agent = LLM + Context + Tools",
+      "chapters_verified": 10,
+      "toc_entries_count": 293,
+      "level1_toc_headings_count": 12,
+      "level1_toc_headings": [
+        "Giri\u015f",
+        "1 AI Agent\u2019lara Giri\u015f",
+        "2 Context Engineering",
+        "3 Kullan\u0131c\u0131 Belle\u011fi ve Bilgi Taban\u0131",
+        "4 Ara\u00e7lar",
+        "5 Kodlama Agent\u2019\u0131 ve Kod \u00dcretimi",
+        "6 Etkile\u015fim: G\u00f6zlem ve Eylem Uzaylar\u0131n\u0131n Geni\u015fletilmesi",
+        "7 Agent\u2019\u0131n De\u011ferlendirmesi",
+        "8 Model Post-Training",
+        "9 Agent\u2019\u0131n S\u00fcrekli Evrimi",
+        "10 \u00c7oklu Agent \u0130\u015f Birli\u011fi",
+        "Sons\u00f6z: Agent = LLM + Context + Tools\u2019a D\u00f6n\u00fc\u015f"
+      ],
+      "title_page_excerpt": "AI Agent\u2019lar\u0131 Derinlemesine Anlamak Tasar\u0131m \u0130lkeleri ve M\u00fchendislik Prati\u011fi Bojie Li S\u00fcr\u00fcm v2.0 \u00b7September 23, 2026"
+    },
+    "introductory_chapter_computer_simulation_pdf": {
+      "filename": "Introductory_Chapter_Computer_Simulation.pdf",
+      "resolved_via": "Path.home() / 'Downloads'",
+      "exists_locally": true,
+      "page_count": 5,
+      "file_size_bytes": 541468,
+      "author": "Dragan Cvetkovic (Singidunum University, IntechOpen, 2019)",
+      "author_verified_in_text": true,
+      "sections_verified": [
+        "1. Introduction",
+        "1.1. Process of modeling and making of reliable computer model",
+        "1.2. Computer modeling and computer simulation",
+        "1.3. Reasons for computer modeling and simulation",
+        "1.4. Advantages and disadvantages of computer simulations"
+      ],
+      "cited_textbooks_count": 6
+    },
+    "bojieli_93_experiments_summary": {
+      "total_chapters": 10,
+      "documented_companion_projects_badge_count": 93,
+      "chapter_project_table_sum": 108,
+      "standalone_projects_min": 70,
+      "external_cloned_repos_count": 23,
+      "languages_translated_count": 15,
+      "local_turkish_edition_pdf_filename": "AI-Agents-in-Depth-tr.pdf",
+      "local_turkish_edition_expected_pages": 390
+    },
+    "bojieli_10_chapters_count": 10,
+    "bojieli_23_external_repos_count": 23,
+    "bojieli_ai_infra_12_chapters_count": 12,
+    "bsbodden_15_patterns_count": 15,
+    "computer_simulation_6_textbooks_count": 6,
+    "youtube_and_blog_sources_verified": [
+      {
+        "source_id": "MINDSTUDIO-HYBRID-MEMORY-2026",
+        "url": "https://www.mindstudio.ai/blog/ai-agent-hybrid-memory-architecture",
+        "title": "How to Build an AI Agent That Never Forgets: A Hybrid Memory Architecture",
+        "author": "Luis Chavez-Mattos (MindStudio)",
+        "pillars": [
+          "Active Conversation / Working Window",
+          "Automatic Transcript Capture (Structured Episodic Store)",
+          "Curated Memory Files (Conflict-Resolved Entity Cards)",
+          "Vector Search for Associative Recall (Semantic + Keyword Hybrid)"
+        ]
+      },
+      {
+        "source_id": "YOUTUBE-BYTEMONK-RRbtskowjSY",
+        "url": "https://www.youtube.com/watch?v=RRbtskowjSY&vl=en",
+        "title": "Build an AI Agent That Never Forgets",
+        "channel": "ByteMonk",
+        "architecture": "4-Tier Cognitive Memory Hierarchy (Working Context, Episodic Vector Store, Semantic Knowledge Graph, Procedural Skill Memory) with Sleep-Consolidation & Decay."
+      },
+      {
+        "source_id": "YOUTUBE-MG-xsPf8MkdMx8",
+        "url": "https://www.youtube.com/watch?v=xsPf8MkdMx8&t=84",
+        "title": "AI Agent That Never Forget: Redis + LangGraph Integration Tutorial",
+        "channel": "MG (@MG_cafe)",
+        "architecture": "LangGraph StateGraph + RedisSaver Checkpointer (thread_id short-term working state) + RedisVL Cross-Thread Long-Term Semantic/Episodic Store."
+      },
+      {
+        "source_id": "ARXIV-1204-1581",
+        "url": "https://arxiv.org/pdf/1204.1581",
+        "title": "A new approach of designing Multi-Agent Systems",
+        "authors": "Sara Maalal & Malika Addou (2012)",
+        "architecture": "AUML + Model-Driven Architecture (MDA) generic MAS meta-model: Reactive, Cognitive, Communicative, Rational, and Adaptive agents with informaboutConstraintes(), acceptPartnerShip(), and Decide()."
+      }
+    ]
+  },
+  "four_tier_hybrid_memory_verification": {
+    "tier1_working_snap_checkpoint": {
+      "thread_id": "game::2024_10_CIN_BAL",
+      "latest_checkpoint_id": "game::2024_10_CIN_BAL::snap_010",
+      "active_window_snaps": 5,
+      "total_snaps_logged": 10,
+      "agent_status_bar": {
+        "compressed_snaps_count": 5,
+        "first_snap": 1,
+        "last_snap": 5,
+        "mean_epa_delta": 0.0042
+      },
+      "kv_cache_prefix_hit_ratio": 0.7826
+    },
+    "tier2_episodic_transcripts_count": 3,
+    "tier3_semantic_conflict_resolution_verified": true,
+    "tier3_cross_entity_contamination_count": 0,
+    "tier4_progressive_disclosure_skills": [
+      {
+        "skill_id": "SOP-WAVE1-10GATE-DFS-POOL-CURATION",
+        "category": "dfs_pool_curation",
+        "similarity": 0.3674,
+        "disclosure_level": "FULL_PROGRESSIVE_DISCLOSURE",
+        "codified_rule": "reject sub-floor WR4/TE2/RB3 traps and road-dog punt DSTs before contest simulation",
+        "progressive_payload": {
+          "input_slate_players": 225,
+          "curated_pool_players": 119,
+          "rejected_traps": 106
+        }
+      },
+      {
+        "skill_id": "SOP-WAVE2-CVAR99-200PT-CONTEST-SIM",
+        "category": "dfs_lineup_simulation",
+        "similarity": 0.2152,
+        "disclosure_level": "FULL_PROGRESSIVE_DISCLOSURE",
+        "codified_rule": "salary <= 50000 and valid_9_slot_roster and cvar_099 >= 200.0 and joint_p99 >= 200.0",
+        "progressive_payload": {
+          "frontier_dfs_equations": 30,
+          "total_lineup_world_evaluations": 6200000
+        }
+      }
+    ]
+  },
+  "multi_agent_orchestration_verification": {
+    "patterns_wired_count": 15,
+    "goap_astar_plan": {
+      "planner": "Embabel_GOAP_AStar",
+      "start_state": "RawSlateInput",
+      "goal_state": "Verified200PtPortfolio",
+      "actions_count": 7,
+      "total_cost": 0.75,
+      "admissible_heuristic_verified": true,
+      "action_sequence": [
+        "Ingest26LayerSituationalContext",
+        "Execute5TrackReasoningOverlay",
+        "Simulate10000SnapWorlds",
+        "ApplyHeavyJuiceAndConjunctionFirewall",
+        "CurateWave1DedicatedDfsPool",
+        "SimulateWave2ContestMatrix6M",
+        "AuditCriticAndSign200PtPortfolio"
+      ],
+      "state_sequence": [
+        "RawSlateInput",
+        "SituationalContextReady",
+        "ReasoningOverlayReady",
+        "PostSimProjectionsReady",
+        "Verified360MarketsReady",
+        "Curated119PoolReady",
+        "ContestSim6MReady",
+        "Verified200PtPortfolio"
+      ]
+    },
+    "blackboard_final_version": 5,
+    "contract_net_awards": {
+      "protocol": "Contract-Net (Task Announcement -> Bid -> Award)",
+      "contracts_announced": 3,
+      "contracts_awarded": 3,
+      "awards": [
+        {
+          "contract_slot": "LINEUP_1_Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
+          "winning_bidder_agent": "SolverAgent::Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
+          "bid_utility_score": 402.78,
+          "cvar_099_dk_pts": 415.72,
+          "joint_p99_dk_pts": 394.01,
+          "salary_used": 49900,
+          "award_status": "AWARDED"
+        },
+        {
+          "contract_slot": "LINEUP_2_Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
+          "winning_bidder_agent": "SolverAgent::Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
+          "bid_utility_score": 392.19,
+          "cvar_099_dk_pts": 410.14,
+          "joint_p99_dk_pts": 387.99,
+          "salary_used": 49900,
+          "award_status": "AWARDED"
+        },
+        {
+          "contract_slot": "LINEUP_3_Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
+          "winning_bidder_agent": "SolverAgent::Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
+          "bid_utility_score": 324.17,
+          "cvar_099_dk_pts": 383.86,
+          "joint_p99_dk_pts": 363.38,
+          "salary_used": 49600,
+          "award_status": "AWARDED"
+        }
+      ]
+    },
+    "generator_critic_and_ooda": {
+      "generator_critic_iterations": [
+        {
+          "iteration": 1,
+          "rubric_scores": {
+            "1_situational_grounding_and_l26_last": 1,
+            "2_conformal_cqr_and_copula_calibration": 1,
+            "3_heavy_juice_minus_300_and_trap_firewall": 0,
+            "4_dk_200pt_cvar99_and_50k_salary_cap": 1
+          },
+          "score": 3,
+          "max_score": 4,
+          "ooda_phase": "Observe->Orient->Decide(Replan)->Act",
+          "critic_feedback": "CRITIC_VETO: Strip -320 heavy-juice trap (TKT-HEAVY-JUICE-MINUS-320-TRAP-09) via Stage-5 Firewall."
+        },
+        {
+          "iteration": 2,
+          "rubric_scores": {
+            "1_situational_grounding_and_l26_last": 1,
+            "2_conformal_cqr_and_copula_calibration": 1,
+            "3_heavy_juice_minus_300_and_trap_firewall": 1,
+            "4_dk_200pt_cvar99_and_50k_salary_cap": 1
+          },
+          "score": 4,
+          "max_score": 4,
+          "ooda_phase": "Observe->Orient->Decide(Commit)->Act",
+          "critic_feedback": "APPROVED_4_OF_4: All situational, conformal, -300 firewall, and 200+ pt DFS gates passed."
+        }
+      ],
+      "final_score": 4,
+      "converged_within_max_iterations": true,
+      "six_failure_modes_mitigated": {
+        "FM1_shared_concurrency_conflicts": {
+          "mitigated": true,
+          "mechanism": "Atomic versioned Blackboard writes instead of race-prone file/socket overwrites."
+        },
+        "FM2_cascading_error_amplification": {
+          "mitigated": true,
+          "mechanism": "Stage-by-stage schema & simplex conservation verifiers halt error propagation."
+        },
+        "FM3_homogeneous_convergence": {
+          "mitigated": true,
+          "mechanism": "3 orthogonal DFS solver archetypes (Cash Floor, Primary Shootout Stack, Contrarian KL Leverage) + dual adversarial critics."
+        },
+        "FM4_passing_the_buck": {
+          "mitigated": true,
+          "mechanism": "Explicit Contract-Net slot ownership & step-level first-error attribution (Bojie Li Ch 7.5.2)."
+        },
+        "FM5_runaway_loops": {
+          "mitigated": true,
+          "mechanism": "Hard max_iterations=3 cap with deterministic termination predicate."
+        },
+        "FM6_comprehension_debt_and_cognitive_surrender": {
+          "mitigated": true,
+          "mechanism": "Codified mathematical invariants (L12->L13->L21, L26<=0.08, CVaR_0.99>=200.0) verified via executable assertions."
+        }
+      },
+      "all_6_failure_modes_mitigated": true
+    },
+    "bojieli_ch7_pass_at_1": 1.0,
+    "bojieli_ch7_pass_hat_3_reliability": 1.0
+  },
+  "auml_mda_arxiv_1204_1581_verification": {
+    "arxiv_id": "1204.1581",
+    "authors": "Sara Maalal & Malika Addou (2012)",
+    "auml_specializations_verified": [
+      "ReactiveAgent",
+      "CognitiveAgent",
+      "CommunicativeAgent",
+      "RationalAgent",
+      "AdaptiveAgent"
+    ],
+    "constraints_informed": [
+      "FIREWALL_ODDS_GT_MINUS_300",
+      "POST_DEVIG_EV_GT_0.015",
+      "DK_SALARY_CAP_LE_50000",
+      "DK_GPP_CVAR99_GE_200.0"
+    ],
+    "partnerships_established": [
+      {
+        "agent_a": "ReactiveFirewallAgent",
+        "agent_b": "CognitiveProjectionAgent",
+        "shared_goal": "Stage5_ConjunctionGate",
+        "status": "PARTNERSHIP_ACCEPTED"
+      },
+      {
+        "agent_a": "CognitiveProjectionAgent",
+        "agent_b": "RationalDfsOptimizerAgent",
+        "shared_goal": "Wave2_200PtPortfolio",
+        "status": "PARTNERSHIP_ACCEPTED"
+      }
+    ],
+    "Decide_output": "PASS",
+    "communicative_envelope": {
+      "sender": "CommunicativeBroadcastAgent",
+      "reactive_firewall_block": true,
+      "cognitive_decide_result": "PASS",
+      "adaptive_regime": "WEATHER_SUPPRESSOR_L1_ACTIVE",
+      "rational_200pt_cleared": true
+    }
+  },
+  "discrete_event_computer_simulation_verification": {
+    "status": "PASS",
+    "total_snap_evaluations": 1750000,
+    "devs_clock_monotonic_verified": true,
+    "simplex_truncation_drift": 2.220446049250313e-16,
+    "simplex_conservation_verified": true,
+    "monte_carlo_sample_mean_dk_pts": 208.5,
+    "monte_carlo_standard_error": 0.375471,
+    "ci95_half_width": 0.735908,
+    "relative_precision_ratio": 0.00353,
+    "variance_reduction_verified": true,
+    "cited_simulation_textbooks_verified": 6
+  },
+  "ai_infra_quantitative_roofline_verification": {
+    "ai_infra_chapters_wired": 12,
+    "kv_cache_footprint_gb": 32.0,
+    "prefill_arithmetic_intensity_flops_per_byte": 1927.53,
+    "decode_arithmetic_intensity_flops_per_byte": 32.0,
+    "prefill_is_compute_bound_and_decode_is_memory_bound": true,
+    "five_data_movement_questions": {
+      "1_what_moves": "26-Layer Context Packet tensors, KV-cache prefix blocks, and 10,000 x 119 float64 world matrices",
+      "2_how_much_bytes": 34369258368,
+      "3_how_many_times": "1 immutable prefix prefill + O(1) contiguous BLAS matrix multiply (Y_worlds @ X_cand.T)",
+      "4_through_where": "CPU L3 Cache / AVX2 SIMD registers (zero raw-table token serialization per Exp 5-13 Artifact Pattern)",
+      "5_who_waits": "Stage-5 Conjunction Gate waits strictly on L12->L13->L21->Stage3 Simulation completion"
+    }
+  },
+  "gse_two_wave_projections_and_200pt_dfs_summary": {
+    "stage1_to_5_dependency_order": [
+      "offensive_line",
+      "coaching_scheme",
+      "scheme_matchup",
+      "qb_behavior",
+      "trust_signals"
+    ],
+    "l26_market_entered_last_weight_le_0_08": true,
+    "heavy_juice_minus_300_trap_blocked": true,
+    "pass_discipline_verified": true,
+    "wave1_total_slate_players_projected": 225,
+    "wave1_curated_dfs_pool_size": 119,
+    "wave1_rejected_traps_count": 106,
+    "wave2_total_lineup_world_evaluations": 6200000,
+    "all_3_lineups_clear_200pt_championship_target": true,
+    "max_cvar_099_championship_dk_pts": 415.72,
+    "max_joint_p99_shootout_dk_pts": 394.01,
+    "lineups": [
+      {
+        "lineup_id": 1,
+        "archetype": "Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
+        "total_salary": 49900,
+        "salary_cap_remaining": 100,
+        "valid_dk_9_slot_roster": true,
+        "qb_team": "HOU",
+        "stacked_pass_catchers_count": 2,
+        "opposing_bring_backs_count": 1,
+        "mean_projection_dk_pts": 182.43,
+        "joint_p90_ceiling_dk_pts": 283.74,
+        "joint_p99_shootout_dk_pts": 394.01,
+        "cvar_099_championship_dk_pts": 415.72,
+        "clears_200pt_dk_championship_target": true,
+        "wave2_lineup_vs_field_simulation": {
+          "sim_first_place_win_rate": 0.1399,
+          "sim_top_1pct_finish_rate": 0.3095,
+          "sim_200pt_exceedance_prob": 0.3115,
+          "sim_contest_roi_pct": 389.02,
+          "submodular_world_coverage_marginal_gain": 0.3095
+        },
+        "roster": [
+          {
+            "player": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "team": "SEA",
+            "opponent": "ARI",
+            "salary": 9300,
+            "gse_dk_projection": 29.09,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.8499
+          },
+          {
+            "player": "Nico Collins",
+            "position": "WR",
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 7200,
+            "gse_dk_projection": 19.62,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.523
+          },
+          {
+            "player": "Josh Jacobs",
+            "position": "RB",
+            "team": "GB",
+            "opponent": "NE",
+            "salary": 6800,
+            "gse_dk_projection": 26.19,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.8033
+          },
+          {
+            "player": "C.J. Stroud",
+            "position": "QB",
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 5900,
+            "gse_dk_projection": 26.36,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.0588
+          },
+          {
+            "player": "Ollie Gordon II",
+            "position": "RB",
+            "team": "MIA",
+            "opponent": "DET",
+            "salary": 5600,
+            "gse_dk_projection": 23.82,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.7287
+          },
+          {
+            "player": "Ladd McConkey",
+            "position": "WR",
+            "team": "LAC",
+            "opponent": "HOU",
+            "salary": 5500,
+            "gse_dk_projection": 15.3,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.2921
+          },
+          {
+            "player": "Malik Davis",
+            "position": "RB",
+            "team": "DAL",
+            "opponent": "IND",
+            "salary": 4000,
+            "gse_dk_projection": 16.95,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.4379
+          },
+          {
+            "player": "Dalton Schultz",
+            "position": "TE",
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 3200,
+            "gse_dk_projection": 13.9,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.6035
+          },
+          {
+            "player": "Packers",
+            "position": "DST",
+            "team": "GB",
+            "opponent": "NE",
+            "salary": 2400,
+            "gse_dk_projection": 11.2,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.6233
+          }
+        ]
+      },
+      {
+        "lineup_id": 2,
+        "archetype": "Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
+        "total_salary": 49900,
+        "salary_cap_remaining": 100,
+        "valid_dk_9_slot_roster": true,
+        "qb_team": "DET",
+        "stacked_pass_catchers_count": 2,
+        "opposing_bring_backs_count": 2,
+        "mean_projection_dk_pts": 179.75,
+        "joint_p90_ceiling_dk_pts": 279.73,
+        "joint_p99_shootout_dk_pts": 387.99,
+        "cvar_099_championship_dk_pts": 410.14,
+        "clears_200pt_dk_championship_target": true,
+        "wave2_lineup_vs_field_simulation": {
+          "sim_first_place_win_rate": 0.1318,
+          "sim_top_1pct_finish_rate": 0.2881,
+          "sim_200pt_exceedance_prob": 0.2976,
+          "sim_contest_roi_pct": 359.14,
+          "submodular_world_coverage_marginal_gain": 0.222
+        },
+        "roster": [
+          {
+            "player": "Amon-Ra St. Brown",
+            "position": "WR",
+            "team": "DET",
+            "opponent": "MIA",
+            "salary": 8100,
+            "gse_dk_projection": 21.83,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.6168
+          },
+          {
+            "player": "Malik Nabers",
+            "position": "WR",
+            "team": "NYG",
+            "opponent": "PHI",
+            "salary": 7300,
+            "gse_dk_projection": 22.41,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.6393
+          },
+          {
+            "player": "Jared Goff",
+            "position": "QB",
+            "team": "DET",
+            "opponent": "MIA",
+            "salary": 6600,
+            "gse_dk_projection": 28.37,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.1504
+          },
+          {
+            "player": "Rhamondre Stevenson",
+            "position": "RB",
+            "team": "NE",
+            "opponent": "GB",
+            "salary": 6100,
+            "gse_dk_projection": 23.45,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.716
+          },
+          {
+            "player": "Ollie Gordon II",
+            "position": "RB",
+            "team": "MIA",
+            "opponent": "DET",
+            "salary": 5600,
+            "gse_dk_projection": 23.82,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.7287
+          },
+          {
+            "player": "Stefon Diggs",
+            "position": "WR",
+            "team": "WAS",
+            "opponent": "LAR",
+            "salary": 5600,
+            "gse_dk_projection": 17.12,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.3984
+          },
+          {
+            "player": "Sam LaPorta",
+            "position": "TE",
+            "team": "DET",
+            "opponent": "MIA",
+            "salary": 5100,
+            "gse_dk_projection": 18.93,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.8297
+          },
+          {
+            "player": "Greg Dulcich",
+            "position": "TE",
+            "team": "MIA",
+            "opponent": "DET",
+            "salary": 3100,
+            "gse_dk_projection": 13.52,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.5823
+          },
+          {
+            "player": "Chargers",
+            "position": "DST",
+            "team": "LAC",
+            "opponent": "HOU",
+            "salary": 2400,
+            "gse_dk_projection": 10.3,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.5643
+          }
+        ]
+      },
+      {
+        "lineup_id": 3,
+        "archetype": "Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
+        "total_salary": 49600,
+        "salary_cap_remaining": 400,
+        "valid_dk_9_slot_roster": true,
+        "qb_team": "LAR",
+        "stacked_pass_catchers_count": 1,
+        "opposing_bring_backs_count": 1,
+        "mean_projection_dk_pts": 171.37,
+        "joint_p90_ceiling_dk_pts": 264.65,
+        "joint_p99_shootout_dk_pts": 363.38,
+        "cvar_099_championship_dk_pts": 383.86,
+        "clears_200pt_dk_championship_target": true,
+        "wave2_lineup_vs_field_simulation": {
+          "sim_first_place_win_rate": 0.0577,
+          "sim_top_1pct_finish_rate": 0.1711,
+          "sim_200pt_exceedance_prob": 0.1892,
+          "sim_contest_roi_pct": 121.25,
+          "submodular_world_coverage_marginal_gain": 0.0935
+        },
+        "roster": [
+          {
+            "player": "Puka Nacua",
+            "position": "WR",
+            "team": "LAR",
+            "opponent": "WAS",
+            "salary": 8800,
+            "gse_dk_projection": 25.52,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.7472
+          },
+          {
+            "player": "Josh Jacobs",
+            "position": "RB",
+            "team": "GB",
+            "opponent": "NE",
+            "salary": 6800,
+            "gse_dk_projection": 26.19,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.8033
+          },
+          {
+            "player": "Matthew Stafford",
+            "position": "QB",
+            "team": "LAR",
+            "opponent": "WAS",
+            "salary": 6200,
+            "gse_dk_projection": 22.12,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 0.8296
+          },
+          {
+            "player": "Rhamondre Stevenson",
+            "position": "RB",
+            "team": "NE",
+            "opponent": "GB",
+            "salary": 6100,
+            "gse_dk_projection": 23.45,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.716
+          },
+          {
+            "player": "Ashton Jeanty",
+            "position": "RB",
+            "team": "LV",
+            "opponent": "SF",
+            "salary": 5900,
+            "gse_dk_projection": 19.15,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.546
+          },
+          {
+            "player": "Stefon Diggs",
+            "position": "WR",
+            "team": "WAS",
+            "opponent": "LAR",
+            "salary": 5600,
+            "gse_dk_projection": 17.12,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.3984
+          },
+          {
+            "player": "Adonai Mitchell",
+            "position": "WR",
+            "team": "NYJ",
+            "opponent": "KC",
+            "salary": 4500,
+            "gse_dk_projection": 12.72,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.112
+          },
+          {
+            "player": "Dalton Schultz",
+            "position": "TE",
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 3200,
+            "gse_dk_projection": 13.9,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.6035
+          },
+          {
+            "player": "Eagles",
+            "position": "DST",
+            "team": "PHI",
+            "opponent": "NYG",
+            "salary": 2500,
+            "gse_dk_projection": 11.2,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.6233
+          }
+        ]
+      }
+    ]
+  },
+  "digest_sha256": "3eedee70827cd4b04f13835bbf0746c299618b883c2504d8dd7dcdf976b028eb"
+}

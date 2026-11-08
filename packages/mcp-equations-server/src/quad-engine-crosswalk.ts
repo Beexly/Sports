@@ -257,7 +257,7 @@ const FALLBACK_SEED_CROSSWALK: QuadEngineCrosswalkNode[] = [
 export function loadLiveQuadEngineCrosswalk(): QuadEngineCrosswalkNode[] {
   const possiblePaths = [
     join(process.cwd(), "docs/engine/research/2026-10-28/QUAD-ENGINE-MASTER-CROSSWALK.json"),
-    resolve("C:/Users/Garrett/Sports/docs/engine/research/2026-10-28/QUAD-ENGINE-MASTER-CROSSWALK.json"),
+    resolve(process.cwd(), "../../docs/engine/research/2026-10-28/QUAD-ENGINE-MASTER-CROSSWALK.json"),
   ];
 
   try {

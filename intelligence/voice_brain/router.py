@@ -134,6 +134,15 @@ class ModelRouter:
         temperature: float,
     ) -> Tuple[str, str]:
         models = [
+            "inkling/inkling-2",
+            "inkling/inkling-small-2",
+            "deepseek/deepseek-v3.2",
+            "z-ai/glm-5.1",
+            "z-ai/glm-5-turbo",
+            "x-ai/grok-4.1-fast",
+            "x-ai/grok-4.20-multi-agent-beta-0309",
+            "xiaomi/mimo-v2-pro",
+            "minimax/minimax-m2.7",
             "nvidia/nemotron-3.5-lightning:free",
             "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
             "google/gemma-4-26b-a4b-it:free",

@@ -157,10 +157,56 @@ class MarketCalibrationSuite:
             self.heads[market]["brier"] = round(brier, 4)
             self.heads[market]["skill"] = round(skill, 4)
             self.heads[market]["sample_size"] = count
-            report[market] = {"count": count, "brier": brier, "skill": skill}
+            self.heads[market]["skill_gate_passed"] = bool(skill > 0.0)
+            self.heads[market]["active_transform"] = "shrunk_logistic" if skill > 0.0 else "identity_fallback"
+            report[market] = {
+                "count": count,
+                "brier": brier,
+                "skill": skill,
+                "skill_gate_passed": bool(skill > 0.0),
+                "active_transform": self.heads[market]["active_transform"],
+            }
             
         self.fitted = True
         return report
+
+    def calibrate_probability(
+        self,
+        raw_prob: float,
+        market: str = "SPREAD",
+        devig_prob: float = 0.5,
+    ) -> Dict[str, Any]:
+        """Apply market-specific calibration head with strict Brier Skill Score (BSS > 0) gate."""
+        p_raw = max(0.001, min(0.999, float(raw_prob)))
+        p_mkt = max(0.001, min(0.999, float(devig_prob)))
+        mkt_key = str(market).upper()
+        head = self.heads.get(mkt_key, {})
+        skill = float(head.get("skill", 0.0))
+        slope_a = float(head.get("slope_a", head.get("a", 1.0)))
+        brier = float(head.get("brier", 0.0))
+        baseline = float(head.get("brier_baseline", TRUE_BASE_RATE_BRIER.get(mkt_key, 0.25)))
+
+        # Reject any head with non-positive Brier skill or inverted Platt slope (a < 0)
+        if skill <= 0.0 or (brier > 0.0 and brier >= baseline) or slope_a < 0.0:
+            cal_p = p_raw
+            status = "FALLBACK_IDENTITY_NEGATIVE_BRIERSKILL"
+            gate_passed = False
+        else:
+            cal_p = 0.7 * p_raw + 0.3 * p_mkt
+            status = "CALIBRATED_HEAD_ACTIVE"
+            gate_passed = True
+
+        edge = cal_p - p_mkt
+        conf = map_cover_prob_and_edge_to_confidence(cal_p, edge, market=mkt_key)
+        return {
+            "market": mkt_key,
+            "raw_prob": round(p_raw, 4),
+            "calibrated_prob": round(cal_p, 4),
+            "conviction_score": conf,
+            "skill": round(skill, 4),
+            "skill_gate_passed": gate_passed,
+            "status": status,
+        }
         
     def export(self, file_path: str) -> None:
         """Export calibration parameters to JSON."""

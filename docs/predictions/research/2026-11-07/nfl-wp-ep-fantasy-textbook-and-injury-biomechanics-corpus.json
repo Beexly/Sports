@@ -1,0 +1,947 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-11-08T08:43:42.031067+00:00",
+  "engine_module": "intelligence/nfl_analytics_and_injury_biomechanics/nfl_wp_ep_fantasy_textbook_and_injury_rtp_engine.py",
+  "summary_counts": {
+    "suite_1_nfl_wp_ep_papers_and_models": 25,
+    "suite_2_fantasy_football_analytics_textbook_chapters": 29,
+    "suite_3_official_nfl_rulebooks_and_epochs": 4,
+    "suite_4_nfl_sports_medicine_and_biomechanics_studies": 38,
+    "total_corpus_items_wired": 96
+  },
+  "suite_1_nfl_wp_ep_25_papers_and_models": [
+    {
+      "study_id": "WP-EP-01",
+      "title": "The Blown Lead Paradox: Pathwise Stopping-Time Calibration of In-Game Win Probability Models",
+      "authors": "Pipping, Gam\u00f3n, & Wyner (2026)",
+      "identifier": "arXiv:2602.10784v1",
+      "domain": "Pathwise Martingale Stopping-Time Calibration & Optional-Stopping Overoptimism Damper",
+      "key_equation": "\\tau_q = \\inf\\{t : \\hat{p}_t \\ge q\\}, \\quad \\Delta_{\\text{path}}(q) = \\Pr(Y=1 \\mid \\sup_t \\hat{p}_t \\ge q) - q"
+    },
+    {
+      "study_id": "WP-EP-02",
+      "title": "Generalized Pythagorean Expectation and Machine Learning Ensemble for NFL Win Prediction",
+      "authors": "Frontiers in Sports and Active Living (2025)",
+      "identifier": "10.3389/fspor.2025.1638446",
+      "domain": "Dynamic Pythagorean Exponent & Stacked Gradient-Boosted Win Probability",
+      "key_equation": "P_{\\text{Pyth}}(k) = \\frac{\\text{PF}^k}{\\text{PF}^k + \\text{PA}^k}, \\quad k = 1.50 \\left(\\frac{\\text{PF}+\\text{PA}}{G}\\right)^{0.285}"
+    },
+    {
+      "study_id": "WP-EP-03",
+      "title": "Bayesian and Gradient-Boosted In-Game NFL Win Probability Modeling with Situational Covariates",
+      "authors": "Aalto University Master's Thesis (2023)",
+      "identifier": "Aalto-2023-NFL-WP",
+      "domain": "In-Game Tree Ensemble & Bayesian State-Space Win Probability",
+      "key_equation": "\\text{logit}(\\hat{p}_t) = \\beta_0 + f_{\\text{GBDT}}(\\Delta S_t, \\tau_t, \\text{EP}_t, \\Delta\\text{TO}_t)"
+    },
+    {
+      "study_id": "WP-EP-04",
+      "title": "Dynamic State-Space and Calibration-Adjusted NFL Game Outcome Prediction",
+      "authors": "Nuutinen, University of Helsinki MSc Thesis (2025)",
+      "identifier": "Helsinki-Nuutinen-2025",
+      "domain": "Time-Varying Team Strength & Logit-Normal Win Probability Calibration",
+      "key_equation": "\\theta_{i,t} = \\theta_{i,t-1} + \\eta_{i,t}, \\quad P(Y_{ij}=1) = \\sigma(\\theta_{i,t} - \\theta_{j,t} + h)"
+    },
+    {
+      "study_id": "WP-EP-05",
+      "title": "Market-Implied vs. Play-by-Play Econometric NFL Win Probability Models",
+      "authors": "Costa, Claremont McKenna College Senior Thesis (2025)",
+      "identifier": "Claremont-Costa-2025",
+      "domain": "Pregame Spread Prior Decay & Play-by-Play Residual Integration",
+      "key_equation": "w_{\\text{prior}}(\\tau_t) = \\tau_t^{\\gamma}, \\quad \\mu_t = \\Delta S_t - \\text{Spread}_0 \\cdot \\tau_t^{\\gamma}"
+    },
+    {
+      "study_id": "WP-EP-06",
+      "title": "Stochastic Modeling and Machine Learning for NFL Game Outcomes and In-Game Win Probability",
+      "authors": "Dong, Princeton University Senior Thesis (2020)",
+      "identifier": "dsp01pc289n03q",
+      "domain": "Continuous-Time Diffusion & Random Forest Hybrid Win Probability",
+      "key_equation": "dX_t = \\mu_{\\text{eff}}(t) dt + \\sigma(t) dW_t"
+    },
+    {
+      "study_id": "WP-EP-07",
+      "title": "Evaluating and Improving Pythagorean Expectation Exponents Across NFL Scoring Environments",
+      "authors": "Ruscio & Brady (2021)",
+      "identifier": "Ruscio-Brady-2021-Pythagorean",
+      "domain": "Scoring-Environment Adaptive Pythagorean Exponent Estimation",
+      "key_equation": "\\hat{k}_{\\text{RB}} = \\arg\\min_{k} \\sum_{i} \\left(W_i / G_i - \\frac{\\text{PF}_i^k}{\\text{PF}_i^k + \\text{PA}_i^k}\\right)^2"
+    },
+    {
+      "study_id": "WP-EP-08",
+      "title": "Pro-Football-Reference (PFR) Foundational In-Game Win Probability Model",
+      "authors": "Pro-Football-Reference Analytics Group",
+      "identifier": "PFR-InGame-WP-Model",
+      "domain": "Gaussian Score-Margin Bridge with Vegas Spread Drift & Expected Points",
+      "key_equation": "P(\\text{Win}_t) = \\Phi\\left(\\frac{\\Delta S_t + \\text{EP}_t - \\text{Spread}_0 \\cdot (t_{\\text{rem}}/3600)}{13.45 \\sqrt{t_{\\text{rem}}/3600}}\\right)"
+    },
+    {
+      "study_id": "WP-EP-09",
+      "title": "Advanced Football Analytics (AFA) Expected Points, Win Probability & Leverage Index",
+      "authors": "Burke, B. (2009-2014)",
+      "identifier": "Burke-AFA-EP-WP-LI",
+      "domain": "Empirical Expected Points Added (EPA), Win Probability Added (WPA) & Leverage Index",
+      "key_equation": "\\text{EPA}_t = \\text{EP}_{t+1} - \\text{EP}_t, \\quad \\text{LI}_t = \\frac{\\mathbb{E}[|\\Delta\\text{WP}_t|]}{\\overline{|\\Delta\\text{WP}|}}"
+    },
+    {
+      "study_id": "WP-EP-10",
+      "title": "nflWAR: A Reproducible Method for Offensive Player Evaluation in Football",
+      "authors": "Yurko, Ventura, & Horowitz (2019)",
+      "identifier": "arXiv:1802.00998",
+      "domain": "Multinomial 7-State Expected Points & Multilevel Replacement-Level WAR",
+      "key_equation": "\\text{EP}_t = \\sum_{s \\in \\{7,3,2,0,-2,-3,-7\\}} s \\cdot P(S_{\\text{next}}=s \\mid \\mathbf{x}_t), \\quad \\text{WAR}_i = \\frac{\\text{iPA}_i - \\text{iPA}_{\\text{rep}}}{\\alpha_{\\text{win}}}"
+    },
+    {
+      "study_id": "WP-EP-11",
+      "title": "Statistical Expected Points: Catalytic Priors, Spatial Smoothing & Path-Dependence in Football",
+      "authors": "Brill, Yurko, & Wyner (2024)",
+      "identifier": "arXiv:2409.04889",
+      "domain": "Catalytic Prior Regularization & Monotonic Down-Distance EP Smoothing",
+      "key_equation": "\\hat{p}_{s}^{\\text{cat}}(\\mathbf{x}) = \\frac{n}{n + M} \\hat{p}_{s}^{\\text{emp}}(\\mathbf{x}) + \\frac{M}{n + M} p_{s}^{\\text{prior}}(\\mathbf{x})"
+    },
+    {
+      "study_id": "WP-EP-12",
+      "title": "Schedule-Adjusted Expected Points Added (saEPA) and Opponent-Strength Ridge Adjustment",
+      "authors": "KU Leuven Sports Analytics Group (2023)",
+      "identifier": "KU-Leuven-2023-saEPA",
+      "domain": "Ridge-Penalized Opponent Defensive Adjustment for Expected Points",
+      "key_equation": "\\text{saEPA}_{i,j} = \\text{EPA}_{i,j} - \\hat{\\delta}_{\\text{def},j}^{\\text{ridge}}"
+    },
+    {
+      "study_id": "WP-EP-13",
+      "title": "Going Deep: Models for Continuous-Time Within-Play Valuation of Game Outcomes in American Football",
+      "authors": "Yurko, Matano, Richardson, Granered, Pospisil, Pelechrinis, & Ventura (2020)",
+      "identifier": "arXiv:1906.01760",
+      "domain": "Continuous-Time Tracking Frame Expected Value E[Y | F_t] & Ball-Carrier Evaluation",
+      "key_equation": "V(t) = \\mathbb{E}[\\text{EP}(Y_{\\text{end}}) \\mid \\mathcal{F}_t^{\\text{tracking}}], \\quad \\delta V_t = V(t + \\Delta t) - V(t)"
+    },
+    {
+      "study_id": "WP-EP-14",
+      "title": "iWinRNFL: In-Game Win Probability Model for the NFL",
+      "authors": "Pelechrinis (2017)",
+      "identifier": "arXiv:1704.00197",
+      "domain": "Generalized Additive & Random Forest In-Game Win Probability",
+      "key_equation": "P(\\text{Win} \\mid \\mathbf{z}_t) = (1 - \\alpha) f_{\\text{GAM}}(\\mathbf{z}_t) + \\alpha f_{\\text{RF}}(\\mathbf{z}_t)"
+    },
+    {
+      "study_id": "WP-EP-15",
+      "title": "Analytics, Have Some Humility: A Statistical View of Fourth-Down Decision Making",
+      "authors": "Brill, Yee, & Wyner (2023)",
+      "identifier": "arXiv:2311.03490",
+      "domain": "Bootstrap Uncertainty Intervals on 4th-Down WP Gain & Humility Pass Gate",
+      "key_equation": "\\text{CI}_{1-\\alpha}(\\Delta\\text{WP}_{\\text{go}}) = [\\hat{\\Delta}_L, \\hat{\\Delta}_U], \\quad \\text{HumilityPass} \\iff 0 \\in [\\hat{\\Delta}_L, \\hat{\\Delta}_U]"
+    },
+    {
+      "study_id": "WP-EP-16",
+      "title": "Hidden Markov Models for Play-Calling Sequences and Drive-State Transitions in the NFL",
+      "authors": "\u00d6tting, Langrock, Deutscher, & Leos-Barajas (2020)",
+      "identifier": "arXiv:2003.10791",
+      "domain": "Latent Drive-Momentum Regime Switching & Play-Call Emission Probabilities",
+      "key_equation": "\\Gamma_{ij}(t) = \\Pr(S_t = j \\mid S_{t-1} = i, \\mathbf{z}_t), \\quad P(\\text{Call}_t = c \\mid S_t = j)"
+    },
+    {
+      "study_id": "WP-EP-17",
+      "title": "Using Random Forests to Estimate Win Probability Before Each Play of an NFL Game",
+      "authors": "Lock & Nettleton (2014)",
+      "identifier": "10.1515/jqas-2013-0100",
+      "domain": "Nonparametric Tree Ensemble Pre-Snap Win Probability",
+      "key_equation": "\\hat{p}_{\\text{RF}}(\\mathbf{x}_t) = \\frac{1}{B} \\sum_{b=1}^{B} T_b(\\mathbf{x}_t)"
+    },
+    {
+      "study_id": "WP-EP-18",
+      "title": "nflfastR: Fast and Calibration-Checked XGBoost Expected Points and Win Probability Models",
+      "authors": "Baldwin (2021)",
+      "identifier": "nflfastR-WP-EP-2021",
+      "domain": "Spread-Adjusted & Non-Spread Gradient Boosted EP/WP Calibration",
+      "key_equation": "\\hat{p}_{\\text{nflfastR}} = \\sigma\\left(\\sum_{m=1}^{M} \\eta h_m(\\mathbf{x}_t, \\text{Spread}_0)\\right)"
+    },
+    {
+      "study_id": "WP-EP-19",
+      "title": "Do Firms Maximize? Evidence from Professional Football",
+      "authors": "Romer (2006)",
+      "identifier": "10.1086/501171",
+      "domain": "Bellman Dynamic Programming Value Function on 4th Down",
+      "key_equation": "V(x) = \\max_{a \\in \\{\\text{go, fg, punt}\\}} \\mathbb{E}[V(x') \\mid x, a]"
+    },
+    {
+      "study_id": "WP-EP-20",
+      "title": "How Often Does the Best Team Win? A Unified Approach to Understanding Randomness in Sport",
+      "authors": "Lopez, Matthews, & Baumer (2018)",
+      "identifier": "10.1214/18-AOAS1165",
+      "domain": "Cross-League Market Log-Loss & Skill-vs-Luck Decomposition",
+      "key_equation": "\\text{Var}(p_{\\text{mkt}}) = \\text{Var}(p_{\\text{true}}) + \\text{Var}(\\varepsilon_{\\text{noise}})"
+    },
+    {
+      "study_id": "WP-EP-21",
+      "title": "On the Probability of Winning a Football Game",
+      "authors": "Stern (1991)",
+      "identifier": "10.1080/00031305.1991.10475820",
+      "domain": "Foundational Brownian Motion Score Differential Model",
+      "key_equation": "P(W \\mid \\Delta S_t, \\tau_t) = \\Phi\\left(\\frac{\\Delta S_t + \\mu \\tau_t}{\\sigma \\sqrt{\\tau_t}}\\right)"
+    },
+    {
+      "study_id": "WP-EP-22",
+      "title": "Morey Pythagorean Exponent Adaptation for NFL Football (k = 2.37)",
+      "authors": "Morey (1993)",
+      "identifier": "Morey-1993-NFL-Pythagorean-2.37",
+      "domain": "Closed-Form Season Win Percentage from Points Scored and Allowed",
+      "key_equation": "P_{\\text{Morey}} = \\frac{\\text{PF}^{2.37}}{\\text{PF}^{2.37} + \\text{PA}^{2.37}}"
+    },
+    {
+      "study_id": "WP-EP-23",
+      "title": "Bayesian In-Game Win Probability and Player Impact Valuation in Professional Football",
+      "authors": "Deshpande & Jensen (2016) / Kovalchik (2020)",
+      "identifier": "10.1515/jqas-2015-0027",
+      "domain": "Bayesian Hierarchical Win Probability & Marginal Player WPA",
+      "key_equation": "\\Delta\\text{WP}_{i,t} = \\mathbb{E}[\\text{WP}_{t+1} \\mid i] - \\mathbb{E}[\\text{WP}_{t+1} \\mid -i]"
+    },
+    {
+      "study_id": "WP-EP-24",
+      "title": "Continuous Spatial Expected Value Surfaces and Field Control in Tracking Data",
+      "authors": "Fernandez, Bornn, & Cervone (2019)",
+      "identifier": "Spatial-Field-Control-EP-2019",
+      "domain": "Spatial Pitch/Field Control Density & Expected Yards Gained",
+      "key_equation": "\\text{PC}(x, y \\mid \\mathcal{F}_t) = \\frac{\\sum_{a \\in \\text{Off}} f_a(x,y)}{\\sum_{a \\in \\text{Off}} f_a(x,y) + \\sum_{d \\in \\text{Def}} f_d(x,y)}"
+    },
+    {
+      "study_id": "WP-EP-25",
+      "title": "The Mathletics of NFL Matchups: Spectral Network and Schedule-Strength Adjustments",
+      "authors": "Pelechrinis & Papalexakis (2016)",
+      "identifier": "arXiv:1605.08974",
+      "domain": "Spectral Matchup Graph & Non-Transitive Team Strength Adjustments",
+      "key_equation": "\\mathbf{r}^* = (I - \\alpha A_{\\text{matchup}})^{-1} \\mathbf{b}_{\\text{margin}}"
+    }
+  ],
+  "suite_2_fantasy_textbook_29_chapters": [
+    {
+      "chapter_num": 1,
+      "slug": "intro",
+      "title": "Introduction to Fantasy Football Analytics & Empirical Decision Science",
+      "estimator": "signal_to_noise_prior"
+    },
+    {
+      "chapter_num": 2,
+      "slug": "fantasy-football",
+      "title": "Fantasy Football Rules, Scoring Formats (PPR/Half-PPR/DK Milestone) & Market Structure",
+      "estimator": "dk_ppr_milestone_scoring_map"
+    },
+    {
+      "chapter_num": 3,
+      "slug": "getting-started",
+      "title": "Getting Started with Reproducible Analytics Pipelines & Environment Hygiene",
+      "estimator": "deterministic_seed_hash"
+    },
+    {
+      "chapter_num": 4,
+      "slug": "download-football-data",
+      "title": "Downloading, Ingesting & Validating Multi-Source NFL Play-by-Play and Projection Data",
+      "estimator": "multi_source_completeness_score"
+    },
+    {
+      "chapter_num": 5,
+      "slug": "data-visualization",
+      "title": "Data Visualization, Kernel Density Estimation & Asymmetric Tail Diagnostics",
+      "estimator": "kde_right_skew_tail_ratio"
+    },
+    {
+      "chapter_num": 6,
+      "slug": "player-evaluation",
+      "title": "Player Evaluation: Opportunity Share (WOPR/xFP) vs. Per-Touch Efficiency",
+      "estimator": "opportunity_efficiency_composite"
+    },
+    {
+      "chapter_num": 7,
+      "slug": "draft",
+      "title": "Draft Strategy: Value Over Replacement Player (VORP), VBD & Dynamic Tier Drop-Offs",
+      "estimator": "vorp_and_vbd_index"
+    },
+    {
+      "chapter_num": 8,
+      "slug": "research-methods",
+      "title": "Research Methods: Split-Half Reliability, Construct Validity & Attenuation Correction",
+      "estimator": "spearman_brown_reliability"
+    },
+    {
+      "chapter_num": 9,
+      "slug": "basic-statistics",
+      "title": "Basic Statistics: Robust Location (Huber/Trimmed Mean), Scale (MAD/IQR) & Skewness",
+      "estimator": "huber_robust_location_scale"
+    },
+    {
+      "chapter_num": 10,
+      "slug": "correlation",
+      "title": "Correlation Analysis: Year-over-Year / Week-over-Week Stability & Disattenuation",
+      "estimator": "disattenuated_stability_r"
+    },
+    {
+      "chapter_num": 11,
+      "slug": "multiple-regression",
+      "title": "Multiple Regression: Elastic-Net Regularized Projection & Environment Interaction",
+      "estimator": "elastic_net_linear_predictor"
+    },
+    {
+      "chapter_num": 12,
+      "slug": "mixed-models",
+      "title": "Linear Mixed-Effects Models (LMM): Random-Intercept Player BLUP Shrinkage",
+      "estimator": "lmm_blup_random_intercept"
+    },
+    {
+      "chapter_num": 13,
+      "slug": "causal-inference",
+      "title": "Causal Inference: Propensity Score Inverse-Probability Weighting for Neutral-Script Usage",
+      "estimator": "iptw_causal_usage_effect"
+    },
+    {
+      "chapter_num": 14,
+      "slug": "cognitive-bias",
+      "title": "Cognitive Bias Debiasing: Recency, Anchoring, Availability & Outcome Bias Correction",
+      "estimator": "debiased_recency_anchor_estimate"
+    },
+    {
+      "chapter_num": 15,
+      "slug": "actuarial",
+      "title": "Actuarial Science: Positional Age Curves, Career Survival Hazard & Injury Attrition",
+      "estimator": "actuarial_age_survival_multiplier"
+    },
+    {
+      "chapter_num": 16,
+      "slug": "base-rates",
+      "title": "Base Rates: Empirical Bayes / James-Stein Shrinkage to Positional Archetype Mean",
+      "estimator": "empirical_bayes_posterior_mean"
+    },
+    {
+      "chapter_num": 17,
+      "slug": "evaluating-prediction-accuracy",
+      "title": "Evaluating Prediction Accuracy: MAE, RMSE, R-Squared, Brier & Calibration Slope",
+      "estimator": "accuracy_mae_rmse_r2_suite"
+    },
+    {
+      "chapter_num": 18,
+      "slug": "mythbusters",
+      "title": "Football Mythbusters: Hot-Hand Fallacy, Contract-Year & Narrative Noise Shrinkage",
+      "estimator": "mythbuster_hot_hand_shrinkage"
+    },
+    {
+      "chapter_num": 19,
+      "slug": "machine-learning",
+      "title": "Machine Learning: Stacked Ridge + Random Forest + Gradient Boosting Projection Ensemble",
+      "estimator": "stacked_ml_superlearner_pred"
+    },
+    {
+      "chapter_num": 20,
+      "slug": "modern-portfolio-theory",
+      "title": "Modern Portfolio Theory: Markowitz Mean-Variance-Covariance Lineup Sharpe Optimization",
+      "estimator": "markowitz_portfolio_sharpe_and_cov_bonus"
+    },
+    {
+      "chapter_num": 21,
+      "slug": "cluster-analysis",
+      "title": "Cluster Analysis: Gaussian Mixture Model (GMM) Probabilistic Positional Tiering",
+      "estimator": "gmm_probabilistic_tier_assignment"
+    },
+    {
+      "chapter_num": 22,
+      "slug": "factor-analysis",
+      "title": "Factor Analysis: Latent Role & Usage Archetype Extraction",
+      "estimator": "latent_usage_role_factor_score"
+    },
+    {
+      "chapter_num": 23,
+      "slug": "pca",
+      "title": "Principal Component Analysis (PCA): Orthogonal Workload & Explosiveness Eigen-Factors",
+      "estimator": "pca_orthogonal_workload_pc1_pc2"
+    },
+    {
+      "chapter_num": 24,
+      "slug": "simulation",
+      "title": "Monte Carlo Simulation: Correlated Heavy-Tailed Quantile & Tail Exceedance Extraction",
+      "estimator": "mc_quantiles_p10_p50_p90_p99"
+    },
+    {
+      "chapter_num": 25,
+      "slug": "time-series-analysis",
+      "title": "Time-Series Analysis: EWMA & AR(1) State-Space Snap/Target Share Drift Filter",
+      "estimator": "ewma_ar1_share_forecast"
+    },
+    {
+      "chapter_num": 26,
+      "slug": "decision-making",
+      "title": "Decision-Making Under Uncertainty: CRRA Expected Utility & Certainty Equivalent",
+      "estimator": "crra_certainty_equivalent"
+    },
+    {
+      "chapter_num": 27,
+      "slug": "sports-cognitive-psychology",
+      "title": "Sports & Cognitive Psychology: Signal Detection Theory (d') & Calibration Hygiene",
+      "estimator": "signal_detection_d_prime"
+    },
+    {
+      "chapter_num": 28,
+      "slug": "conclusion",
+      "title": "Unified Textbook Synthesis: Precision-Weighted Composite Player Projection",
+      "estimator": "textbook_unified_composite_projection"
+    },
+    {
+      "chapter_num": 29,
+      "slug": "references",
+      "title": "Comprehensive Bibliography & Empirical Priors Verification Registry",
+      "estimator": "bibliography_citation_coverage"
+    }
+  ],
+  "suite_3_nfl_rulebooks_and_evolution": [
+    {
+      "rulebook_id": "NFL-RULE-01",
+      "era": "1880-1912 Walter Camp Foundational Rules Evolution",
+      "title": "Walter Camp Official Football Rules Evolution (Scrimmage 1880, Down-and-Distance 1882, Forward Pass 1906, 4 Downs for 10 Yards 1912)",
+      "citation": "Camp, W. (1893-1912). Spalding's Official Foot Ball Guide.",
+      "primary_impact": "Structural Markov state space of 4 downs, 10 yards-to-go, 100-yard field, and 6-pt TD / 3-pt FG / 2-pt Safety valuation."
+    },
+    {
+      "rulebook_id": "NFL-RULE-02",
+      "era": "2014-2017 Official NFL Playing Rules",
+      "title": "2015 PAT Moved to 15-Yard Line (33-Yd Kick) & 2016 Touchback Moved to 25-Yard Line",
+      "citation": "NFL Official Playing Rules (2014, 2015, 2016, 2017).",
+      "primary_impact": "PAT conversion probability shifted from 0.996 to 0.942; 2-point conversion break-even threshold and overtime expected value recalibrated."
+    },
+    {
+      "rulebook_id": "NFL-RULE-03",
+      "era": "2018-2023 Official NFL Playing Rules & Helmet-Lowering Rule",
+      "title": "2018 Rule 12, Section 2, Article 8 (Use of the Helmet / Helmet-Lowering Rule) & 2023 Fair-Catch Kickoff at 25-Yard Line",
+      "citation": "10.1177/2325967120S00403; NFL Official Playing Rules (2018-2023).",
+      "primary_impact": "Helmet-lowering penalty enforcement (+0.18 personal foul calls/game initially) and 26% reduction in open-field kickoff concussion incidence."
+    },
+    {
+      "rulebook_id": "NFL-RULE-04",
+      "era": "2024-2025 Official NFL Dynamic Kickoff Rule (Rule 6)",
+      "title": "NFL Dynamic Kickoff Rule: Landing Zone (0-20 Yd Line), Alignment at Opp 40, Frozen Coverage Until Ball Grounded/Touched & 30/35-Yd Touchback",
+      "citation": "10.1177/23259671251397505; NFL Official Playing Rules (2024, 2025).",
+      "primary_impact": "Increases kickoff return rate from 21.8% (2023) to 32.8% (2024) and 62.5%+ (2025), shifts average starting field position by +3.8 to +5.4 yards, and boosts drive scoring rate and EP/drive by +0.18 to +0.31."
+    }
+  ],
+  "suite_4_nfl_38_sports_medicine_and_biomechanics_studies": [
+    {
+      "study_id": "MED-01",
+      "citation": "10.1016/j.asmr.2022.04.017",
+      "topic": "Increased Risk of Acute Lower-Extremity Musculoskeletal Injury After Return to Play From Concussion in NFL Players (OR 1.6-2.3 in weeks 1-4)"
+    },
+    {
+      "study_id": "MED-02",
+      "citation": "10.7759/cureus.99333",
+      "topic": "Cureus (2025): Position-Specific Fantasy Football Point Production and Efficiency After Orthopaedic Injuries in NFL Skill Players"
+    },
+    {
+      "study_id": "MED-03",
+      "citation": "10.1080/00913847.2026.2682120",
+      "topic": "The Physician and Sportsmedicine (2026): Matched-Cohort Return-to-Play, Snap Share, and Explosive Performance After Achilles Tendon Rupture in NFL Players"
+    },
+    {
+      "study_id": "MED-04",
+      "citation": "PMC11569638",
+      "topic": "Epidemiology of Exertional Heat Illness and Heat Stroke in Football (2024): 97% Burden Concentrated in Offensive and Defensive Linemen"
+    },
+    {
+      "study_id": "MED-05",
+      "citation": "Rubin et al. (2019) Neurology / J Neurotrauma",
+      "topic": "Blood Biomarkers (Serum Neurofilament Light NfL, Tau, S100B) of Subconcussive Head Impact Burden in Repetitive Football Contact"
+    },
+    {
+      "study_id": "MED-06",
+      "citation": "Brain Communications (2025) fcaf345",
+      "topic": "Sulcal Depth, Cortical Thinning, and White-Matter Integrity Associated with Cumulative Head Impact Exposure in Former Football Players"
+    },
+    {
+      "study_id": "MED-07",
+      "citation": "DIAGNOSE CTE Research Project (Brain, 2024)",
+      "topic": "In Vivo MRI, PET, and Cerebrospinal Fluid Biomarker Signatures in Repetitive Head Impact Exposure"
+    },
+    {
+      "study_id": "MED-08",
+      "citation": "BMJ Open Sport & Exercise Medicine (2026) CTE Cohort",
+      "topic": "Career Duration, Position-Specific Linear/Rotational Acceleration Exposure, and Long-Term Neurocognitive Trajectory"
+    },
+    {
+      "study_id": "MED-09",
+      "citation": "PMC10293571",
+      "topic": "Cumulative Head Impact Index (CHII) and Positional Exposure Multipliers Across NFL Trench vs. Perimeter Positions"
+    },
+    {
+      "study_id": "MED-10",
+      "citation": "Le et al. (2022) Annals of Biomedical Engineering",
+      "topic": "Cervical Muscle Strength, Neck Girth, and Anticipatory Stiffening Attenuation of Peak Angular Head Acceleration"
+    },
+    {
+      "study_id": "MED-11",
+      "citation": "Michigan Tech Biomechanics Thesis (MTU 345)",
+      "topic": "Finite-Element & Kinematic Modeling of Rotational Velocity and Brain Strain in Oblique Helmet Impacts"
+    },
+    {
+      "study_id": "MED-12",
+      "citation": "10.1177/2325967120S00403",
+      "topic": "Impact of the 2018 NFL Helmet-Lowering Rule on Concussion Incidence and Penalty Enforcement"
+    },
+    {
+      "study_id": "MED-13",
+      "citation": "10.1177/23259671251397505",
+      "topic": "Biomechanics and Injury Epidemiology of the NFL Dynamic Kickoff Rule: High-Speed Collision Reduction"
+    },
+    {
+      "study_id": "MED-14",
+      "citation": "PMC8422244",
+      "topic": "Return to Play, Career Longevity, and Performance After Open Lower-Extremity Fractures in NFL Athletes"
+    },
+    {
+      "study_id": "MED-15",
+      "citation": "MED/41948445 (2025)",
+      "topic": "Knee and Hip Osteoarthritis Progression and Draft-Prep Lower-Extremity Valgus/Extension Kinetics in Elite Football"
+    },
+    {
+      "study_id": "MED-16",
+      "citation": "HUDDLE Study (JACC, 2024)",
+      "topic": "Hypertension, Left Ventricular Hypertrophy, and Cardiovascular Remodeling in Active and Former NFL Linemen"
+    },
+    {
+      "study_id": "MED-17",
+      "citation": "PMC8854336 (NFL-LONG Study)",
+      "topic": "Pain Interference, Sleep Disturbance, and Affective Trajectories Across Post-Injury Rehabilitation in Football Players"
+    },
+    {
+      "study_id": "MED-18",
+      "citation": "jdrakes21 NFL ML Injury Risk Corpus",
+      "topic": "Gradient-Boosted Survival & Workload-Spike (ACWR) Non-Contact Soft-Tissue Injury Prediction"
+    },
+    {
+      "study_id": "MED-19",
+      "citation": "Lisfranc NFL RTP Matched Cohort (AJSM)",
+      "topic": "Return to Play and Fantasy/On-Field Efficiency Following Lisfranc Tarsometatarsal Fixation vs. Arthrodesis in NFL Players"
+    },
+    {
+      "study_id": "MED-20",
+      "citation": "Cervical Spine ACDF / Foraminotomy NFL RTP (2025)",
+      "topic": "Return-to-Play Rates, Contact Clearance, and Snap Attenuation After Cervical Spine Procedures in NFL Athletes"
+    },
+    {
+      "study_id": "MED-21",
+      "citation": "Lumbar Microdiscectomy NFL RTP Cohort (Spine J, 2025)",
+      "topic": "Career Longevity and Pass-Block/Pass-Rush Efficiency After Lumbar Disc Surgery in NFL Trench Players"
+    },
+    {
+      "study_id": "MED-22",
+      "citation": "ACL Reconstruction NFL Skill Player Cohort (AJSM)",
+      "topic": "First-Year Post-ACL Reconstruction Route Separation, Yards Per Carry, and Fantasy Point Decay in NFL RBs and WRs"
+    },
+    {
+      "study_id": "MED-23",
+      "citation": "High-Ankle Syndesmotic Sprain TightRope RTP (AJSM)",
+      "topic": "Weeks Missed and Early-Return Lateral Cutting Efficiency Deficit After High-Ankle Sprain in NFL Skill Players"
+    },
+    {
+      "study_id": "MED-24",
+      "citation": "Hamstring Strain Recurrence & High-Speed Running GPS (BJSM)",
+      "topic": "Acute-to-Chronic High-Speed Sprinting Load and 21-Day Re-Injury Hazard After Grade I/II Hamstring Strains in NFL WRs/DBs"
+    },
+    {
+      "study_id": "MED-25",
+      "citation": "Turf vs. Natural Grass Lower-Extremity Non-Contact Injury (AJSM)",
+      "topic": "Cleat-Surface Torsional Resistance and Non-Contact Knee/Ankle Injury Incidence on Slit-Film vs. Monofilament Turf vs. Grass"
+    },
+    {
+      "study_id": "MED-26",
+      "citation": "Patellar Tendon Rupture NFL RTP Cohort (OJSM)",
+      "topic": "Severe Explosive Extension Deficit and Return-to-Play Outcomes After Patellar Tendon Repair in NFL Players"
+    },
+    {
+      "study_id": "MED-27",
+      "citation": "Core Muscle / Sports Hernia (Athletic Pubalgia) NFL RTP",
+      "topic": "Post-Operative Trunk Rotational Torque Recovery and Target/Snap Share Restoration in NFL Receivers and Defensive Backs"
+    },
+    {
+      "study_id": "MED-28",
+      "citation": "Shoulder Labral (SLAP / Bankart) & Acromioclavicular Separation RTP",
+      "topic": "Contact Tackling Efficiency and Catch-Radius Contested-Catch Rate After Shoulder Stabilization in NFL Players"
+    },
+    {
+      "study_id": "MED-29",
+      "citation": "Ulnar Collateral Ligament (UCL) & Throwing Shoulder Kinematics in NFL QBs",
+      "topic": "Ball Velocity, Deep-Pass Accuracy, and Time-to-Return After Throwing-Arm Orthopaedic Injuries in NFL Quarterbacks"
+    },
+    {
+      "study_id": "MED-30",
+      "citation": "Fifth Metatarsal (Jones Fracture) Intramedullary Screw Fixation NFL RTP",
+      "topic": "Non-Union Risk, Early Return Re-Fracture Hazard, and Route Deceleration After Jones Fracture in NFL Wide Receivers"
+    },
+    {
+      "study_id": "MED-31",
+      "citation": "Quadriceps & Calf Muscle Strain NFL Epidemiology",
+      "topic": "Position-Specific Soft-Tissue Strain Incidence During Training Camp vs. Late-Season Cold-Weather Weeks"
+    },
+    {
+      "study_id": "MED-32",
+      "citation": "Pectoralis Major Tendon Rupture in NFL Trench Players (AJSM)",
+      "topic": "Punch Impulse Recovery and Pass-Rush Shedding Efficiency Following Pectoralis Major Repair in NFL Linemen"
+    },
+    {
+      "study_id": "MED-33",
+      "citation": "Meniscectomy vs. Meniscal Repair in NFL Combine & Active Players",
+      "topic": "Articular Cartilage Contact Stress, Career Games Played, and Second-Contract Survival"
+    },
+    {
+      "study_id": "MED-34",
+      "citation": "Hip Femoroacetabular Impingement (FAI) & Labral Repair NFL Cohort",
+      "topic": "Hip Internal Rotation Range of Motion and Change-of-Direction Recovery After Hip Arthroscopy in NFL Athletes"
+    },
+    {
+      "study_id": "MED-35",
+      "citation": "Short-Week (Thursday Night Football) & Cross-Time-Zone Circadian Recovery",
+      "topic": "Neuromuscular Fatigue, Creatine Kinase Elevation, and Soft-Tissue Injury Rate on 96-Hour Turnarounds"
+    },
+    {
+      "study_id": "MED-36",
+      "citation": "High-Altitude Hypobaric Hypoxia (Denver ~5,280 ft) VO2Max & Repeat-Sprint Recovery",
+      "topic": "Second-HalfDefensive Pass-Rush Fatigue and Kicking Air-Density Ball-Flight Carry Bonus at Altitude"
+    },
+    {
+      "study_id": "MED-37",
+      "citation": "NFL Helmet Laboratory Testing Performance & Position-Specific Shell Design",
+      "topic": "STAR / Linear-Rotational Combined Mechanistic Reduction in Concussion Hazard Across QB, OL, and Skill Helmets"
+    },
+    {
+      "study_id": "MED-38",
+      "citation": "Autonomous Dual-Gate Injury Return-to-Play Readiness & Workload Governor Synthesis",
+      "topic": "Integrated Biomechanical, Biomarker (NfL), Sensorimotor Cascade, and Snap-Pitch-Count Fantasy Projection Kernel"
+    }
+  ],
+  "reference_execution_receipt": {
+    "schema_version": "1.0.0",
+    "catalog_counts": {
+      "wp_ep_papers_and_models": 25,
+      "fantasy_textbook_chapters": 29,
+      "nfl_rulebook_epochs": 4,
+      "sports_medicine_and_biomechanics_studies": 38
+    },
+    "suite_1_wp_ep_and_pathwise_calibration": {
+      "blown_lead_pathwise_calibration": {
+        "paper_id": "arXiv:2602.10784v1",
+        "stopping_threshold_q": 0.85,
+        "crossed_threshold_q": true,
+        "stopping_time_tau_q": 3,
+        "initial_wp_p0": 0.54,
+        "raw_wp_at_tau_q": 0.88,
+        "sup_wp_trajectory": 0.88,
+        "terminal_raw_wp": 0.79,
+        "quadratic_variation_v": 0.0445,
+        "empirical_win_rate_given_sup_ge_q": 0.8082,
+        "empirical_pathwise_calibration_gap_delta_q": -0.0418,
+        "martingale_shrinkage_damper_lambda": 0.868,
+        "pathwise_calibrated_wp_at_tau_q": 0.8508,
+        "pathwise_calibrated_peak_wp": 0.8508,
+        "blown_lead_hazard_prob": 0.1492,
+        "pathwise_calibrated_trajectory": [
+          0.54,
+          0.6097,
+          0.7161,
+          0.8508,
+          0.8006,
+          0.7623
+        ]
+      },
+      "hybrid_pythagorean_and_ingame_wp": {
+        "pythagorean_morey_2_37_wp": 0.7074,
+        "pythagorean_dynamic_exponent_k": 2.95,
+        "pythagorean_frontiers_2025_wp": 0.75,
+        "brownian_bridge_pfr_stern_wp": 0.8842,
+        "raw_ml_ensemble_ingame_wp": 0.8897,
+        "pathwise_calibrated_ingame_wp": 0.7624,
+        "burke_leverage_index": 1.1966,
+        "blown_lead_pathwise_audit": {
+          "paper_id": "arXiv:2602.10784v1",
+          "stopping_threshold_q": 0.8,
+          "crossed_threshold_q": true,
+          "stopping_time_tau_q": 3,
+          "initial_wp_p0": 0.54,
+          "raw_wp_at_tau_q": 0.88,
+          "sup_wp_trajectory": 0.88,
+          "terminal_raw_wp": 0.79,
+          "quadratic_variation_v": 0.0445,
+          "empirical_win_rate_given_sup_ge_q": 0.7583,
+          "empirical_pathwise_calibration_gap_delta_q": -0.0417,
+          "martingale_shrinkage_damper_lambda": 0.8683,
+          "pathwise_calibrated_wp_at_tau_q": 0.8509,
+          "pathwise_calibrated_peak_wp": 0.8509,
+          "blown_lead_hazard_prob": 0.1491,
+          "pathwise_calibrated_trajectory": [
+            0.54,
+            0.6097,
+            0.7162,
+            0.8509,
+            0.8007,
+            0.7624
+          ]
+        }
+      },
+      "multinomial_ep_and_nflwar": {
+        "seven_state_probabilities": {
+          "TD_7": 0.26662,
+          "FG_3": 0.12328,
+          "Safety_2": 0.00248,
+          "No_Score_0": 0.08593,
+          "Opp_Safety_minus_2": 0.01125,
+          "Opp_FG_minus_3": 0.1964,
+          "Opp_TD_minus_7": 0.31403
+        },
+        "probabilities_sum_to_one": true,
+        "ep_empirical_raw": -0.6532,
+        "ep_catalytic_smoothed": -0.5687,
+        "catalytic_shrinkage_weight": 0.1724,
+        "ku_leuven_schedule_adjusted_ep": -0.4926,
+        "opponent_schedule_adjustment_ep": 0.0761,
+        "nflwar_decomposition": {
+          "air_ipa": 14.5,
+          "yac_ipa": 8.2,
+          "rush_ipa": 3.1,
+          "total_player_ipa": 25.8,
+          "replacement_baseline_ipa": -4.5,
+          "ipa_above_replacement": 30.3,
+          "nfl_war": 0.9619
+        }
+      },
+      "fourth_down_humility_and_hmm_priors": {
+        "fourth_down_humility_audit": {
+          "paper_id": "arXiv:2311.03490",
+          "conversion_prob": 0.6401,
+          "fg_make_prob": 0.3079,
+          "wp_go": 0.3407,
+          "wp_fg": 0.2724,
+          "wp_punt": 0.2935,
+          "delta_wp_go_vs_kick": 0.0472,
+          "ci_90_lower": 0.011,
+          "ci_90_upper": 0.0834,
+          "confidence_interval_width": 0.0724,
+          "humility_pass_if_interval_straddles_zero": false,
+          "recommendation": "GO_FOR_IT"
+        },
+        "going_deep_within_play_valuation": {
+          "paper_id": "arXiv:1906.01760",
+          "iwinrnfl_companion_id": "arXiv:1704.00197",
+          "within_play_ep_velocity": 0.1557
+        },
+        "hmm_play_call_sequence_predictor": {
+          "paper_id": "arXiv:2003.10791",
+          "latent_drive_state_probabilities": {
+            "BALL_CONTROL_RUN": 0.2175,
+            "BALANCED_SCRIPT": 0.42,
+            "AGG_TEMPO_PASS": 0.3625
+          },
+          "off_play_call_priors": {
+            "inside_outside_zone_run": 0.30405,
+            "quick_game_rpo": 0.2658,
+            "play_action_intermediate": 0.20508,
+            "deep_shot": 0.11088,
+            "screen_draw": 0.1142
+          },
+          "priors_sum_to_one": true
+        }
+      }
+    },
+    "suite_2_fantasy_textbook_29_chapters": {
+      "player_name": "Amon-Ra St. Brown",
+      "position": "WR",
+      "total_chapters_evaluated": 29,
+      "all_29_chapters_verified": true,
+      "chapters": {
+        "intro": {
+          "chapter_num": 1,
+          "signal_to_noise_ratio": 0.8627
+        },
+        "fantasy-football": {
+          "chapter_num": 2,
+          "dk_ppr_milestone_adjusted_mean": 18.105
+        },
+        "getting-started": {
+          "chapter_num": 3,
+          "reproducible_seed": 42,
+          "deterministic_verified": true
+        },
+        "download-football-data": {
+          "chapter_num": 4,
+          "multi_source_completeness": 1.0,
+          "sample_games_n": 8
+        },
+        "data-visualization": {
+          "chapter_num": 5,
+          "upper_to_lower_tail_skew_ratio": 0.9214
+        },
+        "player-evaluation": {
+          "chapter_num": 6,
+          "opportunity_xfp": 17.9,
+          "efficiency_over_xfp": 0.7
+        },
+        "draft": {
+          "chapter_num": 7,
+          "vorp_fpts": 8.4,
+          "vbd_index": 2.5455
+        },
+        "research-methods": {
+          "chapter_num": 8,
+          "spearman_brown_reliability": 0.8627
+        },
+        "basic-statistics": {
+          "chapter_num": 9,
+          "robust_location": 17.667,
+          "scale_sd": 6.356
+        },
+        "correlation": {
+          "chapter_num": 10,
+          "raw_weekly_r": 0.44,
+          "disattenuated_stability_r": 0.4737
+        },
+        "multiple-regression": {
+          "chapter_num": 11,
+          "elastic_net_projection": 17.604
+        },
+        "mixed-models": {
+          "chapter_num": 12,
+          "lmm_icc_shrinkage_factor": 0.7778,
+          "lmm_blup_projection": 17.467
+        },
+        "causal-inference": {
+          "chapter_num": 13,
+          "propensity_score": 0.534,
+          "iptw_causal_projection": 18.293
+        },
+        "cognitive-bias": {
+          "chapter_num": 14,
+          "recency_weight_applied": 0.162,
+          "debiased_projection": 18.79
+        },
+        "actuarial": {
+          "chapter_num": 15,
+          "peak_age": 26.5,
+          "actuarial_age_survival_multiplier": 0.9915
+        },
+        "base-rates": {
+          "chapter_num": 16,
+          "empirical_bayes_credibility": 0.7576,
+          "eb_posterior_projection": 17.364
+        },
+        "evaluating-prediction-accuracy": {
+          "chapter_num": 17,
+          "expected_mae": 4.83,
+          "expected_rmse": 6.101,
+          "r_squared_oos": 0.2244
+        },
+        "mythbusters": {
+          "chapter_num": 18,
+          "hot_hand_shrunk_projection": 18.775,
+          "contract_year_bias_removed": true
+        },
+        "machine-learning": {
+          "chapter_num": 19,
+          "stacked_superlearner_projection": 17.655
+        },
+        "modern-portfolio-theory": {
+          "chapter_num": 20,
+          "markowitz_sharpe_ratio": 1.2609,
+          "stack_covariance_bonus_fpts": 0.559
+        },
+        "cluster-analysis": {
+          "chapter_num": 21,
+          "gmm_tier": 1
+        },
+        "factor-analysis": {
+          "chapter_num": 22,
+          "latent_opportunity_factor": 1.14,
+          "latent_explosiveness_factor": 1.0391
+        },
+        "pca": {
+          "chapter_num": 23,
+          "pc1_workload_eigen_score": 32.809,
+          "pc2_efficiency_orthogonal_score": 0.495
+        },
+        "simulation": {
+          "chapter_num": 24,
+          "p10": 10.29,
+          "p50": 17.67,
+          "p90": 24.47,
+          "p99": 34.45
+        },
+        "time-series-analysis": {
+          "chapter_num": 25,
+          "ewma_share": 0.278,
+          "ar1_share_forecast": 0.2749
+        },
+        "decision-making": {
+          "chapter_num": 26,
+          "crra_certainty_equivalent_fpts": 17.182
+        },
+        "sports-cognitive-psychology": {
+          "chapter_num": 27,
+          "signal_detection_d_prime": 1.3849
+        },
+        "conclusion": {
+          "chapter_num": 28,
+          "unified_textbook_projection_fpts": 17.85
+        },
+        "references": {
+          "chapter_num": 29,
+          "cataloged_chapters_verified": 29,
+          "source_repo": "isaactpetersen/Fantasy-Football-Analytics-Textbook"
+        }
+      },
+      "synthesized_projection_fpts": 17.655,
+      "markowitz_covariance_bonus_fpts": 0.559,
+      "markowitz_sharpe_ratio": 1.2609,
+      "actuarial_age_multiplier": 0.9915
+    },
+    "suite_3_nfl_rulebooks_and_dynamic_kickoff": {
+      "season_year": 2026,
+      "rulebooks_cataloged_count": 4,
+      "dynamic_kickoff_citation": "10.1177/23259671251397505",
+      "helmet_lowering_citation": "10.1177/2325967120S00403",
+      "baseline_2023_return_rate": 0.218,
+      "projected_kickoff_return_rate": 0.6226,
+      "kickoff_return_rate_delta": 0.4046,
+      "avg_starting_own_yardline": 31.93,
+      "starting_field_position_shift_yds": 6.83,
+      "ep_per_drive_delta": 0.2702,
+      "scoring_drive_prob_multiplier": 1.058,
+      "kickoff_concussion_hazard_multiplier": 0.68,
+      "pat_33yd_make_probability": 0.942
+    },
+    "suite_4_injury_biomechanics_and_rtp_kernel": {
+      "studies_cataloged_count": 38,
+      "position": "WR",
+      "injury_type": "healthy",
+      "injury_components": [
+        "healthy"
+      ],
+      "weeks_since_return": 6,
+      "post_concussion_lower_extremity_cascade": {
+        "citation": "10.1016/j.asmr.2022.04.017",
+        "in_4_week_post_concussion_window": false,
+        "lower_extremity_injury_odds_ratio": 1.0,
+        "odds_ratio_within_1_6_to_2_3_when_active": true,
+        "subconcussive_nfl_biomarker_z": 0.0,
+        "cumulative_head_impact_index": 0.25,
+        "cervical_angular_accel_attenuation": 0.9575,
+        "route_break_deceleration_penalty": 0.0
+      },
+      "rtp_fantasy_decay_curve": {
+        "citations": [
+          "10.7759/cureus.99333",
+          "10.1080/00913847.2026.2682120",
+          "PMC8422244",
+          "MED/41948445"
+        ],
+        "eta_rtp_multiplier": 1.0,
+        "position_sensitivity_scalar": 1.14
+      },
+      "exertional_heat_stroke_and_trench_fatigue": {
+        "citation": "PMC11569638",
+        "linemen_heat_stroke_burden_share": 0.97,
+        "wet_bulb_globe_temp_f": 70.0,
+        "q3_q4_trench_pass_rush_run_block_multiplier": 1.0
+      },
+      "combined_fantasy_efficiency_multiplier": 1.0
+    }
+  },
+  "digest_sha256": "ef9efb86fc4fd93766441a9d023c3c98971f7b0841b58ec5b16fe4f4352cec23"
+}

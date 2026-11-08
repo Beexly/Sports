@@ -14,6 +14,8 @@ features standardized with train stats) on [family] vs [baseline], same rows.
 import glob
 import json
 import math
+import os
+from pathlib import Path
 import warnings
 
 import numpy as np
@@ -21,9 +23,10 @@ import pandas as pd
 
 warnings.filterwarnings("ignore")
 
-DATA = "C:/workspace/gse-lab-20260919/data"
-OUT_MD = "C:/workspace/gse-lab-20260919/move37_wfamily_results.md"
-OUT_JSON = "C:/workspace/gse-lab-20260919/move37_wfamily_results.json"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DATA = os.environ.get("GSE_PBP_DATA_DIR", str(REPO_ROOT / "data" / "nflverse"))
+OUT_MD = str(REPO_ROOT / "docs" / "engine" / "research" / "move37_wfamily_results.md")
+OUT_JSON = str(REPO_ROOT / "data" / "audits" / "move37_wfamily_results.json")
 TRAIN_SEASONS = [2019, 2020, 2021, 2022, 2023]
 TEST_SEASONS = [2024, 2025]
 WINDOW_PLAYS = 200     # per-play sequence length for W6/W7/W8

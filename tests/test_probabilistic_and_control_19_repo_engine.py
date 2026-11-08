@@ -1,7 +1,7 @@
 r"""Comprehensive Multi-Pass Test Suite for the 19-Repository (20-URL) Probabilistic & Control Engine.
 
 Verifies mathematical invariants, edge cases, error paths, and hardware-aware replacements across:
-  - Target A: Personal Hardware & Software Optimization (C:\Users\Garrett)
+  - Target A: Personal Hardware & Software Optimization (~)
   - Target B: Galaxy Sports Edge (GSE) Prediction Engine, SGP Copula & Player Tracking
   - Target C: Galaxy Science Institute (GSI) Biomechanical Kinematics, Survival & Clinical Safety Gates
 """

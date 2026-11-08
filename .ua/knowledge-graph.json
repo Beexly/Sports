@@ -18,8 +18,8 @@
       "Bazel",
       "NumPy/SciPy"
     ],
-    "analyzedAt": "2026-11-07T23:44:15.990755+00:00",
-    "gitCommitHash": "eefe63e7222aacf4edc49d14598ae80288f6f92a",
+    "analyzedAt": "2026-11-08T00:26:06.911281+00:00",
+    "gitCommitHash": "5e7e6a1b1adf48497e6813ad7ca7e6367b288246",
     "figmaTokenConfigured": false
   },
   "nodes": [
@@ -977,11 +977,41 @@
       "type": "file",
       "name": "live_cognitive_self_improvement_engine.py",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "sizeLines": 598,
-      "summary": "live_cognitive_self_improvement_engine.py (598 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.",
+      "sizeLines": 777,
+      "summary": "live_cognitive_self_improvement_engine.py (777 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.",
       "tags": [
         "py",
         "reasoning-and-cognitive-self-improvement"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:intelligence/reasoning/live_cognitive_self_improvement_engine.py:discover_fleet_skills_catalog",
+      "type": "function",
+      "name": "discover_fleet_skills_catalog",
+      "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
+      "lineStart": 71,
+      "lineEnd": 108,
+      "summary": "Discover all installed skills across Hermes, `.agents/skills`, `.gemini/config/skills`,",
+      "tags": [
+        "python",
+        "function",
+        "live_cognitive_self_improvement_engine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:intelligence/reasoning/live_cognitive_self_improvement_engine.py:run_jev_skill_select_and_merged_turn_routing",
+      "type": "function",
+      "name": "run_jev_skill_select_and_merged_turn_routing",
+      "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
+      "lineStart": 111,
+      "lineEnd": 227,
+      "summary": "Implements `/jev-skill-select` (`jevkit.skillpick` + `jevkit.turn` + `jevkit.route`):",
+      "tags": [
+        "python",
+        "function",
+        "live_cognitive_self_improvement_engine"
       ],
       "complexity": "complex"
     },
@@ -990,8 +1020,8 @@
       "type": "function",
       "name": "pava_monotone_quantiles",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 66,
-      "lineEnd": 84,
+      "lineStart": 234,
+      "lineEnd": 252,
       "summary": "Pool-Adjacent-Violators Algorithm (PAVA) with non-negativity projection:",
       "tags": [
         "python",
@@ -1005,8 +1035,8 @@
       "type": "function",
       "name": "verify_symbolic_and_probabilistic_axioms",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 87,
-      "lineEnd": 120,
+      "lineStart": 255,
+      "lineEnd": 288,
       "summary": "Symbolic & Probabilistic Axiom Verifier:",
       "tags": [
         "python",
@@ -1020,8 +1050,8 @@
       "type": "function",
       "name": "compute_latch_and_foresight_tactical_lookahead",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 126,
-      "lineEnd": 180,
+      "lineStart": 294,
+      "lineEnd": 348,
       "summary": "Applies `StealthMark 1.8.10` (`https://stealthmodels.com/`) game-theoretic planning to live football:",
       "tags": [
         "python",
@@ -1035,8 +1065,8 @@
       "type": "function",
       "name": "compute_scenario_bradley_terry_specialist_weights",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 218,
-      "lineEnd": 256,
+      "lineStart": 386,
+      "lineEnd": 424,
       "summary": "Implements `arXiv:2509.05346` (\"Beyond Benchmarking: Scenario-Based Evaluation of LLMs\")",
       "tags": [
         "python",
@@ -1050,8 +1080,8 @@
       "type": "function",
       "name": "run_counterfactual_perturbation_stress_test",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 262,
-      "lineEnd": 310,
+      "lineStart": 430,
+      "lineEnd": 478,
       "summary": "Implements `arXiv:2606.25057` dynamic contamination-free counterfactual evaluation:",
       "tags": [
         "python",
@@ -1065,8 +1095,8 @@
       "type": "function",
       "name": "compute_live_18_authority_situational_and_tactical_upgrade",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 316,
-      "lineEnd": 406,
+      "lineStart": 484,
+      "lineEnd": 578,
       "summary": "Called directly inside `compile_stage1_to_stage2_simulation_priors()` in",
       "tags": [
         "python",
@@ -1080,8 +1110,8 @@
       "type": "function",
       "name": "run_live_18_authority_cognitive_upgrade_on_trace",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 412,
-      "lineEnd": 495,
+      "lineStart": 584,
+      "lineEnd": 670,
       "summary": "Runs at the end of `AnalysisEngine.analyze()` in `intelligence/reasoning/engine.py`:",
       "tags": [
         "python",
@@ -1095,8 +1125,8 @@
       "type": "function",
       "name": "apply_live_18_authority_dfs_pool_and_lineup_upgrade",
       "filePath": "intelligence/reasoning/live_cognitive_self_improvement_engine.py",
-      "lineStart": 501,
-      "lineEnd": 598,
+      "lineStart": 676,
+      "lineEnd": 777,
       "summary": "Applies the 18-Authority Cognitive & Tactical Self-Improvement Engine to the",
       "tags": [
         "python",
@@ -2234,8 +2264,8 @@
       "type": "file",
       "name": "index.ts",
       "filePath": "workers/stealth-skeleton-provider/src/index.ts",
-      "sizeLines": 4196,
-      "summary": "index.ts (4196 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
+      "sizeLines": 4337,
+      "summary": "index.ts (4337 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
       "tags": [
         "ts",
         "stealth-skeleton-worker-and-eval-suite"
@@ -3098,6 +3128,20 @@
     {
       "source": "file:intelligence/reasoning/engine.py",
       "target": "function:intelligence/reasoning/engine.py:analyze",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:intelligence/reasoning/live_cognitive_self_improvement_engine.py",
+      "target": "function:intelligence/reasoning/live_cognitive_self_improvement_engine.py:discover_fleet_skills_catalog",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:intelligence/reasoning/live_cognitive_self_improvement_engine.py",
+      "target": "function:intelligence/reasoning/live_cognitive_self_improvement_engine.py:run_jev_skill_select_and_merged_turn_routing",
       "type": "contains",
       "direction": "directed",
       "weight": 1.0

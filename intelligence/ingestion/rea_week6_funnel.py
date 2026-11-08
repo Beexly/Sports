@@ -160,20 +160,23 @@ def extract_teams_from_text(text: str) -> list[str]:
 
 
 async def run_rea_playwright_harvest() -> list[dict]:
-    chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    import shutil
+    chrome_path = os.environ.get("CHROME_EXECUTABLE_PATH") or shutil.which("chrome") or shutil.which("google-chrome")
     SAMPLES_DIR.mkdir(parents=True, exist_ok=True)
     results = []
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(
-            executable_path=chrome_path,
-            headless=True,
-            args=[
+        launch_kwargs = {
+            "headless": True,
+            "args": [
                 "--disable-blink-features=AutomationControlled",
                 "--no-sandbox",
                 "--disable-gpu",
             ],
-        )
+        }
+        if chrome_path:
+            launch_kwargs["executable_path"] = chrome_path
+        browser = await p.chromium.launch(**launch_kwargs)
         context = await browser.new_context(
             user_agent=HEADERS["User-Agent"],
             viewport={"width": 1366, "height": 900},

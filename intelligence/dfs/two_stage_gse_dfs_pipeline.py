@@ -95,9 +95,36 @@ def build_gse_post_game_sim_projections_and_curated_pool(
         gid = str(r.get("game_id", f"{tm}@{opp}"))
         sal = int(r["salary"])
         gse_proj = round(float(r["projection"]), 2)
+        stage1_base_proj = round(_safe_num(r.get("dk_csv_avg_fpts", gse_proj), gse_proj), 2)
         val_1k = round(gse_proj / max(sal / 1000.0, 1.0), 2)
+        stage1_val_1k = round(stage1_base_proj / max(sal / 1000.0, 1.0), 2)
         is_trap = bool(r.get("is_sub_floor_trap", False))
         gate_note = str(r.get("accuracy_gate_note", ""))
+
+        stage1_entry = {
+            "player": nm,
+            "name": nm,
+            "position": pos,
+            "team": tm,
+            "opponent": opp,
+            "game_id": gid,
+            "dk_salary": sal,
+            "salary": sal,
+            "dk_csv_avg_fpts": stage1_base_proj,
+            "gse_post_game_sim_stats": {
+                "pass_yds": round(_safe_num(r.get("orig_pass_yds", r.get("proj_pass_yds")), 0.0), 1),
+                "rush_yds": round(_safe_num(r.get("orig_rush_yds", r.get("proj_rush_yds")), 0.0), 1),
+                "rec_yds": round(_safe_num(r.get("orig_rec_yds", r.get("proj_rec_yds")), 0.0), 1),
+                "receptions": round(_safe_num(r.get("orig_receptions", r.get("proj_receptions")), 0.0), 2),
+                "total_tds": round(_safe_num(r.get("orig_td", r.get("proj_td")), 0.0), 2),
+            },
+            "gse_dk_projection": stage1_base_proj,
+            "gse_post_game_sim_projection": stage1_base_proj,
+            "gse_value_per_1k": stage1_val_1k,
+            "pos_salary_rank_on_team": int(r.get("orig_pos_salary_rank", r.get("pos_salary_rank", 1))),
+            "accuracy_gate_note": str(r.get("orig_gate_note", gate_note)),
+        }
+        all_gse_projections.append(stage1_entry)
 
         rec_entry = {
             "player": nm,
@@ -108,7 +135,7 @@ def build_gse_post_game_sim_projections_and_curated_pool(
             "game_id": gid,
             "dk_salary": sal,
             "salary": sal,
-            "dk_csv_avg_fpts": round(_safe_num(r.get("dk_csv_avg_fpts", gse_proj), gse_proj), 2),
+            "dk_csv_avg_fpts": stage1_base_proj,
             "gse_post_game_sim_stats": {
                 "pass_yds": round(_safe_num(r.get("proj_pass_yds"), 0.0), 1),
                 "rush_yds": round(_safe_num(r.get("proj_rush_yds"), 0.0), 1),
@@ -122,7 +149,6 @@ def build_gse_post_game_sim_projections_and_curated_pool(
             "pos_salary_rank_on_team": int(r.get("pos_salary_rank", 1)),
             "accuracy_gate_note": gate_note,
         }
-        all_gse_projections.append(rec_entry)
 
         # Step 2: Dedicated GSE DFS Player Pool Selection Criteria
         reject_reason = None

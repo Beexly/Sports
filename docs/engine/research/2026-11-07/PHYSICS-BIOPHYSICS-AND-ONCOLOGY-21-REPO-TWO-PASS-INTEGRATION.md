@@ -1,13 +1,13 @@
 # Wave 4: 21-Repository (22-URL) Two-Pass Source-Code Audit & Integration (`Physics`, `Differentiable Biophysics`, `Quantum QAOA`, `Microclimate` & `Spatial Oncology`)
 
 **Date:** `2026-11-07`  
-**Execution Engine:** [`intelligence/ecosystem/physics_biophysics_and_oncology_21_repo_engine.py`](file:///C:/Users/Garrett/Sports/intelligence/ecosystem/physics_biophysics_and_oncology_21_repo_engine.py)  
-**Verification Suite:** [`tests/test_physics_biophysics_and_oncology_21_repo_engine.py`](file:///C:/Users/Garrett/Sports/tests/test_physics_biophysics_and_oncology_21_repo_engine.py)  
-**Live Execution Receipt:** [`data/audits/physics_biophysics_and_oncology_21_repo_integration_2026_11_07.json`](file:///C:/Users/Garrett/Sports/data/audits/physics_biophysics_and_oncology_21_repo_integration_2026_11_07.json)
+**Execution Engine:** [`intelligence/ecosystem/physics_biophysics_and_oncology_21_repo_engine.py`](file:///~/Sports/intelligence/ecosystem/physics_biophysics_and_oncology_21_repo_engine.py)  
+**Verification Suite:** [`tests/test_physics_biophysics_and_oncology_21_repo_engine.py`](file:///~/Sports/tests/test_physics_biophysics_and_oncology_21_repo_engine.py)  
+**Live Execution Receipt:** [`data/audits/physics_biophysics_and_oncology_21_repo_integration_2026_11_07.json`](file:///~/Sports/data/audits/physics_biophysics_and_oncology_21_repo_integration_2026_11_07.json)
 
 ---
 
-## 1. Hardware & Personal Environment Telemetry (`Target A: C:\Users\Garrett`)
+## 1. Hardware & Personal Environment Telemetry (`Target A: ~`)
 
 Before integrating any of the 22 URLs (21 unique repositories; `https://github.com/quantumlib/Cirq` was listed twice and deduplicated), we audited Garrett's live workstation constraints:
 - **CPU:** `12th Gen Intel(R) Core(TM) i7-1255U` (`AMD64`, AVX2 SIMD)

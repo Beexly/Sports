@@ -1,0 +1,283 @@
+{
+  "schema_version": "1.0.0-fleet-agent3-multi-cli-and-workspaces-deep-read",
+  "generated_at_utc": "2026-11-08T05:18:00Z",
+  "agent_id": "fleet-agent-3-multi-cli-and-sibling-workspaces-deep-reader",
+  "two_host_path_hygiene_enforced": true,
+  "zero_hardcoded_local_host_paths_in_intelligence_py": true,
+  "session_librarian_8_surfaces_summary": {
+    "core_indexed_cli_sessions_total": 3675,
+    "all_cli_sessions_including_grok_mimo_cursor": 4595,
+    "surfaces_verified_count": 8,
+    "surfaces": {
+      "1_hermes": {
+        "locator": "~/.hermes",
+        "state_db_locator": "~/AppData/Local/hermes/state.db",
+        "sessions_count": 2839,
+        "stored_messages_count": 770424,
+        "plans_count": 12,
+        "cron_jobs_count": 17,
+        "models_and_routers": [
+          "gse/skeleton-frontier (grok-4.20-multi-agent-beta-0309)",
+          "gse/skeleton-alpha (glm-5.1 + kimi-k2.5)",
+          "gse/skeleton-council",
+          "gse/skeleton-gsi-med",
+          "gse/skeleton-fast (mimo-v2.6-flash)",
+          "stealth/crouton-alpha",
+          "omniroute (http://localhost:20128/v1)"
+        ],
+        "competitor_intel_dossiers": [
+          "dfs-optimizer-tier.json",
+          "fivethirtyeight-nfl-elo.json",
+          "nfelo.json",
+          "nflverse-epa-wp.json",
+          "prop-tool-tier.json",
+          "scouting-betting-tier-2.json"
+        ],
+        "nvidia_skills": [
+          "dgx-spark-skills",
+          "ethos-explore",
+          "ethos-orchestrate",
+          "ethos-write",
+          "nvidia-skill-finder",
+          "tao-setup"
+        ],
+        "overnight_prompt": "~/.hermes/OVERNIGHT_MASTER_PROMPT_2026_10_29.md",
+        "vault_offload_manifest": "~/.hermes/offload_manifest_2026_10_29.json"
+      },
+      "2_antigravity_gemini_cli": {
+        "locator": "~/.gemini",
+        "brain_locator": "~/.gemini/antigravity-cli/brain",
+        "brain_sessions_count": 505,
+        "conversation_sqlite_dbs_count": 505,
+        "total_transcript_steps": 104003,
+        "skills_count": 185,
+        "mcp_servers": [
+          "GitKraken",
+          "firecrawl",
+          "firecrawl-agent",
+          "omniroute"
+        ],
+        "orca_telemetry_hooks": [
+          "BeforeAgent",
+          "AfterAgent",
+          "BeforeTool",
+          "AfterTool",
+          "SessionStart",
+          "SessionEnd"
+        ]
+      },
+      "3_claude_code": {
+        "locator": "~/.claude",
+        "jsonl_sessions_count": 331,
+        "agents_count": 11,
+        "rules_count": 4,
+        "slash_commands_count": 40,
+        "skills_count": 90,
+        "plans_count": 1,
+        "hierarchical_routing_tiers": {
+          "tier_1_free_workhorse": [
+            "omniroute/auto/coding:free",
+            "qwen/qwen-2.5-coder-32b-instruct:free",
+            "deepseek/deepseek-r1:free",
+            "mimo-v2-pro"
+          ],
+          "tier_2_fast": [
+            "claude-haiku-4-5",
+            "gpt-5.4-mini",
+            "gemini-3-flash"
+          ],
+          "tier_3_frontier": [
+            "claude-sonnet-4-6",
+            "gpt-5.4",
+            "gemini-3.1-pro"
+          ],
+          "tier_4_arbitration": [
+            "claude-opus-4-6"
+          ]
+        }
+      },
+      "4_codex": {
+        "locator": "~/.codex",
+        "workspace_files_count": 43972,
+        "default_model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh",
+        "multi_agent_configs_count": 10,
+        "skills_count": 21,
+        "mcp_servers": [
+          "owlex",
+          "council-unified-agent",
+          "node_repl",
+          "medusa",
+          "stripe",
+          "vercel",
+          "rea"
+        ]
+      },
+      "5_grok": {
+        "locator": "~/.grok",
+        "repo_config_locator": "repo://.grok/config.toml",
+        "sessions_count": 908,
+        "default_model": "grok-4.7",
+        "fork_secondary_model": "grok-4.6",
+        "marketplace": "https://github.com/xai-org/plugin-marketplace.git"
+      },
+      "6_xiaomi_mimo": {
+        "locator": "~/.mimocode",
+        "sessions_locator": "~/XiaomiMiMoProjects/.mimo-sessions",
+        "updater_locator": "~/AppData/Local/xiaomi-mimo-desktop-ai-updater",
+        "program_files_path_status": "Installed per-user in ~/AppData/Local/xiaomi-mimo-desktop-ai-updater and ~/.mimocode",
+        "session_directories_count": 10,
+        "session_files_count": 18471,
+        "models": [
+          "mimo-v2.6-flash",
+          "mimo-v2-pro"
+        ]
+      },
+      "7_cursor": {
+        "locator": "~/.cursor",
+        "repo_config_locator": "repo://.cursor/environment.json",
+        "chat_sessions_count": 2,
+        "cursor_skills_count": 23,
+        "default_model": "claude-haiku-5-5",
+        "mcp_servers": [
+          "rea (rea-agents@6.7.0)",
+          "posthog"
+        ]
+      },
+      "8_downloads_and_shared_skill_vaults": {
+        "downloads_locator": "~/Downloads",
+        "downloads_total_files": 702,
+        "downloads_domain_artifacts_indexed": 508,
+        "downloads_dk_salary_exports": [
+          "DKSalaries (1).csv",
+          "DKSalaries (2).csv",
+          "DKSalaries (3).csv",
+          "DKSalaries.csv"
+        ],
+        "shared_agents_vault_locator": "~/.agents",
+        "shared_agents_skills_count": 310,
+        "jev_sdk_locator": "~/hermes-jev-skills",
+        "jev_sdk_files_count": 130,
+        "omniroute_locator": "~/.omniroute/stealth-skeleton-provider.json"
+      }
+    }
+  },
+  "sibling_workspaces_and_worktrees": {
+    "sports_canonical": {
+      "locator": "~/Sports",
+      "git_tracked_files": 62845,
+      "git_branches": 2061,
+      "equation_families_wired": 279,
+      "equations_wired": 21419,
+      "situational_layers": 26,
+      "frontier_dfs_equations": 30
+    },
+    "sports_worktrees": {
+      "legacy_vault_offload": {
+        "locator": "~/Sports-worktrees",
+        "offloaded_at_utc": "2026-10-29T05:41:13Z",
+        "gdrive_file_id": "1TYu4hFKyXebxJeGJZyCvmL2lq1KOdwQU",
+        "archive_name": "legacy_sept_oct_worktrees_docs_and_meta.zip"
+      },
+      "active_git_worktrees_count": 9,
+      "active_git_worktrees": [
+        "C:/c/wt-ci-rival (feat/competitive-intel)",
+        "C:/c/wt-ledger (ledger/consolidated-2026-10-30)",
+        "C:/c/wt-not-for-sale (fix/car-gb-not-for-sale)",
+        "C:/c/wt-sports (engine/cv-bootstrap-2026-10-30)",
+        "C:/c/wt-takeover-2026-11-06 (ci/takeover-guards-2026-11-06)",
+        "C:/c/wt-tree-red (ci/test-wall-triage-batch2)",
+        "C:/c/wt-week8-fail-remediation (hermes/week8-fail-remediation)",
+        "C:/c/wt-week8-forensic (hermes/takeover-loop-2026-11-06)",
+        "~/Sports-ledger-tmp (ledger/16-5-honesty)"
+      ]
+    },
+    "gse_ml_service": {
+      "locator": "~/gse-ml-service",
+      "framework": "FastAPI",
+      "models": [
+        "ETKF (Bishop et al. 2001 Ensemble Transform Kalman Filter)",
+        "TDA (Vietoris-Rips H0/H1 persistence image with pure-NumPy exact Z_2 fallback)",
+        "Free-Energy Predictive Coder (Friston 2005)",
+        "MPS Tensor Network (Stoudenmire & Schwab 2016)",
+        "MaxEnt IRL (Ziebart 2008 stub)"
+      ],
+      "pytest_files_passed": 6,
+      "pytest_tests_passed": 354,
+      "canonical_sports_wiring": [
+        "packages/prediction-engine/src/ensemble/remote-model-client.ts",
+        "scripts/ops/mega_sweep_2026_11_06_wiring_engine.py"
+      ]
+    },
+    "gse_lab_20260919": {
+      "locator": "C:/workspace/gse-lab-20260919",
+      "nflverse_games_evaluated": 2679,
+      "neon_settled_picks_evaluated": 2711,
+      "empirical_mills": [
+        "allseat_mills.py",
+        "allseat_mills_v2.py",
+        "move37_wfamily.py (W1-W11 hypotheses)",
+        "devig_mill.py",
+        "wind_totals_mill.py",
+        "turnovers_multi_season.py",
+        "walkforward_brier.py",
+        "decision_calibration.py",
+        "GSE2/EDGE_LEDGER.md"
+      ],
+      "canonical_sports_wiring": [
+        "packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
+        "packages/prediction-engine/src/nfl/x-situational-80-rules.ts",
+        "packages/prediction-engine/src/public-baseline/devig.ts",
+        "scripts/ops/gse_connected_game_workflow.py"
+      ]
+    },
+    "onedrive_galaxy_sports_edge": {
+      "locator": "~/OneDrive/Documents/Galaxy Sports Edge",
+      "approx_files_count": 1250,
+      "packaged_zips": [
+        "galaxy-proof-mcp.zip",
+        "gse-ots-anchor.zip",
+        "gse-weather-edge.zip"
+      ],
+      "canonical_sports_wiring": [
+        "packages/data-ingestion/src/weather-vintage.ts",
+        "packages/prediction-engine/src/pedersen-ledger.ts",
+        "packages/crypto/src/pedersen-ledger.ts",
+        "intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py"
+      ]
+    },
+    "nfl_farm": {
+      "locator": "~/nfl-farm",
+      "files_count": 286,
+      "extracted_engines_count": 24,
+      "canonical_sports_wiring": [
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py",
+        "intelligence/dfs/dfs_and_fantasy_accuracy_engine.py",
+        "scripts/ops/solve_showdown_dfs_milp.py",
+        "scripts/ops/gse_coach_mind_simulator.py"
+      ]
+    }
+  },
+  "remediations_and_wiring_fixes_verified": [
+    {
+      "id": "FIX-01",
+      "component": "gse-ml-service/app/models/tda.py",
+      "description": "Added exact pure-NumPy Vietoris-Rips Z_2 persistent homology solver (_pure_numpy_ripser_maxdim1) with lexicographic point canonicalization so app/tests/test_tda.py and app/tests/test_main.py pass 100% (354/354 tests across all 6 test files) without requiring a compiled C++ ripser wheel on Python 3.13."
+    },
+    {
+      "id": "FIX-02",
+      "component": "packages/crypto/src/pedersen-ledger.ts",
+      "description": "Implemented self-contained secp256k1 Jacobian elliptic-curve point arithmetic and Node crypto SHA-256 so packages/crypto/src/__tests__/pedersen-ledger.test.ts passes 100% (27/27 tests across both Pedersen test suites) without missing @noble/* node_modules."
+    },
+    {
+      "id": "FIX-03",
+      "component": "scripts/ops/gse_connected_game_workflow.py & scripts/calibration/train_market_specific_calibration_heads.py",
+      "description": "Wired load_market_calibration_heads() and apply_stage4_conformal_and_calibration() into gse_connected_game_workflow.py and MarketCalibrationSuite.calibrate_probability() with a strict Brier Skill Score (BSS > 0) and positive Platt slope gate, falling back to identity (raw_prob) whenever skill <= 0."
+    },
+    {
+      "id": "FIX-04",
+      "component": "scripts/ops/solve_showdown_dfs_milp.py",
+      "description": "Added multi-lineup GPP portfolio generators solve_dk_showdown_portfolio_milp() and solve_dk_classic_portfolio_milp() with iterative Hamming min_uniques cuts, per-player max_exposure caps, max-4-per-team skill limits, and linear QB + 2 WR/TE + 1 opponent bring-back stacking constraints."
+    }
+  ]
+}

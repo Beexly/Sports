@@ -41,8 +41,6 @@ def load_env_local_secrets(env_path: Optional[Path] = None) -> Dict[str, str]:
         candidates.append(Path(env_path))
     repo_root = Path(__file__).resolve().parents[2]
     candidates.append(repo_root / ".env.local")
-    candidates.append(Path(r"C:\c\wt-week8-forensic\.env.local"))
-    candidates.append(Path(__file__).resolve().parents[2] / ".env.local")
 
     parsed: Dict[str, str] = {}
     for candidate in candidates:
@@ -641,22 +639,31 @@ def build_uncompressed_full_corpus_documents() -> List[CorpusDocument]:
     """
     docs: List[CorpusDocument] = []
 
-    # 1. Parse MANIFEST.md and per-lane INDEX-*.md from Google Drive if mounted, plus deterministic full registry
+    # 1. Parse MANIFEST.md and per-lane INDEX-*.md from repo-synced Mega-Sweep directory, plus deterministic full registry
+    mega_sweep_root = (
+        Path(__file__).resolve().parents[2]
+        / "docs"
+        / "data-sources"
+        / "research"
+        / "2026-11-07"
+        / "google-drive-mega-sweep"
+        / "mega-sweep-primary"
+    )
     manifest_paths = [
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\MANIFEST.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-a-sports\INDEX-BOOKS-A.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-a-sports\INDEX-BOOKS-A-2.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-b-medical\INDEX-BOOKS-B.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-b-medical\INDEX-BOOKS-B-2.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-c-systems\INDEX-BOOKS-C.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-c-systems\INDEX-BOOKS-C-2.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-d-models\INDEX-BOOKS-D.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-must-have\INDEX-BOOKS-MUST.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\books-must-have\INDEX-BOOKS-MUST-2.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\lane-a-situational\INDEX-REPOS-A-1.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\lane-a-situational\INDEX-REPOS-A-2.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\lane-b-medical\INDEX-REPOS-B-1.md"),
-        Path(r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\lane-b-medical\INDEX-REPOS-B-2.md"),
+        mega_sweep_root / "MANIFEST.md",
+        mega_sweep_root / "books-a-sports" / "INDEX-BOOKS-A.md",
+        mega_sweep_root / "books-a-sports" / "INDEX-BOOKS-A-2.md",
+        mega_sweep_root / "books-b-medical" / "INDEX-BOOKS-B.md",
+        mega_sweep_root / "books-b-medical" / "INDEX-BOOKS-B-2.md",
+        mega_sweep_root / "books-c-systems" / "INDEX-BOOKS-C.md",
+        mega_sweep_root / "books-c-systems" / "INDEX-BOOKS-C-2.md",
+        mega_sweep_root / "books-d-models" / "INDEX-BOOKS-D.md",
+        mega_sweep_root / "books-must-have" / "INDEX-BOOKS-MUST.md",
+        mega_sweep_root / "books-must-have" / "INDEX-BOOKS-MUST-2.md",
+        mega_sweep_root / "lane-a-situational" / "INDEX-REPOS-A-1.md",
+        mega_sweep_root / "lane-a-situational" / "INDEX-REPOS-A-2.md",
+        mega_sweep_root / "lane-b-medical" / "INDEX-REPOS-B-1.md",
+        mega_sweep_root / "lane-b-medical" / "INDEX-REPOS-B-2.md",
     ]
 
     seen_titles: set[str] = set()

@@ -46,13 +46,26 @@ def repair_and_audit() -> Dict[str, Any]:
         for line in REGISTRY_21K_PATH.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
+    import re as _re
+
+    neg_pow_re = _re.compile(r"(?<!\()(-\d+\.\d+)\*\*2")
+    reg_changed = False
     reg_copula_total = 0
     reg_copula_safe = 0
     reg_unsafe_copula = 0
+    reg_unparenthesized_neg_pow = 0
     reg_sub_min = 0
     families_seen = set()
     for r in rows_21k:
         fspec = str(r.get("formula_spec", ""))
+        if neg_pow_re.search(fspec):
+            fspec = neg_pow_re.sub(r"((\1)**2)", fspec)
+            r["formula_spec"] = fspec
+            if "latex_formula" in r and neg_pow_re.search(str(r["latex_formula"])):
+                r["latex_formula"] = neg_pow_re.sub(r"((\1)**2)", str(r["latex_formula"]))
+            reg_changed = True
+        if neg_pow_re.search(str(r.get("formula_spec", ""))):
+            reg_unparenthesized_neg_pow += 1
         if r.get("formula_type") == "copula_tail":
             reg_copula_total += 1
             if "**2)/4.5)**(-2.75)" in fspec or ")/4.5)**(-2.75)" not in fspec:
@@ -66,6 +79,12 @@ def repair_and_audit() -> Dict[str, Any]:
         if "family_id" in r:
             families_seen.add(int(r["family_id"]))
 
+    if reg_changed:
+        REGISTRY_21K_PATH.write_text(
+            "\n".join(json.dumps(r, ensure_ascii=False) for r in rows_21k) + "\n",
+            encoding="utf-8",
+        )
+
     summary = {
         "status": "PASS"
         if (
@@ -74,6 +93,7 @@ def repair_and_audit() -> Dict[str, Any]:
             and cat_copula_repaired == 1367
             and cat_unsafe_copula == 0
             and reg_unsafe_copula == 0
+            and reg_unparenthesized_neg_pow == 0
             and cat_sub_min == 1400
             and reg_sub_min == 1400
             and len(families_seen) == 279
@@ -85,6 +105,7 @@ def repair_and_audit() -> Dict[str, Any]:
         "registry_copula_tail_total": reg_copula_total,
         "registry_copula_tail_safe": reg_copula_safe,
         "unsafe_copula_tail_remaining": cat_unsafe_copula + reg_unsafe_copula,
+        "unparenthesized_negative_pow_remaining": reg_unparenthesized_neg_pow,
         "sub_min_sample_size_gated_count": reg_sub_min,
         "canonical_families_covered": len(families_seen),
     }

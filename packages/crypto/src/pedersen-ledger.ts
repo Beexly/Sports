@@ -44,12 +44,176 @@
  * callers here guard.
  */
 
-import { secp256k1 } from "@noble/curves/secp256k1.js";
-import { sha256 } from "@noble/hashes/sha2.js";
-import { bytesToHex } from "@noble/hashes/utils.js";
+import { createHash } from "node:crypto";
 
-const Point = secp256k1.Point;
-type Pt = InstanceType<typeof Point>;
+const SECP256K1_P = 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn;
+const SECP256K1_N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
+const SECP256K1_GX = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798n;
+const SECP256K1_GY = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8n;
+const SECP256K1_SQRT_EXP = (SECP256K1_P + 1n) >> 2n;
+
+function modP(a: bigint): bigint {
+  const r = a % SECP256K1_P;
+  return r >= 0n ? r : r + SECP256K1_P;
+}
+
+function modPowP(base: bigint, exp: bigint): bigint {
+  let b = modP(base);
+  let e = exp;
+  let r = 1n;
+  while (e > 0n) {
+    if (e & 1n) r = modP(r * b);
+    b = modP(b * b);
+    e >>= 1n;
+  }
+  return r;
+}
+
+function modInvP(a: bigint): bigint {
+  // Extended Euclidean algorithm in F_p
+  let t = 0n;
+  let newT = 1n;
+  let r = SECP256K1_P;
+  let newR = modP(a);
+  while (newR !== 0n) {
+    const q = r / newR;
+    [t, newT] = [newT, t - q * newT];
+    [r, newR] = [newR, r - q * newR];
+  }
+  return modP(t);
+}
+
+function sha256(data: Uint8Array): Uint8Array {
+  return new Uint8Array(createHash("sha256").update(data).digest());
+}
+
+function bytesToHex(bytes: Uint8Array): string {
+  return Buffer.from(bytes).toString("hex");
+}
+
+class Secp256k1Point {
+  static readonly Fn = { ORDER: SECP256K1_N } as const;
+  static readonly ZERO = new Secp256k1Point(0n, 1n, 0n);
+  static readonly BASE = new Secp256k1Point(SECP256K1_GX, SECP256K1_GY, 1n);
+
+  // Jacobian coordinates (X, Y, Z) representing affine (X/Z^2, Y/Z^3); Z === 0n is infinity.
+  constructor(
+    readonly X: bigint,
+    readonly Y: bigint,
+    readonly Z: bigint,
+  ) {}
+
+  static CURVE(): { readonly p: bigint; readonly n: bigint } {
+    return { p: SECP256K1_P, n: SECP256K1_N };
+  }
+
+  isZero(): boolean {
+    return this.Z === 0n;
+  }
+
+  toAffine(): { readonly x: bigint; readonly y: bigint } | null {
+    if (this.Z === 0n) return null;
+    if (this.Z === 1n) return { x: this.X, y: this.Y };
+    const zInv = modInvP(this.Z);
+    const zInv2 = modP(zInv * zInv);
+    const zInv3 = modP(zInv2 * zInv);
+    return { x: modP(this.X * zInv2), y: modP(this.Y * zInv3) };
+  }
+
+  equals(other: Secp256k1Point): boolean {
+    if (this.Z === 0n || other.Z === 0n) return this.Z === other.Z;
+    const z1z1 = modP(this.Z * this.Z);
+    const z2z2 = modP(other.Z * other.Z);
+    if (modP(this.X * z2z2) !== modP(other.X * z1z1)) return false;
+    const z1z1z1 = modP(z1z1 * this.Z);
+    const z2z2z2 = modP(z2z2 * other.Z);
+    return modP(this.Y * z2z2z2) === modP(other.Y * z1z1z1);
+  }
+
+  double(): Secp256k1Point {
+    if (this.Z === 0n || this.Y === 0n) return Secp256k1Point.ZERO;
+    const XX = modP(this.X * this.X);
+    const YY = modP(this.Y * this.Y);
+    const YYYY = modP(YY * YY);
+    const S = modP(2n * (modP((this.X + YY) * (this.X + YY)) - XX - YYYY));
+    const M = modP(3n * XX); // a = 0 on secp256k1
+    const T = modP(M * M - 2n * S);
+    const X3 = T;
+    const Y3 = modP(M * (S - T) - 8n * YYYY);
+    const Z3 = modP(2n * this.Y * this.Z);
+    return new Secp256k1Point(X3, Y3, Z3);
+  }
+
+  add(other: Secp256k1Point): Secp256k1Point {
+    if (this.Z === 0n) return other;
+    if (other.Z === 0n) return this;
+    const Z1Z1 = modP(this.Z * this.Z);
+    const Z2Z2 = modP(other.Z * other.Z);
+    const U1 = modP(this.X * Z2Z2);
+    const U2 = modP(other.X * Z1Z1);
+    const S1 = modP(this.Y * modP(other.Z * Z2Z2));
+    const S2 = modP(other.Y * modP(this.Z * Z1Z1));
+    if (U1 === U2) {
+      return S1 === S2 ? this.double() : Secp256k1Point.ZERO;
+    }
+    const H = modP(U2 - U1);
+    const I = modP(4n * H * H);
+    const J = modP(H * I);
+    const r = modP(2n * (S2 - S1));
+    const V = modP(U1 * I);
+    const X3 = modP(r * r - J - 2n * V);
+    const Y3 = modP(r * (V - X3) - 2n * S1 * J);
+    const Z3 = modP(modP((this.Z + other.Z) * (this.Z + other.Z) - Z1Z1 - Z2Z2) * H);
+    return new Secp256k1Point(X3, Y3, Z3);
+  }
+
+  multiply(scalar: bigint): Secp256k1Point {
+    if (typeof scalar !== "bigint" || scalar <= 0n || scalar >= SECP256K1_N) {
+      throw new Error("invalid scalar: out of range");
+    }
+    let result: Secp256k1Point = Secp256k1Point.ZERO;
+    let addend: Secp256k1Point = this;
+    let k = scalar;
+    while (k > 0n) {
+      if (k & 1n) result = result.add(addend);
+      addend = addend.double();
+      k >>= 1n;
+    }
+    return result;
+  }
+
+  toHex(): string {
+    const aff = this.toAffine();
+    if (aff === null) throw new Error("bad point: ZERO");
+    const prefix = (aff.y & 1n) === 1n ? "03" : "02";
+    return prefix + aff.x.toString(16).padStart(64, "0");
+  }
+
+  static fromHex(hex: string): Secp256k1Point {
+    if (typeof hex !== "string" || !/^(02|03)[0-9a-fA-F]{64}$/.test(hex)) {
+      throw new Error("invalid compressed secp256k1 hex");
+    }
+    const prefix = hex.slice(0, 2);
+    const x = BigInt("0x" + hex.slice(2));
+    if (x <= 0n || x >= SECP256K1_P) {
+      throw new Error("x coordinate out of field range");
+    }
+    const rhs = modP(modP(modP(x * x) * x) + 7n);
+    let y = modPowP(rhs, SECP256K1_SQRT_EXP);
+    if (modP(y * y) !== rhs) {
+      throw new Error("point is not on secp256k1 curve");
+    }
+    const isOdd = (y & 1n) === 1n;
+    const wantOdd = prefix === "03";
+    if (isOdd !== wantOdd) {
+      y = SECP256K1_P - y;
+    }
+    return new Secp256k1Point(x, y, 1n);
+  }
+}
+
+const Point = Secp256k1Point;
+type Pt = Secp256k1Point;
 
 /** Proven-prime group order n. */
 export const CURVE_ORDER: bigint = Point.Fn.ORDER;

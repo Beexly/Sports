@@ -323,13 +323,63 @@ def evaluate_frontier_19_equations_on_curated_pool(
     if len(effective_lineups) < 2 and len(curated_pool) >= 27:
         sorted_pool = sorted(
             curated_pool,
-            key=lambda r: float(r.get("gse_mean_fpts", 0.0)),
+            key=lambda r: float(
+                r.get(
+                    "gse_mean_fpts",
+                    r.get(
+                        "gse_dk_projection",
+                        r.get("gse_post_game_sim_projection", r.get("projection", 0.0)),
+                    ),
+                )
+            ),
             reverse=True,
         )
         effective_lineups = [
-            {"proj_sum": sum(float(x.get("gse_mean_fpts", 15.0)) for x in sorted_pool[0:9]), "players": sorted_pool[0:9]},
-            {"proj_sum": sum(float(x.get("gse_mean_fpts", 15.0)) for x in sorted_pool[9:18]), "players": sorted_pool[9:18]},
-            {"proj_sum": sum(float(x.get("gse_mean_fpts", 15.0)) for x in sorted_pool[18:27]), "players": sorted_pool[18:27]},
+            {
+                "proj_sum": sum(
+                    float(
+                        x.get(
+                            "gse_mean_fpts",
+                            x.get(
+                                "gse_dk_projection",
+                                x.get("gse_post_game_sim_projection", x.get("projection", 15.0)),
+                            ),
+                        )
+                    )
+                    for x in sorted_pool[0:9]
+                ),
+                "players": sorted_pool[0:9],
+            },
+            {
+                "proj_sum": sum(
+                    float(
+                        x.get(
+                            "gse_mean_fpts",
+                            x.get(
+                                "gse_dk_projection",
+                                x.get("gse_post_game_sim_projection", x.get("projection", 15.0)),
+                            ),
+                        )
+                    )
+                    for x in sorted_pool[9:18]
+                ),
+                "players": sorted_pool[9:18],
+            },
+            {
+                "proj_sum": sum(
+                    float(
+                        x.get(
+                            "gse_mean_fpts",
+                            x.get(
+                                "gse_dk_projection",
+                                x.get("gse_post_game_sim_projection", x.get("projection", 15.0)),
+                            ),
+                        )
+                    )
+                    for x in sorted_pool[18:27]
+                ),
+                "players": sorted_pool[18:27],
+            },
         ]
     if effective_lineups and len(effective_lineups) >= 2:
         k_lu = len(effective_lineups)

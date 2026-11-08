@@ -35,6 +35,36 @@ SCHEMAS_DIR = REPO_ROOT / "schemas" / "v1"
 CONTEXT_PACKETS_DIR = REPO_ROOT / "data" / "context_packets"
 
 _WAREHOUSE_SUMMARY_CACHE: Optional[Dict[str, Any]] = None
+_SHARED_ENTITY_RESOLVER: Optional[CanonicalEntityResolver] = None
+_CACHED_DEFAULT_CITATIONS: Optional[List[Dict[str, Any]]] = None
+
+
+def _get_shared_entity_resolver() -> CanonicalEntityResolver:
+    global _SHARED_ENTITY_RESOLVER
+    if _SHARED_ENTITY_RESOLVER is None:
+        _SHARED_ENTITY_RESOLVER = CanonicalEntityResolver()
+    return _SHARED_ENTITY_RESOLVER
+
+
+def _get_default_corpus_citations() -> List[Dict[str, Any]]:
+    global _CACHED_DEFAULT_CITATIONS
+    if _CACHED_DEFAULT_CITATIONS is None:
+        citations_raw = query_research_corpus("Cover 4 Quarters MOD PUSH 2-Jet pass protection trench", top_k=4)
+        _CACHED_DEFAULT_CITATIONS = [
+            {
+                "source_id": c["source_id"],
+                "chunk_id": c["chunk_id"],
+                "relevance_reason": c["relevance_reason"],
+            }
+            for c in citations_raw
+        ] or [
+            {
+                "source_id": "SRC-CORP-00129",
+                "chunk_id": "CORP-00129-CHK-01",
+                "relevance_reason": "Core NFL Schemes & Systems baseline reference",
+            }
+        ]
+    return list(_CACHED_DEFAULT_CITATIONS)
 
 
 def _get_warehouse_summary() -> Dict[str, Any]:
@@ -152,6 +182,7 @@ def execute_single_layer(
     game_ctx: Dict[str, Any],
     resolver: CanonicalEntityResolver,
     prior_layers: Dict[str, Dict[str, Any]],
+    _pre_resolved_entities: Optional[tuple] = None,
 ) -> Dict[str, Any]:
     l_num = int(layer_meta["num"])
     l_id = str(layer_meta["id"])
@@ -161,21 +192,25 @@ def execute_single_layer(
     as_of = str(game_ctx.get("as_of", "2026-11-05T18:00:00Z"))
     as_of_date = as_of[:10]
 
-    # Resolve team & venue entities through Wave 4 firewall
-    home_ent = resolver.resolve_entity(home, entity_type="team", as_of_date=as_of_date)
-    away_ent = resolver.resolve_entity(away, entity_type="team", as_of_date=as_of_date)
-    venue_ent = resolver.resolve_entity(f"VENUE-NFL-{home_ent['current_team_id']}", entity_type="venue", as_of_date=as_of_date)
-    resolved_ids = [home_ent["canonical_id"], away_ent["canonical_id"], venue_ent["canonical_id"]]
+    if _pre_resolved_entities is not None:
+        home_ent, away_ent, venue_ent, base_resolved_ids = _pre_resolved_entities
+        resolved_ids = list(base_resolved_ids)
+    else:
+        # Resolve team & venue entities through Wave 4 firewall
+        home_ent = resolver.resolve_entity(home, entity_type="team", as_of_date=as_of_date)
+        away_ent = resolver.resolve_entity(away, entity_type="team", as_of_date=as_of_date)
+        venue_ent = resolver.resolve_entity(f"VENUE-NFL-{home_ent['current_team_id']}", entity_type="venue", as_of_date=as_of_date)
+        resolved_ids = [home_ent["canonical_id"], away_ent["canonical_id"], venue_ent["canonical_id"]]
 
-    # Optional focal player check (enforces Wave 4 contamination firewall if focal_players provided)
-    for fp in game_ctx.get("focal_players", []) or []:
-        p_ent = resolver.resolve_entity(
-            fp["name"],
-            entity_type="player",
-            team_id=fp.get("team"),
-            as_of_date=as_of_date,
-        )
-        resolved_ids.append(p_ent["canonical_id"])
+        # Optional focal player check (enforces Wave 4 contamination firewall if focal_players provided)
+        for fp in game_ctx.get("focal_players", []) or []:
+            p_ent = resolver.resolve_entity(
+                fp["name"],
+                entity_type="player",
+                team_id=fp.get("team"),
+                as_of_date=as_of_date,
+            )
+            resolved_ids.append(p_ent["canonical_id"])
 
     overrides = (game_ctx.get("layer_overrides") or {}).get(l_id, {})
     base_val = float(overrides.get("perturbation_delta", 0.0))
@@ -237,16 +272,17 @@ def execute_single_layer(
         lev_idx = round(0.18 + eq_delta * 1.08 + base_val, 6)
         signals.update({"playoff_leverage_index": lev_idx, "contract_milestone_incentive_delta": round(0.012 + base_val * 0.2, 6), "layer_domain_signal": lev_idx})
     elif l_num == 6:
+        wind_val = float(game_ctx.get("wind_mph", 8.0)) + base_val
         signals.update({
             "stadium": venue_ent["canonical_name"],
             "roof_type": venue_ent["position"],
-            "wind_mph": float(game_ctx.get("wind_mph", 8.0)) + base_val,
-            "weather_pass_penalty": round(-0.015 * max(0.0, float(game_ctx.get("wind_mph", 8.0)) - 12.0), 4),
+            "wind_mph": wind_val,
+            "weather_pass_penalty": round(-0.015 * max(0.0, wind_val - 12.0) + eq_delta * 0.15 + base_val * 0.05, 6),
         })
     elif l_num == 7:
         ref = resolver.resolve_entity(game_ctx.get("referee_id", "OFF-REF-01"), entity_type="official", as_of_date=as_of_date)
         resolved_ids.append(ref["canonical_id"])
-        signals.update({"referee_crew": ref["canonical_name"], "holding_call_rate_z": round(0.15 + base_val, 4)})
+        signals.update({"referee_crew": ref["canonical_name"], "holding_call_rate_z": round(0.15 + eq_delta * 0.2 + base_val, 6)})
     elif l_num == 8:
         rest_d = eq_inputs["rest_differential_days"]
         tz_d = eq_inputs["timezone_delta_hours"]
@@ -254,7 +290,7 @@ def execute_single_layer(
         signals.update({"rest_differential_days": rest_d, "timezone_delta_hours": tz_d, "circadian_travel_fatigue_delta": circ_delta, "layer_domain_signal": circ_delta})
     elif l_num == 9:
         inj_count = int(game_ctx.get("home_cluster_injuries", 1))
-        signals.update({"home_cluster_injuries": inj_count, "availability_adjustment": round(-0.035 * inj_count + base_val, 4)})
+        signals.update({"home_cluster_injuries": inj_count, "availability_adjustment": round(-0.035 * inj_count + eq_delta * 0.2 + base_val, 6)})
     elif l_num == 10:
         signals.update({
             "gsi_trauma_hazard_index": round(0.12 + abs(eq_delta) * 0.2 + base_val, 4),
@@ -369,10 +405,26 @@ def execute_all_26_layers(
     game_ctx: Dict[str, Any],
     resolver: Optional[CanonicalEntityResolver] = None,
 ) -> Dict[str, Dict[str, Any]]:
-    ent_resolver = resolver or CanonicalEntityResolver()
+    ent_resolver = resolver or _get_shared_entity_resolver()
+    home = str(game_ctx.get("home_team", "BAL"))
+    away = str(game_ctx.get("away_team", "JAX"))
+    as_of_date = str(game_ctx.get("as_of", "2026-11-05T18:00:00Z"))[:10]
+    home_ent = ent_resolver.resolve_entity(home, entity_type="team", as_of_date=as_of_date)
+    away_ent = ent_resolver.resolve_entity(away, entity_type="team", as_of_date=as_of_date)
+    venue_ent = ent_resolver.resolve_entity(f"VENUE-NFL-{home_ent['current_team_id']}", entity_type="venue", as_of_date=as_of_date)
+    base_resolved_ids = [home_ent["canonical_id"], away_ent["canonical_id"], venue_ent["canonical_id"]]
+    for fp in game_ctx.get("focal_players", []) or []:
+        p_ent = ent_resolver.resolve_entity(
+            fp["name"],
+            entity_type="player",
+            team_id=fp.get("team"),
+            as_of_date=as_of_date,
+        )
+        base_resolved_ids.append(p_ent["canonical_id"])
+    pre_resolved = (home_ent, away_ent, venue_ent, base_resolved_ids)
     results: Dict[str, Dict[str, Any]] = {}
     for meta in ALL_26_LAYERS_META:
-        out = execute_single_layer(meta, game_ctx, ent_resolver, results)
+        out = execute_single_layer(meta, game_ctx, ent_resolver, results, _pre_resolved_entities=pre_resolved)
         results[meta["id"]] = out
     return results
 
@@ -392,24 +444,9 @@ def build_context_packet(
             f"Temporal leakage guard rejected packet build for {game_id}: as_of ({as_of}) >= kickoff_utc ({kickoff_utc})"
         )
 
-    resolver = CanonicalEntityResolver()
+    resolver = _get_shared_entity_resolver()
     layers = execute_all_26_layers(game_ctx, resolver=resolver)
-
-    citations_raw = query_research_corpus("Cover 4 Quarters MOD PUSH 2-Jet pass protection trench", top_k=4)
-    citations = [
-        {
-            "source_id": c["source_id"],
-            "chunk_id": c["chunk_id"],
-            "relevance_reason": c["relevance_reason"],
-        }
-        for c in citations_raw
-    ] or [
-        {
-            "source_id": "SRC-CORP-00129",
-            "chunk_id": "CORP-00129-CHK-01",
-            "relevance_reason": "Core NFL Schemes & Systems baseline reference",
-        }
-    ]
+    citations = _get_default_corpus_citations()
 
     packet = {
         "schema_version": "1.0.0",

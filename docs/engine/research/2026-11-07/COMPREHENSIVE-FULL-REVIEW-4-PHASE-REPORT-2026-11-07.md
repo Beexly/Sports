@@ -76,7 +76,7 @@
 - **Genkit v1.x Multi-SDK Standards:**
   - Enforced `genkit({ plugins: [googleAI()] })` and `response.text` property in JS/TS, `genkit.Init` + `genkit.DefineResumableTool` in Go, and `GenkitRouter` + `@Schema()` `schemantic` in Dart 1.0.
 - **Python 3.13 Standards:**
-  - Enforced `from __future__ import annotations`, frozen/typed `@dataclass` contracts, and portable `Path.home()` / `REPO_ROOT` resolution (zero hardcoded `C:\Users\Garrett` strings).
+  - Enforced `from __future__ import annotations`, frozen/typed `@dataclass` contracts, and portable `Path.home()` / `REPO_ROOT` resolution (zero hardcoded `~` strings).
 
 ### 4B. CI/CD & DevOps Practices Review (`cicd-automation::deployment-engineer`)
 - **Pre-Ship Guardrail Gates (`100% PASS`):**

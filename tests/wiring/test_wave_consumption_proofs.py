@@ -384,6 +384,11 @@ def test_openrouter_8suite_livebench_and_provider_integrations_verified() -> Non
     assert "stealth-skeleton" in opencode_cfg.get("provider", {})
     assert "openrouter" in opencode_cfg.get("provider", {})
     assert opencode_cfg["provider"]["stealth-skeleton"]["options"]["baseURL"] == "https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1"
+    assert "inkling/inkling-small-2" in opencode_cfg["provider"]["stealth-skeleton"]["models"]
+    assert "inkling/inkling-2" in opencode_cfg["provider"]["stealth-skeleton"]["models"]
+    assert "inkling/inkling-small-2" in opencode_cfg["provider"]["openrouter"]["models"]
+    assert "inkling/inkling-2" in opencode_cfg["provider"]["openrouter"]["models"]
+    assert len(opencode_cfg.get("approved_verification_and_routing_fleet", [])) == 9
 
     integrations_dir = repo_root / "workers" / "stealth-skeleton-provider" / "integrations"
     assert (integrations_dir / "models-dev" / "provider.toml").exists()
@@ -392,6 +397,7 @@ def test_openrouter_8suite_livebench_and_provider_integrations_verified() -> Non
     litellm_json = json.loads((integrations_dir / "litellm" / "stealth_skeleton_litellm_models.json").read_text(encoding="utf-8"))
     assert "stealth-skeleton/skeleton-alpha" in litellm_json
     assert "openrouter/stealth-skeleton/skeleton-alpha" in litellm_json
+
 
 
 

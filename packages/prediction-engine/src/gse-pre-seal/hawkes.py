@@ -30,7 +30,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 DB_PATH = Path("external/downloads/circa_observations.db")
-OUT_PATH = Path("C:/Users/Garrett/Sports/docs/ops/hawkes-regime-2026-10-26.json")
+OUT_PATH = Path(__file__).resolve().parents[4] / "docs" / "ops" / "hawkes-regime-2026-10-26.json"
 
 
 # --------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 r"""Comprehensive Multi-Pass Test Suite for the 33-Repository (Batch 2 -> 45 Total) Integration Engine.
 
 Verifies all 33 new repositories + edge cases across:
-  - Target A: Personal Hardware & Software Optimization (C:\Users\Garrett)
+  - Target A: Personal Hardware & Software Optimization (~)
   - Target B: Galaxy Sports Edge (GSE) Website, Prediction Engine & DFS Optimizer
   - Target C: Galaxy Science Institute (GSI) Biomechanics, RF Vital Sensing & Scientific Corpus
 """

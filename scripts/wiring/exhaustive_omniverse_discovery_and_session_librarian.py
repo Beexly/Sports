@@ -6,7 +6,7 @@ Session Librarian Sweep (`scripts/wiring/exhaustive_omniverse_discovery_and_sess
 Executes with ZERO `[:60]` sample truncation across:
   1. 100% of Google Drive (`G:\\My Drive` + all `DriveFS/*/metadata_sqlite_db` SQLite tables/rows)
   2. 100% of Google Docs (`.gdoc`, `.gsheet`, `.gslides`, `.docx` across Drive, OneDrive, Downloads, and Repo)
-  3. 100% of the Repository (`C:\\Users\\Garrett\\Sports` across all top-level directories, branches, and worktrees:
+  3. 100% of the Repository (`~/Sports` across all top-level directories, branches, and worktrees:
      `Sports-worktrees`, `gse-ml-service`, `gse-lab-20260919`)
   4. 100% of the Agent Bus (`docs/wiring/inbox/`, `docs/wiring/`, `docs/ops/`, `brain/`, `~/.hermes/`, `~/.claude/`)
   5. 100% of the Session Librarian (`session-librarian` 8-Surface Cross-System Discovery Checklist:
@@ -15,7 +15,7 @@ Executes with ZERO `[:60]` sample truncation across:
   6. 100% of Installed Skills (`ALL-758-SKILLS-LIVE-EXECUTION-RECEIPT.json` — all 903 `SKILL.md` files)
 
 Strict Guardrails:
-  - Zero raw `C:\\Users\\Garrett` strings in committed JSON/Markdown outputs (portable `~` / `gdrive://` / `repo://` URIs only).
+  - Zero raw Windows home path strings in committed JSON/Markdown outputs (portable `~` / `gdrive://` / `repo://` URIs only).
   - Privacy filter on personal/HR/family filenames outside GSE/GSI/Sports/Science/Math/Engineering scope.
 """
 

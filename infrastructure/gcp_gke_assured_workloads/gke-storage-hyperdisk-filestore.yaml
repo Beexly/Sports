@@ -1,0 +1,66 @@
+# GKE Storage Golden Path Manifests (gke-storage)
+# Configures Regional PD-SSD StorageClass with WaitForFirstConsumer & allowVolumeExpansion,
+# Dynamic Hyperdisk Balanced StorageClass with topology-aware scheduling,
+# ReadWriteMany Filestore PVC (1Ti minimum), and GCS FUSE CSI readOnly mount with Workload Identity.
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gse-fast-regional-pd
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: pd-ssd
+  replication-type: regional-pd
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gse-dynamic-hyperdisk-topology
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: dynamic
+  pd-type: pd-balanced
+  hyperdisk-type: hyperdisk-balanced
+  disk-type-preference: hyperdisk-type
+  use-allowed-disk-topology: "true"
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gse-shared-filestore-rwx
+  namespace: gse-ai
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard-rwx
+  resources:
+    requests:
+      storage: 1Ti
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gse-corpus-gcsfuse-reader
+  namespace: gse-ai
+  annotations:
+    gke-gcsfuse/volumes: "true"
+spec:
+  serviceAccountName: gse-workload-identity-sa
+  containers:
+    - name: corpus-reader
+      image: us-central1-docker.pkg.dev/gse-enterprise-prod/gse-images/corpus-reader:1.0.0
+      volumeMounts:
+        - name: gse-corpus-bucket
+          mountPath: /mnt/corpus
+          readOnly: true
+  volumes:
+    - name: gse-corpus-bucket
+      csi:
+        driver: gcsfuse.csi.storage.gke.io
+        readOnly: true
+        volumeAttributes:
+          bucketName: gse-enterprise-warehouse-2026

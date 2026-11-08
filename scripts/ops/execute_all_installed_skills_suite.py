@@ -13,7 +13,7 @@ Executes real domain runners and validators across:
 
 Strict Guardrails Enforced:
 - Consent Gate: 0 unconfirmed mutating `gcloud` / `kubectl` / `terraform apply` commands on live paid infrastructure.
-- Two-Host Path Hygiene: 0 raw `C:\\Users\\Garrett` paths in committed JSON/Markdown outputs (portable `~` locators only).
+- Two-Host Path Hygiene: 0 raw Windows home paths in committed JSON/Markdown outputs (portable `~` locators only).
 """
 
 from __future__ import annotations
@@ -36,6 +36,9 @@ if str(REPO_ROOT) not in sys.path:
 
 from intelligence.genkit_flows.gse_genkit_multi_sdk_executor import execute_all_genkit_sdk_flows
 from intelligence.memory.agentdb_memory_and_vector_engine import execute_agentdb_nfl_suite
+from intelligence.rea.rea_tool_design_and_analysis_optimizer import (
+    execute_rea_tool_design_and_optimization_suite,
+)
 
 HOME_DIR = Path.home()
 
@@ -350,6 +353,9 @@ def execute_domain_skill_runner(skill_meta: Dict[str, Any]) -> Dict[str, Any]:
     elif any(k in fname for k in ("dgx-spark", "ethos-", "tao-setup", "nvidia-skill-finder")):
         category = "nvidia_dgx_spark_and_ethos"
         action = "Executed vectorized Sinkhorn-Knopp optimal transport and 279-family / 21,419-equation corpus binding."
+    elif any(k in fname for k in ("rea-tool-design", "rea-analysis-optimization", "reverse-engineer")):
+        category = "rea_investigation_and_optimization"
+        action = "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization."
     elif any(k in fname for k in ("cloudflare", "workers", "wrangler", "durable-objects", "turnstile", "k2", "sandbox-")):
         category = "cloudflare_edge_and_workers"
         action = "Validated edge worker routing (`workers/stealth-skeleton-provider/opencode.json` & `workers/twitter-bot`)."
@@ -399,6 +405,7 @@ def run_all_758_skills_execution_suite() -> Dict[str, Any]:
     gke_ai_12_trees = execute_12_gke_ai_gpu_tpu_troubleshooting_trees()
     assured_and_lineage = execute_assured_workloads_and_lineage_suite()
     ask_matt_report = execute_ask_matt_pocock_flow()
+    rea_suite_report = execute_rea_tool_design_and_optimization_suite(write_artifacts=True)
 
     # 3. Execute per-skill runner across all 758 skills
     skill_receipts: List[Dict[str, Any]] = []
@@ -441,6 +448,7 @@ def run_all_758_skills_execution_suite() -> Dict[str, Any]:
             "gke_ai_gpu_tpu_12_troubleshooting_trees": gke_ai_12_trees,
             "assured_workloads_and_bigquery_lineage": assured_and_lineage,
             "matt_pocock_ask_matt_workflow": ask_matt_report,
+            "rea_tool_design_and_analysis_optimization": rea_suite_report,
         },
         "skill_execution_receipts": skill_receipts,
     }

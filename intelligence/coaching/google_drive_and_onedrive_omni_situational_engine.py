@@ -4,18 +4,18 @@ intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py
 ==========================================================================
 Wave 12 Executable Mathematical & Situational Reasoning Engine compiled from the
 full extraction of:
-  1. `G:\\My Drive\\GSN` (2,324 files: 5 master `.docx` research audits, `GSE_58_paper_dossiers.md`,
+  1. `gdrive://GSN` (2,324 files: 5 master `.docx` research audits, `GSE_58_paper_dossiers.md`,
      `GSE_58_independent_research.md`, `SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md`,
      `CLAUDE_CODEX_SEAMLESS_OPERATING_PROTOCOL.md`, `PROMPT_3_V2_LINE_LEVEL_WAVE3_INTEGRATION.md`,
      `PROMPT_4_FINAL_WAVE_DESIGN_MEDIA_AUDIT_INTEGRATION(1).md`, `Galaxy Sports Edge/docs/research/*`,
      `.codex-worktrees/gse-frontier-recovery/*`, `GSE. 10.2.26/*`, and 373 `.gdoc` pointers).
-  2. `G:\\My Drive\\GSE-Ultra-30TB-Vault` (1,223 files: `cuda_weighted_entropy_evolution_feed.jsonl`,
+  2. `gdrive://GSE-Ultra-30TB-Vault` (1,223 files: `cuda_weighted_entropy_evolution_feed.jsonl`,
      `gcp_agentic_and_rclone_feed.jsonl`, `manifest.json`, `offload_manifest_2026_10_29.json`,
      `research-corpus-2026-11-03/manifest.jsonl` [2,034 OpenAlex records + 1,118 PDFs],
      `deep-corpus-2026-11-04/pdfs` [53 PDFs], `downloads-archive-2026-11-03` [18 files],
      `nfl-film-room-2026` [13 files / 12 full-game MP4s], `hermes-backup/memories-20261103-140317/MEMORY.md`).
-  3. `G:\\My Drive\\Alter` (4 files: `ALTER_XIV_CLAUDE_CODE_KICKOFF.md`, `alter-xiv-scaffold-v2_1.zip`,
-     `alter-xiv-scaffold-v2.zip`, `files.zip`) & Root `G:\\My Drive` (GSE/GSI/Sports architecture `.gdoc`
+  3. `gdrive://Alter` (4 files: `ALTER_XIV_CLAUDE_CODE_KICKOFF.md`, `alter-xiv-scaffold-v2_1.zip`,
+     `alter-xiv-scaffold-v2.zip`, `files.zip`) & Root `gdrive://` (GSE/GSI/Sports architecture `.gdoc`
      pointers, `deepseek_markdown_20260911_667ac8.md`, `extract-data-2026-09-11.json`,
      `extract-data-2026-09-11 (1).json`, `gse-repo-source-4b4ae1e.zip`).
   4. `onedrive://Galaxy Sports Edge` (1,027 files:
@@ -46,7 +46,7 @@ import numpy as np
 
 
 # ============================================================================
-# COMPLETE 58-PAPER DOSSIER CATALOG (G:\My Drive\GSN\GSE_58_paper_dossiers.md)
+# COMPLETE 58-PAPER DOSSIER CATALOG (gdrive://GSN/GSE_58_paper_dossiers.md)
 # ============================================================================
 GSE_58_PAPER_DOSSIER_CATALOG: List[Dict[str, str]] = [
     # Cluster A — Win probability & calibration
@@ -124,7 +124,7 @@ def evaluate_gdrive_58_paper_and_corpus_situational_laws(
     game_context: Dict[str, Any],
 ) -> Dict[str, Any]:
     """
-    Evaluates all 58 paper dossiers from `G:\\My Drive\\GSN\\GSE_58_paper_dossiers.md`
+    Evaluates all 58 paper dossiers from `gdrive://GSN/GSE_58_paper_dossiers.md`
     + `World-Class Sports Probability Engine Corpus Audit (1).docx` +
     `Projective Geometry, Joint Point-and-Line Calibration... (SkeleTrack v2)` across:
       1. Tracking Homography (`SkeleTrack v2` plane-to-plane H in PGL(3,R), 8-DoF conditioning,
@@ -240,10 +240,10 @@ def evaluate_gdrive_58_paper_and_corpus_situational_laws(
             "boltzmann_temperature_2505_21543": round(boltzmann_temp, 3),
         },
         "provenance": [
-            "G:\\My Drive\\GSN\\GSE_58_paper_dossiers.md",
-            "G:\\My Drive\\GSN\\GSE_58_independent_research.md",
-            "G:\\My Drive\\GSN\\World-Class Sports Probability Engine Corpus Audit (1).docx",
-            "G:\\My Drive\\GSN\\Galaxy Sports Edge Research Audit (2).docx",
+            "gdrive://GSN/GSE_58_paper_dossiers.md",
+            "gdrive://GSN/GSE_58_independent_research.md",
+            "gdrive://GSN/World-Class Sports Probability Engine Corpus Audit (1).docx",
+            "gdrive://GSN/Galaxy Sports Edge Research Audit (2).docx",
         ],
     }
 
@@ -390,10 +390,10 @@ def evaluate_tracking_decoupled_and_cqr_small_sample_calibration(
             "steam_regime_active": steam_regime_active,
         },
         "provenance": [
-            "G:\\My Drive\\GSN\\Architectural Blueprint for a Calibrated, Tracking-Decoupled Sports Probability Engine (1).docx",
-            "G:\\My Drive\\GSN\\Auditing Conformal Prediction, Small-Sample Calibration, and Sports Market Probabilities for GSE (2).docx",
-            "G:\\My Drive\\GSN\\CQR Research (1).docx",
-            "G:\\My Drive\\deepseek_markdown_20260911_667ac8.md",
+            "gdrive://GSN/Architectural Blueprint for a Calibrated, Tracking-Decoupled Sports Probability Engine (1).docx",
+            "gdrive://GSN/Auditing Conformal Prediction, Small-Sample Calibration, and Sports Market Probabilities for GSE (2).docx",
+            "gdrive://GSN/CQR Research (1).docx",
+            "gdrive://deepseek_markdown_20260911_667ac8.md",
         ],
     }
 
@@ -557,7 +557,7 @@ def evaluate_nfl_roster_truth_and_wave3_line_level(
     """
     Implements:
       1. `nfl-roster-truth` 68 Build Cards (`BUILD-NRT-001` to `BUILD-NRT-068` in
-         `OneDrive\\Documents\\Galaxy Sports Edge\\docs\\research\\nfl-roster-truth` & `G:\\My Drive\\GSN`):
+         `onedrive://Galaxy Sports Edge/docs/research/nfl-roster-truth` & `gdrive://GSN`):
          - Active-games denominator (`player_gp`, never `team_gp`) with snap-weighted participation.
          - IR/PUP return ramp-up snap discount (0.62x first game back, 0.82x second game back).
          - Practice squad elevation & emergency QB3 rules.
@@ -702,10 +702,10 @@ def evaluate_nfl_roster_truth_and_wave3_line_level(
             "edgeball_ceiling_utility_boost": round(edgeball_gpp_utility_boost, 4),
         },
         "provenance": [
-            "onedrive://Galaxy Sports Edge/docs\\research\\nfl-roster-truth\\15-build-queue-summary.md",
-            "G:\\My Drive\\GSN\\PROMPT_3_V2_LINE_LEVEL_WAVE3_INTEGRATION.md",
-            "G:\\My Drive\\extract-data-2026-09-11 (1).json",
-            "onedrive://Galaxy Sports Edge/docs\\research\\edgeball-contest-os\\04-gse-edgeball-format-spec.md",
+            "onedrive://Galaxy Sports Edge/docs/research/nfl-roster-truth/15-build-queue-summary.md",
+            "gdrive://GSN/PROMPT_3_V2_LINE_LEVEL_WAVE3_INTEGRATION.md",
+            "gdrive://extract-data-2026-09-11 (1).json",
+            "onedrive://Galaxy Sports Edge/docs/research/edgeball-contest-os/04-gse-edgeball-format-spec.md",
         ],
     }
 
@@ -717,7 +717,7 @@ def evaluate_vault_entropy_evolution_and_alter_xiv_twin(
     game_context: Dict[str, Any],
 ) -> Dict[str, Any]:
     """
-    Implements the exact mathematical equations from `G:\\My Drive\\GSE-Ultra-30TB-Vault`:
+    Implements the exact mathematical equations from `gdrive://GSE-Ultra-30TB-Vault`:
       1. `cuda_weighted_entropy_evolution_feed.jsonl` (`EQ-CUDA-001` to `EQ-CUDA-004`):
          - `EQ-CUDA-001` Weighted 14-Bucket Partition-Entropy Objective:
            J(k; w) = sum_{j=0}^{13} w_j * (-p_j * (log2(c_j) - log2(n))), p_j = c_j / n
@@ -729,7 +729,7 @@ def evaluate_vault_entropy_evolution_and_alter_xiv_twin(
       2. `gcp_agentic_and_rclone_feed.jsonl` (`EQ-GCP-001` to `EQ-GCP-010`):
          - `EQ-GCP-006` Bi-Temporal Point-in-Time As-Of Join Invariant (t_valid <= t_cut and t_tx <= t_cut)
          - `EQ-GCP-010` Adaptive Concurrency Little's Law Gradient2 Limit
-      3. `G:\\My Drive\\Alter\\ALTER_XIV_CLAUDE_CODE_KICKOFF.md`:
+      3. `gdrive://Alter/ALTER_XIV_CLAUDE_CODE_KICKOFF.md`:
          - `SIGNAL -> MIND -> ORACLE -> INTROSPECTION` epistemic world-model state transitions.
     """
     # EQ-CUDA-002: Verify injective mapping of all 14 valid (p, q) pairs (p in 0..4, p+q <= 4, excluding (3,1))
@@ -813,9 +813,9 @@ def evaluate_vault_entropy_evolution_and_alter_xiv_twin(
             "introspection_learning_loop_closed": True,
         },
         "provenance": [
-            "G:\\My Drive\\GSE-Ultra-30TB-Vault\\cuda_weighted_entropy_evolution_feed.jsonl",
-            "G:\\My Drive\\GSE-Ultra-30TB-Vault\\gcp_agentic_and_rclone_feed.jsonl",
-            "G:\\My Drive\\Alter\\ALTER_XIV_CLAUDE_CODE_KICKOFF.md",
+            "gdrive://GSE-Ultra-30TB-Vault/cuda_weighted_entropy_evolution_feed.jsonl",
+            "gdrive://GSE-Ultra-30TB-Vault/gcp_agentic_and_rclone_feed.jsonl",
+            "gdrive://Alter/ALTER_XIV_CLAUDE_CODE_KICKOFF.md",
         ],
     }
 
@@ -827,7 +827,7 @@ def run_google_drive_and_onedrive_omni_situational_overlay(
     game_context: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     """
-    Executes all 5 Google Drive (`G:\\My Drive`) and OneDrive (`Galaxy Sports Edge`)
+    Executes all 5 Google Drive (`gdrive://`) and OneDrive (`Galaxy Sports Edge`)
     situational engines and returns a deterministic adjustment vector with full
     cryptographic provenance.
     """
@@ -865,7 +865,7 @@ def run_google_drive_and_onedrive_omni_situational_overlay(
 
     result_payload = {
         "engine_module": "intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py",
-        "wave": "Wave 12 — Entire Google Drive (G:\\My Drive) + OneDrive (Galaxy Sports Edge) Situational Engine",
+        "wave": "Wave 12 — Entire Google Drive (gdrive://) + OneDrive (Galaxy Sports Edge) Situational Engine",
         "situational_adjustment_vector": {
             "epa_delta": epa_delta,
             "pass_rate_delta": pass_rate_delta,

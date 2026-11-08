@@ -2507,7 +2507,7 @@ class ScramFaultTreeMocusAndBirnbaumEngine:
 
 def run_probabilistic_and_control_19_repo_integration() -> dict[str, Any]:
     """Execute all 19 unique repositories (20 URLs) across Personal Hardware, GSE, and GSI."""
-    usage = shutil.disk_usage(r"C:\\")
+    usage = shutil.disk_usage(str(REPO_ROOT))
     c_free_gb = round(usage.free / (1024**3), 2)
 
     # 1. ourownstory/neural_prophet

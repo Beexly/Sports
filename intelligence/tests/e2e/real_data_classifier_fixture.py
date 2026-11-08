@@ -78,10 +78,12 @@ ITEMS = [
 ]
 
 if __name__ == "__main__":
+    from pathlib import Path
     import sys
-    sys.path.insert(0, "/home/hatch/workspace/gse-intelligence-build")
+    intel_root = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(intel_root))
     import importlib.util as ilu, os
-    pkg = "/home/hatch/workspace/gse-intelligence-build/trust-signals"
+    pkg = str(intel_root / "trust-signals")
     spec = ilu.spec_from_file_location("trust_signals", os.path.join(pkg, "__init__.py"),
                                       submodule_search_locations=[pkg])
     mod = ilu.module_from_spec(spec); sys.modules["trust_signals"] = mod

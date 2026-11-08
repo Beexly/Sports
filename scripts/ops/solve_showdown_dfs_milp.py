@@ -275,6 +275,11 @@ def solve_dk_classic_milp(
     mode: str = "cash",
     salary_cap: int = 50000,
     min_salary: int = 45000,
+    stack_qb_pass_catchers: int = 0,
+    require_opp_bringback: bool = False,
+    prior_solutions: Sequence[np.ndarray] | None = None,
+    min_uniques: int = 1,
+    locked_out_indices: set[int] | None = None,
 ) -> dict[str, Any]:
     """Solve DraftKings 9-slot Classic roster (1 QB, 2 RB, 3 WR, 1 TE, 1 FLEX, 1 DST <= $50,000) via MILP."""
     mode_norm = mode.strip().lower()
@@ -298,6 +303,8 @@ def solve_dk_classic_milp(
     for i, p in enumerate(enriched):
         if p["is_out"] or (mode_norm == "cash" and p["is_decoy_trap"]):
             ub_vars[i] = 0.0
+        if locked_out_indices and i in locked_out_indices:
+            ub_vars[i] = 0.0
 
     def _pos_vec(positions: set[str]) -> np.ndarray:
         return np.array([1.0 if p["pos"] in positions else 0.0 for p in enriched], dtype=np.float64)
@@ -314,6 +321,63 @@ def solve_dk_classic_milp(
     ]
     lhs = [9.0, float(min_salary), 1.0, 1.0, 2.0, 3.0, 1.0, 7.0]
     rhs = [9.0, float(salary_cap), 1.0, 1.0, 3.0, 4.0, 2.0, 7.0]
+
+    # Max 4 skill players per team (competitor-intel dfs-optimizer-tier.json rule)
+    teams = sorted({p["team"] for p in enriched if not p["is_out"]})
+    for tm in teams:
+        r_tm = np.array(
+            [1.0 if (p["team"] == tm and p["pos"] in {"QB", "RB", "WR", "TE"}) else 0.0 for p in enriched],
+            dtype=np.float64,
+        )
+        rows.append(r_tm)
+        lhs.append(0.0)
+        rhs.append(4.0)
+
+    # Linear QB + K pass-catchers (WR/TE) correlation stack + optional 1 opponent bring-back
+    if stack_qb_pass_catchers > 0 or require_opp_bringback:
+        for i_qb, p_qb in enumerate(enriched):
+            if p_qb["pos"] != "QB":
+                continue
+            tm = p_qb["team"]
+            if stack_qb_pass_catchers > 0:
+                same_team_pc = [
+                    j for j, pj in enumerate(enriched) if pj["team"] == tm and pj["pos"] in {"WR", "TE"}
+                ]
+                if len(same_team_pc) >= stack_qb_pass_catchers:
+                    # sum_{j in WR/TE(tm)} x_j - K * x_qb >= 0
+                    r_stk = np.zeros(n, dtype=np.float64)
+                    for j in same_team_pc:
+                        r_stk[j] = 1.0
+                    r_stk[i_qb] = -float(stack_qb_pass_catchers)
+                    rows.append(r_stk)
+                    lhs.append(0.0)
+                    rhs.append(float(len(same_team_pc)))
+            if require_opp_bringback:
+                opp_tm = str(p_qb.get("opponent") or p_qb.get("opp") or "").upper()
+                opp_skill = [
+                    j
+                    for j, pj in enumerate(enriched)
+                    if pj["pos"] in {"RB", "WR", "TE"}
+                    and ((opp_tm and pj["team"] == opp_tm) or (not opp_tm and pj["team"] != tm))
+                ]
+                if opp_skill:
+                    # sum_{m in opp_skill} x_m - x_qb >= 0
+                    r_bb = np.zeros(n, dtype=np.float64)
+                    for m_idx in opp_skill:
+                        r_bb[m_idx] = 1.0
+                    r_bb[i_qb] = -1.0
+                    rows.append(r_bb)
+                    lhs.append(0.0)
+                    rhs.append(float(len(opp_skill)))
+
+    # Iterative Hamming distance exclusion cuts for multi-lineup portfolios
+    if prior_solutions:
+        max_overlap = max(0, 9 - int(min_uniques))
+        for prev_sol in prior_solutions:
+            r_cut = np.asarray(prev_sol, dtype=np.float64)
+            rows.append(r_cut)
+            lhs.append(0.0)
+            rhs.append(float(max_overlap))
 
     res = milp(
         c=c,
@@ -336,6 +400,148 @@ def solve_dk_classic_milp(
         "objective_value": round(float(-res.fun), 3),
         "selected_players": [p["name"] for p in chosen],
         "roster": chosen,
+        "_solution_vector": sol.tolist(),
+    }
+
+
+def solve_dk_showdown_portfolio_milp(
+    players: Sequence[Mapping[str, Any]],
+    n_lineups: int = 5,
+    mode: str = "gpp",
+    min_uniques: int = 1,
+    max_exposure: float = 0.80,
+    salary_cap: int = 50000,
+    min_salary: int = 42000,
+) -> dict[str, Any]:
+    """Generate a multi-lineup Showdown GPP/Cash portfolio with Hamming `min_uniques` and `max_exposure` bounds."""
+    enriched = [_enrich_player_decoy_and_objectives(p) for p in players]
+    n = len(enriched)
+    max_count = max(1, int(np.ceil(float(max_exposure) * max(1, n_lineups))))
+    exposure_counts = np.zeros(n, dtype=int)
+    prior_binary_vectors: list[np.ndarray] = []
+    lineups: list[dict[str, Any]] = []
+
+    for _k in range(n_lineups):
+        # Filter pool or cap players who reached max_exposure
+        capped_pool = []
+        for i, p in enumerate(enriched):
+            p_copy = dict(p)
+            if exposure_counts[i] >= max_count:
+                p_copy["is_out"] = True
+            capped_pool.append(p_copy)
+        # Solve single Showdown with iterative uniqueness penalty if prior lineups exist
+        for i, p_copy in enumerate(capped_pool):
+            if prior_binary_vectors:
+                # Apply mild exposure decay + strict exclusion via adjusted objective if needed
+                freq = float(exposure_counts[i]) / max(1.0, float(len(lineups)))
+                p_copy["gpp_objective"] = float(p_copy["gpp_objective"]) - 0.35 * freq
+        try:
+            lu = solve_dk_showdown_milp(
+                capped_pool,
+                mode=mode,
+                salary_cap=salary_cap,
+                min_salary=min_salary,
+            )
+        except RuntimeError:
+            break
+        sel_set = set(lu["selected_players"])
+        vec = np.array([1 if p["name"] in sel_set else 0 for p in enriched], dtype=int)
+        # Enforce min_uniques against prior lineups by locking out highest-salaried shared flex if identical
+        if any(int(np.sum(vec * prev)) > (6 - min_uniques) for prev in prior_binary_vectors):
+            overlap_indices = [
+                i for i, p in enumerate(enriched) if p["name"] in sel_set and exposure_counts[i] > 0
+            ]
+            if overlap_indices:
+                drop_idx = max(overlap_indices, key=lambda idx: (exposure_counts[idx], enriched[idx]["salary"]))
+                capped_pool[drop_idx]["is_out"] = True
+                try:
+                    lu = solve_dk_showdown_milp(
+                        capped_pool,
+                        mode=mode,
+                        salary_cap=salary_cap,
+                        min_salary=min_salary,
+                    )
+                    sel_set = set(lu["selected_players"])
+                    vec = np.array([1 if p["name"] in sel_set else 0 for p in enriched], dtype=int)
+                except RuntimeError:
+                    break
+        prior_binary_vectors.append(vec)
+        exposure_counts += vec
+        lineups.append(lu)
+
+    exposures = {
+        enriched[i]["name"]: round(float(exposure_counts[i]) / max(1, len(lineups)), 4)
+        for i in range(n)
+        if exposure_counts[i] > 0
+    }
+    return {
+        "contest_type": "DK_SHOWDOWN_PORTFOLIO",
+        "mode": mode,
+        "requested_lineups": n_lineups,
+        "generated_lineups": len(lineups),
+        "min_uniques": min_uniques,
+        "max_exposure": max_exposure,
+        "player_exposures": exposures,
+        "lineups": lineups,
+    }
+
+
+def solve_dk_classic_portfolio_milp(
+    players: Sequence[Mapping[str, Any]],
+    n_lineups: int = 5,
+    mode: str = "gpp",
+    min_uniques: int = 2,
+    max_exposure: float = 0.65,
+    stack_qb_pass_catchers: int = 2,
+    require_opp_bringback: bool = True,
+    salary_cap: int = 50000,
+    min_salary: int = 45000,
+) -> dict[str, Any]:
+    """Generate a multi-lineup Classic GPP/Cash portfolio with exact MILP Hamming cuts, stacking & exposure bounds."""
+    enriched = [_enrich_player_decoy_and_objectives(p) for p in players]
+    n = len(enriched)
+    max_count = max(1, int(np.ceil(float(max_exposure) * max(1, n_lineups))))
+    exposure_counts = np.zeros(n, dtype=int)
+    prior_solutions: list[np.ndarray] = []
+    lineups: list[dict[str, Any]] = []
+
+    for _k in range(n_lineups):
+        locked_out = {i for i in range(n) if exposure_counts[i] >= max_count}
+        try:
+            lu = solve_dk_classic_milp(
+                players,
+                mode=mode,
+                salary_cap=salary_cap,
+                min_salary=min_salary,
+                stack_qb_pass_catchers=stack_qb_pass_catchers,
+                require_opp_bringback=require_opp_bringback,
+                prior_solutions=prior_solutions,
+                min_uniques=min_uniques,
+                locked_out_indices=locked_out,
+            )
+        except RuntimeError:
+            break
+        sol_vec = np.asarray(lu.pop("_solution_vector"), dtype=int)
+        prior_solutions.append(sol_vec)
+        exposure_counts += sol_vec
+        lineups.append(lu)
+
+    exposures = {
+        enriched[i]["name"]: round(float(exposure_counts[i]) / max(1, len(lineups)), 4)
+        for i in range(n)
+        if exposure_counts[i] > 0
+    }
+    return {
+        "contest_type": "DK_CLASSIC_PORTFOLIO",
+        "mode": mode,
+        "requested_lineups": n_lineups,
+        "generated_lineups": len(lineups),
+        "min_uniques": min_uniques,
+        "max_exposure": max_exposure,
+        "stack_qb_pass_catchers": stack_qb_pass_catchers,
+        "require_opp_bringback": require_opp_bringback,
+        "player_exposures": exposures,
+        "lineups": lineups,
     }
 
 

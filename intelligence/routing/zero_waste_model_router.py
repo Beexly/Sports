@@ -23,7 +23,7 @@ import json
 import os
 import time
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class TaskTier(str, Enum):
@@ -138,7 +138,37 @@ def get_cloud_credit_lanes_summary() -> Dict[str, Any]:
             "chat_completions_endpoint": "https://www.galaxysportsedge.com/api/openrouter-provider/chat/completions",
             "mcp_manifest_endpoint": "https://www.galaxysportsedge.com/api/openrouter-provider/mcp/manifest",
             "schema_version": "2.4",
-            "models": ["gse/stealth-skeleton-alpha", "gse/skeleton-v1", "gse/skeleton-v1-fast"],
+            "models": [
+                "gse/stealth-skeleton-alpha",
+                "gse/skeleton-v1",
+                "gse/skeleton-v1-fast",
+                "deepseek/deepseek-v3.2",
+                "z-ai/glm-5.1",
+                "z-ai/glm-5-turbo",
+                "x-ai/grok-4.1-fast",
+                "x-ai/grok-4.20-multi-agent-beta-0309",
+                "xiaomi/mimo-v2-pro",
+                "xiaomi/mimo-v2-flash",
+                "minimax/minimax-m2.7",
+                "inkling/inkling-small-2",
+                "inkling/inkling-2",
+                "glm-5.3-flash-free",
+                "stealth/crouton-alpha",
+            ],
+        },
+        "claude_cli_and_hermes_subscription": {
+            "provider": "ANTHROPIC_LOGGED_IN_CLAUDE_CLI_AND_HERMES_SUBSCRIPTION",
+            "model_id": "anthropic/claude-opus-5.5",
+            "transport": "claude_cli_and_hermes_subscription_no_api_burn",
+            "marginal_api_cost_per_1m_usd": (0.0, 0.0),
+            "drain_all_subscription_capacity": True,
+            "never_use_claude_for_babysitting_or_workhorse": True,
+        },
+        "dual_provider_budget_governor": {
+            "opencode_budget_usd": 10.00,
+            "openrouter_budget_usd": 10.00,
+            "total_budget_usd": 20.00,
+            "hard_circuit_breaker_at_pct": 0.95,
         },
         "impact_partnership": {
             "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
@@ -302,3 +332,29 @@ def build_constitutional_gatekeeper_prompt(game_id: str, candidate_ticket: Dict[
             fallback="scaleway:https://api.scaleway.ai/v1/llama-3.3-70b-instruct",
         ),
     }
+
+
+CANONICAL_9_FLEET_MODEL_IDS: Tuple[str, ...] = (
+    "deepseek/deepseek-v3.2",
+    "z-ai/glm-5.1",
+    "z-ai/glm-5-turbo",
+    "x-ai/grok-4.1-fast",
+    "x-ai/grok-4.20-multi-agent-beta-0309",
+    "xiaomi/mimo-v2-pro",
+    "minimax/minimax-m2.7",
+    "inkling/inkling-small-2",
+    "inkling/inkling-2",
+)
+
+from scripts.ops.zero_waste_model_router import (  # noqa: E402
+    APPROVED_VERIFICATION_MODELS,
+    CLAUDE_CLI_AND_HERMES_SUBSCRIPTION_SPINE,
+    DUAL_PROVIDER_BUDGET_GOVERNOR,
+    HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS,
+    MODEL_ID_ALIASES,
+    MODEL_ROUTING_TABLE,
+    check_dual_provider_budget_and_route,
+    select_strongest_agent_for_task,
+    select_zero_waste_cost_optimized_model,
+)
+

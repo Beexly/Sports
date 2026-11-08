@@ -1,0 +1,207 @@
+{
+  "status": "PASS",
+  "executed_at_utc": "2026-11-08T04:39:04.770181+00:00",
+  "total_wave_skills_executed": 59,
+  "wave_skills": [
+    "audit-the-list",
+    "accessibility-compliance-accessibility-audit",
+    "bazel-build-optimization",
+    "assuredworkloads-environment-assessor",
+    "multi-cloud-architecture",
+    "codebase-cleanup-deps-audit",
+    "hybrid-cloud-architect",
+    "api-gateway-backend-security-and-rate-limiting",
+    "api-gateway-mcp-server",
+    "apigee-agent-gateway-governance",
+    "AgentDB Memory Patterns",
+    "AgentDB Vector Search",
+    "agent-platform-access-audit",
+    "agent-platform-alert-configuration",
+    "e2e-testing-patterns",
+    "iam-helper-for-policy-management",
+    "academic-paper-review",
+    "test-driven-development",
+    "santa-method",
+    "ml-pipeline-workflow",
+    "ml-engineer",
+    "mlops-engineer",
+    "machine-learning-ops-ml-pipeline",
+    "managed-airflow-migrations",
+    "managed-airflow-dag-authoring",
+    "managed-airflow-recommendations",
+    "managed-airflow-dag-troubleshooting",
+    "agent-platform-rag-engine-management",
+    "rag-implementation",
+    "google-cloud-solution-rag-enterprise-search-gke-sqldb",
+    "gke-storage",
+    "max-leverage",
+    "writing-fragments",
+    "detection-engineering-coverage-evaluation",
+    "ai-engineer",
+    "data-engineer",
+    "reverse-engineer-anything",
+    "prompt-engineer",
+    "network-engineer",
+    "tutorial-engineer",
+    "vector-database-engineer",
+    "protocol-reverse-engineering",
+    "documentation-generation-doc-generate",
+    "deep-research",
+    "setup-ts-deep-modules",
+    "research",
+    "compute-future-reservations",
+    "compute-on-demand-reservations",
+    "gke-ai-troubleshooting-tpu-reservation-stockout",
+    "papersgpt-for-zotero",
+    "pathways-workload",
+    "wrangler",
+    "workload-manager-basics",
+    "wizard",
+    "tdd-workflow",
+    "nvidia-skill-finder",
+    "loop-me",
+    "rea-tool-design",
+    "rea-analysis-optimization"
+  ],
+  "subsystems": {
+    "api_gateway_and_mcp_openapi": {
+      "status": "PASS",
+      "openapi_version": "3.0.4",
+      "backend_protocol": "h2",
+      "preserved_quota_metrics": [
+        "mcp-equation-eval-credits",
+        "mcp-tool-read-requests"
+      ],
+      "mcp_tools_exposed": [
+        "evaluate_equation_spec",
+        "query_quad_engine_crosswalk",
+        "inspect_analysis_view"
+      ],
+      "mcp_tools_explicitly_opted_out": [
+        "GET /v1/admin/health"
+      ],
+      "mcp_streamable_http_protocol_version": "2025-11-25"
+    },
+    "apigee_agent_gateway_governance": {
+      "status": "PASS",
+      "deployment_type": "EXTENSIBLE",
+      "llm_uri_match": "generateContent|streamGenerateContent|v1/chat/completions",
+      "authz_policy_suffixes": [
+        ":generateContent",
+        ":streamGenerateContent",
+        "/v1/chat/completions"
+      ],
+      "feature_uids_preserved_count": 6,
+      "token_metering_buckets": [
+        "gemini-flash",
+        "gemini-pro",
+        "other"
+      ],
+      "ext_proc_wire_format": "EXT_PROC_GRPC"
+    },
+    "managed_airflow_3_suite": {
+      "status": "PASS",
+      "dag_file": "infrastructure/gcp_gke_assured_workloads/composer_airflow3_gse_pipeline_dag.py",
+      "uses_airflow_3_sdk": true,
+      "uses_asset_scheduling": true,
+      "no_deprecated_google_or_http_operators": true,
+      "no_top_level_db_or_variable_calls": true,
+      "troubleshooting_modes_verified": [
+        "DAG_RUN_TIMEOUT",
+        "TASK_QUEUED_TIMEOUT",
+        "TASK_STUCK_IN_QUEUE",
+        "BIGQUERY_JOB_FAILED",
+        "DETECTED_ZOMBIE",
+        "WORKER_OUT_OF_POD_STORAGE"
+      ]
+    },
+    "agent_platform_access_alerts_and_rag": {
+      "status": "PASS",
+      "spiffe_principal_verified": "principal://agents.global.org-123456.system.id.goog/resources/aiplatform/projects/123456/locations/us-central1/reasoningEngines/98765",
+      "non_spiffe_rejected": true,
+      "audit_denial_classifications": [
+        "VPC service controls violation",
+        "IAM permission denied"
+      ],
+      "otel_alert_policies_count": 11,
+      "otel_alert_policy_ids": [
+        "reliability_latency_anomaly",
+        "reliability_error_rate_fast_burn_1h",
+        "reliability_error_rate_slow_burn_3d",
+        "reliability_model_call_error_rate_sql",
+        "reliability_tool_call_error_rate_sql",
+        "quality_final_response",
+        "quality_tool_use",
+        "quality_hallucination",
+        "cost_rapid_token_burn_rate",
+        "safety_model_armor_trigger_rate_sql",
+        "security_iam_permission_denied_rate_sql"
+      ],
+      "rag_top_chunk_id": "RAG-CHK-01",
+      "rag_top_similarity": 0.9985
+    },
+    "agentdb_vector_and_memory": {
+      "status": "PASS",
+      "embedding_dimension": 768,
+      "binary_quantization_bytes": 96,
+      "binary_memory_reduction_x": 32,
+      "scalar_memory_reduction_x": 4,
+      "product_quantization_bytes": 96,
+      "hnsw_index_enabled": true,
+      "mmr_diversity_enabled": true
+    },
+    "compute_reservations_pathways_gke_storage_iam": {
+      "status": "PASS",
+      "calendar_mode_feasible": true,
+      "on_demand_available_capacity": 6,
+      "silent_double_billing_drift_caught": true,
+      "pathways_container_order": [
+        "user-workload",
+        "proxy",
+        "pathways-rm",
+        "pathways-worker",
+        "colocated-python-sidecar"
+      ],
+      "gke_storage_manifest_kinds": [
+        "StorageClass",
+        "StorageClass",
+        "PersistentVolumeClaim",
+        "Pod"
+      ],
+      "iam_blanket_public_access_refused": true
+    },
+    "secops_detection_coverage_and_santa_method": {
+      "status": "PASS",
+      "secops_prompt_injection_detected": false,
+      "secops_all_lro_done_before_rule_gen": true,
+      "secops_coverage_eval": [
+        {
+          "ruleId": "ru_gke_token_001",
+          "displayName": "GKE Metadata Token Replay Detection",
+          "owner": "gse-secops",
+          "type": "SINGLE_EVENT",
+          "alertingEnabled": false
+        }
+      ],
+      "secops_missing_coverage_generated_rules": 1,
+      "santa_method_verdict": "NICE",
+      "santa_reviewers": [
+        "Santa_Reviewer_B_Isolated",
+        "Santa_Reviewer_C_Isolated"
+      ]
+    },
+    "bazel_deep_modules_wizard_loop_fragments": {
+      "status": "PASS",
+      "bazelrc_verified": true,
+      "dependency_cruiser_5_rules_verified": true,
+      "packages_deep_module_readme_verified": true,
+      "wizard_4_stages_verified": true,
+      "loop_me_workflow_verified": true,
+      "writing_fragments_verified": true,
+      "wrangler_worker_config_verified": true,
+      "nvidia_6_skills_and_11_plugins_routed": true,
+      "max_leverage_free_settlement_path_verified": true
+    }
+  },
+  "digest_sha256": "668eed2133e1a66fcbaa7910b62658beac134d0da6c8dcd7c9940fa6ddf44c61"
+}

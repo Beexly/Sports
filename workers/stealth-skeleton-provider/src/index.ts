@@ -2455,6 +2455,58 @@ export const STEALTH_SKELETON_CLOAKED_MODEL_IDS: readonly string[] = [
   "stealth-skeleton/skeleton-flash",
 ] as const;
 
+export const APPROVED_9_FLEET_MODEL_IDS: readonly string[] = [
+  "deepseek/deepseek-v3.2",
+  "deepseek-v3.2",
+  "z-ai/glm-5.1",
+  "glm-5.1",
+  "z-ai/glm-5-turbo",
+  "glm-5-turbo",
+  "x-ai/grok-4.1-fast",
+  "grok-4.1-fast",
+  "x-ai/grok-4.20-multi-agent-beta-0309",
+  "x-ai/grok-4.20-beta",
+  "grok-4.20-beta",
+  "xiaomi/mimo-v2-pro",
+  "mimo-v2-pro",
+  "minimax/minimax-m2.7",
+  "minimax-m2.7",
+  "inkling/inkling-small-2",
+  "inkling/inkling-small-2-new",
+  "inkling-small-2",
+  "inkling-small-2-new",
+  "inkling/inkling-2",
+  "inkling-2",
+] as const;
+
+export const SUPPORTED_MODEL_IDS: ReadonlySet<string> = new Set([
+  "gse/stealth-skeleton-alpha",
+  "gse/skeleton-v1",
+  "gse/skeleton-v1-fast",
+  "gse/skeleton-stealth",
+  "gse/skeleton-math-pro",
+  "gse/skeleton-forecast",
+  "gse/skeleton-council",
+  "gse/skeleton-flash",
+  "xiaomi/mimo-v2-flash",
+  "mimo-v2-flash",
+  "mimo-v2.6-flash",
+  "glm-5.3-flash-free",
+  "z-ai/glm-5.3-flash:free",
+  "glm-5.3-flash:free",
+  "stealth/crouton-alpha",
+  "crouton-alpha",
+  "deepseek-1017",
+  "qwen3.8-flash",
+  "gpt-6-luna",
+  "prism-ml/ternary-bonsai-2-27b",
+  "ternary-bonsai-2-27b",
+  "anthropic/claude-opus-5.5",
+  "claude-opus-5.5",
+  ...STEALTH_SKELETON_CLOAKED_MODEL_IDS,
+  ...APPROVED_9_FLEET_MODEL_IDS,
+]);
+
 export function resolveOpenRouterTrafficRouting(
   requestedModel: string,
   provider?: OpenRouterProviderRoutingPreferences
@@ -2998,17 +3050,6 @@ export async function handleStealthSkeletonRequest(
     }
 
     const reqStartMs = performance.now();
-    const SUPPORTED_MODEL_IDS = new Set([
-      "gse/stealth-skeleton-alpha",
-      "gse/skeleton-v1",
-      "gse/skeleton-v1-fast",
-      "gse/skeleton-stealth",
-      "gse/skeleton-math-pro",
-      "gse/skeleton-forecast",
-      "gse/skeleton-council",
-      "gse/skeleton-flash",
-      ...STEALTH_SKELETON_CLOAKED_MODEL_IDS,
-    ]);
     const initialRequestedModel =
       typeof body.model === "string" && SUPPORTED_MODEL_IDS.has(body.model)
         ? body.model
@@ -4292,21 +4333,21 @@ export function evaluateJevSkillSelectLocalGateAndRanker(turn: string): {
   if (/\b(nfl|game|prop|sgp|dfs|call-sheet|simulation|week\s*9)\b/.test(lower)) {
     candidates.push({
       name: "gse-connected-game-workflow",
-      path: "C:/Users/Garrett/.agents/skills/gse-connected-game-workflow/SKILL.md",
+      path: "~/.agents/skills/gse-connected-game-workflow/SKILL.md",
       match: 0.78,
     });
   }
   if (/\b(understand|knowledge\s+graph|onboard|blast\s+radius|diff)\b/.test(lower)) {
     candidates.push({
       name: "understand",
-      path: "C:/Users/Garrett/.gemini/config/plugins/understand-anything/skills/understand/SKILL.md",
+      path: "~/.gemini/config/plugins/understand-anything/skills/understand/SKILL.md",
       match: 0.84,
     });
   }
   if (/\b(skill|jev|pick-skill|catalog)\b/.test(lower)) {
     candidates.push({
       name: "jev-skill-select",
-      path: "C:/Users/Garrett/.agents/skills/jev-skill-select/SKILL.md",
+      path: "~/.agents/skills/jev-skill-select/SKILL.md",
       match: 0.82,
     });
   }

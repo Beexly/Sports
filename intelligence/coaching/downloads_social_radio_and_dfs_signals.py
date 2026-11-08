@@ -681,7 +681,7 @@ def evaluate_all_social_radio_and_pregame_pack_signals(
     clues, Pregame Data Pack 10-gate checklist, DFS DKSalaries slates, and
     Content-OS / telemetry wiring for the specified matchup (default JAX @ BAL, Week 9).
     Enforces Stage-0 roster allowlist hygiene (`assert_zero_roster_contamination`)
-    before writing `C:\\c\\wt-week8-forensic\\data\\engine\\downloads_social_radio_dfs_signals_2026_11_05.json`.
+    before writing `data/engine/downloads_social_radio_dfs_signals_2026_11_05.json`.
     """
     away_u = away.upper()
     home_u = home.upper()

@@ -1030,7 +1030,7 @@ class NvkeNodeContractAndSpiffeAttestor:
         dll_path = REPO_ROOT / "intelligence" / "native_kernels" / "bin" / "libgse_native_kernels.dll"
         if not dll_path.exists():
             dll_path = REPO_ROOT / "intelligence" / "native_kernels" / "libgse_native_kernels.dll"
-        usage = shutil.disk_usage(r"C:\\")
+        usage = shutil.disk_usage(str(REPO_ROOT))
         free_gb = round(usage.free / (1024**3), 2)
         total_gb = round(usage.total / (1024**3), 2)
         return {

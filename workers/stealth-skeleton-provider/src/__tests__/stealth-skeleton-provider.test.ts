@@ -754,6 +754,48 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
       assert.equal(body.gse_metadata.posthog_ai_observability.properties.$ai_model, cloakedModelId);
       assert.equal(body.gse_metadata.posthog_ai_observability.properties.$ai_provider, "gse-stealth-skeleton-provider");
     }
+
+    for (const fleetModelId of [
+      "inkling/inkling-small-2",
+      "inkling-small-2",
+      "inkling/inkling-small-2-new",
+      "inkling-small-2-new",
+      "inkling/inkling-2",
+      "inkling-2",
+      "deepseek/deepseek-v3.2",
+      "z-ai/glm-5.1",
+      "z-ai/glm-5-turbo",
+      "glm-5.3-flash-free",
+      "z-ai/glm-5.3-flash:free",
+      "x-ai/grok-4.1-fast",
+      "x-ai/grok-4.20-multi-agent-beta-0309",
+      "x-ai/grok-4.20-beta",
+      "xiaomi/mimo-v2-pro",
+      "xiaomi/mimo-v2-flash",
+      "mimo-v2-flash",
+      "mimo-v2.6-flash",
+      "stealth/crouton-alpha",
+      "anthropic/claude-opus-5.5",
+      "minimax/minimax-m2.7",
+    ]) {
+      const fleetRes = await handleStealthSkeletonRequest(
+        new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: fleetModelId,
+            messages: [{ role: "user", content: "Verify CRPS(N(0,1), 0)" }],
+          }),
+        })
+      );
+      assert.equal(fleetRes.status, 200);
+      const fleetBody = (await fleetRes.json()) as { model: string };
+      assert.equal(
+        fleetBody.model,
+        fleetModelId,
+        `Approved fleet model ${fleetModelId} must be preserved without coercion`
+      );
+    }
   });
 
   it("supports stealthmodels.com discovery aliases, queues CROWD_RLHF_QUEUE distillation traces, and solves StealthMark 1.8.10 Latch, Foresight, SVG & NVIDIA compute-eval pass@k", async () => {

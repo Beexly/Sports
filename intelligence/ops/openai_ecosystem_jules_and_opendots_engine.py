@@ -38,8 +38,8 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence
 import urllib.error
 import urllib.request
 
-WORKTREE_ROOT = Path(r"C:\c\wt-week8-forensic")
 MAIN_REPO_ROOT = Path(__file__).resolve().parents[2]
+WORKTREE_ROOT = MAIN_REPO_ROOT
 
 
 def _load_env_secret(key_name: str) -> str:

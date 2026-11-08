@@ -1,13 +1,13 @@
 # Nineteen-Repository (20-URL) Two-Pass Source-Code Audit & Integration: Probabilistic, Bayesian, Control & Biomechanical Movement Primitives
 
 **Date:** `2026-11-07`  
-**Execution Engine:** [`intelligence/ecosystem/probabilistic_and_control_19_repo_engine.py`](file:///C:/Users/Garrett/Sports/intelligence/ecosystem/probabilistic_and_control_19_repo_engine.py)  
-**Verification Suite:** [`tests/test_probabilistic_and_control_19_repo_engine.py`](file:///C:/Users/Garrett/Sports/tests/test_probabilistic_and_control_19_repo_engine.py)  
-**Live Receipt:** [`data/audits/probabilistic_and_control_19_repo_integration_2026_11_07.json`](file:///C:/Users/Garrett/Sports/data/audits/probabilistic_and_control_19_repo_integration_2026_11_07.json)
+**Execution Engine:** [`intelligence/ecosystem/probabilistic_and_control_19_repo_engine.py`](file:///~/Sports/intelligence/ecosystem/probabilistic_and_control_19_repo_engine.py)  
+**Verification Suite:** [`tests/test_probabilistic_and_control_19_repo_engine.py`](file:///~/Sports/tests/test_probabilistic_and_control_19_repo_engine.py)  
+**Live Receipt:** [`data/audits/probabilistic_and_control_19_repo_integration_2026_11_07.json`](file:///~/Sports/data/audits/probabilistic_and_control_19_repo_integration_2026_11_07.json)
 
 ---
 
-## 1. Hardware & Storage Telemetry (`Target A: C:\Users\Garrett`)
+## 1. Hardware & Storage Telemetry (`Target A: ~`)
 
 - **CPU:** `12th Gen Intel(R) Core(TM) i7-1255U` (`10 cores / 12 threads`, native AVX2 SIMD vectorization)
 - **GPU:** `Intel(R) Iris(R) Xe Graphics` (integrated; **zero local NVIDIA CUDA devices**)

@@ -1,0 +1,166 @@
+openapi: 3.0.4
+info:
+  title: Galaxy Sports Edge Remote MCP & Equation Gateway API
+  description: >-
+    Production OpenAPI 3.0.4 specification for Google Cloud API Gateway
+    implementing api-gateway-backend-security-and-rate-limiting and
+    api-gateway-mcp-server with JWT authentication, preserved multi-metric quotas,
+    and Streamable HTTP MCP 2025-11-25 tool routing.
+  version: "1.0.0"
+servers:
+  - url: https://gse-mcp-gateway-9a860471.uc.gateway.dev
+security:
+  - gse_jwt_auth: []
+x-google-api-management:
+  backends:
+    default:
+      address: https://gse-mcp-equations-service-uc.a.run.app
+      pathTranslation: APPEND_PATH_TO_ADDRESS
+      protocol: h2
+      deadline: 30.0
+      jwtAudience: https://gse-mcp-equations-service-uc.a.run.app
+  metrics:
+    mcp-tool-read-requests:
+      displayName: MCP Tool Read Requests
+      valueType: INT64
+      metricKind: DELTA
+    mcp-equation-eval-credits:
+      displayName: MCP Equation Evaluation Compute Credits
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      - name: mcp-tool-read-requests-per-minute
+        metric: mcp-tool-read-requests
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 120
+      - name: mcp-equation-eval-credits-per-minute
+        metric: mcp-equation-eval-credits
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 500
+  mcp:
+    tools-list:
+      security:
+        - gse_jwt_auth: []
+paths:
+  /mcp:
+    post:
+      operationId: handle_streamable_http_mcp
+      summary: Streamable HTTP MCP JSON-RPC 2.0 endpoint at host root
+      parameters:
+        - in: header
+          name: MCP-Protocol-Version
+          required: true
+          schema:
+            type: string
+            enum:
+              - "2025-11-25"
+      responses:
+        "200":
+          description: JSON-RPC 2.0 MCP response
+  /v1/equations/evaluate:
+    post:
+      operationId: evaluate_equation_spec
+      summary: Evaluate a compiled AST equation specification with unit normalization
+      x-google-mcp-tool:
+        name: evaluate_equation_spec
+        description: Evaluate a compiled AST equation specification from the 21,419-equation registry and return bounded log-odds delta and REA Evidence metadata.
+      x-google-quota:
+        metricCosts:
+          mcp-equation-eval-credits: 5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - equation_id
+                - family
+                - inputs
+              properties:
+                equation_id:
+                  type: string
+                family:
+                  type: string
+                inputs:
+                  type: object
+      responses:
+        "200":
+          description: Evaluated equation result
+  /v1/crosswalk/query:
+    post:
+      operationId: query_quad_engine_crosswalk
+      summary: Query the Quad-Engine Crosswalk across GSE, GSI, Core Math, and Coaching
+      x-google-mcp-tool:
+        name: query_quad_engine_crosswalk
+        description: Query the Quad-Engine Crosswalk for domain equations, provenance, and REA Evidence envelopes.
+      x-google-quota:
+        metricCosts:
+          mcp-tool-read-requests: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                top_k:
+                  type: integer
+      responses:
+        "200":
+          description: Crosswalk matches
+  /v1/evidence/inspect:
+    post:
+      operationId: inspect_analysis_view
+      summary: Inspect a retained REA Evidence view by parent_evidence_id without re-running the producer
+      x-google-mcp-tool:
+        name: inspect_analysis_view
+        description: Retrieve a summary, module, or paged slice of a retained REA Evidence record by parent_evidence_id.
+      x-google-quota:
+        metricCosts:
+          mcp-tool-read-requests: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - parent_evidence_id
+                - kind
+              properties:
+                parent_evidence_id:
+                  type: string
+                kind:
+                  type: string
+                offset:
+                  type: integer
+                limit:
+                  type: integer
+      responses:
+        "200":
+          description: Paged REA Evidence slice
+  /v1/admin/health:
+    get:
+      operationId: get_admin_health
+      summary: Internal gateway health probe excluded from MCP tool exposure
+      x-google-mcp-tool: false
+      responses:
+        "200":
+          description: Healthy
+components:
+  securitySchemes:
+    gse_jwt_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-google-issuer: https://securetoken.google.com/gse-enterprise-prod
+      x-google-jwks_uri: https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com
+      x-google-audiences: https://gse-mcp-gateway-9a860471.uc.gateway.dev

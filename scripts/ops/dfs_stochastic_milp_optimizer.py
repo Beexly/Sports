@@ -243,7 +243,7 @@ def optimize_dfs_portfolio(
             integrality=integrality,
             bounds=Bounds(lb, ub),
             constraints=constraints,
-            options={"mip_rel_gap": 0.005, "time_limit": 1.5},
+            options={"mip_rel_gap": 0.005, "time_limit": 10.0},
         )
         if not res.success or res.x is None:
             break

@@ -1860,7 +1860,7 @@ def run_scientific_and_agentic_15_repo_integration() -> dict[str, Any]:
     sdp_hit = sdp_cache.process_query("select props from WAS @ SEA", lambda q: {"matchup": q, "count": 1840}, now=12.0)
 
     # 3. vinta/awesome-python
-    disk_free_gb = round(shutil.disk_usage("C:\\").free / (1024 ** 3), 2)
+    disk_free_gb = round(shutil.disk_usage(str(REPO_ROOT)).free / (1024 ** 3), 2)
     ap_audit = AwesomePythonStackAuditor.audit_candidates(
         [
             {"name": "statsmodels", "category": "econometrics", "days_since_commit": 4, "stars": 11747, "install_size_mb": 11.3},

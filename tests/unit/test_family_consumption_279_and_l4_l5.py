@@ -59,6 +59,26 @@ def test_reasoning_trace_binds_all_279_families_across_5_standing_tracks() -> No
         for t_obj in trace["tracks"].values()
     )
     assert total_track_receipts == 279
+    assert trace["all_26_layers_consumed_by_tracks"] is True
+    assert trace["all_26_layers_consumed"] is True
+    assert trace["layers_consumed_count"] == 26
+    assert trace["consumed_layers_count"] == 26
+    assert len(trace["layers_consumed"]) == 26
+    assert "pre_family_279_reasoning_delta" in trace
+    assert "family_279_shrunk_contribution" in trace
+    assert "post_family_279_final_reasoning_delta" in trace
+    assert trace["family_279_shrunk_contribution"] != 0.0
+    assert trace["pre_family_279_reasoning_delta"] != trace["post_family_279_final_reasoning_delta"]
+    assert trace["post_family_279_final_reasoning_delta"] == trace["final_reasoning_delta"]
+    assert 0.005 <= abs(trace["final_reasoning_delta"]) <= 0.35
+
+    import copy
+    from intelligence.reasoning.layers.layer_registry import ALL_26_LAYERS
+    for lid in ALL_26_LAYERS:
+        pkt_sig = copy.deepcopy(pkt)
+        pkt_sig["layers"][lid]["signals"]["equation_batch_log_odds_delta"] += 2.0
+        tr_sig = execute_reasoning_workflow(pkt_sig, write_to_disk=False)
+        assert tr_sig["final_reasoning_delta"] != trace["final_reasoning_delta"], f"Layer {lid} had zero impact on final_reasoning_delta"
 
 
 def test_single_family_weight_perturbation_changes_receipt() -> None:

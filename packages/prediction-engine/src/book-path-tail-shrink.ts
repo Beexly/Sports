@@ -126,6 +126,7 @@ export function shrinkBookPathTailConfidence(
   options: BookPathTailShrinkOptions = {},
 ): BookPathTailShrinkResult {
   const raw = clampScore(confidence);
+  const rawRounded = Math.round(raw);
   const enabled = options.enabled === true;
   const floor = options.floor ?? BOOK_PATH_TAIL_FLOOR;
   const ceiling = options.ceiling ?? BOOK_PATH_TAIL_CEILING;
@@ -135,20 +136,19 @@ export function shrinkBookPathTailConfidence(
       : Math.max(0, Math.min(1, options.strength));
 
   if (!enabled) {
-    return { confidence: Math.round(raw), applied: false, rawConfidence: Math.round(raw) };
+    return { confidence: rawRounded, applied: false, rawConfidence: rawRounded };
   }
-  if (raw < floor) {
-    return { confidence: Math.round(raw), applied: false, rawConfidence: Math.round(raw) };
+  if (rawRounded < floor) {
+    return { confidence: rawRounded, applied: false, rawConfidence: rawRounded };
   }
   if (ceiling >= floor) {
     // Degenerate config: no room to shrink below the floor. Identity.
-    return { confidence: Math.round(raw), applied: false, rawConfidence: Math.round(raw) };
+    return { confidence: rawRounded, applied: false, rawConfidence: rawRounded };
   }
   if (strength <= 0) {
-    return { confidence: Math.round(raw), applied: false, rawConfidence: Math.round(raw) };
+    return { confidence: rawRounded, applied: false, rawConfidence: rawRounded };
   }
 
-  const rawRounded = Math.round(raw);
   if (strength >= 1) {
     // Hard cap: the entire inverted band collapses to the ceiling.
     return {

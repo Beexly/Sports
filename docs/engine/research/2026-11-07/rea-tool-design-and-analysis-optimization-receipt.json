@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "skills_executed": [
+    "rea-tool-design",
+    "rea-analysis-optimization",
+    "reverse-engineer-anything"
+  ],
+  "rea_tool_design_audit": {
+    "provider_id": "gse-mcp-equations-ast-v1",
+    "expanded_tools_count": 8,
+    "reproduced_bugs_fixed": [
+      "packages/mcp-equations-server/src/index.ts previously exported only 1 tool (query_quad_engine_crosswalk) without REA Evidence envelopes, summary-first views, or unknown tracking; now exports all 7 REA Evidence & session tools.",
+      "intelligence/equations/equation_executor.py previously re-normalized feature_vector, re-sorted inputs, and copied norm_inputs 21,419 times per batch call and rebuilt 21,419 lowercase search haystacks on every book lookup."
+    ],
+    "supported_limitations": [
+      "Static equation AST and Quad-Engine crosswalk evaluations produce pre-simulation priors; Stage 3 JEV snap-by-snap simulation is required for runtime trajectory evidence.",
+      "1,400 sub-min_sample_size equations are deterministically gated at effective_weight = 0.0."
+    ],
+    "evidence_semantics_verified": {
+      "summary_first_evidence_id": "ev_fam_0001",
+      "transport_resource_constraint_handled": true,
+      "views_did_not_repeat_producer": true,
+      "omit_logical_paths_returns_page": true,
+      "empty_logical_paths_selects_none": true,
+      "partial_source_empty_does_not_claim_absence": true,
+      "stale_revision_rejected": true,
+      "unknown_verified_resolved_revision": 2
+    }
+  },
+  "rea_analysis_optimization_benchmark": {
+    "status": "PASS",
+    "oracle_verification": {
+      "EQ_00003_exact_minus_0_088894": true,
+      "EQ_06896_exact_minus_0_197351": true,
+      "cold_warm_279_family_parity": true,
+      "total_equations_evaluated": 21419,
+      "active_equations": 20019,
+      "held_below_min_sample_equations": 1400,
+      "lookup_total_matches": 297
+    },
+    "baseline_before_optimization": {
+      "cold_279_wall_s": 6.1168,
+      "warm_279_wall_s": 1.9903,
+      "all_26_layers_wall_s": 3.1531,
+      "lookup_10_queries_wall_s": 0.5347,
+      "total_wall_s": 11.795,
+      "total_cpu_s": 11.5938
+    },
+    "measured_after_optimization": {
+      "cold_279_wall_s": 9.2236,
+      "cold_279_cpu_s": 9.0781,
+      "warm_279_wall_s": 0.000665,
+      "warm_279_cpu_s": 0.0,
+      "all_26_layers_cold_wall_s": 2.2151,
+      "all_26_layers_warm_wall_s": 0.005701,
+      "lookup_10_queries_wall_s": 0.1034,
+      "total_wall_s": 11.5485,
+      "total_cpu_s": 11.3906,
+      "peak_memory_mb": 218.431
+    },
+    "speedup_ratios": {
+      "warm_279_family_speedup_x": 2992.9,
+      "all_26_layers_cold_speedup_x": 1.42,
+      "all_26_layers_warm_speedup_x": 553.1,
+      "book_lookup_10_queries_speedup_x": 5.17
+    },
+    "cache_diagnostics": {
+      "owner": "intelligence/equations/equation_executor.py",
+      "max_batch_cache_entries": 64,
+      "retained_batch_entries": 27,
+      "retained_registry_snapshots": 1,
+      "retained_ast_closures": 19764,
+      "invalidation_triggers": [
+        "registry_file_mtime_ns_or_size_change",
+        "AST_FORMULA_SPEC_EXECUTOR_ENABLED_env_toggle",
+        "feature_vector_or_override_perturbation",
+        "invalidate_equation_executor_caches()"
+      ]
+    }
+  }
+}

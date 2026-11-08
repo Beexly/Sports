@@ -6,7 +6,7 @@ Mandate (Garrett, 2026-11-05 — HARD):
 Never compress, minimize, or omit any part of the GSE/GSN intelligence stack.
 This module provides a deterministic, zero-omission live registry and runtime execution
 bridge across:
-  1. All 24,957+ files in the GSE Monorepo (`C:\\c\\wt-week8-forensic`):
+  1. All 24,957+ files in the GSE Monorepo (`repo://gse-monorepo`):
      - `docs/*` (11,078+ files: `engine` [3,740], `arxiv-program` [1,791], `research` [1,538],
        `data-sources` [1,001], `dfs` [778], `ops` [620], `predictions` [578], `fable` [143],
        `fantasy` [135], `props` [67], `reasoning` [51], `gse` [47], `strategy` [42],
@@ -33,11 +33,11 @@ bridge across:
      - `formal/*` (69+ Lean4 / formal verification proofs & invariants)
      - `workers/*` (37+ Cloudflare & X/Twitter transport workers)
      - `gse-ml-service/*` (38+ FastAPI / ML inference modules)
-  2. All Textbooks, Research Books, and PDF Corpora across Repo, Google Drive (`G:\\My Drive`),
+  2. All Textbooks, Research Books, and PDF Corpora across Repo, Google Drive (`gdrive://`),
      and the committed repo-relative `bk-dl-deduplicated-provenance-index.json`:
-     - 17 Textbooks & Quantitative Finance / Sports Analytics Books in `GSE-Ultra-30TB-Vault\\downloads-archive-2026-11-03`
-     - 1,185 PDFs in `G:\\My Drive\\GSE-Ultra-30TB-Vault` (`research-corpus-2026-11-03\\pdfs` [1,117], `deep-corpus-2026-11-04\\pdfs` [52])
-     - 337 PDFs + 58 Paper Dossiers + 702 Markdown Specs in `G:\\My Drive\\GSN`
+     - 17 Textbooks & Quantitative Finance / Sports Analytics Books in `GSE-Ultra-30TB-Vault/downloads-archive-2026-11-03`
+     - 1,185 PDFs in `gdrive://GSE-Ultra-30TB-Vault` (`research-corpus-2026-11-03/pdfs` [1,117], `deep-corpus-2026-11-04/pdfs` [52])
+     - 337 PDFs + 58 Paper Dossiers + 702 Markdown Specs in `gdrive://GSN`
      - 99 Repo PDFs & 80 Repo `.docx` Manuals
 """
 
@@ -465,8 +465,8 @@ _CACHED_MONOREPO_CENSUS: Optional[Dict[str, Any]] = None
 
 def scan_full_monorepo_and_drives_census(force_refresh: bool = False) -> Dict[str, Any]:
     """
-    Performs a fast, pruned `os.walk` across the entire repository (`C:\\c\\wt-week8-forensic`),
-    plus checks mounted Google Drive (`G:\\My Drive`), OneDrive, and Downloads so that
+    Performs a fast, pruned `os.walk` across the entire repository (`repo://gse-monorepo`),
+    plus checks repo-relative Google Drive (`gdrive://`), OneDrive, and Downloads mirrors so that
     every bucket, package, intelligence domain, formal proof, worker, and book is
     accounted for at runtime.
     """

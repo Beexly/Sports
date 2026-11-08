@@ -23,7 +23,7 @@
 1. **Infeasible or Degenerate MILP Knapsack Constraints (Salary Cap `< $50,000` or Locked Injured/Bye Player):** When a caller passes a player from `PIT`/`TEN` or an `Out` player, or sets `uncertainty_budget_gamma < 0`, the solver must raise a deterministic `ValueError` or prune the ineligible player before building the incidence matrix rather than returning a 0-player lineup or silently exceeding `$50,000`.
 2. **Collinear or Zero-Variance Historical Samples in the Stage-1 Bayesian/Variance Projection Engine:** When a player has `player_gp == 1` or constant snap counts across weeks, variance estimation must shrink toward the positional empirical Bayes prior (`sigma_pos_prior > 0`) rather than yielding `sigma = 0.0` or `NaN` in the Stage-2 robust ellipsoidal penalty.
 3. **Multi-Lineup Exposure & Diversity Overlap Collapse (`pydfs-lineup-optimizer` / `swanson/degenerate`):** Generating $K$ lineups without an iterative overlap cut $\sum_{i \in L_m} x_i \le 9 - d_{\min}$ returns $K$ identical copies of Lineup 1; Task 1 pins strict uniqueness and `max_exposure` enforcement across generated lineups.
-4. **Google Drive 49-Book Discovery Across Local Mounts, OneDrive, Downloads & Manifests:** If `G:\My Drive` is unmounted or synced under a secondary path (`C:\Users\Garrett\Google Drive`, `C:\Users\Garrett\OneDrive\Documents`, `C:\Users\Garrett\Downloads`, or repo book registries), the ingestion scanner must deduplicate by SHA-256 / normalized title, index all 49 books without crashing on broken symlinks or locked `.docx`/`.pdf` handles, and wire their extracted equations into the cognitive router registry.
+4. **Google Drive 49-Book Discovery Across Local Mounts, OneDrive, Downloads & Manifests:** If `G:\My Drive` is unmounted or synced under a secondary path (`~\Google Drive`, `~\OneDrive\Documents`, `~\Downloads`, or repo book registries), the ingestion scanner must deduplicate by SHA-256 / normalized title, index all 49 books without crashing on broken symlinks or locked `.docx`/`.pdf` handles, and wire their extracted equations into the cognitive router registry.
 5. **Phase-Transition Spectral Entropy Blindness (`S_spec = 4.1589` on Opposed-Half Cancellation):** Standard spectral entropy cannot distinguish a locked 4-quarter game script from two opposed halves that cancel in the aggregate; Task 4 pins the Cellular Sheaf Cohomology Laplacian $L_{\mathcal{F}} = \delta^T \delta$, Ollivier-Ricci curvature $\kappa_{OR}(e)$, and Phase Resultant $R \in [0, 1]$ (`r_controls()`) to separate coherent phase lock ($R \to 1.0$) from opposed-half cancellation ($R \to 0.0$).
 
 ---
@@ -231,7 +231,7 @@ git commit -m "feat(analytics): wire Congelio 7-repo NFL suite, OpenCV biomechan
 - Test: `tests/test_google_drive_49_books_ingestion_and_wiring_engine.py`
 
 **Interfaces:**
-- Consumes: Local Google Drive mounts (`G:\My Drive`, `C:\Users\Garrett\Google Drive`, `C:\Users\Garrett\OneDrive\Documents\Galaxy Sports Edge`, `C:\Users\Garrett\Downloads`, and repo corpus manifests `data/mind/` / `docs/`)
+- Consumes: Local Google Drive mounts (`G:\My Drive`, `~\Google Drive`, `~\OneDrive\Documents\Galaxy Sports Edge`, `~\Downloads`, and repo corpus manifests `data/mind/` / `docs/`)
 - Produces:
   - `GoogleDrive49BooksWiringEngine.discover_and_inventory_49_books(extra_search_dirs: list[Path] | None = None) -> dict[str, Any]`
   - `GoogleDrive49BooksWiringEngine.extract_and_wire_49_book_equations() -> dict[str, Any]`
@@ -281,7 +281,7 @@ Expected: FAIL with `ModuleNotFoundError`
 
 - [ ] **Step 3: Implement `intelligence/ecosystem/google_drive_49_books_ingestion_and_wiring_engine.py`**
 
-Scan all local Google Drive / OneDrive / Downloads / corpus directories (`G:\My Drive`, `C:\Users\Garrett\Google Drive`, `C:\Users\Garrett\OneDrive\Documents\Galaxy Sports Edge`, `C:\Users\Garrett\Downloads`, `C:\Users\Garrett\Sports\docs`, `C:\Users\Garrett\Sports\data`), map all 49 NFL / Fantasy Football / Prediction / Quantitative Modeling books (`BK-GDRIVE-01` .. `BK-GDRIVE-49`) with SHA-256 provenance, assign each book's extracted equations to the 6 GSE situational families (`pressure`, `weather`, `restFatigue`, `coveragePersonnel`, `qbSkillScript`, `marketMicrostructure`) + Positive-Part James-Stein shrinkage capped at $|\Delta \text{log-odds}| \le 0.35$, and emit trainer-ready JSONL to `data/mind/feeds/google_drive_49_books_wired_equations_2026_11_07.jsonl`.
+Scan all local Google Drive / OneDrive / Downloads / corpus directories (`G:\My Drive`, `~\Google Drive`, `~\OneDrive\Documents\Galaxy Sports Edge`, `~\Downloads`, `~\Sports\docs`, `~\Sports\data`), map all 49 NFL / Fantasy Football / Prediction / Quantitative Modeling books (`BK-GDRIVE-01` .. `BK-GDRIVE-49`) with SHA-256 provenance, assign each book's extracted equations to the 6 GSE situational families (`pressure`, `weather`, `restFatigue`, `coveragePersonnel`, `qbSkillScript`, `marketMicrostructure`) + Positive-Part James-Stein shrinkage capped at $|\Delta \text{log-odds}| \le 0.35$, and emit trainer-ready JSONL to `data/mind/feeds/google_drive_49_books_wired_equations_2026_11_07.jsonl`.
 
 - [ ] **Step 4: Run test and Ruff to verify they pass**
 

@@ -8,9 +8,11 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 import sys
 
-sys.path.insert(0, "/home/hatch/workspace/gse-intelligence-build")
+INTEL_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(INTEL_ROOT))
 
 from integration.api import analyze
 from integration.providers import ProviderRegistry
@@ -21,7 +23,7 @@ import importlib.util as _ilu
 
 
 def _load_trust_pkg():
-    pkg_dir = "/home/hatch/workspace/gse-intelligence-build/trust-signals"
+    pkg_dir = str(INTEL_ROOT / "trust-signals")
     spec = _ilu.spec_from_file_location(
         "trust_signals", os.path.join(pkg_dir, "__init__.py"),
         submodule_search_locations=[pkg_dir])
@@ -36,8 +38,7 @@ from trust_signals.provider import FileStoreTrustSignalProvider
 from trust_signals.store import IntakeStore
 from coaching.provider import CoachingEngineProvider
 
-import os
-sys.path.insert(0, "/home/hatch/workspace/gse-intelligence-build/qb-behavior/src")
+sys.path.insert(0, str(INTEL_ROOT / "qb-behavior" / "src"))
 from qb_behavior.situational.provider import SituationalQBProvider
 
 

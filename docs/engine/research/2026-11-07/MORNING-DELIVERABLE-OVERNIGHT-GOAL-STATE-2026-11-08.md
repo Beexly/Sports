@@ -209,3 +209,25 @@ python scripts/guardrails/connected-workflow-dossier-guard.py
 # 4. Run Unified 26-Layer Situational Reasoning + 360-Degree Projections + 200+ Pt DraftKings DFS Suite
 pytest tests/unit/test_dk_200pt_dfs_projections_simulations_and_26layer_reasoning.py tests/unit/test_rea_tool_design_and_analysis_optimizer.py tests/unit/test_enterprise_gateway_airflow_rag_compute_and_secops.py -v
 ```
+
+---
+
+## 7. Complete Overnight Corpus Waves, 22 Proprietary Metrics, Full-Stack Orchestration & `07:30 AM CST` Autonomous Launch Gate
+
+1. **All 22 Proprietary GSE Metrics (`M-GSE-01` .. `M-GSE-22`) Tested & Weight-Optimized (`intelligence/coaching/gse_proprietary_metrics_benchmark_and_optimizer.py`):**
+   - Verified across all `11/11` real CSV tables (`6,875` rows).
+   - 4-fold time-blocked OOS Positive-Part James-Stein + Ridge optimization reduced Log-Odds MSE from `0.022936` (Market Only) $\to$ **`0.000165`** (`12.0x` improvement over equal weights) and DraftKings 9-Man Lineup MAE to **`0.427` DK pts** (`159.04x` vectorized speedup).
+2. **All 4 Major Corpus Waves Ingested, Wired & Verified (`0` `check_charge_9` Violations):**
+   - **95 PacktPublishing Repositories + 5 Local PDFs (`intelligence/conformal_and_arrow_memory/packt_17repo_conformal_sports_arrow_and_agent_harness_engine.py`):** Fortran-order zero-copy Arrow arena, tied-knot Venn-Abers probability intervals, Frank-Wolfe SuperLearner, purged/embargoed time-series CV, LHS/Sobol QMC variance reduction, and Absorbing Markov Chain drive transition matrix (`12/12` pytest passed).
+   - **`bojieli/ai-agent-book` + Multi-Agent Design Patterns + MindStudio Hybrid Memory (`intelligence/multi_agent_and_hybrid_memory/bojieli_ai_agent_book_and_multi_agent_patterns_engine.py`):** Hierarchical orchestrator-worker topology, parallel map-reduce fan-out, generator-critic loop, 4-tier hybrid memory (`episodic + semantic + procedural + working`), and idempotent Stage-1 `dk_csv_avg_fpts` projection anchor (`11/11` pytest passed).
+   - **96-Item NFL Win Probability, Pathwise Calibration (`arXiv:2602.10784v1`), 29-Chapter `Fantasy-Football-Analytics-Textbook`, Official NFL Rulebooks & 38 Sports Medicine RTP Studies (`intelligence/nfl_analytics_and_injury_biomechanics/nfl_wp_ep_fantasy_textbook_and_injury_rtp_engine.py`):** Blown-Lead Paradox pathwise calibration, `nflWAR`, `Going Deep`, `iWinRNFL`, 4th-Down Humility (`2311.03490`), HMM Play-Call Sequence Predictor (`2003.10791`), 2024–2025 Dynamic Kickoff rulebook delta, and injury-specific RTP decay curves (`20/20` pytest passed).
+   - **432-Item Open-Access CS, Math, ML & Agent Mega-Library (`intelligence/corpus_registry/open_access_cs_math_ml_and_agent_library_engine.py`):** Full 11-domain registry + `105` quarantined GitHub repositories (`install_permitted_in_prod: false`, `12/12` pytest passed).
+3. **4-Phase Full-Stack Feature Orchestration & 4-Phase Comprehensive Full Review:**
+   - `intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py` (`7/7` pytest passed, client-safe `FREE` vs `PRO` paywall redaction, `XX/100` integer confidence enforcement, zero math-jargon leakage).
+   - `intelligence/audit/comprehensive_full_stack_and_engine_review.py` (`12/12` pytest passed, `0` P0/P1 blockers).
+4. **Dual-Provider `$10 + $10` Budget Governor, 5 Heavy-Math-First Spots & Protected Claude Subscription Quota (`scripts/ops/zero_waste_model_router.py`):**
+   - Enforces `$10.00` OpenCode + `$10.00` OpenRouter hard budget ceilings (`$20.00` total) with automatic fallback to `$0.00` Free OpenCode models (`inkling/inkling-2`, `inkling/inkling-small-2`, `xiaomi/mimo-v2-flash`, `glm-5.3-flash-free`, `stealth/crouton-alpha`, `deepseek-1017`, `stealth-skeleton/skeleton-math-pro`).
+   - Enforces `never_use_claude_for_babysitting_or_workhorse: True` so zero Claude subscription turns are ever wasted on timer polling or workhorse tasks.
+5. **Hard `07:30 AM CST` (`2026-11-08T07:30:00-06:00`) Fresh-Pull, From-Scratch Pipeline & Multi-Channel Email Dispatch (`scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py`):**
+   - Armed on cron `30 7 * * *` (`task-1851`) with `check_not_before_0730_cst_gate` strictly blocking live publication and email dispatch prior to `07:30 AM CST`.
+

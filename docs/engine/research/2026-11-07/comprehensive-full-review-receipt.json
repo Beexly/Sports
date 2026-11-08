@@ -1,0 +1,515 @@
+{
+  "schema_version": "1.0.0",
+  "skill_workflow": "comprehensive-review-full-review",
+  "executed_at_utc": "2026-11-08T06:30:41.031912+00:00",
+  "overall_status": "PASS",
+  "p0_unresolved_blockers_count": 0,
+  "p1_unresolved_blockers_count": 0,
+  "phases_passed_count": 4,
+  "phases_total_count": 4,
+  "elapsed_seconds": 158.107,
+  "phases": {
+    "phase_1_code_quality_and_architecture": {
+      "phase": 1,
+      "name": "Code Quality & Architecture Review",
+      "specialists": [
+        "code-reviewer",
+        "architect-review"
+      ],
+      "status": "PASS",
+      "phase_1a_code_quality": {
+        "status": "PASS",
+        "equations_cataloged": 21419,
+        "equations_wired_and_tested": 21419,
+        "placeholder_formula_specs": 0,
+        "held_below_min_sample_size": 1400,
+        "zero_synthetic_tanh_verified": true,
+        "families_accounted": 279,
+        "proprietary_gse_metrics_count": 22,
+        "missing_metric_files": [],
+        "proprietary_csv_tables_verified": 11,
+        "proprietary_csv_total_rows": 6875,
+        "lobo_4fold_optimized_beats_equal": true,
+        "lobo_4fold_optimized_beats_market": true,
+        "all_6_metric_families_pass_ablation": true,
+        "two_host_portability": {
+          "files_scanned": 723,
+          "violations_count": 0,
+          "violations": [],
+          "passed": true
+        }
+      },
+      "phase_1b_architecture_and_design": {
+        "status": "PASS",
+        "gsi_sandbox_isolated": true,
+        "mobile_workspace_isolated": true,
+        "mega_sweep_module_deduplicated": true,
+        "mega_sweep_shim_lines": 26,
+        "armed_workflows_status": "ARMED",
+        "armed_stages_passed": 9,
+        "armed_stages_total": 9,
+        "layers_26_populated": 26,
+        "l21_dependency_chain": "L12_trench_matchup_ol_vs_dl -> L13_scheme_vs_scheme -> L21_qb_processing_and_pressure",
+        "l26_entered_last": true,
+        "strict_5_track_dependency_order": [
+          "offensive_line",
+          "coaching_scheme",
+          "scheme_matchup",
+          "qb_behavior",
+          "trust_signals"
+        ],
+        "frontier_dfs_equations_count": 30,
+        "dk_200pt_lineups_verified": true,
+        "overnight_9model_fleet_registered": true
+      }
+    },
+    "phase_2_security_and_performance": {
+      "phase": 2,
+      "name": "Security & Performance Review",
+      "specialists": [
+        "security-auditor",
+        "performance-engineer"
+      ],
+      "status": "PASS",
+      "phase_2a_security_audit": {
+        "status": "PASS",
+        "python_files_scanned_for_secrets": 1109,
+        "hardcoded_secret_hits_count": 0,
+        "hardcoded_secret_hits": [],
+        "ast_sandbox_verification": {
+          "adversarial_payloads_tested": 13,
+          "adversarial_payloads_blocked": 13,
+          "escaped_payloads": [],
+          "builtins_empty_dict_verified": true,
+          "allowed_safe_functions_verified": true,
+          "valid_expression_sample_output": 0.021847,
+          "passed": true
+        },
+        "paywall_redaction_invariants": {
+          "types_gates_premium_and_confidence_to_pro": true,
+          "web_entitlements_boot_guard_and_fail_closed": true,
+          "board_state_centralized_viewer_redaction": true,
+          "mobile_entitlements_presentational_only": true
+        },
+        "heavy_juice_and_conjunction_firewall": {
+          "verified": true,
+          "minus_285_pass_specimen_blocked": true,
+          "minus_320_heavy_juice_trap_blocked": true,
+          "solo_source_trap_blocked": true,
+          "fleet_9_of_9_unanimous_pass_on_minus_300": true
+        },
+        "external_supply_chain_quarantine_verified": true
+      },
+      "phase_2b_performance_engineering": {
+        "status": "PASS",
+        "proprietary_22_metrics_scalar_ms_per_10k": 115.08,
+        "proprietary_22_metrics_vectorized_ms_per_10k": 0.161,
+        "proprietary_22_metrics_vectorized_speedup_x": 715.23,
+        "exceeds_100x_vectorized_speedup_target": true,
+        "equations_21419_batch_elapsed_sec": 0.1729,
+        "within_0_35s_equation_budget": true,
+        "rea_bounded_cache_diagnostics": {
+          "owner": "intelligence/equations/equation_executor.py",
+          "max_batch_cache_entries": 64,
+          "retained_batch_entries": 4,
+          "retained_registry_snapshots": 1,
+          "retained_ast_closures": 40658,
+          "invalidation_triggers": [
+            "registry_file_mtime_ns_or_size_change",
+            "AST_FORMULA_SPEC_EXECUTOR_ENABLED_env_toggle",
+            "feature_vector_or_override_perturbation",
+            "invalidate_equation_executor_caches()"
+          ]
+        }
+      }
+    },
+    "phase_3_testing_and_documentation": {
+      "phase": 3,
+      "name": "Testing & Documentation Review",
+      "specialists": [
+        "test-automator",
+        "docs-architect"
+      ],
+      "status": "PASS",
+      "phase_3a_testing_coverage": {
+        "status": "PASS",
+        "overnight_test_suites_verified": 9,
+        "all_suites_present": true,
+        "total_test_functions_count": 39,
+        "total_assert_statements_count": 552,
+        "pytest_executed": true,
+        "pytest_passed": true,
+        "pytest_summary": "34 passed in 47.04s",
+        "suites": {
+          "tests/unit/test_gse_proprietary_metrics_benchmark_and_optimizer.py": {
+            "exists": true,
+            "test_functions_count": 2,
+            "assert_statements_count": 23,
+            "test_names": [
+              "test_all_22_proprietary_gse_metrics_catalog_and_csv_warehouse",
+              "test_proprietary_metrics_ablation_and_weight_optimization"
+            ]
+          },
+          "tests/unit/test_dk_200pt_situational_dfs_and_projection_engine.py": {
+            "exists": true,
+            "test_functions_count": 4,
+            "assert_statements_count": 43,
+            "test_names": [
+              "test_frontier_30_dfs_equations_catalog_completeness",
+              "test_l1_and_l2_environment_scalars_boundary_and_edge_cases",
+              "test_360_board_conjunction_gate_and_heavy_juice_firewall",
+              "test_200pt_dk_championship_portfolio_and_full_omniverse_suite"
+            ]
+          },
+          "tests/unit/test_dk_200pt_dfs_projections_simulations_and_26layer_reasoning.py": {
+            "exists": true,
+            "test_functions_count": 2,
+            "assert_statements_count": 47,
+            "test_names": [
+              "test_lesson_l1_and_l2_environment_scalars_and_30_frontier_equations",
+              "test_every_section_of_26_layer_reasoning_and_360_projections_and_200pt_dfs"
+            ]
+          },
+          "tests/unit/test_equation_executor_ast_and_bounds.py": {
+            "exists": true,
+            "test_functions_count": 10,
+            "assert_statements_count": 52,
+            "test_names": [
+              "test_repair_and_audit_equation_registry_invariants",
+              "test_eq_00003_and_eq_06896_unit_normalization_and_bounds",
+              "test_copula_tail_negative_product_domain_safety",
+              "test_all_21419_ast_vs_operator_parity_sub_min_sample_gating_and_speed",
+              "test_execute_all_279_equation_families_receipts",
+              "test_nan_inf_none_and_non_numeric_input_resilience",
+              "test_sea_level_altitude_ft_continuity",
+              "test_equation_gate_12304_ast_and_bounds_parity",
+              "test_per_game_context_packet_and_trace_sub_1_second_budget",
+              "test_edge_case_c3_fallback_parameter_binding_isolation"
+            ]
+          },
+          "tests/unit/test_family_consumption_279_and_l4_l5.py": {
+            "exists": true,
+            "test_functions_count": 4,
+            "assert_statements_count": 32,
+            "test_names": [
+              "test_reasoning_trace_binds_all_279_families_across_5_standing_tracks",
+              "test_single_family_weight_perturbation_changes_receipt",
+              "test_l4_adversary_challenge_and_l5_sign_flip_determinism",
+              "test_situational_rules_80_85_87_reconciliation"
+            ]
+          },
+          "tests/unit/test_deep_read_books_pdfs_21419_equations.py": {
+            "exists": true,
+            "test_functions_count": 5,
+            "assert_statements_count": 126,
+            "test_names": [
+              "test_458_mega_sweep_books_and_6field_provenance",
+              "test_472_deduplicated_provenance_entries_and_quarantine",
+              "test_21419_equations_279_families_and_ast_execution_integrity",
+              "test_zero_hardcoded_local_host_paths_in_intelligence",
+              "test_deep_read_verification_receipt_json"
+            ]
+          },
+          "tests/unit/test_deep_read_grok_muse_motif_comp_intel.py": {
+            "exists": true,
+            "test_functions_count": 5,
+            "assert_statements_count": 121,
+            "test_names": [
+              "test_receipt_exists_and_all_referenced_paths_resolve",
+              "test_zero_hardcoded_local_host_paths_in_intelligence_py",
+              "test_grok_xai_universal_metrics_second_order_kernels_and_mega_sweep_wired",
+              "test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wired",
+              "test_comp_intel_nuke_calibration_etr_audit_and_two_wave_dfs_wired"
+            ]
+          },
+          "tests/unit/test_deep_read_multi_cli_and_laptop_workspaces.py": {
+            "exists": true,
+            "test_functions_count": 4,
+            "assert_statements_count": 35,
+            "test_names": [
+              "test_deep_read_receipt_schema_and_8_cli_surfaces_3675_sessions",
+              "test_zero_hardcoded_local_host_paths_across_intelligence_py",
+              "test_stage4_market_calibration_heads_negative_brier_skill_gate",
+              "test_dfs_milp_showdown_and_classic_multi_lineup_portfolio_and_stacking"
+            ]
+          },
+          "tests/unit/test_overnight_9model_fleet_projection_and_200pt_dfs_stress_tester.py": {
+            "exists": true,
+            "test_functions_count": 3,
+            "assert_statements_count": 73,
+            "test_names": [
+              "test_9model_fleet_catalog_and_capability_matched_stage_assignment",
+              "test_edge_cases_heavy_juice_firewall_solo_source_split_vote_and_dfs_cap",
+              "test_overnight_5slate_9model_fleet_stress_test_and_receipt"
+            ]
+          }
+        }
+      },
+      "phase_3b_documentation_and_filing": {
+        "status": "PASS",
+        "canonical_buckets_checked": [
+          "dfs",
+          "predictions",
+          "props",
+          "fantasy",
+          "engine",
+          "data-sources",
+          "arxiv-program"
+        ],
+        "dated_2026_11_07_artifacts_count": 52,
+        "bucket_root_filing_violations": [],
+        "undated_research_root_violations": [],
+        "retired_docs_research_violations": [],
+        "artifacts_by_bucket": {
+          "dfs": [
+            "docs/dfs/research/2026-11-07/DEEP-RESEARCH-12-DOMAIN-19-EQUATION-DFS-MASTER-SYNTHESIS-2026-11-07.md",
+            "docs/dfs/research/2026-11-07/DEEP-RESEARCH-TWO-WAVE-DFS-LINEUP-SIMULATION-AND-OMNIVERSE-AUDIT-2026-11-07.md",
+            "docs/dfs/research/2026-11-07/DFS-5000-PAGE-RESEARCH-CORPUS-AND-ENGINE-WIRING-2026-11-07.md",
+            "docs/dfs/research/2026-11-07/DRAFTKINGS-DFS-THE-DEEP-DIVE-2026-11-07.md",
+            "docs/dfs/research/2026-11-07/HARD-DATA-INGESTION-AND-EMPIRICAL-PRIORS-LEDGER-2026-11-07.md",
+            "docs/dfs/research/2026-11-07/dk-200pt-dfs-projections-simulations-and-26layer-reasoning-receipt.json",
+            "docs/dfs/research/2026-11-07/overnight-9model-fleet-inkling2-projection-and-200pt-dfs-receipt.json"
+          ],
+          "predictions": [
+            "docs/predictions/research/2026-11-07/NFL-WP-EP-FANTASY-TEXTBOOK-AND-INJURY-BIOMECHANICS-DEEP-RESEARCH-2026-11-07.md",
+            "docs/predictions/research/2026-11-07/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md",
+            "docs/predictions/research/2026-11-07/WEEK-9-TOP-10-PLAYS-AND-DFS-DAD-PACKET-2026-11-07.md",
+            "docs/predictions/research/2026-11-07/nfl-wp-ep-fantasy-textbook-and-injury-biomechanics-corpus.json"
+          ],
+          "fantasy": [
+            "docs/fantasy/research/2026-11-07/WEEK-9-FANTASY-FOOTBALL-AND-DFS-UNIFIED-ENGINE-DOSSIER-2026-11-07.md"
+          ],
+          "engine": [
+            "docs/engine/research/2026-11-07/0730-cst-fresh-pull-and-email-dispatch-receipt.json",
+            "docs/engine/research/2026-11-07/ALL-758-SKILLS-LIVE-EXECUTION-RECEIPT.json",
+            "docs/engine/research/2026-11-07/BOJIELI-AI-AGENT-BOOK-MULTI-AGENT-PATTERNS-AND-HYBRID-MEMORY-2026-11-07.md",
+            "docs/engine/research/2026-11-07/COMPREHENSIVE-FULL-REVIEW-4-PHASE-REPORT-2026-11-07.md",
+            "docs/engine/research/2026-11-07/COMPREHENSIVE-FULL-REVIEW-REPORT-2026-11-07.md",
+            "docs/engine/research/2026-11-07/DOWNLOADS-20-ARTIFACTS-SOVEREIGN-EXTRACTION-LEDGER.md",
+            "docs/engine/research/2026-11-07/FORTY-FIVE-REPO-TWO-PASS-DEEP-DIVE-AND-GSI-GSE-INTEGRATION.md",
+            "docs/engine/research/2026-11-07/FULL-STACK-ORCHESTRATION-POST-SIM-PROJECTIONS-AND-200PT-DFS-2026-11-07.md",
+            "docs/engine/research/2026-11-07/GKE-AI-TPU-GPU-AND-CLOUD-SKILLS-EXECUTION-REPORT.md",
+            "docs/engine/research/2026-11-07/IMPLEMENTATION-PLAN-RECONCILED.md",
+            "docs/engine/research/2026-11-07/LIVEBENCH-2406-19314V2-37PAGE-EXTRACTION-AND-EQUATIONS.md",
+            "docs/engine/research/2026-11-07/MORNING-DELIVERABLE-OVERNIGHT-GOAL-STATE-2026-11-08.md",
+            "docs/engine/research/2026-11-07/OMNIVERSE-COMPLETE-DISCOVERY-AND-SESSION-LIBRARIAN-REPORT-2026-11-07.md",
+            "docs/engine/research/2026-11-07/OPENROUTER-8SUITE-AND-LIVEBENCH-EVAL-REPORT.md",
+            "docs/engine/research/2026-11-07/PACKT-17REPO-CONFORMAL-SPORTS-ARROW-AND-PDF-DEEP-RESEARCH-2026-11-07.md",
+            "docs/engine/research/2026-11-07/PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION.md",
+            "docs/engine/research/2026-11-07/PROBABILISTIC-AND-CONTROL-19-REPO-TWO-PASS-INTEGRATION.md",
+            "docs/engine/research/2026-11-07/REA-TOOL-DESIGN-AND-ANALYSIS-OPTIMIZATION-REPORT-2026-11-07.md",
+            "docs/engine/research/2026-11-07/SCIENTIFIC-AND-AGENTIC-15-REPO-TWO-PASS-INTEGRATION.md",
+            "docs/engine/research/2026-11-07/SOVEREIGN-20-DOWNLOADS-DEEP-WIRING-SYNTHESIS.md",
+            "docs/engine/research/2026-11-07/TWELVE-REPO-TWO-PASS-DEEP-DIVE-AND-GSI-GSE-INTEGRATION.md",
+            "docs/engine/research/2026-11-07/TWO-AXIS-CODE-REVIEW-AND-RETRO-2026-11-07.md",
+            "docs/engine/research/2026-11-07/bojieli-ai-agent-book-and-multi-agent-patterns-receipt.json",
+            "docs/engine/research/2026-11-07/comprehensive-full-review-receipt.json",
+            "docs/engine/research/2026-11-07/deep-read-books-pdfs-21419-equations-receipt.json",
+            "docs/engine/research/2026-11-07/deep-read-grok-muse-motif-comp-intel-agentbus-receipt.json",
+            "docs/engine/research/2026-11-07/deep-read-multi-cli-and-laptop-workspaces-receipt.json",
+            "docs/engine/research/2026-11-07/enterprise-58-skill-wave-execution-receipt.json",
+            "docs/engine/research/2026-11-07/fragments-football-intelligence-explore.md",
+            "docs/engine/research/2026-11-07/full-stack-orchestration-200pt-dfs-and-projections-receipt.json",
+            "docs/engine/research/2026-11-07/gse-proprietary-created-metrics-test-and-optimization-receipt.json",
+            "docs/engine/research/2026-11-07/packt-73repo-conformal-sports-arrow-bayesian-and-harness-receipt.json",
+            "docs/engine/research/2026-11-07/packt-95repo-conformal-sports-arrow-bayesian-simulation-and-harness-receipt.json",
+            "docs/engine/research/2026-11-07/rea-tool-design-and-analysis-optimization-receipt.json"
+          ],
+          "data-sources": [
+            "docs/data-sources/research/2026-11-07/bk-dl-deduplicated-provenance-index.json",
+            "docs/data-sources/research/2026-11-07/external-github-repos-quarantine-manifest.json",
+            "docs/data-sources/research/2026-11-07/google-drive-and-docs-verified-manifest.json",
+            "docs/data-sources/research/2026-11-07/omniverse-full-google-drive-docs-repo-agentbus-session-librarian-manifest.json"
+          ],
+          "arxiv-program": [
+            "docs/arxiv-program/research/2026-11-07/OPEN-ACCESS-CS-MATH-ML-AND-AGENT-MEGA-LIBRARY-2026-11-07.md",
+            "docs/arxiv-program/research/2026-11-07/open-access-cs-math-ml-and-agent-mega-library-manifest.json"
+          ]
+        },
+        "required_corpus_receipts_missing": [],
+        "mega_sweep_458_books_and_472_provenance_verified": true
+      }
+    },
+    "phase_4_best_practices_and_cicd": {
+      "phase": 4,
+      "name": "Best Practices, Guardrails & CI/CD Readiness",
+      "specialists": [
+        "legacy-modernizer",
+        "deployment-engineer"
+      ],
+      "status": "PASS",
+      "phase_4a_surface_and_brand_guardrails": {
+        "status": "PASS",
+        "trust_gate": {
+          "script": "scripts/guardrails/trust-gate.mjs",
+          "passed": true,
+          "output": "[trust-gate] OK - scanned 4700 file(s); no banned phrases."
+        },
+        "mobile_lint_rules": {
+          "script": "apps/mobile/scripts/lint-rules.js",
+          "passed": true,
+          "files_scanned": 48,
+          "violations_count": 0,
+          "confidence_integer_xx_100_enforced": true,
+          "zero_forbidden_math_jargon_verified": true
+        },
+        "connected_workflow_dossier_guard": {
+          "script": "scripts/guardrails/connected-workflow-dossier-guard.py",
+          "passed": true,
+          "output": "  PASS  connected-workflow-dossier-guard \u2014 cryptographic Stage 0..5 receipt & zero-contamination verified"
+        }
+      },
+      "phase_4b_charge_regression_and_cicd": {
+        "status": "PASS",
+        "passed_count": 10,
+        "total_charges": 10,
+        "all_10_charges_passed": true,
+        "charges": [
+          {
+            "charge": 1,
+            "name": "No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified",
+            "status": "PASS",
+            "active_surface_86_62_hits": 0,
+            "sample_hits": [],
+            "raw_3pass_audit_verified": true
+          },
+          {
+            "charge": 2,
+            "name": "No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present",
+            "status": "PASS",
+            "literal_5367_hits": 0,
+            "sample_hits": []
+          },
+          {
+            "charge": 3,
+            "name": "Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger",
+            "status": "PASS",
+            "brain_logs_fallback_fired": true,
+            "ask_jarvis_wired": true
+          },
+          {
+            "charge": 4,
+            "name": "Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER)",
+            "status": "PASS",
+            "active_hits": 0,
+            "sample_hits": []
+          },
+          {
+            "charge": 5,
+            "name": "Verifiable test suite execution",
+            "status": "PASS",
+            "detail": "10 passed in 9.47s"
+          },
+          {
+            "charge": 6,
+            "name": "Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo",
+            "status": "PASS",
+            "public_surface_hits": 0,
+            "unmarked_repo_files": 0,
+            "sample_public_hits": [],
+            "sample_unmarked_files": []
+          },
+          {
+            "charge": 7,
+            "name": "Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked",
+            "status": "PASS",
+            "domains_configured": true
+          },
+          {
+            "charge": 8,
+            "name": "Grants execution packs and cited wiring artifacts exist on disk",
+            "status": "PASS",
+            "missing_files": []
+          },
+          {
+            "charge": 9,
+            "name": "Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths",
+            "status": "PASS",
+            "corpus_census_present": true,
+            "google_drive_manifest_present": true,
+            "bk_dl_index_present": true,
+            "quarantine_manifest_verified": true,
+            "runtime_downloads_path_hits": 0,
+            "intelligence_py_home_path_hits": 0
+          },
+          {
+            "charge": 10,
+            "name": "Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass",
+            "status": "PASS",
+            "consumption_test_file_present": true,
+            "ast_and_279_family_tests_passed": true,
+            "registry_exact_21419": true,
+            "unsquared_copula_tail_count": 0,
+            "gsi_sandbox_quarantined": true
+          }
+        ]
+      }
+    }
+  },
+  "prioritized_findings_p0_to_p3": [
+    {
+      "priority": "P0 (Critical)",
+      "category": "Security & AST Sandbox",
+      "title": "Restrict equation formula_spec evaluation strictly to validated AST nodes with __builtins__: {} and zero hardcoded secrets",
+      "status": "VERIFIED_CLOSED",
+      "proof": "intelligence/equations/equation_executor.py + Phase 2A AST injection & secret scan"
+    },
+    {
+      "priority": "P0 (Critical)",
+      "category": "Equation & Domain Math Integrity",
+      "title": "Compile all 21,419 equations across 279 families (<0.35s), repair 1,372 copula_tail rows, and hold 1,400 sub-min_sample_size rows at weight 0.0",
+      "status": "VERIFIED_CLOSED",
+      "proof": "tests/unit/test_equation_executor_ast_and_bounds.py"
+    },
+    {
+      "priority": "P0 (Critical)",
+      "category": "Conjunction & Heavy-Juice Firewall",
+      "title": "Enforce -250 / -300+ Heavy-Juice Sportsbook Firewall, Steelers ML -285 PASS regression gate, and server-side paywall redaction",
+      "status": "VERIFIED_CLOSED",
+      "proof": "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+    },
+    {
+      "priority": "P0 (Critical)",
+      "category": "Two-Host Portability & Charge Regression",
+      "title": "Enforce zero hardcoded local user paths across intelligence/**/*.py and pass all 10 charges in run_charge_regression_suite.py",
+      "status": "VERIFIED_CLOSED",
+      "proof": "scripts/wiring/run_charge_regression_suite.py (10/10 PASS)"
+    },
+    {
+      "priority": "P1 (High)",
+      "category": "Proprietary GSE Metrics & Vectorized Speed",
+      "title": "Wire, ablate, and James-Stein/Ridge optimize all 22 proprietary GSE metrics (M-GSE-01..22) with >100x vectorized NumPy speedup",
+      "status": "VERIFIED_CLOSED",
+      "proof": "intelligence/coaching/gse_proprietary_metrics_benchmark_and_optimizer.py"
+    },
+    {
+      "priority": "P1 (High)",
+      "category": "26-Layer Reasoning & Two-Wave 200+ Pt DFS",
+      "title": "Verify 26-layer armed workflow spine (L12->L13->L21, L26<=0.08 last), 30 Frontier DFS equations, and >=200.0 DK pt championship portfolio",
+      "status": "VERIFIED_CLOSED",
+      "proof": "scripts/wiring/verify_armed_workflows.py + tests/unit/test_dk_200pt_situational_dfs_and_projection_engine.py"
+    },
+    {
+      "priority": "P1 (High)",
+      "category": "Public Copy & Mobile Lint Guardrails",
+      "title": "Enforce XX/100 integer confidence formatting and zero forbidden math jargon on web and mobile surfaces",
+      "status": "VERIFIED_CLOSED",
+      "proof": "scripts/guardrails/trust-gate.mjs + apps/mobile/scripts/lint-rules.js"
+    },
+    {
+      "priority": "P2 (Medium)",
+      "category": "Architecture Modularization",
+      "title": "Continue progressive-disclosure decomposition of large omniverse bridge modules into domain-focused sub-packages",
+      "status": "TRACKED_BACKLOG",
+      "proof": "docs/engine/research/2026-11-07/TWO-AXIS-CODE-REVIEW-AND-RETRO-2026-11-07.md"
+    },
+    {
+      "priority": "P3 (Low)",
+      "category": "Enum & Schema Ergonomics",
+      "title": "Standardize StrEnum gate status constants across legacy coaching helper scripts",
+      "status": "TRACKED_BACKLOG",
+      "proof": "schemas/v1/layer_output.schema.json"
+    }
+  ],
+  "digest_sha256": "677097cab0073d6575dbb74a478cfecd91c54459ca8fb2b0568974322030ce0b"
+}

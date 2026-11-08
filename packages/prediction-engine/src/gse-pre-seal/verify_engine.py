@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-REPO_ROOT = Path("C:/Users/Garrett/Sports")
+REPO_ROOT = Path(__file__).resolve().parents[4]
 CANDIDATE_DIR = REPO_ROOT / "candidates"
 CANDIDATE_PATH = CANDIDATE_DIR / "2026-10-25-week7-candidate.json"
 SEAL_PATH = CANDIDATE_DIR / "sealed-center.json"

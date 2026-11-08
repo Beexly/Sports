@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "DEEP-READ-BOOKS-PDFS-21419-EQUATIONS-2026-11-07",
+  "generated_at_utc": "2026-11-08T05:22:00Z",
+  "status": "VERIFIED_PASS",
+  "mega_sweep_458_books_verification": {
+    "manifest_path": "docs/data-sources/research/2026-11-07/google-drive-and-docs-verified-manifest.json",
+    "manifest_sha256": "cb981531682690744a51e3cbdb2db83d87c2f9e78ce3856dbcb012789982b7ed",
+    "raw_files_scanned_by_lane": {
+      "books-a-sports": 114,
+      "books-b-medical": 68,
+      "books-c-systems": 69,
+      "books-d-models": 93,
+      "books-must-have": 121
+    },
+    "raw_files_scanned_total": 465,
+    "total_unique_mega_sweep_books": 458,
+    "verified_6field_provenance_count": 458,
+    "synced_markdown_dossiers_count": 52,
+    "lanes": {
+      "books-a-sports": 107,
+      "books-b-medical": 68,
+      "books-c-systems": 69,
+      "books-d-models": 93,
+      "books-must-have": 121
+    },
+    "required_6_fields": [
+      "source_locator",
+      "canonical_variable_mapping",
+      "units_and_scaling",
+      "assumptions_and_domain_validity",
+      "dataset_validation_check",
+      "license_status"
+    ],
+    "all_books_verified": true,
+    "runtime_execution_summary": {
+      "mega_sweep_books_total": 458,
+      "mega_sweep_books_wired": 458,
+      "mega_sweep_books_by_lane": {
+        "books-a-sports": 107,
+        "books-b-medical": 68,
+        "books-c-systems": 69,
+        "books-d-models": 93,
+        "books-must-have": 121
+      },
+      "mega_sweep_books_wired_by_lane": {
+        "books-a-sports": 107,
+        "books-b-medical": 68,
+        "books-c-systems": 69,
+        "books-d-models": 93,
+        "books-must-have": 121
+      },
+      "manifest_458_books_sha256_parity_verified": true,
+      "lane_b_medical_gsi_quarantine": {
+        "quarantine_enforced": true,
+        "sports_spine_import_permitted": false,
+        "sports_spine_weight": 0.0,
+        "quarantined_medical_books_count": 68
+      },
+      "deduplicated_provenance_entries_total": 472,
+      "deduplicated_provenance_entries_wired": 472,
+      "bk_dl_deduplicated_entries_total": 40,
+      "bk_dl_deduplicated_entries_wired": 40,
+      "bk_drv_50_books_total": 50,
+      "bk_drv_50_books_wired": 50,
+      "total_equations_registry_count": 21419,
+      "total_families_registry_count": 279,
+      "lane_aggregate_log_odds_deltas": {
+        "books-a-sports": 0.002264,
+        "books-b-medical": 0.0,
+        "books-c-systems": -0.012315,
+        "books-d-models": 0.000291,
+        "books-must-have": 0.012871
+      },
+      "composite_sports_spine_book_log_odds_delta": 0.000778,
+      "all_458_books_and_472_provenance_entries_verified": true
+    }
+  },
+  "provenance_472_entries_verification": {
+    "index_path": "docs/data-sources/research/2026-11-07/bk-dl-deduplicated-provenance-index.json",
+    "index_sha256": "e75e33ae7d1ebee9b43a2639d966f7d2c2ff6c23eefc2850056c553ceb66cdbf",
+    "total_unique_entries": 472,
+    "unique_sha256_digests_count": 472,
+    "downloads_submitted_files": 48,
+    "downloads_deduplicated_unique_entries": 40,
+    "downloads_duplicate_files_collapsed": 8,
+    "google_drive_50_books_entries": 50,
+    "origin_group_breakdown": {
+      "google_drive_books-a-sports": 107,
+      "google_drive_books-b-medical": 68,
+      "google_drive_books-c-systems": 69,
+      "google_drive_books-d-models": 93,
+      "google_drive_books-must-have": 121,
+      "google_drive_gsn_docx_audit": 14
+    },
+    "quarantined_external_github_repos": {
+      "quarantine_manifest_path": "docs/data-sources/research/2026-11-07/external-github-repos-quarantine-manifest.json",
+      "total_external_repos_indexed": 202,
+      "new_and_prior_batch_107_count": 107,
+      "install_permitted_in_prod": false,
+      "quarantine_status": "RESEARCH_ONLY_QUARANTINE",
+      "explicitly_rejected_items": [
+        "Blur009/Blur-AutoClicker",
+        "itbrowser-net/undetectable-fingerprint-browser"
+      ]
+    }
+  },
+  "equations_21419_verification": {
+    "registry_path": "data/equations/equation_execution_registry.jsonl",
+    "registry_sha256": "03203bac32e2d391df136f0518bce01f2579e126706b8b794fe95303162db3c2",
+    "catalog_12304_path": "data/equations/equation_executable_catalog_12304.json",
+    "catalog_12304_sha256": "5960624f2967ce47c4148071ff5338d2c18309aa2f4667b6843631d9b38ed972",
+    "total_equations_verified": 21419,
+    "canonical_families_count": 279,
+    "canonical_family_id_range": [
+      0,
+      278
+    ],
+    "source_catalog_breakdown": {
+      "equation_executable_catalog_12304.json": 12304,
+      "thousand_equation_matrix_2026.json": 1666,
+      "QUAD-ENGINE-MASTER-CROSSWALK.json": 3742,
+      "unified-corpus-and-gsi-wiring-bridge.ts::GRADUATE_MONOGRAPHS": 33,
+      "pdf_extracted_knowledge_index_2026_11_06.json": 516,
+      "wave8_football_books_and_github_repos_manifest_2026_11_05.json": 177,
+      "extracted_theorems_lemmas_algorithms_2026_11_06.jsonl": 2949,
+      "downloads_20_sovereign_artifacts_2026_11_07.jsonl": 32
+    },
+    "dynamic_registry_counts": {
+      "total_cataloged": 21419,
+      "wired_and_tested": 21419,
+      "dormant_with_reason": 0,
+      "duplicates": 0,
+      "placeholder_formula_specs": 0,
+      "held_below_min_sample_size": 1400
+    },
+    "placeholder_f_eq_formula_specs_count": 0,
+    "synthetic_tanh_templates_in_executor_count": 0,
+    "copula_tail_verification": {
+      "catalog_12304_copula_tail_count": 1367,
+      "registry_21419_copula_tail_count": 1372,
+      "unsafe_copula_tail_count": 0,
+      "positive_definite_eigenvalue_floor": 1e-06,
+      "frechet_hoeffding_bounds_enforced": true
+    },
+    "sample_size_gate_verification": {
+      "sub_min_sample_size_gated_count": 1400,
+      "active_full_sample_count": 20019,
+      "gated_promotion_gate": "HELD_BELOW_MIN_SAMPLE_SIZE",
+      "gated_effective_weight_multiplier": 0.0
+    },
+    "execution_and_perturbation_verification": {
+      "all_21419_ast_vs_operator_checked": 21419,
+      "all_21419_ast_compilation_errors": 0,
+      "ast_vs_operator_max_abs_diff": 0.0,
+      "batch_execution_21419_elapsed_seconds": 0.1463,
+      "family_consumption_census": {
+        "total_families": 279,
+        "accounted_families": 279,
+        "active_bound_families": 279,
+        "dormant_logged_families": 0
+      },
+      "book_and_sovereign_perturbation_responsiveness": {
+        "unified-corpus-and-gsi-wiring-bridge.ts::GRADUATE_MONOGRAPHS": {
+          "total": 33,
+          "responsive": 33
+        },
+        "pdf_extracted_knowledge_index_2026_11_06.json": {
+          "total": 516,
+          "responsive": 516
+        },
+        "wave8_football_books_and_github_repos_manifest_2026_11_05.json": {
+          "total": 177,
+          "responsive": 177
+        },
+        "downloads_20_sovereign_artifacts_2026_11_07.jsonl": {
+          "total": 32,
+          "responsive": 32
+        }
+      }
+    }
+  },
+  "intelligence_path_hygiene_verification": {
+    "intelligence_python_files_scanned": 721,
+    "hardcoded_local_host_paths_found": 0,
+    "status": "CLEAN_ZERO_HARDCODED_HOST_PATHS"
+  }
+}

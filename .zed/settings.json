@@ -1,0 +1,68 @@
+{
+  "theme": "One Dark",
+  "buffer_font_size": 14,
+  "ui_font_size": 15,
+  "format_on_save": "on",
+  "autosave": "on_focus_change",
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.hg",
+    "**/.DS_Store",
+    "**/node_modules",
+    "**/.next",
+    "**/.turbo",
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "**/.ruff_cache",
+    "**/data/nflverse/**",
+    "**/data/simulations/**",
+    "**/data/mind/feeds/**"
+  ],
+  "languages": {
+    "Python": {
+      "language_servers": ["ruff", "basedpyright"],
+      "format_on_save": "on",
+      "formatter": {
+        "language_server": {
+          "name": "ruff"
+        }
+      },
+      "code_actions_on_format": {
+        "source.organizeImports.ruff": true,
+        "source.fixAll.ruff": true
+      }
+    },
+    "TypeScript": {
+      "format_on_save": "on",
+      "tab_size": 2
+    },
+    "TSX": {
+      "format_on_save": "on",
+      "tab_size": 2
+    }
+  },
+  "lsp": {
+    "ruff": {
+      "initialization_options": {
+        "settings": {
+          "lineLength": 110,
+          "lint": {
+            "select": ["E", "F", "I", "B", "S", "UP", "PERF"]
+          }
+        }
+      }
+    }
+  },
+  "context_servers": {
+    "gse-equations-mcp": {
+      "command": {
+        "path": "node",
+        "args": ["packages/mcp-equations-server/dist/index.js"]
+      }
+    }
+  }
+}

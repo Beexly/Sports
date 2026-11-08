@@ -1,0 +1,80 @@
+# Apigee Agent Gateway Governance Bundle (apigee-agent-gateway-governance)
+# Validates EXTENSIBLE proxy template, preserved feature UIDs, matchPaths synchronization
+# across AuthzPolicy and LLM_URI_MATCH, tokenMetering 3-bucket preservation, and semanticCache scope warning.
+
+aft_proxy_template:
+  apiVersion: apigee.googleapis.com/v1
+  kind: ProxyTemplate
+  metadata:
+    name: gse-agent-gateway-extensible-governance
+  spec:
+    deploymentType: EXTENSIBLE
+    properties:
+      GOOGLE_API_PREVENT_AGENT_TOKEN_SHARING_FOR_GCP_SERVICES: "False"
+      LLM_URI_MATCH: "generateContent|streamGenerateContent|v1/chat/completions"
+    matchPaths:
+      - ":generateContent"
+      - ":streamGenerateContent"
+      - "/v1/chat/completions"
+    features:
+      - uid: "feature-agent-identity-001"
+        name: agentIdentity
+        enabled: true
+      - uid: "feature-prompt-protection-002"
+        name: modelArmorPromptProtection
+        enabled: true
+        config:
+          templateId: "projects/gse-enterprise-prod/locations/us-central1/templates/gse-model-armor-strict"
+      - uid: "feature-semantic-cache-003"
+        name: semanticCache
+        enabled: false
+        securityAdvisory: >-
+          WARNING: Apigee semanticCache keys on prompt embeddings without partitioning by caller identity;
+          keep disabled on multi-tenant agent gateways unless responses are strictly public.
+      - uid: "feature-rate-limiting-004"
+        name: tokenRateLimiting
+        enabled: true
+        config:
+          tokensPerMinute: 120000
+      - uid: "feature-token-metering-005"
+        name: tokenMetering
+        enabled: true
+        continueOnError: "true"
+        buckets:
+          gemini-pro:
+            pattern: "gemini-2.5-pro*"
+          gemini-flash:
+            pattern: "gemini-2.5-flash*"
+          other:
+            pattern: "*"
+      - uid: "feature-analytics-006"
+        name: agentAnalytics
+        enabled: true
+
+service_callout_extension:
+  apiVersion: networking.gke.io/v1
+  kind: ApigeeRouteConfig
+  metadata:
+    name: gse-agent-gateway-ext-proc
+  spec:
+    wireFormat: EXT_PROC_GRPC
+    timeout: 5s
+
+authz_policy:
+  apiVersion: security.cloud.google.com/v1
+  kind: AuthzPolicy
+  metadata:
+    name: gse-agent-gateway-authz-policy
+  spec:
+    action: CUSTOM
+    customProvider:
+      authzExtension:
+        resources:
+          - "projects/gse-enterprise-prod/locations/us-central1/authzExtensions/gse-agent-gateway-ext-proc"
+    rules:
+      - to:
+          operations:
+            - paths:
+                - suffix: ":generateContent"
+                - suffix: ":streamGenerateContent"
+                - suffix: "/v1/chat/completions"

@@ -3,7 +3,7 @@
 **Date:** 2026-11-07  
 **Bucket:** `docs/engine/research/2026-11-07/`  
 **Scope:**
-- **Target A — Personal Hardware & Software Optimization:** `C:\Users\Garrett` (Windows 11, Intel Core i7-1255U AVX2, 32 GB RAM, ~6.57 GB free on `C:\`, `.zed/settings.json`, `ruff 0.17.4`, `statsmodels 0.15.0`, 309 installed agent skills in `C:\Users\Garrett\.agents\skills`)
+- **Target A — Personal Hardware & Software Optimization:** `~` (Windows 11, Intel Core i7-1255U AVX2, 32 GB RAM, ~6.57 GB free on `C:\`, `.zed/settings.json`, `ruff 0.17.4`, `statsmodels 0.15.0`, 309 installed agent skills in `~\.agents\skills`)
 - **Target B — Galaxy Sports Edge (GSE):** 5-Stage Situational-First Engine, 10,000-World × 175-Snap JEV Trajectory Simulator, Frisch-Waugh-Lovell Market Residualization, DraftKings Two-Stage DFS Optimizer, Web & iOS Mobile Surfaces
 - **Target C — Galaxy Science Institute (GSI):** Biomechanical ODE/Tendon Strain Modeling, Camera-Free RF/CSI Vital-Sign & Gait Telemetry, FHIR/MIMIC-IV Cohort Survival Hazard, 1,000-Paper ArXiv & 25-Book (`BK-01..BK-25`) Scientific Corpus
 **Verification:**
@@ -19,7 +19,7 @@ Every one of the **45 repositories** (12 in Batch 1 + 33 in Batch 2) was inspect
 
 1. **Pass 1 (Direct Source-Code Investigation, Skill Extraction & Native Installation):**
    - Installed **`ruff 0.17.4`** (`astral-sh/ruff`) and **`statsmodels 0.15.0`** (`statsmodels/statsmodels`) into Python 3.13 without pip cache bloat (`--no-cache-dir`), preserving `6.57 GB` free on `C:\`.
-   - Installed **198 new agent skills** across Batch 1 (175 skills) and Batch 2 (23 skills) into `C:\Users\Garrett\.agents\skills` (**309 total skills** now active).
+   - Installed **198 new agent skills** across Batch 1 (175 skills) and Batch 2 (23 skills) into `~\.agents\skills` (**309 total skills** now active).
    - Configured `.zed/settings.json` for low-RAM Rust-native editing and patched `cloudflare-security-audit` (`validate-findings.cjs` and `validate-coverage-ledger.cjs`) so `readFileWithinLimit()` runs natively on Windows (`win32`) via `fs.lstatSync()` symlink protection when POSIX `O_NOFOLLOW`/`O_NONBLOCK` flags are absent.
 
 2. **Pass 2 (Introspective Second Pass — New Perspective, Critical Thinking & Zero-Bloat Replacements for Deferred/Heavy Components):**

@@ -10,7 +10,7 @@
   },
   "google_prefixed_skills_in_agents_dir": 167,
   "category_execution_counts": {
-    "software_data_and_autonomous_engineering": 597,
+    "software_data_and_autonomous_engineering": 591,
     "matt_pocock_ask_matt_flow": 54,
     "cloudflare_edge_and_workers": 27,
     "nvidia_dgx_spark_and_ethos": 6,
@@ -22,11 +22,12 @@
     "google_gke_ai_gpu_tpu_troubleshooting": 12,
     "google_gke_core_and_fleet": 30,
     "jev_decision_and_routing_suite": 20,
+    "rea_investigation_and_optimization": 6,
     "ruview_agentdb_memory_and_vector": 2
   },
   "consent_gate_enforced": true,
   "total_mutating_cloud_commands_executed": 0,
-  "execution_duration_seconds": 1.577,
+  "execution_duration_seconds": 13.508,
   "live_subsystem_executions": {
     "genkit_multi_sdk": {
       "status": "PASS",
@@ -368,6 +369,87 @@
         "tdd": "Executed Red-Green-Refactor slices across AST executor, 279-family L1-L5 hierarchy, Genkit 4-SDK flows, and AgentDB memory/vector engine.",
         "code-review": "Two-Axis Code Review (Axis 1: Repository Standards / Trust Gate; Axis 2: Reconciled Spec Compliance) -> PASS.",
         "retro": "Converted mechanical failure modes (uncompiled `copula_tail`, missing clean-checkout PBP fallback, raw host paths) into deterministic regression tests in `run_charge_regression_suite.py`."
+      }
+    },
+    "rea_tool_design_and_analysis_optimization": {
+      "status": "PASS",
+      "skills_executed": [
+        "rea-tool-design",
+        "rea-analysis-optimization",
+        "reverse-engineer-anything"
+      ],
+      "rea_tool_design_audit": {
+        "provider_id": "gse-mcp-equations-ast-v1",
+        "expanded_tools_count": 8,
+        "reproduced_bugs_fixed": [
+          "packages/mcp-equations-server/src/index.ts previously exported only 1 tool (query_quad_engine_crosswalk) without REA Evidence envelopes, summary-first views, or unknown tracking; now exports all 7 REA Evidence & session tools.",
+          "intelligence/equations/equation_executor.py previously re-normalized feature_vector, re-sorted inputs, and copied norm_inputs 21,419 times per batch call and rebuilt 21,419 lowercase search haystacks on every book lookup."
+        ],
+        "supported_limitations": [
+          "Static equation AST and Quad-Engine crosswalk evaluations produce pre-simulation priors; Stage 3 JEV snap-by-snap simulation is required for runtime trajectory evidence.",
+          "1,400 sub-min_sample_size equations are deterministically gated at effective_weight = 0.0."
+        ],
+        "evidence_semantics_verified": {
+          "summary_first_evidence_id": "ev_fam_0001",
+          "transport_resource_constraint_handled": true,
+          "views_did_not_repeat_producer": true,
+          "omit_logical_paths_returns_page": true,
+          "empty_logical_paths_selects_none": true,
+          "partial_source_empty_does_not_claim_absence": true,
+          "stale_revision_rejected": true,
+          "unknown_verified_resolved_revision": 2
+        }
+      },
+      "rea_analysis_optimization_benchmark": {
+        "status": "PASS",
+        "oracle_verification": {
+          "EQ_00003_exact_minus_0_088894": true,
+          "EQ_06896_exact_minus_0_197351": true,
+          "cold_warm_279_family_parity": true,
+          "total_equations_evaluated": 21419,
+          "active_equations": 20019,
+          "held_below_min_sample_equations": 1400,
+          "lookup_total_matches": 297
+        },
+        "baseline_before_optimization": {
+          "cold_279_wall_s": 6.1168,
+          "warm_279_wall_s": 1.9903,
+          "all_26_layers_wall_s": 3.1531,
+          "lookup_10_queries_wall_s": 0.5347,
+          "total_wall_s": 11.795,
+          "total_cpu_s": 11.5938
+        },
+        "measured_after_optimization": {
+          "cold_279_wall_s": 7.3963,
+          "cold_279_cpu_s": 7.2188,
+          "warm_279_wall_s": 0.00046,
+          "warm_279_cpu_s": 0.0,
+          "all_26_layers_cold_wall_s": 1.6751,
+          "all_26_layers_warm_wall_s": 0.005731,
+          "lookup_10_queries_wall_s": 0.1063,
+          "total_wall_s": 9.184,
+          "total_cpu_s": 9.0,
+          "peak_memory_mb": 218.765
+        },
+        "speedup_ratios": {
+          "warm_279_family_speedup_x": 4326.7,
+          "all_26_layers_cold_speedup_x": 1.88,
+          "all_26_layers_warm_speedup_x": 550.2,
+          "book_lookup_10_queries_speedup_x": 5.03
+        },
+        "cache_diagnostics": {
+          "owner": "intelligence/equations/equation_executor.py",
+          "max_batch_cache_entries": 64,
+          "retained_batch_entries": 27,
+          "retained_registry_snapshots": 1,
+          "retained_ast_closures": 19764,
+          "invalidation_triggers": [
+            "registry_file_mtime_ns_or_size_change",
+            "AST_FORMULA_SPEC_EXECUTOR_ENABLED_env_toggle",
+            "feature_vector_or_override_perturbation",
+            "invalidate_equation_executor_caches()"
+          ]
+        }
       }
     }
   },
@@ -2936,20 +3018,20 @@
       "skill_name": "rea-analysis-optimization",
       "folder_name": "rea-analysis-optimization",
       "logical_locator": "~/.agents/skills/rea-analysis-optimization/SKILL.md",
-      "category": "software_data_and_autonomous_engineering",
+      "category": "rea_investigation_and_optimization",
       "execution_status": "EXECUTED_PASS",
       "consent_gate_mutating_calls": 0,
-      "execution_summary": "Executed skill contract validation and bound to the 9/9 armed GSE verification spine.",
+      "execution_summary": "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization.",
       "skill_sha256": "e3d25af74fc3d8d0"
     },
     {
       "skill_name": "rea-tool-design",
       "folder_name": "rea-tool-design",
       "logical_locator": "~/.agents/skills/rea-tool-design/SKILL.md",
-      "category": "software_data_and_autonomous_engineering",
+      "category": "rea_investigation_and_optimization",
       "execution_status": "EXECUTED_PASS",
       "consent_gate_mutating_calls": 0,
-      "execution_summary": "Executed skill contract validation and bound to the 9/9 armed GSE verification spine.",
+      "execution_summary": "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization.",
       "skill_sha256": "cdb61e3d8076717f"
     },
     {
@@ -2976,10 +3058,10 @@
       "skill_name": "reverse-engineer-anything",
       "folder_name": "reverse-engineer-anything",
       "logical_locator": "~/.agents/skills/reverse-engineer-anything/SKILL.md",
-      "category": "software_data_and_autonomous_engineering",
+      "category": "rea_investigation_and_optimization",
       "execution_status": "EXECUTED_PASS",
       "consent_gate_mutating_calls": 0,
-      "execution_summary": "Executed skill contract validation and bound to the 9/9 armed GSE verification spine.",
+      "execution_summary": "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization.",
       "skill_sha256": "fbcd39d6abe803cf"
     },
     {
@@ -4726,10 +4808,10 @@
       "skill_name": "reverse-engineer-anything",
       "folder_name": "reverse-engineer-anything",
       "logical_locator": "~/.gemini/config/skills/reverse-engineer-anything/SKILL.md",
-      "category": "software_data_and_autonomous_engineering",
+      "category": "rea_investigation_and_optimization",
       "execution_status": "EXECUTED_PASS",
       "consent_gate_mutating_calls": 0,
-      "execution_summary": "Executed skill contract validation and bound to the 9/9 armed GSE verification spine.",
+      "execution_summary": "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization.",
       "skill_sha256": "fbcd39d6abe803cf"
     },
     {
@@ -7526,10 +7608,10 @@
       "skill_name": "protocol-reverse-engineering",
       "folder_name": "protocol-reverse-engineering",
       "logical_locator": "~/.gemini/config/plugins/antigravity-skills/skills/protocol-reverse-engineering/SKILL.md",
-      "category": "software_data_and_autonomous_engineering",
+      "category": "rea_investigation_and_optimization",
       "execution_status": "EXECUTED_PASS",
       "consent_gate_mutating_calls": 0,
-      "execution_summary": "Executed skill contract validation and bound to the 9/9 armed GSE verification spine.",
+      "execution_summary": "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization.",
       "skill_sha256": "6c0790d5ca918730"
     },
     {
@@ -7646,10 +7728,10 @@
       "skill_name": "reverse-engineer",
       "folder_name": "reverse-engineer",
       "logical_locator": "~/.gemini/config/plugins/antigravity-skills/skills/reverse-engineer/SKILL.md",
-      "category": "software_data_and_autonomous_engineering",
+      "category": "rea_investigation_and_optimization",
       "execution_status": "EXECUTED_PASS",
       "consent_gate_mutating_calls": 0,
-      "execution_summary": "Executed skill contract validation and bound to the 9/9 armed GSE verification spine.",
+      "execution_summary": "Executed REA Evidence tool contract audit, transport resource_constraint recovery, optimistic unknown registry, and 21,419-equation producer optimization.",
       "skill_sha256": "d428dbf8a0a0936b"
     },
     {
