@@ -1748,6 +1748,13 @@ def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
     assert "36-13-1 (+20.14u)" in ai_seo_ts
     assert "all-in secondary view" in ai_seo_ts
 
+    # The Python audit engine must not re-crown the secondary view as the record.
+    engine_py = (REPO_ROOT / "intelligence" / "seo" / "seo_and_lcp_optimization_engine.py").read_text(encoding="utf-8")
+    assert "36-13-1 (+20.14u)" in engine_py
+    assert "47-19-1 (+24.92u) overall" not in engine_py
+    assert fl["lcp_four_subpart_audit"]["verified_36_13_1_present"] is True
+    assert fl["lcp_four_subpart_audit"]["no_inverted_overall_framing"] is True
+
 
 def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     """

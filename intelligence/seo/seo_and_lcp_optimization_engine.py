@@ -17,10 +17,10 @@ Implements and validates:
      `SoftwareApplication`, `Dataset`, `FAQPage`, `HowTo`, `BreadcrumbList`).
   5. `seo-snippet-hunter` — Position-Zero Featured Snippet blocks (40-60 word paragraph
      answers, 5-8 item numbered lists, comparison tables, and PAA Q&A blocks).
-  6. `seo-authority-builder` — E-E-A-T (`9.6/10`) scorecard with verified 47-19-1
-     (+24.92u) ledger, 32-team active injury/QB1 verification, and editorial policy.
+  6. `seo-authority-builder` — E-E-A-T (`9.6/10`) scorecard with verified 36-13-1
+     (+20.14u) ledger (47-19-1 is the all-in secondary view), 32-team active injury/QB1 verification, and editorial policy.
   7. `seo-content-writer` & `seo-content-refresher` — Freshness scanner blocking stale
-     2023/2024 dates, stale 36-13-1 records, or duplicate Week 9 teams, plus fresh
+     2023/2024 dates, stale voided ledger framing, or duplicate Week 9 teams, plus fresh
      2026 NFL Week 9 & DraftKings DFS pillar content.
   8. `debug-optimize-lcp` — LCP 4-subpart budget verification (TTFB, Resource Load Delay,
      Resource Load Duration, Element Render Delay -> Total LCP < 2.5s Good threshold).
@@ -80,12 +80,12 @@ ROUTE_META_PACKAGES: list[dict[str, Any]] = [
         "title": "NFL Week 9 Picks Against the Spread | Galaxy Sports Edge",  # 56 chars
         "description": (
             "Unlock NFL Week 9 picks against the spread, totals, and correlated SGPs "
-            "across all 15 games. Backed by a 47-19-1 (+24.92u) audited record →"
+            "across all 15 games. Backed by a 36-13-1 (+20.14u) verified record →"
         ),  # 140 chars
         "ab_title_variations": [
             "NFL Week 9 Picks Against the Spread | Galaxy Sports Edge",
             "NFL Week 9 Spreads, Totals & SGP Card | Galaxy Sports Edge",
-            "Verified NFL Week 9 Picks (47-19-1) | Galaxy Sports Edge",
+            "Verified NFL Week 9 Picks (36-13-1) | Galaxy Sports Edge",
         ],
         "canonical": "https://www.galaxysportsedge.com/packages",
     },
@@ -165,15 +165,15 @@ ROUTE_META_PACKAGES: list[dict[str, Any]] = [
             "calibrated sports betting record",
             "transparent pick grading",
         ],
-        "title": "Audited NFL Picks Ledger (47-19-1) | Galaxy Sports Edge",  # 55 chars
+        "title": "Audited NFL Picks Ledger (36-13-1) | Galaxy Sports Edge",  # 55 chars
         "description": (
-            "Inspect our public NFL settlement ledger: 47-19-1 (+24.92u) overall and "
-            "38-13-1 (+22.85u) base record with closing line value (CLV) audits ✓"
-        ),  # 141 chars
+            "Inspect our public NFL settlement ledger: verified 36-13-1 (+20.14u) "
+            "with 47-19-1 (+24.92u) as the all-in secondary view and CLV tracking ✓"
+        ),  # 139 chars
         "ab_title_variations": [
-            "Audited NFL Picks Ledger (47-19-1) | Galaxy Sports Edge",
+            "Audited NFL Picks Ledger (36-13-1) | Galaxy Sports Edge",
             "Transparent NFL Settlement Ledger & CLV Audit | GSE",
-            "Verified 47-19-1 (+24.92u) NFL Record & Calibration | GSE",
+            "Verified 36-13-1 (+20.14u) NFL Record & Calibration | GSE",
         ],
         "canonical": "https://www.galaxysportsedge.com/calibration",
     },
@@ -321,7 +321,8 @@ def audit_content_freshness_and_lcp() -> dict[str, Any]:
     """
     Scans `apps/web/lib/seo/` and `docs/predictions/research/2026-11-07/WEEK-9-LIVE-CONTENT-AND-ENGAGEMENT-PACK-2026-11-07.md`
     to confirm:
-      1. Zero stale `36-13-1` ledger strings remain in active SEO JSON-LD (`47-19-1 (+24.92u)` is live).
+      1. The verified record (`36-13-1 (+20.14u)`) leads the active SEO JSON-LD, and
+         the inverted framing (`47-19-1 (+24.92u)` as "overall") is absent.
       2. Zero bogus 2024 Week 9 matchups (`MIA @ BUF`, `DET @ GB`, `IND @ MIN`, `TB @ KC`) appear as active games.
       3. LCP 4-subpart budget (`TTFB`, `Resource Load Delay`, `Resource Load Duration`, `Element Render Delay`)
          meets Google Core Web Vitals Good (`<= 2500ms`) thresholds.
@@ -349,22 +350,28 @@ def audit_content_freshness_and_lcp() -> dict[str, Any]:
         "dfs_page": REPO_ROOT / "apps" / "web" / "app" / "fantasy" / "dfs" / "page.tsx",
         "redline_hero": REPO_ROOT / "apps" / "web" / "components" / "redline" / "redline-world.tsx",
         "seo_metadata": REPO_ROOT / "apps" / "web" / "lib" / "seo" / "metadata.ts",
+        "seo_jsonld": REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts",
     }
     route_bytes: dict[str, int] = {}
     layout_text = ""
     seo_text = ""
+    jsonld_text = ""
     for k, fp in web_files.items():
         if fp.is_file():
             raw = fp.read_bytes()
-            route_bytes[k] = len(raw)
+            if k != "seo_jsonld":
+                route_bytes[k] = len(raw)
             if k == "root_layout":
                 layout_text = raw.decode("utf-8", errors="ignore")
             elif k == "seo_metadata":
                 seo_text = raw.decode("utf-8", errors="ignore")
+            elif k == "seo_jsonld":
+                jsonld_text = raw.decode("utf-8", errors="ignore")
     local_io_ms = (time.perf_counter_ns() - t_lcp_start) / 1_000_000.0
 
     # Verify freshness invariants against actual file contents
-    stale_36_13_1_present = ("36-13-1" in seo_text) or ("36-13-1" in pack_text)
+    verified_36_13_1_present = "36-13-1 (+20.14u)" in jsonld_text
+    inverted_overall_framing_present = "47-19-1 (+24.92u)" + " overall" in jsonld_text
     bogus_2024_matchups_present = any(
         m in pack_text for m in ("MIA @ BUF", "DET @ GB", "IND @ MIN", "TB @ KC", "LAC @ CLE", "DEN @ BAL")
     )
@@ -386,7 +393,8 @@ def audit_content_freshness_and_lcp() -> dict[str, Any]:
         "measured_total_critical_bytes": total_critical_bytes,
         "local_ast_io_ms": round(local_io_ms, 3),
         "font_display_swap_verified": font_display_swap_verified,
-        "zero_stale_36_13_1_verified": not stale_36_13_1_present,
+        "verified_36_13_1_present": verified_36_13_1_present,
+        "no_inverted_overall_framing": not inverted_overall_framing_present,
         "zero_bogus_2024_matchups_verified": not bogus_2024_matchups_present,
         "ttfb_ms": ttfb_ms,
         "ttfb_share_pct": round((ttfb_ms / total_lcp_ms) * 100.0, 1),
@@ -411,7 +419,7 @@ def audit_content_freshness_and_lcp() -> dict[str, Any]:
         "current_score_out_of_10": 9.6,
         "experience_signals": "First-hand snap-by-snap NFL film, trench protection, and injury-redistribution dossiers across all 15 Week 9 games",
         "expertise_signals": "19-Equation Deep Research DFS Engine + 26-Layer Connected Game Workflow + 32/32 QB1 & active roster verification",
-        "authority_signals": "Audited 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) public settlement ledger with closing line value (CLV) tracking",
+        "authority_signals": "Audited 36-13-1 (+20.14u) verified | 47-19-1 (+24.92u) all-in secondary public settlement ledger with closing line value (CLV) tracking",
         "trust_signals": "Strict PASS discipline on low-edge lines, integer XX/100 conviction format, and zero leaked paid picks on free surfaces",
     }
 
