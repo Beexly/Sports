@@ -1,0 +1,710 @@
+{
+  "report_type": "CADENCE_V4_0_T90_GAMEDAY_LOCK_AND_CONFORMAL_DIAGNOSTIC",
+  "version": "v4.0",
+  "phase": "T90_GAMEDAY_LOCK_REFRESH",
+  "slot": "SUN_LATE",
+  "week": 9,
+  "season": 2026,
+  "cadence_window": {
+    "day": "Sun",
+    "ct_time": "13:35",
+    "label": "T-90 inactives lock refresh + conformal residual diagnostic (flag-only)"
+  },
+  "generated_at_utc": "2026-11-08T19:40:10.676982+00:00",
+  "inputs": {
+    "full_slate_path": "data/engine/week9_full_slate_connected_dossiers_2026_11_06.json",
+    "full_slate_sha256": "dadda03981cf2ef1183893797c7e5da8769167bca6e750a5d9900041786f402b",
+    "full_slate_generated_at": "2026-11-06T15:59:16.880156+00:00",
+    "full_slate_official_record": {
+      "record": "47-19-1",
+      "win_rate": 0.7121,
+      "net_units": "+24.92u",
+      "base_record": "38-13-1",
+      "base_net_units": "+22.85u"
+    },
+    "v30_overlay_path": "docs/predictions/research/2026-11-06/cadence_v30_overlay_sunday_w9.json",
+    "v30_overlay_sha256": "dd13ff225130c43521edae14b334ff447c9759a63cb432144c8ae84bc630cb7c",
+    "sealed_baseline_path": "data/engine/week9_tuesday_0400ct_sealed_baseline_2026.json",
+    "sealed_baseline_sha256": "059e992b962f9c49c5fed6efabb3a99fdad9af798028ce83b6b1e9d9d585891a",
+    "stored_snapshot": {
+      "source_csv": "data/nflverse/injuries_2026.csv",
+      "csv_sha256": "7ac1a6b6f69974ff172cea271f28dc01fca23c49ee170bcef7c1f4ac42549072",
+      "week9_rows": 266,
+      "week9_designations_all": [
+        {
+          "team": "BAL",
+          "player": "Lamar Jackson",
+          "position": "QB",
+          "status": "Out"
+        },
+        {
+          "team": "BAL",
+          "player": "Tyler Huntley",
+          "position": "QB",
+          "status": "Out"
+        },
+        {
+          "team": "BAL",
+          "player": "Jaylinn Hawkins",
+          "position": "S",
+          "status": "Out"
+        },
+        {
+          "team": "BAL",
+          "player": "Nate Wiggins",
+          "position": "CB",
+          "status": "Questionable"
+        },
+        {
+          "team": "BAL",
+          "player": "Adam Randall",
+          "position": "RB",
+          "status": "Questionable"
+        },
+        {
+          "team": "JAX",
+          "player": "Travon Walker",
+          "position": "DE",
+          "status": "Questionable"
+        },
+        {
+          "team": "JAX",
+          "player": "Bhayshul Tuten",
+          "position": "RB",
+          "status": "Questionable"
+        }
+      ],
+      "week9_designations_sunday_teams": [],
+      "counts": {
+        "ruled_out": 3,
+        "questionable": 4,
+        "doubtful": 0,
+        "sunday_ruled_out": 0,
+        "sunday_questionable": 0,
+        "sunday_doubtful": 0
+      }
+    }
+  },
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "no_mutation": {
+    "sealed_state_written": false,
+    "candidate_written": false,
+    "seal_function_called": false,
+    "note": "This run wrote exactly one file: this report. candidates/, dossiers, parquet and every sealed artifact were opened read-only."
+  },
+  "availability_refresh": {
+    "slot": "SUN_LATE",
+    "stored_snapshot": {
+      "source": "data/nflverse/injuries_2026.csv",
+      "week9_rows": 266,
+      "week9_designations_sunday_teams": [],
+      "counts": {
+        "ruled_out": 3,
+        "questionable": 4,
+        "doubtful": 0,
+        "sunday_ruled_out": 0,
+        "sunday_questionable": 0,
+        "sunday_doubtful": 0
+      }
+    },
+    "fetched_at_utc": "2026-11-08T19:40:09.619334+00:00",
+    "games": [
+      {
+        "game": "HOU @ LAC",
+        "gameId": "401873046",
+        "kickoff": "2026-11-08T21:05Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "LAC",
+            "player": "Kendall Williamson",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "LAC",
+            "player": "Deane Leonard",
+            "position": "CB",
+            "status": "Out"
+          },
+          {
+            "team": "LAC",
+            "player": "Brenen Thompson",
+            "position": "WR",
+            "status": "Doubtful"
+          },
+          {
+            "team": "HOU",
+            "player": "Reed Blankenship",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "HOU",
+            "player": "David Montgomery",
+            "position": "RB",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "LAC",
+            "player": "Denzel Perryman",
+            "position": "LB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LAC",
+            "player": "David Njoku",
+            "position": "TE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "HOU",
+            "player": "Jaylin Noel",
+            "position": "WR",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "HOU",
+            "player": "Jake Hummel",
+            "position": "LB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "HOU",
+            "player": "Jaylin Smith",
+            "position": "CB",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "ARI @ SEA",
+        "gameId": "401873048",
+        "kickoff": "2026-11-08T21:25Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "SEA",
+            "player": "Sam Darnold",
+            "position": "QB",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Charles Cross",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Brandon Pili",
+            "position": "DT",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Uchenna Nwosu",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Leonard Williams",
+            "position": "DT",
+            "status": "Out"
+          },
+          {
+            "team": "ARI",
+            "player": "Isaiah Adams",
+            "position": "G",
+            "status": "Questionable"
+          },
+          {
+            "team": "ARI",
+            "player": "Jon Gaines II",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "ARI",
+            "player": "Jayden Williams",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "ARI",
+            "player": "Walter Nolen III",
+            "position": "DT",
+            "status": "Questionable"
+          },
+          {
+            "team": "ARI",
+            "player": "Max Melton",
+            "position": "CB",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": []
+      },
+      {
+        "game": "GB @ NE",
+        "gameId": "401873049",
+        "kickoff": "2026-11-08T21:25Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "NE",
+            "player": "Charles Woods",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "Hunter Henry",
+            "position": "TE",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "Mack Hollins",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "TreVeyon Henderson",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "GB",
+            "player": "Travis Glover",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "GB",
+            "player": "Sean Rhyan",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "GB",
+            "player": "Keisean Nixon",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "GB",
+            "player": "Zaire Franklin",
+            "position": "LB",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "NE",
+            "player": "Greg Van Roten",
+            "position": "G",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "GB",
+            "player": "Chris Brooks",
+            "position": "RB",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "LV @ SF",
+        "gameId": "401873047",
+        "kickoff": "2026-11-08T21:25Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "SF",
+            "player": "Mike Evans",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "SF",
+            "player": "Brandon Aiyuk",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "SF",
+            "player": "Deebo Samuel Sr.",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "LV",
+            "player": "Thomas Booker IV",
+            "position": "DT",
+            "status": "Out"
+          },
+          {
+            "team": "LV",
+            "player": "Darien Porter",
+            "position": "CB",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "SF",
+            "player": "Nate Hobbs",
+            "position": "CB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "SF",
+            "player": "Christian Kirk",
+            "position": "WR",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LV",
+            "player": "Patrick Johnson",
+            "position": "DE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LV",
+            "player": "Keyron Crawford",
+            "position": "DE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LV",
+            "player": "Chigozie Anusiem",
+            "position": "CB",
+            "status": "Injured Reserve"
+          }
+        ]
+      }
+    ],
+    "offline": false,
+    "summary": {
+      "games_polled": 4,
+      "games_with_error": 0,
+      "designations_applied": 28,
+      "statuses_not_applied": 12,
+      "stored_curated_subset_size": 0,
+      "newly_listed_not_in_stored_subset": [
+        "Brandon Aiyuk",
+        "Brandon Pili",
+        "Brenen Thompson",
+        "Charles Cross",
+        "Charles Woods",
+        "Darien Porter",
+        "David Montgomery",
+        "Deane Leonard",
+        "Deebo Samuel Sr.",
+        "Hunter Henry",
+        "Isaiah Adams",
+        "Jayden Williams",
+        "Jon Gaines II",
+        "Keisean Nixon",
+        "Kendall Williamson",
+        "Leonard Williams",
+        "Mack Hollins",
+        "Max Melton",
+        "Mike Evans",
+        "Reed Blankenship",
+        "Sam Darnold",
+        "Sean Rhyan",
+        "Thomas Booker IV",
+        "Travis Glover",
+        "TreVeyon Henderson",
+        "Uchenna Nwosu",
+        "Walter Nolen III",
+        "Zaire Franklin"
+      ],
+      "stored_names_absent_from_refresh": [],
+      "diff_caveat": "The stored snapshot is the injuries_2026.csv Week 9 designation set. Every stored designation belongs to TNF teams (BAL/JAX) and the stored Sunday count is zero, so newly_listed names are net-new at T-90 rather than a scope difference. A newly-listed player on a sealed PLAY ticket is a flag for the owner, never a silent reprice."
+    }
+  },
+  "conformal": {
+    "sigma_total": 12.798,
+    "sigma_total_calibration": {
+      "source": "artifacts/slate/2026-10-25-week7-master-slate.json",
+      "n": 13,
+      "sd": 0.134,
+      "relation": "finalProjectedTotal = totalLine + sigma * Phi^-1(modelOverProb)"
+    },
+    "alpha": 0.1,
+    "path": "single-total; Week 9 dossiers persist market_prob_devig = 0.5 (posted_total) and Stage-5 post_sim_prob (pOver) per game \u2014 proxy=false / devig=true on every observation",
+    "observations": [
+      {
+        "game": "BUF @ MIN",
+        "gameId": null,
+        "slot": "Monday Night Football (Mon 8:15 PM ET)",
+        "kickoff": "2026-11-10T01:15Z",
+        "marketTotal": 45.5,
+        "pOver": 0.5659,
+        "modelTotal": 47.6238,
+        "residual": 2.1238,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "HOU @ LAC",
+        "gameId": "401873046",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-08T21:05Z",
+        "marketTotal": 40.5,
+        "pOver": 0.5284,
+        "modelTotal": 41.4118,
+        "residual": 0.9118,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "ARI @ SEA",
+        "gameId": "401873048",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-08T21:25Z",
+        "marketTotal": 39.5,
+        "pOver": 0.3012,
+        "modelTotal": 32.8329,
+        "residual": -6.6671,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "GB @ NE",
+        "gameId": "401873049",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-08T21:25Z",
+        "marketTotal": 45.5,
+        "pOver": 0.3985,
+        "modelTotal": 42.208,
+        "residual": -3.292,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "LV @ SF",
+        "gameId": "401873047",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-08T21:25Z",
+        "marketTotal": 52.5,
+        "pOver": 0.3759,
+        "modelTotal": 48.4524,
+        "residual": -4.0476,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "LAR @ WAS",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": null,
+        "marketTotal": 48.5,
+        "pOver": 0.4274,
+        "modelTotal": 46.158,
+        "residual": -2.342,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "CLE @ NO",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": "2026-11-08T18:00Z",
+        "marketTotal": 42.5,
+        "pOver": 0.3254,
+        "modelTotal": 36.707,
+        "residual": -5.793,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "DAL @ IND",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": "2026-11-08T18:00Z",
+        "marketTotal": 51.5,
+        "pOver": 0.3233,
+        "modelTotal": 45.6322,
+        "residual": -5.8678,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "DEN @ CAR",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": "2026-11-08T18:00Z",
+        "marketTotal": 44.5,
+        "pOver": 0.3367,
+        "modelTotal": 39.1058,
+        "residual": -5.3942,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "DET @ MIA",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": "2026-11-08T18:00Z",
+        "marketTotal": 50.5,
+        "pOver": 0.4582,
+        "modelTotal": 49.1566,
+        "residual": -1.3434,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "NYG @ PHI",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": "2026-11-08T18:00Z",
+        "marketTotal": 38.5,
+        "pOver": 0.4027,
+        "modelTotal": 35.347,
+        "residual": -3.153,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "NYJ @ KC",
+        "gameId": null,
+        "slot": "Sunday Early (Sun 1:00 PM ET)",
+        "kickoff": "2026-11-08T18:00Z",
+        "marketTotal": 47.5,
+        "pOver": 0.46,
+        "modelTotal": 46.2146,
+        "residual": -1.2854,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "CIN @ ATL",
+        "gameId": null,
+        "slot": "Sunday International Madrid (Sun 9:30 AM ET)",
+        "kickoff": "2026-11-08T14:30Z",
+        "marketTotal": 52.5,
+        "pOver": 0.4341,
+        "modelTotal": 50.3762,
+        "residual": -2.1238,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "TB @ CHI",
+        "gameId": null,
+        "slot": "Sunday Night Football (Sun 8:20 PM ET)",
+        "kickoff": "2026-11-09T01:20Z",
+        "marketTotal": 47.5,
+        "pOver": 0.453,
+        "modelTotal": 45.9887,
+        "residual": -1.5113,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      },
+      {
+        "game": "JAX @ BAL",
+        "gameId": null,
+        "slot": "TNF (Thu 8:15 PM ET)",
+        "kickoff": "2026-11-06T01:15Z",
+        "marketTotal": 41.5,
+        "pOver": 0.3919,
+        "modelTotal": 37.9886,
+        "residual": -3.5114,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig = 0.5 = posted_total line"
+      }
+    ],
+    "band": {
+      "lower": -6.6671,
+      "upper": 6.6671
+    },
+    "residuals": [
+      2.1238,
+      0.9118,
+      -6.6671,
+      -3.292,
+      -4.0476,
+      -2.342,
+      -5.793,
+      -5.8678,
+      -5.3942,
+      -1.3434,
+      -3.153,
+      -1.2854,
+      -2.1238,
+      -1.5113,
+      -3.5114
+    ],
+    "flagged": [],
+    "n": 15,
+    "coverage": 1.0,
+    "qLevel": 1.0,
+    "degenerate": true,
+    "degeneracy_note": "qLevel saturates at 1.0 for n<=18 at alpha=0.1; the band equals max|residual| and no flag is possible by construction. This is a property of the estimator at this sample size, not evidence of calibration."
+  },
+  "publication": {
+    "published": false,
+    "reason": "Flag-only diagnostic. Nothing here is a publication."
+  }
+}
