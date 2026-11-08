@@ -271,3 +271,5 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 
 - **2026-11-07 (AGY — Motif 5 Build Items & OpenAlex/Dataset Completion):** Wired all 5 Motif build items (`intelligence/engine/motif_21papers_13datasets_cqr_and_pik_engine.py`, `data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json`, `workers/stealth-skeleton-provider/src/index.ts`) on real downloaded external datasets (`minmaxxxer/nfl-odds-2026` n=120 games, `firstandthirty/nfl-tools` n=6,224 graded props), resolved OpenAlex 429 citation debt for all 21 arXiv papers, and preserved SHA-256 immutability of the v1 frozen bank and harness.
+
+- **2026-11-08 (Hermes takeover cycle):** Fixed inverted SEO structured data in `apps/web/lib/seo/ai-agent-and-search-seo.ts` — Dataset JSON-LD now reports verified 36-13-1 (+20.14u) with 47-19-1 as all-in secondary (was: 47-19-1 "overall" / 38-13-1 "base official", verified record absent); breadcrumb updated to "Audited NFL Settlement Ledger (36-13-1 verified)". Guard test `test_32` updated to pin the corrected strings. Truth endpoint live 200 in ~7s. Executor working-tree churn left unstaged.

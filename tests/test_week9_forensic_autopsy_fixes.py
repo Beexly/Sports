@@ -1745,8 +1745,8 @@ def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
     assert len(seo["audit_sha256"]) == 64
 
     ai_seo_ts = (REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts").read_text(encoding="utf-8")
-    assert "47-19-1 (+24.92u)" in ai_seo_ts
-    assert "36-13-1" not in ai_seo_ts
+    assert "36-13-1 (+20.14u)" in ai_seo_ts
+    assert "all-in secondary view" in ai_seo_ts
 
 
 def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
