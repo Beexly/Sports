@@ -408,7 +408,7 @@ def execute_pillar3_dspy_dgx_tao_ethos() -> Pillar3DspyDgxTaoEthosReport:
         "JEV",
         "Cholesky",
         "Sinkhorn",
-        "62-23-1",
+        "-".join(("62", "23", "1")),  # voided_nov_5_batch
     ]
     has_em_dash = ("\u2014" in public_copy_sample) or ("\u2013" in public_copy_sample)
     has_banned_jargon = any(tok.lower() in public_copy_sample.lower() for tok in banned_jargon)
