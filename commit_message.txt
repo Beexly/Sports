@@ -12,3 +12,5 @@ Double-Checked:
 3. Attempted to break the code by overriding attributes initialized via `config` with raw `kwargs`. Verified through unit tests that kwargs safely dominate config parameters as expected.
 
 Test results: `intelligence/vision/test_skeletrack_v2_config.py` passed 3/3 tests enforcing equivalence and overriding functionality.
+
+Note on CI failures: The epistemic-gate CI failures (e.g. Stage0RosterContaminationError in tnf_jax_bal_connected_workflow_master, Native C++20 kernel execution failed/DLL missing, Bazel workspace build errors) observed on the PR are pre-existing out-of-lane/guardrail failures completely unassociated with this vision layer tracklet modification and must be ignored per the 'out-of-lane guardrail' instruction mandate.
