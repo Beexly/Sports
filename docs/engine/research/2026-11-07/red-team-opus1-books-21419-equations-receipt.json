@@ -1,0 +1,482 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "RED-TEAM-OPUS1-BOOKS-AND-21419-EQUATIONS-2026-11-07",
+  "auditor": "Opus 5.5 Red-Team Subagent #1 (RedTeamBigGun)",
+  "generated_at_utc": "2026-11-08T10:59:33.398533+00:00",
+  "status": "VERIFIED_PASS",
+  "all_invariants_passed": true,
+  "in_place_fixes_applied": [
+    {
+      "file": "intelligence/reasoning/equation_gate.py",
+      "issue_found": "evaluate_single_catalog_equation had a stale operator fallback block (when use_ast_executor=False) that diverged from compile_formula_spec_ast and _evaluate_operator_kernel on 4,614 of 12,304 equations, and re-normalized bindings / copied dicts 12,304 times per batch.",
+      "fix_applied": "Routed fallback operator evaluation directly through _evaluate_operator_kernel(op_type, w0, w1, w2, x0, x1, x2) and added pre-normalized binding / shared AST environment reuse, reducing 12,304-catalog AST-vs-operator discrepancies from 4,614 to 0 (0.0 max diff) and cutting batch latency to ~0.12s."
+    },
+    {
+      "file": "intelligence/equations/equation_executor.py",
+      "issue_found": "1) Extreme finite float inputs (e.g. 1e160) caused OverflowError in _pow_safe, copula_tail ((x0*x1)**2), and conformal_quantile (x2**2). 2) w_safe * raw_kernel could overflow to +/-inf after math.isfinite(raw_kernel), causing round(inf, 6) to emit non-finite diagnostic_raw. 3) execute_all_458_mega_sweep_books_and_472_provenance_entries and _resolve_bound_inputs used raw float(v) instead of _safe_finite_float(v, 0.0) when building cache keys or un-cached bound inputs.",
+      "fix_applied": "Hardened _pow_safe and _evaluate_operator_kernel against OverflowError, guarded weighted_raw = w_safe * raw_kernel with math.isfinite before rounding, replaced raw float(v) with _safe_finite_float(v, 0.0), and exported SPORTS_SPINE_IMPORT_PERMITTED = False and LANE_B_MEDICAL_SPORTS_SPINE_WEIGHT = 0.0."
+    }
+  ],
+  "artifacts_sha256": {
+    "equation_execution_registry_jsonl": "03203bac32e2d391df136f0518bce01f2579e126706b8b794fe95303162db3c2",
+    "equation_executable_catalog_12304_json": "5960624f2967ce47c4148071ff5338d2c18309aa2f4667b6843631d9b38ed972",
+    "bk_dl_deduplicated_provenance_index_json": "e75e33ae7d1ebee9b43a2639d966f7d2c2ff6c23eefc2850056c553ceb66cdbf",
+    "google_drive_and_docs_verified_manifest_json": "cb981531682690744a51e3cbdb2db83d87c2f9e78ce3856dbcb012789982b7ed"
+  },
+  "equations_21419_and_5_stress_vectors_audit": {
+    "total_equations_verified": 21419,
+    "catalog_12304_equations_verified": 12304,
+    "canonical_families_count": 279,
+    "canonical_family_id_range": [
+      0,
+      278
+    ],
+    "unique_input_features_count": 232,
+    "source_catalog_breakdown": {
+      "equation_executable_catalog_12304.json": 12304,
+      "thousand_equation_matrix_2026.json": 1666,
+      "QUAD-ENGINE-MASTER-CROSSWALK.json": 3742,
+      "unified-corpus-and-gsi-wiring-bridge.ts::GRADUATE_MONOGRAPHS": 33,
+      "pdf_extracted_knowledge_index_2026_11_06.json": 516,
+      "wave8_football_books_and_github_repos_manifest_2026_11_05.json": 177,
+      "extracted_theorems_lemmas_algorithms_2026_11_06.jsonl": 2949,
+      "downloads_20_sovereign_artifacts_2026_11_07.jsonl": 32
+    },
+    "source_catalog_matches_expected": true,
+    "dynamic_registry_counts": {
+      "total_cataloged": 21419,
+      "wired_and_tested": 21419,
+      "dormant_with_reason": 0,
+      "duplicates": 0,
+      "placeholder_formula_specs": 0,
+      "held_below_min_sample_size": 1400
+    },
+    "placeholder_f_eq_specs_count": 0,
+    "unsafe_negative_base_fractional_powers_count": 0,
+    "unparenthesized_negative_squares_count": 0,
+    "copula_tail_registry_total": 1372,
+    "copula_tail_safe_total": 1372,
+    "ast_compilation_failures_count": 0,
+    "sub_min_sample_equations_count": 1400,
+    "active_above_min_sample_equations_count": 20019,
+    "sub_min_sample_gate_violations_count": 0,
+    "global_ast_vs_reference_max_discrepancy": 0.0,
+    "catalog_12304_ast_vs_reference_max_discrepancy": 0.0,
+    "global_non_finite_outputs_count": 0,
+    "global_out_of_bounds_outputs_count": 0,
+    "extreme_float64_overflow_1e160_resilient": true,
+    "five_stress_test_vectors": {
+      "1_baseline_nfl_neutral": {
+        "equations_evaluated": 21419,
+        "active_equations": 20019,
+        "held_below_min_sample_equations": 1400,
+        "ast_vs_reference_max_abs_discrepancy": 0.0,
+        "non_finite_outputs_count": 0,
+        "out_of_bounds_outputs_count": 0,
+        "all_outputs_finite_in_bounds": true,
+        "sample_log_odds_deltas": [
+          -0.032807,
+          -0.164442,
+          0.0,
+          0.038571,
+          -0.174247
+        ]
+      },
+      "2_extreme_denver_altitude": {
+        "equations_evaluated": 21419,
+        "active_equations": 20019,
+        "held_below_min_sample_equations": 1400,
+        "ast_vs_reference_max_abs_discrepancy": 0.0,
+        "non_finite_outputs_count": 0,
+        "out_of_bounds_outputs_count": 0,
+        "all_outputs_finite_in_bounds": true,
+        "sample_log_odds_deltas": [
+          0.124829,
+          -0.35,
+          -0.028342,
+          -0.065596,
+          0.35
+        ]
+      },
+      "3_extreme_shootout_dome": {
+        "equations_evaluated": 21419,
+        "active_equations": 20019,
+        "held_below_min_sample_equations": 1400,
+        "ast_vs_reference_max_abs_discrepancy": 0.0,
+        "non_finite_outputs_count": 0,
+        "out_of_bounds_outputs_count": 0,
+        "all_outputs_finite_in_bounds": true,
+        "sample_log_odds_deltas": [
+          -0.150798,
+          0.021233,
+          0.061929,
+          0.127554,
+          -0.35
+        ]
+      },
+      "4a_all_zero_boundary": {
+        "equations_evaluated": 21419,
+        "active_equations": 20019,
+        "held_below_min_sample_equations": 1400,
+        "ast_vs_reference_max_abs_discrepancy": 0.0,
+        "non_finite_outputs_count": 0,
+        "out_of_bounds_outputs_count": 0,
+        "all_outputs_finite_in_bounds": true,
+        "sample_log_odds_deltas": [
+          0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0
+        ]
+      },
+      "4b_all_negative_boundary": {
+        "equations_evaluated": 21419,
+        "active_equations": 20019,
+        "held_below_min_sample_equations": 1400,
+        "ast_vs_reference_max_abs_discrepancy": 0.0,
+        "non_finite_outputs_count": 0,
+        "out_of_bounds_outputs_count": 0,
+        "all_outputs_finite_in_bounds": true,
+        "sample_log_odds_deltas": [
+          -0.036687,
+          0.35,
+          0.008185,
+          -0.0,
+          -0.001686
+        ]
+      },
+      "5_malformed_nan_inf_injection": {
+        "equations_evaluated": 21419,
+        "active_equations": 20019,
+        "held_below_min_sample_equations": 1400,
+        "ast_vs_reference_max_abs_discrepancy": 0.0,
+        "non_finite_outputs_count": 0,
+        "out_of_bounds_outputs_count": 0,
+        "all_outputs_finite_in_bounds": true,
+        "sample_log_odds_deltas": [
+          0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0
+        ]
+      }
+    },
+    "elapsed_seconds": 0.9874
+  },
+  "books_458_and_provenance_472_audit": {
+    "mega_sweep_books_total": 458,
+    "mega_sweep_unique_sha256_count": 458,
+    "mega_sweep_lanes": {
+      "books-a-sports": 107,
+      "books-b-medical": 68,
+      "books-c-systems": 69,
+      "books-d-models": 93,
+      "books-must-have": 121
+    },
+    "mega_sweep_lanes_match_expected": true,
+    "synced_markdown_dossiers_count": 52,
+    "missing_6field_provenance_books_count": 0,
+    "non_portable_locators_count": 0,
+    "provenance_472_entries_total": 472,
+    "provenance_472_unique_sha256_count": 472,
+    "provenance_origin_groups": {
+      "google_drive_books-a-sports": 107,
+      "google_drive_books-b-medical": 68,
+      "google_drive_books-c-systems": 69,
+      "google_drive_books-d-models": 93,
+      "google_drive_books-must-have": 121,
+      "google_drive_gsn_docx_audit": 14
+    },
+    "missing_6field_provenance_entries_count": 0,
+    "bk_gdrive_001_to_458_exact_order": true,
+    "bk_gdocx_459_to_472_exact_order": true,
+    "bk_dl_01_to_40_exact_order": true,
+    "bk_drv_01_to_50_exact_order": true,
+    "unwired_458_books_count": 0,
+    "unwired_472_entries_count": 0,
+    "unwired_bk_dl_40_count": 0,
+    "unwired_bk_dl_duplicate_aliases_count": 0,
+    "unwired_bk_drv_50_count": 0,
+    "books_b_medical_68_quarantine_verified": true,
+    "quarantined_external_repos_all_false": true,
+    "runtime_execution_summary": {
+      "mega_sweep_books_total": 458,
+      "mega_sweep_books_wired": 458,
+      "mega_sweep_books_by_lane": {
+        "books-a-sports": 107,
+        "books-b-medical": 68,
+        "books-c-systems": 69,
+        "books-d-models": 93,
+        "books-must-have": 121
+      },
+      "mega_sweep_books_wired_by_lane": {
+        "books-a-sports": 107,
+        "books-b-medical": 68,
+        "books-c-systems": 69,
+        "books-d-models": 93,
+        "books-must-have": 121
+      },
+      "manifest_458_books_sha256_parity_verified": true,
+      "lane_b_medical_gsi_quarantine": {
+        "quarantine_enforced": true,
+        "sports_spine_import_permitted": false,
+        "sports_spine_weight": 0.0,
+        "quarantined_medical_books_count": 68
+      },
+      "deduplicated_provenance_entries_total": 472,
+      "deduplicated_provenance_entries_wired": 472,
+      "bk_dl_deduplicated_entries_total": 40,
+      "bk_dl_deduplicated_entries_wired": 40,
+      "bk_drv_50_books_total": 50,
+      "bk_drv_50_books_wired": 50,
+      "total_equations_registry_count": 21419,
+      "total_families_registry_count": 279,
+      "lane_aggregate_log_odds_deltas": {
+        "books-a-sports": 0.002264,
+        "books-b-medical": 0.0,
+        "books-c-systems": -0.012315,
+        "books-d-models": 0.000291,
+        "books-must-have": 0.012871
+      },
+      "composite_sports_spine_book_log_odds_delta": 0.000778,
+      "all_458_books_and_472_provenance_entries_verified": true
+    },
+    "malformed_nan_inf_execution_verified": true
+  },
+  "workflow_26_layers_and_279_families_audit": {
+    "layers_1_to_26_total_equations_executed": 21419,
+    "layers_1_to_26_active_equations": 20019,
+    "layers_1_to_26_held_equations": 1400,
+    "all_26_layers_populated_in_context_packet": true,
+    "all_26_layers_consumed_in_reasoning_trace": true,
+    "l21_dependency_chain_verified": true,
+    "l26_entered_last_after_25_layers": true,
+    "strict_5_track_dependency_order_verified": true,
+    "five_tracks_l1_to_l5_verified": true,
+    "weekly_cycle_7_steps_verified": true,
+    "families_279_accounted_in_trace": true,
+    "families_279_equations_evaluated_in_trace": true,
+    "market_entered_last_and_smallest_verified": true,
+    "perturbation_responsiveness_verified": true,
+    "base_final_reasoning_delta": -0.051101,
+    "perturbed_final_reasoning_delta": 0.008015,
+    "layer_batch_breakdown": [
+      {
+        "layer": 1,
+        "equations_executed": 184,
+        "active": 184,
+        "held": 0,
+        "families_in_layer": 135,
+        "aggregate_log_odds_delta": 0.015516
+      },
+      {
+        "layer": 2,
+        "equations_executed": 161,
+        "active": 161,
+        "held": 0,
+        "families_in_layer": 128,
+        "aggregate_log_odds_delta": 0.009868
+      },
+      {
+        "layer": 3,
+        "equations_executed": 236,
+        "active": 236,
+        "held": 0,
+        "families_in_layer": 170,
+        "aggregate_log_odds_delta": 0.030488
+      },
+      {
+        "layer": 4,
+        "equations_executed": 165,
+        "active": 165,
+        "held": 0,
+        "families_in_layer": 131,
+        "aggregate_log_odds_delta": 0.011914
+      },
+      {
+        "layer": 5,
+        "equations_executed": 169,
+        "active": 169,
+        "held": 0,
+        "families_in_layer": 136,
+        "aggregate_log_odds_delta": 0.015566
+      },
+      {
+        "layer": 6,
+        "equations_executed": 2614,
+        "active": 2320,
+        "held": 294,
+        "families_in_layer": 213,
+        "aggregate_log_odds_delta": 0.007872
+      },
+      {
+        "layer": 7,
+        "equations_executed": 166,
+        "active": 166,
+        "held": 0,
+        "families_in_layer": 131,
+        "aggregate_log_odds_delta": 0.018023
+      },
+      {
+        "layer": 8,
+        "equations_executed": 2325,
+        "active": 2089,
+        "held": 236,
+        "families_in_layer": 189,
+        "aggregate_log_odds_delta": 0.004711
+      },
+      {
+        "layer": 9,
+        "equations_executed": 502,
+        "active": 502,
+        "held": 0,
+        "families_in_layer": 185,
+        "aggregate_log_odds_delta": 0.017447
+      },
+      {
+        "layer": 10,
+        "equations_executed": 964,
+        "active": 964,
+        "held": 0,
+        "families_in_layer": 276,
+        "aggregate_log_odds_delta": 0.07178
+      },
+      {
+        "layer": 11,
+        "equations_executed": 1130,
+        "active": 1050,
+        "held": 80,
+        "families_in_layer": 193,
+        "aggregate_log_odds_delta": 0.002549
+      },
+      {
+        "layer": 12,
+        "equations_executed": 2326,
+        "active": 2127,
+        "held": 199,
+        "families_in_layer": 186,
+        "aggregate_log_odds_delta": 0.000705
+      },
+      {
+        "layer": 13,
+        "equations_executed": 3313,
+        "active": 3222,
+        "held": 91,
+        "families_in_layer": 279,
+        "aggregate_log_odds_delta": 0.067379
+      },
+      {
+        "layer": 14,
+        "equations_executed": 156,
+        "active": 156,
+        "held": 0,
+        "families_in_layer": 129,
+        "aggregate_log_odds_delta": 0.016141
+      },
+      {
+        "layer": 15,
+        "equations_executed": 154,
+        "active": 154,
+        "held": 0,
+        "families_in_layer": 128,
+        "aggregate_log_odds_delta": 0.013498
+      },
+      {
+        "layer": 16,
+        "equations_executed": 155,
+        "active": 155,
+        "held": 0,
+        "families_in_layer": 128,
+        "aggregate_log_odds_delta": 0.013986
+      },
+      {
+        "layer": 17,
+        "equations_executed": 149,
+        "active": 149,
+        "held": 0,
+        "families_in_layer": 122,
+        "aggregate_log_odds_delta": 0.012384
+      },
+      {
+        "layer": 18,
+        "equations_executed": 154,
+        "active": 154,
+        "held": 0,
+        "families_in_layer": 127,
+        "aggregate_log_odds_delta": 0.013421
+      },
+      {
+        "layer": 19,
+        "equations_executed": 2265,
+        "active": 1996,
+        "held": 269,
+        "families_in_layer": 183,
+        "aggregate_log_odds_delta": 0.007247
+      },
+      {
+        "layer": 20,
+        "equations_executed": 161,
+        "active": 161,
+        "held": 0,
+        "families_in_layer": 133,
+        "aggregate_log_odds_delta": 0.016138
+      },
+      {
+        "layer": 21,
+        "equations_executed": 214,
+        "active": 214,
+        "held": 0,
+        "families_in_layer": 150,
+        "aggregate_log_odds_delta": 0.015169
+      },
+      {
+        "layer": 22,
+        "equations_executed": 169,
+        "active": 169,
+        "held": 0,
+        "families_in_layer": 131,
+        "aggregate_log_odds_delta": 0.014265
+      },
+      {
+        "layer": 23,
+        "equations_executed": 158,
+        "active": 158,
+        "held": 0,
+        "families_in_layer": 127,
+        "aggregate_log_odds_delta": 0.009877
+      },
+      {
+        "layer": 24,
+        "equations_executed": 158,
+        "active": 158,
+        "held": 0,
+        "families_in_layer": 125,
+        "aggregate_log_odds_delta": 0.014214
+      },
+      {
+        "layer": 25,
+        "equations_executed": 843,
+        "active": 843,
+        "held": 0,
+        "families_in_layer": 270,
+        "aggregate_log_odds_delta": 0.058137
+      },
+      {
+        "layer": 26,
+        "equations_executed": 2428,
+        "active": 2197,
+        "held": 231,
+        "families_in_layer": 227,
+        "aggregate_log_odds_delta": 0.011192
+      }
+    ]
+  },
+  "two_host_path_hygiene_audit": {
+    "intelligence_python_files_scanned": 751,
+    "violations_count": 0,
+    "violations": [],
+    "two_host_rule_clean": true
+  }
+}

@@ -1017,6 +1017,27 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "wired_into_10k_world_175_snap_simulation": True,
     }
 
+    from intelligence.simulation.spatial_micro_metrics_pbp_and_dfs_bridge import (
+        compute_game_spatial_micro_pbp_conditioners,
+    )
+    spatial_micro_bundle = compute_game_spatial_micro_pbp_conditioners(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["spatial_micro_away_rush_delta"] = float(
+        spatial_micro_bundle["away_conditioners"]["rush_yards_spatial_delta"]
+    )
+    conditioners["spatial_micro_home_rush_delta"] = float(
+        spatial_micro_bundle["home_conditioners"]["rush_yards_spatial_delta"]
+    )
+    conditioners["spatial_micro_away_epa_delta"] = float(
+        spatial_micro_bundle["away_conditioners"]["composite_epa_per_snap_delta"]
+    )
+    conditioners["spatial_micro_home_epa_delta"] = float(
+        spatial_micro_bundle["home_conditioners"]["composite_epa_per_snap_delta"]
+    )
+
     result = {
         "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
         "away_team": away_u,
@@ -1035,6 +1056,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "openai_ecosystem_jules_and_opendots": openai_jules_opendots,
         "gse_143_skills_and_7_agy_plugins": skills_143_readiness,
         "gse_livebench_vs_forecastbench": gse_livebench,
+        "spatial_micro_pbp_conditioners": spatial_micro_bundle,
         "trajectory_conditioners": conditioners,
         "simulation_trajectory_conditioners": conditioners,
     }
@@ -1356,6 +1378,61 @@ def simulate_matchup_pbp(
     int_mult_lut = np.array([away_int_mult, home_int_mult], dtype=np.float64)
     sack_prob_lut = np.array([away_sack_prob, home_sack_prob], dtype=np.float64)
     scramble_p_lut = np.array([0.145, 0.115], dtype=np.float64)
+
+    spatial_rush_delta_lut = np.zeros(2, dtype=np.float64)
+    spatial_pass_mu_delta_lut = np.zeros(2, dtype=np.float64)
+    spatial_comp_delta_lut = np.zeros(2, dtype=np.float64)
+    spatial_sack_delta_lut = np.zeros(2, dtype=np.float64)
+    if w1_w7_override is not None and (
+        "spatial_micro_pbp_conditioners" in w1_w7_override
+        or "spatial_micro_overrides" in w1_w7_override
+    ):
+        sp_cond = w1_w7_override.get("spatial_micro_pbp_conditioners")
+        if not isinstance(sp_cond, dict):
+            sp_cond = pre_proj_priors.get("spatial_micro_pbp_conditioners", {})
+        aw_sp = sp_cond.get("away_conditioners", {})
+        hm_sp = sp_cond.get("home_conditioners", {})
+        spatial_rush_delta_lut = np.array(
+            [
+                float(aw_sp.get("rush_yards_spatial_delta", 0.0)),
+                float(hm_sp.get("rush_yards_spatial_delta", 0.0)),
+            ],
+            dtype=np.float64,
+        )
+        spatial_pass_mu_delta_lut = np.array(
+            [
+                float(aw_sp.get("wr_te_explosive_mu_delta", 0.0)) + 2.5 * float(aw_sp.get("rb_receiving_epa_delta", 0.0)),
+                float(hm_sp.get("wr_te_explosive_mu_delta", 0.0)) + 2.5 * float(hm_sp.get("rb_receiving_epa_delta", 0.0)),
+            ],
+            dtype=np.float64,
+        )
+        spatial_comp_delta_lut = np.array(
+            [
+                float(aw_sp.get("wr_te_completion_prob_delta", 0.0)) + float(aw_sp.get("qb_comp_prob_delta", 0.0)),
+                float(hm_sp.get("wr_te_completion_prob_delta", 0.0)) + float(hm_sp.get("qb_comp_prob_delta", 0.0)),
+            ],
+            dtype=np.float64,
+        )
+        spatial_sack_delta_lut = np.array(
+            [
+                float(aw_sp.get("qb_sack_prob_delta", 0.0)),
+                float(hm_sp.get("qb_sack_prob_delta", 0.0)),
+            ],
+            dtype=np.float64,
+        )
+        scramble_p_lut = np.clip(
+            scramble_p_lut
+            + np.array(
+                [
+                    float(aw_sp.get("qb_scramble_escape_delta", 0.0)),
+                    float(hm_sp.get("qb_scramble_escape_delta", 0.0)),
+                ],
+                dtype=np.float64,
+            ),
+            0.04,
+            0.28,
+        )
+
     tau_4th = max(0.05, float(sealed_state["tau"]))
     tau_ge_040 = bool(sealed_state["tau"] >= 0.40)
 
@@ -1456,10 +1533,10 @@ def simulate_matchup_pbp(
             )
             p_pass = (base_p + pass_delta_lut[ps_v] + script_pass_mod).clip(0.15, 0.90)
             cur_sacks_v = np.where(is_hm, home_sacks[idx_13], away_sacks[idx_13])
-            comp_base_v = comp_base_lut[ps_v] - trauma_comp_pen_scalar * np.minimum(4, cur_sacks_v)
+            comp_base_v = comp_base_lut[ps_v] + spatial_comp_delta_lut[ps_v] - trauma_comp_pen_scalar * np.minimum(4, cur_sacks_v)
             comp_floor_v = comp_floor_lut[ps_v]
             int_mult_v = int_mult_lut[ps_v]
-            sack_prob_v = (sack_prob_lut[ps_v] + trauma_sack_add_scalar * np.minimum(4, cur_sacks_v)).clip(0.030, 0.195)
+            sack_prob_v = (sack_prob_lut[ps_v] + spatial_sack_delta_lut[ps_v] + trauma_sack_add_scalar * np.minimum(4, cur_sacks_v)).clip(0.030, 0.195)
 
             if has_jev_tensor:
                 db_idx = np.where(dn_v == 1, 0, np.where(dn_v == 2, 1, np.where(yd_v <= 3, 2, 3)))
@@ -1476,13 +1553,13 @@ def simulate_matchup_pbp(
             to_prob = ((np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v) * np.where(is_pass, int_mult_v, 1.0)).clip(0.003, 0.075)
             is_to = u_out < to_prob
             pass_comp = np.minimum(0.78, np.maximum(comp_floor_v, comp_base_v + 0.38 * ne_v))
-            pass_mu = (11.4 + 14.5 * ne_v).clip(4.0, 22.0)
+            pass_mu = (11.4 + 14.5 * ne_v + spatial_pass_mu_delta_lut[ps_v]).clip(4.0, 22.0)
             pass_draw = rng.gamma(shape=2.5, scale=pass_mu * 0.4, size=n_13)
             pass_yds = np.where(
                 u_out < (to_prob + sack_prob_v), -rng.integers(5, 9, size=n_13),
                 np.where(u_out < (to_prob + sack_prob_v + pass_comp), np.rint(pass_draw).astype(np.int32), 0)
             )
-            run_mu = (5.9 + 9.5 * ne_v).clip(2.5, 12.0)
+            run_mu = (5.9 + 9.5 * ne_v + spatial_rush_delta_lut[ps_v]).clip(2.5, 12.0)
             run_draw = rng.gamma(shape=2.2, scale=run_mu / 2.2, size=n_13) - 1.5
             run_yds = np.rint(run_draw).astype(np.int32)
             yds = np.where(is_pass, pass_yds, run_yds)
@@ -1623,6 +1700,7 @@ def simulate_matchup_pbp(
 
     home_margin_out = shrunk_margin + (raw_margin_vec - raw_margin) * scale_m
     total_pts_out = np.maximum(10.0, shrunk_total + (raw_total_vec - raw_total) * scale_t)
+    total_pts_out = np.maximum(total_pts_out, np.abs(home_margin_out))
     home_score = 0.5 * (total_pts_out + home_margin_out)
     away_score = 0.5 * (total_pts_out - home_margin_out)
 

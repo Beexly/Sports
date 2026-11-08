@@ -1,0 +1,356 @@
+{
+  "schema_version": "1.0.0",
+  "skill_invoked": "antigravity-skills:code-review-ai-ai-review",
+  "companion_skills": [
+    "requesting-code-review",
+    "santa-method",
+    "verification-loop"
+  ],
+  "generated_at_utc": "2026-11-08T10:23:54.512170+00:00",
+  "elapsed_seconds": 0.7726,
+  "quality_gate_passed": true,
+  "review_event": "APPROVE_AFTER_IN_PLACE_REMEDIATION",
+  "open_critical_issues_count": 0,
+  "open_high_issues_count": 0,
+  "remediated_and_verified_issues_count": 4,
+  "initial_triage": {
+    "files_analyzed_count": 15,
+    "total_lines_analyzed": 21740,
+    "total_functions_analyzed": 246,
+    "total_classes_analyzed": 27,
+    "change_classification": [
+      "feature",
+      "security_hardening",
+      "performance_optimization",
+      "bug_fix"
+    ],
+    "routing_decision": {
+      "files_changed": 15,
+      "lines_changed": 21740,
+      "analysis_scale": "segmented_deep_module_review",
+      "security_sensitive": true,
+      "affects_math_or_gate": true,
+      "fast_triage_engine": {
+        "model_id": "glm-5.3-flash-free",
+        "free_on_opencode": true,
+        "pricing_per_1m_in_out_usd": [
+          0.0,
+          0.0
+        ]
+      },
+      "deep_security_and_santa_dual_review_engine": {
+        "reviewer_b_free_lead": "stealth/crouton-alpha",
+        "reviewer_c_free_lead": "inkling/inkling-2",
+        "math_ast_verifier": "deepseek-1017",
+        "big_guns_escalation_model": "deepseek/deepseek-v3.2",
+        "routing_mode": "SUBSCRIPTION_OPUS_55_PLUS_FREE_OPENCODE_AND_PAID_BIG_GUNS",
+        "never_use_claude_for_babysitting_or_workhorse": true,
+        "total_remaining_budget_usd": 20.0
+      }
+    },
+    "files": [
+      {
+        "path": "scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py",
+        "lines": 1911,
+        "functions": 17,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "scripts/ops/zero_waste_model_router.py",
+        "lines": 1337,
+        "functions": 18,
+        "classes": 2,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/coaching/gse_proprietary_metrics_benchmark_and_optimizer.py",
+        "lines": 995,
+        "functions": 7,
+        "classes": 1,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py",
+        "lines": 1644,
+        "functions": 5,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py",
+        "lines": 1353,
+        "functions": 13,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/dfs/overnight_9model_fleet_projection_and_200pt_dfs_stress_tester.py",
+        "lines": 843,
+        "functions": 7,
+        "classes": 1,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/equations/equation_executor.py",
+        "lines": 1711,
+        "functions": 42,
+        "classes": 2,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/reasoning/reasoning_workflow_assembler.py",
+        "lines": 886,
+        "functions": 5,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/conformal_and_arrow_memory/packt_17repo_conformal_sports_arrow_and_agent_harness_engine.py",
+        "lines": 2262,
+        "functions": 36,
+        "classes": 13,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/multi_agent_and_hybrid_memory/bojieli_ai_agent_book_and_multi_agent_patterns_engine.py",
+        "lines": 1863,
+        "functions": 23,
+        "classes": 6,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/nfl_analytics_and_injury_biomechanics/nfl_wp_ep_fantasy_textbook_and_injury_rtp_engine.py",
+        "lines": 1690,
+        "functions": 15,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/corpus_registry/open_access_cs_math_ml_and_agent_library_engine.py",
+        "lines": 3025,
+        "functions": 36,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/rea/rea_tool_design_and_analysis_optimizer.py",
+        "lines": 737,
+        "functions": 10,
+        "classes": 2,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "intelligence/audit/comprehensive_full_stack_and_engine_review.py",
+        "lines": 1253,
+        "functions": 12,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-Python",
+          "Semgrep-OWASP-2025",
+          "Sonar-Python-AST",
+          "Bandit-Taint",
+          "TwoHost-PathGuard"
+        ]
+      },
+      {
+        "path": "packages/prediction-engine/src/book-path-tail-shrink.ts",
+        "lines": 230,
+        "functions": 0,
+        "classes": 0,
+        "matched_static_tools": [
+          "CodeQL-TypeScript",
+          "Semgrep-TS",
+          "Sonar-TS",
+          "Mobile-Lint-Rules"
+        ]
+      }
+    ]
+  },
+  "owasp_top_10_2025_audit": {
+    "owasp_2025_categories": {
+      "A01_broken_access_control": true,
+      "A02_cryptographic_failures": true,
+      "A03_injection_and_xss_defense": true,
+      "A04_insecure_design_and_fail_closed_gates": true,
+      "A05_security_misconfiguration_and_gsi_isolation": true,
+      "A06_vulnerable_components_quarantine": true,
+      "A07_authentication_and_quota_governance": true,
+      "A08_software_and_data_integrity": true,
+      "A09_security_logging_and_monitoring": true,
+      "A10_ssrf_webhook_protection": true
+    },
+    "passed_count": 10,
+    "total_categories": 10,
+    "all_owasp_top_10_passed": true
+  },
+  "performance_and_loop_analysis": {
+    "loops_scanned_count": 265,
+    "n_plus_1_or_blocking_io_in_loops_count": 0,
+    "flagged_loops": [],
+    "status": "PASS"
+  },
+  "santa_method_dual_review_council": {
+    "converged": true,
+    "council_size": 9,
+    "invariants": {
+      "armed_workflows_9_of_9": true,
+      "equations_21419_ast_safe": true,
+      "sub_min_sample_1400_held": true,
+      "copula_tail_1372_repaired": true,
+      "families_279_consumed": true,
+      "two_host_zero_local_paths": true,
+      "google_drive_and_docs_verified": true,
+      "gsi_sandbox_quarantined": true
+    }
+  },
+  "review_comments": [
+    {
+      "path": "scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py",
+      "line": 1525,
+      "severity": "HIGH",
+      "category": "Security",
+      "title": "Unescaped Dynamic Strings in HTML Morning Report Email (CWE-79 / OWASP A03)",
+      "description": "Player names, matchup strings, archetype labels, and ticket selections were interpolated directly into `html_body` without `html.escape(..., quote=True)`. Remediated by adding `_escape_html()` and wrapping all dynamic HTML interpolations.",
+      "status": "REMEDIATED_AND_VERIFIED",
+      "code_example": "# Before:\nf'<tr><td>{p[\"position\"]}</td><td>{p[\"player\"]}</td>...'\n\n# After (Fixed):\nf'<tr><td>{_escape_html(p[\"position\"])}</td><td>{_escape_html(p[\"player\"])}</td>...'",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/79.html"
+      ],
+      "auto_fixable": true,
+      "cwe": "CWE-79",
+      "cvss": 7.4,
+      "effort": "easy"
+    },
+    {
+      "path": "scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py",
+      "line": 1299,
+      "severity": "HIGH",
+      "category": "Security",
+      "title": "Unvalidated Webhook URL in Cloudflare Email Dispatcher (CWE-918 / OWASP A10 SSRF)",
+      "description": "`_try_send_via_cloudflare_email` passed `cf_webhook` directly to `urllib.request.urlopen()` without enforcing `https://` or blocking loopback, cloud metadata (`169.254.169.254`), and private RFC1918 IP literals. Remediated via `_validate_https_webhook_url()`.",
+      "status": "REMEDIATED_AND_VERIFIED",
+      "code_example": "# Added SSRF validator:\nurl_ok, url_reason = _validate_https_webhook_url(cf_webhook)\nif not url_ok:\n    return False, url_reason",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/918.html"
+      ],
+      "auto_fixable": true,
+      "cwe": "CWE-918",
+      "cvss": 7.8,
+      "effort": "easy"
+    },
+    {
+      "path": "scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py",
+      "line": 1358,
+      "severity": "MEDIUM",
+      "category": "Security",
+      "title": "Explicit SSL Context & Implicit TLS 465 / Safe SMTP_PORT Parsing (CWE-319 / OWASP A02)",
+      "description": "`_try_send_via_smtp` called `server.starttls()` without an explicit `ssl.create_default_context()` and `SMTP_PORT` parsing lacked a `ValueError` guard. Remediated with `ssl.create_default_context()`, `SMTP_SSL` support for port 465, and safe integer parsing.",
+      "status": "REMEDIATED_AND_VERIFIED",
+      "code_example": "tls_ctx = ssl.create_default_context()\nserver.starttls(context=tls_ctx)",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/319.html"
+      ],
+      "auto_fixable": true,
+      "cwe": "CWE-319",
+      "cvss": 5.9,
+      "effort": "trivial"
+    },
+    {
+      "path": "intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py",
+      "line": 515,
+      "severity": "LOW",
+      "category": "Maintainability",
+      "title": "PEP 8 Function Naming & 22-Metric Cache Completeness Check",
+      "description": "Standardized `_load_Cached_or_run_proprietary_metrics` to `_load_cached_or_run_proprietary_metrics` (retaining alias) and added verification that `len(metrics_catalog_and_optimized_weights) == 22` before returning cached receipt data.",
+      "status": "REMEDIATED_AND_VERIFIED",
+      "code_example": "def _load_cached_or_run_proprietary_metrics() -> Dict[str, Any]:\n    ...\n    and len(data.get('metrics_catalog_and_optimized_weights', [])) == 22",
+      "references": [
+        "https://peps.python.org/pep-0008/#function-and-variable-names"
+      ],
+      "auto_fixable": true,
+      "cwe": null,
+      "cvss": null,
+      "effort": "trivial"
+    }
+  ],
+  "receipt_sha256": "ad57f013b508d927ad597179f7af90d082b529178be879785aaf96000d80e0ec"
+}

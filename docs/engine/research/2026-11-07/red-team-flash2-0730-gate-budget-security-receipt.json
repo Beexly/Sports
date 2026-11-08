@@ -1,0 +1,397 @@
+{
+  "all_passed": true,
+  "auditor": "Gemini 3.8 Flash Red-Team Subagent #2 (RedTeamBigGun)",
+  "audits": {
+    "active_workflow_specs": {
+      "all_in_notes": true,
+      "all_passed": true,
+      "audit_name": "audit_active_workflow_specs",
+      "passed_checks": 6,
+      "total_checks": 6,
+      "workflow_details": [
+        {
+          "exists": true,
+          "file": "continuous-corpus-ingestion-and-wiring-loop.md",
+          "has_all_sections": true,
+          "line_count": 26,
+          "passed": true,
+          "sections_found": [
+            "## Loop Definition",
+            "## Trigger",
+            "## Push Right",
+            "## Checkpoint",
+            "## Brief"
+          ]
+        },
+        {
+          "exists": true,
+          "file": "continuous-post-game-learning-and-pathwise-calibration-loop.md",
+          "has_all_sections": true,
+          "line_count": 22,
+          "passed": true,
+          "sections_found": [
+            "## Loop Definition",
+            "## Trigger",
+            "## Push Right",
+            "## Checkpoint",
+            "## Brief"
+          ]
+        },
+        {
+          "exists": true,
+          "file": "dk-200pt-dfs-contest-simulation-loop.md",
+          "has_all_sections": true,
+          "line_count": 24,
+          "passed": true,
+          "sections_found": [
+            "## Loop Definition",
+            "## Trigger",
+            "## Push Right",
+            "## Checkpoint",
+            "## Brief"
+          ]
+        },
+        {
+          "exists": true,
+          "file": "full-board-360-game-dossier-and-firewall-loop.md",
+          "has_all_sections": true,
+          "line_count": 27,
+          "passed": true,
+          "sections_found": [
+            "## Loop Definition",
+            "## Trigger",
+            "## Push Right",
+            "## Checkpoint",
+            "## Brief"
+          ]
+        },
+        {
+          "exists": true,
+          "file": "overnight-autonomous-projection-loop.md",
+          "has_all_sections": true,
+          "line_count": 36,
+          "passed": true,
+          "sections_found": [
+            "## Loop Definition",
+            "## Trigger",
+            "## Push Right",
+            "## Checkpoint",
+            "## Brief"
+          ]
+        }
+      ]
+    },
+    "book_path_tail_shrink": {
+      "all_passed": true,
+      "audit_name": "audit_book_path_tail_shrink",
+      "non_monotone_inversion_repair_verified": true,
+      "passed_checks": 11,
+      "shrink_results": [
+        {
+          "actual": 50,
+          "enabled": true,
+          "expected": 50,
+          "passed": true,
+          "raw_conf": 50
+        },
+        {
+          "actual": 75,
+          "enabled": true,
+          "expected": 75,
+          "passed": true,
+          "raw_conf": 75
+        },
+        {
+          "actual": 79,
+          "enabled": true,
+          "expected": 79,
+          "passed": true,
+          "raw_conf": 79
+        },
+        {
+          "actual": 80,
+          "enabled": true,
+          "expected": 80,
+          "passed": true,
+          "raw_conf": 80
+        },
+        {
+          "actual": 79,
+          "enabled": true,
+          "expected": 79,
+          "passed": true,
+          "raw_conf": 85
+        },
+        {
+          "actual": 78,
+          "enabled": true,
+          "expected": 78,
+          "passed": true,
+          "raw_conf": 90
+        },
+        {
+          "actual": 77,
+          "enabled": true,
+          "expected": 77,
+          "passed": true,
+          "raw_conf": 95
+        },
+        {
+          "actual": 76,
+          "enabled": true,
+          "expected": 76,
+          "passed": true,
+          "raw_conf": 100
+        },
+        {
+          "actual": 90,
+          "enabled": false,
+          "expected": 90,
+          "passed": true,
+          "raw_conf": 90
+        },
+        {
+          "actual": 100,
+          "enabled": false,
+          "expected": 100,
+          "passed": true,
+          "raw_conf": 100
+        }
+      ],
+      "total_checks": 11
+    },
+    "budget_and_protected_claude_quota": {
+      "all_passed": true,
+      "audit_name": "audit_budget_and_protected_claude_quota",
+      "budget_tests": [
+        {
+          "passed": true,
+          "test": "under_budget"
+        },
+        {
+          "passed": true,
+          "test": "opencode_95pct_breaker"
+        },
+        {
+          "passed": true,
+          "test": "openrouter_95pct_breaker"
+        },
+        {
+          "passed": true,
+          "test": "both_budgets_exhausted"
+        }
+      ],
+      "passed_checks": 26,
+      "total_checks": 26,
+      "workhorse_results": [
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "glm-5.3-flash-free",
+          "task_str": "poll_timer"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "inkling/inkling-small-2",
+          "task_str": "babysit_agent"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "xiaomi/mimo-v2-flash",
+          "task_str": "cron_healthcheck"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "inkling/inkling-small-2",
+          "task_str": "pbp_snap_workhorse"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "glm-5.3-flash-free",
+          "task_str": "schema_check"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "xiaomi/mimo-v2-flash",
+          "task_str": "monitor_heartbeat"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "inkling/inkling-small-2",
+          "task_str": "watchdog_cron"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "inkling/inkling-small-2",
+          "task_str": "pbp_parse"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "inkling/inkling-small-2",
+          "task_str": "ingest_workhorse"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "inkling/inkling-small-2",
+          "task_str": "babysitting_worker_fleet"
+        },
+        {
+          "route_ok": true,
+          "sel_ok": true,
+          "selected_model": "xiaomi/mimo-v2-flash",
+          "task_str": "health_check_endpoint"
+        }
+      ]
+    },
+    "security_paywall_and_public_copy_firewall": {
+      "all_passed": true,
+      "audit_name": "audit_security_paywall_and_public_copy_firewall",
+      "confidence_xx_100_ok": true,
+      "copy_firewall_ok": true,
+      "free_redaction_ok": true,
+      "passed_checks": 24,
+      "pro_delivery_ok": true,
+      "ssrf_ok": true,
+      "total_checks": 24,
+      "two_host_rule_ok": true,
+      "two_host_violations": [],
+      "two_host_violations_count": 0,
+      "xss_ok": true
+    },
+    "time_gate_torture_test": {
+      "all_passed": true,
+      "audit_name": "audit_0730_cst_time_gate_torture_test",
+      "passed_checks": 47,
+      "results_sample": [
+        {
+          "gate_res": {
+            "allow_overnight_dry_run": false,
+            "email_dispatch_blocked_until_0730_cst": true,
+            "evaluated_at_cst": "2026-11-08T07:29:59.999000-06:00",
+            "evaluated_at_utc": "2026-11-08T13:29:59.999000+00:00",
+            "gate_status": "BLOCKED_BEFORE_0730_CST",
+            "live_execution_allowed": false,
+            "live_publish_blocked_until_0730_cst": true,
+            "make_live": false,
+            "make_live_allowed": false,
+            "overnight_dry_run_permitted": false,
+            "seconds_until_0730_cst": 0.001,
+            "send_morning_email": false,
+            "send_morning_email_allowed": false,
+            "target_unlock_cst": "2026-11-08T07:30:00-06:00",
+            "target_unlock_utc": "2026-11-08T13:30:00+00:00",
+            "timezone": "America/Chicago"
+          },
+          "label": "2026-11-08 07:29:59.999 CST (strict)",
+          "passed": true
+        },
+        {
+          "gate_res": {
+            "allow_overnight_dry_run": true,
+            "email_dispatch_blocked_until_0730_cst": true,
+            "evaluated_at_cst": "2026-11-08T07:29:59.999000-06:00",
+            "evaluated_at_utc": "2026-11-08T13:29:59.999000+00:00",
+            "gate_status": "DRY_RUN_ONLY_BEFORE_0730_CST",
+            "live_execution_allowed": false,
+            "live_publish_blocked_until_0730_cst": true,
+            "make_live": false,
+            "make_live_allowed": false,
+            "overnight_dry_run_permitted": true,
+            "seconds_until_0730_cst": 0.001,
+            "send_morning_email": false,
+            "send_morning_email_allowed": false,
+            "target_unlock_cst": "2026-11-08T07:30:00-06:00",
+            "target_unlock_utc": "2026-11-08T13:30:00+00:00",
+            "timezone": "America/Chicago"
+          },
+          "label": "2026-11-08 07:29:59.999 CST (dry_run)",
+          "passed": true
+        },
+        {
+          "gate_res": {
+            "allow_overnight_dry_run": false,
+            "email_dispatch_blocked_until_0730_cst": true,
+            "evaluated_at_cst": "2026-11-08T07:29:59.999999-06:00",
+            "evaluated_at_utc": "2026-11-08T13:29:59.999999+00:00",
+            "gate_status": "BLOCKED_BEFORE_0730_CST",
+            "live_execution_allowed": false,
+            "live_publish_blocked_until_0730_cst": true,
+            "make_live": false,
+            "make_live_allowed": false,
+            "overnight_dry_run_permitted": false,
+            "seconds_until_0730_cst": 1e-06,
+            "send_morning_email": false,
+            "send_morning_email_allowed": false,
+            "target_unlock_cst": "2026-11-08T07:30:00-06:00",
+            "target_unlock_utc": "2026-11-08T13:30:00+00:00",
+            "timezone": "America/Chicago"
+          },
+          "label": "2026-11-08 07:29:59.999999-06:00 (strict)",
+          "passed": true
+        },
+        {
+          "gate_res": {
+            "allow_overnight_dry_run": true,
+            "email_dispatch_blocked_until_0730_cst": true,
+            "evaluated_at_cst": "2026-11-08T07:29:59.999999-06:00",
+            "evaluated_at_utc": "2026-11-08T13:29:59.999999+00:00",
+            "gate_status": "DRY_RUN_ONLY_BEFORE_0730_CST",
+            "live_execution_allowed": false,
+            "live_publish_blocked_until_0730_cst": true,
+            "make_live": false,
+            "make_live_allowed": false,
+            "overnight_dry_run_permitted": true,
+            "seconds_until_0730_cst": 1e-06,
+            "send_morning_email": false,
+            "send_morning_email_allowed": false,
+            "target_unlock_cst": "2026-11-08T07:30:00-06:00",
+            "target_unlock_utc": "2026-11-08T13:30:00+00:00",
+            "timezone": "America/Chicago"
+          },
+          "label": "2026-11-08 07:29:59.999999-06:00 (dry_run)",
+          "passed": true
+        },
+        {
+          "gate_res": {
+            "allow_overnight_dry_run": false,
+            "email_dispatch_blocked_until_0730_cst": true,
+            "evaluated_at_cst": "2026-11-08T07:29:59-06:00",
+            "evaluated_at_utc": "2026-11-08T13:29:59+00:00",
+            "gate_status": "BLOCKED_BEFORE_0730_CST",
+            "live_execution_allowed": false,
+            "live_publish_blocked_until_0730_cst": true,
+            "make_live": false,
+            "make_live_allowed": false,
+            "overnight_dry_run_permitted": false,
+            "seconds_until_0730_cst": 1.0,
+            "send_morning_email": false,
+            "send_morning_email_allowed": false,
+            "target_unlock_cst": "2026-11-08T07:30:00-06:00",
+            "target_unlock_utc": "2026-11-08T13:30:00+00:00",
+            "timezone": "America/Chicago"
+          },
+          "label": "2026-11-08 13:29:59Z (strict)",
+          "passed": true
+        }
+      ],
+      "total_checks": 47,
+      "total_timestamps_evaluated": 29
+    }
+  },
+  "failed_checks": 0,
+  "generated_at_utc": "2026-11-08T09:32:01.686282+00:00",
+  "overall_status": "CONVERGED_100_PCT_PASS",
+  "passed_checks": 114,
+  "receipt_sha256": "796457e7251108dd63e6f652832c0a251be5aaa8ef4bde3c34a81d84b785e63c",
+  "schema_version": "1.0.0",
+  "total_checks": 114
+}

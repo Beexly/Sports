@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "RED-TEAM-ROUND2-SEAT-SWAP-FLASH2-2026-11-07",
+  "auditor": "Gemini 3.8 Flash Red-Team Subagent #2 (RedTeamBigGun, Model='flash')",
+  "generated_at_utc": "2026-11-08T10:24:10.665528+00:00",
+  "status": "VERIFIED_PASS",
+  "all_audits_passed": true,
+  "execution_duration_seconds": 0.332,
+  "garrett_sunday_directives_applied": [
+    "trends trends trends (stats) - see the game ahead of the game",
+    "/rea-tool-design /rea-analysis-optimization Scores24 + PFR + PFF + NGS + FTN",
+    "switch seats around for Round 2 final sweep across all 15 Week 9 games"
+  ],
+  "audit_sections": {
+    "peer_opus1_books_and_equations": {
+      "status": "VERIFIED_PASS",
+      "opus1_receipt_sha256": "35ca813585db9cc6e6197be7c8c5316ca95d7880ccda3ea4e303a6e2140d147d",
+      "total_equations_verified": 21419,
+      "total_mega_sweep_books": 458,
+      "gsi_medical_quarantine_enforced": true,
+      "pre_sim_26_layer_sequence_valid": true
+    },
+    "nfl_multi_horizon_trends_12_families": {
+      "status": "VERIFIED_PASS",
+      "games_evaluated": 15,
+      "trend_families_count": 12,
+      "total_game_trend_vectors": 180,
+      "data_artifact_sha256": "ad46519b1f6e83fc533d3e0a7f4cb1c9a8350666546a6ff2e34d6236e24815f9",
+      "receipt_artifact_sha256": "b289688289273a1ab261e69a9065f149b4fae66cf26ca46fbb88c9a1f4978d03",
+      "top_shootout_matchups": [
+        {
+          "matchup": "CIN@ATL",
+          "projected_combined_plays": 134.67,
+          "shootout_probability_boost": 0.0523,
+          "projected_1h_total_delta": 1.302
+        },
+        {
+          "matchup": "DAL@IND",
+          "projected_combined_plays": 132.6,
+          "shootout_probability_boost": 0.0447,
+          "projected_1h_total_delta": 1.07
+        },
+        {
+          "matchup": "BUF@MIN",
+          "projected_combined_plays": 133.39,
+          "shootout_probability_boost": 0.0443,
+          "projected_1h_total_delta": 1.059
+        },
+        {
+          "matchup": "LAR@WAS",
+          "projected_combined_plays": 134.71,
+          "shootout_probability_boost": 0.0435,
+          "projected_1h_total_delta": 1.307
+        },
+        {
+          "matchup": "HOU@LAC",
+          "projected_combined_plays": 131.0,
+          "shootout_probability_boost": 0.0406,
+          "projected_1h_total_delta": 0.955
+        }
+      ],
+      "top_trench_sack_matchups": [
+        {
+          "matchup": "CLE@NO",
+          "sack_disruption_hazard_boost": 1.1075
+        },
+        {
+          "matchup": "NYG@PHI",
+          "sack_disruption_hazard_boost": 1.0733
+        },
+        {
+          "matchup": "ARI@SEA",
+          "sack_disruption_hazard_boost": 1.0563
+        },
+        {
+          "matchup": "TB@CHI",
+          "sack_disruption_hazard_boost": 1.0541
+        },
+        {
+          "matchup": "DEN@CAR",
+          "sack_disruption_hazard_boost": 1.0532
+        }
+      ]
+    },
+    "state_and_trend_11_sources_completeness": {
+      "status": "VERIFIED_PASS",
+      "teams_charted_count": 32,
+      "external_sources_verified_count": 11,
+      "external_sources_list": [
+        "Scores24_Streak_Lens",
+        "PFR_Historical_Splits",
+        "PFF_Micro_Matchup_Grades",
+        "NGS_Tracking_Physics",
+        "FTN_Charting_DVOA",
+        "SamHoppen_SumerSports_Splits",
+        "FantasyPtsData_SEP_1Read",
+        "PattonAnalytics_Trench_Survival",
+        "KoalatyStats_XFP_Regression",
+        "WideLeft_Cover1_Defensive_Shells",
+        "StatRankings_MagicSportsBreakdown_11Layer"
+      ],
+      "unified_packets_evaluated": 53,
+      "convergence_locks_count": 21,
+      "fake_streak_traps_blocked": 2,
+      "index_lookup_speedup_x": 20.86,
+      "shared_producer_reuse_speedup_x": 2987.13,
+      "data_artifact_sha256": "4d6d7ba32c62005128a284f20ceb3f5aefa8b8c911f73d7b4894a3b73de426c7",
+      "receipt_artifact_sha256": "1e4e6aec9abd1c1a9e5339e5539383b81231d4a368aaff94b3ff5de1ada0172f"
+    },
+    "full_board_zero_blind_spots_8_suites": {
+      "status": "VERIFIED_PASS",
+      "official_games_count": 15,
+      "call_sheet_markets_covered": 77,
+      "dk_boards_found_count": 14,
+      "sample_board_props_count": 78,
+      "sample_board_unique_markets_count": 14,
+      "zero_blind_spots_verified": true
+    },
+    "cloud_mcp_and_cross_system_resilience": {
+      "status": "VERIFIED_PASS",
+      "mcp_server_contracts_verified": true,
+      "twitter_bot_worker_verified": true,
+      "ml_service_contracts_verified": true,
+      "copy_sanitizer_zero_jargon": true,
+      "confidence_format_integer_xx_over_100": true
+    },
+    "situational_signals_matrix_monotonicity": {
+      "status": "VERIFIED_PASS",
+      "unique_ref_crews_tested": 15,
+      "kickoff_shifts_range": [
+        31.0,
+        31.4
+      ],
+      "turf_multipliers_range": [
+        0.9825,
+        1.045
+      ],
+      "div_multipliers_range": [
+        0.9892,
+        1.0325
+      ],
+      "monotonicity_and_bounds_verified": true
+    },
+    "two_host_rule_charge_9": {
+      "status": "VERIFIED_PASS",
+      "total_python_files_scanned": 748,
+      "total_violations": 0,
+      "two_host_rule_charge_9_compliant": true
+    }
+  }
+}

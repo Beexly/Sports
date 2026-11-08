@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "executed_at_utc": "2026-11-08T08:43:54.088288+00:00",
+  "executed_at_utc": "2026-11-08T09:48:33.709385+00:00",
   "game_id_verified": "2024_10_CIN_BAL",
   "corpus_and_sources_ingested": {
     "ai_agents_in_depth_pdf": {
@@ -179,7 +179,7 @@
         {
           "contract_slot": "LINEUP_1_Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
           "winning_bidder_agent": "SolverAgent::Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
-          "bid_utility_score": 402.78,
+          "bid_utility_score": 402.02,
           "cvar_099_dk_pts": 415.72,
           "joint_p99_dk_pts": 394.01,
           "salary_used": 49900,
@@ -188,7 +188,7 @@
         {
           "contract_slot": "LINEUP_2_Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
           "winning_bidder_agent": "SolverAgent::Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
-          "bid_utility_score": 392.19,
+          "bid_utility_score": 390.15,
           "cvar_099_dk_pts": 410.14,
           "joint_p99_dk_pts": 387.99,
           "salary_used": 49900,
@@ -197,10 +197,10 @@
         {
           "contract_slot": "LINEUP_3_Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
           "winning_bidder_agent": "SolverAgent::Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
-          "bid_utility_score": 324.17,
-          "cvar_099_dk_pts": 383.86,
-          "joint_p99_dk_pts": 363.38,
-          "salary_used": 49600,
+          "bid_utility_score": 308.74,
+          "cvar_099_dk_pts": 376.1,
+          "joint_p99_dk_pts": 356.2,
+          "salary_used": 49800,
           "award_status": "AWARDED"
         }
       ]
@@ -367,11 +367,11 @@
         "cvar_099_championship_dk_pts": 415.72,
         "clears_200pt_dk_championship_target": true,
         "wave2_lineup_vs_field_simulation": {
-          "sim_first_place_win_rate": 0.1399,
-          "sim_top_1pct_finish_rate": 0.3095,
+          "sim_first_place_win_rate": 0.1388,
+          "sim_top_1pct_finish_rate": 0.3071,
           "sim_200pt_exceedance_prob": 0.3115,
-          "sim_contest_roi_pct": 389.02,
-          "submodular_world_coverage_marginal_gain": 0.3095
+          "sim_contest_roi_pct": 385.2,
+          "submodular_world_coverage_marginal_gain": 0.3071
         },
         "roster": [
           {
@@ -481,11 +481,11 @@
         "cvar_099_championship_dk_pts": 410.14,
         "clears_200pt_dk_championship_target": true,
         "wave2_lineup_vs_field_simulation": {
-          "sim_first_place_win_rate": 0.1318,
-          "sim_top_1pct_finish_rate": 0.2881,
+          "sim_first_place_win_rate": 0.1279,
+          "sim_top_1pct_finish_rate": 0.2871,
           "sim_200pt_exceedance_prob": 0.2976,
-          "sim_contest_roi_pct": 359.14,
-          "submodular_world_coverage_marginal_gain": 0.222
+          "sim_contest_roi_pct": 348.95,
+          "submodular_world_coverage_marginal_gain": 0.2268
         },
         "roster": [
           {
@@ -583,23 +583,23 @@
       {
         "lineup_id": 3,
         "archetype": "Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
-        "total_salary": 49600,
-        "salary_cap_remaining": 400,
+        "total_salary": 49800,
+        "salary_cap_remaining": 200,
         "valid_dk_9_slot_roster": true,
         "qb_team": "LAR",
-        "stacked_pass_catchers_count": 1,
+        "stacked_pass_catchers_count": 2,
         "opposing_bring_backs_count": 1,
-        "mean_projection_dk_pts": 171.37,
-        "joint_p90_ceiling_dk_pts": 264.65,
-        "joint_p99_shootout_dk_pts": 363.38,
-        "cvar_099_championship_dk_pts": 383.86,
+        "mean_projection_dk_pts": 165.5,
+        "joint_p90_ceiling_dk_pts": 257.32,
+        "joint_p99_shootout_dk_pts": 356.2,
+        "cvar_099_championship_dk_pts": 376.1,
         "clears_200pt_dk_championship_target": true,
         "wave2_lineup_vs_field_simulation": {
-          "sim_first_place_win_rate": 0.0577,
-          "sim_top_1pct_finish_rate": 0.1711,
-          "sim_200pt_exceedance_prob": 0.1892,
-          "sim_contest_roi_pct": 121.25,
-          "submodular_world_coverage_marginal_gain": 0.0935
+          "sim_first_place_win_rate": 0.0453,
+          "sim_top_1pct_finish_rate": 0.1353,
+          "sim_200pt_exceedance_prob": 0.1566,
+          "sim_contest_roi_pct": 74.14,
+          "submodular_world_coverage_marginal_gain": 0.0831
         },
         "roster": [
           {
@@ -673,21 +673,21 @@
             "markowitz_sharpe_ratio": 1.112
           },
           {
-            "player": "Dalton Schultz",
+            "player": "Colby Parkinson",
             "position": "TE",
-            "team": "HOU",
-            "opponent": "LAC",
-            "salary": 3200,
-            "gse_dk_projection": 13.9,
+            "team": "LAR",
+            "opponent": "WAS",
+            "salary": 3000,
+            "gse_dk_projection": 8.03,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.6035
+            "markowitz_sharpe_ratio": 1.1719
           },
           {
-            "player": "Eagles",
+            "player": "Saints",
             "position": "DST",
-            "team": "PHI",
-            "opponent": "NYG",
-            "salary": 2500,
+            "team": "NO",
+            "opponent": "CLE",
+            "salary": 2900,
             "gse_dk_projection": 11.2,
             "rtp_fantasy_multiplier": 1.0,
             "markowitz_sharpe_ratio": 1.6233
@@ -696,5 +696,5 @@
       }
     ]
   },
-  "digest_sha256": "3eedee70827cd4b04f13835bbf0746c299618b883c2504d8dd7dcdf976b028eb"
+  "digest_sha256": "34ff9e971f8a402d1ae3d277db4f19182d1cc361887d6ef080197a5fcbb1353b"
 }

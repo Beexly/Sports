@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0.0",
+  "auditor": "Opus 5.5 Red-Team Subagent #2 (RedTeamBigGun)",
+  "generated_at_utc": "2026-11-08T09:30:00Z",
+  "overall_status": "PASS",
+  "strict_workflow_sequence_verified": [
+    "STAGE_0_ROSTER_AND_BOARD_ALLOWLIST_GATE",
+    "STAGE_1_COACHING_FILM_INJURY_WEATHER_AND_11CSV_TABLES",
+    "STAGE_2_26LAYERS_5TRACKS_L1_L5_7STEPS_279FAMILIES_87RULES_22METRICS_96ITEMS",
+    "STAGE_3_PERTURBATION_AND_SNAP_BY_SNAP_SIMULATIONS"
+  ],
+  "defects_found_and_fixed_in_place": [
+    {
+      "defect_id": "DEFECT-OPUS2-01",
+      "file": "intelligence/coaching/gse_proprietary_metrics_benchmark_and_optimizer.py",
+      "issue": "PROPRIETARY_GSE_METRICS_CATALOG referenced phantom consumer paths (intelligence/situational/situational_priors.py, intelligence/simulation/pbp_10k_simulator.py, intelligence/calibration/class_b_conjunction_gate.py) and non-canonical weekly_step_id '4_scheme_and_tendencies', and lacked a Stage 2 runtime context evaluator.",
+      "fix_applied": "Re-pointed all wired_consumers to real on-disk modules, standardized weekly_step_id to canonical '4_situations', and added evaluate_22_proprietary_metrics_for_context()."
+    },
+    {
+      "defect_id": "DEFECT-OPUS2-02",
+      "file": "intelligence/reasoning/layers/layer_registry.py & intelligence/context/context_packet_builder.py",
+      "issue": "L12_trench_matchup_ol_vs_dl did not consume L09_injuries_and_availability overrides, L13_scheme_vs_scheme did not consume L12_trench_matchup_ol_vs_dl outputs, and context_packet_builder.py docstring cited L12 -> L18 -> L21 instead of L12 -> L13 -> L21.",
+      "fix_applied": "Wired full causal propagation L09 -> L12 -> L13 -> L21 in layer_registry.py and aligned context_packet_builder.py docstring."
+    },
+    {
+      "defect_id": "DEFECT-OPUS2-03",
+      "file": "intelligence/reasoning/reasoning_workflow_assembler.py & schemas/v1/reasoning_trace.schema.json",
+      "issue": "validate_reasoning_trace_schema permitted L26 applied_weight up to 0.10 instead of 0.08, execute_reasoning_workflow did not bind the 22 proprietary metrics, 87 situational firewall rules, 96-item WP/EP/Textbook/RTP overlay, or stage3_pre_sim_situational_priors, and run_synthetic_simulation_stage_validator used static quantile offsets.",
+      "fix_applied": "Enforced applied_weight <= 0.08 in both code and JSON schema, wired Stage 2 evaluation of all 22 proprietary metrics + 87 firewall rules + 96 WP/EP/Textbook/RTP items into execute_reasoning_workflow before Stage 3, and wired Stage 2 priors into all 5 simulation quantiles (p10..p90) and win_probability."
+    }
+  ],
+  "stage0_verification": {
+    "stage": "STAGE_0_ROSTER_AND_BOARD_ALLOWLIST_GATE",
+    "status": "PASS",
+    "active_canonical_entities_count": 5479,
+    "duplicate_active_canonical_ids_count": 0,
+    "active_nfl_teams_count": 32,
+    "verified_2026_player_team_locks": {
+      "Geno Smith": {
+        "canonical_id": "PLY-GENO-SMITH",
+        "verified_team_2026": "NYJ",
+        "rejected_stale_teams": [
+          "SEA",
+          "LV",
+          "NYG"
+        ]
+      },
+      "Mike Evans": {
+        "canonical_id": "PLY-MIKE-EVANS",
+        "verified_team_2026": "SF",
+        "rejected_stale_teams": [
+          "TB"
+        ]
+      },
+      "Aaron Rodgers": {
+        "canonical_id": "PLY-00-0023459",
+        "verified_team_2026": "PIT",
+        "rejected_stale_teams": [
+          "NYJ",
+          "GB"
+        ]
+      },
+      "DK Metcalf": {
+        "canonical_id": "PLY-00-0035640",
+        "verified_team_2026": "PIT",
+        "rejected_stale_teams": [
+          "SEA"
+        ]
+      },
+      "Sam Darnold": {
+        "canonical_id": "PLY-00-0034869",
+        "verified_team_2026": "SEA",
+        "rejected_stale_teams": [
+          "MIN",
+          "SF",
+          "CAR",
+          "NYJ"
+        ]
+      }
+    },
+    "week9_preflight_gate_passed": true
+  },
+  "stage1_verification": {
+    "stage": "STAGE_1_COACHING_FILM_INJURY_WEATHER_AND_11CSV_TABLES",
+    "status": "PASS",
+    "verified_csv_tables_count": 11,
+    "total_rows_across_11_csv_tables": 6875,
+    "active_player_gp_denominator_enforced": true,
+    "sample_active_player_gp_yards_per_game": 85.0,
+    "rejected_team_gp_denominated_yards_per_game": 42.5,
+    "misleading_stat_firewall_triggered_count": 15
+  },
+  "stage2_verification": {
+    "stage": "STAGE_2_26LAYERS_5TRACKS_L1_L5_7STEPS_279FAMILIES_87RULES_22METRICS_96ITEMS",
+    "status": "PASS",
+    "canonical_26_layers_verified": true,
+    "strict_l09_l12_l13_l21_l26_order_verified": true,
+    "five_domain_tracks_l1_to_l5_verified": true,
+    "l4_adversary_and_l5_sign_flip_detector_verified": true,
+    "seven_weekly_cycle_steps_verified": true,
+    "equation_families_279_accounted": 279,
+    "situational_firewall_87_rules_reconciled": 87,
+    "proprietary_22_metrics_verified": true,
+    "proprietary_22_oos_brier_skill_score": 0.061172,
+    "nfl_96_items_wp_ep_textbook_rtp_verified": true,
+    "l26_market_entered_last_weight": 0.05,
+    "l26_over_008_tamper_rejected": true,
+    "computed_before_stage3_simulation": true
+  },
+  "stage3_verification": {
+    "stage": "STAGE_3_PERTURBATION_AND_SNAP_BY_SNAP_SIMULATIONS",
+    "status": "PASS",
+    "upstream_perturbation_proofs": {
+      "L09_injuries_and_availability": {
+        "base_p50_margin": -2.8652,
+        "perturbed_p50_margin": -5.6281,
+        "base_p50_total": 45.5709,
+        "perturbed_p50_total": 44.2771,
+        "base_win_prob": 0.5852,
+        "perturbed_win_prob": 0.4879,
+        "all_5_quantiles_shifted": true
+      },
+      "L12_trench_matchup_ol_vs_dl": {
+        "base_p50_margin": -2.8652,
+        "perturbed_p50_margin": -5.348,
+        "base_p50_total": 45.5709,
+        "perturbed_p50_total": 44.3721,
+        "base_win_prob": 0.5852,
+        "perturbed_win_prob": 0.4982,
+        "all_5_quantiles_shifted": true
+      },
+      "L13_scheme_vs_scheme": {
+        "base_p50_margin": -2.8652,
+        "perturbed_p50_margin": -1.3064,
+        "base_p50_total": 45.5709,
+        "perturbed_p50_total": 46.3969,
+        "base_win_prob": 0.5852,
+        "perturbed_win_prob": 0.6388,
+        "all_5_quantiles_shifted": true
+      },
+      "L21_qb_processing_and_pressure": {
+        "base_p50_margin": -2.8652,
+        "perturbed_p50_margin": -1.2769,
+        "base_p50_total": 45.5709,
+        "perturbed_p50_total": 46.3913,
+        "base_win_prob": 0.5852,
+        "perturbed_win_prob": 0.6401,
+        "all_5_quantiles_shifted": true
+      },
+      "M_GSE_01_TO_22_PROPRIETARY_METRICS": {
+        "base_proprietary_22_delta": 0.000141,
+        "perturbed_proprietary_22_delta": 0.12,
+        "base_p50_margin": -2.8652,
+        "perturbed_p50_margin": -2.3168,
+        "base_win_prob": 0.5852,
+        "perturbed_win_prob": 0.6042,
+        "all_5_quantiles_shifted": true
+      }
+    },
+    "multi_scale_175_snap_simulations": {
+      "N_250_x_175_snaps": {
+        "worlds": 250,
+        "snaps_per_world": 175,
+        "total_snaps_evaluated": 43750,
+        "elapsed_ms": 73.18,
+        "home_win_prob": 0.648,
+        "margin_quantiles": {
+          "p10": -12.268,
+          "p25": -5.873,
+          "p50": 3.16,
+          "p75": 13.054,
+          "p90": 19.363
+        },
+        "total_quantiles": {
+          "p10": 35.282,
+          "p25": 40.812,
+          "p50": 51.048,
+          "p75": 59.617,
+          "p90": 67.155
+        }
+      },
+      "N_500_x_175_snaps": {
+        "worlds": 500,
+        "snaps_per_world": 175,
+        "total_snaps_evaluated": 87500,
+        "elapsed_ms": 77.42,
+        "home_win_prob": 0.598,
+        "margin_quantiles": {
+          "p10": -13.502,
+          "p25": -5.857,
+          "p50": 3.312,
+          "p75": 13.4,
+          "p90": 21.045
+        },
+        "total_quantiles": {
+          "p10": 35.419,
+          "p25": 42.684,
+          "p50": 50.943,
+          "p75": 60.6,
+          "p90": 68.61
+        }
+      },
+      "N_1000_x_175_snaps": {
+        "worlds": 1000,
+        "snaps_per_world": 175,
+        "total_snaps_evaluated": 175000,
+        "elapsed_ms": 97.52,
+        "home_win_prob": 0.604,
+        "margin_quantiles": {
+          "p10": -12.239,
+          "p25": -5.68,
+          "p50": 3.71,
+          "p75": 11.165,
+          "p90": 20.555
+        },
+        "total_quantiles": {
+          "p10": 34.477,
+          "p25": 42.062,
+          "p50": 50.684,
+          "p75": 61.543,
+          "p90": 69.128
+        }
+      },
+      "N_2500_x_175_snaps": {
+        "worlds": 2500,
+        "snaps_per_world": 175,
+        "total_snaps_evaluated": 437500,
+        "elapsed_ms": 146.2,
+        "home_win_prob": 0.61,
+        "margin_quantiles": {
+          "p10": -12.542,
+          "p25": -5.947,
+          "p50": 3.496,
+          "p75": 13.84,
+          "p90": 20.436
+        },
+        "total_quantiles": {
+          "p10": 35.289,
+          "p25": 42.61,
+          "p50": 50.931,
+          "p75": 60.412,
+          "p90": 68.734
+        }
+      }
+    },
+    "real_pbp_perturbation_win_prob_shift": {
+      "baseline_home_win_prob_N500": 0.598,
+      "perturbed_home_win_prob_N500": 0.432,
+      "baseline_total_p50_N500": 50.943,
+      "perturbed_total_p50_N500": 45.198
+    }
+  },
+  "elapsed_ms": 1313.69
+}

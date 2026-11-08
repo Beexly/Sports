@@ -1,0 +1,27 @@
+{
+  "schema_version": "GSE-GSI-UNIVERSE-ZERO-OVERLOOKED-RECEIPT-v2.0",
+  "generated_at_utc": "2026-11-08T10:19:00Z",
+  "auditor_mode": "ADVERSARIAL_VERIFICATION_AND_REMEDIATION",
+  "status": "PASS",
+  "red_team_files_verified": [
+    "intelligence/audit/red_team_opus1_books_and_21419_equations_verifier.py",
+    "intelligence/audit/red_team_opus2_reasoning_workflow_sequence_and_22metrics_verifier.py",
+    "intelligence/audit/red_team_argon1_pbp_small_sim_scaling_and_load_tester.py",
+    "intelligence/audit/red_team_argon2_wave2_dfs_200pt_and_360_firewall_verifier.py",
+    "intelligence/audit/red_team_flash1_corpus_waves_and_word_by_word_verifier.py",
+    "intelligence/audit/red_team_flash2_0730_gate_budget_router_and_security_verifier.py"
+  ],
+  "intelligence_module_census": {
+    "total_py_files": 748,
+    "non_test_non_init_non_redteam_modules": 528,
+    "subpackages_verified": 51
+  },
+  "gse_ml_service_sync": {
+    "status": "SYNCED_AND_VERIFIED",
+    "pytest_passed": 355,
+    "pytest_skipped": 3,
+    "tda_pure_numpy_ripser_synced": true,
+    "kats_prophet_simulator_files_synced": 20
+  },
+  "verified_defects_remediated_count": 12
+}

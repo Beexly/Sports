@@ -1,0 +1,108 @@
+{
+  "red_team_subagent_id": "flash1_corpus_waves_and_word_by_word",
+  "model_architecture": "Gemini 3.8 Flash",
+  "timestamp_utc": "2026-11-08T10:25:51.390523+00:00",
+  "total_audit_runtime_seconds": 0.5161,
+  "overall_red_team_status": "PASS",
+  "two_host_rule_compliant": true,
+  "waves_verified": {
+    "wave1_packt_95_and_5_pdfs": {
+      "status": "PASS",
+      "wave1_repos": 16,
+      "wave2_repos": 17,
+      "wave3_repos": 40,
+      "wave4_repos": 22,
+      "total_unique_packt_repos": 95,
+      "total_local_pdfs": 5,
+      "all_8_pillars_verified": true,
+      "healthcare_quarantine_enforced": true
+    },
+    "wave2_bojieli_and_multi_agent_patterns": {
+      "status": "PASS",
+      "bojieli_chapters": 10,
+      "companion_experiments": 93,
+      "companion_repos": 23,
+      "ai_infra_chapters": 12,
+      "sam_bodden_patterns": 15,
+      "simulation_textbooks": 6,
+      "hybrid_memory_4_tiers_verified": true
+    },
+    "wave3_nfl_wp_ep_fantasy_and_38_injuries": {
+      "status": "PASS",
+      "wp_ep_papers": 25,
+      "fantasy_textbook_chapters": 29,
+      "rulebook_epochs": 4,
+      "sports_medicine_studies": 38,
+      "total_suite_items": 96,
+      "dfs_enrichment_integration_verified": true
+    },
+    "wave4_open_access_432_mega_library_and_quarantine": {
+      "status": "PASS",
+      "total_domains": 10,
+      "total_cataloged_items": 432,
+      "internal_quarantined_repos": 105,
+      "external_manifest_repos_107": 107,
+      "security_risk_repos_rejected": [
+        "Blur009/Blur-AutoClicker",
+        "itbrowser-net/undetectable-fingerprint-browser"
+      ],
+      "all_10_domain_suites_verified": true
+    }
+  },
+  "mathematical_invariants_and_simulations": {
+    "status": "PASS",
+    "absorbing_markov_invariants_passed": true,
+    "max_err_TS": 0.0,
+    "max_err_A": 1.1102230246251565e-16,
+    "tied_knot_venn_abers_passed": true,
+    "frank_wolfe_superlearner_passed": true,
+    "blown_lead_paradox_passed": true,
+    "injury_rtp_monotonicity_passed": true,
+    "simulation_benchmarks": {
+      "250": {
+        "worlds_n": 250,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 43750,
+        "elapsed_seconds": 0.00255,
+        "snaps_per_second": 17174373.9,
+        "stopping_time_tau_q_mean": 88,
+        "threshold_crossed": true,
+        "calibrated_wp_at_tau_q": 0.8055,
+        "blown_lead_hazard": 0.1945
+      },
+      "500": {
+        "worlds_n": 500,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 87500,
+        "elapsed_seconds": 0.00542,
+        "snaps_per_second": 16147188.5,
+        "stopping_time_tau_q_mean": 92,
+        "threshold_crossed": true,
+        "calibrated_wp_at_tau_q": 0.8068,
+        "blown_lead_hazard": 0.1932
+      },
+      "1000": {
+        "worlds_n": 1000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 175000,
+        "elapsed_seconds": 0.02535,
+        "snaps_per_second": 6902999.1,
+        "stopping_time_tau_q_mean": 90,
+        "threshold_crossed": true,
+        "calibrated_wp_at_tau_q": 0.8063,
+        "blown_lead_hazard": 0.1937
+      },
+      "2500": {
+        "worlds_n": 2500,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 437500,
+        "elapsed_seconds": 0.04386,
+        "snaps_per_second": 9973942.4,
+        "stopping_time_tau_q_mean": 91,
+        "threshold_crossed": true,
+        "calibrated_wp_at_tau_q": 0.8073,
+        "blown_lead_hazard": 0.1927
+      }
+    }
+  }
+}

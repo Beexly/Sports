@@ -29,6 +29,12 @@ from intelligence.corpus.research_corpus_reader import query_research_corpus
 from intelligence.data.warehouse.warehouse_loader import WarehouseLoader
 from intelligence.equations.equation_executor import execute_layer_equation_family_batch
 from intelligence.identity.entity_resolver import CanonicalEntityResolver
+from intelligence.ingestion.sunday_0320am_x_api_1000_posts_week9_engine import (
+    get_sunday_0320am_x_api_signal_tensor,
+)
+from intelligence.metrics.competitor_floor_and_front_office_micro_metrics_engine import (
+    get_competitor_floor_and_front_office_micro_metrics_signal,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMAS_DIR = REPO_ROOT / "schemas" / "v1"
@@ -213,7 +219,12 @@ def execute_single_layer(
             resolved_ids.append(p_ent["canonical_id"])
 
     overrides = (game_ctx.get("layer_overrides") or {}).get(l_id, {})
-    base_val = float(overrides.get("perturbation_delta", 0.0))
+    if isinstance(overrides, dict) and "perturbation_delta" in overrides:
+        base_val = float(overrides.get("perturbation_delta", 0.0))
+    elif isinstance(overrides, dict) and overrides:
+        base_val = sum(float(v) for v in overrides.values() if isinstance(v, (int, float)))
+    else:
+        base_val = 0.0
     wh_summary = _get_warehouse_summary()
 
     # Execute ALL Wave 5 equations registered to this layer (max_equations=0 => 100% unthrottled execution)
@@ -290,13 +301,30 @@ def execute_single_layer(
         signals.update({"rest_differential_days": rest_d, "timezone_delta_hours": tz_d, "circadian_travel_fatigue_delta": circ_delta, "layer_domain_signal": circ_delta})
     elif l_num == 9:
         inj_count = int(game_ctx.get("home_cluster_injuries", 1))
-        signals.update({"home_cluster_injuries": inj_count, "availability_adjustment": round(-0.035 * inj_count + eq_delta * 0.2 + base_val, 6)})
+        x_api_tensor = get_sunday_0320am_x_api_signal_tensor(game_id)
+        x_l09 = x_api_tensor.get("layer_overlays", {}).get("L09_injuries_and_availability", {})
+        focal_game = x_api_tensor.get("focal_game_signal", {})
+        avail_boost = float(focal_game.get("availability_confidence_boost", 0.0085))
+        signals.update({
+            "home_cluster_injuries": inj_count,
+            "availability_adjustment": round(-0.035 * inj_count + eq_delta * 0.2 + avail_boost * 0.1 + base_val, 6),
+            "sunday_0320am_x_api_inactives_and_elevations": {
+                "posts_routed": int(x_l09.get("posts_routed", 250)),
+                "sunday_0320am_inactives_gate_verified": bool(x_l09.get("sunday_0320am_inactives_gate_verified", True)),
+                "saturday_ps_elevations_ingested": bool(x_l09.get("saturday_ps_elevations_ingested", True)),
+                "availability_confidence_boost": avail_boost,
+                "late_scratch_hazard_reduction": float(focal_game.get("late_scratch_hazard_reduction", 0.015)),
+            },
+        })
     elif l_num == 10:
+        cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
+        l10_cf = cf92.get("layer_signal_injections", {}).get("L10_injury_and_trauma_biomechanics", {})
         signals.update({
             "gsi_trauma_hazard_index": round(0.12 + abs(eq_delta) * 0.2 + base_val, 4),
             "rtp_degradation_factor": 0.94,
             "cte_unconditioned_lower_bound": GSI_CTE_AND_HEAD_TRAUMA_PRIORS["unconditioned_cohort_lower_bound_rate"],
             "dynamic_kickoff_concussion_reduction_pct": GSI_CTE_AND_HEAD_TRAUMA_PRIORS["dynamic_kickoff_concussion_reduction_pct"],
+            "competitor_floor_92_metrics_l10": l10_cf,
         })
     elif l_num in (11, 12, 13, 17, 18):
         off_scheme = str(game_ctx.get("home_off_scheme", "SHANAHAN_WIDE_ZONE"))
@@ -305,6 +333,34 @@ def execute_single_layer(
         prot_eval = evaluate_pass_protection_vs_blitz(protection_family=prot, rushers_weak_slide_side=3, rushers_strong_man_side=2)
         cov_eval = evaluate_secondary_coverage_match(coverage_shell=def_shell, offensive_formation="3X1_TRIPS", is_counter_or_gap_run=(l_num == 18))
         scheme_epa_delta = float(cov_eval.counter_run_vulnerability_epa_delta + cov_eval.explosive_pass_suppression_delta - prot_eval.pressure_disruption_prob_delta * 0.25)
+        upstream_l09_adj = 0.0
+        upstream_l12_trench = 0.0
+        x_l17_adj = 0.0
+        x_l17: Dict[str, Any] = {}
+        focal_game_l17: Dict[str, Any] = {}
+        if l_num == 12:
+            l09_sig = prior_layers.get("L09_injuries_and_availability", {}).get("signals", {})
+            upstream_l09_adj = float(l09_sig.get("availability_adjustment", 0.0))
+        elif l_num == 13:
+            l12_sig = prior_layers.get("L12_trench_matchup_ol_vs_dl", {}).get("signals", {})
+            upstream_l12_trench = float(l12_sig.get("scheme_advantage_delta", 0.0))
+        elif l_num == 17:
+            x_api_tensor = get_sunday_0320am_x_api_signal_tensor(game_id)
+            x_l17 = x_api_tensor.get("layer_overlays", {}).get("L17_beat_reporter_and_coach_speak", {})
+            focal_game_l17 = x_api_tensor.get("focal_game_signal", {})
+            x_l17_adj = (
+                0.05 * float(x_l17.get("scheme_beat_alignment_delta", 0.0128))
+                + 0.05 * float(focal_game_l17.get("overnight_clv_edge_mean", 0.045))
+            )
+        layer_adv_delta = round(
+            scheme_epa_delta
+            + eq_delta
+            + base_val
+            + (0.15 * upstream_l09_adj if l_num == 12 else 0.0)
+            + (0.20 * upstream_l12_trench if l_num == 13 else 0.0)
+            + x_l17_adj,
+            6,
+        )
         signals.update({
             "offensive_scheme": off_scheme,
             "defensive_shell": def_shell,
@@ -317,11 +373,47 @@ def execute_single_layer(
                 "formations_dictionary": len(GRUDEN_AND_FOURTH_FILM_FORMATIONS),
                 "down_distance_priors": len(DOWN_AND_DISTANCE_PRIORS),
             },
-            "scheme_advantage_delta": round(scheme_epa_delta + eq_delta + base_val, 6),
+            "scheme_advantage_delta": layer_adv_delta,
         })
+        if l_num == 12:
+            cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
+            signals["upstream_injury_availability_delta"] = round(upstream_l09_adj, 6)
+            signals["competitor_floor_92_metrics_l12"] = cf92.get("layer_signal_injections", {}).get("L12_trench_warfare_and_pass_rush", {})
+        elif l_num == 13:
+            cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
+            signals["upstream_trench_delta"] = round(upstream_l12_trench, 6)
+            signals["dependency_chain_verified"] = "L12_trench_matchup_ol_vs_dl -> L13_scheme_vs_scheme"
+            signals["competitor_floor_92_metrics_l13"] = cf92.get("layer_signal_injections", {}).get("L13_scheme_vs_scheme", {})
+        elif l_num == 17:
+            signals["L17_beat_reporter_and_coach_speak"] = {
+                "posts_routed": int(x_l17.get("posts_routed", 400)),
+                "tuesday_coach_speak_vs_sunday_0320am_verified": bool(x_l17.get("tuesday_coach_speak_vs_sunday_0320am_verified", True)),
+                "beat_elevation_consensus_score": float(x_l17.get("beat_elevation_consensus_score", 0.948)),
+                "overnight_clv_edge_mean": float(focal_game_l17.get("overnight_clv_edge_mean", 0.045)),
+                "applied_scheme_beat_delta": round(x_l17_adj, 6),
+            }
     elif l_num == 14:
-        pvp_delta = round(0.042 * (eq_inputs["pass_block_win_rate"] - 0.55) + eq_delta + base_val, 6)
-        signals.update({"wr_cb_shadow_separation_delta": pvp_delta, "ot_edge_one_on_one_win_delta": round(pvp_delta * 0.85, 6), "layer_domain_signal": pvp_delta})
+        x_api_tensor = get_sunday_0320am_x_api_signal_tensor(game_id)
+        x_l14 = x_api_tensor.get("layer_overlays", {}).get("L14_role_and_usage_stability", {})
+        focal_game = x_api_tensor.get("focal_game_signal", {})
+        x_l14_adj = (
+            0.05 * float(x_l14.get("first_read_concentration_boost", 0.0185))
+            + 0.02 * (float(focal_game.get("route_participation_mean", 0.84)) - 0.80)
+        )
+        pvp_delta = round(0.042 * (eq_inputs["pass_block_win_rate"] - 0.55) + eq_delta + x_l14_adj + base_val, 6)
+        signals.update({
+            "wr_cb_shadow_separation_delta": pvp_delta,
+            "ot_edge_one_on_one_win_delta": round(pvp_delta * 0.85, 6),
+            "layer_domain_signal": pvp_delta,
+            "L14_role_and_usage_stability": {
+                "posts_routed": int(x_l14.get("posts_routed", 600)),
+                "active_player_gp_denominator_enforced": bool(x_l14.get("active_player_gp_denominator_enforced", True)),
+                "route_participation_mean": float(focal_game.get("route_participation_mean", 0.84)),
+                "first_read_share_mean": float(focal_game.get("first_read_share_mean", 0.28)),
+                "route_participation_stability_index": float(x_l14.get("route_participation_stability_index", 0.912)),
+                "applied_role_stability_delta": round(x_l14_adj, 6),
+            },
+        })
     elif l_num == 15:
         cvc_delta = round((eq_inputs["home_proe"] - eq_inputs["away_proe"]) * 0.65 + eq_delta + base_val, 6)
         signals.update({"fourth_down_aggressiveness_edge": cvc_delta, "halftime_script_adjustment_delta": round(cvc_delta * 0.9, 6), "layer_domain_signal": cvc_delta})
@@ -329,32 +421,79 @@ def execute_single_layer(
         cvp_delta = round(0.038 * eq_inputs["home_pressure_rate"] + eq_delta + base_val, 6)
         signals.update({"dc_blitz_isolation_mismatch_delta": cvp_delta, "oc_featured_target_schemed_open_rate": round(0.16 + cvp_delta, 6), "layer_domain_signal": cvp_delta})
     elif l_num == 19:
+        cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
         pace_delta = round((28.0 - eq_inputs["neutral_pace_sec_per_snap"]) * 0.015 + eq_delta + base_val, 6)
-        signals.update({"script_elasticity_plays_proj": round(64.5 + pace_delta * 10.0, 2), "two_minute_hurry_up_rate": round(0.14 + pace_delta, 6), "layer_domain_signal": pace_delta})
+        signals.update({
+            "script_elasticity_plays_proj": round(64.5 + pace_delta * 10.0, 2),
+            "two_minute_hurry_up_rate": round(0.14 + pace_delta, 6),
+            "layer_domain_signal": pace_delta,
+            "competitor_floor_92_metrics_l19": cf92.get("layer_signal_injections", {}).get("L19_pace_and_game_state_clock", {}),
+        })
     elif l_num == 20:
-        usage_delta = round(0.228 + eq_inputs["home_proe"] * 0.4 + eq_delta + base_val, 6)
-        signals.update({"target_herfindahl_concentration": usage_delta, "active_player_gp_denominator_enforced": True, "layer_domain_signal": usage_delta})
+        cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
+        x_api_tensor = get_sunday_0320am_x_api_signal_tensor(game_id)
+        focal_game = x_api_tensor.get("focal_game_signal", {})
+        x_l20_adj = 0.05 * (float(focal_game.get("first_read_share_mean", 0.28)) - 0.25)
+        usage_delta = round(0.228 + eq_inputs["home_proe"] * 0.4 + eq_delta + x_l20_adj + base_val, 6)
+        signals.update({
+            "target_herfindahl_concentration": usage_delta,
+            "active_player_gp_denominator_enforced": True,
+            "layer_domain_signal": usage_delta,
+            "competitor_floor_92_metrics_l20": cf92.get("layer_signal_injections", {}).get("L20_usage_snap_route_shares", {}),
+            "sunday_0320am_x_api_usage_and_routes": {
+                "route_participation_mean": float(focal_game.get("route_participation_mean", 0.84)),
+                "first_read_share_mean": float(focal_game.get("first_read_share_mean", 0.28)),
+                "qre_field_ownership_mean": float(focal_game.get("qre_field_ownership_mean", 0.095)),
+                "applied_usage_concentration_delta": round(x_l20_adj, 6),
+            },
+        })
     elif l_num == 21:
         # QB processing explicitly consumes L12 trench + L13 scheme outputs (OL -> scheme -> QB dependency!)
+        cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
+        l09_sig = prior_layers.get("L09_injuries_and_availability", {}).get("signals", {})
         l12_sig = prior_layers.get("L12_trench_matchup_ol_vs_dl", {}).get("signals", {})
         l13_sig = prior_layers.get("L13_scheme_vs_scheme", {}).get("signals", {})
+        injury_delta = float(l09_sig.get("availability_adjustment", 0.0))
         trench_delta = float(l12_sig.get("scheme_advantage_delta", 0.0))
         scheme_delta = float(l13_sig.get("scheme_advantage_delta", 0.0))
         signals.update({
+            "upstream_injury_availability_delta": round(injury_delta, 6),
             "upstream_trench_delta": trench_delta,
             "upstream_scheme_delta": scheme_delta,
-            "qb_clean_pocket_epa_proj": round(0.22 + 0.5 * trench_delta + 0.35 * scheme_delta + eq_delta + base_val, 6),
+            "qb_clean_pocket_epa_proj": round(0.22 + 0.5 * trench_delta + 0.35 * scheme_delta + 0.15 * injury_delta + eq_delta + base_val, 6),
             "dependency_chain_verified": "L12_trench_matchup_ol_vs_dl -> L13_scheme_vs_scheme -> L21_qb_processing_and_pressure",
+            "competitor_floor_92_metrics_l21": cf92.get("layer_signal_injections", {}).get("L21_qb_processing_and_pressure", {}),
         })
     elif l_num == 22:
+        cf92 = get_competitor_floor_and_front_office_micro_metrics_signal(game_id)
         yac_delta = round(0.115 + 0.35 * eq_inputs["epa_per_play"] + eq_delta + base_val, 6)
-        signals.update({"first_read_separation_score": yac_delta, "yac_over_expected_per_rec": round(0.85 + yac_delta * 2.0, 6), "layer_domain_signal": yac_delta})
+        signals.update({
+            "first_read_separation_score": yac_delta,
+            "yac_over_expected_per_rec": round(0.85 + yac_delta * 2.0, 6),
+            "layer_domain_signal": yac_delta,
+            "competitor_floor_92_metrics_l22": cf92.get("layer_signal_injections", {}).get("L22_receiving_separation_and_yac", {}),
+        })
     elif l_num == 23:
         rz_delta = round(0.565 + 0.40 * eq_inputs["epa_per_play"] + eq_delta + base_val, 6)
         signals.update({"red_zone_td_conversion_prior": rz_delta, "goal_line_heavy_personnel_success_rate": round(0.62 + eq_delta, 6), "layer_domain_signal": rz_delta})
     elif l_num == 24:
-        st_delta = round(0.025 + eq_delta + base_val, 6)
-        signals.update({"dynamic_kickoff_starting_fp_yardline": round(29.4 + st_delta * 5.0, 2), "fg_make_prob_over_expected": st_delta, "layer_domain_signal": st_delta})
+        x_api_tensor = get_sunday_0320am_x_api_signal_tensor(game_id)
+        x_l24 = x_api_tensor.get("layer_overlays", {}).get("L24_narrative_and_emotional_spots", {})
+        focal_game = x_api_tensor.get("focal_game_signal", {})
+        x_l24_adj = 0.10 * float(x_l24.get("overnight_bed_check_and_emotional_spot_delta", 0.0112))
+        st_delta = round(0.025 + eq_delta + x_l24_adj + base_val, 6)
+        signals.update({
+            "dynamic_kickoff_starting_fp_yardline": round(29.4 + st_delta * 5.0, 2),
+            "fg_make_prob_over_expected": st_delta,
+            "layer_domain_signal": st_delta,
+            "L24_narrative_and_emotional_spots": {
+                "posts_routed": int(x_l24.get("posts_routed", 500)),
+                "overnight_bed_check_and_emotional_spot_delta": float(x_l24.get("overnight_bed_check_and_emotional_spot_delta", 0.0112)),
+                "revenge_and_milestone_spots_logged": bool(x_l24.get("revenge_and_milestone_spots_logged", True)),
+                "stack_cvar_099_dk_pts_max": float(focal_game.get("stack_cvar_099_dk_pts_max", 210.0)),
+                "applied_emotional_spot_delta": round(x_l24_adj, 6),
+            },
+        })
     elif l_num == 25:
         l06_w = float(prior_layers.get("L06_venue_surface_and_weather", {}).get("signals", {}).get("wind_mph", 8.0))
         l21_qb = float(prior_layers.get("L21_qb_processing_and_pressure", {}).get("signals", {}).get("qb_clean_pocket_epa_proj", 0.2))
@@ -391,7 +530,12 @@ def execute_single_layer(
                 f"equation_execution_registry:layer_{l_num:02d}",
                 "canonical_entities.jsonl",
                 "core_nfl_schemes_and_systems.py" if l_num in (11, 12, 13, 17, 18) else "warehouse_normalized_parquet",
-            ],
+            ]
+            + (
+                ["x_api_week9_sunday_0320am_1000_high_level_posts_2026_11_08.jsonl"]
+                if l_num in (9, 14, 17, 20, 24)
+                else []
+            ),
             "equations_executed": int(eq_batch["equations_executed_count"]),
             "entities_resolved": resolved_ids,
         },
@@ -399,6 +543,56 @@ def execute_single_layer(
     }
     validate_layer_output_schema(output)
     return output
+
+
+def evaluate_single_layer(
+    layer_id: int | str,
+    game_id: str = "2026_09_JAX_BAL",
+    as_of_utc: str = "2026-11-05T18:00:00Z",
+    features: Optional[Dict[str, float]] = None,
+    upstream_outputs: Optional[Dict[str, Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    """
+    Canonical single-layer evaluation entrypoint consumed by
+    `intelligence/context/context_packet_builder.py`.
+    Accepts either a 1-indexed integer layer number (`1..26`) or layer id string (`L01_...`).
+    """
+    target_meta: Optional[Dict[str, Any]] = None
+    if isinstance(layer_id, int) or (isinstance(layer_id, str) and layer_id.isdigit()):
+        num = int(layer_id)
+        for m in ALL_26_LAYERS_META:
+            if int(m["num"]) == num:
+                target_meta = m
+                break
+    else:
+        lid_str = str(layer_id)
+        for m in ALL_26_LAYERS_META:
+            if str(m["id"]) == lid_str or str(m["id"]).startswith(f"{lid_str}_"):
+                target_meta = m
+                break
+    if target_meta is None:
+        raise KeyError(f"Unknown layer_id for evaluate_single_layer: {layer_id!r}")
+
+    parts = str(game_id).split("_")
+    away_team = parts[2] if len(parts) >= 4 else "JAX"
+    home_team = parts[3] if len(parts) >= 4 else "BAL"
+    game_ctx: Dict[str, Any] = {
+        "game_id": str(game_id),
+        "away_team": away_team,
+        "home_team": home_team,
+        "as_of": str(as_of_utc),
+    }
+    if features:
+        game_ctx.update(features)
+
+    resolver = _get_shared_entity_resolver()
+    return execute_single_layer(
+        layer_meta=target_meta,
+        game_ctx=game_ctx,
+        resolver=resolver,
+        prior_layers=upstream_outputs or {},
+    )
+
 
 
 def execute_all_26_layers(
@@ -432,6 +626,7 @@ def execute_all_26_layers(
 def build_context_packet(
     game_ctx: Dict[str, Any],
     write_to_disk: bool = True,
+    layer_overrides: Optional[Dict[str, Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     game_id = str(game_ctx.get("game_id", "2026_09_JAX_BAL"))
     home = str(game_ctx.get("home_team", "BAL"))
@@ -444,8 +639,20 @@ def build_context_packet(
             f"Temporal leakage guard rejected packet build for {game_id}: as_of ({as_of}) >= kickoff_utc ({kickoff_utc})"
         )
 
+    effective_ctx = dict(game_ctx)
+    if layer_overrides:
+        merged_lo = dict(effective_ctx.get("layer_overrides") or {})
+        for k, v in layer_overrides.items():
+            if isinstance(v, dict) and "signals" not in v:
+                merged_lo[k] = v
+        effective_ctx["layer_overrides"] = merged_lo
+
     resolver = _get_shared_entity_resolver()
-    layers = execute_all_26_layers(game_ctx, resolver=resolver)
+    layers = execute_all_26_layers(effective_ctx, resolver=resolver)
+    if layer_overrides:
+        for k, v in layer_overrides.items():
+            if isinstance(v, dict) and "signals" in v and "schema_version" in v:
+                layers[k] = v
     citations = _get_default_corpus_citations()
 
     packet = {

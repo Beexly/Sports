@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "SPATIAL-MICRO-METRICS-PBP-AND-DFS-BRIDGE-2026-11-07",
+  "generated_at_utc": "2026-11-08T11:13:27.155650+00:00",
+  "status": "VERIFIED_PASS",
+  "exact_formula_verifications": {
+    "pff_elusive_rating_exact": 84.0,
+    "pff_elusive_rating_expected": 84.0,
+    "true_box_spacing_delta_exact": 4.9,
+    "true_box_spacing_delta_expected": 4.9,
+    "tovs_exact": 26.4,
+    "tovs_expected": 26.4,
+    "catch_point_leverage_delta_exact": 2.3,
+    "catch_point_leverage_delta_expected": 2.3,
+    "all_exact_formulas_verified": true
+  },
+  "pbp_175_snap_perturbation_proof": {
+    "elite_spatial_sim": {
+      "home_win_prob": 0.718,
+      "home_rush_yds_mean": 190.61,
+      "home_pass_yds_mean": 363.03,
+      "home_sacks_mean": 1.092,
+      "home_rush_quantiles": {
+        "p10": 131.0,
+        "p25": 158.0,
+        "p50": 189.0,
+        "p75": 225.0,
+        "p90": 249.1
+      },
+      "home_pass_quantiles": {
+        "p10": 282.0,
+        "p25": 322.0,
+        "p50": 362.0,
+        "p75": 406.25,
+        "p90": 438.0
+      },
+      "home_margin_quantiles": {
+        "p10": -8.33,
+        "p25": -1.08,
+        "p50": 8.06,
+        "p75": 18.06,
+        "p90": 27.2
+      }
+    },
+    "compressed_collapse_sim": {
+      "home_win_prob": 0.402,
+      "home_rush_yds_mean": 34.85,
+      "home_pass_yds_mean": 93.11,
+      "home_sacks_mean": 4.348,
+      "home_rush_quantiles": {
+        "p10": 17.0,
+        "p25": 24.0,
+        "p50": 33.0,
+        "p75": 44.0,
+        "p90": 54.0
+      },
+      "home_pass_quantiles": {
+        "p10": 53.0,
+        "p25": 71.0,
+        "p50": 88.0,
+        "p75": 113.25,
+        "p90": 137.0
+      },
+      "home_margin_quantiles": {
+        "p10": -18.55,
+        "p25": -10.63,
+        "p50": -2.15,
+        "p75": 6.05,
+        "p90": 14.25
+      }
+    },
+    "rush_yards_shifted_positively": true,
+    "pass_yards_shifted_positively": true,
+    "sacks_reduced_by_pad_and_disguise_processing": true,
+    "win_prob_shifted_positively": true
+  },
+  "dfs_200pt_and_360_prop_ceiling_boosts": {
+    "jahmyr_gibbs": {
+      "tovs": 33.582,
+      "pff_elusive_rating": 85.2829,
+      "ryoe_boom_rate_gt_5yd": 0.145,
+      "burn_rate_vs_man_gt_2yds": 0.41,
+      "first_read_target_share": 0.3164,
+      "zone_void_exploitation_rate_zver": 0.68,
+      "eve_to_pcv_ratio": 0.6271,
+      "q90_spatial_boost_dk_pts": 2.61,
+      "q95_spatial_boost_dk_pts": 3.665,
+      "q99_spatial_boost_dk_pts": 4.991,
+      "cvar_099_spatial_boost_dk_pts": 5.889
+    },
+    "amon_ra_st_brown": {
+      "tovs": 17.6234,
+      "pff_elusive_rating": 81.388,
+      "ryoe_boom_rate_gt_5yd": 0.145,
+      "burn_rate_vs_man_gt_2yds": 0.41,
+      "first_read_target_share": 0.3164,
+      "zone_void_exploitation_rate_zver": 0.68,
+      "eve_to_pcv_ratio": 0.6271,
+      "q90_spatial_boost_dk_pts": 1.953,
+      "q95_spatial_boost_dk_pts": 2.797,
+      "q99_spatial_boost_dk_pts": 3.821,
+      "cvar_099_spatial_boost_dk_pts": 4.509
+    }
+  },
+  "trends_6th_lens_integration": {
+    "games_covered": 15,
+    "packets_evaluated": 53,
+    "lens6_front_office_spatial_micro_attached": true
+  },
+  "elapsed_ms": 179.95
+}

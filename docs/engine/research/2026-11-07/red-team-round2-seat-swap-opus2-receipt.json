@@ -1,0 +1,607 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "RED-TEAM-ROUND2-SEAT-SWAP-OPUS2-2026-11-07",
+  "auditor": "Opus 5.5 Red-Team Subagent #2 (RedTeamBigGun \u2014 Round 2 Seat-Swap)",
+  "generated_at_utc": "2026-11-08T10:56:46.571813+00:00",
+  "overall_status": "VERIFIED_PASS",
+  "out_of_the_box_gaps_closed": [
+    {
+      "gap_id": "GAP-ROUND2-OPUS2-01",
+      "title": "Cross-Domain Corpus-to-Trend Equation & Book Provenance Coupling",
+      "description": "Mapped all 5 Statistical Trend Lenses (Scores24, PFR, PFF, NGS, MultiHorizon) and all 12 Trend Families (T-01..T-12) directly to governing equation families (FAM-000..FAM-278), book/corpus provenance IDs (458 Mega-Sweep Books, Packt 95, NFL 96, CS/Math 432), 26 reasoning layers (L01..L26), 5 domain tracks, and 22 proprietary GSE metrics (M-GSE-01..22)."
+    },
+    {
+      "gap_id": "GAP-ROUND2-OPUS2-02",
+      "title": "End-to-End 5-Lens Trend Verdict -> Stage 2 Pre-Sim Priors -> Stage 3 Quantile Perturbation Bridge",
+      "description": "Wired TrendEvidencePacket + GamePreSnapVisionDossier into build_context_packet -> execute_reasoning_workflow -> run_synthetic_simulation_stage_validator & simulate_matchup_pbp, proving STORY_CONVERGENCE_LOCK vs FAKE_STREAK_TRAP deterministically shifts all 5 Stage 3 quantiles (p10..p90) and win probability while respecting |delta_log_odds| <= 0.35 and L26 <= 0.08."
+    },
+    {
+      "gap_id": "GAP-ROUND2-OPUS2-03",
+      "title": "/rea-analysis-optimization Single-Pass < 50ms Cross-Domain Slate Synthesizer",
+      "description": "Engineered CrossDomainCorpusTrendsReasoningSynthesizer with content-digest keyed shared caching and O(1) lookup tables across all 15 Week 9 games, executing in < 15 ms cold and < 0.5 ms warm."
+    }
+  ],
+  "two_host_portability_audit": {
+    "intelligence_python_files_scanned": 13,
+    "violations_count": 0,
+    "violations": [],
+    "two_host_rule_clean": true
+  },
+  "peer_flash1_and_opus1_corpus_books_equations_audit": {
+    "status": "PASS",
+    "flash1_4_corpus_waves": {
+      "wave1_packt_95_repos_and_5_pdfs": true,
+      "wave2_bojieli_10ch_93exp_15patterns_4tier_memory": true,
+      "wave3_nfl_96_wp_ep_textbook_rulebooks_38_rtp": true,
+      "wave4_open_access_432_and_105_107_quarantine": true,
+      "markov_venn_abers_superlearner_invariants": true
+    },
+    "opus1_books_and_21419_equations": {
+      "total_equations_verified": 21419,
+      "active_equations": 20019,
+      "held_sub_min_sample_equations": 1400,
+      "mega_sweep_458_books_verified": true,
+      "provenance_472_entries_verified": true,
+      "books_b_medical_68_quarantined": true,
+      "layers_1_to_26_equations_executed": 21419
+    }
+  },
+  "peer_5lens_and_12family_trends_audit": {
+    "status": "PASS",
+    "games_evaluated": 15,
+    "multi_horizon_trend_families": 12,
+    "total_game_trend_vectors": 180,
+    "total_5lens_packets": 53,
+    "story_convergence_locks_count": 21,
+    "fake_streak_traps_blocked_count": 2,
+    "all_8_market_categories_populated": true,
+    "partial_recovery_verified": true
+  },
+  "cross_domain_corpus_trends_reasoning_bridge": {
+    "status": "PASS",
+    "games_synthesized": 15,
+    "five_lenses_mapped_to_equations_and_books": 5,
+    "twelve_trend_families_mapped_to_equations_and_books": 12,
+    "single_pass_cold_synthesis_ms": 0.1605,
+    "warm_100_queries_ms": 0.1845,
+    "under_50ms_budget_verified": true,
+    "lens_equation_verifications": {
+      "Scores24StreakEvidence": {
+        "lens_id": "scores24_discrete_streaks",
+        "governing_layer_ids": [
+          "L03_team_efficiency_priors",
+          "L04_divisional_and_historical",
+          "L20_skill_player_usage_and_routes"
+        ],
+        "governing_domain_tracks": [
+          "4_trust_signals",
+          "2_coaching_and_scheme"
+        ],
+        "governing_equation_family_ids": [
+          14,
+          42,
+          88,
+          145,
+          211
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-01",
+          "M-GSE-12",
+          "M-GSE-17"
+        ],
+        "book_and_corpus_wave_provenance": [
+          "BK-GDRIVE-001",
+          "Packt-Wave1:Applied-Conformal-Venn-Abers",
+          "NFL-96:Fantasy-Textbook-Ch08-Empirical-Bayes",
+          "MegaLibrary-432:Domain-04-Bayesian-Beta-Binomial"
+        ],
+        "equations_evaluated_count": 562,
+        "aggregate_equation_log_odds_delta": 0.012774,
+        "verified_non_empty": true
+      },
+      "PFRHistoricalSplitEvidence": {
+        "lens_id": "pfr_game_log_quantiles",
+        "governing_layer_ids": [
+          "L02_market_and_pace_priors",
+          "L19_pace_and_script_elasticity",
+          "L23_red_zone_and_goal_line"
+        ],
+        "governing_domain_tracks": [
+          "2_coaching_and_scheme",
+          "4_trust_signals"
+        ],
+        "governing_equation_family_ids": [
+          23,
+          67,
+          119,
+          178,
+          234
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-02",
+          "M-GSE-08",
+          "M-GSE-11",
+          "M-GSE-19"
+        ],
+        "book_and_corpus_wave_provenance": [
+          "BK-GDRIVE-010",
+          "BK-DL-01:Hidden-Game-of-Football",
+          "Packt-Wave1:Romano-CQR-Order-Statistics",
+          "NFL-96:arXiv-2311.03490-Fourth-Down-Humility"
+        ],
+        "equations_evaluated_count": 2584,
+        "aggregate_equation_log_odds_delta": 0.011045,
+        "verified_non_empty": true
+      },
+      "PFFMicroMatchupEvidence": {
+        "lens_id": "pff_micro_matchup_grades",
+        "governing_layer_ids": [
+          "L12_trench_matchup_ol_vs_dl",
+          "L13_scheme_vs_scheme",
+          "L14_player_vs_player_shadow_matchups",
+          "L21_qb_processing_and_pressure"
+        ],
+        "governing_domain_tracks": [
+          "3_offensive_line",
+          "5_scheme_matchup",
+          "1_qb_behavior"
+        ],
+        "governing_equation_family_ids": [
+          31,
+          79,
+          132,
+          189,
+          251
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-03",
+          "M-GSE-04",
+          "M-GSE-05",
+          "M-GSE-13",
+          "M-GSE-15"
+        ],
+        "book_and_corpus_wave_provenance": [
+          "BK-GDRIVE-025",
+          "BK-DL-12:Core-NFL-Schemes-and-Pass-Protection",
+          "NFL-96:Going-Deep-and-nflWAR",
+          "MegaLibrary-432:Domain-06-Bradley-Terry-Paired-Comparisons"
+        ],
+        "equations_evaluated_count": 6009,
+        "aggregate_equation_log_odds_delta": 0.015902,
+        "verified_non_empty": true
+      },
+      "NGSTrackingPhysicsEvidence": {
+        "lens_id": "ngs_tracking_physics",
+        "governing_layer_ids": [
+          "L06_venue_surface_and_weather",
+          "L10_biomechanics_and_return_to_play",
+          "L21_qb_processing_and_pressure",
+          "L22_receiver_separation_and_yac"
+        ],
+        "governing_domain_tracks": [
+          "1_qb_behavior",
+          "5_scheme_matchup",
+          "3_offensive_line"
+        ],
+        "governing_equation_family_ids": [
+          54,
+          96,
+          154,
+          205,
+          263
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-06",
+          "M-GSE-07",
+          "M-GSE-14",
+          "M-GSE-16",
+          "M-GSE-20"
+        ],
+        "book_and_corpus_wave_provenance": [
+          "BK-GDRIVE-042",
+          "Packt-Wave1:Spatial-Stadium-GIS-and-Navier-Stokes-Wind",
+          "NFL-96:38-Study-Injury-Biomechanics-and-RTP-Curves",
+          "MegaLibrary-432:Domain-03-Gaussian-Process-Spatiotemporal-Tracking"
+        ],
+        "equations_evaluated_count": 3961,
+        "aggregate_equation_log_odds_delta": 0.019171,
+        "verified_non_empty": true
+      },
+      "MultiHorizonChartingEvidence": {
+        "lens_id": "ftn_multi_horizon_t01_t12",
+        "governing_layer_ids": [
+          "L07_officials_and_referee_crew",
+          "L11_offensive_scheme_and_playcaller",
+          "L15_coaching_vs_coaching_chess_match",
+          "L24_special_teams_and_field_position",
+          "L25_cross_layer_interaction_terms",
+          "L26_market_price_check_last"
+        ],
+        "governing_domain_tracks": [
+          "2_coaching_and_scheme",
+          "5_scheme_matchup",
+          "1_qb_behavior",
+          "4_trust_signals"
+        ],
+        "governing_equation_family_ids": [
+          8,
+          61,
+          108,
+          167,
+          224,
+          275
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-09",
+          "M-GSE-10",
+          "M-GSE-18",
+          "M-GSE-21",
+          "M-GSE-22"
+        ],
+        "book_and_corpus_wave_provenance": [
+          "BK-GDRIVE-088",
+          "Bojieli-Wave2:4-Tier-Hybrid-Memory-and-POMDP",
+          "NFL-96:arXiv-2003.10791-HMM-Play-Call-Sequence",
+          "NFL-96:arXiv-2602.10784v1-Blown-Lead-Paradox"
+        ],
+        "equations_evaluated_count": 4879,
+        "aggregate_equation_log_odds_delta": 0.016244,
+        "verified_non_empty": true
+      }
+    },
+    "trend_family_equation_verifications": {
+      "T-01": {
+        "trend_id": "T-01",
+        "trend_key": "T01_MULTI_HORIZON_EPA_VELOCITY_AND_ACCELERATION",
+        "governing_layer_id": "L03_team_efficiency_priors",
+        "governing_domain_track": "2_coaching_and_scheme",
+        "governing_equation_family_ids": [
+          12,
+          45,
+          101
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-01",
+          "M-GSE-02"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-003",
+          "NFL-96:Multinomial-EP-and-nflWAR",
+          "Packt-Wave1:EnbPI-Sequential"
+        ],
+        "layer_equations_executed": 236,
+        "layer_equation_log_odds_delta": 0.018619,
+        "verified_active": true
+      },
+      "T-02": {
+        "trend_id": "T-02",
+        "trend_key": "T02_QUARTER_BY_QUARTER_PACING_AND_HALFTIME_SCRIPT_DELTA",
+        "governing_layer_id": "L19_pace_and_script_elasticity",
+        "governing_domain_track": "2_coaching_and_scheme",
+        "governing_equation_family_ids": [
+          19,
+          74,
+          149
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-02",
+          "M-GSE-08",
+          "M-GSE-19"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-019",
+          "NFL-96:arXiv-2602.10784v1-Blown-Lead-Paradox",
+          "Bojieli-Wave2:Tier2-Drive-Memory"
+        ],
+        "layer_equations_executed": 2265,
+        "layer_equation_log_odds_delta": 0.016693,
+        "verified_active": true
+      },
+      "T-03": {
+        "trend_id": "T-03",
+        "trend_key": "T03_COVERAGE_SHELL_SHIFT_AND_YPRR_MATCHUP_TREND",
+        "governing_layer_id": "L13_scheme_vs_scheme",
+        "governing_domain_track": "5_scheme_matchup",
+        "governing_equation_family_ids": [
+          33,
+          89,
+          162
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-05",
+          "M-GSE-13",
+          "M-GSE-14"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-033",
+          "BK-DL-12:Core-NFL-Schemes",
+          "NFL-96:arXiv-2003.10791-HMM-Play-Call"
+        ],
+        "layer_equations_executed": 3313,
+        "layer_equation_log_odds_delta": 0.03691,
+        "verified_active": true
+      },
+      "T-04": {
+        "trend_id": "T-04",
+        "trend_key": "T04_TRENCH_PRESSURE_STUNT_AND_SACK_SURVIVAL_CURVE",
+        "governing_layer_id": "L12_trench_matchup_ol_vs_dl",
+        "governing_domain_track": "3_offensive_line",
+        "governing_equation_family_ids": [
+          28,
+          82,
+          175,
+          219
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-03",
+          "M-GSE-04",
+          "M-GSE-06",
+          "M-GSE-15"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-052",
+          "NFL-96:Going-Deep-Survival-Hazard",
+          "Packt-Wave1:Bayesian-Causal-Trench"
+        ],
+        "layer_equations_executed": 2326,
+        "layer_equation_log_odds_delta": 0.003614,
+        "verified_active": true
+      },
+      "T-05": {
+        "trend_id": "T-05",
+        "trend_key": "T05_RED_ZONE_GREEN_ZONE_AND_GOAL_LINE_CONVERSION_TREND",
+        "governing_layer_id": "L23_red_zone_and_goal_line",
+        "governing_domain_track": "2_coaching_and_scheme",
+        "governing_equation_family_ids": [
+          49,
+          114,
+          203
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-11",
+          "M-GSE-12"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-071",
+          "Packt-Wave1:Absorbing-Markov-Drive-Matrix",
+          "NFL-96:arXiv-2311.03490-Fourth-Down"
+        ],
+        "layer_equations_executed": 158,
+        "layer_equation_log_odds_delta": 0.00772,
+        "verified_active": true
+      },
+      "T-06": {
+        "trend_id": "T-06",
+        "trend_key": "T06_EXPECTED_FANTASY_POINTS_REGRESSION_AND_AIR_YARDS_SURGE",
+        "governing_layer_id": "L20_skill_player_usage_and_routes",
+        "governing_domain_track": "5_scheme_matchup",
+        "governing_equation_family_ids": [
+          63,
+          128,
+          214
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-14",
+          "M-GSE-16",
+          "M-GSE-17",
+          "M-GSE-20"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-095",
+          "NFL-96:Fantasy-Textbook-29-Chapters",
+          "Packt-Wave1:Sobol-QMC-200pt-DFS-Tails"
+        ],
+        "layer_equations_executed": 161,
+        "layer_equation_log_odds_delta": 0.01148,
+        "verified_active": true
+      },
+      "T-07": {
+        "trend_id": "T-07",
+        "trend_key": "T07_REFEREE_CREW_DPI_HOLDING_AND_PACE_TENDENCY",
+        "governing_layer_id": "L07_officials_and_referee_crew",
+        "governing_domain_track": "4_trust_signals",
+        "governing_equation_family_ids": [
+          17,
+          71,
+          184
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-18"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-112",
+          "NFL-96:4-Official-NFL-Rulebook-Epochs",
+          "MegaLibrary-432:Domain-04-Poisson-Hierarchical"
+        ],
+        "layer_equations_executed": 166,
+        "layer_equation_log_odds_delta": 0.011674,
+        "verified_active": true
+      },
+      "T-08": {
+        "trend_id": "T-08",
+        "trend_key": "T08_DYNAMIC_KICKOFF_2026_AND_STARTING_FIELD_POSITION_TREND",
+        "governing_layer_id": "L24_special_teams_and_field_position",
+        "governing_domain_track": "4_trust_signals",
+        "governing_equation_family_ids": [
+          58,
+          139,
+          240
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-21"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-134",
+          "NFL-96:2024-2026-Dynamic-Kickoff-Rulebook",
+          "Packt-Wave1:Absorbing-Markov-Field-Position"
+        ],
+        "layer_equations_executed": 158,
+        "layer_equation_log_odds_delta": 0.011204,
+        "verified_active": true
+      },
+      "T-09": {
+        "trend_id": "T-09",
+        "trend_key": "T09_SURFACE_TURF_BIOMECHANICS_AND_MICRO_WEATHER_PHYSICS",
+        "governing_layer_id": "L06_venue_surface_and_weather",
+        "governing_domain_track": "4_trust_signals",
+        "governing_equation_family_ids": [
+          26,
+          94,
+          192,
+          258
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-07",
+          "M-GSE-09"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-156",
+          "Packt-Wave1:Spatial-Stadium-GIS-Wind",
+          "NFL-96:38-Study-Turf-and-RTP-Biomechanics"
+        ],
+        "layer_equations_executed": 2614,
+        "layer_equation_log_odds_delta": 0.011007,
+        "verified_active": true
+      },
+      "T-10": {
+        "trend_id": "T-10",
+        "trend_key": "T10_DIVISIONAL_FAMILIARITY_AND_COACHING_TREE_ELASTICITY",
+        "governing_layer_id": "L04_divisional_and_historical",
+        "governing_domain_track": "2_coaching_and_scheme",
+        "governing_equation_family_ids": [
+          38,
+          105,
+          227
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-01",
+          "M-GSE-05",
+          "M-GSE-13"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-180",
+          "BK-DL-01:Hidden-Game-of-Football",
+          "Bojieli-Wave2:15-Multi-Agent-Opponent-Modeling"
+        ],
+        "layer_equations_executed": 165,
+        "layer_equation_log_odds_delta": 0.008224,
+        "verified_active": true
+      },
+      "T-11": {
+        "trend_id": "T-11",
+        "trend_key": "T11_EARLY_DOWN_SUCCESS_AND_PLAY_VOLUME_CONTINUATION",
+        "governing_layer_id": "L21_qb_processing_and_pressure",
+        "governing_domain_track": "1_qb_behavior",
+        "governing_equation_family_ids": [
+          51,
+          121,
+          198,
+          266
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-02",
+          "M-GSE-06",
+          "M-GSE-17",
+          "M-GSE-19"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-210",
+          "NFL-96:Fantasy-Textbook-Play-Volume",
+          "MegaLibrary-432:Domain-05-MDP-Bellman-Continuation"
+        ],
+        "layer_equations_executed": 214,
+        "layer_equation_log_odds_delta": 0.012496,
+        "verified_active": true
+      },
+      "T-12": {
+        "trend_id": "T-12",
+        "trend_key": "T12_MARKET_STEAM_VELOCITY_AND_CLV_MICROSTRUCTURE",
+        "governing_layer_id": "L26_market_price_check_last",
+        "governing_domain_track": "4_trust_signals",
+        "governing_equation_family_ids": [
+          77,
+          156,
+          248,
+          278
+        ],
+        "governing_proprietary_metric_ids": [
+          "M-GSE-10",
+          "M-GSE-22"
+        ],
+        "corpus_wave_and_book_ids": [
+          "BK-GDRIVE-250",
+          "MegaLibrary-432:Domain-10-Kalshi-Sportsbook-Microstructure",
+          "Packt-Wave1:Purged-Embargoed-CLV-Gate"
+        ],
+        "layer_equations_executed": 2428,
+        "layer_equation_log_odds_delta": 0.012285,
+        "verified_active": true
+      }
+    },
+    "stage2_to_stage3_perturbation_proof": {
+      "convergence_lock_packet": {
+        "packet_id": "W9_ARI_SEA_MCBRIDE_REC_YDS",
+        "entity_name": "Trey McBride",
+        "story_convergence_lock": true,
+        "fake_streak_trap": false,
+        "publish_allowed": true,
+        "trend_pre_sim_log_odds_delta": 0.262,
+        "stage2_pre_market_reasoning_delta": 0.35,
+        "stage2_final_reasoning_delta": 0.35,
+        "stage2_proprietary_22_delta": 0.116737,
+        "stage2_l26_applied_weight": 0.05,
+        "stage3_validator_win_probability": 0.84,
+        "stage3_validator_margin_quantiles": {
+          "p10": -9.475,
+          "p25": -2.209,
+          "p50": 4.5565,
+          "p75": 11.322,
+          "p90": 18.588
+        },
+        "stage3_validator_total_quantiles": {
+          "p10": 38.348,
+          "p25": 44.06,
+          "p50": 49.7727,
+          "p75": 55.485,
+          "p90": 61.198
+        },
+        "stage3_pbp_175snap_win_prob": 0.628,
+        "stage3_pbp_175snap_margin_p50": 4.25,
+        "stage3_pbp_175snap_total_p50": 46.671
+      },
+      "fake_streak_trap_packet": {
+        "packet_id": "W9_FAKE_STREAK_TRAP_SPECIMEN_WR_DECOY",
+        "entity_name": "Allen Lazard (Box-Score Streak vs CB1 Shadow Trap)",
+        "story_convergence_lock": false,
+        "fake_streak_trap": true,
+        "publish_allowed": false,
+        "trend_pre_sim_log_odds_delta": -0.3406,
+        "stage2_pre_market_reasoning_delta": -0.35,
+        "stage2_final_reasoning_delta": -0.35,
+        "stage2_proprietary_22_delta": -0.12,
+        "stage2_l26_applied_weight": 0.05,
+        "stage3_validator_win_probability": 0.2901,
+        "stage3_validator_margin_quantiles": {
+          "p10": -25.71,
+          "p25": -18.351,
+          "p50": -11.4916,
+          "p75": -4.632,
+          "p90": 2.727
+        },
+        "stage3_validator_total_quantiles": {
+          "p10": 29.099,
+          "p25": 34.887,
+          "p50": 40.674,
+          "p75": 46.461,
+          "p90": 52.249
+        },
+        "stage3_pbp_175snap_win_prob": 0.408,
+        "stage3_pbp_175snap_margin_p50": -4.972,
+        "stage3_pbp_175snap_total_p50": 43.708
+      },
+      "all_5_quantiles_shifted": true,
+      "win_probability_shifted": true
+    }
+  },
+  "total_audit_elapsed_ms": 1440.31
+}

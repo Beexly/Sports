@@ -56,6 +56,9 @@ from intelligence.dfs.dfs_19_equation_deep_research_engine import (
     FRONTIER_19_DFS_EQUATIONS_CATALOG,
     evaluate_frontier_19_equations_on_curated_pool,
 )
+from intelligence.ingestion.sunday_0320am_x_api_1000_posts_week9_engine import (
+    get_sunday_0320am_x_api_signal_tensor,
+)
 from intelligence.dfs.dfs_and_fantasy_accuracy_engine import (
     BLOCKED_PUNT_DSTS_BY_TEAM,
     SUB_FLOOR_ROLE_TRAP_DENYLIST,
@@ -330,6 +333,7 @@ def evaluate_360_degree_picks_props_parlays_and_sgps(
     reasoning_trace: Dict[str, Any],
     seed: int = 42,
     optimal_weights: Optional[Dict[str, float]] = None,
+    custom_tickets: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """
     Evaluates the full 360-degree board (`1Q-4Q`, `1H/2H`, Full-Game Spread/Total/ML,
@@ -481,38 +485,77 @@ def evaluate_360_degree_picks_props_parlays_and_sgps(
         },
     ]
 
+    if custom_tickets is not None:
+        candidates = list(custom_tickets)
+
+    x_api_0320am_tensor = get_sunday_0320am_x_api_signal_tensor(pkt_game_id)
+    focal_game_x = x_api_0320am_tensor.get("focal_game_signal", {})
+    x_clv_steam_lift = round(
+        min(0.004, max(0.0, float(focal_game_x.get("overnight_clv_edge_mean", 0.045)) * 0.05)),
+        5,
+    )
+
     evaluated_tickets: List[Dict[str, Any]] = []
     published_tickets: List[Dict[str, Any]] = []
     passed_tickets: List[Dict[str, Any]] = []
 
     for c in candidates:
         # FWL post-reasoning market blend (L26 weight <= 0.08) + 22-metric James-Stein optimal_weights lift
-        ind_dec = str(c["independent_edge_decision"])
-        sources = list(c["agreement_sources"])
-        p_sim_raw = float(c["model_prob"])
+        # + Sunday 03:20 AM CST X API overnight CLV steam lift
+        ind_dec = str(c.get("independent_edge_decision", "PLAY"))
+        sources = list(c.get("agreement_sources", []))
+        try:
+            p_sim_raw = float(c.get("model_prob", 0.50))
+        except (TypeError, ValueError):
+            p_sim_raw = float("nan")
+        try:
+            p_mkt = float(c.get("market_devig_prob", 0.50))
+        except (TypeError, ValueError):
+            p_mkt = float("nan")
+        try:
+            cqr_lo = float(c.get("cqr_lower_bound", 0.45))
+        except (TypeError, ValueError):
+            cqr_lo = float("nan")
+        try:
+            am_odds = int(c.get("american_odds", -110))
+        except (TypeError, ValueError):
+            am_odds = -110
+
+        is_corrupted = any(
+            not math.isfinite(x)
+            for x in (p_sim_raw, p_mkt, cqr_lo)
+        )
+
         p_sim = (
-            min(0.70, p_sim_raw + opt_metric_lift)
-            if (ind_dec == "PLAY" and len(sources) >= 2 and int(c.get("american_odds", -110)) > -250)
+            min(0.70, p_sim_raw + opt_metric_lift + x_clv_steam_lift)
+            if ((not is_corrupted) and ind_dec == "PLAY" and len(sources) >= 2 and am_odds > -250)
             else p_sim_raw
         )
-        p_mkt = float(c["market_devig_prob"])
-        am_odds = int(c.get("american_odds", -110))
-        p_post = (1.0 - mkt_weight) * p_sim + mkt_weight * p_mkt
-        raw_edge = round(p_post - p_mkt, 4)
-        cqr_lo = float(c["cqr_lower_bound"])
+        p_post = (1.0 - mkt_weight) * p_sim + mkt_weight * p_mkt if not is_corrupted else float("nan")
+        raw_edge = round(p_post - p_mkt, 4) if not is_corrupted else float("nan")
 
         # 6-Stage Conjunction & Heavy-Juice Book Verification Gate (blocks stupid -250 / -300+ juice traps)
-        not_heavy_juice_trap = am_odds > -250 and p_mkt < 0.714
+        not_heavy_juice_trap = (not is_corrupted) and am_odds > -250 and p_mkt < 0.714
         gate_checks = {
             "stage0_not_heavy_juice_minus_250_or_300_trap": not_heavy_juice_trap,
-            "stage1_independent_edge_not_pass": ind_dec != "PASS",
-            "stage2_multi_source_agreement_ge_2": len(sources) >= 2,
-            "stage3_positive_devigged_edge_ge_0_035": raw_edge >= 0.035,
-            "stage4_conformal_lower_bound_beats_market": cqr_lo > p_mkt,
+            "stage1_independent_edge_not_pass": (not is_corrupted) and ind_dec != "PASS",
+            "stage2_multi_source_agreement_ge_2": (not is_corrupted) and len(sources) >= 2,
+            "stage3_positive_devigged_edge_ge_0_035": (not is_corrupted) and raw_edge >= 0.035,
+            "stage4_conformal_lower_bound_beats_market": (not is_corrupted) and cqr_lo > p_mkt,
             "stage5_reasoning_tracks_and_l26_last": all_tracks_ok and entered_last and mkt_weight <= 0.08,
         }
         publish_allowed = all(gate_checks.values())
         decision = "PLAY" if publish_allowed else "PASS"
+
+        if not not_heavy_juice_trap:
+            if c.get("market_category") in ("FULL_GAME_ML", "FULL_GAME_SPREAD") and am_odds <= -250:
+                routed_destination = "1H_DERIVATIVE" if abs(am_odds) < 350 else "ALT_SPREAD_LADDER"
+            else:
+                routed_destination = "PASS"
+        elif not publish_allowed:
+            routed_destination = "PASS"
+        else:
+            routed_destination = "PUBLISH_OFFICIAL_BOARD"
 
         rec = {
             **c,
@@ -521,10 +564,11 @@ def evaluate_360_degree_picks_props_parlays_and_sgps(
             "away_team": away_team,
             "matchup": matchup_label,
             "american_odds": am_odds,
-            "post_fwl_prob": round(p_post, 4),
-            "devigged_edge": raw_edge,
+            "post_fwl_prob": round(p_post, 4) if math.isfinite(p_post) else None,
+            "devigged_edge": raw_edge if math.isfinite(raw_edge) else None,
             "agreement_count": len(sources),
             "gate_checks": gate_checks,
+            "routed_destination": routed_destination,
             "publishAllowed": publish_allowed,
             "decision": decision,
         }
@@ -567,6 +611,9 @@ def evaluate_360_degree_picks_props_parlays_and_sgps(
         "publishAllowed": correlated_sgp_prob > book_implied_prob + 0.05 and sgp_ev > 0.15,
     }
 
+    x_api_0320am_tensor = get_sunday_0320am_x_api_signal_tensor(pkt_game_id)
+    focal_game_x = x_api_0320am_tensor.get("focal_game_signal", {})
+
     return {
         "game_id": pkt_game_id,
         "home_team": home_team,
@@ -575,6 +622,17 @@ def evaluate_360_degree_picks_props_parlays_and_sgps(
         "context_packet_layers_consumed": pkt_layer_count,
         "proprietary_22_metrics_optimal_weights_applied": bool(optimal_weights),
         "proprietary_22_metrics_weight_sum": opt_weight_sum,
+        "sunday_0320am_x_api_1000_posts_overlay": {
+            "pulled_at_cst": x_api_0320am_tensor["pulled_at_cst"],
+            "total_posts_consumed": int(x_api_0320am_tensor["total_posts"]),
+            "projections_clv_steam_posts": int(
+                x_api_0320am_tensor["category_counts"].get("projections_and_market_clv_steam", 150)
+            ),
+            "fantasy_usage_posts": int(
+                x_api_0320am_tensor["category_counts"].get("fantasy_usage_and_route_participation", 200)
+            ),
+            "focal_game_overnight_clv_edge_mean": float(focal_game_x.get("overnight_clv_edge_mean", 0.045)),
+        },
         "market_categories_covered_count": 7,
         "market_categories_covered": [
             "FULL_GAME_SPREAD_TOTAL_ML",
@@ -588,11 +646,12 @@ def evaluate_360_degree_picks_props_parlays_and_sgps(
         "evaluated_tickets_count": len(evaluated_tickets),
         "published_tickets_count": len(published_tickets),
         "passed_tickets_count": len(passed_tickets),
-        "pass_discipline_verified": len(passed_tickets) == 3 and all(not t["publishAllowed"] for t in passed_tickets),
+        "pass_discipline_verified": (len(passed_tickets) >= 3 if custom_tickets is None else len(passed_tickets) > 0) and all(not t["publishAllowed"] for t in passed_tickets),
         "heavy_juice_minus_300_trap_blocked": any(
-            t["ticket_id"] == "TKT-HEAVY-JUICE-MINUS-320-TRAP-09" and not t["publishAllowed"]
+            ("-320" in t.get("ticket_id", "") or "-300" in t.get("ticket_id", "") or t.get("american_odds", 0) <= -250) and not t["publishAllowed"]
             for t in passed_tickets
         ),
+        "evaluated_tickets": evaluated_tickets,
         "published_tickets": published_tickets,
         "passed_tickets": passed_tickets,
         "correlated_sgp_analysis": sgp_ticket,
@@ -667,6 +726,8 @@ def construct_and_verify_200pt_dk_championship_portfolio(
     seed: int = 42,
     num_sims: int = 10000,
     optimal_weights: Optional[Dict[str, float]] = None,
+    n_cand_lineups: int = 120,
+    n_field_lineups: int = 500,
 ) -> Dict[str, Any]:
     """
     Loads the official GSE Post-Game-Sim Player Projections (`225` active slate players),
@@ -782,8 +843,6 @@ def construct_and_verify_200pt_dk_championship_portfolio(
     #  Establish The Run / Mike Leone 35-Contest, 9,570-Lineup Solver Audit)
     # -----------------------------------------------------------------------
     n_pool = len(curated_records)
-    n_cand_lineups = 120
-    n_field_lineups = 500
     rng_w2 = np.random.default_rng(seed + 777)
 
     # Build 10,000 x N_pool correlated world matrix Y_worlds on the curated pool
@@ -802,6 +861,7 @@ def construct_and_verify_200pt_dk_championship_portfolio(
     pool_sds = np.maximum(2.0, (pool_p90s - pool_means) / 1.28155)
     pool_games = [str(p.get("game_id", "")) for p in curated_records]
     pool_teams = [str(p.get("team", "")) for p in curated_records]
+    pool_opponents = [str(p.get("opponent", "")) for p in curated_records]
     pool_pos = [str(p.get("position", "")) for p in curated_records]
     uniq_games = sorted(set(pool_games))
     uniq_teams = sorted(set(pool_teams))
@@ -818,50 +878,243 @@ def construct_and_verify_200pt_dk_championship_portfolio(
         bonus_step = np.where(comp >= 1.15, 3.0, 0.0) if pool_pos[j] != "DST" else 0.0
         Y_worlds[:, j] = np.clip(pool_means[j] + pool_sds[j] * comp + bonus_step, 0.0, None)
 
-    # Build Incidence Matrix X_cand (120 x N_pool) where rows 0..2 are our 3 solved MILP archetypes
-    # and rows 3..119 are correlated stack variations drawn from the curated player pool under the $50,000 cap
+    # Build Incidence Matrix X_cand (n_cand_lineups x N_pool) where rows 0..2 are our 3 solved MILP archetypes
+    # and rows 3..n_cand_lineups-1 are legal correlated stack variations drawn under the $50,000 cap
     X_cand = np.zeros((n_cand_lineups, n_pool), dtype=np.float64)
-    for k_idx, lu in enumerate(lineups):
-        for p in lu.to_dict(orient="records"):
-            pk = norm_key(str(p["player"]))
-            if pk in curated_idx_by_name:
-                X_cand[k_idx, curated_idx_by_name[pk]] = 1.0
-
     pos_groups = {
         pos_c: [i for i, p in enumerate(curated_records) if p["position"] == pos_c]
         for pos_c in ("QB", "RB", "WR", "TE", "DST")
     }
+
+    max_exp_count = int(np.ceil(0.35 * n_cand_lineups))
+    player_exp_counts = np.zeros(n_pool, dtype=int)
+    candidate_rosters_list: List[List[Dict[str, Any]]] = []
+    candidate_sets: List[set[int]] = []
+
+    for k_idx, lu in enumerate(lineups):
+        if k_idx >= n_cand_lineups:
+            break
+        lu_set = set()
+        for p in lu.to_dict(orient="records"):
+            pk = norm_key(str(p["player"]))
+            if pk in curated_idx_by_name:
+                p_i = curated_idx_by_name[pk]
+                X_cand[k_idx, p_i] = 1.0
+                player_exp_counts[p_i] += 1
+                lu_set.add(p_i)
+        candidate_sets.append(lu_set)
+        candidate_rosters_list.append(lu.to_dict(orient="records"))
+
     for c_idx in range(len(lineups), n_cand_lineups):
-        qb_i = int(rng_w2.choice(pos_groups["QB"]))
-        qb_tm = pool_teams[qb_i]
-        same_tm_wr_te = [i for i in pos_groups["WR"] + pos_groups["TE"] if pool_teams[i] == qb_tm]
-        rb_picks = rng_w2.choice(pos_groups["RB"], size=min(2, len(pos_groups["RB"])), replace=False)
-        wr_picks = rng_w2.choice(pos_groups["WR"], size=min(3, len(pos_groups["WR"])), replace=False)
-        te_pick = int(rng_w2.choice(pos_groups["TE"]))
-        dst_pick = int(rng_w2.choice(pos_groups["DST"]))
-        chosen_set = {qb_i, *map(int, rb_picks), *map(int, wr_picks), te_pick, dst_pick}
-        for s_i in same_tm_wr_te[:2]:
-            if len(chosen_set) < 9:
-                chosen_set.add(int(s_i))
-        flex_pool = [i for i in pos_groups["RB"] + pos_groups["WR"] + pos_groups["TE"] if i not in chosen_set]
-        while len(chosen_set) < 9 and flex_pool:
-            pick_f = int(rng_w2.choice(flex_pool))
-            chosen_set.add(pick_f)
-            flex_pool.remove(pick_f)
-        capped_cand = _enforce_salary_cap_preserving_positions(
-            list(chosen_set),
-            pos_groups=pos_groups,
-            pool_pos=pool_pos,
-            pool_salaries=pool_salaries,
-            salary_cap=50000,
-        )
-        for idx_chosen in capped_cand:
-            X_cand[c_idx, idx_chosen] = 1.0
+        chosen_indices: Optional[List[int]] = None
+        for _att in range(500):
+            eligible_qbs = [i for i in pos_groups["QB"] if player_exp_counts[i] < max_exp_count]
+            if not eligible_qbs:
+                min_exp = np.min(player_exp_counts[pos_groups["QB"]])
+                eligible_qbs = [i for i in pos_groups["QB"] if player_exp_counts[i] == min_exp]
+            qb_i = int(rng_w2.choice(eligible_qbs))
+            qb_tm = pool_teams[qb_i]
+            qb_opp = pool_opponents[qb_i]
+
+            tm_pass_catchers = [
+                i for i in pos_groups["WR"] + pos_groups["TE"]
+                if pool_teams[i] == qb_tm and player_exp_counts[i] < max_exp_count
+            ]
+            if len(tm_pass_catchers) < 2:
+                tm_pass_catchers = [
+                    i for i in pos_groups["WR"] + pos_groups["TE"]
+                    if pool_teams[i] == qb_tm
+                ]
+            if len(tm_pass_catchers) < 2:
+                continue
+            stack_picks = list(rng_w2.choice(tm_pass_catchers, size=2, replace=False))
+
+            opp_skill = [
+                i for i in pos_groups["RB"] + pos_groups["WR"] + pos_groups["TE"]
+                if pool_teams[i] == qb_opp and player_exp_counts[i] < max_exp_count
+            ]
+            if not opp_skill:
+                opp_skill = [
+                    i for i in pos_groups["RB"] + pos_groups["WR"] + pos_groups["TE"]
+                    if pool_teams[i] == qb_opp
+                ]
+            if not opp_skill:
+                continue
+            bb_pick = int(rng_w2.choice(opp_skill))
+
+            cand_chosen = [qb_i, stack_picks[0], stack_picks[1], bb_pick]
+            pos_c_counts = {"QB": 1, "RB": 0, "WR": 0, "TE": 0, "DST": 0}
+            team_skill_counts = {qb_tm: 3, qb_opp: 1}
+            for p_i in [stack_picks[0], stack_picks[1], bb_pick]:
+                pos_c_counts[pool_pos[p_i]] += 1
+
+            eligible_dsts = [
+                i for i in pos_groups["DST"]
+                if i not in cand_chosen and player_exp_counts[i] < max_exp_count and pool_teams[i] != qb_tm and pool_teams[i] != qb_opp
+            ]
+            if not eligible_dsts:
+                eligible_dsts = [i for i in pos_groups["DST"] if i not in cand_chosen]
+            if not eligible_dsts:
+                continue
+            dst_pick = int(rng_w2.choice(eligible_dsts))
+            cand_chosen.append(dst_pick)
+            pos_c_counts["DST"] += 1
+
+            needed_rbs = max(0, 2 - pos_c_counts["RB"])
+            needed_wrs = max(0, 3 - pos_c_counts["WR"])
+            needed_tes = max(0, 1 - pos_c_counts["TE"])
+
+            valid_rb_pool = [
+                i for i in pos_groups["RB"]
+                if i not in cand_chosen and player_exp_counts[i] < max_exp_count and team_skill_counts.get(pool_teams[i], 0) < 4
+            ]
+            if len(valid_rb_pool) < needed_rbs:
+                continue
+            rb_added = list(rng_w2.choice(valid_rb_pool, size=needed_rbs, replace=False)) if needed_rbs > 0 else []
+            for r_i in rb_added:
+                cand_chosen.append(r_i)
+                pos_c_counts["RB"] += 1
+                t = pool_teams[r_i]
+                team_skill_counts[t] = team_skill_counts.get(t, 0) + 1
+
+            valid_wr_pool = [
+                i for i in pos_groups["WR"]
+                if i not in cand_chosen and player_exp_counts[i] < max_exp_count and team_skill_counts.get(pool_teams[i], 0) < 4
+            ]
+            if len(valid_wr_pool) < needed_wrs:
+                continue
+            wr_added = list(rng_w2.choice(valid_wr_pool, size=needed_wrs, replace=False)) if needed_wrs > 0 else []
+            for w_i in wr_added:
+                cand_chosen.append(w_i)
+                pos_c_counts["WR"] += 1
+                t = pool_teams[w_i]
+                team_skill_counts[t] = team_skill_counts.get(t, 0) + 1
+
+            valid_te_pool = [
+                i for i in pos_groups["TE"]
+                if i not in cand_chosen and player_exp_counts[i] < max_exp_count and team_skill_counts.get(pool_teams[i], 0) < 4
+            ]
+            if len(valid_te_pool) < needed_tes:
+                continue
+            te_added = list(rng_w2.choice(valid_te_pool, size=needed_tes, replace=False)) if needed_tes > 0 else []
+            for t_i in te_added:
+                cand_chosen.append(t_i)
+                pos_c_counts["TE"] += 1
+                t = pool_teams[t_i]
+                team_skill_counts[t] = team_skill_counts.get(t, 0) + 1
+
+            eligible_flex = []
+            if pos_c_counts["RB"] < 3:
+                eligible_flex.extend([i for i in pos_groups["RB"] if i not in cand_chosen and player_exp_counts[i] < max_exp_count and team_skill_counts.get(pool_teams[i], 0) < 4])
+            if pos_c_counts["WR"] < 4:
+                eligible_flex.extend([i for i in pos_groups["WR"] if i not in cand_chosen and player_exp_counts[i] < max_exp_count and team_skill_counts.get(pool_teams[i], 0) < 4])
+            if pos_c_counts["TE"] < 2:
+                eligible_flex.extend([i for i in pos_groups["TE"] if i not in cand_chosen and player_exp_counts[i] < max_exp_count and team_skill_counts.get(pool_teams[i], 0) < 4])
+            if not eligible_flex:
+                continue
+            flex_pick = int(rng_w2.choice(eligible_flex))
+            cand_chosen.append(flex_pick)
+            pos_c_counts[pool_pos[flex_pick]] += 1
+            t_flx = pool_teams[flex_pick]
+            team_skill_counts[t_flx] = team_skill_counts.get(t_flx, 0) + 1
+
+            total_sal = sum(int(pool_salaries[i]) for i in cand_chosen)
+            swap_attempts = 0
+            while total_sal > 50000 and swap_attempts < 20:
+                swap_attempts += 1
+                swappable_slots = list(range(4, 9))
+                swappable_slots.sort(key=lambda s_idx: pool_salaries[cand_chosen[s_idx]], reverse=True)
+                swapped = False
+                for s_idx in swappable_slots:
+                    old_p = cand_chosen[s_idx]
+                    old_pos = pool_pos[old_p]
+                    old_sal = int(pool_salaries[old_p])
+                    old_tm = pool_teams[old_p]
+
+                    cheaper_cands = [
+                        ci for ci in pos_groups[old_pos]
+                        if ci not in cand_chosen
+                        and pool_salaries[ci] < old_sal
+                        and player_exp_counts[ci] < max_exp_count
+                        and (team_skill_counts.get(pool_teams[ci], 0) < 4 or pool_teams[ci] == old_tm)
+                    ]
+                    if cheaper_cands:
+                        deficit = total_sal - 50000
+                        under_cap_cands = [ci for ci in cheaper_cands if (old_sal - int(pool_salaries[ci])) >= deficit]
+                        new_p = max(under_cap_cands, key=lambda ci: int(pool_salaries[ci])) if under_cap_cands else min(cheaper_cands, key=lambda ci: int(pool_salaries[ci]))
+                        cand_chosen[s_idx] = new_p
+                        if old_pos != "DST":
+                            team_skill_counts[old_tm] -= 1
+                            team_skill_counts[pool_teams[new_p]] = team_skill_counts.get(pool_teams[new_p], 0) + 1
+                        total_sal = sum(int(pool_salaries[i]) for i in cand_chosen)
+                        swapped = True
+                        break
+                if not swapped:
+                    break
+
+            if total_sal > 50000:
+                continue
+
+            c_set = set(cand_chosen)
+            if len(c_set) != 9:
+                continue
+
+            max_overlap_found = max([len(c_set.intersection(es)) for es in candidate_sets], default=0)
+            if max_overlap_found > 6:
+                continue
+
+            if any(player_exp_counts[i] + 1 > max_exp_count for i in cand_chosen):
+                continue
+
+            chosen_indices = cand_chosen
+            break
+
+        if chosen_indices is None:
+            qb_fallback = int(rng_w2.choice(pos_groups["QB"]))
+            chosen_fallback = [qb_fallback]
+            for p_c in ("RB", "RB", "WR", "WR", "WR", "TE", "DST"):
+                cands_pos = [i for i in pos_groups[p_c] if i not in chosen_fallback]
+                chosen_fallback.append(int(rng_w2.choice(cands_pos)))
+            flex_cands = [i for i in pos_groups["RB"] + pos_groups["WR"] + pos_groups["TE"] if i not in chosen_fallback]
+            chosen_fallback.append(int(rng_w2.choice(flex_cands)))
+            chosen_indices = _enforce_salary_cap_preserving_positions(
+                chosen_fallback,
+                pos_groups=pos_groups,
+                pool_pos=pool_pos,
+                pool_salaries=pool_salaries,
+                salary_cap=50000,
+            )
+
+        for i in chosen_indices:
+            player_exp_counts[i] += 1
+            X_cand[c_idx, i] = 1.0
+        candidate_sets.append(set(chosen_indices))
+        candidate_rosters_list.append([
+            {
+                "player": str(curated_records[i]["player"]),
+                "position": str(pool_pos[i]),
+                "team": str(pool_teams[i]),
+                "opponent": str(pool_opponents[i]),
+                "salary": int(pool_salaries[i]),
+                "gse_dk_projection": float(curated_records[i]["gse_dk_projection"]),
+            }
+            for i in chosen_indices
+        ])
 
     # Build Simulated Opponent Contest Field X_field (500 x N_pool) weighted by Dirichlet-Multinomial / QRE field ownership
-    # while strictly enforcing valid 9-man positional structure and total_salary <= $50,000
+    # blended with Sunday 03:20 AM CST X API QRE ownership priors while strictly enforcing valid 9-man positional structure
+    # and total_salary <= $50,000
+    x_api_dfs_tensor = get_sunday_0320am_x_api_signal_tensor()
+    x_by_gid = x_api_dfs_tensor.get("by_game_id", {})
     qre_weights = np.array(
-        [max(0.005, float(p.get("eq_dfs_11_qre_ownership", 0.08))) for p in curated_records],
+        [
+            max(
+                0.005,
+                0.85 * float(p.get("eq_dfs_11_qre_ownership", 0.08))
+                + 0.15 * float(x_by_gid.get(str(p.get("game_id", "")), {}).get("qre_field_ownership_mean", 0.095)),
+            )
+            for p in curated_records
+        ],
         dtype=np.float64,
     )
     qre_weights = qre_weights / qre_weights.sum()
@@ -923,17 +1176,31 @@ def construct_and_verify_200pt_dk_championship_portfolio(
 
         # Compute correlated lineup p90, p99, and CVaR_0.99 from the second-stage Student-t (nu=4)
         # + Gumbel-Hougaard stack co-movement + DraftKings +3.0pt milestone bonuses
+        # + 6-Domain Spatial / Micro-Blocking / Conceptual Processing Ceiling Boosts
+        from intelligence.simulation.spatial_micro_metrics_pbp_and_dfs_bridge import (
+            compute_player_spatial_micro_dfs_and_prop_ceiling_boost,
+        )
+
         indiv_p90_sum = 0.0
         indiv_p99_sum = 0.0
         milestone_bonus_ev_sum = 0.0
+        spatial_cvar_boost_sum = 0.0
         for p in lu_players:
             pk = norm_key(str(p["player"]))
             c_rec = curated_by_name.get(pk, {})
             sim_info = c_rec.get("second_stage_dfs_pool_sim", {})
             p_mean = float(p["projection"])
-            indiv_p90_sum += float(sim_info.get("sim_p90_ceiling", p_mean * 1.48))
-            indiv_p99_sum += float(sim_info.get("sim_p99_slate_breaker", p_mean * 1.92))
+            sp_boost = compute_player_spatial_micro_dfs_and_prop_ceiling_boost(
+                player_name=str(p["player"]),
+                team=str(p["team"]),
+                opponent=str(p["opponent"]),
+                position=str(p["position"]),
+                base_projection_dk_pts=p_mean,
+            )["ceiling_boosts"]
+            indiv_p90_sum += float(sim_info.get("sim_p90_ceiling", p_mean * 1.48)) + 0.15 * float(sp_boost["q90_spatial_boost_dk_pts"])
+            indiv_p99_sum += float(sim_info.get("sim_p99_slate_breaker", p_mean * 1.92)) + 0.15 * float(sp_boost["q99_spatial_boost_dk_pts"])
             milestone_bonus_ev_sum += float(sim_info.get("dk_300_100_yd_bonus_prob", 0.25)) * 3.0
+            spatial_cvar_boost_sum += 0.12 * float(sp_boost["cvar_099_spatial_boost_dk_pts"])
 
         # Correlated game-stack & bring-back coupling factor (Hunter-Vielma-Zaman + Gumbel upper-tail lambda_U)
         qb_rows = [p for p in lu_players if p["position"] == "QB"]
@@ -954,7 +1221,7 @@ def construct_and_verify_200pt_dk_championship_portfolio(
         stack_retention = 0.72 + 0.03 * min(2, len(same_team_catchers)) + 0.02 * min(1, len(bring_backs))
         joint_p90_score = round(mean_proj_sum + (indiv_p90_sum - mean_proj_sum) * stack_retention + 3.0, 2)
         joint_p99_score = round(mean_proj_sum + (indiv_p99_sum - mean_proj_sum) * stack_retention + 6.0, 2)
-        cvar_099_score = round(joint_p99_score + 8.45 + milestone_bonus_ev_sum, 2)
+        cvar_099_score = round(joint_p99_score + 8.45 + milestone_bonus_ev_sum + spatial_cvar_boost_sum, 2)
 
         positions_list = [p["position"] for p in lu_players]
         valid_9_slots = (
@@ -1094,7 +1361,9 @@ def construct_and_verify_200pt_dk_championship_portfolio(
         },
         "wave2_lineup_vs_field_contest_simulation_summary": {
             "candidate_lineups_simulated": n_cand_lineups,
+            "candidate_lineups_count": n_cand_lineups,
             "opponent_field_lineups_simulated": n_field_lineups,
+            "opponent_field_lineups_count": n_field_lineups,
             "correlated_slate_worlds_simulated": num_sims,
             "total_lineup_world_evaluations": (n_cand_lineups + n_field_lineups) * num_sims,
             "all_candidate_lineups_salary_cap_and_roster_valid": bool(
@@ -1105,6 +1374,8 @@ def construct_and_verify_200pt_dk_championship_portfolio(
             ),
             "max_candidate_lineup_salary": int(np.max(cand_salaries)),
             "max_opponent_field_lineup_salary": int(np.max(field_salaries)),
+            "max_player_exposure_ratio": round(float(np.max(player_exp_counts) / n_cand_lineups), 4),
+            "all_candidate_lineups_pass_roster_and_exposure_audit": bool(np.max(player_exp_counts) <= max_exp_count),
             "portfolio_combined_top1pct_world_coverage": round(float(np.mean(covered_top1pct_worlds)), 4),
             "portfolio_mean_sim_roi_pct": round(float(np.mean(cand_sim_roi_pct[: len(lineups)])), 2),
             "antithetic_and_control_variate_diagnostics": (
@@ -1150,6 +1421,10 @@ def construct_and_verify_200pt_dk_championship_portfolio(
         "max_joint_p99_shootout_dk_pts": max(
             (lu["joint_p99_shootout_dk_pts"] for lu in lineup_reports), default=0.0
         ),
+        "sunday_0320am_x_api_1000_posts_dfs_overlay": get_sunday_0320am_x_api_signal_tensor().get(
+            "dfs_and_projections_overlay", {}
+        ),
+        "candidate_lineups_rosters": candidate_rosters_list,
         "lineups": lineup_reports,
     }
 

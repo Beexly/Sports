@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "workflow": "/antigravity-skills:full-stack-orchestration-full-stack-feature",
   "feature_name": "Overnight Post-Simulation 360-Degree NFL Projection & Two-Wave 200+ Pt DraftKings DFS Contest Feature",
-  "generated_at_utc": "2026-11-08T08:41:54.984318+00:00",
+  "generated_at_utc": "2026-11-08T10:33:11.312506+00:00",
   "status": "PASS",
   "phase1_architecture_and_database_spec": {
     "schema_version": "1.0.0",
@@ -163,24 +163,24 @@
   },
   "phase2_backend_execution_summary": {
     "slate_id": "NFL_2026_WEEK9_MAIN_SLATE",
-    "execution_latency_ms": 5565.74,
+    "execution_latency_ms": 19683.43,
     "proprietary_metrics_cataloged": 22,
     "all_22_metrics_wired_and_tested": true,
     "oos_4fold_benchmark": {
-      "n_historical_slates": 320,
-      "logit_mse_market_only": 0.014361,
-      "logit_mse_unoptimized_equal_weights": 0.001095,
-      "logit_mse_optimized_james_stein_ridge": 0.000107,
-      "prob_brier_market_only": 0.000797,
-      "prob_brier_unoptimized_equal_weights": 6.2e-05,
-      "prob_brier_optimized_james_stein_ridge": 6e-06,
-      "binary_outcome_brier_market_only": 0.2003,
-      "binary_outcome_brier_unoptimized_equal": 0.189079,
-      "binary_outcome_brier_optimized": 0.187899,
-      "binary_outcome_brier_skill_score": 0.061909,
-      "dk_lineup_mae_market_only_pts": 4.032,
-      "dk_lineup_mae_unoptimized_equal_pts": 1.097,
-      "dk_lineup_mae_optimized_james_stein_pts": 0.335,
+      "n_historical_slates": 640,
+      "logit_mse_market_only": 0.013048,
+      "logit_mse_unoptimized_equal_weights": 0.001222,
+      "logit_mse_optimized_james_stein_ridge": 7.2e-05,
+      "prob_brier_market_only": 0.000708,
+      "prob_brier_unoptimized_equal_weights": 6.5e-05,
+      "prob_brier_optimized_james_stein_ridge": 4e-06,
+      "binary_outcome_brier_market_only": 0.199503,
+      "binary_outcome_brier_unoptimized_equal": 0.188473,
+      "binary_outcome_brier_optimized": 0.187299,
+      "binary_outcome_brier_skill_score": 0.061172,
+      "dk_lineup_mae_market_only_pts": 3.832,
+      "dk_lineup_mae_unoptimized_equal_pts": 1.16,
+      "dk_lineup_mae_optimized_james_stein_pts": 0.282,
       "optimized_beats_unoptimized_equal": true,
       "optimized_beats_market_baseline": true
     },
@@ -195,7 +195,15 @@
       "top_lineup_p90_pts": 284.97,
       "top_lineup_p99_pts": 393.08,
       "top_lineup_cvar_099_pts": 415.07,
-      "clears_200pt_target": true
+      "clears_200pt_target": true,
+      "all_7_pillars_verified": true,
+      "iterative_passes_executed": 5,
+      "monotonic_convergence_verified": true,
+      "operational_slate_windows_armed": [
+        "WINDOW_1_0730AM_MORNING_PUBLISH",
+        "WINDOW_2_T60M_OFFICIAL_INACTIVES_PIVOT",
+        "WINDOW_3_NOON_AND_AFTERNOON_LATE_SWAP"
+      ]
     },
     "model_routing_summary": {
       "quad_frontier_pillars_count": 4,
@@ -265,7 +273,17 @@
         "wave2_opponent_field": 500,
         "top_lineup_p90_pts": 284.97,
         "top_lineup_p99_pts": 393.08,
-        "clears_200pt_target": true
+        "clears_200pt_target": true,
+        "iterative_multi_pass_convergence": {
+          "passes_completed": 5,
+          "monotonic_convergence_verified": true,
+          "final_portfolio_championship_tail_pts": 356.104
+        },
+        "three_window_slate_action_plan": {
+          "window_1_0730am_morning_publish": "Full Main Slate 20-Max Portfolio and Top-5 Flagship 200+ Point Bullets armed for 07:30 AM CST release.",
+          "window_2_t60m_official_inactives_pivot": "Pre-computed T-60m conditional swap matrix armed for 10:30 AM CST official inactive lists.",
+          "window_3_noon_and_afternoon_late_swap": "Dynamic 3:05 PM and 3:25 PM CST late-swap leverage matrix armed for early-slate chalk scenarios."
+        }
       }
     },
     "pro_tier_payload_sample": {
@@ -346,8 +364,8 @@
           "market_category": "SKILL_PLAYER_SUITE",
           "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
           "american_odds": -110,
-          "confidence": "64/100",
-          "confidence_score": "64/100",
+          "confidence": "65/100",
+          "confidence_score": "65/100",
           "film_room_rationale": "Vacated backfield carries and favorable light-box counts create sustained early-down rushing volume and second-level breakaway lanes."
         },
         {
@@ -569,15 +587,15 @@
         {
           "lineup_id": 3,
           "archetype": "Lineup 3  :  Contrarian Leverage & Late-Swap GPP Stack (Contrarian Leverage Build)",
-          "total_salary": 49600,
-          "salary_cap_remaining": 400,
+          "total_salary": 49900,
+          "salary_cap_remaining": 100,
           "qb_team": "LAR",
-          "stacked_pass_catchers_count": 1,
+          "stacked_pass_catchers_count": 2,
           "opposing_bring_backs_count": 1,
-          "mean_projection_dk_pts": 172.28,
-          "ceiling_p90_dk_pts": 266.43,
-          "shootout_p99_dk_pts": 365.68,
-          "championship_tail_dk_pts": 386.3,
+          "mean_projection_dk_pts": 171.03,
+          "ceiling_p90_dk_pts": 266.01,
+          "shootout_p99_dk_pts": 367.92,
+          "championship_tail_dk_pts": 388.57,
           "confidence": "78/100",
           "roster": [
             {
@@ -587,6 +605,14 @@
               "opponent": "WAS",
               "salary": 8800,
               "projected_dk_pts": 25.71
+            },
+            {
+              "player": "Malik Nabers",
+              "position": "WR",
+              "team": "NYG",
+              "opponent": "PHI",
+              "salary": 7300,
+              "projected_dk_pts": 22.59
             },
             {
               "player": "Josh Jacobs",
@@ -613,28 +639,12 @@
               "projected_dk_pts": 23.45
             },
             {
-              "player": "Ashton Jeanty",
-              "position": "RB",
-              "team": "LV",
-              "opponent": "SF",
-              "salary": 5900,
-              "projected_dk_pts": 19.33
-            },
-            {
               "player": "Stefon Diggs",
               "position": "WR",
               "team": "WAS",
               "opponent": "LAR",
               "salary": 5600,
               "projected_dk_pts": 17.3
-            },
-            {
-              "player": "Adonai Mitchell",
-              "position": "WR",
-              "team": "NYJ",
-              "opponent": "KC",
-              "salary": 4500,
-              "projected_dk_pts": 12.72
             },
             {
               "player": "Dalton Schultz",
@@ -645,11 +655,19 @@
               "projected_dk_pts": 13.9
             },
             {
-              "player": "Eagles",
+              "player": "Colby Parkinson",
+              "position": "TE",
+              "team": "LAR",
+              "opponent": "WAS",
+              "salary": 3000,
+              "projected_dk_pts": 8.21
+            },
+            {
+              "player": "Saints",
               "position": "DST",
-              "team": "PHI",
-              "opponent": "NYG",
-              "salary": 2500,
+              "team": "NO",
+              "opponent": "CLE",
+              "salary": 2900,
               "projected_dk_pts": 11.2
             }
           ]
@@ -660,7 +678,17 @@
         "wave2_opponent_field": 500,
         "top_lineup_p90_pts": 284.97,
         "top_lineup_p99_pts": 393.08,
-        "clears_200pt_target": true
+        "clears_200pt_target": true,
+        "iterative_multi_pass_convergence": {
+          "passes_completed": 5,
+          "monotonic_convergence_verified": true,
+          "final_portfolio_championship_tail_pts": 356.104
+        },
+        "three_window_slate_action_plan": {
+          "window_1_0730am_morning_publish": "Full Main Slate 20-Max Portfolio and Top-5 Flagship 200+ Point Bullets armed for 07:30 AM CST release.",
+          "window_2_t60m_official_inactives_pivot": "Pre-computed T-60m conditional swap matrix armed for 10:30 AM CST official inactive lists.",
+          "window_3_noon_and_afternoon_late_swap": "Dynamic 3:05 PM and 3:25 PM CST late-swap leverage matrix armed for early-slate chalk scenarios."
+        }
       }
     }
   },
@@ -687,9 +715,9 @@
     "postgres_17_pg_cron_hygiene_verified": true,
     "api_response_latency_slo": {
       "target_cached_response_ceiling_ms": 500.0,
-      "measured_free_projection_ms": 2.865,
-      "measured_pro_projection_ms": 8.031,
-      "measured_cached_p95_ms": 8.031,
+      "measured_free_projection_ms": 4.316,
+      "measured_pro_projection_ms": 12.509,
+      "measured_cached_p95_ms": 12.509,
       "meets_sub_500ms_slo": true
     },
     "security_and_paywall_audit": {
@@ -700,5 +728,5 @@
       "heavy_juice_minus_300_firewall_verified": true
     }
   },
-  "digest_sha256": "e41b873950ceaabafd6b703a0f07ad100585f0738a782111de4641a27bf6ab89"
+  "digest_sha256": "859c4302215ae628f23eaf014d7e9a268f1fd73920f2c56dd9f90e11ef39c5d7"
 }
