@@ -18,7 +18,7 @@ full extraction of:
      `alter-xiv-scaffold-v2.zip`, `files.zip`) & Root `G:\\My Drive` (GSE/GSI/Sports architecture `.gdoc`
      pointers, `deepseek_markdown_20260911_667ac8.md`, `extract-data-2026-09-11.json`,
      `extract-data-2026-09-11 (1).json`, `gse-repo-source-4b4ae1e.zip`).
-  4. `C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge` (1,027 files:
+  4. `onedrive://Galaxy Sports Edge` (1,027 files:
      `gse-weather-edge-INTEGRATION_SPEC.md`, `gse-weather-edge.zip`, `galaxy-proof-mcp.zip`,
      `gse-ots-anchor.zip`, `ACTIVATION_COCKPIT.md`, `FRONTIER_RD_2026-07-17.md`,
      `FRONTIER_UNTAPPED_ATLAS.md`, `HANDOFF_TO_CODING_AGENT.md`, `AWS_LEVERAGE_MAP.md`,
@@ -405,7 +405,7 @@ def evaluate_onedrive_weather_edge_aerodynamics(
     game_context: Dict[str, Any],
 ) -> Dict[str, Any]:
     """
-    Implements `C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge-INTEGRATION_SPEC.md`
+    Implements `onedrive://Galaxy Sports Edge/gse-weather-edge-INTEGRATION_SPEC.md`
     and `gse-weather-edge/src/index.ts` (`gse-weather-edge.zip`):
       1. Leak-Safety Contract (`asOfUtc <= kickoffUtc`): verifies forecast lead time and rejects
          post-kickoff or reanalysis leakage; indoor/dome sites short-circuit to `indoor-neutral`.
@@ -449,8 +449,8 @@ def evaluate_onedrive_weather_edge_aerodynamics(
                 "second_half_pass_rush_fatigue_mult": 1.0,
             },
             "provenance": [
-                "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge-INTEGRATION_SPEC.md",
-                "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge.zip::src/index.ts",
+                "onedrive://Galaxy Sports Edge/gse-weather-edge-INTEGRATION_SPEC.md",
+                "onedrive://Galaxy Sports Edge/gse-weather-edge.zip::src/index.ts",
             ],
         }
 
@@ -542,8 +542,8 @@ def evaluate_onedrive_weather_edge_aerodynamics(
             "second_half_pass_rush_fatigue_mult": round(second_half_pass_rush_fatigue_mult, 4),
         },
         "provenance": [
-            "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge-INTEGRATION_SPEC.md",
-            "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge.zip::src/index.ts",
+            "onedrive://Galaxy Sports Edge/gse-weather-edge-INTEGRATION_SPEC.md",
+            "onedrive://Galaxy Sports Edge/gse-weather-edge.zip::src/index.ts",
         ],
     }
 
@@ -702,10 +702,10 @@ def evaluate_nfl_roster_truth_and_wave3_line_level(
             "edgeball_ceiling_utility_boost": round(edgeball_gpp_utility_boost, 4),
         },
         "provenance": [
-            "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\docs\\research\\nfl-roster-truth\\15-build-queue-summary.md",
+            "onedrive://Galaxy Sports Edge/docs\\research\\nfl-roster-truth\\15-build-queue-summary.md",
             "G:\\My Drive\\GSN\\PROMPT_3_V2_LINE_LEVEL_WAVE3_INTEGRATION.md",
             "G:\\My Drive\\extract-data-2026-09-11 (1).json",
-            "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\docs\\research\\edgeball-contest-os\\04-gse-edgeball-format-spec.md",
+            "onedrive://Galaxy Sports Edge/docs\\research\\edgeball-contest-os\\04-gse-edgeball-format-spec.md",
         ],
     }
 

@@ -39,7 +39,7 @@ from typing import Iterable
 import numpy as np
 import pandas as pd
 
-DATA = Path(r"C:\Users\Garrett\Sports\intelligence\vision\data")
+DATA = Path(__file__).resolve().parent / "data"
 
 TRACK_COLS = ["gameId", "playId", "nflId", "frameId", "frameType", "x", "y",
               "s", "a", "dir", "o", "event", "club", "playDirection"]

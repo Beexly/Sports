@@ -298,7 +298,7 @@ def check_charge_8() -> Dict[str, Any]:
 
 
 def check_charge_9() -> Dict[str, Any]:
-    """Charge 9: Drive/library claims reconciled in CORPUS-CENSUS.csv + Google Drive/Docs & BK-DL manifests + Two-Host Rule."""
+    """Charge 9: Drive/library claims reconciled in CORPUS-CENSUS.csv + Google Drive/Docs & BK-DL manifests + Two-Host Rule + Quarantine Manifest."""
     corpus_census = WIRING_DIR / "CORPUS-CENSUS.csv"
     gdrive_manifest = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "google-drive-and-docs-verified-manifest.json"
     bk_dl_index = REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "bk-dl-deduplicated-provenance-index.json"
@@ -309,47 +309,105 @@ def check_charge_9() -> Dict[str, Any]:
         git_grep_lines(dl_win, ["intelligence", "packages", "apps", "workers"])
         + git_grep_lines(dl_posix, ["intelligence", "packages", "apps", "workers"])
     )
+    home_win = str(Path.home())
+    home_posix = Path.home().as_posix()
+    py_home_hits = [
+        str(p.relative_to(REPO_ROOT))
+        for p in (REPO_ROOT / "intelligence").rglob("*.py")
+        if "__pycache__" not in str(p)
+        and (home_win.lower() in p.read_text(encoding="utf-8", errors="ignore").lower() or home_posix.lower() in p.read_text(encoding="utf-8", errors="ignore").lower())
+    ]
+
+    quarantine_ok = False
+    if quarantine_manifest.exists():
+        try:
+            q_data = json.loads(quarantine_manifest.read_text(encoding="utf-8"))
+            repos = q_data.get("repositories") or (
+                list(q_data.get("new_34_repos", [])) + list(q_data.get("prior_73_repos", []))
+            )
+            by_slug = {str(r.get("owner_repo") or r.get("repo_slug") or ""): r for r in repos}
+            blur_verdict = str(
+                by_slug.get("Blur009/Blur-AutoClicker", {}).get("security_verdict")
+                or by_slug.get("Blur009/Blur-AutoClicker", {}).get("status")
+                or ""
+            )
+            itb_verdict = str(
+                by_slug.get("itbrowser-net/undetectable-fingerprint-browser", {}).get("security_verdict")
+                or by_slug.get("itbrowser-net/undetectable-fingerprint-browser", {}).get("status")
+                or ""
+            )
+            quarantine_ok = (
+                len(repos) >= 107
+                and all(r.get("install_permitted_in_prod") is False for r in repos)
+                and blur_verdict.startswith("REJECTED_SECURITY_POLICY")
+                and itb_verdict.startswith("REJECTED_SECURITY_POLICY")
+            )
+        except Exception:
+            quarantine_ok = False
+
     exists = (
         corpus_census.exists()
         and corpus_census.stat().st_size > 1000
         and gdrive_manifest.exists()
         and bk_dl_index.exists()
-        and quarantine_manifest.exists()
+        and quarantine_ok
         and len(runtime_dl_hits) == 0
+        and len(py_home_hits) == 0
     )
     return {
         "charge": 9,
-        "name": "Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL manifests + Two-Host zero local paths",
+        "name": "Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths",
         "status": "PASS" if exists else "FAIL",
         "corpus_census_present": corpus_census.exists(),
         "google_drive_manifest_present": gdrive_manifest.exists(),
         "bk_dl_index_present": bk_dl_index.exists(),
-        "quarantine_manifest_present": quarantine_manifest.exists(),
+        "quarantine_manifest_verified": quarantine_ok,
         "runtime_downloads_path_hits": len(runtime_dl_hits),
+        "intelligence_py_home_path_hits": len(py_home_hits),
     }
 
 
 def check_charge_10() -> Dict[str, Any]:
-    """Charge 10: Every 'wired' claim carries an automated consumption test proof + AST/279-family/GSI-sandbox guards."""
+    """Charge 10: Every 'wired' claim carries an automated consumption test proof + 21,419-AST/copula_tail/bounds/279-family/GSI-sandbox guards."""
     test_file = REPO_ROOT / "tests" / "wiring" / "test_wave_consumption_proofs.py"
     ast_test = REPO_ROOT / "tests" / "unit" / "test_equation_executor_ast_and_bounds.py"
     fam_test = REPO_ROOT / "tests" / "unit" / "test_family_consumption_279_and_l4_l5.py"
     gsi_sandbox = REPO_ROOT / "research" / "gsi_sandbox" / "physics_biophysics_and_oncology_21_repo_sandbox.py"
     old_gsi = REPO_ROOT / "intelligence" / "ecosystem" / "physics_biophysics_and_oncology_21_repo_engine.py"
-    exists = (
+    reg_file = REPO_ROOT / "data" / "equations" / "equation_execution_registry.jsonl"
+
+    reg_lines = [ln for ln in reg_file.read_text(encoding="utf-8").splitlines() if ln.strip()] if reg_file.exists() else []
+    unsquared_copula = sum(1 for ln in reg_lines if "(1.0 + (x0 * x1) / 4.5)" in ln)
+    gsi_import_hits = git_grep_lines("gsi_sandbox", ["intelligence", "packages", "apps", "workers"])
+
+    unit_proc = subprocess.run(
+        [sys.executable, "-m", "pytest", str(ast_test), str(fam_test), "-q"],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+    ) if (ast_test.exists() and fam_test.exists()) else None
+    unit_ok = bool(unit_proc and unit_proc.returncode == 0)
+
+    passed = (
         test_file.exists()
         and ast_test.exists()
         and fam_test.exists()
         and gsi_sandbox.exists()
         and not old_gsi.exists()
+        and len(reg_lines) == 21419
+        and unsquared_copula == 0
+        and len(gsi_import_hits) == 0
+        and unit_ok
     )
     return {
         "charge": 10,
-        "name": "Automated perturbation, 21,419-AST, 279-family L4/L5, and GSI sandbox isolation proofs present",
-        "status": "PASS" if exists else "PENDING_WAVE_3_TO_8",
-        "consumption_test_file_present": exists,
-        "ast_and_279_family_tests_present": ast_test.exists() and fam_test.exists(),
-        "gsi_sandbox_quarantined": gsi_sandbox.exists() and not old_gsi.exists(),
+        "name": "Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass",
+        "status": "PASS" if passed else "FAIL",
+        "consumption_test_file_present": test_file.exists(),
+        "ast_and_279_family_tests_passed": unit_ok,
+        "registry_exact_21419": len(reg_lines) == 21419,
+        "unsquared_copula_tail_count": unsquared_copula,
+        "gsi_sandbox_quarantined": gsi_sandbox.exists() and not old_gsi.exists() and len(gsi_import_hits) == 0,
     }
 
 
@@ -407,6 +465,8 @@ def main() -> None:
     args = parser.parse_args()
     res = run_suite(args.wave)
     print(json.dumps({"wave": res["wave"], "passed_count": res["passed_count"], "total": res["total_charges"]}, indent=2))
+    if res["passed_count"] != res["total_charges"]:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

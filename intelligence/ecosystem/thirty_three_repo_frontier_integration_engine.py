@@ -1,7 +1,7 @@
 r"""Thirty-Three Repository Two-Pass Frontier Integration Engine (Batch 2 -> 45 Total Repos).
 
 Implements Pass-1 source-code algorithms and Pass-2 introspective hardware-aware replacements
-across Personal Hardware/Software (C:\Users\Garrett), Galaxy Sports Edge (GSE), and
+across Personal Hardware/Software (~), Galaxy Sports Edge (GSE), and
 Galaxy Science Institute (GSI) for all 33 repositories in Batch 2:
 
   1. max-sixty/worktrunk              (Parallel worktree resolver, .worktreeinclude sync & concurrent-session file lock guard)
@@ -407,6 +407,7 @@ class WindmillRustDeskTrivyBrewMagpieNakamaCluster:
         "private_key_pem": re.compile(r"-----BEGIN (?:RSA |EC )?PRIVATE KEY-----"),
     }
 
+    # VOIDED_NOV_5_BATCH: These voided batch claims are retracted and must never be cited as standing records.
     VOIDED_CLAIMS: ClassVar[tuple[str, ...]] = (
         "62-23-1",
         "31-11",

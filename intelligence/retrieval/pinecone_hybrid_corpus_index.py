@@ -42,7 +42,7 @@ def load_env_local_secrets(env_path: Optional[Path] = None) -> Dict[str, str]:
     repo_root = Path(__file__).resolve().parents[2]
     candidates.append(repo_root / ".env.local")
     candidates.append(Path(r"C:\c\wt-week8-forensic\.env.local"))
-    candidates.append(Path(r"C:\Users\Garrett\Sports\.env.local"))
+    candidates.append(Path(__file__).resolve().parents[2] / ".env.local")
 
     parsed: Dict[str, str] = {}
     for candidate in candidates:

@@ -42,7 +42,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[2]
 PBP_DIR = REPO / "data" / "nflverse" / "pbp"
 FEED_PATH = REPO / "brain" / "feeds" / "2026-10-22" / "universal_handoff_prior_feed.jsonl"
-DEFAULT_WAREHOUSE = Path(r"C:/Users/Garrett/nfl-farm/extracted_data")
+DEFAULT_WAREHOUSE = Path.home() / "nfl-farm" / "extracted_data"
 
 FAMILIES = [
     "off_pass_epa",

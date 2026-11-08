@@ -45,7 +45,16 @@ def _get_dynamic_team_pbp_priors() -> Dict[str, Dict[str, float]]:
                 except Exception:
                     pbp = None
             if pbp is None and slim_csv_path.is_file():
-                pbp = pd.read_csv(slim_csv_path, compression="gzip", usecols=cols, low_memory=False)
+                try:
+                    pbp = pd.read_csv(slim_csv_path, compression="gzip", usecols=cols, low_memory=False)
+                except Exception:
+                    pbp = None
+            wh_pbp_path = REPO_ROOT / "data" / "warehouse" / "v1" / "pbp_normalized.parquet"
+            if pbp is None and wh_pbp_path.is_file():
+                try:
+                    pbp = pd.read_parquet(wh_pbp_path)
+                except Exception:
+                    pbp = None
             if pbp is None:
                 raise RuntimeError("No PBP source available")
             pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR"})

@@ -68,7 +68,7 @@ from voice_interface import SpeechWorker, list_voices, sapi_available  # noqa: E
 
 #: Default agent-bus checkout. Overridable with GSE_BUS_REPO, same variable the
 #: bridge script honours, so the two cannot drift apart.
-BUS_REPO = Path(os.environ.get("GSE_BUS_REPO", "C:/Users/Garrett/orca/agent-bus/agent-bus"))
+BUS_REPO = Path(os.environ.get("GSE_BUS_REPO", str(Path.home() / "orca/agent-bus/agent-bus")))
 BUS_MSG_DIR = BUS_REPO / "sports" / "msg"
 
 ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"

@@ -59,11 +59,11 @@ class WarehouseLoader:
 
         expected_rows = int(rec.get("record_count", 0))
         if pq is not None:
-            meta = pq.read_metadata(pq_path)
-            actual_rows = int(meta.num_rows)
-            table = pq.read_table(pq_path)
-            col_names = list(table.column_names)
-            sample_rows = table.slice(0, min(10, actual_rows)).to_pylist()
+            pf = pq.ParquetFile(pq_path)
+            actual_rows = int(pf.metadata.num_rows)
+            col_names = list(pf.schema_arrow.names)
+            first_batch = next(pf.iter_batches(batch_size=min(10, max(1, actual_rows))), None) if actual_rows > 0 else None
+            sample_rows = first_batch.to_pylist() if first_batch is not None else []
         else:
             sidecar_path = pq_path.with_suffix(".parquet.meta.json")
             if sidecar_path.exists():

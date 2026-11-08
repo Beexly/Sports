@@ -43,7 +43,7 @@ def _find_env_local_paths() -> List[Path]:
     candidates = [
         repo_root / ".env.local",
         Path(r"C:\c\wt-week8-forensic\.env.local"),
-        Path(r"C:\Users\Garrett\Sports\.env.local"),
+        Path(__file__).resolve().parents[2] / ".env.local",
     ]
     seen = set()
     ordered: List[Path] = []

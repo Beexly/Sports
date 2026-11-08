@@ -1,9 +1,9 @@
 """GSE & GSI 143-Skill Orchestrator, Operational Domain Router & 7 `agy` CLI Plugin Registry.
 
 Parses, categorizes, and routes all 143 newly added/synced skills across
-`C:\\Users\\Garrett\\.agents\\skills` union `C:\\Users\\Garrett\\.claude\\skills`
-(plus `C:\\Users\\Garrett\\.gemini\\config\\skills` and the 7 `agy` CLI plugins
-totaling 383 plugin skills in `C:\\Users\\Garrett\\.gemini\\config\\plugins`).
+`~/.agents\\skills` union `~/.claude\\skills`
+(plus `~/.gemini\\config\\skills` and the 7 `agy` CLI plugins
+totaling 383 plugin skills in `~/.gemini\\config\\plugins`).
 
 Provides:
 - `load_143_skills_catalog() -> Dict[str, Any]`

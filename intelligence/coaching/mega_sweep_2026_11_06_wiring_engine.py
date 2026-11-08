@@ -919,7 +919,7 @@ def evaluate_laptop_hardware_execution_plan(
 
 # =============================================================================
 # 4. `gse-ml-service` 5-MODEL ENSEMBLE BRIDGE
-#    (`C:\Users\Garrett\gse-ml-service`)
+#    (`~/gse-ml-service`)
 # =============================================================================
 
 
@@ -940,7 +940,7 @@ def compute_gse_ml_service_5_model_ensemble(
     etkf_obs_var: float = 0.02,
 ) -> Dict[str, Any]:
     """
-    Deterministic vectorized math bridge for the 5 models in `C:\\Users\\Garrett\\gse-ml-service`:
+    Deterministic vectorized math bridge for the 5 models in `~/gse-ml-service`:
       1. `tda_persistence_entropy` (`tda_service.py`: Vietoris-Rips H0/H1 pocket collapse & shell topology entropy)
       2. `mps_schmidt_entanglement` (`mps_service.py`: Tensor-network Matrix Product State bond entanglement across 5 OLmen)
       3. `irl_coaching_reward_recovery` (`irl_service.py`: Maximum Entropy Inverse RL revealed coaching risk preference)

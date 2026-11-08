@@ -1,3 +1,4 @@
+from pathlib import Path
 """
 Hardened Stream Ingestion Pipeline for Verified Datasets
 """
@@ -11,7 +12,7 @@ import io
 import pandas as pd
 from datetime import datetime, timezone
 
-BASE_DIR = r"C:\Users\Garrett\Sports"
+BASE_DIR = str(Path(__file__).resolve().parents[2])
 MANIFEST_PATH = os.path.join(BASE_DIR, r"docs\data-sources\research\2026-10-16\rea_extraction\dataset_manifest.json")
 WAREHOUSE_RAW = os.path.join(BASE_DIR, r"intelligence\data\warehouse\raw")
 WAREHOUSE_NORM = os.path.join(BASE_DIR, r"intelligence\data\warehouse\normalized")

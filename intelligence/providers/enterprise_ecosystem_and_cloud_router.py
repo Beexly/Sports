@@ -49,10 +49,10 @@ def verify_enterprise_programs_and_services() -> Dict[str, Any]:
 
     # Check NVIDIA skills & NIM / RAPIDS / TAO readiness
     nvidia_skills = {
-        "dgx_spark_skills": Path("C:/Users/Garrett/.agents/skills/dgx-spark-skills/SKILL.md").is_file(),
-        "tao_setup": Path("C:/Users/Garrett/.agents/skills/tao-setup/SKILL.md").is_file(),
-        "ethos_orchestrate": Path("C:/Users/Garrett/.agents/skills/ethos-orchestrate/SKILL.md").is_file(),
-        "nvidia_skill_finder": Path("C:/Users/Garrett/.agents/skills/nvidia-skill-finder/SKILL.md").is_file(),
+        "dgx_spark_skills": (Path.home() / ".agents/skills/dgx-spark-skills/SKILL.md").is_file(),
+        "tao_setup": (Path.home() / ".agents/skills/tao-setup/SKILL.md").is_file(),
+        "ethos_orchestrate": (Path.home() / ".agents/skills/ethos-orchestrate/SKILL.md").is_file(),
+        "nvidia_skill_finder": (Path.home() / ".agents/skills/nvidia-skill-finder/SKILL.md").is_file(),
     }
 
     return {

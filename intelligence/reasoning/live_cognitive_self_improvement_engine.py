@@ -45,7 +45,7 @@ from pathlib import Path
 import sys
 from typing import Any, Dict, List, Optional, Sequence
 
-JEVKIT_ROOT = Path(r"C:\Users\Garrett\hermes-jev-skills")
+JEVKIT_ROOT = Path.home() / "hermes-jev-skills"
 if JEVKIT_ROOT.is_dir() and str(JEVKIT_ROOT) not in sys.path:
     sys.path.insert(0, str(JEVKIT_ROOT))
 

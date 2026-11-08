@@ -607,13 +607,20 @@ def _get_2026_team_pbp_ftn_stats() -> dict[str, dict[str, Any]]:
     import pandas as pd
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     ftn_path = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
-    if not pbp_path.is_file():
-        return {}
-
-    try:
-        pbp = pd.read_parquet(pbp_path)
-    except Exception:
+    pbp = None
+    if pbp_path.is_file():
+        try:
+            pbp = pd.read_parquet(pbp_path)
+        except Exception:
+            pbp = None
+    if pbp is None and slim_csv_path.is_file():
+        try:
+            pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
+        except Exception:
+            pbp = None
+    if pbp is None:
         return {}
     pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR"})
     pbp["defteam"] = pbp["defteam"].replace({"LA": "LAR"})
@@ -1811,10 +1818,23 @@ def run_stage1b_all_5367_equations_pre_sim_review(
     from intelligence.coaching.live_books_and_pdfs_executable_engine import (
         run_all_live_books_and_pdfs_engines,
     )
+    from intelligence.equations.equation_executor import (
+        execute_all_279_equation_families,
+    )
     live_books_engines = run_all_live_books_and_pdfs_engines(
         away=stage0_allowlist["away"],
         home=stage0_allowlist["home"],
         week=int(stage0_allowlist.get("week") or 9),
+    )
+    families_279_eval = execute_all_279_equation_families(
+        {
+            "epa_per_play": round(float(capped_log_odds), 6),
+            "proe": 0.025,
+            "pressure_rate": 0.34,
+            "wind_mph": 8.0,
+            "temp_f": 62.0,
+            "total_line": 45.5,
+        }
     )
 
     total_premises_reviewed = (
@@ -1841,7 +1861,11 @@ def run_stage1b_all_5367_equations_pre_sim_review(
             "mind_staging_full_corpus_records": full_corpus_count,
             "mind_staging_full_corpus_trainer_ready": full_corpus_trainer_ready,
             "total_equations_and_scientific_premises_reviewed": total_premises_reviewed,
+            "equation_execution_registry_21419_evaluated": int(families_279_eval["total_equations_evaluated"]),
+            "equations_active_above_min_sample": int(families_279_eval["equations_active_above_min_sample"]),
+            "equations_held_below_min_sample": int(families_279_eval["equations_held_below_min_sample"]),
         },
+        "family_consumption_census": families_279_eval["family_consumption_census"],
         "cognitive_router_4stage_execution": {
             "stage_a_context_mask_bits_total": 288,
             "stage_a_context_mask_bits_active": active_bits_count,

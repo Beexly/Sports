@@ -203,8 +203,10 @@ def build_bk_dl_provenance_index() -> Dict[str, Any]:
     for entry in all_entries:
         for req_f in MANDATORY_6_BRIDGE_FIELDS:
             assert req_f in entry, f"Missing mandatory bridge field {req_f} in {entry}"
-        assert "C:\\Users\\Garrett" not in json.dumps(entry)
-        assert "C:/Users/Garrett" not in json.dumps(entry)
+        home_win = str(Path.home())
+        home_posix = Path.home().as_posix()
+        assert home_win not in json.dumps(entry)
+        assert home_posix not in json.dumps(entry)
 
     payload = {
         "schema_version": "1.0.0",

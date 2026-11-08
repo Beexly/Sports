@@ -1,6 +1,6 @@
 {
-  "wave": "WAVE_OVERNIGHT_RECONCILED_2026_11_07",
-  "timestamp_utc": "2026-11-08T03:56:11.353938+00:00",
+  "wave": "WAVE_AUDIT_REMEDIATION_REVIEWED",
+  "timestamp_utc": "2026-11-08T04:40:44.624036+00:00",
   "passed_count": 10,
   "total_charges": 10,
   "checks": [
@@ -37,7 +37,7 @@
       "charge": 5,
       "name": "Verifiable test suite execution",
       "status": "PASS",
-      "detail": "10 passed in 49.11s"
+      "detail": "10 passed in 7.30s"
     },
     {
       "charge": 6,
@@ -62,20 +62,23 @@
     },
     {
       "charge": 9,
-      "name": "Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL manifests + Two-Host zero local paths",
+      "name": "Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths",
       "status": "PASS",
       "corpus_census_present": true,
       "google_drive_manifest_present": true,
       "bk_dl_index_present": true,
-      "quarantine_manifest_present": true,
-      "runtime_downloads_path_hits": 0
+      "quarantine_manifest_verified": true,
+      "runtime_downloads_path_hits": 0,
+      "intelligence_py_home_path_hits": 0
     },
     {
       "charge": 10,
-      "name": "Automated perturbation, 21,419-AST, 279-family L4/L5, and GSI sandbox isolation proofs present",
+      "name": "Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass",
       "status": "PASS",
       "consumption_test_file_present": true,
-      "ast_and_279_family_tests_present": true,
+      "ast_and_279_family_tests_passed": true,
+      "registry_exact_21419": true,
+      "unsquared_copula_tail_count": 0,
       "gsi_sandbox_quarantined": true
     }
   ]

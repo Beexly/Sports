@@ -422,6 +422,7 @@ def load_stage0_game_roster_allowlist(
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
+    wh_pbp_path = REPO_ROOT / "data" / "warehouse" / "v1" / "pbp_normalized.parquet"
     pbp: pd.DataFrame | None = None
     if pbp_path.is_file():
         try:
@@ -429,7 +430,15 @@ def load_stage0_game_roster_allowlist(
         except Exception:
             pbp = None
     if pbp is None and slim_csv_path.is_file():
-        pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
+        try:
+            pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
+        except Exception:
+            pbp = None
+    if pbp is None and wh_pbp_path.is_file():
+        try:
+            pbp = pd.read_parquet(wh_pbp_path)
+        except Exception:
+            pbp = None
     if pbp is None:
         raise Stage0RosterContaminationError(
             f"STAGE0_FAIL: 2026 PBP parquet ({pbp_path}) and clean-checkout slim fallback ({slim_csv_path}) both missing"

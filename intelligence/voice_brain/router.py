@@ -22,10 +22,10 @@ from typing import Any, Dict, List, Optional, Tuple
 def _load_env() -> Dict[str, str]:
     env_dict: Dict[str, str] = {}
     candidates = [
-        r"C:\Users\Garrett\AppData\Local\hermes\.env",
+        str(Path.home() / "AppData/Local/hermes/.env"),
         os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env.local"),
         os.path.join(os.getcwd(), ".env.local"),
-        r"C:\Users\Garrett\Sports\.env.local",
+        str(Path(__file__).resolve().parents[2] / ".env.local"),
     ]
     for candidate in candidates:
         if os.path.exists(candidate):
@@ -64,7 +64,7 @@ class ModelRouter:
             or ""
         )
         self.hermes_path = os.environ.get(
-            "HERMES_EXE", r"C:\Users\Garrett\AppData\Local\hermes\bin\hermes.exe"
+            "HERMES_EXE", str(Path.home() / "AppData/Local/hermes/bin/hermes.exe")
         )
 
     def route_query(

@@ -37,7 +37,7 @@ def _load_env_local() -> None:
     candidates = [
         Path(__file__).resolve().parents[2] / ".env.local",
         Path.cwd() / ".env.local",
-        Path("C:/Users/Garrett/Sports/.env.local"),
+        Path(__file__).resolve().parents[2] / ".env.local",
     ]
     for p in candidates:
         if p.exists():

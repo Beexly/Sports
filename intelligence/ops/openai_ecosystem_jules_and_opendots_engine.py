@@ -39,7 +39,7 @@ import urllib.error
 import urllib.request
 
 WORKTREE_ROOT = Path(r"C:\c\wt-week8-forensic")
-MAIN_REPO_ROOT = Path(r"C:\Users\Garrett\Sports")
+MAIN_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _load_env_secret(key_name: str) -> str:

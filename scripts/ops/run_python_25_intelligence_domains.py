@@ -38,7 +38,9 @@ def run_all_31_datasets(away: str = "JAX", home: str = "BAL") -> dict[str, Any]:
 
     # 1. FTN Charting 2026 (18,019 rows x 29 cols)
     ftn_df = pd.read_parquet(nflv / "ftn_charting_2026.parquet")
-    pbp_df = pd.read_parquet(nflv / "pbp" / "play_by_play_2026.parquet")
+    pbp_path = nflv / "pbp" / "play_by_play_2026.parquet"
+    slim_csv = nflv / "pbp_2026_slim_clean_checkout.csv.gz"
+    pbp_df = pd.read_parquet(pbp_path) if pbp_path.is_file() else pd.read_csv(slim_csv, compression="gzip", low_memory=False)
     pbp_sub = pbp_df[["game_id", "play_id", "posteam", "defteam", "epa", "success"]].rename(
         columns={"game_id": "nflverse_game_id", "play_id": "nflverse_play_id"}
     )
@@ -393,7 +395,9 @@ def _sanitize_json(obj: Any) -> Any:
 
 
 def main() -> int:
-    pbp_df = pd.read_parquet(REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet")
+    pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    slim_csv = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
+    pbp_df = pd.read_parquet(pbp_path) if pbp_path.is_file() else pd.read_csv(slim_csv, compression="gzip", low_memory=False)
     datasets_report = run_all_31_datasets("JAX", "BAL")
     coaching_deep = run_all_coaching_physics_and_signal_functions(pbp_df, "JAX", "BAL")
     intel_domains = run_all_31_intelligence_subpackages("JAX", "BAL")

@@ -17,6 +17,9 @@ FALLBACK_PRIORITY_RECORDS_PATH = REPO_ROOT / "data" / "corpus" / "research_recor
 DEFAULT_BRAIN_FEEDS_DIR = REPO_ROOT / "brain" / "feeds"
 
 _RECORDS_QUERY_CACHE: Dict[str, List[Dict[str, Any]]] = {}
+_BRAIN_FEEDS_CACHE: Dict[str, List[Dict[str, Any]]] = {}
+_FULL_QUERY_CACHE: Dict[str, List[Dict[str, Any]]] = {}
+MAX_BRAIN_FEED_FILE_BYTES = 10 * 1024 * 1024
 
 
 def _tokenize(text: str) -> List[str]:
@@ -32,18 +35,40 @@ class ResearchCorpusReader:
     ) -> None:
         if records_path:
             self.records_path = Path(records_path)
-        elif DEFAULT_RECORDS_PATH.exists():
-            self.records_path = DEFAULT_RECORDS_PATH
-        else:
+        elif FALLBACK_PRIORITY_RECORDS_PATH.exists():
             self.records_path = FALLBACK_PRIORITY_RECORDS_PATH
+        else:
+            self.records_path = DEFAULT_RECORDS_PATH
         self.brain_feeds_dir = Path(brain_feeds_dir) if brain_feeds_dir else DEFAULT_BRAIN_FEEDS_DIR
         self.include_brain_feeds = include_brain_feeds
 
-    def iter_brain_feed_records(self) -> List[Dict[str, Any]]:
-        out: List[Dict[str, Any]] = []
+    def _brain_feeds_cache_key(self) -> str:
         if not self.include_brain_feeds or not self.brain_feeds_dir.exists():
-            return out
+            return "disabled"
+        parts: List[str] = []
         for p in sorted(self.brain_feeds_dir.rglob("*.jsonl")):
+            try:
+                st = p.stat()
+                if st.st_size > MAX_BRAIN_FEED_FILE_BYTES:
+                    continue
+                parts.append(f"{p.name}:{st.st_mtime_ns}:{st.st_size}")
+            except Exception:
+                continue
+        return "|".join(parts)
+
+    def iter_brain_feed_records(self) -> List[Dict[str, Any]]:
+        if not self.include_brain_feeds or not self.brain_feeds_dir.exists():
+            return []
+        bf_key = self._brain_feeds_cache_key()
+        if bf_key in _BRAIN_FEEDS_CACHE:
+            return _BRAIN_FEEDS_CACHE[bf_key]
+        out: List[Dict[str, Any]] = []
+        for p in sorted(self.brain_feeds_dir.rglob("*.jsonl")):
+            try:
+                if p.stat().st_size > MAX_BRAIN_FEED_FILE_BYTES:
+                    continue
+            except Exception:
+                continue
             rel = str(p.relative_to(REPO_ROOT)).replace("\\", "/") if p.is_relative_to(REPO_ROOT) else str(p)
             try:
                 for line_idx, line in enumerate(p.read_text(encoding="utf-8", errors="ignore").splitlines(), 1):
@@ -52,6 +77,9 @@ class ResearchCorpusReader:
                     obj = json.loads(line)
                     cid = obj.get("id") or obj.get("record_id") or f"BRAIN-{p.stem}-{line_idx:04d}"
                     txt = obj.get("content") or obj.get("text") or obj.get("full_text") or json.dumps(obj)
+                    title_str = str(obj.get("title") or p.name)
+                    sec_str = str(obj.get("domain") or "mind_feed")
+                    full_str = str(txt)
                     out.append(
                         {
                             "record_id": str(cid),
@@ -60,16 +88,18 @@ class ResearchCorpusReader:
                             "item_id": f"BRAIN-{p.stem}",
                             "location": rel,
                             "category": "brain_mind_staging_feed",
-                            "title": obj.get("title") or p.name,
+                            "title": title_str,
                             "authors": "GSE Brain Mind Feed",
                             "year": 2026,
-                            "section": obj.get("domain") or "mind_feed",
+                            "section": sec_str,
                             "page_or_line": f"L{line_idx}",
-                            "full_text": str(txt),
+                            "full_text": full_str,
+                            "_haystack_lower": f"{title_str} {sec_str} {full_str}".lower(),
                         }
                     )
             except Exception:
                 continue
+        _BRAIN_FEEDS_CACHE[bf_key] = out
         return out
 
     def query(
@@ -158,31 +188,39 @@ class ResearchCorpusReader:
                 _RECORDS_QUERY_CACHE[cache_key] = file_hits[: max(top_k * 3, 15)]
                 scored.extend(_RECORDS_QUERY_CACHE[cache_key])
 
-        # 2. Scan brain/feeds/*.jsonl directly so live feed edits immediately affect retrieval
+        # 2. Scan brain/feeds/*.jsonl (cached on mtime/size so live feed edits immediately invalidate)
         if self.include_brain_feeds and (not category_filter or category_filter == "brain_mind_staging_feed"):
-            for brec in self.iter_brain_feed_records():
-                haystack = f"{brec['title']} {brec['section']} {brec['full_text']}".lower()
-                matched_tokens = [tok for tok in q_set if tok in haystack]
-                if not matched_tokens:
-                    continue
-                exact_phrase_bonus = 3.5 if (len(q_lower) > 4 and q_lower in haystack) else 0.0
-                score = round(len(matched_tokens) * 1.0 + exact_phrase_bonus + 1.5, 4)
-                scored.append(
-                    {
-                        "source_id": brec["source_id"],
-                        "chunk_id": brec["chunk_id"],
-                        "item_id": brec["item_id"],
-                        "title": brec["title"],
-                        "location": brec["location"],
-                        "category": brec["category"],
-                        "section": brec["section"],
-                        "page_or_line": brec["page_or_line"],
-                        "sha256": "",
-                        "relevance_score": score,
-                        "relevance_reason": f"Matched {len(matched_tokens)}/{len(q_set)} query tokens ({', '.join(sorted(matched_tokens)[:6])}) in brain_feed:{brec['section']}",
-                        "snippet": brec["full_text"][:320].replace("\n", " ").strip(),
-                    }
-                )
+            bf_key = f"{self._brain_feeds_cache_key()}:{query_text}:{category_filter}:{top_k}"
+            if bf_key in _FULL_QUERY_CACHE:
+                scored.extend(_FULL_QUERY_CACHE[bf_key])
+            else:
+                bf_hits: List[Dict[str, Any]] = []
+                for brec in self.iter_brain_feed_records():
+                    haystack = brec.get("_haystack_lower") or f"{brec['title']} {brec['section']} {brec['full_text']}".lower()
+                    matched_tokens = [tok for tok in q_set if tok in haystack]
+                    if not matched_tokens:
+                        continue
+                    exact_phrase_bonus = 3.5 if (len(q_lower) > 4 and q_lower in haystack) else 0.0
+                    score = round(len(matched_tokens) * 1.0 + exact_phrase_bonus + 1.5, 4)
+                    bf_hits.append(
+                        {
+                            "source_id": brec["source_id"],
+                            "chunk_id": brec["chunk_id"],
+                            "item_id": brec["item_id"],
+                            "title": brec["title"],
+                            "location": brec["location"],
+                            "category": brec["category"],
+                            "section": brec["section"],
+                            "page_or_line": brec["page_or_line"],
+                            "sha256": "",
+                            "relevance_score": score,
+                            "relevance_reason": f"Matched {len(matched_tokens)}/{len(q_set)} query tokens ({', '.join(sorted(matched_tokens)[:6])}) in brain_feed:{brec['section']}",
+                            "snippet": brec["full_text"][:320].replace("\n", " ").strip(),
+                        }
+                    )
+                bf_hits.sort(key=lambda x: (-float(x["relevance_score"]), str(x["chunk_id"])))
+                _FULL_QUERY_CACHE[bf_key] = bf_hits[: max(top_k * 3, 15)]
+                scored.extend(_FULL_QUERY_CACHE[bf_key])
 
         scored.sort(key=lambda x: (-float(x["relevance_score"]), str(x["chunk_id"])))
         return scored[:top_k]

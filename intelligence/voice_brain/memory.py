@@ -111,7 +111,7 @@ class BrainMemory:
             ),
             (
                 "agent_fleet_architecture",
-                "Agent bus at C:\\Users\\Garrett\\orca\\agent-bus\\agent-bus. Motif is lead strategist (Muse), Orca is hands/builder, Hermes is player/executor, OpenCode CLI has elite models.",
+                "Agent bus at ~/orca/agent-bus/agent-bus. Motif is lead strategist (Muse), Orca is hands/builder, Hermes is player/executor, OpenCode CLI has elite models.",
                 "fleet",
             ),
             (

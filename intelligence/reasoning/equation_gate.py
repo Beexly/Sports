@@ -16,8 +16,14 @@ from __future__ import annotations
 import functools
 import json
 import math
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+from intelligence.equations.equation_executor import (
+    compile_formula_spec_ast,
+    normalize_feature_vector,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CATALOG_12304_PATH = REPO_ROOT / "data" / "equations" / "equation_executable_catalog_12304.json"
@@ -169,9 +175,9 @@ def extract_normalized_game_state_bindings(game_ctx: Dict[str, Any]) -> Dict[str
     altitude = float(env.get("altitude_ft", game_ctx.get("altitude_ft", 400.0 + 25.0 * float(raw_temp or 65.0))) or 400.0) / 5280.0
 
     raw_rest = env.get("rest_differential", game_ctx.get("rest_differential_days", game_ctx.get("rest_diff", 0.0)))
-    rest_diff = float(raw_rest or 0.0) / 7.0
-    short_week = float(env.get("short_week", game_ctx.get("short_week", 1.0 if rest_diff < -0.2 else 0.0)) or 0.0)
-    tz_shift = float(env.get("time_zone_shift_hours", game_ctx.get("time_zone_shift_hours", rest_diff * 0.5)) or 0.0) / 3.0
+    rest_diff = max(-0.5, min(0.5, float(raw_rest or 0.0) / 14.0))
+    short_week = float(env.get("short_week", game_ctx.get("short_week", 1.0 if rest_diff < -0.1 else 0.0)) or 0.0)
+    tz_shift = max(-0.5, min(0.5, float(env.get("time_zone_shift_hours", game_ctx.get("time_zone_shift_hours", rest_diff * 0.5)) or 0.0) / 6.0))
 
     home_ol_out = float(game_ctx.get("home_ol_starters_out", max(0.0, flat_inj)) or 0) * 0.25
     away_ol_out = float(game_ctx.get("away_ol_starters_out", max(0.0, -flat_inj)) or 0) * 0.25
@@ -235,47 +241,85 @@ def evaluate_single_catalog_equation(
     eq: Dict[str, Any],
     game_ctx: Dict[str, Any],
     bindings: Optional[Dict[str, float]] = None,
+    use_ast_executor: Optional[bool] = None,
 ) -> float:
     """
-    Evaluate a single cataloged equation (`EQ_00001`..`EQ_12304`) using its authentic
-    corpus-derived `operator_type` (`linear_logit`, `bilinear_interaction`, `rational_pade`,
-    `exponential_survival`, `bellman_advantage`, `copula_tail`, `conformal_quantile`,
-    `sheaf_laplacian`, or `python_callable`). Zero synthetic `tanh` templates.
+    Evaluate a single cataloged equation (`EQ_00001`..`EQ_12304`) via compiled safe AST
+    parsing of `formula_expression`/`formula_spec` (behind AST_FORMULA_SPEC_EXECUTOR_ENABLED=true)
+    or its authentic corpus-derived `operator_type`, enforcing unit normalization,
+    `sample_size_n >= min_sample_size` gating, and Stage D clamping to [-0.35, +0.35].
     """
+    n_obs = int(eq.get("sample_size_n", 100))
+    min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", 30)))
+    if n_obs < min_n:
+        return 0.0
+
     if bindings is None:
-        bindings = extract_normalized_game_state_bindings(game_ctx)
-    p0, p1, p2 = eq["parameter_bindings"]
-    x0 = float(bindings.get(p0, 0.0))
-    x1 = float(bindings.get(p1, 0.0))
-    x2 = float(bindings.get(p2, 0.0))
+        norm_bindings = normalize_feature_vector(extract_normalized_game_state_bindings(game_ctx))
+    else:
+        norm_bindings = normalize_feature_vector(bindings)
+
+    p0, p1, p2 = eq["parameter_bindings"][:3]
+    x0 = float(norm_bindings.get(p0, 0.0))
+    x1 = float(norm_bindings.get(p1, 0.0))
+    x2 = float(norm_bindings.get(p2, 0.0))
     coeffs = eq["coefficients"]
     w0 = float(coeffs["w_primary"])
     w1 = float(coeffs["w_secondary"])
     w2 = float(coeffs["w_interaction"])
     op_type = str(eq.get("operator_type") or eq.get("formula_type") or "linear_logit")
 
-    if op_type == "linear_logit":
-        z = max(-12.0, min(12.0, w0 * x0 + w1 * x1 + w2 * x2))
-        return (2.0 / (1.0 + math.exp(-z))) - 1.0
-    if op_type == "bilinear_interaction":
-        return w0 * x0 + w1 * x1 + w2 * (x0 * x1) + 0.5 * w2 * (x1 * x2)
-    if op_type == "rational_pade":
-        return (w0 * x0 + w1 * x1 + 0.25 * w2 * x2) / (1.0 + abs(w2 * x2))
-    if op_type == "exponential_survival":
-        mag = abs(w1 * x0 + w2 * x1 + 0.35 * w0 * x2)
-        sgn = 1.0 if (w0 * x0 + w1 * x1 - 0.5 * w2 * x2) >= 0.0 else -1.0
-        return abs(w0) * (1.0 - math.exp(-min(10.0, mag))) * sgn
-    if op_type == "bellman_advantage":
-        return w0 * x0 + 0.94 * (w1 * x1 + w2 * max(x0, x2))
-    if op_type == "copula_tail":
-        tail_factor = (1.0 + ((x0 * x1) ** 2) / 4.5) ** (-2.75)
-        return w0 * x0 + w1 * x1 * tail_factor + w2 * x2
-    if op_type == "conformal_quantile":
-        return (w0 * x0 + w1 * x1 + 0.30 * w2 * x2) / math.sqrt(1.0 + (w2 * x2) ** 2)
-    if op_type == "sheaf_laplacian":
-        return -(w0 * (x0 - x1) + w1 * (x1 - x2) + w2 * (x0 - x2))
-    # python_callable analytical kernel
-    return (w0 * x0 + w1 * x1 + w2 * x2) / math.sqrt(1.0 + x0 * x0 + x1 * x1 + x2 * x2)
+    ast_enabled = (
+        use_ast_executor
+        if use_ast_executor is not None
+        else os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
+    )
+    fspec = str(eq.get("formula_expression") or eq.get("formula_spec") or "")
+    raw_val: Optional[float] = None
+    if ast_enabled and fspec:
+        try:
+            closure = compile_formula_spec_ast(fspec)
+            ast_env = dict(norm_bindings)
+            ast_env["x0"] = x0
+            ast_env["x1"] = x1
+            ast_env["x2"] = x2
+            ast_env["x_primary"] = x0
+            ast_env["x_secondary"] = x1
+            ast_env["x_interaction"] = x2
+            ast_env[str(p0)] = x0
+            ast_env[str(p1)] = x1
+            ast_env[str(p2)] = x2
+            raw_val = float(closure(ast_env))
+        except Exception:
+            raw_val = None
+
+    if raw_val is None:
+        if op_type == "linear_logit":
+            z = max(-12.0, min(12.0, w0 * x0 + w1 * x1 + w2 * x2))
+            raw_val = (2.0 / (1.0 + math.exp(-z))) - 1.0
+        elif op_type == "bilinear_interaction":
+            raw_val = w0 * x0 + w1 * x1 + w2 * (x0 * x1) + 0.5 * w2 * (x1 * x2)
+        elif op_type == "rational_pade":
+            raw_val = (w0 * x0 + w1 * x1 + 0.25 * w2 * x2) / (1.0 + abs(w2 * x2))
+        elif op_type == "exponential_survival":
+            mag = abs(w1 * x0 + w2 * x1 + 0.35 * w0 * x2)
+            sgn = 1.0 if (w0 * x0 + w1 * x1 - 0.5 * w2 * x2) >= 0.0 else -1.0
+            raw_val = abs(w0) * (1.0 - math.exp(-min(10.0, mag))) * sgn
+        elif op_type == "bellman_advantage":
+            raw_val = w0 * x0 + 0.94 * (w1 * x1 + w2 * max(x0, x2))
+        elif op_type == "copula_tail":
+            tail_factor = (1.0 + ((x0 * x1) ** 2) / 4.5) ** (-2.75)
+            raw_val = w0 * x0 + w1 * x1 * tail_factor + w2 * x2
+        elif op_type == "conformal_quantile":
+            raw_val = (w0 * x0 + w1 * x1 + 0.30 * w2 * x2) / math.sqrt(1.0 + (w2 * x2) ** 2)
+        elif op_type == "sheaf_laplacian":
+            raw_val = -(w0 * (x0 - x1) + w1 * (x1 - x2) + w2 * (x0 - x2))
+        else:
+            raw_val = (w0 * x0 + w1 * x1 + w2 * x2) / math.sqrt(1.0 + x0 * x0 + x1 * x1 + x2 * x2)
+
+    if not math.isfinite(raw_val):
+        return 0.0
+    return max(-MAX_ABS_DELTA_LOG_ODDS, min(MAX_ABS_DELTA_LOG_ODDS, float(raw_val)))
 
 
 def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, Any]:

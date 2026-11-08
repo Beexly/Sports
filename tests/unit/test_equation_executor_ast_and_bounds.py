@@ -177,3 +177,80 @@ def test_execute_all_279_equation_families_receipts() -> None:
     assert census["accounted_families"] == 279
     assert census["active_bound_families"] + census["dormant_logged_families"] == 279
     assert len(summary["family_receipts"]) == 279
+
+
+def test_nan_inf_none_and_non_numeric_input_resilience() -> None:
+    from intelligence.equations.equation_executor import (
+        execute_layer_equation_family_batch,
+        normalize_canonical_features,
+    )
+
+    corrupted_inputs: dict = {
+        "epa_per_play": float("nan"),
+        "proe": float("inf"),
+        "pressure_rate": float("-inf"),
+        "altitude_ft": None,
+        "wind_mph": "corrupt_string",
+        "total_line": True,
+    }
+    norm = normalize_canonical_features(corrupted_inputs)
+    assert all(math.isfinite(v) and v == 0.0 for v in norm.values())
+
+    res = evaluate_equation_spec("EQ_06896", "FAM_199_WEATHER", corrupted_inputs, use_ast_executor=True)
+    assert math.isfinite(res["diagnostic_raw_signal"])
+    assert math.isfinite(res["log_odds_delta"])
+    assert res["log_odds_delta"] == 0.0
+
+    batch = execute_layer_equation_family_batch(1, corrupted_inputs)
+    assert math.isfinite(batch["aggregate_log_odds_delta"])
+    assert -0.35 <= batch["aggregate_log_odds_delta"] <= 0.35
+
+
+def test_sea_level_altitude_ft_continuity() -> None:
+    res_sea = evaluate_equation_spec(
+        equation_id="EQ_06896",
+        family="FAM_199_WEATHER",
+        inputs={"altitude_ft": 8.0, "wind_mph": 0.0, "total_line": 44.5},
+        use_ast_executor=True,
+    )
+    assert abs(res_sea["raw_signal"]) < 0.01, f"Sea-level 8.0 ft should not be treated as 8 miles: {res_sea}"
+
+
+def test_equation_gate_12304_ast_and_bounds_parity() -> None:
+    from intelligence.reasoning.equation_gate import (
+        evaluate_single_catalog_equation,
+        load_equation_executable_catalog_12304,
+    )
+
+    cat = load_equation_executable_catalog_12304()
+    by_id = {e["equation_id"]: e for e in cat["equations"]}
+
+    v_00003 = evaluate_single_catalog_equation(
+        by_id["EQ_00003"],
+        {"rest_differential_days": -10.0, "time_zone_shift_hours": 3.0, "home_neutral_pace_sec": 26.8},
+    )
+    assert -0.35 <= v_00003 <= 0.35
+
+    v_06896 = evaluate_single_catalog_equation(
+        by_id["EQ_06896"],
+        {},
+        {"altitude_ft": 5280.0, "wind_mph": 8.0, "total_line": 45.5},
+    )
+    assert abs(v_06896 - (-0.2014)) < 1e-4
+    assert -0.35 <= v_06896 <= 0.35
+
+
+def test_per_game_context_packet_and_trace_sub_1_second_budget() -> None:
+    from intelligence.context.context_packet_builder import build_context_packet
+    from intelligence.reasoning.reasoning_workflow_assembler import execute_reasoning_workflow
+
+    # Warm up registry once
+    pkt0 = build_context_packet("2024_10_CIN_BAL", persist=True)
+    execute_reasoning_workflow(pkt0, persist=True)
+
+    t0 = time.perf_counter()
+    pkt = build_context_packet("2026_09_DET_GB", persist=False)
+    trace = execute_reasoning_workflow(pkt, persist=False)
+    elapsed = time.perf_counter() - t0
+    assert elapsed < 1.0, f"Per-game context packet + reasoning trace took {elapsed:.3f}s (> 1.0s budget)"
+    assert trace["family_consumption_census"]["accounted_families"] == 279

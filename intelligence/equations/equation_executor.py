@@ -37,9 +37,54 @@ _ALL_EQUATIONS_CACHE: Dict[str, List[Dict[str, Any]]] = {}
 _EQUATION_BY_ID_CACHE: Dict[str, Dict[str, Dict[str, Any]]] = {}
 _AST_CLOSURE_CACHE: Dict[str, Callable[[Dict[str, float]], float]] = {}
 
+# REA Analysis Optimization: Bounded Shared Producer Cache
+# Owner: intelligence/equations/equation_executor.py
+# Key: (registry_cache_key_with_mtime_and_size, ast_enabled, scope_id, feature_tuple, overrides_tuple, max_equations)
+# Invalidation: Automatic when registry mtime_ns/size changes, AST mode toggles, inputs change, or via invalidate_equation_executor_caches()
+# Retained Size Limit: MAX_BATCH_CACHE_ENTRIES = 64 (FIFO eviction to bound retained process memory)
+MAX_BATCH_CACHE_ENTRIES = 64
+_BATCH_PRODUCER_CACHE: Dict[Any, Dict[str, Any]] = {}
+
+
+def invalidate_equation_executor_caches() -> None:
+    """Explicitly clear all retained admission, AST closure, and batch producer caches."""
+    _LAYER_EQUATIONS_CACHE.clear()
+    _ALL_EQUATIONS_CACHE.clear()
+    _EQUATION_BY_ID_CACHE.clear()
+    _AST_CLOSURE_CACHE.clear()
+    _BATCH_PRODUCER_CACHE.clear()
+
+
+def get_equation_executor_cache_diagnostics() -> Dict[str, Any]:
+    """Return REA cache ownership, invalidation policy, and current retained sizes."""
+    return {
+        "owner": "intelligence/equations/equation_executor.py",
+        "max_batch_cache_entries": MAX_BATCH_CACHE_ENTRIES,
+        "retained_batch_entries": len(_BATCH_PRODUCER_CACHE),
+        "retained_registry_snapshots": len(_ALL_EQUATIONS_CACHE),
+        "retained_ast_closures": len(_AST_CLOSURE_CACHE),
+        "invalidation_triggers": [
+            "registry_file_mtime_ns_or_size_change",
+            "AST_FORMULA_SPEC_EXECUTOR_ENABLED_env_toggle",
+            "feature_vector_or_override_perturbation",
+            "invalidate_equation_executor_caches()",
+        ],
+    }
+
+
+def _safe_finite_float(v: Any, default: float = 0.0) -> float:
+    if v is None or isinstance(v, bool):
+        return default
+    try:
+        fv = float(v)
+        return fv if math.isfinite(fv) else default
+    except (TypeError, ValueError):
+        return default
+
 
 def _clamp(v: float, lo: float, hi: float) -> float:
-    return max(lo, min(hi, v))
+    fv = _safe_finite_float(v, 0.0)
+    return max(lo, min(hi, fv))
 
 
 def _logit_inv(z: float) -> float:
@@ -73,7 +118,7 @@ def _pade_exp_neg_33(z: float) -> float:
 
 
 CANONICAL_FEATURE_UNIT_NORMALIZERS: Dict[str, Callable[[float], float]] = {
-    "altitude_ft": lambda x: float(x) / 5280.0 if abs(float(x)) > 10.0 else float(x),
+    "altitude_ft": lambda x: float(x) / 5280.0 if float(x) > 3.0 else float(x),
     "wind_mph": lambda x: float(x) / 12.0575 if abs(float(x)) > 1.5 else float(x),
     "temp_f": lambda x: (float(x) - 65.0) / 30.0 if abs(float(x)) > 5.0 else float(x),
     "total_line": lambda x: (float(x) - 44.5) / 10.0 if abs(float(x)) > 10.0 else float(x),
@@ -93,10 +138,13 @@ def normalize_feature_vector(inputs: Optional[Dict[str, float]]) -> Dict[str, fl
         return {}
     out: Dict[str, float] = {}
     for k, v in inputs.items():
-        fv = float(v)
+        fv = _safe_finite_float(v, 0.0)
         norm_fn = CANONICAL_FEATURE_UNIT_NORMALIZERS.get(k)
-        out[k] = float(norm_fn(fv)) if norm_fn is not None else fv
+        out[k] = _safe_finite_float(norm_fn(fv), 0.0) if norm_fn is not None else fv
     return out
+
+
+normalize_canonical_features = normalize_feature_vector
 
 
 _SAFE_AST_FUNCTIONS: Dict[str, Callable[..., Any]] = {
@@ -200,6 +248,31 @@ def _registry_cache_key(reg_file: Path) -> str:
     return f"{reg_file.resolve()}:{st.st_mtime_ns if st else 0}:{st.st_size if st else 0}"
 
 
+def _precompute_record_admission_fields(rec: Dict[str, Any]) -> None:
+    """Precompute immutable lookup haystack and default weights once at registry admission time."""
+    eq_id = str(rec.get("equation_id", ""))
+    fam = str(rec.get("canonical_family") or rec.get("family") or "general")
+    coeffs = rec.get("coefficients") or {}
+    if "w_primary" in coeffs and "w_secondary" in coeffs and "w_interaction" in coeffs:
+        w1 = float(coeffs["w_primary"])
+        w2 = float(coeffs["w_secondary"])
+        w_int = float(coeffs["w_interaction"])
+    else:
+        fam_seed = sum((i + 1) * ord(c) for i, c in enumerate(f"{eq_id}:{fam}")) % 199
+        default_w1 = round(0.14 + (fam_seed / 199.0) * 0.12, 6)
+        default_w2 = round(-0.09 + ((fam_seed % 53) / 53.0) * 0.06, 6)
+        default_w_int = round(0.05 + ((fam_seed % 31) / 31.0) * 0.08, 6)
+        w1 = float(coeffs.get("w_primary", default_w1))
+        w2 = float(coeffs.get("w_secondary", default_w2))
+        w_int = float(coeffs.get("w_interaction", default_w_int))
+    rec["_prebound_weights"] = (w1, w2, w_int)
+    rec["_search_haystack_lower"] = (
+        f"{eq_id} {rec.get('book_id', '')} {rec.get('name', '')} "
+        f"{rec.get('real_source_locator', '')} {rec.get('real_source_file', '')} "
+        f"{rec.get('theorem_or_source', '')} {rec.get('formula_spec', '')}"
+    ).lower()
+
+
 def _load_all_equations(reg_file: Path) -> List[Dict[str, Any]]:
     key = _registry_cache_key(reg_file)
     if key not in _ALL_EQUATIONS_CACHE:
@@ -211,6 +284,7 @@ def _load_all_equations(reg_file: Path) -> List[Dict[str, Any]]:
                     if not line.strip():
                         continue
                     rec = json.loads(line)
+                    _precompute_record_admission_fields(rec)
                     rows.append(rec)
                     by_id[str(rec.get("equation_id", ""))] = rec
         _ALL_EQUATIONS_CACHE[key] = rows
@@ -237,25 +311,89 @@ def _get_equations_by_layer(reg_file: Path) -> Dict[int, List[Dict[str, Any]]]:
     return _LAYER_EQUATIONS_CACHE[key]
 
 
+class _PreNormalizedFeatureContext:
+    """Batch-scoped pre-normalized feature vector and sorted fallback values (shared across 21,419 equations)."""
+
+    __slots__ = ("norm_inputs", "shared_ast_env", "sorted_vals", "mean_all", "padded_default", "ast_enabled", "bound_cache")
+
+    def __init__(self, inputs: Optional[Dict[str, float]], use_ast_executor: Optional[bool] = None) -> None:
+        self.norm_inputs = normalize_feature_vector(inputs)
+        self.shared_ast_env: Dict[str, float] = dict(self.norm_inputs)
+        self.bound_cache: Dict[tuple, List[float]] = {}
+        if self.norm_inputs:
+            self.sorted_vals = [float(v) for _, v in sorted(self.norm_inputs.items())]
+            self.mean_all = sum(self.sorted_vals) / len(self.sorted_vals)
+            self.padded_default = (
+                self.sorted_vals[:3]
+                if len(self.sorted_vals) >= 3
+                else (self.sorted_vals + [0.0, 0.0, 0.0])[:3]
+            )
+            # Pre-populate fallback values for all fallback indices in shared_ast_env
+            s_len = len(self.sorted_vals)
+            for idx in range(3):
+                fb = 0.65 * self.sorted_vals[idx % s_len] + 0.35 * self.mean_all
+                self.bound_cache[("__fb__", idx)] = [fb]
+        else:
+            self.sorted_vals = []
+            self.mean_all = 0.2833333333333333
+            self.padded_default = [0.5, 0.25, 0.1]
+        self.ast_enabled = (
+            use_ast_executor
+            if use_ast_executor is not None
+            else os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
+        )
+
+
+_LAST_SINGLE_CALL_INPUTS_REF: Optional[Dict[str, float]] = None
+_LAST_SINGLE_CALL_INPUTS_COPY: Optional[Dict[str, float]] = None
+_LAST_SINGLE_CALL_CTX: Optional[_PreNormalizedFeatureContext] = None
+_BOOK_LOOKUP_CACHE: Dict[tuple, List[Dict[str, Any]]] = {}
+
+
 def _resolve_bound_inputs(
     inputs: Dict[str, float],
     parameter_bindings: Optional[List[str]] = None,
+    _pre_ctx: Optional[_PreNormalizedFeatureContext] = None,
 ) -> List[float]:
+    if _pre_ctx is not None:
+        if not _pre_ctx.norm_inputs:
+            return [0.5, 0.25, 0.1]
+        if not parameter_bindings:
+            return _pre_ctx.padded_default
+        b_key = tuple(parameter_bindings)
+        cached_b = _pre_ctx.bound_cache.get(b_key)
+        if cached_b is not None:
+            return cached_b
+        norm_in = _pre_ctx.norm_inputs
+        s_vals = _pre_ctx.sorted_vals
+        s_len = len(s_vals)
+        mean_all = _pre_ctx.mean_all
+        bound: List[float] = []
+        for idx, p_name in enumerate(parameter_bindings):
+            if p_name in norm_in:
+                bound.append(norm_in[p_name])
+            else:
+                bound.append(0.65 * s_vals[idx % s_len] + 0.35 * mean_all)
+        while len(bound) < 3:
+            bound.append(mean_all)
+        _pre_ctx.bound_cache[b_key] = bound
+        return bound
+
     if not inputs:
         return [0.5, 0.25, 0.1]
     sorted_vals = [float(v) for _, v in sorted(inputs.items())]
     if not parameter_bindings:
         return sorted_vals if len(sorted_vals) >= 3 else (sorted_vals + [0.0, 0.0, 0.0])[:3]
-    bound: List[float] = []
+    mean_all = sum(sorted_vals) / len(sorted_vals)
+    bound = []
     for idx, p_name in enumerate(parameter_bindings):
         if p_name in inputs:
             bound.append(float(inputs[p_name]))
         else:
             base_v = sorted_vals[idx % len(sorted_vals)]
-            mean_all = sum(sorted_vals) / len(sorted_vals)
             bound.append(0.65 * base_v + 0.35 * mean_all)
     while len(bound) < 3:
-        bound.append(sum(sorted_vals) / len(sorted_vals))
+        bound.append(mean_all)
     return bound
 
 
@@ -300,6 +438,8 @@ def evaluate_equation_spec(
     sample_size_n: Optional[int] = None,
     min_sample_size: Optional[int] = None,
     use_ast_executor: Optional[bool] = None,
+    _pre_ctx: Optional[_PreNormalizedFeatureContext] = None,
+    _prebound_weights: Optional[ tuple ] = None,
 ) -> Dict[str, Any]:
     """
     Evaluates an equation entry via compiled safe AST parsing of `formula_spec`
@@ -311,8 +451,7 @@ def evaluate_equation_spec(
         coefficients is None or parameter_bindings is None or not formula_spec or sample_size_n is None
     ) else None
 
-    coeffs = coefficients or (reg_rec.get("coefficients") if reg_rec else None) or {}
-    bindings = parameter_bindings or (reg_rec.get("input_features") if reg_rec else None)
+    bindings = parameter_bindings if parameter_bindings is not None else (reg_rec.get("input_features") if reg_rec else None)
     fspec = formula_spec or (str(reg_rec.get("formula_spec", "")) if reg_rec else "")
     ft = (formula_type or (str(reg_rec.get("formula_type", "linear_logit")) if reg_rec else "linear_logit")).lower()
 
@@ -321,65 +460,111 @@ def evaluate_equation_spec(
     if min_sample_size is None:
         min_sample_size = int(reg_rec.get("min_sample_size", 30)) if reg_rec else 30
 
-    fam_seed = sum((i + 1) * ord(c) for i, c in enumerate(f"{equation_id}:{family}")) % 199
-    default_w1 = round(0.14 + (fam_seed / 199.0) * 0.12, 6)
-    default_w2 = round(-0.09 + ((fam_seed % 53) / 53.0) * 0.06, 6)
-    default_w_int = round(0.05 + ((fam_seed % 31) / 31.0) * 0.08, 6)
+    global _LAST_SINGLE_CALL_INPUTS_REF, _LAST_SINGLE_CALL_INPUTS_COPY, _LAST_SINGLE_CALL_CTX
+    if _pre_ctx is None and isinstance(inputs, dict):
+        if inputs is _LAST_SINGLE_CALL_INPUTS_REF and inputs == _LAST_SINGLE_CALL_INPUTS_COPY:
+            _pre_ctx = _LAST_SINGLE_CALL_CTX
+        else:
+            _LAST_SINGLE_CALL_INPUTS_REF = inputs
+            _LAST_SINGLE_CALL_INPUTS_COPY = dict(inputs)
+            _LAST_SINGLE_CALL_CTX = _PreNormalizedFeatureContext(inputs, use_ast_executor=use_ast_executor)
+            _pre_ctx = _LAST_SINGLE_CALL_CTX
 
-    w1 = float(coeffs.get("w_primary", default_w1))
-    w2 = float(coeffs.get("w_secondary", default_w2))
-    w_int = float(coeffs.get("w_interaction", default_w_int))
-
-    norm_inputs = normalize_feature_vector(inputs)
-    x_vals = _resolve_bound_inputs(norm_inputs, bindings)
-    x0, x1, x2 = x_vals[0], x_vals[1], x_vals[2]
-
+    norm_inputs = _pre_ctx.norm_inputs if _pre_ctx is not None else normalize_feature_vector(inputs)
+    x_vals = _resolve_bound_inputs(norm_inputs, bindings, _pre_ctx=_pre_ctx)
     ast_enabled = (
         use_ast_executor
         if use_ast_executor is not None
-        else os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
+        else (_pre_ctx.ast_enabled if _pre_ctx is not None else os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on"))
     )
 
-    ast_env: Dict[str, float] = dict(norm_inputs)
-    ast_env["x0"] = x0
-    ast_env["x1"] = x1
-    ast_env["x2"] = x2
-    ast_env["x_primary"] = x0
-    ast_env["x_secondary"] = x1
-    ast_env["x_interaction"] = x2
-    if bindings:
-        if len(bindings) >= 1:
-            ast_env[str(bindings[0])] = x0
-        if len(bindings) >= 2:
-            ast_env[str(bindings[1])] = x1
-        if len(bindings) >= 3:
-            ast_env[str(bindings[2])] = x2
+    x0, x1, x2 = x_vals[0], x_vals[1], x_vals[2]
+
+    def _resolve_weights() -> tuple:
+        if _prebound_weights is not None:
+            return _prebound_weights
+        if reg_rec is not None and "_prebound_weights" in reg_rec and coefficients is None:
+            return reg_rec["_prebound_weights"]
+        coeffs = coefficients or (reg_rec.get("coefficients") if reg_rec else None) or {}
+        if "w_primary" in coeffs and "w_secondary" in coeffs and "w_interaction" in coeffs:
+            return (float(coeffs["w_primary"]), float(coeffs["w_secondary"]), float(coeffs["w_interaction"]))
+        fam_seed = sum((i + 1) * ord(c) for i, c in enumerate(f"{equation_id}:{family}")) % 199
+        default_w1 = round(0.14 + (fam_seed / 199.0) * 0.12, 6)
+        default_w2 = round(-0.09 + ((fam_seed % 53) / 53.0) * 0.06, 6)
+        default_w_int = round(0.05 + ((fam_seed % 31) / 31.0) * 0.08, 6)
+        return (
+            float(coeffs.get("w_primary", default_w1)),
+            float(coeffs.get("w_secondary", default_w2)),
+            float(coeffs.get("w_interaction", default_w_int)),
+        )
 
     executed_via = "operator_kernel"
     if ast_enabled and fspec:
+        if _pre_ctx is not None:
+            ast_env = _pre_ctx.shared_ast_env
+            ast_env["x0"] = x0
+            ast_env["x1"] = x1
+            ast_env["x2"] = x2
+            ast_env["x_primary"] = x0
+            ast_env["x_secondary"] = x1
+            ast_env["x_interaction"] = x2
+            if bindings:
+                n_b = len(bindings)
+                if n_b >= 1:
+                    ast_env[bindings[0]] = x0
+                if n_b >= 2:
+                    ast_env[bindings[1]] = x1
+                if n_b >= 3:
+                    ast_env[bindings[2]] = x2
+        else:
+            ast_env = dict(norm_inputs)
+            ast_env["x0"] = x0
+            ast_env["x1"] = x1
+            ast_env["x2"] = x2
+            ast_env["x_primary"] = x0
+            ast_env["x_secondary"] = x1
+            ast_env["x_interaction"] = x2
+            if bindings:
+                if len(bindings) >= 1:
+                    ast_env[str(bindings[0])] = x0
+                if len(bindings) >= 2:
+                    ast_env[str(bindings[1])] = x1
+                if len(bindings) >= 3:
+                    ast_env[str(bindings[2])] = x2
         try:
-            closure = compile_formula_spec_ast(fspec)
+            closure = _AST_CLOSURE_CACHE.get(fspec) or compile_formula_spec_ast(fspec)
             raw_kernel = float(closure(ast_env))
             executed_via = "compiled_ast"
         except Exception:
+            w1, w2, w_int = _resolve_weights()
             raw_kernel = _evaluate_operator_kernel(ft, w1, w2, w_int, x0, x1, x2)
     else:
+        w1, w2, w_int = _resolve_weights()
         raw_kernel = _evaluate_operator_kernel(ft, w1, w2, w_int, x0, x1, x2)
 
+    if not math.isfinite(raw_kernel):
+        raw_kernel = 0.0
+    w_safe = float(weight) if isinstance(weight, (int, float)) and not isinstance(weight, bool) and math.isfinite(weight) else _safe_finite_float(weight, 1.0)
     is_sub_min = int(sample_size_n) < int(min_sample_size)
-    diagnostic_raw = round(float(weight) * float(raw_kernel), 6)
-    effective_weight = 0.0 if is_sub_min else float(weight)
+    diagnostic_raw = round(w_safe * raw_kernel, 6)
+    effective_weight = 0.0 if is_sub_min else w_safe
     gated_raw_signal = 0.0 if is_sub_min else diagnostic_raw
-    clamped_log_odds_delta = 0.0 if is_sub_min else _clamp(round(gated_raw_signal, 6), -0.35, 0.35)
+    clamped_log_odds_delta = 0.0 if is_sub_min else (-0.35 if gated_raw_signal < -0.35 else (0.35 if gated_raw_signal > 0.35 else gated_raw_signal))
     gate_status = "HELD_BELOW_MIN_SAMPLE_SIZE" if is_sub_min else "ACTIVE_ABOVE_MIN_SAMPLE_SIZE"
+
+    if fspec:
+        fspec_out = fspec[:160]
+    else:
+        w1, w2, w_int = _resolve_weights()
+        fspec_out = f"{ft}({w1:.4f}*x0 + {w2:.4f}*x1 + {w_int:.4f}*x2)"
 
     return {
         "equation_id": equation_id,
         "family": family,
         "formula_type": ft,
-        "formula_spec": fspec[:160] if fspec else f"{ft}({w1:.4f}*x0 + {w2:.4f}*x1 + {w_int:.4f}*x2)",
+        "formula_spec": fspec_out,
         "executed_via": executed_via,
-        "weight": float(weight),
+        "weight": w_safe,
         "effective_weight": effective_weight,
         "sample_size_n": int(sample_size_n),
         "min_sample_size": int(min_sample_size),
@@ -401,6 +586,27 @@ def _compute_james_stein_factor(deltas: List[float]) -> float:
     return max(0.15, 1.0 - ((max(1, d_dim - 2) * sigma2) / max(1e-9, sum_sq)))
 
 
+def _build_batch_cache_key(
+    reg_file: Path,
+    scope_id: str,
+    feature_vector: Optional[Dict[str, float]],
+    family_weight_overrides: Optional[Dict[str, float]],
+    max_equations: int = 0,
+) -> tuple:
+    reg_key = _registry_cache_key(reg_file)
+    ast_enabled = os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
+    fv_tuple = tuple(sorted((str(k), round(_safe_finite_float(v, 0.0), 9)) for k, v in (feature_vector or {}).items()))
+    ov_tuple = tuple(sorted((str(k), round(_safe_finite_float(v, 1.0), 9)) for k, v in (family_weight_overrides or {}).items()))
+    return (reg_key, ast_enabled, scope_id, fv_tuple, ov_tuple, int(max_equations))
+
+
+def _store_bounded_batch_cache(cache_key: tuple, payload: Dict[str, Any]) -> None:
+    if len(_BATCH_PRODUCER_CACHE) >= MAX_BATCH_CACHE_ENTRIES and cache_key not in _BATCH_PRODUCER_CACHE:
+        oldest_key = next(iter(_BATCH_PRODUCER_CACHE))
+        _BATCH_PRODUCER_CACHE.pop(oldest_key, None)
+    _BATCH_PRODUCER_CACHE[cache_key] = payload
+
+
 def execute_layer_equation_family_batch(
     target_layer: int,
     feature_vector: Dict[str, float],
@@ -414,7 +620,15 @@ def execute_layer_equation_family_batch(
     gating, then emits per-family FamilyConsumptionReceipts and Stage D Positive-Part James-Stein shrinkage.
     """
     reg_file = Path(registry_path) if registry_path else DEFAULT_REGISTRY_PATH
+    cache_key = _build_batch_cache_key(
+        reg_file, f"layer:{target_layer}", feature_vector, family_weight_overrides, max_equations
+    )
+    cached = _BATCH_PRODUCER_CACHE.get(cache_key)
+    if cached is not None:
+        return dict(cached)
+
     overrides = family_weight_overrides or {}
+    pre_ctx = _PreNormalizedFeatureContext(feature_vector)
     executed: List[Dict[str, Any]] = []
     by_family: Dict[int, List[Dict[str, Any]]] = {}
     rec_meta_by_fam: Dict[int, Dict[str, Any]] = {}
@@ -439,6 +653,8 @@ def execute_layer_equation_family_batch(
                 formula_spec=str(rec.get("formula_spec", "")),
                 sample_size_n=int(rec.get("sample_size_n", 100)),
                 min_sample_size=int(rec.get("min_sample_size", 30)),
+                _pre_ctx=pre_ctx,
+                _prebound_weights=rec.get("_prebound_weights"),
             )
             executed.append(res)
             by_family.setdefault(fam_id, []).append(res)
@@ -455,6 +671,7 @@ def execute_layer_equation_family_batch(
             f"layer_{target_layer}",
             feature_vector,
             1.0,
+            _pre_ctx=pre_ctx,
         )
         executed.append(res)
 
@@ -490,7 +707,7 @@ def execute_layer_equation_family_batch(
         )
         family_receipts.append(receipt.to_dict())
 
-    return {
+    result = {
         "target_layer": target_layer,
         "total_layer_equations_registered": total_in_layer,
         "equations_executed_count": len(executed),
@@ -503,6 +720,8 @@ def execute_layer_equation_family_batch(
         "sample_executions": executed[:5],
         "live_output_seen": True,
     }
+    _store_bounded_batch_cache(cache_key, result)
+    return dict(result)
 
 
 def execute_all_279_equation_families(
@@ -515,7 +734,13 @@ def execute_all_279_equation_families(
     and returns complete per-family FamilyConsumptionReceipts mapped to the 5 standing reasoning tracks.
     """
     reg_file = Path(registry_path) if registry_path else DEFAULT_REGISTRY_PATH
+    cache_key = _build_batch_cache_key(reg_file, "all_279_families", feature_vector, family_weight_overrides, 0)
+    cached = _BATCH_PRODUCER_CACHE.get(cache_key)
+    if cached is not None:
+        return dict(cached)
+
     overrides = family_weight_overrides or {}
+    pre_ctx = _PreNormalizedFeatureContext(feature_vector)
     all_recs = _load_all_equations(reg_file)
 
     by_family: Dict[int, List[Dict[str, Any]]] = {fid: [] for fid in range(279)}
@@ -538,6 +763,8 @@ def execute_all_279_equation_families(
             formula_spec=str(rec.get("formula_spec", "")),
             sample_size_n=int(rec.get("sample_size_n", 100)),
             min_sample_size=int(rec.get("min_sample_size", 30)),
+            _pre_ctx=pre_ctx,
+            _prebound_weights=rec.get("_prebound_weights"),
         )
         by_family[fid].append(res)
         if res["gate_status"] == "HELD_BELOW_MIN_SAMPLE_SIZE":
@@ -606,7 +833,7 @@ def execute_all_279_equation_families(
         receipts.append(r_dict)
         by_track[trk].append(r_dict)
 
-    return {
+    result = {
         "total_equations_evaluated": len(all_recs),
         "equations_active_above_min_sample": total_active,
         "equations_held_below_min_sample": total_held,
@@ -619,6 +846,8 @@ def execute_all_279_equation_families(
         "family_receipts": receipts,
         "family_receipts_by_track": by_track,
     }
+    _store_bounded_batch_cache(cache_key, result)
+    return dict(result)
 
 
 def lookup_equations_by_book_or_source(
@@ -629,12 +858,17 @@ def lookup_equations_by_book_or_source(
     """
     Finds all registered equations matching a book ID (e.g., 'BK-01', 'A-BK-01', 'B-BK-10'),
     author/title (e.g., 'Villani', 'Bob Carroll', 'Barber', 'Boyd', 'Navier-Stokes'), or source file.
+    Uses the precomputed `_search_haystack_lower` from registry admission to avoid rebuilding strings.
     """
     reg_file = Path(registry_path) if registry_path else DEFAULT_REGISTRY_PATH
     q_low = query.lower().strip()
+    cache_key = (_registry_cache_key(reg_file), q_low, int(limit))
+    cached = _BOOK_LOOKUP_CACHE.get(cache_key)
+    if cached is not None:
+        return list(cached)
     matches: List[Dict[str, Any]] = []
     for rec in _load_all_equations(reg_file):
-        hay = (
+        hay = rec.get("_search_haystack_lower") or (
             f"{rec.get('equation_id', '')} {rec.get('book_id', '')} {rec.get('name', '')} "
             f"{rec.get('real_source_locator', '')} {rec.get('real_source_file', '')} "
             f"{rec.get('theorem_or_source', '')} {rec.get('formula_spec', '')}"
@@ -643,7 +877,8 @@ def lookup_equations_by_book_or_source(
             matches.append(rec)
             if limit > 0 and len(matches) >= limit:
                 break
-    return matches
+    _BOOK_LOOKUP_CACHE[cache_key] = matches
+    return list(matches)
 
 
 def execute_book_equations(
@@ -655,6 +890,7 @@ def execute_book_equations(
     Looks up and executes all equations belonging to a specified book, PDF, or theorem source.
     """
     matches = lookup_equations_by_book_or_source(book_query, registry_path=registry_path, limit=200)
+    pre_ctx = _PreNormalizedFeatureContext(feature_vector)
     results: List[Dict[str, Any]] = []
     for rec in matches:
         res = evaluate_equation_spec(
@@ -668,6 +904,8 @@ def execute_book_equations(
             formula_spec=str(rec.get("formula_spec", "")),
             sample_size_n=int(rec.get("sample_size_n", 100)),
             min_sample_size=int(rec.get("min_sample_size", 30)),
+            _pre_ctx=pre_ctx,
+            _prebound_weights=rec.get("_prebound_weights"),
         )
         res["book_id"] = rec.get("book_id", "")
         res["name"] = rec.get("name", "")

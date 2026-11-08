@@ -1,3 +1,4 @@
+from pathlib import Path
 """Regenerate the W3 slate artifact with CORRECT edge arithmetic.
 
 The first-pass CSV computed edge_vs_market with a sign error (model - market on a
@@ -16,7 +17,7 @@ import pandas as pd
 from scipy.stats import norm
 
 DATA = "data"
-OUT = "/c/Users/Garrett/Sports-oppadj/docs/research/2026-09-19-opp-adj-epa-path/data"
+OUT = str(Path.home() / "Sports-oppadj/docs/research/2026-09-19-opp-adj-epa-path/data")
 
 tge = pd.read_csv(f"{DATA}/team_game_efficiency_prod.csv")
 tge = tge[tge.seasonType == "REG"]

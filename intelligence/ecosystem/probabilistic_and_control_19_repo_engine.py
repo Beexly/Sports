@@ -1,7 +1,7 @@
 """Probabilistic, Bayesian, Control & Biomechanical Movement Primitives 19-Repository Engine.
 
 Two-Pass Deep Source-Code Integration across:
-  - Target A: Personal Hardware & Software Optimization (C:\\Users\\Garrett — Intel i7-1255U AVX2, 32GB RAM, 6.2GB free C: guard)
+  - Target A: Personal Hardware & Software Optimization (`~` — Intel i7-1255U AVX2, 32GB RAM, 6.2GB free C: guard)
   - Target B: Galaxy Sports Edge (GSE) Prediction Engine, SGP Copula, Coaching & Player Tracking
   - Target C: Galaxy Science Institute (GSI) Biomechanical Kinematics, Survival & Clinical Safety Gates
 

@@ -173,21 +173,21 @@ All **15 games** on the official 2026 NFL Week 9 slate are verified in `docs/wir
 
 | # | Game ID | Matchup | Dossier Artifact (`data/engine/`) | Layers | Equations | Conditioned Median Spread (Home) | Conditioned Median Total |
 |---:|---|---|---|---:|---:|---:|---:|
-| 1 | `2026_09_JAX_BAL` | `JAX @ BAL` | `connected_workflow_dossier_jax_bal_week9.json` | 26 | 21,419 | `+12.50` (`JAX -12.5`) | `41.10` |
-| 2 | `2026_09_CIN_ATL` | `CIN @ ATL` | `connected_workflow_dossier_cin_atl_week9.json` | 26 | 21,419 | `+2.96` (`CIN -2.96`) | `52.12` |
-| 3 | `2026_09_ARI_SEA` | `ARI @ SEA` | `connected_workflow_dossier_ari_sea_week9.json` | 26 | 21,419 | `+3.06` (`ARI -3.06`) | `43.61` |
-| 4 | `2026_09_CAR_GB` | `CAR @ GB` | `connected_workflow_dossier_car_gb_week9.json` | 26 | 21,419 | `-10.42` (`GB -10.42`) | `44.18` |
-| 5 | `2026_09_CHI_CIN` / `DET_MIN` | `DET @ MIN` | `connected_workflow_dossier_det_min_week9.json` | 26 | 21,419 | `+1.85` (`DET -1.85`) | `48.40` |
-| 6 | `2026_09_DEN_HOU` | `DEN @ HOU` | `connected_workflow_dossier_den_hou_week9.json` | 26 | 21,419 | `-2.15` (`HOU -2.15`) | `42.85` |
-| 7 | `2026_09_IND_PIT` | `IND @ PIT` | `connected_workflow_dossier_ind_pit_week9.json` | 26 | 21,419 | `-3.40` (`PIT -3.40`) | `43.90` |
-| 8 | `2026_09_LAC_TEN` | `LAC @ TEN` | `connected_workflow_dossier_lac_ten_week9.json` | 26 | 21,419 | `+6.20` (`LAC -6.20`) | `41.75` |
-| 9 | `2026_09_MIA_WAS` | `MIA @ WAS` | `connected_workflow_dossier_mia_was_week9.json` | 26 | 21,419 | `-3.80` (`WAS -3.80`) | `47.60` |
-| 10 | `2026_09_NE_CLE` | `NE @ CLE` | `connected_workflow_dossier_ne_cle_week9.json` | 26 | 21,419 | `-2.45` (`CLE -2.45`) | `40.25` |
-| 11 | `2026_09_NO_LAR` | `NO @ LAR` | `connected_workflow_dossier_no_lar_week9.json` | 26 | 21,419 | `-7.10` (`LAR -7.10`) | `45.30` |
-| 12 | `2026_09_NYG_SF` | `NYG @ SF` | `connected_workflow_dossier_nyg_sf_week9.json` | 26 | 21,419 | `-9.85` (`SF -9.85`) | `46.15` |
-| 13 | `2026_09_KC_BUF` | `KC @ BUF` | `connected_workflow_dossier_kc_buf_week9.json` | 26 | 21,419 | `-1.90` (`BUF -1.90`) | `49.20` |
-| 14 | `2026_09_PHI_DAL` | `PHI @ DAL` | `connected_workflow_dossier_phi_dal_week9.json` | 26 | 21,419 | `+3.15` (`PHI -3.15`) | `47.80` |
-| 15 | `2026_09_TB_LV` | `TB @ LV` | `connected_workflow_dossier_tb_lv_week9.json` | 26 | 21,419 | `+4.10` (`TB -4.10`) | `44.60` |
+| 1 | `2026_09_ARI_SEA` | `ARI @ SEA` | `connected_workflow_dossier_ari_sea_week9.json` | 26 | 21,419 | `+3.06` (`ARI -3.06`) | `43.61` |
+| 2 | `2026_09_BUF_MIN` | `BUF @ MIN` | `connected_workflow_dossier_buf_min_week9.json` | 26 | 21,419 | `-1.22` (`MIN -1.22`) | `50.98` |
+| 3 | `2026_09_CIN_ATL` | `CIN @ ATL` | `connected_workflow_dossier_cin_atl_week9.json` | 26 | 21,419 | `+0.43` (`CIN -0.43`) | `46.35` |
+| 4 | `2026_09_CLE_NO` | `CLE @ NO` | `connected_workflow_dossier_cle_no_week9.json` | 26 | 21,419 | `+6.79` (`CLE -6.79`) | `42.76` |
+| 5 | `2026_09_DAL_IND` | `DAL @ IND` | `connected_workflow_dossier_dal_ind_week9.json` | 26 | 21,419 | `+3.30` (`DAL -3.30`) | `44.17` |
+| 6 | `2026_09_DEN_CAR` | `DEN @ CAR` | `connected_workflow_dossier_den_car_week9.json` | 26 | 21,419 | `+3.85` (`DEN -3.85`) | `42.27` |
+| 7 | `2026_09_DET_MIA` | `DET @ MIA` | `connected_workflow_dossier_det_mia_week9.json` | 26 | 21,419 | `-1.62` (`MIA -1.62`) | `48.69` |
+| 8 | `2026_09_GB_NE` | `GB @ NE` | `connected_workflow_dossier_gb_ne_week9.json` | 26 | 21,419 | `-0.51` (`NE -0.51`) | `43.47` |
+| 9 | `2026_09_HOU_LAC` | `HOU @ LAC` | `connected_workflow_dossier_hou_lac_week9.json` | 26 | 21,419 | `+2.19` (`HOU -2.19`) | `47.26` |
+| 10 | `2026_09_JAX_BAL` | `JAX @ BAL` | `connected_workflow_dossier_jax_bal_week9.json` | 26 | 21,419 | `+4.37` (`JAX -4.37`) | `49.62` |
+| 11 | `2026_09_LAR_WAS` | `LAR @ WAS` | `connected_workflow_dossier_lar_was_week9.json` | 26 | 21,419 | `+3.56` (`LAR -3.56`) | `46.74` |
+| 12 | `2026_09_LV_SF` | `LV @ SF` | `connected_workflow_dossier_lv_sf_week9.json` | 26 | 21,419 | `+5.02` (`LV -5.02`) | `45.95` |
+| 13 | `2026_09_NYG_PHI` | `NYG @ PHI` | `connected_workflow_dossier_nyg_phi_week9.json` | 26 | 21,419 | `+5.42` (`NYG -5.42`) | `45.81` |
+| 14 | `2026_09_NYJ_KC` | `NYJ @ KC` | `connected_workflow_dossier_nyj_kc_week9.json` | 26 | 21,419 | `+6.42` (`NYJ -6.42`) | `47.61` |
+| 15 | `2026_09_TB_CHI` | `TB @ CHI` | `connected_workflow_dossier_tb_chi_week9.json` | 26 | 21,419 | `-0.22` (`CHI -0.22`) | `46.83` |
 
 ---
 
@@ -205,4 +205,7 @@ python scripts/ops/gse_connected_game_workflow.py --away JAX --home BAL --week 9
 node scripts/guardrails/trust-gate.mjs
 node apps/mobile/scripts/lint-rules.js
 python scripts/guardrails/connected-workflow-dossier-guard.py
+
+# 4. Run Unified 26-Layer Situational Reasoning + 360-Degree Projections + 200+ Pt DraftKings DFS Suite
+pytest tests/unit/test_dk_200pt_dfs_projections_simulations_and_26layer_reasoning.py tests/unit/test_rea_tool_design_and_analysis_optimizer.py tests/unit/test_enterprise_gateway_airflow_rag_compute_and_secops.py -v
 ```

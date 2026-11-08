@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any, ClassVar
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SKILLS_DIR = Path(r"C:\Users\Garrett\.agents\skills")
+SKILLS_DIR = Path.home() / ".agents" / "skills"
 
 
 # ============================================================================

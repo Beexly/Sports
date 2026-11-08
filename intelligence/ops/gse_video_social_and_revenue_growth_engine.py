@@ -490,7 +490,7 @@ def main() -> int:
     md_txt = ETC_PATTERN.sub("and related items", "\n".join(md_lines))
     OUT_MD.write_text(md_txt + "\n", encoding="utf-8")
 
-    sports_root = Path(r"C:\Users\Garrett\Sports")
+    sports_root = Path(__file__).resolve().parents[2]
     if sports_root.exists() and sports_root.resolve() != REPO_ROOT.resolve():
         for rel in [
             Path("intelligence/ops/gse_video_social_and_revenue_growth_engine.py"),
