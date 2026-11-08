@@ -20883,3 +20883,5 @@ Window: posts after status ID 2118721479298990591 through 9:08 AM CT Sat 2026-11
 - Search reach limits: plain EPA Latest reached only ~19 minutes; EPA NFL reached back only to ~2:59 PM Nov 6, so in-window EPA posts from Nov 6 morning may exist beyond reach; the Following feed was not exhaustively scrolled to the window start (coverage was completed through the named accounts and searches).
 - Account states unchanged: @FTNData protected; @NerdingonNFL and @NFLResearcher (no underscore) display no posts.
 - X API: the custom.x-api helper returned HTTP 401 on the usage check this run, so no API pull was attempted; the browser lanes are the evidence for this run.
+
+- Built Q52: Defensive field-zone split (red-zone vs open-field efficiency allowed) into `packages/prediction-engine/src/expected-metrics/defensive-field-zone-split.ts` on 2026-11-07.

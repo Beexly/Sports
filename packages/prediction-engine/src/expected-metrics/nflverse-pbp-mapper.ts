@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type DefensiveFieldZonePlay } from "./defensive-field-zone-split.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -105,6 +106,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly defensiveFieldZonePlays: readonly DefensiveFieldZonePlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +382,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const defensiveFieldZonePlays: DefensiveFieldZonePlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -499,6 +502,28 @@ export function mapNflversePbpToExpectedMetrics(
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
       }
+
+      // (g) Defensive field-zone series — scrimmage pass/run rows faced by a defense.
+      if (
+        row["season_type"] === "REG" &&
+        (playType === "pass" || playType === "run") &&
+        row["qb_kneel"] !== "1" &&
+        row["qb_spike"] !== "1" &&
+        (row["defteam"] ?? "") !== ""
+      ) {
+        defensiveFieldZonePlays.push({
+          playId,
+          defteam: row["defteam"] ?? "",
+          week: num(row["week"]),
+          yardline_100: yardline100,
+          down,
+          ydstogo,
+          yardsGained: num(row["yards_gained"]),
+          touchdown: bin(row["touchdown"]),
+          turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
+          epa: null, // fit-free mapper; attach post-fit via attachOwnEpa
+        });
+      }
     }
 
     // (d) EPA/WPA transition pairs — after = row j's own emitted play.
@@ -611,6 +636,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    defensiveFieldZonePlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
