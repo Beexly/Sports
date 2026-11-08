@@ -274,13 +274,17 @@ async function repointChildTables(
     });
     const skipped: Array<{ id: string; reason: string }> = [];
     let moved = 0;
+
+    const canonicalRows = await client.gameSignal.findMany({
+      where: { gameId: canonicalId },
+      select: { sourceName: true, signalKey: true },
+    });
+    const canonicalSet = new Set(
+      canonicalRows.map((r: { sourceName: string; signalKey: string }) => `${r.sourceName}\0${r.signalKey}`)
+    );
+
     for (const row of rows) {
-      const collision = await client.gameSignal.findUnique({
-        where: {
-          [GAME_SIGNAL_UNIQUE]: { gameId: canonicalId, sourceName: row.sourceName, signalKey: row.signalKey },
-        } as never,
-        select: { id: true },
-      });
+      const collision = canonicalSet.has(`${row.sourceName}\0${row.signalKey}`);
       if (collision) {
         skipped.push({
           id: row.id,
@@ -288,7 +292,10 @@ async function repointChildTables(
         });
         continue;
       }
-      if (!dryRun) await client.gameSignal.update({ where: { id: row.id }, data: { gameId: canonicalId } });
+      if (!dryRun) {
+        await client.gameSignal.update({ where: { id: row.id }, data: { gameId: canonicalId } });
+        canonicalSet.add(`${row.sourceName}\0${row.signalKey}`);
+      }
       moved += 1;
     }
     outcomes.push({ table: "game_signals", moved, skipped });
