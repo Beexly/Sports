@@ -2,6 +2,26 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["red zone plays", "open field plays", "epa", "success rate", "touchdowns allowed"],
+    failureModes: ["non-finite yardline missing", "unratable plays dropping success tracking"],
+    family: "team",
+    forbiddenInputs: ["DVOA", "composite scoring"],
+    formulaClass: "composite_score",
+    formulaSummary: "Compares defensive EPA and success rate between open field and inside the 20.",
+    historicalPrecedent: [{ name: "Red zone defense vs open field defense", reason: "Seattle 2026 red zone inversion." }],
+    internalName: "defensive_field_zone_split_shadow",
+    metricId: "defensive-field-zone-split-shadow",
+    protectedComponents: ["epa allowed", "success rate allowed"],
+    publicExposure: "hidden",
+    publicName: "Defensive Field-Zone Split (SHADOW)",
+    sourceRightsRequired: ["modeling allowed"],
+    status: "SHADOW",
+    targetQuestion: "How does a defense perform inside the red zone compared to the open field?",
+    targetVariable: "field zone defensive split",
+    validationMethods: ["bucket_lift"],
+  },
+
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
