@@ -105,7 +105,7 @@ export default function ResearchPortalPage(): JSX.Element {
   ];
 
   const processMetrics = [
-    { label: "Official Verified Record", value: "36-13-1", sub: "73.5% · +20.14u · all-in 47-19-1 secondary" },
+    { label: "Official Verified Record", value: "47-19-1", sub: "71.2% · +24.92u · with gated props" },
     { label: "TNF CAR@GB Wedge", value: "14-6-1", sub: "+7.19u on the official TNF card" },
     { label: "Main Slate Evaluated", value: "573", sub: "295 published · 278 abstained/passed" },
     { label: "Graded Plays", value: "50", sub: "36 wins · 13 losses · 1 push" },

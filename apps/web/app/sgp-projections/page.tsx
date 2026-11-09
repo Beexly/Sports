@@ -7,7 +7,7 @@ import { getEntitledSgpRows } from "@/lib/engine/engine-live-bridge";
 export const metadata: Metadata = {
   title: "Correlated SGP Projections | Galaxy Sports Edge",
   description:
-    "Same-Game Parlay game-script pricing, connected player prop pairings, and live line value across all NFL matchups. Official verified record 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)).",
+    "Same-Game Parlay game-script pricing, connected player prop pairings, and live line value across all NFL matchups. Official verified record 47-19-1 (71.2% · +24.92u (with gated props)).",
   alternates: { canonical: "/sgp-projections" },
 };
 
@@ -21,7 +21,7 @@ export default function SgpProjectionsPage(): JSX.Element {
         {/* Header */}
         <div className="border-b border-slate-800 pb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-purple-400">
-            Connected Game-Script Parlays · Verified 36-13-1 (+20.14u)
+            Connected Game-Script Parlays · Verified 47-19-1 (+24.92u)
           </div>
           <h1 className="mt-4 font-display text-4xl uppercase sm:text-6xl text-white">
             Correlated SGP Projections

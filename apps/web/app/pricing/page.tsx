@@ -6,7 +6,7 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Pricing & Plans | Galaxy Sports Edge",
   description:
-    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Syndicate Data Feed ($499). Backed by our documented 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) official NFL record.",
+    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Syndicate Data Feed ($499). Backed by our documented 47-19-1 (71.2% · +24.92u (with gated props)) official NFL record.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -96,7 +96,7 @@ export default function PricingPage(): JSX.Element {
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF4D2E]">
-            Official Settled NFL Record: 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u))
+            Official Settled NFL Record: 47-19-1 (71.2% · +24.92u (with gated props))
           </p>
           <h1 className="mt-3 font-display text-4xl uppercase tracking-tight text-white sm:text-6xl">
             Choose Your Edge
@@ -169,7 +169,7 @@ export default function PricingPage(): JSX.Element {
             Every call published on Galaxy Sports Edge is built from coaching tendencies, offensive and defensive line pass-protection matchups, active injury reports, and de-vigged sportsbook price comparisons. If a game or prop does not give us a clear edge over the market number, we mark it <strong>PASS · NO BET</strong>. We never force action.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
-            <span>✓ Settled Record: 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u))</span>
+            <span>✓ Settled Record: 47-19-1 (71.2% · +24.92u (with gated props))</span>
             <span>✓ Week 8 Settled Sweep: 22-8-1 · +12.40u</span>
             <span>✓ Timestamped Pre-Kickoff Ledger</span>
           </div>

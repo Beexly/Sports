@@ -11,7 +11,7 @@ const card = board as unknown as SealedBoard;
 export const metadata: Metadata = {
   title: "Official Verified Board | Galaxy Sports Edge",
   description:
-    "Official verified NFL Season Ledger of Record 36-13-1 (73.5% · +20.14u; MAIN + DERIVATIVE + TNF SINGLE-STAKE; all-in secondary 47-19-1 · +24.92u). The complete sealed card: game calls, player props, and correlated SGPs.",
+    "Official verified NFL Season Ledger of Record 47-19-1 (71.2% · +24.92u (with gated props); base 38-13-1 · +22.85u). The complete sealed card: game calls, player props, and correlated SGPs.",
   alternates: { canonical: "/board" },
 };
 
@@ -36,8 +36,8 @@ export default function BoardPage(): JSX.Element {
           <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">36-13-1</div>
-              <div className="text-xs text-slate-400">73.5% · +20.14 Units · all-in 47-19-1 (+24.92u)</div>
+              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">47-19-1</div>
+              <div className="text-xs text-slate-400">71.2% · +24.92 Units · with gated props</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <div className="text-xs uppercase tracking-wider text-slate-400">Base Game &amp; Slate Ledger</div>

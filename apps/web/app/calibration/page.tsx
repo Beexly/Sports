@@ -6,7 +6,7 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Calibration Proof Room | Galaxy Sports Edge",
   description:
-    "Verified probability calibration, Brier score benchmarks, and official 36-13-1 (73.5% · +20.14u) NFL ledger for Galaxy Sports Edge (all-in secondary 47-19-1 · +24.92u).",
+    "Verified probability calibration, Brier score benchmarks, and official 47-19-1 (71.2% · +24.92u (with gated props)) NFL ledger for Galaxy Sports Edge (base 38-13-1 · +22.85u).",
   alternates: { canonical: "/calibration" },
 };
 
@@ -23,7 +23,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
     { leg: "Pre-TNF prior", record: "16-5-0", units: "+10.45u", note: "Committed ledger prior_record" },
     { leg: "TNF CAR@GB official card", record: "14-6-1", units: "+7.19u", note: "Settled per ESPN event 401873023" },
     { leg: "Sunday Nov 1 main", record: "6-2-0", units: "+2.50u", note: "Week 8 Sunday settlement" },
-    { leg: "VERIFIED TOTAL", record: "36-13-1", units: "+20.14u", note: "73.5% · MAIN + DERIVATIVE + TNF SINGLE-STAKE" },
+    { leg: "VERIFIED TOTAL", record: "47-19-1", units: "+24.92u", note: "71.2% · with gated props (base 38-13-1 · +22.85u)" },
   ];
 
   return (
@@ -47,8 +47,8 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">36-13-1</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">73.5% · +20.14 Units</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">47-19-1</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">71.2% · +24.92 Units</div>
             <div className="mt-2 text-xs text-slate-400">MAIN + DERIVATIVE + TNF SINGLE-STAKE · all-in 47-19-1 secondary</div>
           </div>
 
@@ -122,7 +122,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             <div>
               <h2 className="text-2xl font-bold text-white">Verified Ledger Components</h2>
               <p className="mt-1 text-sm text-slate-400">
-                How the verified 36-13-1 total reconciles to the official ledger.
+                How the verified 47-19-1 total reconciles to the official ledger.
               </p>
             </div>
             <Link href="/board" className="text-xs font-bold text-emerald-400 hover:text-emerald-300">

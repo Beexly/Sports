@@ -27,7 +27,7 @@ export async function GET() {
   const emailDispatch = buildSahniPersonalizedEmailDispatch(
     "Member",
     "JAX @ BAL",
-    "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+    "47-19-1 (71.2%) · +24.92u Verified (with gated props)",
     "Mark Andrews OVER 2.5 Receptions (88/100 Free Teaser) + 9 Locked TNF Plays & 3-Leg SGP",
   );
 
@@ -40,7 +40,7 @@ export async function GET() {
       pushes: 1,
       winRatePct: 71.2,
       netUnits: 24.92,
-      recordDisplay: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+      recordDisplay: "47-19-1 (71.2%) · +24.92u Verified (with gated props)",
     },
     tnfMatchup: "JAX @ BAL",
     stage0ActiveStarters: {
