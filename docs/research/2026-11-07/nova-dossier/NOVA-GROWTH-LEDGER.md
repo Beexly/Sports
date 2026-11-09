@@ -7,8 +7,10 @@ The standing record of everything Nova produces, how it is received, and how she
 - Production voice: Zephyr + Nov 7, 2026 adjusted style text (Garrett's B1 pick, 2026-11-07 15:04 CT; VOICE-LOCK.md governs)
 - Standing spec: NOVA-CHARACTER-SPEC-2026-11-07.md
 - Canonical dossier: Beexly/Sports branch motif/nova-dossier-2026-11-07, docs/research/2026-11-07/nova-dossier/
-- Pieces produced to date: counted in the Production Log below
+- Pieces produced to date: 21 ledger entries (15 in the Nov 6–7 tracking era + 6 pre-tracking video pieces appended by the 2026-11-08 weekly review; Oct 27–28 audition/stills archive is documented in the bible, not individually ledgered — see 2026-11-08 review, Discrepancy 3)
 - Public posts to date: 0 (nothing posts without Garrett's approval of the specific piece)
+- Last weekly review: 2026-11-08 — tracking/reviews/2026-11-08-review.md (period Nov 6–8: 0 new pieces Nov 8, 0 posts, drift verdict PARTIAL/FAIL — see Drift table)
+- Higgsfield balance at last production entry: 218 credits (after Take 6, 2026-11-07)
 
 ## Production Log
 
@@ -31,6 +33,12 @@ Every artifact, in order. Fields: date/time CT · artifact · route · cost · s
 | 2026-11-07 16:53 | nova-higgsfield-gameday-report-4-redteam-fixes.mp4 (3,786,472 bytes, on disk 2026-11-07 16:53) — CORRECTION (added by daily tracking): this Take 5 production entry was filed under Review History, not in this Production Log; re-stated here, original entry left untouched | Higgsfield Soul + Zephyr WAV voice track | 160 cr (balance after: 378) | Script B | HELD — awaiting Garrett's approval | medium shot ✓; hands never visible ✓; mic gone ✓; crowd distant/soft ✓; skin natural ✓; hair strands separate ✓; NEW defect: navy Patriots-logo jacket + Nike swoosh (wardrobe drift — her lock is black/charcoal/plum, no logos); streak + beauty mark still absent; file verified 1920×1080, 10.05s | pending |
 | 2026-11-07 17:11 | nova-higgsfield-gameday-report-5-wardrobe-lock.mp4 (3,607,713 bytes, on disk 2026-11-07 17:11) — CORRECTION (added by daily tracking): this Take 6 production entry was filed under Review History, not in this Production Log; re-stated here, original entry left untouched | Higgsfield Soul + Zephyr WAV voice track | 160 cr (balance after: 218) | Script B | HELD — awaiting Garrett's approval | WARDROBE LOCK LANDED: plain black zip jacket, zero logos ✓; end smile small/relaxed ✓; hands out ✓; crowd distant/soft ✓; regressions: framing tightened to chest-up; small black lapel mic back on her chest (discreet, reporter-plausible); one wide-open mouth frame at ~0.5s; setting drifted to open grass field (tailgate texture gone); streak + beauty mark still absent; file verified 1920×1080, 10.05s | pending |
 | 2026-11-07 ~17:58 | Take 7 — no artifact on disk — CORRECTION (added by daily tracking): the Take 7 IN PRODUCTION and STOPPED entries were filed under Review History, not in this Production Log; re-stated here, originals left untouched. Absence of a file is expected: Garrett stopped it ("NO") before the Higgsfield run, voice recording halted mid-step, no generation ran, no WAV downloaded | Higgsfield Soul + new Zephyr WAV (planned, never ran) | 0 cr spent (160 cr planned, not spent) | Sunday-board line, written fresh, rejected: "Okay — Sunday's board is up. Worked every game twice, and uh, there's two I keep coming back to. It's all on the site. Tell me where I'm wrong." | STOPPED by Garrett 17:58 CT | line still read as funnel copy | Stopped by Garrett; later same evening: "I'm done with this for tonight. Just stop." — Nova closed for the night, resumes only on Garrett's direction |
+| 2026-10-28 | manifesto-vertical.mp4 + manifesto-square.mp4 (tonight-2026-10-28/, 47.9s) (added by the weekly review — pre-tracking piece, production record in bible §50 + ASSEMBLY-MANIFESTO.md) | Stills + slow push-in assembly; voice Zephyr + §45 amended style, 8 breath-group chunks stitched | free (AI Studio voice) | Manifesto script v4 ("Okay, real talk. Everybody in this business is undefeated — if you only count the screenshots they post…" — full text in manifesto.srt) | HELD — awaiting Garrett's approval, never posted | stills + push-in, not true motion (movement test not passed; disclosed in assembly notes) | pending |
+| 2026-10-28 | how-i-work-vertical.mp4 + how-i-work-square.mp4 (tonight-2026-10-28/, 18.6s) (added by the weekly review — pre-tracking piece, record in ASSEMBLY-2-3.md) | Stills + slow push-in assembly; voice tonight-2026-10-28/how-i-work.wav | free | "I don't start with the odds. I start with the tape…" (full text in how-i-work.srt) | HELD — awaiting Garrett's approval, never posted | stills + push-in, not true motion | pending |
+| 2026-10-28 | grade-me-vertical.mp4 + grade-me-square.mp4 (tonight-2026-10-28/, 15.5s) (added by the weekly review — pre-tracking piece, record in ASSEMBLY-2-3.md) | Stills + slow push-in assembly; voice tonight-2026-10-28/grade-me.wav | free | "My record starts at zero tonight…" (full text in grade-me.srt) | HELD — awaiting Garrett's approval, never posted | stills + push-in, not true motion | pending |
+| 2026-10-28 / rebuilt 2026-11-06 | reveal-vertical.mp4 + reveal-vertical-rebuilt.mp4 (tonight-2026-10-28/) (added by the weekly review — pre-tracking piece) | Stills assembly | free | "I'm Nova. I'm AI, the whole face, the whole voice…" (full text in reveal.srt) | HELD — awaiting Garrett's approval, never posted | stills-based, not true motion | pending |
+| 2026-10-28 15:30 | motion/higgsfield-api-test-1.mp4 (643,443 bytes) (added by the weekly review — pre-tracking piece, record in motion/higgsfield-api-test-1-log.txt) | Higgsfield API, kling-video/v4.0/image-to-video | 2.38 credits (estimate in log) | silent / motion test | HELD — test only, never posted | API motion test, not a finished piece | — |
+| 2026-10-28 16:01 | motion/higgsfield-api-scene-1.mp4 (5,763,227 bytes) (added by the weekly review — pre-tracking piece, record in motion/higgsfield-api-scene-1-log.txt) | Higgsfield API, image-to-video from cafe-01-reading-laptop.jpg | 18.8 credits (estimate in log) | silent / cafe scene motion test | HELD — test only, never posted | motion test, not a finished piece | — |
 
 ## Performance Log
 
@@ -39,6 +47,7 @@ Public results only, from real posts. Nothing enters this table without a post U
 | Posted | Platform | URL | Views | Likes | Replies/Comments | Shares/Reposts | Notes |
 |---|---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — | No public Nova posts yet (2026-11-07) |
+| — | — | — | not retrieved | not retrieved | not retrieved | not retrieved | Weekly review 2026-11-08: still no public Nova posts; week's records searched, no Nova post URLs found — no metrics exist to retrieve, none estimated (added by the weekly review) |
 
 ## Decisions & Changes Log
 
@@ -60,13 +69,14 @@ Filled by the weekly review: her recent output checked against the spec and the 
 
 | Check date | Window reviewed | Identity hold | Voice hold | Speech-habit hold | Flags |
 |---|---|---|---|---|---|
-| — | — | — | — | — | First check runs with the first weekly review after pieces exist |
+| 2026-11-08 | 2026-11-06 to 2026-11-08 (Takes 1–6 + Take 7 script; no Nov 8 pieces) | PARTIAL / FAIL — same woman broadly, but plum streak + beauty mark absent in every frame-verified take (Takes 4–6); tattoos not visible for verification; wardrobe FAIL Take 5 (Patriots + Nike logos), PASS Takes 4 and 6; nose-ring and fringe calls unstable across red-team methods | FAIL early Nov 7 (Callirrhoe + retired style, morning drift), PASS after correction — Takes 4–6 used Zephyr + Nov 7 adjusted style per VOICE-LOCK latest section, B1 picked by Garrett 15:04 CT | FAIL — "Let's eat" (banned) in presenter-1, report-1, report-2 (all HELD, never post); Script B repeated verbatim across Takes 4–6, killed as a reusable line 17:13 CT (takes are production tests, will not post with that line); Take 7 fresh line passed form (short units, one "uh", no banned phrase) but was STOPPED as funnel copy | Persistent: streak + beauty mark never landed; skin poreless/waxy in both red teams (85% AI-detection, methods differ); Take 6 regressions: chest-up framing, lapel mic returned, setting drifted to grass field. Full detail: tracking/reviews/2026-11-08-review.md |
 
 ## Review History
 
 | Review | Period | Report |
 |---|---|---|
-| — | — | First weekly review pending (cron: nova-growth-review-weekly) |
+| 2026-11-08 | Weekly review, 2026-11-06 to 2026-11-08 | tracking/reviews/2026-11-08-review.md — 21 ledger entries (6 pre-tracking appended), 0 public posts, metrics not retrieved (no posts exist), drift PARTIAL/FAIL, improvements: wardrobe/hand/signage/mic/voice-drift corrected in-day; regressions: Take 6 framing/mic/setting |
+| — | — | First weekly review pending (cron: nova-growth-review-weekly) — superseded by the 2026-11-08 row above, left untouched per protocol |
 | 2026-11-07 | Take 4 red team — nvidia/nemotron-3.5-super-vl-120b-a12b | tracking/reviews/2026-11-07-take4-redteam-nemotron-vl.md |
 | 2026-11-07 | Take 5 red team (video input) — nvidia/nemotron-3.5-super-vl-120b-a12b | tracking/reviews/2026-11-07-take5-redteam-nemotron-vl-video.md |
 | 2026-11-07 16:53 | nova-higgsfield-gameday-report-4-redteam-fixes.mp4 (Take 5) | Higgsfield Soul + Zephyr WAV voice track | 160 cr (balance after: 378) | Script B | HELD — awaiting Garrett's approval | medium shot ✓; hands never visible ✓; mic gone ✓; crowd distant/soft ✓; skin natural ✓; hair strands separate ✓; NEW defect: navy Patriots-logo jacket + Nike swoosh (wardrobe drift — her lock is black/charcoal/plum, no logos); streak + beauty mark still absent; file verified 1920×1080, 10.05s | pending |
