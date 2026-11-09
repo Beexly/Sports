@@ -68,6 +68,19 @@ export {
   type ExpectedRushModel,
 } from "./expected-rush-yards.js";
 
+// QB Opponent Tier Efficiency Split (SHADOW)
+export {
+  computeQbOpponentTierEfficiencySplit,
+  QB_OPPONENT_TIER_MODEL_VERSION,
+  MIN_RATABLE_DROPBACKS_FOR_RANK,
+  MIN_RATABLE_DROPBACKS_FOR_QB,
+  type QbOpponentTierPlay,
+  type QbOpponentTierArm,
+  type QbOpponentTierResult,
+  type QbOpponentTierDiagnostics,
+  type QbOpponentTierOutput,
+} from "./qb-opponent-tier-efficiency-split.js";
+
 // Expected YAC → GSE-xYAC.
 export {
   fitExpectedYacModel,

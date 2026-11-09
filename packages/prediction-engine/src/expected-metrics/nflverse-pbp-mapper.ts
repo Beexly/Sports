@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type QbOpponentTierPlay } from "./qb-opponent-tier-efficiency-split.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -60,6 +61,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "rusher_player_id", "receiver_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
+  // QB opponent tier
+  "week", "passer_player_id", "qb_spike",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
 ] as const;
@@ -105,6 +108,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+
+  readonly qbOpponentTierPlays: readonly QbOpponentTierPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +385,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const qbOpponentTierPlays: QbOpponentTierPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -597,6 +603,17 @@ export function mapNflversePbpToExpectedMetrics(
         epa: null, // fit-free mapper; attach post-fit via attachOwnEpa
         terminalOutcome: mapDriveResult(driveFdr.get(key) ?? "", driveHasPunt.get(key) === true),
       });
+
+      qbOpponentTierPlays.push({
+        playId,
+        gameId: row["game_id"] ?? "",
+        week: num(row["week"]),
+        passerPlayerId: row["passer_player_id"] ?? "",
+        defteam: row["defteam"] ?? "",
+        playType: row["play_type"] ?? "",
+        qbSpike: row["qb_spike"] === "1" ? 1 : 0,
+        epa: null,
+      });
     }
   }
 
@@ -611,6 +628,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    qbOpponentTierPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
