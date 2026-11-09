@@ -51,7 +51,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
           <h1 className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">{pkg.title}</h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">{pkg.description}</p>
           <p className="mt-6 border-t border-mineral pt-6 font-numerals text-sm tabular-nums text-ion-2">
-            Verified Season Record: 47-19-1 (+24.92u (with gated props); 73.5%). All-in secondary 47-19-1 (+24.92u). Window closed  -  not for sale.
+            Verified Season Record: 47-19-1 (+24.92u (with gated props); 71.2%). All-in secondary 47-19-1 (+24.92u). Window closed  -  not for sale.
           </p>
         </main>
         <Footer />
