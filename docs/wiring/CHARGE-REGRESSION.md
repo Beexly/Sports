@@ -872,3 +872,63 @@ Automated execution log of `scripts/wiring/run_charge_regression_suite.py` acros
 | 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths | **PASS** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_verified": true, "runtime_downloads_path_hits": 0, "intelli` |
 | 10 | Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass | **PASS** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_passed": true, "registry_exact_21419": true, "unsquared_copula_tail_count": 0, "gsi_sandbox_quarantined": true}` |
 
+## WAVE_0_BASELINE — `2026-11-09T05:49:33.777525+00:00` (`7/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **FAIL** | `{"active_hits": 1, "sample_hits": ["apps/web/lib/fantasy/dfs-slate.ts:86 (Jets DST)"]}` |
+| 5 | Verifiable test suite execution | **FAIL** | `{"detail": "/usr/bin/python3: No module named pytest"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths | **PASS** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_verified": true, "runtime_downloads_path_hits": 0, "intelli` |
+| 10 | Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass | **FAIL** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_passed": false, "registry_exact_21419": true, "unsquared_copula_tail_count": 0, "gsi_sandbox_quarantined": false}` |
+
+## WAVE_0_BASELINE — `2026-11-09T05:53:44.515218+00:00` (`8/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **PASS** | `{"active_hits": 0, "sample_hits": []}` |
+| 5 | Verifiable test suite execution | **FAIL** | `{"detail": "Traceback (most recent call last):\n  File \"<string>\", line 7, in <module>\n  File \"<frozen importlib._bootstrap_external>"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths | **PASS** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_verified": true, "runtime_downloads_path_hits": 0, "intelli` |
+| 10 | Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass | **FAIL** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_passed": true, "registry_exact_21419": true, "unsquared_copula_tail_count": 0, "gsi_sandbox_quarantined": false}` |
+
+## WAVE_0_BASELINE — `2026-11-09T05:56:22.040050+00:00` (`10/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **PASS** | `{"active_hits": 0, "sample_hits": []}` |
+| 5 | Verifiable test suite execution | **PASS** | `{"detail": "10 passed (stdlib runner)"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths | **PASS** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_verified": true, "runtime_downloads_path_hits": 0, "intelli` |
+| 10 | Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass | **PASS** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_passed": true, "registry_exact_21419": true, "unsquared_copula_tail_count": 0, "gsi_sandbox_quarantined": true}` |
+
+## WAVE_0_BASELINE — `2026-11-09T15:54:44.765601+00:00` (`10/10` PASS)
+
+| Charge | Description | Status | Details |
+|---:|---|---|---|
+| 1 | No edited 86.62 benchmark artifact on active surfaces + raw 3-pass audit verified | **PASS** | `{"active_surface_86_62_hits": 0, "sample_hits": [], "raw_3pass_audit_verified": true}` |
+| 2 | No '5,367 equations' hardcoded literals in brain/bridge/skills; 12,304 catalog present | **PASS** | `{"literal_5367_hits": 0, "sample_hits": []}` |
+| 3 | Brain fallback_fired logged explicitly & ask-jarvis.ts wired to live provider/ledger | **PASS** | `{"brain_logs_fallback_fired": true, "ask_jarvis_wired": true}` |
+| 4 | Zero active pulled-play strings (NYJ ML -122, NYJ -1.5, Jets DST, Godwin OVER) | **PASS** | `{"active_hits": 0, "sample_hits": []}` |
+| 5 | Verifiable test suite execution | **PASS** | `{"detail": "10 passed (stdlib runner)"}` |
+| 6 | Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo | **PASS** | `{"public_surface_hits": 0, "unmarked_repo_files": 0, "sample_public_hits": [], "sample_unmarked_files": []}` |
+| 7 | Provider worker & custom domains configured; OpenRouter intake-form dependency honestly tracked | **PASS** | `{"domains_configured": true}` |
+| 8 | Grants execution packs and cited wiring artifacts exist on disk | **PASS** | `{"missing_files": []}` |
+| 9 | Every Drive/library claim reconciled in CORPUS-CENSUS.csv + Google Drive/BK-DL/Quarantine manifests + Two-Host zero local paths | **PASS** | `{"corpus_census_present": true, "google_drive_manifest_present": true, "bk_dl_index_present": true, "quarantine_manifest_verified": true, "runtime_downloads_path_hits": 0, "intelli` |
+| 10 | Automated perturbation, 21,419-AST, copula_tail domain safety, 279-family L4/L5, and GSI sandbox isolation proofs pass | **PASS** | `{"consumption_test_file_present": true, "ast_and_279_family_tests_passed": true, "registry_exact_21419": true, "unsquared_copula_tail_count": 0, "gsi_sandbox_quarantined": true}` |
+

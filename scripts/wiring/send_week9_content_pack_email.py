@@ -37,14 +37,14 @@ GOLF_TOP10_AND_DFS_EXECUTIVE_HEADER = """# EXECUTIVE SUMMARY FOR GARRETT & DAD (
 ## TOP 10 WEEK 9 PLAYS & PROPS ACROSS ALL 77 CATEGORIES (RANKED BY CONFIDENCE)
 | Rank | Matchup | Category (of 77) | Official Ticket | Engine Projection | Confidence |
 |---:|---|---|---|---|---:|
-| **1** | `DET @ MIA` | RB Rushing / Combo Yards | **Ollie Gordon II OVER 68.5 Rushing Yards (-112)** (or OVER 88.5 Rush+Rec Yds) | `86.4 Rush / 111.2 Total Yds` (`Achane` IR + `Wright` DNP) | **`86/100`** |
-| **2** | `GB @ NE` | RB Rushing / Combo Yards | **Rhamondre Stevenson OVER 64.5 Rushing Yards (-115)** (or OVER 86.5 Rush+Rec Yds) | `81.2 Rush / 108.7 Total Yds` (**`TreVeyon Henderson` OUT**) | **`85/100`** |
-| **3** | `DET @ MIA` | TE Receiving Yards | **Greg Dulcich OVER 34.5 Receiving Yards (-110)** (or OVER 3.5 Receptions +105) | `52.8 Rec Yds / 4.8 Rec` (`Will Kacmarek` LP, MOF funnel) | **`83/100`** |
-| **4** | `ARI @ SEA` | WR Receiving Yards | **Jaxon Smith-Njigba OVER 74.5 Receiving Yards (-110)** | `91.4 Rec Yds (7.6 Rec)` (`29.4%` target share vs ARI zone) | **`82/100`** |
-| **5** | `LV @ SF` | Full-Game Spread / 1H | **San Francisco 49ers -6.5 (-110)** (or **SF 1H -3.5**) | `SF 27.6 - LV 19.2` (`Purdy + Mike Evans + Kittle` red zone) | **`81/100`** |
-| **6** | `NYG @ PHI` | QB Rushing Yards | **Joe Milton (Joe Milton III) OVER 34.5 Rushing Yards (-110)** | `46.8 Rush Yds` (Named PHI QB1 starter over Tanner McKee) | **`81/100`** |
-| **7** | `DET @ MIA` | 1st-Quarter Rushing | **Ollie Gordon II OVER 16.5 1Q Rushing Yards (-110)** | `23.4 1Q Rush Yds` (Scripted Drive 1 & Drive 2 bell-cow carries) | **`81/100`** |
-| **8** | `GB @ NE` | 1st-Quarter Rushing | **Rhamondre Stevenson OVER 15.5 1Q Rushing Yards (-110)** | `21.8 1Q Rush Yds` (Uncontested early carries, Henderson OUT) | **`80/100`** |
+| **1** | `DET @ MIA` | RB Rushing / Combo Yards | **Jahmyr Gibbs OVER 68.5 Rushing Yards (-112)** (or OVER 94.5 Rush+Rec Yds) | `84.2 Rush / 112.4 Total Yds` (`DET -7.0` positive script) | **`84/100`** |
+| **2** | `ARI @ SEA` | WR Receiving Yards | **Jaxon Smith-Njigba OVER 74.5 Receiving Yards (-110)** | `91.4 Rec Yds (7.6 Rec)` (`29.4%` target share vs ARI zone) | **`82/100`** |
+| **3** | `DET @ MIA` | WR Receptions / Yards | **Amon-Ra St. Brown OVER 6.5 Receptions (-115)** | `7.8 Rec / 86.5 Rec Yds` (Primary slot chain-mover) | **`82/100`** |
+| **4** | `LV @ SF` | Full-Game Spread / 1H | **San Francisco 49ers -6.5 (-110)** (or **SF 1H -3.5**) | `SF 27.6 - LV 19.2` (`Purdy + Mike Evans + Kittle` red zone) | **`81/100`** |
+| **5** | `NYG @ PHI` | QB Rushing Yards | **Joe Milton (Joe Milton III) OVER 34.5 Rushing Yards (-110)** | `46.8 Rush Yds` (Named PHI QB1 starter over Tanner McKee) | **`81/100`** |
+| **6** | `DAL @ IND` | WR Receiving Yards | **CeeDee Lamb OVER 82.5 Receiving Yards (-110)** | `96.4 Rec Yds (7.9 Rec)` (Indoor Lucas Oil track) | **`81/100`** |
+| **7** | `DET @ MIA` | Full-Game Spread | **Detroit Lions -7.0 (-110)** | `DET 27.4 - MIA 16.7` (`DET #11` vs `MIA #32` Net EPA) | **`80/100`** |
+| **8** | `GB @ NE` | RB Rushing Yards | **Josh Jacobs OVER 68.5 Rushing Yards (-110)** | `81.5 Rush Yds` (Bell-cow early-down workload) | **`80/100`** |
 | **9** | `NYG @ PHI` | WR Receiving Yards | **Malik Nabers OVER 68.5 Receiving Yards (-110)** | `83.2 Rec Yds (7.1 Rec)` (`J.J. McCarthy` 31% first-read alpha) | **`80/100`** |
 | **10** | `LV @ SF` | IDP Defensive Sacks | **Nick Bosa OVER 0.25 Sacks (-145)** (Half-sack clears) | `0.88 Expected Sacks` (Wide-9 edge vs Kirk Cousins dropbacks) | **`80/100`** |
 

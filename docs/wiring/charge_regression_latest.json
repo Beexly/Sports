@@ -1,6 +1,6 @@
 {
-  "wave": "WAVE_0740_CST_REDTEAM_VERIFIED_LIVE_RELEASE",
-  "timestamp_utc": "2026-11-08T14:10:27.225902+00:00",
+  "wave": "WAVE_0_BASELINE",
+  "timestamp_utc": "2026-11-09T15:54:44.765601+00:00",
   "passed_count": 10,
   "total_charges": 10,
   "checks": [
@@ -37,11 +37,11 @@
       "charge": 5,
       "name": "Verifiable test suite execution",
       "status": "PASS",
-      "detail": "10 passed in 6.18s"
+      "detail": "10 passed (stdlib runner)"
     },
     {
       "charge": 6,
-      "name": "Zero active 62-23-1 (voided_nov_5_batch) hits in public surfaces and zero unmarked 62-23-1 files in repo",
+      "name": "Zero active 62-23-1 hits in public surfaces and zero unmarked 62-23-1 files in repo",
       "status": "PASS",
       "public_surface_hits": 0,
       "unmarked_repo_files": 0,

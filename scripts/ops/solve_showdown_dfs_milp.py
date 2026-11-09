@@ -20,7 +20,10 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import numpy as np
-from scipy.optimize import Bounds, LinearConstraint, milp
+try:
+    from scipy.optimize import Bounds, LinearConstraint, milp
+except ImportError:  # pragma: no cover
+    Bounds = LinearConstraint = milp = None  # type: ignore[assignment]
 
 _OPS_DIR = str(Path(__file__).resolve().parent)
 if _OPS_DIR not in sys.path:

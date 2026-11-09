@@ -609,7 +609,7 @@ export function runJarvisJynxAutonomousBrain(req: {
     {
       matchup: "DET @ MIA",
       market: "Spread",
-      selection: "DET -3.5",
+      selection: "DET -7.0",
       convictionScore: "84/100",
       clvBps: 112,
       stageGateDecision: "PLAY",

@@ -61,7 +61,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     const tnfWriteups = getWriteupsForWindowSlot(tnfPkg.windowSlot);
 
     const { container } = render(
-      <PaywallRevealCard pkg={tnfPkg} teasers={teasers} initialUnlockedWriteups={null} />,
+      <PaywallRevealCard pkg={{ ...tnfPkg, forSale: true }} teasers={teasers} initialUnlockedWriteups={null} />,
     );
 
     expect(screen.getByText(tnfPkg.title)).toBeDefined();
@@ -130,26 +130,38 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     );
     expect((unlockedText.match(/BET THIS:/g) ?? []).length).toBe(plays);
     expect((unlockedText.match(/PASS · NO BET/g) ?? []).length).toBe(passes);
-expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.sideConfidence}`);
-expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.totalConfidence}`);
-expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
+    expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.sideConfidence}`);
+    expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.totalConfidence}`);
+    expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
 
-// Verify all 14 writeups use XX/100 confidence and honest PLAY/PASS gating
-expect(LIVE_SLATE_COACH_WRITEUPS.length).toBe(14);
-for (const w of LIVE_SLATE_COACH_WRITEUPS) {
-  expect(w.sideTotalCall.sideConfidence).toMatch(/^\d{1,3}\/100$/);
-  expect(w.sideTotalCall.totalConfidence).toMatch(/^\d{1,3}\/100$/);
-  expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.sideDecision);
-  expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.totalDecision);
+    // Verify all 14 writeups use XX/100 confidence and honest PLAY/PASS gating
+    expect(LIVE_SLATE_COACH_WRITEUPS.length).toBe(14);
+    for (const w of LIVE_SLATE_COACH_WRITEUPS) {
+      expect(w.sideTotalCall.sideConfidence).toMatch(/^\d{1,3}\/100$/);
+      expect(w.sideTotalCall.totalConfidence).toMatch(/^\d{1,3}\/100$/);
+      expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.sideDecision);
+      expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.totalDecision);
 
-  for (const prop of w.topProps) {
-    expect(prop.confidence).toMatch(/^\d{1,3}\/100$/);
-    expect(["PLAY", "PASS"]).toContain(prop.decision);
-    if (prop.decision === "PLAY") {
-      expect(prop.expectedClv).toBeGreaterThan(0);
+      for (const prop of w.topProps) {
+        expect(prop.confidence).toMatch(/^\d{1,3}\/100$/);
+        expect(["PLAY", "PASS"]).toContain(prop.decision);
+        if (prop.decision === "PLAY") {
+          expect(prop.expectedClv).toBeGreaterThan(0);
         }
       }
     }
+
+    // Verify MNF BUF @ MIN writeup aligns with conserved 503-book stat projections
+    const mnfWriteup = LIVE_SLATE_COACH_WRITEUPS.find((w) => w.windowSlot === "MNF")!;
+    expect(mnfWriteup.matchup).toBe("Buffalo Bills @ Minnesota Vikings");
+    expect(mnfWriteup.sideTotalCall.sideDecision).toBe("PASS");
+    expect(mnfWriteup.sideTotalCall.totalDecision).toBe("PASS");
+    expect(mnfWriteup.topProps.map((p) => `${p.playerName} ${p.side} ${p.line}`)).toEqual([
+      "James Cook UNDER 100.5",
+      "Justin Jefferson UNDER 55.5",
+      "Dalton Kincaid UNDER 57.5",
+      "Jordan Mason UNDER 48.5",
+    ]);
   });
 
   it("gates inactive routes with Under Construction notice (/picks, /board, /calibration, /sgp-projections un-gated to live verified cards), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
@@ -205,7 +217,7 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
 
     const packagesSrc = readFileSync(
       resolve(__dirname, "..", "app", "packages", "page.tsx"),
-    "utf8",
+      "utf8",
     );
     // The storefront hero was reworded by the humanize pass; pin the current
     // stable promise (the pack chooser) instead of the retired sentence.
@@ -218,7 +230,8 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
 
     const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
     const pkgText = pkgPageDom.textContent ?? "";
-    expect(pkgText).toContain("Free Matchup & Game-Environment Analytics: Jacksonville Jaguars @ Baltimore Ravens");
+    expect(pkgText).toContain("Free Game-Environment Preview");
+    expect(pkgText).toContain("BUF @ MIN");
     expect(pkgText).not.toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
     expect(pkgText).not.toContain("Tonight");
     expect(pkgText).not.toMatch(/TONIGHT\s*·\s*TNF/i);

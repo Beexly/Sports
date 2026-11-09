@@ -59,10 +59,9 @@ export const DFS_SLATE: readonly DfsPlayer[] = [
   d("drb6", "Tony Pollard", "RB", "TEN", "CIN", 5300, 18.5, 10, 27, 0.12),
   d("drb7", "Jonah Coleman", "RB", "DEN", "KC", 4300, 22.2, 12, 31, 0.19),
   d("drb8", "Bucky Irving", "RB", "TB", "ATL", 6100, 15.5, 8, 24, 0.09),
-  d("drb9", "Javonte Williams", "RB", "DAL", "ARI", 5800, 15.2, 8, 24, 0.08),
-  d("drb10", "Ollie Gordon II", "RB", "MIA", "DET", 5600, 29.1, 18, 36, 0.16),
-  d("drb11", "Rhamondre Stevenson", "RB", "NE", "GB", 6100, 28.1, 18, 35, 0.17),
-  d("drb12", "Malik Davis", "RB", "DAL", "IND", 4000, 19.7, 13, 27, 0.08),
+  d("drb9", "Javonte Williams", "RB", "DAL", "IND", 5800, 15.2, 8, 24, 0.08),
+  d("drb10", "Ollie Gordon II", "RB", "MIA", "DET", 5600, 11.3, 6, 18, 0.16),
+  d("drb11", "Rhamondre Stevenson", "RB", "NE", "GB", 6100, 15.4, 9, 24, 0.17),
   // WR
   d("dwr0", "A.J. Brown", "WR", "PHI", "WAS", 6800, 18.5, 10, 29, 0.14), // Joe Milton stack (Smith/Wicks OUT, Hurts IR)
   d("dwr0b", "Zay Flowers", "WR", "BAL", "BUF", 7200, 28.0, 16, 38, 0.16), // Lamar Jackson stack
@@ -82,9 +81,9 @@ export const DFS_SLATE: readonly DfsPlayer[] = [
   d("dte2", "Dallas Goedert", "TE", "PHI", "WAS", 4700, 25.3, 14, 34, 0.22), // Smith & Wicks OUT (+50 yds Sinkhorn boost)
   d("dte3", "Jake Ferguson", "TE", "DAL", "ARI", 4800, 13.8, 7, 22, 0.10),
   d("dte4", "Dalton Kincaid", "TE", "BUF", "BAL", 4400, 11.5, 5, 20, 0.08),
-  d("dte5", "Greg Dulcich", "TE", "MIA", "DET", 3100, 15.8, 10, 23, 0.07),
+  d("dte5", "Greg Dulcich", "TE", "MIA", "DET", 3100, 6.3, 3, 12, 0.07),
   // DST
-  d("ddst1", "Jets DST [PULLED_EXCLUDED]", "DST", "NYJ", "LV", 2800, 8.6, 3, 17, 0.14),
+  d("ddst1", "Jets DST", "DST", "NYJ", "KC", 2800, 6.6, 2, 14, 0.06), // DFS salary table only; pulled betting play excluded
   d("ddst2", "Falcons DST", "DST", "ATL", "TB", 2500, 6.2, 2, 15, 0.10),
   d("ddst3", "Steelers DST", "DST", "PIT", "CLE", 3400, 8.2, 3, 16, 0.12),
   d("ddst4", "Rams DST", "DST", "LAR", "LAC", 3100, 7.8, 2, 15, 0.09),

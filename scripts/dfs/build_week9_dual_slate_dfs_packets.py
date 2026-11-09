@@ -179,7 +179,7 @@ def _load_slate_engine_dossiers(game_ids: list[str]) -> tuple[dict[tuple[str, st
 
 def load_classic_slate(csv_path: str | Path) -> pd.DataFrame:
     """Normalize a DraftKings Classic export and hydrate with 10,000-sim + 26-layer + 21,419-equation projections."""
-    raw = pd.read_csv(csv_path)
+    raw = pd.read_csv(csv_path, encoding="utf-8-sig")
     raw = _split_game_info(raw)
     raw = raw[raw["Position"].isin(CLASSIC_SCORABLE)].copy()
     raw["Salary"] = pd.to_numeric(raw["Salary"], errors="coerce")
@@ -197,21 +197,13 @@ def load_classic_slate(csv_path: str | Path) -> pd.DataFrame:
         "game_id": raw["game_id"].astype(str),
         "salary": raw["Salary"].astype(int),
         "projection": raw["AvgPointsPerGame"].astype(float).round(3),
-        "status": raw["Status"].astype(object).fillna("").astype(str) if "Status" in raw.columns else "",
+        "status": raw["Status"].astype(object).fillna("").astype(str).str.strip().str.upper() if "Status" in raw.columns else "",
         "role": "",
         "dk_id": raw["ID"].astype(str),
     }).reset_index(drop=True)
-    # STAGE 0 GATE: purge OUT/IR/D/season-ending, traded-away and non-starting QBs.
+    # STAGE 0 GATE: strictly purge OUT/IR/D/SUSP/PUP/NFI, season-ending, traded-away, and non-starting QBs.
+    # NEVER clear or overwrite `status` before running `apply_gate`.
     cfg = load_gate_config()
-    sit_mults = cfg.get("situational_multipliers_unfitted") or {}
-    for _tm, _m in sit_mults.items():
-        if isinstance(_m, dict):
-            for _key in _m:
-                if ":" in _key:
-                    _pos, _nm = _key.split(":", 1)
-                    _sf_mask = (out["team"] == _tm) & (out["name"].map(_norm_player_key) == _norm_player_key(_nm))
-                    if _sf_mask.any():
-                        out.loc[_sf_mask, "status"] = ""
     out, removed = apply_gate(out, cfg)
     out.attrs["stage0_removed"] = removed
 
@@ -271,59 +263,35 @@ def derive_component_projections(
                 continue
             dk_base = float(d.at[idx, "projection"])
             if p_pos == "QB":
-                py = max(float(ap["pass_yds"]), float(d.at[idx, "proj_pass_yds"]) * 0.85 if dk_base > 0 else 195.0)
-                ptd = max(float(ap["pass_tds"]), float(d.at[idx, "proj_td"]) * 0.85 if dk_base > 0 else 1.25)
-                ry = max(float(ap["rush_yds"]), 14.0)
+                py = float(ap["pass_yds"]) if float(ap["pass_yds"]) > 0 else float(d.at[idx, "proj_pass_yds"])
+                ptd = float(ap["pass_tds"]) if float(ap["pass_tds"]) > 0 else float(d.at[idx, "proj_td"])
+                ry = max(float(ap["rush_yds"]), 6.0)
                 fpts = 0.04 * py + 4.0 * ptd + 0.1 * ry - 0.75
                 d.at[idx, "proj_pass_yds"] = round(py, 2)
                 d.at[idx, "proj_td"] = round(ptd, 3)
                 d.at[idx, "proj_rush_yds"] = round(ry, 2)
-                d.at[idx, "projection"] = round(max(dk_base, fpts), 3)
+                d.at[idx, "projection"] = round(0.75 * fpts + 0.25 * dk_base if dk_base > 0 else fpts, 3)
             elif p_pos == "RB":
-                ry = max(float(ap["rush_yds"]), float(d.at[idx, "proj_rush_yds"]) * 0.90)
-                rcy = max(float(ap["rec_yds"]), float(d.at[idx, "proj_rec_yds"]) * 0.90)
-                rc = max(float(ap["receptions"]), float(d.at[idx, "proj_receptions"]) * 0.90)
-                td = max(float(ap["td_lambda"]), float(d.at[idx, "proj_td"]) * 0.90)
+                ry = float(ap["rush_yds"]) if float(ap["rush_yds"]) > 0 else float(d.at[idx, "proj_rush_yds"])
+                rcy = float(ap["rec_yds"]) if float(ap["rec_yds"]) > 0 else float(d.at[idx, "proj_rec_yds"])
+                rc = float(ap["receptions"]) if float(ap["receptions"]) > 0 else float(d.at[idx, "proj_receptions"])
+                td = float(ap["td_lambda"]) if float(ap["td_lambda"]) > 0 else float(d.at[idx, "proj_td"])
                 fpts = 0.1 * ry + 0.1 * rcy + 1.0 * rc + 6.0 * td
                 d.at[idx, "proj_rush_yds"] = round(ry, 2)
                 d.at[idx, "proj_rec_yds"] = round(rcy, 2)
                 d.at[idx, "proj_receptions"] = round(rc, 2)
                 d.at[idx, "proj_td"] = round(td, 3)
-                d.at[idx, "projection"] = round(max(dk_base * 0.92, fpts), 3)
+                d.at[idx, "projection"] = round(0.75 * fpts + 0.25 * dk_base if dk_base > 0 else fpts, 3)
             elif p_pos in ("WR", "TE"):
-                rcy = max(float(ap["rec_yds"]), float(d.at[idx, "proj_rec_yds"]) * 0.90)
-                rc = max(float(ap["receptions"]), float(d.at[idx, "proj_receptions"]) * 0.90)
-                td = max(float(ap["td_lambda"]), float(ap["rec_tds"]), float(d.at[idx, "proj_td"]) * 0.90)
+                rcy = float(ap["rec_yds"]) if float(ap["rec_yds"]) > 0 else float(d.at[idx, "proj_rec_yds"])
+                rc = float(ap["receptions"]) if float(ap["receptions"]) > 0 else float(d.at[idx, "proj_receptions"])
+                td = max(float(ap["td_lambda"]), float(ap["rec_tds"])) if max(float(ap["td_lambda"]), float(ap["rec_tds"])) > 0 else float(d.at[idx, "proj_td"])
                 fpts = 0.1 * rcy + 1.0 * rc + 6.0 * td
                 d.at[idx, "proj_rec_yds"] = round(rcy, 2)
                 d.at[idx, "proj_receptions"] = round(rc, 2)
                 d.at[idx, "proj_td"] = round(td, 3)
-                d.at[idx, "projection"] = round(max(dk_base * 0.92, fpts), 3)
+                d.at[idx, "projection"] = round(0.75 * fpts + 0.25 * dk_base if dk_base > 0 else fpts, 3)
 
-    if cfg:
-        sit_mults = cfg.get("situational_multipliers_unfitted") or {}
-        for _tm, _m in sit_mults.items():
-            if _tm == "note" or not isinstance(_m, dict):
-                continue
-            for _key, _mult in _m.items():
-                mult_f = float(_mult)
-                if ":" in _key:
-                    _pos, _nm = _key.split(":", 1)
-                    _mask = (d["team"] == _tm) & (d["name"].map(_norm_player_key) == _norm_player_key(_nm))
-                else:
-                    _mask = (d["team"] == _tm) & (d["position"] == _key)
-                if _mask.any():
-                    for _ridx in d.index[_mask]:
-                        if float(d.at[_ridx, "projection"]) < 2.0 and str(d.at[_ridx, "position"]) == "RB":
-                            d.at[_ridx, "proj_rush_yds"] = 48.5
-                            d.at[_ridx, "proj_rec_yds"] = 22.4
-                            d.at[_ridx, "proj_receptions"] = 2.8
-                            d.at[_ridx, "proj_td"] = 0.42
-                            d.at[_ridx, "projection"] = round(0.1 * 48.5 + 0.1 * 22.4 + 2.8 + 6.0 * 0.42, 3)
-                    d.loc[_mask, "projection"] = (d.loc[_mask, "projection"] * mult_f).round(3)
-                    for col in ("proj_rush_yds", "proj_rec_yds", "proj_receptions", "proj_td", "proj_fpts"):
-                        if col in d.columns:
-                            d.loc[_mask, col] = (d.loc[_mask, col] * mult_f).round(3)
     d = apply_10_gate_dfs_accuracy_overlay(d)
     return d
 
@@ -335,9 +303,12 @@ def load_showdown_slate(csv_path: str | Path) -> pd.DataFrame:
     1.5x, scoring 1.5x) and once at ``FLEX``. The CPT row is kept as its own
     candidate so the 1.5x multiplier is priced by DraftKings, not re-derived.
     """
-    raw = pd.read_csv(csv_path)
+    raw = pd.read_csv(csv_path, encoding="utf-8-sig")
     raw = _split_game_info(raw)
     raw = raw[raw["Position"].isin(SHOWDOWN_SCORABLE)].copy()
+    if "Status" in raw.columns:
+        blocked_st = {"IR", "O", "OUT", "D", "DOUBTFUL", "SUSP", "PUP", "NFI"}
+        raw = raw[~raw["Status"].fillna("").astype(str).str.strip().str.upper().isin(blocked_st)].copy()
     raw["Salary"] = pd.to_numeric(raw["Salary"], errors="coerce")
     raw["AvgPointsPerGame"] = pd.to_numeric(raw["AvgPointsPerGame"], errors="coerce").fillna(0.0)
     raw = raw[raw["Salary"].fillna(0) >= 200]

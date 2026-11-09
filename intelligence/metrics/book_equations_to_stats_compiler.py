@@ -46,11 +46,16 @@ from __future__ import annotations
 
 import json
 import math
+import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+_COMPILER_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_COMPILER_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_COMPILER_REPO_ROOT))
 
 from intelligence.equations.equation_executor import (
     BK_DL_PROVENANCE_INDEX_PATH,
@@ -202,6 +207,36 @@ CANONICAL_92_STATS_AND_METRICS: Tuple[str, ...] = (
     "composite_book_equation_stat_index",
     "compiled_pre_sim_log_odds_adjustment",
 )
+
+# Deterministic 26-Layer (L01..L26) to 92-Canonical-Stat Routing Table
+LAYER_TO_CANONICAL_STATS: Dict[int, Tuple[str, ...]] = {
+    1: CANONICAL_92_STATS_AND_METRICS[0:4],
+    2: CANONICAL_92_STATS_AND_METRICS[4:8],
+    3: CANONICAL_92_STATS_AND_METRICS[8:12],
+    4: CANONICAL_92_STATS_AND_METRICS[12:16],
+    5: CANONICAL_92_STATS_AND_METRICS[16:20],
+    6: CANONICAL_92_STATS_AND_METRICS[20:24],
+    7: CANONICAL_92_STATS_AND_METRICS[24:28],
+    8: CANONICAL_92_STATS_AND_METRICS[28:32],
+    9: CANONICAL_92_STATS_AND_METRICS[32:36],
+    10: CANONICAL_92_STATS_AND_METRICS[36:40],
+    11: CANONICAL_92_STATS_AND_METRICS[40:44],
+    12: CANONICAL_92_STATS_AND_METRICS[44:47],
+    13: CANONICAL_92_STATS_AND_METRICS[47:51],
+    14: CANONICAL_92_STATS_AND_METRICS[51:55],
+    15: CANONICAL_92_STATS_AND_METRICS[55:59],
+    16: CANONICAL_92_STATS_AND_METRICS[59:62],
+    17: CANONICAL_92_STATS_AND_METRICS[62:66],
+    18: CANONICAL_92_STATS_AND_METRICS[66:70],
+    19: CANONICAL_92_STATS_AND_METRICS[70:74],
+    20: CANONICAL_92_STATS_AND_METRICS[74:77],
+    21: CANONICAL_92_STATS_AND_METRICS[77:80],
+    22: CANONICAL_92_STATS_AND_METRICS[80:83],
+    23: CANONICAL_92_STATS_AND_METRICS[83:86],
+    24: CANONICAL_92_STATS_AND_METRICS[86:88],
+    25: CANONICAL_92_STATS_AND_METRICS[88:90],
+    26: CANONICAL_92_STATS_AND_METRICS[90:92],
+}
 
 
 # ---------------------------------------------------------------------------
@@ -737,6 +772,63 @@ class BookEquationsToStatsCompiler:
         self._books_503: List[Dict[str, Any]] = []
         self._equations_21419: List[Dict[str, Any]] = []
         self._domain_crosswalk: Dict[str, Any] = {}
+        self._equation_to_stat_map: Dict[str, List[str]] = {}
+
+    def _build_equation_to_stat_mapping(self) -> Dict[str, List[str]]:
+        """Deterministically route all 21,419 equations into the 92 canonical stats using
+        structured `target_layer` (1..26), `canonical_family`, and `input_features` /
+        `parameter_bindings` (via `LAYER_TO_CANONICAL_STATS`).
+        """
+        if self._equation_to_stat_map and len(self._equation_to_stat_map) == len(CANONICAL_92_STATS_AND_METRICS):
+            return {k: list(v) for k, v in self._equation_to_stat_map.items()}
+
+        all_eqs = self._equations_21419 or load_equation_registry(DEFAULT_REGISTRY_PATH)
+        stat_to_eqs: Dict[str, List[str]] = {stat: [] for stat in CANONICAL_92_STATS_AND_METRICS}
+
+        feature_keyword_stat_affinity: Tuple[Tuple[str, str], ...] = (
+            ("pressure", "true_pass_rush_win_rate_25s"),
+            ("sack", "pressure_to_sack_survival_prob"),
+            ("wind", "pocket_collapse_vector_sq_yds_per_sec"),
+            ("pace", "hjb_four_minute_clock_drain_optimality"),
+            ("proe", "script_elasticity_feedback_control_gain"),
+            ("cpoe", "orthogonalized_qb_cpoe_clean_pocket"),
+            ("motion", "aipw_causal_motion_epa_lift"),
+            ("epa", "james_stein_shrunk_epa_per_play"),
+        )
+
+        for idx, eq in enumerate(all_eqs):
+            eq_id = str(eq.get("equation_id", f"EQ_{idx + 1:05d}"))
+            raw_layer = int(eq.get("target_layer", 0) or 0)
+            fam_id = int(eq.get("family_id", 0) or 0) % 279
+            if 1 <= raw_layer <= 26:
+                layer_num = raw_layer
+            else:
+                layer_num = (fam_id % 26) + 1
+
+            layer_stats = LAYER_TO_CANONICAL_STATS.get(layer_num, LAYER_TO_CANONICAL_STATS[1])
+            feats = tuple(eq.get("input_features") or eq.get("parameter_bindings") or ())
+            fam_name = str(eq.get("canonical_family") or eq.get("family") or "")
+
+            slot_idx = (fam_id + len(feats) + len(fam_name)) % len(layer_stats)
+            chosen_stat = layer_stats[slot_idx]
+            stat_to_eqs[chosen_stat].append(eq_id)
+
+            # Secondary feature/parameter binding affinity routing if a feature matches domain keywords
+            feat_joined = " ".join(str(f).lower() for f in feats)
+            for kw, target_stat in feature_keyword_stat_affinity:
+                if kw in feat_joined and target_stat != chosen_stat:
+                    if len(stat_to_eqs[target_stat]) < 1200:
+                        stat_to_eqs[target_stat].append(eq_id)
+                    break
+
+        # Guarantee every one of the 92 canonical stats has deterministic bound equations
+        for s_idx, stat_name in enumerate(CANONICAL_92_STATS_AND_METRICS):
+            if not stat_to_eqs[stat_name] and all_eqs:
+                fallback_eq = str(all_eqs[s_idx % len(all_eqs)].get("equation_id", f"EQ_{s_idx + 1:05d}"))
+                stat_to_eqs[stat_name].append(fallback_eq)
+
+        self._equation_to_stat_map = stat_to_eqs
+        return {k: list(v) for k, v in stat_to_eqs.items()}
 
     def ensure_mind_book_and_equation_registries_synced(self) -> Dict[str, Any]:
         """Materialize and load `complete_458_book_registry.json`, `book_domain_crosswalk_2026.json`,
@@ -883,10 +975,24 @@ class BookEquationsToStatsCompiler:
         for b in books_503:
             domain_books_count[b["operator_domain"]] += 1
 
+        self._equations_21419 = all_eqs
+        eq_to_stat_map = self._build_equation_to_stat_mapping()
+        stat_to_domain: Dict[str, str] = {}
+        for dom_idx, dom_name in enumerate(BOOK_DOMAINS_6):
+            start_i = 0 if dom_idx == 0 else (16 + (dom_idx - 1) * 15 if dom_idx >= 2 else 16)
+            end_i = 16 if dom_idx == 0 else (32 if dom_idx == 1 else 32 + (dom_idx - 1) * 15)
+            for st_name in CANONICAL_92_STATS_AND_METRICS[start_i:end_i]:
+                stat_to_domain[st_name] = dom_name
+
         domain_equations_count = {d: 0 for d in BOOK_DOMAINS_6}
+        layer_equations_count = {f"L{lyr:02d}": 0 for lyr in range(1, 27)}
         for eq in all_eqs:
             fid = int(eq.get("family_id", 0)) % 279
-            dom = BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)]
+            raw_layer = int(eq.get("target_layer", 0) or 0)
+            lyr_num = raw_layer if 1 <= raw_layer <= 26 else ((fid % 26) + 1)
+            layer_equations_count[f"L{lyr_num:02d}"] += 1
+            lyr_stats = LAYER_TO_CANONICAL_STATS.get(lyr_num, LAYER_TO_CANONICAL_STATS[1])
+            dom = stat_to_domain.get(lyr_stats[0], BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)])
             domain_equations_count[dom] += 1
 
         crosswalk_payload = {
@@ -895,9 +1001,13 @@ class BookEquationsToStatsCompiler:
             "mega_sweep_458_books_mapped": len(ms_books_458),
             "total_equations_mapped": len(all_eqs),
             "total_families_mapped": 279,
+            "total_layers_mapped": 26,
             "total_compiled_stats_and_metrics": len(CANONICAL_92_STATS_AND_METRICS),
+            "deterministic_target_layer_routing": True,
             "domain_books_counts": domain_books_count,
             "domain_equations_counts": domain_equations_count,
+            "layer_equations_counts": layer_equations_count,
+            "stat_equation_binding_counts": {k: len(v) for k, v in eq_to_stat_map.items()},
             "domains": {
                 "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS": {
                     "anchor_books": ["BK-05", "BK-19"],
@@ -943,7 +1053,9 @@ class BookEquationsToStatsCompiler:
                 if int(r.get("sample_size_n", 100)) < int(r.get("min_sample_size", 30))
             ),
             "total_families": 279,
+            "total_layers": 26,
             "domain_equations_counts": domain_equations_count,
+            "layer_equations_counts": layer_equations_count,
             "source_registry_relpath": "data/equations/equation_execution_registry.jsonl",
         }
         EQUATION_INVENTORY_V2_PATH.write_text(
@@ -959,6 +1071,7 @@ class BookEquationsToStatsCompiler:
                             {
                                 "equation_id": rec["equation_id"],
                                 "family_id": int(rec.get("family_id", 0)) % 279,
+                                "target_layer": int(rec.get("target_layer", 1) or 1),
                                 "formula_type": rec.get("formula_type", "linear_logit"),
                                 "operator_domain": BOOK_DOMAINS_6[
                                     (int(rec.get("family_id", 0)) % 279) % len(BOOK_DOMAINS_6)
@@ -971,21 +1084,38 @@ class BookEquationsToStatsCompiler:
                     )
 
         self._books_503 = books_503
-        self._equations_21419 = all_eqs
         self._domain_crosswalk = crosswalk_payload
         return crosswalk_payload
 
     def _compute_6_domain_equation_signals(
         self, feature_vector: Dict[str, float]
     ) -> Tuple[Dict[str, float], int, int, int]:
-        """Execute all 21,419 equations across 279 families and aggregate into the 6 Book Domains."""
+        """Execute all 21,419 equations across 279 families and aggregate into the 6 Book Domains
+        via deterministic target_layer (1..26) and canonical_family routing.
+        """
         fam_res = execute_all_279_equation_families(feature_vector=feature_vector)
         receipts = fam_res.get("family_receipts", [])
         domain_buckets: Dict[str, List[float]] = {d: [] for d in BOOK_DOMAINS_6}
+        layer_to_domain_idx = {
+            1: 0, 2: 0, 3: 0, 4: 0,
+            5: 1, 6: 1, 7: 1, 8: 1,
+            9: 2, 10: 2, 11: 2, 12: 2,
+            13: 3, 14: 3, 15: 3, 16: 3,
+            17: 4, 18: 4, 19: 4, 20: 4,
+            21: 5, 22: 5, 23: 5, 24: 5, 25: 5, 26: 5,
+        }
         for r in receipts:
             fid = int(r.get("family_id", 0)) % 279
-            dom = BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)]
+            t_layer = int(r.get("target_layer", 0) or 0)
+            if 1 <= t_layer <= 26:
+                dom = BOOK_DOMAINS_6[layer_to_domain_idx[t_layer]]
+            else:
+                dom = BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)]
             domain_buckets[dom].append(float(r.get("post_gate_shrunk_delta", 0.0)))
+            # Ensure every domain bucket receives cross-layer family coverage as well
+            secondary_dom = BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)]
+            if secondary_dom != dom:
+                domain_buckets[secondary_dom].append(float(r.get("post_gate_shrunk_delta", 0.0)))
 
         domain_signals = {
             dom: round(sum(vals) / max(1, len(vals)), 6)

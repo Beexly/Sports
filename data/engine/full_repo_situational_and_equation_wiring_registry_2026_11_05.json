@@ -1,10 +1,10 @@
 {
   "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-  "generated_at_utc": "2026-11-07T23:44:14.811545+00:00",
-  "total_ts_modules_cataloged": 1464,
-  "prediction_engine_ts_modules": 1455,
-  "mcp_equations_server_ts_modules": 9,
-  "total_python_intelligence_modules_cataloged": 618,
+  "generated_at_utc": "2026-11-09T04:20:59.003741+00:00",
+  "total_ts_modules_cataloged": 1466,
+  "prediction_engine_ts_modules": 1456,
+  "mcp_equations_server_ts_modules": 10,
+  "total_python_intelligence_modules_cataloged": 655,
   "x_situational_80_rules_count": 87,
   "consolidated_sweep_signals_count": 29,
   "all_in_one_research_signals_count": 17,
@@ -14,8 +14,15 @@
   "equation_families_count": 279,
   "total_equations_routed": 12304,
   "cholesky_families_orthogonalized": 6,
-  "clamped_log_odds_delta": -0.004932,
+  "clamped_log_odds_delta": 0.015377,
   "x_situational_80_rules": {
+    "evaluated_count": 80,
+    "firewall_rules_evaluated_count": 7,
+    "total_rules_evaluated": 87,
+    "situational_catalog_80_rules_count": 80,
+    "emission_firewall_7_rules_count": 7,
+    "situational_plus_misleading_85_rules_count": 85,
+    "total_reconciled_rules_count": 87,
     "x_situational_80_rules_count": 87,
     "misleading_stat_firewall_rules_count": 15,
     "theme_deltas": {
@@ -24,14 +31,15 @@
       "Situational Splits": 0.066,
       "Coaching Decisions": 0.114,
       "Personnel & Matchup": 0.19,
-      "Availability: QB Change": -0.136,
+      "Availability: QB Change": 0.0,
       "Environment: Weather": -0.012,
       "Availability: OL Attrition": -0.233,
       "Market Context": 0.14
     },
-    "records": [
+    "situational_catalog_80_rules": [
       {
         "recordId": "1.1",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Garbage-Time EPA Downweight (0.15x when WP < 5% or > 95%)",
@@ -41,6 +49,7 @@
       },
       {
         "recordId": "1.2",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "High-Leverage 3rd/4th Down Conversion Weighting",
@@ -50,6 +59,7 @@
       },
       {
         "recordId": "1.3",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Two-Minute Warning Middle-8 Double-Score Swing",
@@ -59,6 +69,7 @@
       },
       {
         "recordId": "1.4",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Score-Differential Neutral Zone (-7 to +7) Filtering",
@@ -68,6 +79,7 @@
       },
       {
         "recordId": "1.5",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Prevent-Defense 4Q Yardage Inflation Discount",
@@ -77,6 +89,7 @@
       },
       {
         "recordId": "1.6",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Early-Down (1st/2nd) Success Rate Structural Anchor",
@@ -86,6 +99,7 @@
       },
       {
         "recordId": "1.7",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Late-Down Variance & Unsustainable 3rd-and-Long Regression",
@@ -95,6 +109,7 @@
       },
       {
         "recordId": "1.8",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Field-Position Expected Points Starting Line Adjustment",
@@ -104,6 +119,7 @@
       },
       {
         "recordId": "1.9",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Turnover-Luck Fumble Recovery 50% Mean Reversion",
@@ -113,6 +129,7 @@
       },
       {
         "recordId": "1.10",
+        "tier": "situational_catalog_80",
         "theme": "Game State & Leverage",
         "evaluator": "leverage",
         "name": "Kneeldown Victory Formation Negative Rushing Yards Filter",
@@ -122,6 +139,7 @@
       },
       {
         "recordId": "2.1",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Pass Rate Over Expected (PROE) Neutral Script Baseline",
@@ -131,6 +149,7 @@
       },
       {
         "recordId": "2.2",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Trailing-Script Pass Volume Surge (+8+ Deficit Elasticity)",
@@ -140,6 +159,7 @@
       },
       {
         "recordId": "2.3",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Leading-Script Clock-Drain Run Clamp (+8+ Lead)",
@@ -149,6 +169,7 @@
       },
       {
         "recordId": "2.4",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Neutral Situation Pace (Seconds/Snap) Play Volume Multiplier",
@@ -158,6 +179,7 @@
       },
       {
         "recordId": "2.5",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "No-Huddle Up-Tempo Defensive Substitution Fatigue",
@@ -167,6 +189,7 @@
       },
       {
         "recordId": "2.6",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "First-15 Scripted Opener EPA vs Unscripted Decay",
@@ -176,6 +199,7 @@
       },
       {
         "recordId": "2.7",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Second-Half Halftime Coaching Adjustment Delta",
@@ -185,6 +209,7 @@
       },
       {
         "recordId": "2.8",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "RB Receiving Checkdown Boost in Negative Game Script",
@@ -194,6 +219,7 @@
       },
       {
         "recordId": "2.9",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "RB Goal-Line Carry Boost in Positive Game Script",
@@ -203,6 +229,7 @@
       },
       {
         "recordId": "2.10",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Emergency QB White-Flag 2H Run Clamp (Blowout Preservation)",
@@ -212,6 +239,7 @@
       },
       {
         "recordId": "2.11",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Drive-Sustaining Penalty First-Down Play-Count Extension",
@@ -221,6 +249,7 @@
       },
       {
         "recordId": "2.12",
+        "tier": "situational_catalog_80",
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Time-of-Possession Defensive Snap Cumulative Fatigue (>70 snaps)",
@@ -230,6 +259,7 @@
       },
       {
         "recordId": "3.1",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Red-Zone (Inside-20) Pass vs Run TD Conversion Split",
@@ -239,6 +269,7 @@
       },
       {
         "recordId": "3.2",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Goal-to-Go (Inside-5) Heavy Package & QB Sneak Share",
@@ -248,6 +279,7 @@
       },
       {
         "recordId": "3.3",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Play-Action Dropback EPA Delta vs Straight Dropback",
@@ -257,6 +289,7 @@
       },
       {
         "recordId": "3.4",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Pre-Snap Motion & Motion-at-Snap YPRR Lift",
@@ -266,6 +299,7 @@
       },
       {
         "recordId": "3.5",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Under-Center vs Shotgun Run/Pass Tendency Tell",
@@ -275,6 +309,7 @@
       },
       {
         "recordId": "3.6",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Screen & RPO Rate vs Aggressive Pass-Rush Fronts",
@@ -284,6 +319,7 @@
       },
       {
         "recordId": "3.7",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Home vs Road Crowd-Noise Silent-Count False-Start Tax",
@@ -293,6 +329,7 @@
       },
       {
         "recordId": "3.8",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Natural Grass vs Artificial Turf Speed/Cut Efficiency",
@@ -302,6 +339,7 @@
       },
       {
         "recordId": "3.9",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Short-Week (TNF 4-Day Rest) Road Circadian & Recovery Penalty",
@@ -311,6 +349,7 @@
       },
       {
         "recordId": "3.10",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Post-Bye Week Extra Preparation Scripted Edge",
@@ -320,6 +359,7 @@
       },
       {
         "recordId": "3.11",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "Divisional Familiarity Second-Meeting Under/Suppression Trend",
@@ -329,6 +369,7 @@
       },
       {
         "recordId": "3.12",
+        "tier": "situational_catalog_80",
         "theme": "Situational Splits",
         "evaluator": "splits",
         "name": "High-Altitude (Mile High) Kicking Range & Conditioning Split",
@@ -338,6 +379,7 @@
       },
       {
         "recordId": "4.1",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "4th-Down Go-For-It WP Aggressiveness Over Expected",
@@ -347,6 +389,7 @@
       },
       {
         "recordId": "4.2",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "2nd-and-1 Sneak Opportunity Tax vs Deep-Shot EV",
@@ -356,6 +399,7 @@
       },
       {
         "recordId": "4.3",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "Two-Point Conversion Analytics Chart Adherence",
@@ -365,6 +409,7 @@
       },
       {
         "recordId": "4.4",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "End-of-Half Timeout Preservation vs Clock Bleed",
@@ -374,6 +419,7 @@
       },
       {
         "recordId": "4.5",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "Defensive Coordinator Blitz Rate on 3rd-and-Medium",
@@ -383,6 +429,7 @@
       },
       {
         "recordId": "4.6",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "Simulated Pressure / Creeper (4-Man Rush, Dropper) Disguise",
@@ -392,6 +439,7 @@
       },
       {
         "recordId": "4.7",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "Stunt / Twist Interior DL Games vs Backup OG/C",
@@ -401,6 +449,7 @@
       },
       {
         "recordId": "4.8",
+        "tier": "situational_catalog_80",
         "theme": "Coaching Decisions",
         "evaluator": "decision",
         "name": "Interim HC / New Play-Caller 3-Week Volatility Regime",
@@ -410,6 +459,7 @@
       },
       {
         "recordId": "5.1",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "11-Personnel vs 12/21 Heavy Personnel Box-Count Response",
@@ -419,6 +469,7 @@
       },
       {
         "recordId": "5.2",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "MOFC (Single-High Cover-1/3) vs MOFO (Two-High Cover-2/4/6) YPRR",
@@ -428,6 +479,7 @@
       },
       {
         "recordId": "5.3",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Slot WR vs Outside Perimeter WR Defensive Funnel",
@@ -437,6 +489,7 @@
       },
       {
         "recordId": "5.4",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Shadow CB1 Lock vs Moving Alpha WR Alignment Escape",
@@ -446,6 +499,7 @@
       },
       {
         "recordId": "5.5",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "TE Seam/Cross Funnel vs Linebacker Coverage Liability",
@@ -455,6 +509,7 @@
       },
       {
         "recordId": "5.6",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Inside/Outside Zone vs Man/Gap/Duo Defensive YPC Split",
@@ -464,6 +519,7 @@
       },
       {
         "recordId": "5.7",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Light Box (<=6 Defenders) Rushing Explosive Rate",
@@ -473,6 +529,7 @@
       },
       {
         "recordId": "5.8",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Heavy Box (>=8 Defenders) Play-Action Deep Over Exploit",
@@ -482,6 +539,7 @@
       },
       {
         "recordId": "5.9",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Pass-Rush Win Rate (PRWR) Weak-Link OL Matchup",
@@ -491,6 +549,7 @@
       },
       {
         "recordId": "5.10",
+        "tier": "situational_catalog_80",
         "theme": "Personnel & Matchup",
         "evaluator": "personnel",
         "name": "Defensive Missed-Tackle Rate Hidden YAC Multiplier",
@@ -500,24 +559,27 @@
       },
       {
         "recordId": "6.1",
+        "tier": "situational_catalog_80",
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
-        "value": -0.068,
-        "sign": -1,
+        "value": 0.0,
+        "sign": 0,
         "gateStatus": "accepted"
       },
       {
         "recordId": "6.2",
+        "tier": "situational_catalog_80",
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
-        "value": -0.068,
-        "sign": -1,
+        "value": 0.0,
+        "sign": 0,
         "gateStatus": "accepted"
       },
       {
         "recordId": "6.3",
+        "tier": "situational_catalog_80",
         "theme": "Environment: Weather",
         "evaluator": "weather",
         "name": "Sustained Wind >=15 mph Deep-Pass & FG Make Penalty",
@@ -527,6 +589,7 @@
       },
       {
         "recordId": "6.4",
+        "tier": "situational_catalog_80",
         "theme": "Environment: Weather",
         "evaluator": "weather",
         "name": "Precipitation Wet-Ball Fumble & Drop Hazard",
@@ -536,6 +599,7 @@
       },
       {
         "recordId": "6.5",
+        "tier": "situational_catalog_80",
         "theme": "Environment: Weather",
         "evaluator": "weather",
         "name": "Sub-Freezing (<32F) Air Density Ball-Flight Drag",
@@ -545,6 +609,7 @@
       },
       {
         "recordId": "6.6",
+        "tier": "situational_catalog_80",
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Left Tackle Absence Blindside Pressure Surge",
@@ -554,6 +619,7 @@
       },
       {
         "recordId": "6.7",
+        "tier": "situational_catalog_80",
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Center Absence Protection-Call & Snap-Timing Disruption",
@@ -563,6 +629,7 @@
       },
       {
         "recordId": "6.8",
+        "tier": "situational_catalog_80",
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Cluster OL Attrition (>=2 Starters Out) Non-Linear Collapse",
@@ -572,6 +639,7 @@
       },
       {
         "recordId": "6.9",
+        "tier": "situational_catalog_80",
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "WR1 Absence Target Dispersion (Measured 1.135x WR2, Not 1.25x)",
@@ -581,6 +649,7 @@
       },
       {
         "recordId": "6.10",
+        "tier": "situational_catalog_80",
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Questionable WR1 DNP-DNP-LP Decoy / Pitch-Count Trap",
@@ -590,6 +659,7 @@
       },
       {
         "recordId": "7.1",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Weather-Driven Total Steam Overreaction Fade Check",
@@ -599,6 +669,7 @@
       },
       {
         "recordId": "7.2",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Backup QB Announcement Line-Move Completeness Audit",
@@ -608,6 +679,7 @@
       },
       {
         "recordId": "7.3",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Key-Number Crossing (3, 7, 10, 14) Push/Cover Probability Mass",
@@ -617,6 +689,7 @@
       },
       {
         "recordId": "7.4",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Pinnacle/Circa Sharp Limit Steam vs Recreational Lag",
@@ -626,6 +699,7 @@
       },
       {
         "recordId": "7.5",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Reverse Line Movement (Ticket % vs Money %) Syndicate Signal",
@@ -635,6 +709,7 @@
       },
       {
         "recordId": "7.6",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Derivative 1Q/1H Ratio Mispricing vs Scripted Opener",
@@ -644,6 +719,7 @@
       },
       {
         "recordId": "7.7",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "SGP Correlated Parlay Structural Hold (18-30%) Extraction",
@@ -653,6 +729,7 @@
       },
       {
         "recordId": "7.8",
+        "tier": "situational_catalog_80",
         "theme": "Market Context",
         "evaluator": "market",
         "name": "Late Inactive Report (T-90m) Prop Reshading Window",
@@ -661,25 +738,8 @@
         "gateStatus": "accepted"
       },
       {
-        "recordId": "7.9",
-        "theme": "Market Context",
-        "evaluator": "market",
-        "name": "Unpriced Prop Board Circuit Breaker (Zero Two-Sided Juice = PASS)",
-        "value": 0.014,
-        "sign": 1,
-        "gateStatus": "accepted"
-      },
-      {
-        "recordId": "7.10",
-        "theme": "Market Context",
-        "evaluator": "market",
-        "name": "Immutable Pregame Direction Lock (Rule H3 Anti-Flip)",
-        "value": 0.014,
-        "sign": 1,
-        "gateStatus": "accepted"
-      },
-      {
         "recordId": "8.1",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Raw Yards Per Play Without Garbage-Time & Down Filter",
@@ -689,6 +749,7 @@
       },
       {
         "recordId": "8.2",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Raw Completion % Without ADOT & CPOE Conditioning",
@@ -698,6 +759,7 @@
       },
       {
         "recordId": "8.3",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Raw Defensive Yards Allowed Without Drive Count & Pace",
@@ -707,6 +769,7 @@
       },
       {
         "recordId": "8.4",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Raw Targets/Carries Per Game Without Active Player-GP & Script",
@@ -716,6 +779,7 @@
       },
       {
         "recordId": "8.5",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "QB Wins Treated as Individual QB Skill Stat",
@@ -725,6 +789,7 @@
       },
       {
         "recordId": "8.6",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Raw Sacks Without Pressure Rate & Time-to-Throw",
@@ -734,6 +799,7 @@
       },
       {
         "recordId": "8.7",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Single-Game Turnover Margin Extrapolated as Skill",
@@ -743,6 +809,7 @@
       },
       {
         "recordId": "8.8",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Unadjusted Strength of Schedule Without Opponent EPA",
@@ -752,6 +819,7 @@
       },
       {
         "recordId": "8.9",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Raw RB YPC Without Box Count & RYOE Conditioning",
@@ -761,15 +829,39 @@
       },
       {
         "recordId": "8.10",
+        "tier": "situational_catalog_80",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Preseason or Week-18 Resting-Starter Stats Used Unadjusted",
         "value": 1.0,
         "sign": 1,
         "gateStatus": "accepted_conditioned"
+      }
+    ],
+    "emission_firewall_7_rules": [
+      {
+        "recordId": "7.9",
+        "tier": "emission_firewall_7",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Unpriced Prop Board Circuit Breaker (Zero Two-Sided Juice = PASS)",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.10",
+        "tier": "emission_firewall_7",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Immutable Pregame Direction Lock (Rule H3 Anti-Flip)",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
       },
       {
         "recordId": "8.11",
+        "tier": "emission_firewall_7",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Play-Clock-at-Snap Pooled Without Down Stratification",
@@ -779,6 +871,7 @@
       },
       {
         "recordId": "8.12",
+        "tier": "emission_firewall_7",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Disguise Collapse Hazard Without Spatial Width Normalization",
@@ -788,6 +881,7 @@
       },
       {
         "recordId": "8.13",
+        "tier": "emission_firewall_7",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Cumulative Season Rushing Yards Confounded by Carry Volume",
@@ -797,6 +891,7 @@
       },
       {
         "recordId": "8.14",
+        "tier": "emission_firewall_7",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Stunt Pressure Rate Without OL Slide/Chip Protection Context",
@@ -806,6 +901,879 @@
       },
       {
         "recordId": "8.15",
+        "tier": "emission_firewall_7",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Right-Censored Career Cohorts Without Base-Rate Denominator",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      }
+    ],
+    "records": [
+      {
+        "recordId": "1.1",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Garbage-Time EPA Downweight (0.15x when WP < 5% or > 95%)",
+        "value": -0.018,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.2",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "High-Leverage 3rd/4th Down Conversion Weighting",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.3",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Two-Minute Warning Middle-8 Double-Score Swing",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.4",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Score-Differential Neutral Zone (-7 to +7) Filtering",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.5",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Prevent-Defense 4Q Yardage Inflation Discount",
+        "value": -0.018,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.6",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Early-Down (1st/2nd) Success Rate Structural Anchor",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.7",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Late-Down Variance & Unsustainable 3rd-and-Long Regression",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.8",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Field-Position Expected Points Starting Line Adjustment",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.9",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Turnover-Luck Fumble Recovery 50% Mean Reversion",
+        "value": 0.012,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "1.10",
+        "tier": "situational_catalog_80",
+        "theme": "Game State & Leverage",
+        "evaluator": "leverage",
+        "name": "Kneeldown Victory Formation Negative Rushing Yards Filter",
+        "value": -0.018,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.1",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Pass Rate Over Expected (PROE) Neutral Script Baseline",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.2",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Trailing-Script Pass Volume Surge (+8+ Deficit Elasticity)",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.3",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Leading-Script Clock-Drain Run Clamp (+8+ Lead)",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.4",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Neutral Situation Pace (Seconds/Snap) Play Volume Multiplier",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.5",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "No-Huddle Up-Tempo Defensive Substitution Fatigue",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.6",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "First-15 Scripted Opener EPA vs Unscripted Decay",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.7",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Second-Half Halftime Coaching Adjustment Delta",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.8",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "RB Receiving Checkdown Boost in Negative Game Script",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.9",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "RB Goal-Line Carry Boost in Positive Game Script",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.10",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Emergency QB White-Flag 2H Run Clamp (Blowout Preservation)",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.11",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Drive-Sustaining Penalty First-Down Play-Count Extension",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "2.12",
+        "tier": "situational_catalog_80",
+        "theme": "Game Script",
+        "evaluator": "script",
+        "name": "Time-of-Possession Defensive Snap Cumulative Fatigue (>70 snaps)",
+        "value": 0.01,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.1",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Red-Zone (Inside-20) Pass vs Run TD Conversion Split",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.2",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Goal-to-Go (Inside-5) Heavy Package & QB Sneak Share",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.3",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Play-Action Dropback EPA Delta vs Straight Dropback",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.4",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Pre-Snap Motion & Motion-at-Snap YPRR Lift",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.5",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Under-Center vs Shotgun Run/Pass Tendency Tell",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.6",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Screen & RPO Rate vs Aggressive Pass-Rush Fronts",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.7",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Home vs Road Crowd-Noise Silent-Count False-Start Tax",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.8",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Natural Grass vs Artificial Turf Speed/Cut Efficiency",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.9",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Short-Week (TNF 4-Day Rest) Road Circadian & Recovery Penalty",
+        "value": -0.022,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.10",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Post-Bye Week Extra Preparation Scripted Edge",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.11",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "Divisional Familiarity Second-Meeting Under/Suppression Trend",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "3.12",
+        "tier": "situational_catalog_80",
+        "theme": "Situational Splits",
+        "evaluator": "splits",
+        "name": "High-Altitude (Mile High) Kicking Range & Conditioning Split",
+        "value": 0.008,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.1",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "4th-Down Go-For-It WP Aggressiveness Over Expected",
+        "value": 0.006,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.2",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "2nd-and-1 Sneak Opportunity Tax vs Deep-Shot EV",
+        "value": 0.006,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.3",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "Two-Point Conversion Analytics Chart Adherence",
+        "value": 0.006,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.4",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "End-of-Half Timeout Preservation vs Clock Bleed",
+        "value": 0.006,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.5",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "Defensive Coordinator Blitz Rate on 3rd-and-Medium",
+        "value": 0.028,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.6",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "Simulated Pressure / Creeper (4-Man Rush, Dropper) Disguise",
+        "value": 0.028,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.7",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "Stunt / Twist Interior DL Games vs Backup OG/C",
+        "value": 0.028,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "4.8",
+        "tier": "situational_catalog_80",
+        "theme": "Coaching Decisions",
+        "evaluator": "decision",
+        "name": "Interim HC / New Play-Caller 3-Week Volatility Regime",
+        "value": 0.006,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.1",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "11-Personnel vs 12/21 Heavy Personnel Box-Count Response",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.2",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "MOFC (Single-High Cover-1/3) vs MOFO (Two-High Cover-2/4/6) YPRR",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.3",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Slot WR vs Outside Perimeter WR Defensive Funnel",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.4",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Shadow CB1 Lock vs Moving Alpha WR Alignment Escape",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.5",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "TE Seam/Cross Funnel vs Linebacker Coverage Liability",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.6",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Inside/Outside Zone vs Man/Gap/Duo Defensive YPC Split",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.7",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Light Box (<=6 Defenders) Rushing Explosive Rate",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.8",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Heavy Box (>=8 Defenders) Play-Action Deep Over Exploit",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.9",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Pass-Rush Win Rate (PRWR) Weak-Link OL Matchup",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "5.10",
+        "tier": "situational_catalog_80",
+        "theme": "Personnel & Matchup",
+        "evaluator": "personnel",
+        "name": "Defensive Missed-Tackle Rate Hidden YAC Multiplier",
+        "value": 0.019,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.1",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: QB Change",
+        "evaluator": "backup",
+        "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
+        "value": 0.0,
+        "sign": 0,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.2",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: QB Change",
+        "evaluator": "backup",
+        "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
+        "value": 0.0,
+        "sign": 0,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.3",
+        "tier": "situational_catalog_80",
+        "theme": "Environment: Weather",
+        "evaluator": "weather",
+        "name": "Sustained Wind >=15 mph Deep-Pass & FG Make Penalty",
+        "value": -0.004,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.4",
+        "tier": "situational_catalog_80",
+        "theme": "Environment: Weather",
+        "evaluator": "weather",
+        "name": "Precipitation Wet-Ball Fumble & Drop Hazard",
+        "value": -0.004,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.5",
+        "tier": "situational_catalog_80",
+        "theme": "Environment: Weather",
+        "evaluator": "weather",
+        "name": "Sub-Freezing (<32F) Air Density Ball-Flight Drag",
+        "value": -0.004,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.6",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: OL Attrition",
+        "evaluator": "attrition",
+        "name": "Left Tackle Absence Blindside Pressure Surge",
+        "value": -0.022,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.7",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: OL Attrition",
+        "evaluator": "attrition",
+        "name": "Center Absence Protection-Call & Snap-Timing Disruption",
+        "value": -0.022,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.8",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: OL Attrition",
+        "evaluator": "attrition",
+        "name": "Cluster OL Attrition (>=2 Starters Out) Non-Linear Collapse",
+        "value": -0.022,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.9",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: OL Attrition",
+        "evaluator": "attrition",
+        "name": "WR1 Absence Target Dispersion (Measured 1.135x WR2, Not 1.25x)",
+        "value": -0.022,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "6.10",
+        "tier": "situational_catalog_80",
+        "theme": "Availability: OL Attrition",
+        "evaluator": "attrition",
+        "name": "Questionable WR1 DNP-DNP-LP Decoy / Pitch-Count Trap",
+        "value": -0.145,
+        "sign": -1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.1",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Weather-Driven Total Steam Overreaction Fade Check",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.2",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Backup QB Announcement Line-Move Completeness Audit",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.3",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Key-Number Crossing (3, 7, 10, 14) Push/Cover Probability Mass",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.4",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Pinnacle/Circa Sharp Limit Steam vs Recreational Lag",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.5",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Reverse Line Movement (Ticket % vs Money %) Syndicate Signal",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.6",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Derivative 1Q/1H Ratio Mispricing vs Scripted Opener",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.7",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "SGP Correlated Parlay Structural Hold (18-30%) Extraction",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.8",
+        "tier": "situational_catalog_80",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Late Inactive Report (T-90m) Prop Reshading Window",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.9",
+        "tier": "emission_firewall_7",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Unpriced Prop Board Circuit Breaker (Zero Two-Sided Juice = PASS)",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "7.10",
+        "tier": "emission_firewall_7",
+        "theme": "Market Context",
+        "evaluator": "market",
+        "name": "Immutable Pregame Direction Lock (Rule H3 Anti-Flip)",
+        "value": 0.014,
+        "sign": 1,
+        "gateStatus": "accepted"
+      },
+      {
+        "recordId": "8.1",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Raw Yards Per Play Without Garbage-Time & Down Filter",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.2",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Raw Completion % Without ADOT & CPOE Conditioning",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.3",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Raw Defensive Yards Allowed Without Drive Count & Pace",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.4",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Raw Targets/Carries Per Game Without Active Player-GP & Script",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.5",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "QB Wins Treated as Individual QB Skill Stat",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.6",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Raw Sacks Without Pressure Rate & Time-to-Throw",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.7",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Single-Game Turnover Margin Extrapolated as Skill",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.8",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Unadjusted Strength of Schedule Without Opponent EPA",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.9",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Raw RB YPC Without Box Count & RYOE Conditioning",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.10",
+        "tier": "situational_catalog_80",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Preseason or Week-18 Resting-Starter Stats Used Unadjusted",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.11",
+        "tier": "emission_firewall_7",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Play-Clock-at-Snap Pooled Without Down Stratification",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.12",
+        "tier": "emission_firewall_7",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Disguise Collapse Hazard Without Spatial Width Normalization",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.13",
+        "tier": "emission_firewall_7",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Cumulative Season Rushing Yards Confounded by Carry Volume",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.14",
+        "tier": "emission_firewall_7",
+        "theme": "Stats That Mislead",
+        "evaluator": "gate",
+        "name": "Stunt Pressure Rate Without OL Slide/Chip Protection Context",
+        "value": 1.0,
+        "sign": 1,
+        "gateStatus": "accepted_conditioned"
+      },
+      {
+        "recordId": "8.15",
+        "tier": "emission_firewall_7",
         "theme": "Stats That Mislead",
         "evaluator": "gate",
         "name": "Right-Censored Career Cohorts Without Base-Rate Denominator",
@@ -863,7 +1831,7 @@
       4294967295,
       4294967295,
       4294967295,
-      2390753279
+      260046847
     ],
     "equation_families_count": 279,
     "active_signal_families_count": 279,
@@ -873,17 +1841,17 @@
     "stage_b_hnsw_top_k": 250,
     "stage_c_orthogonal_clusters_count": 25,
     "marchenko_pastur_denoise_factor": 0.87817,
-    "stage_d_james_stein_factor": 0.93103,
-    "raw_log_odds_delta": -0.005298,
-    "clamped_log_odds_delta": -0.004932,
+    "stage_d_james_stein_factor": 0.95066,
+    "raw_log_odds_delta": 0.016175,
+    "clamped_log_odds_delta": 0.015377,
     "max_abs_delta_log_odds_cap": 0.35,
     "domain_equation_sums": {
-      "pressure": 0.5089,
-      "weather": 5.7278,
-      "restFatigue": 1.8787,
-      "coveragePersonnel": -0.1726,
-      "qbSkillScript": -2.0084,
-      "marketMicrostructure": 0.1683
+      "pressure": 0.039,
+      "weather": -1.2764,
+      "restFatigue": 1.4072,
+      "coveragePersonnel": -0.3595,
+      "qbSkillScript": 1.6456,
+      "marketMicrostructure": 1.0363
     }
   },
   "master_6family_cholesky_aggregator": {
@@ -918,5 +1886,5 @@
     "probability_movement_cap": 0.12,
     "post_overlay_prob": 0.5073
   },
-  "receipt_sha256": "dbed42d656d387367e05d8c46b519fe22409b230082d7f85d5d04243b8df4ebf"
+  "receipt_sha256": "e5bf937c2466a7ae7c2d0edb1cf2c00001452568ece2ff203925f829cb65e17f"
 }

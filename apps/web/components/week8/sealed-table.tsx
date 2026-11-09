@@ -71,9 +71,9 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                 <p className="mt-4 max-w-xl text-pretty text-[15px] leading-relaxed text-[#C4BFB6]">{row.rationale}</p>
                 {hasLimit && (
                   <div className="mt-4 rounded border border-[#FF4D2E]/30 bg-[#16181F] p-3 text-xs">
-                    <span className="font-semibold uppercase tracking-wider text-[#FF4D2E]">Trench X-Ray: </span>
+                    <span className="font-semibold uppercase tracking-wider text-[#FF4D2E]">Sealed Line Check: </span>
                     <span className="text-[#EDE8E0]">
-                      Offensive line pass protection +1.34s pocket time · Defensive front pressure rate 28.4%
+                      Model win prob {pct(row.model_p)} vs market prob {pct(row.market_p)} · Edge +{pct(row.edge)} · Read {row.confidence_display}
                     </span>
                   </div>
                 )}
@@ -98,10 +98,10 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                     🔒 Locked Card · {lockedRows.length} Plays Reserved for Members
                   </span>
                   <h3 className="mt-3 font-display text-2xl uppercase tracking-tight text-[#EDE8E0]">
-                    Unlock 3 More Free Trench Teaser Plays
+                    Get Weekly NFL Matchup &amp; Injury Notes
                   </h3>
                   <p className="mt-2 text-sm text-[#C4BFB6]">
-                    Join 4,200+ football bettors receiving daily NFL trench matchup alerts &amp; injury workload updates, or unlock the entire locked card now.
+                    Register your email for weekly NFL game-environment and injury workload notes, or unlock the full Week 9 card on our storefront now.
                   </p>
 
                   {!submitted ? (
@@ -119,18 +119,18 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                         disabled={loading}
                         className="min-h-[44px] rounded bg-[#FF4D2E] px-6 text-xs font-bold uppercase tracking-wider text-[#08090C] hover:opacity-90"
                       >
-                        {loading ? "Unlocking…" : "Get Free Teasers →"}
+                        {loading ? "Registering…" : "Get Matchup Notes →"}
                       </button>
                       <Link
                         href="/packages"
                         className="inline-flex min-h-[44px] items-center rounded border border-[#FF4D2E] px-6 text-xs font-bold uppercase tracking-wider text-[#FF4D2E] hover:bg-[#FF4D2E]/10"
                       >
-                        Unlock Full Card ($19) →
+                        Unlock Full Card (From $19) →
                       </Link>
                     </form>
                   ) : (
                     <div className="mt-4 flex items-center justify-center gap-4 text-sm font-semibold text-[#FF4D2E]">
-                      <span>✓ Email registered. Teaser access active.</span>
+                      <span>✓ Email registered for weekly NFL matchup &amp; injury notes.</span>
                       <Link href="/packages" className="underline hover:text-white">
                         Unlock Full Card Now →
                       </Link>

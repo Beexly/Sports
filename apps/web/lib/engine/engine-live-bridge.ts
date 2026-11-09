@@ -78,15 +78,37 @@ export const FREE_TNF_GAME_ENVIRONMENT_ANALYTICS = {
 } as const;
 
 export const THALER_SEGREGATED_BUNDLE_VALUATION = {
-  bundlePriceUsd: 29,
-  standaloneSumUsd: 52,
-  transactionUtilitySurplusUsd: 23,
-  savingsRatioLabel: "44 out of 100",
+  bundlePriceUsd: 49,
+  standaloneSumUsd: 117,
+  transactionUtilitySurplusUsd: 68,
+  savingsRatioLabel: "58 out of 100",
   itemizedGains: [
-    { label: "Week 9 TNF (JAX @ BAL) Matchup Breakdown & Showdown Captain Lineups", standaloneUsd: 9 },
-    { label: "Week 9 Sunday Main Slate Verified Spread, Total & Player Prop Call Sheet", standaloneUsd: 19 },
-    { label: "Week 9 Sunday DraftKings & FanDuel Optimal DFS Lineups (Cash Core + Tournament Stacks)", standaloneUsd: 15 },
-    { label: "Sunday & Monday Night Football Primetime Packet + Correlated Same-Game Parlay Tickets", standaloneUsd: 9 },
+    { label: "Week 9 Sunday Main Slate & MNF Best Bets Pack (#sunday-nfl-5pct-slate)", standaloneUsd: 39 },
+    { label: "Week 9 Player Props, Anytime TD, Defense/IDP & Correlated Parlay/SGP Pack (#sgp-correlation-basket)", standaloneUsd: 29 },
+    { label: "RedZone Standalone Week 9 Sunday & MNF DFS Pro Pack (#redzone-dfs-pro-pack)", standaloneUsd: 40 },
+    { label: "Monday Night Football (BUF @ MIN) Showdown Captain & Conserved Box-Score Packet", standaloneUsd: 9 },
+  ],
+} as const;
+
+export const WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY = {
+  asOfDate: "2026-11-09",
+  completedGamesCount: 14,
+  remainingGame: "BUF @ MIN (Mon 2026-11-09, 8:15 PM ET)",
+  sundayOfficialPlayRecord: "7-4-0",
+  sundayNetUnits: "+2.06u",
+  passDisciplineAvoidedLossesCount: 38,
+  conservedEngineMaeDkPts: 6.39,
+  conservedEngineRmseDkPts: 7.92,
+  legacyBrokenMaeDkPts: 12.08,
+  legacyBrokenRmseDkPts: 12.9,
+  maeImprovementLabel: "47.1 out of 100 lower error",
+  settledPlayHighlights: [
+    { matchup: "CIN @ ATL", selection: "CIN -3.0 (-112) & CIN ML (-162)", outcome: "2-0 (+1.51u)" },
+    { matchup: "DET @ MIA", selection: "DET -7.0 (-110)", outcome: "WIN (+0.91u)" },
+    { matchup: "DAL @ IND", selection: "Under 51.5 (-110)", outcome: "WIN (+0.91u)" },
+    { matchup: "HOU @ LAC", selection: "HOU -4.5 (-110)", outcome: "WIN (+0.91u)" },
+    { matchup: "ARI @ SEA", selection: "Under 39.5 (-110)", outcome: "WIN (+0.91u)" },
+    { matchup: "TB @ CHI", selection: "TB +6.0 (-110) WIN / TB ML (+220) LOSS", outcome: "1-1 (-0.09u)" },
   ],
 } as const;
 
@@ -129,17 +151,17 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
   },
   {
     pos: "RB",
-    player: "Ollie Gordon II (MIA)",
-    sal: "$5,600",
-    proj: "21.71 pts",
-    why: "Lead MIA bell-cow RB1 in DET@MIA with De'Von Achane (IR) and Jaylen Wright (DNP) sidelined.",
+    player: "Javonte Williams (DAL)",
+    sal: "$5,800",
+    proj: "15.20 pts",
+    why: "Lead Dallas early-down and goal-line back in DAL@IND indoor dome matchup.",
   },
   {
     pos: "RB",
     player: "Rhamondre Stevenson (NE)",
     sal: "$6,100",
-    proj: "21.63 pts",
-    why: "Uncontested three-down bell-cow in GB@NE with TreVeyon Henderson OUT (Illness).",
+    proj: "15.40 pts",
+    why: "Lead early-down back in GB@NE with TreVeyon Henderson OUT (Illness).",
   },
   {
     pos: "WR",
@@ -178,10 +200,10 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
   },
   {
     pos: "TE",
-    player: "Greg Dulcich (MIA)",
-    sal: "$3,100",
-    proj: "15.90 pts",
-    why: "Full-time starting TE1 seam leverage in DET@MIA with Will Kacmarek limited.",
+    player: "Tucker Kraft (GB)",
+    sal: "$5,000",
+    proj: "14.20 pts",
+    why: "Primary play-action seam and red-zone target in GB@NE.",
   },
   {
     pos: "DST",
@@ -201,49 +223,49 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
 
 export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
   cashFlagship: {
-    tag: "OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · 181.13 MEAN PTS)",
-    salary: "$49,900",
-    projectedPts: "181.13 Projected Points",
+    tag: "OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,700 · 174.65 MEAN PTS)",
+    salary: "$49,700",
+    projectedPts: "174.65 Projected Points",
     slots: [
       { pos: "QB", player: "Jared Goff (DET)", detail: "$6,600 · 29.91 pts · 14.2 own · +4.52 edge" },
       { pos: "RB1", player: "Josh Jacobs (GB)", detail: "$6,800 · 26.83 pts · 18.4 own · +3.95 edge" },
-      { pos: "RB2", player: "Ollie Gordon II (MIA)", detail: "$5,600 · 21.71 pts · 19.5 own · +5.20 edge" },
+      { pos: "RB2", player: "Javonte Williams (DAL)", detail: "$5,800 · 15.20 pts · 12.5 own · +3.10 edge" },
       { pos: "WR1", player: "Malik Nabers (NYG)", detail: "$7,300 · 23.64 pts · 16.0 own · +3.85 edge" },
       { pos: "WR2", player: "Jameson Williams (DET)", detail: "$6,100 · 17.46 pts · 13.8 own · +3.45 edge" },
       { pos: "WR3", player: "Ladd McConkey (LAC)", detail: "$5,500 · 15.68 pts · 14.5 own · +3.10 edge" },
       { pos: "TE", player: "Sam LaPorta (DET)", detail: "$5,100 · 19.45 pts · 15.2 own · +3.80 edge" },
-      { pos: "FLEX", player: "Malik Davis (DAL)", detail: "$4,000 · 15.97 pts · 11.0 own · +3.99 edge" },
+      { pos: "FLEX", player: "Josh Downs (IND)", detail: "$4,600 · 16.00 pts · 11.4 own · +3.40 edge" },
       { pos: "DST", player: "Saints DST (NO)", detail: "$2,900 · 10.48 pts · 9.4 own · +3.61 edge" },
     ],
   },
   gppTournament: {
-    tag: "OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($49,900 · 178.88 MEAN / 264.50 P99 PTS)",
-    salary: "$49,900",
-    projectedPts: "178.88 Mean / 264.50 P99 Points (Correlated Stack)",
+    tag: "OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($49,800 · 172.40 MEAN / 254.80 P99 PTS)",
+    salary: "$49,800",
+    projectedPts: "172.40 Mean / 254.80 P99 Points (Correlated Stack)",
     slots: [
       { pos: "QB", player: "C.J. Stroud (HOU)", detail: "$5,900 · 27.76 pts · 9.4 own · +4.70 leverage" },
       { pos: "RB1", player: "Josh Jacobs (GB)", detail: "$6,800 · 26.83 pts · 15.8 own · +3.95 edge" },
-      { pos: "RB2", player: "Ollie Gordon II (MIA)", detail: "$5,600 · 21.71 pts · 18.2 own · +4.90 edge" },
+      { pos: "RB2", player: "Javonte Williams (DAL)", detail: "$5,800 · 15.20 pts · 12.2 own · +3.10 edge" },
       { pos: "WR1", player: "Jaxon Smith-Njigba (SEA)", detail: "$9,300 · 29.11 pts · 21.0 own · +4.85 edge" },
       { pos: "WR2", player: "Nico Collins (HOU)", detail: "$7,200 · 19.26 pts · 14.5 own · +4.10 leverage" },
       { pos: "WR3", player: "Ladd McConkey (LAC)", detail: "$5,500 · 15.68 pts · 14.0 own · +3.75 leverage" },
       { pos: "TE", player: "Dalton Schultz (HOU)", detail: "$3,200 · 12.76 pts · 8.2 own · +3.99 leverage" },
-      { pos: "FLEX", player: "Malik Davis (DAL)", detail: "$4,000 · 15.97 pts · 10.8 own · +3.99 leverage" },
+      { pos: "FLEX", player: "Josh Downs (IND)", detail: "$4,600 · 16.00 pts · 10.8 own · +3.40 leverage" },
       { pos: "DST", player: "Packers DST (GB)", detail: "$2,400 · 9.80 pts · 8.2 own · +4.08 leverage" },
     ],
   },
   showdownCaptains: [
     {
-      player: "Derrick Henry (BAL RB)",
-      detail: "Captain $16,800 · 1.5x Multiplier: 36.90 pts · Heavy rush volume with Joe Fagnano starting at QB for BAL",
+      player: "Josh Allen (BUF QB)",
+      detail: "MNF Captain $16,500 · 1.5x Multiplier: 26.43 pts (17.62 base, q90 26.08) · 237.1 proj pass yds + 27.2 rush yds vs MIN",
     },
     {
-      player: "Zay Flowers (BAL WR)",
-      detail: "Captain $13,800 · 1.5x Multiplier: 31.28 pts · Short-area target funnel for Joe Fagnano in JAX@BAL TNF",
+      player: "James Cook (BUF RB)",
+      detail: "MNF Captain $14,400 · 1.5x Multiplier: 20.79 pts (13.86 base, q90 22.45) · 15.6 proj carries (63.3 rush yds, 0.76 TD) + 14.0 rec yds",
     },
     {
-      player: "Bhayshul Tuten (JAX RB)",
-      detail: "Captain $11,400 · 1.5x Multiplier: 27.60 pts · Lead JAX early-down role with Travis Etienne Jr. OUT",
+      player: "Aaron Jones (MIN RB)",
+      detail: "MNF Captain $13,200 · 1.5x Multiplier: 17.10 pts (11.40 base, q90 18.47) · Lead MIN RB1 (41.6 rush yds + 20.7 rec yds) with Carson Wentz at QB",
     },
   ],
 } as const;
@@ -273,14 +295,14 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   },
   {
     matchup: "DET @ MIA",
-    legs: "DET -3.5 · Amon-Ra St. Brown 70+ Rec Yds · Ollie Gordon II Over 48.5 Rush Yds",
+    legs: "DET -7.0 · Amon-Ra St. Brown 70+ Rec Yds · Jahmyr Gibbs 70+ Rush Yds",
     fairOdds: "+205",
     bookOdds: "+285",
     edge: "25 out of 100",
     conf: "81/100",
     free: false,
     correlation:
-      "Hard Rock Track Script: Detroit intermediate slot conversions build early separation while Miami leans on Ollie Gordon II with De'Von Achane OUT.",
+      "Hard Rock Track Script: Detroit intermediate slot conversions build early separation while Jahmyr Gibbs controls second-half clock against Miami's front.",
   },
   {
     matchup: "GB @ NE",
@@ -317,14 +339,14 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   },
   {
     matchup: "BUF @ MIN",
-    legs: "BUF -1.5 · Josh Allen Anytime Rush TD · Justin Jefferson 80+ Rec Yds",
-    fairOdds: "+160",
-    bookOdds: "+225",
-    edge: "24 out of 100",
+    legs: "James Cook Under 100.5 Rush Yds · Justin Jefferson Under 55.5 Rec Yds · Dalton Kincaid Under 57.5 Rec Yds",
+    fairOdds: "+164",
+    bookOdds: "+475",
+    edge: "22 out of 100",
     conf: "78/100",
     free: false,
     correlation:
-      "MNF Indoor Shootout: Josh Allen red-zone QB power answers Brian Flores simulated pressure while Carson Wentz targets Justin Jefferson on play-action.",
+      "MNF Conserved-Volume & Two-High Shell Script: Buffalo (237.1 pass yds / 113.3 rush yds) and Minnesota (177.2 pass yds / 97.0 rush yds) distribute volume across deep rotations, keeping James Cook (proj 63.3 rush yds), Justin Jefferson (proj 39.7 rec yds), and Dalton Kincaid (proj 39.8 rec yds) below inflated standalone lines.",
   },
   {
     matchup: "DAL @ IND",

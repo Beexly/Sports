@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { orderPacksForStorefront, upcomingOnly } from "@/components/packages/storefront-order";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import { getActiveUpcomingWriteups } from "@/lib/writeups/coach-writeup-engine";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 
 export const revalidate = 300;
 
@@ -55,7 +56,7 @@ export default function HomePage(): JSX.Element {
             {TRUST_LINKS.map(({ label, href }) => (
               <a
                 key={href}
-                href={href}
+                href={isPagePublic(href) ? href : "/engine"}
                 className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2 transition-colors hover:text-plasma"
               >
                 {label}

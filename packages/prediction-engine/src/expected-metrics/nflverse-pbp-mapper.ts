@@ -28,9 +28,12 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type DefensiveFieldZonePlay } from "./defensive-field-zone-split.js";
+import { type QbOpponentTierDropbackPlay } from "./qb-opponent-tier-efficiency-split.js";
+import { type QbPostFirstIntDropbackPlay } from "./qb-post-first-int-efficiency-split.js";
 
 /**
- * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
+ * The ONLY pbp columns this wiring reads. 44 of ~372 (OOM defense — pass to
  * `parseCsv(text, { columns })` so the projecting parser never materializes
  * the full token matrix).
  *
@@ -42,7 +45,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -55,9 +58,10 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // WP situation + label
   "score_differential", "posteam_timeouts_remaining", "defteam_timeouts_remaining",
   "spread_line", "result",
-  // success rate
+  // success rate + Q52/Q53/Q54 core pbp columns
   "play_type", "yards_gained", "interception", "fumble_lost",
-  "rusher_player_id", "receiver_player_id",
+  "passer_player_id", "rusher_player_id", "receiver_player_id",
+  "qb_spike", "qb_kneel",
   // drives
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
@@ -105,6 +109,12 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  /** Q52 mapped defensive field-zone scrimmage plays (epa: null; attach via attachOwnEpa). */
+  readonly defensiveFieldZonePlays: readonly DefensiveFieldZonePlay[];
+  /** Q53 mapped QB opponent-tier dropback plays (epa: null; attach via attachOwnEpa). */
+  readonly qbOpponentTierPlays: readonly QbOpponentTierDropbackPlay[];
+  /** Q54 mapped QB post-first-interception dropback plays (epa: null; attach via attachOwnEpa). */
+  readonly qbPostFirstIntPlays: readonly QbPostFirstIntDropbackPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +390,9 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const defensiveFieldZonePlays: DefensiveFieldZonePlay[] = [];
+  const qbOpponentTierPlays: QbOpponentTierDropbackPlay[] = [];
+  const qbPostFirstIntPlays: QbPostFirstIntDropbackPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -486,17 +499,75 @@ export function mapNflversePbpToExpectedMetrics(
       // (e) Success series — scrimmage pass/run rows with a possession team.
       //     NaN / out-of-range downs pass through untouched; isSuccessfulPlay
       //     returns null for them (unratable, never a silent failure).
-      const playType = row["play_type"];
-      if ((playType === "pass" || playType === "run") && (row["posteam"] ?? "") !== "") {
+      const playType = row["play_type"] ?? "";
+      const posteamStr = row["posteam"] ?? "";
+      const defteamStr = row["defteam"] ?? "";
+      const weekNum = num(row["week"]);
+      const turnoverBin: 0 | 1 =
+        row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0;
+      const qbSpikeBin = row["qb_spike"] === undefined || row["qb_spike"] === "" ? null : bin(row["qb_spike"]);
+      const qbKneelBin = row["qb_kneel"] === undefined || row["qb_kneel"] === "" ? null : bin(row["qb_kneel"]);
+
+      if ((playType === "pass" || playType === "run") && posteamStr !== "") {
         successPlays.push({
           playId,
-          teamId: row["posteam"] ?? "",
+          teamId: posteamStr,
           playerId: (row["rusher_player_id"] || row["receiver_player_id"]) ?? "",
           down,
           ydstogo,
           yardsGained: num(row["yards_gained"]),
           touchdown: bin(row["touchdown"]),
-          turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
+          turnover: turnoverBin,
+        });
+      }
+
+      // (e2) Q52 Defensive Field-Zone Split series (epa: null; attach via attachOwnEpa).
+      if ((playType === "pass" || playType === "run") && posteamStr !== "" && defteamStr !== "") {
+        defensiveFieldZonePlays.push({
+          playId,
+          season,
+          week: weekNum,
+          defteam: defteamStr,
+          posteam: posteamStr,
+          playType,
+          qbKneel: qbKneelBin,
+          qbSpike: qbSpikeBin,
+          yardline100,
+          down,
+          ydstogo,
+          yardsGained: num(row["yards_gained"]),
+          touchdown: bin(row["touchdown"]),
+          turnover: turnoverBin,
+          epa: null,
+        });
+      }
+
+      // (e3) Q53 QB Opponent Tier Efficiency Split & Q54 QB Post-First-INT series (pass rows).
+      if (playType === "pass") {
+        const passerPlayerId = row["passer_player_id"] ?? "";
+        qbOpponentTierPlays.push({
+          playId,
+          season,
+          week: weekNum,
+          passerPlayerId,
+          posteam: posteamStr,
+          defteam: defteamStr,
+          playType,
+          qbSpike: qbSpikeBin,
+          epa: null,
+        });
+        qbPostFirstIntPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          numericPlayId: num(row["play_id"]),
+          season,
+          week: weekNum,
+          passerPlayerId,
+          posteam: posteamStr,
+          playType,
+          qbSpike: qbSpikeBin,
+          interception: bin(row["interception"]),
+          epa: null,
         });
       }
     }
@@ -611,6 +682,9 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    defensiveFieldZonePlays,
+    qbOpponentTierPlays,
+    qbPostFirstIntPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
@@ -627,15 +701,15 @@ export function mapNflversePbpToExpectedMetrics(
 }
 
 /**
- * Post-fit helper: returns a NEW DrivePlay array with our OWN fitted EPA
+ * Post-fit helper: returns a NEW play array with our OWN fitted EPA
  * attached by playId. Pure; ids missing from the map keep epa null (drives.ts
  * treats a null epa as 0 in epaTotal). Never mutates the input.
  */
-export function attachOwnEpa(
-  drivePlays: readonly DrivePlay[],
+export function attachOwnEpa<T extends { readonly playId: string; readonly epa: number | null }>(
+  plays: readonly T[],
   epaByPlayId: ReadonlyMap<string, number>,
-): DrivePlay[] {
-  return drivePlays.map((p) => {
+): T[] {
+  return plays.map((p) => {
     const epa = epaByPlayId.get(p.playId);
     return epa === undefined ? { ...p } : { ...p, epa };
   });

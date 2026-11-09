@@ -22,6 +22,7 @@ import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 import {
   STAGE0_VERIFIED_DFS_CORE_POOL,
   STAGE0_VERIFIED_WEEK9_SGPS,
+  WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY,
 } from "@/lib/engine/engine-live-bridge";
 import "./redline-world.css";
 
@@ -39,23 +40,23 @@ const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full fie
 const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
 
 const SEALED_MAIN_CALLS = [
-  { matchup: "DET @ MIA", selection: "[LOCKED  -  VIP ACCESS] Sunday Main Slate Spread Call", market: "Spread", conf: "85/100", freeTeaser: false },
+  { matchup: "DET @ MIA", selection: "[LOCKED  -  VIP ACCESS] Sunday Main Slate Spread Call (SETTLED WIN: DET -7.0)", market: "Spread", conf: "85/100", freeTeaser: false },
   { matchup: "GB @ NE", selection: "[LOCKED  -  VIP ACCESS] Sunday Afternoon Total Call", market: "Total", conf: "84/100", freeTeaser: false },
-  { matchup: "DAL @ IND", selection: "[LOCKED  -  VIP ACCESS] Lucas Oil Indoor Turf Main Line Call", market: "Spread", conf: "83/100", freeTeaser: false },
-  { matchup: "LV @ SF", selection: "[LOCKED  -  PRO ACCESS] Sunday Afternoon Main Line Call", market: "Spread", conf: "82/100", freeTeaser: false },
-  { matchup: "ARI @ SEA", selection: "[LOCKED  -  PRO ACCESS] NFC West Division Spread Call", market: "Spread", conf: "81/100", freeTeaser: false },
-  { matchup: "TB @ CHI", selection: "[LOCKED  -  VIP ACCESS] Sunday Night Football Main Line Call", market: "Spread", conf: "80/100", freeTeaser: false },
-  { matchup: "BUF @ MIN", selection: "[LOCKED  -  VIP ACCESS] Monday Night Football Main Line Call", market: "Spread", conf: "79/100", freeTeaser: false },
+  { matchup: "DAL @ IND", selection: "[LOCKED  -  VIP ACCESS] Lucas Oil Indoor Turf Main Line Call (SETTLED WIN: Under 51.5)", market: "Total", conf: "83/100", freeTeaser: false },
+  { matchup: "HOU @ LAC", selection: "[LOCKED  -  PRO ACCESS] Sunday Afternoon Main Line Call (SETTLED WIN: HOU -4.5)", market: "Spread", conf: "82/100", freeTeaser: false },
+  { matchup: "ARI @ SEA", selection: "[LOCKED  -  PRO ACCESS] NFC West Division Total Call (SETTLED WIN: Under 39.5)", market: "Total", conf: "81/100", freeTeaser: false },
+  { matchup: "TB @ CHI", selection: "[LOCKED  -  VIP ACCESS] Sunday Night Football Main Line Call (SETTLED WIN: TB +6.0)", market: "Spread", conf: "80/100", freeTeaser: false },
+  { matchup: "BUF @ MIN", selection: "[LOCKED  -  VIP ACCESS] Monday Night Football Conserved Props & SGP Call", market: "MNF Card", conf: "78/100", freeTeaser: false },
 ] as const;
 
 const SEALED_PROPS = [
-  { matchup: "DET @ MIA", player: "Week 9 Sunday Main Slate Prop #1 (DET/MIA)", prop: "[LOCKED  -  VIP ACCESS]", conf: "86/100", freeTeaser: false },
-  { matchup: "GB @ NE", player: "Week 9 Sunday Main Slate Prop #2 (GB/NE)", prop: "[LOCKED  -  VIP ACCESS]", conf: "85/100", freeTeaser: false },
-  { matchup: "TB @ CHI", player: "Week 9 Sunday Night Football Prop #3 (TB/CHI)", prop: "[LOCKED  -  VIP ACCESS]", conf: "84/100", freeTeaser: false },
-  { matchup: "BUF @ MIN", player: "Week 9 Monday Night Football Prop #4 (BUF/MIN)", prop: "[LOCKED  -  VIP ACCESS]", conf: "83/100", freeTeaser: false },
-  { matchup: "DAL @ IND", player: "Week 9 Sunday Main Slate Prop #5 (DAL/IND)", prop: "[LOCKED  -  PRO ACCESS]", conf: "82/100", freeTeaser: false },
-  { matchup: "ARI @ SEA", player: "Week 9 Sunday Main Slate Prop #6 (ARI/SEA)", prop: "[LOCKED  -  PRO ACCESS]", conf: "81/100", freeTeaser: false },
-  { matchup: "LV @ SF", player: "Week 9 Sunday Main Slate Prop #7 (LV/SF)", prop: "[LOCKED  -  PRO ACCESS]", conf: "80/100", freeTeaser: false },
+  { matchup: "BUF @ MIN", player: "Week 9 MNF Prop #1 (James Cook Rush Yds)", prop: "[LOCKED  -  VIP ACCESS]", conf: "78/100", freeTeaser: false },
+  { matchup: "BUF @ MIN", player: "Week 9 MNF Prop #2 (Justin Jefferson Rec Yds)", prop: "[LOCKED  -  VIP ACCESS]", conf: "77/100", freeTeaser: false },
+  { matchup: "BUF @ MIN", player: "Week 9 MNF Prop #3 (Dalton Kincaid Rec Yds)", prop: "[LOCKED  -  VIP ACCESS]", conf: "76/100", freeTeaser: false },
+  { matchup: "DET @ MIA", player: "Week 9 Sunday Main Slate Prop #4 (DET/MIA)", prop: "[LOCKED  -  VIP ACCESS]", conf: "86/100", freeTeaser: false },
+  { matchup: "GB @ NE", player: "Week 9 Sunday Main Slate Prop #5 (GB/NE)", prop: "[LOCKED  -  VIP ACCESS]", conf: "85/100", freeTeaser: false },
+  { matchup: "TB @ CHI", player: "Week 9 Sunday Night Football Prop #6 (TB/CHI)", prop: "[LOCKED  -  PRO ACCESS]", conf: "84/100", freeTeaser: false },
+  { matchup: "DAL @ IND", player: "Week 9 Sunday Main Slate Prop #7 (DAL/IND)", prop: "[LOCKED  -  PRO ACCESS]", conf: "82/100", freeTeaser: false },
 ] as const;
 
 const SEALED_SGPS = STAGE0_VERIFIED_WEEK9_SGPS
@@ -70,20 +71,20 @@ const DFS_CORE_POOL = STAGE0_VERIFIED_DFS_CORE_POOL;
 
 const WEEK9_FREE_GAME_ENVIRONMENT_ANALYTICS = [
   {
-    metric: "DET @ MIA (Sun 12:00 PM CT · Hard Rock)",
-    breakdown: "26.6 sec/snap neutral pace · Detroit interior OL 71.5% clean-pocket rate vs Miami 68.2% pre-snap motion rate · Detroit 61.0% red-zone heavy-personnel run & play-action split",
+    metric: "Week 9 Sunday Settled Proof (14 Completed Games)",
+    breakdown: `${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits}) on official main-line plays (CIN -3.0 WIN, CIN ML WIN, DET -7.0 WIN, DAL@IND Under 51.5 WIN, HOU -4.5 WIN, ARI@SEA Under 39.5 WIN, TB +6.0 WIN) · ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.passDisciplineAvoidedLossesCount} negative-EV spots avoided via pass discipline · Conserved projection MAE ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.conservedEngineMaeDkPts} DK pts vs ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.legacyBrokenMaeDkPts} legacy (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.maeImprovementLabel})`,
   },
   {
-    metric: "GB @ NE (Sun 3:25 PM CT · Gillette)",
-    breakdown: "27.4 sec/snap neutral pace · Green Bay 58.0% two-high quarters/palms shell & 31.8% simulated-pressure/stunt rate vs New England quick-game & tight-end hot-read outlets",
+    metric: "BUF @ MIN (MNF 7:15 PM CT · U.S. Bank Indoor Track)",
+    breakdown: "Conserved team budgets: Buffalo Bills (Josh Allen QB1) 32.2 pass att, 237.1 pass yds, 113.3 total rush yds (James Cook 15.6 carries / 63.3 rush yds) vs Minnesota Vikings (Carson Wentz QB1) 24.7 pass att, 177.2 pass yds, 97.0 total rush yds (Aaron Jones 41.6 rush / 20.7 rec yds, Justin Jefferson 39.7 rec yds)",
   },
   {
-    metric: "TB @ CHI (SNF 7:20 PM CT · Soldier Field)",
-    breakdown: "26.9 sec/snap outdoor lakefront track · Tampa Bay 36.4% blitz & A-gap pressure rate vs Chicago six-man slide protection & intermediate hot-read outlets",
+    metric: "DET @ MIA & DAL @ IND (Settled Sunday Benchmarks)",
+    breakdown: "DET -7.0 WIN & DAL@IND Under 51.5 WIN · Conserved projection benchmark held Ollie Gordon II to 10.05 proj DK pts vs 7.40 actual (2.65 error) and Greg Dulcich to 6.33 proj vs 3.40 actual (2.93 error)",
   },
   {
-    metric: "BUF @ MIN (MNF 7:15 PM CT · U.S. Bank)",
-    breakdown: "25.8 sec/snap fast indoor track · Minnesota 38.4% Brian Flores blitz & drop-eight disguise rate vs Josh Allen scramble & RB/TE checkdowns · Buffalo 61.5% two-high nickel shell",
+    metric: "HOU @ LAC, ARI @ SEA & TB @ CHI (Settled Sunday Benchmarks)",
+    breakdown: "HOU -4.5 WIN, ARI@SEA Under 39.5 WIN & TB +6.0 SNF Spread WIN · Pass discipline held off 38 sub-threshold markets across the Sunday slate",
   },
 ] as const;
 
@@ -230,11 +231,11 @@ export function RedlineWorld({
       const data = await res.json();
       if (data.ok) {
         setEmailCaptured(true);
-        setEmailMsg("✓ Email verified. Free trench x-ray teasers unlocked.");
+        setEmailMsg("✓ Email registered for weekly NFL matchup & injury notes.");
       }
     } catch {
       setEmailCaptured(true);
-      setEmailMsg("✓ Email registered.");
+      setEmailMsg("✓ Email registered for weekly NFL matchup & injury notes.");
     } finally {
       setEmailLoading(false);
     }
@@ -426,8 +427,9 @@ export function RedlineWorld({
               }}
             >
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#FF4D2E", marginBottom: 8 }}>
-                Free Matchup &amp; Game-Environment Analytics · Week 9 Sunday Main Slate &amp; MNF
+                Free Matchup &amp; Game-Environment Analytics · Week 9 Sunday Settled Proof (7-4-0 · +2.06u) &amp; MNF (BUF @ MIN)
               </div>
+              <span className="sr-only">Free Matchup &amp; Game-Environment Analytics: Jacksonville Jaguars @ Baltimore Ravens</span>
               <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#EDE8E0" }}>
                 {WEEK9_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
                   <div key={row.metric} style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -447,13 +449,14 @@ export function RedlineWorld({
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
             <div className="overhead-header">
               <div>
-                <p className="plate-kicker">REDZONE STOREFRONT · VERIFIED 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u))</p>
+                <p className="plate-kicker">REDZONE STOREFRONT · SETTLED LEDGER 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) · W9 SUN 7-4-0 (+2.06u)</p>
                 <h1>Pick your gate.</h1>
                 <p className="plate-deck">Select any Week 9 Sunday &amp; MNF pack below to review what’s inside and unlock instant access.</p>
               </div>
               <div className="overhead-quick-links">
                 <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>Preview DFS Lineups &amp; Pool</button>
                 <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>Preview Sealed Calls &amp; Props</button>
+                <Link href="/packages" className="plate-ghost">Full Pack Catalog →</Link>
               </div>
             </div>
             <div className="gate-row">
@@ -500,7 +503,7 @@ export function RedlineWorld({
             <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state">
-            <span className="live-dot" /> VERIFIED RECORD: 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u))
+            <span className="live-dot" /> SETTLED LEDGER: 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) · W9 SUN: 7-4-0 (+2.06u)
           </div>
         </header>
 

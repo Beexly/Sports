@@ -535,7 +535,11 @@ def verify_jev_spine_freshness_and_qb1(
     }
 
 
-def compute_qb_tier_adjusted_epa(base_off_epa: float, qb_tier: str) -> dict:
+def compute_qb_tier_adjusted_epa(
+    base_off_epa: float,
+    qb_tier: str,
+    compiled_92_pocket_survival: float | None = None,
+) -> dict:
     """Apply QB tier dropoff, execution multiplier, completion floor, and sack/INT multipliers (SG-3).
 
     For EMERGENCY_QB3_UDFA (e.g., BAL +0.134 with Joe Fagnano):
@@ -591,11 +595,22 @@ def compute_qb_tier_adjusted_epa(base_off_epa: float, qb_tier: str) -> dict:
         lam_margin = 0.70
         canonical_tier = "QB1_STARTER"
 
-    adj_epa = round(float(base_off_epa) - dropoff, 4)
+    survival_epa_delta = 0.0
+    if compiled_92_pocket_survival is not None:
+        surv_clamped = max(0.20, min(0.85, float(compiled_92_pocket_survival)))
+        survival_epa_delta = round((surv_clamped - 0.55) * 0.12, 4)
+        sack_mult = round(max(0.85, sack_mult + (0.55 - surv_clamped) * 0.45), 4)
+
+    adj_epa = round(float(base_off_epa) - dropoff + survival_epa_delta, 4)
     return {
         "base_off_epa": round(float(base_off_epa), 4),
         "qb_tier": canonical_tier,
         "epa_dropoff": round(dropoff, 4),
+        "compiled_92_pocket_survival": (
+            round(float(compiled_92_pocket_survival), 4)
+            if compiled_92_pocket_survival is not None
+            else 0.55
+        ),
         "adjusted_off_epa": adj_epa,
         "effective_scaled_epa": round(adj_epa * exec_mult, 4),
         "execution_multiplier": exec_mult,
@@ -2006,7 +2021,7 @@ def main():
             ("CLE", "NO",  [],                  ["WR1"],             "CLE -1.0",  +2.05, "CLE +14 (Myles trench)",  "ELEVATED_SHARP_AGREE", 3),
             ("DAL", "IND", [],                  [],                  "IND -2.5",  +1.70, "IND +10",                 "MODEL_SHARP_ALIGN",  4),
             ("DEN", "CAR", [],                  ["QB_QUESTIONABLE"], "DEN -6.5",  +2.35, "DEN +16 (Surtain lock)",  "ELEVATED_SHARP_AGREE", 5),
-            ("DET", "MIA", [],                  [],                  "DET -3.5",  +2.20, "DET +15 (Gibbs/ARSB)",    "ELEVATED_SHARP_AGREE", 6),
+            ("DET", "MIA", [],                  [],                  "DET -7.0",  +2.20, "DET +15 (Gibbs/ARSB)",    "ELEVATED_SHARP_AGREE", 6),
             ("LAR", "WAS", [],                  [],                  "LAR +2.5",  +1.95, "LAR +12 (Nacua/Puka)",    "MODEL_SHARP_ALIGN",  7),
             ("NYG", "PHI", ["QB1"],             [],                  "NYG +7.5",  +1.40, "PHI -300 ML BLOCKED",     "HEAVY_JUICE_FIREWALL", 8),
             ("NYJ", "KC",  [],                  [],                  "NYJ +6.5",  +1.88, "NYJ +13 (Geno Smith)",    "MODEL_SHARP_ALIGN",  9),

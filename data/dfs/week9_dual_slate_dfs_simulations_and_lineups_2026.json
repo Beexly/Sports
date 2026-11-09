@@ -28,12 +28,6 @@
         "reason": "traded ARI->BAL on 2026-11-04"
       },
       {
-        "name": "Alec Pierce",
-        "team": "IND",
-        "position": "WR",
-        "reason": "DK status IR"
-      },
-      {
         "name": "Isaiah Likely",
         "team": "NYG",
         "position": "TE",
@@ -766,12 +760,6 @@
         "reason": "not confirmed QB1 (Joe Milton)"
       },
       {
-        "name": "Drew Lock",
-        "team": "SEA",
-        "position": "QB",
-        "reason": "not confirmed QB1 (Sam Darnold)"
-      },
-      {
         "name": "Jalen Milroe",
         "team": "SEA",
         "position": "QB",
@@ -842,7 +830,7 @@
         "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation.",
         "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as 100% healthy bell-cow RB1; Greg Dulcich ($3,100) is full-go TE1 against DET middle-of-field funnel while Will Kacmarek is LP.",
         "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches and checkdown targets onto Rhamondre Stevenson ($6,100) vs GB light boxes.",
-        "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Jake Ferguson DNP and KaVontae Turpin DNP; Malik Davis ($4,000) active rotational/explosive matchup leverage against IND interior run defense.",
+        "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Javonte Williams ($6,200) and CeeDee Lamb ($7,600) leading the Dallas offense.",
         "PHI": "Nick Sirianni benched Tanner McKee (0-3) and named Joe Milton ($4,100) Week 9 starting QB vs NYG."
       },
       "situational_and_vacated_role_spotlights": [
@@ -852,9 +840,9 @@
           "team": "NE",
           "opponent": "GB",
           "salary": 6100,
-          "projection": 22.24,
+          "projection": 14.79,
           "sd": 15.28,
-          "value_per_1k": 3.65,
+          "value_per_1k": 2.42,
           "qb_supporting_cast_ovr": 37.9,
           "qb_supporting_cast_rank": 27.0,
           "team_wpp_total": 0.0
@@ -865,9 +853,9 @@
           "team": "MIA",
           "opponent": "DET",
           "salary": 5600,
-          "projection": 21.27,
+          "projection": 9.31,
           "sd": 15.01,
-          "value_per_1k": 3.8,
+          "value_per_1k": 1.66,
           "qb_supporting_cast_ovr": 32.2,
           "qb_supporting_cast_rank": 31.0,
           "team_wpp_total": 0.0
@@ -878,25 +866,12 @@
           "team": "PHI",
           "opponent": "NYG",
           "salary": 4100,
-          "projection": 19.01,
+          "projection": 14.24,
           "sd": 11.11,
-          "value_per_1k": 4.64,
+          "value_per_1k": 3.47,
           "qb_supporting_cast_ovr": 37.1,
           "qb_supporting_cast_rank": 28.0,
           "team_wpp_total": 1.61
-        },
-        {
-          "player": "Malik Davis",
-          "position": "RB",
-          "team": "DAL",
-          "opponent": "IND",
-          "salary": 4000,
-          "projection": 16.1,
-          "sd": 12.32,
-          "value_per_1k": 4.03,
-          "qb_supporting_cast_ovr": 53.3,
-          "qb_supporting_cast_rank": 17.0,
-          "team_wpp_total": 0.0
         },
         {
           "player": "Greg Dulcich",
@@ -904,9 +879,9 @@
           "team": "MIA",
           "opponent": "DET",
           "salary": 3100,
-          "projection": 12.39,
+          "projection": 6.42,
           "sd": 9.13,
-          "value_per_1k": 4.0,
+          "value_per_1k": 2.07,
           "qb_supporting_cast_ovr": 32.2,
           "qb_supporting_cast_rank": 31.0,
           "team_wpp_total": 0.0
@@ -1382,7 +1357,7 @@
             "team": "SEA",
             "opponent": "ARI",
             "salary": 9300,
-            "projection": 29.57
+            "projection": 34.54
           },
           {
             "player": "Josh Jacobs",
@@ -1390,7 +1365,7 @@
             "team": "GB",
             "opponent": "NE",
             "salary": 6800,
-            "projection": 27.48
+            "projection": 11.5
           },
           {
             "player": "Jared Goff",
@@ -1398,7 +1373,7 @@
             "team": "DET",
             "opponent": "MIA",
             "salary": 6600,
-            "projection": 30.02
+            "projection": 13.87
           },
           {
             "player": "Jameson Williams",
@@ -1406,7 +1381,7 @@
             "team": "DET",
             "opponent": "MIA",
             "salary": 6100,
-            "projection": 17.68
+            "projection": 10.38
           },
           {
             "player": "Stefon Diggs",
@@ -1414,7 +1389,7 @@
             "team": "WAS",
             "opponent": "LAR",
             "salary": 5600,
-            "projection": 17.65
+            "projection": 15.9
           },
           {
             "player": "Sam LaPorta",
@@ -1422,15 +1397,7 @@
             "team": "DET",
             "opponent": "MIA",
             "salary": 5100,
-            "projection": 19.43
-          },
-          {
-            "player": "Malik Davis",
-            "position": "RB",
-            "team": "DAL",
-            "opponent": "IND",
-            "salary": 4000,
-            "projection": 16.1
+            "projection": 11.59
           },
           {
             "player": "Greg Dulcich",
@@ -1438,7 +1405,7 @@
             "team": "MIA",
             "opponent": "DET",
             "salary": 3100,
-            "projection": 12.39
+            "projection": 6.42
           },
           {
             "player": "Broncos",
@@ -1446,7 +1413,7 @@
             "team": "DEN",
             "opponent": "CAR",
             "salary": 3000,
-            "projection": 10.96
+            "projection": 11.48
           }
         ]
       },
@@ -1502,7 +1469,7 @@
             "team": "LAR",
             "opponent": "WAS",
             "salary": 8800,
-            "projection": 26.07
+            "projection": 42.24
           },
           {
             "player": "Josh Jacobs",
@@ -1510,7 +1477,7 @@
             "team": "GB",
             "opponent": "NE",
             "salary": 6800,
-            "projection": 27.48
+            "projection": 11.5
           },
           {
             "player": "Rhamondre Stevenson",
@@ -1518,7 +1485,7 @@
             "team": "NE",
             "opponent": "GB",
             "salary": 6100,
-            "projection": 22.24
+            "projection": 14.79
           },
           {
             "player": "C.J. Stroud",
@@ -1526,7 +1493,7 @@
             "team": "HOU",
             "opponent": "LAC",
             "salary": 5900,
-            "projection": 28.31
+            "projection": 17.77
           },
           {
             "player": "Ollie Gordon II",
@@ -1534,7 +1501,7 @@
             "team": "MIA",
             "opponent": "DET",
             "salary": 5600,
-            "projection": 21.27
+            "projection": 9.31
           },
           {
             "player": "Stefon Diggs",
@@ -1542,7 +1509,7 @@
             "team": "WAS",
             "opponent": "LAR",
             "salary": 5600,
-            "projection": 17.65
+            "projection": 15.9
           },
           {
             "player": "Ladd McConkey",
@@ -1550,7 +1517,7 @@
             "team": "LAC",
             "opponent": "HOU",
             "salary": 5500,
-            "projection": 15.88
+            "projection": 14.51
           },
           {
             "player": "Dalton Schultz",
@@ -1558,7 +1525,7 @@
             "team": "HOU",
             "opponent": "LAC",
             "salary": 3200,
-            "projection": 13.15
+            "projection": 12.8
           },
           {
             "player": "Packers",
@@ -1566,7 +1533,7 @@
             "team": "GB",
             "opponent": "NE",
             "salary": 2400,
-            "projection": 9.94
+            "projection": 10.46
           }
         ]
       },
@@ -1620,7 +1587,7 @@
             "team": "NYG",
             "opponent": "PHI",
             "salary": 7300,
-            "projection": 22.64
+            "projection": 30.45
           },
           {
             "player": "DeVonta Smith",
@@ -1628,7 +1595,7 @@
             "team": "PHI",
             "opponent": "NYG",
             "salary": 6800,
-            "projection": 16.43
+            "projection": 15.32
           },
           {
             "player": "Rhamondre Stevenson",
@@ -1636,7 +1603,7 @@
             "team": "NE",
             "opponent": "GB",
             "salary": 6100,
-            "projection": 22.24
+            "projection": 14.79
           },
           {
             "player": "Ashton Jeanty",
@@ -1644,7 +1611,7 @@
             "team": "LV",
             "opponent": "SF",
             "salary": 5900,
-            "projection": 19.88
+            "projection": 8.93
           },
           {
             "player": "Ollie Gordon II",
@@ -1652,7 +1619,7 @@
             "team": "MIA",
             "opponent": "DET",
             "salary": 5600,
-            "projection": 21.27
+            "projection": 9.31
           },
           {
             "player": "Ladd McConkey",
@@ -1660,7 +1627,7 @@
             "team": "LAC",
             "opponent": "HOU",
             "salary": 5500,
-            "projection": 15.88
+            "projection": 14.51
           },
           {
             "player": "Sam LaPorta",
@@ -1668,7 +1635,7 @@
             "team": "DET",
             "opponent": "MIA",
             "salary": 5100,
-            "projection": 19.43
+            "projection": 11.59
           },
           {
             "player": "Joe Milton III",
@@ -1676,7 +1643,7 @@
             "team": "PHI",
             "opponent": "NYG",
             "salary": 4100,
-            "projection": 19.01
+            "projection": 14.24
           },
           {
             "player": "Patriots",
@@ -1684,7 +1651,7 @@
             "team": "NE",
             "opponent": "GB",
             "salary": 3100,
-            "projection": 10.76
+            "projection": 11.2
           }
         ]
       }
@@ -1794,7 +1761,7 @@
       "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation.",
       "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as 100% healthy bell-cow RB1; Greg Dulcich ($3,100) is full-go TE1 against DET middle-of-field funnel while Will Kacmarek is LP.",
       "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches and checkdown targets onto Rhamondre Stevenson ($6,100) vs GB light boxes.",
-      "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Jake Ferguson DNP and KaVontae Turpin DNP; Malik Davis ($4,000) active rotational/explosive matchup leverage against IND interior run defense.",
+      "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Javonte Williams ($6,200) and CeeDee Lamb ($7,600) leading the Dallas offense.",
       "PHI": "Nick Sirianni benched Tanner McKee (0-3) and named Joe Milton ($4,100) Week 9 starting QB vs NYG."
     },
     "slate_identity": {

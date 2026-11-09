@@ -3019,20 +3019,8 @@ def run_stage3_and_4_conserved_post_sim_projections(
             tm_aths = [inf for inf in athletes.values() if inf["team"] == tm_code]
             pbp_rec_sum = sum(float(inf["pbp_2026"].get("rec_yds_per_pg", 0.0)) for inf in tm_aths if inf["position"] in ("WR", "TE", "RB"))
             pbp_rush_sum = sum(float(inf["pbp_2026"].get("rush_yds_per_pg", 0.0)) for inf in tm_aths if inf["position"] in ("RB", "QB", "WR"))
-            if tm_code == "MIA":
-                pbp_rush_sum = max(pbp_rush_sum, 124.0)
-                pbp_rec_sum = max(pbp_rec_sum, 208.0)
-            elif tm_code == "NE":
-                pbp_rush_sum = max(pbp_rush_sum, 118.0)
-                pbp_rec_sum = max(pbp_rec_sum, 218.0)
-            elif tm_code == "DAL":
-                pbp_rush_sum = max(pbp_rush_sum, 128.0)
-                pbp_rec_sum = max(pbp_rec_sum, 255.0)
-            elif tm_code == "PHI":
-                pbp_rush_sum = max(pbp_rush_sum, 126.0)
-                pbp_rec_sum = max(pbp_rec_sum, 205.0)
-            target_pass_mean = float(np.clip(max(195.0, pbp_rec_sum * 1.08) * epa_mod, 185.0, 285.0))
-            target_rush_mean = float(np.clip(max(108.0, pbp_rush_sum * 1.12) * epa_mod, 98.0, 165.0))
+            target_pass_mean = float(np.clip(max(165.0, pbp_rec_sum * 1.02) * epa_mod, 155.0, 285.0))
+            target_rush_mean = float(np.clip(max(85.0, pbp_rush_sum * 1.02) * epa_mod, 75.0, 165.0))
             cur_pass_m = max(1.0, float(np.mean(vecs_a[f"{side_key}_pass_yds"])))
             cur_rush_m = max(1.0, float(np.mean(vecs_a[f"{side_key}_rush_yds"])))
             if cur_pass_m < target_pass_mean * 0.88:
@@ -3076,7 +3064,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
 
             # Receiving share weight (WR, TE, RB) using active player_gp denominator + load-bearing adjustments
             if pos in ("WR", "TE", "RB"):
-                if name == "Bhayshul Tuten" and not tuten_active:
+                if name in ("Bhayshul Tuten", "Malik Davis", "Alec Pierce") and not (name == "Bhayshul Tuten" and tuten_active):
                     rec_weights[name] = 1e-6
                 else:
                     base_t = (
@@ -3088,15 +3076,6 @@ def run_stage3_and_4_conserved_post_sim_projections(
                         base_t = 0.35 if pos in ("WR", "TE") else 0.20
                     if name == "Bhayshul Tuten" and tuten_active:
                         base_t *= 0.65  # limited snap count if active
-                    # Week 9 verified vacated-role & matchup receiving boosts
-                    if name in ("Ollie Gordon II", "Ollie Gordon"):
-                        base_t = max(base_t, 3.5)
-                    elif name == "Greg Dulcich":
-                        base_t = max(base_t, 6.8)
-                    elif name == "Malik Davis":
-                        base_t = max(base_t, 3.6)
-                    elif name == "Rhamondre Stevenson":
-                        base_t = max(base_t, 5.2)
                     abs_mult = 1.0
                     if wr1_is_decoy_or_limited:
                         if name == wr2_name:
@@ -3107,7 +3086,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
 
             # Rushing share weight (RB, QB, WR) using active player_gp denominator + load-bearing adjustments
             if pos in ("RB", "QB", "WR"):
-                if name == "Bhayshul Tuten" and not tuten_active:
+                if name in ("Bhayshul Tuten", "Malik Davis", "Alec Pierce") and not (name == "Bhayshul Tuten" and tuten_active):
                     rush_weights[name] = 1e-6
                 else:
                     base_c = (
@@ -3132,19 +3111,6 @@ def run_stage3_and_4_conserved_post_sim_projections(
                             base_c = max(base_c, 2.8)
                     elif name == "Bhayshul Tuten" and tuten_active:
                         base_c *= 0.65
-                    # Week 9 verified vacated-role & matchup rushing boosts
-                    if name in ("Ollie Gordon II", "Ollie Gordon"):
-                        # De'Von Achane (IR) + Jaylen Wright (DNP) -> Ollie Gordon II bell-cow RB1
-                        base_c = max(base_c, 18.5)
-                    elif name == "Rhamondre Stevenson":
-                        # TreVeyon Henderson (OUT - Illness/DNP) -> Rhamondre Stevenson bell-cow RB1
-                        base_c = max(base_c, 19.5)
-                    elif name == "Malik Davis":
-                        # DAL @ IND indoor fast track rotational/explosive RB leverage
-                        base_c = max(base_c, 11.5)
-                    elif name in ("Joe Milton", "Joe Milton III"):
-                        # PHI dual-threat starting QB rushing floor
-                        base_c = max(base_c, 6.5)
                     rush_weights[name] = max(1e-4, base_c * sit_mult * rt_car_mult)
 
             # Defensive tackle share weight (LB, S, DE, DT, CB/WR Travis Hunter)

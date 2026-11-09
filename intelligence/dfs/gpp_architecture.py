@@ -18,7 +18,10 @@ Layers:
 from __future__ import annotations
 
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
 from scipy.stats import norm, t as student_t, nbinom, gamma
 import pulp
 from typing import Tuple, List, Optional, Dict

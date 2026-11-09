@@ -1659,8 +1659,28 @@ class SimulationVarianceReductionFEMGraphRAGAndDRLEngine:
         cp_shift = float(rng.uniform(0.0, 1.0))
         u_sobol = np.clip((vdc + cp_shift) % 1.0, 1e-6, 1.0 - 1e-6)
 
-        # Beasley-Springer-Moro / Acklam normal inverse CDF approximation via scipy.special.ndtri or erfinv
-        from scipy.special import ndtri  # type: ignore
+        # Beasley-Springer-Moro / Acklam normal inverse CDF approximation via scipy.special.ndtri or Acklam rational
+        try:
+            from scipy.special import ndtri  # type: ignore
+        except ImportError:
+            def ndtri(p_arr: np.ndarray) -> np.ndarray:
+                p = np.clip(np.asarray(p_arr, dtype=np.float64), 1e-12, 1.0 - 1e-12)
+                a = [-3.969683028665376e01, 2.209460984245205e02, -2.759285104469687e02, 1.383577518672690e02, -3.066479806614716e01, 2.506628277459239e00]
+                b = [-5.447609879822406e01, 1.615858368580409e02, -1.556989798598866e02, 6.680131188771972e01, -1.328068155288572e01]
+                c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e00, -2.549732539343734e00, 4.374664141464968e00, 2.938163982698783e00]
+                d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e00, 3.754408661907416e00]
+                p_low = 0.02425
+                p_high = 1.0 - p_low
+                q_mid = p - 0.5
+                r_mid = q_mid * q_mid
+                num_mid = (((((a[0] * r_mid + a[1]) * r_mid + a[2]) * r_mid + a[3]) * r_mid + a[4]) * r_mid + a[5]) * q_mid
+                den_mid = ((((b[0] * r_mid + b[1]) * r_mid + b[2]) * r_mid + b[3]) * r_mid + b[4]) * r_mid + 1.0
+                z_mid = num_mid / den_mid
+                q_tail = np.sqrt(-2.0 * np.log(np.where(p < 0.5, p, 1.0 - p)))
+                num_tail = ((((c[0] * q_tail + c[1]) * q_tail + c[2]) * q_tail + c[3]) * q_tail + c[4]) * q_tail + c[5]
+                den_tail = (((d[0] * q_tail + d[1]) * q_tail + d[2]) * q_tail + d[3]) * q_tail + 1.0
+                z_tail = np.where(p < 0.5, num_tail / den_tail, -num_tail / den_tail)
+                return np.where((p >= p_low) & (p <= p_high), z_mid, z_tail)
 
         z_crude = ndtri(u_crude)
         z_lhs = ndtri(u_lhs)

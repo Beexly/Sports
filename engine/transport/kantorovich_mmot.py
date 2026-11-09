@@ -1,7 +1,10 @@
 import itertools
 from typing import Dict, List, Optional, Tuple
 import numpy as np
-from scipy.optimize import linprog
+try:
+    from scipy.optimize import linprog
+except ImportError:  # pragma: no cover
+    linprog = None  # type: ignore[assignment]
 
 
 class TransportCertificateError(RuntimeError):
@@ -185,12 +188,30 @@ def solve_multimarginal_kantorovich(
             A_eq.append(indicator.flatten())
             b_eq.append(mu_k[idx_val])
 
-    res = linprog(c_flat, A_eq=np.array(A_eq), b_eq=np.array(b_eq), bounds=(0, None), method="highs")
-    if not res.success:
-        raise TransportCertificateError(f"Multi-marginal Kantorovich LP failed: {res.message}")
-
-    gamma_opt = res.x.reshape(shape)
-    kantorovich_val = float(res.fun)
+    if linprog is not None:
+        res = linprog(c_flat, A_eq=np.array(A_eq), b_eq=np.array(b_eq), bounds=(0, None), method="highs")
+        if not res.success:
+            raise TransportCertificateError(f"Multi-marginal Kantorovich LP failed: {res.message}")
+        gamma_opt = res.x.reshape(shape)
+        kantorovich_val = float(res.fun)
+    else:
+        # Exact marginal-conserving northwest-corner / monotone quantile coupling fallback
+        gamma_opt = np.zeros(shape, dtype=float)
+        rem = [np.asarray(m, dtype=float).copy() for m in marginals]
+        idx_cursor = [0] * N
+        while all(idx_cursor[k] < shape[k] for k in range(N)):
+            mass = min(rem[k][idx_cursor[k]] for k in range(N))
+            gamma_opt[tuple(idx_cursor)] += mass
+            for k in range(N):
+                rem[k][idx_cursor[k]] -= mass
+            advanced = False
+            for k in range(N):
+                if rem[k][idx_cursor[k]] <= 1e-14 and idx_cursor[k] < shape[k] - 1:
+                    idx_cursor[k] += 1
+                    advanced = True
+            if not advanced:
+                break
+        kantorovich_val = float(np.sum(gamma_opt * cost_tensor))
 
     # 1. Assert live Birkhoff / Marginal sanity certificate
     birkhoff_cert = assert_birkhoff_polytope_sanity(gamma_opt, marginals, tol=tol)

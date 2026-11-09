@@ -56,11 +56,14 @@ export default async function DfsSuitePage() {
   const note = salaryIsReal
     ? `Licensed DFS salaries are live. ${measuredCopy}`
     : feedDown
-      ? `No licensed salary feed is connected. No licensed DFS salary feed is connected to this surface. ${measuredCopy}`
+      ? `No licensed salary feed is connected to this surface. ${measuredCopy}`
       : `A licensed DFS salary feed is connected, but your tier does not unlock the salary board. ${measuredCopy}`;
 
-  const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[3]!;
-  const tnfPackage = getPackageBySlug("tnf-all-in-pack") ?? LIVE_PACKAGE_CATALOG[0]!;
+  const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[4]!;
+  const standaloneDfsPackage =
+    LIVE_PACKAGE_CATALOG.find((p) => p.slug === "redzone-dfs-pro-pack") ??
+    getPackageBySlug("sgp-correlation-basket") ??
+    LIVE_PACKAGE_CATALOG[2]!;
   const expandedSunMonDfsPackage = getPackageBySlug("week8-sun-mon-dfs-expanded-pack");
 
   return (
@@ -170,7 +173,9 @@ export default async function DfsSuitePage() {
         </div>
 
         <div className="mt-6 space-y-6">
-          {getActiveUpcomingWriteups().map((w) => (
+          {getActiveUpcomingWriteups()
+            .filter((w) => w.windowSlot !== "TNF" && !/JAX\s*@\s*BAL|Jacksonville|Baltimore/i.test(w.matchup))
+            .map((w) => (
             <div key={w.id} className="border border-mineral/70 bg-carbon p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral/50 pb-3">
                 <div>
@@ -238,8 +243,8 @@ export default async function DfsSuitePage() {
             teasers={getRedactedTeasersForWindowSlot(dfsPackage.windowSlot)}
           />
           <PaywallRevealCard
-            pkg={tnfPackage}
-            teasers={getRedactedTeasersForWindowSlot(tnfPackage.windowSlot)}
+            pkg={standaloneDfsPackage}
+            teasers={getRedactedTeasersForWindowSlot(standaloneDfsPackage.windowSlot)}
           />
           {expandedSunMonDfsPackage && (
             <div className="lg:col-span-2">

@@ -1,13 +1,13 @@
 {
   "matchup": "TB @ CHI",
-  "median_total": 46.83,
-  "median_spread_home": -1.82,
+  "median_total": 49.67,
+  "median_spread_home": -2.23,
   "median_plays": 136.0,
   "median_pace_sec": 26.47,
   "sinkhorn_mass_moved": 0.0,
-  "shootout_prob_ge51": 0.4185,
-  "stall_prob_le37": 0.2064,
-  "one_score_prob_le7": 0.3734,
+  "shootout_prob_ge51": 0.4674,
+  "stall_prob_le37": 0.146,
+  "one_score_prob_le7": 0.3695,
   "coachMindsetHash": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
   "pre_projection_universal_and_deep_priors": {
     "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1484,7 +1484,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -1495,7 +1495,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -2445,7 +2445,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -2456,7 +2456,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -3240,10 +3240,10 @@
       "openai_tiktoken": {
         "repo": "openai/tiktoken",
         "encoding_name": "o200k_base",
-        "exact_bpe_library_used": true,
-        "estimated_tokens": 25,
+        "exact_bpe_library_used": false,
+        "estimated_tokens": 21,
         "max_token_budget": 128000,
-        "budget_utilization_ratio": 0.000195,
+        "budget_utilization_ratio": 0.000164,
         "compaction_required": false
       },
       "google_jules_fleet": {
@@ -3395,8 +3395,8 @@
       "away_team": "TB",
       "workflow_ready": true,
       "catalog_counts": {
-        "union_agents_and_claude_skills": 149,
-        "agents_skills_count": 111,
+        "union_agents_and_claude_skills": 143,
+        "agents_skills_count": 105,
         "claude_skills_count": 91,
         "gemini_config_skills_count": 185,
         "agy_plugins_count": 7,
@@ -3488,6 +3488,244 @@
       },
       "doctrine_19_rules_substrate_verified": true
     },
+    "spatial_micro_pbp_conditioners": {
+      "schema": "gse_spatial_micro_pbp_conditioners_v1",
+      "away_team": "TB",
+      "home_team": "CHI",
+      "has_explicit_overrides": false,
+      "away_profile": {
+        "entity_id": "TB_OFFENSE",
+        "entity_name": "TB Offense Spatial Profile",
+        "team": "TB",
+        "opponent": "CHI",
+        "position": "TEAM",
+        "domain1_rb_front7": {
+          "hard_hit_rate": 0.2095,
+          "opportunity_share": 0.643,
+          "target_share": 0.1307,
+          "missed_tackles_forced": 30.2,
+          "designed_runs": 124.0,
+          "receptions": 28.0,
+          "yards_after_contact_per_att": 3.233,
+          "pff_elusive_rating": 64.2532,
+          "ryoe_per_att": 0.478,
+          "ryoe_variance": 1.8506,
+          "ryoe_consistency_rate_gt_1yd": 0.3657,
+          "ryoe_boom_rate_gt_5yd": 0.1144,
+          "unfair_yards_rate": 0.3339,
+          "success_over_expected_rate": 0.0593,
+          "stack_box_efficiency_rate": 0.4791,
+          "tracking_vector_mesh_gap_yds": 3.438,
+          "defenders_in_box": 6.71,
+          "offensive_blockers_in_box": 6.28,
+          "avg_defender_dist_from_los_yds": 4.426,
+          "true_box_spacing_delta": 4.7288,
+          "ybc_per_att": 1.396,
+          "ol_scheme_segregation_penalty_yds": 0.0,
+          "shed_time_survival_sec": 1.85,
+          "shed_time_survival_rate": 0.7392,
+          "def_penetration_depth_yds": -0.462,
+          "designated_first_read_rb_target_rate": 0.3021,
+          "checkdown_dump_off_rate": 0.6979,
+          "rb_yprr": 1.459,
+          "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+          "tovs": 21.5454
+        },
+        "domain2_wr_te_db": {
+          "route_participation_rate": 0.86,
+          "yprr": 2.304,
+          "first_read_target_share": 0.2976,
+          "contested_catch_rate": 0.5221,
+          "catchable_ball_rate": 0.7958,
+          "hard_hit_rate_on_rec": 0.2095,
+          "separation_at_separation_point_ssp_yds": 2.244,
+          "burn_rate_vs_man_gt_2yds": 0.3521,
+          "catch_point_leverage_delta_yds": 1.2564,
+          "true_csoe_target_prevention_rate": -0.0026
+        },
+        "domain3_qb_processing": {
+          "pre_to_post_snap_disguise_decay_ms": 212.01,
+          "disguise_processing_elite_le_220ms": true,
+          "simulated_creeping_pressure_success_rate": 0.502,
+          "throw_to_leverage_variance_tlv_sq_yds": 0.8265
+        },
+        "domain4_trench_dl_ol": {
+          "true_pass_rush_win_rate_prwr_lt_25s": 0.1655,
+          "pocket_anchor_depth_pad_yds": 2.356,
+          "pad_holds_gt_22yds": true,
+          "stunt_loop_handoff_latency_ms": 166.96
+        },
+        "domain5_pocket_escape": {
+          "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.351,
+          "pcv_severe_gt_15": false,
+          "escape_vector_efficiency_eve": 0.761
+        },
+        "domain6_scheme_structural": {
+          "mofo_structural_epa": 0.1483,
+          "mofc_structural_epa": 0.1683,
+          "mofo_mofc_heatmap_counter_delta": 0.1573,
+          "zone_void_exploitation_rate_zver": 0.5884
+        },
+        "expected_yardage_percentiles": {
+          "p10": 142.19,
+          "p25": 202.34,
+          "p50": 273.44,
+          "p75": 350.0,
+          "p90": 426.56,
+          "p95": 481.25,
+          "p99": 579.69
+        },
+        "pbp_snap_conditioners": {
+          "rush_yards_spatial_delta": 0.2292,
+          "rb_receiving_epa_delta": 0.0395,
+          "wr_te_completion_prob_delta": 0.016,
+          "wr_te_explosive_mu_delta": 0.6917,
+          "qb_sack_prob_delta": -0.0088,
+          "qb_comp_prob_delta": 0.0093,
+          "qb_scramble_escape_delta": 0.0035,
+          "composite_epa_per_snap_delta": 0.03506
+        },
+        "dfs_and_prop_ceiling_boosts": {
+          "tovs": 21.5454,
+          "pff_elusive_rating": 64.2532,
+          "ryoe_boom_rate_gt_5yd": 0.1144,
+          "burn_rate_vs_man_gt_2yds": 0.3521,
+          "first_read_target_share": 0.2976,
+          "zone_void_exploitation_rate_zver": 0.5884,
+          "eve_to_pcv_ratio": 0.5634,
+          "q90_spatial_boost_dk_pts": 1.713,
+          "q95_spatial_boost_dk_pts": 2.458,
+          "q99_spatial_boost_dk_pts": 3.359,
+          "cvar_099_spatial_boost_dk_pts": 3.964
+        }
+      },
+      "home_profile": {
+        "entity_id": "CHI_OFFENSE",
+        "entity_name": "CHI Offense Spatial Profile",
+        "team": "CHI",
+        "opponent": "TB",
+        "position": "TEAM",
+        "domain1_rb_front7": {
+          "hard_hit_rate": 0.2054,
+          "opportunity_share": 0.6274,
+          "target_share": 0.1259,
+          "missed_tackles_forced": 29.26,
+          "designed_runs": 124.0,
+          "receptions": 28.0,
+          "yards_after_contact_per_att": 3.185,
+          "pff_elusive_rating": 61.3074,
+          "ryoe_per_att": 0.41,
+          "ryoe_variance": 1.8,
+          "ryoe_consistency_rate_gt_1yd": 0.359,
+          "ryoe_boom_rate_gt_5yd": 0.1104,
+          "unfair_yards_rate": 0.3258,
+          "success_over_expected_rate": 0.0573,
+          "stack_box_efficiency_rate": 0.4764,
+          "tracking_vector_mesh_gap_yds": 3.422,
+          "defenders_in_box": 6.75,
+          "offensive_blockers_in_box": 6.24,
+          "avg_defender_dist_from_los_yds": 4.393,
+          "true_box_spacing_delta": 4.747,
+          "ybc_per_att": 1.363,
+          "ol_scheme_segregation_penalty_yds": 0.0,
+          "shed_time_survival_sec": 1.829,
+          "shed_time_survival_rate": 0.7309,
+          "def_penetration_depth_yds": -0.478,
+          "designated_first_read_rb_target_rate": 0.2926,
+          "checkdown_dump_off_rate": 0.7074,
+          "rb_yprr": 1.399,
+          "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+          "tovs": 20.8488
+        },
+        "domain2_wr_te_db": {
+          "route_participation_rate": 0.86,
+          "yprr": 2.293,
+          "first_read_target_share": 0.2943,
+          "contested_catch_rate": 0.5126,
+          "catchable_ball_rate": 0.789,
+          "hard_hit_rate_on_rec": 0.2054,
+          "separation_at_separation_point_ssp_yds": 2.204,
+          "burn_rate_vs_man_gt_2yds": 0.3426,
+          "catch_point_leverage_delta_yds": 1.2086,
+          "true_csoe_target_prevention_rate": 0.0028
+        },
+        "domain3_qb_processing": {
+          "pre_to_post_snap_disguise_decay_ms": 214.58,
+          "disguise_processing_elite_le_220ms": true,
+          "simulated_creeping_pressure_success_rate": 0.4926,
+          "throw_to_leverage_variance_tlv_sq_yds": 0.8494
+        },
+        "domain4_trench_dl_ol": {
+          "true_pass_rush_win_rate_prwr_lt_25s": 0.1696,
+          "pocket_anchor_depth_pad_yds": 2.323,
+          "pad_holds_gt_22yds": true,
+          "stunt_loop_handoff_latency_ms": 169.12
+        },
+        "domain5_pocket_escape": {
+          "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.38,
+          "pcv_severe_gt_15": false,
+          "escape_vector_efficiency_eve": 0.7434
+        },
+        "domain6_scheme_structural": {
+          "mofo_structural_epa": 0.1362,
+          "mofc_structural_epa": 0.1562,
+          "mofo_mofc_heatmap_counter_delta": 0.1452,
+          "zone_void_exploitation_rate_zver": 0.5762
+        },
+        "expected_yardage_percentiles": {
+          "p10": 140.04,
+          "p25": 199.29,
+          "p50": 269.31,
+          "p75": 344.72,
+          "p90": 420.12,
+          "p95": 473.99,
+          "p99": 570.94
+        },
+        "pbp_snap_conditioners": {
+          "rush_yards_spatial_delta": 0.1446,
+          "rb_receiving_epa_delta": 0.0341,
+          "wr_te_completion_prob_delta": 0.0116,
+          "wr_te_explosive_mu_delta": 0.5378,
+          "qb_sack_prob_delta": -0.0059,
+          "qb_comp_prob_delta": 0.0053,
+          "qb_scramble_escape_delta": 0.002,
+          "composite_epa_per_snap_delta": 0.02598
+        },
+        "dfs_and_prop_ceiling_boosts": {
+          "tovs": 20.8488,
+          "pff_elusive_rating": 61.3074,
+          "ryoe_boom_rate_gt_5yd": 0.1104,
+          "burn_rate_vs_man_gt_2yds": 0.3426,
+          "first_read_target_share": 0.2943,
+          "zone_void_exploitation_rate_zver": 0.5762,
+          "eve_to_pcv_ratio": 0.5385,
+          "q90_spatial_boost_dk_pts": 1.625,
+          "q95_spatial_boost_dk_pts": 2.333,
+          "q99_spatial_boost_dk_pts": 3.189,
+          "cvar_099_spatial_boost_dk_pts": 3.763
+        }
+      },
+      "away_conditioners": {
+        "rush_yards_spatial_delta": 0.2292,
+        "rb_receiving_epa_delta": 0.0395,
+        "wr_te_completion_prob_delta": 0.016,
+        "wr_te_explosive_mu_delta": 0.6917,
+        "qb_sack_prob_delta": -0.0088,
+        "qb_comp_prob_delta": 0.0093,
+        "qb_scramble_escape_delta": 0.0035,
+        "composite_epa_per_snap_delta": 0.03506
+      },
+      "home_conditioners": {
+        "rush_yards_spatial_delta": 0.1446,
+        "rb_receiving_epa_delta": 0.0341,
+        "wr_te_completion_prob_delta": 0.0116,
+        "wr_te_explosive_mu_delta": 0.5378,
+        "qb_sack_prob_delta": -0.0059,
+        "qb_comp_prob_delta": 0.0053,
+        "qb_scramble_escape_delta": 0.002,
+        "composite_epa_per_snap_delta": 0.02598
+      }
+    },
     "trajectory_conditioners": {
       "scripted_1_to_15_epa_boost": 0.014,
       "post_script_16_to_65_cliff_delta": -0.00875,
@@ -3529,7 +3767,11 @@
       "openai_math_sogge_wave_focusing_gain": 1.333244,
       "openai_math_amplitude_damping_retention": 0.96594,
       "openai_math_cnf_satisfaction_prob": 0.281096,
-      "wired_into_10k_world_175_snap_simulation": true
+      "wired_into_10k_world_175_snap_simulation": true,
+      "spatial_micro_away_rush_delta": 0.2292,
+      "spatial_micro_home_rush_delta": 0.1446,
+      "spatial_micro_away_epa_delta": 0.03506,
+      "spatial_micro_home_epa_delta": 0.02598
     },
     "simulation_trajectory_conditioners": {
       "scripted_1_to_15_epa_boost": 0.014,
@@ -3572,7 +3814,11 @@
       "openai_math_sogge_wave_focusing_gain": 1.333244,
       "openai_math_amplitude_damping_retention": 0.96594,
       "openai_math_cnf_satisfaction_prob": 0.281096,
-      "wired_into_10k_world_175_snap_simulation": true
+      "wired_into_10k_world_175_snap_simulation": true,
+      "spatial_micro_away_rush_delta": 0.2292,
+      "spatial_micro_home_rush_delta": 0.1446,
+      "spatial_micro_away_epa_delta": 0.03506,
+      "spatial_micro_home_epa_delta": 0.02598
     }
   },
   "biomech_kinetic_overlay": {
@@ -3591,12 +3837,12 @@
     "scalar_torque_throttle": 0.9954,
     "metabolic_continuity_loss": 0.0125
   },
-  "fourth_down_wp_gap_mean": 0.030547059666860426,
-  "fourth_down_statistically_distinct_rate": 0.6071428571428571,
+  "fourth_down_wp_gap_mean": 0.029280430079483097,
+  "fourth_down_statistically_distinct_rate": 0.5390070921985816,
   "fourth_down_reason": "OBSERVED",
   "game_id": "2026_09_TB_CHI",
   "from_context_packet": "data/context_packets/2026_09_TB_CHI.json",
   "from_reasoning_trace": "data/reasoning/traces/2026_09_TB_CHI.trace.json",
-  "reasoning_trace_cumulative_log_odds_delta": 0.638031,
-  "median_spread_home_trace_conditioned": -0.2249
+  "reasoning_trace_cumulative_log_odds_delta": -0.014988,
+  "median_spread_home_trace_conditioned": -2.2675
 }

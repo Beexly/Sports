@@ -15,7 +15,10 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Iterable
 
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:  # pragma: no cover
+    pd = None  # type: ignore[assignment]
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG = ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"

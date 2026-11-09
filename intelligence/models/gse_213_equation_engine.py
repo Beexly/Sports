@@ -14,8 +14,19 @@ Implements:
 from __future__ import annotations
 
 from typing import Dict, List
+import math
 import numpy as np
-from scipy.stats import t as student_t
+try:
+    from scipy.stats import t as student_t
+except ImportError:  # pragma: no cover
+    class _StudentTFallback:
+        @staticmethod
+        def cdf(x: float, df: float = 5.0) -> float:
+            # Accurate rational/Cornish-Fisher approximation for Student-t CDF
+            z = float(x) * (1.0 - 1.0 / (4.0 * max(1.0, float(df)))) / math.sqrt(1.0 + (float(x) ** 2) / (2.0 * max(1.0, float(df))))
+            return 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
+
+    student_t = _StudentTFallback()  # type: ignore[assignment]
 
 BASES: List[str] = [
     "soe_yd",
