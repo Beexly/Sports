@@ -51,12 +51,12 @@ Five runs, Nov 7 AM/PM, Nov 8 AM/PM, Nov 9 AM. Full reports: `~/workspace/x-for-
 - F15 — @GridironGrading — NFL TE production through 8 weeks: Brock Bowers clear #1 despite missing 2 games  ||  TEST
 - F16 — @Coach_ChadJohn — Free Play Log Template (Play # / Down / Dist / Formation / Motion / Play Call / Result / Notes)  ||  LEARN-ONLY
 - F17 — @MIT_CSAIL — Free book: Foundations of LLMs (Northeastern / NiuTrans) — already-adopted source, new post  ||  LEARN-ONLY
-- B1 — @GridironGrading — NFL S production through 8 weeks: rookie Zakee Wheatley the best rookie safety so far  ||  (see report)
-- B2 — @MySpariEdge — MSE Week 9 Anytime TD model probabilities (Gibbs 72.4% headline)  ||  (see report)
-- B3 — @paulpattersonff — QB comparison 2023–2026 (Fantasy Points Data repost)  ||  (see report)
-- B4 — @Free_Math_Books — Pivato, "Linear Partial Differential Equations and Fourier Theory" (via the FreeMathBooks GitHub org)  ||  (see report)
-- B5 — @b_peters12 — Liam Coen creates clean 5-step progressions for Lawrence + Coen resource list  ||  (see report)
-- B6 — @simplifyinAI — Open-source satellite tracking / radio decoding suite (name truncated, unresolved)  ||  (see report)
+- B1 — @GridironGrading — NFL S production through 8 weeks: rookie Zakee Wheatley the best rookie safety so far  ||  CONTEXT-ONLY
+- B2 — @MySpariEdge — MSE Week 9 Anytime TD model probabilities (Gibbs 72.4% headline)  ||  CONTEXT-ONLY
+- B3 — @paulpattersonff — QB comparison 2023–2026 (Fantasy Points Data repost)  ||  CONTEXT-ONLY
+- B4 — @Free_Math_Books — Pivato, "Linear Partial Differential Equations and Fourier Theory" (via the FreeMathBooks GitHub org)  ||  LEARN-ONLY
+- B5 — @b_peters12 — Liam Coen creates clean 5-step progressions for Lawrence + Coen resource list  ||  LEARN-ONLY
+- B6 — @simplifyinAI — Open-source satellite tracking / radio decoding suite (name truncated, unresolved)  ||  WATCH
 
 **Synthesis (from the report):**
 
@@ -103,10 +103,10 @@ Five runs, Nov 7 AM/PM, Nov 8 AM/PM, Nov 9 AM. Full reports: `~/workspace/x-for-
 - F10 — @open_command — "Command is worth TWICE as much; using xERA was a mistake" (pitching metric correction)  ||  TEST
 - B1 — @run_the_sims — Sam Hoppen's public playcaller dataset (all_playcallers.csv)  ||  TEST
 - B2 — @sfdata9ers — Average time to pressure (min. 120 dropbacks, FantasyPtsData)  ||  TEST
-- B3 — @The_Coach_A — Lions Double Bracket vs Jefferson/Addison (Odd Front + spy LB)  ||  (see report)
-- B4 — @EaglesXsandOs — Projected Value for NFL Trade Deadline Candidates  ||  (see report)
-- B5 — @0xTrackmind — Harnesses for Long-Running Agents (harness guide share)  ||  (see report)
-- B6 — @boxscorescout — "Kendre Miller has arguably been the least effective rusher in the NFL this year"  ||  (see report)
+- B3 — @The_Coach_A — Lions Double Bracket vs Jefferson/Addison (Odd Front + spy LB)  ||  LEARN-ONLY
+- B4 — @EaglesXsandOs — Projected Value for NFL Trade Deadline Candidates  ||  WATCH
+- B5 — @0xTrackmind — Harnesses for Long-Running Agents (harness guide share)  ||  LEARN-ONLY
+- B6 — @boxscorescout — "Kendre Miller has arguably been the least effective rusher in the NFL this year"  ||  CONTEXT-ONLY
 
 **Synthesis (from the report):**
 
@@ -154,12 +154,12 @@ Five runs, Nov 7 AM/PM, Nov 8 AM/PM, Nov 9 AM. Full reports: `~/workspace/x-for-
 - F8 — @thesupermannx — "China cracked recursive self-improvement": Tencent 27B claim, traced and corrected  ||  LEARN-ONLY
 - F9 — @OACerebro — MIT Press open-access monograph link (direct.mit.edu/books/oa-monograph)  ||  LEARN-ONLY
 - F10 — @Rusty_Bill — Top-10 anytime-TD projections "according to TDx and my model" (image-locked)  ||  CONTEXT-ONLY
-- B1 — @ghatz_28 — NFL Offense Cost by Salary (companion to W8)  ||  (see report)
-- B2 — @sfdata9ers — Post-INT study inclusion rule: 25 relevant QB plays after the first INT  ||  (see report)
-- B3 — @HaydenWinks — Jonathan Taylor at RB11: "Matchup is too good," 67%-snaps caveat  ||  (see report)
-- B4 — @rufusjonz — DFS construction notes: forcing JSN + Puka, cheap RBs, Kirk/Bowers/Kittle decisions  ||  (see report)
-- B5 — RELEVANT AD — @LambdaAPI — "AI Systems Performance Engineering" book: free download + $150 Lambda cloud credit  ||  (see report)
-- B6 — @egor65884 — "ChatGPT learns using a formula invented in 1773: Bayes' theorem" (thread with Paper/Video/Blog links)  ||  (see report)
+- B1 — @ghatz_28 — NFL Offense Cost by Salary (companion to W8)  ||  TEST
+- B2 — @sfdata9ers — Post-INT study inclusion rule: 25 relevant QB plays after the first INT  ||  LEARN-ONLY
+- B3 — @HaydenWinks — Jonathan Taylor at RB11: "Matchup is too good," 67%-snaps caveat  ||  LEARN-ONLY
+- B4 — @rufusjonz — DFS construction notes: forcing JSN + Puka, cheap RBs, Kirk/Bowers/Kittle decisions  ||  LEARN-ONLY
+- B5 — RELEVANT AD — @LambdaAPI — "AI Systems Performance Engineering" book: free download + $150 Lambda cloud credit  ||  WATCH
+- B6 — @egor65884 — "ChatGPT learns using a formula invented in 1773: Bayes' theorem" (thread with Paper/Video/Blog links)  ||  CONTEXT-ONLY
 
 **Synthesis (from the report):**
 
@@ -426,31 +426,31 @@ Synthesis: Monday was the thinnest tool density in three days in the first 20 (o
 ### Tier 1 — TEST (bounded test specified for each)
 - **Orkas-AI/Orkas** (MIT) — multi-agent desktop app (Electron); roles lead work in sequence; nearest thing to Motif's orchestration seat in the batch. Test: one bounded GSE research task vs current seat output.
 - **rome-os/rome** (MIT) — YC-backed agent runtime with a CLOUD CONTROL LOOP: worker heartbeats check schedules in the cloud every 5 minutes. Loopback-first audit required before any use.
-- **vstorm-co/agenticos** (no license — LEARN-ONLY until read) — agent OS: per-agent isolated workspace + git worktree.
+- **vstorm-co/agenticos** (Apache-2.0) — agent OS: per-agent isolated workspace + git worktree.
 - **BotHarness/DeepSeekBot** (MIT) — DeepSeek-native agent runtime; plugs into the claude-ds lane.
 - **milind-soni/OpenMausBot** (Apache-2.0) — computer-use agent (browser + desktop + files); largest security surface in the batch.
 - **HarnessMD/munder-difflin** (MIT) — markdown-harness experiment rig for agent behavior.
 
 ### Tier 2 — ADOPT-CANDIDATE
-- **a5c-ai/babysitter** (license unsettled) — process-governance layer over agent runs: gates, checklists, completion verification. Matches Motif's code-reviewer + completion-gap audit pattern.
+- **a5c-ai/babysitter** (MIT) — process-governance layer over agent runs: gates, checklists, completion verification. Matches Motif's code-reviewer + completion-gap audit pattern.
 
 ### Tier 3 — settled verdict, unchanged
 - **paperclipai/paperclip** (MIT) — agent-company OS. Prior verdict stands: bounded pilot only; n8n stays the automation backbone.
 
 ### Tier 4 — TEST (GSI deep-research)
-- **ltjed/freephdlabor** (license unsettled) — long-horizon AI research workforce platform for the deep-research lane.
+- **ltjed/freephdlabor** (MIT) — long-horizon AI research workforce platform for the deep-research lane.
 
 ### Tier 5 — TOOLS, TEST
-- **idosal/git-mcp** (MIT) — GitHub-over-MCP server. Read-only scope only.
-- **leepokai/Codync** (license unsettled) — shared agent memory / coordination. Bounded pilot next to the MCP bus.
+- **idosal/git-mcp** (Apache-2.0) — GitHub-over-MCP server. Read-only scope only.
+- **leepokai/Codync** (Apache-2.0) — shared agent memory / coordination. Bounded pilot next to the MCP bus.
 
 ### WATCH
 - **Orca** (license unstated) — the fleet's removed orchestrator, cataloged as a repo only; Orca stays removed by Garrett's order.
 - **ecc** (license unsettled) — Claude Code harness/performance system.
 - **agent-zero** (no clear license file — **LEARN-ONLY until the LICENSE is read**) — browser-capable agent framework.
-- **notebooklm-mcp** (license unsettled) — NotebookLM over MCP. **Archived upstream; holds a full Google session unencrypted locally. NEVER on Garrett's primary Google account.**
+- **notebooklm-mcp** (MIT) — NotebookLM over MCP. **Archived upstream; holds a full Google session unencrypted locally. NEVER on Garrett's primary Google account.**
 - **khoj** (AGPL-3.0 — learn-only) — personal AI second brain.
-- **meetily** (license unsettled) — local meeting-transcription assistant.
+- **meetily** (MIT) — local meeting-transcription assistant.
 
 ### CATALOG-ONLY (named, not evaluated as candidates)
 AutoGPT (license unsettled, framework mismatch) · agenticSeek (GPL-3.0) · AstrBot (AGPL) · Kilo Code (combined-license file) · letta-code (license unsettled) · SuperClaude Framework · OpenWork · mastra · witsy · PX4 Autopilot (BSD-3, wrong domain — GSI catalog value only) · awesome-ai-agents-2026 · awesome-llm-apps · karpathy-skills gist (no repo metadata at all).
@@ -475,7 +475,7 @@ AutoGPT (license unsettled, framework mismatch) · agenticSeek (GPL-3.0) · Astr
 
 **Addendum shelf (8 titles the fleet report claimed were "queued for sync" — that claim was false):** 2 already in Drive (Peyré & Cuturi, Computational Optimal Transport; Rasmussen & Williams, Gaussian Processes for ML), 1 obtained legally that run (Csiszár & Shields, Information Theory and Statistics: A Tutorial, Rényi Institute), and **5 with NO legal free route anywhere checked** — Nelsen, An Introduction to Copulas · Kallenberg, Foundations of Modern Probability · Tsybakov, Introduction to Nonparametric Estimation · Bouchaud & Potters, Theory of Financial Risk · de la Peña/Lai/Shao, Self-Normalized Processes. Author page, publisher OA, and institutional repository were each checked and named per title; pirate mirrors exist and were not touched.
 
-**Nov 7 follow-through (inside this window):** the Wayback retry closed — **Understanding Machine Learning** and **Dixon & Coles (1997)** are now in Drive (their MANIFEST.md rows are still owed). Garrett added **49-50 books to Drive himself on Nov 7** (for the Argon lane) — real, but **not yet inventoried by Motif**; that is the books lane's largest open gap. Luce & Raiffa, Games and Decisions: a known separate blocker, untouched (an earlier "1,019 MB local copy" claim was refuted on this host — no such file).
+**Nov 7 follow-through (inside this window):** the Wayback retry closed — **Understanding Machine Learning** and **Dixon & Coles (1997)** are now in Drive (their MANIFEST.md rows are still owed). Garrett added **49-50 books to Drive himself on Nov 7** (for the Argon lane) — real, but **not yet inventoried by Motif**; that is the books lane's largest open gap. Luce & Raiffa, Games and Decisions: verified local copy EXISTS (1,019 MB, books-must-have) — only its Drive upload is blocked (see the supplement's correction).
 
 ---
 
