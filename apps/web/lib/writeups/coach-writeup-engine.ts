@@ -144,8 +144,8 @@ export function sanitizePlainFootballText(input: string): string {
  * Ensures no stale "Tonight · Thursday Night Football" badge ever renders on Friday/Weekend slates.
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
-  if (matchup && /Panthers|Packers/i.test(matchup)) {
-    return "Week 8 TNF settled (CAR @ GB)";
+  if (matchup && /Panthers|Broncos|Patriots|Packers/i.test(matchup)) {
+    return "Week 9 Preview";
   }
   switch (windowSlot) {
     case "TNF":
@@ -629,11 +629,11 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideConfidence": "79/100",
       "sideExpectedClv": 0.052,
       "sideDecision": "PLAY",
-      "totalSelection": "OVER 46.5",
+      "totalSelection": "OVER 50.5",
       "totalConfidence": "62/100",
       "totalExpectedClv": 0.012,
-      "totalDecision": "PASS",
-      "rationale": "Ollie Gordon II steps into Miami's bell-cow role alongside Greg Dulcich over the middle, giving Miami home cover value."
+      "totalDecision": "PLAY",
+      "rationale": "We are on OVER 50.5 and 1H OVER 24.5. Ollie Gordon II (OVER 68.5 rush yds) steps into Miami's bell-cow role with Achane on IR and Jaylen Wright inactive. Greg Dulcich (OVER 26.5 rec yds) creates middle mismatches, while Chop Robinson (OVER 0.25 sacks) creates pressure on Goff."
     },
     "topProps": [
       {
@@ -777,24 +777,24 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideConfidence": "64/100",
       "sideExpectedClv": 0.014,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 48.5",
+      "totalSelection": "OVER 52.0",
       "totalConfidence": "63/100",
       "totalExpectedClv": 0.011,
-      "totalDecision": "PASS",
-      "rationale": "Market efficient on the main spread and total; we attack Malik Davis and CeeDee Lamb player props indoors."
+      "totalDecision": "PLAY",
+      "rationale": "We are on OVER 52.0 and 1H OVER 26.5 for the game total. We also attack CeeDee Lamb and Ryan Flournoy player props indoors with George Pickens INACTIVE (hamstring)."
     },
     "topProps": [
       {
-        "playerId": "malik-davis",
-        "playerName": "Malik Davis",
-        "propType": "Rush + Rec Yards",
-        "market": "rush_plus_rec_yds",
-        "line": 36.5,
+        "playerId": "ceedee-lamb",
+        "playerName": "CeeDee Lamb",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 88.5,
         "side": "OVER",
         "confidence": "79/100",
         "expectedClv": 0.118,
         "decision": "PLAY",
-        "nEffTargetNotes": "Malik Davis captures high-efficiency rotational carries and screen targets on the fast indoor track at Lucas Oil Stadium.",
+        "nEffTargetNotes": "CeeDee Lamb and Ryan Flournoy (OVER 38.5) command the target share with George Pickens INACTIVE on the fast indoor track at Lucas Oil Stadium.",
         "pOver": 0.642,
         "pUnder": 0.358
       }
@@ -803,10 +803,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "Dallas Cowboys @ Indianapolis Colts Same-Game Parlay",
       "legs": [
         {
-          "description": "Malik Davis Rush + Rec Yards",
+          "description": "CeeDee Lamb Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Malik Davis OVER 36.5 Rush + Rec Yards",
-          "line": 36.5,
+          "selection": "CeeDee Lamb OVER 88.5 Receiving Yards",
+          "line": 88.5,
           "confidence": "79/100",
           "expectedClv": 0.118,
           "decision": "PLAY"
@@ -914,9 +914,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "New York Giants and Philadelphia Eagles bring contrasting early-down tempo and trench protection fronts into Week 9."
     },
     "schemeMatchup": {
-      "coverageShell": "J.J. McCarthy and Joe Milton headline this Week 9 matchup with Malik Nabers, Tyrone Tracy Jr., DeVonta Smith, and Saquon Barkley featured in early-down scripts.",
+      "coverageShell": "J.J. McCarthy and Joe Milton headline this Week 9 matchup with Malik Nabers, Tyrone Tracy Jr., and Saquon Barkley featured in early-down scripts.",
       "blitzRateVsPressureToSack": "New York Giants and Philadelphia Eagles deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "New York Giants leans on Tyrone Tracy Jr., Malik Nabers, and Theo Johnson, while Philadelphia Eagles features Saquon Barkley, DeVonta Smith, and Dallas Goedert.",
+      "personnelTendencies": "New York Giants leans on Tyrone Tracy Jr., Malik Nabers, and Theo Johnson, while Philadelphia Eagles features Saquon Barkley and Dallas Goedert.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between New York Giants and Philadelphia Eagles headline the film study.",
       "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -929,7 +929,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "61/100",
       "totalExpectedClv": 0.009,
       "totalDecision": "PASS",
-      "rationale": "Market efficient on main spread; we focus on Joe Milton rushing props and Malik Nabers receiving volume."
+      "rationale": "Market efficient on main spread; we focus on Joe Milton rushing props and Malik Nabers receiving volume. We explicitly pass on Saquon Barkley OVER 88.5 rush yards."
     },
     "topProps": [
       {
@@ -1024,9 +1024,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Theo Johnson"
             ]
           },
-          "bringBack": "DeVonta Smith",
+          "bringBack": "Saquon Barkley",
           "valueFiller": "Dallas Goedert",
-          "correlationTheme": "Pair J.J. McCarthy with Malik Nabers and Theo Johnson, and bring it back with DeVonta Smith."
+          "correlationTheme": "Pair J.J. McCarthy with Malik Nabers and Theo Johnson, and bring it back with Saquon Barkley."
         }
       ]
     },
@@ -1077,7 +1077,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "60/100",
       "totalExpectedClv": 0.008,
       "totalDecision": "PASS",
-      "rationale": "Market efficient on full-game spread; we target Garrett Wilson quick-game receptions against Kansas City blitzes."
+      "rationale": "Market efficient on full-game spread; we target Garrett Wilson quick-game receptions against Kansas City blitzes. We explicitly pass on Chiefs ML -310 due to price."
     },
     "topProps": [
       {
@@ -1217,15 +1217,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
-      "sideSelection": "Washington Commanders -2.5",
+      "sideSelection": "Los Angeles Rams -4.5",
       "sideConfidence": "64/100",
       "sideExpectedClv": 0.015,
-      "sideDecision": "PASS",
+      "sideDecision": "PLAY",
       "totalSelection": "OVER 48.5",
       "totalConfidence": "62/100",
       "totalExpectedClv": 0.012,
       "totalDecision": "PASS",
-      "rationale": "Market efficient on main side; we isolate Stefon Diggs and Puka Nacua in a high-tempo NFC matchup."
+      "rationale": "We play Los Angeles Rams -4.5 and Los Angeles Rams 1H -2.5. We also isolate Stefon Diggs and Puka Nacua in a high-tempo NFC matchup."
     },
     "topProps": [
       {
@@ -1238,7 +1238,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "79/100",
         "expectedClv": 0.092,
         "decision": "PLAY",
-        "nEffTargetNotes": "Stefon Diggs operates as Jayden Daniels' primary chain-moving target in Washington's no-huddle rhythm.",
+        "nEffTargetNotes": "Stefon Diggs operates as Jayden Daniels' primary chain-moving target in Washington's no-huddle rhythm with Terry McLaurin OUT. Luke McCaffrey is available for secondary reads.",
         "pOver": 0.642,
         "pUnder": 0.358
       }
@@ -1377,20 +1377,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "chuba-hubbard",
-        "playerName": "Chuba Hubbard",
+        "playerId": "jonah-coleman",
+        "playerName": "Jonah Coleman",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 62.5,
+        "line": 61.5,
         "side": "OVER",
-        "confidence": "76/100",
-        "expectedClv": 0.072,
+        "confidence": "79/100",
+        "expectedClv": 0.118,
         "decision": "PLAY",
-        "nEffTargetNotes": "Chuba Hubbard anchors Carolina's early-down rushing script at home against Denver.",
+        "nEffTargetNotes": "Jonah Coleman projects for high-efficiency rotational carries.",
         "pOver": 0.642,
         "pUnder": 0.358
-      }
-    ],
+      }],
     "correlatedSgpTicket": {
       "title": "Denver Broncos @ Carolina Panthers Same-Game Parlay",
       "legs": [
@@ -1671,20 +1670,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "dalton-schultz",
-        "playerName": "Dalton Schultz",
+        "playerId": "matthew-golden",
+        "playerName": "Matthew Golden",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 41.5,
+        "line": 54.5,
         "side": "OVER",
-        "confidence": "78/100",
-        "expectedClv": 0.088,
+        "confidence": "81/100",
+        "expectedClv": 0.118,
         "decision": "PLAY",
-        "nEffTargetNotes": "Dalton Schultz operates as C.J. Stroud's middle-of-the-field safety valve against two-high zone coverage.",
+        "nEffTargetNotes": "Matthew Golden finds soft spots in zone coverage.",
         "pOver": 0.642,
         "pUnder": 0.358
-      }
-    ],
+      }],
     "correlatedSgpTicket": {
       "title": "Houston Texans @ Los Angeles Chargers Same-Game Parlay",
       "legs": [
@@ -1807,15 +1805,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
-      "sideSelection": "San Francisco 49ers -6.5",
+      "sideSelection": "PASS",
       "sideConfidence": "64/100",
       "sideExpectedClv": 0.016,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
+      "totalSelection": "OVER 52.0",
       "totalConfidence": "62/100",
       "totalExpectedClv": 0.011,
-      "totalDecision": "PASS",
-      "rationale": "Main spread is priced near fair value; Mike Evans perimeter red-zone targets and Nick Bosa sack props carry the edge."
+      "totalDecision": "PLAY",
+      "rationale": "We play OVER 52.0. San Francisco pass-catchers Evans, Deebo, Kirk, and Aiyuk are ALL OUT, driving funnel volume through McCaffrey and Kittle. SF -7.5 is NOT a board play (dropped). We explicitly pass on Christian McCaffrey OVER 118.5 rush+rec."
     },
     "topProps": [
       {
@@ -1963,7 +1961,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "61/100",
       "totalExpectedClv": 0.009,
       "totalDecision": "PASS",
-      "rationale": "Main line is priced efficiently; Jaxon Smith-Njigba slot target volume is our flagship prop in Seattle."
+      "rationale": "Main line is priced efficiently; Jaxon Smith-Njigba slot target volume is our flagship prop in Seattle. We also target Trey McBride (OVER 58.5 rec yds) and Boye Mafe (OVER 0.25 sacks)."
     },
     "topProps": [
       {
@@ -1971,7 +1969,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "playerName": "Jaxon Smith-Njigba",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 74.5,
+        "line": 64.5,
         "side": "OVER",
         "confidence": "82/100",
         "expectedClv": 0.121,
@@ -1987,8 +1985,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         {
           "description": "Jaxon Smith-Njigba Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Jaxon Smith-Njigba OVER 74.5 Receiving Yards",
-          "line": 74.5,
+          "selection": "Jaxon Smith-Njigba OVER 64.5 Receiving Yards",
+          "line": 64.5,
           "confidence": "82/100",
           "expectedClv": 0.121,
           "decision": "PLAY"
@@ -2115,16 +2113,31 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
+        "playerId": "christian-watson",
+        "playerName": "Christian Watson",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 44.5,
+        "side": "UNDER",
+        "confidence": "81/100",
+        "expectedClv": 0.118,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Christian Watson UNDER 44.5 rec yds.",
+        "pOver": 0.642,
+        "pUnder": 0.358
+      },
+
+      {
         "playerId": "rhamondre-stevenson",
         "playerName": "Rhamondre Stevenson",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 64.5,
+        "propType": "Receptions",
+        "market": "rec",
+        "line": 3.5,
         "side": "OVER",
         "confidence": "85/100",
         "expectedClv": 0.13,
         "decision": "PLAY",
-        "nEffTargetNotes": "Rhamondre Stevenson steps into uncontested three-down bell-cow volume against Green Bay's light boxes.",
+        "nEffTargetNotes": "Rhamondre Stevenson steps into expanded receiving volume with Henderson OUT and A.J. Brown OUT, alongside Hunter Henry expected to play.",
         "pOver": 0.642,
         "pUnder": 0.358
       }
@@ -2133,10 +2146,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "Green Bay Packers @ New England Patriots Same-Game Parlay",
       "legs": [
         {
-          "description": "Rhamondre Stevenson Rushing Yards",
+          "description": "Rhamondre Stevenson Receptions",
           "pickType": "PLAYER_PROP",
-          "selection": "Rhamondre Stevenson OVER 64.5 Rushing Yards",
-          "line": 64.5,
+          "selection": "Rhamondre Stevenson OVER 3.5 Receptions",
+          "line": 3.5,
           "confidence": "85/100",
           "expectedClv": 0.13,
           "decision": "PLAY"
@@ -2251,14 +2264,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
-      "sideSelection": "Chicago Bears -6.0",
+      "sideSelection": "Tampa Bay Buccaneers +1.5",
       "sideConfidence": "62/100",
       "sideExpectedClv": 0.011,
-      "sideDecision": "PASS",
-      "totalSelection": "UNDER 47.5",
+      "sideDecision": "PLAY",
+      "totalSelection": "OVER 45.5",
       "totalConfidence": "61/100",
       "totalExpectedClv": 0.009,
-      "totalDecision": "PASS",
+      "totalDecision": "PLAY",
       "rationale": "Sunday Night Football at Soldier Field favors Rome Odunze and D'Andre Swift prop volume over the full-game spread."
     },
     "topProps": [
@@ -2403,13 +2416,27 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideConfidence": "63/100",
       "sideExpectedClv": 0.014,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
+      "totalSelection": "OVER 48.0",
       "totalConfidence": "62/100",
       "totalExpectedClv": 0.01,
-      "totalDecision": "PASS",
-      "rationale": "Monday Night Football indoors at U.S. Bank Stadium highlights Justin Jefferson and Jordan Mason player props."
+      "totalDecision": "PLAY",
+      "rationale": "We are on OVER 48.0 and Tyler Bass OVER 1.5 FGs made. Odell Beckham Jr. promoted to Vikings active roster; Jefferson, Addison, and Hockenson form the condensed target tree."
     },
     "topProps": [
+      {
+        "playerId": "tyler-bass",
+        "playerName": "Tyler Bass",
+        "propType": "Field Goals Made",
+        "market": "fgm",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "81/100",
+        "expectedClv": 0.12,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Tyler Bass OVER 1.5 FGs made is our primary derivative attack.",
+        "pOver": 0.642,
+        "pUnder": 0.358
+      },
       {
         "playerId": "justin-jefferson",
         "playerName": "Justin Jefferson",
