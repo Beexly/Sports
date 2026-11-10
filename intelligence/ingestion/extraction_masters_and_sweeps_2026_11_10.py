@@ -42,9 +42,23 @@ from intelligence.equations.honest_equation_executor import (
 from intelligence.metrics.book_equations_to_stats_compiler import (
     BookEquationsToStatsCompiler,
 )
+from intelligence.ingestion.masters_loader import resolve_masters_paths
 
-DEFAULT_EQ_MASTER_GZ = Path("/home/antigravity/extraction-masters-2026-11-10/EQUATIONS-MASTER-2026-11-10.jsonl.gz")
-DEFAULT_SIT_MASTER_GZ = Path("/home/antigravity/extraction-masters-2026-11-10/SITUATIONAL-MASTER-2026-11-10.jsonl.gz")
+# Masters location resolution is shared by every consumer through
+# `intelligence.ingestion.masters_loader.resolve_masters_paths`, in this order:
+# explicit argument > `GSE_MASTERS_DIR` env var > the real workspace
+# extraction-output directory > the legacy AGY-machine path (last fallback).
+# The DEFAULT_* names are kept for backward compatibility; they now hold the
+# resolved location instead of a hardcoded path that only existed on one box.
+LEGACY_EQ_MASTER_GZ = Path("/home/antigravity/extraction-masters-2026-11-10/EQUATIONS-MASTER-2026-11-10.jsonl.gz")
+LEGACY_SIT_MASTER_GZ = Path("/home/antigravity/extraction-masters-2026-11-10/SITUATIONAL-MASTER-2026-11-10.jsonl.gz")
+try:
+    _RESOLVED_MASTERS = resolve_masters_paths()
+    DEFAULT_EQ_MASTER_GZ = _RESOLVED_MASTERS.equations
+    DEFAULT_SIT_MASTER_GZ = _RESOLVED_MASTERS.situational
+except FileNotFoundError:
+    DEFAULT_EQ_MASTER_GZ = LEGACY_EQ_MASTER_GZ
+    DEFAULT_SIT_MASTER_GZ = LEGACY_SIT_MASTER_GZ
 
 MIND_DIR = REPO_ROOT / "data" / "mind"
 MASTERS_MANIFEST_PATH = MIND_DIR / "extraction_masters_manifest_2026_11_10.json"
@@ -140,10 +154,23 @@ def audit_and_quarantine_legacy_21419_registry() -> Dict[str, Any]:
 
 
 def ingest_and_audit_extraction_masters(
-    eq_gz_path: Path = DEFAULT_EQ_MASTER_GZ,
-    sit_gz_path: Path = DEFAULT_SIT_MASTER_GZ,
+    eq_gz_path: Optional[Path] = None,
+    sit_gz_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
-    """Stream all 645,864 Equations Master & 101,965 Situational Master records and run Honest Executor."""
+    """Stream all 645,864 Equations Master & 101,965 Situational Master records and run Honest Executor.
+
+    Paths resolve through `masters_loader.resolve_masters_paths` when not
+    given explicitly: explicit argument > `GSE_MASTERS_DIR` > workspace
+    extraction-output directory > legacy AGY path.
+    """
+    if eq_gz_path is None or sit_gz_path is None:
+        resolved = resolve_masters_paths()
+        if eq_gz_path is None:
+            eq_gz_path = resolved.equations
+        if sit_gz_path is None:
+            sit_gz_path = resolved.situational
+    eq_gz_path = Path(eq_gz_path)
+    sit_gz_path = Path(sit_gz_path)
     MIND_DIR.mkdir(parents=True, exist_ok=True)
     if not eq_gz_path.is_file() or not sit_gz_path.is_file():
         raise FileNotFoundError(f"Missing extraction master(s): {eq_gz_path}, {sit_gz_path}")
@@ -566,12 +593,15 @@ def ingest_x_and_ig_sweeps_2026_11_09_and_11_10() -> Dict[str, Any]:
     return sweeps_payload
 
 
-def run_stage1_and_stage2() -> Dict[str, Any]:
+def run_stage1_and_stage2(
+    eq_gz_path: Optional[Path] = None,
+    sit_gz_path: Optional[Path] = None,
+) -> Dict[str, Any]:
     compiler = BookEquationsToStatsCompiler()
     crosswalk = compiler.ensure_mind_book_and_equation_registries_synced()
     book_reg = json.loads((MIND_DIR / "complete_458_book_registry.json").read_text(encoding="utf-8"))
     quarantine_audit = audit_and_quarantine_legacy_21419_registry()
-    masters_res = ingest_and_audit_extraction_masters()
+    masters_res = ingest_and_audit_extraction_masters(eq_gz_path=eq_gz_path, sit_gz_path=sit_gz_path)
     sweeps_res = ingest_x_and_ig_sweeps_2026_11_09_and_11_10()
     return {
         "book_registry_summary": {
@@ -601,7 +631,13 @@ def run_stage1_and_stage2() -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
-    summary = run_stage1_and_stage2()
+    import argparse
+
+    _ap = argparse.ArgumentParser(description="Stage 1 & 2 masters ingestion/audit")
+    _ap.add_argument("--eq-master", type=Path, default=None, help="explicit Equations Master path (wins over env/default resolution)")
+    _ap.add_argument("--sit-master", type=Path, default=None, help="explicit Situational Master path (wins over env/default resolution)")
+    _cli = _ap.parse_args()
+    summary = run_stage1_and_stage2(eq_gz_path=_cli.eq_master, sit_gz_path=_cli.sit_master)
     print(json.dumps(summary["book_registry_summary"], indent=2))
     print(json.dumps(summary["quarantine_summary"], indent=2))
     print("EQUATIONS_MASTER:", summary["masters_summary"]["equations_master"]["total_records"])
