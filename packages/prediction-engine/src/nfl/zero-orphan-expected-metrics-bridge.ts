@@ -43,6 +43,10 @@ import {
 } from "./mega-sweep-2026-11-06-reasoning-engine.js";
 import { fourMinuteRunPrior, redZoneTotalMultiplier } from "./killed-claims.js";
 import { evaluateLbVoidTeRbVsSlotAbsorption } from "./role-isomorphism-realloc.js";
+import {
+  evaluateUnifiedQuantitativeArchitectureOverlay,
+  type UnifiedArchitectureOverlayReceipt,
+} from "./unified-quantitative-nfl-architecture.js";
 
 /**
  * Exhaustive manifest of every non-test module in `src/expected-metrics/` and `src/nfl/`.
@@ -115,7 +119,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/win-probability.ts",
   "expected-metrics/wr-depth-after-leader.ts",
   "expected-metrics/yoy-persistence.ts",
-  // src/nfl/ (68 modules including this bridge)
+  // src/nfl/ (69 modules including this bridge)
   "nfl/all-in-one-research-signals.ts",
   "nfl/ats-ablation-harness.ts",
   "nfl/belichick-ten-metrics.ts",
@@ -179,6 +183,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/tackle-probability.ts",
   "nfl/teb-avalanche-braid-overlay.ts",
   "nfl/unified-corpus-and-gsi-wiring-bridge.ts",
+  "nfl/unified-quantitative-nfl-architecture.ts",
   "nfl/universal-handoff-warehouse-priors.ts",
   "nfl/verify-nfl-injury-evidence.ts",
   "nfl/wave13-sheaf-navier-stokes-phase-transition.ts",
@@ -245,6 +250,7 @@ export interface ZeroOrphanOverlayResult {
   readonly megaSweep5Track7StepTrace: MegaSweep5Track7StepTrace;
   readonly roleIsomorphismRealloc: ReturnType<typeof evaluateLbVoidTeRbVsSlotAbsorption>;
   readonly fourMinuteMeasuredRunRate: number;
+  readonly unifiedArchitectureReceipt: UnifiedArchitectureOverlayReceipt;
   readonly familyAdjustments: {
     readonly pressure: number;
     readonly coveragePersonnel: number;
@@ -417,6 +423,11 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
   const fourMinuteMeasuredRunRate =
     fourMinuteRunPrior(0.422) * redZoneTotalMultiplier("current-season-market-shape");
 
+  const unifiedArchitectureReceipt = evaluateUnifiedQuantitativeArchitectureOverlay({
+    timezoneZonesCrossed: input.timeZoneDeltaHours ?? 0,
+    sampleRushYards: input.yardsBeforeContactPerCarry + input.ryoePerCarry,
+  });
+
   const megaSweep5Track7StepTrace = evaluateMegaSweep5TrackAnd7StepReasoning({
     cleanBadThrowRate: w1.cleanBadThrowRate,
     pressureBadThrowDelta: w1.stickyAccuracyDelta,
@@ -468,7 +479,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
           (f3 - 0.44) * 0.10 +
           (w3.independentCreationShare - 0.35) * 0.05 +
           batch4NeuroCollisionLoad.processingSpeedLogitPenalty * 0.15 +
-          textbookAlgorithmsReceipt.combinedStage2LogOddsDelta * 0.12,
+          textbookAlgorithmsReceipt.combinedStage2LogOddsDelta * 0.12 +
+          unifiedArchitectureReceipt.combinedArchitectureLogOddsDelta * 0.20,
       ),
     ).toFixed(4),
   );
@@ -507,6 +519,7 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     megaSweep5Track7StepTrace,
     roleIsomorphismRealloc,
     fourMinuteMeasuredRunRate,
+    unifiedArchitectureReceipt,
     familyAdjustments: {
       pressure: pressureDelta,
       coveragePersonnel: coveragePersonnelDelta,

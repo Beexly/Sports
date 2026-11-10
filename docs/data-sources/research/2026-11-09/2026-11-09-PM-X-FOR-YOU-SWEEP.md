@@ -1,0 +1,5 @@
+# X For You & Watchlist Discovery Sweep — 2026-11-09 PM (Wired Record)
+
+- **Count proof:** `100` feed rows (`78` organic, `17` ads, `5` trading-bot posts skipped per rule); watchlist `13/15` accounts returned with `68` NEW posts (`20` full dossiers + `5` bonus, remainder inventoried).
+- **Wired into engine:** `nflfastR PR #618` coupled `(V, W)` net-EP (`TD = 6 + xp - V`, `FG = 3 - V`, `Saf = 2 + W`), `CFBD opponent-adjusted line yards` (`120%` losses, `100%` `0-4`, `50%` `5-10`, `0%` `>10`), and source-verified `arXiv:2609.00006` (Harness Engineering), `arXiv:2611.06500` (compression), `arXiv:2611.07854` (Drex decision models — paid X post misstated model sizes).
+- **Honest degradations preserved:** `8/78` organic feed posts had exposed permalinks (`70/78` saved as `INVENTORIED-NO-ID`, never back-filled); `SumerSports` and `run_the_sims` hit rate limits (`RATE_LIMITED_UNKNOWN_TONIGHT`, queued for morning retry in `HW-5`); conflicting `Jordan Love EPA leaderboard` captures preserved with `adopted: false`.

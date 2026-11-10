@@ -61,6 +61,13 @@ from intelligence.external_charting.morning_sweep_2026_11_08 import (
     load_nov8_pressure_rates_allowed,
     load_nov8_sfdata_epa_previews,
 )
+from intelligence.architecture.unified_quantitative_nfl_architecture import (
+    compute_circadian_performance_index,
+    map_injury_designation_to_dropoff_bucket,
+    solve_nflfastr_pr618_net_ep,
+)
+from intelligence.coaching.ol_provider import get_cfbd_opponent_adjusted_line_yards
+
 TEAM_PBP_CACHE_PATH = REPO_ROOT / "data" / "engine" / "team_2026_pbp_ftn_32teams_cache.json"
 STAGE0_CONFIG_PATH = (
     REPO_ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
@@ -214,12 +221,18 @@ def compute_conserved_team_environments() -> Dict[str, Dict[str, Any]]:
                 4,
             )
 
-            # 3. EQ-W7213966824 + Domain 1/2/5 (True Box Spacing Delta, Stack-Box Eff, FWL Pure RB EPA)
+            # 3. EQ-W7213966824 + Domain 1/2/5 + X Sweep CFBD Opponent-Adjusted Line Yards
             opp_light_box = float(o_pbp.get("def_light_box_rate", 0.22))
             opp_heavy_box = float(o_pbp.get("def_heavy_box_rate", 0.30))
             rush_epa = float(t_pbp.get("rush_epa", -0.05))
             box_spacing_delta = float(t_92.get("true_box_count_spacing_delta", 0.0))
             fwl_rb_epa = float(t_92.get("micro_blocking_metric_segregation_rb_pure_epa", 0.02))
+            cfbd_off = get_cfbd_opponent_adjusted_line_yards(tm)
+            cfbd_def = get_cfbd_opponent_adjusted_line_yards(opp)
+            cfbd_trench_edge = (
+                float(cfbd_off.get("opp_adjusted_off_line_yards", 2.99))
+                - float(cfbd_def.get("opp_adjusted_def_line_yards_allowed", 2.99))
+            )
             rush_box_mult = round(
                 float(
                     np.clip(
@@ -227,7 +240,8 @@ def compute_conserved_team_environments() -> Dict[str, Dict[str, Any]]:
                         + 0.22 * (opp_light_box - opp_heavy_box)
                         + 0.35 * rush_epa
                         + 0.015 * box_spacing_delta
-                        + 0.08 * fwl_rb_epa,
+                        + 0.08 * fwl_rb_epa
+                        + 0.035 * cfbd_trench_edge,
                         0.86,
                         1.18,
                     )
@@ -235,11 +249,30 @@ def compute_conserved_team_environments() -> Dict[str, Dict[str, Any]]:
                 4,
             )
 
-            # 4. EQ-ARXIV-2309-00756 & EQ-ARXIV-2506-03057 + Domain 6 (HJB Clock Drain & Script Elasticity)
+            # 4. EQ-ARXIV-2309-00756 & EQ-ARXIV-2506-03057 + Domain 6 + nflfastR PR #618 Net-EP + Circadian CPI_k
             pass_epa = float(t_pbp.get("pass_epa", 0.02))
             hjb_clock_drain = float(t_92.get("hjb_four_minute_clock_drain_optimality", 0.78))
             script_gain = float(t_92.get("script_elasticity_feedback_control_gain", 0.88))
             pre_sim_log_odds = float(t_92.get("compiled_pre_sim_log_odds_adjustment", 0.0))
+            pr618_receipt = solve_nflfastr_pr618_net_ep(
+                {
+                    "td": min(0.55, max(0.20, 0.34 + 0.25 * pass_epa)),
+                    "opp_td": 0.20,
+                    "fg": 0.23,
+                    "opp_fg": 0.14,
+                    "safety": 0.004,
+                    "opp_safety": 0.003,
+                },
+                season=2026,
+                half_seconds_remaining=900.0,
+            )
+            circadian_receipt = compute_circadian_performance_index(
+                kickoff_utc_hour=18.0,
+                team_body_clock_utc_offset=-5.0,
+                timezone_zones_crossed=0.0 if is_home else 1.0,
+                days_since_arrival=3.0,
+                travel_direction="NONE",
+            )
             td_share_of_points = float(
                 np.clip(
                     0.71 + 0.05 * (hmm_clean_pocket_gamma - 0.55) + 0.06 * pass_epa + 0.02 * pre_sim_log_odds,
@@ -386,6 +419,13 @@ def compute_conserved_team_environments() -> Dict[str, Dict[str, Any]]:
                 "opp_blitz_rate": opp_blitz_rate,
                 "hjb_clock_drain_optimality": hjb_clock_drain,
                 "script_elasticity_gain": script_gain,
+                "cfbd_opp_adj_off_line_yards": float(cfbd_off.get("opp_adjusted_off_line_yards", 2.99)),
+                "cfbd_opp_adj_def_line_yards_allowed": float(cfbd_def.get("opp_adjusted_def_line_yards_allowed", 2.99)),
+                "cfbd_trench_edge": round(cfbd_trench_edge, 3),
+                "nflfastr_pr618_v_kickoff_ep": pr618_receipt["v_kickoff_ep"],
+                "nflfastr_pr618_td_net_value": pr618_receipt["td_net_score_value"],
+                "circadian_cpi": circadian_receipt["cpi"],
+                "ol_dropoff_bucket_resolved": map_injury_designation_to_dropoff_bucket("LT"),
             }
 
     return team_envs

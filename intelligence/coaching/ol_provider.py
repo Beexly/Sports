@@ -169,3 +169,60 @@ def ol_pass_set_report(observed_depths: list[float]) -> dict[str, float | bool |
 
     report = pass_set_depth_attainment(observed_depths)
     return {"enabled": True, "attainment": report["attainment"], "n": report["n"]}
+
+
+_TEAM_ABBR_ALIASES = {
+    "LAR": "LA",
+    "WSH": "WAS",
+    "JAC": "JAX",
+}
+
+
+def get_cfbd_opponent_adjusted_line_yards(team: str) -> dict[str, float | int]:
+    """Return CFBD opponent-adjusted offensive & defensive line yards from 2026 PBP (`2026-11-09-PM` X sweep)."""
+    import json
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[2]
+    metrics_path = repo_root / "data" / "metrics" / "cfbd_opponent_adjusted_line_yards_2026_11_10.json"
+    if not metrics_path.is_file():
+        return {
+            "carries": 0,
+            "raw_off_line_yards": 2.99,
+            "opp_adjusted_off_line_yards": 2.99,
+            "off_line_yards_rank_nfl": 16,
+            "stuff_rate": 0.175,
+            "raw_def_line_yards_allowed": 2.99,
+            "opp_adjusted_def_line_yards_allowed": 2.99,
+            "def_line_yards_rank_nfl": 16,
+            "league_mean_line_yards": 2.99,
+        }
+    payload = json.loads(metrics_path.read_text(encoding="utf-8"))
+    teams = payload.get("teams") or {}
+    key = str(team or "").strip().upper()
+    resolved = _TEAM_ABBR_ALIASES.get(key, key)
+    return dict(
+        teams.get(resolved)
+        or teams.get(key)
+        or {
+            "carries": 0,
+            "raw_off_line_yards": 2.99,
+            "opp_adjusted_off_line_yards": 2.99,
+            "off_line_yards_rank_nfl": 16,
+            "stuff_rate": 0.175,
+            "raw_def_line_yards_allowed": 2.99,
+            "opp_adjusted_def_line_yards_allowed": 2.99,
+            "def_line_yards_rank_nfl": 16,
+            "league_mean_line_yards": 2.99,
+        }
+    )
+
+
+def map_ol_or_roster_role_to_epa_dropoff_bucket(role_key: str) -> str:
+    """Delegate role-key normalization (`LT`/`WR1`/`CB1`/`EDGE1` -> `OL`/`SKILL`/`DEF`) to Unified Architecture."""
+    from intelligence.architecture.unified_quantitative_nfl_architecture import (
+        map_injury_designation_to_dropoff_bucket,
+    )
+
+    return map_injury_designation_to_dropoff_bucket(role_key)
+

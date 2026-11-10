@@ -1,0 +1,77 @@
+{
+  "schema": "gse_extraction_masters_manifest_v1",
+  "ingested_at": "2026-11-10T17:38:00Z",
+  "doctrine_compliance": {
+    "mind_first_enforced": true,
+    "single_writer_brain_mind_jsonl_untouched_on_vm": true,
+    "windows_trainer_work_order_dispatched": "Beexly/agent-bus@1b723e4 (HW-1)"
+  },
+  "equations_master": {
+    "drive_file_id": "1g7htiDP8q2hoS2s9fpFYh7A-1u_tz2Xu",
+    "filename": "EQUATIONS-MASTER-2026-11-10.jsonl.gz",
+    "compressed_bytes": 20028831,
+    "sha256": "f02bc840c328aa6ccb8d8c1c9a872b1e6f7d12a0e9af0d3f929e0ac66ad74695",
+    "total_records": 645864,
+    "corrupt_lines": 0,
+    "lane_breakdown": {
+      "phase2_delta": 206381,
+      "equations-from-papers": 143716,
+      "R2-reassembly": 117676,
+      "equations-from-pdfs": 91803,
+      "equations-from-books-a": 71215,
+      "equations-from-mind": 5328,
+      "equations-genuine-consolidated": 4708,
+      "equations-from-drive-books": 3086,
+      "equations-from-books-b": 1261,
+      "equations-from-repos": 690
+    }
+  },
+  "situational_master": {
+    "drive_file_id": "1H6UIEatCIeo6wF4zKWG6nG5H4Np8FFcz",
+    "filename": "SITUATIONAL-MASTER-2026-11-10.jsonl.gz",
+    "compressed_bytes": 9312027,
+    "sha256": "b77c6f033cd5dfcac6d7e3a51f34c9027dc63f9562183e6bfb369e34a08a3e3e",
+    "total_records": 101965,
+    "corrupt_lines": 0,
+    "lane_breakdown": {
+      "phase2_delta": 39948,
+      "situational-from-pdfs": 22076,
+      "situational-from-mind": 18835,
+      "situational-from-books-a": 12666,
+      "R2-reassembly": 3375,
+      "situational-from-papers": 2120,
+      "situational-from-drive-books": 1662,
+      "situational-from-books-b": 1181,
+      "situational-from-repos": 102
+    },
+    "kind_breakdown": {
+      "assumption": 19602,
+      "fulltext": 13679,
+      "condition": 9749,
+      "situational_rule": 8443,
+      "decision_rule": 7100,
+      "heuristic": 6863,
+      "theorem": 6850,
+      "failure_mode": 5979,
+      "requirement": 5634,
+      "definition": 5530,
+      "theorem-statement": 3448,
+      "verdict": 1535,
+      "failure-mode": 1457,
+      "acceptance-gate": 1382,
+      "applicability": 1161,
+      "brief": 713,
+      "lemma": 465,
+      "decision-rule": 379,
+      "remark": 377,
+      "deep": 353
+    }
+  },
+  "verified_repairs": {
+    "udlbook_rows_checked": 1932,
+    "udlbook_doubled_backslash_defects_remaining": 0,
+    "little_book_of_semaphores_equation_rows": 268,
+    "little_book_of_semaphores_situational_rows": 114,
+    "nice_ng232_head_injury_situational_rows": 158
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "schema": "gse_honest_equation_executor_audit_v1",
+  "executor_module": "intelligence/equations/honest_equation_executor.py",
+  "zero_fabricated_bindings": true,
+  "total_equations_audited": 645864,
+  "strict_zero_binding_statuses": {
+    "UNPARSEABLE": 536262,
+    "PARSED_SYMBOLIC_ONLY": 72405,
+    "PARSED_EVALUATED": 37197
+  },
+  "domain_probe_statuses": {
+    "UNPARSEABLE": 536262,
+    "PARSED_SYMBOLIC_ONLY": 22020,
+    "PARSED_EVALUATED": 87582
+  },
+  "parsed_valid_ast_total": 109602,
+  "parsed_valid_ast_pct": 16.97,
+  "domain_probe_executable_total": 87582,
+  "domain_probe_executable_pct": 13.56,
+  "lane_parsed_ast_counts": {
+    "phase2_delta": 39278,
+    "equations-from-papers": 30006,
+    "equations-from-pdfs": 15057,
+    "R2-reassembly": 14535,
+    "equations-from-books-a": 9145,
+    "equations-from-mind": 680,
+    "equations-from-drive-books": 468,
+    "equations-from-books-b": 260,
+    "equations-genuine-consolidated": 148,
+    "equations-from-repos": 25
+  },
+  "top_unparseable_and_symbolic_reasons": {
+    "prose_fragment_not_formula": 70018,
+    "unsupported_latex_macro_or_operator": 63810,
+    "bare_identifier_not_equation": 51609,
+    "requires_explicit_symbol_bindings": 50902,
+    "ok": 37197,
+    "unexpected_character:_": 27909,
+    "relational_or_set_statement:\u2264": 24864,
+    "relational_or_set_statement:\u2208": 24758,
+    "relational_or_set_statement:\\in": 24715,
+    "unbalanced_or_unsupported_delimiter": 22780,
+    "uninterpreted_function_symbol": 21243,
+    "unclosed_paren": 19443,
+    "unexpected_character:.": 17997,
+    "relational_or_set_statement:\\leq": 16623,
+    "incomplete_equality_side": 16598,
+    "relational_or_set_statement:>": 13795,
+    "relational_or_set_statement:<": 11938,
+    "unexpected_character::": 10488,
+    "relational_or_set_statement:\u2265": 10441,
+    "relational_or_set_statement:\u2192": 7308
+  },
+  "uniform_random_15_record_sample": [
+    {
+      "record_index": 572426,
+      "source": "unknown",
+      "page_or_section": 1153,
+      "lane": "R2-reassembly",
+      "raw_equation": "Bayesian model to infer \u00b5j \u223c N (m = 0.68, \u03c4 = 0.03).",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "unexpected_character:\u223c",
+      "free_symbols": []
+    },
+    {
+      "record_index": 285767,
+      "source": "unknown",
+      "page_or_section": 528,
+      "lane": "equations-from-pdfs",
+      "raw_equation": "One can show that the importance weights w = \u03c6(v 0 ,...,vn )",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "prose_fragment_not_formula",
+      "free_symbols": []
+    },
+    {
+      "record_index": 483197,
+      "source": "unknown",
+      "page_or_section": "3 Second-order Crank-Nicolson ACM scheme with grad-div stabilization",
+      "lane": "phase2_delta",
+      "raw_equation": "\\displaystyle\\qquad\\qquad\\qquad\\qquad\\qquad\\qquad\\qquad\\qquad\\textstyle-\\left(\\overline{p}_{h}^{n-1/2},\\nabla\\cdot\\bm{v}_{h}\\right)=\\left(f^{n-1/2},\\bm{v}_{h}\\right),\\forall\\ \\bm{v}_{h}\\in\\bm{X}_{h},",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "relational_or_set_statement:\\in",
+      "free_symbols": []
+    },
+    {
+      "record_index": 57396,
+      "source": "Spectral And Algebraic Graph Theory",
+      "page_or_section": 60,
+      "lane": "equations-from-books-a",
+      "raw_equation": "\u2264 |M (a, b)| |\u03c6(b)| \u2264 |M (a, b)| |\u03c6(a)| = |\u03c6(a)| |M (a, b)| .",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "relational_or_set_statement:\u2264",
+      "free_symbols": []
+    },
+    {
+      "record_index": 182765,
+      "source": "unknown",
+      "page_or_section": "7 Closed loop in physical variables",
+      "lane": "equations-from-papers",
+      "raw_equation": "\\triangle_{k}",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "unsupported_latex_macro_or_operator",
+      "free_symbols": []
+    },
+    {
+      "record_index": 190236,
+      "source": "unknown",
+      "page_or_section": "4 Energy estimates and positive-time regularization",
+      "lane": "equations-from-papers",
+      "raw_equation": "\\displaystyle M_{m,j}^{J,2,\\varepsilon}(t)",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "unclosed_paren",
+      "free_symbols": []
+    },
+    {
+      "record_index": 113920,
+      "source": "unknown",
+      "page_or_section": "A.4 Proof of Theorem 6.5",
+      "lane": "equations-from-papers",
+      "raw_equation": "\\sum_{k=1}^{K}g(x_{k})\\geq 1_{\\{\\sum_{k=1}^{K}x_{k}\\geq C\\}},",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "relational_or_set_statement:\\geq",
+      "free_symbols": []
+    },
+    {
+      "record_index": 285435,
+      "source": "unknown",
+      "page_or_section": 482,
+      "lane": "equations-from-pdfs",
+      "raw_equation": "z = \u00b5 + L\u03f5 (10.52)",
+      "strict_status": "PARSED_SYMBOLIC_ONLY",
+      "probe_status": "PARSED_SYMBOLIC_ONLY",
+      "reason": "uninterpreted_function_symbol",
+      "free_symbols": [
+        "L\u03f5__of__arg",
+        "\u00b5"
+      ]
+    },
+    {
+      "record_index": 301465,
+      "source": "unknown",
+      "page_or_section": 195,
+      "lane": "equations-from-pdfs",
+      "raw_equation": "65 Usually we would write S(E, L), but our model rubber band is purely entropic\u2014E = 0 for all states.",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "prose_fragment_not_formula",
+      "free_symbols": []
+    },
+    {
+      "record_index": 125229,
+      "source": "unknown",
+      "page_or_section": "2 The Lipschitz continuity",
+      "lane": "equations-from-papers",
+      "raw_equation": "\\widetilde{f}_{2}(u)=\\widetilde{g}_{2}(u)-\\widetilde{g}_{2}(x)",
+      "strict_status": "PARSED_SYMBOLIC_ONLY",
+      "probe_status": "PARSED_SYMBOLIC_ONLY",
+      "reason": "uninterpreted_function_symbol",
+      "free_symbols": [
+        "g_wid_2__of__u",
+        "g_wid_2__of__x"
+      ]
+    },
+    {
+      "record_index": 75160,
+      "source": "unknown",
+      "page_or_section": null,
+      "lane": "equations-genuine-consolidated",
+      "raw_equation": "\\operatorname{logit} P(\\text{Win}_{ij} = 1) = \\alpha + \\theta_i^{\\text{player}}(\\text{Scheme}) - \\delta_j^{\\text{opp}}(\\text{Shell}) + \\lambda_{\\text{coherence}} C_{\\text{unit}}, \\quad \\text{CP}(t) = \\sigma\\!\\left(\\mathb",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "prose_fragment_not_formula",
+      "free_symbols": []
+    },
+    {
+      "record_index": 199431,
+      "source": "unknown",
+      "page_or_section": "2.1. Boundary layer solutions",
+      "lane": "equations-from-papers",
+      "raw_equation": "0<u_{+}<\\check{u}",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "relational_or_set_statement:<",
+      "free_symbols": []
+    },
+    {
+      "record_index": 470186,
+      "source": "unknown",
+      "page_or_section": "2.3 Illustrations of the effects of the hyper parameters on simulated trajectories",
+      "lane": "phase2_delta",
+      "raw_equation": "t\\in\\{1,...,l\\}",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "relational_or_set_statement:\\in",
+      "free_symbols": []
+    },
+    {
+      "record_index": 114986,
+      "source": "unknown",
+      "page_or_section": "4.3 Swap Function",
+      "lane": "equations-from-papers",
+      "raw_equation": "\\Delta\\tau_{\\text{Out}}=\\rho\\cdot d\\tau_{\\text{In}}",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "unexpected_character:_",
+      "free_symbols": []
+    },
+    {
+      "record_index": 335824,
+      "source": "unknown",
+      "page_or_section": 186,
+      "lane": "phase2_delta",
+      "raw_equation": "\ud835\udefc pi\u2032 (\ud835\udc65; D, \ud835\udf0f) = , (8.22)",
+      "strict_status": "UNPARSEABLE",
+      "probe_status": "UNPARSEABLE",
+      "reason": "unexpected_character:\u2032",
+      "free_symbols": []
+    }
+  ]
+}

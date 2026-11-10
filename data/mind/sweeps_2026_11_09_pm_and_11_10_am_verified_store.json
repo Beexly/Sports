@@ -1,0 +1,186 @@
+{
+  "schema": "gse_verified_discovery_sweeps_store_v1",
+  "wired_at": "2026-11-10T17:40:00Z",
+  "x_for_you_sweep_2026_11_09_pm": {
+    "report_origin_path": "~/workspace/x-for-you-sweep/reports/2026-11-09-PM.md",
+    "count_proof": {
+      "feed_rows_total": 100,
+      "organic_rows": 78,
+      "ads_skipped": 17,
+      "trading_bot_posts_skipped_per_rule": 5,
+      "organic_with_exposed_permalinks": 8,
+      "organic_inventoried_no_id": 70,
+      "watchlist_accounts_queried": 15,
+      "watchlist_accounts_returned": 13,
+      "watchlist_accounts_rate_limited": 2,
+      "watchlist_new_posts": 68,
+      "full_dossiers": 20,
+      "bonus_dossiers": 5
+    },
+    "honest_degradations_preserved": {
+      "feed_permalink_gap": {
+        "exposed_permalink_count": 8,
+        "inventoried_no_id_count": 70,
+        "tag": "INVENTORIED-NO-ID",
+        "backfilled_or_hidden": false
+      },
+      "rate_limited_watchlist_accounts": [
+        {
+          "handle": "SumerSports",
+          "status": "RATE_LIMITED_UNKNOWN_TONIGHT",
+          "marked_nothing_new": false,
+          "morning_retry_queued": true,
+          "hermes_work_order": "HW-5"
+        },
+        {
+          "handle": "run_the_sims",
+          "status": "RATE_LIMITED_UNKNOWN_TONIGHT",
+          "marked_nothing_new": false,
+          "morning_retry_queued": true,
+          "hermes_work_order": "HW-5"
+        }
+      ],
+      "preserved_capture_conflicts": [
+        {
+          "subject": "Jordan Love EPA leaderboard",
+          "conflicting_versions_count": 2,
+          "status": "CAPTURE_CONFLICT_UNRESOLVED",
+          "adopted": false,
+          "resolution_rule": "Verify directly against primary nflfastR Week 9 PBP (HW-5); neither capture adopted."
+        }
+      ]
+    },
+    "wired_technical_signals": {
+      "nflfastr_pr_618": {
+        "repo": "nflverse/nflfastR",
+        "pr_number": 618,
+        "title": "Value EP scoring plays net of the opponent's next possession",
+        "author": "guga31bb",
+        "state_checked_2026_11_10": "open",
+        "formula_wired": "V = a_k + b_k*V + d_k*W; W = a_f + b_f*V + d_f*W; TD_net = 6 + xp - V (5.87 avg in 2026 vs 7.0); FG_net = 3 - V (2.05 avg vs 3.0); Saf_net = 2 + W",
+        "season_2026_kickoff_start_yardline_100": 69,
+        "safety_free_kick_yardline_100": 61,
+        "conversion_value_2026": 0.96,
+        "two_point_make_prob": 0.49,
+        "wired_in_modules": [
+          "intelligence/architecture/unified_quantitative_nfl_architecture.py",
+          "packages/prediction-engine/src/nfl/unified-quantitative-nfl-architecture.ts"
+        ]
+      },
+      "cfbd_opponent_adjusted_line_yards": {
+        "piecewise_carry_weights": {
+          "loss_lt_0_yds": 1.2,
+          "gain_0_to_4_yds": 1.0,
+          "gain_5_to_10_yds": 0.5,
+          "gain_gt_10_yds": 0.0,
+          "max_line_yards_per_carry": 7.0
+        },
+        "opponent_adjustment": "Ridge-regularized offense-vs-defense linear system on per-snap piecewise line yards",
+        "wired_in_modules": [
+          "intelligence/architecture/unified_quantitative_nfl_architecture.py",
+          "intelligence/coaching/ol_provider.py",
+          "intelligence/dfs/conserved_nfl_projection_and_equation_optimizer.py",
+          "packages/prediction-engine/src/nfl/unified-quantitative-nfl-architecture.ts"
+        ]
+      },
+      "source_verified_papers": [
+        {
+          "arxiv_id": "2609.00006",
+          "topic": "Harness Engineering for agent fleet harnesses",
+          "verified_at_primary_source": true
+        },
+        {
+          "arxiv_id": "2611.06500",
+          "topic": "Context / KV compression",
+          "verified_at_primary_source": true
+        },
+        {
+          "arxiv_id": "2611.07854",
+          "topic": "Drex decision models",
+          "verified_at_primary_source": true,
+          "paid_post_discrepancy_caught": "Paid X post misstated Drex model parameter sizes; primary arXiv paper sizes govern."
+        }
+      ]
+    }
+  },
+  "instagram_for_you_sweep_2026_11_10_am": {
+    "source_file": "/home/antigravity/2026-11-10-AM.md",
+    "count_proof": {
+      "feed_positions_seen": 95,
+      "sponsored_ads_excluded": 20,
+      "non_ad_items": 75,
+      "duplicates_skipped": 2,
+      "new_items": 73,
+      "full_dossiers": 20,
+      "inventoried_with_shortcodes": 53,
+      "all_non_ad_shortcodes_preserved": "75/75",
+      "spoken_audio_gap_named": "All 40 opened reels muted with no transcript; black-frame reels explicitly labeled."
+    },
+    "actionable_finds_wired": {
+      "AM_01_claude_fable_5_2_routing_rule": {
+        "models": {
+          "default_workhorse": {
+            "id": "claude-opus-5-5",
+            "input_per_m": 4.0,
+            "output_per_m": 20.0
+          },
+          "escalation_tier": {
+            "id": "claude-fable-5-2",
+            "input_per_m": 8.0,
+            "output_per_m": 40.0
+          }
+        },
+        "paid_plan_extra_usage_window_closes": "2026-11-16",
+        "verdict": "TEST (dispatched to Hermes as HW-4)"
+      },
+      "AM_05_saltline_cached_input_economics": {
+        "reported_input_tokens": 445000000,
+        "reported_output_tokens": 2700000,
+        "input_to_output_ratio": 164.8,
+        "audit_status": "SELF_REPORTED_UNAUDITED",
+        "fleet_doctrine": "Long agent runs are cached-input dominated; enforce context-window boundary discipline."
+      },
+      "AM_11_vs_AM_13_denominator_trust_pair": {
+        "AM_11_braun_ft_streak": {
+          "denominator_present": false,
+          "engine_weight": 0.0,
+          "reason": "Denominator-free broadcast trivia refused until attempt count is verified."
+        },
+        "AM_13_jefferson_wentz_stat_box": {
+          "in_post_graphic": "Justin Jefferson 3 rec / 11 tgts; Carson Wentz 8/25, 81 yds, 0 TD, 2 INT",
+          "official_espn_401873051_verification": {
+            "verified": true,
+            "espn_event_id": "401873051",
+            "final_score": "BUF 23, MIN 6",
+            "justin_jefferson_official": {
+              "rec": 3,
+              "yds": 58,
+              "td": 0,
+              "tgts": 11
+            },
+            "carson_wentz_official": {
+              "comp": 8,
+              "att": 25,
+              "yds": 81,
+              "td": 0,
+              "int": 2
+            },
+            "max_brosmer_relief_official": {
+              "comp": 6,
+              "att": 7,
+              "yds": 58,
+              "td": 0,
+              "int": 0
+            }
+          }
+        }
+      },
+      "AM_20_voyager_vork_headless_3d_engine": {
+        "repo": "https://github.com/voyager-so/vork",
+        "version": "0.1.0",
+        "license_truth": "SOURCE_AVAILABLE_PREVIEW_NOT_OPEN_SOURCE",
+        "verdict": "TEST_STAGED_ON_QUALIFYING_GPU_HOST"
+      }
+    }
+  }
+}

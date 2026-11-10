@@ -1293,6 +1293,24 @@ class BookEquationsToStatsCompiler:
             "books-must-have": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
         }
 
+        gdrive_folder_map_path = MIND_DIR / "gdrive_folder_file_id_map_2026_11_10.json"
+        gdrive_folders: Dict[str, Dict[str, str]] = {}
+        if gdrive_folder_map_path.is_file():
+            try:
+                gdrive_folders = (
+                    json.loads(gdrive_folder_map_path.read_text(encoding="utf-8")).get("folders") or {}
+                )
+            except Exception:
+                gdrive_folders = {}
+
+        sha_counts: Dict[str, int] = {}
+        for b in ms_books_458:
+            sh = str(b.get("sha256", "")).strip()
+            if sh:
+                sha_counts[sh] = sha_counts.get(sh, 0) + 1
+
+        seen_sha_primary: Dict[str, str] = {}
+        drive_id_to_shelf_book_id: Dict[str, str] = {}
         books_503: List[Dict[str, Any]] = []
         for idx, b in enumerate(ms_books_458):
             lane = str(b.get("lane", "books-a-sports"))
@@ -1302,7 +1320,6 @@ class BookEquationsToStatsCompiler:
             else:
                 dom = BOOK_DOMAINS_6[idx % len(BOOK_DOMAINS_6)]
             fname = str(b.get("filename", ""))
-            drive_id = str(b.get("drive_cloud_id") or b.get("drive_id") or "").strip()
             src_loc = str(b.get("source_locator", ""))
             if "(1)" in src_loc:
                 drive_folder_id = LANE_TO_EXTENDED_DRIVE_FOLDER_ID.get(
@@ -1312,20 +1329,40 @@ class BookEquationsToStatsCompiler:
                 drive_folder_id = LANE_TO_PRIMARY_DRIVE_FOLDER_ID.get(
                     lane, "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau"
                 )
+            fallback_drive_id = str(b.get("drive_cloud_id") or b.get("drive_id") or "").strip()
+            drive_id = str(
+                (gdrive_folders.get(drive_folder_id) or {}).get(fname) or fallback_drive_id
+            ).strip()
+            book_id = f"BK-GDRIVE-{idx + 1:03d}"
+            sha_val = str(b.get("sha256", "")).strip()
+            is_sha_dup = False
+            canonical_sha_book_id = book_id
+            if sha_val:
+                if sha_val in seen_sha_primary:
+                    is_sha_dup = True
+                    canonical_sha_book_id = seen_sha_primary[sha_val]
+                else:
+                    seen_sha_primary[sha_val] = book_id
+            if drive_id and drive_id not in drive_id_to_shelf_book_id:
+                drive_id_to_shelf_book_id[drive_id] = book_id
             books_503.append(
                 {
                     "book_index": idx + 1,
-                    "book_id": f"BK-GDRIVE-{idx + 1:03d}",
+                    "book_id": book_id,
                     "lane": lane,
                     "title": str(b.get("title") or Path(fname).stem),
                     "filename": fname,
-                    "sha256": str(b.get("sha256", "")),
+                    "sha256": sha_val,
                     "drive_id": drive_id,
                     "drive_folder_id": drive_folder_id,
                     "drive_url": f"https://drive.google.com/file/d/{drive_id}/view?usp=drivesdk",
                     "operator_domain": dom,
                     "sports_spine_import_permitted": False if is_medical else True,
                     "sports_spine_weight": 0.0 if is_medical else 1.0,
+                    "sha256_group_size": sha_counts.get(sha_val, 1) if sha_val else 1,
+                    "is_sha256_duplicate_copy": is_sha_dup,
+                    "canonical_content_book_id": canonical_sha_book_id,
+                    "is_monograph_citation_alias": False,
                 }
             )
 
@@ -1333,10 +1370,11 @@ class BookEquationsToStatsCompiler:
             num = 458 + idx + 1
             fname = str(d.get("filename", f"gsn_audit_{idx + 1}.docx"))
             drive_id = str(d.get("drive_cloud_id") or d.get("drive_id") or "").strip()
+            book_id = f"BK-GDOCX-{num:03d}"
             books_503.append(
                 {
                     "book_index": num,
-                    "book_id": f"BK-GDOCX-{num:03d}",
+                    "book_id": book_id,
                     "lane": "google_drive_gsn_docx_audit",
                     "title": str(d.get("title") or Path(fname).stem),
                     "filename": fname,
@@ -1347,6 +1385,10 @@ class BookEquationsToStatsCompiler:
                     "operator_domain": BOOK_DOMAINS_6[idx % len(BOOK_DOMAINS_6)],
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
+                    "sha256_group_size": 1,
+                    "is_sha256_duplicate_copy": False,
+                    "canonical_content_book_id": book_id,
+                    "is_monograph_citation_alias": False,
                 }
             )
 
@@ -1372,6 +1414,7 @@ class BookEquationsToStatsCompiler:
             bk_id = f"BK-{m_i:02d}"
             dom = monograph_domains.get(m_i, BOOK_DOMAINS_6[(m_i - 1) % len(BOOK_DOMAINS_6)])
             drive_id, drive_folder_id, mono_title = MONOGRAPH_DRIVE_PROVENANCE[bk_id]
+            alias_target = drive_id_to_shelf_book_id.get(drive_id)
             books_503.append(
                 {
                     "book_index": num,
@@ -1386,6 +1429,10 @@ class BookEquationsToStatsCompiler:
                     "operator_domain": dom,
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
+                    "sha256_group_size": 1,
+                    "is_sha256_duplicate_copy": False,
+                    "canonical_content_book_id": alias_target or bk_id,
+                    "is_monograph_citation_alias": alias_target is not None,
                 }
             )
 
@@ -1393,6 +1440,7 @@ class BookEquationsToStatsCompiler:
             num = 497 + g_i
             gap_id = f"GAP-BK-{g_i:02d}"
             drive_id, drive_folder_id, gap_title = MONOGRAPH_DRIVE_PROVENANCE[gap_id]
+            alias_target = drive_id_to_shelf_book_id.get(drive_id)
             books_503.append(
                 {
                     "book_index": num,
@@ -1407,14 +1455,28 @@ class BookEquationsToStatsCompiler:
                     "operator_domain": BOOK_DOMAINS_6[(g_i - 1) % len(BOOK_DOMAINS_6)],
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
+                    "sha256_group_size": 1,
+                    "is_sha256_duplicate_copy": False,
+                    "canonical_content_book_id": alias_target or gap_id,
+                    "is_monograph_citation_alias": alias_target is not None,
                 }
             )
 
+        non_alias_books = [b for b in books_503 if not b.get("is_monograph_citation_alias")]
         reg_458_payload = {
             "schema_version": self.SCHEMA_VERSION,
             "mega_sweep_458_books_count": len(ms_books_458),
             "deduplicated_472_provenance_count": len(bk_prov.get("entries", [])),
             "complete_503_corpus_books_count": len(books_503),
+            "unique_drive_file_ids_across_472_shelf_and_docx_entries": len(
+                {b["drive_id"] for b in books_503[:472]}
+            ),
+            "unique_drive_file_ids_total": len({b["drive_id"] for b in books_503}),
+            "distinct_sha256_content_books_in_mega_sweep": len(seen_sha_primary),
+            "sha256_duplicate_folder_copies_flagged": sum(
+                1 for b in books_503 if b.get("is_sha256_duplicate_copy")
+            ),
+            "monograph_citation_aliases_flagged": len(books_503) - len(non_alias_books),
             "lane_to_default_domain": lane_to_domain,
             "books_b_medical_quarantine": {
                 "quarantined_count": 68,
