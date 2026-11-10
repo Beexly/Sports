@@ -36,7 +36,7 @@ there.
   restyle a Quanta component (see `references/quanta-design.md` rule 5).
 - **Icons** — Google Material Symbols outlined 400, imported per icon
   (`@material-symbols/svg-400/outlined/<name>.svg?react`). The generate-button
-  sparkle is the branded `@/assets/icon-sparkles-soft.svg?react`.
+  sparkle is the branded `@/workspace/assets/icon-sparkles-soft.svg?react`.
 - **fnf SDK** (`references/fnf-sdk.md`) + **React bindings**
   (`references/fnf-react.md`) — generation jobs, media, profile, workspace,
   credits. `@higgsfield/fnf` ships the SDK core plus ONE bundled adapter:

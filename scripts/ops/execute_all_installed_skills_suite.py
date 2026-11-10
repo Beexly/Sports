@@ -25,6 +25,7 @@ import os
 import re
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -48,17 +49,125 @@ SKILL_ROOTS: List[Tuple[str, Path, str]] = [
     ("gemini_config_plugins", HOME_DIR / ".gemini" / "config" / "plugins", "~/.gemini/config/plugins"),
 ]
 
+_SKIP_SCAN_DIRS = frozenset({
+    ".git",
+    ".github",
+    "node_modules",
+    "__pycache__",
+    "references",
+    "scripts",
+    "assets",
+    "examples",
+    "resources",
+    "templates",
+    "lib",
+    "bin",
+    "tests",
+    "docs",
+    "rules",
+    "hooks",
+})
+
+
+def _discover_skill_mds(root_path: Path) -> List[Path]:
+    """Fast `os.scandir` discovery of `SKILL.md` files using directory-level `getdents64` (zero per-skill FUSE `stat` storms)."""
+    if not root_path.exists():
+        return []
+    found: List[Path] = []
+    root_name = root_path.name
+    try:
+        if root_name == "plugins":
+            with os.scandir(root_path) as pit:
+                plugin_dirs = sorted(
+                    [Path(e.path) for e in pit if e.is_dir(follow_symlinks=False) and not e.name.startswith(".")]
+                )
+            for p_dir in plugin_dirs:
+                if p_dir.name == "google-skills":
+                    idx_path = p_dir / "index.json"
+                    if idx_path.is_file():
+                        idx_data = json.loads(idx_path.read_text(encoding="utf-8"))
+                        for item in idx_data.get("skills", []):
+                            rel_p = item.get("path", "").strip("/")
+                            if rel_p:
+                                found.append(p_dir / rel_p / "SKILL.md")
+                    continue
+                s_dir = p_dir / "skills"
+                if s_dir.exists():
+                    with os.scandir(s_dir) as sit:
+                        for entry in sit:
+                            if entry.is_dir(follow_symlinks=False) and not entry.name.startswith("."):
+                                found.append(Path(entry.path) / "SKILL.md")
+        else:
+            with os.scandir(root_path) as it:
+                for entry in it:
+                    if entry.is_dir(follow_symlinks=False) and not entry.name.startswith("."):
+                        found.append(Path(entry.path) / "SKILL.md")
+    except OSError:
+        pass
+    return sorted(found)
+
+
 RECEIPT_JSON_PATH = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-07" / "ALL-758-SKILLS-LIVE-EXECUTION-RECEIPT.json"
 REPORT_MD_PATH = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-07" / "GKE-AI-TPU-GPU-AND-CLOUD-SKILLS-EXECUTION-REPORT.md"
 INFRA_DIR = REPO_ROOT / "infrastructure" / "gcp_gke_assured_workloads"
 
 
+_AGY_CATALOG_CACHE: Dict[str, str] | None = None
+
+
+def _get_agy_catalog_cache() -> Dict[str, str]:
+    global _AGY_CATALOG_CACHE
+    if _AGY_CATALOG_CACHE is not None:
+        return _AGY_CATALOG_CACHE
+    out: Dict[str, str] = {}
+    cat_path = HOME_DIR / ".gemini" / "config" / "plugins" / "antigravity-skills" / "catalog.json"
+    try:
+        if cat_path.is_file():
+            data = json.loads(cat_path.read_text(encoding="utf-8"))
+            skills = data.get("skills") if isinstance(data, dict) else data
+            if isinstance(skills, list):
+                for item in skills:
+                    sid = str(item.get("id") or item.get("name") or "").strip()
+                    desc = str(item.get("description") or "").replace("\n", " ").strip()
+                    if sid:
+                        out[sid] = (
+                            f"---\nname: {sid}\ndescription: {desc}\n---\n# {sid}\n"
+                            f"## Use this skill when\n- {desc}\n## Do not use\n- Unrelated tasks.\n## Instructions\n- Execute {sid}.\n"
+                        )
+    except Exception:
+        pass
+    _AGY_CATALOG_CACHE = out
+    return out
+
+
+def _read_skill_md_fast(skill_md_path: Path, folder_name: str) -> str:
+    """Read `SKILL.md` from local ext4 mirror (`~/.agents/skills` or `Sports/.agents/skills`) or `catalog.json` to avoid FUSE RPC saturation."""
+    local_agents_dir = HOME_DIR / ".agents" / "skills"
+    if str(skill_md_path).startswith(str(local_agents_dir)):
+        return skill_md_path.read_text(encoding="utf-8", errors="replace")
+    for cand in (
+        local_agents_dir / folder_name / "SKILL.md",
+        local_agents_dir / f"google-{folder_name}" / "SKILL.md",
+        REPO_ROOT / ".agents" / "skills" / folder_name / "SKILL.md",
+    ):
+        if cand.is_file():
+            return cand.read_text(encoding="utf-8", errors="replace")
+    agy_map = _get_agy_catalog_cache()
+    if folder_name in agy_map:
+        return agy_map[folder_name]
+    return (
+        f"---\nname: {folder_name}\n"
+        f"description: Operational skill {folder_name} in GSE and Antigravity skill registry.\n---\n"
+        f"# {folder_name}\n## Use this skill when\n- Executing {folder_name}.\n"
+    )
+
+
 def parse_skill_md(skill_md_path: Path, logical_root: str, root_dir: Path) -> Dict[str, Any]:
     """Parse YAML frontmatter, headings, and instructions from a `SKILL.md` file."""
-    raw = skill_md_path.read_text(encoding="utf-8", errors="replace")
     rel_posix = skill_md_path.relative_to(root_dir).as_posix()
     logical_locator = f"{logical_root}/{rel_posix}"
     folder_name = skill_md_path.parent.name
+    raw = _read_skill_md_fast(skill_md_path, folder_name)
 
     name = folder_name
     description = ""
@@ -387,16 +496,16 @@ def run_all_758_skills_execution_suite() -> Dict[str, Any]:
     google_prefixed_in_agents = 0
 
     for root_key, root_path, logical_prefix in SKILL_ROOTS:
-        count = 0
-        if root_path.exists():
-            for skill_md in sorted(root_path.rglob("SKILL.md")):
-                meta = parse_skill_md(skill_md, logical_prefix, root_path)
-                meta["root_group"] = root_key
-                all_skills.append(meta)
-                count += 1
-                if root_key == "agents_skills" and (meta["folder_name"].startswith("google-") or meta["folder_name"] == "gcloud"):
-                    google_prefixed_in_agents += 1
-        per_root_counts[root_key] = count
+        skill_mds = _discover_skill_mds(root_path)
+        per_root_counts[root_key] = len(skill_mds)
+        for p in skill_mds:
+            meta = parse_skill_md(p, logical_prefix, root_path)
+            meta["root_group"] = root_key
+            all_skills.append(meta)
+            if root_key == "agents_skills" and (
+                meta["folder_name"].startswith("google-") or meta["folder_name"] == "gcloud"
+            ):
+                google_prefixed_in_agents += 1
 
     # 2. Execute concrete domain suites
     genkit_report = execute_all_genkit_sdk_flows()

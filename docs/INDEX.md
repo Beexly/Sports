@@ -51,4 +51,8 @@ commit message — don't invent a bucket.
 | `docs/predictions/` | `docs/predictions/research/2026-11-09/WEEK9-SUNDAY-SETTLEMENT-AND-PROJECTION-AUTOPSY.md` | Week 9 Sunday 13-game settlement ledger (`7-4-0`, `+2.06u`, `3.61` DK Pt MAE) and projection conservation autopsy |
 | `docs/predictions/` | `docs/predictions/research/2026-11-09/MNF-BUF-MIN-FOUNDER-COMMAND-AND-MONETIZATION-PACKET.md` | MNF `BUF @ MIN` founder command packet, conserved player/team projections, and Thaler bundle architecture |
 | `docs/data-sources/` | `docs/data-sources/research/2026-11-07/google-drive-mega-sweep/SKELETON-BOOKS-2026-11-06.md` | 13 Skeleton-Shelf Books (`11` `DRIVE_VERIFIED` + `2` `BLOCKED`/`HTML_ONLY`), 8 Addendum Shelf Audit, and 2 Nov 7 Wayback Retry Closures |
+| `docs/data-sources/` | `docs/data-sources/research/2026-11-07/google-drive-mega-sweep/books-a-sports/INDEX-BOOKS-A-2.md` | Wave Books-A-2 + Garrett's 49 Nov 7 self-added sports analytics & DFS books/monographs in Google Drive folder `1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p` (`79` total files) |
+| `docs/predictions/` | `docs/predictions/research/2026-11-08/cadence_v40_gameday_lock_sun_late_w9.json` | Cadence v4.0 `SUN_LATE` Week 9 T-90 inactives lock refresh and conformal residual diagnostic (`scripts/ops/run_cadence_v40_sun_late_w9.py`) |
+| `docs/predictions/` | `docs/predictions/research/2026-11-07/nova-dossier/` | Consolidated Nova Dossier & Week 9 Game Dossier Surface packet (`2026-11-08-review.md`, `NOVA-REALISM-RESEARCH-PACKET-2026-11-07.md`, `NOVA-UPDATE-V2-2026-11-07.md`, `VOICE-LOCK.md`, `persona-nova-bible.md`, `personality-spec.md`, plus architecture & migration docs) |
+
 

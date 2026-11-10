@@ -10,10 +10,18 @@ from __future__ import annotations
 
 import json
 import math
+import sys
+import types
 from pathlib import Path
 from typing import Any, Dict
 
-import pytest
+try:
+    import pytest  # type: ignore
+except ModuleNotFoundError:
+    _pytest_shim = types.ModuleType("pytest")
+    _pytest_shim.fixture = lambda *args, **kwargs: (lambda fn: fn)  # type: ignore[attr-defined]
+    sys.modules["pytest"] = _pytest_shim
+    pytest = _pytest_shim  # type: ignore
 
 from intelligence.metrics.book_equations_to_stats_compiler import (
     BOOK_DOMAIN_CROSSWALK_PATH,

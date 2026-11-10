@@ -73,7 +73,8 @@
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** The package root, derived from this file's own location so the sweep runs from any cwd. */
@@ -92,16 +93,16 @@ const GATE = "test/mcp-cognitive-router.t14.spec.ts";
 const VITEST = resolve(PKG, "..", "..", "node_modules", "vitest", "vitest.mjs");
 
 /** Where the JSON report lands. */
-const REPORT = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t14_mcp_sweep_report.json";
+const REPORT = join(tmpdir(), "_t14_mcp_sweep_report.json");
 
 /** The lock file, so two sweeps cannot interleave their mutations. */
-const SWEEP_LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t14_mcp_sweep.lock";
+const SWEEP_LOCK = join(tmpdir(), "_t14_mcp_sweep.lock");
 
 /** A lock older than this is stale, however old its PID is. */
 const LOCK_STALE_MS = 30 * 60 * 1000;
 
 /** Where the pristine copies of the mutated files live while the sweep runs. */
-const BACKUP_DIR = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t14_mcp_backup";
+const BACKUP_DIR = join(tmpdir(), "_t14_mcp_backup");
 
 /** The self-test mode, if any. */
 const SELF_TEST = process.env.T14_SWEEP_SELF_TEST ?? "";

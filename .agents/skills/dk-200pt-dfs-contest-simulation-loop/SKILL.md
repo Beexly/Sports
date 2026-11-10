@@ -6,11 +6,12 @@ metadata:
   loop-mode: loop-me
 ---
 
+
 # Two-Wave 200+ Pt DraftKings DFS Contest Simulation & Late-Swap Loop (`loop-me`)
 
 ## Loop Definition
 
-A recurring game-day and pre-lock DraftKings GPP workflow (`intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py` and `python scripts/ops/solve_showdown_dfs_milp.py`) that converts situationally conditioned 10,000-world player trajectory vectors into a 150-lineup MME / high-ceiling portfolio engineered to clear the `200+` DK point threshold and beat realistic opponent field ownership.
+A recurring game-day and pre-lock DraftKings GPP workflow (`intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py` and `python Beexly/Sports/scripts/ops/solve_showdown_dfs_milp.py`) that converts situationally conditioned 10,000-world player trajectory vectors into a 150-lineup MME / high-ceiling portfolio engineered to clear the `200+` DK point threshold and beat realistic opponent field ownership.
 
 ## Use this skill when
 

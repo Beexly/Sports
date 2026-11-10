@@ -1,20 +1,11 @@
 ---
 name: neon-postgres
-description: >-
-  Guides and best practices for working with Lakebase Postgres, the database
-  behind Neon. Covers setup, connection methods and drivers, pooled vs direct
-  connections, branching, schema migrations, autoscaling, scale-to-zero, instant
-  restore, read replicas, connection pooling, IP allow lists, and logical
-  replication.
-  Use when users ask about "Lakebase Postgres", "Neon setup", "connect to Neon",
-  "Neon project", "DATABASE_URL", "serverless Postgres", "Neon CLI", "neon", "Neon MCP",
-  "Neon Auth", "@neondatabase/serverless", "@neondatabase/neon-js",
-  "scale to zero", "Neon autoscaling", "Neon read replica",
-  "Neon connection pooling", or "schema migrations".
+description: Guides and best practices for working with Lakebase Postgres, the database behind Neon. Covers setup, connection methods and drivers, pooled vs direct connections, branching, schema migrations, autoscaling, scale-to-zero, instant restore, read replicas, connection pooling, IP allow lists, and logical replication. Use when users ask about "Lakebase Postgres", "Neon setup", "connect to Neon", "Neon project", "DATABASE_URL", "serverless Postgres", "Neon CLI", "neon", "Neon MCP", "Neon Auth", "@neondatabase/serverless", "@neondatabase/neon-js", "scale to zero", "Neon autoscaling", "Neon read replica", "Neon connection pooling", or "schema migrations".
 metadata:
   parent: neon
   source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon-postgres
 ---
+
 
 **FIRST**: Use the parent `neon` skill for a Neon overview, getting started with Neon, Neon development best practices, and more.
 

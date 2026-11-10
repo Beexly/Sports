@@ -94,7 +94,7 @@ Anything these don't cover, build your own component from Quanta primitives
 - **Buttons** — the GENERATE action is always Quanta `variant="marketingPrimary"`
   (the 3D lime CTA) with the credit cost INSIDE the button as
   `{label} {sparkles icon} {credits}` — the sparkle is the branded asset
-  `@/assets/icon-sparkles-soft.svg?react` at 14px, and the credits number
+  `@/workspace/assets/icon-sparkles-soft.svg?react` at 14px, and the credits number
   inherits the button label's font (never smaller/other). Quanta variant colors
   do NOT follow the names: `primary` = flat LIME, `secondary` = solid WHITE,
   `tertiary` = dark white/10 glass. Ordinary/nav actions use the dark

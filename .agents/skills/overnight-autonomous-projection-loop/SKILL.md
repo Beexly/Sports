@@ -6,6 +6,7 @@ metadata:
   loop-mode: loop-me
 ---
 
+
 # Overnight Autonomous Projection, 07:30 AM CST Fresh-Pull & Live Email Dispatch Loop (`loop-me`)
 
 ## Loop Definition
@@ -22,7 +23,7 @@ A non-stop overnight engineering, ingestion, optimization, and stress-testing wo
 
 - Publishing live production projections, call sheets, or morning email dispatches prior to `07:30 AM CST` (`not_before_0730_cst: true` is strictly enforced).
 - Running isolated single-paper ingestion or post-game settlement grading outside the overnight-to-morning production cycle.
-- Bypassing `node scripts/trust-gate.mjs`, `node apps/mobile/scripts/lint-rules.js`, or the 10-charge forensic regression suite.
+- Bypassing `node Beexly/Sports/scripts/trust-gate.mjs`, `node apps/mobile/Beexly/Sports/scripts/lint-rules.js`, or the 10-charge forensic regression suite.
 
 ## Instructions
 
@@ -37,7 +38,7 @@ A non-stop overnight engineering, ingestion, optimization, and stress-testing wo
 1. **Phase A — Non-Stop Overnight Engineering & Hardening (`Until 07:30 AM CST`):**
    - Ingest and wire all corpus waves (48,610+ corpus records, 21,419 compiled AST equations across 279 families, 22 proprietary GSE metrics `M-GSE-01..M-GSE-22`, 95 PacktPublishing repositories, `bojieli/ai-agent-book`, NFL Win Probability / Blown-Lead Pathwise Calibration / 29-Chapter Fantasy Textbook / 38 Sports Medicine RTP studies, and 420+ Open-Access CS/Math/ML books).
    - Continuously run the 9-model worker fleet (`Inkling 2`, `Inkling Small 2`, `DeepSeek V3.2`, `GLM-5.1`, `GLM-5-Turbo`, `Grok 4.20 Beta`, `Grok 4.1 Fast`, `MiMo-V2-Pro`, `MiniMax M2.7`) across multi-slate `200+` Pt DraftKings DFS simulations and 10-charge regression gates (`10/10 PASS`, `9/9 ARMED`).
-2. **Phase B — `07:30 AM CST` Fresh Data Pull (`python scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py`):**
+2. **Phase B — `07:30 AM CST` Fresh Data Pull (`python Beexly/Sports/scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py`):**
    - At `07:30 AM CST`, pull fresh NFL active injuries/rosters (`data/nflverse/injuries_2026.csv`), live stadium weather forecasts, fresh DraftKings salaries/ownership/propBets (`~1,800+` props / `77+` markets per game), and live sportsbook lines under the Odds API credit governor.
 3. **Phase C — `07:30 AM CST` Entire Process From Scratch:**
    - Re-run the entire pipeline from scratch on the fresh `07:30 AM CST` data:
@@ -46,7 +47,7 @@ A non-stop overnight engineering, ingestion, optimization, and stress-testing wo
      - **Stage 4:** Conformal calibration (`market_calibration_heads_2026.json`), Blown-Lead Pathwise Calibration (`arXiv:2602.10784v1`), and FWL market residualization.
      - **Stage 5:** Class B De-Vig, `-250` / `-300+` Heavy-Juice Firewall, 5-Stage Conjunction Gate (`PASS` discipline), and Two-Wave `200+` Pt DraftKings DFS Contest Simulation (`120` candidates vs. `500` QRE opponent field lineups across `10,000` worlds).
 4. **Phase D — Post-`07:30 AM CST` Live Publication & Email Delivery:**
-   - Verify `node scripts/trust-gate.mjs`, `node apps/mobile/scripts/lint-rules.js`, `python scripts/wiring/run_charge_regression_suite.py` (`10/10 PASS`), and `python scripts/wiring/verify_armed_workflows.py --check-armed` (`9/9 ARMED`).
+   - Verify `node Beexly/Sports/scripts/trust-gate.mjs`, `node apps/mobile/Beexly/Sports/scripts/lint-rules.js`, `python Beexly/Sports/scripts/wiring/run_charge_regression_suite.py` (`10/10 PASS`), and `python Beexly/Sports/scripts/wiring/verify_armed_workflows.py --check-armed` (`9/9 ARMED`).
    - Make everything live (strictly `>= 07:30 AM CST`, never before) and send the complete morning brief, 360-degree projections, signed call sheet, and `200+` Pt DraftKings DFS lineup portfolio directly to Garrett via email.
 
 ### 3. Checkpoint & Brief Delivery

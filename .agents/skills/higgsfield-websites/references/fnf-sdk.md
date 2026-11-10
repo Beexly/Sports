@@ -389,7 +389,7 @@ clients, and let `createWorkflowPlatformAdapter` send the correct operation:
 | job list/feed | `GET /jobs?gen_type=...&size=...` |
 | media get/list | `GET /jobs/media/{id}` / `GET /jobs/media?...` |
 | Element get/list | `GET /reference-elements/{id}` / `GET /reference-elements?...` |
-| character train/read | `POST /custom-references` / `GET /custom-references/{id}` |
+| character train/read | `POST /custom-references` / `GET /custom-workspace/references/{id}` |
 | realtime edit/cost/finalize | `POST /realtime/chain/edit` / `POST /realtime/chain/cost` / `POST /realtime/chain/finalize` |
 | saved style list/create | `GET /realtime/custom-styles` / `POST /realtime/custom-styles` |
 | saved style update/delete | `PATCH /realtime/custom-styles/{id}` / `DELETE /realtime/custom-styles/{id}` |

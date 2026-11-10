@@ -522,17 +522,63 @@ let SWEEP_RESULT: { code: number; output: string } | null = null;
  */
 function runSweep(): { code: number; output: string } {
   if (SWEEP_RESULT) return SWEEP_RESULT;
+  const fsMod = process.getBuiltinModule("node:fs") as typeof import("node:fs");
+  const osMod = process.getBuiltinModule("node:os") as typeof import("node:os");
+  const pathMod = process.getBuiltinModule("node:path") as typeof import("node:path");
+  const localVitest = pathMod.resolve(PKG, "../../node_modules/vitest/vitest.mjs");
+  const nodePaths = (process.env.NODE_PATH ?? "").split(pathMod.delimiter).filter(Boolean);
+  let resolvedVitest = "../../node_modules/vitest/vitest.mjs";
+  if (!fsMod.existsSync(localVitest)) {
+    const npxRoot = pathMod.join(osMod.homedir(), ".npm", "_npx");
+    try {
+      for (const entry of fsMod.readdirSync(npxRoot, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const nm = pathMod.join(npxRoot, entry.name, "node_modules");
+        const candidate = pathMod.join(nm, "vitest", "vitest.mjs");
+        if (fsMod.existsSync(candidate)) {
+          resolvedVitest = candidate;
+          nodePaths.push(nm);
+          break;
+        }
+      }
+    } catch {
+      // Ignore missing ~/.npm/_npx directory.
+    }
+  }
+  const scratchDir = osMod.tmpdir().replace(/\\/g, "/");
+  const rawSweepSource = readFileSync(resolve(PKG, SWEEP_REL), "utf8");
+  const runnerSource = rawSweepSource
+    .replaceAll(
+      '"../../node_modules/vitest/vitest.mjs"',
+      JSON.stringify(resolvedVitest),
+    )
+    .replace(
+      /[A-Z]:\/[^\s"']+\/scratch/g,
+      scratchDir,
+    );
+  const runnerPath = pathMod.join(
+    osMod.tmpdir(),
+    `_mutation_sweep_t6_red_team_runner_${process.pid}.mjs`,
+  );
+  fsMod.writeFileSync(runnerPath, runnerSource, "utf8");
   try {
-    const output = execFileSync(process.execPath, [resolve(PKG, SWEEP_REL)], {
+    const output = execFileSync(process.execPath, [runnerPath], {
       encoding: "utf8",
       cwd: PKG,
       stdio: ["ignore", "pipe", "pipe"],
-      env: { ...process.env, T6_SWEEP_CHILD: "0" },
+      env: {
+        ...process.env,
+        NODE_PATH: nodePaths.join(pathMod.delimiter),
+        T6_SWEEP_CHILD: "0",
+      },
     });
     SWEEP_RESULT = { code: 0, output };
   } catch (error) {
     const e = error as { status?: number; stdout?: string; stderr?: string };
     SWEEP_RESULT = { code: e.status ?? 1, output: `${e.stdout ?? ""}${e.stderr ?? ""}` };
+  } finally {
+    fsMod.rmSync(runnerPath, { force: true });
+    fsMod.rmSync(pathMod.join(PKG, "C:"), { recursive: true, force: true });
   }
   return SWEEP_RESULT;
 }

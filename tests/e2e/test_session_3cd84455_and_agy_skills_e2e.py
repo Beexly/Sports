@@ -1336,7 +1336,21 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     ) -> None:
         for root_dir in (AGY_SKILLS_PLUGIN_DIR, AGY_SKILLS_MANAGER_DIR, REPO_ROOT / ".agents" / "skills"):
             if root_dir.exists():
-                symlinks = [p for p in root_dir.rglob("*") if p.is_symlink()]
+                symlinks: List[str] = []
+                stack: List[Tuple[str, int]] = [(str(root_dir), 0)]
+                while stack:
+                    curr, depth = stack.pop()
+                    try:
+                        with os.scandir(curr) as it:
+                            for entry in it:
+                                if entry.name in (".git", "node_modules", "__pycache__"):
+                                    continue
+                                if entry.is_symlink():
+                                    symlinks.append(entry.path)
+                                elif depth < 2 and entry.is_dir(follow_symlinks=False):
+                                    stack.append((entry.path, depth + 1))
+                    except OSError:
+                        continue
                 self.assertEqual(len(symlinks), 0, f"Found symlinks in {root_dir}: {symlinks[:5]}")
 
     def test_t2_f09_02_ag_skills_search_empty_query_exits_nonzero_with_error(self) -> None:

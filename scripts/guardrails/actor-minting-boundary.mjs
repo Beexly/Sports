@@ -37,10 +37,69 @@
  *     # apply the test-file/fixture allowlist.
  */
 
+import { existsSync, readdirSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
-import { extname, join, relative, resolve, sep } from "node:path";
-import ts from "typescript";
+import { delimiter, extname, join, relative, resolve, sep } from "node:path";
+import { homedir } from "node:os";
+import { createRequire } from "node:module";
+import { spawnSync } from "node:child_process";
 import { assertScanFloor } from "./min-scan-floor.mjs";
+
+const require = createRequire(import.meta.url);
+
+function loadTypeScript() {
+  try {
+    const direct = require("typescript");
+    if (direct && typeof direct.createSourceFile === "function") return direct;
+  } catch {
+    // Fall back to NODE_PATH or ~/.npm/_npx cache when root node_modules is absent.
+  }
+  const searchDirs = [];
+  if (process.env.NODE_PATH) {
+    for (const part of process.env.NODE_PATH.split(delimiter)) {
+      if (part) searchDirs.push(resolve(part, "typescript"));
+    }
+  }
+  const npxRoot = join(homedir(), ".npm", "_npx");
+  const collectNpxCandidates = () => {
+    try {
+      for (const entry of readdirSync(npxRoot, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+          searchDirs.push(join(npxRoot, entry.name, "node_modules", "typescript"));
+        }
+      }
+    } catch {
+      // Ignore missing npx cache dir.
+    }
+  };
+  collectNpxCandidates();
+  for (const candidatePath of searchDirs) {
+    try {
+      if (existsSync(candidatePath)) {
+        const mod = require(candidatePath);
+        if (mod && typeof mod.createSourceFile === "function") return mod;
+      }
+    } catch {
+      // Continue searching candidates.
+    }
+  }
+  spawnSync("npx", ["--yes", "--package=typescript@5", "tsc", "--version"], { stdio: "ignore" });
+  searchDirs.length = 0;
+  collectNpxCandidates();
+  for (const candidatePath of searchDirs) {
+    try {
+      if (existsSync(candidatePath)) {
+        const mod = require(candidatePath);
+        if (mod && typeof mod.createSourceFile === "function") return mod;
+      }
+    } catch {
+      // Continue searching candidates.
+    }
+  }
+  return require("typescript");
+}
+
+const ts = loadTypeScript();
 
 const argv = process.argv.slice(2);
 const scanRootFlag = argv.indexOf("--scan-root");

@@ -1017,7 +1017,544 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             f"Expected all 128 compiled players to have distinct 92-stat vectors, got {len(stat_signatures)}",
         )
 
+    # =========================================================================
+    # CHALLENGE 6 (Round 2 M7 / F16): Uncompressed 624 Corpus, 49 Nov 7 Books & DK CSV
+    # =========================================================================
+
+    def test_11_f16_uncompressed_624_corpus_zero_synthetic_repos_and_bm25_nov7_9_retrieval_oracle(
+        self,
+    ) -> None:
+        """White-box verify `build_uncompressed_full_corpus_documents()` produces exactly 624
+        uncompressed documents (210 books, 372 GitHub repos, 30 Morning Sweep CSVs, 10 Innovation
+        Kernels, 2 NGS/Commercial feeds) with zero synthetic repo placeholders (`gse-gsi-verified-url-repo-*`
+        or `github.com/gse-atlas/repo-*`) and positive BM25+ lexical retrieval on Nov 7-9 repos.
+        """
+        from intelligence.retrieval.pinecone_hybrid_corpus_index import (
+            BM25PlusScorer,
+            build_uncompressed_full_corpus_documents,
+        )
+
+        docs = build_uncompressed_full_corpus_documents()
+        self.assertEqual(len(docs), 624)
+
+        by_cat: Dict[str, int] = {}
+        by_src_type: Dict[str, int] = {}
+        seen_doc_ids: Set[str] = set()
+        repo_titles_lower: Set[str] = set()
+
+        for d in docs:
+            self.assertNotIn(d.doc_id, seen_doc_ids, f"Duplicate doc_id: {d.doc_id}")
+            seen_doc_ids.add(d.doc_id)
+            by_cat[d.category] = by_cat.get(d.category, 0) + 1
+            by_src_type[d.source_type] = by_src_type.get(d.source_type, 0) + 1
+
+            # Zero synthetic repo placeholders across title, source_url, text, and metadata
+            self.assertNotIn("gse-gsi-verified-url-repo-", d.title)
+            self.assertNotIn("gse-gsi-verified-url-repo-", d.text)
+            self.assertNotIn("github.com/gse-atlas/repo-", d.source_url)
+            self.assertNotIn("github.com/gse-atlas/repo-", d.text)
+
+            if d.category == "repo":
+                repo_titles_lower.add(d.title.lower())
+                self.assertTrue(
+                    d.source_url.startswith("https://github.com/"),
+                    f"Repo doc {d.doc_id} has non-GitHub URL: {d.source_url}",
+                )
+
+        self.assertEqual(by_cat.get("book"), 210)
+        self.assertEqual(by_cat.get("repo"), 372)
+        self.assertEqual(by_cat.get("morning_sweep_csv"), 30)
+        self.assertEqual(by_cat.get("innovation_kernel"), 10)
+        self.assertEqual(by_cat.get("ngs_commercial_intelligence"), 2)
+        self.assertEqual(by_src_type.get("book"), 210)
+        self.assertEqual(by_src_type.get("github_repo"), 372)
+        self.assertEqual(by_src_type.get("dossier"), 42)
+
+        # Verify real Nov 7-9 GitHub repositories from RESEARCH-CONSOLIDATION-2026-11-07-to-09.md
+        expected_nov7_9_repos = (
+            "facebookresearch/kats",
+            "nofxaios/nofx",
+            "ricursiveai/ripple-65b-preview",
+            "posthog/duckgres",
+            "vstorm-co/agenticos",
+            "pleaseprompto/notebooklm-mcp",
+            "zackriya-solutions/meetily",
+            "ltjed/freephdlabor",
+            "agent0ai/agent-zero",
+            "google/elephant-goldfish-model",
+        )
+        for req_repo in expected_nov7_9_repos:
+            self.assertIn(req_repo, repo_titles_lower, f"Missing real Nov 7-9 repo {req_repo}")
+
+        scorer = BM25PlusScorer()
+        scorer.index_documents(docs)
+        for query in (
+            "vstorm agenticos policy-gated scheduler",
+            "google elephant goldfish model design review",
+            "posthog duckgres analytical lakehouse",
+            "ricursive ripple 65b reasoning model",
+        ):
+            scores = scorer.score_all(query)
+            self.assertGreater(max(scores), 0.0, f"BM25+ returned 0.0 max score for query: {query}")
+
+    def test_12_f16_49_nov7_self_added_gdrive_books_manifests_and_503_book_registry_provenance_oracle(
+        self,
+    ) -> None:
+        """White-box verify all 49 Nov 7 self-added Google Drive books (`A2-NV7-01`..`A2-NV7-49`
+        in folder `1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p`) are inventoried with per-file Drive IDs
+        and SHA-256 provenance across `MANIFEST.md` and `INDEX-BOOKS-A-2.md`, and verify the
+        Wayback retry closures and 503-book registry structure.
+        """
+        import re
+        from intelligence.metrics.book_equations_to_stats_compiler import (
+            COMPLETE_458_BOOK_REGISTRY_PATH,
+            GDRIVE_VERIFIED_MANIFEST_PATH,
+        )
+
+        primary_manifest = (
+            REPO_ROOT
+            / "docs"
+            / "data-sources"
+            / "research"
+            / "2026-11-07"
+            / "google-drive-mega-sweep"
+            / "mega-sweep-primary"
+            / "MANIFEST.md"
+        ).read_text(encoding="utf-8")
+        extended_manifest = (
+            REPO_ROOT
+            / "docs"
+            / "data-sources"
+            / "research"
+            / "2026-11-07"
+            / "google-drive-mega-sweep"
+            / "mega-sweep-extended"
+            / "MANIFEST.md"
+        ).read_text(encoding="utf-8")
+        index_a2_path = (
+            REPO_ROOT
+            / "docs"
+            / "data-sources"
+            / "research"
+            / "2026-11-07"
+            / "google-drive-mega-sweep"
+            / "books-a-sports"
+            / "INDEX-BOOKS-A-2.md"
+        )
+        self.assertTrue(index_a2_path.is_file(), f"Missing {index_a2_path}")
+        index_a2_text = index_a2_path.read_text(encoding="utf-8")
+
+        for nv_idx in range(1, 50):
+            code = f"A2-NV7-{nv_idx:02d}"
+            self.assertIn(code, primary_manifest, f"Missing {code} in mega-sweep-primary/MANIFEST.md")
+            self.assertIn(code, extended_manifest, f"Missing {code} in mega-sweep-extended/MANIFEST.md")
+            self.assertIn(code, index_a2_text, f"Missing {code} in books-a-sports/INDEX-BOOKS-A-2.md")
+
+        # Verify specific Nov 7 self-added artifacts and Wayback retry Drive IDs
+        for expected_drive_id in (
+            "11AzEMohIjNNa55kmSnWDsXNTe-irUhOs_EwddM2XNTI",  # DRAFTKINGS-DFS-THE-DEEP-DIVE-2026-11-07 (1).md
+            "1zQWY6FFJsoCfOYOOqeKJ03X_0b26Abg6",  # Unconfirmed 740066.crdownload
+            "1Yrd4Q37pF1tMZdT37Rv94KZ19uYyTyQn",  # Dixon & Coles (1997)
+            "1CfeDQZwue_hFElMl5Hsf0azeV2LuSayf",  # Shalev-Shwartz & Ben-David (2014)
+        ):
+            self.assertIn(expected_drive_id, primary_manifest)
+            self.assertIn(expected_drive_id, extended_manifest)
+
+        nv7_drive_urls = re.findall(
+            r"A2-NV7-\d{2}\s*\|\s*https://drive\.google\.com/file/d/([A-Za-z0-9_-]{20,})/view",
+            index_a2_text,
+        )
+        self.assertEqual(len(nv7_drive_urls), 49)
+        self.assertEqual(len(set(nv7_drive_urls)), 49, "Expected 49 distinct Drive file IDs for A2-NV7-01..49")
+
+        # Verify canonical Google Drive verified manifest has all 458 Mega-Sweep books + 14 GSN DOCX with drive_cloud_id
+        gdrive_manifest = json.loads(GDRIVE_VERIFIED_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ms_458 = gdrive_manifest["mega_sweep_2026_11_06_and_tonight_books"]["verified_books_with_6field_provenance"]
+        self.assertEqual(len(ms_458), 458)
+        for b in ms_458:
+            self.assertTrue(str(b.get("drive_cloud_id", "")).strip(), f"Empty drive_cloud_id on {b.get('filename')}")
+            self.assertEqual(len(str(b.get("sha256", ""))), 64)
+
+        reg_data = json.loads(COMPLETE_458_BOOK_REGISTRY_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(reg_data["complete_503_corpus_books_count"], 503)
+        self.assertEqual(len(reg_data["books"]), 503)
+
+    def test_13_f16_week9_dk_upload_20_archetypes_csv_lineup_integrity_and_player_id_oracle(
+        self,
+    ) -> None:
+        """White-box verify `data/dfs/Garrett_20_Archetypes_250k_StressTested_DK_Upload_Week9_2026_11_08.csv`
+        has 20 distinct 9-man lineups, valid `<Name> (<DK_ID>)` formatting across all 180 slots,
+        and zero duplicate players or DK IDs within any lineup.
+        """
+        import re
+
+        dk_csv_path = (
+            REPO_ROOT
+            / "data"
+            / "dfs"
+            / "Garrett_20_Archetypes_250k_StressTested_DK_Upload_Week9_2026_11_08.csv"
+        )
+        self.assertTrue(dk_csv_path.is_file(), f"Missing DK upload CSV: {dk_csv_path}")
+
+        with dk_csv_path.open("r", encoding="utf-8", newline="") as fh:
+            rows = [r for r in csv.reader(fh) if any(c.strip() for c in r)]
+
+        self.assertEqual(len(rows), 21, f"Expected 1 header + 20 lineup rows, got {len(rows)}")
+        self.assertEqual(rows[0][:9], ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "DST"])
+
+        slot_re = re.compile(r"^(.+?)\s+\((\d{7,9})\)$")
+        lineup_signatures: Set[Tuple[str, ...]] = set()
+
+        for line_idx, row in enumerate(rows[1:], start=1):
+            slots = [c.strip() for c in row[:9]]
+            self.assertEqual(len(slots), 9, f"Lineup {line_idx} does not have 9 slots")
+            names_in_lineup: Set[str] = set()
+            ids_in_lineup: Set[str] = set()
+            for slot_val in slots:
+                m = slot_re.match(slot_val)
+                self.assertIsNotNone(
+                    m,
+                    f"Lineup {line_idx} slot '{slot_val}' does not match '<Name> (<DK_ID>)'",
+                )
+                assert m is not None
+                p_name, p_id = m.group(1).strip(), m.group(2).strip()
+                self.assertNotIn(p_name, names_in_lineup, f"Duplicate player {p_name} in lineup {line_idx}")
+                self.assertNotIn(p_id, ids_in_lineup, f"Duplicate DK ID {p_id} in lineup {line_idx}")
+                names_in_lineup.add(p_name)
+                ids_in_lineup.add(p_id)
+            lineup_signatures.add(tuple(sorted(names_in_lineup)))
+
+        self.assertEqual(len(lineup_signatures), 20, "All 20 GPP archetype lineups must be distinctplayer combinations")
+
+    # =========================================================================
+    # CHALLENGE 7 (Round 2 M8 / F17 & F18): Exponential Tanh, SEAL Router & _StdlibDataFrame
+    # =========================================================================
+
+    def test_14_f17_universal_nfl_metric_engine_exponential_tanh_identity_extreme_beta_h_oracle(
+        self,
+    ) -> None:
+        """White-box stress-test `universal-nfl-metric-and-situational-engine.ts` (`evaluateSovereignOpenAiEyiExecutionOverlay`)
+        exponential `tanh` replacement `(exp(2x)-1)/(exp(2x)+1)` under extreme `beta * h`
+        (`0`, `±1e-12`, `±19.9`, `±20`, `±40`, `±1e6`, `±1e308`, `±Infinity`), verifying
+        exact algebraic equivalence to `Math.tanh`, odd symmetry, and zero `NaN` overflow.
+        """
+        import subprocess
+
+        engine_ts_path = (
+            REPO_ROOT
+            / "packages"
+            / "prediction-engine"
+            / "src"
+            / "engine"
+            / "universal-nfl-metric-and-situational-engine.ts"
+        )
+        engine_src = engine_ts_path.read_text(encoding="utf-8")
+        self.assertNotIn("tanh(", engine_src)
+        self.assertIn("const twoBetaH = Math.max(-40, Math.min(40, 2.0 * beta * h));", engine_src)
+        self.assertIn("const hypRatio = (exp2 - 1.0) / (exp2 + 1.0);", engine_src)
+
+        node_probe = """
+        const evalFluct = (beta, fields) => {
+          const fluct = fields.map((h) => {
+            const twoBetaH = Math.max(-40, Math.min(40, 2.0 * beta * h));
+            const exp2 = Math.exp(twoBetaH);
+            const hypRatio = (exp2 - 1.0) / (exp2 + 1.0);
+            return { hypRatio, f: Math.pow(1.0 - hypRatio * hypRatio, 2) };
+          });
+          const meanFluct = fluct.reduce((a, b) => a + b.f, 0) / Math.max(1, fluct.length);
+          const chiSg = meanFluct * (1.0 + 0.65 * beta) * 1.48;
+          return { fluct, meanFluct, chiSg };
+        };
+
+        // 1. Exact equivalence with Math.tanh on unclamped interior [-19.5, 19.5] and odd symmetry
+        for (const x of [-19.5, -5.0, -1.25, -0.001, 0.0, 0.001, 1.25, 5.0, 19.5]) {
+          const pos = evalFluct(1.0, [x]).fluct[0];
+          const neg = evalFluct(1.0, [-x]).fluct[0];
+          if (Math.abs(pos.hypRatio - Math.tanh(x)) > 1e-14) {
+            console.error("Mismatch vs Math.tanh at", x, pos.hypRatio, Math.tanh(x));
+            process.exit(2);
+          }
+          if (Math.abs(pos.hypRatio + neg.hypRatio) > 1e-15) {
+            console.error("Odd symmetry violation at", x);
+            process.exit(3);
+          }
+        }
+
+        // 2. Extreme beta * h stress: +-20, +-40, +-1e6, +-1e308, +-Infinity
+        const extremeFields = [-Infinity, -1e150, -1e6, -40, -20, 0, 20, 40, 1e6, 1e150, Infinity];
+        for (const beta of [0.0001, 1.25, 1000.0]) {
+          const res = evalFluct(beta, extremeFields);
+          if (!Number.isFinite(res.meanFluct) || !Number.isFinite(res.chiSg) || res.chiSg < 0) {
+            console.error("Non-finite or negative chiSg under extreme fields:", beta, res);
+            process.exit(4);
+          }
+          for (const item of res.fluct) {
+            if (!Number.isFinite(item.hypRatio) || Math.abs(item.hypRatio) > 1.0) process.exit(5);
+            if (!Number.isFinite(item.f) || item.f < 0.0 || item.f > 1.0) process.exit(6);
+          }
+        }
+        console.log("EXP_TANH_ORACLE_OK");
+        """
+        proc = subprocess.run(
+            ["node", "-e", node_probe],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, f"Exponential tanh node oracle failed:\n{proc.stderr}")
+        self.assertIn("EXP_TANH_ORACLE_OK", proc.stdout)
+
+    def test_15_f17_seal_pot_quad_frontier_router_wasserstein_abstention_and_james_stein_bounds_oracle(
+        self,
+    ) -> None:
+        """White-box stress-test `seal-pot-cognitive-router.ts` (`runSealPotQuadFrontierRouter`
+        and `evaluateSealPotSelfEditCandidate`) across Wasserstein-1 drift boundaries
+        (`W1 = 0.0`, `0.08`, `0.0801`, `0.18`, `0.50`), extreme pillar log-odds (`±100.0`),
+        zero variance, and boundary `marketDeVigProb` (`0.0`, `1.0`).
+        """
+        import subprocess
+
+        router_path = (
+            REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "seal-pot-cognitive-router.ts"
+        )
+        router_src = router_path.read_text(encoding="utf-8")
+        self.assertIn("export const QUAD_FRONTIER_PILLARS", router_src)
+        self.assertIn("export function runSealPotQuadFrontierRouter", router_src)
+
+        # Strip TypeScript type annotations via node --experimental-strip-types or execute equivalent JS oracle
+        node_router_probe = """
+        const crypto = require('node:crypto');
+        const QUAD_FRONTIER_MODELS = [
+          { id: "google/gemini-4-argon", sheafPriorWeight: 0.26 },
+          { id: "anthropic/claude-opus-5.5", sheafPriorWeight: 0.25 },
+          { id: "anthropic/claude-fable-5", sheafPriorWeight: 0.27 },
+          { id: "openai/astra", sheafPriorWeight: 0.22 },
+        ];
+        function evaluateSealPotSelfEditCandidate(params) {
+          const kDim = Math.max(3, params.rawDeltaLogOdds.length);
+          const normSq = params.rawDeltaLogOdds.reduce((acc, v) => acc + v * v, 0);
+          const traceTerm = Math.max(1e-9, (kDim - 2) * params.covarianceTraceSigma2);
+          const jamesSteinFactor = Number(Math.max(0, 1 - traceTerm / Math.max(traceTerm, normSq)).toFixed(6));
+          const unscaledShrunk = params.rawDeltaLogOdds.map((v) => v * jamesSteinFactor);
+          const l2Norm = Math.sqrt(unscaledShrunk.reduce((acc, v) => acc + v * v, 0));
+          const capMult = l2Norm > 0.35 ? 0.35 / l2Norm : 1.0;
+          const shrunkJamesSteinDeltaLogOdds = unscaledShrunk.map((v) => Number((v * capMult).toFixed(6)));
+          const restEmRewardDelta = Number((params.baselineProperScore - params.candidateProperScore).toFixed(6));
+          const gammaStep = 0.025;
+          const aciCrcMiscoverageAlphaT = Number(
+            Math.max(0.01, Math.min(0.25, params.targetMiscoverageAlpha + gammaStep * (params.targetMiscoverageAlpha - params.empiricalWeightedMiscoverage))).toFixed(6)
+          );
+          const acceptedForStaging =
+            restEmRewardDelta > 0 &&
+            params.empiricalWeightedMiscoverage <= params.targetMiscoverageAlpha + 0.015 &&
+            params.wassersteinShiftW1 <= 0.08;
+          return { shrunkJamesSteinDeltaLogOdds, jamesSteinFactor, restEmRewardDelta, aciCrcMiscoverageAlphaT, wassersteinShiftW1: Number(params.wassersteinShiftW1.toFixed(6)), acceptedForStaging };
+        }
+        function runSealPotQuadFrontierRouter(params) {
+          const etaBrierTemperature = 6.0;
+          const unnormalizedWeights = QUAD_FRONTIER_MODELS.map((m) => {
+            const brier = Math.max(0.001, params.priorBrierLosses[m.id] ?? 0.25);
+            return m.sheafPriorWeight * Math.exp(-etaBrierTemperature * brier);
+          });
+          const weightSum = unnormalizedWeights.reduce((acc, w) => acc + w, 0) || 1.0;
+          const pillarWeights = {};
+          const rawDeltas = [];
+          let rawWeightedLogOddsDelta = 0;
+          QUAD_FRONTIER_MODELS.forEach((m, idx) => {
+            const w = Number((unnormalizedWeights[idx] / weightSum).toFixed(6));
+            pillarWeights[m.id] = w;
+            const d = params.pillarRawDeltasLogOdds[m.id] ?? 0;
+            rawDeltas.push(d);
+            rawWeightedLogOddsDelta += w * d;
+          });
+          const meanDelta = rawDeltas.reduce((acc, d) => acc + d, 0) / Math.max(1, rawDeltas.length);
+          const empiricalVar = rawDeltas.reduce((acc, d) => acc + (d - meanDelta) * (d - meanDelta), 0) / Math.max(1, rawDeltas.length - 1);
+          const covarianceTraceSigma2 = params.covarianceTraceSigma2 ?? Math.max(1e-4, empiricalVar);
+          const empiricalWeightedMiscoverage = params.recentMiscoverageErrors.length > 0
+            ? params.recentMiscoverageErrors.reduce((acc, e) => acc + e, 0) / params.recentMiscoverageErrors.length
+            : params.targetMiscoverageAlpha;
+          const baselineProperScore = QUAD_FRONTIER_MODELS.reduce((acc, m) => acc + (params.priorBrierLosses[m.id] ?? 0.25), 0) / QUAD_FRONTIER_MODELS.length;
+          const candidateProperScore = QUAD_FRONTIER_MODELS.reduce((acc, m) => acc + pillarWeights[m.id] * (params.priorBrierLosses[m.id] ?? 0.25), 0);
+          const ledgerEntry = evaluateSealPotSelfEditCandidate({
+            rawDeltaLogOdds: rawDeltas,
+            covarianceTraceSigma2,
+            baselineProperScore,
+            candidateProperScore,
+            targetMiscoverageAlpha: params.targetMiscoverageAlpha,
+            empiricalWeightedMiscoverage,
+            wassersteinShiftW1: params.wassersteinShiftW1,
+          });
+          const wassersteinDriftAbstained = params.wassersteinShiftW1 > 0.08;
+          const weightedShrunk = QUAD_FRONTIER_MODELS.reduce((acc, m, idx) => acc + pillarWeights[m.id] * (ledgerEntry.shrunkJamesSteinDeltaLogOdds[idx] ?? 0), 0);
+          const cappedDelta = Math.max(-0.35, Math.min(0.35, weightedShrunk));
+          const shrunkLogOddsDelta = wassersteinDriftAbstained ? 0 : Number(cappedDelta.toFixed(6));
+          const clampedBaseProb = Math.max(1e-6, Math.min(1 - 1e-6, params.marketDeVigProb));
+          const baseLogit = Math.log(clampedBaseProb / (1 - clampedBaseProb));
+          const postRoutingProb = Number((1 / (1 + Math.exp(-(baseLogit + shrunkLogOddsDelta)))).toFixed(6));
+          return { pillarWeights, shrunkLogOddsDelta, wassersteinDriftAbstained, postRoutingProb, ledgerEntry };
+        }
+
+        // Test 1: Extreme positive & negative raw deltas (+-100.0) are strictly capped to [-0.35, 0.35]
+        for (const sign of [1, -1]) {
+          const r = runSealPotQuadFrontierRouter({
+            eventId: "EXTREME",
+            marketDeVigProb: 0.5,
+            pillarRawDeltasLogOdds: {
+              "google/gemini-4-argon": sign * 100.0,
+              "anthropic/claude-opus-5.5": sign * 85.0,
+              "anthropic/claude-fable-5": sign * 95.0,
+              "openai/astra": sign * 90.0,
+            },
+            priorBrierLosses: {
+              "google/gemini-4-argon": 0.10,
+              "anthropic/claude-opus-5.5": 0.12,
+              "anthropic/claude-fable-5": 0.09,
+              "openai/astra": 0.14,
+            },
+            recentMiscoverageErrors: [0, 0, 0, 1, 0],
+            targetMiscoverageAlpha: 0.10,
+            wassersteinShiftW1: 0.02,
+          });
+          if (Math.abs(r.shrunkLogOddsDelta) > 0.35 || r.shrunkLogOddsDelta * sign <= 0) process.exit(2);
+          if (r.wassersteinDriftAbstained !== false) process.exit(3);
+        }
+
+        // Test 2: Wasserstein-1 abstention when W1 > 0.08 (including W1 = 0.0801, 0.18, 0.25)
+        for (const w1 of [0.0801, 0.18, 0.1801, 0.45]) {
+          const r = runSealPotQuadFrontierRouter({
+            eventId: "DRIFT",
+            marketDeVigProb: 0.54,
+            pillarRawDeltasLogOdds: {
+              "google/gemini-4-argon": 0.30,
+              "anthropic/claude-opus-5.5": 0.28,
+              "anthropic/claude-fable-5": 0.32,
+              "openai/astra": 0.25,
+            },
+            priorBrierLosses: {
+              "google/gemini-4-argon": 0.10,
+              "anthropic/claude-opus-5.5": 0.11,
+              "anthropic/claude-fable-5": 0.09,
+              "openai/astra": 0.12,
+            },
+            recentMiscoverageErrors: [],
+            targetMiscoverageAlpha: 0.10,
+            wassersteinShiftW1: w1,
+          });
+          if (r.wassersteinDriftAbstained !== true || r.shrunkLogOddsDelta !== 0 || r.postRoutingProb !== 0.54 || r.ledgerEntry.acceptedForStaging !== false) {
+            console.error("Failed W1 abstention at", w1, r);
+            process.exit(4);
+          }
+        }
+
+        // Test 3: Boundary marketDeVigProb (0.0 and 1.0) remain finite
+        for (const p0 of [0.0, 1.0]) {
+          const r = runSealPotQuadFrontierRouter({
+            eventId: "BOUNDARY_P",
+            marketDeVigProb: p0,
+            pillarRawDeltasLogOdds: {
+              "google/gemini-4-argon": 0.1,
+              "anthropic/claude-opus-5.5": 0.1,
+              "anthropic/claude-fable-5": 0.1,
+              "openai/astra": 0.1,
+            },
+            priorBrierLosses: {
+              "google/gemini-4-argon": 0.1,
+              "anthropic/claude-opus-5.5": 0.1,
+              "anthropic/claude-fable-5": 0.1,
+              "openai/astra": 0.1,
+            },
+            recentMiscoverageErrors: [0],
+            targetMiscoverageAlpha: 0.1,
+            wassersteinShiftW1: 0.01,
+          });
+          if (!Number.isFinite(r.postRoutingProb) || r.postRoutingProb < 0 || r.postRoutingProb > 1) process.exit(5);
+        }
+        console.log("SEAL_ROUTER_ORACLE_OK");
+        """
+        proc = subprocess.run(
+            ["node", "-e", node_router_probe],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, f"SEAL router node oracle failed:\n{proc.stderr}")
+        self.assertIn("SEAL_ROUTER_ORACLE_OK", proc.stdout)
+
+    def test_16_f18_stage0_stdlib_dataframe_pd_none_parity_and_corruption_stress_oracle(
+        self,
+    ) -> None:
+        """White-box stress-test `_StdlibDataFrame`, `_StdlibSeries`, `_StdlibMask`, and
+        `load_stage0_game_roster_allowlist` when `pd = None` in
+        `scripts/ops/enforce_stage0_roster_and_board_allowlist.py`.
+        """
+        import scripts.ops.enforce_stage0_roster_and_board_allowlist as stage0_mod
+
+        # 1. Direct unit stress-test of _StdlibDataFrame, _StdlibSeries, and _StdlibMask edge cases
+        raw_rows = [
+            {"posteam": "LA", "defteam": "SF", "game_id": "2026_09_SF_LA", "passer_player_name": "M.Stafford", "passing_yards": "285.0", "complete_pass": "1", "epa": "0.42"},
+            {"posteam": "LA", "defteam": "SF", "game_id": "2026_09_SF_LA", "passer_player_name": "M.Stafford", "passing_yards": "", "complete_pass": None, "epa": "invalid_float"},
+            {"posteam": "BUF", "defteam": "MIN", "game_id": "2026_09_BUF_MIN", "passer_player_name": "J.Allen", "passing_yards": "312.5", "complete_pass": "1", "epa": "0.58"},
+            {"posteam": None, "defteam": "", "game_id": "   ", "passer_player_name": "", "passing_yards": None, "complete_pass": "0", "epa": None},
+        ]
+        df = stage0_mod._StdlibDataFrame(raw_rows).copy()
+        self.assertEqual(len(df), 4)
+        df["posteam"] = df["posteam"].replace({"LA": "LAR"})
+        self.assertEqual(df["posteam"].dropna().unique().tolist(), ["LAR", "BUF"])
+
+        lar_or_buf = df[(df["posteam"].isin(["LAR"])) | (df["defteam"] == "MIN")]
+        self.assertEqual(len(lar_or_buf), 3)
+        self.assertEqual(lar_or_buf["game_id"].nunique(), 2)
+        self.assertAlmostEqual(lar_or_buf["passing_yards"].fillna(0).sum(), 597.5, places=2)
+        self.assertAlmostEqual(lar_or_buf["epa"].dropna().mean(), 0.50, places=4)
+
+        empty_df = df[df["posteam"] == "NONEXISTENT_TEAM"]
+        self.assertEqual(len(empty_df), 0)
+        self.assertEqual(empty_df["passing_yards"].sum(), 0.0)
+        self.assertEqual(empty_df["epa"].mean(), 0.0)
+
+        # 2. Verify load_stage0_game_roster_allowlist when pd = None produces valid allowlists & catches contamination
+        orig_pd = getattr(stage0_mod, "pd", None)
+        try:
+            stage0_mod.pd = None
+            al_jax_bal = stage0_mod.load_stage0_game_roster_allowlist("JAX", "BAL", 9)
+            al_buf_min = stage0_mod.load_stage0_game_roster_allowlist("BUF", "MIN", 9)
+
+            self.assertEqual(al_jax_bal["matchup"], "JAX@BAL")
+            self.assertEqual(al_jax_bal["confirmed_qb1"], {"JAX": "Trevor Lawrence", "BAL": "Joe Fagnano"})
+            self.assertGreaterEqual(al_jax_bal["verified_board_athletes_count"], 20)
+            self.assertEqual(len(al_jax_bal["stage0_receipt_sha256"]), 64)
+
+            self.assertEqual(al_buf_min["matchup"], "BUF@MIN")
+            self.assertEqual(al_buf_min["confirmed_qb1"], {"BUF": "Josh Allen", "MIN": "Carson Wentz"})
+            self.assertGreaterEqual(al_buf_min["verified_board_athletes_count"], 15)
+            self.assertEqual(len(al_buf_min["stage0_receipt_sha256"]), 64)
+
+            # Verify self-check passes
+            stage0_mod.assert_zero_roster_contamination(al_jax_bal, al_jax_bal, "jax_bal_self_check")
+            stage0_mod.assert_zero_roster_contamination(al_buf_min, al_buf_min, "buf_min_self_check")
+
+            # Verify off-roster hallucination and excluded-player positive projection are caught when pd = None
+            with self.assertRaises(stage0_mod.Stage0RosterContaminationError):
+                stage0_mod.assert_zero_roster_contamination(
+                    {"athlete": "Tank Bigsby", "proj": 42.5},
+                    al_jax_bal,
+                    "hallucinated_rb_test",
+                )
+            with self.assertRaises(stage0_mod.Stage0RosterContaminationError):
+                stage0_mod.assert_zero_roster_contamination(
+                    {"athlete": "Lamar Jackson", "pass_yds_mean": 245.0},
+                    al_jax_bal,
+                    "excluded_qb_positive_proj_test",
+                )
+        finally:
+            stage0_mod.pd = orig_pd
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

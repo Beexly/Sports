@@ -267,7 +267,7 @@ the only verification.
 1. **`references/design-recipe.md`** — craft floor (ALWAYS read; short).
 2. **`references/scroll-scrub.md`** — the **animated website**, which is the
    DEFAULT Tier-1 experience for every website: read it in Phase 0. It owns the
-   specialized boards/assets/runtime sequence and bundled Markdown code
+   specialized boards/workspace/assets/runtime sequence and bundled Markdown code
    references for that build. Only read **`references/wow-catalog.md`** (Tier-1
    technique menu + anti-convergence ledger + Phase 4 implementation contracts)
    when the user explicitly asked for something other than an animated website.

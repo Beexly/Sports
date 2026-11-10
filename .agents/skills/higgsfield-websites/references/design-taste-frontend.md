@@ -858,7 +858,7 @@ The Reference Vocabulary (Section 10) names patterns. The Block Library implemen
 
 ### 12.A File Location
 ```
-references/blocks/
+workspace/references/blocks/
   hero/
     asymmetric-split.md
     editorial-manifesto.md

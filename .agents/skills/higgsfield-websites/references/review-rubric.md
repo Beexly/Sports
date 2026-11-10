@@ -106,7 +106,7 @@ Check each item; fix every hit before deploying.
         actually imported/rendered by a route (grep for its import);
       - real film shipped — at least ONE clip (`single-shot` ships exactly
         one; a `multi-leg` journey ships one per leg) under
-        `app/public/assets/**/*.mp4` (the seam-locked chain), each with a
+        `app/public/workspace/assets/**/*.mp4` (the seam-locked chain), each with a
         first-frame poster (item 9e);
       - the brief carries the journey block (Journey scenes + Camera
         architecture A/B) written in Phase 0.

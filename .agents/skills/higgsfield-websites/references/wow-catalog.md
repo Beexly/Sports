@@ -52,7 +52,7 @@ only on that explicit-alternative path.
   what "animated website" means and it is the default experience — reach for
   another technique here ONLY when the user explicitly asked for one. This is a
   specialized pipeline: read and follow **`references/scroll-scrub.md`** before
-  boards/assets/code.
+  boards/workspace/assets/code.
 
 ### B. Layered depth family (one image becomes a 3D-feeling scene)
 

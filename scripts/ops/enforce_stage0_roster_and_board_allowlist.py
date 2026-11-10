@@ -15,6 +15,7 @@ entering Stage 1-5 simulations, projections, or call-sheet dossiers.
 from __future__ import annotations
 
 import csv
+import gzip
 import hashlib
 import json
 import sys
@@ -25,6 +26,141 @@ try:
     import pandas as pd
 except ImportError:  # pragma: no cover
     pd = None  # type: ignore[assignment]
+
+
+class _StdlibMask:
+    """Boolean mask compatible with pandas Series boolean indexing and .sum()."""
+
+    def __init__(self, bools: list[bool]) -> None:
+        self._bools = [bool(b) for b in bools]
+
+    def __or__(self, other: "_StdlibMask") -> "_StdlibMask":
+        return _StdlibMask([a or b for a, b in zip(self._bools, other._bools)])
+
+    def __and__(self, other: "_StdlibMask") -> "_StdlibMask":
+        return _StdlibMask([a and b for a, b in zip(self._bools, other._bools)])
+
+    def __invert__(self) -> "_StdlibMask":
+        return _StdlibMask([not a for a in self._bools])
+
+    def __len__(self) -> int:
+        return len(self._bools)
+
+    def any(self) -> bool:
+        return any(self._bools)
+
+    def all(self) -> bool:
+        return all(self._bools)
+
+    def tolist(self) -> list[bool]:
+        return list(self._bools)
+
+    def sum(self) -> int:
+        return sum(1 for b in self._bools if b)
+
+
+class _StdlibUniqueArray:
+    def __init__(self, values: list[Any]) -> None:
+        self._values = values
+
+    def tolist(self) -> list[Any]:
+        return list(self._values)
+
+
+class _StdlibSeries:
+    """Minimal pure-Python column Series supporting the PBP operations in Stage-0."""
+
+    def __init__(self, values: list[Any]) -> None:
+        self._values = values
+
+    def replace(self, mapping: Mapping[Any, Any]) -> "_StdlibSeries":
+        return _StdlibSeries([mapping.get(v, v) for v in self._values])
+
+    def isin(self, allowed: Any) -> _StdlibMask:
+        allowed_set = set(allowed)
+        return _StdlibMask([v in allowed_set for v in self._values])
+
+    def __eq__(self, other: object) -> _StdlibMask:  # type: ignore[override]
+        return _StdlibMask([v == other for v in self._values])
+
+    def __ne__(self, other: object) -> _StdlibMask:  # type: ignore[override]
+        return _StdlibMask([v != other for v in self._values])
+
+    def notna(self) -> _StdlibMask:
+        return _StdlibMask([v is not None and str(v).strip() != "" for v in self._values])
+
+    def dropna(self) -> "_StdlibSeries":
+        return _StdlibSeries([v for v in self._values if v is not None and str(v).strip() != ""])
+
+    def unique(self) -> _StdlibUniqueArray:
+        seen: list[Any] = []
+        seen_set: set[Any] = set()
+        for v in self._values:
+            if v not in seen_set:
+                seen_set.add(v)
+                seen.append(v)
+        return _StdlibUniqueArray(seen)
+
+    def nunique(self) -> int:
+        return len({v for v in self._values if v is not None and str(v).strip() != ""})
+
+    def fillna(self, default: Any) -> "_StdlibSeries":
+        out: list[Any] = []
+        for v in self._values:
+            if v is None or str(v).strip() == "":
+                out.append(default)
+            else:
+                out.append(v)
+        return _StdlibSeries(out)
+
+    def _to_floats(self) -> list[float]:
+        nums: list[float] = []
+        for v in self._values:
+            if v is None or str(v).strip() == "":
+                continue
+            try:
+                nums.append(float(v))
+            except (TypeError, ValueError):
+                continue
+        return nums
+
+    def sum(self) -> float:
+        return float(sum(self._to_floats()))
+
+    def mean(self) -> float:
+        nums = self._to_floats()
+        return float(sum(nums) / len(nums)) if nums else 0.0
+
+
+class _StdlibDataFrame:
+    """Minimal pure-Python table wrapper used when pandas is unavailable."""
+
+    def __init__(self, rows: list[dict[str, Any]]) -> None:
+        self._rows = rows
+
+    def copy(self) -> "_StdlibDataFrame":
+        return _StdlibDataFrame([dict(r) for r in self._rows])
+
+    def __len__(self) -> int:
+        return len(self._rows)
+
+    def __getitem__(self, key: Any) -> Any:
+        if isinstance(key, str):
+            return _StdlibSeries([r.get(key) for r in self._rows])
+        if isinstance(key, _StdlibMask):
+            return _StdlibDataFrame([r for r, b in zip(self._rows, key._bools) if b])
+        raise KeyError(f"Unsupported key type: {type(key)}")
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        vals = value._values if isinstance(value, _StdlibSeries) else list(value)
+        for r, v in zip(self._rows, vals):
+            r[key] = v
+
+
+def _load_stdlib_gzip_csv_df(path: Path) -> _StdlibDataFrame:
+    with gzip.open(path, "rt", encoding="utf-8", newline="") as gz_fh:
+        return _StdlibDataFrame(list(csv.DictReader(gz_fh)))
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -180,18 +316,19 @@ def resolve_or_generate_matchup_board(
             raise Stage0RosterContaminationError(f"STAGE0_FAIL: Live board file missing: {board_path}")
         return json.loads(board_path.read_text(encoding="utf-8")), board_rel_path
 
-    if board_path.is_file() and "jax_bal" not in board_rel_path.lower():
-        loaded = json.loads(board_path.read_text(encoding="utf-8"))
-        teams_with_skill = {
-            str(p.get("team") or "").strip()
-            for p in loaded.get("props", [])
-            if str(p.get("position") or "").strip() in ("RB", "WR", "TE")
-        }
-        if away in teams_with_skill and home in teams_with_skill:
-            return loaded, board_rel_path
-
     dyn_rel = f"data/engine/week{week}_{away.lower()}_{home.lower()}_dk_full_board_2026_11_06.json"
     dyn_path = REPO_ROOT / dyn_rel
+
+    for cand_path, cand_rel in ((board_path, board_rel_path), (dyn_path, dyn_rel)):
+        if cand_path.is_file() and "jax_bal" not in cand_rel.lower():
+            loaded = json.loads(cand_path.read_text(encoding="utf-8"))
+            teams_with_skill = {
+                str(p.get("team") or "").strip()
+                for p in loaded.get("props", [])
+                if str(p.get("position") or "").strip() in ("RB", "WR", "TE")
+            }
+            if away in teams_with_skill and home in teams_with_skill:
+                return loaded, cand_rel
 
     excluded_lower = {
         str(ep.get("name") or "").strip().lower()
@@ -410,18 +547,25 @@ def load_stage0_game_roster_allowlist(
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     wh_pbp_path = REPO_ROOT / "data" / "warehouse" / "v1" / "pbp_normalized.parquet"
-    pbp: pd.DataFrame | None = None
-    if pbp_path.is_file():
+    pbp: Any = None
+    if pd is not None and pbp_path.is_file():
         try:
             pbp = pd.read_parquet(pbp_path)
         except Exception:
             pbp = None
     if pbp is None and slim_csv_path.is_file():
-        try:
-            pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
-        except Exception:
-            pbp = None
-    if pbp is None and wh_pbp_path.is_file():
+        if pd is not None:
+            try:
+                pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
+            except Exception:
+                pbp = None
+        if pbp is None:
+            try:
+                with gzip.open(slim_csv_path, "rt", encoding="utf-8", newline="") as gz_fh:
+                    pbp = _StdlibDataFrame(list(csv.DictReader(gz_fh)))
+            except Exception:
+                pbp = None
+    if pbp is None and pd is not None and wh_pbp_path.is_file():
         try:
             pbp = pd.read_parquet(wh_pbp_path)
         except Exception:
@@ -595,8 +739,9 @@ def load_stage0_game_roster_allowlist(
         total_tackles = solo_tackles + assist_tackles
         sacks = float(len(sack_rows))
 
-        fg_rows = kick_rows[kick_rows["play_type"] == "field_goal"] if len(kick_rows) else pd.DataFrame()
-        xp_rows = kick_rows[kick_rows["play_type"] == "extra_point"] if len(kick_rows) else pd.DataFrame()
+        empty_df = _StdlibDataFrame([]) if pd is None else pd.DataFrame()
+        fg_rows = kick_rows[kick_rows["play_type"] == "field_goal"] if len(kick_rows) else empty_df
+        xp_rows = kick_rows[kick_rows["play_type"] == "extra_point"] if len(kick_rows) else empty_df
         fg_att = int(len(fg_rows))
         fg_made = int((fg_rows["field_goal_result"] == "made").sum()) if len(fg_rows) else 0
         xp_att = int(len(xp_rows))
@@ -675,6 +820,9 @@ def load_stage0_game_roster_allowlist(
     }
     canonical = json.dumps(allowlist_payload, sort_keys=True)
     allowlist_payload["stage0_receipt_sha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    allowlist_payload["matchup"] = matchup_key
+    allowlist_payload["allowed_players"] = list(athletes.keys())
+    allowlist_payload["roster"] = list(athletes.values())
     return allowlist_payload
 
 

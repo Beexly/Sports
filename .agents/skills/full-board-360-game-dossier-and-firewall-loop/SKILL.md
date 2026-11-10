@@ -6,6 +6,7 @@ metadata:
   loop-mode: loop-me
 ---
 
+
 # 360-Degree Full-Board Market Review, Heavy-Juice Firewall & Storefront Publish Loop (`loop-me`)
 
 ## Loop Definition
@@ -16,7 +17,7 @@ A recurring pre-game workflow that evaluates every single DraftKings / sportsboo
 
 - Running scheduled full-board market locks on Tuesday (`14:00 America/Chicago`), Thursday (`17:00 America/Chicago`), Sunday (`09:30 America/Chicago`), or Monday (`17:00 America/Chicago`).
 - Re-evaluating a game environment after a verified steam move (`>= 1.5 pts` on spread/total or `>= 25 cents` on prop juice) or key starter injury ruling.
-- Auditing call-sheet tickets against the `-250` / `-300+` heavy-juice firewall, 5-Stage Conjunction Gate (`publishAllowed`), `node scripts/trust-gate.mjs`, and `node apps/mobile/scripts/lint-rules.js`.
+- Auditing call-sheet tickets against the `-250` / `-300+` heavy-juice firewall, 5-Stage Conjunction Gate (`publishAllowed`), `node Beexly/Sports/scripts/trust-gate.mjs`, and `node apps/mobile/Beexly/Sports/scripts/lint-rules.js`.
 
 ## Do not use this skill when
 
@@ -42,7 +43,7 @@ A recurring pre-game workflow that evaluates every single DraftKings / sportsboo
 3. **Stage 5 (De-Vig, `-300` Heavy-Juice Firewall & Conjunction Gate):**
    - Reject any straight bet or parlay leg priced worse than `-250` (and hard-block `-300+` heavy-juice traps), automatically evaluating alternate spreads, `1Q`/`1H` derivatives, or `PASS`.
    - Never publish any ticket where `independentEdge.decision == "PASS"` (`publishAllowed: false`).
-4. **Storefront & Mobile Gate Verification:** Run `node scripts/trust-gate.mjs`, `node apps/mobile/scripts/lint-rules.js` (confirming `XX/100` confidence format and zero robotic math jargon on public copy), and server-side `FREE` vs. `PRO` paywall redaction (`intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py`).
+4. **Storefront & Mobile Gate Verification:** Run `node Beexly/Sports/scripts/trust-gate.mjs`, `node apps/mobile/Beexly/Sports/scripts/lint-rules.js` (confirming `XX/100` confidence format and zero robotic math jargon on public copy), and server-side `FREE` vs. `PRO` paywall redaction (`intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py`).
 
 ### 3. Checkpoint & Brief Delivery
 

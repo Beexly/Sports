@@ -60,6 +60,127 @@ export const QUAD_FRONTIER_MODELS: readonly QuadFrontierModelDescriptor[] = [
   },
 ] as const;
 
+export const QUAD_FRONTIER_PILLARS: readonly QuadFrontierModelId[] =
+  QUAD_FRONTIER_MODELS.map((m) => m.id);
+
+export interface SealPotQuadFrontierRouterInput {
+  readonly eventId: string;
+  readonly marketDeVigProb: number;
+  readonly pillarRawDeltasLogOdds: Readonly<Record<QuadFrontierModelId, number>>;
+  readonly priorBrierLosses: Readonly<Record<QuadFrontierModelId, number>>;
+  readonly recentMiscoverageErrors: readonly number[];
+  readonly targetMiscoverageAlpha: number;
+  readonly wassersteinShiftW1: number;
+  readonly covarianceTraceSigma2?: number;
+}
+
+export interface SealPotQuadFrontierRouterResult {
+  readonly eventId: string;
+  readonly pillarWeights: Readonly<Record<QuadFrontierModelId, number>>;
+  readonly rawWeightedLogOddsDelta: number;
+  readonly shrunkLogOddsDelta: number;
+  readonly jamesSteinFactor: number;
+  readonly aciCrcMiscoverageAlphaT: number;
+  readonly wassersteinShiftW1: number;
+  readonly wassersteinDriftAbstained: boolean;
+  readonly postRoutingProb: number;
+  readonly ledgerEntry: MindLedgerEntry;
+}
+
+export function runSealPotQuadFrontierRouter(
+  params: SealPotQuadFrontierRouterInput
+): SealPotQuadFrontierRouterResult {
+  const etaBrierTemperature = 6.0;
+  const unnormalizedWeights = QUAD_FRONTIER_MODELS.map((m) => {
+    const brier = Math.max(0.001, params.priorBrierLosses[m.id] ?? 0.25);
+    return m.sheafPriorWeight * Math.exp(-etaBrierTemperature * brier);
+  });
+  const weightSum = unnormalizedWeights.reduce((acc, w) => acc + w, 0) || 1.0;
+
+  const pillarWeights = {} as Record<QuadFrontierModelId, number>;
+  const rawDeltas: number[] = [];
+  let rawWeightedLogOddsDelta = 0;
+
+  QUAD_FRONTIER_MODELS.forEach((m, idx) => {
+    const w = Number((unnormalizedWeights[idx]! / weightSum).toFixed(6));
+    pillarWeights[m.id] = w;
+    const d = params.pillarRawDeltasLogOdds[m.id] ?? 0;
+    rawDeltas.push(d);
+    rawWeightedLogOddsDelta += w * d;
+  });
+
+  const meanDelta = rawDeltas.reduce((acc, d) => acc + d, 0) / Math.max(1, rawDeltas.length);
+  const empiricalVar =
+    rawDeltas.reduce((acc, d) => acc + (d - meanDelta) * (d - meanDelta), 0) /
+    Math.max(1, rawDeltas.length - 1);
+  const covarianceTraceSigma2 =
+    params.covarianceTraceSigma2 ?? Math.max(1e-4, empiricalVar);
+
+  const empiricalWeightedMiscoverage =
+    params.recentMiscoverageErrors.length > 0
+      ? params.recentMiscoverageErrors.reduce((acc, e) => acc + e, 0) /
+        params.recentMiscoverageErrors.length
+      : params.targetMiscoverageAlpha;
+
+  const baselineProperScore =
+    QUAD_FRONTIER_MODELS.reduce(
+      (acc, m) => acc + (params.priorBrierLosses[m.id] ?? 0.25),
+      0
+    ) / QUAD_FRONTIER_MODELS.length;
+  const candidateProperScore = QUAD_FRONTIER_MODELS.reduce(
+    (acc, m) => acc + pillarWeights[m.id] * (params.priorBrierLosses[m.id] ?? 0.25),
+    0
+  );
+
+  const ledgerEntry = evaluateSealPotSelfEditCandidate({
+    epochId: `seal-pot-${params.eventId}`,
+    domainSlug: "NFL_GSE",
+    sealSelfEditDirective: `quad-frontier-sheaf-route:${params.eventId}`,
+    rawDeltaLogOdds: rawDeltas,
+    covarianceTraceSigma2,
+    baselineProperScore,
+    candidateProperScore,
+    targetMiscoverageAlpha: params.targetMiscoverageAlpha,
+    empiricalWeightedMiscoverage,
+    wassersteinShiftW1: params.wassersteinShiftW1,
+  });
+
+  const wassersteinDriftAbstained =
+    !Number.isFinite(params.wassersteinShiftW1) ||
+    params.wassersteinShiftW1 < 0 ||
+    params.wassersteinShiftW1 > 0.08;
+  const weightedShrunk = QUAD_FRONTIER_MODELS.reduce(
+    (acc, m, idx) =>
+      acc + pillarWeights[m.id] * (ledgerEntry.shrunkJamesSteinDeltaLogOdds[idx] ?? 0),
+    0
+  );
+  const safeWeightedShrunk = Number.isFinite(weightedShrunk) ? weightedShrunk : 0;
+  const cappedDelta = Math.max(-0.35, Math.min(0.35, safeWeightedShrunk));
+  const shrunkLogOddsDelta = wassersteinDriftAbstained
+    ? 0
+    : Number(cappedDelta.toFixed(6));
+
+  const safeMarketProb = Number.isFinite(params.marketDeVigProb) ? params.marketDeVigProb : 0.5;
+  const clampedBaseProb = Math.max(1e-6, Math.min(1 - 1e-6, safeMarketProb));
+  const baseLogit = Math.log(clampedBaseProb / (1 - clampedBaseProb));
+  const postRoutingProb = Number(
+    (1 / (1 + Math.exp(-(baseLogit + shrunkLogOddsDelta)))).toFixed(6)
+  );
+
+  return {
+    eventId: params.eventId,
+    pillarWeights,
+    rawWeightedLogOddsDelta: Number(rawWeightedLogOddsDelta.toFixed(6)),
+    shrunkLogOddsDelta,
+    jamesSteinFactor: ledgerEntry.jamesSteinFactor,
+    aciCrcMiscoverageAlphaT: ledgerEntry.aciCrcMiscoverageAlphaT,
+    wassersteinShiftW1: ledgerEntry.wassersteinShiftW1,
+    wassersteinDriftAbstained,
+    postRoutingProb,
+    ledgerEntry,
+  };
+}
+
 export interface MindLedgerEntry {
   readonly epochId: string;
   readonly timestamp: string;
@@ -119,9 +240,14 @@ export function evaluateSealPotSelfEditCandidate(params: {
     ).toFixed(6)
   );
 
+  const safeW1 = Number.isFinite(params.wassersteinShiftW1) ? params.wassersteinShiftW1 : 1.0;
   const acceptedForStaging =
+    Number.isFinite(restEmRewardDelta) &&
     restEmRewardDelta > 0 &&
+    Number.isFinite(params.empiricalWeightedMiscoverage) &&
     params.empiricalWeightedMiscoverage <= params.targetMiscoverageAlpha + 0.015 &&
+    Number.isFinite(params.wassersteinShiftW1) &&
+    params.wassersteinShiftW1 >= 0 &&
     params.wassersteinShiftW1 <= 0.08;
 
   const timestamp = params.timestamp ?? new Date().toISOString();
@@ -136,7 +262,7 @@ export function evaluateSealPotSelfEditCandidate(params: {
     jamesSteinFactor,
     restEmRewardDelta,
     aciCrcMiscoverageAlphaT,
-    wassersteinShiftW1: Number(params.wassersteinShiftW1.toFixed(6)),
+    wassersteinShiftW1: Number(safeW1.toFixed(6)),
     acceptedForStaging,
   };
 

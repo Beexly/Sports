@@ -474,7 +474,7 @@ every Higgsfield product uses for the generate/main action (like the composer's
 GENERATE button).
 - Generate buttons ALWAYS show the credit cost INSIDE the button, formatted
 `{label} {sparkles icon} {credits}` — the sparkle is the branded asset
-(`import Sparkles from "@/assets/icon-sparkles-soft.svg?react"`, 14px) and
+(`import Sparkles from "@/workspace/assets/icon-sparkles-soft.svg?react"`, 14px) and
 the credits number inherits the label's font (no smaller/other typography) —
 never a separate cost line outside the button, never a costless generate
 button. See any template scaffold's submit.
@@ -574,7 +574,7 @@ Then verify by hand:
   Higgsfield — host chrome owns those)
 - [ ] Dark only: no theme toggle, no light mode, no `dark:` styling; every
   generate button reads `{label} {sparkles} {credits}` (the branded
-  `@/assets/icon-sparkles-soft.svg` icon, credits in the label's font);
+  `@/workspace/assets/icon-sparkles-soft.svg` icon, credits in the label's font);
   non-generation buttons use the dark `tertiary`/`ghost`
 - [ ] One icon family: Google Material Symbols outlined 400
   (`@material-symbols/svg-400/outlined/<name>.svg?react`), `-fill` variants

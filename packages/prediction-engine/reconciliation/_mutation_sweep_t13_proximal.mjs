@@ -31,13 +31,44 @@
  * failure, a crash, and a test that never ran.
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, rmSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { homedir, tmpdir } from "node:os";
+import { delimiter, join, resolve } from "node:path";
 
+function resolveVitestEnv() {
+  const localVitest = "../../node_modules/vitest/vitest.mjs";
+  const nodePaths = (process.env.NODE_PATH ?? "").split(delimiter).filter(Boolean);
+  if (existsSync(localVitest)) {
+    return { vitest: localVitest, nodePath: nodePaths.join(delimiter) };
+  }
+  const npxRoot = join(homedir(), ".npm", "_npx");
+  try {
+    for (const entry of readdirSync(npxRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const nm = join(npxRoot, entry.name, "node_modules");
+      const candidate = join(nm, "vitest", "vitest.mjs");
+      if (existsSync(candidate)) {
+        nodePaths.push(nm);
+        return { vitest: candidate, nodePath: nodePaths.join(delimiter) };
+      }
+    }
+  } catch {
+    // Ignore missing ~/.npm/_npx directory.
+  }
+  for (const np of nodePaths) {
+    const candidate = resolve(np, "vitest", "vitest.mjs");
+    if (existsSync(candidate)) {
+      return { vitest: candidate, nodePath: nodePaths.join(delimiter) };
+    }
+  }
+  return { vitest: localVitest, nodePath: nodePaths.join(delimiter) };
+}
+
+const { vitest: VITEST, nodePath: CHILD_NODE_PATH } = resolveVitestEnv();
 const GATE = "src/causal/causal-claim-gate.ts";
 const SOLVER = "src/causal/proximal-bridge-id.ts";
 const TESTS = ["test/proximal-bridge-id.t13.spec.ts"];
-const VITEST = "../../node_modules/vitest/vitest.mjs";
-const REPORT = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t13_sweep_report.json";
+const REPORT = join(tmpdir(), "_t13_sweep_report.json");
 
 /**
  * The pristine text of EVERY file a mutation may touch.
@@ -51,6 +82,17 @@ const ORIGINALS = new Map([
   [GATE, readFileSync(GATE, "utf8")],
   [SOLVER, readFileSync(SOLVER, "utf8")],
 ]);
+
+for (const sig of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+  process.on(sig, () => {
+    try {
+      for (const [file, text] of ORIGINALS) writeFileSync(file, text);
+      rmSync(REPORT, { force: true });
+    } finally {
+      process.exit(130);
+    }
+  });
+}
 
 /** Phase 1: disable the route. The named test must not pass. */
 const DISABLE = [
@@ -110,6 +152,7 @@ function passedTitles() {
     execFileSync("node", [VITEST, "run", "--reporter=json", `--outputFile=${REPORT}`, ...TESTS], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
+      env: { ...process.env, NODE_PATH: CHILD_NODE_PATH },
     });
   } catch {
     // A non-zero exit is EXPECTED for a mutation that breaks a test; the report still lands.

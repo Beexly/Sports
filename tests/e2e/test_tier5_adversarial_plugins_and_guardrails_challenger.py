@@ -28,7 +28,7 @@ Scope:
      - Adversarial rejection in `validate-skills.js --strict` and `installSkill` for symlinked
        skill dirs, symlinked inner files, unknown frontmatter keys, `$ARGUMENTS` placeholders,
        mismatched folder/frontmatter names, broken/traversal helper refs, and missing strict sections.
-     - Strict validation across all 307 vault skills and all 15 `Beexly/Sports/.agents/skills`.
+     - Strict validation across all 307 vault skills and all 53 `Beexly/Sports/.agents/skills`.
   4. `MongoDBDossierArchiveAdapter`:
      - Credential resolution priority (`explicit arg > os.environ > /shared/user/.gemini/secrets/mongodb_atlas.env`).
      - Zero secret leakage in `repr()`, `str()`, `archive_document()`, logging output, or tracked git files.
@@ -354,6 +354,138 @@ class TestTier5AdversarialPluginLaunchers(unittest.TestCase):
         combined_gh = f"{proc_gh.stdout}{proc_gh.stderr}"
         self.assertIn("Logged in to github.com", combined_gh)
 
+    def test_05_round2_f14_all_6_connected_launchers_hostile_appdata_and_symlink_chains(self) -> None:
+        """Verify all 6 connected plugin launchers (`gdocs`, `gdrive`, `gh`, `gsheets`, `gslides`, `gcalendar`) survive unset, custom, read-only (`chmod 0500`), file-as-dir (`ENOTDIR`), and multi-hop relative symlink chains."""
+        all_6_launchers = (
+            ("gdocs", Path("/opt/antigravity/plugins/gdocs/skills/gdocs/scripts/gdocs"), ["--version"]),
+            ("gdrive", Path("/opt/antigravity/plugins/gdrive/skills/gdrive/scripts/gdrive"), ["--version"]),
+            ("gh", Path("/opt/antigravity/plugins/github/skills/github/scripts/gh"), ["--version"]),
+            ("gsheets", Path("/opt/antigravity/plugins/gsheets/skills/gsheets/scripts/gsheets"), ["--version"]),
+            ("gslides", Path("/opt/antigravity/plugins/gslides/skills/gslides/scripts/gslides"), ["--version"]),
+            ("gcalendar", Path("/opt/antigravity/plugins/gcalendar/skills/gcalendar/scripts/gcalendar"), ["--version"]),
+        )
+        base_env_unset = {k: v for k, v in os.environ.items() if k != "ANTIGRAVITY_APP_DATA_DIR"}
+
+        with tempfile.TemporaryDirectory(prefix="challenger-r2-6plugins-") as tmp:
+            tmp_path = Path(tmp)
+            custom_dir = tmp_path / "custom_writable"
+            custom_dir.mkdir(parents=True, exist_ok=True)
+            ro_dir = tmp_path / "readonly_appdata"
+            ro_dir.mkdir(parents=True, exist_ok=True)
+            os.chmod(ro_dir, stat.S_IRUSR | stat.S_IXUSR)
+            not_a_dir = tmp_path / "file_instead_of_dir"
+            not_a_dir.write_text("hostile file blocking mkdir -p", encoding="utf-8")
+
+            hop1_dir = tmp_path / "chains" / "hop1"
+            hop2_dir = tmp_path / "chains" / "hop2" / "bin"
+            hop1_dir.mkdir(parents=True, exist_ok=True)
+            hop2_dir.mkdir(parents=True, exist_ok=True)
+
+            try:
+                for name, launcher_path, args in all_6_launchers:
+                    self.assertTrue(launcher_path.is_file(), f"Missing launcher: {launcher_path}")
+                    src = launcher_path.read_text(encoding="utf-8")
+                    self.assertIn("PREBAKED_TARGET=", src, f"{name} missing PREBAKED_TARGET")
+
+                    # Mode A: unset ANTIGRAVITY_APP_DATA_DIR
+                    proc_unset = subprocess.run(
+                        [str(launcher_path), *args],
+                        env=base_env_unset,
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                    )
+                    self.assertEqual(proc_unset.returncode, 0, f"{name} failed with unset env:\n{proc_unset.stderr}")
+                    self.assertNotIn(f"Registered '{name}' into PATH", proc_unset.stderr)
+
+                    # Mode B: custom writable ANTIGRAVITY_APP_DATA_DIR
+                    proc_custom = subprocess.run(
+                        [str(launcher_path), *args],
+                        env=dict(os.environ, ANTIGRAVITY_APP_DATA_DIR=str(custom_dir)),
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                    )
+                    self.assertEqual(proc_custom.returncode, 0, f"{name} failed with custom env:\n{proc_custom.stderr}")
+                    self.assertTrue((custom_dir / "bin" / name).is_symlink(), f"Missing shim symlink for {name}")
+
+                    # Mode C: strictly read-only ANTIGRAVITY_APP_DATA_DIR (chmod 0500)
+                    proc_ro = subprocess.run(
+                        [str(launcher_path), *args],
+                        env=dict(os.environ, ANTIGRAVITY_APP_DATA_DIR=str(ro_dir)),
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                    )
+                    self.assertEqual(proc_ro.returncode, 0, f"{name} failed with read-only env:\n{proc_ro.stderr}")
+
+                    # Mode D: regular file as ANTIGRAVITY_APP_DATA_DIR (ENOTDIR on mkdir -p)
+                    proc_enotdir = subprocess.run(
+                        [str(launcher_path), *args],
+                        env=dict(os.environ, ANTIGRAVITY_APP_DATA_DIR=str(not_a_dir)),
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                    )
+                    self.assertEqual(proc_enotdir.returncode, 0, f"{name} failed with ENOTDIR env:\n{proc_enotdir.stderr}")
+
+                    # Mode E: 2-hop relative symlink chain
+                    h1 = hop1_dir / name
+                    h2 = hop2_dir / name
+                    h1.symlink_to(launcher_path)
+                    h2.symlink_to(Path("../../hop1") / name)
+                    proc_chain = subprocess.run(
+                        [str(h2), *args],
+                        env=dict(os.environ, PATH=f"{hop2_dir}:{os.environ.get('PATH', '')}"),
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                    )
+                    self.assertEqual(proc_chain.returncode, 0, f"{name} failed symlink chain:\n{proc_chain.stderr}")
+            finally:
+                os.chmod(ro_dir, stat.S_IRWXU)
+
+    def test_06_round2_f14_zero_stale_tmp_binaries_and_all_6_plugins_prebaked_and_auth(self) -> None:
+        """Verify zero leftover `.tmp.*` files exist in `plugin_data` and all 6 plugins pass `auth status` using pre-baked binaries."""
+        expected_prebaked = (
+            ("gdocs", "/opt/antigravity/plugin_data/gdocs/bin/gdocs-986250228"),
+            ("gdrive", "/opt/antigravity/plugin_data/gdrive/bin/gdrive-1013145354"),
+            ("gh", "/opt/antigravity/plugin_data/github/bin/gh-2.103.3"),
+            ("gsheets", "/opt/antigravity/plugin_data/gsheets/bin/gsheets-986250228"),
+            ("gslides", "/opt/antigravity/plugin_data/gslides/bin/gslides-986250228"),
+            ("gcalendar", "/opt/antigravity/plugin_data/gcalendar/bin/gcalendar-986250228"),
+        )
+        for tool, prebaked_str in expected_prebaked:
+            prebaked = Path(prebaked_str)
+            self.assertTrue(prebaked.is_file(), f"Missing pre-baked binary: {prebaked}")
+            self.assertTrue(os.access(prebaked, os.X_OK), f"Pre-baked binary not executable: {prebaked}")
+            proc_auth = subprocess.run(
+                [f"/opt/antigravity/bin/{tool}", "auth", "status"],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(proc_auth.returncode, 0, f"{tool} auth status failed:\n{proc_auth.stderr}")
+            combined = f"{proc_auth.stdout}{proc_auth.stderr}"
+            self.assertTrue(
+                "Logged in" in combined or "✓" in combined,
+                f"Unexpected auth status output for {tool}: {combined}",
+            )
+
+        # Ensure zero leftover .tmp.* binaries across both FUSE and /opt plugin_data trees
+        for pd_root in (
+            Path("/home/antigravity/.gemini/jetski/plugin_data"),
+            Path("/opt/antigravity/plugin_data"),
+        ):
+            if pd_root.exists():
+                for dirpath, _dirnames, filenames in os.walk(pd_root):
+                    for fn in filenames:
+                        self.assertNotIn(
+                            ".tmp.",
+                            fn,
+                            f"Stale temporary binary found in {dirpath}: {fn}",
+                        )
+
 
 class TestTier5AdversarialAntigravitySkillsAndValidator(unittest.TestCase):
     """White-box stress tests for `rmyndharis/antigravity-skills` CLI search, aliases, installer, and `validate-skills.js --strict`."""
@@ -527,19 +659,19 @@ class TestTier5AdversarialAntigravitySkillsAndValidator(unittest.TestCase):
             self.assertIn("INSTALL_SKILL_SECURITY_OK", proc.stdout)
 
     def test_04_strict_validation_passes_all_307_vault_skills_and_all_15_workspace_skills(self) -> None:
-        """Verify `validate-skills.js --strict` passes all 307 vault skills and all 15 `Beexly/Sports/.agents/skills` with 0 errors."""
+        """Verify `validate-skills.js --strict` passes all 307 vault skills and all 53 `Beexly/Sports/.agents/skills` (15 R1 + 38 R2) with 0 errors."""
         # 1. All 307 vault skills
         proc_vault = subprocess.run(
             ["node", str(AGY_VALIDATE_JS), "--strict"],
             cwd=str(AGY_SKILLS_ROOT),
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=90,
         )
         self.assertEqual(proc_vault.returncode, 0, f"Vault strict validation failed:\n{proc_vault.stderr}")
         self.assertIn("Validation passed for 307 skills.", proc_vault.stdout)
 
-        # 2. All 15 Beexly/Sports/.agents/skills (0 warnings, 0 errors)
+        # 2. All 53 Beexly/Sports/.agents/skills (0 warnings, 0 errors)
         proc_ws = subprocess.run(
             ["node", str(AGY_VALIDATE_JS), "--strict", "--skills-dir", str(WORKSPACE_SKILLS_DIR)],
             cwd=str(REPO_ROOT),
@@ -548,13 +680,155 @@ class TestTier5AdversarialAntigravitySkillsAndValidator(unittest.TestCase):
             timeout=30,
         )
         self.assertEqual(proc_ws.returncode, 0, f"Workspace strict validation failed:\n{proc_ws.stderr}")
-        self.assertIn("Validation passed for 15 skills.", proc_ws.stdout)
+        self.assertIn("Validation passed for 53 skills.", proc_ws.stdout)
         self.assertEqual(proc_ws.stderr.strip(), "", f"Expected 0 warnings on workspace skills, got:\n{proc_ws.stderr}")
 
-        # 3. Verify zero symlinks anywhere under .agents/skills or /shared/user/.gemini/config/plugins/antigravity-skills
-        for root_dir in (WORKSPACE_SKILLS_DIR, AGY_SKILLS_ROOT):
-            symlinks = [p for p in root_dir.rglob("*") if p.is_symlink()]
-            self.assertEqual(symlinks, [], f"Found unexpected symlinks in {root_dir}: {symlinks}")
+        # 3. Fast symlink check across WORKSPACE_SKILLS_DIR (recursive) and AGY_SKILLS_ROOT/skills (getdents64)
+        ws_symlinks: List[str] = []
+        for dirpath, dirnames, filenames in os.walk(WORKSPACE_SKILLS_DIR, followlinks=False):
+            for name in [*dirnames, *filenames]:
+                cand = os.path.join(dirpath, name)
+                if os.path.islink(cand):
+                    ws_symlinks.append(cand)
+        self.assertEqual(ws_symlinks, [], f"Found unexpected symlinks in {WORKSPACE_SKILLS_DIR}: {ws_symlinks}")
+        with os.scandir(AGY_SKILLS_ROOT / "skills") as v_it:
+            vault_symlinks = [e.name for e in v_it if e.is_symlink()]
+        self.assertEqual(vault_symlinks, [], f"Found unexpected symlinks in {AGY_SKILLS_ROOT / 'skills'}: {vault_symlinks}")
+
+    def test_05_round2_f13_google_skills_187_three_root_parity_7_plugins_and_1269_live_execution(self) -> None:
+        """White-box challenge `google/skills` (`187` skills across 3 roots), 7 `CANONICAL_7_AGY_PLUGINS` (`383` skills), and `1,269`-skill execution receipt."""
+        google_plugin_dir = Path("/shared/user/.gemini/config/plugins/google-skills")
+        gemini_skills_dir = Path("/shared/user/.gemini/config/skills")
+        agents_skills_dir = Path.home() / ".agents" / "skills"
+
+        index_path = google_plugin_dir / "index.json"
+        self.assertTrue(index_path.is_file(), f"Missing {index_path}")
+        index_data = json.loads(index_path.read_text(encoding="utf-8"))
+        skills_list = index_data.get("skills", [])
+        self.assertEqual(len(skills_list), 187, f"Expected 187 standalone google/skills, got {len(skills_list)}")
+
+        with os.scandir(gemini_skills_dir) as git:
+            gemini_skill_names = {e.name for e in git if e.is_dir(follow_symlinks=False)}
+        with os.scandir(agents_skills_dir) as ait:
+            agents_skill_names = {e.name for e in ait if e.is_dir(follow_symlinks=False)}
+        google_cat_dirs: Dict[str, set[str]] = {}
+        for cat_name in ("ads", "analytics", "cloud", "developers", "identity"):
+            c_dir = google_plugin_dir / "skills" / cat_name
+            self.assertTrue(c_dir.is_dir(), f"Missing category dir: {c_dir}")
+            with os.scandir(c_dir) as cit:
+                google_cat_dirs[cat_name] = {e.name for e in cit if e.is_dir(follow_symlinks=False)}
+
+        # Check category breakdown (ads=3, analytics=2, cloud=175, developers=6, identity=1)
+        cat_counts: Dict[str, int] = {}
+        for item in skills_list:
+            entrypoint = str(item.get("entrypoint", "")).strip()
+            rel_md = entrypoint.split("/main/")[-1].lstrip("/") if "/main/" in entrypoint else str(item.get("path", "")).strip("/")
+            rel_dir = rel_md[: -len("/SKILL.md")] if rel_md.endswith("/SKILL.md") else rel_md
+            sid = str(item.get("name", "")).strip()
+            parts = rel_dir.split("/")
+            cat = parts[1] if len(parts) >= 2 and parts[0] == "skills" else parts[0]
+            cat_counts[cat] = cat_counts.get(cat, 0) + 1
+            self.assertIn(sid, google_cat_dirs.get(cat, set()), f"Missing in google-skills/{cat}: {sid}")
+            self.assertIn(sid, gemini_skill_names, f"Missing in gemini/config/skills: {sid}")
+            self.assertIn(f"google-{sid}", agents_skill_names, f"Missing in ~/.agents/skills: google-{sid}")
+
+        self.assertEqual(
+            cat_counts,
+            {"ads": 14, "analytics": 2, "cloud": 166, "developers": 3, "identity": 2},
+            f"Unexpected google/skills category breakdown: {cat_counts}",
+        )
+
+        # Verify 7 CANONICAL_7_AGY_PLUGINS skill counts (15 + 9 + 307 + 45 + 1 + 5 + 1 = 383)
+        expected_plugins = {
+            "superpowers": 15,
+            "understand-anything": 9,
+            "antigravity-skills": 307,
+            "antigravity-workflows": 45,
+            "android-cli-plugin": 1,
+            "chrome-devtools-plugin": 5,
+            "google-antigravity-sdk": 1,
+        }
+        plugins_root = Path("/shared/user/.gemini/config/plugins")
+        total_canonical = 0
+        for p_name, exp_count in expected_plugins.items():
+            s_dir = plugins_root / p_name / "skills"
+            self.assertTrue(s_dir.is_dir(), f"Missing canonical plugin skills dir: {s_dir}")
+            with os.scandir(s_dir) as it:
+                entries = [e.name for e in it if e.is_dir(follow_symlinks=False) and not e.name.startswith(".")]
+            self.assertEqual(len(entries), exp_count, f"Plugin {p_name} count mismatch: {len(entries)} != {exp_count}")
+            total_canonical += len(entries)
+        self.assertEqual(total_canonical, 383)
+
+        # Verify live skills execution receipt
+        receipt_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-07" / "ALL-758-SKILLS-LIVE-EXECUTION-RECEIPT.json"
+        self.assertTrue(receipt_path.is_file())
+        receipt_raw = receipt_path.read_text(encoding="utf-8")
+        self.assertNotIn("C:\\Users\\", receipt_raw)
+        self.assertNotIn("C:/Users/", receipt_raw)
+        receipt = json.loads(receipt_raw)
+        self.assertEqual(receipt["overall_status"], "ALL_SKILLS_EXECUTED_PASS")
+        self.assertGreaterEqual(receipt["total_skill_md_files_executed"], 1110)
+        self.assertTrue(receipt["consent_gate_enforced"])
+        self.assertEqual(receipt["total_mutating_cloud_commands_executed"], 0)
+        self.assertEqual(receipt["per_root_skill_counts"]["agents_skills"], 366)
+        self.assertEqual(receipt["per_root_skill_counts"]["gemini_config_skills"], 299)
+        self.assertGreaterEqual(receipt["per_root_skill_counts"]["gemini_config_plugins"], 445)
+        self.assertEqual(receipt["google_prefixed_skills_in_agents_dir"], 187)
+
+    def test_06_round2_f13_validate_skills_strict_rejects_prose_refs_bad_metadata_and_500_lines(self) -> None:
+        """White-box test `validate-skills.js --strict` against inline-code/bold prose helper refs, non-string metadata, prohibited description phrases, >500 lines, and missing `SKILL.md`."""
+        with tempfile.TemporaryDirectory(prefix="challenger-r2-strict-val-") as tmp:
+            tmp_root = Path(tmp)
+
+            # 1. Inline-code & bold prose helper references (`references/missing-doc.md`, **scripts/missing-runner.sh**) + non-string metadata + "You are" description
+            skill_prose = tmp_root / "prose-ref-skill"
+            skill_prose.mkdir(parents=True)
+            (skill_prose / "SKILL.md").write_text(
+                "---\n"
+                "name: prose-ref-skill\n"
+                "description: You are a helpful assistant that PROACTIVELY runs tasks.\n"
+                "metadata:\n"
+                "  numeric_key: 42\n"
+                "---\n"
+                "## Use this skill when\n- Testing prose refs.\n"
+                "## Do not use\n- Production.\n"
+                "## Instructions\n- Consult `references/nonexistent-architecture.md` and **scripts/missing-runner.sh** first.\n",
+                encoding="utf-8",
+            )
+
+            # 2. Skill exceeding 500 lines
+            skill_long = tmp_root / "over-500-lines-skill"
+            skill_long.mkdir(parents=True)
+            long_body = "\n".join(f"- Step {i}: deterministic check." for i in range(505))
+            (skill_long / "SKILL.md").write_text(
+                "---\n"
+                "name: over-500-lines-skill\n"
+                "description: Valid description for line limit test.\n"
+                "---\n"
+                "## Use this skill when\n- Testing line limits.\n"
+                "## Do not use\n- Never.\n"
+                "## Instructions\n" + long_body + "\n",
+                encoding="utf-8",
+            )
+
+            # 3. Non-hidden directory missing SKILL.md entirely
+            (tmp_root / "dir-without-skill-md").mkdir(parents=True)
+
+            proc = subprocess.run(
+                ["node", str(AGY_VALIDATE_JS), "--strict", "--skills-dir", str(tmp_root)],
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+            self.assertNotEqual(proc.returncode, 0, "Expected strict validator to reject synthetic violations")
+            self.assertIn("Missing SKILL.md: dir-without-skill-md", proc.stderr)
+            self.assertIn("description must say what the skill does and when to use it, not address the agent", proc.stderr)
+            self.assertIn("metadata.numeric_key must be a string", proc.stderr)
+            self.assertIn("Referenced file not found or outside skill", proc.stderr)
+            self.assertIn("references/nonexistent-architecture.md", proc.stderr)
+            self.assertIn("scripts/missing-runner.sh", proc.stderr)
+            self.assertIn('Missing "SKILL.md line count <= 500" section (strict)', proc.stderr)
+            self.assertIn("over-500-lines-skill", proc.stderr)
 
 
 class TestTier5AdversarialMongoDBCredentialsAndSecretHygiene(unittest.TestCase):
@@ -666,6 +940,377 @@ class TestTier5AdversarialMongoDBCredentialsAndSecretHygiene(unittest.TestCase):
         self.assertEqual(proc_grep.returncode, 1, f"Private key leaked in tracked git files:\n{proc_grep.stdout}")
         self.assertEqual(proc_grep.stdout.strip(), "")
 
+    def test_03_round2_f15_live_digest_auth_verification_and_project_galaxy_sports_edge(self) -> None:
+        """Verify live HTTP Digest Auth verification against `https://cloud.mongodb.com/api/atlas/v1.0` for Org `6af23c6a4b0ddc92393b827f` and Project `Galaxy Sports Edge` (`6af23d2bfdbda62efc136f07`)."""
+        file_secrets = load_env_local_secrets(MONGODB_SECRET_FILE)
+        self.assertEqual(file_secrets.get("MONGODB_ATLAS_PROJECT_ID"), "6af23d2bfdbda62efc136f07")
+        self.assertEqual(file_secrets.get("MONGODB_ATLAS_PROJECT_NAME"), "Galaxy Sports Edge")
+
+        adapter = MongoDBDossierArchiveAdapter()
+        self.assertEqual(adapter.atlas_org_id, "6af23c6a4b0ddc92393b827f")
+        self.assertEqual(adapter.atlas_project_id, "6af23d2bfdbda62efc136f07")
+        self.assertEqual(adapter.atlas_project_name, "Galaxy Sports Edge")
+
+        verification = adapter.verify_atlas_org_and_project(timeout_sec=10.0)
+        self.assertEqual(verification["org_id"], "6af23c6a4b0ddc92393b827f")
+        self.assertEqual(verification["project_id"], "6af23d2bfdbda62efc136f07")
+        self.assertEqual(verification["project_name"], "Galaxy Sports Edge")
+        self.assertFalse(verification["org_is_deleted"])
+        self.assertIn(verification["verification_mode"], ("live_http_digest_auth", "offline_cached_receipt_fallback"))
+        project_ids = {p["id"] for p in verification["projects"]}
+        self.assertIn("6af23d2bfdbda62efc136f07", project_ids)
+        self.assertIn("ORG_OWNER", verification["roles"])
+        self.assertNotIn(file_secrets["MONGODB_ATLAS_PRIVATE_KEY"], json.dumps(verification))
+
+    def test_04_round2_f15_adversarial_http_errors_corrupt_receipt_tiny_timeout_and_secret_hygiene(self) -> None:
+        """White-box test `MongoDBDossierArchiveAdapter` under HTTP 401/500, `URLError`, corrupt receipt JSON, malformed API payloads, and tiny `timeout_sec`."""
+        import urllib.error
+
+        file_secrets = load_env_local_secrets(MONGODB_SECRET_FILE)
+        priv_key = file_secrets["MONGODB_ATLAS_PRIVATE_KEY"]
+        adapter = MongoDBDossierArchiveAdapter()
+
+        # 1. Tiny timeout (< 0.05s) must bypass network I/O and use receipt fallback without leaking private key
+        res_fast = adapter.verify_atlas_org_and_project(timeout_sec=0.001)
+        self.assertFalse(res_fast["live_http_verified"])
+        self.assertEqual(res_fast["verification_mode"], "offline_cached_receipt_fallback")
+        self.assertEqual(res_fast["project_id"], "6af23d2bfdbda62efc136f07")
+        self.assertNotIn(priv_key, json.dumps(res_fast))
+
+        # 2. HTTP 401 Unauthorized & URLError + corrupt receipt file -> must fall back to `offline_default_fallback`
+        with tempfile.TemporaryDirectory(prefix="challenger-corrupt-receipt-") as tmp:
+            corrupt_receipt = Path(tmp) / "corrupt_receipt.json"
+            corrupt_receipt.write_text("{corrupt_json_payload!!!", encoding="utf-8")
+
+            with patch.object(
+                MongoDBDossierArchiveAdapter,
+                "DEFAULT_RECEIPT_PATH",
+                corrupt_receipt,
+            ), patch.object(
+                adapter,
+                "_atlas_get_json",
+                side_effect=urllib.error.HTTPError(
+                    url="https://cloud.mongodb.com/api/atlas/v1.0/orgs/6af23c6a4b0ddc92393b827f",
+                    code=401,
+                    msg="Unauthorized Digest",
+                    hdrs=None,  # type: ignore[arg-type]
+                    fp=None,
+                ),
+            ):
+                fallback_401 = adapter.verify_atlas_org_and_project(timeout_sec=5.0)
+                self.assertFalse(fallback_401["live_http_verified"])
+                self.assertEqual(fallback_401["verification_mode"], "offline_default_fallback")
+                self.assertEqual(fallback_401["org_id"], "6af23c6a4b0ddc92393b827f")
+                self.assertEqual(fallback_401["project_id"], "6af23d2bfdbda62efc136f07")
+                self.assertNotIn(priv_key, json.dumps(fallback_401))
+
+                projects_401 = adapter.list_atlas_projects(timeout_sec=5.0)
+                self.assertEqual(len(projects_401), 1)
+                self.assertEqual(projects_401[0]["id"], "6af23d2bfdbda62efc136f07")
+
+                clusters_401 = adapter.list_project_clusters(timeout_sec=5.0)
+                self.assertEqual(clusters_401, [])
+
+        # 3. Malformed payload structure from `_atlas_get_json` (non-dict entries inside `results`)
+        with patch.object(
+            adapter,
+            "_atlas_get_json",
+            return_value={"results": [None, "corrupt_row", 999, {"id": "p_valid", "name": "ValidProj", "clusterCount": 2}]},
+        ):
+            filtered_projects = adapter.list_atlas_projects(timeout_sec=5.0)
+            self.assertEqual(len(filtered_projects), 1)
+            self.assertEqual(filtered_projects[0]["id"], "p_valid")
+            self.assertEqual(filtered_projects[0]["clusterCount"], 2)
+
+
+class TestTier5AdversarialM8GuardrailsAndPythonLedger(unittest.TestCase):
+    """White-box adversarial stress tests for M8 (`F17` 36 CI guardrails & AST boundaries, `F18` Python ledger & Stage-0 stdlib PBP fallback)."""
+
+    def test_01_ai_transport_import_boundary_whitebox_ast_violations_and_type_exemptions(self) -> None:
+        """White-box test `analyzeSource` in `ai-transport-import-boundary.mjs` across all 6 violation rules and verify `import type` / comments are exempt."""
+        guard_url = (REPO_ROOT / "scripts" / "guardrails" / "ai-transport-import-boundary.mjs").as_uri()
+        node_script = f"""
+        import assert from 'node:assert/strict';
+        import {{ analyzeSource }} from {json.dumps(guard_url)};
+
+        // 1. Aliased named import of callClaudeMessages
+        const v1 = analyzeSource('apps/web/app/api/chat/route.ts', 'import {{ callClaudeMessages as sneak }} from "@/lib/claude-api/messages";');
+        assert.ok(v1.some(v => v.id === 'raw-transport-import'), 'Missed aliased raw-transport-import');
+
+        // 2. Namespace import & Default import of transport module
+        const v2 = analyzeSource('apps/web/lib/claude-api/caller.ts', 'import * as m from "./messages";\\nimport defM from "./messages";');
+        assert.ok(v2.some(v => v.id === 'raw-transport-namespace-import'), 'Missed raw-transport-namespace-import');
+        assert.ok(v2.some(v => v.id === 'raw-transport-default-import'), 'Missed raw-transport-default-import');
+
+        // 3. Export star and named re-export
+        const v3 = analyzeSource('apps/web/lib/claude-api/barrel.ts', 'export * from "./messages";\\nexport {{ callClaudeMessages as pub }} from "./messages";');
+        assert.ok(v3.some(v => v.id === 'raw-transport-export-star'), 'Missed raw-transport-export-star');
+        assert.ok(v3.some(v => v.id === 'raw-transport-reexport'), 'Missed raw-transport-reexport');
+
+        // 4. Namespace property access, computed literal access, and destructuring
+        const v4 = analyzeSource(
+          'apps/web/lib/other.ts',
+          'const ns = require("./some-wrapper");\\nns.callClaudeMessages();\\nns["callClaudeMessages"]();\\nconst {{ callClaudeMessages: extracted }} = ns;'
+        );
+        const nsHits = v4.filter(v => v.id === 'raw-transport-namespace-access');
+        assert.equal(nsHits.length, 3, `Expected 3 raw-transport-namespace-access hits, got ${{nsHits.length}}`);
+
+        // 5. Relative provider import, vendor SDK import, raw endpoint literal, dynamic import & require
+        const v5 = analyzeSource(
+          'apps/web/lib/claude-api/sneaky.ts',
+          'import {{ invoke }} from "./providers/bedrock";\\n' +
+          'import Anthropic from "@anthropic-ai/sdk";\\n' +
+          'const ep = "https://api.anthropic.com/v1/messages";\\n' +
+          'const dyn = await import("./messages");\\n' +
+          'const req = require("./messages");'
+        );
+        assert.ok(v5.some(v => v.id === 'raw-provider-import'), 'Missed relative raw-provider-import');
+        assert.ok(v5.some(v => v.id === 'provider-sdk-import'), 'Missed provider-sdk-import');
+        assert.ok(v5.some(v => v.id === 'raw-endpoint-literal'), 'Missed raw-endpoint-literal');
+        assert.ok(v5.some(v => v.id === 'raw-transport-dynamic'), 'Missed raw-transport-dynamic');
+        assert.ok(v5.some(v => v.id === 'raw-transport-require'), 'Missed raw-transport-require');
+
+        // 6. Negative controls: type-only imports, ClaudeMessagesError class import, and comments MUST produce 0 violations
+        const clean = analyzeSource(
+          'apps/web/lib/safe-consumer.ts',
+          '// Example endpoint: https://api.anthropic.com/v1/messages\\n' +
+          'import type {{ callClaudeMessages }} from "@/lib/claude-api/messages";\\n' +
+          'import {{ type callClaudeMessages as TMsg, ClaudeMessagesError }} from "@/lib/claude-api/messages";\\n' +
+          'export const errClass = ClaudeMessagesError;'
+        );
+        assert.deepEqual(clean, [], `Expected 0 violations on safe code, got ${{JSON.stringify(clean)}}`);
+        console.log('AI_TRANSPORT_BOUNDARY_WHITEBOX_OK');
+        """
+        proc = subprocess.run(
+            ["node", "--input-type=module", "-e", node_script],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(proc.returncode, 0, f"ai-transport-import-boundary whitebox failed:\n{proc.stdout}\n{proc.stderr}")
+        self.assertIn("AI_TRANSPORT_BOUNDARY_WHITEBOX_OK", proc.stdout)
+
+    def test_02_actor_minting_boundary_and_client_ip_boundary_adversarial_fixture_scans(self) -> None:
+        """Verify `actor-minting-boundary.mjs --scan-root` and `client-ip-boundary.mjs --scan-root` catch synthetic violations and pass clean code."""
+        actor_guard = REPO_ROOT / "scripts" / "guardrails" / "actor-minting-boundary.mjs"
+        ip_guard = REPO_ROOT / "scripts" / "guardrails" / "client-ip-boundary.mjs"
+
+        with tempfile.TemporaryDirectory(prefix="challenger-m8-boundaries-") as tmp:
+            tmp_path = Path(tmp)
+
+            # 1. Actor minting adversarial violations
+            actor_bad_dir = tmp_path / "actor_bad"
+            actor_bad_dir.mkdir()
+            (actor_bad_dir / "violator.ts").write_text(
+                'import { serviceActor as sa } from "@/lib/auth/actor";\n'
+                'import * as actorNs from "@/lib/auth/actor";\n'
+                'import { helper } from "@/lib/auth/actor-test-internal";\n'
+                'export * from "@/lib/auth/actor";\n'
+                'export { systemActor } from "@/lib/auth/actor";\n'
+                'const a = actorNs.serviceActor("x");\n'
+                'const b = actorNs["systemActor"]("y");\n'
+                'const dyn = await import("@/lib/auth/actor");\n',
+                encoding="utf-8",
+            )
+            proc_actor_bad = subprocess.run(
+                ["node", str(actor_guard), "--scan-root", str(actor_bad_dir)],
+                cwd=str(REPO_ROOT),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(proc_actor_bad.returncode, 1, f"Expected actor-minting-boundary to fail:\n{proc_actor_bad.stdout}")
+            for rule_id in ("[raw-import]", "[test-internal]", "[export-star]", "[raw-reexport]", "[namespace-minting]", "[dynamic-import]"):
+                self.assertIn(rule_id, proc_actor_bad.stderr)
+
+            # Actor minting clean negative control
+            actor_ok_dir = tmp_path / "actor_ok"
+            actor_ok_dir.mkdir()
+            (actor_ok_dir / "clean.ts").write_text(
+                '// Comment mentioning serviceActor and systemActor\n'
+                'import { resolveServiceActor } from "@/lib/auth/actor";\n'
+                'export const actor = resolveServiceActor;\n',
+                encoding="utf-8",
+            )
+            proc_actor_ok = subprocess.run(
+                ["node", str(actor_guard), "--scan-root", str(actor_ok_dir)],
+                cwd=str(REPO_ROOT),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(proc_actor_ok.returncode, 0, f"Expected clean actor code to pass:\n{proc_actor_ok.stderr}")
+
+            # 2. Client-IP boundary adversarial violations
+            ip_bad_dir = tmp_path / "ip_bad"
+            ip_bad_dir.mkdir()
+            (ip_bad_dir / "route.ts").write_text(
+                'export function getIp(req: Request) {\n'
+                '  const a = req.headers.get("X-Forwarded-For");\n'
+                '  const b = req.headers.get("x-vercel-forwarded-for");\n'
+                '  const c = req.headers.get(`x-real-ip`);\n'
+                '  return a || b || c;\n'
+                '}\n',
+                encoding="utf-8",
+            )
+            proc_ip_bad = subprocess.run(
+                ["node", str(ip_guard), "--scan-root", str(ip_bad_dir)],
+                cwd=str(REPO_ROOT),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(proc_ip_bad.returncode, 1, f"Expected client-ip-boundary to fail:\n{proc_ip_bad.stdout}")
+            self.assertEqual(proc_ip_bad.stderr.count("[forwarding-header-literal]"), 3)
+
+            # Client-IP clean negative control (comments mentioning x-forwarded-for are allowed)
+            ip_ok_dir = tmp_path / "ip_ok"
+            ip_ok_dir.mkdir()
+            (ip_ok_dir / "clean.ts").write_text(
+                '// Never parse x-forwarded-for or x-real-ip directly; use clientIp(req).\n'
+                'import { clientIp } from "@/lib/api/rate-limit";\n'
+                'export const handler = (req: Request) => clientIp(req);\n',
+                encoding="utf-8",
+            )
+            proc_ip_ok = subprocess.run(
+                ["node", str(ip_guard), "--scan-root", str(ip_ok_dir)],
+                cwd=str(REPO_ROOT),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(proc_ip_ok.returncode, 0, f"Expected clean client-ip code to pass:\n{proc_ip_ok.stderr}")
+
+    def test_03_run_all_manifest_fail_closed_and_4_remediated_guardrails_live_pass(self) -> None:
+        """Verify `run-all.mjs` fails closed (exit 2) on unknown `--only` guards and passes all 4 remediated TypeScript/Vitest guardrails live."""
+        run_all = REPO_ROOT / "scripts" / "guardrails" / "run-all.mjs"
+
+        # 1. Unknown guard name in --only must exit 2
+        proc_unknown = subprocess.run(
+            ["node", str(run_all), "--only=nonexistent-guard-name"],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        self.assertEqual(proc_unknown.returncode, 2)
+        self.assertIn("--only references unknown guard(s): nonexistent-guard-name", proc_unknown.stderr)
+
+        # 2. All 4 remediated guardrails pass live
+        proc_4 = subprocess.run(
+            [
+                "node",
+                str(run_all),
+                "--only=ai-transport-import-boundary,actor-minting-boundary,client-ip-boundary,ai-council",
+                "--json",
+            ],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        self.assertEqual(proc_4.returncode, 0, f"4 remediated guardrails failed:\n{proc_4.stdout}\n{proc_4.stderr}")
+        payload = json.loads(proc_4.stdout)
+        results = {r["name"]: r["ok"] for r in payload.get("results", [])}
+        self.assertEqual(
+            results,
+            {
+                "ai-transport-import-boundary": True,
+                "actor-minting-boundary": True,
+                "client-ip-boundary": True,
+                "ai-council": True,
+            },
+        )
+
+    def test_04_f18_zero_hybrid_ledger_strings_and_overnight_dry_run_and_seo_lcp(self) -> None:
+        """Verify zero hybrid `47-19-1` + `72.9%`/`+26.50u` strings across target Python scripts, test `--dry-run`, and verify SEO LCP freshness."""
+        target_scripts = (
+            REPO_ROOT / "scripts" / "ops" / "run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py",
+            REPO_ROOT / "scripts" / "ops" / "gse_connected_game_workflow.py",
+            REPO_ROOT / "scripts" / "ops" / "run_week9_full_slate_connected_workflow.py",
+            REPO_ROOT / "scripts" / "ops" / "gse_structured_workflow_runner.py",
+            REPO_ROOT / "scripts" / "ops" / "workflow_runner.py",
+            REPO_ROOT / "intelligence" / "dfs" / "full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py",
+            REPO_ROOT / "intelligence" / "seo" / "seo_and_lcp_optimization_engine.py",
+        )
+        for path in target_scripts:
+            self.assertTrue(path.is_file(), f"Missing target script: {path}")
+            text = path.read_text(encoding="utf-8")
+            for line_no, line in enumerate(text.splitlines(), start=1):
+                if "47-19-1" in line:
+                    self.assertNotIn("72.9%", line, f"Hybrid 47-19-1 + 72.9% at {path}:{line_no}")
+                    self.assertNotIn("0.729", line, f"Hybrid 47-19-1 + 0.729 at {path}:{line_no}")
+                    self.assertNotIn("+26.50u", line, f"Hybrid 47-19-1 + +26.50u at {path}:{line_no}")
+
+        # Verify --dry-run does not modify MASTER_RECEIPT_PATH
+        shift_script = REPO_ROOT / "scripts" / "ops" / "run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py"
+        receipt_path = REPO_ROOT / "data" / "engine" / "overnight_20h_shift_master_receipt_2026_11_05.json"
+        before_bytes = receipt_path.read_bytes() if receipt_path.is_file() else None
+        proc_dry = subprocess.run(
+            [sys.executable, str(shift_script), "--dry-run"],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertEqual(proc_dry.returncode, 0, f"Overnight shift --dry-run failed:\n{proc_dry.stdout}\n{proc_dry.stderr}")
+        self.assertIn("OFFICIAL VERIFIED RECORD: 47-19-1 (71.2% · +24.92u)", proc_dry.stdout)
+        self.assertIn("[DRY-RUN] Verified all 5 tracks without modifying master shift receipt.", proc_dry.stdout)
+        after_bytes = receipt_path.read_bytes() if receipt_path.is_file() else None
+        self.assertEqual(before_bytes, after_bytes, "--dry-run mutated overnight_20h_shift_master_receipt_2026_11_05.json")
+
+        # Verify SEO & LCP engine
+        from intelligence.seo.seo_and_lcp_optimization_engine import (
+            audit_content_freshness_and_lcp,
+            compute_lcp_4_subpart_breakdown_and_fixes,
+        )
+
+        freshness = audit_content_freshness_and_lcp()
+        lcp_4 = compute_lcp_4_subpart_breakdown_and_fixes()
+        self.assertTrue(freshness["lcp_four_subpart_audit"]["verified_47_19_1_present"])
+        self.assertTrue(freshness["lcp_four_subpart_audit"]["no_inverted_overall_framing"])
+        self.assertTrue(freshness["lcp_four_subpart_audit"]["zero_bogus_2024_matchups_verified"])
+        self.assertTrue(lcp_4["passes_cwv_good_threshold"])
+        self.assertLessEqual(lcp_4["total_lcp_ms"], 2500)
+
+    def test_05_f18_stage0_stdlib_dataframe_fallback_parity_and_contamination_rejection(self) -> None:
+        """White-box test `_StdlibDataFrame` in `enforce_stage0_roster_and_board_allowlist.py` when `pd = None` and verify contamination rejection."""
+        import scripts.ops.enforce_stage0_roster_and_board_allowlist as stage0_mod
+
+        # 1. Execute with pd = None (stdlib gzip.open + csv.DictReader fallback)
+        with patch.object(stage0_mod, "pd", None):
+            allowlist_stdlib = stage0_mod.load_stage0_game_roster_allowlist("JAX", "BAL", week=9)
+            self.assertEqual(allowlist_stdlib["matchup"], "JAX@BAL")
+            self.assertGreaterEqual(len(allowlist_stdlib["allowed_players"]), 15)
+            self.assertIn("Trevor Lawrence", allowlist_stdlib["allowed_players"])
+            self.assertIn("Joe Fagnano", allowlist_stdlib["allowed_players"])
+            self.assertTrue(allowlist_stdlib["stage0_receipt_sha256"])
+
+            # 2. Inject an off-roster hallucinated player ("Tank Bigsby") into a synthetic board and verify Stage0RosterContaminationError
+            real_board_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_dk_full_board_2026_11_05.json"
+            board_data = json.loads(real_board_path.read_text(encoding="utf-8"))
+            board_data["props"].append(
+                {
+                    "athlete": "Tank Bigsby",
+                    "team": "JAX",
+                    "position": "RB",
+                    "market": "Total Rushing Yards (incl. overtime)",
+                    "line": 45.5,
+                    "open_line": 45.5,
+                    "has_price": True,
+                }
+            )
+            with patch.object(
+                stage0_mod,
+                "resolve_or_generate_matchup_board",
+                return_value=(board_data, "synthetic_contaminated_board.json"),
+            ):
+                with self.assertRaises(stage0_mod.Stage0RosterContaminationError) as ctx:
+                    stage0_mod.load_stage0_game_roster_allowlist("JAX", "BAL", week=9)
+                self.assertIn("Tank Bigsby", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

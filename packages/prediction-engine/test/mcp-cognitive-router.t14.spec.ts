@@ -56,7 +56,8 @@
  */
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import {
   CONTEXT_MASK_BITS,
@@ -1161,7 +1162,14 @@ describe("T14 -- the 50k MCP cognitive router: cross-equation Jacobian and Stein
    * caught here rather than by a human reading a green pipeline.
    */
   it("T14: the mutation sweep for T14 is present and targets this gate", () => {
-    const path = resolve(process.cwd(), "reconciliation/_mutation_sweep_t14_mcp.mjs");
+    const pkgSweepPath = resolve(
+      dirname(fileURLToPath(import.meta.url)),
+      "..",
+      "reconciliation/_mutation_sweep_t14_mcp.mjs",
+    );
+    const path = existsSync(pkgSweepPath)
+      ? pkgSweepPath
+      : resolve(process.cwd(), "reconciliation/_mutation_sweep_t14_mcp.mjs");
     expect(existsSync(path)).toBe(true);
     const source = readFileSync(path, "utf8");
     expect(source).toContain("mcp-cognitive-router.ts");

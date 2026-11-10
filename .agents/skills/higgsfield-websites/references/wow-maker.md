@@ -94,7 +94,7 @@ a param/model is rejected, run `higgsfield model list` +
   (repeated `--image`, `--should_texture true`; no rigging).
 
 **Pipeline:** generate → poll → **download into `app/public/`** (e.g. `assets/`,
-`media/`, `frames/`) → reference **same-origin** (`/assets/...`). The Worker serves
+`media/`, `frames/`) → reference **same-origin** (`/workspace/assets/...`). The Worker serves
 `public/` at the root. Never ship `<img src="">` / `<video src="">` blanks or
 stock/picsum as the final asset.
 

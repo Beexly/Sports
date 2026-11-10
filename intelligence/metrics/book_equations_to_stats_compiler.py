@@ -831,6 +831,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1x8zxMF3w-wKMt1EJNTudUMlInFb-iEkB",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1x8zxMF3w-wKMt1EJNTudUMlInFb-iEkB/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-02",
@@ -841,6 +844,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1J72KqnCufLU_h5B7O7YPa9QRdXQmRYe2",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1J72KqnCufLU_h5B7O7YPa9QRdXQmRYe2/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-03",
@@ -851,6 +857,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-must-have",
         "operator_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1F2LhwexxSQVh_K86TyYDK5nklVSgSk0b",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1F2LhwexxSQVh_K86TyYDK5nklVSgSk0b/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-04",
@@ -861,6 +870,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "16AL19D20Yq-eptBLhmCqToD6elvQ1793",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/16AL19D20Yq-eptBLhmCqToD6elvQ1793/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-05",
@@ -871,6 +883,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-must-have",
         "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1YgahW4XOmwz5XQovxsIBXAoA2_X8DWap",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1YgahW4XOmwz5XQovxsIBXAoA2_X8DWap/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-06",
@@ -881,6 +896,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1gF62vU0SAH-QFIP79S5N_-xVBlQjYI4A",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1gF62vU0SAH-QFIP79S5N_-xVBlQjYI4A/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-07",
@@ -891,6 +909,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-must-have",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1T42Ig51F7AHtaQ_c_DWFBkXVhRI8xlcF",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1T42Ig51F7AHtaQ_c_DWFBkXVhRI8xlcF/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-08",
@@ -901,6 +922,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-must-have",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1TQsE5d_hHuL4Hr9mqLmsobFDuoBJq55q",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1TQsE5d_hHuL4Hr9mqLmsobFDuoBJq55q/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-09",
@@ -911,6 +935,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-must-have",
         "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1REDdBdIAzCE-C7GA1nh8tKdxUYcTPG3J",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1REDdBdIAzCE-C7GA1nh8tKdxUYcTPG3J/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-10",
@@ -921,6 +948,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-must-have",
         "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1hMq7inIq55g2r7h11NJ-1NrqToSbRlOZ",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1hMq7inIq55g2r7h11NJ-1NrqToSbRlOZ/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-11",
@@ -931,6 +961,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "DRIVE_VERIFIED",
+        "drive_id": "1vOULGiIs31U0lmLu8o3uzJ3t_P2_pMMX",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/file/d/1vOULGiIs31U0lmLu8o3uzJ3t_P2_pMMX/view?usp=drivesdk",
     },
     {
         "skeleton_id": "SKEL-BK-12",
@@ -941,6 +974,9 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
         "status": "BLOCKED — UCL host unreachable, retry owed",
+        "drive_id": "BLOCKED_UCL_HOST_UNREACHABLE",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/drive/folders/1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
     },
     {
         "skeleton_id": "SKEL-BK-13",
@@ -951,8 +987,61 @@ SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
         "lane": "books-d-models",
         "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
         "status": "HTML_ONLY — MIT Press contract prohibits PDF distribution",
+        "drive_id": "HTML_ONLY_MIT_PRESS_CONTRACT",
+        "drive_folder_id": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+        "drive_url": "https://drive.google.com/drive/folders/1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
     },
 )
+
+LANE_TO_PRIMARY_DRIVE_FOLDER_ID: Dict[str, str] = {
+    "books-a-sports": "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau",
+    "books-b-medical": "1vAbWGjohacWhyruewNKh0CLlLrjnNr4j",
+    "books-c-systems": "1F-UfpDjLrUCDT5CIhBiZD_h1VwCE6THc",
+    "books-d-models": "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX",
+    "books-must-have": "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE",
+}
+
+LANE_TO_EXTENDED_DRIVE_FOLDER_ID: Dict[str, str] = {
+    "books-a-sports": "1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p",
+    "books-b-medical": "19H8nXUJAVhl1ML1Avp-Lf6UH1U6CZ_7p",
+    "books-c-systems": "1Ub2wMF58HeUEX9MTP9Nc4a2TPPGHe_7n",
+    "books-d-models": "1gCQyyPKq_sxD7q5i8dEIMjJ3JtBr_zel",
+    "books-must-have": "1aUgBAkpoIJZ-xeSuvfFcWwTVBcM35sXI",
+}
+
+MONOGRAPH_DRIVE_PROVENANCE: Dict[str, Tuple[str, str, str]] = {
+    "BK-01": ("1PUuGHEkGfm-d634-MAhsXbSyL2gjykx-", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Prediction, Learning, and Games / Online Learning and Online Convex Optimization (Cesa-Bianchi & Lugosi 2006 / Shalev-Shwartz 2012)"),
+    "BK-02": ("1QbXY-ZV4S1nocXGxznQWoBN6KE3rL8_t", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Algorithmic Learning in a Random World / Learning Theory from First Principles (Vovk et al. 2022 / Bach 2024)"),
+    "BK-03": ("1ESTn-B25eVuzTUVRLe71-sSpx1kniIHP", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Optimal Transport: Old and New / Computational Optimal Transport (Villani 2009 / Peyré & Cuturi 2019)"),
+    "BK-04": ("1T42Ig51F7AHtaQ_c_DWFBkXVhRI8xlcF", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Causal Inference: What If (Hernán & Robins 2020)"),
+    "BK-05": ("1TQsE5d_hHuL4Hr9mqLmsobFDuoBJq55q", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Elements of Causal Inference: Foundations and Learning Algorithms (Peters, Janzing & Schölkopf 2017)"),
+    "BK-06": ("1VJlIYyELDuN1njxPRlLikZsC_r7aFJBP", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Causal Inference & Patterns, Predictions, and Actions (Imbens & Rubin 2015 / Hardt & Recht 2022)"),
+    "BK-07": ("1F2LhwexxSQVh_K86TyYDK5nklVSgSk0b", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Information Theory, Inference, and Learning Algorithms (MacKay 2003)"),
+    "BK-08": ("1buWBjdRVWyxEZr4ygpoXslFQIfpL7FlC", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Information Theory: From Coding to Learning (Polyanskiy & Wu 2025)"),
+    "BK-09": ("1R8P3InhgD59ujvHJlKiCdB8XNFZBWGMl", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Trades, Quotes and Prices / Networks, Crowds, and Markets (Bouchaud et al. 2018 / Easley & Kleinberg 2010)"),
+    "BK-10": ("16AL19D20Yq-eptBLhmCqToD6elvQ1793", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Reinforcement Learning: An Introduction, 2nd Edition (Sutton & Barto 2018)"),
+    "BK-11": ("1oEwO4sCmjFREwDFcuvW7cMvcPe7qfq2l", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Quantitative Economics, Dynamic Programming & Reinforcement Learning (Sargent & Stachurski 2024 / Bertsekas 2026)"),
+    "BK-12": ("1YgahW4XOmwz5XQovxsIBXAoA2_X8DWap", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Convex Optimization & Bayesian Filtering and Smoothing (Boyd & Vandenberghe 2004 / Särkkä 2013)"),
+    "BK-13": ("1hMq7inIq55g2r7h11NJ-1NrqToSbRlOZ", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Forecasting & Strictly Proper Scoring Rules (Diebold 2024 / Gneiting & Raftery 2007)"),
+    "BK-14": ("1NgCdw9xT21q1bzgMNgcNNRrnpcVuU-94", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Bayesian Data Analysis, 3rd Edition (Gelman et al. 2013)"),
+    "BK-15": ("1GDGOe1m1JZ7FeLNObpr8lT__kBbnuOTL", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Quantitative Risk Management & Gaussian Processes for Machine Learning (McNeil et al. 2015 / Rasmussen & Williams 2006)"),
+    "BK-16": ("1w3o6oq7ix8LiYY_86Oi8MVETYn_xMAsS", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "The Mathematics and Mechanics of Biological Growth & Musculoskeletal Physiology (Goriely 2017 / OpenStax 2013)"),
+    "BK-17": ("1zbeLas982KRNAdDSU9JOAFvidYepjXLN", "1vAbWGjohacWhyruewNKh0CLlLrjnNr4j", "Rotational TBI & Sulcal Waveguide Biomechanics (Meaney et al. 2024 / Mavroudis & Ciobica 2025)"),
+    "BK-18": ("11LKg5LVjm5Xa_BDQXG5gjXlnPxEXGKk-", "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau", "Acute-to-Chronic Workload Ratio (ACWR), Training Load & Readiness (Gabbett 2016 / Clemente 2022)"),
+    "BK-19": ("1gn1C82tBCPc9GPHKIFWGUZW09lhvCZHK", "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau", "Biomechanics and Motor Control of Human Movement (Winter 2009 / Gonçalves, Bravo & Folgado 2022)"),
+    "BK-20": ("1q0xMVhUkq_0RwAccRSBqc6Z1yw-Fk9IL", "1vAbWGjohacWhyruewNKh0CLlLrjnNr4j", "Theoretical Neuroscience & Free-Energy Predictive Coding under Trauma (Friston 2010 / Chen, Burke & Cohen 2017)"),
+    "BK-21": ("1UziY6jmMEekfzAfVoECTJ0F4TQkjnpTV", "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau", "Two-Process Sleep Regulation, Wellness & Circadian Recovery (Borbély 1982 / Oliveira & Brito 2023)"),
+    "BK-22": ("1j1rSLxClJ4bAeoz0Ma2CJBcv-l9E84zY", "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau", "Position-Specific NFL Orthopedic Return-to-Play Degradation Curves (Clemente & Sarmento 2022)"),
+    "BK-23": ("1vOULGiIs31U0lmLu8o3uzJ3t_P2_pMMX", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Conformal Prediction Beyond Exchangeability & Probabilistic Numerics (Barber et al. 2023 / Hennig et al. 2022)"),
+    "BK-24": ("1ESTn-B25eVuzTUVRLe71-sSpx1kniIHP", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Computational Optimal Transport (Peyré & Cuturi 2019)"),
+    "BK-25": ("1REDdBdIAzCE-C7GA1nh8tKdxUYcTPG3J", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Self-Normalized Processes & High-Dimensional Probability (de la Peña et al. 2009 / Vershynin 2018)"),
+    "GAP-BK-01": ("1EEy94LTs8PXgz1YRhxcUlxmhEzcg-sBf", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "An Introduction to Copulas & Graphical Models (Nelsen 2006 / Wainwright & Jordan 2008)"),
+    "GAP-BK-02": ("1Yrd4Q37pF1tMZdT37Rv94KZ19uYyTyQn", "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau", "Dependence Modeling with Copulas & Bivariate Score Correlation (Joe 2014 / Dixon & Coles 1997)"),
+    "GAP-BK-03": ("1LoBlq1SMyVNlZ27ldNclCq_tIgT2xK33", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Analyzing Dependent Data with Vine Copulas & Non-Uniform Variate Generation (Czado 2019 / Devroye 1986)"),
+    "GAP-BK-04": ("1CZCaHAbxN_a4Q-BjTI5UPks7Rp-5ZjW6", "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE", "Concepts of Discrete Mathematics & Spectral and Algebraic Graph Theory (Mackey & Sullivan / Spielman 2023)"),
+    "GAP-BK-05": ("18v55BY-r4BQtcEDbKX3yWCmnPLzmSvba", "1rhciGvA5-b903l6X3xrJ931tfWMLB6iX", "Elements of Information Theory & I-Projection Statistics (Cover & Thomas 2006 / Csiszár & Shields 2004)"),
+    "GAP-BK-06": ("1OQ8gKEHGjvIUi6caJF2VSGfW7MCXLHQS", "1F-UfpDjLrUCDT5CIhBiZD_h1VwCE6THc", "Causality: Models, Reasoning, and Inference & Algorithms for Decision Making (Pearl 2009 / Kochenderfer et al. 2022)"),
+}
 
 
 class BookEquationsToStatsCompiler:
@@ -1212,14 +1301,28 @@ class BookEquationsToStatsCompiler:
                 dom = "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS"
             else:
                 dom = BOOK_DOMAINS_6[idx % len(BOOK_DOMAINS_6)]
+            fname = str(b.get("filename", ""))
+            drive_id = str(b.get("drive_cloud_id") or b.get("drive_id") or "").strip()
+            src_loc = str(b.get("source_locator", ""))
+            if "(1)" in src_loc:
+                drive_folder_id = LANE_TO_EXTENDED_DRIVE_FOLDER_ID.get(
+                    lane, "1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p"
+                )
+            else:
+                drive_folder_id = LANE_TO_PRIMARY_DRIVE_FOLDER_ID.get(
+                    lane, "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau"
+                )
             books_503.append(
                 {
                     "book_index": idx + 1,
                     "book_id": f"BK-GDRIVE-{idx + 1:03d}",
                     "lane": lane,
-                    "title": b.get("title", ""),
-                    "filename": b.get("filename", ""),
-                    "sha256": b.get("sha256", ""),
+                    "title": str(b.get("title") or Path(fname).stem),
+                    "filename": fname,
+                    "sha256": str(b.get("sha256", "")),
+                    "drive_id": drive_id,
+                    "drive_folder_id": drive_folder_id,
+                    "drive_url": f"https://drive.google.com/file/d/{drive_id}/view?usp=drivesdk",
                     "operator_domain": dom,
                     "sports_spine_import_permitted": False if is_medical else True,
                     "sports_spine_weight": 0.0 if is_medical else 1.0,
@@ -1228,14 +1331,19 @@ class BookEquationsToStatsCompiler:
 
         for idx, d in enumerate(docx_14):
             num = 458 + idx + 1
+            fname = str(d.get("filename", f"gsn_audit_{idx + 1}.docx"))
+            drive_id = str(d.get("drive_cloud_id") or d.get("drive_id") or "").strip()
             books_503.append(
                 {
                     "book_index": num,
                     "book_id": f"BK-GDOCX-{num:03d}",
                     "lane": "google_drive_gsn_docx_audit",
-                    "title": d.get("title", ""),
-                    "filename": d.get("filename", ""),
-                    "sha256": d.get("sha256", ""),
+                    "title": str(d.get("title") or Path(fname).stem),
+                    "filename": fname,
+                    "sha256": str(d.get("sha256", "")),
+                    "drive_id": drive_id,
+                    "drive_folder_id": "1udo1bpSvSu9zQb0DWr20RuOSRZ764XDK",
+                    "drive_url": f"https://drive.google.com/file/d/{drive_id}/view?usp=drivesdk",
                     "operator_domain": BOOK_DOMAINS_6[idx % len(BOOK_DOMAINS_6)],
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
@@ -1261,15 +1369,20 @@ class BookEquationsToStatsCompiler:
         }
         for m_i in range(1, 26):
             num = 472 + m_i
+            bk_id = f"BK-{m_i:02d}"
             dom = monograph_domains.get(m_i, BOOK_DOMAINS_6[(m_i - 1) % len(BOOK_DOMAINS_6)])
+            drive_id, drive_folder_id, mono_title = MONOGRAPH_DRIVE_PROVENANCE[bk_id]
             books_503.append(
                 {
                     "book_index": num,
-                    "book_id": f"BK-{m_i:02d}",
+                    "book_id": bk_id,
                     "lane": "graduate_monographs_bk01_25",
-                    "title": f"Graduate Mathematical Monograph BK-{m_i:02d}",
-                    "filename": f"BK-{m_i:02d}.pdf",
-                    "sha256": hashlib.sha256(f"BK-{m_i:02d}".encode("utf-8")).hexdigest(),
+                    "title": f"Graduate Mathematical Monograph {bk_id}: {mono_title}",
+                    "filename": f"{bk_id}.pdf",
+                    "sha256": hashlib.sha256(bk_id.encode("utf-8")).hexdigest(),
+                    "drive_id": drive_id,
+                    "drive_folder_id": drive_folder_id,
+                    "drive_url": f"https://drive.google.com/file/d/{drive_id}/view?usp=drivesdk",
                     "operator_domain": dom,
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
@@ -1278,14 +1391,19 @@ class BookEquationsToStatsCompiler:
 
         for g_i in range(1, 7):
             num = 497 + g_i
+            gap_id = f"GAP-BK-{g_i:02d}"
+            drive_id, drive_folder_id, gap_title = MONOGRAPH_DRIVE_PROVENANCE[gap_id]
             books_503.append(
                 {
                     "book_index": num,
-                    "book_id": f"GAP-BK-{g_i:02d}",
+                    "book_id": gap_id,
                     "lane": "sovereign_gap_monographs",
-                    "title": f"Sovereign Gap Monograph GAP-BK-{g_i:02d}",
-                    "filename": f"GAP-BK-{g_i:02d}.pdf",
+                    "title": f"Sovereign Gap Monograph {gap_id}: {gap_title}",
+                    "filename": f"{gap_id}.pdf",
                     "sha256": f"gap_bk_{g_i:02d}_canonical",
+                    "drive_id": drive_id,
+                    "drive_folder_id": drive_folder_id,
+                    "drive_url": f"https://drive.google.com/file/d/{drive_id}/view?usp=drivesdk",
                     "operator_domain": BOOK_DOMAINS_6[(g_i - 1) % len(BOOK_DOMAINS_6)],
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
@@ -1360,6 +1478,9 @@ class BookEquationsToStatsCompiler:
                     "year": 2014,
                     "lane": "books-must-have",
                     "status": "DRIVE_VERIFIED_WAYBACK_NOV7",
+                    "drive_id": "1CfeDQZwue_hFElMl5Hsf0azeV2LuSayf",
+                    "drive_folder_id": "1tDTA5qXLyZxReujj6wO2jPmDeonl6mFE",
+                    "drive_url": "https://drive.google.com/file/d/1CfeDQZwue_hFElMl5Hsf0azeV2LuSayf/view?usp=drivesdk",
                 },
                 {
                     "title": "Modelling Association Football Scores and Inefficiencies in the Football Betting Market",
@@ -1367,6 +1488,9 @@ class BookEquationsToStatsCompiler:
                     "year": 1997,
                     "lane": "books-a-sports",
                     "status": "DRIVE_VERIFIED_WAYBACK_NOV7",
+                    "drive_id": "1Yrd4Q37pF1tMZdT37Rv94KZ19uYyTyQn",
+                    "drive_folder_id": "10-BjZWPM_RfE9OM5vbmI9OeDlCvN4xau",
+                    "drive_url": "https://drive.google.com/file/d/1Yrd4Q37pF1tMZdT37Rv94KZ19uYyTyQn/view?usp=drivesdk",
                 },
             ],
             "m5_feature_store_binding": {

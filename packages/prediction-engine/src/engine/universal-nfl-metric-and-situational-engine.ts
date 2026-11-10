@@ -1120,8 +1120,15 @@ export function evaluateSovereignOpenAiEyiExecutionOverlay(
   const pade44 = p4 / q4;
 
   const fields = input.localFields ?? [0.32, 0.28, -0.14, 0.41, 0.19];
-  const beta = input.inverseTempBeta ?? 1.25;
-  const fluct = fields.map((h) => Math.pow(1.0 - Math.pow(Math.tanh(beta * h), 2), 2));
+  const rawBeta = input.inverseTempBeta ?? 1.25;
+  const beta = Number.isFinite(rawBeta) ? rawBeta : 1.25;
+  const fluct = fields.map((h) => {
+    const twoBetaH = Math.max(-40, Math.min(40, 2.0 * beta * h));
+    const safeTwoBetaH = Number.isFinite(twoBetaH) ? twoBetaH : 0.0;
+    const exp2 = Math.exp(safeTwoBetaH);
+    const hypRatio = (exp2 - 1.0) / (exp2 + 1.0);
+    return Math.pow(1.0 - hypRatio * hypRatio, 2);
+  });
   const meanFluct = fluct.reduce((a, b) => a + b, 0) / Math.max(1, fluct.length);
   const chiSg = meanFluct * (1.0 + 0.65 * beta) * 1.48;
 

@@ -4585,11 +4585,11 @@ def run_stage5_360_conjunction_gate(
             ),
             "panel_b_21_pick_5stage_ledger": {
                 "record": "47-19-1",
-                "net_units": "+26.50u",
+                "net_units": "+24.92u",
                 **(
                     ledger_audit.get("panel_b_official_new_engine_ledger")
                     or ledger_audit.get("panel_b_new_engine_ledger")
-                    or {"sample_size": 86, "wins": 62, "losses": 23, "pushes": 1, "win_rate": 0.7294, "net_units": "+26.50u"}
+                    or {"sample_size": 67, "wins": 47, "losses": 19, "pushes": 1, "win_rate": 0.7121, "net_units": "+24.92u"}
                 ),
             },
         },
@@ -4684,7 +4684,7 @@ def render_connected_master_call_sheet_markdown(
             "",
             "## 4. Dual-Panel Official Record & Statistical Honesty Disclosure",
             "- **Panel A — Full Historical Replay (`n = 15,947` settled picks):** `52.70%` win rate, `-5.48%` ROI.",
-            "- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `47-19-1` (`72.9%`), `+26.50u`.",
+            "- **Panel B — Official New Engine Verified Record (`n = 67` settled picks):** `47-19-1` (`71.2%`), `+24.92u`.",
             "",
         ])
         return "\n".join(dyn_lines)
@@ -4993,7 +4993,7 @@ def render_connected_master_call_sheet_markdown(
         "",
         "## 6. Dual-Panel Official Record & Statistical Honesty Disclosure",
         "- **Panel A — Full Historical Replay (`n = 15,947` settled picks):** `52.70%` win rate (`7,976W - 7,158L - 813P`), `-5.48%` ROI, `0.2484` Brier score vs `0.2500` coin-flip baseline (`55.58%` implied breakeven due to `-145` to `-300` juiced-favorite bias).",
-        "- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `47-19-1` (`72.9%`), `+26.50u` (`16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).",
+        "- **Panel B — Official New Engine Verified Record (`n = 67` settled picks):** `47-19-1` (`71.2%`), `+24.92u` (base verified `36-13-1` `+20.14u`).",
         "- **Tonight's Official Ticket (`JAX @ BAL`, 2026-11-05):** **`0 BETS / FULL-BOARD PASS` (`0.00u` risked on official ledger; Stage 5 circuit breaker `STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES`)**.",
         "",
     ])

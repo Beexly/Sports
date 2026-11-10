@@ -6,6 +6,7 @@ metadata:
   loop-mode: loop-me
 ---
 
+
 # Continuous Corpus Ingestion, Quarantine & Autonomous Wiring Loop (`loop-me`)
 
 ## Loop Definition
@@ -39,9 +40,9 @@ A zero-checkpoint autonomous workflow that triggers whenever a new batch of GitH
    - Extract the underlying equations, statistical estimators, conformal prediction heads, Bayesian shrinkage priors, biomechanical RTP decay curves, or multi-agent harness patterns and implement clean, vectorized Python modules under `intelligence/`.
    - Enforce the **Two-Host Rule**: zero hardcoded local user paths (`C:\Users\Garrett`) inside any `intelligence/**/*.py` file (`check_charge_9`).
 3. **Workflow & Engine Wiring:**
-   - Connect the new module into the post-simulation projection and `200+` Pt DraftKings DFS pipeline (`intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py` and `intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py`) and the 9-model worker fleet router (`python scripts/ops/zero_waste_model_router.py`).
+   - Connect the new module into the post-simulation projection and `200+` Pt DraftKings DFS pipeline (`intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py` and `intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py`) and the 9-model worker fleet router (`python Beexly/Sports/scripts/ops/zero_waste_model_router.py`).
 4. **Automated Verification Gate:**
-   - Create and run unit tests (`tests/unit/test_*.py`), `python scripts/wiring/run_charge_regression_suite.py` (`10/10 PASS`), and `python scripts/wiring/verify_armed_workflows.py --check-armed` (`9/9 ARMED`).
+   - Create and run unit tests (`tests/unit/test_*.py`), `python Beexly/Sports/scripts/wiring/run_charge_regression_suite.py` (`10/10 PASS`), and `python Beexly/Sports/scripts/wiring/verify_armed_workflows.py --check-armed` (`9/9 ARMED`).
 
 ### 3. Checkpoint & Brief Delivery
 

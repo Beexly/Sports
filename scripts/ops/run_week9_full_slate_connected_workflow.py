@@ -92,6 +92,7 @@ def run_week9_full_slate_connected_workflow(
 ) -> dict[str, Any]:
     slate = matchups if matchups is not None else COMPLETE_WEEK9_ALL_MATCHUPS
     dossiers_summary: dict[str, dict[str, Any]] = {}
+    any_recomputed = False
 
     for away, home in slate:
         away_u = away.strip().upper()
@@ -119,6 +120,7 @@ def run_week9_full_slate_connected_workflow(
             except Exception:
                 bundle = None
         if bundle is None:
+            any_recomputed = True
             bundle = execute_connected_game_workflow(
                 away=away_u,
                 home=home_u,
@@ -178,6 +180,26 @@ def run_week9_full_slate_connected_workflow(
     official_15_keys = [f"{a} @ {h}" for a, h in OFFICIAL_WEEK9_15_GAME_SLATE if f"{a} @ {h}" in dossiers_summary]
     featured_4_keys = [f"{a} @ {h}" for a, h in FEATURED_WEEK9_SLATE if f"{a} @ {h}" in dossiers_summary]
 
+    out_path = REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
+    call_sheet_path = REPO_ROOT / "data" / "engine" / "week9_complete_360_all_games_verified_call_sheet.json"
+    cov_path = REPO_ROOT / "data" / "engine" / "week9_coverage_audit_2026.json"
+    if (
+        reuse_fresh_dossiers
+        and not any_recomputed
+        and out_path.is_file()
+        and call_sheet_path.is_file()
+        and cov_path.is_file()
+    ):
+        try:
+            existing_out = json.loads(out_path.read_text(encoding="utf-8"))
+            if (
+                existing_out.get("official_15_week9_games") == official_15_keys
+                and (existing_out.get("official_new_engine_verified_record") or {}).get("record") == "47-19-1"
+            ):
+                return existing_out
+        except Exception:
+            pass
+
     slate_packet: dict[str, Any] = {
         "schema": "gse_week9_full_slate_connected_dossiers_v2",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -193,14 +215,13 @@ def run_week9_full_slate_connected_workflow(
         "zero_etc_policy_enforced": True,
         "official_new_engine_verified_record": {
             "record": "47-19-1",
-            "win_rate": 0.7294,
-            "net_units": "+26.50u",
+            "win_rate": 0.7121,
+            "net_units": "+24.92u",
         },
         "dossiers": dossiers_summary,
     }
     slate_packet["slate_packet_sha256"] = _sha256_obj(slate_packet)
 
-    out_path = REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(slate_packet, indent=2, allow_nan=False), encoding="utf-8")
 
@@ -271,9 +292,14 @@ if __name__ == "__main__":
     )
     parser.add_argument("--week", type=int, default=9, help="NFL Week (default: 9)")
     parser.add_argument("--n-sims", type=int, default=10000, help="Monte Carlo worlds per game (default: 10000)")
+    parser.add_argument("--recompute-all", action="store_true", help="Re-run all 15 simulations instead of reusing verified fresh dossiers")
     args = parser.parse_args()
 
-    packet = run_week9_full_slate_connected_workflow(week=args.week, n_sims=args.n_sims)
+    packet = run_week9_full_slate_connected_workflow(
+        week=args.week,
+        n_sims=args.n_sims,
+        reuse_fresh_dossiers=not args.recompute_all,
+    )
     print(
         f"[WEEK 9 FULL SLATE CONNECTED WORKFLOW COMPLETE] "
         f"official_15={packet['official_15_week9_games_count']} | "

@@ -1,18 +1,10 @@
 ---
 name: neon
-description: >-
-  Overview of Neon, a complete set of cloud backend primitives for apps and
-  agents, spanning Lakebase Postgres, Auth, the Data API, Object Storage, Compute
-  Functions, and the AI Gateway. Start here to route to the right Neon skill, set
-  up the CLI or MCP server, and follow the branch-first workflow. Use when "Neon"
-  or "Lakebase Postgres" is mentioned, or when any of its individual capabilities
-  are the trigger: "object storage" or "S3", "buckets", "serverless functions",
-  "AI gateway", "call an LLM", "logs", "branch logs", "query logs",
-  "log export", "Loki", "Grafana", "observability", "telemetry", "postgres",
-  "database", or "backend".
+description: 'Overview of Neon, a complete set of cloud backend primitives for apps and agents, spanning Lakebase Postgres, Auth, the Data API, Object Storage, Compute Functions, and the AI Gateway. Start here to route to the right Neon skill, set up the CLI or MCP server, and follow the branch-first workflow. Use when "Neon" or "Lakebase Postgres" is mentioned, or when any of its individual capabilities are the trigger: "object storage" or "S3", "buckets", "serverless functions", "AI gateway", "call an LLM", "logs", "branch logs", "query logs", "log export", "Loki", "Grafana", "observability", "telemetry", "postgres", "database", or "backend".'
 metadata:
   source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon
 ---
+
 
 # Neon
 

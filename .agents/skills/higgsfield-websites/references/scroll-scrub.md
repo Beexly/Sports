@@ -188,10 +188,10 @@ Use the Higgsfield CLI already used by the website flow.
 
    ```bash
    bash /tmp/scroll-scrub-video.sh bounds source.mp4 /tmp/scene-a
-   bash /tmp/scroll-scrub-video.sh desktop source.mp4 app/public/assets/world/scene-a.mp4
-   bash /tmp/scroll-scrub-video.sh mobile source.mp4 app/public/assets/world/scene-a-mobile.mp4
-   bash /tmp/scroll-scrub-video.sh poster app/public/assets/world/scene-a.mp4 app/public/assets/world/scene-a-poster.png
-   bash /tmp/scroll-scrub-video.sh poster app/public/assets/world/scene-a-mobile.mp4 app/public/assets/world/scene-a-mobile-poster.png
+   bash /tmp/scroll-scrub-video.sh desktop source.mp4 app/public/workspace/assets/world/scene-a.mp4
+   bash /tmp/scroll-scrub-video.sh mobile source.mp4 app/public/workspace/assets/world/scene-a-mobile.mp4
+   bash /tmp/scroll-scrub-video.sh poster app/public/workspace/assets/world/scene-a.mp4 app/public/workspace/assets/world/scene-a-poster.png
+   bash /tmp/scroll-scrub-video.sh poster app/public/workspace/assets/world/scene-a-mobile.mp4 app/public/workspace/assets/world/scene-a-mobile-poster.png
    ```
 
    `bounds` writes `<prefix>-first.png` and `<prefix>-last.png`. Pass a boundary

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -229,18 +230,18 @@ def load_143_skills_catalog() -> Dict[str, Any]:
         return json.loads(audit_fallback_path.read_text(encoding="utf-8"))["catalog"]
 
     agents_entries = (
-        {p.name for p in AGENTS_SKILLS_DIR.iterdir() if not p.name.startswith(".")}
-        if AGENTS_SKILLS_DIR.is_dir()
+        {e.name for e in os.scandir(AGENTS_SKILLS_DIR) if not e.name.startswith(".")}
+        if AGENTS_SKILLS_DIR.exists()
         else set()
     )
     claude_entries = (
-        {p.name for p in CLAUDE_SKILLS_DIR.iterdir() if not p.name.startswith(".")}
-        if CLAUDE_SKILLS_DIR.is_dir()
+        {e.name for e in os.scandir(CLAUDE_SKILLS_DIR) if not e.name.startswith(".")}
+        if CLAUDE_SKILLS_DIR.exists()
         else set()
     )
     gemini_entries = (
-        {p.name for p in GEMINI_SKILLS_DIR.iterdir() if not p.name.startswith(".")}
-        if GEMINI_SKILLS_DIR.is_dir()
+        {e.name for e in os.scandir(GEMINI_SKILLS_DIR) if not e.name.startswith(".")}
+        if GEMINI_SKILLS_DIR.exists()
         else set()
     )
 
@@ -290,12 +291,16 @@ def load_143_skills_catalog() -> Dict[str, Any]:
     for p_name in CANONICAL_7_AGY_PLUGINS:
         p_dir = GEMINI_PLUGINS_DIR / p_name
         s_dir = p_dir / "skills"
-        s_list = sorted([d.name for d in s_dir.iterdir() if d.is_dir()]) if s_dir.is_dir() else []
+        if s_dir.exists():
+            with os.scandir(s_dir) as it:
+                s_list = sorted([e.name for e in it if e.is_dir(follow_symlinks=False)])
+        else:
+            s_list = []
         total_plugin_skills += len(s_list)
         plugins_summary.append(
             {
                 "plugin_name": p_name,
-                "installed": p_dir.is_dir(),
+                "installed": p_dir.exists(),
                 "skills_count": len(s_list),
                 "sample_skills": s_list[:10],
             }
@@ -308,10 +313,11 @@ def load_143_skills_catalog() -> Dict[str, Any]:
         ("claude", CLAUDE_SKILLS_DIR),
         ("gemini", GEMINI_SKILLS_DIR),
     ]:
-        if root_dir.is_dir():
-            for item in root_dir.iterdir():
-                if item.is_symlink():
-                    symlinks_found.append(f"{root_label}:{item.name}")
+        if root_dir.exists():
+            with os.scandir(root_dir) as it:
+                for item in it:
+                    if item.is_symlink():
+                        symlinks_found.append(f"{root_label}:{item.name}")
 
     return {
         "schema_version": "gse-143-skills-and-7-agy-plugins-2026-11-06",

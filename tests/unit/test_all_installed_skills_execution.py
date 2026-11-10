@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import unittest
 from pathlib import Path
 
 from scripts.ops.execute_all_installed_skills_suite import (
@@ -49,3 +50,17 @@ def test_gcp_gke_assured_workloads_infrastructure_manifests() -> None:
     assert "NetworkPolicy" in infra["parsed_kinds"]
     assert "JobSet" in infra["parsed_kinds"]
     assert "SemanticGovernancePolicy" in infra["parsed_kinds"]
+
+
+class TestAllInstalledSkillsExecution(unittest.TestCase):
+    """Unittest discovery wrapper for `test_all_installed_skills_execution.py`."""
+
+    def test_all_758_skills_executed_and_verified(self) -> None:
+        test_all_758_skills_executed_and_verified()
+
+    def test_gcp_gke_assured_workloads_infrastructure_manifests(self) -> None:
+        test_gcp_gke_assured_workloads_infrastructure_manifests()
+
+
+if __name__ == "__main__":
+    unittest.main()

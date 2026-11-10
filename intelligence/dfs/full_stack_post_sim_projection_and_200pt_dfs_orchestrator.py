@@ -724,7 +724,7 @@ def execute_backend_post_sim_projection_and_200pt_dfs_pipeline(
         "execution_latency_ms": elapsed_ms,
         "official_ledger_of_record": {
             "season_record": "47-19-1",
-            "net_units": "+26.50u",
+            "net_units": "+24.92u",
             "win_pct": 0.7121,
             "dual_panel_verification": {
                 "panel_a_historical_walk_forward_games": 15947,
@@ -989,7 +989,7 @@ def project_client_safe_payload(backend_bundle: Dict[str, Any], tier: str = "FRE
             "and red-zone personnel tendencies."
         ),
         "official_season_record": str(ledger.get("season_record", "47-19-1")),
-        "official_net_units": str(ledger.get("net_units", "+26.50u")),
+        "official_net_units": str(ledger.get("net_units", "+24.92u")),
         "dual_panel_summary": (
             "Verified across 15,947 historical walk-forward games and 16-5 active 5-stage call-sheet slice."
         ),
