@@ -18,6 +18,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -102,3 +103,21 @@ def test_audit_artifacts_pinecone_receipt_and_zero_secrets() -> None:
         txt = fpath.read_text(encoding="utf-8")
         assert not etc_pattern.search(txt), f"Forbidden abbreviation in {fpath}"
         assert not secret_pattern.search(txt), f"Forbidden raw secret in {fpath}"
+
+
+class Test143SkillsAndAgyPlugins(unittest.TestCase):
+    def test_01_143_skills_catalog_and_zero_symlinks(self) -> None:
+        test_143_skills_catalog_and_zero_symlinks()
+
+    def test_02_all_7_agy_plugins_registered_in_import_manifest(self) -> None:
+        test_all_7_agy_plugins_registered_in_import_manifest()
+
+    def test_03_task_routing_and_matchup_readiness_telemetry(self) -> None:
+        test_task_routing_and_matchup_readiness_telemetry()
+
+    def test_04_audit_artifacts_pinecone_receipt_and_zero_secrets(self) -> None:
+        test_audit_artifacts_pinecone_receipt_and_zero_secrets()
+
+
+if __name__ == "__main__":
+    unittest.main()

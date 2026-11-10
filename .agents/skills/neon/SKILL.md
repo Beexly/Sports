@@ -455,3 +455,16 @@ neon neon-auth domain delete <domain> # remove one you no longer use
 ```
 
 If the workspace isn't linked, pass `--project-id <id>` (and `--branch <id|name>`) explicitly. For local development, `neon neon-auth domain allow-localhost` manages whether `localhost` is permitted. Register the domain before pointing users at the new URL, so they never hit the `invalid domain` error.
+
+## Use this skill when
+
+- Executing `neon` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `neon`.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `neon` skill specification.
+

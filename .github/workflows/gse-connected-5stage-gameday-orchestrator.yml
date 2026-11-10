@@ -66,13 +66,23 @@ jobs:
       - name: Consolidate Mind Staging & Corpus (Pre-Sim Readiness)
         run: python scripts/ops/consolidate_mind_staging_and_corpus.py
 
+      - name: Compile 503 Books & 21,419 Equations into 92 Micro-Metrics + Q52-Q54 Signals
+        run: |
+          python intelligence/metrics/book_equations_to_stats_compiler.py
+          python intelligence/metrics/intel_loop_q52_q54_and_research_consolidation_2026_11_09.py
+
+      - name: Execute 30-Team Conserved NFL Box-Score Projection Spine
+        run: python intelligence/dfs/conserved_nfl_projection_and_equation_optimizer.py
+
       - name: Execute Week ${{ github.event.inputs.week || '9' }} Connected 5-Stage Slate Workflow
         env:
           GSE_NFL_WEEK: ${{ github.event.inputs.week || '9' }}
         run: python scripts/ops/run_week9_full_slate_connected_workflow.py
 
-      - name: Verify Cryptographic Stage 0..5 Receipts & Forensic Invariants
-        run: python scripts/guardrails/connected-workflow-dossier-guard.py
+      - name: Verify Cryptographic Stage 0..5 Receipts & E2E Projection Conservation Invariants
+        run: |
+          python scripts/guardrails/connected-workflow-dossier-guard.py
+          python -m unittest tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py tests/unit/test_intel_loop_q52_q54_and_research_consolidation.py tests/unit/test_no_fake_projections_or_ir_players.py
 
       - name: Run Trust Gate Guardrail
         run: node scripts/guardrails/trust-gate.mjs
@@ -142,7 +152,11 @@ jobs:
           pip install numpy scipy
 
       - name: Consolidate Mind Staging & Corpus
-        run: python scripts/ops/consolidate_mind_staging_and_corpus.py
+        run: |
+          python scripts/ops/consolidate_mind_staging_and_corpus.py
+          python intelligence/metrics/book_equations_to_stats_compiler.py
+          python intelligence/metrics/intel_loop_q52_q54_and_research_consolidation_2026_11_09.py
+          python -m unittest tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py tests/unit/test_intel_loop_q52_q54_and_research_consolidation.py
 
       - name: Execute 20h Overnight Hermes/OpenCode/NVIDIA/OpenRouter/RunPod Shift Verification
         run: python scripts/ops/run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run

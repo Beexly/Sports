@@ -267,6 +267,101 @@ def main() -> None:
         }
         dossier["stage2_jev_spine_and_10k_simulation"] = s2
 
+        # Synchronize Stage 0 & Stage 3/4 athlete projections with conserved team budgets and purge IR/excluded players
+        from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (
+            build_conserved_week9_player_projections,
+        )
+        conserved_pool = build_conserved_week9_player_projections()
+        conserved_by_tm_name = {
+            (str(p["team"]).upper(), str(p["player"]).strip().lower()): p
+            for p in conserved_pool
+        }
+        excluded_names_low = {
+            str(ep.get("name") or "").strip().lower()
+            for ep in json.loads(tx_path.read_text(encoding="utf-8")).get("excluded_players", [])
+        } | {"malik davis", "alec pierce", "drew lock"}
+
+        if isinstance(s0.get("verified_board_athletes"), dict):
+            s0["verified_board_athletes"] = {
+                k: v
+                for k, v in s0["verified_board_athletes"].items()
+                if k.strip().lower() not in excluded_names_low
+            }
+            dossier["stage0_roster_and_board_allowlist"] = s0
+
+        s34 = dossier.get("stage3_4_conserved_post_sim_projections", {})
+        aths = s34.get("athlete_post_sim_projections", {})
+        if isinstance(aths, dict):
+            cleaned_aths: Dict[str, Any] = {}
+            for a_name, a_obj in aths.items():
+                if a_name.strip().lower() in excluded_names_low:
+                    continue
+                tm_a = str(a_obj.get("team") or "").upper()
+                c_rec = conserved_by_tm_name.get((tm_a, a_name.strip().lower()))
+                if c_rec and isinstance(a_obj.get("projections"), dict):
+                    pr = a_obj["projections"]
+                    if c_rec["position"] == "QB" and "pass_yds" in pr:
+                        py_m = float(c_rec["proj_pass_yds"])
+                        pr["pass_yds"]["mean"] = round(py_m, 1)
+                        pr["pass_yds"]["p50"] = round(py_m * 0.98, 2)
+                    if "rush_yds" in pr and c_rec["position"] in {"QB", "RB"}:
+                        ry_m = float(c_rec["proj_rush_yds"])
+                        pr["rush_yds"]["mean"] = round(ry_m, 1)
+                        pr["rush_yds"]["p50"] = round(ry_m * 0.97, 2)
+                    if "rec_yds" in pr and c_rec["position"] in {"RB", "WR", "TE"}:
+                        rcy_m = float(c_rec["proj_rec_yds"])
+                        pr["rec_yds"]["mean"] = round(rcy_m, 1)
+                        pr["rec_yds"]["p50"] = round(rcy_m * 0.97, 2)
+                    if "receptions" in pr and c_rec["position"] in {"RB", "WR", "TE"}:
+                        rec_m = float(c_rec["proj_receptions"])
+                        pr["receptions"]["mean"] = round(rec_m, 2)
+                        pr["receptions"]["p50"] = round(rec_m * 0.97, 2)
+                    if "rush_plus_rec_yds" in pr and c_rec["position"] == "RB":
+                        tot_m = round(float(c_rec["proj_rush_yds"]) + float(c_rec["proj_rec_yds"]), 1)
+                        pr["rush_plus_rec_yds"]["mean"] = tot_m
+                        pr["rush_plus_rec_yds"]["p50"] = round(tot_m * 0.97, 2)
+                cleaned_aths[a_name] = a_obj
+            s34["athlete_post_sim_projections"] = cleaned_aths
+
+        derivs = s34.get("derivatives_and_exotics_360", {})
+        if isinstance(derivs.get("touchdown_scorer_probabilities"), dict):
+            derivs["touchdown_scorer_probabilities"] = {
+                k: v
+                for k, v in derivs["touchdown_scorer_probabilities"].items()
+                if k.strip().lower() not in excluded_names_low
+            }
+        dossier["stage3_4_conserved_post_sim_projections"] = s34
+
+        def _purge_excluded_tree(node: Any) -> Any:
+            if isinstance(node, dict):
+                out_d: Dict[str, Any] = {}
+                for k, v in node.items():
+                    if k in ("excluded_players", "off_roster_hallucination_denylist"):
+                        out_d[k] = v
+                        continue
+                    if isinstance(k, str) and k.strip().lower() in excluded_names_low:
+                        continue
+                    out_d[k] = _purge_excluded_tree(v)
+                return out_d
+            if isinstance(node, list):
+                out_l: List[Any] = []
+                for item in node:
+                    if isinstance(item, dict):
+                        p_nm = str(
+                            item.get("athlete")
+                            or item.get("player_name")
+                            or item.get("player")
+                            or ""
+                        ).strip().lower()
+                        if p_nm in excluded_names_low:
+                            continue
+                        if any(bad_n in json.dumps(item).lower() for bad_n in ("malik davis", "alec pierce", "drew lock")):
+                            continue
+                    out_l.append(_purge_excluded_tree(item))
+                return out_l
+            return node
+
+        dossier = _purge_excluded_tree(dossier)
         dossier = re_seal_dossier_chain(dossier)
         dpath.write_text(json.dumps(dossier, indent=2, allow_nan=False), encoding="utf-8")
 

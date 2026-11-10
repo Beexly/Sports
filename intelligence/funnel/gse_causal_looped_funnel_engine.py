@@ -237,9 +237,12 @@ def execute_pass1_foundational_and_arxiv_equations(
     # 1. HMM Pass-Blocking Posterior (2609-33664)
     hmm_gamma_clean_25s = round(1.0 / (1.0 + math.exp(-4.2 * (pass_block_win_rate - 0.52))), 4)
 
-    # 2. Empirical Bayes BTL Shrinkage (1807-09236)
-    team_seed = (sum(ord(c) for c in home_team) - sum(ord(c) for c in away_team)) * 0.015
-    btl_shrunk_rating_diff = round(float(np.clip(team_seed / (1.0 + 0.35), -0.22, 0.22)), 4)
+    # 2. Empirical Bayes BTL Shrinkage (1807-09236) from real Nov 8 net EPA differential
+    from intelligence.external_charting.morning_sweep_2026_11_08 import load_nov8_sfdata_epa_previews
+    _epa_map = load_nov8_sfdata_epa_previews()
+    _epa_row = _epa_map.get(f"{away_team}@{home_team}", {})
+    _net_epa_diff = float(_epa_row.get("home_net_epa", 0.0)) - float(_epa_row.get("away_net_epa", 0.0))
+    btl_shrunk_rating_diff = round(float(np.clip(_net_epa_diff / (1.0 + 0.35), -0.22, 0.22)), 4)
 
     # 3. Multilevel Pre-Snap Motion Timing Variance (2502-16313)
     motion_timing_scale_sigma = round(max(0.12, 0.45 - 0.28 * motion_rate), 4)
@@ -284,6 +287,7 @@ def execute_pass1_foundational_and_arxiv_equations(
         "pass_id": "PASS_1_EQUATIONS_TO_METRICS_AND_STATS",
         "hmm_pass_blocking_gamma_25s": hmm_gamma_clean_25s,
         "empirical_bayes_btl_shrunk_diff": btl_shrunk_rating_diff,
+        "eq_arxiv_1807_09236_btl_shrunk_rating_diff": btl_shrunk_rating_diff,
         "multilevel_motion_timing_sigma": motion_timing_scale_sigma,
         "multilevel_motion_epa_lift": motion_epa_lift,
         "causal_panel_synthetic_control_exit_delta": synthetic_control_exit_delta,
@@ -293,6 +297,7 @@ def execute_pass1_foundational_and_arxiv_equations(
         "yac_conservation_of_momentum_bonus_yds": kinematic_tree_yac_bonus_yds,
         "knn_motion_pressure_separation_bonus_yds": knn_motion_separation_bonus_yds,
         "composite_pass1_stat_modifier": composite_pass1_stat_modifier,
+        "pass1_composite_log_odds_delta": composite_pass1_stat_modifier,
     }
 
 
@@ -542,6 +547,56 @@ class GSECausalLoopedFunnelEngine:
         self._prop_evaluator = SpatialMicroMetricsPropAndMatchupEvaluator()
 
     # --------------------------------------------------------------------------
+    def _get_verified_week9_15_games_context(self) -> List[Dict[str, Any]]:
+        """Return WEEK9_15_GAMES_CONTEXT with Stage-0 confirmed QB1s and zero IR/inactive skill players."""
+        stage0_path = REPO_ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+        confirmed_qb1: Dict[str, str] = {}
+        if stage0_path.is_file():
+            try:
+                s0_data = json.loads(stage0_path.read_text(encoding="utf-8"))
+                confirmed_qb1 = dict(s0_data.get("confirmed_qb1") or {})
+            except Exception:
+                confirmed_qb1 = {}
+
+        skill_replacements: Dict[Tuple[str, str], str] = {
+            ("WAS", "stefon diggs"): "Terry McLaurin",
+            ("NE", "stefon diggs"): "Kayshon Boutte",
+            ("HOU", "stefon diggs"): "Nico Collins",
+            ("MIA", "de'von achane"): "Ollie Gordon II",
+            ("MIA", "devon achane"): "Ollie Gordon II",
+            ("MIA", "tyreek hill"): "Jaylen Waddle",
+            ("JAX", "christian kirk"): "Brian Thomas Jr.",
+        }
+        qb_fallback_replacements: Dict[str, str] = {
+            "j.j. mccarthy": "Jaxson Dart",
+            "jj mccarthy": "Jaxson Dart",
+            "kyler murray": "Gardner Minshew II",
+        }
+
+        sanitized: List[Dict[str, Any]] = []
+        for raw_g in WEEK9_15_GAMES_CONTEXT:
+            g = dict(raw_g)
+            away = str(g["away"]).upper()
+            home = str(g["home"]).upper()
+            away_qb = str(confirmed_qb1.get(away) or g.get("away_qb1") or "")
+            home_qb = str(confirmed_qb1.get(home) or g.get("home_qb1") or "")
+            if away_qb.lower() in qb_fallback_replacements:
+                away_qb = "Carson Wentz" if away == "MIN" else qb_fallback_replacements[away_qb.lower()]
+            if home_qb.lower() in qb_fallback_replacements:
+                home_qb = "Carson Wentz" if home == "MIN" else qb_fallback_replacements[home_qb.lower()]
+            g["away_qb1"] = away_qb
+            g["home_qb1"] = home_qb
+
+            new_skill: List[str] = []
+            for s_idx, p_nm in enumerate(g.get("focal_skill", [])):
+                p_tm = away if s_idx < 3 else home
+                clean_nm = skill_replacements.get((p_tm, str(p_nm).strip().lower()), str(p_nm))
+                new_skill.append(clean_nm)
+            g["focal_skill"] = new_skill
+            sanitized.append(g)
+        return sanitized
+
+    # --------------------------------------------------------------------------
     # STAGE 1: Equations (Pass 1) -> Metrics (92 + 22 = 114) -> Stats
     # --------------------------------------------------------------------------
     def stage1_compile_equations_to_metrics_to_stats(
@@ -552,7 +607,7 @@ class GSECausalLoopedFunnelEngine:
             write_artifacts=write_artifacts
         )
         pass1_by_game: Dict[str, Any] = {}
-        for g_ctx in WEEK9_15_GAMES_CONTEXT:
+        for g_ctx in self._get_verified_week9_15_games_context():
             gid = g_ctx["game_id"]
             home = g_ctx["home"]
             away = g_ctx["away"]
@@ -598,6 +653,27 @@ class GSECausalLoopedFunnelEngine:
                 "cannot run before Stage 1 (Equations Pass 1 -> Metrics -> Stats) is locked!"
             )
 
+        from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (
+            build_conserved_week9_player_projections,
+            compute_conserved_team_environments,
+            project_full_nfl_game_box_score_from_dossier,
+        )
+
+        conserved_envs = compute_conserved_team_environments()
+        conserved_pool = build_conserved_week9_player_projections()
+        conserved_player_by_tm_nm: Dict[Tuple[str, str], Dict[str, Any]] = {
+            (str(p.get("team", "")).upper(), str(p.get("player", "")).strip().lower()): p
+            for p in conserved_pool
+        }
+        try:
+            mnf_box = project_full_nfl_game_box_score_from_dossier("BUF @ MIN")
+            for mp in mnf_box.get("player_stat_projections", []):
+                conserved_player_by_tm_nm[
+                    (str(mp.get("team", "")).upper(), str(mp.get("player", "")).strip().lower())
+                ] = mp
+        except Exception:
+            pass
+
         live_sim_by_gid: Dict[str, Dict[str, Any]] = {
             str(g["game_id"]): g
             for g in (live_simulation_results or [])
@@ -609,7 +685,7 @@ class GSECausalLoopedFunnelEngine:
             "2026_09_CLE_NO": (-102, -118),
             "2026_09_DAL_IND": (-142, 120),
             "2026_09_DEN_CAR": (235, -290),
-            "2026_09_DET_MIA": (150, -180),
+            "2026_09_DET_MIA": (260, -325),
             "2026_09_LAR_WAS": (-138, 116),
             "2026_09_NYG_PHI": (-340, 270),
             "2026_09_NYJ_KC": (-275, 225),
@@ -624,11 +700,32 @@ class GSECausalLoopedFunnelEngine:
         games_projections: Dict[str, Any] = {}
         player_projections_pool_seed: List[Dict[str, Any]] = []
 
-        # Salary deterministic schedule by role
-        role_salaries = [7200, 6600, 6100, 7400, 6800, 5600]
+        # Load real DraftKings salaries from dk_salaries_week9_main_slate_2026_11_08.csv
+        import csv as _csv
+        _dk_sal_lookup: Dict[Tuple[str, str], int] = {}
+        _dk_dst_sal_lookup: Dict[str, int] = {}
+        _dk_csv_path = REPO_ROOT / "data" / "dfs" / "dk_salaries_week9_main_slate_2026_11_08.csv"
+        if _dk_csv_path.exists():
+            with _dk_csv_path.open("r", encoding="utf-8-sig") as _f:
+                for _r in _csv.DictReader(_f):
+                    _tm_ab = str(_r.get("TeamAbbrev", "")).strip().upper()
+                    _nm = str(_r.get("Name", "")).strip()
+                    _pos_r = str(_r.get("Position", "")).strip().upper()
+                    try:
+                        _sal_val = int(float(_r.get("Salary", 0) or 0))
+                    except ValueError:
+                        _sal_val = 0
+                    if _sal_val <= 0:
+                        continue
+                    if _pos_r == "DST":
+                        _dk_dst_sal_lookup[_tm_ab] = _sal_val
+                    else:
+                        _dk_sal_lookup[(_tm_ab, _nm.lower())] = max(_sal_val, _dk_sal_lookup.get((_tm_ab, _nm.lower()), 0))
+
+        role_fallback_salaries = [6800, 6500, 4800, 6600, 6200, 4500]
         role_positions = ["RB", "WR", "TE", "RB", "WR", "TE"]
 
-        for idx, g_ctx in enumerate(WEEK9_15_GAMES_CONTEXT):
+        for idx, g_ctx in enumerate(self._get_verified_week9_15_games_context()):
             gid = g_ctx["game_id"]
             home = g_ctx["home"]
             away = g_ctx["away"]
@@ -660,7 +757,7 @@ class GSECausalLoopedFunnelEngine:
                 rush_epa_prior=0.045,
             )
 
-            # 3. Combine Stage 1 Pass-1 Equations + 92 Spatial Micro-Metrics + 26-Layer Context + 175-Snap PBP Sim
+            # 3. Combine Stage 1 Pass-1 Equations + 92 Spatial Micro-Metrics + 26-Layer Context + Conserved Team Env
             p1_mod = float(
                 self.state.stage1_stats_payload["pass1_arxiv_and_book_kernels_by_game"][gid][
                     "composite_pass1_stat_modifier"
@@ -672,9 +769,15 @@ class GSECausalLoopedFunnelEngine:
             book_total = float(g_ctx["total_line"])
             book_spread_home = float(g_ctx["spread_line"])
             home_ml, away_ml = canonical_ml_by_gid.get(gid, (-135, 115))
-            # Implied baseline scores before GSE layered context + simulation adjustments
             implied_home = (book_total - book_spread_home) / 2.0
             implied_away = (book_total + book_spread_home) / 2.0
+
+            home_env = conserved_envs.get(home, {})
+            away_env = conserved_envs.get(away, {})
+            env_home_pts = float(home_env.get("implied_team_points", implied_home))
+            env_away_pts = float(away_env.get("implied_team_points", implied_away))
+            home_pocket_delta = (float(home_env.get("hmm_clean_pocket_gamma", 0.55)) - 0.55) * 3.2
+            away_pocket_delta = (float(away_env.get("hmm_clean_pocket_gamma", 0.55)) - 0.55) * 3.2
 
             sim_home_shift = (
                 float(s3_priors["post_l26_final_reasoning_delta"]) * 4.8
@@ -682,12 +785,16 @@ class GSECausalLoopedFunnelEngine:
                 + float(pbp_cond.get("home_rush_yds_per_carry_delta", 0.12)) * 1.8
                 + float(pbp_cond.get("home_pass_yds_per_att_delta", 0.25)) * 1.4
                 + lab_mills["wind_total_points_delta"] * 0.5
+                + 0.35 * (env_home_pts - implied_home)
+                + home_pocket_delta
             )
             sim_away_shift = (
                 -float(s3_priors["post_l26_final_reasoning_delta"]) * 2.2
                 + float(pbp_cond.get("away_rush_yds_per_carry_delta", 0.08)) * 1.5
                 + float(pbp_cond.get("away_pass_yds_per_att_delta", 0.18)) * 1.2
                 + lab_mills["wind_total_points_delta"] * 0.5
+                + 0.35 * (env_away_pts - implied_away)
+                + away_pocket_delta
             )
 
             if gid in live_sim_by_gid:
@@ -721,17 +828,20 @@ class GSECausalLoopedFunnelEngine:
                 "away_ml_american": away_ml,
             }
 
-            # Build canonical player projections for QBs + focal skill players from this game's locked environment
-            env_mult = max(0.82, min(1.24, proj_total_pts / 45.5))
-            # Away QB1 & Home QB1
+            # Build canonical player projections for QBs + focal skill players from Conserved 503-Book Projections
             for qb_idx, (qb_name, qb_tm, opp_tm, tm_pts) in enumerate(
                 [
                     (g_ctx["away_qb1"], away, home, proj_away_pts),
                     (g_ctx["home_qb1"], home, away, proj_home_pts),
                 ]
             ):
-                qb_sal = 6900 if qb_idx == 1 else 6400
-                med_dk = round((17.8 + (tm_pts - 21.5) * 0.48) * env_mult, 2)
+                qb_sal = _dk_sal_lookup.get((qb_tm, qb_name.lower()), 6200 if qb_idx == 1 else 5800)
+                c_qb = conserved_player_by_tm_nm.get((qb_tm, qb_name.lower()))
+                if c_qb is not None and float(c_qb.get("proj_dk_pts", 0.0)) > 0.0:
+                    med_dk = round(float(c_qb["proj_dk_pts"]), 2)
+                else:
+                    tm_conservation_mult = max(0.68, min(1.26, tm_pts / 22.5))
+                    med_dk = round((17.2 + (tm_pts - 21.5) * 0.45 + (qb_sal - 5800) * 0.0012) * tm_conservation_mult, 2)
                 p75_dk = round(med_dk * 1.22, 2)
                 p90_dk = round(med_dk * 1.42, 2)
                 p99_dk = round(med_dk * 1.74, 2)
@@ -754,16 +864,22 @@ class GSECausalLoopedFunnelEngine:
                     }
                 )
 
-            # Focal Skill Players (RB, WR, TE)
+            # Focal Skill Players (RB, WR, TE) — bound directly to Conserved 503-Book Player Projections
             for s_idx, p_name in enumerate(g_ctx.get("focal_skill", [])):
                 is_away_player = s_idx < 3
                 p_tm = away if is_away_player else home
                 opp_tm = home if is_away_player else away
                 tm_pts = proj_away_pts if is_away_player else proj_home_pts
                 pos = role_positions[s_idx % len(role_positions)]
-                sal = role_salaries[s_idx % len(role_salaries)]
-                base_pts = 15.6 if pos == "RB" else (16.2 if pos == "WR" else 12.1)
-                med_dk = round((base_pts + (tm_pts - 21.5) * 0.36) * env_mult, 2)
+                sal = _dk_sal_lookup.get((p_tm, p_name.lower()), role_fallback_salaries[s_idx % len(role_fallback_salaries)])
+                c_p = conserved_player_by_tm_nm.get((p_tm, p_name.lower()))
+                if c_p is not None and float(c_p.get("proj_dk_pts", 0.0)) > 0.0:
+                    med_dk = round(float(c_p["proj_dk_pts"]), 2)
+                else:
+                    tm_conservation_mult = max(0.65, min(1.28, tm_pts / 22.5))
+                    base_pts = 14.8 if pos == "RB" else (15.4 if pos == "WR" else 10.2)
+                    sal_adj = (sal - 5500) * 0.0018 + (idx * 0.17) + (s_idx * 0.11)
+                    med_dk = round((base_pts + (tm_pts - 21.5) * 0.34 + sal_adj) * tm_conservation_mult, 2)
                 p75_dk = round(med_dk * 1.25, 2)
                 p90_dk = round(med_dk * 1.48, 2)
                 p99_dk = round(med_dk * 1.88, 2)
@@ -787,7 +903,7 @@ class GSECausalLoopedFunnelEngine:
                 )
 
             # Team DST entry
-            dst_sal = 2900 + (idx % 5) * 100
+            dst_sal = _dk_dst_sal_lookup.get(home, 2900 + (idx % 5) * 100)
             dst_med = round(7.8 + max(0.0, 23.5 - proj_away_pts) * 0.35, 2)
             player_projections_pool_seed.append(
                 {
@@ -940,6 +1056,10 @@ class GSECausalLoopedFunnelEngine:
         self.state.stage3a_discrepancies_payload = payload
         self.state.stage3a_markets_and_discrepancies_locked = True
         return payload
+
+    stage3_causal_looped_26layer_279family_simulation = (
+        stage3a_derive_props_totals_winners_losers_and_book_discrepancies
+    )
 
     # --------------------------------------------------------------------------
     # STAGE 3B: Canonical Projections -> DFS Player Pools (HARD GATED!)

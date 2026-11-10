@@ -190,18 +190,74 @@ def check_charge_4() -> Dict[str, Any]:
     }
 
 
+def _run_test_files_with_pytest_or_unittest(test_files: List[Path]) -> tuple[bool, str]:
+    """Run test files with pytest if available, falling back to unittest/direct test invocation in stdlib-only environments."""
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", *[str(p) for p in test_files], "-q"],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode == 0:
+        detail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else "pytest passed"
+        return True, detail
+    if "No module named pytest" not in (proc.stderr or ""):
+        detail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else proc.stderr.strip()[:120]
+        return False, detail
+
+    # Fallback: run each test file via unittest / function runner using stdlib
+    runner_code = (
+        "import contextlib, importlib.util, inspect, pathlib, sys, tempfile, types, unittest\n"
+        "sys.path.insert(0, '.')\n"
+        "if 'pytest' not in sys.modules:\n"
+        "    pytest_mod = types.ModuleType('pytest')\n"
+        "    @contextlib.contextmanager\n"
+        "    def _raises(exc_type):\n"
+        "        try:\n"
+        "            yield\n"
+        "        except exc_type:\n"
+        "            return\n"
+        "        raise AssertionError(f'Expected {exc_type} to be raised')\n"
+        "    pytest_mod.raises = _raises\n"
+        "    sys.modules['pytest'] = pytest_mod\n"
+        "total = 0\n"
+        "for path in sys.argv[1:]:\n"
+        "    spec = importlib.util.spec_from_file_location('mod_' + str(total), path)\n"
+        "    mod = importlib.util.module_from_spec(spec)\n"
+        "    spec.loader.exec_module(mod)\n"
+        "    suite = unittest.defaultTestLoader.loadTestsFromModule(mod)\n"
+        "    if suite.countTestCases() > 0:\n"
+        "        res = unittest.TextTestRunner(verbosity=0).run(suite)\n"
+        "        if not res.wasSuccessful():\n"
+        "            sys.exit(1)\n"
+        "        total += res.testsRun\n"
+        "    for name, obj in vars(mod).items():\n"
+        "        if name.startswith('test_') and callable(obj):\n"
+        "            sig = inspect.signature(obj)\n"
+        "            if 'tmp_path' in sig.parameters:\n"
+        "                with tempfile.TemporaryDirectory() as td:\n"
+        "                    obj(pathlib.Path(td))\n"
+        "            else:\n"
+        "                obj()\n"
+        "            total += 1\n"
+        "print(f'{total} passed (stdlib runner)')\n"
+    )
+    u_proc = subprocess.run(
+        [sys.executable, "-c", runner_code, *[str(p) for p in test_files]],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+    )
+    ok = u_proc.returncode == 0
+    detail = u_proc.stdout.strip().splitlines()[-1] if u_proc.stdout.strip() else u_proc.stderr.strip()[:120]
+    return ok, detail
+
+
 def check_charge_5() -> Dict[str, Any]:
     """Charge 5: CI/Test verification verifiable."""
     test_file = REPO_ROOT / "tests" / "wiring" / "test_wave_consumption_proofs.py"
     if test_file.exists():
-        proc = subprocess.run(
-            [sys.executable, "-m", "pytest", str(test_file), "-q"],
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-            text=True,
-        )
-        pytest_ok = proc.returncode == 0
-        detail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else proc.stderr.strip()[:120]
+        pytest_ok, detail = _run_test_files_with_pytest_or_unittest([test_file])
     else:
         pytest_ok = True
         detail = "test_wave_consumption_proofs.py pending Wave 3+ creation"
@@ -378,15 +434,16 @@ def check_charge_10() -> Dict[str, Any]:
 
     reg_lines = [ln for ln in reg_file.read_text(encoding="utf-8").splitlines() if ln.strip()] if reg_file.exists() else []
     unsquared_copula = sum(1 for ln in reg_lines if "(1.0 + (x0 * x1) / 4.5)" in ln)
-    gsi_import_hits = git_grep_lines("gsi_sandbox", ["intelligence", "packages", "apps", "workers"])
+    gsi_import_hits = [
+        ln
+        for ln in git_grep_lines("gsi_sandbox", ["intelligence", "packages", "apps", "workers"])
+        if re.search(r"\b(import|from)\b.*gsi_sandbox", ln)
+    ]
 
-    unit_proc = subprocess.run(
-        [sys.executable, "-m", "pytest", str(ast_test), str(fam_test), "-q"],
-        cwd=str(REPO_ROOT),
-        capture_output=True,
-        text=True,
-    ) if (ast_test.exists() and fam_test.exists()) else None
-    unit_ok = bool(unit_proc and unit_proc.returncode == 0)
+    if ast_test.exists() and fam_test.exists():
+        unit_ok, _ = _run_test_files_with_pytest_or_unittest([ast_test, fam_test])
+    else:
+        unit_ok = False
 
     passed = (
         test_file.exists()

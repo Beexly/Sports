@@ -21,7 +21,10 @@ import sys
 from pathlib import Path
 from typing import Any, Mapping
 
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:  # pragma: no cover
+    pd = None  # type: ignore[assignment]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -295,28 +298,12 @@ def resolve_or_generate_matchup_board(
                 "tackles": 0,
             }
 
-        sit_team_cfg = (stage0_cfg.get("situational_multipliers_unfitted") or {}).get(tm) or {}
-        sit_named_players = {
-            k.split(":", 1)[1].strip()
-            for k in sit_team_cfg.keys()
-            if ":" in str(k)
-        }
-        for s_nm in sit_named_players:
-            if s_nm in tm_candidates:
-                tm_candidates[s_nm]["has_snaps"] = True
-                if tm_candidates[s_nm]["carries"] == 0 and tm_candidates[s_nm]["position"] == "RB":
-                    tm_candidates[s_nm]["carries"] = 25
-                    tm_candidates[s_nm]["rush_yds"] = 115.0
-                    tm_candidates[s_nm]["targets"] = 6
-                    tm_candidates[s_nm]["receptions"] = 5
-                    tm_candidates[s_nm]["rec_yds"] = 42.0
-
         selected: list[dict[str, Any]] = []
         if qb1_name in tm_candidates:
             selected.append(tm_candidates[qb1_name])
         rbs = sorted(
             [c for c in tm_candidates.values() if c["position"] == "RB" and c["has_snaps"]],
-            key=lambda x: -(1000 if x["name"] in sit_named_players else 0) - (x["carries"] + x["targets"]),
+            key=lambda x: -(x["carries"] + x["targets"]),
         )[:3]
         wrs = sorted(
             [c for c in tm_candidates.values() if c["position"] == "WR" and c["has_snaps"]],

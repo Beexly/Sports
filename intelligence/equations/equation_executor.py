@@ -38,6 +38,8 @@ BK_DL_PROVENANCE_INDEX_PATH = (
 GDRIVE_VERIFIED_MANIFEST_PATH = (
     REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "google-drive-and-docs-verified-manifest.json"
 )
+LANE_B_MEDICAL_SPORTS_SPINE_WEIGHT: float = 0.0
+SPORTS_SPINE_IMPORT_PERMITTED: bool = False
 
 _LAYER_EQUATIONS_CACHE: Dict[str, Dict[int, List[Dict[str, Any]]]] = {}
 _ALL_EQUATIONS_CACHE: Dict[str, List[Dict[str, Any]]] = {}

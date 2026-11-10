@@ -1,5 +1,4 @@
 ---
-version: 0.12.0
 name: higgsfield-product-photoshoot
 description: |
   Generate brand-quality product images through Higgsfield product-photoshoot
@@ -18,8 +17,10 @@ description: |
   video (use higgsfield-generate Marketing Studio), marketplace listing cards
   (use higgsfield-marketplace-cards), Soul Character training (use
   higgsfield-soul-id).
-argument-hint: "[--mode <mode>] [--count N] [prompt]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[--mode <mode>] [--count N] [prompt]"
 ---
 
 # Product Photoshoot
@@ -213,3 +214,16 @@ Print the image URLs as a short bulleted list. No JSON, no IDs, no internal mode
 - Calling `higgsfield generate create gpt_image_2 --prompt ...` directly instead of `higgsfield product-photoshoot create` — bypasses the prompt enhancer and produces noticeably worse output.
 - Pasting the assembled prompt back to the user — they want the URLs.
 - Using a `--mode` value not in the table above.
+
+## Use this skill when
+
+- Executing `higgsfield-product-photoshoot` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-product-photoshoot`.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-product-photoshoot` skill specification.
+

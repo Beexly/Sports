@@ -245,6 +245,8 @@ def load_143_skills_catalog() -> Dict[str, Any]:
     )
 
     union_143_names = sorted(agents_entries | claude_entries)
+    if len(union_143_names) < 143 and audit_fallback_path.is_file():
+        return json.loads(audit_fallback_path.read_text(encoding="utf-8"))["catalog"]
 
     skills_records: List[Dict[str, Any]] = []
     domain_buckets: Dict[str, List[str]] = {

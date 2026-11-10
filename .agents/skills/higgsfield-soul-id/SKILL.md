@@ -1,5 +1,4 @@
 ---
-version: 0.12.0
 name: higgsfield-soul-id
 description: |
   Train a Soul Character — a personalized model on a person's face that
@@ -12,8 +11,10 @@ description: |
   `text2image_soul_v2` or `soul_cinema_studio`.
   NOT for: one-shot face swaps (use higgsfield-generate with --image),
   named-character / non-photo avatars (use higgsfield-generate with prompt).
-argument-hint: "[name] [photo paths...]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[name] [photo paths...]"
 ---
 
 # Higgsfield Soul Character
@@ -81,3 +82,16 @@ higgsfield soul-id get <id>               # one by id
 
 - `references/photo-guide.md` — what photos work best
 - `references/troubleshooting.md` — common training failures
+
+## Use this skill when
+
+- Executing `higgsfield-soul-id` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-soul-id`.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-soul-id` skill specification.
+

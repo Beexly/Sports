@@ -1,13 +1,13 @@
 {
   "matchup": "NYJ @ KC",
-  "median_total": 47.61,
-  "median_spread_home": 4.82,
+  "median_total": 50.5,
+  "median_spread_home": 4.54,
   "median_plays": 130.0,
   "median_pace_sec": 27.69,
   "sinkhorn_mass_moved": 0.0,
-  "shootout_prob_ge51": 0.3928,
-  "stall_prob_le37": 0.2279,
-  "one_score_prob_le7": 0.3643,
+  "shootout_prob_ge51": 0.4331,
+  "stall_prob_le37": 0.1652,
+  "one_score_prob_le7": 0.3564,
   "coachMindsetHash": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
   "pre_projection_universal_and_deep_priors": {
     "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1484,7 +1484,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -1495,7 +1495,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -2445,7 +2445,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -2456,7 +2456,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -3240,10 +3240,10 @@
       "openai_tiktoken": {
         "repo": "openai/tiktoken",
         "encoding_name": "o200k_base",
-        "exact_bpe_library_used": true,
-        "estimated_tokens": 25,
+        "exact_bpe_library_used": false,
+        "estimated_tokens": 21,
         "max_token_budget": 128000,
-        "budget_utilization_ratio": 0.000195,
+        "budget_utilization_ratio": 0.000164,
         "compaction_required": false
       },
       "google_jules_fleet": {
@@ -3395,8 +3395,8 @@
       "away_team": "NYJ",
       "workflow_ready": true,
       "catalog_counts": {
-        "union_agents_and_claude_skills": 149,
-        "agents_skills_count": 111,
+        "union_agents_and_claude_skills": 143,
+        "agents_skills_count": 105,
         "claude_skills_count": 91,
         "gemini_config_skills_count": 185,
         "agy_plugins_count": 7,
@@ -3488,6 +3488,244 @@
       },
       "doctrine_19_rules_substrate_verified": true
     },
+    "spatial_micro_pbp_conditioners": {
+      "schema": "gse_spatial_micro_pbp_conditioners_v1",
+      "away_team": "NYJ",
+      "home_team": "KC",
+      "has_explicit_overrides": false,
+      "away_profile": {
+        "entity_id": "NYJ_OFFENSE",
+        "entity_name": "NYJ Offense Spatial Profile",
+        "team": "NYJ",
+        "opponent": "KC",
+        "position": "TEAM",
+        "domain1_rb_front7": {
+          "hard_hit_rate": 0.2061,
+          "opportunity_share": 0.6303,
+          "target_share": 0.1267,
+          "missed_tackles_forced": 29.43,
+          "designed_runs": 124.0,
+          "receptions": 28.0,
+          "yards_after_contact_per_att": 3.194,
+          "pff_elusive_rating": 61.8484,
+          "ryoe_per_att": 0.422,
+          "ryoe_variance": 1.8094,
+          "ryoe_consistency_rate_gt_1yd": 0.3602,
+          "ryoe_boom_rate_gt_5yd": 0.1111,
+          "unfair_yards_rate": 0.3273,
+          "success_over_expected_rate": 0.0577,
+          "stack_box_efficiency_rate": 0.4769,
+          "tracking_vector_mesh_gap_yds": 3.425,
+          "defenders_in_box": 6.74,
+          "offensive_blockers_in_box": 6.25,
+          "avg_defender_dist_from_los_yds": 4.399,
+          "true_box_spacing_delta": 4.7436,
+          "ybc_per_att": 1.369,
+          "ol_scheme_segregation_penalty_yds": 0.0,
+          "shed_time_survival_sec": 1.833,
+          "shed_time_survival_rate": 0.7325,
+          "def_penetration_depth_yds": -0.475,
+          "designated_first_read_rb_target_rate": 0.2944,
+          "checkdown_dump_off_rate": 0.7056,
+          "rb_yprr": 1.41,
+          "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+          "tovs": 20.9778
+        },
+        "domain2_wr_te_db": {
+          "route_participation_rate": 0.86,
+          "yprr": 2.295,
+          "first_read_target_share": 0.2949,
+          "contested_catch_rate": 0.5143,
+          "catchable_ball_rate": 0.7903,
+          "hard_hit_rate_on_rec": 0.2061,
+          "separation_at_separation_point_ssp_yds": 2.212,
+          "burn_rate_vs_man_gt_2yds": 0.3443,
+          "catch_point_leverage_delta_yds": 1.2175,
+          "true_csoe_target_prevention_rate": 0.0018
+        },
+        "domain3_qb_processing": {
+          "pre_to_post_snap_disguise_decay_ms": 214.1,
+          "disguise_processing_elite_le_220ms": true,
+          "simulated_creeping_pressure_success_rate": 0.4943,
+          "throw_to_leverage_variance_tlv_sq_yds": 0.8451
+        },
+        "domain4_trench_dl_ol": {
+          "true_pass_rush_win_rate_prwr_lt_25s": 0.1689,
+          "pocket_anchor_depth_pad_yds": 2.329,
+          "pad_holds_gt_22yds": true,
+          "stunt_loop_handoff_latency_ms": 168.72
+        },
+        "domain5_pocket_escape": {
+          "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.375,
+          "pcv_severe_gt_15": false,
+          "escape_vector_efficiency_eve": 0.7466
+        },
+        "domain6_scheme_structural": {
+          "mofo_structural_epa": 0.1384,
+          "mofc_structural_epa": 0.1585,
+          "mofo_mofc_heatmap_counter_delta": 0.1475,
+          "zone_void_exploitation_rate_zver": 0.5785
+        },
+        "expected_yardage_percentiles": {
+          "p10": 140.44,
+          "p25": 199.86,
+          "p50": 270.08,
+          "p75": 345.7,
+          "p90": 421.32,
+          "p95": 475.33,
+          "p99": 572.56
+        },
+        "pbp_snap_conditioners": {
+          "rush_yards_spatial_delta": 0.1603,
+          "rb_receiving_epa_delta": 0.0351,
+          "wr_te_completion_prob_delta": 0.0124,
+          "wr_te_explosive_mu_delta": 0.5664,
+          "qb_sack_prob_delta": -0.0064,
+          "qb_comp_prob_delta": 0.0061,
+          "qb_scramble_escape_delta": 0.0023,
+          "composite_epa_per_snap_delta": 0.02766
+        },
+        "dfs_and_prop_ceiling_boosts": {
+          "tovs": 20.9778,
+          "pff_elusive_rating": 61.8484,
+          "ryoe_boom_rate_gt_5yd": 0.1111,
+          "burn_rate_vs_man_gt_2yds": 0.3443,
+          "first_read_target_share": 0.2949,
+          "zone_void_exploitation_rate_zver": 0.5785,
+          "eve_to_pcv_ratio": 0.5431,
+          "q90_spatial_boost_dk_pts": 1.641,
+          "q95_spatial_boost_dk_pts": 2.356,
+          "q99_spatial_boost_dk_pts": 3.22,
+          "cvar_099_spatial_boost_dk_pts": 3.8
+        }
+      },
+      "home_profile": {
+        "entity_id": "KC_OFFENSE",
+        "entity_name": "KC Offense Spatial Profile",
+        "team": "KC",
+        "opponent": "NYJ",
+        "position": "TEAM",
+        "domain1_rb_front7": {
+          "hard_hit_rate": 0.2096,
+          "opportunity_share": 0.6436,
+          "target_share": 0.1309,
+          "missed_tackles_forced": 30.24,
+          "designed_runs": 124.0,
+          "receptions": 28.0,
+          "yards_after_contact_per_att": 3.235,
+          "pff_elusive_rating": 64.3635,
+          "ryoe_per_att": 0.48,
+          "ryoe_variance": 1.8525,
+          "ryoe_consistency_rate_gt_1yd": 0.366,
+          "ryoe_boom_rate_gt_5yd": 0.1146,
+          "unfair_yards_rate": 0.3342,
+          "success_over_expected_rate": 0.0594,
+          "stack_box_efficiency_rate": 0.4792,
+          "tracking_vector_mesh_gap_yds": 3.438,
+          "defenders_in_box": 6.7,
+          "offensive_blockers_in_box": 6.28,
+          "avg_defender_dist_from_los_yds": 4.427,
+          "true_box_spacing_delta": 4.7281,
+          "ybc_per_att": 1.397,
+          "ol_scheme_segregation_penalty_yds": 0.0,
+          "shed_time_survival_sec": 1.851,
+          "shed_time_survival_rate": 0.7395,
+          "def_penetration_depth_yds": -0.462,
+          "designated_first_read_rb_target_rate": 0.3024,
+          "checkdown_dump_off_rate": 0.6976,
+          "rb_yprr": 1.461,
+          "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+          "tovs": 21.5712
+        },
+        "domain2_wr_te_db": {
+          "route_participation_rate": 0.86,
+          "yprr": 2.304,
+          "first_read_target_share": 0.2977,
+          "contested_catch_rate": 0.5224,
+          "catchable_ball_rate": 0.796,
+          "hard_hit_rate_on_rec": 0.2096,
+          "separation_at_separation_point_ssp_yds": 2.246,
+          "burn_rate_vs_man_gt_2yds": 0.3524,
+          "catch_point_leverage_delta_yds": 1.2582,
+          "true_csoe_target_prevention_rate": -0.0028
+        },
+        "domain3_qb_processing": {
+          "pre_to_post_snap_disguise_decay_ms": 211.92,
+          "disguise_processing_elite_le_220ms": true,
+          "simulated_creeping_pressure_success_rate": 0.5024,
+          "throw_to_leverage_variance_tlv_sq_yds": 0.8256
+        },
+        "domain4_trench_dl_ol": {
+          "true_pass_rush_win_rate_prwr_lt_25s": 0.1654,
+          "pocket_anchor_depth_pad_yds": 2.357,
+          "pad_holds_gt_22yds": true,
+          "stunt_loop_handoff_latency_ms": 166.88
+        },
+        "domain5_pocket_escape": {
+          "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.35,
+          "pcv_severe_gt_15": false,
+          "escape_vector_efficiency_eve": 0.7616
+        },
+        "domain6_scheme_structural": {
+          "mofo_structural_epa": 0.1488,
+          "mofc_structural_epa": 0.1688,
+          "mofo_mofc_heatmap_counter_delta": 0.1578,
+          "zone_void_exploitation_rate_zver": 0.5888
+        },
+        "expected_yardage_percentiles": {
+          "p10": 142.27,
+          "p25": 202.46,
+          "p50": 273.59,
+          "p75": 350.2,
+          "p90": 426.8,
+          "p95": 481.52,
+          "p99": 580.02
+        },
+        "pbp_snap_conditioners": {
+          "rush_yards_spatial_delta": 0.2324,
+          "rb_receiving_epa_delta": 0.0397,
+          "wr_te_completion_prob_delta": 0.0162,
+          "wr_te_explosive_mu_delta": 0.6974,
+          "qb_sack_prob_delta": -0.0089,
+          "qb_comp_prob_delta": 0.0095,
+          "qb_scramble_escape_delta": 0.0035,
+          "composite_epa_per_snap_delta": 0.03543
+        },
+        "dfs_and_prop_ceiling_boosts": {
+          "tovs": 21.5712,
+          "pff_elusive_rating": 64.3635,
+          "ryoe_boom_rate_gt_5yd": 0.1146,
+          "burn_rate_vs_man_gt_2yds": 0.3524,
+          "first_read_target_share": 0.2977,
+          "zone_void_exploitation_rate_zver": 0.5888,
+          "eve_to_pcv_ratio": 0.5643,
+          "q90_spatial_boost_dk_pts": 1.716,
+          "q95_spatial_boost_dk_pts": 2.463,
+          "q99_spatial_boost_dk_pts": 3.365,
+          "cvar_099_spatial_boost_dk_pts": 3.971
+        }
+      },
+      "away_conditioners": {
+        "rush_yards_spatial_delta": 0.1603,
+        "rb_receiving_epa_delta": 0.0351,
+        "wr_te_completion_prob_delta": 0.0124,
+        "wr_te_explosive_mu_delta": 0.5664,
+        "qb_sack_prob_delta": -0.0064,
+        "qb_comp_prob_delta": 0.0061,
+        "qb_scramble_escape_delta": 0.0023,
+        "composite_epa_per_snap_delta": 0.02766
+      },
+      "home_conditioners": {
+        "rush_yards_spatial_delta": 0.2324,
+        "rb_receiving_epa_delta": 0.0397,
+        "wr_te_completion_prob_delta": 0.0162,
+        "wr_te_explosive_mu_delta": 0.6974,
+        "qb_sack_prob_delta": -0.0089,
+        "qb_comp_prob_delta": 0.0095,
+        "qb_scramble_escape_delta": 0.0035,
+        "composite_epa_per_snap_delta": 0.03543
+      }
+    },
     "trajectory_conditioners": {
       "scripted_1_to_15_epa_boost": 0.014,
       "post_script_16_to_65_cliff_delta": -0.00875,
@@ -3529,7 +3767,11 @@
       "openai_math_sogge_wave_focusing_gain": 1.320709,
       "openai_math_amplitude_damping_retention": 0.96594,
       "openai_math_cnf_satisfaction_prob": 0.281096,
-      "wired_into_10k_world_175_snap_simulation": true
+      "wired_into_10k_world_175_snap_simulation": true,
+      "spatial_micro_away_rush_delta": 0.1603,
+      "spatial_micro_home_rush_delta": 0.2324,
+      "spatial_micro_away_epa_delta": 0.02766,
+      "spatial_micro_home_epa_delta": 0.03543
     },
     "simulation_trajectory_conditioners": {
       "scripted_1_to_15_epa_boost": 0.014,
@@ -3572,7 +3814,11 @@
       "openai_math_sogge_wave_focusing_gain": 1.320709,
       "openai_math_amplitude_damping_retention": 0.96594,
       "openai_math_cnf_satisfaction_prob": 0.281096,
-      "wired_into_10k_world_175_snap_simulation": true
+      "wired_into_10k_world_175_snap_simulation": true,
+      "spatial_micro_away_rush_delta": 0.1603,
+      "spatial_micro_home_rush_delta": 0.2324,
+      "spatial_micro_away_epa_delta": 0.02766,
+      "spatial_micro_home_epa_delta": 0.03543
     }
   },
   "biomech_kinetic_overlay": {
@@ -3591,12 +3837,12 @@
     "scalar_torque_throttle": 0.9954,
     "metabolic_continuity_loss": 0.0125
   },
-  "fourth_down_wp_gap_mean": 0.027075199600357026,
-  "fourth_down_statistically_distinct_rate": 0.43703703703703706,
+  "fourth_down_wp_gap_mean": 0.026309454143892255,
+  "fourth_down_statistically_distinct_rate": 0.37037037037037035,
   "fourth_down_reason": "OBSERVED",
   "game_id": "2026_09_NYJ_KC",
   "from_context_packet": "data/context_packets/2026_09_NYJ_KC.json",
   "from_reasoning_trace": "data/reasoning/traces/2026_09_NYJ_KC.trace.json",
-  "reasoning_trace_cumulative_log_odds_delta": 0.639418,
-  "median_spread_home_trace_conditioned": 6.4185
+  "reasoning_trace_cumulative_log_odds_delta": -0.014988,
+  "median_spread_home_trace_conditioned": 4.5025
 }

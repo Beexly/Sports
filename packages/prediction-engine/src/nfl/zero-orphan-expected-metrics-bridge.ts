@@ -49,7 +49,7 @@ import { evaluateLbVoidTeRbVsSlotAbsorption } from "./role-isomorphism-realloc.j
  * Verified against the filesystem by `zero-orphan-engine-audit.test.ts`.
  */
 export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
-  // src/expected-metrics/ (62 modules)
+  // src/expected-metrics/ (65 modules)
   "expected-metrics/adjusted-scramble-epa.ts",
   "expected-metrics/any-a.ts",
   "expected-metrics/avg-separation-expected.ts",
@@ -57,6 +57,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/cpae-aggregate.ts",
   "expected-metrics/cpae-surface.ts",
   "expected-metrics/defensive-fantasy-points-allowed.ts",
+  "expected-metrics/defensive-field-zone-split.ts",
   "expected-metrics/defensive-success-allowed.ts",
   "expected-metrics/defensive-target-share.ts",
   "expected-metrics/directional-qb-epa.ts",
@@ -87,7 +88,9 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/pressure-elusiveness-collision.ts",
   "expected-metrics/qb-aggressiveness-expected.ts",
   "expected-metrics/qb-conditioned-receiver-efficiency.ts",
+  "expected-metrics/qb-opponent-tier-efficiency-split.ts",
   "expected-metrics/qb-penalty-epa.ts",
+  "expected-metrics/qb-post-first-int-efficiency-split.ts",
   "expected-metrics/qb-pressure-change.ts",
   "expected-metrics/qb-red-zone-carry-share.ts",
   "expected-metrics/qb-scramble-epa.ts",
@@ -175,6 +178,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/stadium-coordinates-c33.ts",
   "nfl/tackle-probability.ts",
   "nfl/teb-avalanche-braid-overlay.ts",
+  "nfl/unified-corpus-and-gsi-wiring-bridge.ts",
   "nfl/universal-handoff-warehouse-priors.ts",
   "nfl/verify-nfl-injury-evidence.ts",
   "nfl/wave13-sheaf-navier-stokes-phase-transition.ts",

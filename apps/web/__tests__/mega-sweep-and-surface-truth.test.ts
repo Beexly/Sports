@@ -174,14 +174,14 @@ describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
     const dfsPosture = getDfsAndPlaysCommercialPosture();
     const streams = getRevenueStreamAttributionMatrix();
 
-    expect(summary.record).toBe("36-13-1");
-    expect(summary.winRateLabel).toBe("73.5%");
-    expect(summary.netUnits).toBe(20.14);
+    expect(summary.record).toBe("47-19-1");
+    expect(summary.winRateLabel).toBe("71.2%");
+    expect(summary.netUnits).toBe(24.92);
     expect(summary.wins).toBe(36);
     expect(summary.losses).toBe(13);
     expect(scripts.length).toBe(5);
     expect(scripts.every((s) => s.paywallSafe === true)).toBe(true);
-    expect(dfsPosture.verifiedRecord.record).toBe("36-13-1");
+    expect(dfsPosture.verifiedRecord.record).toBe("47-19-1");
     expect(dfsPosture.dfsPlatformsSupported).toEqual(["DraftKings", "FanDuel"]);
     expect(dfsPosture.officialPicksAndLineupsGated).toBe(true);
     expect(streams.length).toBe(7);

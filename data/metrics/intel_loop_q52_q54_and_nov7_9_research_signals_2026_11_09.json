@@ -1,0 +1,3739 @@
+{
+  "schema_version": "gse-intel-loop-q52-q54-and-nov7-9-research-v1",
+  "generated_at_utc": "2026-11-09T18:25:00Z",
+  "target_season": 2026,
+  "target_week": 9,
+  "canonical_filed_research_docs": {
+    "engine_intel_loop_q52_q54": "docs/engine/research/2026-11-09/INTEL-LOOP-Q52-Q54-CONSOLIDATED-2026-11-09.md",
+    "data_sources_research_consolidation": "docs/data-sources/research/2026-11-09/RESEARCH-CONSOLIDATION-2026-11-07-to-09.md",
+    "predictions_content_ideas_and_signals": "docs/predictions/research/2026-11-09/CONTENT-IDEAS-AND-SIGNALS-2026-11-07-to-09.md",
+    "mnf_founder_command_packet": "docs/predictions/research/2026-11-09/MNF-BUF-MIN-FOUNDER-COMMAND-AND-MONETIZATION-PACKET.md"
+  },
+  "typescript_expected_metrics_modules": {
+    "Q52": {
+      "metric_id": "defensive-field-zone-split",
+      "internal_name": "defensive_field_zone_split_shadow",
+      "status": "SHADOW",
+      "module_path": "packages/prediction-engine/src/expected-metrics/defensive-field-zone-split.ts",
+      "test_path": "packages/prediction-engine/src/expected-metrics/__tests__/defensive-field-zone-split.test.ts",
+      "upstream_pr": 1262
+    },
+    "Q53": {
+      "metric_id": "qb-opponent-tier-efficiency-split",
+      "internal_name": "qb_opponent_tier_efficiency_split_shadow",
+      "status": "SHADOW",
+      "module_path": "packages/prediction-engine/src/expected-metrics/qb-opponent-tier-efficiency-split.ts",
+      "test_path": "packages/prediction-engine/src/expected-metrics/__tests__/qb-opponent-tier-efficiency-split.test.ts",
+      "upstream_pr": 1266
+    },
+    "Q54": {
+      "metric_id": "qb-post-first-int-efficiency-split",
+      "internal_name": "qb_post_first_int_efficiency_split_shadow",
+      "status": "SHADOW",
+      "module_path": "packages/prediction-engine/src/expected-metrics/qb-post-first-int-efficiency-split.ts",
+      "test_path": "packages/prediction-engine/src/expected-metrics/__tests__/qb-post-first-int-efficiency-split.test.ts",
+      "upstream_status": "TIGHTENED_AND_IMPLEMENTED_LOCALLY"
+    }
+  },
+  "expected_metrics_evaluations": {
+    "Q52_defensive_field_zone_split": {
+      "season_to_date": {
+        "window": "season-to-date",
+        "targetWeek": 9,
+        "includedWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "defenses": [
+          {
+            "defteam": "BAL",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": 0.08,
+              "successPlays": 40,
+              "successesAllowed": 19,
+              "successRateAllowed": 0.475,
+              "touchdownsAllowed": 8,
+              "redZoneTdRateAllowed": 0.2
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.06,
+              "successPlays": 160,
+              "successesAllowed": 65,
+              "successRateAllowed": 0.4062
+            },
+            "epaSplit": 0.14,
+            "successSplit": 0.0688,
+            "redZoneTdRateAllowed": 0.2
+          },
+          {
+            "defteam": "BUF",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.09,
+              "successPlays": 40,
+              "successesAllowed": 15,
+              "successRateAllowed": 0.375,
+              "touchdownsAllowed": 6,
+              "redZoneTdRateAllowed": 0.15
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": 0.02,
+              "successPlays": 160,
+              "successesAllowed": 70,
+              "successRateAllowed": 0.4375
+            },
+            "epaSplit": -0.11,
+            "successSplit": -0.0625,
+            "redZoneTdRateAllowed": 0.15
+          },
+          {
+            "defteam": "DET",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.06,
+              "successPlays": 40,
+              "successesAllowed": 16,
+              "successRateAllowed": 0.4,
+              "touchdownsAllowed": 6,
+              "redZoneTdRateAllowed": 0.15
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.08,
+              "successPlays": 160,
+              "successesAllowed": 62,
+              "successRateAllowed": 0.3875
+            },
+            "epaSplit": 0.02,
+            "successSplit": 0.0125,
+            "redZoneTdRateAllowed": 0.15
+          },
+          {
+            "defteam": "KC",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.05,
+              "successPlays": 40,
+              "successesAllowed": 16,
+              "successRateAllowed": 0.4,
+              "touchdownsAllowed": 6,
+              "redZoneTdRateAllowed": 0.15
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.07,
+              "successPlays": 160,
+              "successesAllowed": 64,
+              "successRateAllowed": 0.4
+            },
+            "epaSplit": 0.02,
+            "successSplit": 0.0,
+            "redZoneTdRateAllowed": 0.15
+          },
+          {
+            "defteam": "LAC",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.1,
+              "successPlays": 40,
+              "successesAllowed": 14,
+              "successRateAllowed": 0.35,
+              "touchdownsAllowed": 5,
+              "redZoneTdRateAllowed": 0.125
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.09,
+              "successPlays": 160,
+              "successesAllowed": 61,
+              "successRateAllowed": 0.3812
+            },
+            "epaSplit": -0.01,
+            "successSplit": -0.0312,
+            "redZoneTdRateAllowed": 0.125
+          },
+          {
+            "defteam": "MIN",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.04,
+              "successPlays": 40,
+              "successesAllowed": 17,
+              "successRateAllowed": 0.425,
+              "touchdownsAllowed": 7,
+              "redZoneTdRateAllowed": 0.175
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.11,
+              "successPlays": 160,
+              "successesAllowed": 58,
+              "successRateAllowed": 0.3625
+            },
+            "epaSplit": 0.07,
+            "successSplit": 0.0625,
+            "redZoneTdRateAllowed": 0.175
+          },
+          {
+            "defteam": "SEA",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": 0.42,
+              "successPlays": 40,
+              "successesAllowed": 25,
+              "successRateAllowed": 0.625,
+              "touchdownsAllowed": 14,
+              "redZoneTdRateAllowed": 0.35
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.14,
+              "successPlays": 160,
+              "successesAllowed": 60,
+              "successRateAllowed": 0.375
+            },
+            "epaSplit": 0.56,
+            "successSplit": 0.25,
+            "redZoneTdRateAllowed": 0.35
+          },
+          {
+            "defteam": "SF",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": 0.04,
+              "successPlays": 40,
+              "successesAllowed": 18,
+              "successRateAllowed": 0.45,
+              "touchdownsAllowed": 7,
+              "redZoneTdRateAllowed": 0.175
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.05,
+              "successPlays": 160,
+              "successesAllowed": 66,
+              "successRateAllowed": 0.4125
+            },
+            "epaSplit": 0.09,
+            "successSplit": 0.0375,
+            "redZoneTdRateAllowed": 0.175
+          }
+        ],
+        "diagnostics": {
+          "excludedNonScrimmagePlays": 0,
+          "excludedKneelOrSpikePlays": 0,
+          "excludedEmptyTeamPlays": 0,
+          "excludedNonFiniteYardlinePlays": 0,
+          "excludedNullEpaPlays": 0,
+          "redZoneExcludedNullEpaPlays": 0,
+          "openFieldExcludedNullEpaPlays": 0,
+          "excludedUnratableSuccessPlays": 0,
+          "redZoneExcludedUnratableSuccessPlays": 0,
+          "openFieldExcludedUnratableSuccessPlays": 0,
+          "belowFloorDefensesCount": 0,
+          "belowFloorDefenses": []
+        }
+      },
+      "last_4_weeks": {
+        "window": "last-4",
+        "targetWeek": 9,
+        "includedWeeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "defenses": [],
+        "diagnostics": {
+          "excludedNonScrimmagePlays": 0,
+          "excludedKneelOrSpikePlays": 0,
+          "excludedEmptyTeamPlays": 0,
+          "excludedNonFiniteYardlinePlays": 0,
+          "excludedNullEpaPlays": 0,
+          "redZoneExcludedNullEpaPlays": 0,
+          "openFieldExcludedNullEpaPlays": 0,
+          "excludedUnratableSuccessPlays": 0,
+          "redZoneExcludedUnratableSuccessPlays": 0,
+          "openFieldExcludedUnratableSuccessPlays": 0,
+          "belowFloorDefensesCount": 8,
+          "belowFloorDefenses": [
+            {
+              "defteam": "BAL",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "BUF",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "DET",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "KC",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "LAC",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "MIN",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "SEA",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            },
+            {
+              "defteam": "SF",
+              "redZonePlays": 20,
+              "openFieldPlays": 80,
+              "redZoneEpaPlays": 20,
+              "reasons": [
+                "red_zone_plays_below_30",
+                "open_field_plays_below_100",
+                "red_zone_epa_plays_below_30"
+              ]
+            }
+          ]
+        }
+      },
+      "last_8_weeks": {
+        "window": "last-8",
+        "targetWeek": 9,
+        "includedWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "defenses": [
+          {
+            "defteam": "BAL",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": 0.08,
+              "successPlays": 40,
+              "successesAllowed": 19,
+              "successRateAllowed": 0.475,
+              "touchdownsAllowed": 8,
+              "redZoneTdRateAllowed": 0.2
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.06,
+              "successPlays": 160,
+              "successesAllowed": 65,
+              "successRateAllowed": 0.4062
+            },
+            "epaSplit": 0.14,
+            "successSplit": 0.0688,
+            "redZoneTdRateAllowed": 0.2
+          },
+          {
+            "defteam": "BUF",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.09,
+              "successPlays": 40,
+              "successesAllowed": 15,
+              "successRateAllowed": 0.375,
+              "touchdownsAllowed": 6,
+              "redZoneTdRateAllowed": 0.15
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": 0.02,
+              "successPlays": 160,
+              "successesAllowed": 70,
+              "successRateAllowed": 0.4375
+            },
+            "epaSplit": -0.11,
+            "successSplit": -0.0625,
+            "redZoneTdRateAllowed": 0.15
+          },
+          {
+            "defteam": "DET",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.06,
+              "successPlays": 40,
+              "successesAllowed": 16,
+              "successRateAllowed": 0.4,
+              "touchdownsAllowed": 6,
+              "redZoneTdRateAllowed": 0.15
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.08,
+              "successPlays": 160,
+              "successesAllowed": 62,
+              "successRateAllowed": 0.3875
+            },
+            "epaSplit": 0.02,
+            "successSplit": 0.0125,
+            "redZoneTdRateAllowed": 0.15
+          },
+          {
+            "defteam": "KC",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.05,
+              "successPlays": 40,
+              "successesAllowed": 16,
+              "successRateAllowed": 0.4,
+              "touchdownsAllowed": 6,
+              "redZoneTdRateAllowed": 0.15
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.07,
+              "successPlays": 160,
+              "successesAllowed": 64,
+              "successRateAllowed": 0.4
+            },
+            "epaSplit": 0.02,
+            "successSplit": 0.0,
+            "redZoneTdRateAllowed": 0.15
+          },
+          {
+            "defteam": "LAC",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.1,
+              "successPlays": 40,
+              "successesAllowed": 14,
+              "successRateAllowed": 0.35,
+              "touchdownsAllowed": 5,
+              "redZoneTdRateAllowed": 0.125
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.09,
+              "successPlays": 160,
+              "successesAllowed": 61,
+              "successRateAllowed": 0.3812
+            },
+            "epaSplit": -0.01,
+            "successSplit": -0.0312,
+            "redZoneTdRateAllowed": 0.125
+          },
+          {
+            "defteam": "MIN",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": -0.04,
+              "successPlays": 40,
+              "successesAllowed": 17,
+              "successRateAllowed": 0.425,
+              "touchdownsAllowed": 7,
+              "redZoneTdRateAllowed": 0.175
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.11,
+              "successPlays": 160,
+              "successesAllowed": 58,
+              "successRateAllowed": 0.3625
+            },
+            "epaSplit": 0.07,
+            "successSplit": 0.0625,
+            "redZoneTdRateAllowed": 0.175
+          },
+          {
+            "defteam": "SEA",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": 0.42,
+              "successPlays": 40,
+              "successesAllowed": 25,
+              "successRateAllowed": 0.625,
+              "touchdownsAllowed": 14,
+              "redZoneTdRateAllowed": 0.35
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.14,
+              "successPlays": 160,
+              "successesAllowed": 60,
+              "successRateAllowed": 0.375
+            },
+            "epaSplit": 0.56,
+            "successSplit": 0.25,
+            "redZoneTdRateAllowed": 0.35
+          },
+          {
+            "defteam": "SF",
+            "window": "last-8",
+            "targetWeek": 9,
+            "redZone": {
+              "plays": 40,
+              "epaPlays": 40,
+              "meanEpaAllowed": 0.04,
+              "successPlays": 40,
+              "successesAllowed": 18,
+              "successRateAllowed": 0.45,
+              "touchdownsAllowed": 7,
+              "redZoneTdRateAllowed": 0.175
+            },
+            "openField": {
+              "plays": 160,
+              "epaPlays": 160,
+              "meanEpaAllowed": -0.05,
+              "successPlays": 160,
+              "successesAllowed": 66,
+              "successRateAllowed": 0.4125
+            },
+            "epaSplit": 0.09,
+            "successSplit": 0.0375,
+            "redZoneTdRateAllowed": 0.175
+          }
+        ],
+        "diagnostics": {
+          "excludedNonScrimmagePlays": 0,
+          "excludedKneelOrSpikePlays": 0,
+          "excludedEmptyTeamPlays": 0,
+          "excludedNonFiniteYardlinePlays": 0,
+          "excludedNullEpaPlays": 0,
+          "redZoneExcludedNullEpaPlays": 0,
+          "openFieldExcludedNullEpaPlays": 0,
+          "excludedUnratableSuccessPlays": 0,
+          "redZoneExcludedUnratableSuccessPlays": 0,
+          "openFieldExcludedUnratableSuccessPlays": 0,
+          "belowFloorDefensesCount": 0,
+          "belowFloorDefenses": []
+        }
+      }
+    },
+    "Q53_qb_opponent_tier_efficiency_split": {
+      "season_to_date": {
+        "window": "season-to-date",
+        "targetWeek": 9,
+        "includedWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "defenseRanksByWeek": {
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [
+            {
+              "defteam": "MIN",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.22,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.18,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.14,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.13,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.11,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.12,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.14,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.16,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "5": [
+            {
+              "defteam": "MIN",
+              "week": 5,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.18,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.13,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 5,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 5,
+              "priorDropbacksFaced": 115,
+              "priorRatableDropbacksFaced": 115,
+              "priorMeanEpaAllowed": 0.1194,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 5,
+              "priorDropbacksFaced": 115,
+              "priorRatableDropbacksFaced": 115,
+              "priorMeanEpaAllowed": 0.1285,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 5,
+              "priorDropbacksFaced": 119,
+              "priorRatableDropbacksFaced": 119,
+              "priorMeanEpaAllowed": 0.1503,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 5,
+              "priorDropbacksFaced": 116,
+              "priorRatableDropbacksFaced": 116,
+              "priorMeanEpaAllowed": 0.1659,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "6": [
+            {
+              "defteam": "MIN",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 6,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 6,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 6,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": 0.1273,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": 0.1367,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 6,
+              "priorDropbacksFaced": 129,
+              "priorRatableDropbacksFaced": 129,
+              "priorMeanEpaAllowed": 0.1556,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 6,
+              "priorDropbacksFaced": 130,
+              "priorRatableDropbacksFaced": 130,
+              "priorMeanEpaAllowed": 0.1725,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "7": [
+            {
+              "defteam": "MIN",
+              "week": 7,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 7,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 7,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.1434,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 7,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 7,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 7,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.102,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 7,
+              "priorDropbacksFaced": 136,
+              "priorRatableDropbacksFaced": 136,
+              "priorMeanEpaAllowed": 0.1349,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 7,
+              "priorDropbacksFaced": 139,
+              "priorRatableDropbacksFaced": 139,
+              "priorMeanEpaAllowed": 0.1453,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 7,
+              "priorDropbacksFaced": 139,
+              "priorRatableDropbacksFaced": 139,
+              "priorMeanEpaAllowed": 0.1601,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 7,
+              "priorDropbacksFaced": 140,
+              "priorRatableDropbacksFaced": 140,
+              "priorMeanEpaAllowed": 0.1758,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "8": [
+            {
+              "defteam": "MIN",
+              "week": 8,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 8,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 8,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 8,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.1434,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 8,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.135,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 8,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 8,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 8,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.102,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 8,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 8,
+              "priorDropbacksFaced": 122,
+              "priorRatableDropbacksFaced": 122,
+              "priorMeanEpaAllowed": -0.0954,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 8,
+              "priorDropbacksFaced": 149,
+              "priorRatableDropbacksFaced": 149,
+              "priorMeanEpaAllowed": 0.1432,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 8,
+              "priorDropbacksFaced": 148,
+              "priorRatableDropbacksFaced": 148,
+              "priorMeanEpaAllowed": 0.1507,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 8,
+              "priorDropbacksFaced": 150,
+              "priorRatableDropbacksFaced": 150,
+              "priorMeanEpaAllowed": 0.1646,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 8,
+              "priorDropbacksFaced": 150,
+              "priorRatableDropbacksFaced": 150,
+              "priorMeanEpaAllowed": 0.1786,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ]
+        },
+        "leagueTop10MeanEpa": -0.0023,
+        "leagueRestMeanEpa": 0.2234,
+        "qbs": [
+          {
+            "passerPlayerId": "00-0032950_CARSON_WENTZ",
+            "posteam": "MIN",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 74,
+            "totalClassifiedRatableDropbacks": 74,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "rawEpaPerDropback": -0.18,
+              "shrunkEpaPerDropback": -0.1165,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 38,
+              "ratableDropbacks": 38,
+              "rawEpaPerDropback": 0.08,
+              "shrunkEpaPerDropback": 0.1294,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.2459,
+            "rawSensitivityDelta": -0.26
+          },
+          {
+            "passerPlayerId": "00-0034857_JOSH_ALLEN",
+            "posteam": "BUF",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 92,
+            "totalClassifiedRatableDropbacks": 92,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 42,
+              "ratableDropbacks": 42,
+              "rawEpaPerDropback": 0.09,
+              "shrunkEpaPerDropback": 0.0602,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 50,
+              "ratableDropbacks": 50,
+              "rawEpaPerDropback": 0.26,
+              "shrunkEpaPerDropback": 0.2495,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.1893,
+            "rawSensitivityDelta": -0.17
+          },
+          {
+            "passerPlayerId": "00-0036264_JORDAN_LOVE",
+            "posteam": "GB",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 77,
+            "totalClassifiedRatableDropbacks": 77,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 35,
+              "ratableDropbacks": 35,
+              "rawEpaPerDropback": 0.05,
+              "shrunkEpaPerDropback": 0.031,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 42,
+              "ratableDropbacks": 42,
+              "rawEpaPerDropback": 0.21,
+              "shrunkEpaPerDropback": 0.2143,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.1833,
+            "rawSensitivityDelta": -0.16
+          },
+          {
+            "passerPlayerId": "00-0036442_JOE_BURROW",
+            "posteam": "CIN",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 82,
+            "totalClassifiedRatableDropbacks": 82,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 38,
+              "ratableDropbacks": 38,
+              "rawEpaPerDropback": 0.14,
+              "shrunkEpaPerDropback": 0.0909,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 44,
+              "ratableDropbacks": 44,
+              "rawEpaPerDropback": 0.24,
+              "shrunkEpaPerDropback": 0.2348,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.1439,
+            "rawSensitivityDelta": -0.1
+          },
+          {
+            "passerPlayerId": "00-0039851_DRAKE_MAYE",
+            "posteam": "NE",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 85,
+            "totalClassifiedRatableDropbacks": 85,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 40,
+              "ratableDropbacks": 40,
+              "rawEpaPerDropback": -0.12,
+              "shrunkEpaPerDropback": -0.0808,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 45,
+              "ratableDropbacks": 45,
+              "rawEpaPerDropback": 0.3,
+              "shrunkEpaPerDropback": 0.2764,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.3572,
+            "rawSensitivityDelta": -0.42
+          }
+        ],
+        "diagnostics": {
+          "excludedNonPassPlays": 0,
+          "excludedQbSpikePlays": 0,
+          "excludedEmptyDefteamPlays": 0,
+          "excludedEmptyPasserIdPlays": 0,
+          "excludedUnrankedOpponentDropbacks": 1470,
+          "week1UnclassifiedDropbacks": 490,
+          "excludedNullEpaDropbacks": 0,
+          "belowFloorTop10ArmsCount": 1,
+          "belowFloorRestArmsCount": 1
+        }
+      },
+      "last_4_weeks": {
+        "window": "last-4",
+        "targetWeek": 9,
+        "includedWeeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "defenseRanksByWeek": {
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [
+            {
+              "defteam": "MIN",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.22,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.18,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.14,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.13,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.11,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.12,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.14,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.16,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "5": [
+            {
+              "defteam": "MIN",
+              "week": 5,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.18,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.13,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 5,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 5,
+              "priorDropbacksFaced": 115,
+              "priorRatableDropbacksFaced": 115,
+              "priorMeanEpaAllowed": 0.1194,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 5,
+              "priorDropbacksFaced": 115,
+              "priorRatableDropbacksFaced": 115,
+              "priorMeanEpaAllowed": 0.1285,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 5,
+              "priorDropbacksFaced": 119,
+              "priorRatableDropbacksFaced": 119,
+              "priorMeanEpaAllowed": 0.1503,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 5,
+              "priorDropbacksFaced": 116,
+              "priorRatableDropbacksFaced": 116,
+              "priorMeanEpaAllowed": 0.1659,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "6": [
+            {
+              "defteam": "MIN",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 6,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 6,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 6,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": 0.1273,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": 0.1367,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 6,
+              "priorDropbacksFaced": 129,
+              "priorRatableDropbacksFaced": 129,
+              "priorMeanEpaAllowed": 0.1556,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 6,
+              "priorDropbacksFaced": 130,
+              "priorRatableDropbacksFaced": 130,
+              "priorMeanEpaAllowed": 0.1725,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "7": [
+            {
+              "defteam": "MIN",
+              "week": 7,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 7,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 7,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.1434,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 7,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 7,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 7,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.102,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 7,
+              "priorDropbacksFaced": 136,
+              "priorRatableDropbacksFaced": 136,
+              "priorMeanEpaAllowed": 0.1349,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 7,
+              "priorDropbacksFaced": 139,
+              "priorRatableDropbacksFaced": 139,
+              "priorMeanEpaAllowed": 0.1453,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 7,
+              "priorDropbacksFaced": 139,
+              "priorRatableDropbacksFaced": 139,
+              "priorMeanEpaAllowed": 0.1601,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 7,
+              "priorDropbacksFaced": 140,
+              "priorRatableDropbacksFaced": 140,
+              "priorMeanEpaAllowed": 0.1758,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "8": [
+            {
+              "defteam": "MIN",
+              "week": 8,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 8,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 8,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 8,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.1434,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 8,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.135,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 8,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 8,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 8,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.102,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 8,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 8,
+              "priorDropbacksFaced": 122,
+              "priorRatableDropbacksFaced": 122,
+              "priorMeanEpaAllowed": -0.0954,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 8,
+              "priorDropbacksFaced": 149,
+              "priorRatableDropbacksFaced": 149,
+              "priorMeanEpaAllowed": 0.1432,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 8,
+              "priorDropbacksFaced": 148,
+              "priorRatableDropbacksFaced": 148,
+              "priorMeanEpaAllowed": 0.1507,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 8,
+              "priorDropbacksFaced": 150,
+              "priorRatableDropbacksFaced": 150,
+              "priorMeanEpaAllowed": 0.1646,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 8,
+              "priorDropbacksFaced": 150,
+              "priorRatableDropbacksFaced": 150,
+              "priorMeanEpaAllowed": 0.1786,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ]
+        },
+        "leagueTop10MeanEpa": -0.0021,
+        "leagueRestMeanEpa": 0.2237,
+        "qbs": [
+          {
+            "passerPlayerId": "00-0032950_CARSON_WENTZ",
+            "posteam": "MIN",
+            "window": "last-4",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 58,
+            "totalClassifiedRatableDropbacks": 58,
+            "top10Arm": null,
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 30,
+              "ratableDropbacks": 30,
+              "rawEpaPerDropback": 0.08,
+              "shrunkEpaPerDropback": 0.1375,
+              "leagueTierMean": 0.2237
+            },
+            "sensitivityDelta": null,
+            "rawSensitivityDelta": null
+          },
+          {
+            "passerPlayerId": "00-0034857_JOSH_ALLEN",
+            "posteam": "BUF",
+            "window": "last-4",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 73,
+            "totalClassifiedRatableDropbacks": 73,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 33,
+              "ratableDropbacks": 33,
+              "rawEpaPerDropback": 0.09,
+              "shrunkEpaPerDropback": 0.0553,
+              "leagueTierMean": -0.0021
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 40,
+              "ratableDropbacks": 40,
+              "rawEpaPerDropback": 0.26,
+              "shrunkEpaPerDropback": 0.2479,
+              "leagueTierMean": 0.2237
+            },
+            "sensitivityDelta": -0.1926,
+            "rawSensitivityDelta": -0.17
+          },
+          {
+            "passerPlayerId": "00-0036264_JORDAN_LOVE",
+            "posteam": "GB",
+            "window": "last-4",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 61,
+            "totalClassifiedRatableDropbacks": 61,
+            "top10Arm": null,
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 33,
+              "ratableDropbacks": 33,
+              "rawEpaPerDropback": 0.21,
+              "shrunkEpaPerDropback": 0.2152,
+              "leagueTierMean": 0.2237
+            },
+            "sensitivityDelta": null,
+            "rawSensitivityDelta": null
+          },
+          {
+            "passerPlayerId": "00-0036442_JOE_BURROW",
+            "posteam": "CIN",
+            "window": "last-4",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 65,
+            "totalClassifiedRatableDropbacks": 65,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 30,
+              "ratableDropbacks": 30,
+              "rawEpaPerDropback": 0.14,
+              "shrunkEpaPerDropback": 0.0832,
+              "leagueTierMean": -0.0021
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 35,
+              "ratableDropbacks": 35,
+              "rawEpaPerDropback": 0.24,
+              "shrunkEpaPerDropback": 0.2341,
+              "leagueTierMean": 0.2237
+            },
+            "sensitivityDelta": -0.1509,
+            "rawSensitivityDelta": -0.1
+          },
+          {
+            "passerPlayerId": "00-0039851_DRAKE_MAYE",
+            "posteam": "NE",
+            "window": "last-4",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 68,
+            "totalClassifiedRatableDropbacks": 68,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 32,
+              "ratableDropbacks": 32,
+              "rawEpaPerDropback": -0.12,
+              "shrunkEpaPerDropback": -0.0746,
+              "leagueTierMean": -0.0021
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "rawEpaPerDropback": 0.3,
+              "shrunkEpaPerDropback": 0.2728,
+              "leagueTierMean": 0.2237
+            },
+            "sensitivityDelta": -0.3474,
+            "rawSensitivityDelta": -0.42
+          }
+        ],
+        "diagnostics": {
+          "excludedNonPassPlays": 0,
+          "excludedQbSpikePlays": 0,
+          "excludedEmptyDefteamPlays": 0,
+          "excludedEmptyPasserIdPlays": 0,
+          "excludedUnrankedOpponentDropbacks": 0,
+          "week1UnclassifiedDropbacks": 0,
+          "excludedNullEpaDropbacks": 0,
+          "belowFloorTop10ArmsCount": 2,
+          "belowFloorRestArmsCount": 0
+        }
+      },
+      "last_8_weeks": {
+        "window": "last-8",
+        "targetWeek": 9,
+        "includedWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "defenseRanksByWeek": {
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [
+            {
+              "defteam": "MIN",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.22,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.18,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.14,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.13,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.11,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.12,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.14,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 4,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": 0.16,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "5": [
+            {
+              "defteam": "MIN",
+              "week": 5,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.18,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.13,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 5,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 5,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 5,
+              "priorDropbacksFaced": 115,
+              "priorRatableDropbacksFaced": 115,
+              "priorMeanEpaAllowed": 0.1194,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 5,
+              "priorDropbacksFaced": 115,
+              "priorRatableDropbacksFaced": 115,
+              "priorMeanEpaAllowed": 0.1285,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 5,
+              "priorDropbacksFaced": 119,
+              "priorRatableDropbacksFaced": 119,
+              "priorMeanEpaAllowed": 0.1503,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 5,
+              "priorDropbacksFaced": 116,
+              "priorRatableDropbacksFaced": 116,
+              "priorMeanEpaAllowed": 0.1659,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "6": [
+            {
+              "defteam": "MIN",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.17,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.12,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 6,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 6,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 6,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 6,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": 0.1273,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 6,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": 0.1367,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 6,
+              "priorDropbacksFaced": 129,
+              "priorRatableDropbacksFaced": 129,
+              "priorMeanEpaAllowed": 0.1556,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 6,
+              "priorDropbacksFaced": 130,
+              "priorRatableDropbacksFaced": 130,
+              "priorMeanEpaAllowed": 0.1725,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "7": [
+            {
+              "defteam": "MIN",
+              "week": 7,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.16,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 7,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 7,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.1434,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 7,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 7,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.11,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 7,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.102,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 7,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 7,
+              "priorDropbacksFaced": 136,
+              "priorRatableDropbacksFaced": 136,
+              "priorMeanEpaAllowed": 0.1349,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 7,
+              "priorDropbacksFaced": 139,
+              "priorRatableDropbacksFaced": 139,
+              "priorMeanEpaAllowed": 0.1453,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 7,
+              "priorDropbacksFaced": 139,
+              "priorRatableDropbacksFaced": 139,
+              "priorMeanEpaAllowed": 0.1601,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 7,
+              "priorDropbacksFaced": 140,
+              "priorRatableDropbacksFaced": 140,
+              "priorMeanEpaAllowed": 0.1758,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ],
+          "8": [
+            {
+              "defteam": "MIN",
+              "week": 8,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1833,
+              "ordinalRank": 1,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "LAC",
+              "week": 8,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.15,
+              "ordinalRank": 2,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BUF",
+              "week": 8,
+              "priorDropbacksFaced": 126,
+              "priorRatableDropbacksFaced": 126,
+              "priorMeanEpaAllowed": -0.1499,
+              "ordinalRank": 3,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DEN",
+              "week": 8,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.1434,
+              "ordinalRank": 4,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "HOU",
+              "week": 8,
+              "priorDropbacksFaced": 125,
+              "priorRatableDropbacksFaced": 125,
+              "priorMeanEpaAllowed": -0.135,
+              "ordinalRank": 5,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "BAL",
+              "week": 8,
+              "priorDropbacksFaced": 124,
+              "priorRatableDropbacksFaced": 124,
+              "priorMeanEpaAllowed": -0.1196,
+              "ordinalRank": 6,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "PIT",
+              "week": 8,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.1106,
+              "ordinalRank": 7,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "DET",
+              "week": 8,
+              "priorDropbacksFaced": 123,
+              "priorRatableDropbacksFaced": 123,
+              "priorMeanEpaAllowed": -0.102,
+              "ordinalRank": 8,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "SF",
+              "week": 8,
+              "priorDropbacksFaced": 105,
+              "priorRatableDropbacksFaced": 105,
+              "priorMeanEpaAllowed": -0.1,
+              "ordinalRank": 9,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "KC",
+              "week": 8,
+              "priorDropbacksFaced": 122,
+              "priorRatableDropbacksFaced": 122,
+              "priorMeanEpaAllowed": -0.0954,
+              "ordinalRank": 10,
+              "tier": "TOP-10"
+            },
+            {
+              "defteam": "ATL",
+              "week": 8,
+              "priorDropbacksFaced": 149,
+              "priorRatableDropbacksFaced": 149,
+              "priorMeanEpaAllowed": 0.1432,
+              "ordinalRank": 11,
+              "tier": "REST"
+            },
+            {
+              "defteam": "MIA",
+              "week": 8,
+              "priorDropbacksFaced": 148,
+              "priorRatableDropbacksFaced": 148,
+              "priorMeanEpaAllowed": 0.1507,
+              "ordinalRank": 12,
+              "tier": "REST"
+            },
+            {
+              "defteam": "CAR",
+              "week": 8,
+              "priorDropbacksFaced": 150,
+              "priorRatableDropbacksFaced": 150,
+              "priorMeanEpaAllowed": 0.1646,
+              "ordinalRank": 13,
+              "tier": "REST"
+            },
+            {
+              "defteam": "JAX",
+              "week": 8,
+              "priorDropbacksFaced": 150,
+              "priorRatableDropbacksFaced": 150,
+              "priorMeanEpaAllowed": 0.1786,
+              "ordinalRank": 14,
+              "tier": "REST"
+            }
+          ]
+        },
+        "leagueTop10MeanEpa": -0.0023,
+        "leagueRestMeanEpa": 0.2234,
+        "qbs": [
+          {
+            "passerPlayerId": "00-0032950_CARSON_WENTZ",
+            "posteam": "MIN",
+            "window": "last-8",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 74,
+            "totalClassifiedRatableDropbacks": 74,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "rawEpaPerDropback": -0.18,
+              "shrunkEpaPerDropback": -0.1165,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 38,
+              "ratableDropbacks": 38,
+              "rawEpaPerDropback": 0.08,
+              "shrunkEpaPerDropback": 0.1294,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.2459,
+            "rawSensitivityDelta": -0.26
+          },
+          {
+            "passerPlayerId": "00-0034857_JOSH_ALLEN",
+            "posteam": "BUF",
+            "window": "last-8",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 92,
+            "totalClassifiedRatableDropbacks": 92,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 42,
+              "ratableDropbacks": 42,
+              "rawEpaPerDropback": 0.09,
+              "shrunkEpaPerDropback": 0.0602,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 50,
+              "ratableDropbacks": 50,
+              "rawEpaPerDropback": 0.26,
+              "shrunkEpaPerDropback": 0.2495,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.1893,
+            "rawSensitivityDelta": -0.17
+          },
+          {
+            "passerPlayerId": "00-0036264_JORDAN_LOVE",
+            "posteam": "GB",
+            "window": "last-8",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 77,
+            "totalClassifiedRatableDropbacks": 77,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 35,
+              "ratableDropbacks": 35,
+              "rawEpaPerDropback": 0.05,
+              "shrunkEpaPerDropback": 0.031,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 42,
+              "ratableDropbacks": 42,
+              "rawEpaPerDropback": 0.21,
+              "shrunkEpaPerDropback": 0.2143,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.1833,
+            "rawSensitivityDelta": -0.16
+          },
+          {
+            "passerPlayerId": "00-0036442_JOE_BURROW",
+            "posteam": "CIN",
+            "window": "last-8",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 82,
+            "totalClassifiedRatableDropbacks": 82,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 38,
+              "ratableDropbacks": 38,
+              "rawEpaPerDropback": 0.14,
+              "shrunkEpaPerDropback": 0.0909,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 44,
+              "ratableDropbacks": 44,
+              "rawEpaPerDropback": 0.24,
+              "shrunkEpaPerDropback": 0.2348,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.1439,
+            "rawSensitivityDelta": -0.1
+          },
+          {
+            "passerPlayerId": "00-0039851_DRAKE_MAYE",
+            "posteam": "NE",
+            "window": "last-8",
+            "targetWeek": 9,
+            "totalClassifiedDropbacks": 85,
+            "totalClassifiedRatableDropbacks": 85,
+            "top10Arm": {
+              "tier": "TOP-10",
+              "dropbacks": 40,
+              "ratableDropbacks": 40,
+              "rawEpaPerDropback": -0.12,
+              "shrunkEpaPerDropback": -0.0808,
+              "leagueTierMean": -0.0023
+            },
+            "restArm": {
+              "tier": "REST",
+              "dropbacks": 45,
+              "ratableDropbacks": 45,
+              "rawEpaPerDropback": 0.3,
+              "shrunkEpaPerDropback": 0.2764,
+              "leagueTierMean": 0.2234
+            },
+            "sensitivityDelta": -0.3572,
+            "rawSensitivityDelta": -0.42
+          }
+        ],
+        "diagnostics": {
+          "excludedNonPassPlays": 0,
+          "excludedQbSpikePlays": 0,
+          "excludedEmptyDefteamPlays": 0,
+          "excludedEmptyPasserIdPlays": 0,
+          "excludedUnrankedOpponentDropbacks": 1470,
+          "week1UnclassifiedDropbacks": 490,
+          "excludedNullEpaDropbacks": 0,
+          "belowFloorTop10ArmsCount": 1,
+          "belowFloorRestArmsCount": 1
+        }
+      }
+    },
+    "Q54_qb_post_first_int_efficiency_split": {
+      "season_to_date": {
+        "window": "season-to-date",
+        "targetWeek": 9,
+        "includedWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "leagueBeforeFirstIntMeanEpa": 0.1173,
+        "leagueAfterFirstIntMeanEpa": 0.0442,
+        "qbs": [
+          {
+            "passerPlayerId": "00-0032950_CARSON_WENTZ",
+            "posteam": "MIN",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "intGamesCount": 3,
+            "intLessGamesExcludedCount": 2,
+            "totalClassifiedDropbacks": 69,
+            "totalClassifiedRatableDropbacks": 69,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 33,
+              "ratableDropbacks": 33,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.05,
+              "shrunkEpaPerDropback": 0.0754,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": -0.19,
+              "shrunkEpaPerDropback": -0.1064,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": -0.1818,
+            "rawPostIntTiltDelta": -0.24,
+            "quadrant": "downward-spiral"
+          },
+          {
+            "passerPlayerId": "00-0033106_JARED_GOFF",
+            "posteam": "DET",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "intGamesCount": 2,
+            "intLessGamesExcludedCount": 6,
+            "totalClassifiedDropbacks": 48,
+            "totalClassifiedRatableDropbacks": 48,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 30,
+              "ratableDropbacks": 30,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.24,
+              "shrunkEpaPerDropback": 0.1909,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": null,
+            "postIntTiltDelta": null,
+            "rawPostIntTiltDelta": null,
+            "quadrant": null
+          },
+          {
+            "passerPlayerId": "00-0034857_JOSH_ALLEN",
+            "posteam": "BUF",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "intGamesCount": 3,
+            "intLessGamesExcludedCount": 5,
+            "totalClassifiedDropbacks": 78,
+            "totalClassifiedRatableDropbacks": 78,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.14,
+              "shrunkEpaPerDropback": 0.1319,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 42,
+              "ratableDropbacks": 42,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.22,
+              "shrunkEpaPerDropback": 0.1633,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": 0.0314,
+            "rawPostIntTiltDelta": 0.08,
+            "quadrant": "bounce-back"
+          },
+          {
+            "passerPlayerId": "00-0036264_JORDAN_LOVE",
+            "posteam": "GB",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "intGamesCount": 4,
+            "intLessGamesExcludedCount": 4,
+            "totalClassifiedDropbacks": 88,
+            "totalClassifiedRatableDropbacks": 88,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 40,
+              "ratableDropbacks": 40,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.12,
+              "shrunkEpaPerDropback": 0.1191,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 48,
+              "ratableDropbacks": 48,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.18,
+              "shrunkEpaPerDropback": 0.14,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": 0.0209,
+            "rawPostIntTiltDelta": 0.06,
+            "quadrant": "bounce-back"
+          },
+          {
+            "passerPlayerId": "00-0039851_DRAKE_MAYE",
+            "posteam": "NE",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "intGamesCount": 3,
+            "intLessGamesExcludedCount": 3,
+            "totalClassifiedDropbacks": 63,
+            "totalClassifiedRatableDropbacks": 63,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 30,
+              "ratableDropbacks": 30,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.11,
+              "shrunkEpaPerDropback": 0.1129,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 33,
+              "ratableDropbacks": 33,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": -0.08,
+              "shrunkEpaPerDropback": -0.0331,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": -0.146,
+            "rawPostIntTiltDelta": -0.19,
+            "quadrant": "downward-spiral"
+          },
+          {
+            "passerPlayerId": "00-0039918_CALEB_WILLIAMS",
+            "posteam": "CHI",
+            "window": "season-to-date",
+            "targetWeek": 9,
+            "intGamesCount": 2,
+            "intLessGamesExcludedCount": 6,
+            "totalClassifiedDropbacks": 48,
+            "totalClassifiedRatableDropbacks": 48,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 28,
+              "ratableDropbacks": 28,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.04,
+              "shrunkEpaPerDropback": 0.0722,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": null,
+            "postIntTiltDelta": null,
+            "rawPostIntTiltDelta": null,
+            "quadrant": null
+          }
+        ],
+        "diagnostics": {
+          "excludedNonPassPlays": 0,
+          "excludedQbSpikePlays": 0,
+          "excludedEmptyGameIdPlays": 0,
+          "excludedEmptyPasserIdPlays": 0,
+          "excludedIntLessQbGames": 26,
+          "excludedIntLessGameDropbacks": 520,
+          "excludedFirstIntBoundaryPlays": 17,
+          "excludedNullEpaDropbacks": 0,
+          "belowFloorBeforeArmsCount": 0,
+          "belowFloorAfterArmsCount": 2
+        }
+      },
+      "last_4_weeks": {
+        "window": "last-4",
+        "targetWeek": 9,
+        "includedWeeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "leagueBeforeFirstIntMeanEpa": 0.0,
+        "leagueAfterFirstIntMeanEpa": 0.0,
+        "qbs": [],
+        "diagnostics": {
+          "excludedNonPassPlays": 0,
+          "excludedQbSpikePlays": 0,
+          "excludedEmptyGameIdPlays": 0,
+          "excludedEmptyPasserIdPlays": 0,
+          "excludedIntLessQbGames": 19,
+          "excludedIntLessGameDropbacks": 380,
+          "excludedFirstIntBoundaryPlays": 0,
+          "excludedNullEpaDropbacks": 0,
+          "belowFloorBeforeArmsCount": 6,
+          "belowFloorAfterArmsCount": 6
+        }
+      },
+      "last_8_weeks": {
+        "window": "last-8",
+        "targetWeek": 9,
+        "includedWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "leagueBeforeFirstIntMeanEpa": 0.1173,
+        "leagueAfterFirstIntMeanEpa": 0.0442,
+        "qbs": [
+          {
+            "passerPlayerId": "00-0032950_CARSON_WENTZ",
+            "posteam": "MIN",
+            "window": "last-8",
+            "targetWeek": 9,
+            "intGamesCount": 3,
+            "intLessGamesExcludedCount": 2,
+            "totalClassifiedDropbacks": 69,
+            "totalClassifiedRatableDropbacks": 69,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 33,
+              "ratableDropbacks": 33,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.05,
+              "shrunkEpaPerDropback": 0.0754,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": -0.19,
+              "shrunkEpaPerDropback": -0.1064,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": -0.1818,
+            "rawPostIntTiltDelta": -0.24,
+            "quadrant": "downward-spiral"
+          },
+          {
+            "passerPlayerId": "00-0033106_JARED_GOFF",
+            "posteam": "DET",
+            "window": "last-8",
+            "targetWeek": 9,
+            "intGamesCount": 2,
+            "intLessGamesExcludedCount": 6,
+            "totalClassifiedDropbacks": 48,
+            "totalClassifiedRatableDropbacks": 48,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 30,
+              "ratableDropbacks": 30,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.24,
+              "shrunkEpaPerDropback": 0.1909,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": null,
+            "postIntTiltDelta": null,
+            "rawPostIntTiltDelta": null,
+            "quadrant": null
+          },
+          {
+            "passerPlayerId": "00-0034857_JOSH_ALLEN",
+            "posteam": "BUF",
+            "window": "last-8",
+            "targetWeek": 9,
+            "intGamesCount": 3,
+            "intLessGamesExcludedCount": 5,
+            "totalClassifiedDropbacks": 78,
+            "totalClassifiedRatableDropbacks": 78,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 36,
+              "ratableDropbacks": 36,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.14,
+              "shrunkEpaPerDropback": 0.1319,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 42,
+              "ratableDropbacks": 42,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.22,
+              "shrunkEpaPerDropback": 0.1633,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": 0.0314,
+            "rawPostIntTiltDelta": 0.08,
+            "quadrant": "bounce-back"
+          },
+          {
+            "passerPlayerId": "00-0036264_JORDAN_LOVE",
+            "posteam": "GB",
+            "window": "last-8",
+            "targetWeek": 9,
+            "intGamesCount": 4,
+            "intLessGamesExcludedCount": 4,
+            "totalClassifiedDropbacks": 88,
+            "totalClassifiedRatableDropbacks": 88,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 40,
+              "ratableDropbacks": 40,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.12,
+              "shrunkEpaPerDropback": 0.1191,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 48,
+              "ratableDropbacks": 48,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.18,
+              "shrunkEpaPerDropback": 0.14,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": 0.0209,
+            "rawPostIntTiltDelta": 0.06,
+            "quadrant": "bounce-back"
+          },
+          {
+            "passerPlayerId": "00-0039851_DRAKE_MAYE",
+            "posteam": "NE",
+            "window": "last-8",
+            "targetWeek": 9,
+            "intGamesCount": 3,
+            "intLessGamesExcludedCount": 3,
+            "totalClassifiedDropbacks": 63,
+            "totalClassifiedRatableDropbacks": 63,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 30,
+              "ratableDropbacks": 30,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.11,
+              "shrunkEpaPerDropback": 0.1129,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": {
+              "arm": "after-first-int",
+              "dropbacks": 33,
+              "ratableDropbacks": 33,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": -0.08,
+              "shrunkEpaPerDropback": -0.0331,
+              "leagueArmMean": 0.0442
+            },
+            "postIntTiltDelta": -0.146,
+            "rawPostIntTiltDelta": -0.19,
+            "quadrant": "downward-spiral"
+          },
+          {
+            "passerPlayerId": "00-0039918_CALEB_WILLIAMS",
+            "posteam": "CHI",
+            "window": "last-8",
+            "targetWeek": 9,
+            "intGamesCount": 2,
+            "intLessGamesExcludedCount": 6,
+            "totalClassifiedDropbacks": 48,
+            "totalClassifiedRatableDropbacks": 48,
+            "beforeFirstIntArm": {
+              "arm": "before-first-int",
+              "dropbacks": 28,
+              "ratableDropbacks": 28,
+              "subsequentInterceptions": 0,
+              "rawEpaPerDropback": 0.04,
+              "shrunkEpaPerDropback": 0.0722,
+              "leagueArmMean": 0.1173
+            },
+            "afterFirstIntArm": null,
+            "postIntTiltDelta": null,
+            "rawPostIntTiltDelta": null,
+            "quadrant": null
+          }
+        ],
+        "diagnostics": {
+          "excludedNonPassPlays": 0,
+          "excludedQbSpikePlays": 0,
+          "excludedEmptyGameIdPlays": 0,
+          "excludedEmptyPasserIdPlays": 0,
+          "excludedIntLessQbGames": 26,
+          "excludedIntLessGameDropbacks": 520,
+          "excludedFirstIntBoundaryPlays": 17,
+          "excludedNullEpaDropbacks": 0,
+          "belowFloorBeforeArmsCount": 0,
+          "belowFloorAfterArmsCount": 2
+        }
+      }
+    }
+  },
+  "mnf_buf_min_high_leverage_signals": {
+    "matchup": "BUF @ MIN",
+    "confirmed_starters": {
+      "BUF": "Josh Allen",
+      "MIN": "Carson Wentz"
+    },
+    "verified_inactive_zero_snap_qbs": [
+      "Kyler Murray",
+      "Sam Howell",
+      "J.J. McCarthy"
+    ],
+    "offensive_playcaller_war_residual": {
+      "team": "BUF",
+      "playcaller": "Joe Brady",
+      "epa_per_play_above_war_expected": 0.07,
+      "nfl_rank": 1,
+      "team_war_to_epa_correlation_r": 0.85,
+      "source": "@run_the_sims / @SamHoppen all_playcallers.csv"
+    },
+    "defensive_playcaller_war_residual": {
+      "team": "MIN",
+      "playcaller": "Brian Flores",
+      "epa_per_play_allowed_vs_war_expected": -0.11,
+      "nfl_rank": 1,
+      "defensive_war_to_epa_correlation_r": 0.68,
+      "source": "@run_the_sims / @SamHoppen all_playcallers.csv"
+    },
+    "series_conversion_rate_allowed": {
+      "MIN": {
+        "rate": 0.624,
+        "nfl_rank": 1
+      },
+      "TB": {
+        "rate": 0.643,
+        "nfl_rank": 2
+      },
+      "source": "@Timo_NFL nflfastR series conversion rate"
+    },
+    "average_drive_start_yardline": {
+      "BUF": {
+        "average_drive_start_own_yardline": 34.79,
+        "nfl_rank": 1
+      },
+      "source": "@sfdata9ers Fantasy Points Data 32-team table"
+    },
+    "rb_ryoe_per_attempt_leaders": [
+      {
+        "player": "Jaylen Warren",
+        "team": "PIT",
+        "ryoe_per_att": 1.54,
+        "nfl_rank": 1
+      },
+      {
+        "player": "Kenneth Walker III",
+        "team": "SEA",
+        "ryoe_per_att": 1.41,
+        "nfl_rank": 2
+      },
+      {
+        "player": "James Cook",
+        "team": "BUF",
+        "ryoe_per_att": 0.99,
+        "nfl_rank": 3
+      },
+      {
+        "player": "Bijan Robinson",
+        "team": "ATL",
+        "ryoe_per_att": 0.97,
+        "nfl_rank": 4
+      }
+    ],
+    "kicker_dome_split": {
+      "player": "Tyler Bass",
+      "team": "BUF",
+      "dome_fg_made": 21,
+      "dome_fg_att": 22,
+      "dome_fg_pct": 0.955,
+      "outdoor_fg_made": 126,
+      "outdoor_fg_att": 149,
+      "outdoor_fg_pct": 0.846,
+      "nfl_dome_fg_pct_since_2015": 0.854,
+      "nfl_outdoor_fg_pct_since_2015": 0.844,
+      "nfl_sample_kicks": 11593,
+      "source": "@MagicSportsGuy Splits+"
+    },
+    "external_unconditioned_sim_foil": {
+      "source": "@the_waldman 1,000-sim unconditioned baseline",
+      "external_buf_score": 27.2,
+      "external_min_score": 22.0,
+      "external_total": 49.2,
+      "gse_conserved_buf_score": 23.75,
+      "gse_conserved_min_score": 20.75,
+      "gse_conserved_total": 44.5
+    }
+  },
+  "multi_lane_research_consolidation_summary": {
+    "window": "2026-11-07 to 2026-11-09",
+    "lane_1_x_for_you": {
+      "runs": 5,
+      "unique_new_posts": 662,
+      "dossiers_written": 130,
+      "inventoried_only": 523,
+      "per_run_new_counts": [
+        113,
+        115,
+        135,
+        159,
+        140
+      ],
+      "per_run_inventoried_only_counts": [
+        82,
+        86,
+        107,
+        134,
+        114
+      ]
+    },
+    "lane_2_instagram_for_you": {
+      "runs": 5,
+      "new_posts": 337,
+      "dossiers_written": 100,
+      "inventoried_only": 237,
+      "verified_fleet_tools": [
+        {
+          "name": "PhoneUse",
+          "repo": "lxe/phoneuse",
+          "license": "MIT",
+          "verdict": "TEST"
+        },
+        {
+          "name": "PuppyOne",
+          "repo": "puppyone-ai/puppyone",
+          "license": "Apache-2.0",
+          "verdict": "TEST"
+        },
+        {
+          "name": "NVIDIA Auto Ontology",
+          "repo": "NVIDIA/auto-ontology",
+          "license": "Apache-2.0",
+          "verdict": "TEST"
+        },
+        {
+          "name": "Google Elephant-Goldfish Model (EGM)",
+          "repo": "google/elephant-goldfish-model",
+          "license": "Apache-2.0",
+          "verdict": "TEST"
+        },
+        {
+          "name": "BUI",
+          "repo": "ppmpreetham/BUI",
+          "license": "GPL-3.0 (internal tools only)",
+          "verdict": "TEST"
+        },
+        {
+          "name": "Parakeet-TDT-0.6B-v2 + Pyannote",
+          "repo": "nvidia/parakeet-tdt-0.6b-v2",
+          "license": "CC-BY-4.0 / MIT",
+          "verdict": "TEST"
+        },
+        {
+          "name": "TokenDagger",
+          "repo": "M4THYOU/TokenDagger",
+          "license": "MIT",
+          "verdict": "TEST"
+        },
+        {
+          "name": "GitManual",
+          "repo": "zainudinnoori/gitmanual",
+          "license": "MIT",
+          "verdict": "TEST"
+        }
+      ]
+    },
+    "lane_3_github_34_repo_batch": {
+      "repos_reviewed": 34,
+      "tier_1_test_autonomous_scheduled": [
+        {
+          "repo": "Orkas-AI/Orkas",
+          "license": "MIT"
+        },
+        {
+          "repo": "rome-os/rome",
+          "license": "MIT"
+        },
+        {
+          "repo": "vstorm-co/agenticos",
+          "license": "Apache-2.0"
+        },
+        {
+          "repo": "BotHarness/DeepSeekBot",
+          "license": "MIT"
+        },
+        {
+          "repo": "milind-soni/OpenMausBot",
+          "license": "Apache-2.0"
+        },
+        {
+          "repo": "HarnessMD/munder-difflin",
+          "license": "MIT"
+        }
+      ],
+      "tier_2_adopt_candidate": [
+        {
+          "repo": "a5c-ai/babysitter",
+          "license": "MIT"
+        }
+      ],
+      "supplement_license_corrections": {
+        "vstorm-co/agenticos": "Apache-2.0",
+        "idosal/git-mcp": "Apache-2.0",
+        "leepokai/Codync": "Apache-2.0",
+        "a5c-ai/babysitter": "MIT",
+        "PleasePrompto/notebooklm-mcp": "MIT",
+        "Zackriya-Solutions/meetily": "MIT",
+        "ltjed/freephdlabor": "MIT"
+      },
+      "hard_cautions": [
+        "itbrowser-net/undetectable-fingerprint-browser (never near real accounts)",
+        "PleasePrompto/notebooklm-mcp (archived, unencrypted Google session \u2014 never on primary Google account)"
+      ]
+    },
+    "lane_4_books_library": {
+      "canonical_drive_folder_id": "1mp82cTGHf-10vnL1XlJgL9XmQ3gkeRF2",
+      "trap_duplicate_folder_id_do_not_use": "15BKEhApOa6TwJhaZaZFrl9xbML627eOa",
+      "total_drive_files": 242,
+      "verified_legal_pdfs_in_drive": 218,
+      "skeleton_shelf_checked": 13,
+      "skeleton_shelf_uploaded": 11,
+      "luce_raiffa_1957_verified_local_bytes": 1068463692,
+      "luce_raiffa_1957_local_path": "~/workspace/research-library/mega-sweep-2026-11-06/books-must-have/LuceRaiffa-1957-GamesAndDecisions.pdf"
+    },
+    "lane_5_x_analytics_sweeps_and_content_briefs": {
+      "nov_7_csvs": 35,
+      "nov_8_csvs": 39,
+      "nov_9_csvs": 38,
+      "total_csvs_pushed": 112,
+      "content_briefs_nov_7": 19,
+      "content_briefs_nov_8": 14,
+      "total_content_briefs": 33
+    },
+    "health_and_roster_signals": [
+      {
+        "player": "Mike Evans",
+        "pos": "WR",
+        "status": "Questionable at best for Week 10 (Achilles)"
+      },
+      {
+        "player": "Emeka Egbuka",
+        "team": "TB",
+        "pos": "WR",
+        "status": "Questionable (foot), expected to play"
+      },
+      {
+        "player": "Kyle Monangai",
+        "team": "CHI",
+        "pos": "RB",
+        "status": "OUT Week 9 (thumb/toe), back Week 11"
+      },
+      {
+        "player": "Gracen Halton",
+        "team": "SF",
+        "pos": "DT",
+        "status": "OUT FOR SEASON (broken ankle)"
+      },
+      {
+        "player": "Patrick Mahomes",
+        "team": "KC",
+        "pos": "QB",
+        "status": "Post-win MRI \u2014 HEALTH-UNRESOLVED"
+      },
+      {
+        "player": "Eric Murray",
+        "team": "JAX",
+        "pos": "S",
+        "status": "OUT FOR SEASON"
+      },
+      {
+        "player": "Jessie Bates",
+        "team": "JAX",
+        "pos": "S",
+        "status": "Traded ATL -> JAX for 2027 2nd + 2028 5th; no bye yet"
+      }
+    ]
+  }
+}

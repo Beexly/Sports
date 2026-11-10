@@ -29,8 +29,17 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
-import pandas as pd
-from scipy.stats import t as student_t
+from intelligence.dfs._pandas_scipy_compat import get_pandas_or_shim
+pd = get_pandas_or_shim()
+try:
+    from scipy.stats import t as student_t
+except ImportError:
+    class _StudentTFallback:
+        @staticmethod
+        def rvs(df, size=None, random_state=None):
+            rng = random_state if hasattr(random_state, "standard_t") else np.random.default_rng(random_state)
+            return rng.standard_t(df, size=size)
+    student_t = _StudentTFallback()
 
 from intelligence.dfs.dfs_19_equation_deep_research_engine import (
     evaluate_frontier_19_equations_on_curated_pool,

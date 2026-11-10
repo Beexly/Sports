@@ -324,13 +324,14 @@ def main(argv: Optional[List[str]] = None) -> int:
                 cases.append(case)
                 status = "COMPLETED" if case["completed"] else f"DIVERGED at t={case['diverged_at']:.5f}"
                 ratio = case["decay_ratio"]
+                enstrophy_str = "n/a" if case["enstrophy_final"] is None else f"{case['enstrophy_final']:.4f}"
                 print(
                     f"  Nr={Nr:>3} Nz={Nz:>3} nu={nu:<6} {status:<26} "
                     f"omega0={case['omega_0']:>10.4f} "
                     f"ratio={'n/a' if ratio is None else f'{ratio:.6f}':>10} "
                     f"mono={str(case['monotone_decay']):<5} "
                     f"phaselock={case['triadic_resultant_max']:.2e} "
-                    f"enstrophy={'n/a' if case['enstrophy_final'] is None else f'{case['enstrophy_final']:.4f}'}"
+                    f"enstrophy={enstrophy_str}"
                 )
 
     completed = [c for c in cases if c["completed"]]

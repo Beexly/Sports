@@ -1,10 +1,11 @@
 ---
-version: 0.12.0
 name: higgsfield-brandkit
 description: |
   Create and extend complete visual brand systems through the Higgsfield CLI and bundled deterministic local tooling: palettes, SVG logo marks, typography, mockups, social graphics, packaging, signage, merchandise, posters, presentation decks, and editable PPTX/PDF brandbooks. Preserves official supplied assets, persists approvals locally, and regenerates only dependent outputs. Use when: "create a brand kit", "make a visual identity", "design a logo and brandbook", "apply this logo to branded assets", "make packaging or signage", or "extend our existing branding". Chain with higgsfield-generate for general image production and Marketing Studio brand-kits when importing website metadata for ads. NOT for unbranded image generation (use higgsfield-generate), product catalog photography (use higgsfield-product-photoshoot), website implementation (use higgsfield-websites), or native Figma/Canva/PSD/AI delivery.
-argument-hint: "[brand brief or existing assets] [requested deliverables]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[brand brief or existing assets] [requested deliverables]"
 ---
 
 # Higgsfield Brandkit
@@ -200,3 +201,16 @@ For other outputs return:
 - [Mockups](references/mockups.md), [social graphics](references/social-templates.md), [posters/banners](references/posters-banners.md), [packaging](references/packaging.md), [signage](references/signage.md), and [merchandise](references/merchandise.md) — applications.
 - [Presentation decks](references/presentation-deck.md) and [Brandbooks](references/brandbook.md) — editable documents.
 - [QA and iteration](references/qa-and-iteration.md) — preflight, repair, approval, and delivery manifest.
+
+## Use this skill when
+
+- Executing `higgsfield-brandkit` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-brandkit`.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-brandkit` skill specification.
+

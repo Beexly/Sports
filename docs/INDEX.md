@@ -40,3 +40,15 @@ commit message — don't invent a bucket.
   are product/company docs, untouched by this reorg.
 - Code is never in `docs/` — `apps/`, `packages/`, `lib/`, `workers/` are
   separate trees.
+
+## 2026-11-09 Consolidated Research & Corpus Filings (Nov 7–9 Sweep)
+
+| Bucket | Canonical Path | Contents |
+|---|---|---|
+| `docs/engine/` | `docs/engine/research/2026-11-09/INTEL-LOOP-Q52-Q54-CONSOLIDATED-2026-11-09.md` | Consolidated Intel Loop Runs 66–69 covering Q52 (`defensive-field-zone-split`), Q53 (`qb-opponent-tier-efficiency-split`), and Q54 (`qb-post-first-int-efficiency-split`) |
+| `docs/data-sources/` | `docs/data-sources/research/2026-11-09/RESEARCH-CONSOLIDATION-2026-11-07-to-09.md` | Consolidated Nov 7–9 multi-lane sweep across X/Twitter, Instagram, GitHub (34 repos + EGM), Books (218 PDFs + 13 Skeleton Books), and 112 CSV tables (`35 + 39 + 38`) |
+| `docs/predictions/` | `docs/predictions/research/2026-11-09/CONTENT-IDEAS-AND-SIGNALS-2026-11-07-to-09.md` | 33 verbatim content briefs and 48 analytical signals across Pillars A–F |
+| `docs/predictions/` | `docs/predictions/research/2026-11-09/WEEK9-SUNDAY-SETTLEMENT-AND-PROJECTION-AUTOPSY.md` | Week 9 Sunday 13-game settlement ledger (`7-4-0`, `+2.06u`, `3.61` DK Pt MAE) and projection conservation autopsy |
+| `docs/predictions/` | `docs/predictions/research/2026-11-09/MNF-BUF-MIN-FOUNDER-COMMAND-AND-MONETIZATION-PACKET.md` | MNF `BUF @ MIN` founder command packet, conserved player/team projections, and Thaler bundle architecture |
+| `docs/data-sources/` | `docs/data-sources/research/2026-11-07/google-drive-mega-sweep/SKELETON-BOOKS-2026-11-06.md` | 13 Skeleton-Shelf Books (`11` `DRIVE_VERIFIED` + `2` `BLOCKED`/`HTML_ONLY`), 8 Addendum Shelf Audit, and 2 Nov 7 Wayback Retry Closures |
+

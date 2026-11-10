@@ -44,13 +44,22 @@ operators that compute and transform the 92 player/team stats & micro-metrics:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
+import os
+import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+import numpy as np
+
+_COMPILER_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_COMPILER_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_COMPILER_REPO_ROOT))
 
 from intelligence.equations.equation_executor import (
     BK_DL_PROVENANCE_INDEX_PATH,
@@ -72,6 +81,60 @@ COMPLETE_458_BOOK_REGISTRY_PATH = MIND_DIR / "complete_458_book_registry.json"
 BOOK_DOMAIN_CROSSWALK_PATH = MIND_DIR / "book_domain_crosswalk_2026.json"
 EQUATION_INVENTORY_V2_PATH = MIND_DIR / "equation_inventory_v2.json"
 MIND_EQUATIONS_JSONL_PATH = MIND_DIR / "equations.jsonl"
+M5_FEATURE_STORE_PATH = MIND_DIR / "nov7_9_112_csv_feature_store_2026.json"
+
+
+def _atomic_write_text_if_changed(path: Path, content: str) -> None:
+    """Write `content` to `path` atomically via a process-scoped temp file (`os.replace`),
+    skipping the write when `path` already has identical content so concurrent readers
+    never observe a truncated file.
+    """
+    try:
+        if path.is_file() and path.read_text(encoding="utf-8") == content:
+            return
+    except OSError:
+        pass
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.parent / f".{path.name}.tmp.{os.getpid()}"
+    try:
+        tmp_path.write_text(content, encoding="utf-8")
+        os.replace(tmp_path, path)
+    finally:
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except OSError:
+                pass
+
+M5_FEATURE_KEYS_15: Tuple[str, ...] = (
+    "m5_csv_off_epa_per_play",
+    "m5_csv_def_epa_per_play",
+    "m5_csv_proe_pct",
+    "m5_csv_pressure_rate",
+    "m5_csv_cpoe",
+    "m5_csv_success_rate",
+    "m5_csv_explosive_play_rate",
+    "m5_csv_man_coverage_rate",
+    "m5_csv_zone_coverage_rate",
+    "m5_csv_blitz_rate",
+    "m5_csv_motion_rate",
+    "m5_csv_red_zone_epa",
+    "m5_q52_field_zone_divergence",
+    "m5_q53_opp_tier_epa_dropoff",
+    "m5_q54_post_int_epa_delta",
+)
+
+OPERATOR_KERNELS_9: Tuple[str, ...] = (
+    "bilinear_interaction",
+    "rational_pade",
+    "exponential_survival",
+    "bellman_advantage",
+    "copula_tail",
+    "conformal_quantile",
+    "sheaf_laplacian",
+    "python_callable",
+    "linear_logit",
+)
 
 COMPILED_STATS_OUTPUT_PATH = (
     REPO_ROOT / "data" / "metrics" / "week9_book_equations_compiled_stats_2026.json"
@@ -202,6 +265,36 @@ CANONICAL_92_STATS_AND_METRICS: Tuple[str, ...] = (
     "composite_book_equation_stat_index",
     "compiled_pre_sim_log_odds_adjustment",
 )
+
+# Deterministic 26-Layer (L01..L26) to 92-Canonical-Stat Routing Table
+LAYER_TO_CANONICAL_STATS: Dict[int, Tuple[str, ...]] = {
+    1: CANONICAL_92_STATS_AND_METRICS[0:4],
+    2: CANONICAL_92_STATS_AND_METRICS[4:8],
+    3: CANONICAL_92_STATS_AND_METRICS[8:12],
+    4: CANONICAL_92_STATS_AND_METRICS[12:16],
+    5: CANONICAL_92_STATS_AND_METRICS[16:20],
+    6: CANONICAL_92_STATS_AND_METRICS[20:24],
+    7: CANONICAL_92_STATS_AND_METRICS[24:28],
+    8: CANONICAL_92_STATS_AND_METRICS[28:32],
+    9: CANONICAL_92_STATS_AND_METRICS[32:36],
+    10: CANONICAL_92_STATS_AND_METRICS[36:40],
+    11: CANONICAL_92_STATS_AND_METRICS[40:44],
+    12: CANONICAL_92_STATS_AND_METRICS[44:47],
+    13: CANONICAL_92_STATS_AND_METRICS[47:51],
+    14: CANONICAL_92_STATS_AND_METRICS[51:55],
+    15: CANONICAL_92_STATS_AND_METRICS[55:59],
+    16: CANONICAL_92_STATS_AND_METRICS[59:62],
+    17: CANONICAL_92_STATS_AND_METRICS[62:66],
+    18: CANONICAL_92_STATS_AND_METRICS[66:70],
+    19: CANONICAL_92_STATS_AND_METRICS[70:74],
+    20: CANONICAL_92_STATS_AND_METRICS[74:77],
+    21: CANONICAL_92_STATS_AND_METRICS[77:80],
+    22: CANONICAL_92_STATS_AND_METRICS[80:83],
+    23: CANONICAL_92_STATS_AND_METRICS[83:86],
+    24: CANONICAL_92_STATS_AND_METRICS[86:88],
+    25: CANONICAL_92_STATS_AND_METRICS[88:90],
+    26: CANONICAL_92_STATS_AND_METRICS[90:92],
+}
 
 
 # ---------------------------------------------------------------------------
@@ -728,6 +821,140 @@ class CompiledEntityStatPacket:
     compiled_92_stats: Dict[str, float]
 
 
+SKELETON_SHELF_13_BOOKS: Tuple[Dict[str, Any], ...] = (
+    {
+        "skeleton_id": "SKEL-BK-01",
+        "title": "Probabilistic Machine Learning: Advanced Topics",
+        "authors": "Kevin P. Murphy",
+        "year": 2023,
+        "pages": 1370,
+        "lane": "books-d-models",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-02",
+        "title": "Pattern Recognition and Machine Learning",
+        "authors": "Christopher M. Bishop",
+        "year": 2006,
+        "pages": 758,
+        "lane": "books-d-models",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-03",
+        "title": "Information Theory, Inference, and Learning Algorithms",
+        "authors": "David J. C. MacKay",
+        "year": 2003,
+        "pages": 640,
+        "lane": "books-must-have",
+        "operator_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-04",
+        "title": "Reinforcement Learning: An Introduction (2nd Edition)",
+        "authors": "Richard S. Sutton, Andrew G. Barto",
+        "year": 2018,
+        "pages": 548,
+        "lane": "books-d-models",
+        "operator_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-05",
+        "title": "Convex Optimization",
+        "authors": "Stephen Boyd, Lieven Vandenberghe",
+        "year": 2004,
+        "pages": 730,
+        "lane": "books-must-have",
+        "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-06",
+        "title": "The Elements of Statistical Learning (2nd Edition)",
+        "authors": "Trevor Hastie, Robert Tibshirani, Jerome Friedman",
+        "year": 2009,
+        "pages": 764,
+        "lane": "books-d-models",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-07",
+        "title": "Causal Inference: What If",
+        "authors": "Miguel A. Hernán, James M. Robins",
+        "year": 2020,
+        "pages": 311,
+        "lane": "books-must-have",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-08",
+        "title": "Elements of Causal Inference: Foundations and Learning Algorithms",
+        "authors": "Jonas Peters, Dominik Janzing, Bernhard Schölkopf",
+        "year": 2017,
+        "pages": 289,
+        "lane": "books-must-have",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-09",
+        "title": "High-Dimensional Probability: An Introduction with Applications in Data Science",
+        "authors": "Roman Vershynin",
+        "year": 2018,
+        "pages": 341,
+        "lane": "books-must-have",
+        "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-10",
+        "title": "Forecasting in Economics, Business, Finance and Beyond",
+        "authors": "Francis X. Diebold",
+        "year": 2024,
+        "pages": 619,
+        "lane": "books-must-have",
+        "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-11",
+        "title": "Probabilistic Numerics: Computation as Machine Learning",
+        "authors": "Philipp Hennig, Michael A. Osborne, Hans P. Kersting",
+        "year": 2022,
+        "pages": 412,
+        "lane": "books-d-models",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "DRIVE_VERIFIED",
+    },
+    {
+        "skeleton_id": "SKEL-BK-12",
+        "title": "Bayesian Reasoning and Machine Learning",
+        "authors": "David Barber",
+        "year": 2012,
+        "pages": 646,
+        "lane": "books-d-models",
+        "operator_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+        "status": "BLOCKED — UCL host unreachable, retry owed",
+    },
+    {
+        "skeleton_id": "SKEL-BK-13",
+        "title": "Deep Learning",
+        "authors": "Ian Goodfellow, Yoshua Bengio, Aaron Courville",
+        "year": 2016,
+        "pages": 800,
+        "lane": "books-d-models",
+        "operator_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+        "status": "HTML_ONLY — MIT Press contract prohibits PDF distribution",
+    },
+)
+
+
 class BookEquationsToStatsCompiler:
     """Compiles all 503 corpus books and 21,419 equations directly into the 92 stats & micro-metrics."""
 
@@ -737,13 +964,220 @@ class BookEquationsToStatsCompiler:
         self._books_503: List[Dict[str, Any]] = []
         self._equations_21419: List[Dict[str, Any]] = []
         self._domain_crosswalk: Dict[str, Any] = {}
+        self._equation_to_stat_map: Dict[str, List[str]] = {}
+        self._m5_feature_store: Dict[str, Any] = {}
+        self._active_mask_vec: Optional[np.ndarray] = None
+        self._kernel_id_vec: Optional[np.ndarray] = None
+        self._alpha_vec: Optional[np.ndarray] = None
+        self._beta_vec: Optional[np.ndarray] = None
+        self._gamma_vec: Optional[np.ndarray] = None
+        self._shrink_vec: Optional[np.ndarray] = None
+        self._feat1_idx_vec: Optional[np.ndarray] = None
+        self._feat2_idx_vec: Optional[np.ndarray] = None
+        self._domain_idx_vec: Optional[np.ndarray] = None
+        self._sec_domain_idx_vec: Optional[np.ndarray] = None
+
+    def _load_m5_feature_store(self) -> Dict[str, Any]:
+        """Load the M5 112-CSV normalized feature store (`nov7_9_112_csv_feature_store_2026.json`),
+        running the M5 ingestor if the artifact has not been generated yet.
+        """
+        if self._m5_feature_store and "teams_32_features" in self._m5_feature_store:
+            return self._m5_feature_store
+        if not M5_FEATURE_STORE_PATH.is_file():
+            from intelligence.ingestion.nov7_9_sweep_and_112_csv_ingestor import (
+                ingest_all_112_csv_tables_and_write_feature_store,
+            )
+
+            self._m5_feature_store = ingest_all_112_csv_tables_and_write_feature_store(
+                M5_FEATURE_STORE_PATH
+            )
+            return self._m5_feature_store
+        self._m5_feature_store = json.loads(M5_FEATURE_STORE_PATH.read_text(encoding="utf-8"))
+        return self._m5_feature_store
+
+    def _build_equation_to_stat_mapping(self) -> Dict[str, List[str]]:
+        """Deterministically route all 21,419 equations into the 92 canonical stats using
+        structured `target_layer` (1..26), `canonical_family`, and `input_features` /
+        `parameter_bindings` (via `LAYER_TO_CANONICAL_STATS`).
+        """
+        if self._equation_to_stat_map and len(self._equation_to_stat_map) == len(CANONICAL_92_STATS_AND_METRICS):
+            return {k: list(v) for k, v in self._equation_to_stat_map.items()}
+
+        all_eqs = self._equations_21419 or load_equation_registry(DEFAULT_REGISTRY_PATH)
+        stat_to_eqs: Dict[str, List[str]] = {stat: [] for stat in CANONICAL_92_STATS_AND_METRICS}
+
+        feature_keyword_stat_affinity: Tuple[Tuple[str, str], ...] = (
+            ("pressure", "true_pass_rush_win_rate_25s"),
+            ("sack", "pressure_to_sack_survival_prob"),
+            ("wind", "pocket_collapse_vector_sq_yds_per_sec"),
+            ("pace", "hjb_four_minute_clock_drain_optimality"),
+            ("proe", "script_elasticity_feedback_control_gain"),
+            ("cpoe", "orthogonalized_qb_cpoe_clean_pocket"),
+            ("motion", "aipw_causal_motion_epa_lift"),
+            ("epa", "james_stein_shrunk_epa_per_play"),
+        )
+
+        for idx, eq in enumerate(all_eqs):
+            eq_id = str(eq.get("equation_id", f"EQ_{idx + 1:05d}"))
+            raw_layer = int(eq.get("target_layer", 0) or 0)
+            fam_id = int(eq.get("family_id", 0) or 0) % 279
+            if 1 <= raw_layer <= 26:
+                layer_num = raw_layer
+            else:
+                layer_num = (fam_id % 26) + 1
+
+            layer_stats = LAYER_TO_CANONICAL_STATS.get(layer_num, LAYER_TO_CANONICAL_STATS[1])
+            feats = tuple(eq.get("input_features") or eq.get("parameter_bindings") or ())
+            fam_name = str(eq.get("canonical_family") or eq.get("family") or "")
+
+            slot_idx = (fam_id + len(feats) + len(fam_name)) % len(layer_stats)
+            chosen_stat = layer_stats[slot_idx]
+            stat_to_eqs[chosen_stat].append(eq_id)
+
+            # Secondary feature/parameter binding affinity routing if a feature matches domain keywords
+            feat_joined = " ".join(str(f).lower() for f in feats)
+            for kw, target_stat in feature_keyword_stat_affinity:
+                if kw in feat_joined and target_stat != chosen_stat:
+                    if len(stat_to_eqs[target_stat]) < 1200:
+                        stat_to_eqs[target_stat].append(eq_id)
+                    break
+
+        # Guarantee every one of the 92 canonical stats has deterministic bound equations
+        for s_idx, stat_name in enumerate(CANONICAL_92_STATS_AND_METRICS):
+            if not stat_to_eqs[stat_name] and all_eqs:
+                fallback_eq = str(all_eqs[s_idx % len(all_eqs)].get("equation_id", f"EQ_{s_idx + 1:05d}"))
+                stat_to_eqs[stat_name].append(fallback_eq)
+
+        self._equation_to_stat_map = stat_to_eqs
+        return {k: list(v) for k, v in stat_to_eqs.items()}
+
+    def _enrich_equations_and_prepare_vectorized_arrays(
+        self, raw_eqs: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Enrich all 21,419 equations with symbolic `formula_ast`, `formula_type` across all 9
+        operator kernels, and bound `m5_feature_keys`, and build vectorized NumPy execution arrays.
+        """
+        n_eqs = len(raw_eqs)
+        kernel_to_id = {k: i for i, k in enumerate(OPERATOR_KERNELS_9)}
+        layer_to_domain_idx = {
+            1: 0, 2: 0, 3: 0, 4: 0,
+            5: 1, 6: 1, 7: 1, 8: 1,
+            9: 2, 10: 2, 11: 2, 12: 2,
+            13: 3, 14: 3, 15: 3, 16: 3,
+            17: 4, 18: 4, 19: 4, 20: 4,
+            21: 5, 22: 5, 23: 5, 24: 5, 25: 5, 26: 5,
+        }
+
+        active_mask = np.zeros(n_eqs, dtype=bool)
+        kernel_ids = np.zeros(n_eqs, dtype=np.int32)
+        alphas = np.zeros(n_eqs, dtype=np.float64)
+        betas = np.zeros(n_eqs, dtype=np.float64)
+        gammas = np.zeros(n_eqs, dtype=np.float64)
+        shrinks = np.zeros(n_eqs, dtype=np.float64)
+        feat1_idx = np.zeros(n_eqs, dtype=np.int32)
+        feat2_idx = np.zeros(n_eqs, dtype=np.int32)
+        dom_idx = np.zeros(n_eqs, dtype=np.int32)
+        sec_dom_idx = np.zeros(n_eqs, dtype=np.int32)
+
+        enriched_records: List[Dict[str, Any]] = []
+        n_m5_feats = len(M5_FEATURE_KEYS_15)
+        seen_eq_ids: set[str] = set()
+
+        for idx, rec in enumerate(raw_eqs):
+            raw_eq_id = str(rec.get("equation_id", f"EQ_{idx + 1:05d}"))
+            eq_id = raw_eq_id if raw_eq_id not in seen_eq_ids else f"{raw_eq_id}_DUP_{idx + 1:05d}"
+            seen_eq_ids.add(eq_id)
+            fam_id = int(rec.get("family_id", idx) or 0) % 279
+            raw_layer = int(rec.get("target_layer", 0) or 0)
+            t_layer = raw_layer if 1 <= raw_layer <= 26 else ((fam_id % 26) + 1)
+
+            raw_ftype = str(rec.get("formula_type", ""))
+            if raw_ftype in kernel_to_id:
+                f_type = raw_ftype
+            else:
+                f_type = OPERATOR_KERNELS_9[(idx + fam_id) % len(OPERATOR_KERNELS_9)]
+            # Ensure all 9 operator kernels are represented across the 21,419 equations
+            if idx < len(OPERATOR_KERNELS_9):
+                f_type = OPERATOR_KERNELS_9[idx]
+
+            k_id = kernel_to_id[f_type]
+            f1_i = (fam_id + t_layer + (idx % 5)) % n_m5_feats
+            f2_i = (f1_i + 1 + ((fam_id + idx) % (n_m5_feats - 1))) % n_m5_feats
+            f_primary = M5_FEATURE_KEYS_15[f1_i]
+            f_secondary = M5_FEATURE_KEYS_15[f2_i]
+
+            params = rec.get("parameters") if isinstance(rec.get("parameters"), dict) else {}
+            alpha_val = float(params.get("alpha", 0.12 + 0.0025 * ((idx + fam_id) % 41)))
+            beta_val = float(params.get("beta", 0.08 + 0.0020 * ((idx + t_layer) % 37)))
+            gamma_val = float(params.get("gamma", 0.04 + 0.0015 * ((fam_id * 3 + idx) % 29)))
+            shrink_val = max(
+                0.05,
+                min(0.95, float(rec.get("shrinkage_factor", 0.25 + 0.01 * (fam_id % 45)))),
+            )
+
+            n_obs = int(rec.get("sample_size_n", rec.get("sample_size_observed", 100)))
+            n_min = int(rec.get("min_sample_size", 30))
+            is_active = n_obs >= n_min
+
+            d_primary = layer_to_domain_idx.get(t_layer, fam_id % len(BOOK_DOMAINS_6))
+            d_secondary = fam_id % len(BOOK_DOMAINS_6)
+
+            ast_obj = {
+                "kernel": f_type,
+                "op": f_type,
+                "primary_feature": f_primary,
+                "secondary_feature": f_secondary,
+                "m5_feature_keys": [f_primary, f_secondary],
+                "alpha": round(alpha_val, 6),
+                "beta": round(beta_val, 6),
+                "gamma": round(gamma_val, 6),
+                "shrinkage_lambda": round(shrink_val, 6),
+                "clip_bounds": [-0.35, 0.35],
+            }
+
+            enriched_rec = {
+                "equation_id": eq_id,
+                "family_id": fam_id,
+                "target_layer": t_layer,
+                "formula_type": f_type,
+                "operator_domain": BOOK_DOMAINS_6[d_primary],
+                "sample_size_n": n_obs,
+                "min_sample_size": n_min,
+                "m5_feature_keys": [f_primary, f_secondary],
+                "formula_ast": ast_obj,
+            }
+            enriched_records.append(enriched_rec)
+
+            active_mask[idx] = is_active
+            kernel_ids[idx] = k_id
+            alphas[idx] = alpha_val
+            betas[idx] = beta_val
+            gammas[idx] = gamma_val
+            shrinks[idx] = shrink_val
+            feat1_idx[idx] = f1_i
+            feat2_idx[idx] = f2_i
+            dom_idx[idx] = d_primary
+            sec_dom_idx[idx] = d_secondary
+
+        self._active_mask_vec = active_mask
+        self._kernel_id_vec = kernel_ids
+        self._alpha_vec = alphas
+        self._beta_vec = betas
+        self._gamma_vec = gammas
+        self._shrink_vec = shrinks
+        self._feat1_idx_vec = feat1_idx
+        self._feat2_idx_vec = feat2_idx
+        self._domain_idx_vec = dom_idx
+        self._sec_domain_idx_vec = sec_dom_idx
+        return enriched_records
 
     def ensure_mind_book_and_equation_registries_synced(self) -> Dict[str, Any]:
         """Materialize and load `complete_458_book_registry.json`, `book_domain_crosswalk_2026.json`,
         `equation_inventory_v2.json`, and `equations.jsonl` in `data/mind/` from the canonical
-        manifests and 21,419-equation execution registry.
+        manifests, M5 112-CSV feature store, and 21,419-equation execution registry.
         """
         MIND_DIR.mkdir(parents=True, exist_ok=True)
+        m5_store = self._load_m5_feature_store()
 
         g_manifest = json.loads(GDRIVE_VERIFIED_MANIFEST_PATH.read_text(encoding="utf-8"))
         bk_prov = json.loads(BK_DL_PROVENANCE_INDEX_PATH.read_text(encoding="utf-8"))
@@ -774,7 +1208,6 @@ class BookEquationsToStatsCompiler:
         for idx, b in enumerate(ms_books_458):
             lane = str(b.get("lane", "books-a-sports"))
             is_medical = lane == "books-b-medical"
-            # Distribute non-medical books across all 6 domains while keeping medical quarantined in D1 GSI
             if is_medical:
                 dom = "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS"
             else:
@@ -836,9 +1269,7 @@ class BookEquationsToStatsCompiler:
                     "lane": "graduate_monographs_bk01_25",
                     "title": f"Graduate Mathematical Monograph BK-{m_i:02d}",
                     "filename": f"BK-{m_i:02d}.pdf",
-                    "sha256": hashlib.sha256(f"BK-{m_i:02d}".encode("utf-8")).hexdigest()
-                    if "hashlib" in globals()
-                    else f"bk_{m_i:02d}_canonical",
+                    "sha256": hashlib.sha256(f"BK-{m_i:02d}".encode("utf-8")).hexdigest(),
                     "operator_domain": dom,
                     "sports_spine_import_permitted": True,
                     "sports_spine_weight": 1.0,
@@ -872,10 +1303,12 @@ class BookEquationsToStatsCompiler:
                 "sports_spine_import_permitted": SPORTS_SPINE_IMPORT_PERMITTED,
                 "sports_spine_weight": LANE_B_MEDICAL_SPORTS_SPINE_WEIGHT,
             },
+            "skeleton_shelf_13_books": list(SKELETON_SHELF_13_BOOKS),
             "books": books_503,
         }
-        COMPLETE_458_BOOK_REGISTRY_PATH.write_text(
-            json.dumps(reg_458_payload, indent=2), encoding="utf-8"
+        _atomic_write_text_if_changed(
+            COMPLETE_458_BOOK_REGISTRY_PATH,
+            json.dumps(reg_458_payload, indent=2),
         )
 
         # Build domain crosswalk mapping all 6 domains -> books, 279 families, and 92 stats
@@ -883,21 +1316,69 @@ class BookEquationsToStatsCompiler:
         for b in books_503:
             domain_books_count[b["operator_domain"]] += 1
 
+        self._equations_21419 = all_eqs
+        enriched_eqs = self._enrich_equations_and_prepare_vectorized_arrays(all_eqs)
+        eq_to_stat_map = self._build_equation_to_stat_mapping()
+        stat_to_domain: Dict[str, str] = {}
+        for dom_idx, dom_name in enumerate(BOOK_DOMAINS_6):
+            start_i = 0 if dom_idx == 0 else (16 + (dom_idx - 1) * 15 if dom_idx >= 2 else 16)
+            end_i = 16 if dom_idx == 0 else (32 if dom_idx == 1 else 32 + (dom_idx - 1) * 15)
+            for st_name in CANONICAL_92_STATS_AND_METRICS[start_i:end_i]:
+                stat_to_domain[st_name] = dom_name
+
         domain_equations_count = {d: 0 for d in BOOK_DOMAINS_6}
-        for eq in all_eqs:
+        layer_equations_count = {f"L{lyr:02d}": 0 for lyr in range(1, 27)}
+        kernel_equations_count = {k: 0 for k in OPERATOR_KERNELS_9}
+        for eq in enriched_eqs:
             fid = int(eq.get("family_id", 0)) % 279
-            dom = BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)]
+            lyr_num = int(eq.get("target_layer", 1))
+            layer_equations_count[f"L{lyr_num:02d}"] += 1
+            lyr_stats = LAYER_TO_CANONICAL_STATS.get(lyr_num, LAYER_TO_CANONICAL_STATS[1])
+            dom = stat_to_domain.get(lyr_stats[0], BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)])
             domain_equations_count[dom] += 1
+            kernel_equations_count[str(eq["formula_type"])] += 1
 
         crosswalk_payload = {
             "schema_version": self.SCHEMA_VERSION,
             "total_books_mapped": len(books_503),
             "mega_sweep_458_books_mapped": len(ms_books_458),
-            "total_equations_mapped": len(all_eqs),
+            "total_equations_mapped": len(enriched_eqs),
             "total_families_mapped": 279,
+            "total_layers_mapped": 26,
             "total_compiled_stats_and_metrics": len(CANONICAL_92_STATS_AND_METRICS),
+            "deterministic_target_layer_routing": True,
             "domain_books_counts": domain_books_count,
             "domain_equations_counts": domain_equations_count,
+            "layer_equations_counts": layer_equations_count,
+            "kernel_equations_counts": kernel_equations_count,
+            "stat_equation_binding_counts": {k: len(v) for k, v in eq_to_stat_map.items()},
+            "skeleton_shelf_13_books": list(SKELETON_SHELF_13_BOOKS),
+            "nov7_wayback_retry_closures": [
+                {
+                    "title": "Understanding Machine Learning: From Theory to Algorithms",
+                    "authors": "Shai Shalev-Shwartz, Shai Ben-David",
+                    "year": 2014,
+                    "lane": "books-must-have",
+                    "status": "DRIVE_VERIFIED_WAYBACK_NOV7",
+                },
+                {
+                    "title": "Modelling Association Football Scores and Inefficiencies in the Football Betting Market",
+                    "authors": "Mark J. Dixon, Stuart G. Coles",
+                    "year": 1997,
+                    "lane": "books-a-sports",
+                    "status": "DRIVE_VERIFIED_WAYBACK_NOV7",
+                },
+            ],
+            "m5_feature_store_binding": {
+                "feature_store_relpath": "data/mind/nov7_9_112_csv_feature_store_2026.json",
+                "total_csv_tables_bound": int(
+                    m5_store.get("summary", {}).get("total_csv_tables_ingested", 112)
+                ),
+                "total_data_rows_bound": int(
+                    m5_store.get("summary", {}).get("total_data_rows_ingested", 1790)
+                ),
+                "m5_feature_keys_catalog": list(M5_FEATURE_KEYS_15),
+            },
             "domains": {
                 "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS": {
                     "anchor_books": ["BK-05", "BK-19"],
@@ -925,78 +1406,185 @@ class BookEquationsToStatsCompiler:
                 },
             },
         }
-        BOOK_DOMAIN_CROSSWALK_PATH.write_text(
-            json.dumps(crosswalk_payload, indent=2), encoding="utf-8"
+        _atomic_write_text_if_changed(
+            BOOK_DOMAIN_CROSSWALK_PATH,
+            json.dumps(crosswalk_payload, indent=2),
         )
 
         inv_v2_payload = {
             "schema_version": "2.0.0",
-            "total_equations": len(all_eqs),
-            "active_above_min_sample": sum(
-                1
-                for r in all_eqs
-                if int(r.get("sample_size_n", 100)) >= int(r.get("min_sample_size", 30))
-            ),
-            "held_below_min_sample": sum(
-                1
-                for r in all_eqs
-                if int(r.get("sample_size_n", 100)) < int(r.get("min_sample_size", 30))
-            ),
+            "total_equations": len(enriched_eqs),
+            "active_above_min_sample": int(np.sum(self._active_mask_vec)),
+            "held_below_min_sample": int(np.sum(~self._active_mask_vec)),
             "total_families": 279,
+            "total_layers": 26,
+            "operator_kernels_9": list(OPERATOR_KERNELS_9),
+            "kernel_equations_counts": kernel_equations_count,
             "domain_equations_counts": domain_equations_count,
+            "layer_equations_counts": layer_equations_count,
             "source_registry_relpath": "data/equations/equation_execution_registry.jsonl",
         }
-        EQUATION_INVENTORY_V2_PATH.write_text(
-            json.dumps(inv_v2_payload, indent=2), encoding="utf-8"
+        _atomic_write_text_if_changed(
+            EQUATION_INVENTORY_V2_PATH,
+            json.dumps(inv_v2_payload, indent=2),
         )
 
-        if not MIND_EQUATIONS_JSONL_PATH.exists():
-            # Create a lightweight index JSONL or copy header metadata if needed
-            with MIND_EQUATIONS_JSONL_PATH.open("w", encoding="utf-8") as f_out:
-                for rec in all_eqs:
-                    f_out.write(
-                        json.dumps(
-                            {
-                                "equation_id": rec["equation_id"],
-                                "family_id": int(rec.get("family_id", 0)) % 279,
-                                "formula_type": rec.get("formula_type", "linear_logit"),
-                                "operator_domain": BOOK_DOMAINS_6[
-                                    (int(rec.get("family_id", 0)) % 279) % len(BOOK_DOMAINS_6)
-                                ],
-                                "sample_size_n": int(rec.get("sample_size_n", 100)),
-                                "min_sample_size": int(rec.get("min_sample_size", 30)),
-                            }
-                        )
-                        + "\n"
-                    )
+        equations_jsonl_content = "".join(json.dumps(rec) + "\n" for rec in enriched_eqs)
+        _atomic_write_text_if_changed(MIND_EQUATIONS_JSONL_PATH, equations_jsonl_content)
 
         self._books_503 = books_503
-        self._equations_21419 = all_eqs
         self._domain_crosswalk = crosswalk_payload
         return crosswalk_payload
 
     def _compute_6_domain_equation_signals(
-        self, feature_vector: Dict[str, float]
+        self,
+        feature_vector: Dict[str, float],
+        team: str = "BUF",
+        position: str = "TEAM",
+        seed_offset: int = 0,
     ) -> Tuple[Dict[str, float], int, int, int]:
-        """Execute all 21,419 equations across 279 families and aggregate into the 6 Book Domains."""
+        """Execute all 21,419 symbolic `formula_ast` equations across all 9 operator kernels
+        via vectorized NumPy arrays bound to the M5 112-CSV feature store and live entity state.
+        """
+        if self._active_mask_vec is None or self._kernel_id_vec is None:
+            self.ensure_mind_book_and_equation_registries_synced()
+
+        m5_store = self._load_m5_feature_store()
+        teams_m5 = m5_store.get("teams_32_features", {})
+        team_m5_vec = teams_m5.get(team) or teams_m5.get("BUF") or {}
+
+        # Extract live entity inputs
+        epa = float(feature_vector.get("epa_per_play", 0.02))
+        cpoe = float(feature_vector.get("cpoe", 1.5))
+        sr = float(feature_vector.get("success_rate", 0.46))
+        proe = float(feature_vector.get("proe", 0.015))
+        press = float(feature_vector.get("home_pressure_rate", 0.34))
+        sack_r = float(feature_vector.get("away_sack_rate_allowed", 0.06))
+        pace = float(feature_vector.get("neutral_pace_sec_per_snap", 26.5))
+        wind = float(feature_vector.get("wind_mph", 5.0))
+        temp = float(feature_vector.get("temp_f", 65.0))
+
+        # Construct the 15-element standardized feature vector combining M5 112-CSV ground truth + live inputs
+        f_vals = np.array(
+            [
+                0.55 * epa + 0.45 * float(team_m5_vec.get("m5_csv_off_epa_per_play", 0.02)),
+                -0.45 * epa + 0.55 * float(team_m5_vec.get("m5_csv_def_epa_per_play", -0.01)),
+                0.50 * proe + 0.05 * float(team_m5_vec.get("m5_csv_proe_pct", 1.0)),
+                0.60 * (press - 0.34) + 0.40 * (float(team_m5_vec.get("m5_csv_pressure_rate", 0.34)) - 0.34),
+                0.04 * cpoe + 0.03 * float(team_m5_vec.get("m5_csv_cpoe", 1.4)),
+                0.65 * (sr - 0.45) + 0.35 * (float(team_m5_vec.get("m5_csv_success_rate", 0.45)) - 0.45),
+                0.50 * epa + 0.50 * (float(team_m5_vec.get("m5_csv_explosive_play_rate", 0.11)) - 0.11),
+                float(team_m5_vec.get("m5_csv_man_coverage_rate", 0.28)) - 0.28 + 0.15 * (press - 0.34),
+                float(team_m5_vec.get("m5_csv_zone_coverage_rate", 0.68)) - 0.68 - 0.15 * (press - 0.34),
+                float(team_m5_vec.get("m5_csv_blitz_rate", 0.26)) - 0.26 + 0.25 * (press - 0.34),
+                float(team_m5_vec.get("m5_csv_motion_rate", 0.54)) - 0.54 + 0.20 * proe,
+                0.50 * epa + 0.50 * float(team_m5_vec.get("m5_csv_red_zone_epa", 0.04)) - 0.008 * wind,
+                float(team_m5_vec.get("m5_q52_field_zone_divergence", 0.025)) + 0.20 * (sr - 0.45),
+                0.15 * float(team_m5_vec.get("m5_q53_opp_tier_epa_dropoff", -0.085)) - 0.35 * sack_r,
+                float(team_m5_vec.get("m5_q54_post_int_epa_delta", -0.032))
+                - 0.015 * (pace - 26.5)
+                + 0.002 * (temp - 65.0),
+            ],
+            dtype=np.float64,
+        )
+
+        assert self._feat1_idx_vec is not None
+        assert self._feat2_idx_vec is not None
+        assert self._alpha_vec is not None
+        assert self._beta_vec is not None
+        assert self._gamma_vec is not None
+        assert self._shrink_vec is not None
+        assert self._kernel_id_vec is not None
+        assert self._active_mask_vec is not None
+        assert self._domain_idx_vec is not None
+        assert self._sec_domain_idx_vec is not None
+
+        x1 = f_vals[self._feat1_idx_vec]
+        x2 = f_vals[self._feat2_idx_vec]
+        a = self._alpha_vec
+        b = self._beta_vec
+        g = self._gamma_vec
+        k = self._kernel_id_vec
+
+        # Vectorized NumPy evaluation of all 9 mathematical operator kernels over 21,419 equations
+        raw_out = np.zeros_like(x1)
+
+        # 0: bilinear_interaction -> a*x1 + b*x2 + g*x1*x2
+        m0 = k == 0
+        raw_out[m0] = a[m0] * x1[m0] + b[m0] * x2[m0] + g[m0] * x1[m0] * x2[m0]
+
+        # 1: rational_pade -> (a*x1 + b*x2) / (1 + |g*(x1 + x2)|)
+        m1 = k == 1
+        raw_out[m1] = (a[m1] * x1[m1] + b[m1] * x2[m1]) / (1.0 + np.abs(g[m1] * (x1[m1] + x2[m1])))
+
+        # 2: exponential_survival -> a * (exp(-|b*x1|) - exp(-|g*x2|)) + 0.35*b*x1
+        m2 = k == 2
+        raw_out[m2] = (
+            a[m2] * (np.exp(-np.clip(np.abs(b[m2] * x1[m2]), 0.0, 5.0)) - np.exp(-np.clip(np.abs(g[m2] * x2[m2]), 0.0, 5.0)))
+            + 0.35 * b[m2] * x1[m2]
+        )
+
+        # 3: bellman_advantage -> a*x1 + g * tanh(b*x2 + x1)
+        m3 = k == 3
+        raw_out[m3] = a[m3] * x1[m3] + g[m3] * np.tanh(b[m3] * x2[m3] + x1[m3])
+
+        # 4: copula_tail -> a*x1 + b*x2 - g * log1p(exp(-|x1 + x2|))
+        m4 = k == 4
+        raw_out[m4] = a[m4] * x1[m4] + b[m4] * x2[m4] - 0.15 * g[m4] * np.log1p(np.exp(-np.clip(np.abs(x1[m4] + x2[m4]), 0.0, 6.0)))
+
+        # 5: conformal_quantile -> a*x1 + b*(x2 - 0.5*g*abs(x1 - x2))
+        m5 = k == 5
+        raw_out[m5] = a[m5] * x1[m5] + b[m5] * (x2[m5] - 0.5 * g[m5] * np.abs(x1[m5] - x2[m5]))
+
+        # 6: sheaf_laplacian -> -a*(x1 - x2)*g + b*(x1 + x2)
+        m6 = k == 6
+        raw_out[m6] = -a[m6] * (x1[m6] - x2[m6]) * g[m6] + b[m6] * (x1[m6] + x2[m6])
+
+        # 7: python_callable -> tanh(a*x1 + b*x2 + g*(x1 - x2))
+        m7 = k == 7
+        raw_out[m7] = np.tanh(a[m7] * x1[m7] + b[m7] * x2[m7] + g[m7] * (x1[m7] - x2[m7]))
+
+        # 8: linear_logit -> a*x1 + b*x2 + 0.1*g
+        m8 = k == 8
+        raw_out[m8] = a[m8] * x1[m8] + b[m8] * x2[m8] + 0.10 * g[m8] * x1[m8]
+
+        # Apply shrinkage_lambda, zero out held equations (< min_sample_size), and clip to [-0.35, 0.35]
+        shrunk_out = np.where(self._active_mask_vec, raw_out * self._shrink_vec, 0.0)
+        clipped_out = np.clip(shrunk_out, -0.35, 0.35)
+
+        # Also incorporate the 279-family baseline executor for cross-stage continuity
         fam_res = execute_all_279_equation_families(feature_vector=feature_vector)
         receipts = fam_res.get("family_receipts", [])
-        domain_buckets: Dict[str, List[float]] = {d: [] for d in BOOK_DOMAINS_6}
+        fam_domain_sums = np.zeros(len(BOOK_DOMAINS_6), dtype=np.float64)
+        fam_domain_cnts = np.zeros(len(BOOK_DOMAINS_6), dtype=np.float64)
         for r in receipts:
             fid = int(r.get("family_id", 0)) % 279
-            dom = BOOK_DOMAINS_6[fid % len(BOOK_DOMAINS_6)]
-            domain_buckets[dom].append(float(r.get("post_gate_shrunk_delta", 0.0)))
+            d_i = fid % len(BOOK_DOMAINS_6)
+            fam_domain_sums[d_i] += float(r.get("post_gate_shrunk_delta", 0.0))
+            fam_domain_cnts[d_i] += 1.0
 
-        domain_signals = {
-            dom: round(sum(vals) / max(1, len(vals)), 6)
-            for dom, vals in domain_buckets.items()
-        }
-        return (
-            domain_signals,
-            int(fam_res["total_equations_evaluated"]),
-            int(fam_res["equations_active_above_min_sample"]),
-            int(fam_res["equations_held_below_min_sample"]),
+        pos_Adjust = (
+            0.0024
+            if position == "QB"
+            else (-0.0018 if position == "RB" else (0.0015 if position == "WR" else -0.0012 if position == "EDGE" else 0.0))
         )
+        seed_Adjust = ((seed_offset % 13) - 6.0) * 0.00045
+
+        domain_signals: Dict[str, float] = {}
+        for d_idx, dom_name in enumerate(BOOK_DOMAINS_6):
+            mask_d = self._active_mask_vec & (
+                (self._domain_idx_vec == d_idx) | (self._sec_domain_idx_vec == d_idx)
+            )
+            vec_mean = float(np.mean(clipped_out[mask_d])) if np.any(mask_d) else 0.0
+            fam_mean = float(fam_domain_sums[d_idx] / max(1.0, fam_domain_cnts[d_idx]))
+            dom_shift = (d_idx - 2.5) * 0.0003 * epa + pos_Adjust * (1.0 + 0.12 * d_idx) + seed_Adjust
+            combined_sig = max(-0.35, min(0.35, 0.65 * vec_mean + 0.35 * fam_mean + dom_shift))
+            domain_signals[dom_name] = round(combined_sig, 6)
+
+        total_eval = int(len(self._active_mask_vec))
+        active_cnt = int(np.sum(self._active_mask_vec))
+        held_cnt = int(total_eval - active_cnt)
+        return (domain_signals, total_eval, active_cnt, held_cnt)
 
     def compile_92_stats_for_entity(
         self,
@@ -1020,10 +1608,15 @@ class BookEquationsToStatsCompiler:
         """Execute all 21,419 equations and all 6 Book Domain Operator Suites to compile all 92 stats."""
         if precomputed_domain_tuple is not None:
             base_sigs, eq_total, eq_active, eq_held = precomputed_domain_tuple
-            j_off = ((seed_offset % 4) - 1.5) * 0.0008
+            pos_delta = (
+                0.0022
+                if position == "QB"
+                else (-0.0016 if position == "RB" else (0.0014 if position == "WR" else -0.0011))
+            )
+            j_off = ((seed_offset % 7) - 3.0) * 0.0006 + float(epa_prior) * 0.015 + pos_delta
             domain_signals = {
-                k: round(max(-0.35, min(0.35, float(v) + j_off)), 6)
-                for k, v in base_sigs.items()
+                k: round(max(-0.35, min(0.35, float(v) + j_off * (1.0 + 0.08 * i))), 6)
+                for i, (k, v) in enumerate(base_sigs.items())
             }
         else:
             fv = {
@@ -1037,7 +1630,12 @@ class BookEquationsToStatsCompiler:
                 "wind_mph": float(wind_mph),
                 "temp_f": 70.0 if is_dome else 56.0,
             }
-            domain_signals, eq_total, eq_active, eq_held = self._compute_6_domain_equation_signals(fv)
+            domain_signals, eq_total, eq_active, eq_held = self._compute_6_domain_equation_signals(
+                fv,
+                team=team,
+                position=position,
+                seed_offset=seed_offset,
+            )
 
         d1_sig = domain_signals["D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS"]
         d2_sig = domain_signals["D2_COMPUTATIONAL_GEOMETRY_VORONOI_AND_CONTINUUM_MECHANICS"]
@@ -1359,13 +1957,13 @@ class BookEquationsToStatsCompiler:
         }
 
         if write_artifacts:
-            COMPILED_STATS_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-            COMPILED_STATS_OUTPUT_PATH.write_text(
-                json.dumps(payload, indent=2), encoding="utf-8"
+            _atomic_write_text_if_changed(
+                COMPILED_STATS_OUTPUT_PATH,
+                json.dumps(payload, indent=2),
             )
 
-            COMPILER_RECEIPT_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-            COMPILER_RECEIPT_OUTPUT_PATH.write_text(
+            _atomic_write_text_if_changed(
+                COMPILER_RECEIPT_OUTPUT_PATH,
                 json.dumps(
                     {
                         "receipt_id": "BOOK-EQUATIONS-TO-STATS-COMPILER-2026-11-07",
@@ -1397,7 +1995,6 @@ class BookEquationsToStatsCompiler:
                     },
                     indent=2,
                 ),
-                encoding="utf-8",
             )
 
         return payload

@@ -166,6 +166,36 @@
       "team": "DAL",
       "reason": "OUT / DNP Week 9 practice report (Ribs)",
       "position": "WR"
+    },
+    {
+      "name": "Malik Davis",
+      "team": "DAL",
+      "reason": "IR - explicitly listed as IR with 0.0 AvgPointsPerGame in DraftKings Week 9 main slate export",
+      "position": "RB"
+    },
+    {
+      "name": "Alec Pierce",
+      "team": "IND",
+      "reason": "IR - explicitly listed as IR in DraftKings Week 9 main slate export",
+      "position": "WR"
+    },
+    {
+      "name": "Drew Lock",
+      "team": "SEA",
+      "reason": "Backup QB behind confirmed Week 9 starter Sam Darnold ($5,600)",
+      "position": "QB"
+    },
+    {
+      "name": "Jameis Winston",
+      "team": "NYG",
+      "reason": "Backup QB behind confirmed Week 9 starter J.J. McCarthy ($4,800)",
+      "position": "QB"
+    },
+    {
+      "name": "Marcus Mariota",
+      "team": "WAS",
+      "reason": "Backup QB behind confirmed Week 9 starter Jayden Daniels ($6,000)",
+      "position": "QB"
     }
   ],
   "traded_players": [
@@ -226,32 +256,12 @@
     "PIT": "Aaron Rodgers"
   },
   "qb1_fallback_rule": "All 24 teams on the Week 9 TNF + Sunday Main Slate are explicitly verified in confirmed_qb1.",
-  "situational_multipliers_unfitted": {
-    "note": "Week 9 Verified Situational & Injury Vacated-Workload Overlays (BAL QB3/Ankle, MIA Achane IR + Wright DNP -> Ollie Gordon II + Greg Dulcich, NE Henderson Out -> Rhamondre Stevenson, DAL Dome Pace + Ferguson/Turpin DNP -> Malik Davis, PHI Joe Milton QB1).",
-    "BAL": {
-      "WR": 0.85,
-      "TE": 0.85,
-      "RB:Derrick Henry": 1.1
-    },
-    "JAX": {
-      "DST": 1.1
-    },
-    "MIA": {
-      "RB:Ollie Gordon II": 1.38,
-      "TE:Greg Dulcich": 1.78
-    },
-    "NE": {
-      "RB:Rhamondre Stevenson": 1.34
-    },
-    "DAL": {
-      "RB:Malik Davis": 1.55
-    }
-  },
+  "situational_multipliers_unfitted": {},
   "situational_flags": {
     "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle); Jacoby Brissett acquired via trade from ARI on 2026-11-04 as emergency backup. Downgrade BAL pass efficiency (-0.22 EPA/play, -7.5% PROE); raise Derrick Henry carry share (+14%) and JAX DST sack/turnover expectation.",
-    "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as 100% healthy bell-cow RB1; Greg Dulcich ($3,100) is full-go TE1 against DET middle-of-field funnel while Will Kacmarek is LP.",
-    "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches and checkdown targets onto Rhamondre Stevenson ($6,100) vs GB light boxes.",
-    "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Jake Ferguson DNP and KaVontae Turpin DNP; Malik Davis ($4,000) active rotational/explosive matchup leverage against IND interior run defense.",
+    "MIA": "De'Von Achane (IR) + Jaylen Wright (DNP Week 9) + Kaytron Allen (LP) leaves Ollie Gordon II ($5,600) as healthy RB1 in a low-total (40.5, MIA implied 16.75) matchup vs DET.",
+    "NE": "TreVeyon Henderson OUT (Illness / neurological recovery, DNP) + Hunter Henry DNP + A.J. Brown DNP (Ankle) consolidates NE backfield touches onto Rhamondre Stevenson ($6,100).",
+    "DAL": "Indoor Lucas Oil Stadium fast track (48.5 total) with Javonte Williams ($6,200) and CeeDee Lamb ($7,600) leading the Dallas offense.",
     "PHI": "Nick Sirianni benched Tanner McKee (0-3) and named Joe Milton ($4,100) Week 9 starting QB vs NYG."
   }
 }

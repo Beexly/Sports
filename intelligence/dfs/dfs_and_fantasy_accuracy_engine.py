@@ -10,7 +10,7 @@ Eliminates the root causes identified in the Week 8 Post-Slate Autopsy and Week 
   2. G2 — Empirical Bayes Role-Prior Shrinkage & Minimum Route/Snap Participation Floor Gate
           (blocks $3,000 WR4/WR5/TE3 0-target traps like Isaac TeSlaa, KeAndre Lambert-Smith,
           Omar Cooper Jr., Chris Moore $200 while preserving verified vacated-workload bell-cows
-          Ollie Gordon II $5,600, Rhamondre Stevenson $6,100, Malik Davis $4,000, Greg Dulcich $3,100,
+          Ollie Gordon II $5,600, Rhamondre Stevenson $6,100, Greg Dulcich $3,100,
           Dalton Schultz $3,200, Woody Marks $5,700, Jonah Coleman $5,300, Joe Milton III $4,100).
   3. G3 — Trench & Matchup-Conditioned DST Scoring Engine (wired to Nov 7 Morning Analytics
           Sweep wPP/xwPP pass protection + QB Supporting Cast Scores; hard-blocks road dog
@@ -30,10 +30,22 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
-import pandas as pd
-from scipy.optimize import Bounds, LinearConstraint, milp
-from scipy.sparse import csc_matrix
-from scipy.stats import t as student_t
+from intelligence.dfs._pandas_scipy_compat import get_pandas_or_shim
+pd = get_pandas_or_shim()
+try:
+    from scipy.optimize import Bounds, LinearConstraint, milp
+    from scipy.sparse import csc_matrix
+    from scipy.stats import t as student_t
+except ImportError:  # pragma: no cover
+    Bounds = LinearConstraint = milp = csc_matrix = None  # type: ignore[assignment]
+
+    class _StudentTFallback:
+        @staticmethod
+        def rvs(df: float, size: Any = None, random_state: Any = None) -> np.ndarray:
+            rng = random_state if hasattr(random_state, "standard_t") else np.random.default_rng(random_state)
+            return rng.standard_t(df, size=size)
+
+    student_t = _StudentTFallback()  # type: ignore[assignment]
 
 from intelligence.external_charting.morning_sweep_2026_11_07 import (
     get_funnel_report_defense_splits,
@@ -49,47 +61,38 @@ DFS_35_CONTEST_9570_LINEUP_ATTRIBUTION = (
 EMPIRICAL_PRIORS_PATH = REPO_ROOT / "data" / "dfs" / "empirical_dk_ownership_and_ceiling_priors_2026.json"
 
 
-# Verified Vacated-Workload & High-Leverage Role Catalysts (Week 9 Live Practice & Depth Audit)
+# Verified Vacated-Workload & High-Leverage Role Catalysts (Week 9 Live Practice & Depth Audit,
+# strictly bounded by Team-Total Conservation L-2 from gridiron-matchup-cards-week9-2026.csv)
 VERIFIED_VACATED_ROLE_CATALYSTS: Dict[str, Dict[str, Any]] = {
     "ollie gordon": {
         "team": "MIA",
         "position": "RB",
-        "proj_rush_yds": 88.5,
-        "proj_rec_yds": 26.5,
-        "proj_receptions": 3.8,
-        "proj_td": 0.92,
-        "dk_projection": 23.82,
-        "catalyst": "De'Von Achane (IR) + Jaylen Wright (OUT/DNP) -> 100% healthy bell-cow RB1 (75%+ carry share)",
+        "proj_rush_yds": 55.4,
+        "proj_rec_yds": 16.0,
+        "proj_receptions": 2.2,
+        "proj_td": 0.32,
+        "dk_projection": 11.26,
+        "catalyst": "De'Von Achane (IR) + Jaylen Wright (OUT/DNP) -> MIA lead RB bounded by 16.75 implied team total (60% of 92.3 team RB rush yds)",
     },
     "rhamondre stevenson": {
         "team": "NE",
         "position": "RB",
-        "proj_rush_yds": 84.0,
-        "proj_rec_yds": 31.5,
-        "proj_receptions": 4.4,
-        "proj_td": 0.85,
-        "dk_projection": 23.45,
-        "catalyst": "TreVeyon Henderson (OUT/DNP) + Hunter Henry (DNP) + A.J. Brown (DNP) -> NE bell-cow + checkdown funnel",
-    },
-    "malik davis": {
-        "team": "DAL",
-        "position": "RB",
-        "proj_rush_yds": 62.0,
-        "proj_rec_yds": 24.5,
-        "proj_receptions": 3.4,
-        "proj_td": 0.65,
-        "dk_projection": 16.95,
-        "catalyst": "Active DAL rotational/explosive back on Lucas Oil indoor fast track (48.5 total) with Ferguson & Turpin DNP",
+        "proj_rush_yds": 64.0,
+        "proj_rec_yds": 22.0,
+        "proj_receptions": 3.2,
+        "proj_td": 0.60,
+        "dk_projection": 15.40,
+        "catalyst": "TreVeyon Henderson (OUT/DNP) + Hunter Henry (DNP) + A.J. Brown (DNP) -> NE bell-cow bounded by 19.5 implied team total",
     },
     "greg dulcich": {
         "team": "MIA",
         "position": "TE",
         "proj_rush_yds": 0.0,
-        "proj_rec_yds": 52.0,
-        "proj_receptions": 4.8,
-        "proj_td": 0.42,
-        "dk_projection": 13.52,
-        "catalyst": "Full-go MIA TE1 (82% route participation) vs DET middle-of-field funnel with Will Kacmarek LP",
+        "proj_rec_yds": 26.0,
+        "proj_receptions": 2.6,
+        "proj_td": 0.18,
+        "dk_projection": 6.28,
+        "catalyst": "MIA TE1 bounded by 40.0 total MIA TE receiving yards in gridiron-matchup-cards-week9-2026.csv",
     },
     "dalton schultz": {
         "team": "HOU",
@@ -138,7 +141,7 @@ VERIFIED_VACATED_ROLE_CATALYSTS: Dict[str, Dict[str, Any]] = {
         "proj_receptions": 4.4,
         "proj_td": 0.42,
         "dk_projection": 12.72,
-        "catalyst": "Full-time NYJ perimeter WR2 after 7-142-1TD eruption in Week 8 (replacing 0-target Omar Cooper Jr.)",
+        "catalyst": "Full-time NYJ perimeter WR2 after 7-142-1TD eruption in Week 8",
     },
 }
 
@@ -198,9 +201,10 @@ ACTIVE_ALPHA_STARTER_FLOORS: Dict[str, Dict[str, Any]] = {
 
 # Explicit Sub-Floor Depth/WR4/TE3/Road-Dog-DST Trap Denylist (Week 8 & Week 9 Forensic Audit)
 SUB_FLOOR_ROLE_TRAP_DENYLIST: Dict[str, str] = {
+    "malik davis": "DAL RB on IR in DraftKings Week 9 main slate export (0.0 AvgPPG)",
+    "alec pierce": "IND WR on IR in DraftKings Week 9 main slate export",
     "isaac teslaa": "DET WR4 (<18% route share with Amon-Ra, Jamo, LaPorta, Gibbs active; 0 catches in W8)",
     "keandre lambert smith": "LAC WR4 ($3,000, 2.4 season PPG; behind Ladd McConkey, Quentin Johnston, Tre Harris)",
-    "omar cooper": "NYJ rotational WR (pulled in Week 8 at 09:10 CT; 0 catches while Adonai Mitchell went 7/142/1TD)",
     "xavier hutchinson": "HOU WR4 rotational piece behind Nico Collins, Marvin Harrison Jr., and Dalton Schultz",
     "foster moreau": "HOU blocking TE2 behind Dalton Schultz",
     "brock wright": "DET blocking TE2 behind Sam LaPorta",
@@ -255,6 +259,8 @@ def apply_10_gate_dfs_accuracy_overlay(df: pd.DataFrame) -> pd.DataFrame:
     out["is_sub_floor_trap"] = False
     out["accuracy_gate_note"] = ""
 
+    blocked_statuses = {"IR", "O", "OUT", "D", "DOUBTFUL", "SUSP", "PUP", "NFI", "OUT_FOR_SEASON"}
+
     for idx in out.index:
         nm_raw = str(out.at[idx, "name"] if "name" in out.columns else out.at[idx, "player"])
         key = norm_key(nm_raw)
@@ -264,6 +270,14 @@ def apply_10_gate_dfs_accuracy_overlay(df: pd.DataFrame) -> pd.DataFrame:
         sal = int(out.at[idx, "salary"])
         pos_rank = int(out.at[idx, "pos_salary_rank"])
         cur_proj = float(out.at[idx, "projection"])
+        st_val = str(out.at[idx, "status"]).strip().upper() if "status" in out.columns else ""
+
+        # --- STAGE 0 HARD STATUS CHECK: Never allow IR/OUT/D players to have positive projections ---
+        if st_val in blocked_statuses:
+            _scale_component_cols(out, idx, 0.0)
+            out.at[idx, "is_sub_floor_trap"] = True
+            out.at[idx, "accuracy_gate_note"] = f"G0_BLOCKED_STATUS_{st_val}"
+            continue
 
         # --- GATE G3: Trench & Matchup-Conditioned DST Scoring ---
         if pos == "DST":
@@ -652,17 +666,62 @@ def hydrate_and_solve_showdown_milp_portfolio(
             overlap_idxs = [i for i in range(n) if str(df.loc[i, "name"]) in prev_names]
             add_row({i: 1.0 for i in overlap_idxs}, -np.inf, 4.0)
 
-        A = csc_matrix(np.vstack(rows))
-        res = milp(
-            c=c,
-            integrality=np.ones(n, dtype=np.int32),
-            bounds=Bounds(np.zeros(n), np.ones(n)),
-            constraints=LinearConstraint(A, lbs, ubs),
-            options={"mip_rel_gap": 0.002, "time_limit": 1.5},
-        )
-        if not res.success or res.x is None:
-            break
-        chosen = [i for i in range(n) if res.x[i] >= 0.5]
+        if milp is not None and csc_matrix is not None and LinearConstraint is not None and Bounds is not None:
+            A = csc_matrix(np.vstack(rows))
+            res = milp(
+                c=c,
+                integrality=np.ones(n, dtype=np.int32),
+                bounds=Bounds(np.zeros(n), np.ones(n)),
+                constraints=LinearConstraint(A, lbs, ubs),
+                options={"mip_rel_gap": 0.002, "time_limit": 1.5},
+            )
+            if not res.success or res.x is None:
+                break
+            chosen = [i for i in range(n) if res.x[i] >= 0.5]
+        else:
+            # Pure-Python/NumPy Showdown solver fallback (1 CPT + 5 FLEX under cap)
+            valid_cpts = sorted([i for i in cpt_indices if c[i] < 0], key=lambda i: c[i])
+            chosen = []
+            for ci in valid_cpts:
+                cpt_name = str(df.loc[ci, "name"])
+                cpt_tm = str(df.loc[ci, "team"])
+                cpt_pos = str(df.loc[ci, "position"])
+                avail_flex = sorted(
+                    [fi for fi in flex_indices if str(df.loc[fi, "name"]) != cpt_name],
+                    key=lambda fi: c[fi],
+                )
+                picked_flex: List[int] = []
+                if cpt_pos == "QB":
+                    pcs = [fi for fi in avail_flex if str(df.loc[fi, "team"]) == cpt_tm and str(df.loc[fi, "position"]) in ("WR", "TE")]
+                    picked_flex.extend(pcs[:2])
+                for fi in avail_flex:
+                    if len(picked_flex) >= 5:
+                        break
+                    if fi not in picked_flex:
+                        picked_flex.append(fi)
+                cand_6 = [ci] + picked_flex
+                tot_s = sum(int(df.loc[x, "salary"]) for x in cand_6)
+                while tot_s > min(salary_cap, 49900):
+                    # Swap most expensive non-stack flex down
+                    swapped = False
+                    for slot_i in range(5, 0, -1):
+                        cur_fi = cand_6[slot_i]
+                        cheaper = [
+                            fi for fi in avail_flex
+                            if fi not in cand_6 and int(df.loc[fi, "salary"]) < int(df.loc[cur_fi, "salary"])
+                        ]
+                        if cheaper:
+                            cand_6[slot_i] = cheaper[0]
+                            tot_s = sum(int(df.loc[x, "salary"]) for x in cand_6)
+                            swapped = True
+                            break
+                    if not swapped:
+                        break
+                if len(cand_6) == 6 and tot_s <= min(salary_cap, 49900):
+                    chosen = cand_6
+                    break
+            if len(chosen) != 6:
+                break
         if len(chosen) != 6:
             break
         lu = df.iloc[chosen].copy()

@@ -13,7 +13,10 @@ from __future__ import annotations
 import os
 from typing import Optional
 
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:  # pragma: no cover
+    pd = None  # type: ignore[assignment]
 
 from integration.providers import DataGapError, OLProvider, OLState, Verification
 

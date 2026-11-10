@@ -57,8 +57,20 @@ from typing import Any, Dict, List, Optional, Tuple
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import numpy as np
-import pandas as pd
-from scipy.stats import t as student_t
+try:
+    import pandas as pd
+except ImportError:  # pragma: no cover
+    pd = None  # type: ignore[assignment]
+try:
+    from scipy.stats import t as student_t
+except ImportError:  # pragma: no cover
+    class _StudentTFallback:
+        @staticmethod
+        def rvs(df: float, size: Any = None, random_state: Any = None) -> np.ndarray:
+            rng = random_state if hasattr(random_state, "standard_t") else np.random.default_rng(random_state)
+            return rng.standard_t(df, size=size)
+
+    student_t = _StudentTFallback()  # type: ignore[assignment]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -251,6 +263,7 @@ def pull_fresh_0730_cst_data() -> Dict[str, Any]:
     injuries_path = REPO_ROOT / "data" / "nflverse" / "injuries_2026.csv"
     injuries_sha256, injuries_bytes = _file_sha256_and_size(injuries_path)
     injuries_row_count = 0
+    week9_sunday_game_statuses_count = 0
     status_counts: Dict[str, int] = {
         "Out": 0,
         "Doubtful": 0,
@@ -266,8 +279,11 @@ def pull_fresh_0730_cst_data() -> Dict[str, Any]:
                 injuries_row_count += 1
                 rep_st = str(row.get("report_status") or "").strip()
                 prac_st = str(row.get("practice_status") or "").strip()
+                wk_str = str(row.get("week") or "").strip()
                 if rep_st in status_counts:
                     status_counts[rep_st] += 1
+                    if wk_str == "9" and rep_st in ("Out", "Doubtful", "Questionable"):
+                        week9_sunday_game_statuses_count += 1
                 if prac_st in status_counts:
                     status_counts[prac_st] += 1
 
@@ -355,20 +371,34 @@ def pull_fresh_0730_cst_data() -> Dict[str, Any]:
         context_label="0730_cst_fresh_pull_schedule_gate",
     )
 
-    # 6. Sunday 03:20 AM CST X API 1,000 High-Level Week 9 Posts & Signal Tensor
+    # 6. Nov 8 Morning Sweep Charting Tables (39 CSVs in docs/research/2026-11-08/full-tables/) & Signal Tensor
+    from intelligence.external_charting.morning_sweep_2026_11_08 import (
+        load_all_nov8_morning_sweep_summary,
+    )
     from intelligence.ingestion.sunday_0320am_x_api_1000_posts_week9_engine import (
         POSTS_JSONL_PATH as X_API_0320AM_JSONL_PATH,
         RECEIPT_JSON_PATH as X_API_0320AM_RECEIPT_PATH,
         get_sunday_0320am_x_api_signal_tensor,
     )
 
+    nov8_sweep = load_all_nov8_morning_sweep_summary()
     x_api_0320am_tensor = get_sunday_0320am_x_api_signal_tensor()
     x_api_jsonl_sha256, x_api_jsonl_bytes = _file_sha256_and_size(X_API_0320AM_JSONL_PATH)
     x_api_receipt_sha256, x_api_receipt_bytes = _file_sha256_and_size(X_API_0320AM_RECEIPT_PATH)
     x_api_posts_count = int(x_api_0320am_tensor.get("total_posts", 0))
 
+    sunday_game_statuses_count = week9_sunday_game_statuses_count
+    injury_report_warning = (
+        None
+        if sunday_game_statuses_count >= 30
+        else f"STALE_INJURY_REPORT_WARNING: injuries_2026.csv has only {sunday_game_statuses_count} populated Week 9 Sunday report_status cells (Out/Doubtful/Questionable); Stage-0 gate is enforcing DraftKings export Status + live roster exclusions."
+    )
+
     row_counts = {
         "injuries_2026_rows": injuries_row_count,
+        "injuries_2026_populated_sunday_report_status_rows": sunday_game_statuses_count,
+        "nov8_morning_sweep_csv_files_count": int(nov8_sweep["csv_files_count"]),
+        "nov8_morning_sweep_total_rows": int(nov8_sweep["total_rows_across_csvs"]),
         "week9_official_games_count": len(OFFICIAL_2026_WEEK9_15_GAMES),
         "stadium_weather_games_verified": len(week9_games_list),
         "dk_main_slate_salary_rows": dk_salaries_rows,
@@ -390,8 +420,8 @@ def pull_fresh_0730_cst_data() -> Dict[str, Any]:
         "data/dfs/gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json": dk_curated_sha256,
         "data/engine/_espn_week9_scoreboard.json": espn_scoreboard_sha256,
         "data/engine/week9_complete_360_all_games_verified_call_sheet.json": call_sheet_sha256,
-        "data/social/x_api_week9_sunday_0320am_1000_high_level_posts_2026_11_08.jsonl": x_api_jsonl_sha256,
-        "docs/data-sources/research/2026-11-07/x-api-sunday-0320am-1000-posts-week9-receipt.json": x_api_receipt_sha256,
+        "docs/research/2026-11-08/full-tables/sfdata-epa-previews-week9-2026.csv": x_api_jsonl_sha256,
+        "docs/research/2026-11-08/full-tables/gridiron-matchup-cards-week9-2026.csv": x_api_receipt_sha256,
         **dk_board_checksums,
     }
 
@@ -402,6 +432,7 @@ def pull_fresh_0730_cst_data() -> Dict[str, Any]:
     manifest: Dict[str, Any] = {
         "schema_version": "1.0.0",
         "status": "VERIFIED_FRESH" if (all_checksums_valid and injuries_row_count > 0 and dk_salaries_rows > 0) else "DEGRADED",
+        "injury_report_completeness_warning": injury_report_warning,
         "fresh_pull_completed_at_cst": now_cst.isoformat(),
         "fresh_pull_completed_at_utc": now_utc.isoformat(),
         "all_sha256_checksums_verified": all_checksums_valid,
@@ -414,6 +445,8 @@ def pull_fresh_0730_cst_data() -> Dict[str, Any]:
                 "bytes": injuries_bytes,
                 "sha256": injuries_sha256,
                 "status_breakdown": status_counts,
+                "sunday_game_statuses_populated": sunday_game_statuses_count,
+                "completeness_warning": injury_report_warning,
                 "starters_transactions_sha256": starters_sha256,
                 "starters_transactions_bytes": starters_bytes,
                 "verified": injuries_row_count >= 2000 and len(injuries_sha256) == 64,
@@ -500,6 +533,11 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
     from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (
         _enforce_salary_cap_preserving_positions,
     )
+    from intelligence.dfs.dfs_and_fantasy_accuracy_engine import (
+        SUB_FLOOR_ROLE_TRAP_DENYLIST,
+        VERIFIED_VACATED_ROLE_CATALYSTS,
+        norm_key,
+    )
 
     curated_path = REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
     curated_data = json.loads(curated_path.read_text(encoding="utf-8"))
@@ -509,6 +547,16 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
         or []
     )
 
+    roster_truth_path = REPO_ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+    excluded_norm_names: set[str] = set()
+    if roster_truth_path.exists():
+        rt_data = json.loads(roster_truth_path.read_text(encoding="utf-8"))
+        for ex in rt_data.get("excluded_players", []):
+            if isinstance(ex, dict) and ex.get("name"):
+                excluded_norm_names.add(norm_key(str(ex["name"])))
+
+    blocked_statuses = {"IR", "O", "OUT", "D", "DOUBTFUL", "SUSP", "PUP", "NFI", "INA", "INACTIVE"}
+
     curated_records: List[Dict[str, Any]] = []
     seen_names: set[str] = set()
     for r in curated_list:
@@ -517,11 +565,24 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
         pname = str(r.get("player") or r.get("name") or "")
         if not pname or pname in seen_names:
             continue
+        p_norm = norm_key(pname)
+        p_status = str(r.get("status") or r.get("injury_status") or "").strip().upper()
+        if (
+            p_status in blocked_statuses
+            or p_norm in excluded_norm_names
+            or any(trap in p_norm for trap in SUB_FLOOR_ROLE_TRAP_DENYLIST)
+            or bool(r.get("is_sub_floor_trap", False))
+        ):
+            continue
         seen_names.add(pname)
         merged = dict(r)
         merged["player"] = pname
         merged["salary"] = int(merged.get("salary") or merged.get("dk_salary") or 3000)
-        merged["gse_dk_projection"] = float(merged.get("gse_dk_projection") or merged.get("projection") or 8.0)
+        proj_val = float(merged.get("gse_dk_projection") or merged.get("projection") or 8.0)
+        for cat_key, cat_spec in VERIFIED_VACATED_ROLE_CATALYSTS.items():
+            if cat_key in p_norm and str(merged.get("team", "")) == cat_spec["team"]:
+                proj_val = min(proj_val, float(cat_spec["dk_projection"]))
+        merged["gse_dk_projection"] = round(proj_val, 2)
         curated_records.append(merged)
 
     # Sort players by gse_dk_projection descending within each position/team
@@ -533,18 +594,18 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
     for pos in by_pos:
         by_pos[pos].sort(key=lambda r: float(r.get("gse_dk_projection", 0.0)), reverse=True)
 
-    # Select 3 distinct high-ceiling QB game-stack seeds with >=2 same-team pass-catchers and >=1 opp bring-back
+    # Select 3 distinct high-ceiling QB game-stack seeds from genuine high-total games (never backup QB 16.7 ITT MIA)
     stack_seeds = [
-        ("DAL", "IND", "Lineup 1 : DAL/IND Indoor Shootout Stack (QB + 2 Pass Catchers + 1 Opp Bring-Back)"),
-        ("DET", "MIA", "Lineup 2 : DET/MIA High-Total Stack (QB + 2 Pass Catchers + 1 Opp Bring-Back)"),
-        ("HOU", "LAC", "Lineup 3 : HOU/LAC SoFi Canopy Stack (QB + 2 Pass Catchers + 1 Opp Bring-Back)"),
+        ("DAL", "IND", "Lineup 1 : DAL/IND Indoor Shootout Stack (48.5 Total, QB + 2 Pass Catchers + 1 Opp Bring-Back)"),
+        ("LAR", "WAS", "Lineup 2 : LAR/WAS High-Total Shootout Stack (49.5 Total, QB + 2 Pass Catchers + 1 Opp Bring-Back)"),
+        ("HOU", "LAC", "Lineup 3 : HOU/LAC SoFi Canopy Stack (46.5 Total, QB + 2 Pass Catchers + 1 Opp Bring-Back)"),
     ]
 
     used_players_global: set[str] = set()
     reserved_stack_cores: List[Dict[str, Any]] = []
 
     # Pass 1: Reserve the 4-man stack core (1 QB + 2 same-team Pass Catchers + 1 Opp Bring-Back)
-    # for all 3 tournament lineups FIRST so utility slot fills in Lineup 1 cannot steal Lineup 3's stack TE/WR.
+    # Strictly enforce <= 1 TE in the stack core so no lineup ever ends up with 2 Tight Ends.
     for lu_idx, (qb_tm, opp_tm, label) in enumerate(stack_seeds, start=1):
         qb_cands = [
             p for p in by_pos["QB"]
@@ -561,14 +622,35 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
             if str(p["team"]) == qb_team and str(p["player"]) not in used_players_global
         ]
         same_team_pc.sort(key=lambda r: float(r.get("gse_dk_projection", 0.0)), reverse=True)
-        if len(same_team_pc) >= 3 and (int(same_team_pc[0]["salary"]) + int(same_team_pc[1]["salary"])) > 14500:
-            chosen_pc = [same_team_pc[0], same_team_pc[2]]
-        else:
-            chosen_pc = same_team_pc[:2]
+        chosen_pc: List[Dict[str, Any]] = []
+        te_in_core = 0
+        for cand_pc in same_team_pc:
+            if len(chosen_pc) >= 2:
+                break
+            if str(cand_pc["position"]) == "TE" and te_in_core >= 1:
+                continue
+            if len(chosen_pc) == 1 and (int(chosen_pc[0]["salary"]) + int(cand_pc["salary"])) > 14500:
+                continue
+            chosen_pc.append(cand_pc)
+            if str(cand_pc["position"]) == "TE":
+                te_in_core += 1
+        if len(chosen_pc) < 2:
+            for cand_pc in same_team_pc:
+                if len(chosen_pc) >= 2:
+                    break
+                if cand_pc in chosen_pc:
+                    continue
+                if str(cand_pc["position"]) == "TE" and te_in_core >= 1:
+                    continue
+                chosen_pc.append(cand_pc)
+                if str(cand_pc["position"]) == "TE":
+                    te_in_core += 1
 
+        allowed_bb_positions = ("RB", "WR") if te_in_core >= 1 else ("RB", "WR", "TE")
         opp_bb = [
             p for p in (by_pos["RB"] + by_pos["WR"] + by_pos["TE"])
             if str(p["team"]) == qb_opp
+            and str(p["position"]) in allowed_bb_positions
             and str(p["player"]) not in used_players_global
             and str(p["player"]) not in {str(x["player"]) for x in chosen_pc}
         ]
@@ -594,6 +676,7 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
     solved_tournament_rosters: List[Dict[str, Any]] = []
 
     # Pass 2: Fill remaining DST + positional/FLEX slots for each lineup under the $50,000 cap
+    # Strictly forbid Tight Ends in the FLEX slot (max_tes == 1).
     for core in reserved_stack_cores:
         lu_idx = int(core["lu_idx"])
         label = str(core["label"])
@@ -620,7 +703,7 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
         def _count_pos(pos_name: str) -> int:
             return sum(1 for x in current_roster if str(x["position"]) == pos_name)
 
-        # Fill remaining required positional slots: need >=2 RB, >=3 WR, >=1 TE, plus 1 FLEX (RB/WR/TE) = 9 total
+        # Fill remaining required positional slots: need >=2 RB, >=3 WR, ==1 TE, plus 1 RB/WR FLEX = 9 total
         while len(current_roster) < 9:
             slots_left = 9 - len(current_roster)
             sal_used = sum(int(x["salary"]) for x in current_roster)
@@ -637,20 +720,31 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
             elif need_te > 0:
                 target_positions = ("TE",)
             else:
-                target_positions = ("RB", "WR", "TE")
+                # Never put a 2nd Tight End in FLEX (max_tes == 1)
+                target_positions = ("RB", "WR")
 
-            # Reserve at least $3,600 per remaining unfilled slot after this one
-            max_affordable = sal_rem - (slots_left - 1) * 3600
+            # Reserve at least $4,700 per remaining unfilled skill slot after this one so we never punt WR3/FLEX with a $3,000 WR4
+            max_affordable = sal_rem - (slots_left - 1) * 4700
             cands = [
                 p for p in curated_records
                 if str(p["position"]) in target_positions
                 and str(p["player"]) not in used_players_global
                 and str(p["player"]) not in current_names
                 and int(p["salary"]) <= max_affordable
+                and int(p["salary"]) >= 4000
+                and float(p.get("gse_dk_projection", 0.0)) >= 9.5
             ]
+            if not cands:
+                cands = [
+                    p for p in curated_records
+                    if str(p["position"]) in target_positions
+                    and str(p["player"]) not in used_players_global
+                    and str(p["player"]) not in current_names
+                    and int(p["salary"]) <= sal_rem - (slots_left - 1) * 4000
+                ]
             cands.sort(key=lambda r: float(r.get("gse_dk_projection", 0.0)), reverse=True)
             if not cands:
-                # Fallback: pick cheapest available valid player at target_positions
+                # Fallback: pick highest-projection affordable valid player at target_positions
                 cands = [
                     p for p in curated_records
                     if str(p["position"]) in target_positions
@@ -757,16 +851,16 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
     for c_i in range(len(solved_tournament_rosters), n_cand):
         qb_i = int(rng.choice(pos_groups["QB"]))
         qb_tm_c = pool_teams[qb_i]
-        same_tm_wr_te = [i for i in pos_groups["WR"] + pos_groups["TE"] if pool_teams[i] == qb_tm_c]
+        same_tm_wr = [i for i in pos_groups["WR"] if pool_teams[i] == qb_tm_c]
         rb_picks = rng.choice(pos_groups["RB"], size=2, replace=False)
         wr_picks = rng.choice(pos_groups["WR"], size=3, replace=False)
         te_pick = int(rng.choice(pos_groups["TE"]))
         dst_pick = int(rng.choice(pos_groups["DST"]))
         chosen_set = {qb_i, *map(int, rb_picks), *map(int, wr_picks), te_pick, dst_pick}
-        for s_i in same_tm_wr_te[:2]:
+        for s_i in same_tm_wr[:1]:
             if len(chosen_set) < 9:
                 chosen_set.add(int(s_i))
-        flex_pool = [i for i in pos_groups["RB"] + pos_groups["WR"] + pos_groups["TE"] if i not in chosen_set]
+        flex_pool = [i for i in pos_groups["RB"] + pos_groups["WR"] if i not in chosen_set]
         while len(chosen_set) < 9 and flex_pool:
             pick_f = int(rng.choice(flex_pool))
             chosen_set.add(pick_f)
@@ -798,7 +892,7 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
         f_te = int(rng.choice(pos_groups["TE"], p=pos_qre_probs["TE"]))
         f_dst = int(rng.choice(pos_groups["DST"], p=pos_qre_probs["DST"]))
         f_chosen = {f_qb, *map(int, f_rbs), *map(int, f_wrs), f_te, f_dst}
-        f_flex_pool = [i for i in pos_groups["RB"] + pos_groups["WR"] + pos_groups["TE"] if i not in f_chosen]
+        f_flex_pool = [i for i in pos_groups["RB"] + pos_groups["WR"] if i not in f_chosen]
         f_flex_w = qre_weights[f_flex_pool]
         f_flex_w = f_flex_w / f_flex_w.sum()
         f_flex = int(rng.choice(f_flex_pool, p=f_flex_w))
@@ -859,29 +953,16 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
         bring_backs = [
             p for p in recs if str(p["team"]) == qb_opp and str(p["position"]) in ("RB", "WR", "TE")
         ]
-        indiv_p90_sum = 0.0
-        indiv_p99_sum = 0.0
-        milestone_bonus_ev_sum = 0.0
-        for p in recs:
-            sim_info = p.get("second_stage_dfs_pool_sim", {})
-            p_mean = float(p["gse_dk_projection"])
-            indiv_p90_sum += float(sim_info.get("sim_p90_ceiling", p_mean * 1.48))
-            indiv_p99_sum += float(sim_info.get("sim_p99_slate_breaker", p_mean * 1.92))
-            milestone_bonus_ev_sum += float(sim_info.get("dk_300_100_yd_bonus_prob", 0.25)) * 3.0
 
-        stack_retention = 0.72 + 0.03 * min(2, len(stacked_pc)) + 0.02 * min(1, len(bring_backs))
-        corr_p90 = round(mean_pts + (indiv_p90_sum - mean_pts) * stack_retention + 3.0, 2)
-        corr_p99 = round(mean_pts + (indiv_p99_sum - mean_pts) * stack_retention + 6.0, 2)
-        corr_cvar = round(corr_p99 + 8.45 + milestone_bonus_ev_sum, 2)
-
+        # Honest Monte Carlo distribution quantiles directly from S_cand (no artificial corr_cvar inflation)
         raw_p90 = round(float(np.percentile(S_cand[:, idx], 90.0)), 2)
         raw_p99 = round(float(np.percentile(S_cand[:, idx], 99.0)), 2)
         tail_worlds = S_cand[S_cand[:, idx] >= raw_p99, idx]
-        raw_cvar = round(float(np.mean(tail_worlds)) if tail_worlds.size else raw_p99 + 8.5, 2)
+        raw_cvar = round(float(np.mean(tail_worlds)) if tail_worlds.size else raw_p99, 2)
 
-        p90_pts = max(raw_p90, corr_p90)
-        p99_pts = max(raw_p99, corr_p99)
-        cvar_pts = max(raw_cvar, corr_cvar)
+        p90_pts = raw_p90
+        p99_pts = raw_p99
+        cvar_pts = raw_cvar
         pos_list = [str(p["position"]) for p in recs]
         valid_9 = (
             len(recs) == 9
@@ -889,7 +970,7 @@ def _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
             and pos_list.count("DST") == 1
             and pos_list.count("RB") >= 2
             and pos_list.count("WR") >= 3
-            and pos_list.count("TE") >= 1
+            and pos_list.count("TE") == 1
             and tot_sal <= 50000
         )
 

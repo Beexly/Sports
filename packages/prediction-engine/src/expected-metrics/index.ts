@@ -212,4 +212,63 @@ export {
   type CorpIsotonicCalibrationResult,
 } from "./batch3-sports-physics-bridge.js";
 
+// Q52 — Defensive Field-Zone Split: Red-Zone vs Open-Field Efficiency Allowed (SHADOW).
+export {
+  computeDefensiveFieldZoneSplit,
+  DEFENSIVE_FIELD_ZONE_SPLIT_VERSION,
+  DEFENSIVE_FIELD_ZONE_SPLIT_FEATURE_KEYS,
+  RED_ZONE_MAX_YARDLINE_100,
+  MIN_RED_ZONE_PLAYS_FLOOR,
+  MIN_OPEN_FIELD_PLAYS_FLOOR,
+  MIN_RED_ZONE_EPA_PLAYS_FLOOR,
+  type FieldZoneWindowType,
+  type DefensiveFieldZonePlay,
+  type DefensiveFieldZoneMetrics,
+  type DefensiveRedZoneMetrics,
+  type DefenseFieldZoneSplitRow,
+  type FieldZoneLeagueContext,
+  type BelowFloorDefenseDiagnostic,
+  type DefensiveFieldZoneDiagnostics,
+  type DefensiveFieldZoneWindowResult,
+  type DefensiveFieldZoneSplitOutput,
+  type ComputeDefensiveFieldZoneOptions,
+} from "./defensive-field-zone-split.js";
 
+// Q53 — QB Efficiency Split by Opponent Defensive Tier: Matchup Sensitivity (SHADOW).
+export {
+  computeQbOpponentTierEfficiencySplit,
+  QB_OPPONENT_TIER_EFFICIENCY_SPLIT_VERSION,
+  QB_OPPONENT_TIER_FEATURE_KEYS,
+  MIN_PRIOR_DEFENSE_RATABLE_DROPBACKS_FOR_RANK,
+  TOP_DEFENSE_TIER_MAX_RANK,
+  MIN_QB_TIER_ARM_RATABLE_DROPBACKS_FLOOR,
+  QB_OPPONENT_TIER_SHRINKAGE_K,
+  type QbOpponentTier,
+  type QbOpponentTierWindowType,
+  type QbOpponentTierDropbackPlay,
+  type DefensePointInTimeRankEntry,
+  type QbOpponentTierArm,
+  type QbOpponentTierWindowRow,
+  type QbOpponentTierWindowDiagnostics,
+  type QbOpponentTierWindowResult,
+  type QbOpponentTierEfficiencySplitOutput,
+  type ComputeQbOpponentTierOptions,
+} from "./qb-opponent-tier-efficiency-split.js";
+
+// Q54 — QB Efficiency Split Before vs After First Interception: In-Game Tilt Response (SHADOW).
+export {
+  computeQbPostFirstIntEfficiencySplit,
+  QB_POST_FIRST_INT_EFFICIENCY_SPLIT_VERSION,
+  QB_POST_FIRST_INT_FEATURE_KEYS,
+  MIN_POST_FIRST_INT_ARM_RATABLE_DROPBACKS_FLOOR,
+  QB_POST_FIRST_INT_SHRINKAGE_K,
+  type QbPostFirstIntArmName,
+  type QbPostFirstIntWindowType,
+  type QbPostFirstIntDropbackPlay,
+  type QbPostFirstIntArm,
+  type QbPostFirstIntWindowRow,
+  type QbPostFirstIntWindowDiagnostics,
+  type QbPostFirstIntWindowResult,
+  type QbPostFirstIntEfficiencySplitOutput,
+  type ComputeQbPostFirstIntOptions,
+} from "./qb-post-first-int-efficiency-split.js";

@@ -26,10 +26,22 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
-import pandas as pd
-from scipy.optimize import Bounds, LinearConstraint, milp
-from scipy.sparse import csc_matrix
-from scipy.stats import gamma, nbinom, norm, t as student_t
+from intelligence.dfs._pandas_scipy_compat import get_pandas_or_shim
+pd = get_pandas_or_shim()
+try:
+    from scipy.optimize import Bounds, LinearConstraint, milp
+    from scipy.sparse import csc_matrix
+    from scipy.stats import gamma, nbinom, norm, t as student_t
+except ImportError:  # pragma: no cover
+    Bounds = LinearConstraint = milp = csc_matrix = gamma = nbinom = norm = None  # type: ignore[assignment]
+
+    class _StudentTFallback:
+        @staticmethod
+        def rvs(df: float, size: Any = None, random_state: Any = None) -> np.ndarray:
+            rng = random_state if hasattr(random_state, "standard_t") else np.random.default_rng(random_state)
+            return rng.standard_t(df, size=size)
+
+    student_t = _StudentTFallback()  # type: ignore[assignment]
 
 
 def build_default_covariance_bonus_matrix(player_df: pd.DataFrame) -> Dict[Tuple[int, int], float]:
@@ -82,6 +94,8 @@ def optimize_dfs_portfolio(
     covariance_bonuses: Optional[Dict[Tuple[int, int], float]] = None,
     min_salary: float = 0.0,
     max_per_team: Optional[int] = None,
+    max_tes: int = 1,
+    max_exposure: Optional[float] = None,
 ) -> List[pd.DataFrame]:
     """Optimize a portfolio of K distinct, covariance-aware DraftKings Classic lineups
     using exact McCormick/Glover MILP linearization solved via HiGHS (`scipy.optimize.milp`).
@@ -128,6 +142,16 @@ def optimize_dfs_portfolio(
     lb = np.zeros(total_vars, dtype=np.float64)
     ub = np.ones(total_vars, dtype=np.float64)
 
+    # Hard Stage-0 / Sub-Floor Trap Guard inside MILP bounds: never select IR/OUT/D or sub-floor trap players
+    blocked_statuses = {"IR", "O", "OUT", "D", "DOUBTFUL", "SUSP", "PUP", "NFI", "OUT_FOR_SEASON"}
+    for i in range(n):
+        if "status" in df.columns:
+            st_i = str(df.loc[i, "status"] or "").strip().upper()
+            if st_i in blocked_statuses:
+                ub[i] = 0.0
+        if "is_sub_floor_trap" in df.columns and bool(df.loc[i, "is_sub_floor_trap"]):
+            ub[i] = 0.0
+
     base_rows: List[np.ndarray] = []
     base_lb: List[float] = []
     base_ub: List[float] = []
@@ -151,7 +175,8 @@ def optimize_dfs_portfolio(
     # 2. Roster size == 9
     add_constraint({i: 1.0 for i in range(n)}, 9.0, 9.0)
 
-    # 3. Positional constraints (DraftKings Classic: 1 QB, 2-3 RB, 3-4 WR, 1-2 TE, 1 DST)
+    # 3. Positional constraints (DraftKings Classic: 1 QB, 2-3 RB, 3-4 WR, 1..max_tes TE, 1 DST)
+    # By default max_tes=1 so FLEX must be an RB or WR (never a double-TE punt).
     qbs = [i for i in range(n) if df.loc[i, "position"] == "QB"]
     rbs = [i for i in range(n) if df.loc[i, "position"] == "RB"]
     wrs = [i for i in range(n) if df.loc[i, "position"] == "WR"]
@@ -162,7 +187,7 @@ def optimize_dfs_portfolio(
     add_constraint({i: 1.0 for i in dsts}, 1.0, 1.0)
     add_constraint({i: 1.0 for i in rbs}, 2.0, 3.0)
     add_constraint({i: 1.0 for i in wrs}, 3.0, 4.0)
-    add_constraint({i: 1.0 for i in tes}, 1.0, 2.0)
+    add_constraint({i: 1.0 for i in tes}, 1.0, float(max(1, min(2, int(max_tes)))))
 
     # 4. McCormick/Glover linearization for z_{ij} = x_i * x_j
     for p_idx, (i, j) in enumerate(pairs):
@@ -222,6 +247,12 @@ def optimize_dfs_portfolio(
 
     all_lineups: List[pd.DataFrame] = []
     past_lineup_indices: List[List[int]] = []
+    exposure_counts = np.zeros(n, dtype=np.int32)
+    max_exp_count = (
+        max(1, int(math.ceil(float(max_exposure) * max(1, int(num_lineups)))))
+        if max_exposure is not None
+        else int(num_lineups)
+    )
 
     for k in range(int(num_lineups)):
         rows = list(base_rows)
@@ -236,25 +267,194 @@ def optimize_dfs_portfolio(
             l_vec.append(-np.inf)
             u_vec.append(float(max_overlap))
 
-        A = csc_matrix(np.vstack(rows))
-        constraints = LinearConstraint(A, l_vec, u_vec)
-        res = milp(
-            c=c,
-            integrality=integrality,
-            bounds=Bounds(lb, ub),
-            constraints=constraints,
-            options={"mip_rel_gap": 0.005, "time_limit": 10.0},
-        )
-        if not res.success or res.x is None:
-            break
+        ub_k = ub.copy()
+        if max_exposure is not None:
+            for i in range(n):
+                if exposure_counts[i] >= max_exp_count:
+                    ub_k[i] = 0.0
 
-        selected = [i for i in range(n) if res.x[i] >= 0.5]
+        if milp is not None and csc_matrix is not None and LinearConstraint is not None and Bounds is not None:
+            A = csc_matrix(np.vstack(rows))
+            constraints = LinearConstraint(A, l_vec, u_vec)
+            res = milp(
+                c=c,
+                integrality=integrality,
+                bounds=Bounds(lb, ub_k),
+                constraints=constraints,
+                options={"mip_rel_gap": 0.005, "time_limit": 10.0},
+            )
+            if not res.success or res.x is None:
+                break
+            selected = [i for i in range(n) if res.x[i] >= 0.5]
+            obj_val = float(-res.fun)
+        else:
+            # Pure-Python/NumPy exact constrained stack + salary-cap solver when scipy is absent
+            projs = df["projection"].to_numpy(dtype=np.float64)
+            sals = df["salary"].to_numpy(dtype=np.float64)
+            pos_list = [str(df.loc[i, "position"]) for i in range(n)]
+            tm_list = [str(df.loc[i, "team"]) for i in range(n)]
+            opp_list = [str(df.loc[i, "opponent"]) for i in range(n)]
+
+            valid_qbs = sorted([i for i in qbs if ub_k[i] > 0.5], key=lambda i: -projs[i])
+            best_sel: Optional[List[int]] = None
+            best_obj = -1e18
+
+            for qb_i in valid_qbs:
+                qb_tm = tm_list[qb_i]
+                qb_opp = opp_list[qb_i]
+                stack_cands = sorted(
+                    [i for i in (wrs + tes) if ub_k[i] > 0.5 and tm_list[i] == qb_tm],
+                    key=lambda i: -projs[i],
+                )
+                if require_qb_stack and not stack_cands:
+                    continue
+                bb_cands = sorted(
+                    [i for i in (rbs + wrs + tes) if ub_k[i] > 0.5 and tm_list[i] == qb_opp],
+                    key=lambda i: -projs[i],
+                )
+                if require_bring_back and not bb_cands:
+                    continue
+
+                stack_choices = (
+                    [[stack_cands[0], stack_cands[1]]]
+                    if len(stack_cands) >= 2
+                    else ([[stack_cands[0]]] if stack_cands else [[]])
+                )
+                bb_choices = [bb_cands[0]] if (require_bring_back and bb_cands) else ([bb_cands[0]] if bb_cands else [None])
+
+                for st_pair in stack_choices:
+                    for bb_i in bb_choices:
+                        locked = [qb_i] + list(st_pair) + ([bb_i] if bb_i is not None else [])
+                        used = set(locked)
+                        r_sel = [i for i in locked if pos_list[i] == "RB"]
+                        w_sel = [i for i in locked if pos_list[i] == "WR"]
+                        t_sel = [i for i in locked if pos_list[i] == "TE"]
+                        if len(t_sel) > max_tes:
+                            continue
+
+                        rem_all = sorted(
+                            [i for i in range(n) if ub_k[i] > 0.5 and i not in used],
+                            key=lambda i: -(projs[i] - 0.6 * exposure_counts[i]),
+                        )
+                        if not t_sel:
+                            t_avail = [i for i in rem_all if pos_list[i] == "TE"]
+                            if not t_avail:
+                                continue
+                            t_sel.append(t_avail[0])
+                            used.add(t_avail[0])
+                        for i in rem_all:
+                            if len(r_sel) >= 2:
+                                break
+                            if i not in used and pos_list[i] == "RB":
+                                r_sel.append(i)
+                                used.add(i)
+                        if len(r_sel) < 2:
+                            continue
+                        for i in rem_all:
+                            if len(w_sel) >= 3:
+                                break
+                            if i not in used and pos_list[i] == "WR":
+                                w_sel.append(i)
+                                used.add(i)
+                        if len(w_sel) < 3:
+                            continue
+                        flx_avail = [i for i in rem_all if i not in used and pos_list[i] in ("RB", "WR")]
+                        if not flx_avail:
+                            continue
+                        flx_i = flx_avail[0]
+                        used.add(flx_i)
+                        dst_avail = [i for i in rem_all if i not in used and pos_list[i] == "DST" and tm_list[i] != qb_opp]
+                        if not dst_avail:
+                            continue
+                        dst_i = dst_avail[0]
+                        cand = [qb_i, r_sel[0], r_sel[1], w_sel[0], w_sel[1], w_sel[2], t_sel[0], flx_i, dst_i]
+
+                        # Down-swap non-stack slots if over salary_cap
+                        prot = set(locked)
+                        tot_s = sum(sals[i] for i in cand)
+                        for _ in range(16):
+                            if tot_s <= salary_cap:
+                                break
+                            overage = tot_s - salary_cap
+                            best_swap: Optional[Tuple[int, int, float]] = None
+                            for sp in (7, 5, 4, 3, 2, 1, 6, 8):
+                                cur_p = cand[sp]
+                                if cur_p in prot:
+                                    continue
+                                req_p = ("RB", "WR") if sp == 7 else (pos_list[cur_p],)
+                                for ci in range(n):
+                                    if (
+                                        ub_k[ci] > 0.5
+                                        and ci not in set(cand)
+                                        and pos_list[ci] in req_p
+                                        and sals[ci] < sals[cur_p]
+                                        and (sp != 8 or tm_list[ci] != qb_opp)
+                                    ):
+                                        saved = sals[cur_p] - sals[ci]
+                                        loss = max(0.0, projs[cur_p] - projs[ci])
+                                        score_sw = (min(saved, overage) / 1000.0) - 0.10 * loss
+                                        if best_swap is None or score_sw > best_swap[2]:
+                                            best_swap = (sp, ci, score_sw)
+                            if best_swap is None:
+                                break
+                            sp_b, new_ci, _ = best_swap
+                            tot_s = tot_s - sals[cand[sp_b]] + sals[new_ci]
+                            cand[sp_b] = new_ci
+
+                        # Up-swap if below min_salary
+                        for _ in range(8):
+                            if tot_s >= min_salary:
+                                break
+                            rem_cap = salary_cap - tot_s
+                            best_up: Optional[Tuple[int, int, float]] = None
+                            for sp in (7, 5, 4, 3, 2, 1, 6, 8):
+                                cur_p = cand[sp]
+                                if cur_p in prot:
+                                    continue
+                                req_p = ("RB", "WR") if sp == 7 else (pos_list[cur_p],)
+                                for ci in range(n):
+                                    if (
+                                        ub_k[ci] > 0.5
+                                        and ci not in set(cand)
+                                        and pos_list[ci] in req_p
+                                        and sals[cur_p] < sals[ci] <= sals[cur_p] + rem_cap
+                                        and (sp != 8 or tm_list[ci] != qb_opp)
+                                    ):
+                                        gain = projs[ci] - projs[cur_p] + (sals[ci] - sals[cur_p]) / 5000.0
+                                        if best_up is None or gain > best_up[2]:
+                                            best_up = (sp, ci, gain)
+                            if best_up is None:
+                                break
+                            sp_u, new_ci, _ = best_up
+                            tot_s = tot_s - sals[cand[sp_u]] + sals[new_ci]
+                            cand[sp_u] = new_ci
+
+                        if not (min_salary <= tot_s <= salary_cap):
+                            continue
+                        if any(len(set(cand) & set(prev)) > max_overlap for prev in past_lineup_indices):
+                            continue
+                        cand_obj = float(sum(projs[i] for i in cand))
+                        for p1, p2 in pairs:
+                            if p1 in cand and p2 in cand:
+                                cand_obj += float(omega[(p1, p2)])
+                        if cand_obj > best_obj:
+                            best_obj = cand_obj
+                            best_sel = sorted(cand)
+
+            if best_sel is None:
+                break
+            selected = best_sel
+            obj_val = best_obj
+
         if len(selected) != 9:
             break
 
+        for idx in selected:
+            exposure_counts[idx] += 1
+
         lineup_df = df.iloc[selected].copy()
         lineup_df["lineup_id"] = k + 1
-        lineup_df["risk_adjusted_objective"] = round(float(-res.fun), 4)
+        lineup_df["risk_adjusted_objective"] = round(float(obj_val), 4)
         all_lineups.append(lineup_df)
         past_lineup_indices.append(selected)
 

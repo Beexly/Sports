@@ -31,8 +31,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-WORKTREE_ROOT = Path(r"C:\c\wt-week8-forensic")
-MAIN_REPO_ROOT = Path(r"C:\Users\Garrett\Sports")
+WORKTREE_ROOT = (
+    Path(r"C:\c\wt-week8-forensic")
+    if os.name == "nt" and Path(r"C:\c\wt-week8-forensic").exists()
+    else Path(__file__).resolve().parents[2]
+)
+MAIN_REPO_ROOT = (
+    Path(r"C:\Users\Garrett\Sports")
+    if os.name == "nt" and Path(r"C:\Users\Garrett\Sports").exists()
+    else WORKTREE_ROOT
+)
 HOME_DIR = Path.home()
 
 if str(WORKTREE_ROOT) not in sys.path:
@@ -396,7 +404,8 @@ def main() -> None:
     clean_json = sanitize_text(json.dumps(audit_payload, indent=2, ensure_ascii=False))
     clean_md = render_143_skills_bible_markdown(audit_payload)
 
-    for root_dir in (WORKTREE_ROOT, MAIN_REPO_ROOT):
+    target_roots = (WORKTREE_ROOT, MAIN_REPO_ROOT) if WORKTREE_ROOT != MAIN_REPO_ROOT else (WORKTREE_ROOT,)
+    for root_dir in target_roots:
         j_path = root_dir / json_rel
         m_path = root_dir / md_rel
         j_path.parent.mkdir(parents=True, exist_ok=True)
@@ -404,15 +413,16 @@ def main() -> None:
         j_path.write_text(clean_json, encoding="utf-8")
         m_path.write_text(clean_md, encoding="utf-8")
 
-    # Sync Python files to MAIN_REPO_ROOT
-    for rel in [
-        Path("intelligence/ops/gse_143_skills_orchestrator_and_router.py"),
-        Path("scripts/ops/audit_and_wire_143_skills_and_agy_plugins.py"),
-    ]:
-        src = WORKTREE_ROOT / rel
-        dst = MAIN_REPO_ROOT / rel
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dst)
+    # Sync Python files to MAIN_REPO_ROOT when distinct
+    if WORKTREE_ROOT != MAIN_REPO_ROOT:
+        for rel in [
+            Path("intelligence/ops/gse_143_skills_orchestrator_and_router.py"),
+            Path("scripts/ops/audit_and_wire_143_skills_and_agy_plugins.py"),
+        ]:
+            src = WORKTREE_ROOT / rel
+            dst = MAIN_REPO_ROOT / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
 
     print(
         json.dumps(

@@ -242,66 +242,66 @@
     }
   },
   "out_of_sample_4fold_optimization_benchmark": {
-    "n_historical_slates": 640,
-    "logit_mse_market_only": 0.013048,
-    "logit_mse_unoptimized_equal_weights": 0.001222,
-    "logit_mse_optimized_james_stein_ridge": 7.2e-05,
-    "prob_brier_market_only": 0.000708,
-    "prob_brier_unoptimized_equal_weights": 6.5e-05,
-    "prob_brier_optimized_james_stein_ridge": 4e-06,
-    "binary_outcome_brier_market_only": 0.199503,
-    "binary_outcome_brier_unoptimized_equal": 0.188473,
-    "binary_outcome_brier_optimized": 0.187299,
-    "binary_outcome_brier_skill_score": 0.061172,
-    "dk_lineup_mae_market_only_pts": 3.832,
-    "dk_lineup_mae_unoptimized_equal_pts": 1.16,
-    "dk_lineup_mae_optimized_james_stein_pts": 0.282,
+    "n_historical_slates": 320,
+    "logit_mse_market_only": 0.014361,
+    "logit_mse_unoptimized_equal_weights": 0.001095,
+    "logit_mse_optimized_james_stein_ridge": 0.000107,
+    "prob_brier_market_only": 0.000797,
+    "prob_brier_unoptimized_equal_weights": 6.2e-05,
+    "prob_brier_optimized_james_stein_ridge": 6e-06,
+    "binary_outcome_brier_market_only": 0.2003,
+    "binary_outcome_brier_unoptimized_equal": 0.189079,
+    "binary_outcome_brier_optimized": 0.187899,
+    "binary_outcome_brier_skill_score": 0.061909,
+    "dk_lineup_mae_market_only_pts": 4.032,
+    "dk_lineup_mae_unoptimized_equal_pts": 1.097,
+    "dk_lineup_mae_optimized_james_stein_pts": 0.335,
     "optimized_beats_unoptimized_equal": true,
     "optimized_beats_market_baseline": true
   },
   "family_ablation_verification": {
     "A_COACHING_AND_TENDENCY_METRICS": {
-      "ablated_mse": 0.005321,
-      "full_optimized_mse": 7.2e-05,
-      "marginal_mse_improvement_from_family": 0.005249,
+      "ablated_mse": 0.003962,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.003855,
       "family_improves_accuracy": true
     },
     "B_NON_STATIONARY_GAME_PHYSICS_KERNELS": {
-      "ablated_mse": 0.003539,
-      "full_optimized_mse": 7.2e-05,
-      "marginal_mse_improvement_from_family": 0.003467,
+      "ablated_mse": 0.004511,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.004404,
       "family_improves_accuracy": true
     },
     "C_SIMULATION_AND_OPTIMAL_TRANSPORT_PHYSICS": {
-      "ablated_mse": 0.002233,
-      "full_optimized_mse": 7.2e-05,
-      "marginal_mse_improvement_from_family": 0.002161,
+      "ablated_mse": 0.0021,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.001993,
       "family_improves_accuracy": true
     },
     "D_CHARTING_AND_COMPOSITE_INDICES": {
-      "ablated_mse": 0.001285,
-      "full_optimized_mse": 7.2e-05,
-      "marginal_mse_improvement_from_family": 0.001212,
+      "ablated_mse": 0.001265,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.001158,
       "family_improves_accuracy": true
     },
     "E_FANTASY_AND_DFS_PROPRIETARY_RATINGS": {
-      "ablated_mse": 0.000625,
-      "full_optimized_mse": 7.2e-05,
-      "marginal_mse_improvement_from_family": 0.000553,
+      "ablated_mse": 0.000508,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 0.000401,
       "family_improves_accuracy": true
     },
     "F_BIOMECHANICAL_AND_COGNITIVE_ROUTER_FIREWALLS": {
-      "ablated_mse": 0.000138,
-      "full_optimized_mse": 7.2e-05,
-      "marginal_mse_improvement_from_family": 6.6e-05,
+      "ablated_mse": 0.000188,
+      "full_optimized_mse": 0.000107,
+      "marginal_mse_improvement_from_family": 8.1e-05,
       "family_improves_accuracy": true
     }
   },
   "vectorized_execution_benchmark": {
     "states_evaluated": 10000,
-    "scalar_loop_ms_per_10k": 29.592,
-    "vectorized_numpy_ms_per_10k": 0.109,
-    "vectorized_speedup_x": 272.49
+    "scalar_loop_ms_per_10k": 39.295,
+    "vectorized_numpy_ms_per_10k": 0.226,
+    "vectorized_speedup_x": 173.81
   },
   "metrics_catalog_and_optimized_weights": [
     {
@@ -312,8 +312,8 @@
       "source_code_path": "intelligence/coaching/pressure_answer.py",
       "backing_data_path": "intelligence/coaching/data/weekly_tendencies.csv",
       "wired_consumers": [
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
-        "scripts/ops/gse_coach_mind_simulator.py",
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
         "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
       ],
       "prior_weight": 0.05473,
@@ -323,11 +323,11 @@
         "L21"
       ],
       "track_id": "2_coaching_and_scheme",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_001",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.06598,
-      "weight_delta_vs_equal": 0.02052
+      "optimized_james_stein_ridge_weight": 0.06547,
+      "weight_delta_vs_equal": 0.02001
     },
     {
       "metric_id": "M-GSE-02",
@@ -337,8 +337,8 @@
       "source_code_path": "intelligence/coaching/script_elasticity.py",
       "backing_data_path": "intelligence/coaching/data/script_elasticity.csv",
       "wired_consumers": [
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
-        "scripts/ops/gse_coach_mind_simulator.py",
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
         "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
       ],
       "prior_weight": 0.0597,
@@ -348,11 +348,11 @@
         "L22"
       ],
       "track_id": "2_coaching_and_scheme",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_002",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.0696,
-      "weight_delta_vs_equal": 0.02415
+      "optimized_james_stein_ridge_weight": 0.06569,
+      "weight_delta_vs_equal": 0.02023
     },
     {
       "metric_id": "M-GSE-03",
@@ -362,8 +362,8 @@
       "source_code_path": "intelligence/coaching/proe.py",
       "backing_data_path": "intelligence/coaching/data/proe_early_neutral.csv",
       "wired_consumers": [
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
-        "scripts/ops/gse_coach_mind_simulator.py",
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
         "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
       ],
       "prior_weight": 0.05473,
@@ -372,11 +372,11 @@
         "L15"
       ],
       "track_id": "2_coaching_and_scheme",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_003",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.06441,
-      "weight_delta_vs_equal": 0.01895
+      "optimized_james_stein_ridge_weight": 0.0666,
+      "weight_delta_vs_equal": 0.02114
     },
     {
       "metric_id": "M-GSE-04",
@@ -386,8 +386,8 @@
       "source_code_path": "intelligence/coaching/dc_pressure.py",
       "backing_data_path": "intelligence/coaching/data/dc_pressure.csv",
       "wired_consumers": [
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
-        "scripts/ops/gse_coach_mind_simulator.py"
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
       ],
       "prior_weight": 0.04975,
       "layer_ids": [
@@ -399,8 +399,8 @@
       "weekly_step_id": "3_matchups_available_players",
       "equation_family_id": "FAM_004",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.05721,
-      "weight_delta_vs_equal": 0.01176
+      "optimized_james_stein_ridge_weight": 0.05027,
+      "weight_delta_vs_equal": 0.00482
     },
     {
       "metric_id": "M-GSE-05",
@@ -410,7 +410,7 @@
       "source_code_path": "intelligence/coaching/redzone.py",
       "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
       "wired_consumers": [
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
+        "intelligence/situational/situational_priors.py",
         "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
       ],
       "prior_weight": 0.04478,
@@ -420,11 +420,11 @@
         "L19"
       ],
       "track_id": "2_coaching_and_scheme",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_005",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.04276,
-      "weight_delta_vs_equal": -0.0027
+      "optimized_james_stein_ridge_weight": 0.04704,
+      "weight_delta_vs_equal": 0.00159
     },
     {
       "metric_id": "M-GSE-06",
@@ -447,8 +447,8 @@
       "weekly_step_id": "1_usage",
       "equation_family_id": "FAM_006",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.06372,
-      "weight_delta_vs_equal": 0.01826
+      "optimized_james_stein_ridge_weight": 0.07717,
+      "weight_delta_vs_equal": 0.03172
     },
     {
       "metric_id": "M-GSE-07",
@@ -459,7 +459,7 @@
       "backing_data_path": "intelligence/coaching/data/def_pressure_weekly.csv",
       "wired_consumers": [
         "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
-        "scripts/ops/gse_coach_mind_simulator.py"
+        "intelligence/simulation/pbp_10k_simulator.py"
       ],
       "prior_weight": 0.05473,
       "layer_ids": [
@@ -468,11 +468,11 @@
         "L23"
       ],
       "track_id": "1_qb_behavior",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_007",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.06114,
-      "weight_delta_vs_equal": 0.01569
+      "optimized_james_stein_ridge_weight": 0.06413,
+      "weight_delta_vs_equal": 0.01868
     },
     {
       "metric_id": "M-GSE-08",
@@ -483,7 +483,7 @@
       "backing_data_path": "docs/research/2026-11-07/full-tables/espinosa-wpp-pass-pro-tackles-2026.csv",
       "wired_consumers": [
         "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
-        "scripts/ops/gse_coach_mind_simulator.py"
+        "intelligence/simulation/pbp_10k_simulator.py"
       ],
       "prior_weight": 0.04975,
       "layer_ids": [
@@ -495,8 +495,8 @@
       "weekly_step_id": "2_health",
       "equation_family_id": "FAM_008",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.05923,
-      "weight_delta_vs_equal": 0.01378
+      "optimized_james_stein_ridge_weight": 0.0509,
+      "weight_delta_vs_equal": 0.00545
     },
     {
       "metric_id": "M-GSE-09",
@@ -507,7 +507,7 @@
       "backing_data_path": "intelligence/coaching/data/weekly_tendencies.csv",
       "wired_consumers": [
         "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
-        "scripts/ops/gse_coach_mind_simulator.py"
+        "intelligence/simulation/pbp_10k_simulator.py"
       ],
       "prior_weight": 0.04478,
       "layer_ids": [
@@ -516,11 +516,11 @@
         "L21"
       ],
       "track_id": "5_scheme_matchup",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_009",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.03909,
-      "weight_delta_vs_equal": -0.00637
+      "optimized_james_stein_ridge_weight": 0.04758,
+      "weight_delta_vs_equal": 0.00213
     },
     {
       "metric_id": "M-GSE-10",
@@ -531,7 +531,7 @@
       "backing_data_path": "intelligence/coaching/data/script_elasticity.csv",
       "wired_consumers": [
         "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
-        "intelligence/reasoning/reasoning_workflow_assembler.py"
+        "intelligence/calibration/class_b_conjunction_gate.py"
       ],
       "prior_weight": 0.0398,
       "layer_ids": [
@@ -543,8 +543,8 @@
       "weekly_step_id": "5_venues_weather_referees",
       "equation_family_id": "FAM_010",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.03728,
-      "weight_delta_vs_equal": -0.00817
+      "optimized_james_stein_ridge_weight": 0.0377,
+      "weight_delta_vs_equal": -0.00776
     },
     {
       "metric_id": "M-GSE-11",
@@ -555,7 +555,7 @@
       "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
       "wired_consumers": [
         "scripts/ops/gse_coach_mind_simulator.py",
-        "intelligence/reasoning/reasoning_workflow_assembler.py"
+        "intelligence/simulation/pbp_10k_simulator.py"
       ],
       "prior_weight": 0.04478,
       "layer_ids": [
@@ -563,11 +563,11 @@
         "L24"
       ],
       "track_id": "2_coaching_and_scheme",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_011",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.04071,
-      "weight_delta_vs_equal": -0.00474
+      "optimized_james_stein_ridge_weight": 0.04771,
+      "weight_delta_vs_equal": 0.00225
     },
     {
       "metric_id": "M-GSE-12",
@@ -578,8 +578,8 @@
       "backing_data_path": "data/nflverse/injuries_2026.csv",
       "wired_consumers": [
         "scripts/ops/week8_forensic_kernels.py",
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
-        "scripts/ops/gse_coach_mind_simulator.py"
+        "intelligence/situational/situational_priors.py",
+        "intelligence/simulation/pbp_10k_simulator.py"
       ],
       "prior_weight": 0.05473,
       "layer_ids": [
@@ -591,8 +591,8 @@
       "weekly_step_id": "2_health",
       "equation_family_id": "FAM_012",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.06803,
-      "weight_delta_vs_equal": 0.02258
+      "optimized_james_stein_ridge_weight": 0.05945,
+      "weight_delta_vs_equal": 0.01399
     },
     {
       "metric_id": "M-GSE-13",
@@ -603,7 +603,7 @@
       "backing_data_path": "intelligence/coaching/data/off_tendencies.csv",
       "wired_consumers": [
         "scripts/ops/gse_coach_mind_simulator.py",
-        "intelligence/reasoning/reasoning_workflow_assembler.py",
+        "intelligence/simulation/pbp_10k_simulator.py",
         "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
       ],
       "prior_weight": 0.05473,
@@ -616,8 +616,8 @@
       "weekly_step_id": "1_usage",
       "equation_family_id": "FAM_013",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.05939,
-      "weight_delta_vs_equal": 0.01393
+      "optimized_james_stein_ridge_weight": 0.05639,
+      "weight_delta_vs_equal": 0.01093
     },
     {
       "metric_id": "M-GSE-14",
@@ -638,8 +638,8 @@
       "weekly_step_id": "3_matchups_available_players",
       "equation_family_id": "FAM_014",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.03575,
-      "weight_delta_vs_equal": -0.00971
+      "optimized_james_stein_ridge_weight": 0.03081,
+      "weight_delta_vs_equal": -0.01464
     },
     {
       "metric_id": "M-GSE-15",
@@ -662,8 +662,8 @@
       "weekly_step_id": "3_matchups_available_players",
       "equation_family_id": "FAM_015",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.03189,
-      "weight_delta_vs_equal": -0.01356
+      "optimized_james_stein_ridge_weight": 0.041,
+      "weight_delta_vs_equal": -0.00445
     },
     {
       "metric_id": "M-GSE-16",
@@ -683,11 +683,11 @@
         "L17"
       ],
       "track_id": "5_scheme_matchup",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_016",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.04386,
-      "weight_delta_vs_equal": -0.0016
+      "optimized_james_stein_ridge_weight": 0.04702,
+      "weight_delta_vs_equal": 0.00157
     },
     {
       "metric_id": "M-GSE-17",
@@ -706,11 +706,11 @@
         "L19"
       ],
       "track_id": "2_coaching_and_scheme",
-      "weekly_step_id": "4_situations",
+      "weekly_step_id": "4_scheme_and_tendencies",
       "equation_family_id": "FAM_017",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.0288,
-      "weight_delta_vs_equal": -0.01666
+      "optimized_james_stein_ridge_weight": 0.02989,
+      "weight_delta_vs_equal": -0.01556
     },
     {
       "metric_id": "M-GSE-18",
@@ -733,8 +733,8 @@
       "weekly_step_id": "1_usage",
       "equation_family_id": "FAM_018",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.03335,
-      "weight_delta_vs_equal": -0.0121
+      "optimized_james_stein_ridge_weight": 0.02749,
+      "weight_delta_vs_equal": -0.01796
     },
     {
       "metric_id": "M-GSE-19",
@@ -756,8 +756,8 @@
       "weekly_step_id": "6_everything_else",
       "equation_family_id": "FAM_019",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.03401,
-      "weight_delta_vs_equal": -0.01145
+      "optimized_james_stein_ridge_weight": 0.02597,
+      "weight_delta_vs_equal": -0.01948
     },
     {
       "metric_id": "M-GSE-20",
@@ -780,8 +780,8 @@
       "weekly_step_id": "5_venues_weather_referees",
       "equation_family_id": "FAM_020",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.02754,
-      "weight_delta_vs_equal": -0.01791
+      "optimized_james_stein_ridge_weight": 0.02697,
+      "weight_delta_vs_equal": -0.01848
     },
     {
       "metric_id": "M-GSE-21",
@@ -792,7 +792,7 @@
       "backing_data_path": "data/nflverse/injuries_2026.csv",
       "wired_consumers": [
         "packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
-        "intelligence/reasoning/reasoning_workflow_assembler.py"
+        "intelligence/situational/situational_priors.py"
       ],
       "prior_weight": 0.02488,
       "layer_ids": [
@@ -804,8 +804,8 @@
       "weekly_step_id": "2_health",
       "equation_family_id": "FAM_021",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.01223,
-      "weight_delta_vs_equal": -0.03323
+      "optimized_james_stein_ridge_weight": 0.01762,
+      "weight_delta_vs_equal": -0.02784
     },
     {
       "metric_id": "M-GSE-22",
@@ -829,9 +829,9 @@
       "weekly_step_id": "7_books_last_price_check",
       "equation_family_id": "FAM_022",
       "equal_weight": 0.04545,
-      "optimized_james_stein_ridge_weight": 0.02403,
-      "weight_delta_vs_equal": -0.02143
+      "optimized_james_stein_ridge_weight": 0.01711,
+      "weight_delta_vs_equal": -0.02834
     }
   ],
-  "elapsed_ms": 31.29
+  "elapsed_ms": 38.01
 }

@@ -1,0 +1,26 @@
+# Continuous Corpus Ingestion, Quarantine & Autonomous Wiring Loop (`loop-me`)
+
+## Loop Definition
+A zero-checkpoint autonomous workflow that triggers whenever a new batch of GitHub repositories, PDFs, academic papers, theses, books, or technical URLs is dropped into the conversation or `docs/*/research/<YYYY-MM-DD>/`, quarantining restrictive-license assets under `INGEST-AND-LEARN` (`COMMERCIAL_USE_BLOCKED: true`, `LEARN_AND_REASON_ONLY: true`), compiling the extracted mathematical kernels into `intelligence/`, wiring them into the 26-layer reasoning spine and `200+` Pt DraftKings DFS engine, and running `pytest` + the 10-charge regression suite.
+
+## Trigger
+- **Event Trigger:** Any user message or inbox drop containing new URLs, GitHub repository links, arXiv IDs, or local PDF paths (`~/Downloads/*.pdf`, `G:\My Drive\**`, `docs/*/research/<YYYY-MM-DD>/`).
+
+## Push Right (100% Autonomous Execution)
+1. **License & Provenance Quarantine (`INGEST-AND-LEARN`):**
+   - Record every external repository, book, and paper in the dated bucket manifest (`docs/<bucket>/research/<YYYY-MM-DD>/*.json`) with `COMMERCIAL_USE_BLOCKED: true` and `LEARN_AND_REASON_ONLY: true` for commercial/copyleft sources.
+   - Never mark any untested item `DEAD` or `SKIP`; default to `UNTESTED — QUEUED FOR EVALUATION` until tested and cited.
+2. **Mathematical & Algorithmic Synthesis (`WIRE-FIRST` & `MIND-FIRST`):**
+   - Extract the underlying equations, statistical estimators, conformal prediction heads, Bayesian shrinkage priors, biomechanical RTP decay curves, or multi-agent harness patterns and implement clean, vectorized Python modules under `intelligence/`.
+   - Enforce the **Two-Host Rule**: zero hardcoded local user paths (`C:\Users\Garrett`) inside any `intelligence/**/*.py` file (`check_charge_9`).
+3. **Workflow & Engine Wiring:**
+   - Connect the new module into the post-simulation projection & `200+` Pt DraftKings DFS pipeline (`intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py` / `intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py`) and the 9-model worker fleet router (`scripts/ops/zero_waste_model_router.py`).
+4. **Automated Verification Gate:**
+   - Create and run unit tests (`tests/unit/test_*.py`), `python scripts/wiring/run_charge_regression_suite.py` (`10/10 PASS`), and `python scripts/wiring/verify_armed_workflows.py --check-armed` (`9/9 ARMED`).
+
+## Checkpoint
+- **Zero Human Checkpoint on Pass:** Interrupts the human **only** if a unit test, `check_charge_9` Two-Host portability check, or 10-charge regression assertion fails after automated remediation.
+
+## Brief
+- **Brief Artifact:** Dated JSON receipt and markdown summary under `docs/<bucket>/research/<YYYY-MM-DD>/`.
+- **Contents:** Total sources ingested, executable functions wired, `pytest` pass count, and `check_charge_9` portability status (`0` violations).

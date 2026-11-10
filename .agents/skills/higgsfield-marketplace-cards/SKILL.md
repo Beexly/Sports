@@ -1,5 +1,4 @@
 ---
-version: 0.12.0
 name: higgsfield-marketplace-cards
 description: |
   Generate marketplace product image cards through Higgsfield: compliant
@@ -12,8 +11,10 @@ description: |
   NOT for generic brand product photography without marketplace/listing context
   (use higgsfield-product-photoshoot), video generation or UGC ads (use
   higgsfield-generate), or Soul Character training (use higgsfield-soul-id).
-argument-hint: "[--scope main|product-images|aplus|full-set] [prompt]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[--scope main|product-images|aplus|full-set] [prompt]"
 ---
 
 # Marketplace Cards
@@ -86,3 +87,16 @@ Marketplace cards ready:
 ```
 
 Avoid JSON, job IDs, internal model names, or enhanced prompt text unless the user explicitly asks.
+
+## Use this skill when
+
+- Executing `higgsfield-marketplace-cards` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-marketplace-cards`.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-marketplace-cards` skill specification.
+

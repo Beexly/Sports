@@ -1,5 +1,4 @@
 ---
-version: 0.12.0
 name: higgsfield-generate
 description: |
   Generate images/videos/3D assets/audio via Higgsfield AI. Defaults:
@@ -20,8 +19,10 @@ description: |
   (use higgsfield-youtube-thumbnail), explainers (use
   higgsfield-video-explainer), playable games/assets (use
   higgsfield-game-generation), or TTS.
-argument-hint: "[prompt-or-analysis-request] [--model <name>] [--image|--video <path-or-id>]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[prompt-or-analysis-request] [--model <name>] [--image|--video <path-or-id>]"
 ---
 
 # Higgsfield Generate
@@ -323,3 +324,16 @@ Load on demand:
 - `references/marketing-brand-kits.md` — brand kits (fetch from URL, list, get)
 - `references/marketing-dtc-ads.md` — DTC Ads Engine (`dtc-ads generate`)
 - `references/marketing-modes.md` — every Marketing Studio mode
+
+## Use this skill when
+
+- Executing `higgsfield-generate` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-generate`.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-generate` skill specification.
+

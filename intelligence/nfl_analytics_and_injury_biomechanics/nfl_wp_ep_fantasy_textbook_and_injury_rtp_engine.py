@@ -41,7 +41,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
-import pandas as pd
+from intelligence.dfs._pandas_scipy_compat import get_pandas_or_shim
+pd = get_pandas_or_shim()
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_JSON_PATH = (

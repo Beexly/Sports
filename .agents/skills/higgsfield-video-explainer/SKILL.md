@@ -1,5 +1,4 @@
 ---
-version: 0.12.0
 name: higgsfield-video-explainer
 description: |
   Build a complete non-photoreal narrated explainer or story video from
@@ -12,8 +11,10 @@ description: |
   mascot/faceless modes, two aspects, and optional burned subtitles. NOT for:
   photoreal films, ads/UGC, talking heads, podcasts, motion typography reels,
   one-off clips without narration, or editing a finished video.
-argument-hint: "[topic or source files] [duration] [language] [aspect ratio]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[topic or source files] [duration] [language] [aspect ratio]"
 ---
 
 # Higgsfield Video Explainer
@@ -279,3 +280,16 @@ Do not use local ffmpeg, the legacy assembly scripts, or the monolithic `video_e
 ## Deliver
 
 Return the final assembled video URL, exact duration, aspect, narration language, selected style, narrator, subtitle status, and a Sources list for researched topics. Keep intermediate job IDs and loose asset URLs internal unless requested.
+
+## Use this skill when
+
+- Executing `higgsfield-video-explainer` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-video-explainer` skill specification.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-video-explainer`.
+

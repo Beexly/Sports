@@ -1,10 +1,11 @@
 ---
-version: 0.12.0
 name: higgsfield-youtube-thumbnail
 description: |
   Create high-click-through YouTube thumbnails and vertical video covers through the Higgsfield CLI. Builds a truthful information-gap concept, preserves up to three referenced identities, supports logos and controlled variants, renders the main image with Nano Banana Pro, and applies focused Seedream edits. Use when: "make a YouTube thumbnail", "thumbnail for this video", "MrBeast-style cover", "Shorts cover", or "Instagram video cover". Chain after any video workflow once its truthful topic and visual direction are known. NOT for producing the video itself (use higgsfield-generate), product catalog photos (use higgsfield-product-photoshoot), or marketplace cards (use higgsfield-marketplace-cards).
-argument-hint: "[video-topic-or-title] [--image <face-or-logo>] [--ratio 16:9|9:16|4:5]"
 allowed-tools: Bash
+metadata:
+  version: 0.12.0
+  argument-hint: "[video-topic-or-title] [--image <face-or-logo>] [--ratio 16:9|9:16|4:5]"
 ---
 
 # Higgsfield YouTube Thumbnail
@@ -178,3 +179,16 @@ Return the passing `result_url` values with short semantic labels such as `shock
 
 - `references/thumbnail-frameworks.md` — 16 concept frameworks, information-gap rule, truthfulness law.
 - `references/text-overlay-bake.md` — five deterministic text-overlay styles and 4K canvas-bake recipe.
+
+## Use this skill when
+
+- Executing `higgsfield-youtube-thumbnail` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
+
+## Instructions
+
+1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-youtube-thumbnail` skill specification.
+
+## Do not use this skill when
+
+- Performing unrelated tasks outside the scope of `higgsfield-youtube-thumbnail`.
+

@@ -8,10 +8,10 @@
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "309cdf0c40a4f479ab4f81ff827c1368ea8632069a3ad4b1c3963a2cc1a0dd75",
     "stage1a_receipt_sha256": "cd461b18f91e220fe0c9e39a91ddcbde7bec60628989ea024d3c8ae652fcaa9a",
-    "stage1b_receipt_sha256": "4cfbce79ef33e99f4cb4743288c7187abd7dd47b06a0f454588cd5db8fd31069",
-    "stage2_receipt_sha256": "15e051caab9e455a3d5759d75c92cc5b893064c65808fe438caa87a06466aaa3",
-    "stage3_4_receipt_sha256": "37b5fd5066cd86ff8b3623571a7b24d312ac3feb39f9f1bc25432dce9a96dcdb",
-    "stage5_receipt_sha256": "8f5eecac4d8226c86c110097493dbc7aecd4f881c02040eddacdb30fa348b483"
+    "stage1b_receipt_sha256": "7886c7f5ff630e91818b1386d85f3de4d466b365463baa050c9843811cdb8e75",
+    "stage2_receipt_sha256": "e44ed5362f63df143425897ee8ee814271299686d75586d0a6e7c1fd669855a0",
+    "stage3_4_receipt_sha256": "a51e1bc511639c4208176a5e485a743778af5fde07e8adc8aa4680e3c093e01c",
+    "stage5_receipt_sha256": "56bf71b6db2276b95d09ebdac08c03b16e2ba59d63af0cb61c26e4704a968037"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -5440,8 +5440,8 @@
       "stage_d_james_stein_shrinkage_factor": 0.916978,
       "stage_d_unclamped_log_odds_delta": 0.0,
       "stage_d_raw_log_odds_delta": 0.0,
-      "stage_d_clamped_log_odds_delta": -0.013772,
-      "stage_d_capped_log_odds_delta": -0.013772,
+      "stage_d_clamped_log_odds_delta": -0.022757,
+      "stage_d_capped_log_odds_delta": -0.022757,
       "marchenko_pastur_effective_rank_shrinkage": 0.96809,
       "stage_d_cap_limit": 0.35,
       "mcp_cognitive_router_ts_telemetry": {
@@ -5460,7 +5460,7 @@
         "stage_c_selected_count": 25,
         "stage_d_james_stein_shrinkage": 0.916978,
         "stage_d_unclamped_log_odds_delta": 0.0,
-        "stage_d_clamped_log_odds_delta": -0.013772,
+        "stage_d_clamped_log_odds_delta": -0.022757,
         "stage_d_clamped": true,
         "tau_hat_coach_prior_bonus": 0.0072,
         "marchenko_pastur_rank_shrinkage": 0.96809,
@@ -7295,21 +7295,21 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "4cfbce79ef33e99f4cb4743288c7187abd7dd47b06a0f454588cd5db8fd31069",
-    "equation_gate_12304_clamped_delta": -0.013772
+    "stage1b_receipt_sha256": "7886c7f5ff630e91818b1386d85f3de4d466b365463baa050c9843811cdb8e75",
+    "equation_gate_12304_clamped_delta": -0.022757
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "4cfbce79ef33e99f4cb4743288c7187abd7dd47b06a0f454588cd5db8fd31069",
+    "parent_stage1b_receipt_sha256": "7886c7f5ff630e91818b1386d85f3de4d466b365463baa050c9843811cdb8e75",
     "away": "CLE",
     "home": "NO",
     "week": 9,
     "stage1_parameter_coupling_verified": true,
     "combined_load_bearing_priors": {
-      "away_off_epa_adj": -0.2109,
-      "home_off_epa_adj": -0.2037,
-      "away_off_epa_delta_situational": -0.0166,
-      "home_off_epa_delta_situational": 0.0128,
+      "away_off_epa_adj": -0.2093,
+      "home_off_epa_adj": -0.2051,
+      "away_off_epa_delta_situational": -0.0147,
+      "home_off_epa_delta_situational": 0.0114,
       "away_comp_rate_adj": 0.6641,
       "home_comp_rate_adj": 0.4929,
       "away_pass_rate_adj": 0.5543,
@@ -7322,8 +7322,8 @@
       "cholesky_6family_whitened_z_shift": -0.0312,
       "mega_sweep_5track_7step_epa_delta": 0.0565,
       "gsi_step2_health_net_epa_delta": -0.04484,
-      "eq_gate_12k_epa_shift": 0.00089,
-      "equation_gate_12304_clamped_delta": 0.0356,
+      "eq_gate_12k_epa_shift": 0.001407,
+      "equation_gate_12304_clamped_delta": 0.056295,
       "roster_truth_player_adjustments": {
         "player_adjustments": {},
         "wr1_absorption": {
@@ -8838,7 +8838,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -8849,7 +8849,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -9799,7 +9799,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -9810,7 +9810,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -10594,10 +10594,10 @@
           "openai_tiktoken": {
             "repo": "openai/tiktoken",
             "encoding_name": "o200k_base",
-            "exact_bpe_library_used": true,
-            "estimated_tokens": 25,
+            "exact_bpe_library_used": false,
+            "estimated_tokens": 21,
             "max_token_budget": 128000,
-            "budget_utilization_ratio": 0.000195,
+            "budget_utilization_ratio": 0.000164,
             "compaction_required": false
           },
           "google_jules_fleet": {
@@ -10749,8 +10749,8 @@
           "away_team": "CLE",
           "workflow_ready": true,
           "catalog_counts": {
-            "union_agents_and_claude_skills": 149,
-            "agents_skills_count": 111,
+            "union_agents_and_claude_skills": 143,
+            "agents_skills_count": 105,
             "claude_skills_count": 91,
             "gemini_config_skills_count": 185,
             "agy_plugins_count": 7,
@@ -10842,6 +10842,244 @@
           },
           "doctrine_19_rules_substrate_verified": true
         },
+        "spatial_micro_pbp_conditioners": {
+          "schema": "gse_spatial_micro_pbp_conditioners_v1",
+          "away_team": "CLE",
+          "home_team": "NO",
+          "has_explicit_overrides": false,
+          "away_profile": {
+            "entity_id": "CLE_OFFENSE",
+            "entity_name": "CLE Offense Spatial Profile",
+            "team": "CLE",
+            "opponent": "NO",
+            "position": "TEAM",
+            "domain1_rb_front7": {
+              "hard_hit_rate": 0.1897,
+              "opportunity_share": 0.5664,
+              "target_share": 0.107,
+              "missed_tackles_forced": 25.59,
+              "designed_runs": 124.0,
+              "receptions": 28.0,
+              "yards_after_contact_per_att": 2.996,
+              "pff_elusive_rating": 50.426,
+              "ryoe_per_att": 0.147,
+              "ryoe_variance": 1.6031,
+              "ryoe_consistency_rate_gt_1yd": 0.3327,
+              "ryoe_boom_rate_gt_5yd": 0.0946,
+              "unfair_yards_rate": 0.2943,
+              "success_over_expected_rate": 0.0494,
+              "stack_box_efficiency_rate": 0.4659,
+              "tracking_vector_mesh_gap_yds": 3.359,
+              "defenders_in_box": 6.9,
+              "offensive_blockers_in_box": 6.12,
+              "avg_defender_dist_from_los_yds": 4.267,
+              "true_box_spacing_delta": 4.8157,
+              "ybc_per_att": 1.237,
+              "ol_scheme_segregation_penalty_yds": 0.0,
+              "shed_time_survival_sec": 1.745,
+              "shed_time_survival_rate": 0.699,
+              "def_penetration_depth_yds": -0.541,
+              "designated_first_read_rb_target_rate": 0.2559,
+              "checkdown_dump_off_rate": 0.7441,
+              "rb_yprr": 1.168,
+              "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+              "tovs": 18.1398
+            },
+            "domain2_wr_te_db": {
+              "route_participation_rate": 0.86,
+              "yprr": 2.254,
+              "first_read_target_share": 0.2817,
+              "contested_catch_rate": 0.4758,
+              "catchable_ball_rate": 0.7628,
+              "hard_hit_rate_on_rec": 0.1897,
+              "separation_at_separation_point_ssp_yds": 2.046,
+              "burn_rate_vs_man_gt_2yds": 0.3059,
+              "catch_point_leverage_delta_yds": 1.0227,
+              "true_csoe_target_prevention_rate": 0.0238
+            },
+            "domain3_qb_processing": {
+              "pre_to_post_snap_disguise_decay_ms": 224.56,
+              "disguise_processing_elite_le_220ms": false,
+              "simulated_creeping_pressure_success_rate": 0.4558,
+              "throw_to_leverage_variance_tlv_sq_yds": 0.9386
+            },
+            "domain4_trench_dl_ol": {
+              "true_pass_rush_win_rate_prwr_lt_25s": 0.1853,
+              "pocket_anchor_depth_pad_yds": 2.197,
+              "pad_holds_gt_22yds": false,
+              "stunt_loop_handoff_latency_ms": 177.52
+            },
+            "domain5_pocket_escape": {
+              "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.496,
+              "pcv_severe_gt_15": false,
+              "escape_vector_efficiency_eve": 0.6751
+            },
+            "domain6_scheme_structural": {
+              "mofo_structural_epa": 0.0889,
+              "mofc_structural_epa": 0.109,
+              "mofo_mofc_heatmap_counter_delta": 0.0979,
+              "zone_void_exploitation_rate_zver": 0.529
+            },
+            "expected_yardage_percentiles": {
+              "p10": 131.75,
+              "p25": 187.49,
+              "p50": 253.36,
+              "p75": 324.3,
+              "p90": 395.24,
+              "p95": 445.91,
+              "p99": 537.12
+            },
+            "pbp_snap_conditioners": {
+              "rush_yards_spatial_delta": -0.1793,
+              "rb_receiving_epa_delta": 0.0078,
+              "wr_te_completion_prob_delta": -0.0057,
+              "wr_te_explosive_mu_delta": -0.0607,
+              "qb_sack_prob_delta": 0.0058,
+              "qb_comp_prob_delta": -0.0104,
+              "qb_scramble_escape_delta": -0.0038,
+              "composite_epa_per_snap_delta": -0.01151
+            },
+            "dfs_and_prop_ceiling_boosts": {
+              "tovs": 18.1398,
+              "pff_elusive_rating": 50.426,
+              "ryoe_boom_rate_gt_5yd": 0.0946,
+              "burn_rate_vs_man_gt_2yds": 0.3059,
+              "first_read_target_share": 0.2817,
+              "zone_void_exploitation_rate_zver": 0.529,
+              "eve_to_pcv_ratio": 0.4513,
+              "q90_spatial_boost_dk_pts": 1.289,
+              "q95_spatial_boost_dk_pts": 1.859,
+              "q99_spatial_boost_dk_pts": 2.543,
+              "cvar_099_spatial_boost_dk_pts": 3.001
+            }
+          },
+          "home_profile": {
+            "entity_id": "NO_OFFENSE",
+            "entity_name": "NO Offense Spatial Profile",
+            "team": "NO",
+            "opponent": "CLE",
+            "position": "TEAM",
+            "domain1_rb_front7": {
+              "hard_hit_rate": 0.196,
+              "opportunity_share": 0.5908,
+              "target_share": 0.1146,
+              "missed_tackles_forced": 27.05,
+              "designed_runs": 124.0,
+              "receptions": 28.0,
+              "yards_after_contact_per_att": 3.071,
+              "pff_elusive_rating": 54.6689,
+              "ryoe_per_att": 0.253,
+              "ryoe_variance": 1.6819,
+              "ryoe_consistency_rate_gt_1yd": 0.3432,
+              "ryoe_boom_rate_gt_5yd": 0.1009,
+              "unfair_yards_rate": 0.3069,
+              "success_over_expected_rate": 0.0526,
+              "stack_box_efficiency_rate": 0.4701,
+              "tracking_vector_mesh_gap_yds": 3.384,
+              "defenders_in_box": 6.84,
+              "offensive_blockers_in_box": 6.17,
+              "avg_defender_dist_from_los_yds": 4.318,
+              "true_box_spacing_delta": 4.7887,
+              "ybc_per_att": 1.288,
+              "ol_scheme_segregation_penalty_yds": 0.0,
+              "shed_time_survival_sec": 1.778,
+              "shed_time_survival_rate": 0.7118,
+              "def_penetration_depth_yds": -0.516,
+              "designated_first_read_rb_target_rate": 0.2706,
+              "checkdown_dump_off_rate": 0.7294,
+              "rb_yprr": 1.261,
+              "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+              "tovs": 19.2234
+            },
+            "domain2_wr_te_db": {
+              "route_participation_rate": 0.86,
+              "yprr": 2.27,
+              "first_read_target_share": 0.2868,
+              "contested_catch_rate": 0.4905,
+              "catchable_ball_rate": 0.7732,
+              "hard_hit_rate_on_rec": 0.196,
+              "separation_at_separation_point_ssp_yds": 2.109,
+              "burn_rate_vs_man_gt_2yds": 0.3206,
+              "catch_point_leverage_delta_yds": 1.0971,
+              "true_csoe_target_prevention_rate": 0.0154
+            },
+            "domain3_qb_processing": {
+              "pre_to_post_snap_disguise_decay_ms": 220.56,
+              "disguise_processing_elite_le_220ms": false,
+              "simulated_creeping_pressure_success_rate": 0.4705,
+              "throw_to_leverage_variance_tlv_sq_yds": 0.903
+            },
+            "domain4_trench_dl_ol": {
+              "true_pass_rush_win_rate_prwr_lt_25s": 0.179,
+              "pocket_anchor_depth_pad_yds": 2.248,
+              "pad_holds_gt_22yds": true,
+              "stunt_loop_handoff_latency_ms": 174.16
+            },
+            "domain5_pocket_escape": {
+              "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.45,
+              "pcv_severe_gt_15": false,
+              "escape_vector_efficiency_eve": 0.7025
+            },
+            "domain6_scheme_structural": {
+              "mofo_structural_epa": 0.1079,
+              "mofc_structural_epa": 0.1279,
+              "mofo_mofc_heatmap_counter_delta": 0.1169,
+              "zone_void_exploitation_rate_zver": 0.5479
+            },
+            "expected_yardage_percentiles": {
+              "p10": 135.06,
+              "p25": 192.2,
+              "p50": 259.72,
+              "p75": 332.45,
+              "p90": 405.17,
+              "p95": 457.11,
+              "p99": 550.61
+            },
+            "pbp_snap_conditioners": {
+              "rush_yards_spatial_delta": -0.0506,
+              "rb_receiving_epa_delta": 0.0194,
+              "wr_te_completion_prob_delta": 0.0012,
+              "wr_te_explosive_mu_delta": 0.1788,
+              "qb_sack_prob_delta": 0.001,
+              "qb_comp_prob_delta": -0.0041,
+              "qb_scramble_escape_delta": -0.0015,
+              "composite_epa_per_snap_delta": 0.00392
+            },
+            "dfs_and_prop_ceiling_boosts": {
+              "tovs": 19.2234,
+              "pff_elusive_rating": 54.6689,
+              "ryoe_boom_rate_gt_5yd": 0.1009,
+              "burn_rate_vs_man_gt_2yds": 0.3206,
+              "first_read_target_share": 0.2868,
+              "zone_void_exploitation_rate_zver": 0.5479,
+              "eve_to_pcv_ratio": 0.4845,
+              "q90_spatial_boost_dk_pts": 1.423,
+              "q95_spatial_boost_dk_pts": 2.048,
+              "q99_spatial_boost_dk_pts": 2.799,
+              "cvar_099_spatial_boost_dk_pts": 3.303
+            }
+          },
+          "away_conditioners": {
+            "rush_yards_spatial_delta": -0.1793,
+            "rb_receiving_epa_delta": 0.0078,
+            "wr_te_completion_prob_delta": -0.0057,
+            "wr_te_explosive_mu_delta": -0.0607,
+            "qb_sack_prob_delta": 0.0058,
+            "qb_comp_prob_delta": -0.0104,
+            "qb_scramble_escape_delta": -0.0038,
+            "composite_epa_per_snap_delta": -0.01151
+          },
+          "home_conditioners": {
+            "rush_yards_spatial_delta": -0.0506,
+            "rb_receiving_epa_delta": 0.0194,
+            "wr_te_completion_prob_delta": 0.0012,
+            "wr_te_explosive_mu_delta": 0.1788,
+            "qb_sack_prob_delta": 0.001,
+            "qb_comp_prob_delta": -0.0041,
+            "qb_scramble_escape_delta": -0.0015,
+            "composite_epa_per_snap_delta": 0.00392
+          }
+        },
         "trajectory_conditioners": {
           "scripted_1_to_15_epa_boost": 0.014,
           "post_script_16_to_65_cliff_delta": -0.00875,
@@ -10883,7 +11121,11 @@
           "openai_math_sogge_wave_focusing_gain": 1.320455,
           "openai_math_amplitude_damping_retention": 0.96594,
           "openai_math_cnf_satisfaction_prob": 0.281096,
-          "wired_into_10k_world_175_snap_simulation": true
+          "wired_into_10k_world_175_snap_simulation": true,
+          "spatial_micro_away_rush_delta": -0.1793,
+          "spatial_micro_home_rush_delta": -0.0506,
+          "spatial_micro_away_epa_delta": -0.01151,
+          "spatial_micro_home_epa_delta": 0.00392
         },
         "simulation_trajectory_conditioners": {
           "scripted_1_to_15_epa_boost": 0.014,
@@ -10926,20 +11168,208 @@
           "openai_math_sogge_wave_focusing_gain": 1.320455,
           "openai_math_amplitude_damping_retention": 0.96594,
           "openai_math_cnf_satisfaction_prob": 0.281096,
-          "wired_into_10k_world_175_snap_simulation": true
+          "wired_into_10k_world_175_snap_simulation": true,
+          "spatial_micro_away_rush_delta": -0.1793,
+          "spatial_micro_home_rush_delta": -0.0506,
+          "spatial_micro_away_epa_delta": -0.01151,
+          "spatial_micro_home_epa_delta": 0.00392
         }
+      },
+      "live_18_authority_cognitive_upgrade": {
+        "matchup": "CLE@NO",
+        "latch_and_foresight_tactical_lookahead": {
+          "away_latch_cooperative_synergy": 0.4409,
+          "home_latch_cooperative_synergy": 0.2966,
+          "away_foresight_3step_net_epa_delta": 0.01822,
+          "home_foresight_3step_net_epa_delta": -0.01404,
+          "latch_secondary_receiver_door_lift": 1.0287,
+          "foresight_rb_te_outlet_pivot_boost": 1.0052
+        },
+        "scenario_bradley_terry_routing": {
+          "scenario_classified": "BACKUP_QB_OR_OL_CLUSTER_INJURY",
+          "bradley_terry_specialist_weights": {
+            "scheme": 0.2112,
+            "matchup": 0.2454,
+            "volume": 0.1818,
+            "market": 0.1281,
+            "research": 0.2334
+          },
+          "dominant_specialist": "matchup",
+          "dominant_vs_market_bt_win_prob": 0.657
+        },
+        "counterfactual_perturbation_stress_test": {
+          "counterfactual_worlds_tested": 8,
+          "directional_survival_rate": 1.0,
+          "counterfactual_mean_epa": 0.00708,
+          "counterfactual_std_epa": 0.00485,
+          "counterfactual_stability_multiplier": 1.0
+        },
+        "gemini_agent_trajectory_verification": {
+          "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/evaluation-overview",
+          "trajectory_exact_match": 1.0,
+          "trajectory_in_order_match": 1.0,
+          "trajectory_any_order_match": 1.0,
+          "trajectory_precision": 1.0,
+          "trajectory_recall": 1.0,
+          "single_turn_tool_use": 1.0
+        },
+        "symbolic_and_probabilistic_axioms": {
+          "prob_bounds_and_conservation_verified": true,
+          "p_away_fair": 0.500571,
+          "p_home_fair": 0.499429,
+          "pava_projected_quantiles": [
+            8.2,
+            11.4,
+            14.8,
+            18.9,
+            24.5
+          ],
+          "pava_monotone_non_negative_verified": true,
+          "romano_cqr_interval_width": 16.3,
+          "immunization_rules_enforced_count": 12,
+          "immunization_rule_ids": [
+            "IMM-01",
+            "IMM-02",
+            "IMM-03",
+            "IMM-04",
+            "IMM-05",
+            "IMM-06",
+            "IMM-07",
+            "IMM-08",
+            "IMM-09",
+            "IMM-10",
+            "IMM-11",
+            "IMM-12"
+          ]
+        },
+        "jev_skill_select": {
+          "status": "ok",
+          "needs_skill": 0.95,
+          "skills": [
+            {
+              "name": "gse-connected-game-workflow",
+              "path": "/home/antigravity/.agents/skills/gse-connected-game-workflow/SKILL.md",
+              "match": 0.96
+            }
+          ],
+          "latency_ms": 1,
+          "merged_with_routing": true,
+          "catalog_size": 2,
+          "batches_120": 1,
+          "billed_requests": 2
+        },
+        "understand_anything_subgraph": {
+          "matched_nodes_count": 4,
+          "one_hop_edges_count": 4,
+          "subgraph_summary": "compile_stage1_to_stage2_simulation_priors (scripts/ops/gse_connected_game_workflow.py): SG-2: Dynamically compile Stage 1A (38 coaching modules / scheme synthesis), | compute_live_18_authority_situational_and_tactical_upgrade (intelligence/reasoning/live_cognitive_self_improvement_engine.py): Called directly inside `compile_stage1_to_stage2_simulation_priors()` in | _normalize_matchup_tuple (intelligence/data_sources/firecrawl_alexandria_live_sync.py): Function `_normalize_matchup_tuple` in `intelligence/data_sources/firecrawl_alexandria_live_sync.py`. | _normalize_team_code (intelligence/data_sources/firecrawl_alexandria_live_sync.py): Function `_normalize_team_code` in `intelligence/data_sources/firecrawl_alexandria_live_sync.py`."
+        },
+        "compute_eval_best_of_4_pass_rate": 1.0,
+        "away_epa_18_authority_delta": 0.01197,
+        "home_epa_18_authority_delta": -0.00922
       }
     },
     "compiled_stage1_priors": {
       "stage1_parameter_coupling_verified": true,
-      "away_off_epa": -0.1943,
+      "live_18_authority_cognitive_upgrade": {
+        "matchup": "CLE@NO",
+        "latch_and_foresight_tactical_lookahead": {
+          "away_latch_cooperative_synergy": 0.4409,
+          "home_latch_cooperative_synergy": 0.2966,
+          "away_foresight_3step_net_epa_delta": 0.01822,
+          "home_foresight_3step_net_epa_delta": -0.01404,
+          "latch_secondary_receiver_door_lift": 1.0287,
+          "foresight_rb_te_outlet_pivot_boost": 1.0052
+        },
+        "scenario_bradley_terry_routing": {
+          "scenario_classified": "BACKUP_QB_OR_OL_CLUSTER_INJURY",
+          "bradley_terry_specialist_weights": {
+            "scheme": 0.2112,
+            "matchup": 0.2454,
+            "volume": 0.1818,
+            "market": 0.1281,
+            "research": 0.2334
+          },
+          "dominant_specialist": "matchup",
+          "dominant_vs_market_bt_win_prob": 0.657
+        },
+        "counterfactual_perturbation_stress_test": {
+          "counterfactual_worlds_tested": 8,
+          "directional_survival_rate": 1.0,
+          "counterfactual_mean_epa": 0.00708,
+          "counterfactual_std_epa": 0.00485,
+          "counterfactual_stability_multiplier": 1.0
+        },
+        "gemini_agent_trajectory_verification": {
+          "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/evaluation-overview",
+          "trajectory_exact_match": 1.0,
+          "trajectory_in_order_match": 1.0,
+          "trajectory_any_order_match": 1.0,
+          "trajectory_precision": 1.0,
+          "trajectory_recall": 1.0,
+          "single_turn_tool_use": 1.0
+        },
+        "symbolic_and_probabilistic_axioms": {
+          "prob_bounds_and_conservation_verified": true,
+          "p_away_fair": 0.500571,
+          "p_home_fair": 0.499429,
+          "pava_projected_quantiles": [
+            8.2,
+            11.4,
+            14.8,
+            18.9,
+            24.5
+          ],
+          "pava_monotone_non_negative_verified": true,
+          "romano_cqr_interval_width": 16.3,
+          "immunization_rules_enforced_count": 12,
+          "immunization_rule_ids": [
+            "IMM-01",
+            "IMM-02",
+            "IMM-03",
+            "IMM-04",
+            "IMM-05",
+            "IMM-06",
+            "IMM-07",
+            "IMM-08",
+            "IMM-09",
+            "IMM-10",
+            "IMM-11",
+            "IMM-12"
+          ]
+        },
+        "jev_skill_select": {
+          "status": "ok",
+          "needs_skill": 0.95,
+          "skills": [
+            {
+              "name": "gse-connected-game-workflow",
+              "path": "/home/antigravity/.agents/skills/gse-connected-game-workflow/SKILL.md",
+              "match": 0.96
+            }
+          ],
+          "latency_ms": 1,
+          "merged_with_routing": true,
+          "catalog_size": 2,
+          "batches_120": 1,
+          "billed_requests": 2
+        },
+        "understand_anything_subgraph": {
+          "matched_nodes_count": 4,
+          "one_hop_edges_count": 4,
+          "subgraph_summary": "compile_stage1_to_stage2_simulation_priors (scripts/ops/gse_connected_game_workflow.py): SG-2: Dynamically compile Stage 1A (38 coaching modules / scheme synthesis), | compute_live_18_authority_situational_and_tactical_upgrade (intelligence/reasoning/live_cognitive_self_improvement_engine.py): Called directly inside `compile_stage1_to_stage2_simulation_priors()` in | _normalize_matchup_tuple (intelligence/data_sources/firecrawl_alexandria_live_sync.py): Function `_normalize_matchup_tuple` in `intelligence/data_sources/firecrawl_alexandria_live_sync.py`. | _normalize_team_code (intelligence/data_sources/firecrawl_alexandria_live_sync.py): Function `_normalize_team_code` in `intelligence/data_sources/firecrawl_alexandria_live_sync.py`."
+        },
+        "compute_eval_best_of_4_pass_rate": 1.0,
+        "away_epa_18_authority_delta": 0.01197,
+        "home_epa_18_authority_delta": -0.00922
+      },
+      "away_off_epa": -0.1946,
       "home_off_epa": -0.2165,
-      "away_off_epa_adj": -0.2109,
-      "home_off_epa_adj": -0.2037,
-      "away_off_epa_delta_situational": -0.0166,
-      "home_off_epa_delta_situational": 0.0128,
-      "eq_gate_12k_epa_shift": 0.00089,
-      "equation_gate_12304_clamped_delta": 0.0356,
+      "away_off_epa_adj": -0.2093,
+      "home_off_epa_adj": -0.2051,
+      "away_off_epa_delta_situational": -0.0147,
+      "home_off_epa_delta_situational": 0.0114,
+      "eq_gate_12k_epa_shift": 0.001407,
+      "equation_gate_12304_clamped_delta": 0.056295,
       "away_def_epa": -0.0173,
       "home_def_epa": 0.0751,
       "away_proe": 0.0161,
@@ -10993,10 +11423,10 @@
         }
       },
       "combined_load_bearing_priors": {
-        "away_off_epa_adj": -0.2109,
-        "home_off_epa_adj": -0.2037,
-        "away_off_epa_delta_situational": -0.0166,
-        "home_off_epa_delta_situational": 0.0128,
+        "away_off_epa_adj": -0.2093,
+        "home_off_epa_adj": -0.2051,
+        "away_off_epa_delta_situational": -0.0147,
+        "home_off_epa_delta_situational": 0.0114,
         "away_comp_rate_adj": 0.6641,
         "home_comp_rate_adj": 0.4929,
         "away_pass_rate_adj": 0.5543,
@@ -11009,8 +11439,8 @@
         "cholesky_6family_whitened_z_shift": -0.0312,
         "mega_sweep_5track_7step_epa_delta": 0.0565,
         "gsi_step2_health_net_epa_delta": -0.04484,
-        "eq_gate_12k_epa_shift": 0.00089,
-        "equation_gate_12304_clamped_delta": 0.0356,
+        "eq_gate_12k_epa_shift": 0.001407,
+        "equation_gate_12304_clamped_delta": 0.056295,
         "roster_truth_player_adjustments": {
           "player_adjustments": {},
           "wr1_absorption": {
@@ -12525,7 +12955,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -12536,7 +12966,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -13486,7 +13916,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -13497,7 +13927,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -14281,10 +14711,10 @@
             "openai_tiktoken": {
               "repo": "openai/tiktoken",
               "encoding_name": "o200k_base",
-              "exact_bpe_library_used": true,
-              "estimated_tokens": 25,
+              "exact_bpe_library_used": false,
+              "estimated_tokens": 21,
               "max_token_budget": 128000,
-              "budget_utilization_ratio": 0.000195,
+              "budget_utilization_ratio": 0.000164,
               "compaction_required": false
             },
             "google_jules_fleet": {
@@ -14436,8 +14866,8 @@
             "away_team": "CLE",
             "workflow_ready": true,
             "catalog_counts": {
-              "union_agents_and_claude_skills": 149,
-              "agents_skills_count": 111,
+              "union_agents_and_claude_skills": 143,
+              "agents_skills_count": 105,
               "claude_skills_count": 91,
               "gemini_config_skills_count": 185,
               "agy_plugins_count": 7,
@@ -14529,6 +14959,244 @@
             },
             "doctrine_19_rules_substrate_verified": true
           },
+          "spatial_micro_pbp_conditioners": {
+            "schema": "gse_spatial_micro_pbp_conditioners_v1",
+            "away_team": "CLE",
+            "home_team": "NO",
+            "has_explicit_overrides": false,
+            "away_profile": {
+              "entity_id": "CLE_OFFENSE",
+              "entity_name": "CLE Offense Spatial Profile",
+              "team": "CLE",
+              "opponent": "NO",
+              "position": "TEAM",
+              "domain1_rb_front7": {
+                "hard_hit_rate": 0.1897,
+                "opportunity_share": 0.5664,
+                "target_share": 0.107,
+                "missed_tackles_forced": 25.59,
+                "designed_runs": 124.0,
+                "receptions": 28.0,
+                "yards_after_contact_per_att": 2.996,
+                "pff_elusive_rating": 50.426,
+                "ryoe_per_att": 0.147,
+                "ryoe_variance": 1.6031,
+                "ryoe_consistency_rate_gt_1yd": 0.3327,
+                "ryoe_boom_rate_gt_5yd": 0.0946,
+                "unfair_yards_rate": 0.2943,
+                "success_over_expected_rate": 0.0494,
+                "stack_box_efficiency_rate": 0.4659,
+                "tracking_vector_mesh_gap_yds": 3.359,
+                "defenders_in_box": 6.9,
+                "offensive_blockers_in_box": 6.12,
+                "avg_defender_dist_from_los_yds": 4.267,
+                "true_box_spacing_delta": 4.8157,
+                "ybc_per_att": 1.237,
+                "ol_scheme_segregation_penalty_yds": 0.0,
+                "shed_time_survival_sec": 1.745,
+                "shed_time_survival_rate": 0.699,
+                "def_penetration_depth_yds": -0.541,
+                "designated_first_read_rb_target_rate": 0.2559,
+                "checkdown_dump_off_rate": 0.7441,
+                "rb_yprr": 1.168,
+                "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+                "tovs": 18.1398
+              },
+              "domain2_wr_te_db": {
+                "route_participation_rate": 0.86,
+                "yprr": 2.254,
+                "first_read_target_share": 0.2817,
+                "contested_catch_rate": 0.4758,
+                "catchable_ball_rate": 0.7628,
+                "hard_hit_rate_on_rec": 0.1897,
+                "separation_at_separation_point_ssp_yds": 2.046,
+                "burn_rate_vs_man_gt_2yds": 0.3059,
+                "catch_point_leverage_delta_yds": 1.0227,
+                "true_csoe_target_prevention_rate": 0.0238
+              },
+              "domain3_qb_processing": {
+                "pre_to_post_snap_disguise_decay_ms": 224.56,
+                "disguise_processing_elite_le_220ms": false,
+                "simulated_creeping_pressure_success_rate": 0.4558,
+                "throw_to_leverage_variance_tlv_sq_yds": 0.9386
+              },
+              "domain4_trench_dl_ol": {
+                "true_pass_rush_win_rate_prwr_lt_25s": 0.1853,
+                "pocket_anchor_depth_pad_yds": 2.197,
+                "pad_holds_gt_22yds": false,
+                "stunt_loop_handoff_latency_ms": 177.52
+              },
+              "domain5_pocket_escape": {
+                "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.496,
+                "pcv_severe_gt_15": false,
+                "escape_vector_efficiency_eve": 0.6751
+              },
+              "domain6_scheme_structural": {
+                "mofo_structural_epa": 0.0889,
+                "mofc_structural_epa": 0.109,
+                "mofo_mofc_heatmap_counter_delta": 0.0979,
+                "zone_void_exploitation_rate_zver": 0.529
+              },
+              "expected_yardage_percentiles": {
+                "p10": 131.75,
+                "p25": 187.49,
+                "p50": 253.36,
+                "p75": 324.3,
+                "p90": 395.24,
+                "p95": 445.91,
+                "p99": 537.12
+              },
+              "pbp_snap_conditioners": {
+                "rush_yards_spatial_delta": -0.1793,
+                "rb_receiving_epa_delta": 0.0078,
+                "wr_te_completion_prob_delta": -0.0057,
+                "wr_te_explosive_mu_delta": -0.0607,
+                "qb_sack_prob_delta": 0.0058,
+                "qb_comp_prob_delta": -0.0104,
+                "qb_scramble_escape_delta": -0.0038,
+                "composite_epa_per_snap_delta": -0.01151
+              },
+              "dfs_and_prop_ceiling_boosts": {
+                "tovs": 18.1398,
+                "pff_elusive_rating": 50.426,
+                "ryoe_boom_rate_gt_5yd": 0.0946,
+                "burn_rate_vs_man_gt_2yds": 0.3059,
+                "first_read_target_share": 0.2817,
+                "zone_void_exploitation_rate_zver": 0.529,
+                "eve_to_pcv_ratio": 0.4513,
+                "q90_spatial_boost_dk_pts": 1.289,
+                "q95_spatial_boost_dk_pts": 1.859,
+                "q99_spatial_boost_dk_pts": 2.543,
+                "cvar_099_spatial_boost_dk_pts": 3.001
+              }
+            },
+            "home_profile": {
+              "entity_id": "NO_OFFENSE",
+              "entity_name": "NO Offense Spatial Profile",
+              "team": "NO",
+              "opponent": "CLE",
+              "position": "TEAM",
+              "domain1_rb_front7": {
+                "hard_hit_rate": 0.196,
+                "opportunity_share": 0.5908,
+                "target_share": 0.1146,
+                "missed_tackles_forced": 27.05,
+                "designed_runs": 124.0,
+                "receptions": 28.0,
+                "yards_after_contact_per_att": 3.071,
+                "pff_elusive_rating": 54.6689,
+                "ryoe_per_att": 0.253,
+                "ryoe_variance": 1.6819,
+                "ryoe_consistency_rate_gt_1yd": 0.3432,
+                "ryoe_boom_rate_gt_5yd": 0.1009,
+                "unfair_yards_rate": 0.3069,
+                "success_over_expected_rate": 0.0526,
+                "stack_box_efficiency_rate": 0.4701,
+                "tracking_vector_mesh_gap_yds": 3.384,
+                "defenders_in_box": 6.84,
+                "offensive_blockers_in_box": 6.17,
+                "avg_defender_dist_from_los_yds": 4.318,
+                "true_box_spacing_delta": 4.7887,
+                "ybc_per_att": 1.288,
+                "ol_scheme_segregation_penalty_yds": 0.0,
+                "shed_time_survival_sec": 1.778,
+                "shed_time_survival_rate": 0.7118,
+                "def_penetration_depth_yds": -0.516,
+                "designated_first_read_rb_target_rate": 0.2706,
+                "checkdown_dump_off_rate": 0.7294,
+                "rb_yprr": 1.261,
+                "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+                "tovs": 19.2234
+              },
+              "domain2_wr_te_db": {
+                "route_participation_rate": 0.86,
+                "yprr": 2.27,
+                "first_read_target_share": 0.2868,
+                "contested_catch_rate": 0.4905,
+                "catchable_ball_rate": 0.7732,
+                "hard_hit_rate_on_rec": 0.196,
+                "separation_at_separation_point_ssp_yds": 2.109,
+                "burn_rate_vs_man_gt_2yds": 0.3206,
+                "catch_point_leverage_delta_yds": 1.0971,
+                "true_csoe_target_prevention_rate": 0.0154
+              },
+              "domain3_qb_processing": {
+                "pre_to_post_snap_disguise_decay_ms": 220.56,
+                "disguise_processing_elite_le_220ms": false,
+                "simulated_creeping_pressure_success_rate": 0.4705,
+                "throw_to_leverage_variance_tlv_sq_yds": 0.903
+              },
+              "domain4_trench_dl_ol": {
+                "true_pass_rush_win_rate_prwr_lt_25s": 0.179,
+                "pocket_anchor_depth_pad_yds": 2.248,
+                "pad_holds_gt_22yds": true,
+                "stunt_loop_handoff_latency_ms": 174.16
+              },
+              "domain5_pocket_escape": {
+                "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.45,
+                "pcv_severe_gt_15": false,
+                "escape_vector_efficiency_eve": 0.7025
+              },
+              "domain6_scheme_structural": {
+                "mofo_structural_epa": 0.1079,
+                "mofc_structural_epa": 0.1279,
+                "mofo_mofc_heatmap_counter_delta": 0.1169,
+                "zone_void_exploitation_rate_zver": 0.5479
+              },
+              "expected_yardage_percentiles": {
+                "p10": 135.06,
+                "p25": 192.2,
+                "p50": 259.72,
+                "p75": 332.45,
+                "p90": 405.17,
+                "p95": 457.11,
+                "p99": 550.61
+              },
+              "pbp_snap_conditioners": {
+                "rush_yards_spatial_delta": -0.0506,
+                "rb_receiving_epa_delta": 0.0194,
+                "wr_te_completion_prob_delta": 0.0012,
+                "wr_te_explosive_mu_delta": 0.1788,
+                "qb_sack_prob_delta": 0.001,
+                "qb_comp_prob_delta": -0.0041,
+                "qb_scramble_escape_delta": -0.0015,
+                "composite_epa_per_snap_delta": 0.00392
+              },
+              "dfs_and_prop_ceiling_boosts": {
+                "tovs": 19.2234,
+                "pff_elusive_rating": 54.6689,
+                "ryoe_boom_rate_gt_5yd": 0.1009,
+                "burn_rate_vs_man_gt_2yds": 0.3206,
+                "first_read_target_share": 0.2868,
+                "zone_void_exploitation_rate_zver": 0.5479,
+                "eve_to_pcv_ratio": 0.4845,
+                "q90_spatial_boost_dk_pts": 1.423,
+                "q95_spatial_boost_dk_pts": 2.048,
+                "q99_spatial_boost_dk_pts": 2.799,
+                "cvar_099_spatial_boost_dk_pts": 3.303
+              }
+            },
+            "away_conditioners": {
+              "rush_yards_spatial_delta": -0.1793,
+              "rb_receiving_epa_delta": 0.0078,
+              "wr_te_completion_prob_delta": -0.0057,
+              "wr_te_explosive_mu_delta": -0.0607,
+              "qb_sack_prob_delta": 0.0058,
+              "qb_comp_prob_delta": -0.0104,
+              "qb_scramble_escape_delta": -0.0038,
+              "composite_epa_per_snap_delta": -0.01151
+            },
+            "home_conditioners": {
+              "rush_yards_spatial_delta": -0.0506,
+              "rb_receiving_epa_delta": 0.0194,
+              "wr_te_completion_prob_delta": 0.0012,
+              "wr_te_explosive_mu_delta": 0.1788,
+              "qb_sack_prob_delta": 0.001,
+              "qb_comp_prob_delta": -0.0041,
+              "qb_scramble_escape_delta": -0.0015,
+              "composite_epa_per_snap_delta": 0.00392
+            }
+          },
           "trajectory_conditioners": {
             "scripted_1_to_15_epa_boost": 0.014,
             "post_script_16_to_65_cliff_delta": -0.00875,
@@ -14570,7 +15238,11 @@
             "openai_math_sogge_wave_focusing_gain": 1.320455,
             "openai_math_amplitude_damping_retention": 0.96594,
             "openai_math_cnf_satisfaction_prob": 0.281096,
-            "wired_into_10k_world_175_snap_simulation": true
+            "wired_into_10k_world_175_snap_simulation": true,
+            "spatial_micro_away_rush_delta": -0.1793,
+            "spatial_micro_home_rush_delta": -0.0506,
+            "spatial_micro_away_epa_delta": -0.01151,
+            "spatial_micro_home_epa_delta": 0.00392
           },
           "simulation_trajectory_conditioners": {
             "scripted_1_to_15_epa_boost": 0.014,
@@ -14613,8 +15285,104 @@
             "openai_math_sogge_wave_focusing_gain": 1.320455,
             "openai_math_amplitude_damping_retention": 0.96594,
             "openai_math_cnf_satisfaction_prob": 0.281096,
-            "wired_into_10k_world_175_snap_simulation": true
+            "wired_into_10k_world_175_snap_simulation": true,
+            "spatial_micro_away_rush_delta": -0.1793,
+            "spatial_micro_home_rush_delta": -0.0506,
+            "spatial_micro_away_epa_delta": -0.01151,
+            "spatial_micro_home_epa_delta": 0.00392
           }
+        },
+        "live_18_authority_cognitive_upgrade": {
+          "matchup": "CLE@NO",
+          "latch_and_foresight_tactical_lookahead": {
+            "away_latch_cooperative_synergy": 0.4409,
+            "home_latch_cooperative_synergy": 0.2966,
+            "away_foresight_3step_net_epa_delta": 0.01822,
+            "home_foresight_3step_net_epa_delta": -0.01404,
+            "latch_secondary_receiver_door_lift": 1.0287,
+            "foresight_rb_te_outlet_pivot_boost": 1.0052
+          },
+          "scenario_bradley_terry_routing": {
+            "scenario_classified": "BACKUP_QB_OR_OL_CLUSTER_INJURY",
+            "bradley_terry_specialist_weights": {
+              "scheme": 0.2112,
+              "matchup": 0.2454,
+              "volume": 0.1818,
+              "market": 0.1281,
+              "research": 0.2334
+            },
+            "dominant_specialist": "matchup",
+            "dominant_vs_market_bt_win_prob": 0.657
+          },
+          "counterfactual_perturbation_stress_test": {
+            "counterfactual_worlds_tested": 8,
+            "directional_survival_rate": 1.0,
+            "counterfactual_mean_epa": 0.00708,
+            "counterfactual_std_epa": 0.00485,
+            "counterfactual_stability_multiplier": 1.0
+          },
+          "gemini_agent_trajectory_verification": {
+            "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/evaluation-overview",
+            "trajectory_exact_match": 1.0,
+            "trajectory_in_order_match": 1.0,
+            "trajectory_any_order_match": 1.0,
+            "trajectory_precision": 1.0,
+            "trajectory_recall": 1.0,
+            "single_turn_tool_use": 1.0
+          },
+          "symbolic_and_probabilistic_axioms": {
+            "prob_bounds_and_conservation_verified": true,
+            "p_away_fair": 0.500571,
+            "p_home_fair": 0.499429,
+            "pava_projected_quantiles": [
+              8.2,
+              11.4,
+              14.8,
+              18.9,
+              24.5
+            ],
+            "pava_monotone_non_negative_verified": true,
+            "romano_cqr_interval_width": 16.3,
+            "immunization_rules_enforced_count": 12,
+            "immunization_rule_ids": [
+              "IMM-01",
+              "IMM-02",
+              "IMM-03",
+              "IMM-04",
+              "IMM-05",
+              "IMM-06",
+              "IMM-07",
+              "IMM-08",
+              "IMM-09",
+              "IMM-10",
+              "IMM-11",
+              "IMM-12"
+            ]
+          },
+          "jev_skill_select": {
+            "status": "ok",
+            "needs_skill": 0.95,
+            "skills": [
+              {
+                "name": "gse-connected-game-workflow",
+                "path": "/home/antigravity/.agents/skills/gse-connected-game-workflow/SKILL.md",
+                "match": 0.96
+              }
+            ],
+            "latency_ms": 1,
+            "merged_with_routing": true,
+            "catalog_size": 2,
+            "batches_120": 1,
+            "billed_requests": 2
+          },
+          "understand_anything_subgraph": {
+            "matched_nodes_count": 4,
+            "one_hop_edges_count": 4,
+            "subgraph_summary": "compile_stage1_to_stage2_simulation_priors (scripts/ops/gse_connected_game_workflow.py): SG-2: Dynamically compile Stage 1A (38 coaching modules / scheme synthesis), | compute_live_18_authority_situational_and_tactical_upgrade (intelligence/reasoning/live_cognitive_self_improvement_engine.py): Called directly inside `compile_stage1_to_stage2_simulation_priors()` in | _normalize_matchup_tuple (intelligence/data_sources/firecrawl_alexandria_live_sync.py): Function `_normalize_matchup_tuple` in `intelligence/data_sources/firecrawl_alexandria_live_sync.py`. | _normalize_team_code (intelligence/data_sources/firecrawl_alexandria_live_sync.py): Function `_normalize_team_code` in `intelligence/data_sources/firecrawl_alexandria_live_sync.py`."
+          },
+          "compute_eval_best_of_4_pass_rate": 1.0,
+          "away_epa_18_authority_delta": 0.01197,
+          "home_epa_18_authority_delta": -0.00922
         }
       },
       "completion_floor": 0.42,
@@ -14639,11 +15407,11 @@
       "away_qb_tier": "QB1",
       "home_qb_tier": "QB2_BACKUP",
       "away_qb_tier_adjustment": {
-        "base_off_epa": -0.0843,
+        "base_off_epa": -0.0846,
         "qb_tier": "QB1",
         "epa_dropoff": 0.11,
-        "adjusted_off_epa": -0.1943,
-        "effective_scaled_epa": -0.1516,
+        "adjusted_off_epa": -0.1946,
+        "effective_scaled_epa": -0.1518,
         "execution_multiplier": 0.78,
         "completion_floor": 0.44,
         "sack_multiplier": 1.25,
@@ -15075,11 +15843,11 @@
       },
       "full_repo_279_family_situational_matrix": {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-        "generated_at_utc": "2026-11-07T21:19:10.313210+00:00",
-        "total_ts_modules_cataloged": 1464,
-        "prediction_engine_ts_modules": 1455,
-        "mcp_equations_server_ts_modules": 9,
-        "total_python_intelligence_modules_cataloged": 611,
+        "generated_at_utc": "2026-11-09T04:20:42.228103+00:00",
+        "total_ts_modules_cataloged": 1466,
+        "prediction_engine_ts_modules": 1456,
+        "mcp_equations_server_ts_modules": 10,
+        "total_python_intelligence_modules_cataloged": 655,
         "x_situational_80_rules_count": 87,
         "consolidated_sweep_signals_count": 29,
         "all_in_one_research_signals_count": 17,
@@ -15089,8 +15857,15 @@
         "equation_families_count": 279,
         "total_equations_routed": 12304,
         "cholesky_families_orthogonalized": 6,
-        "clamped_log_odds_delta": 0.0356,
+        "clamped_log_odds_delta": 0.056295,
         "x_situational_80_rules": {
+          "evaluated_count": 80,
+          "firewall_rules_evaluated_count": 7,
+          "total_rules_evaluated": 87,
+          "situational_catalog_80_rules_count": 80,
+          "emission_firewall_7_rules_count": 7,
+          "situational_plus_misleading_85_rules_count": 85,
+          "total_reconciled_rules_count": 87,
           "x_situational_80_rules_count": 87,
           "misleading_stat_firewall_rules_count": 15,
           "theme_deltas": {
@@ -15104,9 +15879,10 @@
             "Availability: OL Attrition": -0.233,
             "Market Context": 0.14
           },
-          "records": [
+          "situational_catalog_80_rules": [
             {
               "recordId": "1.1",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Garbage-Time EPA Downweight (0.15x when WP < 5% or > 95%)",
@@ -15116,6 +15892,7 @@
             },
             {
               "recordId": "1.2",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "High-Leverage 3rd/4th Down Conversion Weighting",
@@ -15125,6 +15902,7 @@
             },
             {
               "recordId": "1.3",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Two-Minute Warning Middle-8 Double-Score Swing",
@@ -15134,6 +15912,7 @@
             },
             {
               "recordId": "1.4",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Score-Differential Neutral Zone (-7 to +7) Filtering",
@@ -15143,6 +15922,7 @@
             },
             {
               "recordId": "1.5",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Prevent-Defense 4Q Yardage Inflation Discount",
@@ -15152,6 +15932,7 @@
             },
             {
               "recordId": "1.6",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Early-Down (1st/2nd) Success Rate Structural Anchor",
@@ -15161,6 +15942,7 @@
             },
             {
               "recordId": "1.7",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Late-Down Variance & Unsustainable 3rd-and-Long Regression",
@@ -15170,6 +15952,7 @@
             },
             {
               "recordId": "1.8",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Field-Position Expected Points Starting Line Adjustment",
@@ -15179,6 +15962,7 @@
             },
             {
               "recordId": "1.9",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Turnover-Luck Fumble Recovery 50% Mean Reversion",
@@ -15188,6 +15972,7 @@
             },
             {
               "recordId": "1.10",
+              "tier": "situational_catalog_80",
               "theme": "Game State & Leverage",
               "evaluator": "leverage",
               "name": "Kneeldown Victory Formation Negative Rushing Yards Filter",
@@ -15197,6 +15982,7 @@
             },
             {
               "recordId": "2.1",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Pass Rate Over Expected (PROE) Neutral Script Baseline",
@@ -15206,6 +15992,7 @@
             },
             {
               "recordId": "2.2",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Trailing-Script Pass Volume Surge (+8+ Deficit Elasticity)",
@@ -15215,6 +16002,7 @@
             },
             {
               "recordId": "2.3",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Leading-Script Clock-Drain Run Clamp (+8+ Lead)",
@@ -15224,6 +16012,7 @@
             },
             {
               "recordId": "2.4",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Neutral Situation Pace (Seconds/Snap) Play Volume Multiplier",
@@ -15233,6 +16022,7 @@
             },
             {
               "recordId": "2.5",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "No-Huddle Up-Tempo Defensive Substitution Fatigue",
@@ -15242,6 +16032,7 @@
             },
             {
               "recordId": "2.6",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "First-15 Scripted Opener EPA vs Unscripted Decay",
@@ -15251,6 +16042,7 @@
             },
             {
               "recordId": "2.7",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Second-Half Halftime Coaching Adjustment Delta",
@@ -15260,6 +16052,7 @@
             },
             {
               "recordId": "2.8",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "RB Receiving Checkdown Boost in Negative Game Script",
@@ -15269,6 +16062,7 @@
             },
             {
               "recordId": "2.9",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "RB Goal-Line Carry Boost in Positive Game Script",
@@ -15278,6 +16072,7 @@
             },
             {
               "recordId": "2.10",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Emergency QB White-Flag 2H Run Clamp (Blowout Preservation)",
@@ -15287,6 +16082,7 @@
             },
             {
               "recordId": "2.11",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Drive-Sustaining Penalty First-Down Play-Count Extension",
@@ -15296,6 +16092,7 @@
             },
             {
               "recordId": "2.12",
+              "tier": "situational_catalog_80",
               "theme": "Game Script",
               "evaluator": "script",
               "name": "Time-of-Possession Defensive Snap Cumulative Fatigue (>70 snaps)",
@@ -15305,6 +16102,7 @@
             },
             {
               "recordId": "3.1",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Red-Zone (Inside-20) Pass vs Run TD Conversion Split",
@@ -15314,6 +16112,7 @@
             },
             {
               "recordId": "3.2",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Goal-to-Go (Inside-5) Heavy Package & QB Sneak Share",
@@ -15323,6 +16122,7 @@
             },
             {
               "recordId": "3.3",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Play-Action Dropback EPA Delta vs Straight Dropback",
@@ -15332,6 +16132,7 @@
             },
             {
               "recordId": "3.4",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Pre-Snap Motion & Motion-at-Snap YPRR Lift",
@@ -15341,6 +16142,7 @@
             },
             {
               "recordId": "3.5",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Under-Center vs Shotgun Run/Pass Tendency Tell",
@@ -15350,6 +16152,7 @@
             },
             {
               "recordId": "3.6",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Screen & RPO Rate vs Aggressive Pass-Rush Fronts",
@@ -15359,6 +16162,7 @@
             },
             {
               "recordId": "3.7",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Home vs Road Crowd-Noise Silent-Count False-Start Tax",
@@ -15368,6 +16172,7 @@
             },
             {
               "recordId": "3.8",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Natural Grass vs Artificial Turf Speed/Cut Efficiency",
@@ -15377,6 +16182,7 @@
             },
             {
               "recordId": "3.9",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Short-Week (TNF 4-Day Rest) Road Circadian & Recovery Penalty",
@@ -15386,6 +16192,7 @@
             },
             {
               "recordId": "3.10",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Post-Bye Week Extra Preparation Scripted Edge",
@@ -15395,6 +16202,7 @@
             },
             {
               "recordId": "3.11",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "Divisional Familiarity Second-Meeting Under/Suppression Trend",
@@ -15404,6 +16212,7 @@
             },
             {
               "recordId": "3.12",
+              "tier": "situational_catalog_80",
               "theme": "Situational Splits",
               "evaluator": "splits",
               "name": "High-Altitude (Mile High) Kicking Range & Conditioning Split",
@@ -15413,6 +16222,7 @@
             },
             {
               "recordId": "4.1",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "4th-Down Go-For-It WP Aggressiveness Over Expected",
@@ -15422,6 +16232,7 @@
             },
             {
               "recordId": "4.2",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "2nd-and-1 Sneak Opportunity Tax vs Deep-Shot EV",
@@ -15431,6 +16242,7 @@
             },
             {
               "recordId": "4.3",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "Two-Point Conversion Analytics Chart Adherence",
@@ -15440,6 +16252,7 @@
             },
             {
               "recordId": "4.4",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "End-of-Half Timeout Preservation vs Clock Bleed",
@@ -15449,6 +16262,7 @@
             },
             {
               "recordId": "4.5",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "Defensive Coordinator Blitz Rate on 3rd-and-Medium",
@@ -15458,6 +16272,7 @@
             },
             {
               "recordId": "4.6",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "Simulated Pressure / Creeper (4-Man Rush, Dropper) Disguise",
@@ -15467,6 +16282,7 @@
             },
             {
               "recordId": "4.7",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "Stunt / Twist Interior DL Games vs Backup OG/C",
@@ -15476,6 +16292,7 @@
             },
             {
               "recordId": "4.8",
+              "tier": "situational_catalog_80",
               "theme": "Coaching Decisions",
               "evaluator": "decision",
               "name": "Interim HC / New Play-Caller 3-Week Volatility Regime",
@@ -15485,6 +16302,7 @@
             },
             {
               "recordId": "5.1",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "11-Personnel vs 12/21 Heavy Personnel Box-Count Response",
@@ -15494,6 +16312,7 @@
             },
             {
               "recordId": "5.2",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "MOFC (Single-High Cover-1/3) vs MOFO (Two-High Cover-2/4/6) YPRR",
@@ -15503,6 +16322,7 @@
             },
             {
               "recordId": "5.3",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Slot WR vs Outside Perimeter WR Defensive Funnel",
@@ -15512,6 +16332,7 @@
             },
             {
               "recordId": "5.4",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Shadow CB1 Lock vs Moving Alpha WR Alignment Escape",
@@ -15521,6 +16342,7 @@
             },
             {
               "recordId": "5.5",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "TE Seam/Cross Funnel vs Linebacker Coverage Liability",
@@ -15530,6 +16352,7 @@
             },
             {
               "recordId": "5.6",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Inside/Outside Zone vs Man/Gap/Duo Defensive YPC Split",
@@ -15539,6 +16362,7 @@
             },
             {
               "recordId": "5.7",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Light Box (<=6 Defenders) Rushing Explosive Rate",
@@ -15548,6 +16372,7 @@
             },
             {
               "recordId": "5.8",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Heavy Box (>=8 Defenders) Play-Action Deep Over Exploit",
@@ -15557,6 +16382,7 @@
             },
             {
               "recordId": "5.9",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Pass-Rush Win Rate (PRWR) Weak-Link OL Matchup",
@@ -15566,6 +16392,7 @@
             },
             {
               "recordId": "5.10",
+              "tier": "situational_catalog_80",
               "theme": "Personnel & Matchup",
               "evaluator": "personnel",
               "name": "Defensive Missed-Tackle Rate Hidden YAC Multiplier",
@@ -15575,6 +16402,7 @@
             },
             {
               "recordId": "6.1",
+              "tier": "situational_catalog_80",
               "theme": "Availability: QB Change",
               "evaluator": "backup",
               "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
@@ -15584,6 +16412,7 @@
             },
             {
               "recordId": "6.2",
+              "tier": "situational_catalog_80",
               "theme": "Availability: QB Change",
               "evaluator": "backup",
               "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
@@ -15593,6 +16422,7 @@
             },
             {
               "recordId": "6.3",
+              "tier": "situational_catalog_80",
               "theme": "Environment: Weather",
               "evaluator": "weather",
               "name": "Sustained Wind >=15 mph Deep-Pass & FG Make Penalty",
@@ -15602,6 +16432,7 @@
             },
             {
               "recordId": "6.4",
+              "tier": "situational_catalog_80",
               "theme": "Environment: Weather",
               "evaluator": "weather",
               "name": "Precipitation Wet-Ball Fumble & Drop Hazard",
@@ -15611,6 +16442,7 @@
             },
             {
               "recordId": "6.5",
+              "tier": "situational_catalog_80",
               "theme": "Environment: Weather",
               "evaluator": "weather",
               "name": "Sub-Freezing (<32F) Air Density Ball-Flight Drag",
@@ -15620,6 +16452,7 @@
             },
             {
               "recordId": "6.6",
+              "tier": "situational_catalog_80",
               "theme": "Availability: OL Attrition",
               "evaluator": "attrition",
               "name": "Left Tackle Absence Blindside Pressure Surge",
@@ -15629,6 +16462,7 @@
             },
             {
               "recordId": "6.7",
+              "tier": "situational_catalog_80",
               "theme": "Availability: OL Attrition",
               "evaluator": "attrition",
               "name": "Center Absence Protection-Call & Snap-Timing Disruption",
@@ -15638,6 +16472,7 @@
             },
             {
               "recordId": "6.8",
+              "tier": "situational_catalog_80",
               "theme": "Availability: OL Attrition",
               "evaluator": "attrition",
               "name": "Cluster OL Attrition (>=2 Starters Out) Non-Linear Collapse",
@@ -15647,6 +16482,7 @@
             },
             {
               "recordId": "6.9",
+              "tier": "situational_catalog_80",
               "theme": "Availability: OL Attrition",
               "evaluator": "attrition",
               "name": "WR1 Absence Target Dispersion (Measured 1.135x WR2, Not 1.25x)",
@@ -15656,6 +16492,7 @@
             },
             {
               "recordId": "6.10",
+              "tier": "situational_catalog_80",
               "theme": "Availability: OL Attrition",
               "evaluator": "attrition",
               "name": "Questionable WR1 DNP-DNP-LP Decoy / Pitch-Count Trap",
@@ -15665,6 +16502,7 @@
             },
             {
               "recordId": "7.1",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Weather-Driven Total Steam Overreaction Fade Check",
@@ -15674,6 +16512,7 @@
             },
             {
               "recordId": "7.2",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Backup QB Announcement Line-Move Completeness Audit",
@@ -15683,6 +16522,7 @@
             },
             {
               "recordId": "7.3",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Key-Number Crossing (3, 7, 10, 14) Push/Cover Probability Mass",
@@ -15692,6 +16532,7 @@
             },
             {
               "recordId": "7.4",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Pinnacle/Circa Sharp Limit Steam vs Recreational Lag",
@@ -15701,6 +16542,7 @@
             },
             {
               "recordId": "7.5",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Reverse Line Movement (Ticket % vs Money %) Syndicate Signal",
@@ -15710,6 +16552,7 @@
             },
             {
               "recordId": "7.6",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Derivative 1Q/1H Ratio Mispricing vs Scripted Opener",
@@ -15719,6 +16562,7 @@
             },
             {
               "recordId": "7.7",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "SGP Correlated Parlay Structural Hold (18-30%) Extraction",
@@ -15728,6 +16572,7 @@
             },
             {
               "recordId": "7.8",
+              "tier": "situational_catalog_80",
               "theme": "Market Context",
               "evaluator": "market",
               "name": "Late Inactive Report (T-90m) Prop Reshading Window",
@@ -15736,25 +16581,8 @@
               "gateStatus": "accepted"
             },
             {
-              "recordId": "7.9",
-              "theme": "Market Context",
-              "evaluator": "market",
-              "name": "Unpriced Prop Board Circuit Breaker (Zero Two-Sided Juice = PASS)",
-              "value": 0.014,
-              "sign": 1,
-              "gateStatus": "accepted"
-            },
-            {
-              "recordId": "7.10",
-              "theme": "Market Context",
-              "evaluator": "market",
-              "name": "Immutable Pregame Direction Lock (Rule H3 Anti-Flip)",
-              "value": 0.014,
-              "sign": 1,
-              "gateStatus": "accepted"
-            },
-            {
               "recordId": "8.1",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Raw Yards Per Play Without Garbage-Time & Down Filter",
@@ -15764,6 +16592,7 @@
             },
             {
               "recordId": "8.2",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Raw Completion % Without ADOT & CPOE Conditioning",
@@ -15773,6 +16602,7 @@
             },
             {
               "recordId": "8.3",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Raw Defensive Yards Allowed Without Drive Count & Pace",
@@ -15782,6 +16612,7 @@
             },
             {
               "recordId": "8.4",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Raw Targets/Carries Per Game Without Active Player-GP & Script",
@@ -15791,6 +16622,7 @@
             },
             {
               "recordId": "8.5",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "QB Wins Treated as Individual QB Skill Stat",
@@ -15800,6 +16632,7 @@
             },
             {
               "recordId": "8.6",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Raw Sacks Without Pressure Rate & Time-to-Throw",
@@ -15809,6 +16642,7 @@
             },
             {
               "recordId": "8.7",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Single-Game Turnover Margin Extrapolated as Skill",
@@ -15818,6 +16652,7 @@
             },
             {
               "recordId": "8.8",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Unadjusted Strength of Schedule Without Opponent EPA",
@@ -15827,6 +16662,7 @@
             },
             {
               "recordId": "8.9",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Raw RB YPC Without Box Count & RYOE Conditioning",
@@ -15836,15 +16672,39 @@
             },
             {
               "recordId": "8.10",
+              "tier": "situational_catalog_80",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Preseason or Week-18 Resting-Starter Stats Used Unadjusted",
               "value": 1.0,
               "sign": 1,
               "gateStatus": "accepted_conditioned"
+            }
+          ],
+          "emission_firewall_7_rules": [
+            {
+              "recordId": "7.9",
+              "tier": "emission_firewall_7",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Unpriced Prop Board Circuit Breaker (Zero Two-Sided Juice = PASS)",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.10",
+              "tier": "emission_firewall_7",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Immutable Pregame Direction Lock (Rule H3 Anti-Flip)",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
             },
             {
               "recordId": "8.11",
+              "tier": "emission_firewall_7",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Play-Clock-at-Snap Pooled Without Down Stratification",
@@ -15854,6 +16714,7 @@
             },
             {
               "recordId": "8.12",
+              "tier": "emission_firewall_7",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Disguise Collapse Hazard Without Spatial Width Normalization",
@@ -15863,6 +16724,7 @@
             },
             {
               "recordId": "8.13",
+              "tier": "emission_firewall_7",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Cumulative Season Rushing Yards Confounded by Carry Volume",
@@ -15872,6 +16734,7 @@
             },
             {
               "recordId": "8.14",
+              "tier": "emission_firewall_7",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Stunt Pressure Rate Without OL Slide/Chip Protection Context",
@@ -15881,6 +16744,879 @@
             },
             {
               "recordId": "8.15",
+              "tier": "emission_firewall_7",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Right-Censored Career Cohorts Without Base-Rate Denominator",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            }
+          ],
+          "records": [
+            {
+              "recordId": "1.1",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Garbage-Time EPA Downweight (0.15x when WP < 5% or > 95%)",
+              "value": -0.018,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.2",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "High-Leverage 3rd/4th Down Conversion Weighting",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.3",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Two-Minute Warning Middle-8 Double-Score Swing",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.4",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Score-Differential Neutral Zone (-7 to +7) Filtering",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.5",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Prevent-Defense 4Q Yardage Inflation Discount",
+              "value": -0.018,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.6",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Early-Down (1st/2nd) Success Rate Structural Anchor",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.7",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Late-Down Variance & Unsustainable 3rd-and-Long Regression",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.8",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Field-Position Expected Points Starting Line Adjustment",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.9",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Turnover-Luck Fumble Recovery 50% Mean Reversion",
+              "value": 0.012,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "1.10",
+              "tier": "situational_catalog_80",
+              "theme": "Game State & Leverage",
+              "evaluator": "leverage",
+              "name": "Kneeldown Victory Formation Negative Rushing Yards Filter",
+              "value": -0.018,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.1",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Pass Rate Over Expected (PROE) Neutral Script Baseline",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.2",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Trailing-Script Pass Volume Surge (+8+ Deficit Elasticity)",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.3",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Leading-Script Clock-Drain Run Clamp (+8+ Lead)",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.4",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Neutral Situation Pace (Seconds/Snap) Play Volume Multiplier",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.5",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "No-Huddle Up-Tempo Defensive Substitution Fatigue",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.6",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "First-15 Scripted Opener EPA vs Unscripted Decay",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.7",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Second-Half Halftime Coaching Adjustment Delta",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.8",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "RB Receiving Checkdown Boost in Negative Game Script",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.9",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "RB Goal-Line Carry Boost in Positive Game Script",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.10",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Emergency QB White-Flag 2H Run Clamp (Blowout Preservation)",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.11",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Drive-Sustaining Penalty First-Down Play-Count Extension",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "2.12",
+              "tier": "situational_catalog_80",
+              "theme": "Game Script",
+              "evaluator": "script",
+              "name": "Time-of-Possession Defensive Snap Cumulative Fatigue (>70 snaps)",
+              "value": 0.01,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.1",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Red-Zone (Inside-20) Pass vs Run TD Conversion Split",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.2",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Goal-to-Go (Inside-5) Heavy Package & QB Sneak Share",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.3",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Play-Action Dropback EPA Delta vs Straight Dropback",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.4",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Pre-Snap Motion & Motion-at-Snap YPRR Lift",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.5",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Under-Center vs Shotgun Run/Pass Tendency Tell",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.6",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Screen & RPO Rate vs Aggressive Pass-Rush Fronts",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.7",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Home vs Road Crowd-Noise Silent-Count False-Start Tax",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.8",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Natural Grass vs Artificial Turf Speed/Cut Efficiency",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.9",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Short-Week (TNF 4-Day Rest) Road Circadian & Recovery Penalty",
+              "value": -0.022,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.10",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Post-Bye Week Extra Preparation Scripted Edge",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.11",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "Divisional Familiarity Second-Meeting Under/Suppression Trend",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "3.12",
+              "tier": "situational_catalog_80",
+              "theme": "Situational Splits",
+              "evaluator": "splits",
+              "name": "High-Altitude (Mile High) Kicking Range & Conditioning Split",
+              "value": 0.008,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.1",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "4th-Down Go-For-It WP Aggressiveness Over Expected",
+              "value": 0.006,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.2",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "2nd-and-1 Sneak Opportunity Tax vs Deep-Shot EV",
+              "value": 0.006,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.3",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "Two-Point Conversion Analytics Chart Adherence",
+              "value": 0.006,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.4",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "End-of-Half Timeout Preservation vs Clock Bleed",
+              "value": 0.006,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.5",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "Defensive Coordinator Blitz Rate on 3rd-and-Medium",
+              "value": 0.028,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.6",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "Simulated Pressure / Creeper (4-Man Rush, Dropper) Disguise",
+              "value": 0.028,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.7",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "Stunt / Twist Interior DL Games vs Backup OG/C",
+              "value": 0.028,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "4.8",
+              "tier": "situational_catalog_80",
+              "theme": "Coaching Decisions",
+              "evaluator": "decision",
+              "name": "Interim HC / New Play-Caller 3-Week Volatility Regime",
+              "value": 0.006,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.1",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "11-Personnel vs 12/21 Heavy Personnel Box-Count Response",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.2",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "MOFC (Single-High Cover-1/3) vs MOFO (Two-High Cover-2/4/6) YPRR",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.3",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Slot WR vs Outside Perimeter WR Defensive Funnel",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.4",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Shadow CB1 Lock vs Moving Alpha WR Alignment Escape",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.5",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "TE Seam/Cross Funnel vs Linebacker Coverage Liability",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.6",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Inside/Outside Zone vs Man/Gap/Duo Defensive YPC Split",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.7",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Light Box (<=6 Defenders) Rushing Explosive Rate",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.8",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Heavy Box (>=8 Defenders) Play-Action Deep Over Exploit",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.9",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Pass-Rush Win Rate (PRWR) Weak-Link OL Matchup",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "5.10",
+              "tier": "situational_catalog_80",
+              "theme": "Personnel & Matchup",
+              "evaluator": "personnel",
+              "name": "Defensive Missed-Tackle Rate Hidden YAC Multiplier",
+              "value": 0.019,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.1",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: QB Change",
+              "evaluator": "backup",
+              "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
+              "value": -0.068,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.2",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: QB Change",
+              "evaluator": "backup",
+              "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
+              "value": -0.068,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.3",
+              "tier": "situational_catalog_80",
+              "theme": "Environment: Weather",
+              "evaluator": "weather",
+              "name": "Sustained Wind >=15 mph Deep-Pass & FG Make Penalty",
+              "value": -0.004,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.4",
+              "tier": "situational_catalog_80",
+              "theme": "Environment: Weather",
+              "evaluator": "weather",
+              "name": "Precipitation Wet-Ball Fumble & Drop Hazard",
+              "value": -0.004,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.5",
+              "tier": "situational_catalog_80",
+              "theme": "Environment: Weather",
+              "evaluator": "weather",
+              "name": "Sub-Freezing (<32F) Air Density Ball-Flight Drag",
+              "value": -0.004,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.6",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: OL Attrition",
+              "evaluator": "attrition",
+              "name": "Left Tackle Absence Blindside Pressure Surge",
+              "value": -0.022,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.7",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: OL Attrition",
+              "evaluator": "attrition",
+              "name": "Center Absence Protection-Call & Snap-Timing Disruption",
+              "value": -0.022,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.8",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: OL Attrition",
+              "evaluator": "attrition",
+              "name": "Cluster OL Attrition (>=2 Starters Out) Non-Linear Collapse",
+              "value": -0.022,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.9",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: OL Attrition",
+              "evaluator": "attrition",
+              "name": "WR1 Absence Target Dispersion (Measured 1.135x WR2, Not 1.25x)",
+              "value": -0.022,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "6.10",
+              "tier": "situational_catalog_80",
+              "theme": "Availability: OL Attrition",
+              "evaluator": "attrition",
+              "name": "Questionable WR1 DNP-DNP-LP Decoy / Pitch-Count Trap",
+              "value": -0.145,
+              "sign": -1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.1",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Weather-Driven Total Steam Overreaction Fade Check",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.2",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Backup QB Announcement Line-Move Completeness Audit",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.3",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Key-Number Crossing (3, 7, 10, 14) Push/Cover Probability Mass",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.4",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Pinnacle/Circa Sharp Limit Steam vs Recreational Lag",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.5",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Reverse Line Movement (Ticket % vs Money %) Syndicate Signal",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.6",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Derivative 1Q/1H Ratio Mispricing vs Scripted Opener",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.7",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "SGP Correlated Parlay Structural Hold (18-30%) Extraction",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.8",
+              "tier": "situational_catalog_80",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Late Inactive Report (T-90m) Prop Reshading Window",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.9",
+              "tier": "emission_firewall_7",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Unpriced Prop Board Circuit Breaker (Zero Two-Sided Juice = PASS)",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "7.10",
+              "tier": "emission_firewall_7",
+              "theme": "Market Context",
+              "evaluator": "market",
+              "name": "Immutable Pregame Direction Lock (Rule H3 Anti-Flip)",
+              "value": 0.014,
+              "sign": 1,
+              "gateStatus": "accepted"
+            },
+            {
+              "recordId": "8.1",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Raw Yards Per Play Without Garbage-Time & Down Filter",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.2",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Raw Completion % Without ADOT & CPOE Conditioning",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.3",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Raw Defensive Yards Allowed Without Drive Count & Pace",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.4",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Raw Targets/Carries Per Game Without Active Player-GP & Script",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.5",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "QB Wins Treated as Individual QB Skill Stat",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.6",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Raw Sacks Without Pressure Rate & Time-to-Throw",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.7",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Single-Game Turnover Margin Extrapolated as Skill",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.8",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Unadjusted Strength of Schedule Without Opponent EPA",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.9",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Raw RB YPC Without Box Count & RYOE Conditioning",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.10",
+              "tier": "situational_catalog_80",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Preseason or Week-18 Resting-Starter Stats Used Unadjusted",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.11",
+              "tier": "emission_firewall_7",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Play-Clock-at-Snap Pooled Without Down Stratification",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.12",
+              "tier": "emission_firewall_7",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Disguise Collapse Hazard Without Spatial Width Normalization",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.13",
+              "tier": "emission_firewall_7",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Cumulative Season Rushing Yards Confounded by Carry Volume",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.14",
+              "tier": "emission_firewall_7",
+              "theme": "Stats That Mislead",
+              "evaluator": "gate",
+              "name": "Stunt Pressure Rate Without OL Slide/Chip Protection Context",
+              "value": 1.0,
+              "sign": 1,
+              "gateStatus": "accepted_conditioned"
+            },
+            {
+              "recordId": "8.15",
+              "tier": "emission_firewall_7",
               "theme": "Stats That Mislead",
               "evaluator": "gate",
               "name": "Right-Censored Career Cohorts Without Base-Rate Denominator",
@@ -15948,17 +17684,17 @@
           "stage_b_hnsw_top_k": 250,
           "stage_c_orthogonal_clusters_count": 25,
           "marchenko_pastur_denoise_factor": 0.87817,
-          "stage_d_james_stein_factor": 0.933204,
-          "raw_log_odds_delta": 0.038148,
-          "clamped_log_odds_delta": 0.0356,
+          "stage_d_james_stein_factor": 0.927798,
+          "raw_log_odds_delta": 0.060676,
+          "clamped_log_odds_delta": 0.056295,
           "max_abs_delta_log_odds_cap": 0.35,
           "domain_equation_sums": {
-            "pressure": 0.5089,
-            "weather": 9.3289,
-            "restFatigue": 1.8787,
-            "coveragePersonnel": -0.1726,
-            "qbSkillScript": -2.0084,
-            "marketMicrostructure": 3.9601
+            "pressure": 0.039,
+            "weather": 23.3712,
+            "restFatigue": 1.4072,
+            "coveragePersonnel": -0.3595,
+            "qbSkillScript": -3.2011,
+            "marketMicrostructure": 4.148
           }
         },
         "master_6family_cholesky_aggregator": {
@@ -15993,7 +17729,7 @@
           "probability_movement_cap": 0.12,
           "post_overlay_prob": 0.5073
         },
-        "receipt_sha256": "32f90266c9ab31da2e605fe34d70b80e2138db66ec75b1b02406e14e41f7a206",
+        "receipt_sha256": "8d25fb63790008512450f3e3a95f7c9b0e498b517de7f7da49ad4e133f3e6c6f",
         "measured_primitives": {
           "measured_primitives_count": 3,
           "wr1_absorption": {
@@ -16034,7 +17770,7 @@
       },
       "google_drive_and_onedrive_omni_overlay": {
         "engine_module": "intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py",
-        "wave": "Wave 12 \u2014 Entire Google Drive (G:\\My Drive) + OneDrive (Galaxy Sports Edge) Situational Engine",
+        "wave": "Wave 12 \u2014 Entire Google Drive (gdrive://) + OneDrive (Galaxy Sports Edge) Situational Engine",
         "situational_adjustment_vector": {
           "epa_delta": 0.0506,
           "pass_rate_delta": 0.0,
@@ -16049,19 +17785,6 @@
           ],
           "cqr_ess_gate_passed": true,
           "roster_truth_player_adjustments": {
-            "Travis Etienne Jr.": {
-              "canonical_team": "JAX",
-              "player_gp": 6,
-              "team_gp": 8,
-              "naive_per_team_gp_rate": 47.25,
-              "true_per_player_gp_rate": 63.0,
-              "denominator_correction_delta": 15.75,
-              "ir_return_ramp_mult": 0.62,
-              "practice_squad_elevation": false,
-              "elevation_snap_cap_mult": 1.0,
-              "roster_truth_adjusted_rate": 39.06,
-              "source_conflict_detected": false
-            },
             "Parker Washington": {
               "canonical_team": "JAX",
               "player_gp": 8,
@@ -16144,10 +17867,10 @@
               "boltzmann_temperature_2505_21543": 1.15
             },
             "provenance": [
-              "G:\\My Drive\\GSN\\GSE_58_paper_dossiers.md",
-              "G:\\My Drive\\GSN\\GSE_58_independent_research.md",
-              "G:\\My Drive\\GSN\\World-Class Sports Probability Engine Corpus Audit (1).docx",
-              "G:\\My Drive\\GSN\\Galaxy Sports Edge Research Audit (2).docx"
+              "gdrive://GSN/GSE_58_paper_dossiers.md",
+              "gdrive://GSN/GSE_58_independent_research.md",
+              "gdrive://GSN/World-Class Sports Probability Engine Corpus Audit (1).docx",
+              "gdrive://GSN/Galaxy Sports Edge Research Audit (2).docx"
             ]
           },
           "s2_tracking_decoupled_cqr_calibration": {
@@ -16187,10 +17910,10 @@
               "steam_regime_active": true
             },
             "provenance": [
-              "G:\\My Drive\\GSN\\Architectural Blueprint for a Calibrated, Tracking-Decoupled Sports Probability Engine (1).docx",
-              "G:\\My Drive\\GSN\\Auditing Conformal Prediction, Small-Sample Calibration, and Sports Market Probabilities for GSE (2).docx",
-              "G:\\My Drive\\GSN\\CQR Research (1).docx",
-              "G:\\My Drive\\deepseek_markdown_20260911_667ac8.md"
+              "gdrive://GSN/Architectural Blueprint for a Calibrated, Tracking-Decoupled Sports Probability Engine (1).docx",
+              "gdrive://GSN/Auditing Conformal Prediction, Small-Sample Calibration, and Sports Market Probabilities for GSE (2).docx",
+              "gdrive://GSN/CQR Research (1).docx",
+              "gdrive://deepseek_markdown_20260911_667ac8.md"
             ]
           },
           "s3_onedrive_weather_edge_aerodynamics": {
@@ -16216,27 +17939,14 @@
               "second_half_pass_rush_fatigue_mult": 1.0
             },
             "provenance": [
-              "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge-INTEGRATION_SPEC.md",
-              "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\gse-weather-edge.zip::src/index.ts"
+              "onedrive://Galaxy Sports Edge/gse-weather-edge-INTEGRATION_SPEC.md",
+              "onedrive://Galaxy Sports Edge/gse-weather-edge.zip::src/index.ts"
             ]
           },
           "s4_nfl_roster_truth_and_wave3": {
             "subsystem": "nfl_roster_truth_and_wave3_line_level",
             "build_cards_wired": 68,
             "roster_truth_player_adjustments": {
-              "Travis Etienne Jr.": {
-                "canonical_team": "JAX",
-                "player_gp": 6,
-                "team_gp": 8,
-                "naive_per_team_gp_rate": 47.25,
-                "true_per_player_gp_rate": 63.0,
-                "denominator_correction_delta": 15.75,
-                "ir_return_ramp_mult": 0.62,
-                "practice_squad_elevation": false,
-                "elevation_snap_cap_mult": 1.0,
-                "roster_truth_adjusted_rate": 39.06,
-                "source_conflict_detected": false
-              },
               "Parker Washington": {
                 "canonical_team": "JAX",
                 "player_gp": 8,
@@ -16287,10 +17997,10 @@
               "edgeball_ceiling_utility_boost": 0.1912
             },
             "provenance": [
-              "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\docs\\research\\nfl-roster-truth\\15-build-queue-summary.md",
-              "G:\\My Drive\\GSN\\PROMPT_3_V2_LINE_LEVEL_WAVE3_INTEGRATION.md",
-              "G:\\My Drive\\extract-data-2026-09-11 (1).json",
-              "C:\\Users\\Garrett\\OneDrive\\Documents\\Galaxy Sports Edge\\docs\\research\\edgeball-contest-os\\04-gse-edgeball-format-spec.md"
+              "onedrive://Galaxy Sports Edge/docs/research/nfl-roster-truth/15-build-queue-summary.md",
+              "gdrive://GSN/PROMPT_3_V2_LINE_LEVEL_WAVE3_INTEGRATION.md",
+              "gdrive://extract-data-2026-09-11 (1).json",
+              "onedrive://Galaxy Sports Edge/docs/research/edgeball-contest-os/04-gse-edgeball-format-spec.md"
             ]
           },
           "s5_vault_entropy_and_alter_xiv_twin": {
@@ -16344,26 +18054,26 @@
               "introspection_learning_loop_closed": true
             },
             "provenance": [
-              "G:\\My Drive\\GSE-Ultra-30TB-Vault\\cuda_weighted_entropy_evolution_feed.jsonl",
-              "G:\\My Drive\\GSE-Ultra-30TB-Vault\\gcp_agentic_and_rclone_feed.jsonl",
-              "G:\\My Drive\\Alter\\ALTER_XIV_CLAUDE_CODE_KICKOFF.md"
+              "gdrive://GSE-Ultra-30TB-Vault/cuda_weighted_entropy_evolution_feed.jsonl",
+              "gdrive://GSE-Ultra-30TB-Vault/gcp_agentic_and_rclone_feed.jsonl",
+              "gdrive://Alter/ALTER_XIV_CLAUDE_CODE_KICKOFF.md"
             ]
           }
         },
-        "cryptographic_provenance_sha256": "deeca2d951655993106140b409843c6396165c7575692c62cad58281670fb0f8"
+        "cryptographic_provenance_sha256": "3e3138a78aadb82648c56ddf5944cf508604950d8cfcbaaf38c9b9fbb9963b6c"
       },
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "bridge_version": "uncompressed_25k_v1.0",
         "monorepo_census_summary": {
-          "total_repo_files_indexed": 63409,
-          "docs_files_indexed": 11361,
-          "arxiv_program_files_indexed": 1799,
-          "engine_docs_indexed": 3811,
-          "packages_files_indexed": 5939,
+          "total_repo_files_indexed": 63150,
+          "docs_files_indexed": 11525,
+          "arxiv_program_files_indexed": 1801,
+          "engine_docs_indexed": 3861,
+          "packages_files_indexed": 5943,
           "packages_count": 25,
-          "intelligence_files_indexed": 1017,
+          "intelligence_files_indexed": 1031,
           "intelligence_domains_count": 35,
-          "scripts_files_indexed": 875,
+          "scripts_files_indexed": 879,
           "apps_files_indexed": 3540,
           "web_api_routes_indexed": 271,
           "formal_proof_files_indexed": 69,
@@ -17049,7 +18759,7 @@
         },
         "sinkhorn_hydrodynamic_kl": 0.572072,
         "conformal_pass_discipline_verdict": "NO_BET",
-        "equation_gate_12304_clamped_delta": 0.0356,
+        "equation_gate_12304_clamped_delta": 0.056295,
         "full_branch_and_repo_registry": {
           "engine_plan_199_functions_evaluated": 199,
           "mind_eq_functions_indexed": 14,
@@ -17281,6 +18991,7 @@
               "home_ol_immediate_zone_win_rate": 0.6045,
               "away_wr_brk_plus_braking_score": 0.4827,
               "home_wr_brk_plus_braking_score": 0.5086,
+              "away_def_ktd_tackle_efficiency": 0.6929,
               "away_def_ktd_tackle_translation": 0.6929,
               "home_def_ktd_tackle_translation": 0.6737,
               "provenance": [
@@ -18834,7 +20545,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -18845,7 +20556,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -19795,7 +21506,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -19806,7 +21517,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012027,
+              "l1_l2_regularization_penalty": 0.012026,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -20590,10 +22301,10 @@
             "openai_tiktoken": {
               "repo": "openai/tiktoken",
               "encoding_name": "o200k_base",
-              "exact_bpe_library_used": true,
-              "estimated_tokens": 25,
+              "exact_bpe_library_used": false,
+              "estimated_tokens": 21,
               "max_token_budget": 128000,
-              "budget_utilization_ratio": 0.000195,
+              "budget_utilization_ratio": 0.000164,
               "compaction_required": false
             },
             "google_jules_fleet": {
@@ -20745,8 +22456,8 @@
             "away_team": "CLE",
             "workflow_ready": true,
             "catalog_counts": {
-              "union_agents_and_claude_skills": 149,
-              "agents_skills_count": 111,
+              "union_agents_and_claude_skills": 143,
+              "agents_skills_count": 105,
               "claude_skills_count": 91,
               "gemini_config_skills_count": 185,
               "agy_plugins_count": 7,
@@ -20838,6 +22549,244 @@
             },
             "doctrine_19_rules_substrate_verified": true
           },
+          "spatial_micro_pbp_conditioners": {
+            "schema": "gse_spatial_micro_pbp_conditioners_v1",
+            "away_team": "CLE",
+            "home_team": "NO",
+            "has_explicit_overrides": false,
+            "away_profile": {
+              "entity_id": "CLE_OFFENSE",
+              "entity_name": "CLE Offense Spatial Profile",
+              "team": "CLE",
+              "opponent": "NO",
+              "position": "TEAM",
+              "domain1_rb_front7": {
+                "hard_hit_rate": 0.1897,
+                "opportunity_share": 0.5664,
+                "target_share": 0.107,
+                "missed_tackles_forced": 25.59,
+                "designed_runs": 124.0,
+                "receptions": 28.0,
+                "yards_after_contact_per_att": 2.996,
+                "pff_elusive_rating": 50.426,
+                "ryoe_per_att": 0.147,
+                "ryoe_variance": 1.6031,
+                "ryoe_consistency_rate_gt_1yd": 0.3327,
+                "ryoe_boom_rate_gt_5yd": 0.0946,
+                "unfair_yards_rate": 0.2943,
+                "success_over_expected_rate": 0.0494,
+                "stack_box_efficiency_rate": 0.4659,
+                "tracking_vector_mesh_gap_yds": 3.359,
+                "defenders_in_box": 6.9,
+                "offensive_blockers_in_box": 6.12,
+                "avg_defender_dist_from_los_yds": 4.267,
+                "true_box_spacing_delta": 4.8157,
+                "ybc_per_att": 1.237,
+                "ol_scheme_segregation_penalty_yds": 0.0,
+                "shed_time_survival_sec": 1.745,
+                "shed_time_survival_rate": 0.699,
+                "def_penetration_depth_yds": -0.541,
+                "designated_first_read_rb_target_rate": 0.2559,
+                "checkdown_dump_off_rate": 0.7441,
+                "rb_yprr": 1.168,
+                "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+                "tovs": 18.1398
+              },
+              "domain2_wr_te_db": {
+                "route_participation_rate": 0.86,
+                "yprr": 2.254,
+                "first_read_target_share": 0.2817,
+                "contested_catch_rate": 0.4758,
+                "catchable_ball_rate": 0.7628,
+                "hard_hit_rate_on_rec": 0.1897,
+                "separation_at_separation_point_ssp_yds": 2.046,
+                "burn_rate_vs_man_gt_2yds": 0.3059,
+                "catch_point_leverage_delta_yds": 1.0227,
+                "true_csoe_target_prevention_rate": 0.0238
+              },
+              "domain3_qb_processing": {
+                "pre_to_post_snap_disguise_decay_ms": 224.56,
+                "disguise_processing_elite_le_220ms": false,
+                "simulated_creeping_pressure_success_rate": 0.4558,
+                "throw_to_leverage_variance_tlv_sq_yds": 0.9386
+              },
+              "domain4_trench_dl_ol": {
+                "true_pass_rush_win_rate_prwr_lt_25s": 0.1853,
+                "pocket_anchor_depth_pad_yds": 2.197,
+                "pad_holds_gt_22yds": false,
+                "stunt_loop_handoff_latency_ms": 177.52
+              },
+              "domain5_pocket_escape": {
+                "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.496,
+                "pcv_severe_gt_15": false,
+                "escape_vector_efficiency_eve": 0.6751
+              },
+              "domain6_scheme_structural": {
+                "mofo_structural_epa": 0.0889,
+                "mofc_structural_epa": 0.109,
+                "mofo_mofc_heatmap_counter_delta": 0.0979,
+                "zone_void_exploitation_rate_zver": 0.529
+              },
+              "expected_yardage_percentiles": {
+                "p10": 131.75,
+                "p25": 187.49,
+                "p50": 253.36,
+                "p75": 324.3,
+                "p90": 395.24,
+                "p95": 445.91,
+                "p99": 537.12
+              },
+              "pbp_snap_conditioners": {
+                "rush_yards_spatial_delta": -0.1793,
+                "rb_receiving_epa_delta": 0.0078,
+                "wr_te_completion_prob_delta": -0.0057,
+                "wr_te_explosive_mu_delta": -0.0607,
+                "qb_sack_prob_delta": 0.0058,
+                "qb_comp_prob_delta": -0.0104,
+                "qb_scramble_escape_delta": -0.0038,
+                "composite_epa_per_snap_delta": -0.01151
+              },
+              "dfs_and_prop_ceiling_boosts": {
+                "tovs": 18.1398,
+                "pff_elusive_rating": 50.426,
+                "ryoe_boom_rate_gt_5yd": 0.0946,
+                "burn_rate_vs_man_gt_2yds": 0.3059,
+                "first_read_target_share": 0.2817,
+                "zone_void_exploitation_rate_zver": 0.529,
+                "eve_to_pcv_ratio": 0.4513,
+                "q90_spatial_boost_dk_pts": 1.289,
+                "q95_spatial_boost_dk_pts": 1.859,
+                "q99_spatial_boost_dk_pts": 2.543,
+                "cvar_099_spatial_boost_dk_pts": 3.001
+              }
+            },
+            "home_profile": {
+              "entity_id": "NO_OFFENSE",
+              "entity_name": "NO Offense Spatial Profile",
+              "team": "NO",
+              "opponent": "CLE",
+              "position": "TEAM",
+              "domain1_rb_front7": {
+                "hard_hit_rate": 0.196,
+                "opportunity_share": 0.5908,
+                "target_share": 0.1146,
+                "missed_tackles_forced": 27.05,
+                "designed_runs": 124.0,
+                "receptions": 28.0,
+                "yards_after_contact_per_att": 3.071,
+                "pff_elusive_rating": 54.6689,
+                "ryoe_per_att": 0.253,
+                "ryoe_variance": 1.6819,
+                "ryoe_consistency_rate_gt_1yd": 0.3432,
+                "ryoe_boom_rate_gt_5yd": 0.1009,
+                "unfair_yards_rate": 0.3069,
+                "success_over_expected_rate": 0.0526,
+                "stack_box_efficiency_rate": 0.4701,
+                "tracking_vector_mesh_gap_yds": 3.384,
+                "defenders_in_box": 6.84,
+                "offensive_blockers_in_box": 6.17,
+                "avg_defender_dist_from_los_yds": 4.318,
+                "true_box_spacing_delta": 4.7887,
+                "ybc_per_att": 1.288,
+                "ol_scheme_segregation_penalty_yds": 0.0,
+                "shed_time_survival_sec": 1.778,
+                "shed_time_survival_rate": 0.7118,
+                "def_penetration_depth_yds": -0.516,
+                "designated_first_read_rb_target_rate": 0.2706,
+                "checkdown_dump_off_rate": 0.7294,
+                "rb_yprr": 1.261,
+                "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+                "tovs": 19.2234
+              },
+              "domain2_wr_te_db": {
+                "route_participation_rate": 0.86,
+                "yprr": 2.27,
+                "first_read_target_share": 0.2868,
+                "contested_catch_rate": 0.4905,
+                "catchable_ball_rate": 0.7732,
+                "hard_hit_rate_on_rec": 0.196,
+                "separation_at_separation_point_ssp_yds": 2.109,
+                "burn_rate_vs_man_gt_2yds": 0.3206,
+                "catch_point_leverage_delta_yds": 1.0971,
+                "true_csoe_target_prevention_rate": 0.0154
+              },
+              "domain3_qb_processing": {
+                "pre_to_post_snap_disguise_decay_ms": 220.56,
+                "disguise_processing_elite_le_220ms": false,
+                "simulated_creeping_pressure_success_rate": 0.4705,
+                "throw_to_leverage_variance_tlv_sq_yds": 0.903
+              },
+              "domain4_trench_dl_ol": {
+                "true_pass_rush_win_rate_prwr_lt_25s": 0.179,
+                "pocket_anchor_depth_pad_yds": 2.248,
+                "pad_holds_gt_22yds": true,
+                "stunt_loop_handoff_latency_ms": 174.16
+              },
+              "domain5_pocket_escape": {
+                "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.45,
+                "pcv_severe_gt_15": false,
+                "escape_vector_efficiency_eve": 0.7025
+              },
+              "domain6_scheme_structural": {
+                "mofo_structural_epa": 0.1079,
+                "mofc_structural_epa": 0.1279,
+                "mofo_mofc_heatmap_counter_delta": 0.1169,
+                "zone_void_exploitation_rate_zver": 0.5479
+              },
+              "expected_yardage_percentiles": {
+                "p10": 135.06,
+                "p25": 192.2,
+                "p50": 259.72,
+                "p75": 332.45,
+                "p90": 405.17,
+                "p95": 457.11,
+                "p99": 550.61
+              },
+              "pbp_snap_conditioners": {
+                "rush_yards_spatial_delta": -0.0506,
+                "rb_receiving_epa_delta": 0.0194,
+                "wr_te_completion_prob_delta": 0.0012,
+                "wr_te_explosive_mu_delta": 0.1788,
+                "qb_sack_prob_delta": 0.001,
+                "qb_comp_prob_delta": -0.0041,
+                "qb_scramble_escape_delta": -0.0015,
+                "composite_epa_per_snap_delta": 0.00392
+              },
+              "dfs_and_prop_ceiling_boosts": {
+                "tovs": 19.2234,
+                "pff_elusive_rating": 54.6689,
+                "ryoe_boom_rate_gt_5yd": 0.1009,
+                "burn_rate_vs_man_gt_2yds": 0.3206,
+                "first_read_target_share": 0.2868,
+                "zone_void_exploitation_rate_zver": 0.5479,
+                "eve_to_pcv_ratio": 0.4845,
+                "q90_spatial_boost_dk_pts": 1.423,
+                "q95_spatial_boost_dk_pts": 2.048,
+                "q99_spatial_boost_dk_pts": 2.799,
+                "cvar_099_spatial_boost_dk_pts": 3.303
+              }
+            },
+            "away_conditioners": {
+              "rush_yards_spatial_delta": -0.1793,
+              "rb_receiving_epa_delta": 0.0078,
+              "wr_te_completion_prob_delta": -0.0057,
+              "wr_te_explosive_mu_delta": -0.0607,
+              "qb_sack_prob_delta": 0.0058,
+              "qb_comp_prob_delta": -0.0104,
+              "qb_scramble_escape_delta": -0.0038,
+              "composite_epa_per_snap_delta": -0.01151
+            },
+            "home_conditioners": {
+              "rush_yards_spatial_delta": -0.0506,
+              "rb_receiving_epa_delta": 0.0194,
+              "wr_te_completion_prob_delta": 0.0012,
+              "wr_te_explosive_mu_delta": 0.1788,
+              "qb_sack_prob_delta": 0.001,
+              "qb_comp_prob_delta": -0.0041,
+              "qb_scramble_escape_delta": -0.0015,
+              "composite_epa_per_snap_delta": 0.00392
+            }
+          },
           "trajectory_conditioners": {
             "scripted_1_to_15_epa_boost": 0.014,
             "post_script_16_to_65_cliff_delta": -0.00875,
@@ -20879,7 +22828,11 @@
             "openai_math_sogge_wave_focusing_gain": 1.320455,
             "openai_math_amplitude_damping_retention": 0.96594,
             "openai_math_cnf_satisfaction_prob": 0.281096,
-            "wired_into_10k_world_175_snap_simulation": true
+            "wired_into_10k_world_175_snap_simulation": true,
+            "spatial_micro_away_rush_delta": -0.1793,
+            "spatial_micro_home_rush_delta": -0.0506,
+            "spatial_micro_away_epa_delta": -0.01151,
+            "spatial_micro_home_epa_delta": 0.00392
           },
           "simulation_trajectory_conditioners": {
             "scripted_1_to_15_epa_boost": 0.014,
@@ -20922,7 +22875,11 @@
             "openai_math_sogge_wave_focusing_gain": 1.320455,
             "openai_math_amplitude_damping_retention": 0.96594,
             "openai_math_cnf_satisfaction_prob": 0.281096,
-            "wired_into_10k_world_175_snap_simulation": true
+            "wired_into_10k_world_175_snap_simulation": true,
+            "spatial_micro_away_rush_delta": -0.1793,
+            "spatial_micro_home_rush_delta": -0.0506,
+            "spatial_micro_away_epa_delta": -0.01151,
+            "spatial_micro_home_epa_delta": 0.00392
           }
         }
       },
@@ -21124,6 +23081,7 @@
             "home_ol_immediate_zone_win_rate": 0.6045,
             "away_wr_brk_plus_braking_score": 0.4827,
             "home_wr_brk_plus_braking_score": 0.5086,
+            "away_def_ktd_tackle_efficiency": 0.6929,
             "away_def_ktd_tackle_translation": 0.6929,
             "home_def_ktd_tackle_translation": 0.6737,
             "provenance": [
@@ -22677,7 +24635,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -22688,7 +24646,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -23638,7 +25596,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -23649,7 +25607,7 @@
             "infonce_loss": 3.6e-05,
             "contrastive_alignment_prob": 0.999964,
             "glm_logistic_prob": 0.67954,
-            "l1_l2_regularization_penalty": 0.012027,
+            "l1_l2_regularization_penalty": 0.012026,
             "regularized_drive_td_prob": 0.871795,
             "temperature": 0.15,
             "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -24433,10 +26391,10 @@
           "openai_tiktoken": {
             "repo": "openai/tiktoken",
             "encoding_name": "o200k_base",
-            "exact_bpe_library_used": true,
-            "estimated_tokens": 25,
+            "exact_bpe_library_used": false,
+            "estimated_tokens": 21,
             "max_token_budget": 128000,
-            "budget_utilization_ratio": 0.000195,
+            "budget_utilization_ratio": 0.000164,
             "compaction_required": false
           },
           "google_jules_fleet": {
@@ -24588,8 +26546,8 @@
           "away_team": "CLE",
           "workflow_ready": true,
           "catalog_counts": {
-            "union_agents_and_claude_skills": 149,
-            "agents_skills_count": 111,
+            "union_agents_and_claude_skills": 143,
+            "agents_skills_count": 105,
             "claude_skills_count": 91,
             "gemini_config_skills_count": 185,
             "agy_plugins_count": 7,
@@ -24681,6 +26639,244 @@
           },
           "doctrine_19_rules_substrate_verified": true
         },
+        "spatial_micro_pbp_conditioners": {
+          "schema": "gse_spatial_micro_pbp_conditioners_v1",
+          "away_team": "CLE",
+          "home_team": "NO",
+          "has_explicit_overrides": false,
+          "away_profile": {
+            "entity_id": "CLE_OFFENSE",
+            "entity_name": "CLE Offense Spatial Profile",
+            "team": "CLE",
+            "opponent": "NO",
+            "position": "TEAM",
+            "domain1_rb_front7": {
+              "hard_hit_rate": 0.1897,
+              "opportunity_share": 0.5664,
+              "target_share": 0.107,
+              "missed_tackles_forced": 25.59,
+              "designed_runs": 124.0,
+              "receptions": 28.0,
+              "yards_after_contact_per_att": 2.996,
+              "pff_elusive_rating": 50.426,
+              "ryoe_per_att": 0.147,
+              "ryoe_variance": 1.6031,
+              "ryoe_consistency_rate_gt_1yd": 0.3327,
+              "ryoe_boom_rate_gt_5yd": 0.0946,
+              "unfair_yards_rate": 0.2943,
+              "success_over_expected_rate": 0.0494,
+              "stack_box_efficiency_rate": 0.4659,
+              "tracking_vector_mesh_gap_yds": 3.359,
+              "defenders_in_box": 6.9,
+              "offensive_blockers_in_box": 6.12,
+              "avg_defender_dist_from_los_yds": 4.267,
+              "true_box_spacing_delta": 4.8157,
+              "ybc_per_att": 1.237,
+              "ol_scheme_segregation_penalty_yds": 0.0,
+              "shed_time_survival_sec": 1.745,
+              "shed_time_survival_rate": 0.699,
+              "def_penetration_depth_yds": -0.541,
+              "designated_first_read_rb_target_rate": 0.2559,
+              "checkdown_dump_off_rate": 0.7441,
+              "rb_yprr": 1.168,
+              "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+              "tovs": 18.1398
+            },
+            "domain2_wr_te_db": {
+              "route_participation_rate": 0.86,
+              "yprr": 2.254,
+              "first_read_target_share": 0.2817,
+              "contested_catch_rate": 0.4758,
+              "catchable_ball_rate": 0.7628,
+              "hard_hit_rate_on_rec": 0.1897,
+              "separation_at_separation_point_ssp_yds": 2.046,
+              "burn_rate_vs_man_gt_2yds": 0.3059,
+              "catch_point_leverage_delta_yds": 1.0227,
+              "true_csoe_target_prevention_rate": 0.0238
+            },
+            "domain3_qb_processing": {
+              "pre_to_post_snap_disguise_decay_ms": 224.56,
+              "disguise_processing_elite_le_220ms": false,
+              "simulated_creeping_pressure_success_rate": 0.4558,
+              "throw_to_leverage_variance_tlv_sq_yds": 0.9386
+            },
+            "domain4_trench_dl_ol": {
+              "true_pass_rush_win_rate_prwr_lt_25s": 0.1853,
+              "pocket_anchor_depth_pad_yds": 2.197,
+              "pad_holds_gt_22yds": false,
+              "stunt_loop_handoff_latency_ms": 177.52
+            },
+            "domain5_pocket_escape": {
+              "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.496,
+              "pcv_severe_gt_15": false,
+              "escape_vector_efficiency_eve": 0.6751
+            },
+            "domain6_scheme_structural": {
+              "mofo_structural_epa": 0.0889,
+              "mofc_structural_epa": 0.109,
+              "mofo_mofc_heatmap_counter_delta": 0.0979,
+              "zone_void_exploitation_rate_zver": 0.529
+            },
+            "expected_yardage_percentiles": {
+              "p10": 131.75,
+              "p25": 187.49,
+              "p50": 253.36,
+              "p75": 324.3,
+              "p90": 395.24,
+              "p95": 445.91,
+              "p99": 537.12
+            },
+            "pbp_snap_conditioners": {
+              "rush_yards_spatial_delta": -0.1793,
+              "rb_receiving_epa_delta": 0.0078,
+              "wr_te_completion_prob_delta": -0.0057,
+              "wr_te_explosive_mu_delta": -0.0607,
+              "qb_sack_prob_delta": 0.0058,
+              "qb_comp_prob_delta": -0.0104,
+              "qb_scramble_escape_delta": -0.0038,
+              "composite_epa_per_snap_delta": -0.01151
+            },
+            "dfs_and_prop_ceiling_boosts": {
+              "tovs": 18.1398,
+              "pff_elusive_rating": 50.426,
+              "ryoe_boom_rate_gt_5yd": 0.0946,
+              "burn_rate_vs_man_gt_2yds": 0.3059,
+              "first_read_target_share": 0.2817,
+              "zone_void_exploitation_rate_zver": 0.529,
+              "eve_to_pcv_ratio": 0.4513,
+              "q90_spatial_boost_dk_pts": 1.289,
+              "q95_spatial_boost_dk_pts": 1.859,
+              "q99_spatial_boost_dk_pts": 2.543,
+              "cvar_099_spatial_boost_dk_pts": 3.001
+            }
+          },
+          "home_profile": {
+            "entity_id": "NO_OFFENSE",
+            "entity_name": "NO Offense Spatial Profile",
+            "team": "NO",
+            "opponent": "CLE",
+            "position": "TEAM",
+            "domain1_rb_front7": {
+              "hard_hit_rate": 0.196,
+              "opportunity_share": 0.5908,
+              "target_share": 0.1146,
+              "missed_tackles_forced": 27.05,
+              "designed_runs": 124.0,
+              "receptions": 28.0,
+              "yards_after_contact_per_att": 3.071,
+              "pff_elusive_rating": 54.6689,
+              "ryoe_per_att": 0.253,
+              "ryoe_variance": 1.6819,
+              "ryoe_consistency_rate_gt_1yd": 0.3432,
+              "ryoe_boom_rate_gt_5yd": 0.1009,
+              "unfair_yards_rate": 0.3069,
+              "success_over_expected_rate": 0.0526,
+              "stack_box_efficiency_rate": 0.4701,
+              "tracking_vector_mesh_gap_yds": 3.384,
+              "defenders_in_box": 6.84,
+              "offensive_blockers_in_box": 6.17,
+              "avg_defender_dist_from_los_yds": 4.318,
+              "true_box_spacing_delta": 4.7887,
+              "ybc_per_att": 1.288,
+              "ol_scheme_segregation_penalty_yds": 0.0,
+              "shed_time_survival_sec": 1.778,
+              "shed_time_survival_rate": 0.7118,
+              "def_penetration_depth_yds": -0.516,
+              "designated_first_read_rb_target_rate": 0.2706,
+              "checkdown_dump_off_rate": 0.7294,
+              "rb_yprr": 1.261,
+              "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+              "tovs": 19.2234
+            },
+            "domain2_wr_te_db": {
+              "route_participation_rate": 0.86,
+              "yprr": 2.27,
+              "first_read_target_share": 0.2868,
+              "contested_catch_rate": 0.4905,
+              "catchable_ball_rate": 0.7732,
+              "hard_hit_rate_on_rec": 0.196,
+              "separation_at_separation_point_ssp_yds": 2.109,
+              "burn_rate_vs_man_gt_2yds": 0.3206,
+              "catch_point_leverage_delta_yds": 1.0971,
+              "true_csoe_target_prevention_rate": 0.0154
+            },
+            "domain3_qb_processing": {
+              "pre_to_post_snap_disguise_decay_ms": 220.56,
+              "disguise_processing_elite_le_220ms": false,
+              "simulated_creeping_pressure_success_rate": 0.4705,
+              "throw_to_leverage_variance_tlv_sq_yds": 0.903
+            },
+            "domain4_trench_dl_ol": {
+              "true_pass_rush_win_rate_prwr_lt_25s": 0.179,
+              "pocket_anchor_depth_pad_yds": 2.248,
+              "pad_holds_gt_22yds": true,
+              "stunt_loop_handoff_latency_ms": 174.16
+            },
+            "domain5_pocket_escape": {
+              "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.45,
+              "pcv_severe_gt_15": false,
+              "escape_vector_efficiency_eve": 0.7025
+            },
+            "domain6_scheme_structural": {
+              "mofo_structural_epa": 0.1079,
+              "mofc_structural_epa": 0.1279,
+              "mofo_mofc_heatmap_counter_delta": 0.1169,
+              "zone_void_exploitation_rate_zver": 0.5479
+            },
+            "expected_yardage_percentiles": {
+              "p10": 135.06,
+              "p25": 192.2,
+              "p50": 259.72,
+              "p75": 332.45,
+              "p90": 405.17,
+              "p95": 457.11,
+              "p99": 550.61
+            },
+            "pbp_snap_conditioners": {
+              "rush_yards_spatial_delta": -0.0506,
+              "rb_receiving_epa_delta": 0.0194,
+              "wr_te_completion_prob_delta": 0.0012,
+              "wr_te_explosive_mu_delta": 0.1788,
+              "qb_sack_prob_delta": 0.001,
+              "qb_comp_prob_delta": -0.0041,
+              "qb_scramble_escape_delta": -0.0015,
+              "composite_epa_per_snap_delta": 0.00392
+            },
+            "dfs_and_prop_ceiling_boosts": {
+              "tovs": 19.2234,
+              "pff_elusive_rating": 54.6689,
+              "ryoe_boom_rate_gt_5yd": 0.1009,
+              "burn_rate_vs_man_gt_2yds": 0.3206,
+              "first_read_target_share": 0.2868,
+              "zone_void_exploitation_rate_zver": 0.5479,
+              "eve_to_pcv_ratio": 0.4845,
+              "q90_spatial_boost_dk_pts": 1.423,
+              "q95_spatial_boost_dk_pts": 2.048,
+              "q99_spatial_boost_dk_pts": 2.799,
+              "cvar_099_spatial_boost_dk_pts": 3.303
+            }
+          },
+          "away_conditioners": {
+            "rush_yards_spatial_delta": -0.1793,
+            "rb_receiving_epa_delta": 0.0078,
+            "wr_te_completion_prob_delta": -0.0057,
+            "wr_te_explosive_mu_delta": -0.0607,
+            "qb_sack_prob_delta": 0.0058,
+            "qb_comp_prob_delta": -0.0104,
+            "qb_scramble_escape_delta": -0.0038,
+            "composite_epa_per_snap_delta": -0.01151
+          },
+          "home_conditioners": {
+            "rush_yards_spatial_delta": -0.0506,
+            "rb_receiving_epa_delta": 0.0194,
+            "wr_te_completion_prob_delta": 0.0012,
+            "wr_te_explosive_mu_delta": 0.1788,
+            "qb_sack_prob_delta": 0.001,
+            "qb_comp_prob_delta": -0.0041,
+            "qb_scramble_escape_delta": -0.0015,
+            "composite_epa_per_snap_delta": 0.00392
+          }
+        },
         "trajectory_conditioners": {
           "scripted_1_to_15_epa_boost": 0.014,
           "post_script_16_to_65_cliff_delta": -0.00875,
@@ -24722,7 +26918,11 @@
           "openai_math_sogge_wave_focusing_gain": 1.320455,
           "openai_math_amplitude_damping_retention": 0.96594,
           "openai_math_cnf_satisfaction_prob": 0.281096,
-          "wired_into_10k_world_175_snap_simulation": true
+          "wired_into_10k_world_175_snap_simulation": true,
+          "spatial_micro_away_rush_delta": -0.1793,
+          "spatial_micro_home_rush_delta": -0.0506,
+          "spatial_micro_away_epa_delta": -0.01151,
+          "spatial_micro_home_epa_delta": 0.00392
         },
         "simulation_trajectory_conditioners": {
           "scripted_1_to_15_epa_boost": 0.014,
@@ -24765,14 +26965,18 @@
           "openai_math_sogge_wave_focusing_gain": 1.320455,
           "openai_math_amplitude_damping_retention": 0.96594,
           "openai_math_cnf_satisfaction_prob": 0.281096,
-          "wired_into_10k_world_175_snap_simulation": true
+          "wired_into_10k_world_175_snap_simulation": true,
+          "spatial_micro_away_rush_delta": -0.1793,
+          "spatial_micro_home_rush_delta": -0.0506,
+          "spatial_micro_away_epa_delta": -0.01151,
+          "spatial_micro_home_epa_delta": 0.00392
         }
       },
       "posted_home_spread": -3.0,
       "posted_total": 42.5,
       "away": {
         "qb_tier": "QB1",
-        "off_epa_override": -0.2109,
+        "off_epa_override": -0.2093,
         "def_epa_override": -0.0173,
         "early_down_pass_rate": 0.5543,
         "comp_rate_w1_w7": 0.6641,
@@ -24791,7 +26995,7 @@
       },
       "home": {
         "qb_tier": "QB2_BACKUP",
-        "off_epa_override": -0.2037,
+        "off_epa_override": -0.2051,
         "def_epa_override": 0.0751,
         "early_down_pass_rate": 0.4843,
         "clamped_2h_pass_rate": 0.72,
@@ -24980,22 +27184,22 @@
       "bal_cover_plus_7_5_prob": 0.4054,
       "over_41_5_prob": 0.3309
     },
-    "stage2_receipt_sha256": "15e051caab9e455a3d5759d75c92cc5b893064c65808fe438caa87a06466aaa3",
+    "stage2_receipt_sha256": "e44ed5362f63df143425897ee8ee814271299686d75586d0a6e7c1fd669855a0",
     "armed_26_layer_trace_handoff": {
       "context_packet_id": "PKT-2026_09_CLE_NO-20261105",
       "reasoning_trace_id": "TRC-2026_09_CLE_NO-20261105",
       "equations_executed_26_layers": 21419,
-      "reasoning_trace_cumulative_log_odds_delta": 0.640399,
-      "equation_gate_12304_clamped_delta": -0.013772,
-      "eq_gate_12k_epa_shift": 0.00089,
-      "simulator_median_spread_home_trace_conditioned": 6.791
+      "reasoning_trace_cumulative_log_odds_delta": -0.014235,
+      "equation_gate_12304_clamped_delta": -0.022757,
+      "eq_gate_12k_epa_shift": 0.001407,
+      "simulator_median_spread_home_trace_conditioned": 5.2344
     },
-    "eq_gate_12k_epa_shift": 0.00089,
-    "equation_gate_12304_clamped_delta": -0.013772
+    "eq_gate_12k_epa_shift": 0.001407,
+    "equation_gate_12304_clamped_delta": -0.022757
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "15e051caab9e455a3d5759d75c92cc5b893064c65808fe438caa87a06466aaa3",
+    "parent_stage2_receipt_sha256": "e44ed5362f63df143425897ee8ee814271299686d75586d0a6e7c1fd669855a0",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -25493,11 +27697,11 @@
         },
         "projections": {
           "pass_yds": {
-            "mean": 212.38,
+            "mean": 235.2,
             "std": 49.92,
             "p10": 144.04,
             "p25": 175.36,
-            "p50": 211.0,
+            "p50": 230.5,
             "p75": 248.8,
             "p90": 282.28,
             "cqr_interval_width_mult": 1.08
@@ -25563,11 +27767,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_yds": {
-            "mean": 13.23,
+            "mean": 22.9,
             "std": 9.49,
             "p10": 1.2,
             "p25": 5.52,
-            "p50": 12.0,
+            "p50": 22.21,
             "p75": 19.56,
             "p90": 27.12,
             "cqr_interval_width_mult": 1.08
@@ -25653,21 +27857,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 18.7,
+            "mean": 23.4,
             "std": 21.78,
             "p10": 0.82,
             "p25": 3.68,
-            "p50": 11.02,
+            "p50": 22.7,
             "p75": 25.99,
             "p90": 49.65,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.99,
+            "mean": 2.92,
             "std": 3.47,
             "p10": 0.0,
             "p25": 0.52,
-            "p50": 1.9,
+            "p50": 2.83,
             "p75": 4.22,
             "p90": 7.86,
             "cqr_interval_width_mult": 1.08
@@ -25684,11 +27888,11 @@
           },
           "target_share_conserved": 0.0862,
           "rush_yds": {
-            "mean": 40.99,
+            "mean": 42.5,
             "std": 37.44,
             "p10": 0.0,
             "p25": 13.99,
-            "p50": 39.57,
+            "p50": 41.23,
             "p75": 67.82,
             "p90": 93.52,
             "cqr_interval_width_mult": 1.08
@@ -25704,11 +27908,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 59.69,
+            "mean": 65.9,
             "std": 43.38,
             "p10": 3.27,
             "p25": 28.26,
-            "p50": 57.1,
+            "p50": 63.92,
             "p75": 88.64,
             "p90": 120.58,
             "cqr_interval_width_mult": 1.08
@@ -25897,21 +28101,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 30.16,
+            "mean": 13.4,
             "std": 28.55,
             "p10": 2.52,
             "p25": 8.38,
-            "p50": 21.09,
+            "p50": 13.0,
             "p75": 44.26,
             "p90": 73.51,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.94,
+            "mean": 1.67,
             "std": 2.84,
             "p10": 0.0,
             "p25": 0.72,
-            "p50": 2.14,
+            "p50": 1.62,
             "p75": 4.35,
             "p90": 7.22,
             "cqr_interval_width_mult": 1.08
@@ -25928,11 +28132,11 @@
           },
           "target_share_conserved": 0.1443,
           "rush_yds": {
-            "mean": 12.37,
+            "mean": 24.3,
             "std": 13.5,
             "p10": 0.73,
             "p25": 2.77,
-            "p50": 7.81,
+            "p50": 23.57,
             "p75": 17.22,
             "p90": 32.01,
             "cqr_interval_width_mult": 1.08
@@ -25948,11 +28152,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 42.53,
+            "mean": 37.7,
             "std": 31.62,
             "p10": 8.44,
             "p25": 17.68,
-            "p50": 34.6,
+            "p50": 36.57,
             "p75": 58.84,
             "p90": 90.67,
             "cqr_interval_width_mult": 1.08
@@ -26102,21 +28306,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 34.62,
+            "mean": 52.4,
             "std": 31.82,
             "p10": 3.2,
             "p25": 10.22,
-            "p50": 24.92,
+            "p50": 50.83,
             "p75": 50.67,
             "p90": 81.35,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.98,
+            "mean": 5.09,
             "std": 2.81,
             "p10": 0.0,
             "p25": 0.77,
-            "p50": 2.21,
+            "p50": 4.94,
             "p75": 4.48,
             "p90": 7.04,
             "cqr_interval_width_mult": 1.08
@@ -26190,21 +28394,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 7.38,
+            "mean": 8.9,
             "std": 12.27,
             "p10": 0.0,
             "p25": 0.51,
-            "p50": 2.69,
+            "p50": 8.63,
             "p75": 8.87,
             "p90": 21.69,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.1,
+            "mean": 0.87,
             "std": 1.44,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 0.56,
+            "p50": 0.84,
             "p75": 1.81,
             "p90": 3.28,
             "cqr_interval_width_mult": 1.08
@@ -26278,21 +28482,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 36.98,
+            "mean": 59.4,
             "std": 32.82,
             "p10": 3.72,
             "p25": 11.49,
-            "p50": 27.41,
+            "p50": 57.62,
             "p75": 53.17,
             "p90": 86.36,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.37,
+            "mean": 5.16,
             "std": 2.19,
             "p10": 0.0,
             "p25": 0.65,
-            "p50": 1.81,
+            "p50": 5.01,
             "p75": 3.56,
             "p90": 5.63,
             "cqr_interval_width_mult": 1.08
@@ -26516,21 +28720,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 19.68,
+            "mean": 20.1,
             "std": 22.41,
             "p10": 0.91,
             "p25": 4.09,
-            "p50": 11.91,
+            "p50": 19.5,
             "p75": 27.69,
             "p90": 50.13,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.9,
+            "mean": 1.75,
             "std": 2.17,
             "p10": 0.0,
             "p25": 0.24,
-            "p50": 1.26,
+            "p50": 1.7,
             "p75": 2.79,
             "p90": 4.92,
             "cqr_interval_width_mult": 1.08
@@ -26932,11 +29136,11 @@
         },
         "projections": {
           "pass_yds": {
-            "mean": 139.73,
+            "mean": 234.2,
             "std": 43.81,
             "p10": 80.76,
             "p25": 106.68,
-            "p50": 138.0,
+            "p50": 229.52,
             "p75": 170.4,
             "p90": 201.72,
             "cqr_interval_width_mult": 1.08
@@ -27002,11 +29206,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_yds": {
-            "mean": 9.22,
+            "mean": 12.6,
             "std": 8.03,
             "p10": 0.0,
             "p25": 2.6,
-            "p50": 8.0,
+            "p50": 12.22,
             "p75": 13.4,
             "p90": 20.96,
             "cqr_interval_width_mult": 1.08
@@ -27092,21 +29296,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 8.18,
+            "mean": 10.4,
             "std": 16.8,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 6.63,
+            "p50": 10.09,
             "p75": 17.71,
             "p90": 30.36,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.04,
+            "mean": 1.29,
             "std": 2.58,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 1.2,
+            "p50": 1.25,
             "p75": 3.32,
             "p90": 5.74,
             "cqr_interval_width_mult": 1.08
@@ -27123,11 +29327,11 @@
           },
           "target_share_conserved": 0.0557,
           "rush_yds": {
-            "mean": 29.27,
+            "mean": 27.0,
             "std": 34.75,
             "p10": 0.0,
             "p25": 3.28,
-            "p50": 28.21,
+            "p50": 26.19,
             "p75": 53.69,
             "p90": 77.43,
             "cqr_interval_width_mult": 1.08
@@ -27143,11 +29347,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 37.44,
+            "mean": 37.4,
             "std": 38.6,
             "p10": 0.0,
             "p25": 9.09,
-            "p50": 36.36,
+            "p50": 36.28,
             "p75": 64.41,
             "p90": 90.74,
             "cqr_interval_width_mult": 1.08
@@ -27214,21 +29418,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 16.68,
+            "mean": 18.6,
             "std": 17.96,
             "p10": 1.09,
             "p25": 3.92,
-            "p50": 10.68,
+            "p50": 18.04,
             "p75": 23.35,
             "p90": 42.11,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.8,
+            "mean": 2.31,
             "std": 3.04,
             "p10": 0.0,
             "p25": 0.57,
-            "p50": 1.9,
+            "p50": 2.24,
             "p75": 4.02,
             "p90": 7.05,
             "cqr_interval_width_mult": 1.08
@@ -27245,11 +29449,11 @@
           },
           "target_share_conserved": 0.1158,
           "rush_yds": {
-            "mean": 22.1,
+            "mean": 48.3,
             "std": 17.88,
             "p10": 2.75,
             "p25": 8.01,
-            "p50": 17.52,
+            "p50": 46.85,
             "p75": 31.94,
             "p90": 48.53,
             "cqr_interval_width_mult": 1.08
@@ -27265,11 +29469,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 38.78,
+            "mean": 66.9,
             "std": 25.62,
             "p10": 10.0,
             "p25": 18.69,
-            "p50": 33.47,
+            "p50": 64.89,
             "p75": 53.1,
             "p90": 76.03,
             "cqr_interval_width_mult": 1.08
@@ -27336,21 +29540,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 3.92,
+            "mean": 3.8,
             "std": 14.75,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 3.17,
+            "p50": 3.69,
             "p75": 13.5,
             "p90": 23.37,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.46,
+            "mean": 0.47,
             "std": 2.01,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 0.57,
+            "p50": 0.46,
             "p75": 2.57,
             "p90": 4.45,
             "cqr_interval_width_mult": 1.08
@@ -27367,11 +29571,11 @@
           },
           "target_share_conserved": 0.0257,
           "rush_yds": {
-            "mean": 10.06,
+            "mean": 9.8,
             "std": 16.6,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 8.57,
+            "p50": 9.51,
             "p75": 20.18,
             "p90": 32.65,
             "cqr_interval_width_mult": 1.08
@@ -27387,11 +29591,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 13.98,
+            "mean": 13.6,
             "std": 22.04,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 12.71,
+            "p50": 13.19,
             "p75": 28.5,
             "p90": 44.14,
             "cqr_interval_width_mult": 1.08
@@ -27627,21 +29831,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 18.91,
+            "mean": 38.5,
             "std": 19.36,
             "p10": 1.47,
             "p25": 4.86,
-            "p50": 12.71,
+            "p50": 37.34,
             "p75": 26.69,
             "p90": 46.64,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.98,
+            "mean": 3.73,
             "std": 2.09,
             "p10": 0.0,
             "p25": 0.35,
-            "p50": 1.4,
+            "p50": 3.62,
             "p75": 2.96,
             "p90": 4.91,
             "cqr_interval_width_mult": 1.08
@@ -27715,21 +29919,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 11.9,
+            "mean": 16.6,
             "std": 14.52,
             "p10": 0.51,
             "p25": 2.26,
-            "p50": 6.58,
+            "p50": 16.1,
             "p75": 16.24,
             "p90": 31.59,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.64,
+            "mean": 1.6,
             "std": 2.0,
             "p10": 0.0,
             "p25": 0.11,
-            "p50": 1.03,
+            "p50": 1.55,
             "p75": 2.43,
             "p90": 4.35,
             "cqr_interval_width_mult": 1.08
@@ -27803,21 +30007,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 34.61,
+            "mean": 79.6,
             "std": 35.42,
             "p10": 0.0,
             "p25": 8.33,
-            "p50": 30.74,
+            "p50": 77.21,
             "p75": 56.8,
             "p90": 85.52,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.86,
+            "mean": 6.89,
             "std": 2.59,
             "p10": 0.0,
             "p25": 0.53,
-            "p50": 2.36,
+            "p50": 6.68,
             "p75": 4.5,
             "p90": 6.76,
             "cqr_interval_width_mult": 1.08
@@ -27922,21 +30126,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 27.62,
+            "mean": 50.1,
             "std": 24.44,
             "p10": 2.89,
             "p25": 8.7,
-            "p50": 20.42,
+            "p50": 48.6,
             "p75": 40.14,
             "p90": 65.25,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.66,
+            "mean": 4.34,
             "std": 2.41,
             "p10": 0.0,
             "p25": 0.76,
-            "p50": 2.06,
+            "p50": 4.21,
             "p75": 3.96,
             "p90": 6.28,
             "cqr_interval_width_mult": 1.08
@@ -28041,21 +30245,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 14.14,
+            "mean": 16.7,
             "std": 16.13,
             "p10": 0.7,
             "p25": 3.03,
-            "p50": 8.44,
+            "p50": 16.2,
             "p75": 19.9,
             "p90": 35.97,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.72,
+            "mean": 1.45,
             "std": 1.97,
             "p10": 0.0,
             "p25": 0.19,
-            "p50": 1.15,
+            "p50": 1.41,
             "p75": 2.54,
             "p90": 4.51,
             "cqr_interval_width_mult": 1.08
@@ -28943,11 +31147,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "37b5fd5066cd86ff8b3623571a7b24d312ac3feb39f9f1bc25432dce9a96dcdb"
+    "stage3_4_receipt_sha256": "a51e1bc511639c4208176a5e485a743778af5fde07e8adc8aa4680e3c093e01c"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "15e051caab9e455a3d5759d75c92cc5b893064c65808fe438caa87a06466aaa3",
+    "parent_stage2_receipt_sha256": "e44ed5362f63df143425897ee8ee814271299686d75586d0a6e7c1fd669855a0",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -29268,8 +31472,8 @@
           "tackles_plus_assists": {
             "mean": 9.73,
             "std": 20.31,
-            "p10": -17.41,
-            "p25": -4.97,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 8.88,
             "p75": 23.55,
             "p90": 38.06,
@@ -29445,11 +31649,11 @@
         },
         "projections": {
           "pass_yds": {
-            "mean": 212.38,
+            "mean": 235.2,
             "std": 49.92,
             "p10": 144.04,
             "p25": 175.36,
-            "p50": 211.0,
+            "p50": 230.5,
             "p75": 248.8,
             "p90": 282.28,
             "cqr_interval_width_mult": 1.08
@@ -29515,11 +31719,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_yds": {
-            "mean": 13.23,
+            "mean": 22.9,
             "std": 9.49,
             "p10": 1.2,
             "p25": 5.52,
-            "p50": 12.0,
+            "p50": 22.21,
             "p75": 19.56,
             "p90": 27.12,
             "cqr_interval_width_mult": 1.08
@@ -29605,21 +31809,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 18.7,
+            "mean": 23.4,
             "std": 21.78,
             "p10": 0.82,
             "p25": 3.68,
-            "p50": 11.02,
+            "p50": 22.7,
             "p75": 25.99,
             "p90": 49.65,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.99,
+            "mean": 2.92,
             "std": 3.47,
             "p10": 0.0,
             "p25": 0.52,
-            "p50": 1.9,
+            "p50": 2.83,
             "p75": 4.22,
             "p90": 7.86,
             "cqr_interval_width_mult": 1.08
@@ -29627,8 +31831,8 @@
           "rec_tds": {
             "mean": 0.12,
             "std": 0.31,
-            "p10": -0.28,
-            "p25": -0.1,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.11,
             "p75": 0.32,
             "p90": 0.54,
@@ -29636,11 +31840,11 @@
           },
           "target_share_conserved": 0.0862,
           "rush_yds": {
-            "mean": 40.99,
+            "mean": 42.5,
             "std": 37.44,
-            "p10": -10.32,
+            "p10": 0.0,
             "p25": 13.99,
-            "p50": 39.57,
+            "p50": 41.23,
             "p75": 67.82,
             "p90": 93.52,
             "cqr_interval_width_mult": 1.08
@@ -29656,11 +31860,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 59.69,
+            "mean": 65.9,
             "std": 43.38,
             "p10": 3.27,
             "p25": 28.26,
-            "p50": 57.1,
+            "p50": 63.92,
             "p75": 88.64,
             "p90": 120.58,
             "cqr_interval_width_mult": 1.08
@@ -29749,8 +31953,8 @@
           "rec_tds": {
             "mean": 0.09,
             "std": 0.3,
-            "p10": -0.3,
-            "p25": -0.13,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.08,
             "p75": 0.29,
             "p90": 0.49,
@@ -29760,8 +31964,8 @@
           "rush_yds": {
             "mean": 6.6,
             "std": 15.45,
-            "p10": -13.7,
-            "p25": -4.36,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 5.77,
             "p75": 16.33,
             "p90": 26.8,
@@ -29780,7 +31984,7 @@
           "rush_plus_rec_yds": {
             "mean": 20.62,
             "std": 23.61,
-            "p10": -6.01,
+            "p10": 0.0,
             "p25": 4.15,
             "p50": 16.94,
             "p75": 32.52,
@@ -29849,21 +32053,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 30.16,
+            "mean": 13.4,
             "std": 28.55,
             "p10": 2.52,
             "p25": 8.38,
-            "p50": 21.09,
+            "p50": 13.0,
             "p75": 44.26,
             "p90": 73.51,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.94,
+            "mean": 1.67,
             "std": 2.84,
             "p10": 0.0,
             "p25": 0.72,
-            "p50": 2.14,
+            "p50": 1.62,
             "p75": 4.35,
             "p90": 7.22,
             "cqr_interval_width_mult": 1.08
@@ -29880,11 +32084,11 @@
           },
           "target_share_conserved": 0.1443,
           "rush_yds": {
-            "mean": 12.37,
+            "mean": 24.3,
             "std": 13.5,
             "p10": 0.73,
             "p25": 2.77,
-            "p50": 7.81,
+            "p50": 23.57,
             "p75": 17.22,
             "p90": 32.01,
             "cqr_interval_width_mult": 1.08
@@ -29900,11 +32104,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 42.53,
+            "mean": 37.7,
             "std": 31.62,
             "p10": 8.44,
             "p25": 17.68,
-            "p50": 34.6,
+            "p50": 36.57,
             "p75": 58.84,
             "p90": 90.67,
             "cqr_interval_width_mult": 1.08
@@ -30054,21 +32258,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 34.62,
+            "mean": 52.4,
             "std": 31.82,
             "p10": 3.2,
             "p25": 10.22,
-            "p50": 24.92,
+            "p50": 50.83,
             "p75": 50.67,
             "p90": 81.35,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.98,
+            "mean": 5.09,
             "std": 2.81,
             "p10": 0.0,
             "p25": 0.77,
-            "p50": 2.21,
+            "p50": 4.94,
             "p75": 4.48,
             "p90": 7.04,
             "cqr_interval_width_mult": 1.08
@@ -30142,21 +32346,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 7.38,
+            "mean": 8.9,
             "std": 12.27,
             "p10": 0.0,
             "p25": 0.51,
-            "p50": 2.69,
+            "p50": 8.63,
             "p75": 8.87,
             "p90": 21.69,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.1,
+            "mean": 0.87,
             "std": 1.44,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 0.56,
+            "p50": 0.84,
             "p75": 1.81,
             "p90": 3.28,
             "cqr_interval_width_mult": 1.08
@@ -30164,8 +32368,8 @@
           "rec_tds": {
             "mean": 0.05,
             "std": 0.28,
-            "p10": -0.33,
-            "p25": -0.16,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.04,
             "p75": 0.24,
             "p90": 0.43,
@@ -30230,21 +32434,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 36.98,
+            "mean": 59.4,
             "std": 32.82,
             "p10": 3.72,
             "p25": 11.49,
-            "p50": 27.41,
+            "p50": 57.62,
             "p75": 53.17,
             "p90": 86.36,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.37,
+            "mean": 5.16,
             "std": 2.19,
             "p10": 0.0,
             "p25": 0.65,
-            "p50": 1.81,
+            "p50": 5.01,
             "p75": 3.56,
             "p90": 5.63,
             "cqr_interval_width_mult": 1.08
@@ -30252,8 +32456,8 @@
           "rec_tds": {
             "mean": 0.24,
             "std": 0.65,
-            "p10": -0.64,
-            "p25": -0.23,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.23,
             "p75": 0.7,
             "p90": 1.12,
@@ -30263,8 +32467,8 @@
           "rush_yds": {
             "mean": 1.85,
             "std": 13.65,
-            "p10": -16.68,
-            "p25": -7.93,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.55,
             "p75": 11.44,
             "p90": 20.28,
@@ -30283,7 +32487,7 @@
           "rush_plus_rec_yds": {
             "mean": 38.84,
             "std": 35.66,
-            "p10": -1.45,
+            "p10": 0.0,
             "p25": 12.62,
             "p50": 31.56,
             "p75": 57.5,
@@ -30382,8 +32586,8 @@
           "rush_yds": {
             "mean": 4.04,
             "std": 14.3,
-            "p10": -15.1,
-            "p25": -6.33,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 3.55,
             "p75": 13.66,
             "p90": 23.47,
@@ -30402,7 +32606,7 @@
           "rush_plus_rec_yds": {
             "mean": 37.47,
             "std": 33.87,
-            "p10": -0.78,
+            "p10": 0.0,
             "p25": 12.59,
             "p50": 30.5,
             "p75": 55.86,
@@ -30468,21 +32672,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 19.68,
+            "mean": 20.1,
             "std": 22.41,
             "p10": 0.91,
             "p25": 4.09,
-            "p50": 11.91,
+            "p50": 19.5,
             "p75": 27.69,
             "p90": 50.13,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.9,
+            "mean": 1.75,
             "std": 2.17,
             "p10": 0.0,
             "p25": 0.24,
-            "p50": 1.26,
+            "p50": 1.7,
             "p75": 2.79,
             "p90": 4.92,
             "cqr_interval_width_mult": 1.08
@@ -30490,8 +32694,8 @@
           "rec_tds": {
             "mean": 0.13,
             "std": 0.32,
-            "p10": -0.28,
-            "p25": -0.1,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.11,
             "p75": 0.33,
             "p90": 0.55,
@@ -30501,8 +32705,8 @@
           "rush_yds": {
             "mean": 1.86,
             "std": 13.68,
-            "p10": -16.67,
-            "p25": -7.76,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.72,
             "p75": 11.14,
             "p90": 20.23,
@@ -30521,7 +32725,7 @@
           "rush_plus_rec_yds": {
             "mean": 21.54,
             "std": 26.47,
-            "p10": -7.45,
+            "p10": 0.0,
             "p25": 3.12,
             "p50": 16.77,
             "p75": 33.96,
@@ -30609,8 +32813,8 @@
           "rec_tds": {
             "mean": 0.11,
             "std": 0.31,
-            "p10": -0.29,
-            "p25": -0.11,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.09,
             "p75": 0.31,
             "p90": 0.52,
@@ -30620,8 +32824,8 @@
           "rush_yds": {
             "mean": 1.77,
             "std": 13.54,
-            "p10": -16.4,
-            "p25": -8.05,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.66,
             "p75": 11.37,
             "p90": 20.57,
@@ -30640,7 +32844,7 @@
           "rush_plus_rec_yds": {
             "mean": 19.16,
             "std": 24.69,
-            "p10": -8.64,
+            "p10": 0.0,
             "p25": 2.12,
             "p50": 15.12,
             "p75": 31.6,
@@ -30884,11 +33088,11 @@
         },
         "projections": {
           "pass_yds": {
-            "mean": 139.73,
+            "mean": 234.2,
             "std": 43.81,
             "p10": 80.76,
             "p25": 106.68,
-            "p50": 138.0,
+            "p50": 229.52,
             "p75": 170.4,
             "p90": 201.72,
             "cqr_interval_width_mult": 1.08
@@ -30954,11 +33158,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_yds": {
-            "mean": 9.22,
+            "mean": 12.6,
             "std": 8.03,
-            "p10": -0.64,
+            "p10": 0.0,
             "p25": 2.6,
-            "p50": 8.0,
+            "p50": 12.22,
             "p75": 13.4,
             "p90": 20.96,
             "cqr_interval_width_mult": 1.08
@@ -31044,21 +33248,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 8.18,
+            "mean": 10.4,
             "std": 16.8,
-            "p10": -12.33,
-            "p25": -3.42,
-            "p50": 6.63,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 10.09,
             "p75": 17.71,
             "p90": 30.36,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.04,
+            "mean": 1.29,
             "std": 2.58,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 1.2,
+            "p50": 1.25,
             "p75": 3.32,
             "p90": 5.74,
             "cqr_interval_width_mult": 1.08
@@ -31066,8 +33270,8 @@
           "rec_tds": {
             "mean": 0.03,
             "std": 0.27,
-            "p10": -0.34,
-            "p25": -0.17,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.03,
             "p75": 0.22,
             "p90": 0.41,
@@ -31075,11 +33279,11 @@
           },
           "target_share_conserved": 0.0557,
           "rush_yds": {
-            "mean": 29.27,
+            "mean": 27.0,
             "std": 34.75,
-            "p10": -17.35,
+            "p10": 0.0,
             "p25": 3.28,
-            "p50": 28.21,
+            "p50": 26.19,
             "p75": 53.69,
             "p90": 77.43,
             "cqr_interval_width_mult": 1.08
@@ -31095,11 +33299,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 37.44,
+            "mean": 37.4,
             "std": 38.6,
-            "p10": -14.71,
+            "p10": 0.0,
             "p25": 9.09,
-            "p50": 36.36,
+            "p50": 36.28,
             "p75": 64.41,
             "p90": 90.74,
             "cqr_interval_width_mult": 1.08
@@ -31166,21 +33370,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 16.68,
+            "mean": 18.6,
             "std": 17.96,
             "p10": 1.09,
             "p25": 3.92,
-            "p50": 10.68,
+            "p50": 18.04,
             "p75": 23.35,
             "p90": 42.11,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.8,
+            "mean": 2.31,
             "std": 3.04,
             "p10": 0.0,
             "p25": 0.57,
-            "p50": 1.9,
+            "p50": 2.24,
             "p75": 4.02,
             "p90": 7.05,
             "cqr_interval_width_mult": 1.08
@@ -31188,8 +33392,8 @@
           "rec_tds": {
             "mean": 0.07,
             "std": 0.29,
-            "p10": -0.32,
-            "p25": -0.14,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.06,
             "p75": 0.27,
             "p90": 0.47,
@@ -31197,11 +33401,11 @@
           },
           "target_share_conserved": 0.1158,
           "rush_yds": {
-            "mean": 22.1,
+            "mean": 48.3,
             "std": 17.88,
             "p10": 2.75,
             "p25": 8.01,
-            "p50": 17.52,
+            "p50": 46.85,
             "p75": 31.94,
             "p90": 48.53,
             "cqr_interval_width_mult": 1.08
@@ -31217,11 +33421,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 38.78,
+            "mean": 66.9,
             "std": 25.62,
             "p10": 10.0,
             "p25": 18.69,
-            "p50": 33.47,
+            "p50": 64.89,
             "p75": 53.1,
             "p90": 76.03,
             "cqr_interval_width_mult": 1.08
@@ -31288,21 +33492,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 3.92,
+            "mean": 3.8,
             "std": 14.75,
-            "p10": -15.15,
-            "p25": -6.51,
-            "p50": 3.17,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 3.69,
             "p75": 13.5,
             "p90": 23.37,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.46,
+            "mean": 0.47,
             "std": 2.01,
             "p10": 0.0,
             "p25": 0.0,
-            "p50": 0.57,
+            "p50": 0.46,
             "p75": 2.57,
             "p90": 4.45,
             "cqr_interval_width_mult": 1.08
@@ -31310,8 +33514,8 @@
           "rec_tds": {
             "mean": 0.02,
             "std": 0.27,
-            "p10": -0.35,
-            "p25": -0.18,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.01,
             "p75": 0.21,
             "p90": 0.39,
@@ -31319,11 +33523,11 @@
           },
           "target_share_conserved": 0.0257,
           "rush_yds": {
-            "mean": 10.06,
+            "mean": 9.8,
             "std": 16.6,
-            "p10": -10.72,
-            "p25": -1.9,
-            "p50": 8.57,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 9.51,
             "p75": 20.18,
             "p90": 32.65,
             "cqr_interval_width_mult": 1.08
@@ -31339,11 +33543,11 @@
             "cqr_interval_width_mult": 1.08
           },
           "rush_plus_rec_yds": {
-            "mean": 13.98,
+            "mean": 13.6,
             "std": 22.04,
-            "p10": -15.0,
-            "p25": -2.13,
-            "p50": 12.71,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 13.19,
             "p75": 28.5,
             "p90": 44.14,
             "cqr_interval_width_mult": 1.08
@@ -31408,8 +33612,8 @@
           "tackles_plus_assists": {
             "mean": 8.85,
             "std": 19.55,
-            "p10": -17.66,
-            "p25": -5.36,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 8.14,
             "p75": 22.47,
             "p90": 35.67,
@@ -31579,21 +33783,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 18.91,
+            "mean": 38.5,
             "std": 19.36,
             "p10": 1.47,
             "p25": 4.86,
-            "p50": 12.71,
+            "p50": 37.34,
             "p75": 26.69,
             "p90": 46.64,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.98,
+            "mean": 3.73,
             "std": 2.09,
             "p10": 0.0,
             "p25": 0.35,
-            "p50": 1.4,
+            "p50": 3.62,
             "p75": 2.96,
             "p90": 4.91,
             "cqr_interval_width_mult": 1.08
@@ -31601,8 +33805,8 @@
           "rec_tds": {
             "mean": 0.08,
             "std": 0.3,
-            "p10": -0.31,
-            "p25": -0.13,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.07,
             "p75": 0.28,
             "p90": 0.48,
@@ -31667,21 +33871,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 11.9,
+            "mean": 16.6,
             "std": 14.52,
             "p10": 0.51,
             "p25": 2.26,
-            "p50": 6.58,
+            "p50": 16.1,
             "p75": 16.24,
             "p90": 31.59,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.64,
+            "mean": 1.6,
             "std": 2.0,
             "p10": 0.0,
             "p25": 0.11,
-            "p50": 1.03,
+            "p50": 1.55,
             "p75": 2.43,
             "p90": 4.35,
             "cqr_interval_width_mult": 1.08
@@ -31689,8 +33893,8 @@
           "rec_tds": {
             "mean": 0.05,
             "std": 0.28,
-            "p10": -0.33,
-            "p25": -0.16,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.04,
             "p75": 0.24,
             "p90": 0.43,
@@ -31755,21 +33959,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 34.61,
+            "mean": 79.6,
             "std": 35.42,
-            "p10": -9.8,
+            "p10": 0.0,
             "p25": 8.33,
-            "p50": 30.74,
+            "p50": 77.21,
             "p75": 56.8,
             "p90": 85.52,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.86,
+            "mean": 6.89,
             "std": 2.59,
             "p10": 0.0,
             "p25": 0.53,
-            "p50": 2.36,
+            "p50": 6.68,
             "p75": 4.5,
             "p90": 6.76,
             "cqr_interval_width_mult": 1.08
@@ -31777,8 +33981,8 @@
           "rec_tds": {
             "mean": 0.14,
             "std": 0.78,
-            "p10": -0.93,
-            "p25": -0.44,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.14,
             "p75": 0.71,
             "p90": 1.22,
@@ -31788,8 +33992,8 @@
           "rush_yds": {
             "mean": 1.55,
             "std": 13.43,
-            "p10": -16.98,
-            "p25": -8.23,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.29,
             "p75": 11.1,
             "p90": 20.05,
@@ -31808,7 +34012,7 @@
           "rush_plus_rec_yds": {
             "mean": 36.16,
             "std": 37.98,
-            "p10": -12.2,
+            "p10": 0.0,
             "p25": 7.98,
             "p50": 32.53,
             "p75": 60.71,
@@ -31874,21 +34078,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 27.62,
+            "mean": 50.1,
             "std": 24.44,
             "p10": 2.89,
             "p25": 8.7,
-            "p50": 20.42,
+            "p50": 48.6,
             "p75": 40.14,
             "p90": 65.25,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 2.66,
+            "mean": 4.34,
             "std": 2.41,
             "p10": 0.0,
             "p25": 0.76,
-            "p50": 2.06,
+            "p50": 4.21,
             "p75": 3.96,
             "p90": 6.28,
             "cqr_interval_width_mult": 1.08
@@ -31896,8 +34100,8 @@
           "rec_tds": {
             "mean": 0.12,
             "std": 0.32,
-            "p10": -0.3,
-            "p25": -0.12,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.09,
             "p75": 0.32,
             "p90": 0.55,
@@ -31907,8 +34111,8 @@
           "rush_yds": {
             "mean": 1.64,
             "std": 13.47,
-            "p10": -16.9,
-            "p25": -8.14,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.5,
             "p75": 11.21,
             "p90": 20.13,
@@ -31927,7 +34131,7 @@
           "rush_plus_rec_yds": {
             "mean": 29.26,
             "std": 27.82,
-            "p10": -2.93,
+            "p10": 0.0,
             "p25": 8.51,
             "p50": 24.44,
             "p75": 45.26,
@@ -31993,21 +34197,21 @@
         },
         "projections": {
           "rec_yds": {
-            "mean": 14.14,
+            "mean": 16.7,
             "std": 16.13,
             "p10": 0.7,
             "p25": 3.03,
-            "p50": 8.44,
+            "p50": 16.2,
             "p75": 19.9,
             "p90": 35.97,
             "cqr_interval_width_mult": 1.08
           },
           "receptions": {
-            "mean": 1.72,
+            "mean": 1.45,
             "std": 1.97,
             "p10": 0.0,
             "p25": 0.19,
-            "p50": 1.15,
+            "p50": 1.41,
             "p75": 2.54,
             "p90": 4.51,
             "cqr_interval_width_mult": 1.08
@@ -32015,8 +34219,8 @@
           "rec_tds": {
             "mean": 0.06,
             "std": 0.28,
-            "p10": -0.32,
-            "p25": -0.15,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.05,
             "p75": 0.25,
             "p90": 0.45,
@@ -32026,8 +34230,8 @@
           "rush_yds": {
             "mean": 1.51,
             "std": 13.44,
-            "p10": -16.79,
-            "p25": -8.2,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.43,
             "p75": 10.98,
             "p90": 19.93,
@@ -32046,7 +34250,7 @@
           "rush_plus_rec_yds": {
             "mean": 15.65,
             "std": 21.04,
-            "p10": -9.18,
+            "p10": 0.0,
             "p25": 1.08,
             "p50": 13.04,
             "p75": 26.99,
@@ -32114,8 +34318,8 @@
           "rec_yds": {
             "mean": 3.78,
             "std": 14.76,
-            "p10": -15.3,
-            "p25": -6.62,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 3.23,
             "p75": 13.25,
             "p90": 23.1,
@@ -32134,8 +34338,8 @@
           "rec_tds": {
             "mean": 0.02,
             "std": 0.27,
-            "p10": -0.36,
-            "p25": -0.18,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 0.02,
             "p75": 0.21,
             "p90": 0.38,
@@ -32145,8 +34349,8 @@
           "rush_yds": {
             "mean": 1.85,
             "std": 13.51,
-            "p10": -16.49,
-            "p25": -7.81,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 1.73,
             "p75": 11.27,
             "p90": 20.35,
@@ -32165,8 +34369,8 @@
           "rush_plus_rec_yds": {
             "mean": 5.63,
             "std": 20.0,
-            "p10": -21.02,
-            "p25": -9.05,
+            "p10": 0.0,
+            "p25": 0.0,
             "p50": 5.4,
             "p75": 19.14,
             "p90": 32.26,
@@ -32895,11 +35099,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "37b5fd5066cd86ff8b3623571a7b24d312ac3feb39f9f1bc25432dce9a96dcdb"
+    "stage3_4_receipt_sha256": "a51e1bc511639c4208176a5e485a743778af5fde07e8adc8aa4680e3c093e01c"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "37b5fd5066cd86ff8b3623571a7b24d312ac3feb39f9f1bc25432dce9a96dcdb",
+    "parent_stage3_4_receipt_sha256": "a51e1bc511639c4208176a5e485a743778af5fde07e8adc8aa4680e3c093e01c",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
     "max_prop_win_prob": 0.7589,
@@ -35836,11 +38040,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "8f5eecac4d8226c86c110097493dbc7aecd4f881c02040eddacdb30fa348b483"
+    "stage5_receipt_sha256": "56bf71b6db2276b95d09ebdac08c03b16e2ba59d63af0cb61c26e4704a968037"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "37b5fd5066cd86ff8b3623571a7b24d312ac3feb39f9f1bc25432dce9a96dcdb",
+    "parent_stage3_4_receipt_sha256": "a51e1bc511639c4208176a5e485a743778af5fde07e8adc8aa4680e3c093e01c",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
     "max_prop_win_prob": 0.7589,
@@ -38777,14 +40981,14 @@
         }
       }
     },
-    "stage5_receipt_sha256": "8f5eecac4d8226c86c110097493dbc7aecd4f881c02040eddacdb30fa348b483"
+    "stage5_receipt_sha256": "56bf71b6db2276b95d09ebdac08c03b16e2ba59d63af0cb61c26e4704a968037"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {},
-  "master_bundle_sha256": "7952a3c7c05b02713786bef6ce5efefe1569ab0fd785780e1195d5fc6bc9b152",
+  "master_bundle_sha256": "427155c79310c1d64a8f910d26f118a4b3f2ec170f65ab1952a895f258ebaa32",
   "armed_26_layer_workflow_receipt": {
     "game_id": "2026_09_CLE_NO",
     "matchup": "CLE @ NO",
-    "executed_at_utc": "2026-11-07T21:19:10.384178+00:00",
+    "executed_at_utc": "2026-11-09T04:20:42.429083+00:00",
     "context_packet_id": "PKT-2026_09_CLE_NO-20261105",
     "context_packet_path": "data/context_packets/2026_09_CLE_NO.json",
     "reasoning_trace_id": "TRC-2026_09_CLE_NO-20261105",
@@ -38794,11 +40998,11 @@
     "equations_executed": 21419,
     "weekly_cycle_7_steps_verified": true,
     "five_tracks_l5_verified": true,
-    "reasoning_trace_cumulative_log_odds_delta": 0.640399,
-    "equation_gate_12304_clamped_delta": -0.013772,
-    "eq_gate_12k_epa_shift": 0.00089,
-    "simulator_median_spread_home_trace_conditioned": 6.791,
-    "simulator_median_total": 42.76,
+    "reasoning_trace_cumulative_log_odds_delta": -0.014235,
+    "equation_gate_12304_clamped_delta": -0.022757,
+    "eq_gate_12k_epa_shift": 0.001407,
+    "simulator_median_spread_home_trace_conditioned": 5.2344,
+    "simulator_median_total": 41.18,
     "simulator_median_pace_sec": 26.47
   }
 }

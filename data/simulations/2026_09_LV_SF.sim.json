@@ -1,13 +1,13 @@
 {
   "matchup": "LV @ SF",
-  "median_total": 45.95,
-  "median_spread_home": 3.42,
+  "median_total": 48.16,
+  "median_spread_home": 7.28,
   "median_plays": 133.0,
   "median_pace_sec": 27.07,
   "sinkhorn_mass_moved": 0.0,
-  "shootout_prob_ge51": 0.332,
-  "stall_prob_le37": 0.2251,
-  "one_score_prob_le7": 0.3788,
+  "shootout_prob_ge51": 0.4754,
+  "stall_prob_le37": 0.1858,
+  "one_score_prob_le7": 0.318,
   "coachMindsetHash": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
   "pre_projection_universal_and_deep_priors": {
     "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1484,7 +1484,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -1495,7 +1495,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -2445,7 +2445,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -2456,7 +2456,7 @@
         "infonce_loss": 3.6e-05,
         "contrastive_alignment_prob": 0.999964,
         "glm_logistic_prob": 0.67954,
-        "l1_l2_regularization_penalty": 0.012027,
+        "l1_l2_regularization_penalty": 0.012026,
         "regularized_drive_td_prob": 0.871795,
         "temperature": 0.15,
         "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -3240,10 +3240,10 @@
       "openai_tiktoken": {
         "repo": "openai/tiktoken",
         "encoding_name": "o200k_base",
-        "exact_bpe_library_used": true,
-        "estimated_tokens": 25,
+        "exact_bpe_library_used": false,
+        "estimated_tokens": 21,
         "max_token_budget": 128000,
-        "budget_utilization_ratio": 0.000195,
+        "budget_utilization_ratio": 0.000164,
         "compaction_required": false
       },
       "google_jules_fleet": {
@@ -3395,8 +3395,8 @@
       "away_team": "LV",
       "workflow_ready": true,
       "catalog_counts": {
-        "union_agents_and_claude_skills": 149,
-        "agents_skills_count": 111,
+        "union_agents_and_claude_skills": 143,
+        "agents_skills_count": 105,
         "claude_skills_count": 91,
         "gemini_config_skills_count": 185,
         "agy_plugins_count": 7,
@@ -3488,6 +3488,244 @@
       },
       "doctrine_19_rules_substrate_verified": true
     },
+    "spatial_micro_pbp_conditioners": {
+      "schema": "gse_spatial_micro_pbp_conditioners_v1",
+      "away_team": "LV",
+      "home_team": "SF",
+      "has_explicit_overrides": false,
+      "away_profile": {
+        "entity_id": "LV_OFFENSE",
+        "entity_name": "LV Offense Spatial Profile",
+        "team": "LV",
+        "opponent": "SF",
+        "position": "TEAM",
+        "domain1_rb_front7": {
+          "hard_hit_rate": 0.1913,
+          "opportunity_share": 0.5728,
+          "target_share": 0.109,
+          "missed_tackles_forced": 25.97,
+          "designed_runs": 124.0,
+          "receptions": 28.0,
+          "yards_after_contact_per_att": 3.016,
+          "pff_elusive_rating": 51.5231,
+          "ryoe_per_att": 0.175,
+          "ryoe_variance": 1.6237,
+          "ryoe_consistency_rate_gt_1yd": 0.3355,
+          "ryoe_boom_rate_gt_5yd": 0.0963,
+          "unfair_yards_rate": 0.2976,
+          "success_over_expected_rate": 0.0502,
+          "stack_box_efficiency_rate": 0.467,
+          "tracking_vector_mesh_gap_yds": 3.365,
+          "defenders_in_box": 6.89,
+          "offensive_blockers_in_box": 6.13,
+          "avg_defender_dist_from_los_yds": 4.28,
+          "true_box_spacing_delta": 4.8087,
+          "ybc_per_att": 1.25,
+          "ol_scheme_segregation_penalty_yds": 0.0,
+          "shed_time_survival_sec": 1.754,
+          "shed_time_survival_rate": 0.7024,
+          "def_penetration_depth_yds": -0.535,
+          "designated_first_read_rb_target_rate": 0.2597,
+          "checkdown_dump_off_rate": 0.7403,
+          "rb_yprr": 1.192,
+          "rb_yprr_tier": "TIER_2_DUAL_THREAT_1_00_TO_1_50",
+          "tovs": 18.4236
+        },
+        "domain2_wr_te_db": {
+          "route_participation_rate": 0.86,
+          "yprr": 2.258,
+          "first_read_target_share": 0.283,
+          "contested_catch_rate": 0.4797,
+          "catchable_ball_rate": 0.7655,
+          "hard_hit_rate_on_rec": 0.1913,
+          "separation_at_separation_point_ssp_yds": 2.063,
+          "burn_rate_vs_man_gt_2yds": 0.3097,
+          "catch_point_leverage_delta_yds": 1.0422,
+          "true_csoe_target_prevention_rate": 0.0216
+        },
+        "domain3_qb_processing": {
+          "pre_to_post_snap_disguise_decay_ms": 223.51,
+          "disguise_processing_elite_le_220ms": false,
+          "simulated_creeping_pressure_success_rate": 0.4597,
+          "throw_to_leverage_variance_tlv_sq_yds": 0.9293
+        },
+        "domain4_trench_dl_ol": {
+          "true_pass_rush_win_rate_prwr_lt_25s": 0.1837,
+          "pocket_anchor_depth_pad_yds": 2.21,
+          "pad_holds_gt_22yds": true,
+          "stunt_loop_handoff_latency_ms": 176.64
+        },
+        "domain5_pocket_escape": {
+          "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.484,
+          "pcv_severe_gt_15": false,
+          "escape_vector_efficiency_eve": 0.6823
+        },
+        "domain6_scheme_structural": {
+          "mofo_structural_epa": 0.0939,
+          "mofc_structural_epa": 0.1139,
+          "mofo_mofc_heatmap_counter_delta": 0.1029,
+          "zone_void_exploitation_rate_zver": 0.5339
+        },
+        "expected_yardage_percentiles": {
+          "p10": 132.61,
+          "p25": 188.72,
+          "p50": 255.03,
+          "p75": 326.43,
+          "p90": 397.84,
+          "p95": 448.84,
+          "p99": 540.65
+        },
+        "pbp_snap_conditioners": {
+          "rush_yards_spatial_delta": -0.1457,
+          "rb_receiving_epa_delta": 0.0108,
+          "wr_te_completion_prob_delta": -0.0039,
+          "wr_te_explosive_mu_delta": 0.0021,
+          "qb_sack_prob_delta": 0.0045,
+          "qb_comp_prob_delta": -0.0087,
+          "qb_scramble_escape_delta": -0.0032,
+          "composite_epa_per_snap_delta": -0.00744
+        },
+        "dfs_and_prop_ceiling_boosts": {
+          "tovs": 18.4236,
+          "pff_elusive_rating": 51.5231,
+          "ryoe_boom_rate_gt_5yd": 0.0963,
+          "burn_rate_vs_man_gt_2yds": 0.3097,
+          "first_read_target_share": 0.283,
+          "zone_void_exploitation_rate_zver": 0.5339,
+          "eve_to_pcv_ratio": 0.4598,
+          "q90_spatial_boost_dk_pts": 1.324,
+          "q95_spatial_boost_dk_pts": 1.909,
+          "q99_spatial_boost_dk_pts": 2.61,
+          "cvar_099_spatial_boost_dk_pts": 3.08
+        }
+      },
+      "home_profile": {
+        "entity_id": "SF_OFFENSE",
+        "entity_name": "SF Offense Spatial Profile",
+        "team": "SF",
+        "opponent": "LV",
+        "position": "TEAM",
+        "domain1_rb_front7": {
+          "hard_hit_rate": 0.24,
+          "opportunity_share": 0.7355,
+          "target_share": 0.1672,
+          "missed_tackles_forced": 36.0,
+          "designed_runs": 138.0,
+          "receptions": 38.0,
+          "yards_after_contact_per_att": 3.52,
+          "pff_elusive_rating": 72.0,
+          "ryoe_per_att": 0.84,
+          "ryoe_variance": 2.157,
+          "ryoe_consistency_rate_gt_1yd": 0.41,
+          "ryoe_boom_rate_gt_5yd": 0.138,
+          "unfair_yards_rate": 0.384,
+          "success_over_expected_rate": 0.0702,
+          "stack_box_efficiency_rate": 0.4936,
+          "tracking_vector_mesh_gap_yds": 3.58,
+          "defenders_in_box": 6.9,
+          "offensive_blockers_in_box": 6.6,
+          "avg_defender_dist_from_los_yds": 4.52,
+          "true_box_spacing_delta": 4.7255,
+          "ybc_per_att": 1.52,
+          "ol_scheme_segregation_penalty_yds": 0.0,
+          "shed_time_survival_sec": 1.92,
+          "shed_time_survival_rate": 0.7656,
+          "def_penetration_depth_yds": -0.38,
+          "designated_first_read_rb_target_rate": 0.38,
+          "checkdown_dump_off_rate": 0.62,
+          "rb_yprr": 2.12,
+          "rb_yprr_tier": "TIER_1_ELITE_RECEIVING_WEAPON_GE_1_85",
+          "tovs": 26.04
+        },
+        "domain2_wr_te_db": {
+          "route_participation_rate": 0.86,
+          "yprr": 2.372,
+          "first_read_target_share": 0.3196,
+          "contested_catch_rate": 0.59,
+          "catchable_ball_rate": 0.83,
+          "hard_hit_rate_on_rec": 0.24,
+          "separation_at_separation_point_ssp_yds": 2.52,
+          "burn_rate_vs_man_gt_2yds": 0.42,
+          "catch_point_leverage_delta_yds": 1.5187,
+          "true_csoe_target_prevention_rate": -0.04
+        },
+        "domain3_qb_processing": {
+          "pre_to_post_snap_disguise_decay_ms": 204.0,
+          "disguise_processing_elite_le_220ms": true,
+          "simulated_creeping_pressure_success_rate": 0.54,
+          "throw_to_leverage_variance_tlv_sq_yds": 0.71
+        },
+        "domain4_trench_dl_ol": {
+          "true_pass_rush_win_rate_prwr_lt_25s": 0.158,
+          "pocket_anchor_depth_pad_yds": 2.44,
+          "pad_holds_gt_22yds": true,
+          "stunt_loop_handoff_latency_ms": 158.0
+        },
+        "domain5_pocket_escape": {
+          "pocket_collapse_vector_pcv_sq_yds_per_sec": 1.26,
+          "pcv_severe_gt_15": false,
+          "escape_vector_efficiency_eve": 0.79
+        },
+        "domain6_scheme_structural": {
+          "mofo_structural_epa": 0.22,
+          "mofc_structural_epa": 0.21,
+          "mofo_mofc_heatmap_counter_delta": 0.2155,
+          "zone_void_exploitation_rate_zver": 0.69
+        },
+        "expected_yardage_percentiles": {
+          "p10": 154.3,
+          "p25": 219.58,
+          "p50": 296.73,
+          "p75": 379.81,
+          "p90": 462.9,
+          "p95": 522.25,
+          "p99": 629.07
+        },
+        "pbp_snap_conditioners": {
+          "rush_yards_spatial_delta": 0.5993,
+          "rb_receiving_epa_delta": 0.1384,
+          "wr_te_completion_prob_delta": 0.0449,
+          "wr_te_explosive_mu_delta": 1.7029,
+          "qb_sack_prob_delta": -0.0164,
+          "qb_comp_prob_delta": 0.0306,
+          "qb_scramble_escape_delta": 0.006,
+          "composite_epa_per_snap_delta": 0.10386
+        },
+        "dfs_and_prop_ceiling_boosts": {
+          "tovs": 26.04,
+          "pff_elusive_rating": 72.0,
+          "ryoe_boom_rate_gt_5yd": 0.138,
+          "burn_rate_vs_man_gt_2yds": 0.42,
+          "first_read_target_share": 0.3196,
+          "zone_void_exploitation_rate_zver": 0.69,
+          "eve_to_pcv_ratio": 0.627,
+          "q90_spatial_boost_dk_pts": 2.211,
+          "q95_spatial_boost_dk_pts": 3.138,
+          "q99_spatial_boost_dk_pts": 4.28,
+          "cvar_099_spatial_boost_dk_pts": 5.05
+        }
+      },
+      "away_conditioners": {
+        "rush_yards_spatial_delta": -0.1457,
+        "rb_receiving_epa_delta": 0.0108,
+        "wr_te_completion_prob_delta": -0.0039,
+        "wr_te_explosive_mu_delta": 0.0021,
+        "qb_sack_prob_delta": 0.0045,
+        "qb_comp_prob_delta": -0.0087,
+        "qb_scramble_escape_delta": -0.0032,
+        "composite_epa_per_snap_delta": -0.00744
+      },
+      "home_conditioners": {
+        "rush_yards_spatial_delta": 0.5993,
+        "rb_receiving_epa_delta": 0.1384,
+        "wr_te_completion_prob_delta": 0.0449,
+        "wr_te_explosive_mu_delta": 1.7029,
+        "qb_sack_prob_delta": -0.0164,
+        "qb_comp_prob_delta": 0.0306,
+        "qb_scramble_escape_delta": 0.006,
+        "composite_epa_per_snap_delta": 0.10386
+      }
+    },
     "trajectory_conditioners": {
       "scripted_1_to_15_epa_boost": 0.014,
       "post_script_16_to_65_cliff_delta": -0.00875,
@@ -3529,7 +3767,11 @@
       "openai_math_sogge_wave_focusing_gain": 1.32191,
       "openai_math_amplitude_damping_retention": 0.96594,
       "openai_math_cnf_satisfaction_prob": 0.281096,
-      "wired_into_10k_world_175_snap_simulation": true
+      "wired_into_10k_world_175_snap_simulation": true,
+      "spatial_micro_away_rush_delta": -0.1457,
+      "spatial_micro_home_rush_delta": 0.5993,
+      "spatial_micro_away_epa_delta": -0.00744,
+      "spatial_micro_home_epa_delta": 0.10386
     },
     "simulation_trajectory_conditioners": {
       "scripted_1_to_15_epa_boost": 0.014,
@@ -3572,7 +3814,11 @@
       "openai_math_sogge_wave_focusing_gain": 1.32191,
       "openai_math_amplitude_damping_retention": 0.96594,
       "openai_math_cnf_satisfaction_prob": 0.281096,
-      "wired_into_10k_world_175_snap_simulation": true
+      "wired_into_10k_world_175_snap_simulation": true,
+      "spatial_micro_away_rush_delta": -0.1457,
+      "spatial_micro_home_rush_delta": 0.5993,
+      "spatial_micro_away_epa_delta": -0.00744,
+      "spatial_micro_home_epa_delta": 0.10386
     }
   },
   "biomech_kinetic_overlay": {
@@ -3591,12 +3837,12 @@
     "scalar_torque_throttle": 0.9954,
     "metabolic_continuity_loss": 0.0125
   },
-  "fourth_down_wp_gap_mean": 0.03035762580580336,
-  "fourth_down_statistically_distinct_rate": 0.6029411764705882,
+  "fourth_down_wp_gap_mean": 0.02250374672750766,
+  "fourth_down_statistically_distinct_rate": 0.29927007299270075,
   "fourth_down_reason": "OBSERVED",
   "game_id": "2026_09_LV_SF",
   "from_context_packet": "data/context_packets/2026_09_LV_SF.json",
   "from_reasoning_trace": "data/reasoning/traces/2026_09_LV_SF.trace.json",
-  "reasoning_trace_cumulative_log_odds_delta": 0.641069,
-  "median_spread_home_trace_conditioned": 5.0227
+  "reasoning_trace_cumulative_log_odds_delta": -0.014988,
+  "median_spread_home_trace_conditioned": 7.2425
 }

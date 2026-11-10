@@ -35,12 +35,14 @@ TOKEN_PATTERN = re.compile(r"[a-z0-9_+#.\-]+")
 
 
 def load_env_local_secrets(env_path: Optional[Path] = None) -> Dict[str, str]:
-    """Read key-value pairs from .env.local without ever logging or exposing raw secrets."""
+    """Read key-value pairs from .env.local and persistent secret stores without exposing raw secrets."""
     candidates: List[Path] = []
     if env_path is not None:
         candidates.append(Path(env_path))
     repo_root = Path(__file__).resolve().parents[2]
     candidates.append(repo_root / ".env.local")
+    candidates.append(Path("/shared/user/.gemini/secrets/mongodb_atlas.env"))
+    candidates.append(Path.home() / ".gemini" / "secrets" / "mongodb_atlas.env")
 
     parsed: Dict[str, str] = {}
     for candidate in candidates:
@@ -54,7 +56,6 @@ def load_env_local_secrets(env_path: Optional[Path] = None) -> Dict[str, str]:
                 val = val.strip().strip('"').strip("'")
                 if key and key not in parsed:
                     parsed[key] = val
-            break
     return parsed
 
 
@@ -176,8 +177,22 @@ class MongoDBDossierArchiveAdapter:
         env_secrets = load_env_local_secrets()
         self.mongodb_uri = (
             mongodb_uri
-            or os.environ.get("MONGODB_URI")
-            or env_secrets.get("MONGODB_URI")
+            if mongodb_uri is not None
+            else (os.environ.get("MONGODB_URI") or env_secrets.get("MONGODB_URI") or "")
+        )
+        self.atlas_org_id = (
+            os.environ.get("MONGODB_ATLAS_ORG_ID")
+            or env_secrets.get("MONGODB_ATLAS_ORG_ID")
+            or ""
+        )
+        self.atlas_public_key = (
+            os.environ.get("MONGODB_ATLAS_PUBLIC_KEY")
+            or env_secrets.get("MONGODB_ATLAS_PUBLIC_KEY")
+            or ""
+        )
+        self._atlas_private_key = (
+            os.environ.get("MONGODB_ATLAS_PRIVATE_KEY")
+            or env_secrets.get("MONGODB_ATLAS_PRIVATE_KEY")
             or ""
         )
         self.database_name = database_name
@@ -187,6 +202,10 @@ class MongoDBDossierArchiveAdapter:
     def is_configured(self) -> bool:
         return bool(self.mongodb_uri and self.mongodb_uri.startswith(("mongodb://", "mongodb+srv://")))
 
+    @property
+    def is_atlas_org_configured(self) -> bool:
+        return bool(self.atlas_org_id and self.atlas_public_key and self._atlas_private_key)
+
     def archive_document(self, doc: CorpusDocument) -> Dict[str, Any]:
         payload = asdict(doc)
         self._in_memory_Mirror[doc.doc_id] = payload
@@ -195,6 +214,7 @@ class MongoDBDossierArchiveAdapter:
             "archived": True,
             "mode": "mongodb_uri_ready" if self.is_configured else "local_memory_mirror",
             "database": self.database_name,
+            "atlas_org_configured": self.is_atlas_org_configured,
         }
 
     def get_document(self, doc_id: str) -> Optional[Dict[str, Any]]:
@@ -316,6 +336,8 @@ class PineconeBM25HybridCorpusRetriever:
         for doc in self.documents:
             self.mongo_adapter.archive_document(doc)
         return len(self.documents)
+
+    index_documents = index_local_corpus
 
     @staticmethod
     def deterministic_dense_vector(text: str, dimension: int = 1024) -> List[float]:
