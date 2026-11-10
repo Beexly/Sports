@@ -49,6 +49,10 @@ from intelligence.architecture.unified_quantitative_nfl_architecture import (
     student_t_upper_tail_dependence,
 )
 from intelligence.coaching.ol_provider import get_cfbd_opponent_adjusted_line_yards
+from intelligence.ingestion.masters_loader import (
+    build_or_load_index,
+    resolve_masters_paths,
+)
 
 ESPN_MNF_SUMMARY_PATH = REPO_ROOT / "data" / "engine" / "espn_week9_mnf_buf_min_summary_2026-11-09.json"
 ESPN_SUNDAY_FINALS_PATH = REPO_ROOT / "data" / "engine" / "espn_week9_sunday_finals_2026-11-09.json"
@@ -675,6 +679,231 @@ def _parse_espn_home_spread(details: str, home_abbr: str, away_abbr: str) -> flo
     return 0.0
 
 
+def _build_masters_link(
+    raw_implied_pair: Optional[List[float]],
+    devig_methods: Optional[Dict[str, List[float]]],
+) -> Dict[str, Any]:
+    """Live consistency check between the extraction masters and this engine.
+
+    Loads the Equations Master through `masters_loader` (honest-executor
+    classification, cached parsed index), binds the master equation that
+    states the architecture's Multiplicative devig identity
+    (`p_i = q_i / sum_j q_j`, in pairwise-comparison form
+    `w_u / (w_u + w_v)`) to the first game's raw implied probabilities,
+    evaluates it through the honest executor, and compares against
+    `devig_all_six_methods` on the same inputs. Every failure is recorded
+    in the returned block — a failed or missing check is never dropped.
+    This function never raises.
+    """
+    link: Dict[str, Any] = {
+        "schema": "gse_masters_link_v1",
+        "purpose": (
+            "Prove the 645,864-row Equations Master is loaded and live-checked "
+            "against the architecture at projection time, not merely audited offline."
+        ),
+        "checks_run": 0,
+        "checks": [],
+    }
+    try:
+        paths = resolve_masters_paths()
+        idx = build_or_load_index(paths)
+    except Exception as exc:  # recorded, never silent
+        link.update(
+            {
+                "status": "MASTERS_UNAVAILABLE",
+                "error": f"{type(exc).__name__}: {exc}",
+                "loaded_counts": {
+                    "PARSED_EVALUATED": 0,
+                    "PARSED_SYMBOLIC_ONLY": 0,
+                    "UNPARSEABLE": 0,
+                },
+                "total_rows": 0,
+            }
+        )
+        return link
+
+    link.update(
+        {
+            "status": "MASTERS_LOADED",
+            "masters": paths.to_dict(),
+            "index_path": str(idx.index_path) if idx.index_path else None,
+            "index_from_cache": idx.index_from_cache,
+            "total_rows": idx.total_rows,
+            "loaded_counts": idx.counts_by_class(),
+        }
+    )
+    checks: List[Dict[str, Any]] = []
+
+    # --- Check 1: Multiplicative devig == master normalization equation ---
+    norm = idx.find_normalization_equation()
+    if norm is None:
+        checks.append(
+            {
+                "check": "devig_multiplicative_vs_master_normalization",
+                "status": "NO_COUNTERPART_FOUND",
+                "match": False,
+                "reason": "no master equation in s/(s+t) normalization form among parsed rows",
+            }
+        )
+    elif raw_implied_pair is None or not devig_methods or "Multiplicative" not in devig_methods:
+        checks.append(
+            {
+                "check": "devig_multiplicative_vs_master_normalization",
+                "status": "NO_ARCHITECTURE_INPUT",
+                "match": False,
+                "master_row_id": norm["row_id"],
+                "reason": "architecture devig inputs unavailable for the first game",
+            }
+        )
+    elif len(norm.get("free_symbols", [])) != 2:
+        checks.append(
+            {
+                "check": "devig_multiplicative_vs_master_normalization",
+                "status": "COUNTERPART_ARITY_MISMATCH",
+                "match": False,
+                "master_row_id": norm["row_id"],
+                "master_equation": norm["equation"],
+                "reason": (
+                    f"counterpart has {len(norm.get('free_symbols', []))} free symbols; "
+                    "the two-way devig check supplies exactly 2 raw implied probabilities"
+                ),
+            }
+        )
+    else:
+        num_sym = norm["normalization_numerator_symbol"]
+        other_sym = [s for s in norm["free_symbols"] if s != num_sym][0]
+        bindings = {
+            num_sym: float(raw_implied_pair[0]),
+            other_sym: float(raw_implied_pair[1]),
+        }
+        arch_value = float(devig_methods["Multiplicative"][0])
+        try:
+            master_value = idx.evaluate(norm["row_id"], bindings)
+            abs_diff = abs(master_value - arch_value)
+            checks.append(
+                {
+                    "check": "devig_multiplicative_vs_master_normalization",
+                    "status": "EVALUATED",
+                    "architecture_method": "devig_all_six_methods[Multiplicative][0]",
+                    "master_row_id": norm["row_id"],
+                    "master_row_index": norm["row_index"],
+                    "master_equation": norm["equation"],
+                    "master_normalized_expr": norm["normalized_expr"],
+                    "master_provenance": norm["provenance"],
+                    "bindings": bindings,
+                    "inputs_raw_implied_probs": [float(raw_implied_pair[0]), float(raw_implied_pair[1])],
+                    "master_value": master_value,
+                    "architecture_value": arch_value,
+                    "abs_diff": abs_diff,
+                    "tolerance": 1e-5,
+                    "match": bool(abs_diff <= 1e-5),
+                }
+            )
+        except Exception as exc:  # failed check stays visible
+            checks.append(
+                {
+                    "check": "devig_multiplicative_vs_master_normalization",
+                    "status": "EVALUATION_FAILED",
+                    "match": False,
+                    "master_row_id": norm["row_id"],
+                    "master_equation": norm["equation"],
+                    "bindings": bindings,
+                    "architecture_value": arch_value,
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            )
+
+    # --- Check 2: a strict PARSED_EVALUATED master row re-evaluates live ---
+    evaluated_rows = idx.get_evaluated()
+    if evaluated_rows:
+        # Prefer a non-degenerate closed-form row (>=2 operators, non-zero
+        # value) so the sanity check exercises real arithmetic; fall back
+        # to the first evaluated row.
+        rec0 = next(
+            (
+                r
+                for r in evaluated_rows
+                if r.get("operator_count", 0) >= 2
+                and r.get("evaluated_value") not in (None, 0.0)
+            ),
+            evaluated_rows[0],
+        )
+        try:
+            live_value = idx.evaluate(rec0["row_id"], {})
+            stored_value = rec0.get("evaluated_value")
+            checks.append(
+                {
+                    "check": "master_evaluated_row_live_reevaluation",
+                    "status": "EVALUATED",
+                    "master_row_id": rec0["row_id"],
+                    "master_row_index": rec0["row_index"],
+                    "master_equation": rec0["equation"],
+                    "master_provenance": rec0["provenance"],
+                    "master_value": live_value,
+                    "architecture_value": stored_value,
+                    "abs_diff": abs(live_value - float(stored_value)) if stored_value is not None else None,
+                    "match": bool(stored_value is not None and abs(live_value - float(stored_value)) <= 1e-12),
+                }
+            )
+        except Exception as exc:
+            checks.append(
+                {
+                    "check": "master_evaluated_row_live_reevaluation",
+                    "status": "EVALUATION_FAILED",
+                    "match": False,
+                    "master_row_id": rec0["row_id"],
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            )
+    else:
+        checks.append(
+            {
+                "check": "master_evaluated_row_live_reevaluation",
+                "status": "NO_EVALUATED_ROWS",
+                "match": False,
+                "reason": "masters index contains zero PARSED_EVALUATED rows",
+            }
+        )
+
+    # --- Traced provenance for the implemented methods ---
+    sinkhorn_hits = idx.term_provenance.get("sinkhorn", [])
+    link["method_provenance"] = {
+        "devig_multiplicative": {
+            "counterpart_equation_found_in_master": norm is not None,
+            "counterpart_row_id": norm["row_id"] if norm else None,
+            "counterpart_provenance": norm["provenance"] if norm else None,
+            "note": (
+                "The Multiplicative devig identity p_i = q_i / sum_j q_j appears in the master "
+                "in pairwise-comparison form w_u/(w_u+w_v); the bookmaker-markup (overround) "
+                "relation theta = sum_s 1/r_s is the same normalization stated from the odds side."
+            ),
+        },
+        "devig_shin": {
+            "evaluatable_counterpart_found_in_master": False,
+            "note": (
+                "Shin's method is an iterative solve over the bookmaker insider-trading "
+                "parameter z; no scalar evaluatable Shin equation exists in the parsed master. "
+                "The devig family is bound live via its Multiplicative member (Check 1)."
+            ),
+        },
+        "sinkhorn_knopp_ipf": {
+            "provenance_found_in_master": len(sinkhorn_hits) > 0,
+            "provenance_hits": sinkhorn_hits[:4],
+            "evaluatable_counterpart_found_in_master": False,
+            "note": (
+                "Sinkhorn-Knopp IPF is an iterative matrix-scaling algorithm; the master "
+                "carries its source text (Peyre & Cuturi, Computational Optimal Transport, "
+                "incl. the scaling form P = diag(u) K diag(v)) as provenance, but no single "
+                "scalar equation in the master evaluates a matrix IPF. Recorded honestly "
+                "as provenance-only, not as a numeric check."
+            ),
+        },
+    }
+    link["checks"] = checks
+    link["checks_run"] = len(checks)
+    return link
+
+
 def run_stage6_week10_unified_projections() -> Dict[str, Any]:
     """Execute Stage 6 (`PROJECTIONS STRICTLY LAST`) across all 14 official ESPN Week 10 games."""
     if not STAGE4_CALIBRATION_OUT.is_file():
@@ -691,6 +920,8 @@ def run_stage6_week10_unified_projections() -> Dict[str, Any]:
     rng = np.random.default_rng(20261115)
     games_out: List[Dict[str, Any]] = []
     all_players_out: List[Dict[str, Any]] = []
+    first_game_raw_implied_pair: Optional[List[float]] = None
+    first_game_devig_methods: Optional[Dict[str, List[float]]] = None
 
     events = sorted(scoreboard.get("events", []), key=lambda ev: (ev.get("date", ""), ev.get("id", "")))
     for ev in events:
@@ -717,7 +948,11 @@ def run_stage6_week10_unified_projections() -> Dict[str, Any]:
         # Standard NFL spread-to-ML mapping sigma ~ 13.8
         raw_home_win = 0.5 * (1.0 + math.erf((-market_home_spread) / (13.8 * math.sqrt(2.0))))
         vig_scale = 1.045
-        devig = devig_all_six_methods([min(0.96, raw_home_win * vig_scale), min(0.96, (1.0 - raw_home_win) * vig_scale)])
+        raw_implied_pair = [min(0.96, raw_home_win * vig_scale), min(0.96, (1.0 - raw_home_win) * vig_scale)]
+        devig = devig_all_six_methods(raw_implied_pair)
+        if first_game_raw_implied_pair is None:
+            first_game_raw_implied_pair = list(raw_implied_pair)
+            first_game_devig_methods = devig
         market_fair_home_win_shin = round(devig["Shin"][0], 4)
 
         # 2. Venue Physics, Humid Air Density & Circadian Performance Index
@@ -1156,6 +1391,7 @@ def run_stage6_week10_unified_projections() -> Dict[str, Any]:
             "publishAllowed_on_any_row": False,
         },
         "calibration_reference": "data/calibration/week9_settled_15_games_dma_aci_calibration_2026_11_10.json",
+        "masters_link": _build_masters_link(first_game_raw_implied_pair, first_game_devig_methods),
         "games_count": len(games_out),
         "players_count": len(all_players_out),
         "games": games_out,
@@ -1186,6 +1422,11 @@ def main() -> None:
                     "all_tickets_held_at_pass": w10["five_stage_gate_enforcement"]["all_tickets_held_at_pass"],
                     "publishAllowed_any": any(g["publishAllowed"] for g in w10["games"])
                     or any(p["publishAllowed"] for p in w10["player_projections"]),
+                    "masters_link_status": w10["masters_link"]["status"],
+                    "masters_link_loaded_counts": w10["masters_link"]["loaded_counts"],
+                    "masters_link_checks": [
+                        {"check": c["check"], "match": c["match"]} for c in w10["masters_link"]["checks"]
+                    ],
                 },
                 indent=2,
             )
