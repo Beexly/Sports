@@ -48,6 +48,12 @@ from intelligence.architecture.unified_quantitative_nfl_architecture import (
     solve_nflfastr_pr618_net_ep,
     student_t_upper_tail_dependence,
 )
+from intelligence.architecture.ernie_latent_moe_cognitive_router import (
+    ErnieLatentMoECognitiveRouter,
+)
+from intelligence.coaching.morning_sweep_nov10_feature_providers import (
+    MorningSweepNov10FeatureProvider,
+)
 from intelligence.coaching.ol_provider import get_cfbd_opponent_adjusted_line_yards
 from intelligence.ingestion.masters_loader import (
     build_or_load_index,
@@ -358,9 +364,12 @@ def run_stage4_week9_calibration_and_mnf_autopsy() -> Dict[str, Any]:
         game_margin_residuals.append(act_m - sp_line)
         game_total_residuals.append(act_tot - tot_line)
 
-    # Append Game #15: BUF @ MIN (`BUF 23, MIN 6` -> actual home margin `-17.0` vs implied `BUF 23.75, MIN 16.75` -> `-7.0`, total `29` vs `40.5`)
-    mnf_implied_home_margin = 16.75 - 23.75  # -7.0
-    mnf_implied_total = 23.75 + 16.75  # 40.5
+    # Append Game #15: BUF @ MIN (`BUF 23, MIN 6`) reading sealed pre-game implied team points (`BUF 23.75, MIN 20.75`)
+    mnf_budgets = mnf_proj.get("team_conserved_box_score_budgets", {})
+    mnf_buf_implied_pts = float(mnf_budgets.get("BUF", {}).get("implied_team_points", 23.75))
+    mnf_min_implied_pts = float(mnf_budgets.get("MIN", {}).get("implied_team_points", 20.75))
+    mnf_implied_home_margin = mnf_min_implied_pts - mnf_buf_implied_pts  # -3.0 (20.75 - 23.75)
+    mnf_implied_total = mnf_buf_implied_pts + mnf_min_implied_pts  # 44.5 (23.75 + 20.75)
     mnf_actual_home_margin = float(min_score - buf_score)  # -17.0
     mnf_actual_total = float(buf_score + min_score)  # 29.0
     slow_preds.append(mnf_implied_home_margin)
@@ -410,7 +419,7 @@ def run_stage4_week9_calibration_and_mnf_autopsy() -> Dict[str, Any]:
         "final_score": {"BUF": buf_score, "MIN": min_score, "display": f"BUF {buf_score}, MIN {min_score}"},
         "team_box_comparison": {
             "BUF": {
-                "proj_points": 23.75,
+                "proj_points": mnf_buf_implied_pts,
                 "actual_points": buf_score,
                 "proj_pass_yds": 238.6,
                 "actual_pass_yds": 234.0,
@@ -419,7 +428,7 @@ def run_stage4_week9_calibration_and_mnf_autopsy() -> Dict[str, Any]:
                 "time_of_possession": "42:32",
             },
             "MIN": {
-                "proj_points": 16.75,
+                "proj_points": mnf_min_implied_pts,
                 "actual_points": min_score,
                 "proj_pass_yds": 177.8,
                 "actual_pass_yds": 139.0,
@@ -1373,6 +1382,8 @@ def run_stage6_week10_unified_projections() -> Dict[str, Any]:
             }
         )
 
+    nov10_provider = MorningSweepNov10FeatureProvider()
+    latent_moe_router = ErnieLatentMoECognitiveRouter()
     out_payload = {
         "schema": "gse_week10_unified_conserved_stat_projections_v1",
         "generated_at_utc": "2026-11-10T18:35:00Z",
@@ -1391,6 +1402,9 @@ def run_stage6_week10_unified_projections() -> Dict[str, Any]:
             "publishAllowed_on_any_row": False,
         },
         "calibration_reference": "data/calibration/week9_settled_15_games_dma_aci_calibration_2026_11_10.json",
+        "one_mind_1m_provenance_relpath": "data/mind/one_mind_1m_provenance_ledger_2026_11_11.json",
+        "nov10_morning_sweep_46_csv_summary": nov10_provider.summary(),
+        "ernie_latent_moe_512_router": latent_moe_router.to_summary_dict(),
         "masters_link": _build_masters_link(first_game_raw_implied_pair, first_game_devig_methods),
         "games_count": len(games_out),
         "players_count": len(all_players_out),

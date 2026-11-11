@@ -16,6 +16,333 @@
     "publishAllowed_on_any_row": false
   },
   "calibration_reference": "data/calibration/week9_settled_15_games_dma_aci_calibration_2026_11_10.json",
+  "one_mind_1m_provenance_relpath": "data/mind/one_mind_1m_provenance_ledger_2026_11_11.json",
+  "nov10_morning_sweep_46_csv_summary": {
+    "tables_dir": "docs/data-sources/research/2026-11-10/full-tables",
+    "table_count": 46,
+    "total_rows": 685,
+    "sample_tables": [
+      {
+        "filename": "barrett-espn-consensus-vs-epa-db-2026.csv",
+        "row_count": 15,
+        "columns": [
+          "espn_pick",
+          "qb",
+          "epa_per_db",
+          "epa_db_rank_of_44"
+        ],
+        "sha256": "77de013db5119af3"
+      },
+      {
+        "filename": "barrett-mcdaniels-slot-wr-fpg-2026.csv",
+        "row_count": 19,
+        "columns": [
+          "year",
+          "slot_wr_fpg_or_note",
+          "finish"
+        ],
+        "sha256": "24815acabc3df2e6"
+      },
+      {
+        "filename": "barrett-yprr-top16-2026.csv",
+        "row_count": 16,
+        "columns": [
+          "rank",
+          "name",
+          "team",
+          "g",
+          "snap_pct",
+          "routes",
+          "route_pct",
+          "targets",
+          "target_pct",
+          "yprr",
+          "tprr"
+        ],
+        "sha256": "02124f11986a0769"
+      },
+      {
+        "filename": "billsroundtable-bills-pressures-week9-2026.csv",
+        "row_count": 7,
+        "columns": [
+          "rank",
+          "player",
+          "pos",
+          "pressures",
+          "hits",
+          "hurries",
+          "sacks",
+          "pass_rushes"
+        ],
+        "sha256": "b0a38c3386d3b956"
+      },
+      {
+        "filename": "billsroundtable-safety-epa-blanket-2026.csv",
+        "row_count": 6,
+        "columns": [
+          "safety",
+          "team",
+          "epa_allowed_per_target",
+          "blanketed_pct"
+        ],
+        "sha256": "4f88feaebb143181"
+      },
+      {
+        "filename": "cmain7-splash-weekly-survival-2026.csv",
+        "row_count": 9,
+        "columns": [
+          "week",
+          "survival_rate_pct"
+        ],
+        "sha256": "677f474bcc591e77"
+      },
+      {
+        "filename": "dabears-nfc-north-qb-rankings-week9-2026.csv",
+        "row_count": 10,
+        "columns": [
+          "category",
+          "first",
+          "value1",
+          "second",
+          "value2",
+          "third",
+          "value3",
+          "fourth",
+          "value4"
+        ],
+        "sha256": "eb2d559aaba53278"
+      },
+      {
+        "filename": "datainplay-allen-vs-wentz-2026.csv",
+        "row_count": 11,
+        "columns": [
+          "metric",
+          "josh_allen",
+          "carson_wentz"
+        ],
+        "sha256": "261e1bc649033744"
+      }
+    ]
+  },
+  "ernie_latent_moe_512_router": {
+    "router": "ErnieLatentMoECognitiveRouter",
+    "n_clusters": 512,
+    "latent_dim": 64,
+    "top_k_experts": 8,
+    "max_abs_delta_log_odds": 0.35,
+    "block0_orthogonality_frobenius_error": 5.022647764458136e-15,
+    "sample_route": {
+      "top_k_indices": [
+        435,
+        151,
+        359,
+        356,
+        62,
+        253,
+        27,
+        379
+      ],
+      "top_k_weights": [
+        0.153699,
+        0.142494,
+        0.137048,
+        0.135486,
+        0.115479,
+        0.109538,
+        0.103314,
+        0.102942
+      ],
+      "raw_delta_log_odds": -0.014638,
+      "james_stein_shrinkage_factor": 0.0,
+      "capped_delta_log_odds": -0.0
+    }
+  },
+  "masters_link": {
+    "schema": "gse_masters_link_v1",
+    "purpose": "Prove the 645,864-row Equations Master is loaded and live-checked against the architecture at projection time, not merely audited offline.",
+    "checks_run": 2,
+    "checks": [
+      {
+        "check": "devig_multiplicative_vs_master_normalization",
+        "status": "EVALUATED",
+        "architecture_method": "devig_all_six_methods[Multiplicative][0]",
+        "master_row_id": "eqrow-84188",
+        "master_row_index": 84188,
+        "master_equation": "w_{u}/(w_{u}+w_{v})",
+        "master_normalized_expr": "w_u/(w_u+w_v)",
+        "master_provenance": {
+          "book": "The Player Kernel: Learning Team StrengthsBased on Implicit Player Contributions",
+          "title": "The Player Kernel: Learning Team StrengthsBased on Implicit Player Contributions",
+          "author": null,
+          "file": null,
+          "paper_id": "1609.01176",
+          "repo": null,
+          "page": null,
+          "section": "2.1 Pairwise Comparisons as Gaussian Process Classification",
+          "lane": "equations-from-papers",
+          "domain_tags": null
+        },
+        "bindings": {
+          "w_u": 0.5976133222560971,
+          "w_v": 0.44738667774390284
+        },
+        "inputs_raw_implied_probs": [
+          0.5976133222560971,
+          0.44738667774390284
+        ],
+        "master_value": 0.5718787772785618,
+        "architecture_value": 0.571879,
+        "abs_diff": 2.2272143818113932e-07,
+        "tolerance": 1e-05,
+        "match": true
+      },
+      {
+        "check": "master_evaluated_row_live_reevaluation",
+        "status": "EVALUATED",
+        "master_row_id": "eqrow-1133",
+        "master_row_index": 1133,
+        "master_equation": "Ai(0) = , Ai\u2032 (0) = \u2212 1/3 .",
+        "master_provenance": {
+          "book": "Introduction To Random Matrices",
+          "title": null,
+          "author": "Anderson Guionnet Zeitouni",
+          "file": "books-must-have/AndersonGuionnetZeitouni-2010-IntroductionToRandomMatrices.pdf",
+          "paper_id": null,
+          "repo": null,
+          "page": 155,
+          "section": "3.7.1 Vague convergence of the rescaled largest eigenvalue: proof of Theorem",
+          "lane": "equations-from-books-a",
+          "domain_tags": [
+            "probability"
+          ]
+        },
+        "master_value": -0.3333333333333333,
+        "architecture_value": -0.3333333333333333,
+        "abs_diff": 0.0,
+        "match": true
+      }
+    ],
+    "status": "MASTERS_LOADED",
+    "masters": {
+      "equations_master": "/home/antigravity/extraction-masters-2026-11-10/EQUATIONS-MASTER-2026-11-10.jsonl.gz",
+      "situational_master": "/home/antigravity/extraction-masters-2026-11-10/SITUATIONAL-MASTER-2026-11-10.jsonl.gz",
+      "resolution_source": "legacy_fallback"
+    },
+    "index_path": "/home/antigravity/extraction-masters-2026-11-10/.gse-masters-index/masters_parsed_index.json",
+    "index_from_cache": true,
+    "total_rows": 940102,
+    "loaded_counts": {
+      "PARSED_EVALUATED": 65772,
+      "PARSED_SYMBOLIC_ONLY": 98477,
+      "UNPARSEABLE": 775853
+    },
+    "method_provenance": {
+      "devig_multiplicative": {
+        "counterpart_equation_found_in_master": true,
+        "counterpart_row_id": "eqrow-84188",
+        "counterpart_provenance": {
+          "book": "The Player Kernel: Learning Team StrengthsBased on Implicit Player Contributions",
+          "title": "The Player Kernel: Learning Team StrengthsBased on Implicit Player Contributions",
+          "author": null,
+          "file": null,
+          "paper_id": "1609.01176",
+          "repo": null,
+          "page": null,
+          "section": "2.1 Pairwise Comparisons as Gaussian Process Classification",
+          "lane": "equations-from-papers",
+          "domain_tags": null
+        },
+        "note": "The Multiplicative devig identity p_i = q_i / sum_j q_j appears in the master in pairwise-comparison form w_u/(w_u+w_v); the bookmaker-markup (overround) relation theta = sum_s 1/r_s is the same normalization stated from the odds side."
+      },
+      "devig_shin": {
+        "evaluatable_counterpart_found_in_master": false,
+        "note": "Shin's method is an iterative solve over the bookmaker insider-trading parameter z; no scalar evaluatable Shin equation exists in the parsed master. The devig family is bound live via its Multiplicative member (Check 1)."
+      },
+      "sinkhorn_knopp_ipf": {
+        "provenance_found_in_master": true,
+        "provenance_hits": [
+          {
+            "row_index": 68343,
+            "row_id": "eqrow-68343",
+            "provenance": {
+              "book": "Computational Optimal Transport",
+              "title": null,
+              "author": "Peyre Cuturi",
+              "file": "books-must-have/surplus/PeyreCuturi-2019-ComputationalOptimalTransport.pdf",
+              "paper_id": null,
+              "repo": null,
+              "page": 9,
+              "section": "4 Introduction",
+              "lane": "equations-from-books-a",
+              "domain_tags": [
+                "sports"
+              ]
+            },
+            "equation_excerpt": "\u2022 (u, v) = (ef/\u03b5 , eg/\u03b5 ): Sinkhorn scalings."
+          },
+          {
+            "row_index": 68641,
+            "row_id": "eqrow-68641",
+            "provenance": {
+              "book": "Computational Optimal Transport",
+              "title": null,
+              "author": "Peyre Cuturi",
+              "file": "books-must-have/surplus/PeyreCuturi-2019-ComputationalOptimalTransport.pdf",
+              "paper_id": null,
+              "repo": null,
+              "page": 69,
+              "section": "64 Entropic Regularization of Optimal Transport",
+              "lane": "equations-from-books-a",
+              "domain_tags": [
+                "sports"
+              ]
+            },
+            "equation_excerpt": "hP\u0302, Ci \u2264 LC (a, b)+\u03c4 . This implies that Sinkhorn computes a \u03c4 -approximate solu-"
+          },
+          {
+            "row_index": 68648,
+            "row_id": "eqrow-68648",
+            "provenance": {
+              "book": "Computational Optimal Transport",
+              "title": null,
+              "author": "Peyre Cuturi",
+              "file": "books-must-have/surplus/PeyreCuturi-2019-ComputationalOptimalTransport.pdf",
+              "paper_id": null,
+              "repo": null,
+              "page": 70,
+              "section": "64 Entropic Regularization of Optimal Transport",
+              "lane": "equations-from-books-a",
+              "domain_tags": [
+                "sports"
+              ]
+            },
+            "equation_excerpt": "P(2`) = diag(u(`) )K diag(v(`) ),"
+          },
+          {
+            "row_index": 68670,
+            "row_id": "eqrow-68670",
+            "provenance": {
+              "book": "Computational Optimal Transport",
+              "title": null,
+              "author": "Peyre Cuturi",
+              "file": "books-must-have/surplus/PeyreCuturi-2019-ComputationalOptimalTransport.pdf",
+              "paper_id": null,
+              "repo": null,
+              "page": 74,
+              "section": "68 Entropic Regularization of Optimal Transport",
+              "lane": "equations-from-books-a",
+              "domain_tags": [
+                "sports"
+              ]
+            },
+            "equation_excerpt": "K \u2208 Rn\u00d7n"
+          }
+        ],
+        "evaluatable_counterpart_found_in_master": false,
+        "note": "Sinkhorn-Knopp IPF is an iterative matrix-scaling algorithm; the master carries its source text (Peyre & Cuturi, Computational Optimal Transport, incl. the scaling form P = diag(u) K diag(v)) as provenance, but no single scalar equation in the master evaluates a matrix IPF. Recorded honestly as provenance-only, not as a numeric check."
+      }
+    }
+  },
   "games_count": 14,
   "players_count": 224,
   "games": [
@@ -34,7 +361,7 @@
       "market_total": 41.5,
       "shin_devig_home_win_prob": 0.5751,
       "black_litterman_posterior_home_margin": 2.6,
-      "black_litterman_posterior_total": 41.48,
+      "black_litterman_posterior_total": 41.47,
       "lattice_home_win_prob": 0.5694,
       "lattice_away_win_prob": 0.4202,
       "lattice_post_2026_ot_tie_prob": 0.0104,
@@ -63,10 +390,10 @@
           "nflfastr_pr618_v_kickoff_ep": 1.0626,
           "nflfastr_pr618_td_net_value": 5.8974,
           "circadian_cpi": 0.7518,
-          "sinkhorn_iterations": 28,
+          "sinkhorn_iterations": 24,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.08217,
-          "entropic_tilting_ess_pct": 84.92,
+          "entropic_tilting_kl_nats": 0.0822,
+          "entropic_tilting_ess_pct": 84.91,
           "c0_c6_all_identities_satisfied": true
         },
         "NYG": {
@@ -76,8 +403,8 @@
           "expected_points": 22.04,
           "conserved_pass_att": 31.4,
           "conserved_completions": 19.34,
-          "conserved_gross_pass_yds": 217.4,
-          "conserved_net_pass_yds": 198.4,
+          "conserved_gross_pass_yds": 217.3,
+          "conserved_net_pass_yds": 198.3,
           "conserved_total_rush_yds": 115.7,
           "conserved_pass_tds": 1.319,
           "conserved_rush_tds": 0.945,
@@ -86,9 +413,9 @@
           "nflfastr_pr618_v_kickoff_ep": 1.114,
           "nflfastr_pr618_td_net_value": 5.846,
           "circadian_cpi": 0.7518,
-          "sinkhorn_iterations": 24,
+          "sinkhorn_iterations": 28,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.03945,
+          "entropic_tilting_kl_nats": 0.03947,
           "entropic_tilting_ess_pct": 92.37,
           "c0_c6_all_identities_satisfied": true
         }
@@ -109,7 +436,7 @@
       "market_total": 51.5,
       "shin_devig_home_win_prob": 0.5751,
       "black_litterman_posterior_home_margin": 2.65,
-      "black_litterman_posterior_total": 51.38,
+      "black_litterman_posterior_total": 51.37,
       "lattice_home_win_prob": 0.5675,
       "lattice_away_win_prob": 0.4235,
       "lattice_post_2026_ot_tie_prob": 0.009,
@@ -131,16 +458,16 @@
           "conserved_gross_pass_yds": 222.1,
           "conserved_net_pass_yds": 209.5,
           "conserved_total_rush_yds": 129.4,
-          "conserved_pass_tds": 1.45,
+          "conserved_pass_tds": 1.449,
           "conserved_rush_tds": 1.053,
           "cfbd_opp_adj_off_line_yards": 3.063,
           "cfbd_off_line_yards_rank_nfl": 14,
           "nflfastr_pr618_v_kickoff_ep": 1.2164,
           "nflfastr_pr618_td_net_value": 5.7436,
           "circadian_cpi": -0.635,
-          "sinkhorn_iterations": 28,
+          "sinkhorn_iterations": 26,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.06307,
+          "entropic_tilting_kl_nats": 0.06309,
           "entropic_tilting_ess_pct": 88.22,
           "c0_c6_all_identities_satisfied": true
         },
@@ -148,7 +475,7 @@
           "team": "DET",
           "confirmed_qb1": "Jared Goff",
           "qb_volatility_or_injury_watch": null,
-          "expected_points": 27.02,
+          "expected_points": 27.01,
           "conserved_pass_att": 34.5,
           "conserved_completions": 23.17,
           "conserved_gross_pass_yds": 252.6,
@@ -163,8 +490,8 @@
           "circadian_cpi": -0.6125,
           "sinkhorn_iterations": 24,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.04705,
-          "entropic_tilting_ess_pct": 91.01,
+          "entropic_tilting_kl_nats": 0.04708,
+          "entropic_tilting_ess_pct": 91.0,
           "c0_c6_all_identities_satisfied": true
         }
       }
@@ -184,7 +511,7 @@
       "market_total": 50.5,
       "shin_devig_home_win_prob": 0.2586,
       "black_litterman_posterior_home_margin": -8.77,
-      "black_litterman_posterior_total": 50.48,
+      "black_litterman_posterior_total": 50.47,
       "lattice_home_win_prob": 0.2693,
       "lattice_away_win_prob": 0.723,
       "lattice_post_2026_ot_tie_prob": 0.0077,
@@ -200,7 +527,7 @@
           "team": "BUF",
           "confirmed_qb1": "Josh Allen",
           "qb_volatility_or_injury_watch": null,
-          "expected_points": 29.63,
+          "expected_points": 29.62,
           "conserved_pass_att": 25.8,
           "conserved_completions": 16.89,
           "conserved_gross_pass_yds": 221.1,
@@ -213,10 +540,10 @@
           "nflfastr_pr618_v_kickoff_ep": 1.3104,
           "nflfastr_pr618_td_net_value": 5.6496,
           "circadian_cpi": 0.3827,
-          "sinkhorn_iterations": 24,
-          "sinkhorn_max_marginal_error": 4.440892098500626e-16,
-          "entropic_tilting_kl_nats": 0.12579,
-          "entropic_tilting_ess_pct": 77.65,
+          "sinkhorn_iterations": 39,
+          "sinkhorn_max_marginal_error": 8.881784197001252e-16,
+          "entropic_tilting_kl_nats": 0.12576,
+          "entropic_tilting_ess_pct": 77.66,
           "c0_c6_all_identities_satisfied": true
         },
         "NYJ": {
@@ -236,10 +563,10 @@
           "nflfastr_pr618_v_kickoff_ep": 1.1707,
           "nflfastr_pr618_td_net_value": 5.7893,
           "circadian_cpi": 0.3827,
-          "sinkhorn_iterations": 32,
-          "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.09588,
-          "entropic_tilting_ess_pct": 82.71,
+          "sinkhorn_iterations": 50,
+          "sinkhorn_max_marginal_error": 1.7763568394002505e-15,
+          "entropic_tilting_kl_nats": 0.09592,
+          "entropic_tilting_ess_pct": 82.7,
           "c0_c6_all_identities_satisfied": true
         }
       }
@@ -334,7 +661,7 @@
       "market_total": 39.5,
       "shin_devig_home_win_prob": 0.3664,
       "black_litterman_posterior_home_margin": -4.57,
-      "black_litterman_posterior_total": 39.48,
+      "black_litterman_posterior_total": 39.47,
       "lattice_home_win_prob": 0.3643,
       "lattice_away_win_prob": 0.6253,
       "lattice_post_2026_ot_tie_prob": 0.0104,
@@ -352,7 +679,7 @@
           "qb_volatility_or_injury_watch": null,
           "expected_points": 22.02,
           "conserved_pass_att": 34.6,
-          "conserved_completions": 22.59,
+          "conserved_completions": 22.58,
           "conserved_gross_pass_yds": 232.2,
           "conserved_net_pass_yds": 217.6,
           "conserved_total_rush_yds": 109.3,
@@ -363,17 +690,17 @@
           "nflfastr_pr618_v_kickoff_ep": 1.174,
           "nflfastr_pr618_td_net_value": 5.786,
           "circadian_cpi": 0.1305,
-          "sinkhorn_iterations": 48,
+          "sinkhorn_iterations": 41,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.07245,
-          "entropic_tilting_ess_pct": 86.48,
+          "entropic_tilting_kl_nats": 0.07249,
+          "entropic_tilting_ess_pct": 86.47,
           "c0_c6_all_identities_satisfied": true
         },
         "CLE": {
           "team": "CLE",
           "confirmed_qb1": "Deshaun Watson",
           "qb_volatility_or_injury_watch": null,
-          "expected_points": 17.46,
+          "expected_points": 17.45,
           "conserved_pass_att": 30.2,
           "conserved_completions": 19.49,
           "conserved_gross_pass_yds": 197.4,
@@ -388,8 +715,8 @@
           "circadian_cpi": 0.3827,
           "sinkhorn_iterations": 24,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.09018,
-          "entropic_tilting_ess_pct": 83.22,
+          "entropic_tilting_kl_nats": 0.09022,
+          "entropic_tilting_ess_pct": 83.21,
           "c0_c6_all_identities_satisfied": true
         }
       }
@@ -409,7 +736,7 @@
       "market_total": 46.5,
       "shin_devig_home_win_prob": 0.2109,
       "black_litterman_posterior_home_margin": -11.22,
-      "black_litterman_posterior_total": 46.48,
+      "black_litterman_posterior_total": 46.47,
       "lattice_home_win_prob": 0.2102,
       "lattice_away_win_prob": 0.7826,
       "lattice_post_2026_ot_tie_prob": 0.0071,
@@ -431,17 +758,17 @@
           "conserved_gross_pass_yds": 225.0,
           "conserved_net_pass_yds": 214.6,
           "conserved_total_rush_yds": 140.8,
-          "conserved_pass_tds": 1.693,
+          "conserved_pass_tds": 1.692,
           "conserved_rush_tds": 1.271,
           "cfbd_opp_adj_off_line_yards": 3.135,
           "cfbd_off_line_yards_rank_nfl": 10,
           "nflfastr_pr618_v_kickoff_ep": 1.3372,
           "nflfastr_pr618_td_net_value": 5.6228,
           "circadian_cpi": 0.3827,
-          "sinkhorn_iterations": 24,
+          "sinkhorn_iterations": 25,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.04217,
-          "entropic_tilting_ess_pct": 91.98,
+          "entropic_tilting_kl_nats": 0.04215,
+          "entropic_tilting_ess_pct": 91.99,
           "c0_c6_all_identities_satisfied": true
         },
         "TEN": {
@@ -461,10 +788,10 @@
           "nflfastr_pr618_v_kickoff_ep": 0.8816,
           "nflfastr_pr618_td_net_value": 6.0784,
           "circadian_cpi": 0.1305,
-          "sinkhorn_iterations": 50,
-          "sinkhorn_max_marginal_error": 1.7763568394002505e-15,
-          "entropic_tilting_kl_nats": 0.14438,
-          "entropic_tilting_ess_pct": 74.87,
+          "sinkhorn_iterations": 24,
+          "sinkhorn_max_marginal_error": 8.881784197001252e-16,
+          "entropic_tilting_kl_nats": 0.14443,
+          "entropic_tilting_ess_pct": 74.86,
           "c0_c6_all_identities_satisfied": true
         }
       }
@@ -634,7 +961,7 @@
       "market_total": 40.5,
       "shin_devig_home_win_prob": 0.6619,
       "black_litterman_posterior_home_margin": 5.64,
-      "black_litterman_posterior_total": 40.48,
+      "black_litterman_posterior_total": 40.47,
       "lattice_home_win_prob": 0.6548,
       "lattice_away_win_prob": 0.3353,
       "lattice_post_2026_ot_tie_prob": 0.0099,
@@ -663,9 +990,9 @@
           "nflfastr_pr618_v_kickoff_ep": 0.9851,
           "nflfastr_pr618_td_net_value": 5.9749,
           "circadian_cpi": 0.1305,
-          "sinkhorn_iterations": 25,
+          "sinkhorn_iterations": 45,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.05114,
+          "entropic_tilting_kl_nats": 0.05115,
           "entropic_tilting_ess_pct": 90.26,
           "c0_c6_all_identities_satisfied": true
         },
@@ -686,9 +1013,9 @@
           "nflfastr_pr618_v_kickoff_ep": 1.1922,
           "nflfastr_pr618_td_net_value": 5.7678,
           "circadian_cpi": 0.1305,
-          "sinkhorn_iterations": 25,
-          "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.17648,
+          "sinkhorn_iterations": 50,
+          "sinkhorn_max_marginal_error": 1.7763568394002505e-15,
+          "entropic_tilting_kl_nats": 0.17653,
           "entropic_tilting_ess_pct": 70.13,
           "c0_c6_all_identities_satisfied": true
         }
@@ -934,8 +1261,8 @@
       "market_total": 48.5,
       "shin_devig_home_win_prob": 0.6046,
       "black_litterman_posterior_home_margin": 4.13,
-      "black_litterman_posterior_total": 48.48,
-      "lattice_home_win_prob": 0.6081,
+      "black_litterman_posterior_total": 48.47,
+      "lattice_home_win_prob": 0.6082,
       "lattice_away_win_prob": 0.3828,
       "lattice_post_2026_ot_tie_prob": 0.0091,
       "lattice_key_margin_3_ratio": 1.42,
@@ -964,16 +1291,16 @@
           "nflfastr_pr618_td_net_value": 6.0182,
           "circadian_cpi": 0.7373,
           "sinkhorn_iterations": 50,
-          "sinkhorn_max_marginal_error": 1.7763568394002505e-15,
-          "entropic_tilting_kl_nats": 0.07333,
-          "entropic_tilting_ess_pct": 86.36,
+          "sinkhorn_max_marginal_error": 3.552713678800501e-15,
+          "entropic_tilting_kl_nats": 0.07337,
+          "entropic_tilting_ess_pct": 86.35,
           "c0_c6_all_identities_satisfied": true
         },
         "CIN": {
           "team": "CIN",
           "confirmed_qb1": "Joe Burrow",
           "qb_volatility_or_injury_watch": null,
-          "expected_points": 26.31,
+          "expected_points": 26.3,
           "conserved_pass_att": 37.1,
           "conserved_completions": 26.63,
           "conserved_gross_pass_yds": 258.1,
@@ -987,8 +1314,8 @@
           "nflfastr_pr618_td_net_value": 5.6956,
           "circadian_cpi": 0.7373,
           "sinkhorn_iterations": 50,
-          "sinkhorn_max_marginal_error": 1.7763568394002505e-15,
-          "entropic_tilting_kl_nats": 0.07922,
+          "sinkhorn_max_marginal_error": 5.329070518200751e-15,
+          "entropic_tilting_kl_nats": 0.07926,
           "entropic_tilting_ess_pct": 85.3,
           "c0_c6_all_identities_satisfied": true
         }
@@ -1009,7 +1336,7 @@
       "market_total": 38.5,
       "shin_devig_home_win_prob": 0.6619,
       "black_litterman_posterior_home_margin": 6.12,
-      "black_litterman_posterior_total": 38.48,
+      "black_litterman_posterior_total": 38.47,
       "lattice_home_win_prob": 0.67,
       "lattice_away_win_prob": 0.3198,
       "lattice_post_2026_ot_tie_prob": 0.0102,
@@ -1038,9 +1365,9 @@
           "nflfastr_pr618_v_kickoff_ep": 0.7681,
           "nflfastr_pr618_td_net_value": 6.1919,
           "circadian_cpi": 0.9304,
-          "sinkhorn_iterations": 50,
-          "sinkhorn_max_marginal_error": 1.7763568394002505e-15,
-          "entropic_tilting_kl_nats": 0.06185,
+          "sinkhorn_iterations": 27,
+          "sinkhorn_max_marginal_error": 8.881784197001252e-16,
+          "entropic_tilting_kl_nats": 0.06187,
           "entropic_tilting_ess_pct": 88.23,
           "c0_c6_all_identities_satisfied": true
         },
@@ -1061,9 +1388,9 @@
           "nflfastr_pr618_v_kickoff_ep": 1.2507,
           "nflfastr_pr618_td_net_value": 5.7093,
           "circadian_cpi": 0.7518,
-          "sinkhorn_iterations": 23,
+          "sinkhorn_iterations": 32,
           "sinkhorn_max_marginal_error": 8.881784197001252e-16,
-          "entropic_tilting_kl_nats": 0.01341,
+          "entropic_tilting_kl_nats": 0.01342,
           "entropic_tilting_ess_pct": 97.34,
           "c0_c6_all_identities_satisfied": true
         }
@@ -1297,7 +1624,7 @@
       "dropoff_bucket": "QB1",
       "proj_pass_att": 31.4,
       "proj_completions": 19.34,
-      "proj_pass_yds": 217.4,
+      "proj_pass_yds": 217.3,
       "proj_pass_tds": 1.319,
       "proj_interceptions": 0.72,
       "proj_carries": 2.6,
@@ -1494,12 +1821,12 @@
       "proj_rush_tds": 0.26,
       "proj_targets": 1.99,
       "proj_receptions": 1.48,
-      "proj_rec_yds": 10.8,
+      "proj_rec_yds": 10.7,
       "proj_rec_tds": 0.053,
-      "proj_dk_pts": 7.85,
-      "q10_dk_pts": 3.95,
-      "q50_dk_pts": 7.3,
-      "q90_dk_pts": 12.5,
+      "proj_dk_pts": 7.84,
+      "q10_dk_pts": 3.94,
+      "q50_dk_pts": 7.29,
+      "q90_dk_pts": 12.49,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -1514,7 +1841,7 @@
       "proj_pass_att": 30.2,
       "proj_completions": 19.89,
       "proj_pass_yds": 222.1,
-      "proj_pass_tds": 1.45,
+      "proj_pass_tds": 1.449,
       "proj_interceptions": 0.69,
       "proj_carries": 4.8,
       "proj_rush_yds": 24.0,
@@ -1603,11 +1930,11 @@
       "proj_targets": 3.9,
       "proj_receptions": 2.49,
       "proj_rec_yds": 29.6,
-      "proj_rec_tds": 0.16,
-      "proj_dk_pts": 6.41,
+      "proj_rec_tds": 0.159,
+      "proj_dk_pts": 6.4,
       "q10_dk_pts": 3.22,
-      "q50_dk_pts": 5.96,
-      "q90_dk_pts": 10.21,
+      "q50_dk_pts": 5.95,
+      "q90_dk_pts": 10.19,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -1657,7 +1984,7 @@
       "proj_targets": 2.34,
       "proj_receptions": 1.6,
       "proj_rec_yds": 16.7,
-      "proj_rec_tds": 0.102,
+      "proj_rec_tds": 0.101,
       "proj_dk_pts": 3.88,
       "q10_dk_pts": 1.95,
       "q50_dk_pts": 3.61,
@@ -1684,11 +2011,11 @@
       "proj_targets": 2.81,
       "proj_receptions": 2.21,
       "proj_rec_yds": 16.6,
-      "proj_rec_tds": 0.102,
-      "proj_dk_pts": 14.2,
-      "q10_dk_pts": 7.14,
-      "q50_dk_pts": 13.21,
-      "q90_dk_pts": 22.62,
+      "proj_rec_tds": 0.101,
+      "proj_dk_pts": 14.19,
+      "q10_dk_pts": 7.13,
+      "q50_dk_pts": 13.2,
+      "q90_dk_pts": 22.6,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -1711,11 +2038,11 @@
       "proj_targets": 2.03,
       "proj_receptions": 1.59,
       "proj_rec_yds": 11.7,
-      "proj_rec_tds": 0.057,
-      "proj_dk_pts": 8.1,
-      "q10_dk_pts": 4.07,
-      "q50_dk_pts": 7.53,
-      "q90_dk_pts": 12.9,
+      "proj_rec_tds": 0.059,
+      "proj_dk_pts": 8.11,
+      "q10_dk_pts": 4.08,
+      "q50_dk_pts": 7.54,
+      "q90_dk_pts": 12.92,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -2808,7 +3135,7 @@
       "position": "QB",
       "dropoff_bucket": "QB1",
       "proj_pass_att": 34.6,
-      "proj_completions": 22.59,
+      "proj_completions": 22.58,
       "proj_pass_yds": 232.2,
       "proj_pass_tds": 1.329,
       "proj_interceptions": 0.8,
@@ -2843,13 +3170,13 @@
       "proj_rush_yds": 0.0,
       "proj_rush_tds": 0.0,
       "proj_targets": 9.77,
-      "proj_receptions": 5.84,
+      "proj_receptions": 5.83,
       "proj_rec_yds": 71.0,
       "proj_rec_tds": 0.399,
-      "proj_dk_pts": 15.33,
-      "q10_dk_pts": 7.71,
-      "q50_dk_pts": 14.26,
-      "q90_dk_pts": 24.42,
+      "proj_dk_pts": 15.32,
+      "q10_dk_pts": 7.7,
+      "q50_dk_pts": 14.25,
+      "q90_dk_pts": 24.4,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -2870,13 +3197,13 @@
       "proj_rush_yds": 0.0,
       "proj_rush_tds": 0.0,
       "proj_targets": 5.91,
-      "proj_receptions": 3.64,
+      "proj_receptions": 3.63,
       "proj_rec_yds": 41.9,
       "proj_rec_tds": 0.253,
-      "proj_dk_pts": 9.35,
+      "proj_dk_pts": 9.34,
       "q10_dk_pts": 4.7,
-      "q50_dk_pts": 8.7,
-      "q90_dk_pts": 14.89,
+      "q50_dk_pts": 8.69,
+      "q90_dk_pts": 14.88,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -3005,13 +3332,13 @@
       "proj_rush_yds": 41.7,
       "proj_rush_tds": 0.337,
       "proj_targets": 2.85,
-      "proj_receptions": 2.24,
+      "proj_receptions": 2.25,
       "proj_rec_yds": 15.1,
       "proj_rec_tds": 0.053,
-      "proj_dk_pts": 10.26,
+      "proj_dk_pts": 10.27,
       "q10_dk_pts": 5.16,
-      "q50_dk_pts": 9.54,
-      "q90_dk_pts": 16.34,
+      "q50_dk_pts": 9.55,
+      "q90_dk_pts": 16.36,
       "decision": "PASS",
       "publishAllowed": false
     },
@@ -3242,7 +3569,7 @@
       "proj_pass_att": 27.0,
       "proj_completions": 17.6,
       "proj_pass_yds": 225.0,
-      "proj_pass_tds": 1.693,
+      "proj_pass_tds": 1.692,
       "proj_interceptions": 0.62,
       "proj_carries": 3.2,
       "proj_rush_yds": 10.8,
@@ -3304,7 +3631,7 @@
       "proj_targets": 5.27,
       "proj_receptions": 3.23,
       "proj_rec_yds": 46.4,
-      "proj_rec_tds": 0.322,
+      "proj_rec_tds": 0.321,
       "proj_dk_pts": 9.8,
       "q10_dk_pts": 4.93,
       "q50_dk_pts": 9.11,
@@ -3385,7 +3712,7 @@
       "proj_targets": 1.79,
       "proj_receptions": 1.21,
       "proj_rec_yds": 14.6,
-      "proj_rec_tds": 0.119,
+      "proj_rec_tds": 0.118,
       "proj_dk_pts": 3.38,
       "q10_dk_pts": 1.7,
       "q50_dk_pts": 3.14,
@@ -3412,7 +3739,7 @@
       "proj_targets": 2.59,
       "proj_receptions": 2.01,
       "proj_rec_yds": 17.3,
-      "proj_rec_tds": 0.119,
+      "proj_rec_tds": 0.118,
       "proj_dk_pts": 17.75,
       "q10_dk_pts": 8.92,
       "q50_dk_pts": 16.51,
@@ -3439,11 +3766,11 @@
       "proj_targets": 1.71,
       "proj_receptions": 1.35,
       "proj_rec_yds": 11.2,
-      "proj_rec_tds": 0.067,
-      "proj_dk_pts": 9.13,
-      "q10_dk_pts": 4.59,
-      "q50_dk_pts": 8.49,
-      "q90_dk_pts": 14.54,
+      "proj_rec_tds": 0.069,
+      "proj_dk_pts": 9.14,
+      "q10_dk_pts": 4.6,
+      "q50_dk_pts": 8.5,
+      "q90_dk_pts": 14.56,
       "decision": "PASS",
       "publishAllowed": false
     },
