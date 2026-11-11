@@ -349,7 +349,7 @@ export default function PackagesPage(): JSX.Element {
 
                   <div className="mt-5 border-t border-slate-800 pt-3 flex items-center justify-between">
                     <Link
-                      href={`/games/${writeup.gameId}`}
+                      href={`/room/${writeup.gameId}`}
                       aria-label={`Read matchup preview for ${writeup.matchup}`}
                       className="text-sm font-bold text-amber-300 hover:text-amber-200"
                     >

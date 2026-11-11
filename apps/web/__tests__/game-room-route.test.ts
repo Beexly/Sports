@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const page = fs.readFileSync(path.join(repoRoot, "apps/web/app/room/[gameId]/page.tsx"), "utf8");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/game-room/load.ts"), "utf8");
-const boardPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/board/page.tsx"), "utf8");
+const slateSportPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/slate/[sport]/page.tsx"), "utf8");
 const ledgerPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/ledger/page.tsx"), "utf8");
 
 describe("Game Intelligence Room v0", () => {
@@ -33,8 +33,10 @@ describe("Game Intelligence Room v0", () => {
     expect(loader).toMatch(/isPublished:\s*true/);
   });
 
-  it("is discoverable from board and ledger surfaces", () => {
-    expect(boardPage).toContain("href={`/room/${row.gameId}`}");
+  it("is discoverable from the live slate and the ledger", () => {
+    // /board was retired to an honest stub (C-224); the live board surface is
+    // /slate/[sport], which is where a game must be reachable from.
+    expect(slateSportPage).toContain("href={`/room/${game.gameId}`}");
     expect(ledgerPage).toContain("href={`/room/${row.gameId}`}");
   });
 

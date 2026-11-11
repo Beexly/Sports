@@ -83,7 +83,7 @@ export function DossierLedger({ writeups, entries = 3, unlockHref }: DossierLedg
           </dl>
 
           <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4">
-            <Link href={`/games/${featured.gameId}`} className="rl-link">
+            <Link href={`/room/${featured.gameId}`} className="rl-link">
               Read the matchup preview
             </Link>
             <Link href={unlockHref} className="rl-link">
@@ -98,7 +98,7 @@ export function DossierLedger({ writeups, entries = 3, unlockHref }: DossierLedg
           {shown.map((w) => (
             <li key={w.id} className="border-b border-mineral">
               <Link
-                href={`/games/${w.gameId}`}
+                href={`/room/${w.gameId}`}
                 data-od-id={`dossier-entry-${w.gameId}`}
                 className="group grid gap-x-8 gap-y-2 py-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ion-white sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_auto] sm:items-baseline"
               >

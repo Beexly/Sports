@@ -175,6 +175,21 @@ export async function loadGameRoom(
     isBootstrap: signal.isBootstrap,
   }));
 
+  // `games.currentEdgeIndex` has no writer, so it is null for every fixture and
+  // the room told readers "the market is not priced enough to compare" on games
+  // the gate had already scored. The gate decision carries the index the board
+  // renders; fall back to the newest one for this game.
+  const latestDecision = game.currentEdgeIndex == null
+    ? await db.gateDecision
+        .findFirst({
+          where: { gameId: game.id },
+          orderBy: { evaluatedAt: "desc" },
+          select: { edgeIndex: true },
+        })
+        .catch(() => null)
+    : null;
+  const edgeIndex = game.currentEdgeIndex ?? latestDecision?.edgeIndex ?? null;
+
   const node = buildGameIntelligenceNode({
     game: {
       id: game.id,
@@ -183,7 +198,7 @@ export async function loadGameRoom(
       sport: game.sport.name,
       commenceTime: game.commenceTime,
       status: game.status,
-      currentEdgeIndex: game.currentEdgeIndex,
+      currentEdgeIndex: edgeIndex,
       bookmakerCoverageMax: game.bookmakerCoverageMax,
       dataQualityScore: game.dataQualityScore,
       // Line movement is the Pro-tier market read (`canSeeLineMovement` on the

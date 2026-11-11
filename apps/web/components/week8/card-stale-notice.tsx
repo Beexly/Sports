@@ -25,8 +25,14 @@ export function CardStaleNotice({ ageDays, generatedAt }: { ageDays: number; gen
       </p>
       <div className="mt-6 flex flex-wrap gap-4">
         <Link
-          href="/packages"
+          href="/slate/nfl"
           className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-black transition-colors hover:bg-emerald-400"
+        >
+          Live NFL slate →
+        </Link>
+        <Link
+          href="/packages"
+          className="rounded-xl border border-white/15 px-6 py-3 text-sm font-bold text-[#EDE8E0] transition-colors hover:border-emerald-400"
         >
           Galaxy Picks packs →
         </Link>

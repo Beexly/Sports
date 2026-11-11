@@ -203,7 +203,7 @@ export default function DfsPage(): JSX.Element {
 
                 <div className="mt-5 border-t border-slate-800 pt-4 flex flex-wrap items-center justify-between gap-3">
                   <Link
-                    href={`/games/${writeup.gameId}`}
+                    href={`/room/${writeup.gameId}`}
                     className="text-sm font-bold text-amber-300 hover:text-amber-200"
                   >
                     Read Matchup Storyline &amp; Preview →
