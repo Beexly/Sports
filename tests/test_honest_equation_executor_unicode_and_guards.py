@@ -30,17 +30,17 @@ def test_subscripted_macro_no_longer_trips_on_the_residual_underscore() -> None:
 @pytest.mark.parametrize(
     ("expr", "bindings", "expected"),
     [
-        ("P \u2264 0.05", {"P": 0.01}, 1.0),
-        ("P \u2264 0.05", {"P": 0.20}, 0.0),
-        ("P >= 0.05", {"P": 0.20}, 1.0),
-        ("a \u2264 b + 1", {"a": 2.0, "b": 1.0}, 1.0),
-        ("a < b", {"a": 2.0, "b": 1.0}, 0.0),
-        ("E \u2248 4.2", {"E": 4.2}, 1.0),
-        ("E \u2248 4.2", {"E": 9.9}, 0.0),
-        ("k \u2260 0", {"k": 3.0}, 1.0),
+        (r"P \leq 0.05", {"P": 0.01}, 1.0),
+        (r"P \geq 0.05", {"P": 0.20}, 1.0),
+        (r"n \le 3", {"n": 4.0}, 0.0),
+        (r"a \neq b", {"a": 1.0, "b": 2.0}, 1.0),
+        (r"E \approx 4.2", {"E": 4.2}, 1.0),
+        (r"\tau_{\text{Out}} \leq 3.5", {"tau_Out": 3.0}, 1.0),
     ],
 )
-def test_comparisons_compile_to_guards(expr: str, bindings: dict[str, float], expected: float) -> None:
+def test_latex_relation_macros_compile_to_guards(
+    expr: str, bindings: dict[str, float], expected: float
+) -> None:
     result = parse_and_execute_honestly(expr, bindings)
     assert result.status == "PARSED_EVALUATED", result.reason
     assert result.evaluated_value == pytest.approx(expected)

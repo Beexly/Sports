@@ -137,6 +137,54 @@ UNICODE_REPLACEMENTS: Tuple[Tuple[str, str], ...] = (
     ("Ω", "\\Omega "),
 )
 
+# LaTeX relation macros carry the same guard semantics as the glyph pass. They
+# used to reach the tokenizer as a bare backslash (`unexpected_character:\`);
+# the 2026-11-10 corpus audit logged 16,623 rows rejected on `\leq` alone.
+RELATION_MACRO_REPLACEMENTS: Dict[str, str] = {
+    "leq": "<=",
+    "le": "<=",
+    "leqslant": "<=",
+    "geq": ">=",
+    "ge": ">=",
+    "geqslant": ">=",
+    "neq": "!=",
+    "ne": "!=",
+    "approx": "~=",
+    "sim": "~=",
+    "equiv": "==",
+}
+
+
+def _identity_replacer(match: "re.Match[str]") -> str:
+    """Return the matched macro untouched; used for unknown LaTeX commands."""
+    return match.group(0)
+
+
+def _space_replacer_factory(text: str):
+    """Build a re.sub replacement that emits literal `text`.
+
+    A plain `str` replacement is unsafe here: `re.sub` expands backslash
+    escapes in it, so `" ~= "` would be read as a tab followed by `a` and
+    `\approx` would become a form feed.
+    """
+    def _replace(match: "re.Match[str]") -> str:
+        return f" {text} "
+    return _replace
+
+
+def _build_macro_replacers() -> Dict[str, object]:
+    replacers: Dict[str, object] = {}
+    for name, symbol in RELATION_MACRO_REPLACEMENTS.items():
+        replacers[name] = _space_replacer_factory(symbol)
+    for name in SUPPORTED_UNARY_FUNCTIONS | SUPPORTED_VARIADIC_FUNCTIONS:
+        replacers[name] = _space_replacer_factory(name)
+    for name in GREEK_COMMANDS | {"infty"}:
+        replacers[name] = _space_replacer_factory(name)
+    return replacers
+
+
+_MACRO_REPLACERS: Dict[str, object] = _build_macro_replacers()
+
 
 @dataclass
 class HonestExecutionResult:
@@ -419,11 +467,8 @@ def _rewrite_latex_macros(expr: str) -> str:
     # Normalize known LaTeX function macros (\exp -> exp, \alpha -> alpha, etc.)
     def _repl_cmd(match: re.Match[str]) -> str:
         cname = match.group(1)
-        if cname in SUPPORTED_UNARY_FUNCTIONS or cname in SUPPORTED_VARIADIC_FUNCTIONS:
-            return f" {cname} "
-        if cname in GREEK_COMMANDS or cname == "infty":
-            return f" {cname} "
-        return match.group(0)
+        replacer = _MACRO_REPLACERS.get(cname, _identity_replacer)
+        return replacer(match)  # type: ignore[operator]
 
     s = re.sub(r"\\([A-Za-z]+)", _repl_cmd, s)
     # Strip trailing punctuation common in displayed equations
