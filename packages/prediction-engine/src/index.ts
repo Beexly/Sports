@@ -5895,3 +5895,7 @@ export * from "./retrieval/pinecone-corpus-retriever.js";
 
 
 
+
+// Research-derived projection parameters (quote-verified evidence).
+export { SHIPPED_PROJECTION_PARAMETERS, SHIPPED_PARAMETERS_RESEARCH_DERIVED } from "./research/shipped-params.js";
+export type { ProjectionParameters } from "./player-projection.js";
