@@ -10,6 +10,12 @@ import {
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
+import board from "@/lib/week8/sealed-board.json";
+import { cardFreshness } from "@/lib/week8/card-freshness";
+import type { SealedBoard } from "@/lib/week8/types";
+
+const sealedCard = board as unknown as SealedBoard;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "NFL Betting Packs, Player Props, Parlays & DFS | Galaxy Sports Edge",
@@ -23,11 +29,22 @@ export default function PackagesPage(): JSX.Element {
   const upcomingSundayMondayWriteups = getActiveUpcomingWriteups()
     .filter((w) => w.windowSlot !== "TNF" && !/JAX\s*@\s*BAL|Jacksonville|Baltimore/i.test(w.matchup))
     .slice(0, 4);
+  const cardIsStale = cardFreshness(sealedCard.generated_at).stale;
 
   return (
     <div className="relative min-h-screen w-full bg-slate-950 text-white">
       <Nav />
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        {cardIsStale ? (
+          <div
+            data-testid="packages-card-pending-notice"
+            className="mb-6 rounded-2xl border border-amber-400/50 bg-amber-500/10 p-5 text-sm leading-relaxed text-amber-100"
+          >
+            <strong className="text-amber-300">Before you buy:</strong> the next card is not sealed
+            yet, so no graded plays are published right now. Your unlock covers the next sealed card
+            and every pack in the slate it names. If that is not what you want, do not buy today.
+          </div>
+        ) : null}
         {/* Clean Human Football Hero */}
         <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 p-6 sm:p-10 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-6">

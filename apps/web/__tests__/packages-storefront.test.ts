@@ -71,7 +71,7 @@ describe("Galaxy Picks storefront catalog", () => {
     expect(standardPayload.mode).toBe("payment");
     expect(standardPayload.line_items[0]?.price_data.unit_amount).toBe(1900);
     expect(standardPayload.line_items[0]?.price_data.currency).toBe("usd");
-    expect(standardPayload.line_items[0]?.price_data.product_data.name).toContain("Week 9");
+    expect(standardPayload.line_items[0]?.price_data.product_data.name).toContain("Week 10");
     expect(standardPayload.line_items[0]?.price_data.product_data.name).not.toContain("Panthers");
     expect(standardPayload.line_items[0]?.price_data.product_data.name).not.toContain("?");
     expect(standardPayload.line_items[0]?.price_data.product_data.description).toContain("Jacksonville");
