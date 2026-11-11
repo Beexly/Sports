@@ -33,7 +33,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
               <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                GALAXY PICKS · WEEK 9 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MNF (LAC @ BAL)
+                GALAXY PICKS · WEEK 10 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MNF (LAC @ BAL)
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 Real football film, trench matchups, and disciplined numbers.
@@ -120,7 +120,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
             <div>
               <span className="inline-block rounded bg-amber-500/20 border border-amber-400/50 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-300">
-                FREE GAME-SCRIPT INTELLIGENCE · WEEK 9 SUNDAY MAIN SLATE &amp; MNF
+                FREE GAME-SCRIPT INTELLIGENCE · WEEK 10 SUNDAY MAIN SLATE &amp; MNF
               </span>
               <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-white">
                 Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) &amp; Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview
@@ -239,7 +239,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <div>
               <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                WEEK 9 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MONDAY NIGHT FOOTBALL (LAC @ BAL)
+                WEEK 10 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MONDAY NIGHT FOOTBALL (LAC @ BAL)
               </span>
               <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
                 Specialty Betting &amp; Expanded Week 10 DFS Packs

@@ -399,7 +399,7 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
-            <p className="plate-kicker">REDZONE · WEEK 9 NFL DESK (SUNDAY MAIN SLATE &amp; MNF)</p>
+            <p className="plate-kicker">REDZONE · WEEK 10 NFL DESK (SUNDAY MAIN SLATE &amp; MNF)</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
             <p>
               Plain-English NFL picks, player props, Same-Game Parlays, and Daily Fantasy lineups, all on one unified board.
@@ -411,7 +411,7 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
-            <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 9 SUNDAY MAIN SLATE &amp; MNF</p>
+            <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 10 SUNDAY MAIN SLATE &amp; MNF</p>
             <h1>{headline?.matchup ?? "Detroit Lions @ Miami Dolphins"}</h1>
             <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official game calls, player props, Same-Game Parlays, and optimal DFS lineups."}</p>
             <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
@@ -467,7 +467,7 @@ export function RedlineWorld({
                   className={`real-gate${selectedSlug === pack.slug ? " selected" : ""}`}
                   onClick={() => openPurchase(pack)}
                 >
-                  <small>{pack.badge ?? "WEEK 9 PACK"}</small>
+                  <small>{pack.badge ?? "WEEK 10 PACK"}</small>
                   <strong>{pack.title.split("(")[0]?.trim()}</strong>
                   <span className="gate-sub">{pack.subtitle}</span>
                   <b>{price(pack)}</b>
@@ -690,7 +690,7 @@ export function RedlineWorld({
                 <caption>Week 9 Sunday Main Slate and Monday Night Football game-environment and trench tendencies.</caption>
                 <thead>
                   <tr>
-                    <th scope="col">WEEK 9 MATCHUP</th>
+                    <th scope="col">WEEK 10 MATCHUP</th>
                     <th scope="col">GAME-ENVIRONMENT &amp; TRENCH BREAKDOWN</th>
                   </tr>
                 </thead>
