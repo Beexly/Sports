@@ -451,7 +451,7 @@ export function RedlineWorld({
               <div>
                 <p className="plate-kicker">REDZONE STOREFRONT · SETTLED LEDGER 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) · W9 SUN 7-4-0 (+2.06u)</p>
                 <h1>Pick your gate.</h1>
-                <p className="plate-deck">Select any Week 9 Sunday &amp; MNF pack below to review what’s inside and unlock instant access.</p>
+                <p className="plate-deck">Select any Sunday &amp; MNF pack below to review what’s inside and unlock instant access.</p>
               </div>
               <div className="overhead-quick-links">
                 <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>Preview DFS Lineups &amp; Pool</button>
