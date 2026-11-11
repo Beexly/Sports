@@ -66,7 +66,7 @@ describe("Board vs Picks differentiation", () => {
   it("the nav names the picks job; the parked board is deliberately not a front door", () => {
     // /picks is one of the four revenue pillars, named with its job.
     expect(nav).toContain('label: "Picks", href: "/picks"');
-    expect(nav).toContain("Locked Week 8 board");
+    expect(nav).toContain("Locked Week 10 board");
     // /board is under construction: it is deliberately ABSENT from the nav
     // so it can never be mistaken for a live front door. The picks pillar
     // must not be the board (distinct jobs, distinct doors).

@@ -3,9 +3,13 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import board from "@/lib/week8/sealed-board.json";
 import { SealedTable } from "@/components/week8/sealed-table";
+import { CardStaleNotice } from "@/components/week8/card-stale-notice";
+import { cardFreshness } from "@/lib/week8/card-freshness";
 import type { SealedBoard } from "@/lib/week8/types";
 
 const card = board as unknown as SealedBoard;
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "NFL Player Props | Galaxy Sports Edge",
@@ -17,6 +21,22 @@ export default function PropsPage(): JSX.Element {
   const watch = [...card.watch.one_q, ...card.watch.kicking, ...card.watch.idp, ...card.watch.atd].filter(
     (row) => row.decision === "ABSTAIN" && row.publishAllowed === false,
   );
+  const fresh = cardFreshness(card.generated_at);
+  if (fresh.stale) {
+    return (
+      <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
+        <Nav />
+        <main className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+          <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Locked props</p>
+          <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Props withheld</h1>
+          <div className="mt-10">
+            <CardStaleNotice ageDays={fresh.ageDays} generatedAt={fresh.generatedAt} />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />

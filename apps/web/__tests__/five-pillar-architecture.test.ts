@@ -11,7 +11,7 @@ import {
 describe("Storefront & honest settled-record architecture", () => {
   it("exposes the four storefront doors over the sealed board with zero Telegram", () => {
     expect(FIVE_REVENUE_PILLARS).toEqual([
-      { label: "Picks", href: "/picks", desc: "Locked Week 8 board" },
+      { label: "Picks", href: "/picks", desc: "Locked Week 10 board" },
       { label: "Props", href: "/props", desc: "Locked props and watchlist" },
       { label: "Packs", href: "/packages", desc: "Galaxy Picks packages" },
       { label: "DFS", href: "/fantasy/dfs", desc: "DFS lineup optimizer" },

@@ -20,7 +20,7 @@ export interface RevenuePillar {
  * Exact routes representing core commercial and tactical value streams.
  */
 export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
-  { label: "Picks", href: "/picks", desc: "Locked Week 8 board" },
+  { label: "Picks", href: "/picks", desc: "Locked Week 10 board" },
   { label: "Props", href: "/props", desc: "Locked props and watchlist" },
   { label: "Packs", href: "/packages", desc: "Galaxy Picks packages" },
   { label: "DFS", href: "/fantasy/dfs", desc: "DFS lineup optimizer" },

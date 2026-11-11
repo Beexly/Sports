@@ -101,7 +101,7 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                     Get Weekly NFL Matchup &amp; Injury Notes
                   </h3>
                   <p className="mt-2 text-sm text-[#C4BFB6]">
-                    Register your email for weekly NFL game-environment and injury workload notes, or unlock the full Week 9 card on our storefront now.
+                    Register your email for weekly NFL game-environment and injury workload notes, or unlock the full Week 10 card on our storefront now.
                   </p>
 
                   {!submitted ? (
