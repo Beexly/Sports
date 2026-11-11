@@ -247,7 +247,7 @@ function Interlock(): JSX.Element {
         <Link href="/proof" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
           Verify a sealed slate →
         </Link>
-        <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+        <Link href="/board/gate" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
           The settled record →
         </Link>
         <Link href="/verify" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title:
     "Benchmarks & Verification Dossier | Galaxy Sports Edge",
   description:
-    "14 recorded prompt/completion items (8 OpenRouter suites + 6 LiveBench categories, all passing) backed by raw JSONL records, and the independently re-counted 21,419-equation (26 Layers L01..L26) structural verification registry. The earlier 95.93 composite draft is withdrawn — no item-level records back it.",
+    "14 recorded prompt/completion items (8 OpenRouter suites + 6 LiveBench categories, all passing) backed by raw JSONL records, and the independently re-counted 21,419-equation (26 Layers L01..L26) structural verification registry. The earlier 95.93 composite draft is withdrawn: no item-level records back it.",
   alternates: { canonical: "/benchmarks" },
 };
 
@@ -56,7 +56,7 @@ const OPENROUTER_8SUITE_AND_LIVEBENCH_SUITES = [
     mechanism: "Deterministic grader: programmatic_score 1.0 in raw JSONL",
   },
   {
-    suite: "7. Humanity's Last Exam (HLE — Frontier Math, Cohomology & Information Theory)",
+    suite: "7. Humanity's Last Exam (HLE: Frontier Math, Cohomology & Information Theory)",
     category: "OpenRouter 8-Suite",
     items: "1 recorded item",
     score: "100.00 / 100",
@@ -141,7 +141,7 @@ const REGISTRY_INVENTORY = [
   },
   {
     component: "6. 35,119-item draft (95.93 composite)",
-    verified: "WITHDRAWN — zero item-level records; byte-identical to the 16,283-item file; receipt hash mismatch",
+    verified: "WITHDRAWN: zero item-level records; byte-identical to the 16,283-item file; receipt hash mismatch",
     status: "REFUTED",
   },
 ] as const;
@@ -158,7 +158,7 @@ export default function BenchmarksPage(): JSX.Element {
               Benchmark &amp; Verification Dossier
             </span>
             <span className="font-mono text-xs text-[#8F8A82]">
-              95.93 draft withdrawn Nov 7 — no item-level records
+              95.93 draft withdrawn Nov 7 with no item-level records
             </span>
           </div>
           <h1 className="mt-4 font-display text-3xl uppercase tracking-tight text-white sm:text-5xl">
@@ -169,7 +169,7 @@ export default function BenchmarksPage(): JSX.Element {
             <strong className="text-white">14 recorded prompt/completion items</strong> (8 OpenRouter
             suites + 6 LiveBench categories, all passing) backed by raw JSONL records, and the{" "}
             <strong className="text-emerald-400">21,419-equation registry across 26 reasoning
-            layers (L01..L26)</strong> — independently re-counted, executed end-to-end (0 NaN/Inf/errors),
+            layers (L01..L26)</strong>: independently re-counted, executed end-to-end (0 NaN/Inf/errors),
             and resealed 114/114. The earlier <strong className="text-white">35,119-item draft
             (95.93 composite) is withdrawn</strong>: it has zero item-level records and cannot stand
             as a verified score.
@@ -265,7 +265,7 @@ export default function BenchmarksPage(): JSX.Element {
               data/audits/stealth_skeleton_openrouter_8suite_livebench_raw_completions_2026_11_07.jsonl
             </code>
             ): 14 rows (8 OpenRouter suites + 6 LiveBench categories), programmatic_score 1.0 on every
-            row — smoke coverage (N=1 per suite), not a sized benchmark. Composite{" "}
+            row: smoke coverage (N=1 per suite), not a sized benchmark. Composite{" "}
             <strong className="text-emerald-400">100.00 / 100</strong>.
           </p>
 
@@ -315,7 +315,7 @@ export default function BenchmarksPage(): JSX.Element {
           </h2>
           <p className="mt-1 text-xs text-[#8F8A82]">
             Registry facts verified by the Nov 7 fleet adjudication (independent recount +
-            executor run). The 35,119-item / 95.93 draft below is WITHDRAWN — zero item-level
+            executor run). The 35,119-item / 95.93 draft below is WITHDRAWN: zero item-level
             records. No composite score is claimed for the registry; the inventory is the claim.
           </p>
 
