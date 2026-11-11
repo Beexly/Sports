@@ -44,7 +44,7 @@ export default function SgpProjectionsPage(): JSX.Element {
 
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-sm font-bold text-white">JAX @ BAL · Thursday Night Football</span>
+              <span className="font-mono text-sm font-bold text-white">WSH @ NYG · Thursday Night Football</span>
               <span className="rounded-full bg-emerald-500/20 px-3 py-1 font-mono text-xs font-bold text-emerald-400">
                 Conviction 74/100
               </span>

@@ -133,7 +133,7 @@ export async function POST(req: Request) {
       });
 
       // Always pass inline `price_data` from `buildStripePackageCheckoutPayload`
-      // so Stripe Checkout renders the exact active Week 9 pack title, description,
+      // so Stripe Checkout renders the exact active Week 10 pack title, description,
       // and unit amount rather than stale prior-week product metadata on a reused Price ID.
       const primaryItem = payload.line_items[0];
       if (pkg.stripeProductId && primaryItem) {

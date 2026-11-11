@@ -47,7 +47,7 @@ const SAMPLE_TAG = "Sample · ";
 const HEX = { cyan: "#FF4D2E", magenta: "#FF4D2E", uv: "#C9D4CE", amber: "#FFB454", white: "#EDE8E0" };
 
 const SAMPLE_WIRE: readonly NewsItem[] = [
-  { id: "sample-wire-1", source: "DAL Beat", tier: "Insider", team: "DAL", player: "Javonte Williams", headline: "Sample: DAL RB ruled OUT for Week 9; backfield depth absorbs touches", signal: "injury-out", minutesAgo: 5 },
+  { id: "sample-wire-1", source: "DAL Beat", tier: "Insider", team: "DAL", player: "Javonte Williams", headline: "Sample: DAL RB ruled OUT for Week 10; backfield depth absorbs touches", signal: "injury-out", minutesAgo: 5 },
   { id: "sample-wire-2", source: "PHI Beat", tier: "Beat", team: "PHI", player: "Saquon Barkley", headline: "Sample: PHI backfield workload to spike with an up-tempo script", signal: "role-up", minutesAgo: 30 },
   { id: "sample-wire-3", source: "BAL Beat", tier: "Verified", team: "BAL", player: "Zay Flowers", headline: "Sample: BAL target share consolidates around the alpha receiver", signal: "scheme", minutesAgo: 60 },
 ];

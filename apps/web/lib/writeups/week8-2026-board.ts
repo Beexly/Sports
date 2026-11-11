@@ -34,9 +34,9 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "windowSlot": "TNF",
     "postedDetails": "GB -3.5",
     "postedTotal": 46.5,
-    "scoreboardStatus": "Sunday 1:00 PM ET \u00b7 Week 9 Spotlight",
+    "scoreboardStatus": "Sunday 1:00 PM ET \u00b7 Week 10 Spotlight",
     "publication": "PLAY",
-    "passReason": "Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup \u2014 our official spread call, over/under call, and player prop card are locked inside the pack."
+    "passReason": "Sunday Week 10 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup \u2014 our official spread call, over/under call, and player prop card are locked inside the pack."
   },
   {
     "id": "board-2026-w8-401873026",

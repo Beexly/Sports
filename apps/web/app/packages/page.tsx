@@ -33,7 +33,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
               <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                GALAXY PICKS · WEEK 9 SUNDAY MAIN SLATE (DET @ MIA, GB @ NE, DAL @ IND) &amp; MNF (BUF @ MIN)
+                GALAXY PICKS · WEEK 9 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MNF (LAC @ BAL)
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 Real football film, trench matchups, and disciplined numbers.
@@ -48,7 +48,7 @@ export default function PackagesPage(): JSX.Element {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <a
                 href="#pack-cards"
-                aria-label="View this week's Week 9 Sunday Main Slate and Monday Night Football packs"
+                aria-label="View this week's Week 10 Sunday Main Slate and Monday Night Football packs"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-sm font-extrabold text-slate-950 transition-colors shadow-md"
               >
                 View This Week&apos;s Packs ↓
@@ -73,7 +73,7 @@ export default function PackagesPage(): JSX.Element {
                 36-13-1 · +20.14u
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                All-in secondary 47-19-1 · +24.92u · Entering Week 9 Sunday Main Slate &amp; Monday Night Football.
+                All-in secondary 47-19-1 · +24.92u · Entering Week 10 Sunday Main Slate &amp; Monday Night Football.
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
@@ -112,7 +112,7 @@ export default function PackagesPage(): JSX.Element {
           </div>
         </div>
 
-        {/* Free Matchup & Game-Environment Analytics Strip / Table (Week 9 Sunday Main Slate & MNF) */}
+        {/* Free Matchup & Game-Environment Analytics Strip / Table (Week 10 Sunday Main Slate & MNF) */}
         <section
           data-testid="packages-free-game-environment-analytics"
           className="mt-8 rounded-2xl border-2 border-amber-500/40 bg-slate-900/95 p-6 shadow-xl"
@@ -123,10 +123,10 @@ export default function PackagesPage(): JSX.Element {
                 FREE GAME-SCRIPT INTELLIGENCE · WEEK 9 SUNDAY MAIN SLATE &amp; MNF
               </span>
               <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-white">
-                Week 9 Sunday Main Slate (DET @ MIA, GB @ NE, DAL @ IND) &amp; Primetime (TB @ CHI, BUF @ MIN) Free Game-Environment Preview
+                Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) &amp; Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview
               </h2>
               <p className="mt-1 text-sm text-slate-300">
-                Film-room neutral pace, trench pressure rates, coverage shell tendencies, and red-zone play-calling splits across our featured Week 9 Sunday and Monday matchups. Official sides, totals, player props, and Same-Game Parlay legs stay locked inside the packs below.
+                Film-room neutral pace, trench pressure rates, coverage shell tendencies, and red-zone play-calling splits across our featured Week 10 Sunday and Monday matchups. Official sides, totals, player props, and Same-Game Parlay legs stay locked inside the packs below.
               </p>
             </div>
             <span className="rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1.5 text-xs font-extrabold text-emerald-300">
@@ -137,11 +137,11 @@ export default function PackagesPage(): JSX.Element {
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <caption className="sr-only">
-                Week 9 Sunday Main Slate (DET @ MIA, GB @ NE, DAL @ IND) and Primetime (TB @ CHI, BUF @ MIN) Free Game-Environment Preview covering neutral pace, trench pressure rates, and red-zone tendencies.
+                Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) and Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview covering neutral pace, trench pressure rates, and red-zone tendencies.
               </caption>
               <thead>
                 <tr className="border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-amber-300">
-                  <th scope="col" className="py-2.5 pr-4">Week 9 Matchup &amp; Window</th>
+                  <th scope="col" className="py-2.5 pr-4">Week 10 Matchup &amp; Window</th>
                   <th scope="col" className="py-2.5 pr-4">Projected Neutral Pace &amp; Play Volume</th>
                   <th scope="col" className="py-2.5 pr-4">Trench Pressure &amp; Pass-Protection Split</th>
                   <th scope="col" className="py-2.5">Coverage Shell &amp; Red-Zone Environment</th>
@@ -150,7 +150,7 @@ export default function PackagesPage(): JSX.Element {
               <tbody className="divide-y divide-slate-800/80 text-slate-200">
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    DET @ MIA · Sun 12:00 PM CT (Hard Rock)
+                    NE @ DET · Sun 12:00 PM CT (Hard Rock)
                   </th>
                   <td className="py-3 pr-4">
                     <strong className="text-white">26.6 sec/snap</strong> neutral pace · Projected <strong className="text-white">63.0</strong> Detroit plays vs <strong className="text-white">61.5</strong> Miami plays with pre-snap motion on <strong className="text-white">{"68.2%"}</strong> of snaps
@@ -164,7 +164,7 @@ export default function PackagesPage(): JSX.Element {
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    GB @ NE · Sun 3:25 PM CT (Gillette)
+                    KC @ ATL · Sun 3:25 PM CT (Gillette)
                   </th>
                   <td className="py-3 pr-4">
                     <strong className="text-white">27.4 sec/snap</strong> neutral pace · Green Bay <strong className="text-white">{"58.0%"}</strong> two-TE &amp; motion formations to dictate linebacker leverage
@@ -178,7 +178,7 @@ export default function PackagesPage(): JSX.Element {
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    TB @ CHI · SNF 7:20 PM CT (Soldier Field)
+                    SF @ DAL · SNF 7:20 PM CT (Soldier Field)
                   </th>
                   <td className="py-3 pr-4">
                     <strong className="text-white">26.9 sec/snap</strong> outdoor lakefront track · Projected <strong className="text-white">64.0</strong> combined plays per side in Sunday Night Football
@@ -192,7 +192,7 @@ export default function PackagesPage(): JSX.Element {
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    BUF @ MIN · MNF 7:15 PM CT (U.S. Bank)
+                    LAC @ BAL · MNF 7:15 PM CT (U.S. Bank)
                   </th>
                   <td className="py-3 pr-4">
                     <strong className="text-white">25.8 sec/snap</strong> fast indoor turf track · Buffalo <strong className="text-white">66.5%</strong> third-down conversion &amp; red-zone QB power sustain rate
@@ -239,13 +239,13 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <div>
               <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                WEEK 9 SUNDAY MAIN SLATE (DET @ MIA, GB @ NE, DAL @ IND) &amp; MONDAY NIGHT FOOTBALL (BUF @ MIN)
+                WEEK 9 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MONDAY NIGHT FOOTBALL (LAC @ BAL)
               </span>
               <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
-                Specialty Betting &amp; Expanded Week 9 DFS Packs
+                Specialty Betting &amp; Expanded Week 10 DFS Packs
               </h2>
               <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Target a specific edge across the Week 9 Sunday and Monday slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Week 9 DFS Core (2 Sunday Optimal Lineups + 14-Player Core Pool + SNF/MNF Builds).
+                Target a specific edge across the Week 10 Sunday and Monday slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Week 10 DFS Core (2 Sunday Optimal Lineups + 14-Player Core Pool + SNF/MNF Builds).
               </p>
             </div>
           </div>

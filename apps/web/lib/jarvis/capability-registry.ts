@@ -388,7 +388,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     proofSource: "/packages",
     riskLevel: "HIGH",
     nextAction:
-      "Monitor PostHog conversion funnel and Stripe webhook settlement across Week 9 packages.",
+      "Monitor PostHog conversion funnel and Stripe webhook settlement across Week 10 packages.",
     requiresHumanApproval: true,
     canAnswer: true,
     canRecommend: true,
@@ -623,7 +623,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     proofSource: "apps/web/lib/engine/connected-workflow-loader.ts",
     riskLevel: "MEDIUM",
     nextAction:
-      "Execute connected 5-stage workflow across all Week 9 Sunday Main Slate and MNF island games.",
+      "Execute connected 5-stage workflow across all Week 10 Sunday Main Slate and MNF island games.",
     requiresHumanApproval: true,
     canAnswer: true,
     canRecommend: true,

@@ -8,7 +8,7 @@ import {
 export async function GET() {
   const hedonicFraming = computeThalerHedonicBundleFraming(
     [
-      { label: "Week 9 TNF (JAX @ BAL) Full-Board Matchup & Prop Call Sheet", standaloneValueUsd: 29 },
+      { label: "Week 10 TNF (WSH @ NYG) Full-Board Matchup & Prop Call Sheet", standaloneValueUsd: 29 },
       { label: "Trench Protection, Blitz & Coverage Matchup Breakdown", standaloneValueUsd: 19 },
       { label: "DK/FD Showdown Captain & Optimal Lineup Packet", standaloneValueUsd: 15 },
       { label: "Active Injury Replacements & Pass Discipline Notes", standaloneValueUsd: 12 },
@@ -26,7 +26,7 @@ export async function GET() {
 
   const emailDispatch = buildSahniPersonalizedEmailDispatch(
     "Member",
-    "JAX @ BAL",
+    "WSH @ NYG",
     "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
     "Mark Andrews OVER 2.5 Receptions (88/100 Free Teaser) + 9 Locked TNF Plays & 3-Leg SGP",
   );
@@ -42,7 +42,7 @@ export async function GET() {
       netUnits: 24.92,
       recordDisplay: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
     },
-    tnfMatchup: "JAX @ BAL",
+    tnfMatchup: "WSH @ NYG",
     stage0ActiveStarters: {
       balQb1: "Joe Fagnano / Jacoby Brissett",
       balRb1: "Derrick Henry",
@@ -71,8 +71,8 @@ export async function GET() {
       },
     ],
     conformalPassGrades: [
-      { selection: "JAX @ BAL Spread PASS at -7.5 (Steamed from -3.5)", decision: "PASS", publishAllowed: false },
-      { selection: "JAX @ BAL Full-Game Total (UNDER 44.5 PASS)", decision: "PASS", publishAllowed: false },
+      { selection: "WSH @ NYG Spread PASS at -7.5 (Steamed from -3.5)", decision: "PASS", publishAllowed: false },
+      { selection: "WSH @ NYG Full-Game Total (UNDER 44.5 PASS)", decision: "PASS", publishAllowed: false },
       { selection: "Parker Washington Receiving Yards (PASS)", decision: "PASS", publishAllowed: false },
     ],
     hedonicFraming,

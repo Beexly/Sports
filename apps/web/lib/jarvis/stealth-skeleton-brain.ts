@@ -607,7 +607,7 @@ export function runJarvisJynxAutonomousBrain(req: {
 
   const gatedGameCalls: JarvisJynxBetCall[] = [
     {
-      matchup: "DET @ MIA",
+      matchup: "NE @ DET",
       market: "Spread",
       selection: "DET -3.5",
       convictionScore: "84/100",
@@ -616,7 +616,7 @@ export function runJarvisJynxAutonomousBrain(req: {
       note: "Detroit slot efficiency and trench protection advantage in Miami.",
     },
     {
-      matchup: "GB @ NE",
+      matchup: "KC @ ATL",
       market: "Spread",
       selection: "GB -3.0",
       convictionScore: "83/100",
@@ -625,7 +625,7 @@ export function runJarvisJynxAutonomousBrain(req: {
       note: "Jordan Love two-TE play-action seam leverage and Gillette ground control.",
     },
     {
-      matchup: "BUF @ MIN",
+      matchup: "LAC @ BAL",
       market: "Total",
       selection: "Control Tempo & Red-Zone Field Goal Environment",
       convictionScore: "81/100",
@@ -634,7 +634,7 @@ export function runJarvisJynxAutonomousBrain(req: {
       note: "Dome pressure vs disguised two-high coverage shells favors stalled red-zone drives and kicking volume.",
     },
     {
-      matchup: "JAX @ BAL",
+      matchup: "WSH @ NYG",
       market: "Spread",
       selection: "Main Line Steamed Across Key Numbers 3 & 7",
       convictionScore: "54/100",
@@ -652,7 +652,7 @@ export function runJarvisJynxAutonomousBrain(req: {
     )
     .slice(0, 6)
     .map((p) => ({
-      matchup: primaryWriteup?.matchup ?? "Week 9 Slate",
+      matchup: primaryWriteup?.matchup ?? "Week 10 Slate",
       market: p.propType,
       selection: `${p.playerName} ${p.side} ${p.line} ${p.propType}`,
       convictionScore: p.confidence,
@@ -674,19 +674,19 @@ export function runJarvisJynxAutonomousBrain(req: {
   const contentPack: JarvisJynxContentPack = {
     xPost:
       `[GSE AUTONOMOUS DESK · ${modelUsed}] Verified Season Record: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u). ` +
-      `Week 9 Sunday Main Slate (DET @ MIA, GB @ NE, DAL @ IND) & MNF (BUF @ MIN) 360-degree market categories live: ` +
+      `Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & MNF (LAC @ BAL) 360-degree market categories live: ` +
       `Game Lines, 1Q/1H Scripts, Red-Zone Kicking FGM, Receiving Volume Props, Correlated SGPs & 14-Player DFS Core. ` +
       `Full locked card at galaxysportsedge.com/packages.`,
     igCarouselCaption:
-      `Slide 1: Week 9 Autonomous Game-Day Briefing (${WEEK8_GAME_DAY_CATALOG_METADATA.slateWindowLabel}). ` +
+      `Slide 1: Week 10 Autonomous Game-Day Briefing (${WEEK8_GAME_DAY_CATALOG_METADATA.slateWindowLabel}). ` +
       `Slide 2: Verified Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · Composite ${dynamicComposite.formattedScore} across 7 suites. ` +
       `Slide 3: DFS Optimal Cash Flagship (${STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.salary} · ${STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.projectedPts}). ` +
       `Slide 4: GSI Biomechanics & 4Q Trench Fatigue Overlay. Unlock the full card at galaxysportsedge.com/packages.`,
     chalkboardReelScript:
-      `Hook (0-3s): Why the market misprices second-half blitz hot-reads and red-zone stall scripts in Week 9. ` +
+      `Hook (0-3s): Why the market misprices second-half blitz hot-reads and red-zone stall scripts in Week 10. ` +
       `Body (3-18s): Disguised pressure packages force faster time-to-throw and funnel targets into high-percentage intermediate route trees while elevating field-goal attempt floors inside the 25-yard line. ` +
       `Every active depth chart and injury redistribution is verified before a single play clears the gate. ` +
-      `CTA (18-25s): Tap the link in bio for our verified 36-13-1 (+20.14u) Week 9 card at galaxysportsedge.com/packages.`,
+      `CTA (18-25s): Tap the link in bio for our verified 36-13-1 (+20.14u) Week 10 card at galaxysportsedge.com/packages.`,
     socialArchiveStats: "132 IG + 100 X verified social assets indexed in corpus",
   };
 

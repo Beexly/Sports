@@ -133,19 +133,19 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
           {
             "@type": "ListItem",
             position: 2,
-            name: "NFL Week 9 Picks & Packages",
+            name: "NFL Week 10 Picks & Packages",
             item: `${siteUrl}/packages`,
           },
           {
             "@type": "ListItem",
             position: 3,
-            name: "NFL Week 9 Player Props (77 Categories)",
+            name: "NFL Week 10 Player Props (77 Categories)",
             item: `${siteUrl}/props`,
           },
           {
             "@type": "ListItem",
             position: 4,
-            name: "DraftKings NFL Week 9 DFS Lineup Optimizer",
+            name: "DraftKings NFL Week 10 DFS Lineup Optimizer",
             item: `${siteUrl}/fantasy/dfs`,
           },
           {
@@ -159,15 +159,15 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
       {
         "@type": "HowTo",
         "@id": `${siteUrl}/#howto-nfl-dfs-and-props`,
-        name: "How Galaxy Sports Edge Evaluates NFL Week 9 Player Props and DraftKings DFS Lineups",
+        name: "How Galaxy Sports Edge Evaluates NFL Week 10 Player Props and DraftKings DFS Lineups",
         description:
-          "Step-by-step film, trench, injury-workload, and two-sided de-vigging workflow for NFL Week 9 player props and DraftKings $50,000 salary-cap lineups.",
+          "Step-by-step film, trench, injury-workload, and two-sided de-vigging workflow for NFL Week 10 player props and DraftKings $50,000 salary-cap lineups.",
         step: [
           {
             "@type": "HowToStep",
             position: 1,
             name: "Verify Active 32-Team Rosters, QB1 Starters & Friday Injury Designations",
-            text: "Confirm every active NFL starter and DNP/Out injury designation across all 15 official Week 9 games (30 active teams; PIT and TEN on bye).",
+            text: "Confirm every active NFL starter and DNP/Out injury designation across all 15 official Week 10 games (30 active teams; PIT and TEN on bye).",
           },
           {
             "@type": "HowToStep",

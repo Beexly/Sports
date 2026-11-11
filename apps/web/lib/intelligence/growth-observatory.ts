@@ -117,7 +117,7 @@ export const CANONICAL_AUTOPSY_DEFAULTS = {
 
 export const CANONICAL_PIPELINE_DEFAULTS = {
   lastCadenceWindow: "Friday 13:30 CT (210-Book, 372-Repo & 30-CSV Mega-Sweep Full Wiring)",
-  nextTMinus48hSimWindow: "Sunday 08:00 CT (Week 9 Main Slate Final Injury & Weather Freeze)",
+  nextTMinus48hSimWindow: "Sunday 08:00 CT (Week 10 Main Slate Final Injury & Weather Freeze)",
   activePackagesPublished: 22,
   activeAgentsOnline: 26,
 } as const;

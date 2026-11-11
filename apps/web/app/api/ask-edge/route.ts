@@ -65,8 +65,8 @@ export async function POST(req: Request) {
       question?: string;
       matchup?: string;
     };
-    const slateLabel = body.matchup ?? "NFL 2026 Week 9 Matchup Environment";
-    const question = (body.question ?? "Summarize Week 9 trench and coverage matchup environments.").trim();
+    const slateLabel = body.matchup ?? "NFL 2026 Week 10 Matchup Environment";
+    const question = (body.question ?? "Summarize Week 10 trench and coverage matchup environments.").trim();
     const brain = runJarvisJynxAutonomousBrain({
       prompt: `${question} [${slateLabel}]`,
       mode: "bet_predicting",

@@ -1,9 +1,9 @@
 /**
  * apps/web/lib/content-os/video-and-revenue-engine.ts
  *
- * Typed Content-OS & Multi-Stream Revenue / Short-Form Video / DFS / Week 9 Commercial Posture surface.
+ * Typed Content-OS & Multi-Stream Revenue / Short-Form Video / DFS / Week 10 Commercial Posture surface.
  * Strictly adheres to:
- *  - Official New Engine Verified Record (36-13-1, 73.5%, +20.14u entering Week 9:
+ *  - Official New Engine Verified Record (36-13-1, 73.5%, +20.14u entering Week 10:
  *    16-5-0 +10.45u pre-TNF prior + 14-6-1 +7.19u TNF CAR@GB + 6-2-0 +2.50u Sun Nov 1).
  *    All-in secondary view 47-19-1 (+24.92u) is labeled secondary wherever it appears.
  *  - Customer-Facing Human Copy Doctrine (natural football-film & matchup analysis; zero internal pipeline jargon).
@@ -91,7 +91,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "When an offensive tackle loses that initial half-step against a wide-9 speed rusher, the quarterback must get the ball out in under 2.4 seconds to his slot receiver or tight end.",
     ctaPaywallAndFollow45To60s:
-      "We broke down every Week 9 trench matchup for our verified 36-13-1 (+20.14u) card. Follow now and unlock the full Week 9 board at galaxysportsedge.com/packages.",
+      "We broke down every Week 10 trench matchup for our verified 36-13-1 (+20.14u) card. Follow now and unlock the full Week 10 board at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalFilmBreakdownV1",
     paywallSafe: true,
   },
@@ -108,13 +108,13 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Against disguised post-snap safety rotations, running back checkdowns and underneath tight end option routes spike while deep boundary throws stall.",
     ctaPaywallAndFollow45To60s:
-      "Our verified engine is 36-13-1 (73.5%, +20.14u) entering Week 9. Follow for daily film analysis and unlock every official Week 9 play at galaxysportsedge.com/packages.",
+      "Our verified engine is 36-13-1 (73.5%, +20.14u) entering Week 10. Follow for daily film analysis and unlock every official Week 10 play at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalSafetySpinV1",
     paywallSafe: true,
   },
   {
     videoId: "VID-W9-03",
-    title: "The 1st-Quarter Scripted Play-Call Edge on the Week 9 Board",
+    title: "The 1st-Quarter Scripted Play-Call Edge on the Week 10 Board",
     platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
     durationSeconds: 50,
     aspectRatio: "9:16 (1080x1920 60fps)",
@@ -125,30 +125,30 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Offenses that script high early-down pass rates in the opening quarter create concentrated early receiving volume before defensive adjustments at halftime.",
     ctaPaywallAndFollow45To60s:
-      "We review all 77 market types on every game—backed by our verified 36-13-1 (+20.14u) record. Unlock full Week 9 access at galaxysportsedge.com/packages.",
+      "We review all 77 market types on every game—backed by our verified 36-13-1 (+20.14u) record. Unlock full Week 10 access at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalFirstQuarterScriptV1",
     paywallSafe: true,
   },
   {
     videoId: "VID-W9-04",
-    title: "How to Structure Week 9 DraftKings & FanDuel Tournament Stacks",
+    title: "How to Structure Week 10 DraftKings & FanDuel Tournament Stacks",
     platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
     durationSeconds: 55,
     aspectRatio: "9:16 (1080x1920 60fps)",
     hook0To3s:
-      "Stop building uncorrelated DFS lineups—here is how sharp tournament players structure Week 9 stacks for ceiling.",
+      "Stop building uncorrelated DFS lineups—here is how sharp tournament players structure Week 10 stacks for ceiling.",
     filmBreakdown3To25s:
       "Large-field tournament wins require concentrated play volume in high-pace games where a fourth-quarter score forces the trailing offense to pass on every snap.",
     matchupOverlay25To45s:
       "Pairing a high-ceiling quarterback with his primary red-zone target and a low-owned secondary pass catcher captures the 300-yard bonus while separating from chalk lineups.",
     ctaPaywallAndFollow45To60s:
-      "Our Week 9 DraftKings and FanDuel Cash Core and GPP leverage stacks are live now at galaxysportsedge.com/fantasy/dfs.",
+      "Our Week 10 DraftKings and FanDuel Cash Core and GPP leverage stacks are live now at galaxysportsedge.com/fantasy/dfs.",
     remotionCompositionId: "GseVerticalDfsStackBlueprintV1",
     paywallSafe: true,
   },
   {
     videoId: "VID-W9-05",
-    title: "Why Kicking Points & Defensive Sack Props Hold Massive Week 9 Value",
+    title: "Why Kicking Points & Defensive Sack Props Hold Massive Week 10 Value",
     platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
     durationSeconds: 47,
     aspectRatio: "9:16 (1080x1920 60fps)",
@@ -159,7 +159,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "On the defensive side, when a premier edge rusher faces a backup tackle against a pass-heavy game script, half-sack clearance opportunities climb sharply.",
     ctaPaywallAndFollow45To60s:
-      "Our 360-degree Week 9 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the verified 36-13-1 (+20.14u) card at galaxysportsedge.com/packages.",
+      "Our 360-degree Week 10 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the verified 36-13-1 (+20.14u) card at galaxysportsedge.com/packages.",
     remotionCompositionId: "GseVerticalKickingAndIdpEdgeV1",
     paywallSafe: true,
   },
@@ -170,7 +170,7 @@ const REVENUE_ATTRIBUTION_MATRIX: readonly RevenueStreamAttributionItem[] = [
     streamId: "REV-01",
     channel: "Stripe Subscriptions & Day/Week Passes",
     identifierOrUrl: "https://www.galaxysportsedge.com/packages",
-    monetizationRole: "Instant paywall unlock for official Week 9 sides, totals, player props, SGP tickets, and DFS cores.",
+    monetizationRole: "Instant paywall unlock for official Week 10 sides, totals, player props, SGP tickets, and DFS cores.",
     posthogEvents: ["package_checkout_started", "subscription_activated"],
     active: true,
   },
@@ -261,9 +261,9 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
   {
     id: "X-THREAD-W9-01",
     channel: "X Thread",
-    headline: "Week 9 Flagship 12-Post Film & Matchup Environment Thread",
+    headline: "Week 10 Flagship 12-Post Film & Matchup Environment Thread",
     copy:
-      "NFL Week 9 Film & Matchup Environment Thread: DET @ MIA slot/motion duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and BUF @ MIN (Josh Allen vs Carson Wentz & Flores simulated pressure). Verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
+      "NFL Week 10 Film & Matchup Environment Thread: NE @ DET slot/motion duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and LAC @ BAL (Josh Allen vs Carson Wentz & Flores simulated pressure). Verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
@@ -272,7 +272,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Poll / Hook",
     headline: "Silent-Count Pass-Rush Trench Mismatch Poll",
     copy:
-      "Which Week 9 offensive line faces the toughest silent-count pass-rush test? A) NYJ tackles at Arrowhead (protecting Geno Smith) B) ARI tackles at Seattle (protecting Gardner Minshew II) C) BUF line at Minnesota vs A-gap blitzes D) LV line at San Francisco vs wide-9 edge rush.",
+      "Which Week 10 offensive line faces the toughest silent-count pass-rush test? A) NYJ tackles at Arrowhead (protecting Geno Smith) B) ARI tackles at Seattle (protecting Gardner Minshew II) C) BUF line at Minnesota vs A-gap blitzes D) LV line at San Francisco vs wide-9 edge rush.",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
@@ -281,16 +281,16 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Poll / Hook",
     headline: "2026 Alpha WR Red-Zone Call Hook",
     copy:
-      "One receiver needs a touchdown inside the 15-yard line with the game on the line in Week 9: Mike Evans (SF WR) from Brock Purdy, Davante Adams (LAR WR) from Matthew Stafford, Amon-Ra St. Brown (DET WR) from Jared Goff, or Justin Jefferson (MIN WR) from Carson Wentz?",
+      "One receiver needs a touchdown inside the 15-yard line with the game on the line in Week 10: Mike Evans (SF WR) from Brock Purdy, Davante Adams (LAR WR) from Matthew Stafford, Amon-Ra St. Brown (DET WR) from Jared Goff, or Justin Jefferson (MIN WR) from Carson Wentz?",
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
   {
     id: "IG-CAROUSEL-W9-01",
     channel: "IG / Threads Carousel",
-    headline: "8-Slide Week 9 Film & Matchup Blueprint Carousel",
+    headline: "8-Slide Week 10 Film & Matchup Blueprint Carousel",
     copy:
-      "8-Slide Carousel covering DET @ MIA, LV @ SF (Mike Evans), NYJ @ KC (Geno Smith), ARI @ SEA (Sam Darnold), LAR @ WAS (Jayden Daniels + Stefon Diggs), 1Q Scripted Touches, Kicking/Sack Pricing Gaps, and Week 9 DraftKings/FanDuel Stacking Rules.",
+      "8-Slide Carousel covering NE @ DET, LV @ SF (Mike Evans), NYJ @ KC (Geno Smith), ARI @ SEA (Sam Darnold), LAR @ WAS (Jayden Daniels + Stefon Diggs), 1Q Scripted Touches, Kicking/Sack Pricing Gaps, and Week 10 DraftKings/FanDuel Stacking Rules.",
     ctaUrl: "https://www.galaxysportsedge.com/fantasy/dfs",
     paywallSafe: true,
   },

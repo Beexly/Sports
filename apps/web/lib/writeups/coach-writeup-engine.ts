@@ -149,20 +149,20 @@ export function formatWindowSlotLabel(windowSlot: string, matchup?: string): str
   }
   switch (windowSlot) {
     case "TNF":
-      return "Week 9 Thursday Night Football (JAX @ BAL)";
+      return "Week 10 Thursday Night Football (WSH @ NYG)";
     case "SUN_EARLY":
-      return "Week 9 Sunday Early Slate (1:00 PM ET)";
+      return "Week 10 Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
-      return "Week 9 Sunday Afternoon Slate (4:25 PM ET)";
+      return "Week 10 Sunday Afternoon Slate (4:25 PM ET)";
     case "SUN_MAIN":
-      return "Week 9 Sunday Main Slate (12 Games)";
+      return "Week 10 Sunday Main Slate (12 Games)";
     case "SNF":
-      return "Week 9 Sunday Night Football (8:20 PM ET)";
+      return "Week 10 Sunday Night Football (8:20 PM ET)";
     case "MNF":
-      return "Week 9 Monday Night Football (8:15 PM ET)";
+      return "Week 10 Monday Night Football (8:15 PM ET)";
     case "WEEKLY_PASS":
     case "WEEKEND_PASS":
-      return "Full Week 9 All-Access";
+      return "Full Week 10 All-Access";
     default:
       return windowSlot;
   }
@@ -497,7 +497,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       }
     ],
     "correlatedSgpTicket": {
-      "title": "JAX @ BAL Same-Game Parlay",
+      "title": "WSH @ NYG Same-Game Parlay",
       "legs": [
         {
           "description": "Mark Andrews Receptions",
@@ -615,14 +615,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Detroit Lions and Miami Dolphins bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Detroit Lions and Miami Dolphins bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Jared Goff and Malik Willis headline this Week 9 matchup with Amon-Ra St. Brown, Jahmyr Gibbs, Jaylen Waddle, and Ollie Gordon II featured in early-down scripts.",
+      "coverageShell": "Jared Goff and Malik Willis headline this Week 10 matchup with Amon-Ra St. Brown, Jahmyr Gibbs, Jaylen Waddle, and Ollie Gordon II featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Detroit Lions and Miami Dolphins deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Detroit Lions leans on Jahmyr Gibbs, Amon-Ra St. Brown, and Sam LaPorta, while Miami Dolphins features Ollie Gordon II, Jaylen Waddle, and Greg Dulcich.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Detroit Lions and Miami Dolphins headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Miami Dolphins +6.5",
@@ -763,14 +763,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Dallas Cowboys and Indianapolis Colts bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Dallas Cowboys and Indianapolis Colts bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Dak Prescott and Daniel Jones headline this Week 9 matchup with CeeDee Lamb, Malik Davis, Michael Pittman Jr., and Jonathan Taylor featured in early-down scripts.",
+      "coverageShell": "Dak Prescott and Daniel Jones headline this Week 10 matchup with CeeDee Lamb, Malik Davis, Michael Pittman Jr., and Jonathan Taylor featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Dallas Cowboys and Indianapolis Colts deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Dallas Cowboys leans on Malik Davis, CeeDee Lamb, and Luke Schoonmaker, while Indianapolis Colts features Jonathan Taylor, Michael Pittman Jr., and Tyler Warren.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Dallas Cowboys and Indianapolis Colts headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Dallas Cowboys -1.5",
@@ -911,14 +911,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "New York Giants and Philadelphia Eagles bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "New York Giants and Philadelphia Eagles bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "J.J. McCarthy and Joe Milton headline this Week 9 matchup with Malik Nabers, Tyrone Tracy Jr., DeVonta Smith, and Saquon Barkley featured in early-down scripts.",
+      "coverageShell": "J.J. McCarthy and Joe Milton headline this Week 10 matchup with Malik Nabers, Tyrone Tracy Jr., DeVonta Smith, and Saquon Barkley featured in early-down scripts.",
       "blitzRateVsPressureToSack": "New York Giants and Philadelphia Eagles deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "New York Giants leans on Tyrone Tracy Jr., Malik Nabers, and Theo Johnson, while Philadelphia Eagles features Saquon Barkley, DeVonta Smith, and Dallas Goedert.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between New York Giants and Philadelphia Eagles headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Philadelphia Eagles -3.0",
@@ -1059,14 +1059,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "New York Jets and Kansas City Chiefs bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "New York Jets and Kansas City Chiefs bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Geno Smith and Patrick Mahomes headline this Week 9 matchup with Garrett Wilson, Breece Hall, Xavier Worthy, and Kenneth Walker III featured in early-down scripts.",
+      "coverageShell": "Geno Smith and Patrick Mahomes headline this Week 10 matchup with Garrett Wilson, Breece Hall, Xavier Worthy, and Kenneth Walker III featured in early-down scripts.",
       "blitzRateVsPressureToSack": "New York Jets and Kansas City Chiefs deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "New York Jets leans on Breece Hall, Garrett Wilson, and Mason Taylor, while Kansas City Chiefs features Kenneth Walker III, Xavier Worthy, and Travis Kelce.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between New York Jets and Kansas City Chiefs headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "New York Jets +6.5",
@@ -1207,14 +1207,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Los Angeles Rams and Washington Commanders bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Los Angeles Rams and Washington Commanders bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Matthew Stafford and Jayden Daniels headline this Week 9 matchup with Puka Nacua, Kyren Williams, Stefon Diggs, and Brian Robinson Jr. featured in early-down scripts.",
+      "coverageShell": "Matthew Stafford and Jayden Daniels headline this Week 10 matchup with Puka Nacua, Kyren Williams, Stefon Diggs, and Brian Robinson Jr. featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Los Angeles Rams and Washington Commanders deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Los Angeles Rams leans on Kyren Williams, Puka Nacua, and Colby Parkinson, while Washington Commanders features Brian Robinson Jr., Stefon Diggs, and Zach Ertz.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Los Angeles Rams and Washington Commanders headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Washington Commanders -2.5",
@@ -1355,14 +1355,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Denver Broncos and Carolina Panthers bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Denver Broncos and Carolina Panthers bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Bo Nix and Bryce Young headline this Week 9 matchup with Courtland Sutton, Jonah Coleman, Tetairoa McMillan, and Chuba Hubbard featured in early-down scripts.",
+      "coverageShell": "Bo Nix and Bryce Young headline this Week 10 matchup with Courtland Sutton, Jonah Coleman, Tetairoa McMillan, and Chuba Hubbard featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Denver Broncos and Carolina Panthers deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Denver Broncos leans on Jonah Coleman, Courtland Sutton, and Evan Engram, while Carolina Panthers features Chuba Hubbard, Tetairoa McMillan, and Ja'Tavion Sanders.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Denver Broncos and Carolina Panthers headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Carolina Panthers +2.5",
@@ -1503,14 +1503,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Cleveland Browns and New Orleans Saints bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Cleveland Browns and New Orleans Saints bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Deshaun Watson and Tyler Shough headline this Week 9 matchup with Jerry Jeudy, Quinshon Judkins, Chris Olave, and Alvin Kamara featured in early-down scripts.",
+      "coverageShell": "Deshaun Watson and Tyler Shough headline this Week 10 matchup with Jerry Jeudy, Quinshon Judkins, Chris Olave, and Alvin Kamara featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Cleveland Browns and New Orleans Saints deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Cleveland Browns leans on Quinshon Judkins, Jerry Jeudy, and David Njoku, while New Orleans Saints features Alvin Kamara, Chris Olave, and Juwan Johnson.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Cleveland Browns and New Orleans Saints headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "New Orleans Saints -1.5",
@@ -1572,7 +1572,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "n/a",
       "marketOdds": "n/a",
       "edgeScore": 0.0,
-      "correlationRationale": "PASS \u2014 Side, total, and Alvin Kamara prop are all PASS on the selective Week 9 card."
+      "correlationRationale": "PASS \u2014 Side, total, and Alvin Kamara prop are all PASS on the selective Week 10 card."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1649,14 +1649,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Houston Texans and Los Angeles Chargers bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Houston Texans and Los Angeles Chargers bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "C.J. Stroud and Justin Herbert headline this Week 9 matchup with Nico Collins, Joe Mixon, Ladd McConkey, and Omarion Hampton featured in early-down scripts.",
+      "coverageShell": "C.J. Stroud and Justin Herbert headline this Week 10 matchup with Nico Collins, Joe Mixon, Ladd McConkey, and Omarion Hampton featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Houston Texans and Los Angeles Chargers deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Houston Texans leans on Joe Mixon, Nico Collins, and Dalton Schultz, while Los Angeles Chargers features Omarion Hampton, Ladd McConkey, and Will Dissly.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Houston Texans and Los Angeles Chargers headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Houston Texans +1.5",
@@ -1797,14 +1797,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Las Vegas Raiders and San Francisco 49ers bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Las Vegas Raiders and San Francisco 49ers bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Kirk Cousins and Brock Purdy headline this Week 9 matchup with Jakobi Meyers, Ashton Jeanty, Mike Evans, and Christian McCaffrey featured in early-down scripts.",
+      "coverageShell": "Kirk Cousins and Brock Purdy headline this Week 10 matchup with Jakobi Meyers, Ashton Jeanty, Mike Evans, and Christian McCaffrey featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Las Vegas Raiders and San Francisco 49ers deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Las Vegas Raiders leans on Ashton Jeanty, Jakobi Meyers, and Brock Bowers, while San Francisco 49ers features Christian McCaffrey, Mike Evans, and George Kittle.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Las Vegas Raiders and San Francisco 49ers headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "San Francisco 49ers -6.5",
@@ -1945,14 +1945,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Arizona Cardinals and Seattle Seahawks bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Arizona Cardinals and Seattle Seahawks bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Gardner Minshew II and Sam Darnold headline this Week 9 matchup with Marvin Harrison Jr., Bucky Irving, Jaxon Smith-Njigba, and Zach Charbonnet featured in early-down scripts.",
+      "coverageShell": "Gardner Minshew II and Sam Darnold headline this Week 10 matchup with Marvin Harrison Jr., Bucky Irving, Jaxon Smith-Njigba, and Zach Charbonnet featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Arizona Cardinals and Seattle Seahawks deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Arizona Cardinals leans on Bucky Irving, Marvin Harrison Jr., and Trey McBride, while Seattle Seahawks features Zach Charbonnet, Jaxon Smith-Njigba, and AJ Barner.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Arizona Cardinals and Seattle Seahawks headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Seattle Seahawks -4.5",
@@ -2093,14 +2093,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Green Bay Packers and New England Patriots bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Green Bay Packers and New England Patriots bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Jordan Love and Drake Maye headline this Week 9 matchup with Christian Watson, Josh Jacobs, Kayshon Boutte, and Rhamondre Stevenson featured in early-down scripts.",
+      "coverageShell": "Jordan Love and Drake Maye headline this Week 10 matchup with Christian Watson, Josh Jacobs, Kayshon Boutte, and Rhamondre Stevenson featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Green Bay Packers and New England Patriots deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Green Bay Packers leans on Josh Jacobs, Christian Watson, and Tucker Kraft, while New England Patriots features Rhamondre Stevenson, Kayshon Boutte, and Austin Hooper.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Green Bay Packers and New England Patriots headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "New England Patriots +3.5",
@@ -2241,14 +2241,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Tampa Bay Buccaneers and Chicago Bears bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Tampa Bay Buccaneers and Chicago Bears bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Baker Mayfield and Caleb Williams headline this Week 9 matchup with Chris Godwin, Rachaad White, Rome Odunze, and D'Andre Swift featured in early-down scripts.",
+      "coverageShell": "Baker Mayfield and Caleb Williams headline this Week 10 matchup with Chris Godwin, Rachaad White, Rome Odunze, and D'Andre Swift featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Tampa Bay Buccaneers and Chicago Bears deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Tampa Bay Buccaneers leans on Rachaad White, Chris Godwin, and Cade Otton, while Chicago Bears features D'Andre Swift, Rome Odunze, and Cole Kmet.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Tampa Bay Buccaneers and Chicago Bears headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Chicago Bears -6.0",
@@ -2389,14 +2389,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Buffalo Bills and Minnesota Vikings bring contrasting early-down tempo and trench protection fronts into Week 9."
+      "notes": "Buffalo Bills and Minnesota Vikings bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
-      "coverageShell": "Josh Allen and Carson Wentz headline this Week 9 matchup with Keon Coleman, James Cook, Justin Jefferson, and Jordan Mason featured in early-down scripts.",
+      "coverageShell": "Josh Allen and Carson Wentz headline this Week 10 matchup with Keon Coleman, James Cook, Justin Jefferson, and Jordan Mason featured in early-down scripts.",
       "blitzRateVsPressureToSack": "Buffalo Bills and Minnesota Vikings deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Buffalo Bills leans on James Cook, Keon Coleman, and Dalton Kincaid, while Minnesota Vikings features Jordan Mason, Justin Jefferson, and T.J. Hockenson.",
       "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Buffalo Bills and Minnesota Vikings headline the film study.",
-      "notes": "Week 9 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Minnesota Vikings +3.5",
@@ -2584,10 +2584,10 @@ export function getRedactedTeasersForWindowSlot(windowSlot: string) {
 
 export const WEEK9_UPCOMING_14_MATCHUP_CODES: ReadonlyArray<{ matchup: string }> = [
   { matchup: "CIN @ ATL" },
-  { matchup: "DET @ MIA" },
+  { matchup: "NE @ DET" },
   { matchup: "NYG @ PHI" },
-  { matchup: "GB @ NE" },
-  { matchup: "DAL @ IND" },
+  { matchup: "KC @ ATL" },
+  { matchup: "HOU @ CLE" },
   { matchup: "DEN @ CAR" },
   { matchup: "CLE @ NO" },
   { matchup: "LV @ SF" },
@@ -2595,6 +2595,6 @@ export const WEEK9_UPCOMING_14_MATCHUP_CODES: ReadonlyArray<{ matchup: string }>
   { matchup: "HOU @ LAC" },
   { matchup: "ARI @ SEA" },
   { matchup: "LAR @ WAS" },
-  { matchup: "TB @ CHI" },
-  { matchup: "BUF @ MIN" },
+  { matchup: "SF @ DAL" },
+  { matchup: "LAC @ BAL" },
 ];
