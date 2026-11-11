@@ -90,6 +90,18 @@ PROSE_STOPWORDS: Set[str] = {
 }
 
 UNICODE_REPLACEMENTS: Tuple[Tuple[str, str], ...] = (
+    # Comparison and relation glyphs become executable operators, not prose
+    # rejections: a bound like "P <= 0.05" is an applicability predicate that
+    # evaluates to 1.0 or 0.0, which is exactly what a guard node is.
+    ("≤", "<="),
+    ("≥", ">="),
+    ("⩽", "<="),
+    ("⩾", ">="),
+    ("≈", "~="),
+    ("∼", "~="),
+    ("≠", "!="),
+    ("′", "'"),
+    ("″", "''"),
     ("−", "-"),
     ("–", "-"),
     ("—", "-"),
@@ -235,6 +247,22 @@ class BinNode(MathNode):
                 return float(res) if isinstance(res, (int, float)) else float("nan")
             except (OverflowError, ValueError, ZeroDivisionError):
                 return float("nan")
+        if self.op == ">":
+            return 1.0 if lv > rv else 0.0
+        if self.op == "<":
+            return 1.0 if lv < rv else 0.0
+        if self.op == ">=":
+            return 1.0 if lv >= rv else 0.0
+        if self.op == "<=":
+            return 1.0 if lv <= rv else 0.0
+        if self.op == "==":
+            return 1.0 if abs(lv - rv) < 1e-12 else 0.0
+        if self.op == "!=":
+            return 1.0 if abs(lv - rv) >= 1e-12 else 0.0
+        if self.op == "~=":
+            # Approximate equality with a scale-aware tolerance.
+            scale = max(1.0, abs(lv), abs(rv))
+            return 1.0 if abs(lv - rv) <= 1e-2 * scale else 0.0
         return float("nan")
 
 
@@ -400,7 +428,12 @@ def _rewrite_latex_macros(expr: str) -> str:
     s = re.sub(r"\\([A-Za-z]+)", _repl_cmd, s)
     # Strip trailing punctuation common in displayed equations
     s = s.strip().rstrip(".,;:")
-    return re.sub(r"\s+", " ", s).strip()
+    s = re.sub(r"\s+", " ", s).strip()
+    # Subscript residue, applied LAST: expanding `\tau_{\text{Out}}` can leave
+    # `tau _Out`, whose leading underscore is not a token.
+    s = re.sub(r"(?<=[A-Za-z0-9])\s+_(?=[A-Za-z0-9])", "_", s)
+    s = re.sub(r"(?<![A-Za-z0-9_])_(?=[A-Za-z0-9])", "", s)
+    return s
 
 
 Token = Tuple[str, str]  # (kind, text) where kind in {'NUM', 'ID', 'OP', 'LPAREN', 'RPAREN', 'COMMA'}
@@ -460,6 +493,15 @@ def _tokenize(expr: str) -> Tuple[Optional[List[Token]], Optional[str]]:
             tokens.append(("OP", ch))
             i += 1
             continue
+        pair = expr[i : i + 2]
+        if pair in ("<=", ">=", "==", "~=", "!="):
+            tokens.append(("OP", pair))
+            i += 2
+            continue
+        if ch in "<>":
+            tokens.append(("OP", ch))
+            i += 1
+            continue
         return None, f"unexpected_character:{ch}"
     if not tokens:
         return None, "empty_expression"
@@ -511,6 +553,16 @@ class _Parser:
                 node = BinNode(op, node, rhs)
             else:
                 break
+        return node
+
+    def parse_comparison(self) -> MathNode:
+        """Lowest precedence: a comparison yields 1.0 or 0.0, i.e. a guard."""
+        node = self.parse_expr()
+        t = self.peek()
+        if t and t[0] == "OP" and t[1] in ("<=", ">=", "<", ">", "==", "~=", "!="):
+            op = self.consume()[1]
+            rhs = self.parse_expr()
+            return BinNode(op, node, rhs)
         return node
 
     def parse_term(self) -> MathNode:
@@ -620,18 +672,31 @@ def _looks_like_prose_sentence(raw: str) -> Optional[str]:
 
 
 def _split_relational_equation(norm: str) -> Tuple[Optional[str], str, Optional[str]]:
-    """Split `LHS = RHS` cleanly. Rejects inequalities/multi-chain relations that aren't scalar equations."""
-    for rel in ("\\leq", "\\geq", "\\neq", "\\approx", "\\sim", "\\in", "\\subset", "\\rightarrow", "\\to", "≤", "≥", "≠", "≈", "∈", "→", "<", ">"):
+    """Split `LHS = RHS` cleanly. Rejects set/arrow relations that are not scalar equations.
+
+    Comparisons (`<=`, `>=`, `<`, `>`, `~=`, `!=`) are NOT rejected: they compile
+    to indicator operators that evaluate to 1.0/0.0, so a domain or applicability
+    bound survives as an executable predicate instead of being thrown away.
+    """
+    for rel in ("\\in", "\\subset", "\\rightarrow", "\\to", "∈", "⊂", "→"):
         if rel in norm:
             return None, norm, f"relational_or_set_statement:{rel}"
     if "=" in norm:
-        parts = [p.strip() for p in norm.split("=") if p.strip()]
-        if len(parts) < 2:
-            return None, norm, "incomplete_equality_side"
-        lhs, rhs = parts[0], parts[-1]
-        if re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\([A-Za-z0-9_,\s]+\))?", lhs):
-            return lhs, rhs, None
-        return lhs, f"({lhs}) - ({rhs})", None
+        # `==`, `<=`, `>=`, `!=`, `~=` are operators, not assignment splits.
+        assign_hits = len(re.findall(r"(?<![<>=!~])=(?![=])", norm))
+        if assign_hits >= 2:
+            return None, norm, "multi_chain_relation"
+        if assign_hits == 1:
+            idx = re.search(r"(?<![<>=!~])=(?![=])", norm)
+            lhs = norm[: idx.start()].strip()
+            rhs = norm[idx.end() :].strip()
+            if not lhs or not rhs:
+                return None, norm, "incomplete_equality_side"
+            if re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\([A-Za-z0-9_,\s]+\))?", lhs):
+                return lhs, rhs, None
+            return lhs, f"({lhs}) - ({rhs})", None
+        # No assignment: a pure predicate such as `P <= 0.05`.
+        return None, norm, None
     return None, norm, None
 
 
@@ -730,7 +795,7 @@ def parse_and_execute_honestly(
 
     try:
         parser = _Parser(tokens)
-        ast_root = parser.parse_expr()
+        ast_root = parser.parse_comparison()
         if parser.pos != len(tokens):
             raise ValueError(f"trailing_tokens:{tokens[parser.pos][1]}")
     except ValueError as exc:
