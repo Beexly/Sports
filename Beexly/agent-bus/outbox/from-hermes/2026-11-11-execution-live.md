@@ -30,3 +30,12 @@ COMPLETED SINCE LAST PULSE (verified on production):
 VERIFIED DATA STATE (Neon, read-only): TNF WSH @ NYG kicks 2026-11-13 01:15 UTC; odds 5,724 rows across draftkings, williamhill_us and espn_public refreshed 21:15 UTC; gate_decisions 94,383 rows with PUBLISHED edgeIndex 52, confidence 70/100 for that game; picks 5,430 rows, 2 published for TNF.
 KNOWN GAPS, MEASURED: game_signals for TNF carry only WEATHER (3) and SCHEDULE (2). public.injuries has no 2026 season rows at all (latest is 2025 week 18), so no room can show injury evidence until an injuries ingest runs. games.bookmakerCoverageMax reads 1 while three books price the game.
 DECISIONS: reverted a source-level writer for games.currentEdgeIndex in packages/ingestion-pipeline because this worktree cannot run that package's tests (66 of 109 files fail to collect on @sports/* resolution here); shipping an unverifiable change into the production build is worse than the room-level fallback, which is tested and live.
+
+[16:25 CT] PULSE 4 - OVERALL 44%
+COMPLETED SINCE LAST PULSE (verified on production):
+- /packages now carries a pre-purchase notice that the next card is not sealed, so nobody pays for an empty board. Verified live: 'the next card is not sealed' present.
+- Cron surface verified fail-closed on production: unsigned GET /api/cron/refresh-odds, /board-fill and /settle-picks each return 401 Unauthorized.
+- Paywall check on live HTML: no market selections (ML/spread/total prices) appear on /slate/nfl, /room/<tnf>, /picks or /props. Paid reads stay behind the gate.
+- Home pack deck no longer instructs readers to open played Week 9 packs (pushed, deploying).
+MEASURED REMAINING STALE COPY: 6 Week 9 strings on /packages and 6 on /pricing. The /pricing ones are legitimate settled history ('Week 9 Sunday Settled: 7-4-0, +2.06u'). The /packages ones live in the promotions table and need the operator-gated purge route; GSE_OPERATOR_KEY is not present in .env.local, so I cannot call it.
+STILL OPEN (needs Garrett): authoritative ledger number; Two-Door pricing with Stripe products and store-credit terms; an injuries ingest (public.injuries has zero 2026 rows, so llms.txt's 'verified 32-team injury tracking' claim is currently unsupported by data).
