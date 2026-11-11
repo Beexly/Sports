@@ -21,3 +21,12 @@ ROOT CAUSE FOUND, NOT YET FIXED: Neon HAS the Week 10 data. public.games holds W
 RUNNING NOW: nothing blocking. Next targets: render the live Week 10 board from Neon behind the paid gate, then clear the last 6 'Week 9' storefront package names (they live in the promotions table, operator-gated).
 METRICS: guardrails green after each commit (trust-gate OK 4,717 files, mobile lint 0, dossier guard PASS); 17 new unit assertions this pulse; production verified by HTTP 200 plus content assertions.
 DECISIONS: left the public record claim (47-19-1 / 36-13-1) untouched pending Garrett naming the authoritative ledger; did not switch pricing to the Two-Door model without Stripe products and written store-credit terms.
+
+[15:58 CT] PULSE 3 - OVERALL 38%
+COMPLETED SINCE LAST PULSE (verified on production):
+- TNF room now reads the gate. games.currentEdgeIndex has no writer anywhere in the repo, so every room said 'the market is not priced enough to compare' on games the gate had already scored. The room loader falls back to the newest gate_decision. Live check: /room/cmt4fewrc00jbeat5nq9eauqo renders 'Edge Index 52' and the 'not priced enough' string is gone.
+- Room consolidation finished: the last four in-app links to the retired /games/ duplicate now point at /room/. Zero /games/ links remain (the consolidation test is green for the first time).
+- Stale-card notice now sends readers to the live NFL slate first, then packs and DFS.
+VERIFIED DATA STATE (Neon, read-only): TNF WSH @ NYG kicks 2026-11-13 01:15 UTC; odds 5,724 rows across draftkings, williamhill_us and espn_public refreshed 21:15 UTC; gate_decisions 94,383 rows with PUBLISHED edgeIndex 52, confidence 70/100 for that game; picks 5,430 rows, 2 published for TNF.
+KNOWN GAPS, MEASURED: game_signals for TNF carry only WEATHER (3) and SCHEDULE (2). public.injuries has no 2026 season rows at all (latest is 2025 week 18), so no room can show injury evidence until an injuries ingest runs. games.bookmakerCoverageMax reads 1 while three books price the game.
+DECISIONS: reverted a source-level writer for games.currentEdgeIndex in packages/ingestion-pipeline because this worktree cannot run that package's tests (66 of 109 files fail to collect on @sports/* resolution here); shipping an unverifiable change into the production build is worse than the room-level fallback, which is tested and live.
