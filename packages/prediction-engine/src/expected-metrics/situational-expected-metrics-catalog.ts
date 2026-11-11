@@ -32,7 +32,9 @@ export const SITUATIONAL_EXPECTED_METRICS_CATALOG: readonly ExpectedMetricDescri
   { code: "Q48", name: "QB Multi-Dimensional Z-Score", bitIndex: 240, description: "Composite standard score across CPOE, EPA, PBWR-delta, and blitz answer", targetType: "RATE", sampleHurdle: 30 },
   { code: "Q49", name: "Toxic Differential", bitIndex: 241, description: "+20-yard explosive play margin minus turnover margin", targetType: "COUNT", sampleHurdle: 20 },
   { code: "Q50", name: "WR Target Depth After Leader (Gini)", bitIndex: 242, description: "Target share inequality across WR2 through WR4", targetType: "RATE", sampleHurdle: 25 },
-  { code: "Q51", name: "Red-Zone Target Success Rate", bitIndex: 243, description: "Inside-the-20 target completion and TD rate by alignment", targetType: "RATE", sampleHurdle: 15 },
+  { code: "Q51", name: "Target Success Rate", bitIndex: 243, description: "Positive own-EPA share of targets per receiver across STD/L4/L8 windows", targetType: "RATE", sampleHurdle: 20 },
+  { code: "Q52", name: "Defensive Field-Zone Split (RZ vs Open Field)", bitIndex: 264, description: "Red-zone (<=20) vs open-field (>20) defensive EPA/success/TD rate allowed with pick-six excluded (PR #1262)", targetType: "EPA", sampleHurdle: 25 },
+  { code: "Q53", name: "QB Efficiency Split by Opponent Defensive Tier", bitIndex: 265, description: "QB own-EPA/dropback and success rate vs Top-10 vs Bottom-22 pass defenses", targetType: "EPA", sampleHurdle: 30 },
   // Wednesday Evening Dossiers (W1-W14, F1-F6)
   { code: "W1", name: "Clean vs Pressured Bad Throw Split", bitIndex: 244, description: "PFR Bad Throw % clean-pocket sticky truth vs pressured noise", targetType: "RATE", sampleHurdle: 20 },
   { code: "W2", name: "WR Target Success Alpha Interaction", bitIndex: 245, description: "Super-additive WR1 alpha score conditioned on target volume threshold", targetType: "RATE", sampleHurdle: 25 },
@@ -54,6 +56,12 @@ export const SITUATIONAL_EXPECTED_METRICS_CATALOG: readonly ExpectedMetricDescri
   { code: "F2", name: "Defensive Personnel Matching Pass Exploit", bitIndex: 261, description: "Opponent pass EPA exploit against base personnel in obvious pass downs", targetType: "EPA", sampleHurdle: 20 },
   { code: "F3", name: "Clean Pocket Passing Success Split", bitIndex: 262, description: "Clean-pocket passing success weighted projection conditioned on pressure rate", targetType: "RATE", sampleHurdle: 25 },
   { code: "F4", name: "Double-Mug A-Gap Slide Exploit", bitIndex: 263, description: "Protection slide exploit against double-mug pressure looks", targetType: "RATE", sampleHurdle: 15 },
+  // Commit d333e74 Morning Analytics Sweep (39 Transcribed CSV Tables)
+  { code: "M1", name: "Unified Dual-Threat Index (@evduzit)", bitIndex: 266, description: "Composite QB dual-threat score: 50*PassEPA + 50*RushEPA + 2*CPOE + ANY/DB + 20*RushSucc + 20*BT% - 5*TO%", targetType: "RATE", sampleHurdle: 20 },
+  { code: "M2", name: "Splits+ Kicker Roof/Weather Model (@MagicSportsGuy)", bitIndex: 267, description: "Dome (85.4%) vs outdoor (84.4%) FG split + Tyler Bass 95.5% dome boost", targetType: "PROBABILITY", sampleHurdle: 15 },
+  { code: "M3", name: "ShadowCoverage+ & Route IQ Man Split (@MagicSportsGuy/@statyxio)", bitIndex: 268, description: "65%+ route shadow assignment (Gonzalez 73% on Christian Watson 0.65 YPRR vs Man -> Matthew Golden 3.11 YPRR vs Man)", targetType: "RATE", sampleHurdle: 20 },
+  { code: "M4", name: "Pass Rush Performance Blitz Leverage (@The_Coach_A)", bitIndex: 269, description: "Non-blitz vs blitz pass-rush rating split (NYG 15 non-blitz -> 30 blitz, -0.172 EPA/play)", targetType: "RATE", sampleHurdle: 20 },
+  { code: "M5", name: "CounterPlay Action Conversion Kernel (@statyxio)", bitIndex: 270, description: "Required vs scheme-conditioned observed conversion rate per opportunity", targetType: "RATE", sampleHurdle: 15 },
 ];
 
 /**
