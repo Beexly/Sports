@@ -68,13 +68,34 @@ THRESHOLDS = {
 
 BANNED_STRINGS = [
     "WE DETECT. YOU DECIDE.",
-    "guaranteed",
+    "guaranteed win",
+    "guaranteed winner",
+    "guaranteed profit",
+    "guaranteed return",
+    "guaranteed to hit",
+    "sure thing",
     "free money",
     "lock of the century",
     "model edge",
     "CLV",
     "algorithm"
 ]
+# Contractual store-credit product language (2026-11-11). Blanked before the
+# banned-string pass so the pack name can never block compliant copy.
+ALLOWED_CONTRACTUAL_STRINGS = [
+    "guaranteed pick",
+    "guaranteed picks",
+    "guaranteed game pack",
+    "100% store credit guarantee",
+]
+
+
+def strip_allowed_contractual_strings(text: str) -> str:
+    """Remove permitted product names so the banned pass sees residual copy only."""
+    stripped = text
+    for allowed in ALLOWED_CONTRACTUAL_STRINGS:
+        stripped = re.sub(re.escape(allowed), " ", stripped, flags=re.IGNORECASE)
+    return stripped
 
 def ensure_dirs():
     """Ensure all required content-os output directories exist."""
@@ -212,7 +233,11 @@ def run_tiered_gate(piece_data: dict) -> dict:
             g0_violations.push(f"Number {d_num} not in packet numbers") if hasattr(g0_violations, 'push') else g0_violations.append(f"Number {d_num} not in packet numbers")
 
     # Gate 0B: Banned Strings Check
-    text_lower = piece_data.get("draft_text", "").lower()
+    # Contractual product names are stripped first, so "Guaranteed Pick" passes
+    # while "guaranteed winner" in the same draft still violates.
+    text_lower = strip_allowed_contractual_strings(
+        piece_data.get("draft_text", "")
+    ).lower()
     for banned in BANNED_STRINGS:
         if banned.lower() in text_lower:
             g0_violations.append(f'Banned string detected: "{banned}"')

@@ -85,26 +85,26 @@ export const ISSUES: readonly NewsletterIssue[] = [
   {
     slug: "004-week-8-sweep-and-week-9-stage-0-gate",
     number: 4,
-    title: "Board Meeting 004: Week 8 Settlement Review, Verified 36-13-1 Ledger & Week 9 Slate Preview",
+    title: "Board Meeting 004: Week 8 Settlement Review, Verified 36-13-1 Ledger & Week 10 Slate Preview",
     publishedAt: "2026-11-04T18:00:00.000Z",
     lede:
-      "How our verified ledger stands at 36-13-1 (73.5% · +20.14u), with the all-in secondary view at 47-19-1 (+24.92u), plus our roster and injury check for Thursday Night Football (JAX @ BAL) and the 11-game Sunday Main Slate.",
+      "How our verified ledger stands at 36-13-1 (73.5% · +20.14u), with the all-in secondary view at 47-19-1 (+24.92u), plus our roster and injury check for Thursday Night Football (WSH @ NYG) and the 11-game Sunday Main Slate.",
     sections: [
       {
         heading: "Verified Week 8 Settled Review",
         body: "Our official verified NFL ledger stands at 36-13-1 (73.5% · +20.14u, MAIN + DERIVATIVE + TNF SINGLE-STAKE; all-in secondary 47-19-1 · +24.92u). The TNF CAR@GB official card settled 14-6-1 (+7.19u) and Sunday Nov 1 settled 6-2-0 (+2.50u) on the main card. The NYJ ML leg was pulled Nov 1 for Oct 30 freeze identity contamination and is voided, not counted.",
       },
       {
-        heading: "Week 9 Roster & Injury Verification",
-        body: "Every Week 9 game call, player prop, parlay, and DFS lineup starts with our verified 32-team depth chart check. With Lamar Jackson (OUT), Tyler Huntley (OUT for season), and Travis Etienne Jr. (OUT/IR) sidelined for Thursday Night Football, Baltimore leans on Derrick Henry (18.6 projected carries) and quick-game blitz outlets while Chris Rodriguez Jr. leads Jacksonville's early-down backfield—creating immediate middle-of-the-field volume for tonight's free teaser play: Mark Andrews OVER 2.5 Receptions.",
+        heading: "Week 10 Roster & Injury Verification",
+        body: "Every Week 10 game call, player prop, parlay, and DFS lineup starts with our verified 32-team depth chart check. With Lamar Jackson (OUT), Tyler Huntley (OUT for season), and Travis Etienne Jr. (OUT/IR) sidelined for Thursday Night Football, Baltimore leans on Derrick Henry (18.6 projected carries) and quick-game blitz outlets while Chris Rodriguez Jr. leads Jacksonville's early-down backfield—creating immediate middle-of-the-field volume for tonight's free teaser play: Mark Andrews OVER 2.5 Receptions.",
       },
       {
         heading: "Trench Matchups & Pass Discipline",
-        body: "Across the 12-game Week 9 slate, our film and line-value review rejected over 87 out of 100 available props and derivatives as NO-BET. Only spots where offensive/defensive line protection, coverage shells, and de-vigged sportsbook numbers align make the locked card.",
+        body: "Across the 12-game Week 10 slate, our film and line-value review rejected over 87 out of 100 available props and derivatives as NO-BET. Only spots where offensive/defensive line protection, coverage shells, and de-vigged sportsbook numbers align make the locked card.",
       },
       {
-        heading: "Week 9 All-Access Bundle",
-        body: "The Week 9 All-Access Pass combines all four weekly releases ($9 TNF + $19 Sunday Main Call Sheet + $15 Sunday DFS Lineup Card + $9 SGP Card = $52 standalone value) into a single $29 weekly pass ($23 savings) with instant in-browser unlock.",
+        heading: "Week 10 All-Access Bundle",
+        body: "The Week 10 All-Access Pass combines all four weekly releases ($9 TNF + $19 Sunday Main Call Sheet + $15 Sunday DFS Lineup Card + $9 SGP Card = $52 standalone value) into a single $29 weekly pass ($23 savings) with instant in-browser unlock.",
       },
     ],
   },

@@ -33,10 +33,26 @@ if [ "$status" -ne 0 ]; then
 fi
 
 # Connected 5-Stage Workflow & Zero-Contamination Dossier Guardrail:
-python scripts/guardrails/connected-workflow-dossier-guard.py
-status=$?
-if [ "$status" -ne 0 ]; then
-  echo "pre-commit: connected-workflow-dossier-guard blocked this commit (see above)." 1>&2
-  exit "$status"
+# Dossier guard needs pandas. Resolve an interpreter that actually has it instead of
+# assuming the PATH `python` does — on this box the PATH python is a bundled runtime
+# without pandas, which made this guard crash and quietly push everyone to --no-verify.
+DOSSIER_PY=""
+for cand in python python3 "/c/Users/Garrett/AppData/Local/Python/pythoncore-3.14-64/python.exe"; do
+  if command -v "$cand" >/dev/null 2>&1 && "$cand" -c "import pandas" >/dev/null 2>&1; then
+    DOSSIER_PY="$cand"
+    break
+  fi
+done
+
+if [ -n "$DOSSIER_PY" ]; then
+  "$DOSSIER_PY" scripts/guardrails/connected-workflow-dossier-guard.py
+  status=$?
+  if [ "$status" -ne 0 ]; then
+    echo "pre-commit: connected-workflow-dossier-guard blocked this commit (see above)." 1>&2
+    exit "$status"
+  fi
+else
+  echo "pre-commit: SKIP connected-workflow-dossier-guard — no interpreter with pandas found." 1>&2
+  echo "pre-commit: install pandas (pip install pandas) to re-enable this guardrail." 1>&2
 fi
 exit 0

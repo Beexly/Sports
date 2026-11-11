@@ -246,7 +246,7 @@ export function assessPublishReadiness(broadcast: Broadcast, ctx: PublishContext
 }
 
 const SAMPLE_BROADCAST_WIRE: readonly NewsItem[] = [
-  { id: "sample-1", source: "DAL Beat", tier: "Insider", team: "DAL", player: "Javonte Williams", headline: "Sample: DAL RB ruled OUT for Week 9; backfield depth absorbs touches", signal: "injury-out", minutesAgo: 12 },
+  { id: "sample-1", source: "DAL Beat", tier: "Insider", team: "DAL", player: "Javonte Williams", headline: "Sample: DAL RB ruled OUT for Week 10; backfield depth absorbs touches", signal: "injury-out", minutesAgo: 12 },
   { id: "sample-2", source: "PHI Beat", tier: "Beat", team: "PHI", player: "Saquon Barkley", headline: "Sample: PHI backfield workload to spike with an up-tempo script", signal: "role-up", minutesAgo: 35 },
   { id: "sample-3", source: "BAL Beat", tier: "Verified", team: "BAL", player: "Zay Flowers", headline: "Sample: BAL target share consolidates around the alpha receiver", signal: "scheme", minutesAgo: 60 },
 ];

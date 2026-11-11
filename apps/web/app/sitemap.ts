@@ -92,7 +92,6 @@ const ROUTES: ReadonlyArray<{
   { path: "/tools/line-movement", priority: 0.65, changeFrequency: "monthly" },
   { path: "/tools/clv-calculator", priority: 0.65, changeFrequency: "monthly" },
   { path: "/cipher", priority: 0.5, changeFrequency: "weekly" },
-  { path: "/glass-ledger", priority: 0.55, changeFrequency: "weekly" },
   { path: "/data", priority: 0.5, changeFrequency: "monthly" },
   { path: "/content-lab", priority: 0.4, changeFrequency: "monthly" },
   { path: "/llms.txt", priority: 0.9, changeFrequency: "daily" },

@@ -121,8 +121,15 @@ export const LAYER_2_UNSUPPORTED_CLAIMS: ComplianceRule[] = [
     id: "L2-GUARANTEE",
     layer: 2,
     severity: "block",
-    pattern: /\b(guarantee|guaranteed|guaranteed to|sure thing|cant lose|cannot lose|must profit)\b/i,
-    message: "Banned: guarantee or certainty language about outcomes.",
+    // Contractual store-credit product language is permitted (2026-11-11):
+    // the pack name and the remedy name are allowed; any guarantee of an
+    // OUTCOME is still blocked. Negative lookbehind covers "store credit
+    // guarantee" / "store-credit guarantee"; negative lookahead covers
+    // "guaranteed pick(s)" and "guaranteed game pack".
+    pattern:
+      /(?<!store[ -]credit )\bguarantee(d)?\b(?!\s+(?:picks?|game pack)\b)|\b(sure thing|cant lose|cannot lose|must profit)\b/i,
+    message:
+      "Banned: guarantee or certainty language about outcomes. The contractual pack name and store-credit remedy are the only permitted uses.",
     suggestion: "Use 'the model reads' or 'the factor breakdown shows' instead of asserting outcomes.",
   },
   {

@@ -45,7 +45,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-[#C4BFB6] sm:text-lg">
             Monthly recurring plans are currently under construction while we operate our live pay-per-slate
-            storefront. Every pack below is a one-time purchase with instant in-place browser unlock — built on
+            storefront. Every pack below is a one-time purchase with instant in-place browser unlock, built on
             film tendencies, trench matchups, active injury reports, and disciplined pass rules (strictly XX/100
             confidence scores).
           </p>
@@ -88,7 +88,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
             <Link href="/fantasy/dfs" className="underline decoration-[#FF4D2E] underline-offset-4">
               /fantasy/dfs
             </Link>
-            . One-time checkout — zero recurring billing.
+            . One-time checkout, zero recurring billing.
           </p>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-3">

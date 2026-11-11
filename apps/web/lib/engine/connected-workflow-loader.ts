@@ -220,7 +220,7 @@ export function loadVerifiedConnectedWorkflowBundle(): ConnectedWorkflowApiSumma
 
   return {
     status: "CONNECTED_WORKFLOW_VERIFIED",
-    matchup: String(bundle.matchup ?? "JAX @ BAL"),
+    matchup: String(bundle.matchup ?? "WSH @ NYG"),
     week: Number(bundle.week ?? 9),
     generatedAtUtc: String(bundle.generated_at_utc ?? ""),
     masterBundleSha256: String(bundle.master_bundle_sha256 ?? ""),

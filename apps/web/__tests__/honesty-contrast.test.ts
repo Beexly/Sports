@@ -158,7 +158,7 @@ describe("honesty contrast — every remedy is locatable", () => {
     // Hard-coded rather than globbed: the point is that a copy edit cannot
     // introduce a link to a page nobody built. If a route is legitimately
     // added, this list is the deliberate place to say so.
-    const known = new Set(["/board/gate", "/glass-ledger", "/how-to-verify-a-record"]);
+    const known = new Set(["/board/gate", "/how-to-verify-a-record"]);
     for (const item of HONESTY_CONTRAST) {
       expect(known, `unknown verifyHref for ${item.id}: ${item.verifyHref}`).toContain(
         item.verifyHref,

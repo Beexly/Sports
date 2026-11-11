@@ -429,7 +429,7 @@ export function executeCopilotKitRuntimeProtocol(
       id: actionExecutionId,
       name: matchedSchema.name,
       arguments: {
-        prompt: req.prompt ?? "NFL Week 9 Autonomous Evaluation",
+        prompt: req.prompt ?? "NFL Week 10 Autonomous Evaluation",
         mode: brainOutput.mode,
       },
       status: { code: "Success" },
@@ -586,7 +586,7 @@ export function executeUniversalBotSdkAdapter(
       : undefined;
   const effectivePrompt =
     (req.prompt || lastMessage || "").trim() ||
-    "Run full autonomous GSE + GSI synthesis for NFL Week 9 content, DFS, and 360 bet predictions.";
+    "Run full autonomous GSE + GSI synthesis for NFL Week 10 content, DFS, and 360 bet predictions.";
 
   const defaultModeByProtocol: Record<AutonomousBotAdapterProtocol, JarvisJynxBrainMode> = {
     "openmuse-v1": "content_making",
@@ -635,7 +635,7 @@ export async function executeUniversalBotSdkAdapterAsync(
       : undefined;
   const effectivePrompt =
     (req.prompt || lastMessage || "").trim() ||
-    "Run full autonomous GSE + GSI synthesis for NFL Week 9 content, DFS, and 360 bet predictions.";
+    "Run full autonomous GSE + GSI synthesis for NFL Week 10 content, DFS, and 360 bet predictions.";
 
   const defaultModeByProtocol: Record<AutonomousBotAdapterProtocol, JarvisJynxBrainMode> = {
     "openmuse-v1": "content_making",

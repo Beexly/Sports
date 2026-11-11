@@ -17,6 +17,7 @@ import {
   type PlayerSeasonLine,
   type ProjectionBacktest,
 } from "@sports/prediction-engine";
+import { SHIPPED_PROJECTION_PARAMETERS } from "@sports/prediction-engine";
 
 export interface PlayerProjectionRow {
   readonly playerId: string;
@@ -83,7 +84,7 @@ export async function loadPlayerProjections(targetSeason: number, limit = 100): 
 
   const top: PlayerProjectionRow[] = [];
   for (const [playerId, history] of byPlayer) {
-    const proj = projectPlayerSeason(history, targetSeason);
+    const proj = projectPlayerSeason(history, targetSeason, SHIPPED_PROJECTION_PARAMETERS);
     if (proj.priorGames === 0) continue;
     const meta = info.get(playerId);
     top.push({

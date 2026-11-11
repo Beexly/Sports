@@ -10,10 +10,10 @@
     "ct_time": "13:35",
     "label": "T-90 inactives lock refresh + conformal residual diagnostic (flag-only)"
   },
-  "generated_at_utc": "2026-11-10T07:33:39.385527+00:00",
+  "generated_at_utc": "2026-11-08T19:40:10.676982+00:00",
   "inputs": {
     "full_slate_path": "data/engine/week9_full_slate_connected_dossiers_2026_11_06.json",
-    "full_slate_sha256": "86da3a233a28ae32d0e2ba95776459946871c665fea8397f89e6eac7ba207c91",
+    "full_slate_sha256": "dadda03981cf2ef1183893797c7e5da8769167bca6e750a5d9900041786f402b",
     "full_slate_generated_at": "2026-11-06T15:59:16.880156+00:00",
     "full_slate_official_record": {
       "record": "47-19-1",
@@ -23,7 +23,7 @@
       "base_net_units": "+22.85u"
     },
     "v30_overlay_path": "docs/predictions/research/2026-11-06/cadence_v30_overlay_sunday_w9.json",
-    "v30_overlay_sha256": "123770f327ca136251d90722b8cb3dc3abad33dbe7cac6b7c23f8f7935fe4f93",
+    "v30_overlay_sha256": "dd13ff225130c43521edae14b334ff447c9759a63cb432144c8ae84bc630cb7c",
     "sealed_baseline_path": "data/engine/week9_tuesday_0400ct_sealed_baseline_2026.json",
     "sealed_baseline_sha256": "059e992b962f9c49c5fed6efabb3a99fdad9af798028ce83b6b1e9d9d585891a",
     "stored_snapshot": {
@@ -126,7 +126,7 @@
         "sunday_doubtful": 0
       }
     },
-    "fetched_at_utc": "2026-11-10T07:33:15.796831+00:00",
+    "fetched_at_utc": "2026-11-08T19:40:09.619334+00:00",
     "games": [
       {
         "game": "HOU @ LAC",
@@ -137,26 +137,8 @@
         "designations_applied": [
           {
             "team": "LAC",
-            "player": "Ladd McConkey",
-            "position": "WR",
-            "status": "Questionable"
-          },
-          {
-            "team": "LAC",
-            "player": "Justin Herbert",
-            "position": "QB",
-            "status": "Questionable"
-          },
-          {
-            "team": "LAC",
             "player": "Kendall Williamson",
             "position": "S",
-            "status": "Out"
-          },
-          {
-            "team": "LAC",
-            "player": "Brenen Thompson",
-            "position": "WR",
             "status": "Out"
           },
           {
@@ -166,19 +148,37 @@
             "status": "Out"
           },
           {
-            "team": "HOU",
-            "player": "David Montgomery",
-            "position": "RB",
-            "status": "Out"
+            "team": "LAC",
+            "player": "Brenen Thompson",
+            "position": "WR",
+            "status": "Doubtful"
           },
           {
             "team": "HOU",
             "player": "Reed Blankenship",
             "position": "S",
             "status": "Out"
+          },
+          {
+            "team": "HOU",
+            "player": "David Montgomery",
+            "position": "RB",
+            "status": "Out"
           }
         ],
         "roster_statuses_not_applied": [
+          {
+            "team": "LAC",
+            "player": "Denzel Perryman",
+            "position": "LB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LAC",
+            "player": "David Njoku",
+            "position": "TE",
+            "status": "Injured Reserve"
+          },
           {
             "team": "HOU",
             "player": "Jaylin Noel",
@@ -208,20 +208,14 @@
         "designations_applied": [
           {
             "team": "SEA",
-            "player": "Quenton Nelson",
-            "position": "G",
-            "status": "Out"
-          },
-          {
-            "team": "SEA",
             "player": "Sam Darnold",
             "position": "QB",
             "status": "Out"
           },
           {
             "team": "SEA",
-            "player": "Leonard Williams",
-            "position": "DT",
+            "player": "Charles Cross",
+            "position": "OT",
             "status": "Out"
           },
           {
@@ -232,26 +226,26 @@
           },
           {
             "team": "SEA",
-            "player": "Rashid Shaheed",
-            "position": "WR",
+            "player": "Uchenna Nwosu",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Leonard Williams",
+            "position": "DT",
             "status": "Out"
           },
           {
             "team": "ARI",
-            "player": "Hjalte Froholdt",
-            "position": "C",
+            "player": "Isaiah Adams",
+            "position": "G",
             "status": "Questionable"
           },
           {
             "team": "ARI",
-            "player": "Gardner Minshew II",
-            "position": "QB",
-            "status": "Doubtful"
-          },
-          {
-            "team": "ARI",
-            "player": "Michael Wilson",
-            "position": "WR",
+            "player": "Jon Gaines II",
+            "position": "G",
             "status": "Out"
           },
           {
@@ -262,9 +256,15 @@
           },
           {
             "team": "ARI",
-            "player": "Bam Knight",
-            "position": "RB",
-            "status": "Out"
+            "player": "Walter Nolen III",
+            "position": "DT",
+            "status": "Questionable"
+          },
+          {
+            "team": "ARI",
+            "player": "Max Melton",
+            "position": "CB",
+            "status": "Questionable"
           }
         ],
         "roster_statuses_not_applied": []
@@ -278,27 +278,21 @@
         "designations_applied": [
           {
             "team": "NE",
-            "player": "Rhamondre Stevenson",
-            "position": "RB",
+            "player": "Charles Woods",
+            "position": "CB",
             "status": "Questionable"
           },
           {
             "team": "NE",
-            "player": "Ben Brown",
-            "position": "C",
-            "status": "Doubtful"
+            "player": "Hunter Henry",
+            "position": "TE",
+            "status": "Questionable"
           },
           {
             "team": "NE",
-            "player": "A.J. Brown",
+            "player": "Mack Hollins",
             "position": "WR",
-            "status": "Out"
-          },
-          {
-            "team": "NE",
-            "player": "Charles Woods",
-            "position": "CB",
-            "status": "Out"
+            "status": "Questionable"
           },
           {
             "team": "NE",
@@ -308,14 +302,8 @@
           },
           {
             "team": "GB",
-            "player": "Josh Jacobs",
-            "position": "RB",
-            "status": "Out"
-          },
-          {
-            "team": "GB",
-            "player": "Josh Whyle",
-            "position": "TE",
+            "player": "Travis Glover",
+            "position": "OT",
             "status": "Out"
           },
           {
@@ -326,12 +314,24 @@
           },
           {
             "team": "GB",
-            "player": "MarShawn Lloyd",
-            "position": "RB",
+            "player": "Keisean Nixon",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "GB",
+            "player": "Zaire Franklin",
+            "position": "LB",
             "status": "Out"
           }
         ],
         "roster_statuses_not_applied": [
+          {
+            "team": "NE",
+            "player": "Greg Van Roten",
+            "position": "G",
+            "status": "Injured Reserve"
+          },
           {
             "team": "GB",
             "player": "Chris Brooks",
@@ -349,25 +349,19 @@
         "designations_applied": [
           {
             "team": "SF",
-            "player": "Deommodore Lenoir",
-            "position": "CB",
-            "status": "Questionable"
-          },
-          {
-            "team": "SF",
-            "player": "Renardo Green",
-            "position": "CB",
-            "status": "Questionable"
-          },
-          {
-            "team": "SF",
-            "player": "Deebo Samuel Sr.",
+            "player": "Mike Evans",
             "position": "WR",
             "status": "Out"
           },
           {
             "team": "SF",
-            "player": "Mike Evans",
+            "player": "Brandon Aiyuk",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "SF",
+            "player": "Deebo Samuel Sr.",
             "position": "WR",
             "status": "Out"
           },
@@ -379,16 +373,22 @@
           },
           {
             "team": "LV",
-            "player": "Trey Zuhn III",
-            "position": "C",
+            "player": "Darien Porter",
+            "position": "CB",
             "status": "Questionable"
           }
         ],
         "roster_statuses_not_applied": [
           {
             "team": "SF",
-            "player": "C.J. West",
-            "position": "DT",
+            "player": "Nate Hobbs",
+            "position": "CB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "SF",
+            "player": "Christian Kirk",
+            "position": "WR",
             "status": "Injured Reserve"
           },
           {
@@ -416,42 +416,38 @@
     "summary": {
       "games_polled": 4,
       "games_with_error": 0,
-      "designations_applied": 32,
-      "statuses_not_applied": 8,
+      "designations_applied": 28,
+      "statuses_not_applied": 12,
       "stored_curated_subset_size": 0,
       "newly_listed_not_in_stored_subset": [
-        "A.J. Brown",
-        "Bam Knight",
-        "Ben Brown",
+        "Brandon Aiyuk",
         "Brandon Pili",
         "Brenen Thompson",
+        "Charles Cross",
         "Charles Woods",
+        "Darien Porter",
         "David Montgomery",
         "Deane Leonard",
         "Deebo Samuel Sr.",
-        "Deommodore Lenoir",
-        "Gardner Minshew II",
-        "Hjalte Froholdt",
+        "Hunter Henry",
+        "Isaiah Adams",
         "Jayden Williams",
-        "Josh Jacobs",
-        "Josh Whyle",
-        "Justin Herbert",
+        "Jon Gaines II",
+        "Keisean Nixon",
         "Kendall Williamson",
-        "Ladd McConkey",
         "Leonard Williams",
-        "MarShawn Lloyd",
-        "Michael Wilson",
+        "Mack Hollins",
+        "Max Melton",
         "Mike Evans",
-        "Quenton Nelson",
-        "Rashid Shaheed",
         "Reed Blankenship",
-        "Renardo Green",
-        "Rhamondre Stevenson",
         "Sam Darnold",
         "Sean Rhyan",
         "Thomas Booker IV",
+        "Travis Glover",
         "TreVeyon Henderson",
-        "Trey Zuhn III"
+        "Uchenna Nwosu",
+        "Walter Nolen III",
+        "Zaire Franklin"
       ],
       "stored_names_absent_from_refresh": [],
       "diff_caveat": "The stored snapshot is the injuries_2026.csv Week 9 designation set. Every stored designation belongs to TNF teams (BAL/JAX) and the stored Sunday count is zero, so newly_listed names are net-new at T-90 rather than a scope difference. A newly-listed player on a sealed PLAY ticket is a flag for the owner, never a silent reprice."

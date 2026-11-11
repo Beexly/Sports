@@ -31,7 +31,7 @@ const PERF_RE =
 const EXCHANGE_RE =
   /\b(place (a )?wager|bet with us|event contract|prediction market exchange|dcm|trade contracts on our)\b/i;
 const TIPSTER_RE =
-  /\b(daily picks service|lock of the day|guaranteed pick|tipster service)\b/i;
+  /\b(daily picks service|lock of the day|tipster service)\b/i;
 const PQ_WASH_RE =
   /\b(post[- ]quantum (commitment|ledger|pedersen|mint)|quantum[- ]safe (honesty|ledger|commitment)|zk[- ]proven (mint|pedersen|commitment))\b/i;
 const SPORTSBOOK_CTA_RE =

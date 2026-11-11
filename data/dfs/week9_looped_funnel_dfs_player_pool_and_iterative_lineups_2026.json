@@ -1,302 +1,394 @@
 {
   "stage3b_player_pool_summary": {
-    "upstream_canonical_projections_lock_hash": "c46373256686409ee3c105e7b8b7461de4f919b85374cceb883dac557581fd02",
+    "upstream_canonical_projections_lock_hash": "a701b73f467bbf2779eb2665db4bb8edd3b9824a7f5303287e90705878d0a737",
     "total_pool_players": 135,
     "counts_by_position": {
       "QB": 30,
-      "RB": 30,
-      "WR": 30,
-      "TE": 30,
+      "RB": 27,
+      "WR": 35,
+      "TE": 28,
       "DST": 15
     }
   },
   "stage4_and_stage5_iterative_optimization": {
     "stage": "STAGE_5_ITERATIVE_LINEUP_OPTIMIZATION_TESTING_LOOP",
-    "generated_at_utc": "2026-11-09T19:08:39.671248+00:00",
-    "upstream_canonical_projections_lock_hash": "c46373256686409ee3c105e7b8b7461de4f919b85374cceb883dac557581fd02",
-    "iterations_executed": 6,
-    "worlds_per_iteration": 1500,
-    "total_simulated_lineup_worlds": 54000,
-    "initial_iteration_mean_cvar_099_dk_pts": 282.74,
-    "final_iteration_mean_cvar_099_dk_pts": 288.67,
-    "cvar_099_improvement_dk_pts": 5.93,
-    "initial_iteration_mean_prob_ge_200": 0.4187,
-    "final_iteration_mean_prob_ge_200": 0.4783,
+    "generated_at_utc": "2026-11-08T14:14:31.291367+00:00",
+    "upstream_canonical_projections_lock_hash": "a701b73f467bbf2779eb2665db4bb8edd3b9824a7f5303287e90705878d0a737",
+    "iterations_executed": 8,
+    "worlds_per_iteration": 2500,
+    "total_simulated_lineup_worlds": 120000,
+    "initial_iteration_mean_cvar_099_dk_pts": 250.12,
+    "final_iteration_mean_cvar_099_dk_pts": 253.83,
+    "cvar_099_improvement_dk_pts": 3.71,
+    "initial_iteration_mean_prob_ge_200": 0.1586,
+    "final_iteration_mean_prob_ge_200": 0.1937,
     "monotonic_cvar_improvement_verified": true,
     "iteration_history": [
       {
         "iteration": 1,
-        "worlds_simulated": 1500,
-        "mean_prob_ge_200_dk_pts": 0.4187,
-        "mean_cvar_099_dk_pts": 282.74,
-        "max_cvar_099_dk_pts": 315.4,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1586,
+        "mean_cvar_099_dk_pts": 250.12,
+        "max_cvar_099_dk_pts": 265.61,
         "feedback_adjustments_applied_count": 35,
         "lineup_metrics": [
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-            "prob_ge_200_dk_pts": 0.72,
-            "simulated_p90_dk_pts": 269.34,
-            "simulated_cvar_099_dk_pts": 315.4
+            "prob_ge_200_dk_pts": 0.2584,
+            "simulated_p90_dk_pts": 219.83,
+            "simulated_cvar_099_dk_pts": 261.91
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-            "prob_ge_200_dk_pts": 0.5527,
-            "simulated_p90_dk_pts": 250.33,
-            "simulated_cvar_099_dk_pts": 297.4
+            "prob_ge_200_dk_pts": 0.2428,
+            "simulated_p90_dk_pts": 218.54,
+            "simulated_cvar_099_dk_pts": 265.61
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-            "prob_ge_200_dk_pts": 0.48,
-            "simulated_p90_dk_pts": 238.97,
-            "simulated_cvar_099_dk_pts": 285.67
+            "prob_ge_200_dk_pts": 0.1512,
+            "simulated_p90_dk_pts": 207.98,
+            "simulated_cvar_099_dk_pts": 249.89
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-            "prob_ge_200_dk_pts": 0.2193,
-            "simulated_p90_dk_pts": 215.15,
-            "simulated_cvar_099_dk_pts": 262.06
+            "prob_ge_200_dk_pts": 0.1276,
+            "simulated_p90_dk_pts": 203.84,
+            "simulated_cvar_099_dk_pts": 249.99
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
-            "prob_ge_200_dk_pts": 0.2187,
-            "simulated_p90_dk_pts": 215.41,
-            "simulated_cvar_099_dk_pts": 258.4
+            "prob_ge_200_dk_pts": 0.0648,
+            "simulated_p90_dk_pts": 194.36,
+            "simulated_cvar_099_dk_pts": 233.26
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-            "prob_ge_200_dk_pts": 0.3213,
-            "simulated_p90_dk_pts": 226.9,
-            "simulated_cvar_099_dk_pts": 277.5
+            "prob_ge_200_dk_pts": 0.1068,
+            "simulated_p90_dk_pts": 200.91,
+            "simulated_cvar_099_dk_pts": 240.07
           }
         ]
       },
       {
         "iteration": 2,
-        "worlds_simulated": 1500,
-        "mean_prob_ge_200_dk_pts": 0.4165,
-        "mean_cvar_099_dk_pts": 282.72,
-        "max_cvar_099_dk_pts": 325.32,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1611,
+        "mean_cvar_099_dk_pts": 250.12,
+        "max_cvar_099_dk_pts": 270.8,
         "feedback_adjustments_applied_count": 35,
         "lineup_metrics": [
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-            "prob_ge_200_dk_pts": 0.7227,
-            "simulated_p90_dk_pts": 271.48,
-            "simulated_cvar_099_dk_pts": 325.32
+            "prob_ge_200_dk_pts": 0.258,
+            "simulated_p90_dk_pts": 221.34,
+            "simulated_cvar_099_dk_pts": 270.8
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-            "prob_ge_200_dk_pts": 0.516,
-            "simulated_p90_dk_pts": 246.01,
-            "simulated_cvar_099_dk_pts": 296.44
+            "prob_ge_200_dk_pts": 0.2492,
+            "simulated_p90_dk_pts": 220.68,
+            "simulated_cvar_099_dk_pts": 267.61
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-            "prob_ge_200_dk_pts": 0.4693,
-            "simulated_p90_dk_pts": 239.55,
-            "simulated_cvar_099_dk_pts": 281.52
+            "prob_ge_200_dk_pts": 0.1656,
+            "simulated_p90_dk_pts": 210.35,
+            "simulated_cvar_099_dk_pts": 252.44
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-            "prob_ge_200_dk_pts": 0.21,
-            "simulated_p90_dk_pts": 213.19,
-            "simulated_cvar_099_dk_pts": 259.64
+            "prob_ge_200_dk_pts": 0.1292,
+            "simulated_p90_dk_pts": 203.56,
+            "simulated_cvar_099_dk_pts": 242.27
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
-            "prob_ge_200_dk_pts": 0.2493,
-            "simulated_p90_dk_pts": 215.79,
-            "simulated_cvar_099_dk_pts": 262.22
+            "prob_ge_200_dk_pts": 0.0572,
+            "simulated_p90_dk_pts": 192.91,
+            "simulated_cvar_099_dk_pts": 228.9
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-            "prob_ge_200_dk_pts": 0.332,
-            "simulated_p90_dk_pts": 227.89,
-            "simulated_cvar_099_dk_pts": 271.18
+            "prob_ge_200_dk_pts": 0.1076,
+            "simulated_p90_dk_pts": 201.51,
+            "simulated_cvar_099_dk_pts": 238.72
           }
         ]
       },
       {
         "iteration": 3,
-        "worlds_simulated": 1500,
-        "mean_prob_ge_200_dk_pts": 0.4336,
-        "mean_cvar_099_dk_pts": 283.35,
-        "max_cvar_099_dk_pts": 326.34,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1702,
+        "mean_cvar_099_dk_pts": 247.2,
+        "max_cvar_099_dk_pts": 264.58,
         "feedback_adjustments_applied_count": 35,
         "lineup_metrics": [
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-            "prob_ge_200_dk_pts": 0.7253,
-            "simulated_p90_dk_pts": 269.74,
-            "simulated_cvar_099_dk_pts": 326.34
+            "prob_ge_200_dk_pts": 0.2604,
+            "simulated_p90_dk_pts": 221.09,
+            "simulated_cvar_099_dk_pts": 264.58
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-            "prob_ge_200_dk_pts": 0.548,
-            "simulated_p90_dk_pts": 251.63,
-            "simulated_cvar_099_dk_pts": 293.54
+            "prob_ge_200_dk_pts": 0.2504,
+            "simulated_p90_dk_pts": 217.79,
+            "simulated_cvar_099_dk_pts": 256.7
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-            "prob_ge_200_dk_pts": 0.482,
-            "simulated_p90_dk_pts": 240.38,
-            "simulated_cvar_099_dk_pts": 289.12
+            "prob_ge_200_dk_pts": 0.1816,
+            "simulated_p90_dk_pts": 211.03,
+            "simulated_cvar_099_dk_pts": 249.86
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-            "prob_ge_200_dk_pts": 0.2433,
-            "simulated_p90_dk_pts": 218.63,
-            "simulated_cvar_099_dk_pts": 260.1
+            "prob_ge_200_dk_pts": 0.1484,
+            "simulated_p90_dk_pts": 207.46,
+            "simulated_cvar_099_dk_pts": 245.46
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
-            "prob_ge_200_dk_pts": 0.2593,
-            "simulated_p90_dk_pts": 218.11,
-            "simulated_cvar_099_dk_pts": 254.47
+            "prob_ge_200_dk_pts": 0.0716,
+            "simulated_p90_dk_pts": 195.2,
+            "simulated_cvar_099_dk_pts": 230.36
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-            "prob_ge_200_dk_pts": 0.344,
-            "simulated_p90_dk_pts": 228.8,
-            "simulated_cvar_099_dk_pts": 276.54
+            "prob_ge_200_dk_pts": 0.1088,
+            "simulated_p90_dk_pts": 201.91,
+            "simulated_cvar_099_dk_pts": 236.23
           }
         ]
       },
       {
         "iteration": 4,
-        "worlds_simulated": 1500,
-        "mean_prob_ge_200_dk_pts": 0.4351,
-        "mean_cvar_099_dk_pts": 281.91,
-        "max_cvar_099_dk_pts": 323.8,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1703,
+        "mean_cvar_099_dk_pts": 249.24,
+        "max_cvar_099_dk_pts": 261.23,
         "feedback_adjustments_applied_count": 35,
         "lineup_metrics": [
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-            "prob_ge_200_dk_pts": 0.7427,
-            "simulated_p90_dk_pts": 268.89,
-            "simulated_cvar_099_dk_pts": 323.8
+            "prob_ge_200_dk_pts": 0.266,
+            "simulated_p90_dk_pts": 221.05,
+            "simulated_cvar_099_dk_pts": 258.41
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-            "prob_ge_200_dk_pts": 0.5527,
-            "simulated_p90_dk_pts": 252.16,
-            "simulated_cvar_099_dk_pts": 296.94
+            "prob_ge_200_dk_pts": 0.244,
+            "simulated_p90_dk_pts": 219.8,
+            "simulated_cvar_099_dk_pts": 261.23
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-            "prob_ge_200_dk_pts": 0.4847,
-            "simulated_p90_dk_pts": 242.06,
-            "simulated_cvar_099_dk_pts": 283.08
+            "prob_ge_200_dk_pts": 0.1728,
+            "simulated_p90_dk_pts": 210.88,
+            "simulated_cvar_099_dk_pts": 253.22
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-            "prob_ge_200_dk_pts": 0.2447,
-            "simulated_p90_dk_pts": 216.12,
-            "simulated_cvar_099_dk_pts": 254.11
+            "prob_ge_200_dk_pts": 0.1456,
+            "simulated_p90_dk_pts": 207.34,
+            "simulated_cvar_099_dk_pts": 244.42
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
-            "prob_ge_200_dk_pts": 0.2593,
-            "simulated_p90_dk_pts": 219.57,
-            "simulated_cvar_099_dk_pts": 260.72
+            "prob_ge_200_dk_pts": 0.0812,
+            "simulated_p90_dk_pts": 196.27,
+            "simulated_cvar_099_dk_pts": 234.59
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-            "prob_ge_200_dk_pts": 0.3267,
-            "simulated_p90_dk_pts": 230.3,
-            "simulated_cvar_099_dk_pts": 272.83
+            "prob_ge_200_dk_pts": 0.112,
+            "simulated_p90_dk_pts": 201.82,
+            "simulated_cvar_099_dk_pts": 243.55
           }
         ]
       },
       {
         "iteration": 5,
-        "worlds_simulated": 1500,
-        "mean_prob_ge_200_dk_pts": 0.4553,
-        "mean_cvar_099_dk_pts": 282.46,
-        "max_cvar_099_dk_pts": 318.24,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1663,
+        "mean_cvar_099_dk_pts": 248.22,
+        "max_cvar_099_dk_pts": 265.06,
         "feedback_adjustments_applied_count": 35,
         "lineup_metrics": [
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-            "prob_ge_200_dk_pts": 0.718,
-            "simulated_p90_dk_pts": 267.09,
-            "simulated_cvar_099_dk_pts": 318.24
+            "prob_ge_200_dk_pts": 0.2492,
+            "simulated_p90_dk_pts": 220.12,
+            "simulated_cvar_099_dk_pts": 260.13
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-            "prob_ge_200_dk_pts": 0.584,
-            "simulated_p90_dk_pts": 254.55,
-            "simulated_cvar_099_dk_pts": 302.86
+            "prob_ge_200_dk_pts": 0.2428,
+            "simulated_p90_dk_pts": 217.84,
+            "simulated_cvar_099_dk_pts": 265.06
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-            "prob_ge_200_dk_pts": 0.504,
-            "simulated_p90_dk_pts": 241.17,
-            "simulated_cvar_099_dk_pts": 284.35
+            "prob_ge_200_dk_pts": 0.182,
+            "simulated_p90_dk_pts": 210.75,
+            "simulated_cvar_099_dk_pts": 249.6
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-            "prob_ge_200_dk_pts": 0.2847,
-            "simulated_p90_dk_pts": 219.07,
-            "simulated_cvar_099_dk_pts": 258.38
+            "prob_ge_200_dk_pts": 0.1508,
+            "simulated_p90_dk_pts": 206.98,
+            "simulated_cvar_099_dk_pts": 245.36
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
-            "prob_ge_200_dk_pts": 0.2747,
-            "simulated_p90_dk_pts": 218.23,
-            "simulated_cvar_099_dk_pts": 259.75
+            "prob_ge_200_dk_pts": 0.0668,
+            "simulated_p90_dk_pts": 194.55,
+            "simulated_cvar_099_dk_pts": 229.62
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-            "prob_ge_200_dk_pts": 0.3667,
-            "simulated_p90_dk_pts": 230.11,
-            "simulated_cvar_099_dk_pts": 271.19
+            "prob_ge_200_dk_pts": 0.1064,
+            "simulated_p90_dk_pts": 200.99,
+            "simulated_cvar_099_dk_pts": 239.52
           }
         ]
       },
       {
         "iteration": 6,
-        "worlds_simulated": 1500,
-        "mean_prob_ge_200_dk_pts": 0.4783,
-        "mean_cvar_099_dk_pts": 288.67,
-        "max_cvar_099_dk_pts": 328.99,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1793,
+        "mean_cvar_099_dk_pts": 252.1,
+        "max_cvar_099_dk_pts": 267.85,
         "feedback_adjustments_applied_count": 35,
         "lineup_metrics": [
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-            "prob_ge_200_dk_pts": 0.7527,
-            "simulated_p90_dk_pts": 273.9,
-            "simulated_cvar_099_dk_pts": 328.99
+            "prob_ge_200_dk_pts": 0.2612,
+            "simulated_p90_dk_pts": 220.59,
+            "simulated_cvar_099_dk_pts": 261.61
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-            "prob_ge_200_dk_pts": 0.5993,
-            "simulated_p90_dk_pts": 253.55,
-            "simulated_cvar_099_dk_pts": 313.53
+            "prob_ge_200_dk_pts": 0.2716,
+            "simulated_p90_dk_pts": 220.68,
+            "simulated_cvar_099_dk_pts": 267.85
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-            "prob_ge_200_dk_pts": 0.53,
-            "simulated_p90_dk_pts": 243.8,
-            "simulated_cvar_099_dk_pts": 291.59
+            "prob_ge_200_dk_pts": 0.1936,
+            "simulated_p90_dk_pts": 212.38,
+            "simulated_cvar_099_dk_pts": 253.77
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-            "prob_ge_200_dk_pts": 0.2733,
-            "simulated_p90_dk_pts": 220.34,
-            "simulated_cvar_099_dk_pts": 258.69
+            "prob_ge_200_dk_pts": 0.1656,
+            "simulated_p90_dk_pts": 207.57,
+            "simulated_cvar_099_dk_pts": 249.6
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
-            "prob_ge_200_dk_pts": 0.302,
-            "simulated_p90_dk_pts": 220.92,
-            "simulated_cvar_099_dk_pts": 263.87
+            "prob_ge_200_dk_pts": 0.0808,
+            "simulated_p90_dk_pts": 197.62,
+            "simulated_cvar_099_dk_pts": 235.21
           },
           {
             "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-            "prob_ge_200_dk_pts": 0.4127,
-            "simulated_p90_dk_pts": 232.37,
-            "simulated_cvar_099_dk_pts": 275.37
+            "prob_ge_200_dk_pts": 0.1028,
+            "simulated_p90_dk_pts": 200.2,
+            "simulated_cvar_099_dk_pts": 244.53
+          }
+        ]
+      },
+      {
+        "iteration": 7,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1817,
+        "mean_cvar_099_dk_pts": 251.73,
+        "max_cvar_099_dk_pts": 267.8,
+        "feedback_adjustments_applied_count": 35,
+        "lineup_metrics": [
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
+            "prob_ge_200_dk_pts": 0.2768,
+            "simulated_p90_dk_pts": 223.57,
+            "simulated_cvar_099_dk_pts": 267.8
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
+            "prob_ge_200_dk_pts": 0.2728,
+            "simulated_p90_dk_pts": 221.81,
+            "simulated_cvar_099_dk_pts": 262.73
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
+            "prob_ge_200_dk_pts": 0.1964,
+            "simulated_p90_dk_pts": 213.21,
+            "simulated_cvar_099_dk_pts": 255.75
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
+            "prob_ge_200_dk_pts": 0.1704,
+            "simulated_p90_dk_pts": 209.61,
+            "simulated_cvar_099_dk_pts": 246.24
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
+            "prob_ge_200_dk_pts": 0.066,
+            "simulated_p90_dk_pts": 194.39,
+            "simulated_cvar_099_dk_pts": 236.33
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
+            "prob_ge_200_dk_pts": 0.1076,
+            "simulated_p90_dk_pts": 200.93,
+            "simulated_cvar_099_dk_pts": 241.55
+          }
+        ]
+      },
+      {
+        "iteration": 8,
+        "worlds_simulated": 2500,
+        "mean_prob_ge_200_dk_pts": 0.1937,
+        "mean_cvar_099_dk_pts": 253.83,
+        "max_cvar_099_dk_pts": 267.49,
+        "feedback_adjustments_applied_count": 35,
+        "lineup_metrics": [
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
+            "prob_ge_200_dk_pts": 0.2972,
+            "simulated_p90_dk_pts": 223.61,
+            "simulated_cvar_099_dk_pts": 266.66
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
+            "prob_ge_200_dk_pts": 0.2748,
+            "simulated_p90_dk_pts": 222.89,
+            "simulated_cvar_099_dk_pts": 267.49
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
+            "prob_ge_200_dk_pts": 0.2056,
+            "simulated_p90_dk_pts": 213.94,
+            "simulated_cvar_099_dk_pts": 258.01
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
+            "prob_ge_200_dk_pts": 0.1756,
+            "simulated_p90_dk_pts": 210.09,
+            "simulated_cvar_099_dk_pts": 249.45
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-05",
+            "prob_ge_200_dk_pts": 0.0912,
+            "simulated_p90_dk_pts": 199.03,
+            "simulated_cvar_099_dk_pts": 239.52
+          },
+          {
+            "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
+            "prob_ge_200_dk_pts": 0.1176,
+            "simulated_p90_dk_pts": 202.63,
+            "simulated_cvar_099_dk_pts": 241.82
           }
         ]
       }
@@ -304,425 +396,425 @@
     "final_optimized_lineups": [
       {
         "lineup_id": "W9-LOOPED-FUNNEL-LU-01",
-        "primary_stack_game_id": "2026_09_DAL_IND",
-        "primary_stack_team": "DAL",
-        "bring_back_team": "IND",
+        "primary_stack_game_id": "2026_09_DET_MIA",
+        "primary_stack_team": "DET",
+        "bring_back_team": "MIA",
         "roster_count": 9,
-        "total_dk_salary": 57200,
-        "salary_cap_compliant_le_50000": false,
-        "projected_median_dk_pts": 220.92,
-        "projected_p90_dk_pts": 346.5,
-        "projected_p99_ceiling_dk_pts": 446.69,
+        "total_dk_salary": 47200,
+        "salary_cap_compliant_le_50000": true,
+        "projected_median_dk_pts": 178.69,
+        "projected_p90_dk_pts": 281.01,
+        "projected_p99_ceiling_dk_pts": 362.19,
         "clears_200pt_ceiling_target": true,
-        "pass3_dfs_composite_score": 353.352,
+        "pass3_dfs_composite_score": 281.11,
         "players": [
           {
-            "player_id": "W9-2026_09_DAL_IND-DAL-QB1",
-            "player_name": "Dak Prescott",
+            "player_id": "W9-2026_09_DET_MIA-DET-QB1",
+            "player_name": "Jared Goff",
             "position": "QB",
-            "team": "DAL",
-            "dk_salary": 6500,
-            "canonical_median_dk_pts": 27.42,
-            "canonical_p99_ceiling_dk_pts": 47.71,
-            "dfs_pass3_composite_score": 42.1286
+            "team": "DET",
+            "dk_salary": 6400,
+            "canonical_median_dk_pts": 24.59,
+            "canonical_p99_ceiling_dk_pts": 42.79,
+            "dfs_pass3_composite_score": 38.4145
           },
           {
-            "player_id": "W9-2026_09_NYJ_KC-KC-RB-3",
-            "player_name": "Kareem Hunt",
+            "player_id": "W9-2026_09_DET_MIA-DET-RB-1",
+            "player_name": "Jahmyr Gibbs",
             "position": "RB",
-            "team": "KC",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 24.42,
-            "canonical_p99_ceiling_dk_pts": 45.91,
-            "dfs_pass3_composite_score": 35.8412
+            "team": "DET",
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 21.04,
+            "canonical_p99_ceiling_dk_pts": 39.56,
+            "dfs_pass3_composite_score": 32.5837
           },
           {
-            "player_id": "W9-2026_09_CIN_ATL-CIN-RB-0",
-            "player_name": "Chase Brown",
+            "player_id": "W9-2026_09_BUF_MIN-BUF-RB-0",
+            "player_name": "James Cook",
             "position": "RB",
-            "team": "CIN",
-            "dk_salary": 6800,
-            "canonical_median_dk_pts": 22.95,
-            "canonical_p99_ceiling_dk_pts": 43.15,
-            "dfs_pass3_composite_score": 35.3882
+            "team": "BUF",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 21.21,
+            "canonical_p99_ceiling_dk_pts": 39.87,
+            "dfs_pass3_composite_score": 32.4732
           },
           {
-            "player_id": "W9-2026_09_DAL_IND-DAL-WR-1",
-            "player_name": "CeeDee Lamb",
+            "player_id": "W9-2026_09_DET_MIA-DET-WR-0",
+            "player_name": "Amon-Ra St. Brown",
             "position": "WR",
-            "team": "DAL",
-            "dk_salary": 8300,
-            "canonical_median_dk_pts": 33.83,
-            "canonical_p99_ceiling_dk_pts": 63.6,
-            "dfs_pass3_composite_score": 54.6856
+            "team": "DET",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 21.73,
+            "canonical_p99_ceiling_dk_pts": 40.85,
+            "dfs_pass3_composite_score": 33.8405
           },
           {
-            "player_id": "W9-2026_09_DAL_IND-IND-WR-4",
-            "player_name": "Michael Pittman Jr.",
+            "player_id": "W9-2026_09_DET_MIA-MIA-WR-4",
+            "player_name": "Tyreek Hill",
             "position": "WR",
-            "team": "IND",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 20.23,
-            "canonical_p99_ceiling_dk_pts": 38.03,
-            "dfs_pass3_composite_score": 31.9681
-          },
-          {
-            "player_id": "W9-2026_09_LAR_WAS-LAR-WR-1",
-            "player_name": "Puka Nacua",
-            "position": "WR",
-            "team": "LAR",
-            "dk_salary": 8800,
-            "canonical_median_dk_pts": 42.24,
-            "canonical_p99_ceiling_dk_pts": 79.41,
-            "dfs_pass3_composite_score": 69.1923
-          },
-          {
-            "player_id": "W9-2026_09_DAL_IND-DAL-TE-2",
-            "player_name": "Luke Schoonmaker",
-            "position": "TE",
-            "team": "DAL",
-            "dk_salary": 2500,
-            "canonical_median_dk_pts": 7.49,
-            "canonical_p99_ceiling_dk_pts": 14.08,
-            "dfs_pass3_composite_score": 8.3839
-          },
-          {
-            "player_id": "W9-2026_09_ARI_SEA-SEA-WR-4",
-            "player_name": "Jaxon Smith-Njigba",
-            "position": "WR",
-            "team": "SEA",
-            "dk_salary": 9300,
-            "canonical_median_dk_pts": 34.54,
-            "canonical_p99_ceiling_dk_pts": 64.94,
-            "dfs_pass3_composite_score": 55.9562
-          },
-          {
-            "player_id": "W9-2026_09_DET_MIA-MIA-DST",
-            "player_name": "MIA DST",
-            "position": "DST",
             "team": "MIA",
-            "dk_salary": 2200,
-            "canonical_median_dk_pts": 7.8,
-            "canonical_p99_ceiling_dk_pts": 16.77,
-            "dfs_pass3_composite_score": 19.8081
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 19.59,
+            "canonical_p99_ceiling_dk_pts": 36.83,
+            "dfs_pass3_composite_score": 30.6031
+          },
+          {
+            "player_id": "W9-2026_09_BUF_MIN-BUF-WR-1",
+            "player_name": "Khalil Shakir",
+            "position": "WR",
+            "team": "BUF",
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 21.92,
+            "canonical_p99_ceiling_dk_pts": 41.21,
+            "dfs_pass3_composite_score": 35.1328
+          },
+          {
+            "player_id": "W9-2026_09_DET_MIA-DET-TE-2",
+            "player_name": "Sam LaPorta",
+            "position": "TE",
+            "team": "DET",
+            "dk_salary": 4600,
+            "canonical_median_dk_pts": 17.0,
+            "canonical_p99_ceiling_dk_pts": 31.96,
+            "dfs_pass3_composite_score": 26.5037
+          },
+          {
+            "player_id": "W9-2026_09_LAR_WAS-WAS-WR-3",
+            "player_name": "Stefon Diggs",
+            "position": "WR",
+            "team": "WAS",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 21.0,
+            "canonical_p99_ceiling_dk_pts": 39.48,
+            "dfs_pass3_composite_score": 32.9428
+          },
+          {
+            "player_id": "W9-2026_09_NYG_PHI-PHI-DST",
+            "player_name": "PHI DST",
+            "position": "DST",
+            "team": "PHI",
+            "dk_salary": 3100,
+            "canonical_median_dk_pts": 10.61,
+            "canonical_p99_ceiling_dk_pts": 22.81,
+            "dfs_pass3_composite_score": 18.616
           }
         ]
       },
       {
         "lineup_id": "W9-LOOPED-FUNNEL-LU-02",
-        "primary_stack_game_id": "2026_09_CIN_ATL",
-        "primary_stack_team": "CIN",
-        "bring_back_team": "ATL",
+        "primary_stack_game_id": "2026_09_BUF_MIN",
+        "primary_stack_team": "BUF",
+        "bring_back_team": "MIN",
         "roster_count": 9,
-        "total_dk_salary": 56500,
-        "salary_cap_compliant_le_50000": false,
-        "projected_median_dk_pts": 203.06,
-        "projected_p90_dk_pts": 318.73,
-        "projected_p99_ceiling_dk_pts": 411.02,
+        "total_dk_salary": 47400,
+        "salary_cap_compliant_le_50000": true,
+        "projected_median_dk_pts": 176.16,
+        "projected_p90_dk_pts": 276.78,
+        "projected_p99_ceiling_dk_pts": 356.67,
         "clears_200pt_ceiling_target": true,
-        "pass3_dfs_composite_score": 324.919,
+        "pass3_dfs_composite_score": 276.767,
         "players": [
           {
-            "player_id": "W9-2026_09_CIN_ATL-CIN-QB1",
-            "player_name": "Joe Burrow",
+            "player_id": "W9-2026_09_BUF_MIN-BUF-QB1",
+            "player_name": "Josh Allen",
             "position": "QB",
-            "team": "CIN",
+            "team": "BUF",
+            "dk_salary": 6400,
+            "canonical_median_dk_pts": 24.75,
+            "canonical_p99_ceiling_dk_pts": 43.06,
+            "dfs_pass3_composite_score": 37.5292
+          },
+          {
+            "player_id": "W9-2026_09_BUF_MIN-BUF-RB-0",
+            "player_name": "James Cook",
+            "position": "RB",
+            "team": "BUF",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 21.21,
+            "canonical_p99_ceiling_dk_pts": 39.87,
+            "dfs_pass3_composite_score": 32.4732
+          },
+          {
+            "player_id": "W9-2026_09_BUF_MIN-MIN-RB-4",
+            "player_name": "Aaron Jones",
+            "position": "RB",
+            "team": "MIN",
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 19.94,
+            "canonical_p99_ceiling_dk_pts": 37.49,
+            "dfs_pass3_composite_score": 31.1772
+          },
+          {
+            "player_id": "W9-2026_09_BUF_MIN-BUF-WR-1",
+            "player_name": "Khalil Shakir",
+            "position": "WR",
+            "team": "BUF",
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 21.92,
+            "canonical_p99_ceiling_dk_pts": 41.21,
+            "dfs_pass3_composite_score": 35.1328
+          },
+          {
+            "player_id": "W9-2026_09_BUF_MIN-MIN-WR-3",
+            "player_name": "Justin Jefferson",
+            "position": "WR",
+            "team": "MIN",
             "dk_salary": 5800,
-            "canonical_median_dk_pts": 23.54,
-            "canonical_p99_ceiling_dk_pts": 40.96,
-            "dfs_pass3_composite_score": 36.3684
+            "canonical_median_dk_pts": 20.65,
+            "canonical_p99_ceiling_dk_pts": 38.82,
+            "dfs_pass3_composite_score": 32.3571
           },
           {
-            "player_id": "W9-2026_09_CIN_ATL-CIN-RB-0",
-            "player_name": "Chase Brown",
-            "position": "RB",
-            "team": "CIN",
-            "dk_salary": 6800,
-            "canonical_median_dk_pts": 22.95,
-            "canonical_p99_ceiling_dk_pts": 43.15,
-            "dfs_pass3_composite_score": 35.3882
-          },
-          {
-            "player_id": "W9-2026_09_ARI_SEA-SEA-RB-3",
-            "player_name": "Kenneth Walker III",
-            "position": "RB",
-            "team": "SEA",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 22.86,
-            "canonical_p99_ceiling_dk_pts": 42.98,
-            "dfs_pass3_composite_score": 34.7722
-          },
-          {
-            "player_id": "W9-2026_09_CIN_ATL-CIN-WR-1",
-            "player_name": "Ja'Marr Chase",
+            "player_id": "W9-2026_09_DET_MIA-DET-WR-0",
+            "player_name": "Amon-Ra St. Brown",
             "position": "WR",
-            "team": "CIN",
-            "dk_salary": 6500,
-            "canonical_median_dk_pts": 23.16,
-            "canonical_p99_ceiling_dk_pts": 43.54,
-            "dfs_pass3_composite_score": 36.8197
+            "team": "DET",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 21.73,
+            "canonical_p99_ceiling_dk_pts": 40.85,
+            "dfs_pass3_composite_score": 33.8405
           },
           {
-            "player_id": "W9-2026_09_CIN_ATL-ATL-WR-4",
-            "player_name": "Drake London",
-            "position": "WR",
-            "team": "ATL",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 20.99,
-            "canonical_p99_ceiling_dk_pts": 39.46,
-            "dfs_pass3_composite_score": 31.8202
-          },
-          {
-            "player_id": "W9-2026_09_ARI_SEA-SEA-WR-4",
-            "player_name": "Jaxon Smith-Njigba",
-            "position": "WR",
-            "team": "SEA",
-            "dk_salary": 9300,
-            "canonical_median_dk_pts": 34.54,
-            "canonical_p99_ceiling_dk_pts": 64.94,
-            "dfs_pass3_composite_score": 55.9562
-          },
-          {
-            "player_id": "W9-2026_09_CIN_ATL-CIN-TE-2",
-            "player_name": "Mike Gesicki",
+            "player_id": "W9-2026_09_BUF_MIN-BUF-TE-2",
+            "player_name": "Dalton Kincaid",
             "position": "TE",
-            "team": "CIN",
-            "dk_salary": 4800,
-            "canonical_median_dk_pts": 13.39,
-            "canonical_p99_ceiling_dk_pts": 25.17,
-            "dfs_pass3_composite_score": 19.3008
+            "team": "BUF",
+            "dk_salary": 4600,
+            "canonical_median_dk_pts": 17.1,
+            "canonical_p99_ceiling_dk_pts": 32.15,
+            "dfs_pass3_composite_score": 25.4
           },
           {
-            "player_id": "W9-2026_09_DAL_IND-DAL-WR-1",
-            "player_name": "CeeDee Lamb",
+            "player_id": "W9-2026_09_LAR_WAS-LAR-WR-0",
+            "player_name": "Puka Nacua",
             "position": "WR",
-            "team": "DAL",
-            "dk_salary": 8300,
-            "canonical_median_dk_pts": 33.83,
-            "canonical_p99_ceiling_dk_pts": 63.6,
-            "dfs_pass3_composite_score": 54.6856
+            "team": "LAR",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 19.43,
+            "canonical_p99_ceiling_dk_pts": 36.53,
+            "dfs_pass3_composite_score": 32.3894
           },
           {
-            "player_id": "W9-2026_09_DET_MIA-MIA-DST",
-            "player_name": "MIA DST",
+            "player_id": "W9-2026_09_CLE_NO-NO-DST",
+            "player_name": "NO DST",
             "position": "DST",
-            "team": "MIA",
-            "dk_salary": 2200,
-            "canonical_median_dk_pts": 7.8,
-            "canonical_p99_ceiling_dk_pts": 16.77,
-            "dfs_pass3_composite_score": 19.8081
+            "team": "NO",
+            "dk_salary": 3100,
+            "canonical_median_dk_pts": 9.43,
+            "canonical_p99_ceiling_dk_pts": 20.27,
+            "dfs_pass3_composite_score": 16.4676
           }
         ]
       },
       {
         "lineup_id": "W9-LOOPED-FUNNEL-LU-03",
-        "primary_stack_game_id": "2026_09_CIN_ATL",
-        "primary_stack_team": "ATL",
-        "bring_back_team": "CIN",
+        "primary_stack_game_id": "2026_09_LAR_WAS",
+        "primary_stack_team": "WAS",
+        "bring_back_team": "LAR",
         "roster_count": 9,
-        "total_dk_salary": 57800,
-        "salary_cap_compliant_le_50000": false,
-        "projected_median_dk_pts": 196.3,
-        "projected_p90_dk_pts": 308.22,
-        "projected_p99_ceiling_dk_pts": 397.54,
+        "total_dk_salary": 46900,
+        "salary_cap_compliant_le_50000": true,
+        "projected_median_dk_pts": 170.22,
+        "projected_p90_dk_pts": 267.49,
+        "projected_p99_ceiling_dk_pts": 344.74,
         "clears_200pt_ceiling_target": true,
-        "pass3_dfs_composite_score": 313.508,
+        "pass3_dfs_composite_score": 267.269,
         "players": [
           {
-            "player_id": "W9-2026_09_CIN_ATL-ATL-QB1",
-            "player_name": "Michael Penix Jr.",
+            "player_id": "W9-2026_09_LAR_WAS-WAS-QB1",
+            "player_name": "Jayden Daniels",
             "position": "QB",
-            "team": "ATL",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 21.94,
-            "canonical_p99_ceiling_dk_pts": 38.18,
-            "dfs_pass3_composite_score": 33.7467
+            "team": "WAS",
+            "dk_salary": 6900,
+            "canonical_median_dk_pts": 23.68,
+            "canonical_p99_ceiling_dk_pts": 41.2,
+            "dfs_pass3_composite_score": 36.6811
           },
           {
-            "player_id": "W9-2026_09_ARI_SEA-SEA-RB-3",
-            "player_name": "Kenneth Walker III",
+            "player_id": "W9-2026_09_BUF_MIN-MIN-RB-4",
+            "player_name": "Aaron Jones",
             "position": "RB",
-            "team": "SEA",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 22.86,
-            "canonical_p99_ceiling_dk_pts": 42.98,
-            "dfs_pass3_composite_score": 34.7722
+            "team": "MIN",
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 19.94,
+            "canonical_p99_ceiling_dk_pts": 37.49,
+            "dfs_pass3_composite_score": 31.1772
           },
           {
-            "player_id": "W9-2026_09_DET_MIA-DET-RB-0",
-            "player_name": "Jahmyr Gibbs",
+            "player_id": "W9-2026_09_LAR_WAS-WAS-RB-4",
+            "player_name": "Brian Robinson Jr.",
             "position": "RB",
-            "team": "DET",
-            "dk_salary": 10000,
-            "canonical_median_dk_pts": 23.48,
-            "canonical_p99_ceiling_dk_pts": 44.14,
-            "dfs_pass3_composite_score": 34.5992
+            "team": "WAS",
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 20.32,
+            "canonical_p99_ceiling_dk_pts": 38.2,
+            "dfs_pass3_composite_score": 30.0756
           },
           {
-            "player_id": "W9-2026_09_CIN_ATL-ATL-WR-4",
-            "player_name": "Drake London",
+            "player_id": "W9-2026_09_LAR_WAS-WAS-WR-3",
+            "player_name": "Stefon Diggs",
             "position": "WR",
-            "team": "ATL",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 20.99,
-            "canonical_p99_ceiling_dk_pts": 39.46,
-            "dfs_pass3_composite_score": 31.8202
+            "team": "WAS",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 21.0,
+            "canonical_p99_ceiling_dk_pts": 39.48,
+            "dfs_pass3_composite_score": 32.9428
           },
           {
-            "player_id": "W9-2026_09_CIN_ATL-CIN-WR-1",
-            "player_name": "Ja'Marr Chase",
+            "player_id": "W9-2026_09_LAR_WAS-LAR-WR-0",
+            "player_name": "Puka Nacua",
             "position": "WR",
-            "team": "CIN",
-            "dk_salary": 6500,
-            "canonical_median_dk_pts": 23.16,
-            "canonical_p99_ceiling_dk_pts": 43.54,
-            "dfs_pass3_composite_score": 36.8197
+            "team": "LAR",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 19.43,
+            "canonical_p99_ceiling_dk_pts": 36.53,
+            "dfs_pass3_composite_score": 32.3894
           },
           {
-            "player_id": "W9-2026_09_DAL_IND-DAL-WR-1",
-            "player_name": "CeeDee Lamb",
+            "player_id": "W9-2026_09_BUF_MIN-MIN-WR-3",
+            "player_name": "Justin Jefferson",
             "position": "WR",
-            "team": "DAL",
-            "dk_salary": 8300,
-            "canonical_median_dk_pts": 33.83,
-            "canonical_p99_ceiling_dk_pts": 63.6,
-            "dfs_pass3_composite_score": 54.6856
+            "team": "MIN",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 20.65,
+            "canonical_p99_ceiling_dk_pts": 38.82,
+            "dfs_pass3_composite_score": 32.3571
           },
           {
-            "player_id": "W9-2026_09_CIN_ATL-ATL-TE-5",
-            "player_name": "Kyle Pitts",
+            "player_id": "W9-2026_09_LAR_WAS-WAS-TE-5",
+            "player_name": "Zach Ertz",
             "position": "TE",
-            "team": "ATL",
+            "team": "WAS",
             "dk_salary": 4500,
-            "canonical_median_dk_pts": 11.79,
-            "canonical_p99_ceiling_dk_pts": 22.17,
-            "dfs_pass3_composite_score": 17.8978
+            "canonical_median_dk_pts": 16.34,
+            "canonical_p99_ceiling_dk_pts": 30.72,
+            "dfs_pass3_composite_score": 23.6444
           },
           {
-            "player_id": "W9-2026_09_NYG_PHI-NYG-WR-1",
-            "player_name": "Malik Nabers",
+            "player_id": "W9-2026_09_NYJ_KC-KC-WR-5",
+            "player_name": "Xavier Worthy",
             "position": "WR",
-            "team": "NYG",
-            "dk_salary": 7300,
-            "canonical_median_dk_pts": 30.45,
-            "canonical_p99_ceiling_dk_pts": 57.25,
-            "dfs_pass3_composite_score": 49.359
+            "team": "KC",
+            "dk_salary": 4500,
+            "canonical_median_dk_pts": 19.62,
+            "canonical_p99_ceiling_dk_pts": 36.89,
+            "dfs_pass3_composite_score": 31.9316
           },
           {
-            "player_id": "W9-2026_09_DET_MIA-MIA-DST",
-            "player_name": "MIA DST",
+            "player_id": "W9-2026_09_NYJ_KC-KC-DST",
+            "player_name": "KC DST",
             "position": "DST",
-            "team": "MIA",
-            "dk_salary": 2200,
-            "canonical_median_dk_pts": 7.8,
-            "canonical_p99_ceiling_dk_pts": 16.77,
-            "dfs_pass3_composite_score": 19.8081
+            "team": "KC",
+            "dk_salary": 3200,
+            "canonical_median_dk_pts": 9.24,
+            "canonical_p99_ceiling_dk_pts": 19.87,
+            "dfs_pass3_composite_score": 16.0696
           }
         ]
       },
       {
         "lineup_id": "W9-LOOPED-FUNNEL-LU-04",
-        "primary_stack_game_id": "2026_09_JAX_BAL",
-        "primary_stack_team": "BAL",
-        "bring_back_team": "JAX",
+        "primary_stack_game_id": "2026_09_BUF_MIN",
+        "primary_stack_team": "MIN",
+        "bring_back_team": "BUF",
         "roster_count": 9,
-        "total_dk_salary": 55700,
-        "salary_cap_compliant_le_50000": false,
-        "projected_median_dk_pts": 176.84,
-        "projected_p90_dk_pts": 277.74,
-        "projected_p99_ceiling_dk_pts": 358.14,
+        "total_dk_salary": 47600,
+        "salary_cap_compliant_le_50000": true,
+        "projected_median_dk_pts": 168.55,
+        "projected_p90_dk_pts": 264.85,
+        "projected_p99_ceiling_dk_pts": 341.36,
         "clears_200pt_ceiling_target": true,
-        "pass3_dfs_composite_score": 278.874,
+        "pass3_dfs_composite_score": 265.103,
         "players": [
           {
-            "player_id": "W9-2026_09_JAX_BAL-BAL-QB1",
-            "player_name": "Joe Fagnano",
+            "player_id": "W9-2026_09_BUF_MIN-MIN-QB1",
+            "player_name": "Carson Wentz",
             "position": "QB",
-            "team": "BAL",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 21.07,
-            "canonical_p99_ceiling_dk_pts": 36.66,
-            "dfs_pass3_composite_score": 32.6461
+            "team": "MIN",
+            "dk_salary": 6900,
+            "canonical_median_dk_pts": 23.06,
+            "canonical_p99_ceiling_dk_pts": 40.12,
+            "dfs_pass3_composite_score": 34.7971
           },
           {
-            "player_id": "W9-2026_09_DET_MIA-DET-RB-0",
-            "player_name": "Jahmyr Gibbs",
-            "position": "RB",
-            "team": "DET",
-            "dk_salary": 10000,
-            "canonical_median_dk_pts": 23.48,
-            "canonical_p99_ceiling_dk_pts": 44.14,
-            "dfs_pass3_composite_score": 34.5992
-          },
-          {
-            "player_id": "W9-2026_09_LAR_WAS-WAS-RB-3",
+            "player_id": "W9-2026_09_LAR_WAS-WAS-RB-4",
             "player_name": "Brian Robinson Jr.",
             "position": "RB",
             "team": "WAS",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 21.89,
-            "canonical_p99_ceiling_dk_pts": 41.15,
-            "dfs_pass3_composite_score": 32.8119
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 20.32,
+            "canonical_p99_ceiling_dk_pts": 38.2,
+            "dfs_pass3_composite_score": 30.0756
           },
           {
-            "player_id": "W9-2026_09_JAX_BAL-BAL-WR-4",
-            "player_name": "Zay Flowers",
+            "player_id": "W9-2026_09_LAR_WAS-LAR-RB-1",
+            "player_name": "Kyren Williams",
+            "position": "RB",
+            "team": "LAR",
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 18.75,
+            "canonical_p99_ceiling_dk_pts": 35.25,
+            "dfs_pass3_composite_score": 28.7857
+          },
+          {
+            "player_id": "W9-2026_09_BUF_MIN-MIN-WR-3",
+            "player_name": "Justin Jefferson",
             "position": "WR",
-            "team": "BAL",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 20.04,
-            "canonical_p99_ceiling_dk_pts": 37.68,
-            "dfs_pass3_composite_score": 30.3169
+            "team": "MIN",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 20.65,
+            "canonical_p99_ceiling_dk_pts": 38.82,
+            "dfs_pass3_composite_score": 32.3571
           },
           {
-            "player_id": "W9-2026_09_JAX_BAL-JAX-WR-1",
-            "player_name": "Brian Thomas Jr.",
+            "player_id": "W9-2026_09_BUF_MIN-BUF-WR-1",
+            "player_name": "Khalil Shakir",
             "position": "WR",
-            "team": "JAX",
-            "dk_salary": 6500,
-            "canonical_median_dk_pts": 14.8,
-            "canonical_p99_ceiling_dk_pts": 27.82,
-            "dfs_pass3_composite_score": 22.6389
+            "team": "BUF",
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 21.92,
+            "canonical_p99_ceiling_dk_pts": 41.21,
+            "dfs_pass3_composite_score": 35.1328
           },
           {
-            "player_id": "W9-2026_09_NYG_PHI-NYG-WR-1",
-            "player_name": "Malik Nabers",
+            "player_id": "W9-2026_09_LAR_WAS-LAR-WR-0",
+            "player_name": "Puka Nacua",
             "position": "WR",
-            "team": "NYG",
-            "dk_salary": 7300,
-            "canonical_median_dk_pts": 30.45,
-            "canonical_p99_ceiling_dk_pts": 57.25,
-            "dfs_pass3_composite_score": 49.359
+            "team": "LAR",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 19.43,
+            "canonical_p99_ceiling_dk_pts": 36.53,
+            "dfs_pass3_composite_score": 32.3894
           },
           {
-            "player_id": "W9-2026_09_JAX_BAL-BAL-TE-5",
-            "player_name": "Mark Andrews",
+            "player_id": "W9-2026_09_BUF_MIN-MIN-TE-5",
+            "player_name": "T.J. Hockenson",
             "position": "TE",
-            "team": "BAL",
+            "team": "MIN",
             "dk_salary": 4500,
-            "canonical_median_dk_pts": 11.07,
-            "canonical_p99_ceiling_dk_pts": 20.81,
-            "dfs_pass3_composite_score": 14.5343
+            "canonical_median_dk_pts": 15.82,
+            "canonical_p99_ceiling_dk_pts": 29.74,
+            "dfs_pass3_composite_score": 24.472
           },
           {
-            "player_id": "W9-2026_09_LV_SF-SF-WR-4",
-            "player_name": "Jauan Jennings",
+            "player_id": "W9-2026_09_LV_SF-SF-WR-3",
+            "player_name": "Mike Evans",
             "position": "WR",
             "team": "SF",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 26.24,
-            "canonical_p99_ceiling_dk_pts": 49.33,
-            "dfs_pass3_composite_score": 42.1597
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 19.61,
+            "canonical_p99_ceiling_dk_pts": 36.87,
+            "dfs_pass3_composite_score": 31.4394
           },
           {
-            "player_id": "W9-2026_09_DET_MIA-MIA-DST",
-            "player_name": "MIA DST",
+            "player_id": "W9-2026_09_LV_SF-SF-DST",
+            "player_name": "SF DST",
             "position": "DST",
-            "team": "MIA",
-            "dk_salary": 2200,
-            "canonical_median_dk_pts": 7.8,
-            "canonical_p99_ceiling_dk_pts": 16.77,
-            "dfs_pass3_composite_score": 19.8081
+            "team": "SF",
+            "dk_salary": 2900,
+            "canonical_median_dk_pts": 8.99,
+            "canonical_p99_ceiling_dk_pts": 19.33,
+            "dfs_pass3_composite_score": 15.6539
           }
         ]
       },
@@ -732,209 +824,209 @@
         "primary_stack_team": "SF",
         "bring_back_team": "LV",
         "roster_count": 9,
-        "total_dk_salary": 54800,
-        "salary_cap_compliant_le_50000": false,
-        "projected_median_dk_pts": 177.89,
-        "projected_p90_dk_pts": 279.46,
-        "projected_p99_ceiling_dk_pts": 360.4,
+        "total_dk_salary": 48200,
+        "salary_cap_compliant_le_50000": true,
+        "projected_median_dk_pts": 160.34,
+        "projected_p90_dk_pts": 251.99,
+        "projected_p99_ceiling_dk_pts": 324.79,
         "clears_200pt_ceiling_target": true,
-        "pass3_dfs_composite_score": 281.182,
+        "pass3_dfs_composite_score": 250.076,
         "players": [
           {
             "player_id": "W9-2026_09_LV_SF-SF-QB1",
             "player_name": "Brock Purdy",
             "position": "QB",
             "team": "SF",
-            "dk_salary": 6800,
-            "canonical_median_dk_pts": 20.14,
-            "canonical_p99_ceiling_dk_pts": 35.04,
-            "dfs_pass3_composite_score": 31.0716
+            "dk_salary": 6900,
+            "canonical_median_dk_pts": 22.13,
+            "canonical_p99_ceiling_dk_pts": 38.51,
+            "dfs_pass3_composite_score": 34.4404
           },
           {
-            "player_id": "W9-2026_09_LAR_WAS-WAS-RB-3",
-            "player_name": "Brian Robinson Jr.",
+            "player_id": "W9-2026_09_LAR_WAS-LAR-RB-1",
+            "player_name": "Kyren Williams",
             "position": "RB",
-            "team": "WAS",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 21.89,
-            "canonical_p99_ceiling_dk_pts": 41.15,
-            "dfs_pass3_composite_score": 32.8119
+            "team": "LAR",
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 18.75,
+            "canonical_p99_ceiling_dk_pts": 35.25,
+            "dfs_pass3_composite_score": 28.7857
           },
           {
-            "player_id": "W9-2026_09_TB_CHI-CHI-RB-3",
-            "player_name": "D'Andre Swift",
+            "player_id": "W9-2026_09_DET_MIA-MIA-RB-3",
+            "player_name": "Ollie Gordon II",
             "position": "RB",
-            "team": "CHI",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 21.43,
-            "canonical_p99_ceiling_dk_pts": 40.29,
-            "dfs_pass3_composite_score": 31.6125
+            "team": "MIA",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 18.89,
+            "canonical_p99_ceiling_dk_pts": 35.51,
+            "dfs_pass3_composite_score": 28.5818
           },
           {
-            "player_id": "W9-2026_09_LV_SF-SF-WR-4",
-            "player_name": "Jauan Jennings",
+            "player_id": "W9-2026_09_LV_SF-SF-WR-3",
+            "player_name": "Mike Evans",
             "position": "WR",
             "team": "SF",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 26.24,
-            "canonical_p99_ceiling_dk_pts": 49.33,
-            "dfs_pass3_composite_score": 42.1597
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 19.61,
+            "canonical_p99_ceiling_dk_pts": 36.87,
+            "dfs_pass3_composite_score": 31.4394
           },
           {
             "player_id": "W9-2026_09_LV_SF-LV-WR-1",
             "player_name": "Jakobi Meyers",
             "position": "WR",
             "team": "LV",
-            "dk_salary": 6500,
-            "canonical_median_dk_pts": 16.31,
-            "canonical_p99_ceiling_dk_pts": 30.66,
-            "dfs_pass3_composite_score": 23.4819
+            "dk_salary": 5400,
+            "canonical_median_dk_pts": 16.6,
+            "canonical_p99_ceiling_dk_pts": 31.21,
+            "dfs_pass3_composite_score": 24.0766
           },
           {
-            "player_id": "W9-2026_09_HOU_LAC-HOU-WR-1",
-            "player_name": "Nico Collins",
+            "player_id": "W9-2026_09_BUF_MIN-MIN-WR-3",
+            "player_name": "Justin Jefferson",
             "position": "WR",
-            "team": "HOU",
-            "dk_salary": 7200,
-            "canonical_median_dk_pts": 25.88,
-            "canonical_p99_ceiling_dk_pts": 48.65,
-            "dfs_pass3_composite_score": 40.6706
+            "team": "MIN",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 20.65,
+            "canonical_p99_ceiling_dk_pts": 38.82,
+            "dfs_pass3_composite_score": 32.3571
           },
           {
-            "player_id": "W9-2026_09_LV_SF-SF-TE-5",
+            "player_id": "W9-2026_09_LV_SF-SF-TE-4",
             "player_name": "George Kittle",
             "position": "TE",
             "team": "SF",
-            "dk_salary": 6000,
-            "canonical_median_dk_pts": 13.97,
-            "canonical_p99_ceiling_dk_pts": 26.26,
-            "dfs_pass3_composite_score": 20.3026
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 15.28,
+            "canonical_p99_ceiling_dk_pts": 28.73,
+            "dfs_pass3_composite_score": 23.1259
           },
           {
-            "player_id": "W9-2026_09_ARI_SEA-ARI-WR-1",
-            "player_name": "Michael Wilson",
+            "player_id": "W9-2026_09_NYJ_KC-KC-WR-5",
+            "player_name": "Xavier Worthy",
             "position": "WR",
-            "team": "ARI",
-            "dk_salary": 6700,
-            "canonical_median_dk_pts": 24.23,
-            "canonical_p99_ceiling_dk_pts": 45.55,
-            "dfs_pass3_composite_score": 39.263
+            "team": "KC",
+            "dk_salary": 4500,
+            "canonical_median_dk_pts": 19.62,
+            "canonical_p99_ceiling_dk_pts": 36.89,
+            "dfs_pass3_composite_score": 31.9316
           },
           {
-            "player_id": "W9-2026_09_DET_MIA-MIA-DST",
-            "player_name": "MIA DST",
+            "player_id": "W9-2026_09_DEN_CAR-CAR-DST",
+            "player_name": "CAR DST",
             "position": "DST",
-            "team": "MIA",
-            "dk_salary": 2200,
-            "canonical_median_dk_pts": 7.8,
-            "canonical_p99_ceiling_dk_pts": 16.77,
-            "dfs_pass3_composite_score": 19.8081
+            "team": "CAR",
+            "dk_salary": 3300,
+            "canonical_median_dk_pts": 8.81,
+            "canonical_p99_ceiling_dk_pts": 18.94,
+            "dfs_pass3_composite_score": 15.3373
           }
         ]
       },
       {
         "lineup_id": "W9-LOOPED-FUNNEL-LU-06",
-        "primary_stack_game_id": "2026_09_LAR_WAS",
-        "primary_stack_team": "LAR",
-        "bring_back_team": "WAS",
+        "primary_stack_game_id": "2026_09_DET_MIA",
+        "primary_stack_team": "MIA",
+        "bring_back_team": "DET",
         "roster_count": 9,
-        "total_dk_salary": 51700,
-        "salary_cap_compliant_le_50000": false,
-        "projected_median_dk_pts": 184.83,
-        "projected_p90_dk_pts": 290.34,
-        "projected_p99_ceiling_dk_pts": 374.51,
+        "total_dk_salary": 45700,
+        "salary_cap_compliant_le_50000": true,
+        "projected_median_dk_pts": 162.88,
+        "projected_p90_dk_pts": 255.92,
+        "projected_p99_ceiling_dk_pts": 329.88,
         "clears_200pt_ceiling_target": true,
-        "pass3_dfs_composite_score": 292.578,
+        "pass3_dfs_composite_score": 252.649,
         "players": [
           {
-            "player_id": "W9-2026_09_LAR_WAS-LAR-QB1",
-            "player_name": "Matthew Stafford",
+            "player_id": "W9-2026_09_DET_MIA-MIA-QB1",
+            "player_name": "Malik Willis",
             "position": "QB",
-            "team": "LAR",
-            "dk_salary": 6200,
-            "canonical_median_dk_pts": 20.09,
-            "canonical_p99_ceiling_dk_pts": 34.96,
-            "dfs_pass3_composite_score": 30.7271
-          },
-          {
-            "player_id": "W9-2026_09_TB_CHI-CHI-RB-3",
-            "player_name": "D'Andre Swift",
-            "position": "RB",
-            "team": "CHI",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 21.43,
-            "canonical_p99_ceiling_dk_pts": 40.29,
-            "dfs_pass3_composite_score": 31.6125
-          },
-          {
-            "player_id": "W9-2026_09_CIN_ATL-ATL-RB-3",
-            "player_name": "Bijan Robinson",
-            "position": "RB",
-            "team": "ATL",
-            "dk_salary": 6600,
-            "canonical_median_dk_pts": 21.0,
-            "canonical_p99_ceiling_dk_pts": 39.48,
-            "dfs_pass3_composite_score": 30.6164
-          },
-          {
-            "player_id": "W9-2026_09_LAR_WAS-LAR-WR-1",
-            "player_name": "Puka Nacua",
-            "position": "WR",
-            "team": "LAR",
-            "dk_salary": 8800,
-            "canonical_median_dk_pts": 42.24,
-            "canonical_p99_ceiling_dk_pts": 79.41,
-            "dfs_pass3_composite_score": 69.1923
-          },
-          {
-            "player_id": "W9-2026_09_LAR_WAS-WAS-WR-4",
-            "player_name": "Terry McLaurin",
-            "position": "WR",
-            "team": "WAS",
-            "dk_salary": 3000,
-            "canonical_median_dk_pts": 15.39,
-            "canonical_p99_ceiling_dk_pts": 28.93,
-            "dfs_pass3_composite_score": 22.3416
-          },
-          {
-            "player_id": "W9-2026_09_HOU_LAC-HOU-WR-1",
-            "player_name": "Nico Collins",
-            "position": "WR",
-            "team": "HOU",
-            "dk_salary": 7200,
-            "canonical_median_dk_pts": 25.88,
-            "canonical_p99_ceiling_dk_pts": 48.65,
-            "dfs_pass3_composite_score": 40.6706
-          },
-          {
-            "player_id": "W9-2026_09_LAR_WAS-LAR-TE-2",
-            "player_name": "Tyler Higbee",
-            "position": "TE",
-            "team": "LAR",
-            "dk_salary": 3700,
-            "canonical_median_dk_pts": 6.98,
-            "canonical_p99_ceiling_dk_pts": 13.12,
-            "dfs_pass3_composite_score": 8.7946
-          },
-          {
-            "player_id": "W9-2026_09_CLE_NO-NO-WR-4",
-            "player_name": "Chris Olave",
-            "position": "WR",
-            "team": "NO",
-            "dk_salary": 7400,
-            "canonical_median_dk_pts": 24.02,
-            "canonical_p99_ceiling_dk_pts": 45.16,
-            "dfs_pass3_composite_score": 38.8151
-          },
-          {
-            "player_id": "W9-2026_09_DET_MIA-MIA-DST",
-            "player_name": "MIA DST",
-            "position": "DST",
             "team": "MIA",
-            "dk_salary": 2200,
-            "canonical_median_dk_pts": 7.8,
-            "canonical_p99_ceiling_dk_pts": 16.77,
-            "dfs_pass3_composite_score": 19.8081
+            "dk_salary": 6900,
+            "canonical_median_dk_pts": 21.73,
+            "canonical_p99_ceiling_dk_pts": 37.81,
+            "dfs_pass3_composite_score": 33.7652
+          },
+          {
+            "player_id": "W9-2026_09_DET_MIA-MIA-RB-3",
+            "player_name": "Ollie Gordon II",
+            "position": "RB",
+            "team": "MIA",
+            "dk_salary": 5800,
+            "canonical_median_dk_pts": 18.89,
+            "canonical_p99_ceiling_dk_pts": 35.51,
+            "dfs_pass3_composite_score": 28.5818
+          },
+          {
+            "player_id": "W9-2026_09_LV_SF-SF-RB-5",
+            "player_name": "Christian McCaffrey",
+            "position": "RB",
+            "team": "SF",
+            "dk_salary": 4500,
+            "canonical_median_dk_pts": 18.98,
+            "canonical_p99_ceiling_dk_pts": 35.68,
+            "dfs_pass3_composite_score": 27.8103
+          },
+          {
+            "player_id": "W9-2026_09_DET_MIA-MIA-WR-4",
+            "player_name": "Tyreek Hill",
+            "position": "WR",
+            "team": "MIA",
+            "dk_salary": 5300,
+            "canonical_median_dk_pts": 19.59,
+            "canonical_p99_ceiling_dk_pts": 36.83,
+            "dfs_pass3_composite_score": 30.6031
+          },
+          {
+            "player_id": "W9-2026_09_DET_MIA-DET-WR-0",
+            "player_name": "Amon-Ra St. Brown",
+            "position": "WR",
+            "team": "DET",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 21.73,
+            "canonical_p99_ceiling_dk_pts": 40.85,
+            "dfs_pass3_composite_score": 33.8405
+          },
+          {
+            "player_id": "W9-2026_09_NYJ_KC-KC-WR-5",
+            "player_name": "Xavier Worthy",
+            "position": "WR",
+            "team": "KC",
+            "dk_salary": 4500,
+            "canonical_median_dk_pts": 19.62,
+            "canonical_p99_ceiling_dk_pts": 36.89,
+            "dfs_pass3_composite_score": 31.9316
+          },
+          {
+            "player_id": "W9-2026_09_DET_MIA-MIA-TE-5",
+            "player_name": "Greg Dulcich",
+            "position": "TE",
+            "team": "MIA",
+            "dk_salary": 4500,
+            "canonical_median_dk_pts": 14.86,
+            "canonical_p99_ceiling_dk_pts": 27.94,
+            "dfs_pass3_composite_score": 21.4967
+          },
+          {
+            "player_id": "W9-2026_09_CIN_ATL-CIN-WR-0",
+            "player_name": "Ja'Marr Chase",
+            "position": "WR",
+            "team": "CIN",
+            "dk_salary": 5600,
+            "canonical_median_dk_pts": 19.11,
+            "canonical_p99_ceiling_dk_pts": 35.93,
+            "dfs_pass3_composite_score": 30.15
+          },
+          {
+            "player_id": "W9-2026_09_ARI_SEA-SEA-DST",
+            "player_name": "SEA DST",
+            "position": "DST",
+            "team": "SEA",
+            "dk_salary": 3000,
+            "canonical_median_dk_pts": 8.37,
+            "canonical_p99_ceiling_dk_pts": 18.0,
+            "dfs_pass3_composite_score": 14.4697
           }
         ]
       }

@@ -2,154 +2,66 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import board from "@/lib/week8/sealed-board.json";
-import { SealedTable } from "@/components/week8/sealed-table";
-import type { SealedBoard } from "@/lib/week8/types";
-
-const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
-  title: "Official Verified Board | Galaxy Sports Edge",
+  title: "Board Moved: Galaxy Picks & DFS | Galaxy Sports Edge",
   description:
-    "Official verified NFL Season Ledger of Record 47-19-1 (71.2% · +24.92u (with gated props); base 38-13-1 · +22.85u). The complete sealed card: game calls, player props, and correlated SGPs.",
+    "The public slate lives in GALAXY PICKS (PAID) and the DFS optimizer. This route no longer publishes a record.",
   alternates: { canonical: "/board" },
 };
 
 export default function BoardPage(): JSX.Element {
-  const lockedMain = card.main.filter((row) => row.publishAllowed && row.decision === "PUBLISH");
-  const lockedProps = card.props.filter((row) => row.publishAllowed && row.decision === "PUBLISH");
-
   return (
-    <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
+    <div className="relative min-h-screen w-full bg-slate-950 text-white">
       <Nav />
-      <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-        {/* Verification Ledger Header */}
-        <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-[#0c0e14] p-6 sm:p-10 shadow-2xl">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              Official Verified NFL Ledger
-            </span>
-            <span className="font-mono text-xs text-slate-400">Seal {card.seal_digest.slice(0, 16)}...</span>
-          </div>
+      <main id="main-content" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
+        <div
+          data-testid="under-construction-notice"
+          className="rounded-2xl border-2 border-amber-400/50 bg-slate-900 p-8 sm:p-12 text-center shadow-2xl"
+        >
+          <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-300">
+            Under Construction · Galaxy Picks &amp; DFS Only
+          </span>
+          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            The slate lives in Galaxy Picks and DFS
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
+            This route no longer publishes a ledger. Every graded play, every prop, and every
+            correlated ticket sits behind GALAXY PICKS (PAID), and the lineup work sits in the DFS
+            optimizer. Nothing here is withheld to look mysterious: there is simply no second copy
+            of the board.
+          </p>
 
-          <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">47-19-1</div>
-              <div className="text-xs text-slate-400">71.2% · +24.92 Units · with gated props</div>
-            </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Base Game &amp; Slate Ledger</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-cyan-400">38-13-1</div>
-              <div className="text-xs text-slate-400">Secondary view · +22.85 Units</div>
-            </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Graded Plays</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-amber-400">50</div>
-              <div className="text-xs text-slate-400">Settled · 36 wins · 13 losses · 1 push</div>
-            </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Evaluated Markets</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-white">{card.counts.evaluated}</div>
-              <div className="text-xs text-slate-400">Strict Pass Discipline Gate</div>
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap gap-4 text-sm font-semibold">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/packages"
-              className="rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-2.5 text-black transition-colors"
+              className="rounded-xl bg-emerald-500 hover:bg-emerald-400 px-7 py-4 text-base font-extrabold text-black shadow-lg transition-colors"
             >
-              Unlock Full Slate ($9 Single / $29 All-Access) →
+              Open GALAXY PICKS (PAID) →
             </Link>
             <Link
-              href="/calibration"
-              className="rounded-lg border border-slate-700 bg-slate-800 hover:border-slate-500 px-5 py-2.5 text-slate-200 transition-colors"
+              href="/fantasy/dfs"
+              className="rounded-xl border-2 border-slate-700 bg-slate-800 hover:border-emerald-400 px-7 py-4 text-base font-bold text-white transition-colors"
             >
-              View Calibration Proof Room →
-            </Link>
-            <Link
-              href="/sgp-projections"
-              className="rounded-lg border border-slate-700 bg-slate-800 hover:border-slate-500 px-5 py-2.5 text-slate-200 transition-colors"
-            >
-              Correlated SGPs →
+              Open DFS Lineup Optimizer →
             </Link>
           </div>
         </div>
 
-        {/* Section 1: Official Main Game Calls */}
-        <div className="mt-14">
-          <div className="flex items-baseline justify-between border-b border-slate-800 pb-4">
-            <div>
-              <h2 className="text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
-                Official Main Game Calls ({lockedMain.length})
-              </h2>
-              <p className="mt-1 text-sm text-slate-400">
-                Built from coaching tendencies, offensive &amp; defensive line trench matchups, active injury reports, and de-vigged line comparisons.
-              </p>
-            </div>
-            <span className="text-xs font-mono text-emerald-400">Top 2 Free · Remaining Locked</span>
-          </div>
-
-          <div className="mt-6">
-            <SealedTable rows={lockedMain} freeLimit={2} />
-          </div>
-        </div>
-
-        {/* Section 2: Player Props & Derivative Watchlist */}
-        <div className="mt-16">
-          <div className="flex items-baseline justify-between border-b border-slate-800 pb-4">
-            <div>
-              <h2 className="text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
-                Player Props &amp; Derivative Watchlist ({lockedProps.length})
-              </h2>
-              <p className="mt-1 text-sm text-slate-400">
-                Injury target &amp; carry redistribution, depth chart matchup edges, and four-quarter role projections.
-              </p>
-            </div>
-            <span className="text-xs font-mono text-emerald-400">Top 2 Free · Remaining Locked</span>
-          </div>
-
-          <div className="mt-6">
-            <SealedTable rows={lockedProps} freeLimit={2} />
-          </div>
-        </div>
-
-        {/* Section 3: 5-Step Football Breakdown Summary */}
-        <div className="mt-16 rounded-xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8">
-          <h3 className="text-xl font-bold text-white">How We Grade the Slate: 5-Step Football Breakdown</h3>
-          <p className="mt-2 text-sm leading-relaxed text-slate-300">
-            Unlike generic tout sheets that recycle box scores, every play on this board must clear all five football and line-value checks. If a line does not give us clear value against the de-vigged sportsbook price, we mark it <code className="text-amber-400">PASS · NO BET</code>.
+        <section className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-8 sm:p-10">
+          <h2 className="text-2xl font-extrabold tracking-tight">Where the record actually lives</h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-200">
+            Settlement is graded against the closing line and written to the sealed record once the
+            evidence clears its own published bar. Until then the number stays unwritten rather than
+            replaced with a softer one.
           </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-5 text-xs text-slate-400">
-            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Step 1</div>
-              <div className="mt-1 text-slate-200">Film &amp; Injury Check</div>
-              <div className="mt-1">Active depth charts, practice participation &amp; vacated snaps</div>
-            </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Step 2</div>
-              <div className="mt-1 text-slate-200">Snap &amp; Drive Script</div>
-              <div className="mt-1">Play-calling tendencies across all four quarters</div>
-            </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Step 3</div>
-              <div className="mt-1 text-slate-200">Trench &amp; Coverage</div>
-              <div className="mt-1">Pass protection vs pressure rate &amp; man/zone shells</div>
-            </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Step 4</div>
-              <div className="mt-1 text-slate-200">Situational Spot</div>
-              <div className="mt-1">Short-week rest, travel, weather &amp; fourth-quarter pace</div>
-            </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Step 5</div>
-              <div className="mt-1 text-slate-200">Line Value &amp; Pass Gate</div>
-              <div className="mt-1">De-vigged sportsbook comparison &amp; strict pass discipline</div>
-            </div>
-          </div>
-        </div>
+          <Link
+            href="/board/gate"
+            className="mt-5 inline-block rounded-xl border-2 border-slate-700 bg-slate-800 px-6 py-3 text-base font-bold text-white transition-colors hover:border-emerald-400"
+          >
+            How the gate decides →
+          </Link>
+        </section>
       </main>
       <Footer />
     </div>

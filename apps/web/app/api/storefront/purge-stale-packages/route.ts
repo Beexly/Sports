@@ -36,7 +36,7 @@ export async function POST(request?: Request) {
       data: {
         status: "ARCHIVED",
         offerSummary:
-          "Archived historical Week 8 package — shifted cleanly to upcoming active Week 9 slate.",
+          "Archived historical Week 8 package — shifted cleanly to upcoming active Week 10 slate.",
       },
     });
 

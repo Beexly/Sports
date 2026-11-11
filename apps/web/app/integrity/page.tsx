@@ -265,9 +265,6 @@ export default function IntegrityPage() {
                 <Link href="/board/gate" className="underline hover:text-orbital-cyan">
                   How the gate decides
                 </Link>
-                <Link href="/glass-ledger" className="underline hover:text-orbital-cyan">
-                  Glass Ledger
-                </Link>
                 <Link href="/accountability" className="underline hover:text-orbital-cyan">
                   Accountability
                 </Link>
@@ -280,8 +277,8 @@ export default function IntegrityPage() {
           <p className="mt-4 text-sm text-ion-2">
             A signed receipt proves an agent decision happened as recorded. It
             says nothing about whether a betting claim is statistically
-            supported. That is the Glass Ledger&apos;s job, and it stays sealed
-            until the evidence clears its own bar.
+            supported. Tracking that is the sealed record&apos;s job, and it
+            stays sealed until the evidence clears its own bar.
           </p>
         </section>
 
