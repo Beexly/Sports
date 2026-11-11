@@ -127,22 +127,35 @@ def meta_by_id(conn: sqlite3.Connection, row_id: str) -> Optional[Dict[str, Any]
     return dict(row) if row else None
 
 
+_FTS_SQL = {
+    "eq_fts_structure": (
+        "SELECT row_id, bm25(eq_fts_structure) AS score FROM eq_fts_structure"
+        " WHERE eq_fts_structure MATCH ? ORDER BY score LIMIT ?"
+    ),
+    "eq_fts_context": (
+        "SELECT row_id, bm25(eq_fts_context) AS score FROM eq_fts_context"
+        " WHERE eq_fts_context MATCH ? ORDER BY score LIMIT ?"
+    ),
+}
+
+
 def fts_query(
     conn: sqlite3.Connection,
     table: str,
     match: str,
     limit: int,
 ) -> List[Tuple[str, float]]:
-    """Ranked (row_id, bm25) from an FTS5 table; bm25 lower = better."""
-    if table not in ("eq_fts_structure", "eq_fts_context"):
+    """Ranked (row_id, bm25) from an FTS5 table; bm25 lower = better.
+
+    The SQL text is a fixed literal per table (values stay parameterized);
+    the table name only ever selects which literal runs.
+    """
+    sql = _FTS_SQL.get(table)
+    if sql is None:
         raise ValueError(f"not an FTS table: {table}")
     if not match.strip():
         return []
-    rows = conn.execute(
-        f"SELECT row_id, bm25({table}) AS score FROM {table}"
-        f" WHERE {table} MATCH ? ORDER BY score LIMIT ?",
-        (match, limit),
-    ).fetchall()
+    rows = conn.execute(sql, (match, limit)).fetchall()
     return [(r["row_id"], float(r["score"])) for r in rows]
 
 

@@ -97,6 +97,22 @@ def _rrf(rankings: Sequence[Sequence[str]]) -> Dict[str, float]:
     return scores
 
 
+_TIER_SQL = {
+    "structure:norm+exact-symbols": (
+        "SELECT row_id, LENGTH(COALESCE(normalized_expr, '')) AS elen"
+        " FROM eq_meta WHERE is_norm = 1 AND sym_key = ?"
+    ),
+    "structure:exact-symbols": (
+        "SELECT row_id, LENGTH(COALESCE(normalized_expr, '')) AS elen"
+        " FROM eq_meta WHERE sym_key = ? AND sym_key != ''"
+    ),
+    "structure:norm-form": (
+        "SELECT row_id, LENGTH(COALESCE(normalized_expr, '')) AS elen"
+        " FROM eq_meta WHERE is_norm = 1 AND sym_count = ?"
+    ),
+}
+
+
 class EquationRetriever:
     def __init__(
         self,
@@ -128,12 +144,8 @@ class EquationRetriever:
         match = " OR ".join(tokens)
         return [row_id for row_id, _ in fts_query(self.conn, "eq_fts_structure", match, limit)]
 
-    def _tier(self, where: str, params: Sequence[Any], ctx_rank: Dict[str, int]) -> List[str]:
-        rows = self.conn.execute(
-            f"SELECT row_id, LENGTH(COALESCE(normalized_expr, '')) AS elen"
-            f" FROM eq_meta WHERE {where}",
-            params,
-        ).fetchall()
+    def _tier(self, tier: str, params: Sequence[Any], ctx_rank: Dict[str, int]) -> List[str]:
+        rows = self.conn.execute(_TIER_SQL[tier], params).fetchall()
         ids = [r["row_id"] for r in rows]
         elen = {r["row_id"]: r["elen"] for r in rows}
         ids.sort(key=lambda rid: (ctx_rank.get(rid, 1 << 30), elen[rid]))
@@ -147,12 +159,12 @@ class EquationRetriever:
         channel_of: Dict[str, str] = {}
         ordered: List[str] = []
         tiers = [
-            ("structure:norm+exact-symbols", "is_norm = 1 AND sym_key = ?", (sym_key,)),
-            ("structure:exact-symbols", "sym_key = ? AND sym_key != ''", (sym_key,)),
-            ("structure:norm-form", "is_norm = 1 AND sym_count = ?", (nvars,)),
+            ("structure:norm+exact-symbols", (sym_key,)),
+            ("structure:exact-symbols", (sym_key,)),
+            ("structure:norm-form", (nvars,)),
         ]
-        for name, where, params in tiers:
-            for row_id in self._tier(where, params, ctx_rank):
+        for name, params in tiers:
+            for row_id in self._tier(name, params, ctx_rank):
                 if row_id not in channel_of:
                     channel_of[row_id] = name
                     ordered.append(row_id)
@@ -215,6 +227,7 @@ class EquationRetriever:
         candidates = sorted(fused, key=lambda rid: fused[rid], reverse=True)
         verified: List[RetrievedEquation] = []
         attempts = 0
+        failures = 0
         for row_id in candidates:
             if attempts >= situation.pool:
                 break
@@ -225,11 +238,12 @@ class EquationRetriever:
             if bindings is None:
                 continue
             attempts += 1
+            value: Any = None
             try:
                 value = self.masters.evaluate(row_id, bindings)
             except Exception:
-                continue
-            if not self._sane(value, situation):
+                failures += 1
+            if value is None or not self._sane(value, situation):
                 continue
             verified.append(
                 RetrievedEquation(
@@ -259,6 +273,7 @@ class EquationRetriever:
                 "dense_channel": "live" if dense else "stub-not-populated",
                 "fused_candidates": len(candidates),
                 "executor_attempts": attempts,
+                "executor_failures": failures,
                 "verified": len(verified),
             },
             "results": [r.to_dict() for r in verified[: situation.top_k]],

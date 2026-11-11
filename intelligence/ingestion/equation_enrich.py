@@ -45,7 +45,6 @@ from intelligence.ingestion.masters_loader import (
     MastersIndex,
     build_or_load_index,
     normalization_form_symbols,
-    resolve_masters_paths,
     _provenance,
     _raw_equation,
     _row_id,

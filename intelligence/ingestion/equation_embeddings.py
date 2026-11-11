@@ -33,7 +33,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence
+from typing import Any, Callable, Dict, Iterable, List, Sequence
 
 EMBEDDING_CHANNEL_STATUS = "stub-not-populated"
 DEFAULT_ENCODER_CANDIDATES = (
