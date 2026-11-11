@@ -21,11 +21,33 @@ export interface PlayerProjection {
   readonly basisSeasons: number; // prior seasons used
   readonly priorGames: number; // total games in the basis
   readonly method: string;
+  /** Which parameter set produced this number: "default" or a research-derived label. */
+  readonly parameterSource?: string;
 }
 
-const RECENCY_WEIGHTS = [0.6, 0.3, 0.1] as const; // most-recent first, up to 3 seasons
-const REGRESSION_GAMES = 8; // pseudo-games of regression toward the prior
-const LEAGUE_PRIOR_PPR = 6; // conservative per-game prior for a marginal player
+/**
+ * The model's tunable slots, named so research evidence can address them.
+ * Defaults are the values the engine shipped with; passing a different set is the
+ * ONLY way these move, which keeps the wiring inspectable at the call site.
+ */
+export interface ProjectionParameters {
+  readonly recencyWeights: readonly number[];
+  readonly regressionGames: number;
+  readonly leaguePriorPpr: number;
+  /** Audit label recorded on every projection built from this set. */
+  readonly source?: string;
+}
+
+export const DEFAULT_PROJECTION_PARAMETERS: ProjectionParameters = Object.freeze({
+  recencyWeights: [0.6, 0.3, 0.1] as const,
+  regressionGames: 8,
+  leaguePriorPpr: 6,
+  source: "default",
+});
+
+const RECENCY_WEIGHTS = DEFAULT_PROJECTION_PARAMETERS.recencyWeights;
+const REGRESSION_GAMES = DEFAULT_PROJECTION_PARAMETERS.regressionGames;
+const LEAGUE_PRIOR_PPR = DEFAULT_PROJECTION_PARAMETERS.leaguePriorPpr;
 
 function round2(x: number): number {
   return Math.round(x * 100) / 100;
@@ -34,30 +56,60 @@ function round2(x: number): number {
 export function projectPlayerSeason(
   history: readonly PlayerSeasonLine[],
   targetSeason: number,
+  parameters: ProjectionParameters = DEFAULT_PROJECTION_PARAMETERS,
 ): PlayerProjection {
+  if (!Number.isFinite(parameters.regressionGames) || parameters.regressionGames < 0) {
+    throw new RangeError(`regressionGames must be a finite number >= 0, got ${String(parameters.regressionGames)}`);
+  }
+  if (!Number.isFinite(parameters.leaguePriorPpr)) {
+    throw new RangeError(`leaguePriorPpr must be finite, got ${String(parameters.leaguePriorPpr)}`);
+  }
+  const recencyWeights = parameters.recencyWeights.length > 0
+    ? parameters.recencyWeights
+    : DEFAULT_PROJECTION_PARAMETERS.recencyWeights;
+
   const prior = history
     .filter((h) => h.season < targetSeason && h.games > 0 && Number.isFinite(h.pprPerGame))
     .sort((a, b) => b.season - a.season)
-    .slice(0, RECENCY_WEIGHTS.length);
+    .slice(0, recencyWeights.length);
 
   if (prior.length === 0) {
-    return { targetSeason, projectedPprPerGame: LEAGUE_PRIOR_PPR, basisSeasons: 0, priorGames: 0, method: "prior-only (no history)" };
+    return {
+      targetSeason,
+      projectedPprPerGame: parameters.leaguePriorPpr,
+      basisSeasons: 0,
+      priorGames: 0,
+      method: "prior-only (no history)",
+      parameterSource: parameters.source ?? "default",
+    };
   }
 
   let weightSum = 0;
   let valueSum = 0;
   let priorGames = 0;
   prior.forEach((h, i) => {
-    const w = RECENCY_WEIGHTS[i]! * h.games; // recency × sample size
+    const w = recencyWeights[i]! * h.games; // recency × sample size
     weightSum += w;
     valueSum += w * h.pprPerGame;
     priorGames += h.games;
   });
+  if (weightSum <= 0) {
+    return {
+      targetSeason,
+      projectedPprPerGame: parameters.leaguePriorPpr,
+      basisSeasons: prior.length,
+      priorGames,
+      method: "prior-only (degenerate weights)",
+      parameterSource: parameters.source ?? "default",
+    };
+  }
   const observed = valueSum / weightSum;
 
   // Regress toward the league prior by total games seen (more games → trust the
   // observed rate more; few games → pull toward the prior).
-  const projected = (priorGames * observed + REGRESSION_GAMES * LEAGUE_PRIOR_PPR) / (priorGames + REGRESSION_GAMES);
+  const projected =
+    (priorGames * observed + parameters.regressionGames * parameters.leaguePriorPpr) /
+    (priorGames + parameters.regressionGames);
 
   return {
     targetSeason,
@@ -65,6 +117,7 @@ export function projectPlayerSeason(
     basisSeasons: prior.length,
     priorGames,
     method: "recency+games-weighted, regressed to prior",
+    parameterSource: parameters.source ?? "default",
   };
 }
 
