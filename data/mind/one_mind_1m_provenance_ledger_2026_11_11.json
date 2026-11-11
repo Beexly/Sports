@@ -1,0 +1,58 @@
+{
+  "schema": "gse_one_mind_1m_provenance_ledger_v1",
+  "compiled_at_utc": "2026-11-11T07:45:00Z",
+  "elapsed_seconds": 3.33,
+  "doctrine_compliance": {
+    "mind_first_enforced": true,
+    "single_writer_brain_mind_jsonl_untouched_on_vm": true,
+    "fluidx3d_non_commercial_blocklist_active": true,
+    "fluidx3d_rows_admitted_to_training_or_commercial": 0,
+    "fluidx3d_rows_blocked": 0
+  },
+  "sources": {
+    "equations_master_drive": {
+      "drive_file_id": "1g7htiDP8q2hoS2s9fpFYh7A-1u_tz2Xu",
+      "path": "/home/antigravity/extraction-masters-2026-11-10/EQUATIONS-MASTER-2026-11-10.jsonl.gz",
+      "sha256": "b7d5a256be550e356dde32f1b3bf309ccee9a87c7526b9a32e2aabeb5b41c249",
+      "rows_verified": 940102
+    },
+    "situational_master_drive": {
+      "drive_file_id": "1H6UIEatCIeo6wF4zKWG6nG5H4Np8FFcz",
+      "path": "/home/antigravity/extraction-masters-2026-11-10/SITUATIONAL-MASTER-2026-11-10.jsonl.gz",
+      "sha256": "9b981b93128b4a61a985b418fd7884a2f99893de00e5beb03311203614e349d5",
+      "rows_verified": 102082
+    },
+    "hermes_canonical_equations_2026_11_11": {
+      "agent_bus_commit": "761f050",
+      "supersedes": "a61be52 (58,766 equations)",
+      "path": "/home/antigravity/Beexly/agent-bus/outbox/from-hermes/2026-11-11-equations-master-canonical/equations-master-2026-11-11.jsonl",
+      "sha256": "3efdd13b63525cb607139b7b8211670f32e1516a1f835e9fe6de16797d71e161",
+      "rows_verified": 60051,
+      "unique_papers_with_equations": 491,
+      "catalog_papers_total": 1169,
+      "ocr_pages_completed": 11794
+    },
+    "hermes_lima_pilot_001": {
+      "agent_bus_commit": "0ccf61c",
+      "path": "/home/antigravity/Beexly/agent-bus/outbox/from-hermes/2026-11-11-equations-master-canonical/lima-pilot-001-equations.jsonl",
+      "sha256": "43d2a15ec98130bdfa9a83ce198bb2e73ffb22e2df6532f728f77e61b2f7501d",
+      "stageB_eq_md5": "da51300d3aadd3529ad194bdcdd86bcb",
+      "rows_verified": 111
+    }
+  },
+  "totals": {
+    "equations_master_rows": 940102,
+    "hermes_canonical_equation_rows": 60051,
+    "hermes_lima_pilot_equation_rows": 111,
+    "total_equation_rows": 1000264,
+    "total_situational_rows": 102082,
+    "total_one_mind_records": 1102346
+  },
+  "verified_repairs": {
+    "udlbook_rows_checked": 1932,
+    "udlbook_doubled_backslash_defects_remaining": 0,
+    "little_book_of_semaphores_equation_rows": 269,
+    "little_book_of_semaphores_situational_rows": 114,
+    "nice_ng232_head_injury_situational_rows": 199
+  }
+}

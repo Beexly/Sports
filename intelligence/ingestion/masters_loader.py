@@ -403,6 +403,9 @@ def build_or_load_index(
                 corrupt += 1
                 counts[STATUS_UNPARSEABLE] += 1
                 continue
+            if "fluidx3d" in line.lower():
+                counts[STATUS_UNPARSEABLE] += 1
+                continue
             raw = _raw_equation(row)
 
             low_blob = None
