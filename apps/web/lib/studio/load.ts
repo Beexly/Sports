@@ -44,8 +44,16 @@ export async function loadStudioDashboard(
     })
     .catch(() => []);
 
-  const nodes = rows.map((game) =>
-    buildStudioNode({
+  const nodes = rows.map((game) => {
+    // `games.currentEdgeIndex` has no writer, so studio copy generated from it
+    // said "not priced enough" on games the engine had already scored. Prefer
+    // the published pick's 0-100 edge score, which is the same scale.
+    const bestPickEdge = game.picks.reduce<number | null>(
+      (best, pick) =>
+        pick.edgeScore == null ? best : best == null ? pick.edgeScore : Math.max(best, pick.edgeScore),
+      null,
+    );
+    return buildStudioNode({
       game: {
         id: game.id,
         homeTeamName: game.homeTeamName,
@@ -53,7 +61,7 @@ export async function loadStudioDashboard(
         sport: game.sport.name,
         commenceTime: game.commenceTime,
         status: game.status,
-        currentEdgeIndex: game.currentEdgeIndex,
+        currentEdgeIndex: game.currentEdgeIndex ?? bestPickEdge,
         bookmakerCoverageMax: game.bookmakerCoverageMax,
         dataQualityScore: game.dataQualityScore,
         lineMovementSpread: game.lineMovementSpread,
@@ -81,8 +89,8 @@ export async function loadStudioDashboard(
         isBootstrap: signal.isBootstrap,
       })),
       now,
-    })
-  );
+    });
+  });
 
   const selectedNode =
     nodes.find((node) => node.id === selectedGameId) ?? nodes[0] ?? null;
