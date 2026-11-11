@@ -40,6 +40,14 @@ describe("Game Intelligence Room v0", () => {
     expect(ledgerPage).toContain("href={`/room/${row.gameId}`}");
   });
 
+  it("falls back to the newest gate decision when games.currentEdgeIndex is unset", () => {
+    // games.currentEdgeIndex has no writer, so the room must not report "not
+    // priced enough to compare" on a game the gate already scored.
+    expect(loader).toMatch(/gateDecision/);
+    expect(loader).toMatch(/orderBy:\s*\{\s*evaluatedAt:\s*"desc"\s*\}/);
+    expect(loader).toMatch(/currentEdgeIndex:\s*edgeIndex/);
+  });
+
   it("offers an in-content onward path so the room is not a dead end", () => {
     expect(page).toContain("Where This Goes Next");
     expect(page).toContain('href="/ledger"');

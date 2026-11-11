@@ -179,7 +179,8 @@ export async function loadGameRoom(
   // the room told readers "the market is not priced enough to compare" on games
   // the gate had already scored. The gate decision carries the index the board
   // renders; fall back to the newest one for this game.
-  const latestDecision = game.currentEdgeIndex == null
+  const canReadGateDecisions = typeof db.gateDecision?.findFirst === "function";
+  const latestDecision = game.currentEdgeIndex == null && canReadGateDecisions
     ? await db.gateDecision
         .findFirst({
           where: { gameId: game.id },
