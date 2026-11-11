@@ -125,8 +125,8 @@ export const HONESTY_CONTRAST: readonly HonestyContrastItem[] = [
       "A number with no method, no scope, no interval, and no route to the underlying records cannot be wrong, because there is nothing to test it against. It functions as reassurance rather than evidence, and the absence of a way to check it is the load-bearing part.",
     weDo:
       "The performance surface stays sealed until the evidence clears its own stated bar, and the bar is published rather than described. Where we have no substantiated number, we say so instead of showing a softer one.",
-    verifyHref: "/glass-ledger",
-    verifyLabel: "See the sealed record",
+    verifyHref: "/board/gate",
+    verifyLabel: "See what the gate withholds",
   },
 ] as const;
 
