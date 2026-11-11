@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Provider & Platform Status | Galaxy Sports Edge & GSI",
   description:
-    "Live operational status for Galaxy Sports Edge & Galaxy Science Institute (GSI) Stealth-Skeleton v2.4.0 OpenRouter inference endpoints.",
+    "Live operational status for Galaxy Sports Edge & GSI (Texas Nonprofit Corp #15043440630001, 501(c)(3) application pending) Stealth-Skeleton v2.4.0 OpenRouter inference endpoints.",
   alternates: { canonical: "/status" },
 };
 

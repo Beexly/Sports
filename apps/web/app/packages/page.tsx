@@ -33,7 +33,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
               <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                GALAXY PICKS · WEEK 9 SUNDAY MAIN SLATE (DET @ MIA, GB @ NE, DAL @ IND) &amp; MNF (BUF @ MIN)
+                GALAXY PICKS · WEEK 10 NFL SLATE (WSH @ NYG TNF, DET @ CHI, KC @ JAX, LAC @ SF) &amp; ARCHIVED W9
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 Real football film, trench matchups, and disciplined numbers.
@@ -48,7 +48,7 @@ export default function PackagesPage(): JSX.Element {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <a
                 href="#pack-cards"
-                aria-label="View this week's Week 9 Sunday Main Slate and Monday Night Football packs"
+                aria-label="View this week's Week 10 NFL packs"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-sm font-extrabold text-slate-950 transition-colors shadow-md"
               >
                 View This Week&apos;s Packs ↓
@@ -67,13 +67,13 @@ export default function PackagesPage(): JSX.Element {
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-slate-800 pt-6">
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                VERIFIED SEASON RECORD
+                PUBLIC GLASS LEDGER
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                47-19-1 · +24.92u (with gated props)
+                43-17-1 · +22.20u (W8–W9 staked)
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                All-in secondary 47-19-1 · +24.92u · Entering Week 9 Sunday Main Slate &amp; Monday Night Football.
+                Week 8 staked 36-13-1 (+20.14u, n=50) · Week 8 all-in 47-19-1 (+24.92u, n=67) · Entering Week 10.
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">

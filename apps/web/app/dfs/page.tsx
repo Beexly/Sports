@@ -12,7 +12,7 @@ import {
 export const metadata: Metadata = {
   title: "DFS Lineup Optimizer & Stacks | Galaxy Sports Edge",
   description:
-    "Plain-English NFL DFS environment breakdowns, cash cores, tournament stacks, and captain leverage writeups for Week 8.",
+    "Plain-English NFL DFS environment breakdowns, cash cores, tournament stacks, and captain leverage writeups for Week 10.",
 };
 
 export default function DfsPage(): JSX.Element {
@@ -30,7 +30,7 @@ export default function DfsPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
               <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                DAILY FANTASY FOOTBALL · WEEK 8 BLUEPRINT
+                DAILY FANTASY FOOTBALL · WEEK 10 BLUEPRINT (WSH @ NYG TNF, SUNDAY MAIN SLATE &amp; MNF)
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 DFS Optimizer, Cash Cores &amp; Tournament Stacks
@@ -105,7 +105,7 @@ export default function DfsPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                Week 8 Game-by-Game DFS Blueprints
+                Week 10 Game-by-Game DFS Blueprints
               </h2>
               <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                 Captain leverage, high-floor cash cores, and tournament stacks for every game on the slate.
@@ -224,20 +224,20 @@ export default function DfsPage(): JSX.Element {
         {dfsPackage && (
           <div className="mt-12 rounded-2xl border-2 border-emerald-500/60 bg-slate-900 p-6 sm:p-10 text-center shadow-2xl">
             <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase text-emerald-300">
-              WEEK 8 DFS ALL-ACCESS
+              WEEK 10 DFS ALL-ACCESS
             </span>
             <h3 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
               Unlock Ready-to-Play Cash &amp; GPP Lineups
             </h3>
             <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6] max-w-2xl mx-auto">
-              Get our complete player pool projections, correlated stacks, and instant lineup builds for every Week 8 contest.
+              Get our complete player pool projections, correlated stacks, and instant lineup builds for every Week 10 contest.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <Link
                 href="/packages"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-8 py-3.5 text-base font-bold text-slate-950 shadow-lg transition-colors"
               >
-                Get Week 8 DFS Lineups Now →
+                Get Week 10 DFS Lineups Now →
               </Link>
             </div>
           </div>

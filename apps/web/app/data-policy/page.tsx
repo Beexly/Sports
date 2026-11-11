@@ -35,7 +35,7 @@ export default function DataPolicyPage(): JSX.Element {
               1. Strict Zero Data Retention (ZDR) by Default
             </h2>
             <p className="mt-2">
-              Galaxy Sports Edge &amp; Galaxy Sports Institute operate all{" "}
+              Galaxy Sports Edge &amp; GSI (Texas Nonprofit Corp #15043440630001, 501(c)(3) application pending) operate all{" "}
               <code className="text-emerald-400">gse/skeleton-*</code> inference endpoints under a
               strict <strong>Zero Data Retention (ZDR)</strong> policy. Customer prompts, system
               instructions, tool-call payloads, and model completions are processed exclusively in

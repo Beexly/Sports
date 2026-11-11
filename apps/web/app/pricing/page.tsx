@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
+  B2B_GLASS_LEDGER_TIERS,
   LIVE_PACKAGE_CATALOG,
   WEEK8_GAME_DAY_CATALOG_METADATA,
   type PickPackageOffering,
@@ -11,9 +12,9 @@ import { WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY } from "@/lib/engine/engine-live-bri
 import { sanitizePlainFootballText } from "@/lib/writeups/coach-writeup-engine";
 
 export const metadata: Metadata = {
-  title: "Pricing & Plans | Galaxy Sports Edge",
+  title: "Week 10 NFL Packs & Glass-Ledger Verification | Galaxy Sports Edge",
   description:
-    "No monthly subscription needed right now. One-time Week 9 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Backed by our documented 47-19-1 (71.2% · +24.92u (with gated props)) official NFL record.",
+    "One-time Week 10 NFL packs starting with Thursday Night Football (WSH @ NYG, $19), Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), All-Access Bundle ($49), and B2B Glass-Ledger Verification.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -32,35 +33,36 @@ export default async function PricingPage(): Promise<JSX.Element> {
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF4D2E]">
-            Official Settled NFL Record: {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord} (
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedWinPct} ·{" "}
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedUnits}; all-in secondary{" "}
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsRecord} (
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsUnits})) · Week 9 Sunday:{" "}
+            Public Glass Ledger: Weeks 8–9 Staked {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.weeks8To9StakedRecord} (
+            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.weeks8To9StakedUnits}, n=61) · Week 8 Staked{" "}
+            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.stakedMainRecord} (
+            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.stakedMainUnits}, n=50) · Week 8 All-In{" "}
+            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord} (
+            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedUnits}, n=67) · Week 9 Sunday:{" "}
             {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (
             {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits})
           </p>
           <h1 className="mt-3 font-display text-4xl uppercase tracking-tight text-white sm:text-6xl">
-            No Monthly Subscription Needed Right Now
+            Week 10 NFL Packs &amp; Glass-Ledger Verification
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-[#C4BFB6] sm:text-lg">
-            Monthly recurring plans are currently under construction while we operate our live pay-per-slate
-            storefront. Every pack below is a one-time purchase with instant in-place browser unlock — built on
-            film tendencies, trench matchups, active injury reports, and disciplined pass rules (strictly XX/100
-            confidence scores).
+            Monthly recurring plans are currently under construction while we operate our live Week 10 pay-per-slate
+            storefront starting with Thursday Night Football (Washington @ NY Giants). Every pack below is a one-time
+            purchase with instant in-place browser unlock — built on film tendencies, trench matchups, active injury
+            reports, and disciplined pass rules (strictly XX/100 confidence scores). Packs close automatically at kickoff.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/packages"
               className="inline-flex min-h-[46px] items-center justify-center rounded bg-[#FF4D2E] px-6 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#e03e20]"
             >
-              Open Galaxy Picks Storefront →
+              Open Week 10 Storefront →
             </Link>
             <Link
-              href="/packages#sgp-correlation-basket"
+              href="/packages#tnf-all-in-pack"
               className="inline-flex min-h-[46px] items-center justify-center rounded border border-[#FF4D2E] bg-[#12141C] px-6 text-xs font-bold uppercase tracking-wider text-[#EDE8E0] transition-colors hover:bg-[#FF4D2E] hover:text-white"
             >
-              MNF Props &amp; SGP Pack · $29 →
+              Week 10 TNF (WSH @ NYG) Pack · $19 →
             </Link>
             <Link
               href="/fantasy/dfs"
@@ -77,7 +79,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
             id="pricing-pack-catalog-heading"
             className="font-display text-2xl uppercase tracking-wide text-white sm:text-3xl"
           >
-            This Week&apos;s One-Time Packs
+            Week 10 One-Time Packs (TNF WSH @ NYG, Sunday Main Slate &amp; MNF)
           </h2>
           <p className="mt-2 text-sm text-[#C4BFB6]">
             Identical catalog pricing across{" "}
@@ -88,13 +90,13 @@ export default async function PricingPage(): Promise<JSX.Element> {
             <Link href="/fantasy/dfs" className="underline decoration-[#FF4D2E] underline-offset-4">
               /fantasy/dfs
             </Link>
-            . One-time checkout — zero recurring billing.
+            . One-time checkout — zero recurring billing, zero auto-renewal.
           </p>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-3">
             {LIVE_PACKAGE_CATALOG.map((pkg) => {
               const isForSale = pkg.forSale !== false;
-              const isFeatured = pkg.slug === "week8-all-access" || pkg.slug === "sgp-correlation-basket";
+              const isFeatured = pkg.slug === "week8-all-access" || pkg.slug === "tnf-all-in-pack";
               return (
                 <div
                   key={pkg.slug}
@@ -158,14 +160,6 @@ export default async function PricingPage(): Promise<JSX.Element> {
                     >
                       {isForSale ? `Open Pack · ${formatPackPrice(pkg)} →` : "View Archived Pack →"}
                     </Link>
-                    {!isForSale && (
-                      <Link
-                        href="/packages#sgp-correlation-basket"
-                        className="inline-flex min-h-[42px] w-full items-center justify-center rounded bg-[#FF4D2E] text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#e03e20]"
-                      >
-                        Pivot to Active MNF Props &amp; SGP Pack · $29 →
-                      </Link>
-                    )}
                   </div>
                 </div>
               );
@@ -173,7 +167,29 @@ export default async function PricingPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* Verification & Pass Discipline */}
+        {/* B2B Verification & Enterprise Multi-System Integrity Tiers */}
+        <section className="mt-16 rounded-xl border border-[#252833] bg-[#0E1015] p-8">
+          <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+            B2B SaaS &amp; Enterprise Verification (Clean Stripe Invoicing)
+          </div>
+          <p className="mt-2 font-display text-2xl uppercase tracking-wide text-white">
+            Glass-Ledger Creator Verification &amp; Multi-System Integrity Audits
+          </p>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {B2B_GLASS_LEDGER_TIERS.map((tier) => (
+              <div key={tier.slug} className="rounded-xl border border-[#252833] bg-[#12141C] p-6">
+                <div className="flex items-baseline justify-between gap-2">
+                  <h4 className="font-display text-xl uppercase text-white">{tier.title}</h4>
+                  <span className="font-mono text-2xl font-bold text-emerald-400">{tier.priceDisplay}</span>
+                </div>
+                <p className="mt-1 text-[11px] uppercase tracking-wider text-[#8F8A82]">{tier.billingTerm}</p>
+                <p className="mt-3 text-xs leading-relaxed text-[#C4BFB6]">{tier.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Verification, Pass Discipline & Mandatory Legal Disclosures */}
         <div className="mt-16 rounded-xl border border-[#252833] bg-[#0E1015] p-8 text-center sm:p-10">
           <p className="font-display text-2xl uppercase tracking-wide text-white sm:text-3xl">
             Honest Football Grading &amp; Strict Pass Discipline
@@ -182,14 +198,21 @@ export default async function PricingPage(): Promise<JSX.Element> {
             Every call published on Galaxy Sports Edge is built from coaching tendencies, offensive and defensive line pass-protection matchups, active injury reports, and de-vigged sportsbook price comparisons. If a game or prop does not give us a clear edge over the market number, we mark it <strong>PASS · NO BET</strong>. We never force action.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
-            <span>✓ Settled Record: 47-19-1 (71.2% · +24.92u (with gated props))</span>
+            <span>✓ Weeks 8–9 Staked: 43-17-1 (+22.20u, n=61) · Week 8 All-In: 47-19-1 (+24.92u, n=67)</span>
             <span>
               ✓ Week 9 Sunday Settled: {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (
               {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits}) ·{" "}
               {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.passDisciplineAvoidedLossesCount} Avoided Losses
             </span>
-            <span>✓ Timestamped Pre-Kickoff Ledger</span>
+            <span>✓ Timestamped Pre-Kickoff Glass Ledger</span>
           </div>
+          <p className="mx-auto mt-6 max-w-3xl border-t border-[#252833] pt-4 text-[11px] leading-relaxed text-[#8F8A82]">
+            <strong>21+ Only · Analytical &amp; Educational Information Only:</strong> Galaxy Sports Edge is an analytical research and forecast-verification publisher, not a sportsbook, and does not accept wagers. Past results promise nothing about the next one. All pack purchases are one-time digital unlocks with no recurring subscription or automatic renewal; see{" "}
+            <Link href="/terms" className="underline">
+              Terms of Service
+            </Link>{" "}
+            for full access and refund policies. If you or someone you know has a gambling problem and wants help, call <strong>1-800-GAMBLER</strong>.
+          </p>
         </div>
       </main>
       <Footer />

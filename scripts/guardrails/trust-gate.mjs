@@ -122,6 +122,7 @@ const BANNED_PHRASES = [
   // the verified education / glossary / internal / labelled-demo files above.
   { phrase: "sharp money", wordBoundary: false, claim: "banned.sharp-money", allowFiles: SHARP_MONEY_ALLOW },
   { phrase: "smart money", wordBoundary: false, claim: "banned.smart-money", allowFiles: SHARP_MONEY_ALLOW },
+  { phrase: "Dad_Top20", wordBoundary: false, claim: "banned.leaked-personal-path" },
 ];
 
 // ── BS-004 positioning vocabulary (the REST of it) ──────────────────────
@@ -470,7 +471,7 @@ const LOCK_PROPER_NOUN_SAFE_CONTEXT =
 // else's table, not a claim. It was unscoped before, which let a marketing
 // surface carry the surname list; it is now scoped with the other two.
 const LOCK_STAT_TABLE_SAFE_CONTEXT =
-  /\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+/gi;
+  /\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+|\bLock\/Darnold\b|\bLock\s+oblique\b|\bLock's\s+three\s+games\b/gi;
 
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in

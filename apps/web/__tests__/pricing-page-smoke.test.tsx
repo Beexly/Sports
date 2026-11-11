@@ -65,10 +65,10 @@ describe("/pricing smoke", () => {
     });
   });
 
-  it("renders the under-construction headline, the pack catalog, and zero monthly price", async () => {
+  it("renders the Week 10 headline, the pack catalog, and zero monthly price", async () => {
     const { container, getByText, getAllByRole } = render(await PricingPage());
     await waitFor(() => {
-      expect(getByText("No Monthly Subscription Needed Right Now")).toBeInTheDocument();
+      expect(getByText("Week 10 NFL Packs & Glass-Ledger Verification")).toBeInTheDocument();
     });
     const text = container.textContent ?? "";
     // Pin the money posture that must survive edits to /pricing.
