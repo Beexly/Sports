@@ -40,6 +40,13 @@ export function buildFridayScoreboardPayload(now: Date = new Date()) {
   };
 }
 
-export async function GET() {
+export async function GET(request?: Request) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret && request) {
+    const authHeader = request.headers.get("authorization");
+    if (authHeader && authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: "UNAUTHORIZED_CRON" }, { status: 401 });
+    }
+  }
   return NextResponse.json(buildFridayScoreboardPayload(), { status: 200 });
 }

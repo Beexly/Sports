@@ -66,7 +66,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">
-              Weeks 8–9 Staked Main/Deriv
+              Weeks 8-9 Staked Main/Deriv
             </div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">
               {s.weeks8_9_cumulative_staked.record}
@@ -81,7 +81,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
 
           <div className="rounded-2xl border border-cyan-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">
-              Weeks 8–9 All-In Secondary
+              Weeks 8-9 All-In Secondary
             </div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-cyan-400">
               {s.weeks8_9_cumulative_all_in.record}
@@ -205,7 +205,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
                   </td>
                 </tr>
                 <tr className="border-t-2 border-emerald-500/40 bg-emerald-950/30 font-extrabold text-white">
-                  <td className="py-3.5 px-4">CUMULATIVE · Weeks 8–9 Staked Main/Derivative</td>
+                  <td className="py-3.5 px-4">CUMULATIVE · Weeks 8-9 Staked Main/Derivative</td>
                   <td className="py-3.5 px-4 text-emerald-400">{s.weeks8_9_cumulative_staked.record}</td>
                   <td className="py-3.5 px-4">{s.weeks8_9_cumulative_staked.n}</td>
                   <td className="py-3.5 px-4 text-emerald-400">{s.weeks8_9_cumulative_staked.net_units_display}</td>
@@ -214,7 +214,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
                   </td>
                 </tr>
                 <tr className="bg-cyan-950/30 font-extrabold text-white">
-                  <td className="py-3.5 px-4">CUMULATIVE · Weeks 8–9 All-In Secondary View</td>
+                  <td className="py-3.5 px-4">CUMULATIVE · Weeks 8-9 All-In Secondary View</td>
                   <td className="py-3.5 px-4 text-cyan-400">{s.weeks8_9_cumulative_all_in.record}</td>
                   <td className="py-3.5 px-4">{s.weeks8_9_cumulative_all_in.n}</td>
                   <td className="py-3.5 px-4 text-cyan-400">{s.weeks8_9_cumulative_all_in.net_units_display}</td>

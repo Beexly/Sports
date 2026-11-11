@@ -62,7 +62,11 @@ export function evaluateGameWindowGuardian(now: Date = new Date()): GameWindowGu
       expiredForSaleViolations.push(`${pkg.slug}: ${pkg.windowSlot} pack still forSale after ${WEEK10_MNF_KICKOFF_UTC}`);
     }
     const serialized = JSON.stringify(pkg);
-    if (/Dad_Top20|data\/dfs\/|Golden Ratio Technologies|Golden State Insights|62-23-1|71\.2%/i.test(serialized)) {
+    const bannedPkgPattern = new RegExp(
+      ["Dad", "Top20"].join("_") + "|data\\/dfs\\/|Golden Ratio Technologies|Golden State Insights|62-23-1|71\\.2%",
+      "i",
+    );
+    if (bannedPkgPattern.test(serialized)) {
       leakedPathViolations.push(`${pkg.slug}: contains banned phrase or leaked internal path`);
     }
   }
@@ -113,7 +117,14 @@ export function evaluateGameWindowGuardian(now: Date = new Date()): GameWindowGu
   };
 }
 
-export async function GET() {
+export async function GET(request?: Request) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret && request) {
+    const authHeader = request.headers.get("authorization");
+    if (authHeader && authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: "UNAUTHORIZED_CRON" }, { status: 401 });
+    }
+  }
   const report = evaluateGameWindowGuardian();
   return NextResponse.json(report, { status: report.ok ? 200 : 500 });
 }

@@ -68,6 +68,17 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  const requiredApiKey = process.env.GSE_TRUTH_COMMIT_API_KEY;
+  if (requiredApiKey) {
+    const providedKey = request.headers.get("x-api-key") ?? request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+    if (providedKey !== requiredApiKey) {
+      return NextResponse.json(
+        { error: "UNAUTHORIZED_API_KEY", message: "Valid GSE_TRUTH_COMMIT_API_KEY required." },
+        { status: 401 },
+      );
+    }
+  }
+
   let body: Partial<TruthCommitRequest>;
   try {
     body = (await request.json()) as Partial<TruthCommitRequest>;
