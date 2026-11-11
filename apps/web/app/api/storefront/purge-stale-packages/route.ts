@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
+import { authorizeOperator } from "@/lib/storefront/operator-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -8,47 +9,58 @@ export async function POST(request?: Request) {
     request?.headers?.get("x-gse-operator-key") ||
     request?.headers?.get("x-gse-Operator-Key");
 
-  const expectedKey =
-    process.env["GSE_OPERATOR_KEY"] ||
-    process.env["OPERATOR_KEY"] ||
-    "sovereign-operator-secret";
-
-  if (!operatorKey || operatorKey !== expectedKey) {
+  // Fail closed: an unset key is a misconfiguration, not permission. There is
+  // no literal fallback credential.
+  const auth = authorizeOperator(operatorKey, process.env);
+  if (auth === "unconfigured") {
+    return NextResponse.json(
+      {
+        error: "Operator key not configured",
+        message: "Set GSE_OPERATOR_KEY (16+ chars) before calling a storefront maintenance route.",
+      },
+      { status: 503 },
+    );
+  }
+  if (auth !== "ok") {
     return NextResponse.json(
       {
         error: "Unauthorized",
         message: "Missing or invalid x-gse-Operator-Key authorization header.",
       },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
   try {
-    // 1. Archive any stale Week 8 promotions/packages in the active storefront table
+    // 1. Archive stale prior-week promotions/packages (Week 8 and Week 9) so the
+    // active storefront table carries only the current slate.
     const promotionPurgeResult = await db.promotion.updateMany({
       where: {
         OR: [
           { slug: { contains: "week-8" } },
+          { slug: { contains: "week-9" } },
           { slug: { contains: "WEEK_08" } },
+          { slug: { contains: "WEEK_09" } },
           { headline: { contains: "Week 8" } },
+          { headline: { contains: "Week 9" } },
         ],
       },
       data: {
         status: "ARCHIVED",
         offerSummary:
-          "Archived historical Week 8 package — shifted cleanly to upcoming active Week 10 slate.",
+          "Archived historical prior-week package — shifted cleanly to the upcoming active Week 10 slate.",
       },
     });
 
-    // 2. Archive hardcoded stale Week 8 tasks across operator cockpit tables
+    // 2. Archive hardcoded stale prior-week tasks across operator cockpit tables
     const dashboardFixResult = await db.cockpitTask.updateMany({
       where: {
-        title: { contains: "Week 8" },
+        OR: [{ title: { contains: "Week 8" } }, { title: { contains: "Week 9" } }],
       },
       data: {
         status: "ARCHIVED",
         decisionNotes:
-          "Purged automatically via storefront recovery layer execution script (WEEK_09_LIVE).",
+          "Purged automatically via storefront recovery layer execution script (WEEK_10_LIVE).",
       },
     });
 
@@ -59,7 +71,7 @@ export async function POST(request?: Request) {
         remediations: {
           stale_packages_deactivated: promotionPurgeResult.count,
           cockpit_records_archived: dashboardFixResult.count,
-          active_slate_target: "WEEK_09_LIVE",
+          active_slate_target: "WEEK_10_LIVE",
         },
       },
       { status: 200 }
