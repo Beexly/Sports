@@ -11,6 +11,7 @@
  */
 import { groundGame, type GroundingFacet } from "../../packages/prediction-engine/src/literature/corpus-grounding.js";
 import { runMasterSituationalReasoningOverlay } from "../../packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.js";
+import { facetsForGame } from "../../packages/prediction-engine/src/literature/situational-facets.js";
 import type { SqlClient } from "../../packages/prediction-engine/src/literature/literature-retrieval.js";
 
 function neonHttpClient(databaseUrl: string): SqlClient {
@@ -30,16 +31,14 @@ function neonHttpClient(databaseUrl: string): SqlClient {
   };
 }
 
-export const TNF_WSH_NYG_FACETS: readonly GroundingFacet[] = [
-  { family: "restFatigue", query: "short week Thursday night game rest fatigue recovery", weight: 1, anchors: ["fatigue", "rest", "recovery", "tired", "congested", "sleep"] },
-  { family: "pressure", query: "pass rush pressure blitz quarterback sacks offensive line protection", weight: 1, anchors: ["pressure", "blitz", "sack", "sacks", "rush"] },
-  { family: "weather", query: "November cold wind outdoor stadium kicking passing", weight: 0.6, anchors: ["weather", "wind", "cold", "rain", "snow", "temperature", "precipitation"] },
-  { family: "coveragePersonnel", query: "man coverage zone coverage cornerback receiver matchup", weight: 0.8, anchors: ["coverage", "cornerback", "zone", "man-to-man"] },
-  { family: "qbSkillScript", query: "rookie quarterback opening script play action quick passing", weight: 0.8, anchors: ["quarterback", "script", "play-action", "rookie"] },
-  { family: "marketMicrostructure", query: "betting line movement public money closing line", weight: 0.5, anchors: ["betting", "bettors", "sportsbook", "odds", "wager", "closing", "market"] },
-  { family: "other", query: "divisional rivalry familiarity home field crowd", weight: 0.6, anchors: ["rivalry", "divisional", "home", "crowd"] },
-  { family: "other", query: "fourth down decision short yardage go for it punt", weight: 0.7, anchors: ["fourth", "4th", "punt"] },
-];
+// WSH @ NYG, Thursday Night Football, MetLife (outdoor), divisional (NFC East).
+export const TNF_WSH_NYG_FACETS: readonly GroundingFacet[] = facetsForGame({
+  isIndoor: false,
+  windMph: 12,
+  tempF: 46,
+  isDivisional: true,
+  window: "Thursday Night Football",
+});
 
 async function main() {
   const url = process.env.DATABASE_URL;
