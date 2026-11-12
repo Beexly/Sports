@@ -87,7 +87,7 @@ export default function PackagesPage(): JSX.Element {
                 VERIFIED SEASON RECORD
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                47-19-1 · +24.92u (with gated props)
+                36-13-1 · +20.14u
               </div>
               <div className="mt-1 text-xs text-slate-400">
                 All-in secondary 47-19-1 · +24.92u · Entering Week 10 Sunday Main Slate &amp; Monday Night Football.
@@ -147,7 +147,7 @@ export default function PackagesPage(): JSX.Element {
               </p>
             </div>
             <span className="rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1.5 text-xs font-extrabold text-emerald-300">
-              Official Sides, Totals, Props &amp; SGPs Locked Below · Verified 47-19-1 (+24.92u) (with gated props)
+              Official Sides, Totals, Props &amp; SGPs Locked Below · Verified 36-13-1 (+20.14u) (all-in secondary 47-19-1, +24.92u)
             </span>
           </div>
 

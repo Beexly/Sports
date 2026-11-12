@@ -3,6 +3,16 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-12 — /packages stops selling the all-in secondary as the verified record
+
+**Changed:** `apps/web/app/packages/page.tsx` rendered `47-19-1 · +24.92u (with gated props)` under the heading `VERIFIED SEASON RECORD`, and a second badge read `Verified 47-19-1 (+24.92u)`. 47-19-1 is a `secondary_view` in `data/engine/new_engine_official_ledger_2026.json` (`record_class: secondary_view`, formula `43-17-1 (+22.56u) + MNF 6-play slip 4-2-0 (+2.36u)`), and `apps/web/lib/packages/catalog.ts` already carried `verifiedRecord: "36-13-1"` / `verifiedUnits: "+20.14u"` with the comment "Secondary views from the ledger (not the verified record)". Both page strings now read 36-13-1 / +20.14u with 47-19-1 named as the all-in secondary. `apps/web/__tests__/packages-storefront.test.ts` line 13 asserted the inversion (`verifiedRecord` toBe `"47-19-1"`) while its own title said "verified 36-13-1"; the assertion now matches the ledger and the catalog.
+
+**Proven:** `node node_modules/vitest/vitest.mjs run apps/web/__tests__/packages-storefront.test.ts --environment=node` — 5 passed (was 1 failed / 4 passed on clean `origin/main` at `31451edf6`; the failure was `expected '36-13-1' to be '47-19-1'`). `node scripts/guardrails/trust-gate.mjs` — OK, 4717 files, no banned phrases. `node apps/mobile/scripts/lint-rules.js` — 48 files, 0 violations. `python scripts/guardrails/connected-workflow-dossier-guard.py` — PASS, Stage 0..5 receipt verified.
+
+**Not proven:** The fix is not yet deployed; production still serves the inverted string until Vercel rebuilds from the new `origin/main`. `data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json` still contains the sentence "The 47-19-1 figure ... is a historical batch voided" — that is a find-replace artifact of the 62-23-1 voided-batch notice (the original at commit `2f181f982` says 62-23-1), and it was left untouched to keep this commit to the storefront surface. `apps/web` tests cannot run on this box for jsdom-dependent suites; only the node-environment suite above was executed.
+
+**Next role:** Correct the 47-19-1/62-23-1 find-replace artifact in the Motif 5 audit JSON so the voided-batch notice names the batch it actually voids. Then confirm production `/packages` renders 36-13-1 after the Vercel deploy.
+
 ## 2026-11-03 — GPP conservation coupling, no MNF
 
 **Changed:** `scripts/ops/pbp_conservation_coupling.py` is now what `run_full_dk_bitemporal_gpp.py` calls. Conserved PBP yards are no longer rescaled onto the static mean. A missed JEV call returns `DEGRADED_UNVERIFIED` / `PASS_FRAGILE` instead of `LOCK_TOURNAMENT_ALPHA` and 0.86. Showdown salary floor is clamped to $48,000. ESPN Week 8 finals are in `data/engine/espn_week8_finals_2026-11-02.json`.
