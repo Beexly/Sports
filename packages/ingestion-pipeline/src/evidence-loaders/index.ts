@@ -27,6 +27,8 @@ import { loadCoaching } from "./coaching.js";
 import { createCorpusLoader } from "./corpus.js";
 import { homeVenue } from "./venues.js";
 import { loadJevSpine } from "./jev.js";
+import { loadNgsTeam } from "./ngs.js";
+import { loadPremiseCatalog } from "./premises.js";
 
 export const EVIDENCE_CODE_VERSION = "v5.3.1+evidence-spine.1";
 
@@ -124,6 +126,14 @@ export async function buildBundle(opts: BuildBundleOptions): Promise<GameEvidenc
     window: null,
   });
 
+  // INGEST-EVERYTHING layers at emission weight 0. Each loader returns MISSING
+  // on failure, never throws into the bundle and never substitutes zeros.
+  const [homeNgs, awayNgs, premiseCatalog] = await Promise.all([
+    loadNgsTeam(opts.db, home, { season: identity.season, week: identity.week, asOf: now }),
+    loadNgsTeam(opts.db, away, { season: identity.season, week: identity.week, asOf: now }),
+    loadPremiseCatalog(opts.db, now),
+  ]);
+
   return {
     identity,
     market,
@@ -198,6 +208,9 @@ export function buildReasoningTrace(bundle: GameEvidenceBundle): TraceEntry[] {
   add("awayCoaching", bundle.awayCoaching, "staff and fourth-down aggression");
   add("corpus", bundle.corpus, "lit.* grounding, shrink-only");
   add("jev", bundle.jev, "unvalidated classifier shadow output", 0);
+  for (const [layer, e] of Object.entries(bundle.extendedLayers ?? {})) {
+    add(layer, e, e.status === "MISSING" ? "" : (e.note ?? "ingested layer"), 0);
+  }
 
   return entries;
 }
