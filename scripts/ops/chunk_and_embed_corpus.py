@@ -141,6 +141,7 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--batch", type=int, default=24)
+    ap.add_argument("--force", action="store_true", help="re-chunk documents already in the table")
     args = ap.parse_args()
 
     source = f"gse-corpus-chunk-v1-{TARGET}"
@@ -163,6 +164,28 @@ def main() -> int:
         docs = docs[: args.limit]
     total_chars = sum(len(d.get("text") or "") for d in docs)
     print(f"docs with text: {len(docs)}, chars: {total_chars:,}")
+
+    # Skip documents already chunked, so a re-run after new extraction only
+    # pays for the new material.
+    if not args.force:
+        import psycopg2  # noqa: PLC0415
+
+        conn0 = psycopg2.connect(get_dsn(), connect_timeout=30)
+        cur0 = conn0.cursor()
+        cur0.execute("SELECT DISTINCT corpus_key FROM lit.corpus_chunk")
+        have = {r[0] for r in cur0.fetchall()}
+        cur0.close()
+        conn0.close()
+        before = len(docs)
+        docs = [
+            d
+            for d in docs
+            if (d.get("sha256") or hashlib.sha256((d.get("path") or "").encode()).hexdigest()) not in have
+        ]
+        print(f"already chunked: {before - len(docs)}, remaining: {len(docs)}")
+        if not docs:
+            print("nothing new to chunk")
+            return 0
 
     plan: list[dict] = []
     for rec in docs:
@@ -233,7 +256,15 @@ def main() -> int:
                 print(f"  batch {i}: vector count mismatch, skipped", flush=True)
                 continue
             rows = []
+            seen_keys = set()
             for b, v in zip(batch, vecs):
+                # Two paths can hold the same file (same sha256), which would put
+                # the same (corpus_key, chunk_index) in one statement and trip
+                # "ON CONFLICT DO UPDATE cannot affect row a second time".
+                ident = (b["corpus_key"], b["chunk_index"])
+                if ident in seen_keys:
+                    continue
+                seen_keys.add(ident)
                 vec = "[" + ",".join(f"{x:.7f}" for x in v) + "]"
                 rows.append(
                     (

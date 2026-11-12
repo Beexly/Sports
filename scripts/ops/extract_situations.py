@@ -195,6 +195,18 @@ def main() -> int:
     os.makedirs(SQL_DIR, exist_ok=True)
     chunks = fetch_chunks(args.limit, True)
     print(f"chunks fetched: {len(chunks)}")
+
+    # Skip chunks already sent to the model, so a re-run after new extraction
+    # only pays for the new material.
+    seen_file = os.path.join(SQL_DIR, "processed_chunks.txt")
+    processed = set()
+    if os.path.exists(seen_file):
+        with open(seen_file, encoding="utf-8") as fh:
+            processed = {line.strip() for line in fh if line.strip()}
+    before = len(chunks)
+    chunks = [c for c in chunks if f"{c['corpus_key']}:{c['chunk_index']}" not in processed]
+    print(f"already processed: {before - len(chunks)}, remaining: {len(chunks)}")
+
     gated = [c for c in chunks if GATE.search(c.get("chunk_text") or "")]
     print(f"passing the football gate: {len(gated)} ({100.0 * len(gated) / max(1, len(chunks)):.1f}%)")
     if args.max_chunks:
@@ -307,6 +319,11 @@ def main() -> int:
                     f"empty={stats['empty']} errors={stats['errors']}",
                     flush=True,
                 )
+
+    # Record every chunk that reached the model, so the next run skips it.
+    with open(seen_file, "a", encoding="utf-8") as fh:
+        for c in gated:
+            fh.write(f"{c['corpus_key']}:{c['chunk_index']}\n")
 
     if conn is not None:
         cur.close()
