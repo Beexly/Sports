@@ -309,5 +309,5 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 **Next role (Builder / Verifier):**
 - Set `enforce_admins: true` on `agent-bus` if the review rule is meant to bind admins.
-- `scripts/trust-gate.mjs` is still absent from the tree while `AGENTS.md` line 101 mandates it; `feat/hermes-research-wiring-2026-11-11` stays blocked until it is restored, waived, or the branch is parked.
+- `scripts/trust-gate.mjs` was reported missing and blocked the branch for a day. It was never missing: the gate lives at `scripts/guardrails/trust-gate.mjs` and has full history. `AGENTS.md` line 101 plus 13 other docs invoke the shorter path, so a 7-line forwarding shim now sits at `scripts/trust-gate.mjs`. All three mandated gates pass: trust-gate 4,712 files / 0 banned phrases, lint-rules 0 violations, dossier guard PASS.
 - Corpus next step per `CORPUS-WIRING-STATUS-OPUS.md`: chunk + embed the 603-paper OCR text into `lit.*` with domain tags, then measure retrieval hit-rate on held-out situational questions before any engine weighting.
