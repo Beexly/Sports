@@ -905,9 +905,14 @@ describe("processSport", () => {
         clvLockLine: -3.5,
         ingestionRunId: "run-1",
       });
-      // The fresh mint publishes: no isPublished in the create payload, so
-      // the schema default (true) applies.
-      expect("isPublished" in created.data).toBe(false);
+      // Publication is now FAIL-CLOSED. The create payload always carries an
+      // explicit isPublished, and it is false unless PUBLIC_PICKS_ENABLED is
+      // "true", a sealed pregame verdict exists for the game, and the
+      // walk-forward emission gate has passed. The emission gate reads
+      // passed:false today, so this is false. Previously the flag was omitted
+      // and the schema default (true) published every pick.
+      expect("isPublished" in created.data).toBe(true);
+      expect(created.data.isPublished).toBe(false);
     });
 
     it("mints nothing when the supersede loses the race (row left PENDING+unpublished before the void)", async () => {
