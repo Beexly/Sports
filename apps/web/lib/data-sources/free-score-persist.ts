@@ -176,6 +176,37 @@ export async function persistFreeScores(options?: {
       continue;
     }
 
+    // GSE-SEC-051, hoisted (settlement-stall RCA 2026-11-12). Every write below
+    // is gated on espn-public-api storage clearance. When that is denied, the
+    // DB load and the up-to-22 scoreboard fetches can never produce a write.
+    // Before this check was hoisted, they ran anyway for all seven sports every
+    // cycle (gamesUpserted 0 every ~15 min) and ate the cron's 300s budget
+    // ahead of runFreePathSettlement, the pass that actually grades picks. So
+    // check first, skip with a recorded reason, and fetch nothing.
+    // The per-write check below stays as defense in depth.
+    const storageClearance = checkClearance({
+      source_id: "espn-public-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["storage"],
+    });
+    if (!storageClearance.allowed) {
+      console.warn(
+        `[free-score-persist] STORAGE_NOT_CLEARED sport=${sport.key} source=espn-public-api ` +
+          `— skipping load+fetch; no write is possible this cycle (free settlement grades in its own pass).`,
+      );
+      out.push({
+        sport: sport.key,
+        freeSport,
+        ok: true,
+        finals: 0,
+        gamesMatched: 0,
+        gamesUpdated: 0,
+        error: "skipped: espn-public-api storage not cleared (GSE-SEC-051)",
+      });
+      continue;
+    }
+
     try {
       // Look at recent games not yet fully result-fetched (load first for date keys)
       const nowMs = Date.now();
