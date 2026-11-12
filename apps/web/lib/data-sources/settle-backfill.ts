@@ -524,9 +524,15 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<P
 }
 
 async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<PersistSettledOutcome> {
-  const $transaction = db.$transaction;
-  if (!$transaction) return { written: false, refusal: null };
-  const written = await $transaction(async (tx) => {
+  if (!db.$transaction) return { written: false, refusal: null };
+  // CALL IT ON THE CLIENT, never through a detached reference. Prisma's
+  // `$transaction` reads `this._engineConfig`; `const tx = db.$transaction;
+  // tx(...)` loses `this` and throws "Cannot read properties of undefined
+  // (reading '_engineConfig')" before a single row is written. That is exactly
+  // what production logged on every cycle — `[cron:settle-picks] stale backfill
+  // failed: Cannot read properties of undefined (reading '_engineConfig')` —
+  // so this lane had never settled one pick.
+  const written = await db.$transaction(async (tx) => {
     // LOCK ORDER: PICK then GAME, the order every settlement transaction here
     // uses (free-settlement-runner, zero-sit). Taking them the other way round
     // deadlocks against those lanes, whose candidate sets overlap with this one.

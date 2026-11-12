@@ -627,4 +627,44 @@ describe("backfill stamps the line-archive CLOSE after a successful settle (C-95
     expect(result.settled).toBe(1);
     expect(snapshotFindMany).not.toHaveBeenCalled();
   });
+
+  it("calls $transaction on the client, not through a detached reference (Prisma reads this._engineConfig)", async () => {
+    // Production logged `stale backfill failed: Cannot read properties of
+    // undefined (reading '_engineConfig')` on every cycle: persistInTx did
+    // `const $transaction = db.$transaction; await $transaction(...)`, which
+    // loses `this`. Prisma's $transaction reads this._engineConfig, so the
+    // lane threw before writing a single row and had never settled a pick.
+    // The other doubles here use an arrow-function $transaction, which cannot
+    // catch that, so this one is a real method and asserts its receiver.
+    const tx = {
+      pick: {
+        updateMany: vi.fn(async () => ({ count: 1 })),
+        findUnique: vi.fn(async () => ({ result: "PENDING", game: { commenceTime: KICKOFF } })),
+      },
+      pickSettlementEvent: { create: vi.fn(async (args: unknown) => args) },
+      postSettlementWork: { createMany: vi.fn(async () => ({ count: 2 })) },
+      game: {
+        updateMany: vi.fn(async () => ({ count: 1 })),
+        findUnique: vi.fn(async () => ({ homeScore: null, awayScore: null })),
+      },
+    };
+    const db = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+      $transaction(this: unknown, fn: TxFn) {
+        if (this !== db) {
+          throw new TypeError("Cannot read properties of undefined (reading '_engineConfig')");
+        }
+        return fn(tx);
+      },
+    };
+
+    const result = await backfillStaleSettlement({
+      db: db as unknown as BackfillDb,
+      now: NOW,
+      fetchScores: async () => scores([navyFinal()]),
+    });
+
+    expect(result.settled).toBe(1);
+    expect(tx.pick.updateMany).toHaveBeenCalledTimes(1);
+  });
 });
