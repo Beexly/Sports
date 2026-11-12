@@ -135,6 +135,12 @@ export interface TeamFormRecord {
   readonly pointsPerGame: number | null;
   /** Null when the source does not carry it. Never a substituted zero. */
   readonly pointsAllowedPerGame: number | null;
+  /** Neutral-situation pass rate, 0..1. Null when the source does not carry it. */
+  readonly neutralPassRate: number | null;
+  /** Proe (pass rate over expected), percent. Null when absent. */
+  readonly proePct: number | null;
+  /** Play-action rate, percent. Null when absent. */
+  readonly playActionPct: number | null;
   /** Weeks actually covered by the source, e.g. [1, 7]. */
   readonly weeksCovered: readonly [number, number];
 }

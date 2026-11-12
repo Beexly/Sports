@@ -12,3 +12,5 @@ export * from "./types.js";
 export * from "./team-codes.js";
 export * from "./completeness-gate.js";
 export * from "./manifest-hash.js";
+export * from "./family-coefficients.js";
+export * from "./family-diagnostics.js";

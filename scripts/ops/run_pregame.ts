@@ -30,6 +30,7 @@ import {
   describeCompleteness,
 } from "@sports/prediction-engine/src/evidence/completeness-gate.js";
 import { sealRun } from "@sports/prediction-engine/src/evidence/manifest-hash.js";
+import { computeFamilyDiagnostics } from "@sports/prediction-engine/src/evidence/family-diagnostics.js";
 import { isPresent, type PregameVerdict } from "@sports/prediction-engine/src/evidence/types.js";
 import { canonicalTeamCode, teamNickname, type NflTeamCode } from "@sports/prediction-engine/src/evidence/team-codes.js";
 import { simulateCoachGame } from "@sports/prediction-engine/src/coach-sim/markov-simulator.js";
@@ -178,8 +179,13 @@ async function main(): Promise<number> {
   }
 
   // ---- Stage C -----------------------------------------------------------
+  // neutralPassRate is the neutral-situation pass rate, NOT third-down
+  // conversion. Passing successRate here was a real defect: 0.42 is a
+  // conversion rate and 0.55 is a pass rate, and the simulator would have run
+  // on the wrong quantity. Absent means the simulator uses its own documented
+  // default, which the trace records.
   const neutralPassRate = isPresent(bundle.homeForm)
-    ? bundle.homeForm.value.successRate
+    ? (bundle.homeForm.value.neutralPassRate ?? undefined)
     : undefined;
   const projection = simulateCoachGame(
     {
@@ -194,25 +200,22 @@ async function main(): Promise<number> {
   );
   log("");
   log("STAGE C — structure (10,000 drives)");
+  log(`  neutralPassRate ${neutralPassRate === undefined ? "MISSING (simulator default)" : neutralPassRate.toFixed(4)}`);
   log(`  winProbHome ${projection.winProbHome.toFixed(4)}  marginMean ${projection.marginMean.toFixed(2)}  totalP10 ${projection.totalP10.toFixed(1)}  totalP90 ${projection.totalP90.toFixed(1)}`);
 
   // ---- Stage D -----------------------------------------------------------
-  // No situational family has a fitted coefficient yet. Every family is
-  // therefore in shadow: computed, logged, weight zero. The delta is zero by
-  // construction, not by a default.
-  const familyDeltas: Array<{ family: string; delta: number; weight: number; status: string }> = [
-    { family: "pressure", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "weather", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "rest", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "market", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "coverage", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "fourthDown", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "script", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-    { family: "home", delta: 0, weight: 0, status: "SHADOW_UNFITTED" },
-  ];
+  // Every family is computed and reported with the deviation it actually saw.
+  // None has a fitted coefficient, so every weight is zero and every delta is
+  // zero. The deviation is what a future fit would be fitted against.
+  const familyDeltas = computeFamilyDiagnostics(bundle);
   log("");
   log("STAGE D — situational overlay (all families shadow, weight 0)");
-  log(`  ${familyDeltas.length} families computed, 0 live`);
+  for (const f of familyDeltas) {
+    const v = f.value === null ? "MISSING" : f.value.toFixed(4);
+    const d = f.deviation === null ? "—" : f.deviation.toFixed(4);
+    log(`  ${f.family.padEnd(20)} ${f.status.padEnd(8)} value ${v.padEnd(10)} dev ${d.padEnd(10)} ${f.unit}`);
+  }
+  log(`  ${familyDeltas.filter((f) => f.status === "REAL").length} measured, 0 live`);
 
   // ---- Stage E -----------------------------------------------------------
   const marketPrior = isPresent(bundle.market.consensusNoVigHome)
@@ -225,7 +228,7 @@ async function main(): Promise<number> {
     emit(args.out, { manifest, bundle, outputs: { ...outputs, verdict: "MISSING_DATA" } });
     return 2;
   }
-  const liveDelta = familyDeltas.reduce((s, f) => s + f.delta * f.weight, 0);
+  const liveDelta = familyDeltas.reduce((s, f) => s + f.delta * f.emissionWeight, 0);
   const posterior = marketPrior + liveDelta;
   log("");
   log("STAGE E — posterior");

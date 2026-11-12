@@ -34,6 +34,11 @@ function findCanonicalRow(
   return undefined;
 }
 
+/** Percent -> 0..1 rate. Null in, null out; never a substituted zero. */
+function toRate(pct: number | null): number | null {
+  return pct === null ? null : pct / 100;
+}
+
 export function loadTeamForm(team: string, opts: TeamFormOptions = {}): Evidence<TeamFormRecord> {
   let code: string;
   try {
@@ -72,6 +77,11 @@ export function loadTeamForm(team: string, opts: TeamFormOptions = {}): Evidence
       successRate: optionalNumber(row, "third_down_conv_w6_w7"),
       pointsPerGame: optionalNumber(row, "points_per_game"),
       pointsAllowedPerGame: optionalNumber(row, "points_allowed_per_game"),
+      // neutral_pass_rate_pct is a percentage in the artefact; the contract
+      // carries a 0..1 rate. Divide only when the value is present.
+      neutralPassRate: toRate(optionalNumber(row, "neutral_pass_rate_pct")),
+      proePct: optionalNumber(row, "proe_pct"),
+      playActionPct: optionalNumber(row, "play_action_pct"),
       weeksCovered: [firstWeek, lastWeek],
     };
     return real(record, "trends:nflverse-pbp", file.generatedAt);
