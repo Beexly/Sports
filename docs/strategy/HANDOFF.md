@@ -311,3 +311,7 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 - Set `enforce_admins: true` on `agent-bus` if the review rule is meant to bind admins.
 - `scripts/trust-gate.mjs` was reported missing and blocked the branch for a day. It was never missing: the gate lives at `scripts/guardrails/trust-gate.mjs` and has full history. `AGENTS.md` line 101 plus 13 other docs invoke the shorter path, so a 7-line forwarding shim now sits at `scripts/trust-gate.mjs`. All three mandated gates pass: trust-gate 4,712 files / 0 banned phrases, lint-rules 0 violations, dossier guard PASS.
 - Corpus next step per `CORPUS-WIRING-STATUS-OPUS.md`: chunk + embed the 603-paper OCR text into `lit.*` with domain tags, then measure retrieval hit-rate on held-out situational questions before any engine weighting.
+
+**Opus executor claim, independently reproduced.** Ran `honest_equation_executor.parse_and_execute_honestly` over the canonical 60,051-row master (`jev-pipeline/equations-from-catalog.jsonl`): **44,435 UNPARSEABLE / 8,566 PARSED_SYMBOLIC_ONLY / 7,050 PARSED_EVALUATED, 0 exceptions**. Exact match to the reported figures, so the executor measurement stands. The supporting "25/25 executor tests" claim does **not** reproduce: `tests/test_honest_equation_executor_unicode_and_guards.py` yields 11 passed, and adding `tests/unit/test_unified_quantitative_nfl_architecture.py` brings it to 17.
+
+**Transcript verification published** as agent-bus PR #10 (`hermes/transcript-verification-2026-11-12`), opened for review rather than pushed to main.
