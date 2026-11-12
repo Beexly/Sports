@@ -166,3 +166,47 @@ export function tryCanonicalTeamCode(input: string): NflTeamCode | null {
 export function sameTeam(a: string, b: string): boolean {
   return canonicalTeamCode(a) === canonicalTeamCode(b);
 }
+
+/** Canonical code -> the nickname a feed's display name ends with. */
+const CODE_TO_NICKNAME: Readonly<Record<NflTeamCode, string>> = {
+  ARI: "Cardinals",
+  ATL: "Falcons",
+  BAL: "Ravens",
+  BUF: "Bills",
+  CAR: "Panthers",
+  CHI: "Bears",
+  CIN: "Bengals",
+  CLE: "Browns",
+  DAL: "Cowboys",
+  DEN: "Broncos",
+  DET: "Lions",
+  GB: "Packers",
+  HOU: "Texans",
+  IND: "Colts",
+  JAX: "Jaguars",
+  KC: "Chiefs",
+  LAC: "Chargers",
+  LAR: "Rams",
+  LV: "Raiders",
+  MIA: "Dolphins",
+  MIN: "Vikings",
+  NE: "Patriots",
+  NO: "Saints",
+  NYG: "Giants",
+  NYJ: "Jets",
+  PHI: "Eagles",
+  PIT: "Steelers",
+  SEA: "Seahawks",
+  SF: "49ers",
+  TB: "Buccaneers",
+  TEN: "Titans",
+  WSH: "Commanders",
+};
+
+/**
+ * The nickname for a canonical code. Used to match a feed's display name
+ * ("New York Giants") without hard-coding the city, which is not unique.
+ */
+export function teamNickname(code: NflTeamCode): string {
+  return CODE_TO_NICKNAME[code];
+}

@@ -33,7 +33,9 @@ export const DEFAULT_FRESHNESS_RULES: readonly FreshnessRule[] = [
   { field: "market.awayMoneyline", maxAgeMinutes: 30, required: false },
   { field: "market.bestHomePrice", maxAgeMinutes: 30, required: false },
   { field: "market.bestAwayPrice", maxAgeMinutes: 30, required: false },
-  { field: "injuries", maxAgeMinutes: 360, required: true },
+  // The official NFL injury report is published once a day, so a 6-hour rule
+  // would fail every morning run. Inactives are a separate, later check.
+  { field: "injuries", maxAgeMinutes: 720, required: true },
   { field: "weather", maxAgeMinutes: 180, required: true },
   { field: "rest", maxAgeMinutes: 1440, required: true },
   { field: "homeForm", maxAgeMinutes: 10080, required: true },

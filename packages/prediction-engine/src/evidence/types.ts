@@ -129,9 +129,12 @@ export interface TeamFormRecord {
   readonly defEpaPerPlay: number;
   readonly passEpaPerPlay: number;
   readonly rushEpaPerPlay: number;
-  readonly successRate: number;
-  readonly pointsPerGame: number;
-  readonly pointsAllowedPerGame: number;
+  /** Null when the source does not carry it. Never a substituted zero. */
+  readonly successRate: number | null;
+  /** Null when the source does not carry it. Never a substituted zero. */
+  readonly pointsPerGame: number | null;
+  /** Null when the source does not carry it. Never a substituted zero. */
+  readonly pointsAllowedPerGame: number | null;
   /** Weeks actually covered by the source, e.g. [1, 7]. */
   readonly weeksCovered: readonly [number, number];
 }
