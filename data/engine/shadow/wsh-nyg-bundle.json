@@ -1,0 +1,971 @@
+{
+  "identity": {
+    "gameId": "cmt4fewrc00jbeat5nq9eauqo",
+    "homeTeam": "NYG",
+    "awayTeam": "WSH",
+    "commenceTime": "2026-11-13T01:15:00.000Z",
+    "venue": {
+      "status": "MISSING",
+      "reason": "games table has no venue column"
+    },
+    "sport": "americanfootball_nfl",
+    "league": "NFL",
+    "season": 2026,
+    "week": 10
+  },
+  "market": {
+    "consensusNoVigHome": {
+      "status": "DERIVED",
+      "value": 0.5486,
+      "source": "consensusNoVig",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "spread": {
+      "status": "REAL",
+      "value": -2,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "total": {
+      "status": "REAL",
+      "value": 41,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "homeMoneyline": {
+      "status": "REAL",
+      "value": -132,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "awayMoneyline": {
+      "status": "REAL",
+      "value": 112,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "bookmakerCount": {
+      "status": "REAL",
+      "value": 5,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "bestHomePrice": {
+      "status": "REAL",
+      "value": -125,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    },
+    "bestAwayPrice": {
+      "status": "REAL",
+      "value": 115,
+      "source": "the-odds-api",
+      "asOf": "2026-11-12T22:00:15.639Z"
+    }
+  },
+  "injuries": {
+    "status": "REAL",
+    "value": [
+      {
+        "playerName": "Micah McFadden",
+        "team": "NYG",
+        "position": "LB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Arvell Reese",
+        "team": "NYG",
+        "position": "LB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Abdul Carter",
+        "team": "NYG",
+        "position": "LB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Knee"
+      },
+      {
+        "playerName": "Greg Desrosiers Jr.",
+        "team": "NYG",
+        "position": "RB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Hamstring"
+      },
+      {
+        "playerName": "Colton Hood",
+        "team": "NYG",
+        "position": "CB",
+        "reportStatus": "Out",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Theo Johnson",
+        "team": "NYG",
+        "position": "TE",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Darnell Mooney",
+        "team": "NYG",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "Limited Participation in Practice",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Charlie Jones",
+        "team": "NYG",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "J.J. McCarthy",
+        "team": "NYG",
+        "position": "QB",
+        "reportStatus": "Questionable",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Cam Skattebo",
+        "team": "NYG",
+        "position": "RB",
+        "reportStatus": "Out",
+        "practiceStatus": "",
+        "primaryInjury": "Hamstring"
+      },
+      {
+        "playerName": "Malachi Fields",
+        "team": "NYG",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Malik Harrison",
+        "team": "NYG",
+        "position": "LB",
+        "reportStatus": "Questionable",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Nikko Reed",
+        "team": "NYG",
+        "position": "CB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Josh Sills",
+        "team": "NYG",
+        "position": "G",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Thomas Fidone II",
+        "team": "NYG",
+        "position": "TE",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "CJ Okoye",
+        "team": "NYG",
+        "position": "DT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Marcus Mbow",
+        "team": "NYG",
+        "position": "OT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Dominic Zvada",
+        "team": "NYG",
+        "position": "PK",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Isaiah Likely",
+        "team": "NYG",
+        "position": "TE",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Devin Singletary",
+        "team": "NYG",
+        "position": "RB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Hamstring"
+      },
+      {
+        "playerName": "Malik Nabers",
+        "team": "NYG",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Jalin Hyatt",
+        "team": "NYG",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Andrew Thomas",
+        "team": "NYG",
+        "position": "OT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Darius Alexander",
+        "team": "NYG",
+        "position": "DT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Jermaine Eluemunor",
+        "team": "NYG",
+        "position": "OT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Sonny Styles",
+        "team": "WSH",
+        "position": "LB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Nick Cross",
+        "team": "WSH",
+        "position": "S",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Frankie Luvu",
+        "team": "WSH",
+        "position": "LB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Back"
+      },
+      {
+        "playerName": "Lucas Patrick",
+        "team": "WSH",
+        "position": "G",
+        "reportStatus": "Out",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Treylon Burks",
+        "team": "WSH",
+        "position": "WR",
+        "reportStatus": "Out",
+        "practiceStatus": "",
+        "primaryInjury": "Knee"
+      },
+      {
+        "playerName": "Colson Yankoff",
+        "team": "WSH",
+        "position": "TE",
+        "reportStatus": "Out",
+        "practiceStatus": "Did Not Participate In Practice",
+        "primaryInjury": "Knee"
+      },
+      {
+        "playerName": "Chig Okonkwo",
+        "team": "WSH",
+        "position": "TE",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Shy Tuttle",
+        "team": "WSH",
+        "position": "DT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Antonio Williams",
+        "team": "WSH",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Knee"
+      },
+      {
+        "playerName": "Drew Stevens",
+        "team": "WSH",
+        "position": "PK",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Austin Ekeler",
+        "team": "WSH",
+        "position": "RB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Back"
+      },
+      {
+        "playerName": "Isaac Yiadom",
+        "team": "WSH",
+        "position": "CB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Tanoa Togiai",
+        "team": "WSH",
+        "position": "G",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Fabian Moreau",
+        "team": "WSH",
+        "position": "CB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Athan Kaliakmanis",
+        "team": "WSH",
+        "position": "QB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Van Jefferson",
+        "team": "WSH",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": "Knee"
+      },
+      {
+        "playerName": "Stefon Diggs",
+        "team": "WSH",
+        "position": "WR",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Rachaad White",
+        "team": "WSH",
+        "position": "RB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Jayden Daniels",
+        "team": "WSH",
+        "position": "QB",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Jer'Zhan Newton",
+        "team": "WSH",
+        "position": "DT",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Dyami Brown",
+        "team": "WSH",
+        "position": "WR",
+        "reportStatus": "Injured Reserve",
+        "practiceStatus": "",
+        "primaryInjury": "Foot"
+      },
+      {
+        "playerName": "Sam Cosmi",
+        "team": "WSH",
+        "position": "G",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "John Bates",
+        "team": "WSH",
+        "position": "TE",
+        "reportStatus": "Active",
+        "practiceStatus": "",
+        "primaryInjury": ""
+      },
+      {
+        "playerName": "Daron Payne",
+        "team": "WSH",
+        "position": "DT",
+        "reportStatus": "Injured Reserve",
+        "practiceStatus": "",
+        "primaryInjury": "Knee"
+      },
+      {
+        "playerName": "Jeremy McNichols",
+        "team": "WSH",
+        "position": "RB",
+        "reportStatus": "Injured Reserve",
+        "practiceStatus": "",
+        "primaryInjury": "Back"
+      }
+    ],
+    "source": "espn:injuries",
+    "asOf": "2026-11-12 11:19:43.263"
+  },
+  "weather": {
+    "status": "REAL",
+    "value": {
+      "temperatureF": 55,
+      "windMph": 13,
+      "windDirectionDeg": null,
+      "precipitationChance": null,
+      "condition": "Rain Showers, 55°F, wind 13 mph",
+      "isDome": false
+    },
+    "source": "nws:weather",
+    "asOf": "2026-11-12T22:25:26.303Z",
+    "note": "windDirectionDeg and precipitationChance not carried by the NWS hourly reading"
+  },
+  "rest": {
+    "status": "REAL",
+    "value": {
+      "homeRestDays": 4,
+      "awayRestDays": 4,
+      "homeBackToBack": false,
+      "awayBackToBack": false
+    },
+    "source": "games",
+    "asOf": "2026-11-12T22:00:28.267Z"
+  },
+  "homeForm": {
+    "status": "REAL",
+    "value": {
+      "team": "NYG",
+      "gamesPlayed": 7,
+      "offEpaPerPlay": 0.009885,
+      "defEpaPerPlay": 0.003924,
+      "passEpaPerPlay": 0.04955,
+      "rushEpaPerPlay": -0.035523,
+      "successRate": null,
+      "pointsPerGame": null,
+      "pointsAllowedPerGame": null,
+      "weeksCovered": [
+        1,
+        8
+      ]
+    },
+    "source": "trends:nflverse-pbp",
+    "asOf": "2026-11-12T21:55:01.344Z"
+  },
+  "awayForm": {
+    "status": "REAL",
+    "value": {
+      "team": "WSH",
+      "gamesPlayed": 6,
+      "offEpaPerPlay": -0.007579,
+      "defEpaPerPlay": 0.077599,
+      "passEpaPerPlay": 0.000105,
+      "rushEpaPerPlay": -0.0329,
+      "successRate": null,
+      "pointsPerGame": null,
+      "pointsAllowedPerGame": null,
+      "weeksCovered": [
+        1,
+        8
+      ]
+    },
+    "source": "trends:nflverse-pbp",
+    "asOf": "2026-11-12T21:55:01.344Z"
+  },
+  "homeCharting": {
+    "status": "MISSING",
+    "reason": "no pressure-rate column in trends or ftn_charting",
+    "source": "trends:nfl_2026_w1_w7+ftn_charting_2026",
+    "asOf": "2026-11-12T21:55:01.344Z"
+  },
+  "awayCharting": {
+    "status": "MISSING",
+    "reason": "no pressure-rate column in trends or ftn_charting",
+    "source": "trends:nfl_2026_w1_w7+ftn_charting_2026",
+    "asOf": "2026-11-12T21:55:01.344Z"
+  },
+  "homeCoaching": {
+    "status": "REAL",
+    "value": {
+      "team": "NYG",
+      "headCoach": "B.Daboll",
+      "offensiveCoordinator": null,
+      "defensiveCoordinator": null,
+      "fourthDownAggression": 0.61
+    },
+    "source": "coach-sim:COACH_32_STAFF_PROFILES",
+    "asOf": "2026-11-12T22:25:26.303Z",
+    "note": "offensiveCoordinator absent from source; defensiveCoordinator absent from source; fourthDownAggression = staffAggression (empirical 4th-and-short go rate)"
+  },
+  "awayCoaching": {
+    "status": "REAL",
+    "value": {
+      "team": "WSH",
+      "headCoach": "D.Quinn",
+      "offensiveCoordinator": null,
+      "defensiveCoordinator": null,
+      "fourthDownAggression": 0.87
+    },
+    "source": "coach-sim:COACH_32_STAFF_PROFILES",
+    "asOf": "2026-11-12T22:25:26.303Z",
+    "note": "offensiveCoordinator absent from source; defensiveCoordinator absent from source; fourthDownAggression = staffAggression (empirical 4th-and-short go rate)"
+  },
+  "corpus": {
+    "status": "REAL",
+    "value": [
+      {
+        "facet": "pass rush pressure blitz quarterback sacks offensive line protection",
+        "support": 0.805158,
+        "citations": [
+          {
+            "uri": "lit.corpus_chunk:fbd6a2c6b3ca#15",
+            "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+            "score": 0.437787
+          },
+          {
+            "uri": "lit.corpus_chunk:fbd6a2c6b3ca#30",
+            "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+            "score": 0.412285
+          },
+          {
+            "uri": "lit.corpus_chunk:fbd6a2c6b3ca#16",
+            "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+            "score": 0.410321
+          },
+          {
+            "uri": "lit.corpus_chunk:fbd6a2c6b3ca#2",
+            "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+            "score": 0.409529
+          },
+          {
+            "uri": "lit.corpus_chunk:fbd6a2c6b3ca#11",
+            "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+            "score": 0.406944
+          },
+          {
+            "uri": "lit.situation:924d3837fbc4#43",
+            "title": "",
+            "score": 0.37037
+          },
+          {
+            "uri": "lit.situation:f132e5185303#59",
+            "title": "",
+            "score": 0.37037
+          },
+          {
+            "uri": "lit.situation:fbd6a2c6b3ca#5",
+            "title": "",
+            "score": 0.35
+          },
+          {
+            "uri": "lit.situation:94484fae9a86#56",
+            "title": "",
+            "score": 0.35
+          },
+          {
+            "uri": "lit.situation:f3c94eb45d5d#26",
+            "title": "",
+            "score": 0.333333
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.259259
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.259259
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.233333
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.224
+          },
+          {
+            "uri": "lit.corpus_statement:2a485ad684fcp131",
+            "title": "",
+            "score": 0.21
+          }
+        ]
+      },
+      {
+        "facet": "man coverage zone coverage cornerback receiver matchup",
+        "support": 0.905698,
+        "citations": [
+          {
+            "uri": "lit.situation:8d17a3b7ae94#40",
+            "title": "",
+            "score": 0.6
+          },
+          {
+            "uri": "lit.situation:8d17a3b7ae94#23",
+            "title": "",
+            "score": 0.555556
+          },
+          {
+            "uri": "lit.corpus_chunk:8d17a3b7ae94#39",
+            "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+            "score": 0.469552
+          },
+          {
+            "uri": "lit.corpus_chunk:8d17a3b7ae94#36",
+            "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+            "score": 0.44118
+          },
+          {
+            "uri": "lit.situation:8d17a3b7ae94#0",
+            "title": "",
+            "score": 0.4375
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.4375
+          },
+          {
+            "uri": "lit.situation:8d17a3b7ae94#40",
+            "title": "",
+            "score": 0.428571
+          },
+          {
+            "uri": "lit.situation:8254f435c0e1#100",
+            "title": "",
+            "score": 0.416667
+          },
+          {
+            "uri": "lit.corpus_chunk:8d17a3b7ae94#38",
+            "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+            "score": 0.412745
+          },
+          {
+            "uri": "lit.corpus_chunk:8d17a3b7ae94#37",
+            "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+            "score": 0.40834
+          },
+          {
+            "uri": "lit.corpus_chunk:8d17a3b7ae94#45",
+            "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+            "score": 0.382519
+          },
+          {
+            "uri": "lit.corpus_statement:8254f435c0e1p100",
+            "title": "Coaching-The-Way-of-the-Winner",
+            "score": 0.35
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.35
+          },
+          {
+            "uri": "lit.corpus_statement:8687507e628ap784",
+            "title": "",
+            "score": 0.21
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.21
+          }
+        ]
+      },
+      {
+        "facet": "quarterback passing accuracy completion decision under pressure play action",
+        "support": 0.832846,
+        "citations": [
+          {
+            "uri": "lit.corpus_chunk:f3c94eb45d5d#29",
+            "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+            "score": 0.47014
+          },
+          {
+            "uri": "lit.corpus_chunk:f3c94eb45d5d#28",
+            "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+            "score": 0.443708
+          },
+          {
+            "uri": "lit.corpus_chunk:f3c94eb45d5d#19",
+            "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+            "score": 0.432908
+          },
+          {
+            "uri": "lit.corpus_chunk:f3c94eb45d5d#7",
+            "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+            "score": 0.407792
+          },
+          {
+            "uri": "lit.corpus_chunk:f3c94eb45d5d#43",
+            "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+            "score": 0.406584
+          },
+          {
+            "uri": "lit.situation:8348efb46ad1#54",
+            "title": "",
+            "score": 0.355555
+          },
+          {
+            "uri": "lit.situation:f3c94eb45d5d#20",
+            "title": "",
+            "score": 0.35
+          },
+          {
+            "uri": "lit.situation:708938c12c8a#181",
+            "title": "",
+            "score": 0.333333
+          },
+          {
+            "uri": "lit.situation:94484fae9a86#56",
+            "title": "",
+            "score": 0.32
+          },
+          {
+            "uri": "lit.situation:94484fae9a86#56",
+            "title": "",
+            "score": 0.3
+          },
+          {
+            "uri": "lit.corpus_statement:cd99c6b72cc0p786",
+            "title": "",
+            "score": 0.233333
+          },
+          {
+            "uri": "lit.corpus_statement:2a485ad684fcp69",
+            "title": "",
+            "score": 0.224
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.21
+          }
+        ]
+      },
+      {
+        "facet": "betting market point spread closing line odds efficiency",
+        "support": 0,
+        "citations": []
+      },
+      {
+        "facet": "fourth down decision go for it punt field goal win probability",
+        "support": 0.92,
+        "citations": [
+          {
+            "uri": "lit.situation:7e98ad100cb6#33",
+            "title": "",
+            "score": 0.6
+          },
+          {
+            "uri": "lit.situation:1acab2f2b51d#0",
+            "title": "",
+            "score": 0.6
+          },
+          {
+            "uri": "lit.situation:708938c12c8a#27",
+            "title": "",
+            "score": 0.5
+          },
+          {
+            "uri": "lit.situation:fa86f2d38c6f#6",
+            "title": "",
+            "score": 0.4
+          },
+          {
+            "uri": "lit.situation:4f3611a2c66e#82",
+            "title": "",
+            "score": 0.4
+          },
+          {
+            "uri": "lit.corpus_statement:b6fb6ecaeaddp181",
+            "title": "Inside-Football",
+            "score": 0.291667
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.291667
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.186667
+          },
+          {
+            "uri": "lit.corpus_statement:p?",
+            "title": "",
+            "score": 0.186667
+          }
+        ]
+      },
+      {
+        "facet": "short week rest fatigue recovery between games",
+        "support": 0.824119,
+        "citations": [
+          {
+            "uri": "lit.corpus_chunk:6b7d4b42bf90#10",
+            "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+            "score": 0.46917
+          },
+          {
+            "uri": "lit.corpus_chunk:6b7d4b42bf90#7",
+            "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+            "score": 0.434758
+          },
+          {
+            "uri": "lit.corpus_chunk:6b7d4b42bf90#3",
+            "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+            "score": 0.413823
+          },
+          {
+            "uri": "lit.corpus_chunk:6b7d4b42bf90#2",
+            "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+            "score": 0.410857
+          },
+          {
+            "uri": "lit.situation:6b7d4b42bf90#6",
+            "title": "",
+            "score": 0.36
+          },
+          {
+            "uri": "lit.situation:55b7cd9535fe#99",
+            "title": "",
+            "score": 0.357142
+          },
+          {
+            "uri": "lit.situation:d38807dd253e#227",
+            "title": "",
+            "score": 0.342857
+          },
+          {
+            "uri": "lit.situation:2ce1d4d2ced1#11",
+            "title": "",
+            "score": 0.32
+          },
+          {
+            "uri": "lit.situation:1370caa08130#64",
+            "title": "",
+            "score": 0.32
+          },
+          {
+            "uri": "lit.corpus_statement:0bb0d9695cdcp62",
+            "title": "",
+            "score": 0.233333
+          },
+          {
+            "uri": "lit.corpus_statement:0bb0d9695cdcp213",
+            "title": "",
+            "score": 0.224
+          },
+          {
+            "uri": "lit.corpus_statement:b0b4f2da68dfp21",
+            "title": "",
+            "score": 0.224
+          },
+          {
+            "uri": "lit.corpus_statement:0bb0d9695cdcp35",
+            "title": "",
+            "score": 0.224
+          },
+          {
+            "uri": "lit.corpus_statement:76b01a0d674dp47",
+            "title": "",
+            "score": 0.21
+          }
+        ]
+      },
+      {
+        "facet": "cold wind weather outdoor passing kicking accuracy",
+        "support": 0,
+        "citations": []
+      }
+    ],
+    "source": "lit:corpus-grounding",
+    "asOf": "2026-11-12T22:25:26.303Z",
+    "note": "support < 0.8 reported as 0 (topical match is not agreement)"
+  },
+  "jev": {
+    "status": "DERIVED",
+    "value": {
+      "gameId": "cmt4fewrc00jbeat5nq9eauqo",
+      "generatedAt": "2026-11-12T22:25:25.292607Z",
+      "contentHash": "faf7d6a8f58907dc43d1cd8410f0dec94f38d23868cf4ad07d7b33ba5a8c5495",
+      "snapCount": 12,
+      "label": "UNVALIDATED_CLASSIFIER_SHADOW",
+      "emissionWeight": 0,
+      "diagnosticDelta": 0
+    },
+    "source": "jev:spine",
+    "asOf": "2026-11-12T22:25:25.292607Z",
+    "note": "unvalidated classifier shadow output; emission weight 0"
+  },
+  "builtAt": "2026-11-12T22:25:26.303Z",
+  "codeVersion": "v5.3.1+evidence-spine.1"
+}
