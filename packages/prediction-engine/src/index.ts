@@ -5899,3 +5899,19 @@ export * from "./retrieval/pinecone-corpus-retriever.js";
 // Research-derived projection parameters (quote-verified evidence).
 export { SHIPPED_PROJECTION_PARAMETERS, SHIPPED_PARAMETERS_RESEARCH_DERIVED } from "./research/shipped-params.js";
 export type { ProjectionParameters } from "./player-projection.js";
+
+// Stage-2 corpus grounding over the prose corpus (lit.situation / corpus_statement / corpus_chunk).
+export {
+  groundFacet,
+  groundGame,
+  applyCorpusGroundingToFamilyDeltas,
+  UNSUPPORTED_FAMILY_FLOOR,
+} from "./literature/corpus-grounding.js";
+export type {
+  GroundingFacet,
+  GroundingEvidence,
+  FacetGrounding,
+  GameGrounding,
+  FamilyGroundingAdjustment,
+  SituationalFamily,
+} from "./literature/corpus-grounding.js";

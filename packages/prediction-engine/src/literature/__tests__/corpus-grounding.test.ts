@@ -123,6 +123,19 @@ describe("relevance filter (live-smoke regressions)", () => {
   });
 });
 
+describe("facet anchors (v3 live-smoke regression)", () => {
+  it("weather facet rejects a hit with no weather word even if it shares generic terms", async () => {
+    const line = { ...SIT, situation: "kicking and passing from the ten yard position", decision: "stand outdoor", lesson: "stadium play", evidence_quote: "kicking passing" };
+    const g = await groundFacet(fakeDb({ situations: [line] }), { family: "weather", query: "November cold wind outdoor stadium kicking passing", anchors: ["wind", "cold", "rain"] });
+    expect(g.evidence).toHaveLength(0);
+  });
+  it("keeps a hit that carries an anchor", async () => {
+    const wind = { ...SIT, situation: "strong wind outdoor stadium", decision: "shorten kicking", lesson: "wind cuts kicking accuracy", evidence_quote: "into the wind" };
+    const g = await groundFacet(fakeDb({ situations: [wind] }), { family: "weather", query: "cold wind outdoor stadium kicking", anchors: ["wind", "cold"] });
+    expect(g.evidence).toHaveLength(1);
+  });
+});
+
 describe("groundGame", () => {
   it("weights facets and reports coverage", async () => {
     const db = fakeDb({ situations: [SIT] });

@@ -10,6 +10,7 @@
  * evidence" gate, not a probability claim.
  */
 import { groundGame, type GroundingFacet } from "../../packages/prediction-engine/src/literature/corpus-grounding.js";
+import { runMasterSituationalReasoningOverlay } from "../../packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.js";
 import type { SqlClient } from "../../packages/prediction-engine/src/literature/literature-retrieval.js";
 
 function neonHttpClient(databaseUrl: string): SqlClient {
@@ -30,14 +31,14 @@ function neonHttpClient(databaseUrl: string): SqlClient {
 }
 
 export const TNF_WSH_NYG_FACETS: readonly GroundingFacet[] = [
-  { family: "restFatigue", query: "short week Thursday night game rest fatigue recovery", weight: 1 },
-  { family: "pressure", query: "pass rush pressure blitz quarterback sacks offensive line protection", weight: 1 },
-  { family: "weather", query: "November cold wind outdoor stadium kicking passing", weight: 0.6 },
-  { family: "coveragePersonnel", query: "man coverage zone coverage cornerback receiver matchup", weight: 0.8 },
-  { family: "qbSkillScript", query: "rookie quarterback opening script play action quick passing", weight: 0.8 },
-  { family: "marketMicrostructure", query: "betting line movement public money closing line", weight: 0.5 },
-  { family: "other", query: "divisional rivalry familiarity home field crowd", weight: 0.6 },
-  { family: "other", query: "fourth down decision short yardage go for it punt", weight: 0.7 },
+  { family: "restFatigue", query: "short week Thursday night game rest fatigue recovery", weight: 1, anchors: ["fatigue", "rest", "recovery", "tired", "congested", "sleep"] },
+  { family: "pressure", query: "pass rush pressure blitz quarterback sacks offensive line protection", weight: 1, anchors: ["pressure", "blitz", "sack", "sacks", "rush"] },
+  { family: "weather", query: "November cold wind outdoor stadium kicking passing", weight: 0.6, anchors: ["weather", "wind", "cold", "rain", "snow", "temperature", "precipitation"] },
+  { family: "coveragePersonnel", query: "man coverage zone coverage cornerback receiver matchup", weight: 0.8, anchors: ["coverage", "cornerback", "zone", "man-to-man"] },
+  { family: "qbSkillScript", query: "rookie quarterback opening script play action quick passing", weight: 0.8, anchors: ["quarterback", "script", "play-action", "rookie"] },
+  { family: "marketMicrostructure", query: "betting line movement public money closing line", weight: 0.5, anchors: ["betting", "bettors", "sportsbook", "odds", "wager", "closing", "market"] },
+  { family: "other", query: "divisional rivalry familiarity home field crowd", weight: 0.6, anchors: ["rivalry", "divisional", "home", "crowd"] },
+  { family: "other", query: "fourth down decision short yardage go for it punt", weight: 0.7, anchors: ["fourth", "4th", "punt"] },
 ];
 
 async function main() {
@@ -52,6 +53,13 @@ async function main() {
     for (const e of f.evidence.slice(0, 3)) console.log(`  - (${e.layer} w=${e.weight.toFixed(3)}) ${e.citation} ${e.title ? "[" + e.title + "] " : ""}${e.text.slice(0, 220)}`);
   }
   console.log(`\noverallSupport=${g.overallSupport} coverage=${g.coverage} latencyMs=${g.latencyMs}`);
+  // Exercise the real Stage-2 overlay with the live grounding. Family deltas here are
+  // ILLUSTRATIVE fixtures (not tonight's engine output) — this proves the wiring, not a pick.
+  const fixture = { pressure: 0.03, weather: -0.01, restFatigue: -0.02, coveragePersonnel: 0.025, qbSkillScript: 0.035, marketMicrostructure: 0.015 };
+  const overlay = runMasterSituationalReasoningOverlay({ familyDeltas: fixture, marketAnchorProb: 0.56, independentEdgeDecision: "PASS", corpusGrounding: g });
+  console.log("\noverlay call:", overlay.streamCalls.find((c) => c.stream.startsWith("corpus:"))?.detail);
+  for (const a of overlay.corpusGrounding?.adjustments ?? []) console.log(`  ${a.family}: support=${a.support.toFixed(3)} x${a.multiplier} ${a.before} -> ${a.after.toFixed(5)}`);
+  console.log("publishAllowed (fixture PASS):", overlay.publishAllowed);
   const errs = g.facets.flatMap((f) => f.layerErrors);
   if (errs.length || g.coverage < 0.5) { console.error("SMOKE FAIL", errs); process.exit(1); }
   console.log("SMOKE PASS");

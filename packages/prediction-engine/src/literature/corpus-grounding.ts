@@ -50,6 +50,14 @@ export interface GroundingFacet {
   readonly query: string;
   /** Prior importance of this facet for the game (0..1). Defaults to 1. */
   readonly weight?: number;
+  /**
+   * Words that make a hit ABOUT this facet (e.g. weather: wind, cold, rain).
+   * When given, every hit must contain at least one, and full-text search runs
+   * on the anchors only. Added after the v3 live smoke: generic football words
+   * ("passing", "kicking", "game") let 1890s line-play passages ground the
+   * weather facet at 0.63.
+   */
+  readonly anchors?: readonly string[];
 }
 
 export type EvidenceLayer = "situation" | "statement" | "chunk";
@@ -116,6 +124,13 @@ export const DEFAULT_PER_LAYER_K = 5;
  */
 export const MIN_TERM_COVERAGE = 0.4;
 
+/**
+ * ...or share at least this many distinct content terms. Added after the v2
+ * live smoke: long facet queries (7 terms) dropped genuine fatigue hits that
+ * matched 2 terms (29% < 40%). A single shared word still never qualifies.
+ */
+export const MIN_TERMS_MATCHED = 2;
+
 /** Support combines only the strongest items, so volume alone cannot saturate it. */
 export const SUPPORT_TOP_N = 3;
 
@@ -131,12 +146,23 @@ function stem(w: string): string {
 }
 
 /** Share of the query's content terms that appear (by stem) in `text`. */
-export function termCoverage(query: string, text: string): number {
+export function termMatch(query: string, text: string): { matched: number; coverage: number } {
   const terms = contentTerms(query);
-  if (!terms.length) return 0;
+  if (!terms.length) return { matched: 0, coverage: 0 };
   const words = new Set(sanitiseQuery(text).toLowerCase().split(" ").map(stem));
-  const hit = terms.filter((t) => words.has(stem(t))).length;
-  return Number((hit / terms.length).toFixed(6));
+  const matched = new Set(terms.map(stem).filter((t) => words.has(t))).size;
+  const total = new Set(terms.map(stem)).size;
+  return { matched, coverage: Number((matched / total).toFixed(6)) };
+}
+
+export function termCoverage(query: string, text: string): number {
+  return termMatch(query, text).coverage;
+}
+
+/** Relevance gate: >=40% of facet terms, or >=2 distinct terms. One word never passes. */
+export function isRelevant(query: string, text: string): boolean {
+  const m = termMatch(query, text);
+  return m.matched >= MIN_TERMS_MATCHED || (m.matched >= 1 && m.coverage >= MIN_TERM_COVERAGE && contentTerms(query).length <= 2);
 }
 
 /** Cap on any single evidence weight, so one hit cannot claim certainty. */
@@ -208,7 +234,7 @@ const STATEMENT_SQL = `
          ts_rank_cd(to_tsvector('english', statement), websearch_to_tsquery('english', $1)) AS rank
     FROM lit.corpus_statement
    WHERE to_tsvector('english', statement) @@ websearch_to_tsquery('english', $1)
-   ORDER BY ('sports' = ANY(domain_tags)) DESC, rank DESC
+   ORDER BY rank DESC
    LIMIT $2`;
 
 const CHUNK_BY_VECTOR_SQL = `
@@ -257,7 +283,13 @@ export async function groundFacet(
 ): Promise<FacetGrounding> {
   const k = opts?.perLayerK ?? DEFAULT_PER_LAYER_K;
   const facetWeight = Math.max(0, Math.min(1, facet.weight ?? 1));
-  const q = toOrQuery(facet.query);
+  const anchors = (facet.anchors ?? []).map((a) => a.toLowerCase()).filter(Boolean);
+  const q = anchors.length ? toOrQuery(anchors.join(" ")) : toOrQuery(facet.query);
+  const anchored = (text: string): boolean => {
+    if (!anchors.length) return true;
+    const words = new Set(sanitiseQuery(text).toLowerCase().split(" ").map(stem));
+    return anchors.some((a) => words.has(stem(a)));
+  };
   const evidence: GroundingEvidence[] = [];
   const layerErrors: string[] = [];
   let chunkMode: FacetGrounding["chunkMode"] = "none";
@@ -267,12 +299,19 @@ export async function groundFacet(
     return { family: facet.family, query: facet.query, facetWeight, support: 0, evidence, chunkMode, layerErrors: ["empty query"] };
   }
 
+  const [sitRes, stmtRes] = await Promise.allSettled([
+    db.query(SITUATION_SQL, [q, k * 2]),
+    db.query(STATEMENT_SQL, [q, k * 2]),
+  ]);
+
   try {
-    const res = await db.query(SITUATION_SQL, [q, k]);
+    if (sitRes.status === "rejected") throw sitRes.reason;
+    const res = sitRes.value;
     for (const r of res.rows as SituationRow[]) {
       if (!r.evidence_quote || !r.evidence_quote.trim()) continue; // no quote, no evidence
-      const cov = termCoverage(facet.query, `${r.situation} ${r.decision} ${r.lesson}`);
-      if (cov < MIN_TERM_COVERAGE) continue;
+      const sitText = `${r.situation} ${r.decision} ${r.lesson}`;
+      if (!anchored(sitText) || !isRelevant(facet.query, sitText)) continue;
+      const cov = Math.max(0.4, termCoverage(facet.query, sitText));
       seed ??= { corpus_key: r.corpus_key, chunk_index: r.chunk_index };
       evidence.push({
         layer: "situation",
@@ -289,11 +328,12 @@ export async function groundFacet(
   }
 
   try {
-    const res = await db.query(STATEMENT_SQL, [q, k]);
+    if (stmtRes.status === "rejected") throw stmtRes.reason;
+    const res = stmtRes.value;
     for (const r of res.rows as StatementRow[]) {
       const sports = Array.isArray(r.domain_tags) && r.domain_tags.includes("sports");
-      const cov = termCoverage(facet.query, r.statement);
-      if (cov < MIN_TERM_COVERAGE) continue;
+      if (!anchored(r.statement) || !isRelevant(facet.query, r.statement)) continue;
+      const cov = Math.max(0.4, termCoverage(facet.query, r.statement));
       evidence.push({
         layer: "statement",
         citation: `lit.corpus_statement:${(r.md5 ?? "?").slice(0, 12)}p${r.page ?? "?"}`,
@@ -331,8 +371,8 @@ export async function groundFacet(
       const n = normaliseSimilarity(Number(r.similarity));
       if (n <= 0) continue;
       // Seeded neighbours inherit the seed's topic; require they still speak to the facet.
-      const cov = termCoverage(facet.query, r.chunk_text);
-      if (chunkMode === "seeded" && cov < MIN_TERM_COVERAGE) continue;
+      if (!anchored(r.chunk_text)) continue;
+      if (chunkMode === "seeded" && !isRelevant(facet.query, r.chunk_text)) continue;
       evidence.push({
         layer: "chunk",
         citation: `lit.corpus_chunk:${r.corpus_key.slice(0, 12)}#${r.chunk_index}`,
@@ -347,7 +387,12 @@ export async function groundFacet(
     layerErrors.push(`chunk: ${e instanceof Error ? e.message : String(e)}`);
   }
 
+  // Keep at most k per layer after relevance filtering.
+  const perLayer: Record<EvidenceLayer, number> = { situation: 0, statement: 0, chunk: 0 };
   evidence.sort((a, b) => b.weight - a.weight);
+  const kept = evidence.filter((e) => (perLayer[e.layer] += 1) <= k);
+  evidence.length = 0;
+  evidence.push(...kept);
   return {
     family: facet.family,
     query: facet.query,
@@ -366,8 +411,7 @@ export async function groundGame(
   opts?: { readonly embedder?: Embedder | null; readonly embedderModel?: string; readonly perLayerK?: number },
 ): Promise<GameGrounding> {
   const started = Date.now();
-  const out: FacetGrounding[] = [];
-  for (const f of facets) out.push(await groundFacet(db, f, opts));
+  const out = await Promise.all(facets.map((f) => groundFacet(db, f, opts)));
   const wSum = out.reduce((s, f) => s + f.facetWeight, 0);
   const overall = wSum > 0 ? out.reduce((s, f) => s + f.support * f.facetWeight, 0) / wSum : 0;
   const covered = out.filter((f) => f.evidence.length > 0).length;
@@ -378,4 +422,51 @@ export async function groundGame(
     coverage: out.length ? Number((covered / out.length).toFixed(6)) : 0,
     latencyMs: Date.now() - started,
   };
+}
+
+/** Floor on the delta multiplier: a family with zero corpus support keeps half its delta. */
+export const UNSUPPORTED_FAMILY_FLOOR = 0.5;
+
+export interface FamilyGroundingAdjustment {
+  readonly family: string;
+  readonly support: number;
+  readonly multiplier: number;
+  readonly before: number;
+  readonly after: number;
+}
+
+/**
+ * Scale situational family deltas by corpus support.
+ *
+ * multiplier = FLOOR + (1 - FLOOR) * support, in [0.5, 1].
+ *
+ * The corpus says whether a situational mechanism is documented, not which
+ * way tonight's number should move. So support may only SHRINK an
+ * undocumented family toward zero; it never grows, flips or creates a delta.
+ * Families without a grounding facet are left untouched (absence is not
+ * evidence against). Multiple facets of the same family: strongest support.
+ */
+export function applyCorpusGroundingToFamilyDeltas<K extends string>(
+  deltas: Partial<Record<K, number | readonly number[]>>,
+  grounding: GameGrounding | null | undefined,
+): { deltas: Partial<Record<K, number | readonly number[]>>; adjustments: FamilyGroundingAdjustment[] } {
+  if (!grounding) return { deltas, adjustments: [] };
+  const best = new Map<string, number>();
+  for (const f of grounding.facets) {
+    if (f.layerErrors.length && f.evidence.length === 0) continue; // a failed lookup is not "no support"
+    best.set(f.family, Math.max(best.get(f.family) ?? 0, f.support));
+  }
+  const out: Partial<Record<K, number | readonly number[]>> = { ...deltas };
+  const adjustments: FamilyGroundingAdjustment[] = [];
+  for (const key of Object.keys(deltas) as K[]) {
+    const support = best.get(key);
+    const d = deltas[key];
+    if (support === undefined || d === undefined) continue;
+    const m = Number((UNSUPPORTED_FAMILY_FLOOR + (1 - UNSUPPORTED_FAMILY_FLOOR) * Math.max(0, Math.min(1, support))).toFixed(6));
+    const scaled = Array.isArray(d) ? (d as readonly number[]).map((v) => v * m) : (d as number) * m;
+    const sum = (x: number | readonly number[]) => (Array.isArray(x) ? (x as readonly number[]).reduce((a, b) => a + b, 0) : (x as number));
+    out[key] = scaled;
+    adjustments.push({ family: key, support, multiplier: m, before: sum(d), after: sum(scaled) });
+  }
+  return { deltas: out, adjustments };
 }
