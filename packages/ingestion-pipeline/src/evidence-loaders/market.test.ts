@@ -216,4 +216,36 @@ describe("loadMarket", () => {
     expect(call?.text).toContain("'H2H'");
     expect(call?.text).not.toContain("'h2h'");
   });
+
+  it("excludes an outlier best price instead of manufacturing an edge", async () => {
+    // Three books agree the home side is around +150. A fourth quotes +440,
+    // which is a 290-cent outlier: a stale row, a different market, or a
+    // mislabelled book. Taking the max would report a 19-point edge that does
+    // not exist.
+    const rows = [
+      oddsRow({ bookmaker: "draftkings", homePrice: 150, awayPrice: -178 }),
+      oddsRow({ bookmaker: "fanduel", homePrice: 145, awayPrice: -172 }),
+      oddsRow({ bookmaker: "betmgm", homePrice: 155, awayPrice: -180 }),
+      oddsRow({ bookmaker: "outlier", homePrice: 440, awayPrice: -600 }),
+    ];
+    const ev = await loadMarket(fakeDb(rows), GAME_ID, NOW);
+
+    expect(isPresent(ev.bestHomePrice)).toBe(true);
+    if (!isPresent(ev.bestHomePrice)) throw new Error("unreachable");
+    // The best REAL price, not the outlier.
+    expect(ev.bestHomePrice.value).toBe(155);
+    expect(ev.bestHomePrice.note).toContain("outlier");
+    expect(ev.bestHomePrice.note).toContain("1");
+  });
+
+  it("keeps the best price when every quote is inside the tolerance", async () => {
+    const rows = [
+      oddsRow({ bookmaker: "draftkings", homePrice: 150, awayPrice: -178 }),
+      oddsRow({ bookmaker: "fanduel", homePrice: 160, awayPrice: -185 }),
+    ];
+    const ev = await loadMarket(fakeDb(rows), GAME_ID, NOW);
+    if (!isPresent(ev.bestHomePrice)) throw new Error("expected a best home price");
+    expect(ev.bestHomePrice.value).toBe(160);
+    expect(ev.bestHomePrice.note).toBeUndefined();
+  });
 });

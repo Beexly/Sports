@@ -198,7 +198,7 @@ export function createCorpusLoader(opts: CorpusLoaderOptions): CorpusLoader {
         // claim ("the corpus says nothing"), failure is no claim at all.
         if (isFailedLookup(facet)) continue;
         if (facet.support < minSupport) {
-          records.push({ facet: facet.query, support: 0, citations: [] });
+          records.push({ family: facet.family, facet: facet.query, support: 0, citations: [] });
           continue;
         }
         const citations: CorpusCitation[] = facet.evidence.map((e) => ({
@@ -208,7 +208,7 @@ export function createCorpusLoader(opts: CorpusLoaderOptions): CorpusLoader {
           // raw layer relevance is not comparable across layers.
           score: e.weight,
         }));
-        records.push({ facet: facet.query, support: facet.support, citations });
+        records.push({ family: facet.family, facet: facet.query, support: facet.support, citations });
       }
 
       const note =

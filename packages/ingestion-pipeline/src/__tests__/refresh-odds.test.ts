@@ -420,20 +420,19 @@ describe("refreshOdds", () => {
 
       const result = await runWithTimers(refreshOdds({ governor: gov }));
 
-      expect(mocks.processSport).toHaveBeenCalledTimes(2);
+      // All three run. The held sport runs on the free path rather than being
+      // dropped: the governor gates the paid request, not the sport.
+      expect(mocks.processSport).toHaveBeenCalledTimes(3);
       expect(mocks.processSport.mock.calls.map((c) => (c[0] as { key: string }).key)).toEqual([
         "americanfootball_nfl",
+        "basketball_nba",
         "baseball_mlb",
       ]);
+      expect(mocks.processSport.mock.calls[1]?.[1]).toBe("espn-free-path");
       expect(result.ok).toBe(true);
       expect(result.results).toEqual([
         expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
-        {
-          sport: "basketball_nba",
-          ok: true,
-          oddsInserted: 0,
-          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: no event within 48h on the free scoreboard`,
-        },
+        expect.objectContaining({ sport: "basketball_nba", ok: true }),
         expect.objectContaining({ sport: "baseball_mlb", ok: true }),
       ]);
       expect(info).toHaveBeenCalledWith(
@@ -760,15 +759,17 @@ describe("refreshOdds", () => {
       ]);
       expect(mocks.processSport.mock.calls.map((c) => (c[0] as { key: string }).key)).toEqual([
         "americanfootball_nfl",
+        "basketball_nba",
         "baseball_mlb",
       ]);
+      // The held sport still runs, on the free path. The governor gates the
+      // PAID request, not the sport: skipping the sport entirely also skipped
+      // ESPN, which is why the odds feed only moved once an hour.
+      expect(mocks.processSport.mock.calls[1]?.[1]).toBe("espn-free-path");
       expect(result.ok).toBe(true);
-      expect(result.results[1]).toEqual({
-        sport: "basketball_nba",
-        ok: true,
-        oddsInserted: 0,
-        note: `${CREDIT_GOVERNOR_SKIP_NOTE}: no event within 48h on the free scoreboard`,
-      });
+      expect(result.results[1]).toEqual(
+        expect.objectContaining({ sport: "basketball_nba", ok: true }),
+      );
       // Single-request runs: the reservation inside decide() is the marker.
       expect(gov.recordCall).not.toHaveBeenCalled();
       expect(info).toHaveBeenCalledWith(
@@ -842,14 +843,11 @@ describe("refreshOdds", () => {
 
       const result = await runWithTimers(refreshOdds({ sport: "baseball_mlb" }));
 
-      expect(mocks.processSport).not.toHaveBeenCalled();
+      // The governor holds the PAID call; the sport still runs on the free path.
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(mocks.processSport.mock.calls[0]?.[1]).toBe("espn-free-path");
       expect(result.results).toEqual([
-        {
-          sport: "baseball_mlb",
-          ok: true,
-          oddsInserted: 0,
-          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: zero credits remaining`,
-        },
+        expect.objectContaining({ sport: "baseball_mlb", ok: true }),
       ]);
       info.mockRestore();
     });
@@ -865,9 +863,11 @@ describe("refreshOdds", () => {
 
       expect(mocks.buildPaidOddsGovernor).not.toHaveBeenCalled();
       expect(injected.decide).toHaveBeenCalledWith("americanfootball_nfl");
-      expect(mocks.processSport).not.toHaveBeenCalled();
-      expect(result.results[0]!.note).toBe(
-        `${CREDIT_GOVERNOR_SKIP_NOTE}: reserve: held by the injected stub`,
+      // Held on the paid path, still run on the free path.
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(mocks.processSport.mock.calls[0]?.[1]).toBe("espn-free-path");
+      expect(result.results[0]).toEqual(
+        expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
       );
       info.mockRestore();
     });
