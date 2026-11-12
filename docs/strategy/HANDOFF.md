@@ -356,6 +356,24 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 **Still open:** the other agent's lane process stopped at 68 of 190 library books. Their per-book chapter summaries are the one artifact this pipeline does not reproduce; the chunk index covers the same text semantically. 545 catalogued PDFs have no arXiv e-print and therefore no equation rows.
 
+### 2026-11-12 (close) — corpus finished
+
+**Final, verified against Neon:**
+- `lit.corpus_chunk`: **298,864 chunks across 2,567 documents**, 389 MB of text, HNSW indexed.
+- `lit.situation`: **3,151** triples, of which **1,547 are football** (offense, defense, special teams, situational, personnel). The rest are analytics, training and medical.
+- `lit.corpus_statement`: **72,852** statements, **2,053 sports-tagged**.
+- `lit.equation`: **62,900** unique equations, arXiv LaTeX only.
+- `lit.corpus_item`: 603 paper-level vectors.
+- Extraction: 3,277 records, 3,107 with usable text, 512,952,575 characters.
+
+**The statement harvest was the highest-yield step.** Converting the 2,053 sports-tagged book statements into situation/decision/lesson triples produced 1,487 new records and moved offense from 103 to 373 and defense from 102 to 244. 573 statements correctly returned nothing rather than being forced into a shape they did not have. Sample output: punting depth from a line-up, catching technique with the arms too wide, arm use while blocking, rear-foot placement.
+
+**Retrieval quality moved with the corpus.** Before the books landed, a query about coverage shells returned helmet-design papers at 0.466. Now "how should a defense disguise a blitz against a quick passing game" returns The Essential Smart Football on structured chaos in the passing game, The Forward Pass in Football on zone coverage, and Inside Football on defensive line moves, at 0.635-0.645.
+
+**OCR closed out.** Every image-only PDF is handled. 38 books and patents came from Drive `gpu-ocr-output/text` and were ingested rather than re-OCR'd. The rest went through Qwen4-Max-Preview vision, including LS_Advanced_Calculus5 (400 pages) and Camp-1911-Football-for-the-Spectator. Five `(1)`-folder duplicates were detected by sha256 and skipped, since chunking dedupes on sha256 anyway. One personal document (SSN Passport) was excluded from the corpus.
+
+**Still open:** 545 catalogued PDFs have no arXiv e-print and therefore no equation rows. The other agent's per-book chapter summaries remain the one artifact this pipeline does not reproduce.
+
 **Corpus index now populated.** `scripts/ops/load_ocr_corpus_to_neon.py` embedded the OCR corpus into `lit.corpus_item` with `baai/bge-m3` via OpenRouter: **603 rows, 1024 dims, HNSW** (`corpus_item_hnsw_idx`, vector_cosine_ops). `corpus_key` is the paper sha256, so re-running upserts instead of duplicating, and `source = 'gse-ocr-2026-11-11'` is the rollback key. One vector per paper over title + an 8,000-char lead: the table holds a single embedding per item, so this is a paper-level index, not a chunk-level one.
 
 Retrieval smoke test passes: seeding on the "assist identification in football" paper returns "Automatic event detection in association football" at 0.820, "Computer Vision for Sports Analytics" at 0.787 and "Automated Offside and Foul" at 0.779. A coherent neighbourhood, not noise. Five of 603 rows have an empty title because those PDFs are books whose OCR starts at Preface/Contents; they were left blank rather than given an invented title.
