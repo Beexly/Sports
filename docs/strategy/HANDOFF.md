@@ -312,6 +312,21 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 - `scripts/trust-gate.mjs` was reported missing and blocked the branch for a day. It was never missing: the gate lives at `scripts/guardrails/trust-gate.mjs` and has full history. `AGENTS.md` line 101 plus 13 other docs invoke the shorter path, so a 7-line forwarding shim now sits at `scripts/trust-gate.mjs`. All three mandated gates pass: trust-gate 4,712 files / 0 banned phrases, lint-rules 0 violations, dossier guard PASS.
 - Corpus next step per `CORPUS-WIRING-STATUS-OPUS.md`: chunk + embed the 603-paper OCR text into `lit.*` with domain tags, then measure retrieval hit-rate on held-out situational questions before any engine weighting.
 
+### 2026-11-12 (later) — full corpus sweep: every PDF, every word, every situation, every equation
+
+**Scope measured, not assumed.** `rclone lsf` over `gdrive:` returns **3,457 PDFs / 15.38 GB**. The 603 already OCR'd left **2,854 PDFs / 14.02 GB** untouched. The 503-book registry matches 449 Drive PDFs, of which 448 sit inside the sweep roots (one Cambridge Core paper was outside and was added).
+
+**Built:**
+- `scripts/ops/extract_all_pdfs.py` — resumable pymupdf text extraction over the G: mount. Native text was already good: median 2,660 chars/page, roughly 4% of PDFs image-only and queued to `needs_ocr.jsonl`.
+- `reconciliation/20261112_lit_corpus_chunk.sql` — new `lit.corpus_chunk` table, one vector per ~1,500-char window with HNSW. `lit.corpus_item` holds one vector per document and cannot answer "where in which book does it say X"; this can.
+- `scripts/ops/chunk_and_embed_corpus.py` — paragraph-aware chunker plus bge-m3 embedding. Two defects fixed during bring-up: a missing `now()` in the value tuple (INSERT had 12 target columns and 11 expressions), and an insert path that spawned one `neon psql` per batch. The embedded TypeScript psql costs ~30s of startup per call, which capped throughput at 1 chunk/s; switching to a single psycopg2 connection with `execute_values` took it to ~16 chunks/s, a 15x improvement.
+- `reconciliation/20261112_lit_situation.sql` + `scripts/ops/extract_situations.py` — situation -> decision -> lesson triples in `lit.situation`, each pinned to a verbatim evidence quote. A record whose quote is not found in its source chunk is dropped, so the table cannot accumulate plausible inventions. A keyword gate keeps the model bill proportional to the football-relevant share (measured 7.4% of chunks).
+- `scripts/ops/extend_equation_catalog.py` — arXiv match then e-print LaTeX equation extraction for the newly extracted papers, resumable at catalog / match / extract.
+
+**Honesty rule carried forward:** equations are still taken only from arXiv e-print LaTeX. The original pipeline records reconstructing math from PDF text as a verified corruption path, and that rule is unchanged. Papers with no e-print source land in `pdf_only.jsonl` and are reported, not guessed. Books therefore have full text and embeddings but no equation records until a math-OCR path exists.
+
+**In flight at handoff:** extraction of 3,132 PDFs (~550/852 through the first root), chunk embedding of the 603-paper set (19,728 of 32,681 chunks at 59%), and arXiv matching. All three are resumable; re-running any command skips completed work.
+
 **Corpus index now populated.** `scripts/ops/load_ocr_corpus_to_neon.py` embedded the OCR corpus into `lit.corpus_item` with `baai/bge-m3` via OpenRouter: **603 rows, 1024 dims, HNSW** (`corpus_item_hnsw_idx`, vector_cosine_ops). `corpus_key` is the paper sha256, so re-running upserts instead of duplicating, and `source = 'gse-ocr-2026-11-11'` is the rollback key. One vector per paper over title + an 8,000-char lead: the table holds a single embedding per item, so this is a paper-level index, not a chunk-level one.
 
 Retrieval smoke test passes: seeding on the "assist identification in football" paper returns "Automatic event detection in association football" at 0.820, "Computer Vision for Sports Analytics" at 0.787 and "Automated Offside and Foul" at 0.779. A coherent neighbourhood, not noise. Five of 603 rows have an empty title because those PDFs are books whose OCR starts at Preface/Contents; they were left blank rather than given an invented title.
