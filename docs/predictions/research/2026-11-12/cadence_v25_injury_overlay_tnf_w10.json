@@ -1,0 +1,287 @@
+{
+  "report_type": "CADENCE_V2_5_INJURY_OVERLAY",
+  "slot": "TNF",
+  "week": 10,
+  "season": 2026,
+  "matchup": "WAS @ NYG",
+  "generated_at_utc": "2026-11-12T22:37:39.527565+00:00",
+  "injuries_file": {
+    "path": "data/nflverse/injuries_2026.csv",
+    "sha256": "04b6d6fd1bffd32b123d32b9c4f200520270cde1ce2b0e1f26e11f26e08bca1f",
+    "rows": 3097,
+    "week_rows": 276,
+    "prior_sha256": "7ac1a6b6f69974ff172cea271f28dc01fca23c49ee170bcef7c1f4ac42549072"
+  },
+  "loader_parity": {
+    "simulator_loader_week8": {},
+    "matches_simulator_loader": null
+  },
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "teams": {
+    "WAS": {
+      "current": {
+        "injured_roles": [
+          "LT",
+          "WR1",
+          "TE1"
+        ],
+        "feasible_shares": {
+          "WR1": 0.0178571429,
+          "WR2": 0.375,
+          "WR3": 0.3035714286,
+          "TE1": 0.0178571429,
+          "RB1": 0.2857142857
+        },
+        "execution_multipliers": {
+          "WR1": 0.82,
+          "WR2": 1.0,
+          "WR3": 1.0,
+          "TE1": 0.84,
+          "RB1": 1.0
+        },
+        "effective_shares": {
+          "WR1": 0.0146428571,
+          "WR2": 0.375,
+          "WR3": 0.3035714286,
+          "TE1": 0.015,
+          "RB1": 0.2857142857
+        },
+        "total_mass_before": 1.0,
+        "total_mass_after": 0.9939285714,
+        "mass_moved": 0.4242857143,
+        "epa_drop_sum": 0
+      },
+      "prior": {
+        "injured_roles": [],
+        "feasible_shares": {
+          "WR1": 0.26,
+          "WR2": 0.21,
+          "WR3": 0.17,
+          "TE1": 0.2,
+          "RB1": 0.16
+        },
+        "execution_multipliers": {
+          "WR1": 1.0,
+          "WR2": 1.0,
+          "WR3": 1.0,
+          "TE1": 1.0,
+          "RB1": 1.0
+        },
+        "effective_shares": {
+          "WR1": 0.26,
+          "WR2": 0.21,
+          "WR3": 0.17,
+          "TE1": 0.2,
+          "RB1": 0.16
+        },
+        "total_mass_before": 1.0,
+        "total_mass_after": 1.0,
+        "mass_moved": 0.0,
+        "epa_drop_sum": 0
+      },
+      "cross_check": {
+        "feasible_shares": {
+          "WR1": 0.0178571429,
+          "WR2": 0.375,
+          "WR3": 0.3035714286,
+          "TE1": 0.0178571429,
+          "RB1": 0.2857142857
+        },
+        "retention_factors": {
+          "WR1": 0.82,
+          "WR2": 0.88,
+          "WR3": 1.0,
+          "TE1": 0.84,
+          "RB1": 0.85
+        },
+        "effective_shares": {
+          "WR1": 0.0146428571,
+          "WR2": 0.33,
+          "WR3": 0.3035714286,
+          "TE1": 0.015,
+          "RB1": 0.2428571429
+        },
+        "mass_loss": 0.0939285714,
+        "sinkhorn": {
+          "iterations": 131,
+          "row_residual": 1.0027373376075843e-10,
+          "col_residual": 5.551115123125783e-17,
+          "converged": true,
+          "objective": 0.214190771013
+        }
+      },
+      "current_designations": [
+        "LT",
+        "WR1",
+        "TE1"
+      ],
+      "prior_designations": []
+    },
+    "NYG": {
+      "current": {
+        "injured_roles": [
+          "EDGE1",
+          "QB_QUESTIONABLE",
+          "RB1",
+          "CB1"
+        ],
+        "feasible_shares": {
+          "WR1": 0.3058823529,
+          "WR2": 0.2470588235,
+          "WR3": 0.2,
+          "TE1": 0.2352941176,
+          "RB1": 0.0117647059
+        },
+        "execution_multipliers": {
+          "WR1": 1.0,
+          "WR2": 1.0,
+          "WR3": 1.0,
+          "TE1": 1.0,
+          "RB1": 0.85
+        },
+        "effective_shares": {
+          "WR1": 0.3058823529,
+          "WR2": 0.2470588235,
+          "WR3": 0.2,
+          "TE1": 0.2352941176,
+          "RB1": 0.01
+        },
+        "total_mass_before": 1.0,
+        "total_mass_after": 0.9982352941,
+        "mass_moved": 0.1482352941,
+        "epa_drop_sum": 0.0947
+      },
+      "prior": {
+        "injured_roles": [],
+        "feasible_shares": {
+          "WR1": 0.26,
+          "WR2": 0.21,
+          "WR3": 0.17,
+          "TE1": 0.2,
+          "RB1": 0.16
+        },
+        "execution_multipliers": {
+          "WR1": 1.0,
+          "WR2": 1.0,
+          "WR3": 1.0,
+          "TE1": 1.0,
+          "RB1": 1.0
+        },
+        "effective_shares": {
+          "WR1": 0.26,
+          "WR2": 0.21,
+          "WR3": 0.17,
+          "TE1": 0.2,
+          "RB1": 0.16
+        },
+        "total_mass_before": 1.0,
+        "total_mass_after": 1.0,
+        "mass_moved": 0.0,
+        "epa_drop_sum": 0
+      },
+      "cross_check": {
+        "feasible_shares": {
+          "WR1": 0.3058823529,
+          "WR2": 0.2470588235,
+          "WR3": 0.2,
+          "TE1": 0.2352941176,
+          "RB1": 0.0117647059
+        },
+        "retention_factors": {
+          "WR1": 0.82,
+          "WR2": 0.88,
+          "WR3": 1.0,
+          "TE1": 0.84,
+          "RB1": 0.85
+        },
+        "effective_shares": {
+          "WR1": 0.2508235294,
+          "WR2": 0.2174117647,
+          "WR3": 0.2,
+          "TE1": 0.1976470588,
+          "RB1": 0.01
+        },
+        "mass_loss": 0.1241176471,
+        "sinkhorn": {
+          "iterations": 143,
+          "row_residual": 1.2907286350838376e-11,
+          "col_residual": 0.0,
+          "converged": true,
+          "objective": 0.152861075717
+        }
+      },
+      "current_designations": [
+        "EDGE1",
+        "QB_QUESTIONABLE",
+        "RB1",
+        "CB1"
+      ],
+      "prior_designations": []
+    }
+  },
+  "mass_moved_total": 0.5725210084,
+  "base_shares": {
+    "WR1": 0.26,
+    "WR2": 0.21,
+    "WR3": 0.17,
+    "TE1": 0.2,
+    "RB1": 0.16
+  },
+  "sealed_cost_matrix": [
+    [
+      0.05,
+      0.35,
+      0.55,
+      0.75,
+      0.9
+    ],
+    [
+      0.35,
+      0.05,
+      0.28,
+      0.5,
+      0.75
+    ],
+    [
+      0.55,
+      0.28,
+      0.05,
+      0.42,
+      0.65
+    ],
+    [
+      0.75,
+      0.5,
+      0.42,
+      0.05,
+      0.48
+    ],
+    [
+      0.9,
+      0.75,
+      0.65,
+      0.48,
+      0.05
+    ]
+  ],
+  "note": "Report-status designations only (Out/Doubtful/Questionable). Practice status is not a game designation. Sinkhorn cost matrix and execution multipliers are the sealed v1.0 values; nothing was resealed."
+}
