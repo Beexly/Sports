@@ -249,7 +249,7 @@ runs rewrite tracked outputs (verdicts json, brain/feeds runtime feed); revert a
 ## 2026-11-05 - Conformal-OT v2.0 MIMIC-IV pilot: NEGATIVE result (Antigravity)
 
 **Done:** galaxy_conformal_ot/wasserstein_mahalanobis_whitening.py (causal multi-frame covariance features, RFF kernel Mahalanobis,
-split-conformal, entropic-OT counterfactual) + enchmarks/clinical_mimic_iv_v2_benchmark.py (10x5 CV, all out-of-fold) + 8 new tests (22/22 pass).
+split-conformal, entropic-OT counterfactual) + benchmarks/clinical_mimic_iv_v2_benchmark.py (10x5 CV, all out-of-fold) + 8 new tests (22/22 pass).
 Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 **Result:** v2 out-of-fold AUC 0.49-0.58 vs shock-index anchor 0.62-0.69. It did NOT beat baseline. v1's 0.7721 was in-sample hand weights, never CV.
@@ -285,3 +285,29 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 - **2026-11-08 (Hermes takeover cycle):** Fixed inverted SEO structured data in `apps/web/lib/seo/ai-agent-and-search-seo.ts` — Dataset JSON-LD now reports verified 36-13-1 (+20.14u) with 47-19-1 as all-in secondary (was: 47-19-1 "overall" / 38-13-1 "base official", verified record absent); breadcrumb updated to "Audited NFL Settlement Ledger (36-13-1 verified)". Guard test `test_32` updated to pin the corrected strings. Truth endpoint live 200 in ~7s. Executor working-tree churn left unstaged.
 
 - **2026-11-08 (Hermes takeover cycle C2):** Ledger `as_of` refreshed to 2026-11-08 with Week 9 TNF (JAX 33 @ BAL 10) review block — official card was 0 bets / FULL-BOARD PASS (0.00u), ledger record unchanged. Purged the same record inversion from `intelligence/seo/seo_and_lcp_optimization_engine.py` (route specs + E-E-A-T + freshness check now assert the verified 36-13-1 leads the JSON-LD; the old check treated the verified string as stale while scanning a nonexistent `metadata.ts`); `test_32` pins it. Truth endpoint 200 with `settlement.health = CRITICAL` (657 of 4334 commenced picks overdue — pre-existing ops backlog, watchdog red every cycle). Journal: `docs/wiring/qa/TAKEOVER-CYCLE-2026-11-08-C2.md`.
+
+---
+
+## 2026-11-12 — Week 10 injury ingest repaired, transcript verification, cron repointed (Hermes)
+
+**Changed:**
+- `scripts/ops/ingest_week10_injuries.py` — the loader was a no-op that printed `Success`. Four defects: `rightsSnapshot` was `str(dict)` (single quotes) so the jsonb cast failed; `playerId` violated `injuries_playerId_fkey` for ESPN ids absent from `players`; psql args were passed without the `--` separator so `neon` swallowed `-f` and executed nothing while returning rc=0; MSYS `/c/...` paths were handed to Python `open()` and to the native `neon` binary. Fixed all four, plus Rams `LAR`→`LA` to match weeks 1-9, and failure detection now treats `ERROR:` in output as failure.
+- `hermes cron edit 9cbc1ee94767` — `takeover-build-loop` was pinned to `stealth/crouton-alpha`, retired with HTTP 404. `failure_streak` was 15, so autonomous Sports work had been dead ~60h. Repointed to `deepseek/deepseek-v4.1-flash` on openrouter; model verified live (`OK`, 49 tokens, $0.000006).
+- `docs/strategy/HANDOFF.md` — removed a stray backspace byte at offset 25842 that made the file unreadable to the edit tooling.
+
+**Proven:**
+- Week 10 injuries: 254 rows / 24 teams → **800 rows / 32 teams**. Stale `10:00:38` batch (254 rows) deleted; `LA` normalised; 2026 total 3,075 → 3,621. The four teams that were playing with zero injury rows (BAL, CIN, LAC, SEA) now have 25 each.
+- TNF `WSH @ NYG` (2026-11-13 01:15Z) has full injury coverage: NYG 21 Active / 2 Out / 2 Questionable, WAS 19 Active / 3 IR / 3 Out.
+- Transcript manifest on `Beexly/agent-bus` commit `3f68607`: **11/11 sha256 match source, 0 mismatches, 0 missing.**
+
+**Not proven / corrections to the Opus report:**
+- Opus reported "Week 10 has only 20 rows, covering NYG and WAS; 12 teams unloaded." Measured against Neon: Week 10 held 254 rows across 24 teams, and only 4 *playing* teams were missing (BAL, CIN, LAC, SEA). CHI, DEN, PHI, TB are on bye and correctly absent. The 20-row figure does not reproduce.
+- Of the 11 "transcripts", only 3 are real transcriptions: `17893206966611015.transcript.json` (37.4s, 16 segments), `week3-multi-episode-transcripts.md` (14 programs), `master_transcriptions.md` (Luke @lukebuildsai, Whisper). Five are empty stubs (`segments: []`, 7-8s duration), one is a single repeated nonsense line, and two are Grok triage notes, not transcripts.
+- Still missing from the corpus: Drive video transcriptions and the xAI archive. `gdrive` is blocked on the Opus VM; an agent with Drive access must add them.
+
+**Branch-rule finding:** `Beexly/agent-bus` main has `required_approving_review_count: 1` but `enforce_admins: false`, so an admin push bypasses the rule while GitHub still prints "Changes must be made through a pull request". The commit was not let through by a hole in the rule — it was an admin bypass. `Beexly/Sports` main has no protection at all (`Branch not protected`, zero rulesets).
+
+**Next role (Builder / Verifier):**
+- Set `enforce_admins: true` on `agent-bus` if the review rule is meant to bind admins.
+- `scripts/trust-gate.mjs` is still absent from the tree while `AGENTS.md` line 101 mandates it; `feat/hermes-research-wiring-2026-11-11` stays blocked until it is restored, waived, or the branch is parked.
+- Corpus next step per `CORPUS-WIRING-STATUS-OPUS.md`: chunk + embed the 603-paper OCR text into `lit.*` with domain tags, then measure retrieval hit-rate on held-out situational questions before any engine weighting.
