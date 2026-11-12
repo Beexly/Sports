@@ -189,6 +189,20 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     vi.useRealTimers();
   });
 
+  it("the stale backfill runs before the free pass so the drain lane always gets a budget", async () => {
+    // Regression: the backfill used to run AFTER the free pass. The free pass
+    // (1,500 rows/sport, up to 21 date-targeted scoreboard fetches per sport,
+    // one transaction per pick) consumed the whole 300s maxDuration, so the
+    // drain lane never executed — `pick_settlement_events` carried zero
+    // `free-backfill` rows for 14 days while 857 published picks sat overdue.
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    expect(res.status).toBe(200);
+    expect(calls.indexOf("backfillStaleSettlement")).toBeGreaterThan(-1);
+    expect(calls.indexOf("backfillStaleSettlement")).toBeLessThan(
+      calls.indexOf("runFreePathSettlement"),
+    );
+  });
+
   it("with a key present: free pass runs before any paid call, then the paid supplement grades the rest", async () => {
     vi.stubEnv("THE_ODDS_API_KEY", "sk_live_present");
     const res = await GET(new Request("http://x/api/cron/settle-picks"));

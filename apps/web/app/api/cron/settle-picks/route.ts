@@ -163,6 +163,19 @@ export async function GET(request: Request) {
     );
     captureError(healthErr, { path: "settle-picks", stage: "free:health-snapshot" });
   }
+  // ── 1. Stale backfill FIRST (published PENDING picks past the 6h grace) ────
+  // This lane drains the overdue tail and is the only thing that can grade a
+  // pick whose game is older than the free pass's date window. It used to run
+  // AFTER the free pass, and the free pass (up to 1,500 rows per sport, up to
+  // 21 date-targeted scoreboard fetches per sport, one transaction per pick)
+  // routinely consumed the whole 300s maxDuration — so the backfill never
+  // executed and `pick_settlement_events` carried ZERO `free-backfill` rows
+  // for 14 days while 857 published picks sat overdue. Running it first gives
+  // the drain lane a guaranteed budget; it is PENDING-scoped and idempotent,
+  // so the free pass that follows simply grades whatever is left.
+  const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]", requestedSport);
+
+  // ── 2. Free pass ───────────────────────────────────────────────────────────
   const freeScores = await persistFreeScores({ sportKey: requestedSport });
   const free = await runFreePathSettlement({
     sportKey: requestedSport,
@@ -185,8 +198,7 @@ export async function GET(request: Request) {
     );
   }
 
-  // ── 3. Stale backfill (published PENDING picks past the 6h grace, in scope) ─
-  const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]", requestedSport);
+  // ── 3. (stale backfill already ran as step 1, before the free pass) ────────
 
   // ── 3b. Zero-sit lane: every grader has run; unpublish stale unstarted
   // picks and VOID (with an RCA code on the outbox event) what still sits
