@@ -337,6 +337,25 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 **arXiv match rate on the new corpus is 4.5%, not the 46% the original 603 saw.** 26 matches, 1 review, 545 pdf_only out of 572. The reason is composition, not a broken matcher: GSE-Research is mostly pre-arXiv journal work (1971 Operations Research on Football, 2003 Colley Matrix) and Mega-Sweep is books. Those 545 are reported in `pdf_only.jsonl` and get no equation rows, which is the rule working as designed rather than a gap to paper over.
 
+### 2026-11-12 (final) — corpus complete, and a correction to how it was being measured
+
+**The corpus is prose, not equations.** Measured across 3,059 documents: 2,645 (86.5%) are prose only at 367,279,842 chars, 359 (11.7%) carry some math at 125,590,684, 49 (1.6%) are math heavy at 7,736,849. Total 500,607,375 chars. The contextual layer is the bulk of this corpus. Any future report that leads with equation counts is measuring the wrong thing.
+
+**Final state, all verified against Neon:**
+- `lit.corpus_chunk`: **297,559 chunks across 2,557 documents**, 388 MB of text, HNSW indexed.
+- `lit.situation`: **1,665** evidence-quoted triples. analytics 1,043, training 118, situational 105, offense 103, defense 102, personnel 82, special_teams 64, medical 39, other 9. 26 records were dropped across the passes because their quote did not appear in the source chunk.
+- `lit.corpus_statement`: **72,852** statements from 80 books, of which **2,053 are sports-tagged**. Loaded from SITUATIONAL-MASTER-2026-11-10 (102,082 raw) after dropping 25,416 table-of-contents fragments and 3,813 stubs.
+- `lit.equation`: **62,900** unique equations across 515 papers, arXiv LaTeX only.
+- `lit.corpus_item`: 603 paper-level vectors.
+
+**EQUATIONS-MASTER-2026-11-10 was NOT loaded, deliberately.** Sampled 20,000 of its 940,102 rows: 0.04% contain any LaTeX markup, 5.7% are plain prose, 7.4% are under 12 characters. The `equation` field holds raw PDF text lines such as "out, let F = R or F = C, and set β = 1 in the former case". That is the text-layer corruption path the pipeline refuses. Loading it would have inflated a count by 940,102 without adding one usable formula.
+
+**38 pre-OCR'd texts folded in.** `gpu-ocr-output/text/` on Drive held OCR for 38 books and patents (Camp 1900, Daly 1921, Spalding 1915, Yost 1905, Roper 1920, James 1890, Hull 1943, Tolman 1932, Wiener 1950, Halmos 1950, Knight 1921, Galton 1889, Thorp 2006, Dixon-Coles 1997, plus 20 sports and analytics patents). Ingested directly rather than re-OCRing, which saved the vision pass from re-reading roughly 9.7 MB of text it already had.
+
+**Vision OCR** (Qwen4-Max-Preview) is finishing the last image-only files. One personal document (SSN Passport) was marked skipped and kept out of the corpus.
+
+**Still open:** the other agent's lane process stopped at 68 of 190 library books. Their per-book chapter summaries are the one artifact this pipeline does not reproduce; the chunk index covers the same text semantically. 545 catalogued PDFs have no arXiv e-print and therefore no equation rows.
+
 **Corpus index now populated.** `scripts/ops/load_ocr_corpus_to_neon.py` embedded the OCR corpus into `lit.corpus_item` with `baai/bge-m3` via OpenRouter: **603 rows, 1024 dims, HNSW** (`corpus_item_hnsw_idx`, vector_cosine_ops). `corpus_key` is the paper sha256, so re-running upserts instead of duplicating, and `source = 'gse-ocr-2026-11-11'` is the rollback key. One vector per paper over title + an 8,000-char lead: the table holds a single embedding per item, so this is a paper-level index, not a chunk-level one.
 
 Retrieval smoke test passes: seeding on the "assist identification in football" paper returns "Automatic event detection in association football" at 0.820, "Computer Vision for Sports Analytics" at 0.787 and "Automated Offside and Foul" at 0.779. A coherent neighbourhood, not noise. Five of 603 rows have an empty title because those PDFs are books whose OCR starts at Preface/Contents; they were left blank rather than given an invented title.
