@@ -26,6 +26,7 @@ import { loadCharting } from "./charting.js";
 import { loadCoaching } from "./coaching.js";
 import { createCorpusLoader } from "./corpus.js";
 import { homeVenue } from "./venues.js";
+import { loadJevSpine } from "./jev.js";
 
 export const EVIDENCE_CODE_VERSION = "v5.3.1+evidence-spine.1";
 
@@ -38,6 +39,8 @@ export interface BuildBundleOptions {
   readonly codeVersion?: string;
   /** Reuse one corpus loader across a slate so the facet cache is shared. */
   readonly corpus?: ReturnType<typeof createCorpusLoader>;
+  /** Path to a per-game JEV spine file. Absent means zero JEV weight. */
+  readonly jevPath?: string | null;
 }
 
 function mergeInjuries(
@@ -134,9 +137,67 @@ export async function buildBundle(opts: BuildBundleOptions): Promise<GameEvidenc
     homeCoaching,
     awayCoaching,
     corpus,
-    // JEV carries zero weight until a per-game spine file exists for this game.
-    jev: missing("no JEV spine file supplied for this game"),
+    // JEV is DERIVED classifier output with emission weight 0. A missing file
+    // is MISSING, never last month's spine.
+    jev: loadJevSpine(opts.gameId, opts.jevPath ?? null),
     builtAt: now.toISOString(),
     codeVersion,
   };
+}
+
+/**
+ * The reasoning trace.
+ *
+ * Every layer that entered the bundle is listed with its honest status. Nothing
+ * is dropped because it is missing or unpromoted: the doctrine is that gates
+ * govern emission and promotion, never knowledge. A layer with no data appears
+ * here as MISSING with the reason, so the audit trail shows what the engine did
+ * not know as clearly as what it did.
+ */
+export interface TraceEntry {
+  readonly layer: string;
+  readonly status: "REAL" | "DERIVED" | "MISSING";
+  readonly source: string | null;
+  readonly asOf: string | null;
+  readonly detail: string;
+  /** Weight this layer carried in the posterior. Zero for everything today. */
+  readonly emissionWeight: number;
+}
+
+export function buildReasoningTrace(bundle: GameEvidenceBundle): TraceEntry[] {
+  const entries: TraceEntry[] = [];
+  const add = (
+    layer: string,
+    e: Evidence<unknown>,
+    detail: string,
+    emissionWeight = 0,
+  ): void => {
+    entries.push({
+      layer,
+      status: e.status,
+      source: e.status === "MISSING" ? (e.source ?? null) : e.source,
+      asOf: e.asOf ?? null,
+      detail: e.status === "MISSING" ? e.reason : detail,
+      emissionWeight,
+    });
+  };
+
+  add("identity", bundle.identity.venue, `venue ${isPresent(bundle.identity.venue) ? bundle.identity.venue.value : "unknown"}`);
+  add("market.spread", bundle.market.spread, "home-perspective spread");
+  add("market.total", bundle.market.total, "game total");
+  add("market.consensusNoVigHome", bundle.market.consensusNoVigHome, "de-vigged consensus, the prior");
+  add("market.bookmakerCount", bundle.market.bookmakerCount, "books pooled");
+  add("injuries", bundle.injuries, "injury report");
+  add("weather", bundle.weather, "venue forecast");
+  add("rest", bundle.rest, "rest days");
+  add("homeForm", bundle.homeForm, "offensive and defensive EPA per play");
+  add("awayForm", bundle.awayForm, "offensive and defensive EPA per play");
+  add("homeCharting", bundle.homeCharting, "pass-block and run-block win rates");
+  add("awayCharting", bundle.awayCharting, "pass-block and run-block win rates");
+  add("homeCoaching", bundle.homeCoaching, "staff and fourth-down aggression");
+  add("awayCoaching", bundle.awayCoaching, "staff and fourth-down aggression");
+  add("corpus", bundle.corpus, "lit.* grounding, shrink-only");
+  add("jev", bundle.jev, "unvalidated classifier shadow output", 0);
+
+  return entries;
 }

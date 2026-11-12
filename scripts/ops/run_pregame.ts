@@ -34,13 +34,14 @@ import { isPresent, type PregameVerdict } from "@sports/prediction-engine/src/ev
 import { canonicalTeamCode, teamNickname, type NflTeamCode } from "@sports/prediction-engine/src/evidence/team-codes.js";
 import { simulateCoachGame } from "@sports/prediction-engine/src/coach-sim/markov-simulator.js";
 
-import { buildBundle, EVIDENCE_CODE_VERSION } from "../../packages/ingestion-pipeline/src/evidence-loaders/index.js";
+import { buildBundle, buildReasoningTrace, EVIDENCE_CODE_VERSION } from "../../packages/ingestion-pipeline/src/evidence-loaders/index.js";
 
 interface Args {
   week: number;
   game: string;
   out: string | null;
   dbUrl: string | null;
+  jev: string | null;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -48,6 +49,7 @@ function parseArgs(argv: readonly string[]): Args {
   let game: string | null = null;
   let out: string | null = null;
   let dbUrl: string | null = null;
+  let jev: string | null = null;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     const next = argv[i + 1];
@@ -63,11 +65,14 @@ function parseArgs(argv: readonly string[]): Args {
     } else if (a === "--db-url" && next !== undefined) {
       dbUrl = next;
       i += 1;
+    } else if (a === "--jev" && next !== undefined) {
+      jev = next;
+      i += 1;
     }
   }
   if (week === null || Number.isNaN(week)) throw new Error("--week <n> is required");
   if (game === null || !game.includes("@")) throw new Error("--game AWAY@HOME is required");
-  return { week, game, out, dbUrl };
+  return { week, game, out, dbUrl, jev };
 }
 
 function log(line: string): void {
@@ -122,7 +127,7 @@ async function main(): Promise<number> {
   log(`started ${now.toISOString()}`);
 
   // ---- Stage A -----------------------------------------------------------
-  const bundle = await buildBundle({ db, gameId, now });
+  const bundle = await buildBundle({ db, gameId, now, jevPath: args.jev });
   log("");
   log("STAGE A — evidence");
   const rows: Array<[string, string, string, string]> = [
@@ -151,9 +156,17 @@ async function main(): Promise<number> {
   log("");
   log(`STAGE B — ${describeCompleteness(report)}`);
 
+  const reasoningTrace = buildReasoningTrace(bundle);
+  const publicationAuthority = {
+    publishable: false,
+    blockedBy: ["walk_forward_emission_gate_closed"],
+  };
+
   const outputs: Record<string, unknown> = {
     verdict: "MISSING_DATA" as PregameVerdict,
     completeness: report,
+    reasoningTrace,
+    publicationAuthority,
     publishable: false,
   };
 
@@ -235,6 +248,8 @@ async function main(): Promise<number> {
   const finalOutputs = {
     verdict,
     completeness: report,
+    reasoningTrace,
+    publicationAuthority,
     projection,
     familyDeltas,
     marketPrior,

@@ -245,17 +245,32 @@ const CHUNK_BY_VECTOR_SQL = `
    ORDER BY embedding <=> $1::vector
    LIMIT $2`;
 
+/**
+ * Seeded nearest-neighbour search.
+ *
+ * The seed is read as an UNCORRELATED scalar subquery, not as a joined CTE.
+ * `FROM lit.corpus_chunk c, seed` forced a Nested Loop + Seq Scan over all
+ * 297,326 rows even though `corpus_chunk_hnsw_idx` exists; the scalar form lets
+ * the planner use `Index Scan using corpus_chunk_hnsw_idx ... Order By
+ * (embedding <=> (InitPlan))`, which is what makes grounding fast.
+ *
+ * The `(SELECT embedding FROM seed) IS NOT NULL` guard matters: a corpus_key
+ * that is a statement-to-situation MD5 is not in corpus_chunk, so the seed is
+ * NULL and `<=>` would return NULL for every row, ordering the whole table
+ * arbitrarily. With the guard the query returns nothing, which is the truth.
+ */
 const CHUNK_SEEDED_SQL = `
   WITH seed AS (
     SELECT embedding FROM lit.corpus_chunk
      WHERE corpus_key = $1 AND chunk_index = $2 AND embedding IS NOT NULL
      LIMIT 1)
   SELECT c.corpus_key, c.chunk_index, c.title, c.chunk_text,
-         (1 - (c.embedding <=> seed.embedding))::float8 AS similarity
-    FROM lit.corpus_chunk c, seed
+         (1 - (c.embedding <=> (SELECT embedding FROM seed)))::float8 AS similarity
+    FROM lit.corpus_chunk c
    WHERE c.embedding IS NOT NULL
+     AND (SELECT embedding FROM seed) IS NOT NULL
      AND NOT (c.corpus_key = $1 AND c.chunk_index = $2)
-   ORDER BY c.embedding <=> seed.embedding
+   ORDER BY c.embedding <=> (SELECT embedding FROM seed)
    LIMIT $3`;
 
 function clip(text: string, n = 600): string {

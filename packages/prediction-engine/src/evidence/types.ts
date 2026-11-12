@@ -173,6 +173,12 @@ export interface JevSpineRecord {
   readonly generatedAt: string;
   readonly contentHash: string;
   readonly snapCount: number;
+  /** e.g. "UNVALIDATED_CLASSIFIER_SHADOW". Never presented as measured data. */
+  readonly label: string;
+  /** Always 0 until the spine is validated against settled outcomes. */
+  readonly emissionWeight: number;
+  /** The delta the spine would have contributed. Logged, never applied. */
+  readonly diagnosticDelta: number;
 }
 
 // ---------------------------------------------------------------------------
