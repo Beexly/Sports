@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import * as assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -34,6 +34,15 @@ const PACKAGES = resolve(PE_SRC, "..", "..");
 const SCAN_ROOTS: readonly string[] = [
   resolve(PE_SRC, "evidence"),
   resolve(PACKAGES, "ingestion-pipeline", "src", "evidence-loaders"),
+];
+
+/**
+ * Single files that are part of the probability path but live outside the two
+ * directories above. The entrypoint is where a fallback would do the most
+ * damage, because it is the last place before the seal.
+ */
+const SCAN_FILES: readonly string[] = [
+  resolve(PACKAGES, "..", "scripts", "ops", "run_pregame.ts"),
 ];
 
 const PACKAGE_ROOT_INDEX = resolve(PE_SRC, "index.ts");
@@ -381,6 +390,10 @@ function scanAll(detector: (source: string) => SourceHit[]): string[] {
     for (const file of collectSourceFiles(root)) {
       violations.push(...formatHits(file, detector(readFileSync(file, "utf8"))));
     }
+  }
+  for (const file of SCAN_FILES) {
+    if (!existsSync(file)) continue;
+    violations.push(...formatHits(file, detector(readFileSync(file, "utf8"))));
   }
   return violations;
 }
