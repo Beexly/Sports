@@ -327,6 +327,16 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 **In flight at handoff:** extraction of 3,132 PDFs (~550/852 through the first root), chunk embedding of the 603-paper set (19,728 of 32,681 chunks at 59%), and arXiv matching. All three are resumable; re-running any command skips completed work.
 
+**Progress at 2026-11-12 09:00 (all measured against Neon, not asserted):**
+- `lit.corpus_chunk`: **149,844 chunks across 1,578 documents**, HNSW built. The 603-paper set alone is 32,681 chunks; the rest is GSE-Research and the Mega-Sweep book corpus.
+- `lit.situation`: **569 records** (analytics 270, training 53, personnel 33, situational 32, offense 30, defense 28, medical 16, special_teams 11). 15 records were dropped because their quote did not appear in the source chunk, which is the guard doing its job.
+- `lit.equation`: **62,900 unique equations** across 515 papers (8,002 display, 54,898 inline).
+- PDF extraction: 1,395 of ~3,132 done, 0 hard failures beyond 2 unreadable files. GSE-Research complete at 852/852; Mega-Sweep books complete; GSN in progress.
+
+**Retrieval is now returning football, not noise.** Before the books landed, a query about coverage shells returned helmet-design papers at 0.466. After: "Football" book chunks on half-back and tackle assignments, "Fast Hybrid Search for Red-Zone Play Recommendations", and "Exploiting Early Intent Recognition" on formation/play structure, at 0.52-0.53.
+
+**arXiv match rate on the new corpus is 4.5%, not the 46% the original 603 saw.** 26 matches, 1 review, 545 pdf_only out of 572. The reason is composition, not a broken matcher: GSE-Research is mostly pre-arXiv journal work (1971 Operations Research on Football, 2003 Colley Matrix) and Mega-Sweep is books. Those 545 are reported in `pdf_only.jsonl` and get no equation rows, which is the rule working as designed rather than a gap to paper over.
+
 **Corpus index now populated.** `scripts/ops/load_ocr_corpus_to_neon.py` embedded the OCR corpus into `lit.corpus_item` with `baai/bge-m3` via OpenRouter: **603 rows, 1024 dims, HNSW** (`corpus_item_hnsw_idx`, vector_cosine_ops). `corpus_key` is the paper sha256, so re-running upserts instead of duplicating, and `source = 'gse-ocr-2026-11-11'` is the rollback key. One vector per paper over title + an 8,000-char lead: the table holds a single embedding per item, so this is a paper-level index, not a chunk-level one.
 
 Retrieval smoke test passes: seeding on the "assist identification in football" paper returns "Automatic event detection in association football" at 0.820, "Computer Vision for Sports Analytics" at 0.787 and "Automated Offside and Foul" at 0.779. A coherent neighbourhood, not noise. Five of 603 rows have an empty title because those PDFs are books whose OCR starts at Preface/Contents; they were left blank rather than given an invented title.
