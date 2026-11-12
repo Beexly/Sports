@@ -376,7 +376,7 @@ def _rewrite_latex_macros(expr: str) -> str:
     for cmd in (
         "\\left", "\\right", "\\bigl", "\\bigr", "\\Bigl", "\\Bigr",
         "\\biggl", "\\biggr", "\\Biggl", "\\Biggr", "\\big", "\\Big",
-        "\\displaystyle", "\\textstyle", "\\,", "\\;", "\\:", "\\!", "\\quad", "\\qquad",
+        "\\displaystyle", "\\textstyle", "\\scriptstyle", "\\small", "\\footnotesize", "\\normalsize", "\\large", "\\bf", "\\rm", "\\,", "\\;", "\\:", "\\!", "\\quad", "\\qquad",
     ):
         s = s.replace(cmd, " ")
     s = s.replace("\\cdot", "*").replace("\\times", "*").replace("\\div", "/")
@@ -384,7 +384,7 @@ def _rewrite_latex_macros(expr: str) -> str:
 
     # Flatten \text{...}, \mathrm{...}, \mathbf{...}, \operatorname{...}, \hat{x}, \bar{x}, \tilde{x}
     for _ in range(8):
-        m = re.search(r"\\(text|mathrm|mathbf|mathit|mathsf|mathcal|mathbb|boldsymbol|operatorname|hat|widehat|bar|overline|tilde|widetilde|vec)\s*\{", s)
+        m = re.search(r"\\(text|mathrm|mathbf|mathit|mathsf|mathcal|mathbb|mathfrak|mathtt|textbf|textit|textrm|mbox|bm|boldsymbol|operatorname|hat|widehat|bar|overline|tilde|widetilde|vec)\s*\{", s)
         if not m:
             break
         brace_pos = m.end() - 1
@@ -393,7 +393,12 @@ def _rewrite_latex_macros(expr: str) -> str:
             break
         inner, end_pos = got
         cmd_name = m.group(1)
-        clean_inner = re.sub(r"[^A-Za-z0-9_]", "_", inner.strip()).strip("_") or "x"
+        clean_inner = re.sub(r"[^A-Za-z0-9_]", "_", inner.strip()).strip("_")
+        if not clean_inner:
+            # Punctuation-only wrapper (e.g. `\mbox{ ,}`): contributes no symbol.
+            # Inventing one would silently change the equation.
+            s = s[: m.start()] + " " + s[end_pos:]
+            continue
         if cmd_name in ("hat", "widehat", "bar", "overline", "tilde", "widetilde", "vec"):
             repl = f"{clean_inner}_{cmd_name[:3]}"
         elif cmd_name == "operatorname" and clean_inner in SUPPORTED_UNARY_FUNCTIONS:
