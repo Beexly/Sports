@@ -1,0 +1,45 @@
+{
+  "directive": "hermes_overnight_goal_2026_11_12.md",
+  "updated_at_ct": "2026-11-13T02:05:00-06:00",
+  "branch": "hermes/week10-master-launch-2026-11-13",
+  "worktree": "C:/Users/Garrett/Sports-main-merge",
+  "base": "origin/main 33c0020a9",
+  "cost_spent_usd": 0,
+  "work_packages": {
+    "WP-0": {
+      "status": "in_progress",
+      "done": [
+        "carry-forward merges (research-wiring b2cd28b9a, opus/corpus-wiring 46afcad0, PR-1272 2293655fc)",
+        "CI fixes: TS2532 tuples, TS18048 activeStage guard, pyyaml epistemic gate",
+        "tsc prediction-engine exit 0; tsc apps/web zero errors; 54 vitest tests green; shell-defensive PASS",
+        "watch-warm */3 -> */10 both vercel.json + manifest; quiet-window guard in 4 cron routes (4/4 tests)",
+        "neon_workflow.yml delete job always() + fallback + continue-on-error",
+        "Neon branches pruned: mve-experiment, hermes-census-20260818 (36 -> 34)"
+      ],
+      "remaining": [
+        "live settlement: TNF UNDER 43.5 + 5 Week 9 SCHEDULED rows + 97 PENDING drain",
+        "pick_quarantine_audit DDL + Q1/Q2 quarantine + hard write gate",
+        "duplicate game-row check (no merge executed yet)"
+      ],
+      "discrepancies": [
+        "29-orphan-branch claim false: most pr-1219..1271 PRs still OPEN; kept their branches",
+        "Week 9 pending NFL rows: 5 actual vs 11 claimed"
+      ]
+    },
+    "WP-1": { "status": "pending", "lane": "injury/roster freshness + player_gp denominators" },
+    "WP-2": { "status": "pending", "lane": "corpus retrieval gates (HNSW cost, semantic, verbatim quotes)" },
+    "WP-3": { "status": "pending", "lane": "equation executor + Sinkhorn kernels" },
+    "WP-4": { "status": "pending", "lane": "odds de-vig + market breadth (77 DK types)" },
+    "WP-5": { "status": "pending", "lane": "two-door pricing + publication gate wiring" },
+    "WP-6": { "status": "pending", "lane": "purged OOF calibration fit + placebo" },
+    "WP-7": { "status": "pending", "lane": "verify_all_ten_gates.sh — script does not exist yet, must be built" },
+    "WP-8": { "status": "blocked_until_WP7_10_of_10", "lane": "full-board sim + commitments + deploy + morning packet" }
+  },
+  "hard_rules": [
+    "WP-8 simulation only after WP-7 10/10 gates exit 0",
+    "REFUSE_PROJECTION on any red gate; no fake confidence penalties",
+    "no pick publication without full 5-stage + snap-by-snap JEV sim",
+    "public surfaces: /packages (paid) + /fantasy/dfs only",
+    "zero fabricated data; PASS is a valid outcome"
+  ]
+}

@@ -119,7 +119,7 @@
     },
     {
       "path": "/api/cron/watch-warm",
-      "schedule": "*/3 * * * *"
+      "schedule": "*/10 * * * *"
     },
     {
       "path": "/api/cron/props-slate-shadow",
@@ -195,6 +195,10 @@
     {
       "source": "/((?!embed$|embed/).*)",
       "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com https://pagead2.googlesyndication.com https://www.googletagservices.com https://partner.googleadservices.com https://tpc.googlesyndication.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com https://pagead2.googlesyndication.com https://*.g.doubleclick.net https://ep1.adtrafficquality.google; frame-src https://js.stripe.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com; worker-src 'self' blob:; upgrade-insecure-requests"
+        },
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"

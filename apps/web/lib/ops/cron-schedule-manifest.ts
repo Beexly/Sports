@@ -186,10 +186,13 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // 10 min: ESPN scoreboard poll -> watch.games upsert -> Space warm-ping ->
   // scheduler_runs heartbeat. Bearer-only cron auth, like every mutating cron.
   cronEntry("/api/cron/watch-scheduler", "*/10 * * * *"),
-  // CV watch-loop Space warm ping (motif/watch-loop-2026-10-01). Every 3 min:
-  // warm-pings the HF Space /health while a window is active or arming, so it
-  // never cold-starts mid-drive. Writes only the scheduler_runs heartbeat.
-  cronEntry("/api/cron/watch-warm", "*/3 * * * *"),
+  // CV watch-loop Space warm ping (motif/watch-loop-2026-10-01). Every 10 min
+  // (2026-11-13: was */3, which beat Neon's 300s autosuspend and kept the
+  // compute awake 24/7): warm-pings the HF Space /health while a window is
+  // active or arming, so it never cold-starts mid-drive. Writes only the
+  // scheduler_runs heartbeat, and skips it in the 02:30–06:30 CT quiet window
+  // when no game is live (lib/cron/neon-quiet-window.ts).
+  cronEntry("/api/cron/watch-warm", "*/10 * * * *"),
   // Props slate shadow runner (motif/audit-fix-props-2026-10-01). Hourly at
   // :25: runs the GSE 4-Beat props pipeline in shadow mode. Env-gated
   // (default OFF), never persists, never publishes.

@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { isNeonQuietWindow } from "@/lib/cron/neon-quiet-window";
 import {
   isInNflWireSeason,
   refreshWireFromRoster,
@@ -35,6 +36,17 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({
         ok: true,
         skipped: "out-of-season",
+        season: wireSeasonLabel(now),
+      });
+    }
+    // Neon quiet window (2026-11-13): 02:30–06:30 CT has no live games in any
+    // major sport (latest NFL/MNF ends ~00:30 CT, NBA/NHL west-coast ~01:30).
+    // Wire ingest is cumulative — the next tick after the window catches up
+    // on every report — so skip the Neon writes and let the compute sleep.
+    if (isNeonQuietWindow(now)) {
+      return NextResponse.json({
+        ok: true,
+        skipped: "neon-quiet-window",
         season: wireSeasonLabel(now),
       });
     }

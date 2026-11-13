@@ -14,6 +14,7 @@
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { isNeonQuietWindow } from "@/lib/cron/neon-quiet-window";
 import { db } from "@sports/db";
 import {
   fetchUpcomingWindows,
@@ -44,6 +45,13 @@ export async function GET(request: Request) {
   const nowMs = Date.now();
   const active = getActiveWindows(windows, nowMs);
   const upcoming = nextWindow(windows, nowMs);
+
+  // Neon quiet window (2026-11-13): 02:30–06:30 CT with zero live games =>
+  // skip every watch.* write so gse-postgres can autosuspend. Window state
+  // upserts resume on the next tick; nothing live is happening in this window.
+  if (active.length === 0 && isNeonQuietWindow(new Date(nowMs))) {
+    return NextResponse.json({ ok: true, skipped: "neon-quiet-window", windows: windows.length, active: [] });
+  }
 
   // Every DB write below is guarded. The watch.* schema is applied by a
   // founder (see watch-schema.sql); until then these statements fail, and an
