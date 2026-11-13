@@ -84,8 +84,16 @@ export function CausalLoopedFunnelExplorer({
     );
   }
 
+  // Bind the first stage to a local so the compiler keeps the proof that the
+  // array is non-empty: `stages[safeIdx]` alone is `FunnelStageSummary |
+  // undefined` under noUncheckedIndexedAccess, and the eight reads below the
+  // tabpanel would each need their own guard. `safeIdx` is clamped into range,
+  // so the `?? firstStage` fallback is unreachable — it exists to carry the
+  // narrow, not to change behaviour.
+  const [firstStage] = stages;
+  if (!firstStage) return null;
   const safeIdx = Math.min(Math.max(selectedIdx, 0), stages.length - 1);
-  const activeStage = stages[safeIdx];
+  const activeStage = stages[safeIdx] ?? firstStage;
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "ArrowRight") {
