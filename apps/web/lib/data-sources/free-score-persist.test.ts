@@ -463,11 +463,14 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
 
     const nflResult = result.sports.find((s) => s.sport === "americanfootball_nfl")!;
     expect(nflResult.ok).toBe(true);
-    // Game was matched (final found) but NOT updated (DB write skipped on denial)
-    expect(nflResult.gamesMatched).toBe(1);
+    // Storage denied → hoisted gate skips load AND fetch (settlement-stall RCA
+    // 2026-11-12): no write was ever possible, so no budget is spent trying.
+    expect(nflResult.gamesMatched).toBe(0);
     expect(nflResult.gamesUpdated).toBe(0);
+    expect(nflResult.error).toMatch(/storage not cleared/);
     expect(result.gamesUpdated).toBe(0);
     expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+    expect(mocks.fetchScoresMultiSourceMock).not.toHaveBeenCalled();
 
     // Ingestion run still recorded (best-effort)
     expect(mocks.dbIngestionRunCreate).toHaveBeenCalledWith(

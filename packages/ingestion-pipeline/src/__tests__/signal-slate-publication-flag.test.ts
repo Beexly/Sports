@@ -202,8 +202,12 @@ describe("generate-signal-slate publication flag (C-92)", () => {
     // the gate's value - asserted both ways so neither direction can rot.
     mocks.pickFindUnique.mockResolvedValue(null);
     await runSlate();
+    // L5 (2026-11-12): an open readiness gate is no longer sufficient. The
+    // fail-closed publication gate also requires a sealed publishable verdict
+    // and an open walk-forward emission gate, neither of which exists here,
+    // so even the "open" direction creates the row unpublished.
     expect((mocks.pickCreate.mock.calls[0]?.[0] as { data: Record<string, unknown> }).data)
-      .toMatchObject({ isPublished: true });
+      .toMatchObject({ isPublished: false });
 
     vi.clearAllMocks();
     mocks.canExpose.value = false;

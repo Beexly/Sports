@@ -225,7 +225,9 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
     mocks.pickFindUnique.mockResolvedValue(null);
     await runSlate();
     const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { confidence: number; tier: string; isPublished: boolean } };
-    expect(args.data.isPublished).toBe(true); // gates.canExposePublicPicks (mocked true)
+    // L5 (2026-11-12): readiness gate open is not enough; the fail-closed
+    // publication gate (no sealed verdict, emission gate closed) keeps it false.
+    expect(args.data.isPublished).toBe(false);
     expect(args.data.confidence).toBeGreaterThanOrEqual(70);
     expect(args.data.tier).toBe("PREMIUM");
   });

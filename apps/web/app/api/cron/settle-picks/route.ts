@@ -175,13 +175,53 @@ export async function GET(request: Request) {
   // so the free pass that follows simply grades whatever is left.
   const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]", requestedSport);
 
-  // ── 2. Free pass ───────────────────────────────────────────────────────────
-  const freeScores = await persistFreeScores({ sportKey: requestedSport });
-  const free = await runFreePathSettlement({
-    sportKey: requestedSport,
-    graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
-    ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
-  });
+  // Heartbeat + fault isolation (settlement-stall RCA 2026-11-12). These used
+  // to be bare awaits: one throw killed the whole cycle with nothing recorded.
+  const step1StartedMs = Date.now();
+  console.info(`[cron:settle-picks] HEARTBEAT step=free:persist-scores start sport=${requestedSport ?? "all"}`);
+  let freeScores: Awaited<ReturnType<typeof persistFreeScores>>;
+  try {
+    freeScores = await persistFreeScores({ sportKey: requestedSport });
+  } catch (persistErr) {
+    const message = persistErr instanceof Error ? persistErr.message : String(persistErr);
+    console.error(`[cron:settle-picks] free:persist-scores threw — continuing to free settlement: ${message}`);
+    captureError(persistErr, { path: "settle-picks", stage: "free:persist-scores" });
+    // The score-persist pass is optional: runFreePathSettlement fetches and
+    // writes finals inside its own transaction, so grading continues.
+    freeScores = {
+      path: "free-score-persist",
+      oddsApiRequired: false,
+      elapsedMs: Date.now() - step1StartedMs,
+      sports: [],
+      gamesUpdated: 0,
+      ingestionRunId: null,
+    };
+  }
+  console.info(
+    `[cron:settle-picks] HEARTBEAT step=free:settle start elapsedMs=${Date.now() - step1StartedMs} ` +
+      `scoresUpdated=${freeScores.gamesUpdated}`,
+  );
+  let free: Awaited<ReturnType<typeof runFreePathSettlement>>;
+  try {
+    free = await runFreePathSettlement({
+      sportKey: requestedSport,
+      graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
+      ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
+    });
+  } catch (settleErr) {
+    // No honest fallback exists for the RCA/STP payload, so record and rethrow.
+    // The failure is no longer silent.
+    console.error(
+      `[cron:settle-picks] free:settle threw after ${Date.now() - step1StartedMs}ms: ` +
+        `${settleErr instanceof Error ? settleErr.message : settleErr}`,
+    );
+    captureError(settleErr, { path: "settle-picks", stage: "free:settle" });
+    throw settleErr;
+  }
+  console.info(
+    `[cron:settle-picks] HEARTBEAT step=free:settle done elapsedMs=${Date.now() - step1StartedMs} ` +
+      `settled=${free.picksSettled} held=${free.picksHeld}`,
+  );
 
   // ── 2. Paid supplement (key present, not forced free) ─────────────────────
   // PENDING-scoped like the free pass; grades only what the free pass left.

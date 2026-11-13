@@ -43,6 +43,7 @@ import { envWithStoredSignals } from "./stored-signal-env-bridge.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
 import { emissionBlocked, zeroEmissionNote } from "./walk-forward-emission-gate.js";
+import { publicationAllowed } from "./publication-gate.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -963,7 +964,10 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
             // that old cannot know about a quarterback change, and the pick
             // still shipped. `isPublished` here is the GATE's value AND this
             // row's value; they are no longer the same statement.
-            isPublished: gates.canExposePublicPicks && !publicationVeto,
+            // L5 (2026-11-12): and the fail-closed publication gate, same
+            // conjunction as process-sport.ts. Without a sealed publishable
+            // verdict and an open walk-forward emission gate this is false.
+            isPublished: gates.canExposePublicPicks && !publicationVeto && publicationAllowed(),
             isBootstrap: !gates.canPersistCanonicalHistory,
             isFeatured: false,
             generatedAt: now,
