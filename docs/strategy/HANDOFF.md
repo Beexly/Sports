@@ -259,7 +259,7 @@ runs rewrite tracked outputs (verdicts json, brain/feeds runtime feed); revert a
 ## 2026-11-05 - Conformal-OT v2.0 MIMIC-IV pilot: NEGATIVE result (Antigravity)
 
 **Done:** galaxy_conformal_ot/wasserstein_mahalanobis_whitening.py (causal multi-frame covariance features, RFF kernel Mahalanobis,
-split-conformal, entropic-OT counterfactual) + enchmarks/clinical_mimic_iv_v2_benchmark.py (10x5 CV, all out-of-fold) + 8 new tests (22/22 pass).
+split-conformal, entropic-OT counterfactual) + benchmarks/clinical_mimic_iv_v2_benchmark.py (10x5 CV, all out-of-fold) + 8 new tests (22/22 pass).
 Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 
 **Result:** v2 out-of-fold AUC 0.49-0.58 vs shock-index anchor 0.62-0.69. It did NOT beat baseline. v1's 0.7721 was in-sample hand weights, never CV.
@@ -299,3 +299,100 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 - **2026-11-13 (Hermes takeover cycle — settlement drain unblocked):** The stale-settlement backfill had never written a single row. Three defects, each found by reading production logs rather than the code: (1) it ran AFTER the free pass, which consumes the route's 300s `maxDuration`, so it never executed — moved to step 1; (2) `persistInTx` called `$transaction` through a detached reference, losing `this`, so Prisma threw `Cannot read properties of undefined (reading '_engineConfig')` before any write; (3) `pickSettlementEvent.create()` hit `pickId @unique` (P2002) for any pick that was settled, withdrawn and re-opened, rolling the transaction back — now an upsert that resets the row to PENDING so the outbox re-announces the corrected outcome. A read-only replay of the lane against production data grades 145 of the oldest 200 overdue picks (NCAAF 62, NHL 56, NBA 16, NFL 11), so the grader was never the problem. Tests: `settle-backfill.test.ts` 25/25, `settle-picks-free-first.test.ts` 17/17 (new ordering + `$transaction` receiver + P2002 regressions). Live on production at `93beacc77`; the 18:20 CT cycle confirmed the `_engineConfig` crash gone and surfaced the P2002 wall, which the upsert commit closes. **Next role:** confirm `pick_settlement_events` carries `free-backfill` rows after the next `:20` cycle and watch the overdue count fall from 857.
 
 - **2026-11-13 (Hermes takeover cycle C2 — ingestion run killers):** Two defects were failing production ingestion runs, neither in the grader. (1) When the Odds API payment circuit was open, an unconditional `oddsProviderTag = "paid-circuit-open"` overwrote a board the keyless path had already fetched as `espn_public`. `isEspnPrimary` then read false, so ESPN rows (which carry no upstream `last_update`) went through the upstream-timestamp freshness gate: every row parsed Invalid, `unparseableTimestamps` equalled `rows`, and the whole run failed "Upstream odds are stale". Measured: 31 NCAAF and 43 NCAAB FAILED runs in 48h. The tag is now only claimed when no board was sourced. (2) `supersedeUnpublishedPendingPick` used `pickSettlementEvent.create()`, whose `pickId` is `@unique`; a slot holder voided, re-opened and voided again still owns its event row, so P2002 rolled back the mint transaction and marked the run FAILED ~4s in, hourly on `basketball_nba`. It now upserts and resets the row to PENDING so the outbox re-announces the current void; the paid settle lane in `settle-sport.ts` had the same `create()` and got the same fix. Tests: `process-sport` 88/88 (new regression fails without the tag fix), `supersede-unpublished-pick` 4/4, `settle-sport` 66/66, full ingestion-pipeline 1579 passed. Settlement drain verified still healthy first: 84 published PENDING, 0 overdue past 6h, 704 `free-backfill` events in 24h. Live at `2c7377837` on `origin/main`. **Next role:** confirm the next NCAAF/NCAAB/NBA cycles land SUCCESS in `ingestion_runs` and that no new `paid-circuit-open` tag appears on a run that sourced ESPN events.
+---
+
+## 2026-11-12 — Week 10 injury ingest repaired, transcript verification, cron repointed (Hermes)
+
+**Changed:**
+- `scripts/ops/ingest_week10_injuries.py` — the loader was a no-op that printed `Success`. Four defects: `rightsSnapshot` was `str(dict)` (single quotes) so the jsonb cast failed; `playerId` violated `injuries_playerId_fkey` for ESPN ids absent from `players`; psql args were passed without the `--` separator so `neon` swallowed `-f` and executed nothing while returning rc=0; MSYS `/c/...` paths were handed to Python `open()` and to the native `neon` binary. Fixed all four, plus Rams `LAR`→`LA` to match weeks 1-9, and failure detection now treats `ERROR:` in output as failure.
+- `hermes cron edit 9cbc1ee94767` — `takeover-build-loop` was pinned to `stealth/crouton-alpha`, retired with HTTP 404. `failure_streak` was 15, so autonomous Sports work had been dead ~60h. Repointed to `deepseek/deepseek-v4.1-flash` on openrouter; model verified live (`OK`, 49 tokens, $0.000006).
+- `docs/strategy/HANDOFF.md` — removed a stray backspace byte at offset 25842 that made the file unreadable to the edit tooling.
+
+**Proven:**
+- Week 10 injuries: 254 rows / 24 teams → **800 rows / 32 teams**. Stale `10:00:38` batch (254 rows) deleted; `LA` normalised; 2026 total 3,075 → 3,621. The four teams that were playing with zero injury rows (BAL, CIN, LAC, SEA) now have 25 each.
+- TNF `WSH @ NYG` (2026-11-13 01:15Z) has full injury coverage: NYG 21 Active / 2 Out / 2 Questionable, WAS 19 Active / 3 IR / 3 Out.
+- Transcript manifest on `Beexly/agent-bus` commit `3f68607`: **11/11 sha256 match source, 0 mismatches, 0 missing.**
+
+**Not proven / corrections to the Opus report:**
+- Opus reported "Week 10 has only 20 rows, covering NYG and WAS; 12 teams unloaded." Measured against Neon: Week 10 held 254 rows across 24 teams, and only 4 *playing* teams were missing (BAL, CIN, LAC, SEA). CHI, DEN, PHI, TB are on bye and correctly absent. The 20-row figure does not reproduce.
+- Of the 11 "transcripts", only 3 are real transcriptions: `17893206966611015.transcript.json` (37.4s, 16 segments), `week3-multi-episode-transcripts.md` (14 programs), `master_transcriptions.md` (Luke @lukebuildsai, Whisper). Five are empty stubs (`segments: []`, 7-8s duration), one is a single repeated nonsense line, and two are Grok triage notes, not transcripts.
+- Still missing from the corpus: Drive video transcriptions and the xAI archive. `gdrive` is blocked on the Opus VM; an agent with Drive access must add them.
+
+**Branch-rule finding:** `Beexly/agent-bus` main has `required_approving_review_count: 1` but `enforce_admins: false`, so an admin push bypasses the rule while GitHub still prints "Changes must be made through a pull request". The commit was not let through by a hole in the rule — it was an admin bypass. `Beexly/Sports` main has no protection at all (`Branch not protected`, zero rulesets).
+
+**Next role (Builder / Verifier):**
+- Set `enforce_admins: true` on `agent-bus` if the review rule is meant to bind admins.
+- `scripts/trust-gate.mjs` was reported missing and blocked the branch for a day. It was never missing: the gate lives at `scripts/guardrails/trust-gate.mjs` and has full history. `AGENTS.md` line 101 plus 13 other docs invoke the shorter path, so a 7-line forwarding shim now sits at `scripts/trust-gate.mjs`. All three mandated gates pass: trust-gate 4,712 files / 0 banned phrases, lint-rules 0 violations, dossier guard PASS.
+- Corpus next step per `CORPUS-WIRING-STATUS-OPUS.md`: chunk + embed the 603-paper OCR text into `lit.*` with domain tags, then measure retrieval hit-rate on held-out situational questions before any engine weighting.
+
+### 2026-11-12 (later) — full corpus sweep: every PDF, every word, every situation, every equation
+
+**Scope measured, not assumed.** `rclone lsf` over `gdrive:` returns **3,457 PDFs / 15.38 GB**. The 603 already OCR'd left **2,854 PDFs / 14.02 GB** untouched. The 503-book registry matches 449 Drive PDFs, of which 448 sit inside the sweep roots (one Cambridge Core paper was outside and was added).
+
+**Built:**
+- `scripts/ops/extract_all_pdfs.py` — resumable pymupdf text extraction over the G: mount. Native text was already good: median 2,660 chars/page, roughly 4% of PDFs image-only and queued to `needs_ocr.jsonl`.
+- `reconciliation/20261112_lit_corpus_chunk.sql` — new `lit.corpus_chunk` table, one vector per ~1,500-char window with HNSW. `lit.corpus_item` holds one vector per document and cannot answer "where in which book does it say X"; this can.
+- `scripts/ops/chunk_and_embed_corpus.py` — paragraph-aware chunker plus bge-m3 embedding. Two defects fixed during bring-up: a missing `now()` in the value tuple (INSERT had 12 target columns and 11 expressions), and an insert path that spawned one `neon psql` per batch. The embedded TypeScript psql costs ~30s of startup per call, which capped throughput at 1 chunk/s; switching to a single psycopg2 connection with `execute_values` took it to ~16 chunks/s, a 15x improvement.
+- `reconciliation/20261112_lit_situation.sql` + `scripts/ops/extract_situations.py` — situation -> decision -> lesson triples in `lit.situation`, each pinned to a verbatim evidence quote. A record whose quote is not found in its source chunk is dropped, so the table cannot accumulate plausible inventions. A keyword gate keeps the model bill proportional to the football-relevant share (measured 7.4% of chunks).
+- `scripts/ops/extend_equation_catalog.py` — arXiv match then e-print LaTeX equation extraction for the newly extracted papers, resumable at catalog / match / extract.
+
+**Honesty rule carried forward:** equations are still taken only from arXiv e-print LaTeX. The original pipeline records reconstructing math from PDF text as a verified corruption path, and that rule is unchanged. Papers with no e-print source land in `pdf_only.jsonl` and are reported, not guessed. Books therefore have full text and embeddings but no equation records until a math-OCR path exists.
+
+**In flight at handoff:** extraction of 3,132 PDFs (~550/852 through the first root), chunk embedding of the 603-paper set (19,728 of 32,681 chunks at 59%), and arXiv matching. All three are resumable; re-running any command skips completed work.
+
+**Progress at 2026-11-12 09:00 (all measured against Neon, not asserted):**
+- `lit.corpus_chunk`: **149,844 chunks across 1,578 documents**, HNSW built. The 603-paper set alone is 32,681 chunks; the rest is GSE-Research and the Mega-Sweep book corpus.
+- `lit.situation`: **569 records** (analytics 270, training 53, personnel 33, situational 32, offense 30, defense 28, medical 16, special_teams 11). 15 records were dropped because their quote did not appear in the source chunk, which is the guard doing its job.
+- `lit.equation`: **62,900 unique equations** across 515 papers (8,002 display, 54,898 inline).
+- PDF extraction: 1,395 of ~3,132 done, 0 hard failures beyond 2 unreadable files. GSE-Research complete at 852/852; Mega-Sweep books complete; GSN in progress.
+
+**Retrieval is now returning football, not noise.** Before the books landed, a query about coverage shells returned helmet-design papers at 0.466. After: "Football" book chunks on half-back and tackle assignments, "Fast Hybrid Search for Red-Zone Play Recommendations", and "Exploiting Early Intent Recognition" on formation/play structure, at 0.52-0.53.
+
+**arXiv match rate on the new corpus is 4.5%, not the 46% the original 603 saw.** 26 matches, 1 review, 545 pdf_only out of 572. The reason is composition, not a broken matcher: GSE-Research is mostly pre-arXiv journal work (1971 Operations Research on Football, 2003 Colley Matrix) and Mega-Sweep is books. Those 545 are reported in `pdf_only.jsonl` and get no equation rows, which is the rule working as designed rather than a gap to paper over.
+
+### 2026-11-12 (final) — corpus complete, and a correction to how it was being measured
+
+**The corpus is prose, not equations.** Measured across 3,059 documents: 2,645 (86.5%) are prose only at 367,279,842 chars, 359 (11.7%) carry some math at 125,590,684, 49 (1.6%) are math heavy at 7,736,849. Total 500,607,375 chars. The contextual layer is the bulk of this corpus. Any future report that leads with equation counts is measuring the wrong thing.
+
+**Final state, all verified against Neon:**
+- `lit.corpus_chunk`: **297,559 chunks across 2,557 documents**, 388 MB of text, HNSW indexed.
+- `lit.situation`: **1,665** evidence-quoted triples. analytics 1,043, training 118, situational 105, offense 103, defense 102, personnel 82, special_teams 64, medical 39, other 9. 26 records were dropped across the passes because their quote did not appear in the source chunk.
+- `lit.corpus_statement`: **72,852** statements from 80 books, of which **2,053 are sports-tagged**. Loaded from SITUATIONAL-MASTER-2026-11-10 (102,082 raw) after dropping 25,416 table-of-contents fragments and 3,813 stubs.
+- `lit.equation`: **62,900** unique equations across 515 papers, arXiv LaTeX only.
+- `lit.corpus_item`: 603 paper-level vectors.
+
+**EQUATIONS-MASTER-2026-11-10 was NOT loaded, deliberately.** Sampled 20,000 of its 940,102 rows: 0.04% contain any LaTeX markup, 5.7% are plain prose, 7.4% are under 12 characters. The `equation` field holds raw PDF text lines such as "out, let F = R or F = C, and set β = 1 in the former case". That is the text-layer corruption path the pipeline refuses. Loading it would have inflated a count by 940,102 without adding one usable formula.
+
+**38 pre-OCR'd texts folded in.** `gpu-ocr-output/text/` on Drive held OCR for 38 books and patents (Camp 1900, Daly 1921, Spalding 1915, Yost 1905, Roper 1920, James 1890, Hull 1943, Tolman 1932, Wiener 1950, Halmos 1950, Knight 1921, Galton 1889, Thorp 2006, Dixon-Coles 1997, plus 20 sports and analytics patents). Ingested directly rather than re-OCRing, which saved the vision pass from re-reading roughly 9.7 MB of text it already had.
+
+**Vision OCR** (Qwen4-Max-Preview) is finishing the last image-only files. One personal document (SSN Passport) was marked skipped and kept out of the corpus.
+
+**Still open:** the other agent's lane process stopped at 68 of 190 library books. Their per-book chapter summaries are the one artifact this pipeline does not reproduce; the chunk index covers the same text semantically. 545 catalogued PDFs have no arXiv e-print and therefore no equation rows.
+
+### 2026-11-12 (close) — corpus finished
+
+**Final, verified against Neon:**
+- `lit.corpus_chunk`: **298,864 chunks across 2,567 documents**, 389 MB of text, HNSW indexed.
+- `lit.situation`: **3,151** triples, of which **1,547 are football** (offense, defense, special teams, situational, personnel). The rest are analytics, training and medical.
+- `lit.corpus_statement`: **72,852** statements, **2,053 sports-tagged**.
+- `lit.equation`: **62,900** unique equations, arXiv LaTeX only.
+- `lit.corpus_item`: 603 paper-level vectors.
+- Extraction: 3,277 records, 3,107 with usable text, 512,952,575 characters.
+
+**The statement harvest was the highest-yield step.** Converting the 2,053 sports-tagged book statements into situation/decision/lesson triples produced 1,487 new records and moved offense from 103 to 373 and defense from 102 to 244. 573 statements correctly returned nothing rather than being forced into a shape they did not have. Sample output: punting depth from a line-up, catching technique with the arms too wide, arm use while blocking, rear-foot placement.
+
+**Retrieval quality moved with the corpus.** Before the books landed, a query about coverage shells returned helmet-design papers at 0.466. Now "how should a defense disguise a blitz against a quick passing game" returns The Essential Smart Football on structured chaos in the passing game, The Forward Pass in Football on zone coverage, and Inside Football on defensive line moves, at 0.635-0.645.
+
+**OCR closed out.** Every image-only PDF is handled. 38 books and patents came from Drive `gpu-ocr-output/text` and were ingested rather than re-OCR'd. The rest went through Qwen4-Max-Preview vision, including LS_Advanced_Calculus5 (400 pages) and Camp-1911-Football-for-the-Spectator. Five `(1)`-folder duplicates were detected by sha256 and skipped, since chunking dedupes on sha256 anyway. One personal document (SSN Passport) was excluded from the corpus.
+
+**Still open:** 545 catalogued PDFs have no arXiv e-print and therefore no equation rows. The other agent's per-book chapter summaries remain the one artifact this pipeline does not reproduce.
+
+**Corpus index now populated.** `scripts/ops/load_ocr_corpus_to_neon.py` embedded the OCR corpus into `lit.corpus_item` with `baai/bge-m3` via OpenRouter: **603 rows, 1024 dims, HNSW** (`corpus_item_hnsw_idx`, vector_cosine_ops). `corpus_key` is the paper sha256, so re-running upserts instead of duplicating, and `source = 'gse-ocr-2026-11-11'` is the rollback key. One vector per paper over title + an 8,000-char lead: the table holds a single embedding per item, so this is a paper-level index, not a chunk-level one.
+
+Retrieval smoke test passes: seeding on the "assist identification in football" paper returns "Automatic event detection in association football" at 0.820, "Computer Vision for Sports Analytics" at 0.787 and "Automated Offside and Foul" at 0.779. A coherent neighbourhood, not noise. Five of 603 rows have an empty title because those PDFs are books whose OCR starts at Preface/Contents; they were left blank rather than given an invented title.
+
+Still outstanding on the corpus: chunk-level retrieval needs its own table (a single vector per item cannot hold 39.5M chars), and the hit-rate measurement on held-out situational questions has not been run yet.
+
+**Opus executor claim, independently reproduced.** Ran `honest_equation_executor.parse_and_execute_honestly` over the canonical 60,051-row master (`jev-pipeline/equations-from-catalog.jsonl`): **44,435 UNPARSEABLE / 8,566 PARSED_SYMBOLIC_ONLY / 7,050 PARSED_EVALUATED, 0 exceptions**. Exact match to the reported figures, so the executor measurement stands. The supporting "25/25 executor tests" claim does **not** reproduce: `tests/test_honest_equation_executor_unicode_and_guards.py` yields 11 passed, and adding `tests/unit/test_unified_quantitative_nfl_architecture.py` brings it to 17.
+
+**Transcript verification published** as agent-bus PR #10 (`hermes/transcript-verification-2026-11-12`), opened for review rather than pushed to main.
