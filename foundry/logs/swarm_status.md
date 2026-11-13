@@ -456,3 +456,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 17:27:16 | CLAIMED | 4d07e5902607436f | worker=hermes-inline file=ShalevShwartz-2012-OnlineLearningAndOnlineConvexOptimization.pdf
 - 2026-11-13 17:39:34 | REJECTED | 4d07e5902607436f | reasoning think chain 820 words < 850 minimum
 - 2026-11-13 17:40:09 | COMPLETE | 4d07e5902607436f | primitives=19 think_words=943
+- 2026-11-13 17:46:49 | CLAIMED | 5b79f17544fe148c | worker=hermes-inline file=ShalevShwartzBenDavid-2014-UnderstandingMachineLearning.pdf
+- 2026-11-13 17:54:20 | COMPLETE | 5b79f17544fe148c | primitives=18 think_words=885
