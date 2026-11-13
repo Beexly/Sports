@@ -186,7 +186,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
             </span>
             <span>
               ✓ Calibration progress: {verifiedLedger.official.gate.clvBackedSettled}/
-              {verifiedLedger.official.gate.target} CLV-backed settled bets
+              {verifiedLedger.official.gate.target} CLV-backed settled bets (win rate requires {verifiedLedger.official.gate.target} before publication)
             </span>
             <span>✓ Timestamped Pre-Kickoff Ledger</span>
           </div>

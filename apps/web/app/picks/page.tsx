@@ -15,7 +15,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Official NFL Picks | Galaxy Sports Edge",
+  title: "NFL Picks | Galaxy Sports Edge",
   description:
     "Official plays with confidence out of 100, transparent passes with reasons, and a verified record recomputed from the settlement database. No hardcoded win rates.",
   alternates: { canonical: "/picks" },

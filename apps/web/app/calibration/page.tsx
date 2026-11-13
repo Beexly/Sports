@@ -149,7 +149,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
           <ul className="mt-4 max-w-3xl list-disc space-y-2 pl-5 text-sm leading-relaxed text-ion-1">
             <li>Observed win rate per confidence band, with sample sizes, from settled official plays.</li>
             <li>A reliability curve (predicted band vs realized rate) and a Brier score benchmark.</li>
-            <li>Closing-line value summaries split by market, all recomputed from lock vs close.</li>
+            <li>Closing-line value summaries split by market, all recomputed from entry vs close.</li>
           </ul>
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-ion-2">
             Every one of those numbers will be produced by the same verification script that

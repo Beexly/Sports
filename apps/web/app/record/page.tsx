@@ -140,7 +140,7 @@ export default function RecordPage(): JSX.Element {
             <StatCard
               label="Net units (flat 1u)"
               value={formatUnits(ledger.pipeline.units.total)}
-              sub={`${ledger.pipeline.units.coveredPicks} plays with a recorded lock price. ${ledger.pipeline.units.missingPricePicks} unpriced plays are counted but excluded from units, never guessed.`}
+              sub={`${ledger.pipeline.units.coveredPicks} plays with a recorded entry price. ${ledger.pipeline.units.missingPricePicks} unpriced plays are counted but excluded from units, never guessed.`}
               tone={ledger.pipeline.units.total >= 0 ? "text-emerald-300" : "text-rose-300"}
             />
             <StatCard
@@ -151,7 +151,7 @@ export default function RecordPage(): JSX.Element {
             <StatCard
               label="Recomputation check"
               value={`${clv.storedValueMatches}/${clv.storedValueMatches + clv.storedValueMismatches}`}
-              sub={`Stored CLV values re-derived from lock vs close fields and compared. ${clv.storedValueMismatches} rows disagree and are listed in the artifact. Mean points CLV: ${clv.meanPoints ?? "not yet graded"}.`}
+              sub={`Stored CLV values re-derived from entry vs close fields and compared. ${clv.storedValueMismatches} rows disagree and are listed in the artifact. Mean points CLV: ${clv.meanPoints ?? "not yet graded"}.`}
             />
           </div>
         </section>

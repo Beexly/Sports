@@ -209,6 +209,11 @@ export function scanLine(rawLines, i, relPath) {
   const subjects = viewsOf(line);
   const normalized = subjects[0];
   if (normalized.length === 0) return [];
+  // Module wiring is not rendered copy: an `import { verifiedLedger } from ...`
+  // line can never be a user-facing performance claim. Skip import/export
+  // statements (false positive on the verified-ledger-view import, 2026-11-13).
+  if (/^(import|export)\b/.test(normalized) && /\bfrom\s+["']/.test(normalized)) return [];
+  if (/^import\s+["']/.test(normalized)) return [];
   if (OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(normalized)) return [];
   const pairSubject = pairSubjectOf(rawLines, i);
   if (pairSubject && OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(pairSubject)) return [];
