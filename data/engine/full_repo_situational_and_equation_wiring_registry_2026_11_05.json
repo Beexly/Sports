@@ -1,6 +1,6 @@
 {
   "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-  "generated_at_utc": "2026-11-13T10:42:52.278997+00:00",
+  "generated_at_utc": "2026-11-13T18:39:53.515700+00:00",
   "total_ts_modules_cataloged": 1493,
   "prediction_engine_ts_modules": 1483,
   "mcp_equations_server_ts_modules": 10,
@@ -14,7 +14,7 @@
   "equation_families_count": 279,
   "total_equations_routed": 12304,
   "cholesky_families_orthogonalized": 6,
-  "clamped_log_odds_delta": 0.009518,
+  "clamped_log_odds_delta": 0.165627,
   "x_situational_80_rules": {
     "evaluated_count": 80,
     "firewall_rules_evaluated_count": 7,
@@ -31,7 +31,7 @@
       "Situational Splits": 0.066,
       "Coaching Decisions": 0.114,
       "Personnel & Matchup": 0.19,
-      "Availability: QB Change": -0.136,
+      "Availability: QB Change": 0.0,
       "Environment: Weather": -0.012,
       "Availability: OL Attrition": -0.233,
       "Market Context": 0.14
@@ -563,8 +563,8 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
-        "value": -0.068,
-        "sign": -1,
+        "value": 0.0,
+        "sign": 0,
         "gateStatus": "accepted"
       },
       {
@@ -573,8 +573,8 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
-        "value": -0.068,
-        "sign": -1,
+        "value": 0.0,
+        "sign": 0,
         "gateStatus": "accepted"
       },
       {
@@ -1437,8 +1437,8 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
-        "value": -0.068,
-        "sign": -1,
+        "value": 0.0,
+        "sign": 0,
         "gateStatus": "accepted"
       },
       {
@@ -1447,8 +1447,8 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
-        "value": -0.068,
-        "sign": -1,
+        "value": 0.0,
+        "sign": 0,
         "gateStatus": "accepted"
       },
       {
@@ -1831,7 +1831,7 @@
       4294967295,
       4294967295,
       4294967295,
-      2390753279
+      209715199
     ],
     "equation_families_count": 279,
     "active_signal_families_count": 279,
@@ -1841,17 +1841,17 @@
     "stage_b_hnsw_top_k": 250,
     "stage_c_orthogonal_clusters_count": 25,
     "marchenko_pastur_denoise_factor": 0.87817,
-    "stage_d_james_stein_factor": 0.924677,
-    "raw_log_odds_delta": 0.010293,
-    "clamped_log_odds_delta": 0.009518,
+    "stage_d_james_stein_factor": 0.921802,
+    "raw_log_odds_delta": 0.179677,
+    "clamped_log_odds_delta": 0.165627,
     "max_abs_delta_log_odds_cap": 0.35,
     "domain_equation_sums": {
       "pressure": 0.039,
-      "weather": 11.323,
+      "weather": 3.9353,
       "restFatigue": 1.4072,
       "coveragePersonnel": -0.3595,
-      "qbSkillScript": -3.2011,
-      "marketMicrostructure": 0.461
+      "qbSkillScript": 1.6456,
+      "marketMicrostructure": 3.5712
     }
   },
   "master_6family_cholesky_aggregator": {
@@ -1886,5 +1886,5 @@
     "probability_movement_cap": 0.12,
     "post_overlay_prob": 0.5073
   },
-  "receipt_sha256": "9fc26afb3168a052ded5b4b24f857c4c587d5efac01f53be52fc74d83c8f25ce"
+  "receipt_sha256": "3dbfba4ea46e39657c65a844bf50a4267238300170097597384e4c376f767b27"
 }

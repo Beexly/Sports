@@ -481,6 +481,67 @@ WEEK9_MATCHUP_ENVIRONMENT_REGISTRY: dict[tuple[str, str], dict[str, Any]] = {
 }
 
 
+# Verified Week 10 game environments (weather + venue metadata only). Posted
+# lines intentionally stay on the standard Week 10 fallback: no sportsbook odds
+# are introduced as model inputs; market comparison happens at Stage 5.
+WEEK10_MATCHUP_WEATHER_REGISTRY: dict[tuple[str, str], dict[str, Any]] = {
+    ("HOU", "CLE"): {
+        # Venue: ESPN 2026 Week 10 scoreboard (data/engine/espn_2026_week10_scoreboard.json,
+        # event 401873056, venue.fullName / indoor=false).
+        "stadium": "Huntington Bank Field",
+        "is_indoor": False,
+        # Forecast: NFLWeather.com Texans At Browns page, retrieved 2026-11-13
+        # (kickoff Sun Nov 15 2026 1:00 PM ET): 47F, feels like 42F, wind 9 mph,
+        # gusts 15 mph (Q4 14 mph), precip prob 8%, mostly cloudy.
+        "wind_mph": 9.0,
+        "temp_f": 47.0,
+        "precip_prob": 0.08,
+        "feels_like_f": 42.0,
+        "wind_gust_mph": 15.0,
+        "weather_note": (
+            "Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, "
+            "mostly cloudy, 8% precip) — NFLWeather.com forecast retrieved 2026-11-13 "
+            "for Sun Nov 15 2026 1:00 PM ET kickoff"
+        ),
+        "weather_source": (
+            "https://www.nflweather.com/en/game/2026/week-10/texans-at-browns "
+            "(retrieved 2026-11-13)"
+        ),
+    },
+}
+
+
+def _lookup_espn_scoreboard_kickoff(away: str, home: str, week: int) -> str | None:
+    """Resolve the real kickoff from the repo's ESPN week scoreboard (no fabrication).
+
+    Prevents the Week 9 historical pin from leaking into Week 10+ context packets
+    when the caller (e.g. the bare CLI) does not thread a Neon kickoff through.
+    Returns None when the scoreboard or matchup is absent.
+    """
+    sb_path = REPO_ROOT / "data" / "engine" / f"espn_2026_week{int(week)}_scoreboard.json"
+    if not sb_path.is_file():
+        return None
+    try:
+        sb = json.loads(sb_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    for ev in sb.get("events", []):
+        comp = (ev.get("competitions") or [{}])[0]
+        away_ab, home_ab = "", ""
+        for c in comp.get("competitors") or []:
+            ab = str((c.get("team") or {}).get("abbreviation") or "").upper()
+            if ab == "LA":
+                ab = "LAR"
+            if c.get("homeAway") == "away":
+                away_ab = ab
+            elif c.get("homeAway") == "home":
+                home_ab = ab
+        if (away_ab, home_ab) == (away.strip().upper(), home.strip().upper()):
+            kickoff = str(ev.get("date") or "")
+            return kickoff or None
+    return None
+
+
 def _get_espn_week9_odds_lookup() -> dict[tuple[str, str], dict[str, Any]]:
     cache = globals().get("_ESPN_W9_ODDS_CACHE")
     if isinstance(cache, dict):
@@ -556,6 +617,10 @@ def _get_matchup_env(away: str, home: str, week: int = 9) -> dict[str, Any]:
             "home_qb_tier": "QB1",
             "weather_note": f"{away_u} @ {home_u} Week {week} standard outdoor conditions (7.5 mph wind, 58F)",
         }
+
+    # Verified Week 10 weather/venue overrides (no odds fields touched).
+    if week >= 10 and key in WEEK10_MATCHUP_WEATHER_REGISTRY:
+        env.update(WEEK10_MATCHUP_WEATHER_REGISTRY[key])
 
     # Enrich with real open/close lines & indoor status from _espn_week9_scoreboard.json
     espn_map = _get_espn_week9_odds_lookup()
@@ -5144,6 +5209,11 @@ def execute_connected_game_workflow(
     assert_zero_roster_contamination(markdown_dossier, stage0, "markdown_dossier")
 
     armed_gid = f"2026_{week:02d}_{away_u}_{home_u}"
+    if kickoff_utc is None and week >= 10:
+        # Bare-CLI runs do not thread a Neon kickoff; resolve the real one from
+        # the repo ESPN week scoreboard so Week 10+ packets never inherit the
+        # Week 9 historical pin (temporal leakage). None if unavailable.
+        kickoff_utc = _lookup_espn_scoreboard_kickoff(away_u, home_u, week)
     armed_bundle = build_armed_context_and_reasoning_trace(
         game_id=armed_gid,
         # Week 9 replays keep their historical pin; Week 10+ arms at run time.

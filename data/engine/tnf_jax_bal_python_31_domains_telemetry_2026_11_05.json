@@ -1,6 +1,6 @@
 {
   "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-  "generated_at_utc": "2026-11-07T16:09:25.443167+00:00",
+  "generated_at_utc": "2026-11-13T18:39:22.135064+00:00",
   "datasets_connected_count": 33,
   "datasets_report": {
     "ftn_charting_2026": {
@@ -768,16 +768,16 @@
         "qb_questionable_conditional_dropoff": 0.1159,
         "team_load_scaling": {
           "JAX": {
-            "target_hhi": 0.1525,
-            "effective_n": 6.56,
-            "load_multiplier": 1.0629,
-            "scaled_qb_q_dropoff": 0.1007
+            "target_hhi": 0.1428,
+            "effective_n": 7.0,
+            "load_multiplier": 1.0285,
+            "scaled_qb_q_dropoff": 0.0974
           },
           "BAL": {
-            "target_hhi": 0.1467,
-            "effective_n": 6.82,
-            "load_multiplier": 1.0425,
-            "scaled_qb_q_dropoff": 0.0987
+            "target_hhi": 0.1472,
+            "effective_n": 6.8,
+            "load_multiplier": 1.044,
+            "scaled_qb_q_dropoff": 0.0989
           },
           "DET_reference": {
             "target_hhi": 0.159,
@@ -1333,16 +1333,16 @@
       "qb_questionable_conditional_dropoff": 0.1159,
       "team_load_scaling": {
         "JAX": {
-          "target_hhi": 0.1525,
-          "effective_n": 6.56,
-          "load_multiplier": 1.0629,
-          "scaled_qb_q_dropoff": 0.1007
+          "target_hhi": 0.1428,
+          "effective_n": 7.0,
+          "load_multiplier": 1.0285,
+          "scaled_qb_q_dropoff": 0.0974
         },
         "BAL": {
-          "target_hhi": 0.1467,
-          "effective_n": 6.82,
-          "load_multiplier": 1.0425,
-          "scaled_qb_q_dropoff": 0.0987
+          "target_hhi": 0.1472,
+          "effective_n": 6.8,
+          "load_multiplier": 1.044,
+          "scaled_qb_q_dropoff": 0.0989
         },
         "DET_reference": {
           "target_hhi": 0.159,
@@ -1692,18 +1692,24 @@
     }
   },
   "intelligence_31_subpackages": {
-    "subpackages_connected_count": 61,
-    "total_intelligence_python_files": 629,
+    "subpackages_connected_count": 81,
+    "total_intelligence_python_files": 742,
     "subpackage_inventory": {
       "adjustment-layer": {
-        "python_files": 4,
+        "python_files": 5,
         "top_level_functions": 27,
         "top_level_classes": 2,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "architecture": {
+        "python_files": 1,
+        "top_level_functions": 34,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "audit": {
-        "python_files": 10,
-        "top_level_functions": 22,
+        "python_files": 12,
+        "top_level_functions": 34,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
@@ -1713,14 +1719,20 @@
         "top_level_classes": 1,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "cloud_and_enterprise_skills": {
+        "python_files": 1,
+        "top_level_functions": 9,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "coaching": {
-        "python_files": 67,
-        "top_level_functions": 380,
-        "top_level_classes": 26,
+        "python_files": 70,
+        "top_level_functions": 388,
+        "top_level_classes": 27,
         "status": "CONNECTED_AND_AUDITED"
       },
       "colab": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 9,
         "top_level_classes": 3,
         "status": "CONNECTED_AND_AUDITED"
@@ -1743,6 +1755,12 @@
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "conformal_and_arrow_memory": {
+        "python_files": 2,
+        "top_level_functions": 2,
+        "top_level_classes": 13,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "context": {
         "python_files": 4,
         "top_level_functions": 10,
@@ -1750,27 +1768,39 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "corpus": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 2,
         "top_level_classes": 1,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "corpus_registry": {
+        "python_files": 2,
+        "top_level_functions": 31,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "data": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 0,
         "top_level_classes": 1,
         "status": "CONNECTED_AND_AUDITED"
       },
       "data_loaders": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 13,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
-      "dfs": {
-        "python_files": 1,
-        "top_level_functions": 3,
+      "data_sources": {
+        "python_files": 2,
+        "top_level_functions": 5,
         "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "dfs": {
+        "python_files": 12,
+        "top_level_functions": 62,
+        "top_level_classes": 15,
         "status": "CONNECTED_AND_AUDITED"
       },
       "doctrine": {
@@ -1779,38 +1809,68 @@
         "top_level_classes": 13,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "ecosystem": {
+        "python_files": 5,
+        "top_level_functions": 5,
+        "top_level_classes": 61,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "engine": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 19,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "engines": {
-        "python_files": 18,
+        "python_files": 21,
         "top_level_functions": 218,
         "top_level_classes": 29,
         "status": "CONNECTED_AND_AUDITED"
       },
       "equations": {
-        "python_files": 1,
-        "top_level_functions": 13,
+        "python_files": 4,
+        "top_level_functions": 71,
+        "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "external_charting": {
+        "python_files": 3,
+        "top_level_functions": 16,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "fantasy": {
+        "python_files": 2,
+        "top_level_functions": 3,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "feedback": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 1,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "funnel": {
+        "python_files": 3,
+        "top_level_functions": 13,
+        "top_level_classes": 9,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "gates": {
-        "python_files": 14,
+        "python_files": 16,
         "top_level_functions": 105,
         "top_level_classes": 5,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "genkit_flows": {
+        "python_files": 2,
+        "top_level_functions": 4,
+        "top_level_classes": 4,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "identity": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 0,
         "top_level_classes": 2,
         "status": "CONNECTED_AND_AUDITED"
@@ -1822,9 +1882,9 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "ingestion": {
-        "python_files": 24,
-        "top_level_functions": 178,
-        "top_level_classes": 11,
+        "python_files": 28,
+        "top_level_functions": 200,
+        "top_level_classes": 13,
         "status": "CONNECTED_AND_AUDITED"
       },
       "integration": {
@@ -1840,7 +1900,7 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "jev": {
-        "python_files": 32,
+        "python_files": 33,
         "top_level_functions": 63,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
@@ -1852,13 +1912,13 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "markets": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 7,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "matchup": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 4,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
@@ -1870,21 +1930,51 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "math": {
-        "python_files": 2,
+        "python_files": 3,
         "top_level_functions": 47,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
-      "models": {
+      "memory": {
         "python_files": 2,
+        "top_level_functions": 5,
+        "top_level_classes": 7,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "metrics": {
+        "python_files": 3,
+        "top_level_functions": 29,
+        "top_level_classes": 2,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "models": {
+        "python_files": 3,
         "top_level_functions": 17,
         "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "multi_agent_and_hybrid_memory": {
+        "python_files": 2,
+        "top_level_functions": 3,
+        "top_level_classes": 6,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "native_kernels": {
+        "python_files": 2,
+        "top_level_functions": 8,
+        "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "newregime": {
         "python_files": 10,
         "top_level_functions": 49,
         "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "nfl_analytics_and_injury_biomechanics": {
+        "python_files": 2,
+        "top_level_functions": 14,
+        "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "nfl_re": {
@@ -1894,21 +1984,27 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "observability": {
-        "python_files": 3,
+        "python_files": 4,
         "top_level_functions": 16,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "ops": {
-        "python_files": 6,
-        "top_level_functions": 27,
+        "python_files": 7,
+        "top_level_functions": 39,
         "top_level_classes": 4,
         "status": "CONNECTED_AND_AUDITED"
       },
       "optimizer": {
-        "python_files": 6,
+        "python_files": 7,
         "top_level_functions": 16,
         "top_level_classes": 8,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "performance": {
+        "python_files": 2,
+        "top_level_functions": 7,
+        "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "physics": {
@@ -1918,20 +2014,20 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "pipeline": {
-        "python_files": 2,
+        "python_files": 3,
         "top_level_functions": 14,
         "top_level_classes": 3,
         "status": "CONNECTED_AND_AUDITED"
       },
       "props": {
-        "python_files": 15,
+        "python_files": 17,
         "top_level_functions": 152,
-        "top_level_classes": 9,
+        "top_level_classes": 16,
         "status": "CONNECTED_AND_AUDITED"
       },
       "providers": {
-        "python_files": 4,
-        "top_level_functions": 15,
+        "python_files": 6,
+        "top_level_functions": 17,
         "top_level_classes": 1,
         "status": "CONNECTED_AND_AUDITED"
       },
@@ -1942,7 +2038,7 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "qb-behavior": {
-        "python_files": 38,
+        "python_files": 40,
         "top_level_functions": 97,
         "top_level_classes": 71,
         "status": "CONNECTED_AND_AUDITED"
@@ -1953,14 +2049,20 @@
         "top_level_classes": 11,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "rea": {
+        "python_files": 2,
+        "top_level_functions": 2,
+        "top_level_classes": 2,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "reasoning": {
-        "python_files": 58,
-        "top_level_functions": 352,
+        "python_files": 61,
+        "top_level_functions": 386,
         "top_level_classes": 51,
         "status": "CONNECTED_AND_AUDITED"
       },
       "reasoning_engine": {
-        "python_files": 14,
+        "python_files": 15,
         "top_level_functions": 44,
         "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
@@ -1978,15 +2080,21 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "roster": {
-        "python_files": 4,
+        "python_files": 5,
         "top_level_functions": 20,
         "top_level_classes": 6,
         "status": "CONNECTED_AND_AUDITED"
       },
       "routing": {
-        "python_files": 2,
-        "top_level_functions": 10,
+        "python_files": 4,
+        "top_level_functions": 30,
         "top_level_classes": 2,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "seo": {
+        "python_files": 2,
+        "top_level_functions": 4,
+        "top_level_classes": 0,
         "status": "CONNECTED_AND_AUDITED"
       },
       "sgp": {
@@ -1996,15 +2104,21 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "sheaf_integrity": {
-        "python_files": 29,
+        "python_files": 34,
         "top_level_functions": 99,
         "top_level_classes": 8,
         "status": "CONNECTED_AND_AUDITED"
       },
       "signals": {
-        "python_files": 1,
+        "python_files": 2,
         "top_level_functions": 3,
         "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "simulation": {
+        "python_files": 2,
+        "top_level_functions": 15,
+        "top_level_classes": 7,
         "status": "CONNECTED_AND_AUDITED"
       },
       "situational": {
@@ -2014,7 +2128,7 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "situational-graph": {
-        "python_files": 5,
+        "python_files": 8,
         "top_level_functions": 42,
         "top_level_classes": 3,
         "status": "CONNECTED_AND_AUDITED"
@@ -2032,9 +2146,15 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "tests": {
-        "python_files": 35,
+        "python_files": 36,
         "top_level_functions": 142,
         "top_level_classes": 90,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "trends": {
+        "python_files": 2,
+        "top_level_functions": 3,
+        "top_level_classes": 13,
         "status": "CONNECTED_AND_AUDITED"
       },
       "trust": {
@@ -2050,7 +2170,7 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "vision": {
-        "python_files": 42,
+        "python_files": 43,
         "top_level_functions": 198,
         "top_level_classes": 52,
         "status": "CONNECTED_AND_AUDITED"

@@ -50,6 +50,9 @@ from scripts.ops.run_week10_full_slate_connected_workflow import (  # noqa: E402
     fetch_remaining_slate,
 )
 from scripts.ops.preflight_live_roster_injury_gate import require_week  # noqa: E402
+from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E402
+    apply_stage0_qb1_live_starter_resolutions,
+)
 
 WEEK = 10
 MAX_AGE_HOURS = 18.0
@@ -180,9 +183,12 @@ def main() -> int:
 
     gate_cfg = require_week(WEEK)
     spine_runner.SIM_WEEK = WEEK
-    # Authoritative QB1s come from the Stage-0 gate (require_week) so the spine
-    # QB1 alignment matches what the SG-1 freshness gate verifies at run time
-    # (excludes banned/IR starters, e.g. CLE Watson -> Sanders, SEA Darnold -> Lock).
+    # Authoritative simulation QB1s = the Stage-0 gate (require_week) WITH the
+    # preflight qb1_ban_conflicts live-starter resolutions applied, matching what
+    # load_stage0_game_roster_allowlist / the SG-1 freshness gate verify at run
+    # time (e.g. CLE: DFS gate substitutes Sanders for banned Watson, but the
+    # verified live starter for simulation is Watson per the preflight config).
+    gate_cfg = apply_stage0_qb1_live_starter_resolutions(gate_cfg, WEEK)
     qb1_cfg = gate_cfg.get("confirmed_qb1", {})
 
     def qb1_name(tm: str) -> str:
