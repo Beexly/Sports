@@ -22,14 +22,16 @@ fill as the overnight lanes land. Nothing here publishes until gates pass.
 - Launch branch: hermes/week10-master-launch-2026-11-13 (base origin/main
   33c0020a9 + research-wiring b2cd28b9a + corpus-wiring 46afcad0 + PR #1272).
 
-## 2. Gate scoreboard (WP-7) — PENDING full run
+## 2. Gate scoreboard (WP-7) — 10/10 individually green, official run pending
 
-Live so far: T-00 PASS (13/13 Week 10 games sim-ready, 32/32 QB1s, 126
-excluded), T-01 PASS, T-02 PASS (HNSW cost 3031, 1091ms), T-03 PASS (10/10).
-T-04 RED -> WP-1 repair lane owns the quote re-derivation (1,486 md5-keyed
-statement rows + 1,027 normalized quotes found; fix recipe delivered).
-T-05..T-10 contracts written; lanes WP-2/3/4 building the implementations.
-WP-8 simulation is REFUSED until verify_all_ten_gates.sh exits 0.
+T-00 PASS (13/13 games, 32/32 QB1s, 126 excluded), T-01 PASS, T-02 PASS
+(cost 3031, 1091ms), T-03 PASS (10/10), T-04 PASS (2708 verbatim quotes —
+WP-1 repair landed), T-05 PASS (26 pytest, Sinkhorn 0.0, 13 games), T-06 PASS
+(83 vitest, nullity purged), T-07 PASS (1096 rows/32 teams, 27 tests),
+T-08 PASS (live Shin de-vig), T-09 PASS (OOF hard_pass). T-10 re-run pending
+WP-5 completion (earlier run raced mid-edit storefront + module junctions,
+both resolved). Official verify_all_ten_gates.sh exit 0 still required before
+WP-8 — REFUSE_PROJECTION stands until then.
 
 ## 3. Week 10 slate (13 remaining games — VERIFIED vs ESPN scoreboard + Neon 2026-11-13 ~04:00 CT)
 

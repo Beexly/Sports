@@ -3,6 +3,16 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-13 — Gate sweep: T-00..T-09 ALL LIVE PASS; T-10 pending WP-5 (aa7aa877f)
+
+**Changed:** WP-1/2/3/4 lane deliveries committed (35 files): quote re-derivation (T-04), executor + kernels + router nullity (T-05/T-06), injury/roster + Shin de-vig loaders (T-07/T-08), w1-w9 trends regen. Gate script fixes: t05 repo-root path + strict mode, t06 vitest absolute path, t08 probe cwd. Worktree junction farm extended: @vitejs/plugin-react, @testing-library/jest-dom, @noble/hashes (scratch installs; main repo untouched). Injuries wk10 re-ingested via ESPN idempotent upsert. Antigravity workspace review consolidated (docs/ops/ANTIGRAVITY-WORKSPACE-REVIEW-2026-11-13.md + digests). Morning packet slate corrected vs ESPN+Neon.
+
+**Proven:** T-00 PASS (13/13), T-01 PASS, T-02 PASS (cost 3031), T-03 PASS (10/10), T-04 PASS (2708 verbatim quotes, 0 short/missing/non-verbatim), T-05 PASS (26 pytest; Sinkhorn residual 0.0 < 1e-9, 13 games), T-06 PASS (83 vitest; lit.retrieval_event=1, activation=10; no hardcoded fallbacks), T-07 PASS (1096 injury rows / 32 teams; 27 loader tests; player_gp denominators), T-08 PASS (live Shin de-vig, sums~1, no 0.5238 anchor), T-09 PASS (OOF hard_pass). tsc prediction-engine + ingestion-pipeline exit 0. ESPN+Neon slate cross-verified (14 games incl. TNF FINAL); catalog gaps found (missing LAR@ARI + PIT@CIN, SF@DAL mislabeled SNF) -> WP-5 steered. Paywall leak (stale JAX@BAL free teaser 88/100) + ledger split-brain -> WP-5 steered.
+
+**Not proven:** T-10 full re-run pending — earlier run raced WP-5's mid-edit storefront + pre-junction module gaps (both since addressed; WP-5 still running). Official verify_all_ten_gates.sh 10/10 exit 0 NOT yet claimed. WP-8 still REFUSED until that run is green. WP-5 completion report not yet received.
+
+**Next role:** on WP-5 completion: review its diff (catalog gaps fixed? leak removed? ledger recomputed?), re-run T-10, then bash scripts/ops/verify_all_ten_gates.sh (no --skip-dry-run). ONLY at exit 0: WP-8 per directive (prop Sniper Gate + MILP floors + ticket caps from the antigravity review, actual JEV snap execution, SG1..SG10 independent re-run, dad-CSV IR fix port-or-disable).
+
 ## 2026-11-13 — WP-6 fit landed + gates 5/10 live-green + guardrail reconciliation (296ba517c, 3ade3824f)
 
 **Changed:** `scripts/ops/fit_oof_logit_temp_2026.py` completed the full 100-run placebo fit -> `data/engine/oof_calibration_2026_11_13.json`. Gate scripts T-00..T-10 + fail-closed runner `verify_all_ten_gates.sh` (now strict-mode). Guardrail reconciliation: trust-gate per-line allowlist for copy-fence's own detection regex; dossier-guard storefront check now structural (catalog must carry audited 47-19-1 AND packages page must link href="/record" — the page's deliberate "link, never quote" copy is preserved); api-route-boundary baseline +2 PUBLIC-by-design parlay-mri routes (xray quota meter, unlock email capture; waitlist precedent; 64->66 with reason in note). Morning packet skeleton + Wave 1 TNF autopsy + Wave 2 Munich preview staged in docs/ops/content-lab-2026-11-13/ (pick-free, trust-gate clean).
