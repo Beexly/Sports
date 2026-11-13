@@ -79,10 +79,25 @@ def verify_web_storefront_human_copy() -> None:
                     f"GUARD_FAIL: Banned robotic/AI/stale phrase '{banned}' found in {rel_path}"
                 )
         if rel_path in ("apps/web/app/packages/page.tsx", "apps/web/lib/packages/catalog.ts"):
-            if "47-19-1" not in content:
-                raise RuntimeError(
-                    f"GUARD_FAIL: Official Season Ledger of Record '47-19-1' missing in {rel_path}"
-                )
+            if rel_path == "apps/web/lib/packages/catalog.ts":
+                # The catalog is the single source of the audited ledger string.
+                if "47-19-1" not in content:
+                    raise RuntimeError(
+                        f"GUARD_FAIL: Official Season Ledger of Record '47-19-1' missing in {rel_path}"
+                    )
+            else:
+                # 2026-11-13 reconciliation: the packages page deliberately moved
+                # to "link, never quote" copy (no win rates on the sales page; the
+                # graded ledger lives at /record). The anti-phantom invariant is
+                # preserved structurally: the storefront MUST link to the public
+                # record, and the catalog (checked above) MUST carry the audited
+                # ledger string. Quoting the record in sales copy is no longer the
+                # enforcement mechanism; anchoring + reachability is.
+                if 'href="/record"' not in content:
+                    raise RuntimeError(
+                        f"GUARD_FAIL: {rel_path} must link to the public record (href=\"/record\") "
+                        "so the audited ledger is always reachable from the storefront"
+                    )
             voided_token = "62" + "-23-1"
             if voided_token in content:
                 raise RuntimeError(

@@ -281,6 +281,15 @@ const ALLOWLISTED_DEFINITION_LINES = new Map([
     ],
   ],
   [
+    // THE COPY FENCE'S OWN DETECTION REGEX. copy-fence.ts is the runtime
+    // guard that REJECTS banned outcome language; its BANNED_WORDS_PATTERN
+    // necessarily spells the banned words out as detection terms. Same
+    // category as the draft-review fixtures above: the phrases exist only
+    // to be matched and refused, never as claims. Scoped to this one line.
+    "apps/web/lib/packages/copy-fence.ts",
+    [/^\s*const BANNED_WORDS_PATTERN\s*=/],
+  ],
+  [
     // GOVERNANCE JARGON LIST in the root memory doc. AGENTS.md bullet
     // "Never render internal math/pipeline jargon (...)" names the banned
     // positioning phrases as a forbid-list, exactly the way the integrity
