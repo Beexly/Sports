@@ -2,11 +2,16 @@
 """Foundry gatekeeper: fail-closed SQLite state machine for the GSE/GSI corpus swarm.
 
 Commands:
-  scan --roots R1 R2 ...     Walk roots for PDFs, dedupe by sha256, enqueue PENDING with tier heuristics.
-  claim --worker W [--tier A]  Atomically claim one PENDING book (prints JSON, or NO_PENDING).
+  scan --roots R1 R2 ...     Walk roots for .pdf/.epub/.md/.txt/.tex, dedupe by sha256,
+                             quarantine personal/tax/ID files, enqueue with tier heuristics.
+  claim --worker W [--tier A]  Atomically claim one PENDING book (textbooks/monographs first,
+                             then largest). Prints JSON, or NO_PENDING.
   commit <artifact.json>     Validate a book extraction; GATEKEEPER_APPROVED or GATEKEEPER_REJECTED.
-  release-stale [--minutes N]  Return CLAIMED books older than N minutes (default 90) to PENDING.
-  status                     Queue counts + recent events.
+  release-stale [--minutes N]  Return CLAIMED books older than N minutes (default 20) to PENDING
+                             (shard B returns to DELEGATED_GCP).
+  sync-cloud                 Mark files completed by GCP (manifests in artifacts/gcp_sync/)
+                             as COMPLETE_CLOUD so local workers never duplicate cloud work.
+  status                     Queue counts + recent events + PENDING termination counter.
 
 All state lives in foundry.db next to this file. WAL mode, busy_timeout 30s.
 Every claim/commit appends to logs/swarm_status.md.
@@ -19,6 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(HERE, "foundry.db")
 LOG = os.path.join(HERE, "logs", "swarm_status.md")
 ARTIFACTS = os.path.join(HERE, "artifacts", "primitives")
+GCP_SYNC = os.path.join(HERE, "artifacts", "gcp_sync")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS corpus_queue (
@@ -37,7 +43,8 @@ CREATE TABLE IF NOT EXISTS corpus_queue (
   source_status TEXT,
   claimed_at REAL,
   completed_at REAL,
-  gate_log TEXT
+  gate_log TEXT,
+  file_size INTEGER
 );
 CREATE TABLE IF NOT EXISTS primitives (
   primitive_id TEXT PRIMARY KEY,
@@ -59,8 +66,10 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE INDEX IF NOT EXISTS idx_queue_status ON corpus_queue(status, tier);
 """
 
+EXTS = {".pdf", ".epub", ".md", ".txt", ".tex"}
 TIER_A = re.compile(r"football|coaching|\bnfl\b|quarterback|offense|defense|scheme|physics|mechanic|fluid|navier|thermodynam|quantum|probabilit|stochastic|optimiz|game.theor|decision|psycholog|behavior|neuro|brain|cogniti|biomechan|physiolog|nutrition|metabol|history|strateg|calculus|differenti|equation|math|statist|learning|control|dynamic|kinematic|aerodynam|entropy|information", re.I)
-TIER_C = re.compile(r"manual|syntax|documentation|readme|invoice|receipt|\bform\b|eeoc|authorization|resume|workbook|sales.kit|screening|\.gdoc|truck.sheet", re.I)
+TIER_C = re.compile(r"manual|syntax|documentation|readme|changelog|license|invoice|receipt|\bform\b|eeoc|authorization|resume|workbook|sales.kit|screening|\.gdoc|truck.sheet|contributing|code.of.conduct", re.I)
+QUARANTINE = re.compile(r"\btax\b|\bw-?2\b|1099|invoice|receipt|passport|driver.?licen|social.?security|\bssn\b|eeoc|authorization|screening|\bresume\b|\bcv\b|baby.girl|dating|profile.pictures?|wedding|charcuterie|craftco|personal.financ|medical.record|immunization|birth.cert", re.I)
 DOMAINS = [
     ("football", r"football|coaching|\bnfl\b|quarterback|offense|defense|scheme|gridiron"),
     ("physics", r"physics|mechanic|fluid|navier|thermodynam|quantum|kinematic|aerodynam|relativ"),
@@ -75,7 +84,8 @@ TOY_MATH = [
     re.compile(r"efficiency\s*=\s*force\s*\*\s*focus\s*/\s*fatigue", re.I),
     re.compile(r"(performance|success|efficiency|win)\s*=\s*[a-z ]*(force|focus|effort|heart|grit)[a-z ]*[/*]", re.I),
 ]
-SKIP_DIRS = {"node_modules", ".git", "$RECYCLE.BIN", ".next", "dist", "build", "venv", "ocr-venv", ".venv", "__pycache__", ".cache", "System Volume Information"}
+SKIP_DIRS = {"node_modules", ".git", "$RECYCLE.BIN", ".next", "dist", "build", "venv", "ocr-venv", ".venv", "__pycache__", ".cache", "System Volume Information", ".hermes", "foundry"}
+REFUSAL_STATUSES = {"INSUFFICIENT_SOURCE_ACCESS", "INSUFFICIENT_OCR"}
 
 
 def now():
@@ -88,6 +98,10 @@ def connect():
     con.execute("PRAGMA busy_timeout=30000")
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA)
+    try:
+        con.execute("ALTER TABLE corpus_queue ADD COLUMN file_size INTEGER")
+    except sqlite3.OperationalError:
+        pass
     return con
 
 
@@ -109,7 +123,7 @@ def guess_domain(name):
 def cmd_scan(args):
     con = connect()
     known = {r["sha256"] for r in con.execute("SELECT sha256 FROM corpus_queue")}
-    added = dupes = 0
+    added = dupes = quarantined = 0
     tiers = {"A": 0, "B": 0, "C": 0}
     for root in args.roots:
         if not os.path.isdir(root):
@@ -118,7 +132,8 @@ def cmd_scan(args):
         for dirpath, dirnames, filenames in os.walk(root):
             dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
             for fn in filenames:
-                if not fn.lower().endswith(".pdf"):
+                ext = os.path.splitext(fn)[1].lower()
+                if ext not in EXTS:
                     continue
                 path = os.path.join(dirpath, fn)
                 try:
@@ -126,7 +141,7 @@ def cmd_scan(args):
                     h = hashlib.sha256()
                     h.update(str(size).encode())
                     with open(path, "rb") as f:
-                        if os.path.splitdrive(path)[0].upper() not in ("C:", ""):
+                        if ext == ".pdf" and os.path.splitdrive(path)[0].upper() not in ("C:", ""):
                             h.update(f.read(2 << 20))  # triage hash: size + first 2MB on network drives
                         else:
                             for chunk in iter(lambda: f.read(1 << 20), b""):
@@ -139,34 +154,52 @@ def cmd_scan(args):
                     dupes += 1
                     continue
                 known.add(digest)
-                if size < 20_000 or TIER_C.search(fn):
-                    tier = "C"
-                elif TIER_A.search(fn):
-                    tier = "A"
-                else:
-                    tier = "B"
                 book_id = digest[:16]
+                if QUARANTINE.search(fn) or QUARANTINE.search(dirpath):
+                    con.execute(
+                        "INSERT OR IGNORE INTO corpus_queue(book_id,file_path,sha256,file_name,title,primary_domain,tier,status,file_size) VALUES(?,?,?,?,?,?,?,?,?)",
+                        (book_id, path, digest, fn, os.path.splitext(fn)[0], "personal", "C", "QUARANTINED", size),
+                    )
+                    quarantined += 1
+                    con.commit()
+                    continue
+                if ext == ".pdf":
+                    if size < 20_000 or TIER_C.search(fn):
+                        tier = "C"
+                    elif TIER_A.search(fn):
+                        tier = "A"
+                    else:
+                        tier = "B"
+                else:
+                    tier = "B" if TIER_A.search(fn) and not TIER_C.search(fn) else "C"
                 init_status = "DELEGATED_GCP" if digest[0] >= "8" else "PENDING"  # shard B belongs to GCP
                 con.execute(
-                    "INSERT OR IGNORE INTO corpus_queue(book_id,file_path,sha256,file_name,title,primary_domain,tier,status) VALUES(?,?,?,?,?,?,?,?)",
-                    (book_id, path, digest, fn, os.path.splitext(fn)[0], guess_domain(fn), tier, init_status),
+                    "INSERT OR IGNORE INTO corpus_queue(book_id,file_path,sha256,file_name,title,primary_domain,tier,status,file_size) VALUES(?,?,?,?,?,?,?,?,?)",
+                    (book_id, path, digest, fn, os.path.splitext(fn)[0], guess_domain(fn), tier, init_status, size),
                 )
                 added += 1
                 tiers[tier] += 1
                 con.commit()  # per-file: never hold a write lock across slow Drive hashing
-                if added % 100 == 0:
-                    print(f"progress: {added} enqueued", flush=True)
+                if added % 200 == 0:
+                    print(f"progress: {added} enqueued, {quarantined} quarantined", flush=True)
     con.commit()
-    log_event(con, None, "SCAN", f"roots={args.roots} added={added} dupes={dupes} tiers={tiers}")
+    log_event(con, None, "SCAN", f"roots={args.roots} added={added} dupes={dupes} quarantined={quarantined} tiers={tiers}")
     con.commit()
-    print(json.dumps({"added": added, "dupes_skipped": dupes, "tiers": tiers}))
+    print(json.dumps({"added": added, "dupes_skipped": dupes, "quarantined": quarantined, "tiers": tiers}))
 
 
 def cmd_claim(args):
     con = connect()
     con.execute("BEGIN IMMEDIATE")
     row = con.execute(
-        "SELECT * FROM corpus_queue WHERE status='PENDING' AND tier=? ORDER BY rowid LIMIT 1", (args.tier,)
+        """SELECT * FROM corpus_queue WHERE status='PENDING' AND tier=?
+           ORDER BY CASE WHEN lower(file_name) LIKE '%textbook%' OR lower(file_name) LIKE '%course%'
+                           OR lower(file_name) LIKE '%handbook%' OR lower(file_name) LIKE '%principles%'
+                           OR lower(file_name) LIKE '%foundation%' OR lower(file_name) LIKE '%introduction%'
+                           OR lower(file_name) LIKE '%theory%' OR lower(file_name) LIKE '%monograph%'
+                           OR lower(file_name) LIKE '%treatise%' OR lower(file_name) LIKE '%lectures%'
+                      THEN 0 ELSE 1 END, COALESCE(file_size,0) DESC, rowid LIMIT 1""",
+        (args.tier,),
     ).fetchone()
     if row is None:
         con.execute("COMMIT")
@@ -194,9 +227,9 @@ def validate(doc):
     if not book_id:
         errs.append("missing book_id")
     src = doc.get("source_status", "COMPLETE")
-    if src == "INSUFFICIENT_SOURCE_ACCESS":
+    if src in REFUSAL_STATUSES:
         if not doc.get("refusal_reason"):
-            errs.append("INSUFFICIENT_SOURCE_ACCESS requires refusal_reason")
+            errs.append(f"{src} requires refusal_reason")
         return errs
     prims = doc.get("primitives") or []
     if len(prims) < 3:
@@ -210,7 +243,7 @@ def validate(doc):
         if words(vq) < 8:
             errs.append(f"{tag}: verbatim_quote missing or <8 words (exact source text required)")
         if p.get("page") in (None, ""):
-            errs.append(f"{tag}: missing page citation")
+            errs.append(f"{tag}: missing page citation (line/section anchor for text files)")
         if not p.get("assumptions"):
             errs.append(f"{tag}: missing assumptions")
         if not p.get("breakdown_regime"):
@@ -276,14 +309,15 @@ def cmd_commit(args):
             print(f"- {e}")
         sys.exit(1)
     ts = now()
-    if doc.get("source_status") == "INSUFFICIENT_SOURCE_ACCESS":
+    if doc.get("source_status") in REFUSAL_STATUSES:
+        st = doc["source_status"]
         con.execute(
-            "UPDATE corpus_queue SET status='INSUFFICIENT_SOURCE_ACCESS', source_status=?, completed_at=?, gate_log='honest refusal accepted' WHERE book_id=?",
-            (doc["source_status"], ts, book_id),
+            "UPDATE corpus_queue SET status=?, source_status=?, completed_at=?, gate_log='honest refusal accepted' WHERE book_id=?",
+            (st, st, ts, book_id),
         )
-        log_event(con, book_id, "REFUSAL_ACCEPTED", doc.get("refusal_reason", "")[:200])
+        log_event(con, book_id, "REFUSAL_ACCEPTED", f"{st}: {doc.get('refusal_reason', '')[:200]}")
         con.commit()
-        print("GATEKEEPER_APPROVED (honest refusal: INSUFFICIENT_SOURCE_ACCESS)")
+        print(f"GATEKEEPER_APPROVED (honest refusal: {st})")
         return
     for p in doc.get("primitives", []):
         pid = f"{book_id}:{p.get('primitive_id') or p.get('name')}"
@@ -314,12 +348,46 @@ def cmd_release_stale(args):
     print(json.dumps({"released": len(rows)}))
 
 
+def cmd_sync_cloud(args):
+    """Mark GCP-completed files as COMPLETE_CLOUD from manifests/dossiers in gcp_sync/."""
+    con = connect()
+    if not os.path.isdir(GCP_SYNC):
+        print(json.dumps({"marked": 0, "note": "gcp_sync missing"}))
+        return
+    hashes, names = set(), set()
+    hexre = re.compile(r"\b[0-9a-f]{32}\b|\b[0-9a-f]{64}\b")
+    for dirpath, _, filenames in os.walk(GCP_SYNC):
+        for fn in filenames:
+            if os.path.splitext(fn)[1].lower() not in {".json", ".jsonl", ".md", ".txt", ".csv"}:
+                continue
+            try:
+                text = open(os.path.join(dirpath, fn), encoding="utf-8", errors="ignore").read()
+            except OSError:
+                continue
+            hashes.update(hexre.findall(text.lower()))
+            names.add(fn)
+    marked = 0
+    if hashes:
+        q = ",".join("?" * len(hashes))
+        rows = con.execute(
+            f"SELECT book_id FROM corpus_queue WHERE sha256 IN ({q}) AND status IN ('PENDING','DELEGATED_GCP')",
+            tuple(hashes),
+        ).fetchall()
+        for r in rows:
+            con.execute("UPDATE corpus_queue SET status='COMPLETE_CLOUD', gate_log='completed by gse-foundry-gcp-01' WHERE book_id=?", (r["book_id"],))
+            log_event(con, r["book_id"], "COMPLETE_CLOUD", "gcp_sync manifest match")
+            marked += 1
+    con.commit()
+    print(json.dumps({"marked": marked, "hashes_seen": len(hashes), "files_seen": len(names)}))
+
+
 def cmd_status(args):
     con = connect()
     counts = [dict(r) for r in con.execute("SELECT tier, status, COUNT(*) n FROM corpus_queue GROUP BY tier, status ORDER BY tier, status")]
     total = con.execute("SELECT COUNT(*) FROM corpus_queue").fetchone()[0]
+    pending = con.execute("SELECT COUNT(*) FROM corpus_queue WHERE status='PENDING'").fetchone()[0]
     recent = [dict(r) for r in con.execute("SELECT datetime(ts,'unixepoch','localtime') t, book_id, event, substr(detail,1,120) d FROM events ORDER BY id DESC LIMIT 12")]
-    print(json.dumps({"total_books": total, "counts": counts, "recent": recent}, indent=1))
+    print(json.dumps({"total_books": total, "pending_termination_counter": pending, "counts": counts, "recent": recent}, indent=1))
 
 
 def main():
@@ -328,10 +396,11 @@ def main():
     s = sub.add_parser("scan"); s.add_argument("--roots", nargs="+", required=True)
     c = sub.add_parser("claim"); c.add_argument("--worker", required=True); c.add_argument("--tier", default="A")
     m = sub.add_parser("commit"); m.add_argument("artifact")
-    r = sub.add_parser("release-stale"); r.add_argument("--minutes", type=int, default=90)
+    r = sub.add_parser("release-stale"); r.add_argument("--minutes", type=int, default=20)
+    sub.add_parser("sync-cloud")
     sub.add_parser("status")
     args = ap.parse_args()
-    {"scan": cmd_scan, "claim": cmd_claim, "commit": cmd_commit, "release-stale": cmd_release_stale, "status": cmd_status}[args.cmd](args)
+    {"scan": cmd_scan, "claim": cmd_claim, "commit": cmd_commit, "release-stale": cmd_release_stale, "sync-cloud": cmd_sync_cloud, "status": cmd_status}[args.cmd](args)
 
 
 if __name__ == "__main__":
