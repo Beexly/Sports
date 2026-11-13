@@ -478,7 +478,14 @@ export async function processSport(
     // on its own.
     const paidCircuitOpen = !oddsKeyIsSentinel && getOddsPaymentCircuitBreaker().getState() === "open";
     if (paidCircuitOpen) {
-      oddsProviderTag = "paid-circuit-open";
+      // Never clobber a board the keyless path already fetched. Overwriting
+      // `espn_public` with `paid-circuit-open` here made `isEspnPrimary` false
+      // at the freshness gate, which then demanded upstream `last_update`
+      // timestamps that ESPN rows do not carry: every row parsed as Invalid
+      // Date and the whole run FAILED "Upstream odds are stale
+      // (unparseableTimestamps=N)". Observed on NCAAF/NCAAB, where the paid
+      // circuit sits open for long stretches.
+      if (events.length === 0) oddsProviderTag = "paid-circuit-open";
       console.warn(
         `${logPrefix} ${sport.key}: Odds API payment circuit open — skipping paid fetch, ` +
           `using the keyless Galaxy/ESPN path`,

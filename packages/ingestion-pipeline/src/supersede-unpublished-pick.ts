@@ -98,6 +98,28 @@ export interface SupersedeTx {
         payload: SupersedeVoidEventPayload;
       };
     }): Promise<unknown>;
+    /** Present on the real Prisma client; test doubles may supply create only. */
+    upsert?(args: {
+      where: { pickId: string };
+      create: {
+        pickId: string;
+        gameId: string;
+        result: "VOID";
+        settledAt: Date;
+        status?: string;
+        payload: SupersedeVoidEventPayload;
+      };
+      update: {
+        gameId: string;
+        result: "VOID";
+        settledAt: Date;
+        status: string;
+        payload: SupersedeVoidEventPayload;
+        claimedAt: null;
+        deliveredAt: null;
+        completedAt: null;
+      };
+    }): Promise<unknown>;
   };
   postSettlementWork: PostSettlementWorkDelegate;
 }
@@ -175,16 +197,39 @@ export async function supersedeUnpublishedPendingPick(
     // and zero-sit): the event rides in the void transaction; the outbox worker
     // closes VOID events as receipts (non-decisive) and never rewrites the
     // payload.
-    await tx.pickSettlementEvent.create({
-      data: {
-        pickId: args.pickId,
-        gameId: args.gameId,
-        result: "VOID",
-        settledAt: now,
-        status: "PENDING",
-        payload,
-      },
-    });
+    const eventData = {
+      pickId: args.pickId,
+      gameId: args.gameId,
+      result: "VOID" as const,
+      settledAt: now,
+      status: "PENDING",
+      payload,
+    };
+    // A pick carries only ONE settlement event (`pickId String @unique`). A slot
+    // holder that was voided, re-opened to PENDING by a later lane and voided
+    // again still owns the first event row, so `create()` threw P2002 and rolled
+    // the whole ingestion transaction back — production logged it as a FAILED
+    // basketball_nba run every hour (the run dies at mint time, four seconds in,
+    // before any odds fetch). Upsert rewrites the row and resets it to PENDING so
+    // the outbox re-announces the current void instead of the superseded one.
+    if (tx.pickSettlementEvent.upsert) {
+      await tx.pickSettlementEvent.upsert({
+        where: { pickId: args.pickId },
+        create: eventData,
+        update: {
+          gameId: args.gameId,
+          result: "VOID",
+          settledAt: now,
+          status: "PENDING",
+          payload,
+          claimedAt: null,
+          deliveredAt: null,
+          completedAt: null,
+        },
+      });
+    } else {
+      await tx.pickSettlementEvent.create({ data: eventData });
+    }
 
     // Same post-settlement rows the zero-sit void appends: the CLV grader and
     // the outcome snapshotter both need to see the void.

@@ -24,19 +24,23 @@ const ARGS = {
   supersededBySelection: "Carolina Panthers -2.5",
 } as const;
 
-function makeHarness(updateCount = 1) {
+function makeHarness(updateCount = 1, opts: { withUpsert?: boolean } = {}) {
   const pickUpdateMany = vi.fn().mockResolvedValue({ count: updateCount });
   const pickSettlementEventCreate = vi.fn().mockResolvedValue({});
+  const pickSettlementEventUpsert = vi.fn().mockResolvedValue({});
   const postSettlementWorkCreateMany = vi.fn().mockResolvedValue({ count: 2 });
+  const eventDelegate = opts.withUpsert
+    ? { create: pickSettlementEventCreate, upsert: pickSettlementEventUpsert }
+    : { create: pickSettlementEventCreate };
   const tx = {
     pick: { updateMany: pickUpdateMany },
-    pickSettlementEvent: { create: pickSettlementEventCreate },
+    pickSettlementEvent: eventDelegate,
     postSettlementWork: { createMany: postSettlementWorkCreateMany },
   };
   const db: SupersedeDb = {
     $transaction: async <T,>(fn: (tx: SupersedeTx) => Promise<T>) => fn(tx as unknown as SupersedeTx),
   };
-  return { db, tx, pickUpdateMany, pickSettlementEventCreate, postSettlementWorkCreateMany };
+  return { db, tx, pickUpdateMany, pickSettlementEventCreate, pickSettlementEventUpsert, postSettlementWorkCreateMany };
 }
 
 describe("supersedeUnpublishedPendingPick", () => {
@@ -102,5 +106,37 @@ describe("supersedeUnpublishedPendingPick", () => {
     expect(result).toBe(false);
     expect(h.pickSettlementEventCreate).not.toHaveBeenCalled();
     expect(h.postSettlementWorkCreateMany).not.toHaveBeenCalled();
+  });
+
+  it("upserts (never create-throws) when the pick already owns an event row from an earlier void", async () => {
+    // Regression for the hourly FAILED basketball_nba ingestion run: a slot
+    // holder voided, re-opened to PENDING by a later lane and voided again still
+    // owns its first PickSettlementEvent, so create() threw P2002 and rolled the
+    // whole mint transaction back.
+    const h = makeHarness(1, { withUpsert: true });
+    h.pickSettlementEventCreate.mockRejectedValue(
+      Object.assign(new Error("Unique constraint failed on the fields: (`pickId`)"), { code: "P2002" }),
+    );
+
+    const result = await supersedeUnpublishedPendingPick(h.db, ARGS);
+
+    expect(result).toBe(true);
+    expect(h.pickSettlementEventCreate).not.toHaveBeenCalled();
+    expect(h.pickSettlementEventUpsert).toHaveBeenCalledTimes(1);
+    const call = h.pickSettlementEventUpsert.mock.calls[0]?.[0] as
+      | { where: { pickId: string }; create: Record<string, unknown>; update: Record<string, unknown> }
+      | undefined;
+    if (!call) throw new Error("pickSettlementEvent.upsert was not called");
+    expect(call.where).toEqual({ pickId: "pick-stale" });
+    expect(call.create).toMatchObject({ pickId: "pick-stale", result: "VOID", status: "PENDING" });
+    // Reset to PENDING with cleared delivery stamps so the outbox re-announces
+    // the current void rather than a stale delivered receipt.
+    expect(call.update).toMatchObject({
+      result: "VOID",
+      status: "PENDING",
+      claimedAt: null,
+      deliveredAt: null,
+      completedAt: null,
+    });
   });
 });

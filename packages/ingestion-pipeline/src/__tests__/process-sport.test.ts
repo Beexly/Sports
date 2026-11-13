@@ -6,6 +6,7 @@ import type { ReadinessGates } from "@sports/prediction-engine";
 // prove the stub agrees with itself.
 import { calculatePickResult, selectGradingLine } from "@sports/prediction-engine";
 import type { FixtureProbe } from "../fixture-confirmation.js";
+import { recordSourceSnapshot } from "../source-snapshot.js";
 
 /**
  * Behavioral tests for processSport — the single pick-generation path
@@ -763,6 +764,27 @@ describe("processSport", () => {
       expect(res.status).not.toBe("failed");
       expect(res.paidRequestCount).toBeUndefined();
       expect(warn.mock.calls.some((c) => /payment circuit open/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("paid circuit OPEN must not relabel a board the keyless path already fetched (espn_public stays espn_public)", async () => {
+      // Regression: the open-circuit block used to overwrite `espn_public` with
+      // `paid-circuit-open` even when ESPN had already returned the board. That
+      // made the freshness gate treat ESPN rows (no upstream last_update) as
+      // stale, failing the whole run with "unparseableTimestamps=N".
+      mocks.circuitState.mockReturnValue("open");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      await processSport(SPORT, "real-paid-key", gates());
+
+      const snapshot = vi.mocked(recordSourceSnapshot).mock.calls.at(-1)?.[0] as
+        | { provider?: string }
+        | undefined;
+      expect(snapshot?.provider).toBe("espn_public");
+      expect(mocks.getOdds).not.toHaveBeenCalled();
       warn.mockRestore();
     });
 

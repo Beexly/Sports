@@ -711,35 +711,56 @@ export async function settleSport(
               data: { result, settledAt },
             });
             if (updated.count === 0) return updated;
-            await tx.pickSettlementEvent.create({
-              data: {
-                pickId: pick.id,
-                gameId: game.id,
-                result,
-                settledAt,
-                status: "PENDING",
-                // SETTLE-TIME EVIDENCE (C-120), same contract as the free
-                // lanes: the score this grade was computed from, recorded
-                // inside the settlement transaction. Nothing else records it,
-                // so once a game row is overwritten there is no way to tell a
-                // MIS-GRADED pick from one graded correctly against a score
-                // that later changed.
-                //
-                // `sources` is empty on purpose: the paid path grades from the
-                // odds provider's normalized score, which carries no per-score
-                // source ids, and inventing one would put a fact in the
-                // evidence record that nothing observed. The lane is
-                // identified by `path`.
-                payload: {
-                  settledWith: {
-                    homeScore: score.homeScore,
-                    awayScore: score.awayScore,
-                    sources: [],
-                    path: "paid",
-                  },
+            const eventData = {
+              pickId: pick.id,
+              gameId: game.id,
+              result,
+              settledAt,
+              status: "PENDING",
+              // SETTLE-TIME EVIDENCE (C-120), same contract as the free
+              // lanes: the score this grade was computed from, recorded
+              // inside the settlement transaction. Nothing else records it,
+              // so once a game row is overwritten there is no way to tell a
+              // MIS-GRADED pick from one graded correctly against a score
+              // that later changed.
+              //
+              // `sources` is empty on purpose: the paid path grades from the
+              // odds provider's normalized score, which carries no per-score
+              // source ids, and inventing one would put a fact in the
+              // evidence record that nothing observed. The lane is
+              // identified by `path`.
+              payload: {
+                settledWith: {
+                  homeScore: score.homeScore,
+                  awayScore: score.awayScore,
+                  sources: [],
+                  path: "paid",
                 },
               },
-            });
+            };
+            // `pickId` is @unique. A pick that was settled, withdrawn and
+            // re-opened to PENDING still owns its event row, and create() then
+            // throws P2002, rolling this whole transaction back. Upsert resets
+            // the row to PENDING so the outbox re-announces the corrected
+            // outcome (same fix as the free-backfill lane).
+            if (tx.pickSettlementEvent.upsert) {
+              await tx.pickSettlementEvent.upsert({
+                where: { pickId: pick.id },
+                create: eventData,
+                update: {
+                  gameId: game.id,
+                  result,
+                  settledAt,
+                  status: "PENDING",
+                  payload: eventData.payload,
+                  claimedAt: null,
+                  deliveredAt: null,
+                  completedAt: null,
+                },
+              });
+            } else {
+              await tx.pickSettlementEvent.create({ data: eventData });
+            }
             // Durable post-settlement work-state (6.10): the CLV grade and
             // snapshot outcome owed for this settled pick are recorded IN
             // the settlement transaction, so a crash before they run leaves
