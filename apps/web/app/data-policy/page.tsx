@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 
 export const metadata: Metadata = {
-  title: "Zero Data Retention (ZDR) & Provider Data Policy | Galaxy Sports Edge & GSI",
+  title: { absolute: "Zero Data Retention (ZDR) & Provider Data Policy | Galaxy Sports Edge & GSI" },
   description:
     "Official OpenRouter Provider Data Policy and Zero Data Retention (ZDR) specification for GSE Stealth-Skeleton v2.4.0 inference endpoints.",
   alternates: { canonical: "/data-policy" },

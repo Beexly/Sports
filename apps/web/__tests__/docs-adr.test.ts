@@ -19,7 +19,7 @@ const ADR_DIR = resolve(repoRoot, "docs/adr");
 function listAdr(): string[] {
   if (!existsSync(ADR_DIR)) return [];
   return readdirSync(ADR_DIR)
-    .filter((n) => n.endsWith(".md"))
+    .filter((n) => n.endsWith(".md") && n !== "README.md")
     .map((n) => join(ADR_DIR, n));
 }
 
@@ -61,7 +61,9 @@ describe("docs/adr — ADR contract", () => {
     });
 
     it(`${name} filename follows NNN-kebab-case.md`, () => {
-      expect(name).toMatch(/^\d{3}-[a-z][a-z0-9-]+\.md$/);
+      // Both numbering styles are live in this directory: ADR 001-009 use a
+      // three-digit prefix, ADR 0001-0006 (Week 9 / GSI expansion) use four.
+      expect(name).toMatch(/^\d{3,4}-[a-z][a-z0-9-]+\.md$/);
     });
   }
 });

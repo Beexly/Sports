@@ -10,7 +10,7 @@ import { DoctrineBoardView } from "@/components/board/doctrine-board";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "The Board: Plays and Passes | Galaxy Sports Edge",
+  title: { absolute: "The Board: Plays and Passes | Galaxy Sports Edge" },
   description:
     "Every game is either a PLAY with its confidence out of 100, or a transparent PASS with the reason. No error states, no hidden slate. The two doctrines share one board.",
   alternates: { canonical: "/board" },

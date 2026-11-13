@@ -17,7 +17,7 @@ import { SingleSlateCard, MembershipPlans } from "./_components/two-door-checkou
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Season Membership & Single-Slate Packs | Galaxy Sports Edge",
+  title: { absolute: "Season Membership & Single-Slate Packs | Galaxy Sports Edge" },
   description:
     "Two doors: a season membership at founding pricing, or single-slate packs with store-credit protection. Every official play clears a five-stage check - and every pass is published free.",
 };

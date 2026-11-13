@@ -7,7 +7,7 @@ import { computeLiveSinkhornKnoppTransport } from "@/lib/jarvis/stealth-skeleton
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Provider & Platform Status | Galaxy Sports Edge & GSI",
+  title: { absolute: "Provider & Platform Status | Galaxy Sports Edge & GSI" },
   description:
     "Live operational status for Galaxy Sports Edge & Galaxy Science Institute (GSI) Stealth-Skeleton v2.4.0 OpenRouter inference endpoints.",
   alternates: { canonical: "/status" },

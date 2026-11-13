@@ -119,7 +119,7 @@ vi.mock("@/lib/observability/sentry", () => ({
 }));
 
 // ─── Now import the module under test ──────────────────────────────────────────
-import { persistFreeScores } from "./free-score-persist";
+import { persistFreeScores, storageClearanceForFinal } from "./free-score-persist";
 import { uniqueScoreboardDates } from "./settlement-score-dates";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -189,6 +189,8 @@ function makeTrustedFinal(opts: {
   awayAbbr: string;
   awayScore: number;
   confirmation: "CONFIRMED" | "SINGLE_SOURCE";
+  /** Provenance carried by the fused final; defaults to the ESPN-only case. */
+  sources?: readonly string[];
 }) {
   return {
     date: opts.date,
@@ -196,7 +198,7 @@ function makeTrustedFinal(opts: {
     home: { name: opts.homeName, abbr: opts.homeAbbr, score: opts.homeScore },
     away: { name: opts.awayName, abbr: opts.awayAbbr, score: opts.awayScore },
     confirmation: opts.confirmation,
-    sources: ["espn-public-api"],
+    sources: opts.sources ?? ["espn-public-api"],
   };
 }
 
@@ -1649,5 +1651,157 @@ describe("persistFreeScores — an unfinished doubleheader is never resolved by 
       data: { homeScore: number; awayScore: number };
     };
     expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2 });
+  });
+});
+
+// ─── Rights gate must follow the FINAL's provenance (GSE-SEC-051) ──────────────
+//
+// The gate used to name `espn-public-api` for every match regardless of which
+// feed produced the final. These pin the corrected rule: every source that
+// contributes a final has to clear storage on its own, and the refusal has to
+// be reported rather than looking like an empty slate.
+describe("persistFreeScores — storage clearance follows the final's own sources", () => {
+  beforeEach(() => {
+    mocks.checkClearanceMock.mockReturnValue(clearanceResult(true, []));
+    mocks.dbGameUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.dbIngestionRunCreate.mockResolvedValue({
+      id: "run-stub",
+      status: "SUCCESS",
+      completedAt: new Date("2026-06-15T12:00:00.000Z"),
+    });
+    mocks.fetchScoresMultiSourceMock.mockResolvedValue({
+      games: [],
+      errors: [],
+      attempted: [],
+      used: null,
+      primary: null,
+      failover: false,
+      oddsApiRequired: false,
+      datesRequested: [],
+    });
+    mocks.fetchHenrygdScoreboardMock.mockResolvedValue([]);
+    mocks.buildTrustedFinalsMock.mockReturnValue([]);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  /** A final ESPN never carried, so henrygd is its only provenance. */
+  function henrygdOnlyFinal() {
+    return makeTrustedFinal({
+      date: "2026-06-15",
+      homeName: "Team A",
+      homeAbbr: "TA",
+      homeScore: 21,
+      awayName: "Team B",
+      awayAbbr: "TB",
+      awayScore: 14,
+      confirmation: "SINGLE_SOURCE",
+      sources: ["henrygd-ncaa"],
+    });
+  }
+
+  function pendingGame() {
+    return makeGameRow({
+      id: "game-1",
+      homeTeamName: "Team A",
+      awayTeamName: "Team B",
+      commenceTime: new Date("2026-06-15T12:00:00.000Z"),
+      homeScore: null,
+      awayScore: null,
+    });
+  }
+
+  it("refuses a henrygd-only final instead of judging it by ESPN's rights entry", async () => {
+    // The live registry's shape: ESPN's row exists (denied for storage),
+    // henrygd has no row at all. The old hardcoded check asked about ESPN for a
+    // final ESPN never carried, so the registry answered a question about the
+    // wrong source.
+    mocks.checkClearanceMock.mockImplementation((req: { source_id?: string }) =>
+      req.source_id === "henrygd-ncaa"
+        ? clearanceResult(false, [
+            { code: "SOURCE_NOT_REGISTERED", message: "henrygd-ncaa not registered" },
+          ])
+        : clearanceResult(true, []),
+    );
+
+    mocks.dbGameFindMany.mockResolvedValue([pendingGame()]);
+    mocks.buildTrustedFinalsMock.mockReturnValue([henrygdOnlyFinal()]);
+
+    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    const nfl = result.sports.find((s) => s.sport === "americanfootball_nfl")!;
+    expect(nfl.gamesMatched).toBe(1);
+    expect(nfl.gamesUpdated).toBe(0);
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+    expect(nfl.rightsRefused).toBe(1);
+    expect(nfl.rightsDeniedSources).toEqual(["henrygd-ncaa"]);
+  });
+
+  it("refuses a CONFIRMED final when only one of its two sources holds storage rights", async () => {
+    mocks.checkClearanceMock.mockImplementation((req: { source_id?: string }) =>
+      req.source_id === "henrygd-ncaa"
+        ? clearanceResult(false, [
+            { code: "SOURCE_NOT_REGISTERED", message: "henrygd-ncaa not registered" },
+          ])
+        : clearanceResult(true, []),
+    );
+
+    mocks.dbGameFindMany.mockResolvedValue([pendingGame()]);
+    mocks.buildTrustedFinalsMock.mockReturnValue([
+      makeTrustedFinal({
+        date: "2026-06-15",
+        homeName: "Team A",
+        homeAbbr: "TA",
+        homeScore: 21,
+        awayName: "Team B",
+        awayAbbr: "TB",
+        awayScore: 14,
+        confirmation: "CONFIRMED",
+        sources: ["espn-public-api", "henrygd-ncaa"],
+      }),
+    ]);
+
+    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    const nfl = result.sports.find((s) => s.sport === "americanfootball_nfl")!;
+    expect(nfl.gamesMatched).toBe(1);
+    expect(nfl.gamesUpdated).toBe(0);
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+    expect(nfl.rightsRefused).toBe(1);
+    // Only the refusing source is named; the cleared one is not smeared.
+    expect(nfl.rightsDeniedSources).toEqual(["henrygd-ncaa"]);
+  });
+
+  it("still writes when every contributing source clears storage", async () => {
+    mocks.dbGameFindMany.mockResolvedValue([pendingGame()]);
+    mocks.buildTrustedFinalsMock.mockReturnValue([
+      makeTrustedFinal({
+        date: "2026-06-15",
+        homeName: "Team A",
+        homeAbbr: "TA",
+        homeScore: 21,
+        awayName: "Team B",
+        awayAbbr: "TB",
+        awayScore: 14,
+        confirmation: "CONFIRMED",
+        sources: ["espn-public-api", "henrygd-ncaa"],
+      }),
+    ]);
+
+    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    const nfl = result.sports.find((s) => s.sport === "americanfootball_nfl")!;
+    expect(nfl.gamesUpdated).toBe(1);
+    expect(nfl.rightsRefused).toBe(0);
+    expect(nfl.rightsDeniedSources).toEqual([]);
+  });
+
+  it("fails closed on a final with no source attribution", () => {
+    const cleared = storageClearanceForFinal([]);
+    expect(cleared.allowed).toBe(false);
+    expect(cleared.denied).toEqual([]);
+    expect(cleared.blocks).toEqual(["NO_SOURCE_ATTRIBUTION"]);
   });
 });

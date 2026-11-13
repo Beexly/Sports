@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 
 export const metadata: Metadata = {
-  title: "Football Film, Trench & Matchup Research | Galaxy Sports Edge",
+  title: { absolute: "Football Film, Trench & Matchup Research | Galaxy Sports Edge" },
   description:
     "How Galaxy Sports Edge grades NFL matchups: offensive and defensive line pass protection, injury target redistribution, short-week fatigue, and de-vigged sportsbook line value.",
   alternates: { canonical: "/research" },

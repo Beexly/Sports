@@ -1,8 +1,7 @@
-# ADR-0006: Multi-Channel Short-Form Video Production, Social Follower Flywheel & Ad/Affiliate Revenue Attribution Engine
+# ADR 0006 — Multi-Channel Short-Form Video Production, Social Follower Flywheel & Ad/Affiliate Revenue Attribution Engine
 
-## Status
-
-Accepted (`2026-11-06`)
+**Date:** 2026-11-06
+**Status:** Accepted
 
 ## Context
 

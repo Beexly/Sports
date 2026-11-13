@@ -43,7 +43,7 @@ describe("no double brand in page titles (FE-13)", () => {
     const violations: string[] = [];
 
     for (const relPath of pages) {
-      const src = readFileSync(join(APP_DIR, relPath), "utf8");
+      const src = readFileSync(join(APP_DIR, relPath), "utf8").replace(/\r\n/g, "\n");
       const firstTitleLine = src.split("\n").find((line) => TITLE_LINE.test(line));
       if (!firstTitleLine) continue;
       if (!BRAND_MARKER.test(firstTitleLine)) continue;
@@ -76,7 +76,7 @@ describe("no double brand in page titles (FE-13)", () => {
       "pledge/page.tsx",
     ];
     for (const relPath of fixed) {
-      const src = readFileSync(join(APP_DIR, relPath), "utf8");
+      const src = readFileSync(join(APP_DIR, relPath), "utf8").replace(/\r\n/g, "\n");
       const firstTitleLine = src.split("\n").find((line) => TITLE_LINE.test(line));
       expect(firstTitleLine).toContain("absolute:");
     }

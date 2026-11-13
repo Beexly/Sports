@@ -6,7 +6,7 @@ import {
 } from "@/lib/intelligence/growth-observatory";
 
 export const metadata: Metadata = {
-  title: "Intelligence & Reasoning Growth Observatory | Galaxy Sports Edge",
+  title: { absolute: "Intelligence & Reasoning Growth Observatory | Galaxy Sports Edge" },
   description:
     "Real-time observatory tracking Quad-Engine Corpus Velocity (arXiv, OpenAlex, Kaggle, Hugging Face, DOCX OMML), 4-Stage Router Funnel, and Sunday Post-Game Film Autopsy.",
   alternates: { canonical: "/intelligence/observatory" },
@@ -153,7 +153,7 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
     postGameAutopsyStats.weSawCount;
 
   return (
-    <main className="min-h-screen bg-black text-white px-4 py-8 md:px-12 lg:px-20 font-sans">
+    <main id="main-content" className="min-h-screen bg-black text-white px-4 py-8 md:px-12 lg:px-20 font-sans">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <header className="border-b border-gray-800 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">

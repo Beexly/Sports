@@ -34,7 +34,7 @@ function resolveGameWriteup(gameId: string): CoachGameWriteup | undefined {
 
 export async function generateMetadata({ params }: GameDetailPageProps): Promise<Metadata> {
   const writeup = resolveGameWriteup(params.gameId);
-  if (!writeup) return { title: "Game Matchup Preview | Galaxy Sports Edge" };
+  if (!writeup) return { title: { absolute: "Game Matchup Preview | Galaxy Sports Edge" } };
   return {
     title: `${writeup.matchup} Matchup Preview | Galaxy Sports Edge`,
     description: `Plain-English football matchup preview, offensive and defensive line notes, and locked official picks for ${writeup.matchup}.`,

@@ -15,7 +15,7 @@ export default function CockpitHermesPluginsPage() {
             ← Cockpit Overview
           </Link>
           <span>·</span>
-          <span className="text-plasma">Hermes 11-Plugin Universe & NVIDIA 6-Skill Suite</span>
+          <h1 className="text-plasma">Hermes 11-Plugin Universe & NVIDIA 6-Skill Suite</h1>
         </div>
         <div className="flex items-center gap-2 font-mono text-[10px] text-ion-3">
           <span>Ledger: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)</span>

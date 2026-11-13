@@ -10,7 +10,7 @@ import {
 } from "@/lib/ledger/verified-ledger-view";
 
 export const metadata: Metadata = {
-  title: "Calibration Proof Room | Galaxy Sports Edge",
+  title: { absolute: "Calibration Proof Room | Galaxy Sports Edge" },
   description:
     "Calibration progress recomputed from the settlement database. Confidence-band counts, closing-line value and the 200-bet law: no win-rate percentage until the sample earns it.",
   alternates: { canonical: "/calibration" },

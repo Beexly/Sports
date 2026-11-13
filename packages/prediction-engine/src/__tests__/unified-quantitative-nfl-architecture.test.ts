@@ -109,4 +109,25 @@ describe("Unified Quantitative NFL Architecture & X/IG Sweep Wiring", () => {
     // Symmetry
     expect(normalPpf(0.025) + normalPpf(0.975)).toBeCloseTo(0, 8);
   });
+
+  it("keeps the devig underdog diagnostic numeric and the Acklam quantile finite", () => {
+    // The receipt reads Shin/Power at index 1 of a two-way devig. It used to be
+    // a bare index read that noUncheckedIndexedAccess rejected as "possibly
+    // undefined" — the fix reads through `?? Number.NaN`. Pin that the real
+    // path still produces a probability, not a fallback.
+    const direct = evaluateUnifiedQuantitativeArchitectureOverlay({ sampleRushYards: 6 });
+    expect(Number.isFinite(direct.devig2WayUnderdogShin)).toBe(true);
+    expect(Number.isFinite(direct.devig2WayUnderdogPower)).toBe(true);
+    expect(direct.devig2WayUnderdogShin).toBeGreaterThan(0);
+    expect(direct.devig2WayUnderdogShin).toBeLessThan(1);
+    expect(direct.devig2WayUnderdogPower).toBeGreaterThan(0);
+    expect(direct.devig2WayUnderdogPower).toBeLessThan(1);
+
+    // One value from each Acklam branch (below pLow, central, above pHigh).
+    // A coefficient table that lost an element would surface here as NaN.
+    for (const p of [0.001, 0.2, 0.5, 0.8, 0.999]) {
+      expect(Number.isFinite(normalPpf(p))).toBe(true);
+    }
+    expect(normalPpf(0.5)).toBeCloseTo(0, 6);
+  });
 });

@@ -1,8 +1,7 @@
-# ADR-0005: Week 9 Plays (`47-19-1` Baseline), 360-Degree Full-Board Market Review & DraftKings/FanDuel DFS Engine
+# ADR 0005 — Week 9 Plays (`47-19-1` Baseline), 360-Degree Full-Board Market Review & DraftKings/FanDuel DFS Engine
 
-## Status
-
-Accepted (`2026-11-06`)
+**Date:** 2026-11-06
+**Status:** Accepted
 
 ## Context
 

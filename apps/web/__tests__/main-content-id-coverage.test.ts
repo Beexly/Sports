@@ -27,7 +27,13 @@ const EXCLUDED_TOP_LEVEL = new Set(["api", "admin", "cockpit", "embed"]);
 
 // One-off delegations that resolve through a component the shared-shell
 // check below doesn't cover, verified by hand.
-const MANUAL_ALLOWLIST = new Set(["fable/page.tsx"]);
+const MANUAL_ALLOWLIST = new Set([
+  "fable/page.tsx",
+  // The home page delegates its whole body to RedlineWorld, whose root
+  // <main> already carries id="main-content" (components/redline/redline-world.tsx).
+  // A source-level scan of app/page.tsx cannot see through that component.
+  "page.tsx",
+]);
 
 function findPageFiles(dir: string, base: string): string[] {
   const out: string[] = [];

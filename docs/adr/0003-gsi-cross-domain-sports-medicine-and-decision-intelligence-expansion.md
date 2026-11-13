@@ -1,8 +1,7 @@
-# ADR-0003: Galaxy Sports Institute (GSI) Cross-Domain Sports Medicine & Enterprise Decision Intelligence Expansion
+# ADR 0003 — Galaxy Sports Institute (GSI) Cross-Domain Sports Medicine & Enterprise Decision Intelligence Expansion
 
-## Status
-
-Accepted (`2026-11-06`)
+**Date:** 2026-11-06
+**Status:** Accepted
 
 ## Context
 

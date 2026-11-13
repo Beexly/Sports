@@ -1,8 +1,7 @@
-# ADR-0001: Uncompressed Ingest-and-Learn Doctrine & Coupled 5-API Omniscience Engine
+# ADR 0001 — Uncompressed Ingest-and-Learn Doctrine & Coupled 5-API Omniscience Engine
 
-## Status
-
-Accepted (`2026-11-06`)
+**Date:** 2026-11-06
+**Status:** Accepted
 
 ## Context
 
