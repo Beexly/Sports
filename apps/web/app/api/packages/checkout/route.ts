@@ -4,6 +4,17 @@ import {
   getPackageBySlug,
   buildStripePackageCheckoutPayload,
 } from "@/lib/packages/catalog";
+import {
+  SEASON_MEMBERSHIP_SLUG,
+  MEMBERSHIP_PLANS,
+  type MembershipPlanId,
+  getSingleSlateOffer,
+  isSingleSlateOfferSlug,
+  resolveWhopCheckoutUrl,
+  singleSlateCheckoutAvailability,
+  membershipCheckoutAvailability,
+} from "@/lib/packages/two-door-offers";
+import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -17,6 +28,24 @@ export async function OPTIONS() {
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
+
+  // Read-only storefront status: Stage-5 gate + Whop configuration booleans.
+  // Never exposes checkout URLs or keys; used to render honest disabled states.
+  if (searchParams.get("action") === "status") {
+    const gate = await getStage5GateStatus();
+    return NextResponse.json(
+      {
+        checkoutEnabled: gate.checkoutEnabled,
+        officialPlayCount: gate.officialPlayCount,
+        reason: gate.reason,
+        evaluatedAt: gate.evaluatedAt,
+        singleSlateOffers: singleSlateCheckoutAvailability(),
+        membershipPlans: membershipCheckoutAvailability(),
+      },
+      { headers: CORS_HEADERS },
+    );
+  }
+
   const packageSlug = searchParams.get("packageSlug") || searchParams.get("package") || searchParams.get("slug") || "";
   const creditBack = searchParams.get("creditBack") === "true" || searchParams.get("creditBack") === "1";
   const returnToStorefront = searchParams.get("returnToStorefront") === "true" || searchParams.get("returnToStorefront") === "1";
@@ -52,6 +81,7 @@ export async function POST(req: Request) {
     let creditBack = false;
     let email: string | undefined;
     let returnToStorefront = false;
+    let plan: string | undefined;
 
     if (isFormSubmit) {
       const formData = await req.formData().catch(() => null);
@@ -63,6 +93,8 @@ export async function POST(req: Request) {
         returnToStorefront = rVal === "true" || rVal === "1";
         const eVal = formData.get("email");
         email = typeof eVal === "string" && eVal.trim() ? eVal.trim() : undefined;
+        const pVal = formData.get("plan");
+        plan = typeof pVal === "string" && pVal.trim() ? pVal.trim() : undefined;
       }
     } else {
       const body = await req.json().catch(() => ({}));
@@ -70,6 +102,7 @@ export async function POST(req: Request) {
       creditBack = Boolean(body.creditBack);
       returnToStorefront = Boolean(body.returnToStorefront);
       email = typeof body.email === "string" ? body.email : undefined;
+      plan = typeof body.plan === "string" ? body.plan : undefined;
     }
 
     if (!packageSlug || typeof packageSlug !== "string") {
@@ -79,6 +112,19 @@ export async function POST(req: Request) {
       );
     }
 
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "www.galaxysportsedge.com";
+    const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+    const origin = req.headers.get("origin") || `${proto}://${host}`;
+
+    // ── New two-door offers: Stage-5 gate + Whop only. Never Stripe, never a
+    //    mock success. Legacy slugs below keep the existing Stripe path. ──
+    if (packageSlug === SEASON_MEMBERSHIP_SLUG) {
+      return handleMembershipCheckout({ plan, isFormSubmit, origin });
+    }
+    if (isSingleSlateOfferSlug(packageSlug)) {
+      return handleSingleSlateCheckout({ packageSlug, creditBack, isFormSubmit, origin });
+    }
+
     const pkg = getPackageBySlug(packageSlug);
     if (!pkg) {
       return NextResponse.json(
@@ -86,10 +132,6 @@ export async function POST(req: Request) {
         { status: 404 },
       );
     }
-
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "www.galaxysportsedge.com";
-    const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const origin = req.headers.get("origin") || `${proto}://${host}`;
 
     const payload = buildStripePackageCheckoutPayload(
       pkg,
@@ -213,4 +255,126 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Two-door offers — Stage-5 gated, Whop-only checkout
+// ---------------------------------------------------------------------------
+
+const WHOP_NOT_CONFIGURED_REASON =
+  "Checkout for this offer is not open yet: our payment provider is still being set up. Nothing has been charged, and this page will open for purchase as soon as checkout is ready.";
+
+interface WhopCheckoutContext {
+  readonly isFormSubmit: boolean;
+  readonly origin: string;
+}
+
+/**
+ * Shared fail-closed responder. Enabled only when the Stage-5 gate reports at
+ * least one official play AND a real Whop checkout link is configured.
+ */
+async function respondWhopCheckout(
+  ctx: WhopCheckoutContext & {
+    offerSlug: string;
+    tier: string;
+    envKey: string;
+    anchor: string;
+  },
+): Promise<NextResponse> {
+  const gate = await getStage5GateStatus();
+  if (!gate.checkoutEnabled) {
+    if (ctx.isFormSubmit) {
+      return NextResponse.redirect(
+        `${ctx.origin}/packages?checkout=closed#${ctx.anchor}`,
+        303,
+      );
+    }
+    return NextResponse.json(
+      {
+        checkoutEnabled: false,
+        officialPlayCount: gate.officialPlayCount,
+        reason: gate.reason,
+      },
+      { status: 503, headers: CORS_HEADERS },
+    );
+  }
+
+  const url = resolveWhopCheckoutUrl(ctx.envKey);
+  if (!url) {
+    if (ctx.isFormSubmit) {
+      return NextResponse.redirect(
+        `${ctx.origin}/packages?checkout=unavailable#${ctx.anchor}`,
+        303,
+      );
+    }
+    return NextResponse.json(
+      {
+        checkoutEnabled: false,
+        officialPlayCount: gate.officialPlayCount,
+        reason: "whop_not_configured",
+        message: WHOP_NOT_CONFIGURED_REASON,
+      },
+      { status: 503, headers: CORS_HEADERS },
+    );
+  }
+
+  if (ctx.isFormSubmit) {
+    return NextResponse.redirect(url, 303);
+  }
+  return NextResponse.json(
+    {
+      checkoutEnabled: true,
+      provider: "whop",
+      url,
+      offerSlug: ctx.offerSlug,
+      tier: ctx.tier,
+      officialPlayCount: gate.officialPlayCount,
+    },
+    { headers: CORS_HEADERS },
+  );
+}
+
+/** Door 1 — Season Membership (founding monthly / standard monthly / rest-of-season). */
+async function handleMembershipCheckout(
+  ctx: WhopCheckoutContext & { plan?: string },
+): Promise<NextResponse> {
+  const planId = (ctx.plan ?? "founding-monthly") as MembershipPlanId;
+  const plan = MEMBERSHIP_PLANS.find((p) => p.id === planId);
+  if (!plan) {
+    return NextResponse.json(
+      { error: `Unknown membership plan '${ctx.plan}'.` },
+      { status: 400, headers: CORS_HEADERS },
+    );
+  }
+  return respondWhopCheckout({
+    ...ctx,
+    offerSlug: SEASON_MEMBERSHIP_SLUG,
+    tier: plan.id,
+    envKey: plan.whopCheckoutEnv,
+    anchor: "season-membership",
+  });
+}
+
+/** Door 2 — Single-Slate Packs (standard or credit-back tier). */
+async function handleSingleSlateCheckout(
+  ctx: WhopCheckoutContext & { packageSlug: string; creditBack: boolean },
+): Promise<NextResponse> {
+  const offer = getSingleSlateOffer(ctx.packageSlug);
+  if (!offer) {
+    return NextResponse.json(
+      { error: `Package with slug '${ctx.packageSlug}' not found in catalog.` },
+      { status: 404, headers: CORS_HEADERS },
+    );
+  }
+  const tier = ctx.creditBack ? "credit-back" : "standard";
+  const envKey = ctx.creditBack
+    ? offer.whopCheckoutEnv.creditBack
+    : offer.whopCheckoutEnv.standard;
+  return respondWhopCheckout({
+    ...ctx,
+    offerSlug: offer.slug,
+    tier,
+    envKey,
+    anchor: offer.slug,
+  });
 }

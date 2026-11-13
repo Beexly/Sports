@@ -5,76 +5,53 @@
  * 1. Stage 0 Live Roster / Transaction / Starter Gate (Week 9: Lamar Jackson OUT, Tyler Huntley OUT,
  *    Joe Fagnano / Jacoby Brissett BAL QB, Travis Etienne Jr. OUT / Chris Rodriguez Jr. JAX RB1, Kyler Murray IR on ARI,
  *    Sam Darnold SEA QB1, Geno Smith NYJ QB1, Mike Evans SF WR1, Carson Wentz MIN QB1, J.J. McCarthy NYG QB1, Joe Milton PHI QB1).
- * 2. Official Verified Ledger: 47-19-1 (71.2%, +24.92u with gated props) through Week 8 (base 38-13-1, +22.85u).
+ * 2. Official Verified Ledger: RECOMPUTED from Neon by scripts/verify-ledger.ts
+ *    (picks + games + pick_settlement_events). The headline below is derived
+ *    from the same artifact /record renders — one ledger, one truth. No win
+ *    rate is published until 200 CLV-backed settled official bets exist.
  * 3. Thaler (1985) Segregated Gains & Bundle Valuation ($52 standalone -> $29 All-Access, $23 surplus).
  * 4. Server-Side Entitlement Redaction: Never ship unredacted locked SGP legs or locked DFS lineups
  *    into the DOM behind a CSS blur when `isUnlocked === false`.
+ * 5. No free high-confidence picks: the free game-environment note carries NO
+ *    selections and NO confidence numbers (P0-2, 2026-11-13).
  */
 
+import { verifiedLedger, formatWlp, formatUnits } from "@/lib/ledger/verified-ledger-view";
+
 export const OFFICIAL_VERIFIED_LEDGER_2026 = {
-  asOfDate: "2026-11-02",
-  overallRecord: "47-19-1",
-  overallWinPct: "71.2",
-  overallNetUnits: "+24.92u",
-  preWeek8Record: "16-5-0",
-  preWeek8NetUnits: "+10.45u",
-  week8Record: "20-8-1",
-  week8NetUnits: "+9.69u",
-  week8MaxPlaySweep: "verified legs 14-6-1 (TNF) + 6-2-0 (Sun)",
+  asOfDate: verifiedLedger.generatedAt.slice(0, 10),
+  overallRecord: formatWlp(verifiedLedger.official.wlp),
+  /** Locked by the 200-bet law; never a percentage until the gate opens. */
+  overallWinPct: verifiedLedger.official.gate.unlocked ? "unlocked (see /record)" : "locked (see /record)",
+  overallNetUnits: formatUnits(verifiedLedger.official.units.total),
+  calibrationProgress: `${verifiedLedger.official.gate.clvBackedSettled}/${verifiedLedger.official.gate.target}`,
+  recomputedFrom: "picks + games + pick_settlement_events (scripts/verify-ledger.ts)",
+  recordUrl: "/record",
+  supersededPriorSnapshot:
+    "47-19-1 (+24.92u) was the audited snapshot published 2026-11-02. It is superseded by the recomputed ledger above after the Nov 13 settlement drain and is kept only as a historical anchor.",
 } as const;
 
+/**
+ * Free game-environment note — PICK-FREE by law (P0-2).
+ * The stale JAX @ BAL TNF teaser (a free 88/100 player prop on a finished
+ * window) is removed. The real Week 10 TNF was WSH @ NYG, now FINAL. This
+ * note carries only DB-derived game facts: no selections, no confidence
+ * numbers, no projections. The graded ledger lives at /record.
+ */
 export const FREE_TNF_GAME_ENVIRONMENT_ANALYTICS = {
-  matchup: "JAX @ BAL",
+  matchup: "WSH @ NYG",
   windowSlot: "TNF",
-  freeTeaserPlay: {
-    player: "Mark Andrews (BAL TE)",
-    selection: "Mark Andrews OVER 2.5 Receptions",
-    confidence: "88/100",
-    projectedReceptions: 3.7,
-    projectedYards: 27.7,
-    rationale:
-      "Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 on play-action), leaving the middle of the field open for Mark Andrews as Baltimore's primary hot-read safety valve.",
-  },
-  spreadDisciplineCall: {
-    selection: "Spread PASS at -7.5 (Steamed from -3.5)",
-    confidence: "54/100",
-    decision: "PASS",
-  },
-  lockedPaywallSummary: {
-    lockedTopConfidencePlaysCount: 9,
-    lockedTopConfidenceRating: "88/100",
-    includesCorrelatedSgp: true,
-    includesShowdownCaptains: true,
-  },
-  teamEnvironment: {
-    balOffensivePlaysMedian: 61.3,
-    balOffensivePlaysMean: 61.9,
-    balOffensivePlaysIqr: "57-66",
-    balDrivesProjected: 11,
-    balRushAttempts: 25.5,
-    balDerrickHenryCarries: 18.6,
-    balPassAttempts: 33.3,
-    balPassCompletionsMedian: 18.0,
-    balPassCompletionsMean: 18.1,
-    balCompletionRatePct: 54.1,
-    balPassCompletionsIqr: "15-21",
-    balPassingYardsMedian: 188.0,
-    balSacksTaken: 3.1,
-    jaxOffensivePlaysMedian: 63.5,
-    jaxRushAttempts: 31.4,
-    jaxPassAttempts: 29.5,
-    jaxPassCompletionsMedian: 19.2,
-    jaxPassCompletionsMean: 19.4,
-    jaxCompletionRatePct: 65.8,
-    jaxPassingYardsMedian: 218.0,
-    jaxSacksTaken: 2.6,
-    jaxNeutralPaceSecPerSnap: 26.2,
-    balTwoHighShellPct: 59.5,
-    balLightBoxPct: 78.0,
-    jaxBlitzRatePct: 30.9,
-    jaxPlayActionBlitzRatePct: 34.8,
-    balCleanPocketRatePct: 36.5,
-  },
+  status: "FINAL",
+  finalScore: verifiedLedger.tnfEvidence.found ? verifiedLedger.tnfEvidence.finalScore : null,
+  totalMarket: verifiedLedger.tnfEvidence.found
+    ? {
+        opened: verifiedLedger.tnfEvidence.clvLockLine,
+        closed: verifiedLedger.tnfEvidence.clvCloseLine,
+      }
+    : null,
+  environmentNote:
+    "Thursday night is settled: Washington at New York is FINAL, and the total market closed well below where it opened. Every official play from the window is graded in the sealed record at full weight, wins and losses alike. No free picks are published here; the environment note is the free part, and the graded ledger is public at /record.",
+  recordUrl: "/record",
 } as const;
 
 export const THALER_SEGREGATED_BUNDLE_VALUATION = {

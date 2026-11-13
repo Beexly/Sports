@@ -242,7 +242,13 @@ export type ZeroSitTx = {
     findMany(args: Record<string, unknown>): Promise<Array<{ id: string }>>;
     updateMany(args: Record<string, unknown>): Promise<{ count: number }>;
   };
-  pickSettlementEvent: { create(args: Record<string, unknown>): Promise<unknown> };
+  pickSettlementEvent: {
+    create(args: Record<string, unknown>): Promise<unknown>;
+    // Optional: real Prisma delegates have upsert; minimal test stubs may not.
+    // The VOID lane probes for it and falls back to create (P2002-safe upsert
+    // pattern, 2026-11-13).
+    upsert?(args: Record<string, unknown>): Promise<unknown>;
+  };
   postSettlementWork: unknown;
   game: { updateMany(args: Record<string, unknown>): Promise<{ count: number }> };
   jarvisMemoryEvent: { create(args: Record<string, unknown>): Promise<unknown> };

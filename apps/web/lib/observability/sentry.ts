@@ -9,7 +9,10 @@
  *
  * Sentry for Startups org: "galaxy-sports-edge".
  * Supports:
- *  - Distributed tracing & spans
+ *  - Distributed tracing & spans (prod tracesSampleRate 0.15, dev 1.0,
+ *    env-overridable via SENTRY_TRACES_SAMPLE_RATE)
+ *  - Vercel Cron check-ins via the SDK's runtime crons-config global
+ *    (see lib/observability/vercel-crons.ts — no withSentryConfig needed)
  *  - AI Agent Monitoring (Hermes, Jev, model evaluation, tool execution, token accounting)
  *  - Error triage & context attachment
  *  - Session Replay configuration (client-side)
@@ -19,6 +22,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
+import { resolveReplaySampleRate, resolveTracesSampleRate } from "./sample-rate";
 
 /** True when a DSN has been configured for this process. */
 let _initialized = false;
@@ -50,17 +54,16 @@ export function initObservability(): void {
 
   if (_initialized) return;
 
-  const tracesSampleRate =
-    typeof process !== "undefined" && process.env["SENTRY_TRACES_SAMPLE_RATE"]
-      ? parseFloat(process.env["SENTRY_TRACES_SAMPLE_RATE"])
-      : process.env["NODE_ENV"] === "development"
-        ? 1.0
-        : 0.1;
+  const tracesSampleRate = resolveTracesSampleRate({
+    SENTRY_TRACES_SAMPLE_RATE:
+      typeof process !== "undefined" ? process.env["SENTRY_TRACES_SAMPLE_RATE"] : undefined,
+    NODE_ENV: typeof process !== "undefined" ? process.env["NODE_ENV"] : undefined,
+  });
 
-  const replaysSessionSampleRate =
-    typeof process !== "undefined" && process.env["SENTRY_REPLAY_SAMPLE_RATE"]
-      ? parseFloat(process.env["SENTRY_REPLAY_SAMPLE_RATE"])
-      : 0.1;
+  const replaysSessionSampleRate = resolveReplaySampleRate({
+    SENTRY_REPLAY_SAMPLE_RATE:
+      typeof process !== "undefined" ? process.env["SENTRY_REPLAY_SAMPLE_RATE"] : undefined,
+  });
 
   Sentry.init({
     dsn,
@@ -96,6 +99,24 @@ export function initObservability(): void {
   });
 
   _initialized = true;
+
+  // Vercel Cron monitoring. In @sentry/nextjs 10.76.2 `vercelCronsMonitoring`
+  // is only a withSentryConfig `_experimental` build flag, NOT a Sentry.init
+  // option — and this repo deliberately avoids withSentryConfig. The SDK's
+  // span hooks (spanStart/spanEnd -> captureCheckIn) are registered
+  // unconditionally and read `globalThis._sentryVercelCronsConfig`, which the
+  // build plugin would inject from vercel.json. We set that same global at
+  // runtime instead — identical check-in behaviour, no webpack plugin.
+  // Server-only: the literal `typeof window` guard lets Next dead-code-
+  // eliminate this import (and its node:fs dep) from the client bundle,
+  // the same pattern instrumentation.ts uses for NEXT_RUNTIME.
+  if (typeof window === "undefined") {
+    void import("./vercel-crons")
+      .then((mod) => mod.enableVercelCronsMonitoring())
+      .catch(() => {
+        // Observability is strictly non-blocking.
+      });
+  }
 }
 
 /**

@@ -6,6 +6,8 @@ import { orderPacksForStorefront, upcomingOnly } from "@/components/packages/sto
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import { getActiveUpcomingWriteups } from "@/lib/writeups/coach-writeup-engine";
 import { isPagePublic } from "@/lib/launch/internal-surface-fence";
+import { loadDoctrineBoard } from "@/lib/board/doctrine-loader";
+import { DoctrineBoardView } from "@/components/board/doctrine-board";
 
 export const revalidate = 300;
 
@@ -28,12 +30,29 @@ const TRUST_LINKS = [
   { label: "Plans and pricing", href: "/pricing" },
 ] as const;
 
-export default function HomePage(): JSX.Element {
+export default async function HomePage(): Promise<JSX.Element> {
   const packs = orderPacksForStorefront(LIVE_PACKAGE_CATALOG);
   const writeups = upcomingOnly(getActiveUpcomingWriteups());
+  // STALENESS_LAW (WP-5): the front door carries the same two-doctrines board
+  // as /board and /picks. PASS-only is a proud state, never an error page.
+  const doctrine = await loadDoctrineBoard();
   return (
     <>
       <RedlineWorld packs={packs} writeups={writeups} />
+      <section
+        id="doctrine-board"
+        data-testid="homepage-doctrine-board"
+        className="relative z-10 border-t border-mineral bg-carbon px-6 py-16 text-ion-white"
+      >
+        <div className="mx-auto max-w-5xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
+            The board / Plays and passes
+          </p>
+          <div className="mt-6">
+            <DoctrineBoardView board={doctrine} compact />
+          </div>
+        </div>
+      </section>
       <section
         id="responsible-close"
         data-testid="homepage-responsible-close"

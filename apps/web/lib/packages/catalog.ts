@@ -15,13 +15,23 @@
  * - Nov 1 Game-Day Pull List (2026-11-01-PULL-LIST.md) enforced: 0 pulled items packaged.
  */
 
+import { TWO_DOOR_PACK_OFFERS } from "./two-door-offers";
+import { scrubPackageCopy } from "./copy-fence";
+import { verifiedLedger, formatWlp, formatUnits } from "@/lib/ledger/verified-ledger-view";
+
+// Two-door storefront offers (Season Membership + Single-Slate Packs) are
+// additive exports; LIVE_PACKAGE_CATALOG below keeps its exact legacy shape.
+export * from "./two-door-offers";
+
 export interface PickPackageOffering {
   id?: string;
   slug: string;
   title: string;
   subtitle: string;
   description: string;
-  windowSlot: 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SUN_MAIN' | 'SNF' | 'MNF' | 'WEEKEND_PASS' | 'WEEKLY_PASS';
+  // "PRIMETIME" and "SUNDAY_FULL" serve the new two-door single-slate packs;
+  // legacy values are unchanged for existing consumers.
+  windowSlot: 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SUN_MAIN' | 'SNF' | 'MNF' | 'WEEKEND_PASS' | 'WEEKLY_PASS' | 'PRIMETIME' | 'SUNDAY_FULL';
   standardPriceCents: number;
   creditBackPriceCents: number | null;
   stripeProductId: string;
@@ -57,17 +67,26 @@ export const WEEK8_GAME_DAY_CATALOG_METADATA = {
   asOfCt: "2026-11-12T00:00:00-06:00",
   kickoffCountdownMinutes: 195,
   slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-  verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
+  verifiedRecordBanner: `${formatWlp(verifiedLedger.official.wlp)} · ${formatUnits(verifiedLedger.official.units.total)} · recomputed from the settlement database (see /record)`,
   seasonLedgerOfRecord: {
-    verifiedRecord: "36-13-1",
-    verifiedUnits: "+20.14u",
-    verifiedWinPct: "73.5%",
-    verifiedDisplayBanner: "36-13-1 (73.5%) · +20.14u (MAIN + DERIVATIVE + TNF SINGLE-STAKE)",
-    // Secondary views from the ledger (not the verified record):
-    baseRecord: "38-13-1",
-    baseUnits: "+22.85u",
+    // ONE ledger, one truth: these values are derived from the same artifact
+    // /record renders (scripts/verify-ledger.ts, Neon read-only). Never typed
+    // in by hand. No win-rate percentage until 200 CLV-backed settled bets.
+    verifiedRecord: formatWlp(verifiedLedger.official.wlp),
+    verifiedUnits: formatUnits(verifiedLedger.official.units.total),
+    verifiedWinPct: verifiedLedger.official.gate.unlocked
+      ? "unlocked (see /record)"
+      : `locked until ${verifiedLedger.official.gate.target} CLV-backed settled bets`,
+    verifiedDisplayBanner: `${formatWlp(verifiedLedger.official.wlp)} · ${formatUnits(verifiedLedger.official.units.total)} · verified record recomputed at /record`,
+    calibrationProgress: `${verifiedLedger.official.gate.clvBackedSettled}/${verifiedLedger.official.gate.target}`,
+    // Historical anchor (dossier-guard contract): the audited snapshot that
+    // was published 2026-11-02, kept verbatim so the anti-phantom invariant
+    // holds. SUPERSEDED by the recomputed ledger above after the Nov 13
+    // settlement drain; never rendered as the live record.
     withGatedPropsRecord: "47-19-1",
     withGatedPropsUnits: "+24.92u",
+    supersededPriorSnapshotNote:
+      "47-19-1 (+24.92u) is the audited snapshot published 2026-11-02, superseded by the recomputed ledger at /record after the Nov 13 settlement drain. Historical anchor only.",
     voidedBatchNote: "Nov 5 historical Week 8 batch voided after Nov 5 engine failure — never a standing record",
   },
   standingRosterRuling: {
@@ -106,7 +125,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Week 10 Standalone Primetime Game Pack (Closed Window)",
     subtitle: "Window Closed — Pivot to Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL)",
     description:
-      "This standalone primetime window (Jacksonville @ Baltimore) is closed and archived. Explore our active Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) packages below. Verified 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) season record.",
+      "This standalone primetime window (Jacksonville @ Baltimore) is closed and archived. Explore our active Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) packages below. The verified record is recomputed from the settlement database and lives at /record.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     creditBackPriceCents: null,
@@ -129,7 +148,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & MNF (LAC @ BAL) Best Bets Pack",
     subtitle: "Every Week 10 Sunday Main Slate & Monday Night Football (LAC @ BAL) Spread, Moneyline, 1Q/1H Script & Kicking FGM Call",
     description:
-      "Our complete Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) game-line and derivative card. Includes our highest-conviction Spread, Moneyline, and Total calls (led by NE @ DET, KC @ ATL, HOU @ CLE, SF @ DAL, and LAC @ BAL), 1st-Quarter and 1st-Half script plays, and our Red-Zone Stall Kicker Field Goals Made Over 1.5 suite. Verified 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) season record.",
+      "Our complete Week 10 Sunday slate (NE @ DET Munich, KC @ ATL, HOU @ CLE, MIN @ GB, MIA @ IND, CAR @ NO, JAX @ TEN, BUF @ NYJ, plus the late window SEA @ LV, LAR @ ARI, SF @ DAL) & Monday Night Football (LAC @ BAL) game-line and derivative card. Includes our highest-conviction Spread, Moneyline, and Total calls (led by NE @ DET, KC @ ATL, HOU @ CLE, SF @ DAL, and LAC @ BAL), 1st-Quarter and 1st-Half script plays, and our Red-Zone Stall Kicker Field Goals Made Over 1.5 suite. The verified record is recomputed from the settlement database and lives at /record.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3900,
     creditBackPriceCents: null,
@@ -205,7 +224,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Week 10 All-Access Bundle (Sunday Main Slate NE @ DET, KC @ ATL, HOU @ CLE + MNF LAC @ BAL + Full DFS)",
     subtitle: "Every Week 10 Sunday & MNF Pack Included: Main Lines, Props, SGPs, Specialty Packs & Full RedZone DFS",
     description:
-      "Unlock every single Week 10 pack across the Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) in one click: Sunday/MNF Main Game Lines, Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Correlated Parlay & SGP Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio. Verified 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) season record.",
+      "Unlock every single Week 10 pack across the Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) in one click: Sunday/MNF Main Game Lines, Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Correlated Parlay & SGP Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio. The verified record is recomputed from the settlement database and lives at /record.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
     creditBackPriceCents: null,
@@ -214,7 +233,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     stripeLookupKey: "gse-pack-week8-all-access",
     gamesCount: 14,
     highlights: [
-      "All Remaining Week 10 Games Included: Sunday Main Slate (NE @ DET, KC @ ATL) + SNF (SF @ DAL) + MNF (LAC @ BAL)",
+      "All Remaining Week 10 Games Included: Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, MIA @ IND, CAR @ NO, JAX @ TEN, BUF @ NYJ) + Late Window (SEA @ LV, LAR @ ARI, SF @ DAL Sun 4:25 ET) + SNF (PIT @ CIN Sun 8:20 ET) + MNF (LAC @ BAL)",
       "Every Pack Included: Main Lines, Skill/QB Props, Defense/IDP, Anytime TD, SGPs & Kicking/1Q/1H Derivatives",
       "Full RedZone DFS Included: 2 Sunday Optimal Lineups + 14-Player Core + SNF/MNF Primetime Builds",
     ],
@@ -253,7 +272,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesDfs: true,
     forSale: true,
     slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-    verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
+    verifiedRecordBanner: WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner,
     pullListIntegrityNote: "All active defensive & offensive line injury designations verified",
     topConfidenceRatings: ["86/100", "84/100", "81/100", "78/100", "75/100", "72/100"],
   },
@@ -283,7 +302,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesDfs: false,
     forSale: true,
     slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-    verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
+    verifiedRecordBanner: WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner,
     pullListIntegrityNote: "All Week 10 RB/TE injury replacements and goal-line roles applied",
     topConfidenceRatings: ["86/100", "85/100", "82/100", "79/100", "76/100", "74/100"],
   },
@@ -313,7 +332,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesDfs: false,
     forSale: true,
     slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-    verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
+    verifiedRecordBanner: WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner,
     pullListIntegrityNote: "Zero conflicting legs; active QB/RB injury replacements verified",
     topConfidenceRatings: ["86/100", "85/100", "84/100", "81/100", "79/100"],
   },
@@ -343,7 +362,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesDfs: false,
     forSale: true,
     slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-    verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
+    verifiedRecordBanner: WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner,
     pullListIntegrityNote: "All Week 10 outdoor stadiums cross-checked against wind & weather reports",
     topConfidenceRatings: ["85/100", "84/100", "80/100", "77/100", "75/100", "73/100"],
   },
@@ -373,7 +392,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesDfs: true,
     forSale: true,
     slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-    verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
+    verifiedRecordBanner: WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner,
     pullListIntegrityNote: "All Week 10 OUT/IR players zeroed across every lineup and player pool",
     topConfidenceRatings: ["86/100", "85/100", "84/100", "83/100"],
     dfsCoreSummary: "2 Sunday Optimal Lineups + SNF/MNF Primetime Builds + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
@@ -385,7 +404,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     title: "Week 10 All-Access Game-Day Pass (Sunday Main Slate & MNF · All Packs Included)",
     subtitle: "Sunday & MNF Main Lines + Props + Defense/IDP + Anytime TD + Parlays/SGPs + Kicking/1Q/1H + Full DFS",
     description:
-      "Complete one-click access to every single Week 10 pack across the Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE), Sunday Night Football (SF @ DAL), and Monday Night Football (LAC @ BAL), including all specialty packs and the Expanded Sunday & MNF DFS portfolio.",
+      "Complete one-click access to every single Week 10 pack across the Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE), the late window (SEA @ LV, LAR @ ARI, SF @ DAL Sun 4:25 ET), Sunday Night Football (PIT @ CIN Sun 8:20 ET), and Monday Night Football (LAC @ BAL), including all specialty packs and the Expanded Sunday & MNF DFS portfolio.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
     creditBackPriceCents: null,
@@ -394,7 +413,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     stripeLookupKey: "gse-pack-week8-all-access",
     gamesCount: 14,
     highlights: [
-      "Unlocks All Week 10 Packs: Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) + SNF (SF @ DAL) + MNF (LAC @ BAL)",
+      "Unlocks All Week 10 Packs: Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) + Late Window (SEA @ LV, LAR @ ARI, SF @ DAL) + SNF (PIT @ CIN) + MNF (LAC @ BAL)",
       "Main Lines + Skill/QB Props + Defense/IDP + Anytime TDs + Correlated SGPs + Kicking/1Q/1H Derivatives",
       "Full RedZone DFS Included: 2 Sunday Optimal Lineups + 14-Player Core + SNF/MNF Primetime Builds",
     ],
@@ -404,8 +423,8 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     includesDfs: true,
     forSale: true,
     slateWindowLabel: "Week 10 · TNF WSH @ NYG (Thu) · Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE, MIN @ GB, JAX @ TEN, MIA @ IND, CAR @ NO, BUF @ NYJ) · Late (SEA @ LV, LAR @ ARI, SF @ DAL) · SNF PIT @ CIN · MNF LAC @ BAL",
-    verifiedRecordBanner: "36-13-1 (73.5%) · +20.14u Verified Season Record (All-in secondary 47-19-1 · +24.92u)",
-    pullListIntegrityNote: "Verified 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) record; all active Week 10 injury reports applied",
+    verifiedRecordBanner: WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner,
+    pullListIntegrityNote: "Record recomputed from the settlement database at /record; all active Week 10 injury reports applied",
     topConfidenceRatings: ["86/100", "85/100", "84/100", "83/100", "82/100", "81/100"],
     dfsCoreSummary: "2 Sunday Optimal Lineups + SNF/MNF Primetime Builds + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
   },
@@ -435,11 +454,13 @@ const PACKAGE_SLUG_ALIASES: Record<string, string> = {
   "kicking-1q-1h-pack": "week8-kicking-1q-1h-pack",
 };
 
+/** Resolves legacy catalog + specialty packs AND the new two-door offers. */
 export function getPackageBySlug(slug: string): PickPackageOffering | undefined {
   const canonical = PACKAGE_SLUG_ALIASES[slug] ?? slug;
   return (
     LIVE_PACKAGE_CATALOG.find((p) => p.slug === canonical) ??
-    WEEK8_SPECIALTY_PACK_TIERS.find((p) => p.slug === canonical)
+    WEEK8_SPECIALTY_PACK_TIERS.find((p) => p.slug === canonical) ??
+    TWO_DOOR_PACK_OFFERS.find((p) => p.slug === canonical)
   );
 }
 
@@ -490,9 +511,18 @@ export function buildStripePackageCheckoutPayload(
   origin?: string,
   returnToStorefront?: boolean,
 ): StripeCheckoutPayload {
+  // New two-door offers are Whop-only (empty Stripe ids); they must never be
+  // sent down the Stripe path.
+  if (!pkg.stripePriceId) {
+    throw new Error(
+      `Package '${pkg.slug}' has no Stripe price - it is a Whop-checkout offer.`,
+    );
+  }
   let unitAmount = pkg.standardPriceCents;
   let productName = sanitizeStripeCheckoutText(pkg.title);
-  const productDescription = sanitizeStripeCheckoutText(pkg.description);
+  // Public-copy fence: Stripe Checkout is customer-facing, so legacy record
+  // banners / win rates are scrubbed and replaced with a /record pointer.
+  const productDescription = sanitizeStripeCheckoutText(scrubPackageCopy(pkg.description));
 
   if (creditBack) {
     if (pkg.creditBackPriceCents === null) {

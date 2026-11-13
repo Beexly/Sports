@@ -2,53 +2,101 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import board from "@/lib/week8/sealed-board.json";
-import { SealedTable } from "@/components/week8/sealed-table";
-import { CardStaleNotice } from "@/components/week8/card-stale-notice";
-import { cardFreshness } from "@/lib/week8/card-freshness";
-import type { SealedBoard } from "@/lib/week8/types";
+import { auth } from "@/lib/auth";
+import { getUserEntitlements } from "@/lib/entitlements";
+import { loadDoctrineBoard } from "@/lib/board/doctrine-loader";
+import { DoctrineBoardView } from "@/components/board/doctrine-board";
+import {
+  formatUnits,
+  formatWlp,
+  verifiedLedger,
+} from "@/lib/ledger/verified-ledger-view";
 
-const card = board as unknown as SealedBoard;
-
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Locked NFL Board | Galaxy Sports Edge",
-  description: "Official verified NFL record 47-19-1 (71.2% · +24.92u (with gated props)). Locked plays from the sealed card only.",
+  title: "Official NFL Picks | Galaxy Sports Edge",
+  description:
+    "Official plays with confidence out of 100, transparent passes with reasons, and a verified record recomputed from the settlement database. No hardcoded win rates.",
   alternates: { canonical: "/picks" },
 };
 
-export default function PicksPage(): JSX.Element {
-  const locked = card.main.filter((row) => row.publishAllowed && row.decision === "PUBLISH");
-  const fresh = cardFreshness(card.generated_at);
+export default async function PicksPage(): Promise<JSX.Element> {
+  let viewerEntitlements: Awaited<ReturnType<typeof getUserEntitlements>> | undefined;
+  try {
+    const session = await auth();
+    if (session?.user?.id) {
+      viewerEntitlements = await getUserEntitlements(session.user.id);
+    }
+  } catch {
+    viewerEntitlements = undefined;
+  }
+
+  const board = await loadDoctrineBoard(viewerEntitlements);
+  const ledger = verifiedLedger;
+  const gate = ledger.official.gate;
+
   return (
-    <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
+    <div className="min-h-screen bg-obsidian text-ion-white">
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Official verified NFL record</p>
-        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">47-19-1 (71.2% · +24.92u)</h1>
-        {fresh.stale ? (
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#C4BFB6]">
-            No live rows are published today. The card below is withheld while the next slate is
-            sealed.
+        <p className="eyebrow">Official plays · verified record</p>
+        <h1 className="mt-4 font-display text-5xl uppercase tracking-tight sm:text-6xl">
+          The Picks
+        </h1>
+
+        {/* Verified record strip - every number from the recomputed artifact */}
+        <section className="mt-8 surface-card p-6" data-testid="verified-record-strip">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">
+                Official settled record · recomputed from the database
+              </div>
+              <div className="mt-1 font-display text-3xl text-emerald-300">
+                {formatWlp(ledger.official.wlp)}{" "}
+                <span className="text-xl text-ion-1">{formatUnits(ledger.official.units.total)}</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">
+                Calibration progress
+              </div>
+              <div className="mt-1 font-display text-3xl text-ion-white">
+                {gate.clvBackedSettled}/{gate.target}
+              </div>
+            </div>
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-ion-2">
+            No win-rate percentage is published until {gate.target} official plays are settled and
+            graded against the closing line. The full ledger, commitment hashes and the
+            verification script live at /record.
           </p>
-        ) : (
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#C4BFB6]">
-            {card.counts.evaluated} markets evaluated. These {locked.length} rows are the only publish-allowed main lines and priced derivative on the sealed card.
-          </p>
-        )}
-        <p className="mt-2 font-mono text-[11px] text-[#8F8A82]">Seal {card.seal_digest}</p>
-        <div className="mt-8 flex gap-4 text-sm">
-          <Link href="/packages" className="inline-flex min-h-11 items-center text-[#FF4D2E]">Galaxy Picks packs</Link>
-          <Link href="/props" className="inline-flex min-h-11 items-center text-[#EDE8E0]">Props and watchlist</Link>
-        </div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link href="/record" className="btn btn-ghost">
+              Verify the record
+            </Link>
+            <Link href="/calibration" className="btn btn-ghost">
+              Calibration progress
+            </Link>
+          </div>
+        </section>
+
+        {/* Today's two-doctrines board */}
         <div className="mt-10">
-          {fresh.stale ? (
-            <CardStaleNotice ageDays={fresh.ageDays} generatedAt={fresh.generatedAt} />
-          ) : (
-            <SealedTable rows={locked} freeLimit={2} />
-          )}
+          <DoctrineBoardView board={board} />
         </div>
+
+        <section className="mt-10 flex flex-wrap gap-3">
+          <Link href="/packages" className="btn btn-primary">
+            Plans and packs
+          </Link>
+          <Link href="/props" className="btn btn-ghost">
+            Props and watchlist
+          </Link>
+          <Link href="/board" className="btn btn-ghost">
+            The full board
+          </Link>
+        </section>
       </main>
       <Footer />
     </div>

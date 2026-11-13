@@ -7,15 +7,27 @@ import {
 } from "@/lib/packages/catalog";
 import { POST as checkoutRoute } from "@/app/api/packages/checkout/route";
 import { GET as unlockRoute } from "@/app/api/packages/unlock/route";
+import { verifiedLedger, formatWlp, formatUnits } from "@/lib/ledger/verified-ledger-view";
 
 describe("Galaxy Picks storefront catalog", () => {
-  it("enforces the official Season Ledger of Record (verified 36-13-1 / +20.14u; all-in secondary 47-19-1 / +24.92u; base 38-13-1 / +22.85u) and standing roster ruling", () => {
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord).toBe("36-13-1");
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedUnits).toBe("+20.14u");
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.baseRecord).toBe("38-13-1");
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.baseUnits).toBe("+22.85u");
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsRecord).toBe("47-19-1");
-    expect(WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsUnits).toBe("+24.92u");
+  it("enforces the recomputed Season Ledger of Record (one artifact, /record) plus the superseded historical anchor and standing roster ruling", () => {
+    // WP-5 LEDGER LAW: the catalog renders the SAME artifact /record renders
+    // (scripts/verify-ledger.ts -> verified-ledger.json). Never hardcoded.
+    const ledger = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
+    expect(ledger.verifiedRecord).toBe(formatWlp(verifiedLedger.official.wlp));
+    expect(ledger.verifiedUnits).toBe(formatUnits(verifiedLedger.official.units.total));
+    expect(ledger.calibrationProgress).toBe(
+      `${verifiedLedger.official.gate.clvBackedSettled}/${verifiedLedger.official.gate.target}`,
+    );
+    // No win-rate percentage anywhere until the 200-bet gate opens.
+    expect(ledger.verifiedWinPct).not.toMatch(/%/);
+    expect(WEEK8_GAME_DAY_CATALOG_METADATA.verifiedRecordBanner).not.toMatch(/%/);
+    // Historical anchor kept verbatim for the dossier-guard anti-phantom
+    // invariant; explicitly labelled superseded, never the live record.
+    expect(ledger.withGatedPropsRecord).toBe("47-19-1");
+    expect(ledger.withGatedPropsUnits).toBe("+24.92u");
+    expect(ledger.supersededPriorSnapshotNote).toContain("47-19-1");
+    expect(ledger.supersededPriorSnapshotNote).toContain("superseded");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.genoSmithTeam).toBe("NYJ");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.mikeEvansTeam).toBe("SF");
     expect(WEEK8_GAME_DAY_CATALOG_METADATA.standingRosterRuling.oct30Section23IdentityPassVoided).toBe(true);

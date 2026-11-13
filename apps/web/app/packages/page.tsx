@@ -2,391 +2,262 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { LIVE_PACKAGE_CATALOG, WEEK8_SPECIALTY_PACK_TIERS } from "@/lib/packages/catalog";
 import {
-  formatWindowSlotLabel,
-  getActiveUpcomingWriteups,
-  getRedactedTeasersForWindowSlot,
-  sanitizePlainFootballText,
-} from "@/lib/writeups/coach-writeup-engine";
-import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
-import board from "@/lib/week8/sealed-board.json";
-import { cardFreshness } from "@/lib/week8/card-freshness";
-import type { SealedBoard } from "@/lib/week8/types";
+  TWO_DOOR_PACK_OFFERS,
+  MEMBERSHIP_PRICING,
+  FOUNDING_SEAT_COPY,
+  singleSlateCheckoutAvailability,
+  membershipCheckoutAvailability,
+} from "@/lib/packages/two-door-offers";
+import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
+import { SingleSlateCard, MembershipPlans } from "./_components/two-door-checkout";
 
-const sealedCard = board as unknown as SealedBoard;
-export const revalidate = 3600;
+// The Stage-5 gate is live state: never cache this page into a stale
+// "checkout open" or "checkout closed" snapshot.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "NFL Betting Packs, Player Props, Parlays & DFS | Galaxy Sports Edge",
+  title: "Season Membership & Single-Slate Packs | Galaxy Sports Edge",
   description:
-    "Plain-English NFL matchup breakdowns, official game picks, player props, correlated Same-Game Parlays, and DraftKings/FanDuel DFS lineups.",
+    "Two doors: a season membership at founding pricing, or single-slate packs with store-credit protection. Every official play clears a five-stage check - and every pass is published free.",
 };
 
-export default function PackagesPage(): JSX.Element {
-  const activePackages = LIVE_PACKAGE_CATALOG.filter((pkg) => pkg.forSale !== false);
-  const activeSpecialtyPacks = WEEK8_SPECIALTY_PACK_TIERS.filter((pkg) => pkg.forSale !== false);
-  const upcomingSundayMondayWriteups = getActiveUpcomingWriteups()
-    .filter((w) => w.windowSlot !== "TNF" && !/JAX\s*@\s*BAL|Jacksonville|Baltimore/i.test(w.matchup))
-    .slice(0, 4);
-  const cardIsStale = cardFreshness(sealedCard.generated_at).stale;
+const eyebrow = "font-numerals text-[11px] uppercase tracking-[0.22em]";
+
+const FIVE_STAGES: readonly { readonly title: string; readonly body: string }[] = [
+  {
+    title: "Fresh-data check",
+    body: "Injury reports, roster rulings and odds are verified fresh before any number is trusted. Stale data never reaches a pick.",
+  },
+  {
+    title: "Full-market scan",
+    body: "We compare the number across every book we track - not one screen - so the price we grade against is the real market.",
+  },
+  {
+    title: "Edge verification",
+    body: "The model must show a measurable edge at the current number. No edge, no play - regardless of how good the storyline sounds.",
+  },
+  {
+    title: "Price check",
+    body: "If the line has already moved past our fair price, the play dies here. We do not chase steam and call it conviction.",
+  },
+  {
+    title: "Publication gate",
+    body: "A sealed five-stage receipt must be attached before a pick can be published or sold. No receipt, no official play.",
+  },
+];
+
+export default async function PackagesPage(): Promise<JSX.Element> {
+  const gate = await getStage5GateStatus();
+  const slateAvailability = singleSlateCheckoutAvailability();
+  const membershipAvailability = membershipCheckoutAvailability();
 
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 text-white">
-      <Nav />
-      <main id="main-content" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {cardIsStale ? (
-          <div
-            data-testid="packages-card-pending-notice"
-            className="mb-6 rounded-2xl border border-amber-400/50 bg-amber-500/10 p-5 text-sm leading-relaxed text-amber-100"
-          >
-            <strong className="text-amber-300">Before you buy:</strong> the next card is not sealed
-            yet, so no graded plays are published right now. Your unlock covers the next sealed card
-            and every pack in the slate it names. If that is not what you want, do not buy today.
-          </div>
-        ) : null}
-        {/* Clean Human Football Hero */}
-        <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 p-6 sm:p-10 shadow-xl">
-          <div className="flex flex-wrap items-center justify-between gap-6">
-            <div className="max-w-3xl">
-              <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                GALAXY PICKS · WEEK 10 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MNF (LAC @ BAL)
+    <div className="relative min-h-screen bg-obsidian text-ion-white">
+      {/* Page-level motion + scrollbar language (flat FIELD surfaces, no glow) */}
+      <style>{`
+        .gse-packages ::-webkit-scrollbar { width: 10px; height: 10px; }
+        .gse-packages ::-webkit-scrollbar-track { background: #08090C; }
+        .gse-packages ::-webkit-scrollbar-thumb { background: #23262E; border: 2px solid #08090C; }
+        .gse-packages ::-webkit-scrollbar-thumb:hover { background: #31353F; }
+        .gse-packages { scrollbar-width: thin; scrollbar-color: #23262E #08090C; }
+        @keyframes gse-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        .gse-rise { animation: gse-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .gse-rise-1 { animation-delay: 0.06s; }
+        .gse-rise-2 { animation-delay: 0.14s; }
+        .gse-rise-3 { animation-delay: 0.22s; }
+        @keyframes gse-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        .gse-pulse { animation: gse-pulse 1.8s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .gse-rise, .gse-pulse { animation: none; }
+        }
+      `}</style>
+
+      <div className="gse-packages">
+        <Nav />
+        <main id="main-content" className="mx-auto w-full max-w-6xl px-4 pb-24 pt-14 sm:px-6">
+          {/* ── Hero · filed report, not a template plate ─────────────── */}
+          <header className="gse-rise border-b border-mineral pb-10">
+            <p className={`${eyebrow} text-plasma`}>Galaxy Sports Edge · Week 10 · Storefront</p>
+            <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] text-ion-white sm:text-6xl">
+              Two doors. One standard.
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1 sm:text-lg">
+              Join for the season, or buy a single slate. Either way, you only ever pay for
+              plays that clear our five-stage check - and when we pass, the reasoning is
+              published free. Passing is a decision we are proud of, not a gap we hide.
+            </p>
+
+            {/* Live Stage-5 gate band */}
+            <div
+              data-testid="stage5-gate-band"
+              className={`mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border px-4 py-3.5 ${
+                gate.checkoutEnabled ? "border-mineral-hi bg-eclipse" : "border-plasma/60 bg-eclipse"
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                <span
+                  aria-hidden
+                  className={`gse-pulse inline-block h-2 w-2 ${gate.checkoutEnabled ? "bg-ion-white" : "bg-plasma"}`}
+                />
+                <span className={`${eyebrow} ${gate.checkoutEnabled ? "text-ion-white" : "text-plasma"}`}>
+                  Stage-5 gate · {gate.checkoutEnabled ? "open" : "closed"}
+                </span>
               </span>
-              <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-                Real football film, trench matchups, and disciplined numbers.
-              </h1>
-              <p className="mt-4 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                We break down every game the way coaches and real bettors watch football: offensive line protection, defensive blitz and coverage tendencies, active injuries, and how the game script actually plays out across all four quarters.
-              </p>
-              <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-300">
-                When a spread or total is already steamed past its fair number, we pass and tell you why. Every pack below gives you our highest-conviction sides, totals, player props, Same-Game Parlays, and DraftKings/FanDuel lineups in plain English.
+              <span className="font-numerals text-[11px] uppercase tracking-[0.18em] tabular-nums text-ion-2">
+                {gate.officialPlayCount} official {gate.officialPlayCount === 1 ? "play" : "plays"} published
+              </span>
+              <span className="w-full text-sm leading-6 text-ion-1 sm:w-auto sm:flex-1">
+                {gate.reason}
+              </span>
+            </div>
+          </header>
+
+          {/* ── Door 1 · Season Membership ────────────────────────────── */}
+          <section id="season-membership" aria-labelledby="door-1-heading" className="gse-rise gse-rise-1 mt-14">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+              <div>
+                <p className={`${eyebrow} text-ion-2`}>Door 1</p>
+                <h2 id="door-1-heading" className="mt-2 font-display text-3xl text-ion-white sm:text-4xl">
+                  Season Membership
+                </h2>
+              </div>
+              <span className={`${eyebrow} border border-plasma px-3 py-1.5 text-plasma`}>
+                {FOUNDING_SEAT_COPY}
+              </span>
+            </div>
+
+            <div className="mt-6 border border-mineral bg-eclipse">
+              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+                <div className="border-b border-mineral p-6 sm:p-8 lg:border-b-0 lg:border-r">
+                  <p className="text-base leading-7 text-ion-1">
+                    Every official play we publish for the rest of the season - sides,
+                    totals, props, correlated parlays and DFS builds - with the same
+                    five-stage discipline on every slate. Members see the full reasoning,
+                    including every pass, the moment it is filed.
+                  </p>
+                  <ul className="mt-6 space-y-2.5 text-sm leading-6 text-ion-1">
+                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>All single-slate packs included while your membership is active</li>
+                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>Full reasoning on every official play and every pass</li>
+                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>Playoff coverage included in the one-time option</li>
+                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>Cancel monthly anytime; the one-time option runs to the final whistle</li>
+                  </ul>
+                </div>
+                <div className="p-6 sm:p-8">
+                  <p className={`${eyebrow} text-ion-2`}>Founding rate</p>
+                  <p className="mt-2 font-numerals text-5xl font-semibold tabular-nums text-ion-white">
+                    ${(MEMBERSHIP_PRICING.foundingMonthlyCents / 100).toFixed(2)}
+                    <span className="text-lg font-normal text-ion-2">/mo</span>
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-ion-2">
+                    ${(MEMBERSHIP_PRICING.standardMonthlyCents / 100).toFixed(2)}/mo standard after the
+                    first 100 members - or ${(MEMBERSHIP_PRICING.restOfSeasonCents / 100).toFixed(0)}{" "}
+                    one-time for the rest of the season plus playoffs.
+                  </p>
+                  <p className="mt-4 border-t border-mineral pt-4 text-xs leading-5 text-ion-2">
+                    Founding seats are a pricing policy, not a countdown: we do not publish
+                    a live seat counter we cannot verify. The rate holds for the first 100
+                    members, full stop.
+                  </p>
+                </div>
+              </div>
+              <div className="border-t border-mineral p-6 sm:p-8">
+                <MembershipPlans gate={gate} availability={membershipAvailability} />
+              </div>
+            </div>
+          </section>
+
+          {/* ── Door 2 · Single-Slate Packs ───────────────────────────── */}
+          <section id="pack-cards" aria-labelledby="door-2-heading" className="gse-rise gse-rise-2 mt-16">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+              <div>
+                <p className={`${eyebrow} text-ion-2`}>Door 2</p>
+                <h2 id="door-2-heading" className="mt-2 font-display text-3xl text-ion-white sm:text-4xl">
+                  Choose Your Football Pack
+                </h2>
+                <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
+                  One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              {TWO_DOOR_PACK_OFFERS.map((offer) => {
+                const availability = slateAvailability.find((a) => a.offerSlug === offer.slug);
+                return (
+                  <SingleSlateCard
+                    key={offer.slug}
+                    offer={offer}
+                    gate={gate}
+                    standardConfigured={availability?.standardConfigured ?? false}
+                    creditBackConfigured={availability?.creditBackConfigured ?? false}
+                  />
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ── The five-stage check · why a pass is a feature ────────── */}
+          <section aria-labelledby="five-stage-heading" className="gse-rise gse-rise-3 mt-16 border border-mineral bg-eclipse">
+            <div className="border-b border-mineral p-6 sm:p-8">
+              <p className={`${eyebrow} text-plasma`}>The standard behind both doors</p>
+              <h2 id="five-stage-heading" className="mt-2 font-display text-2xl text-ion-white sm:text-3xl">
+                Five stages. No shortcuts.
+              </h2>
+              <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
+                Every official play clears all five stages below before it can be
+                published or sold. A game that fails any stage becomes a free, published
+                pass - you get the reasoning without paying for it.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <a
-                href="#pack-cards"
-                aria-label="View this week's Week 10 Sunday Main Slate and Monday Night Football packs"
-                className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-sm font-extrabold text-slate-950 transition-colors shadow-md"
-              >
-                View This Week&apos;s Packs ↓
-              </a>
+            <ol className="grid gap-0 sm:grid-cols-2 lg:grid-cols-5">
+              {FIVE_STAGES.map((stage, i) => (
+                <li
+                  key={stage.title}
+                  className="border-b border-mineral p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 lg:p-6"
+                >
+                  <p className="font-numerals text-2xl tabular-nums text-plasma">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-3 font-display text-lg text-ion-white">{stage.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-ion-2">{stage.body}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          {/* ── Record band · link, never quote ───────────────────────── */}
+          <section className="mt-16 border border-mineral bg-eclipse p-6 sm:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+              <div className="max-w-2xl">
+                <p className={`${eyebrow} text-ion-2`}>The verified record</p>
+                <p className="mt-2 font-display text-2xl text-ion-white">
+                  We don&apos;t quote win rates on this page.
+                </p>
+                <p className="mt-2 text-sm leading-6 text-ion-1">
+                  Every graded play, every pass and every unit is sealed in the public
+                  record - wins and losses alike. Read it before you spend a dollar.
+                </p>
+              </div>
               <Link
-                href="/fantasy/dfs"
-                aria-label="Open Daily Fantasy Sports optimal lineups and player pool"
-                className="inline-flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 px-5 py-3 text-sm font-bold text-white hover:border-amber-400 transition-colors"
+                href="/record"
+                className="border border-plasma px-6 py-3.5 font-numerals text-sm uppercase tracking-[0.18em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
               >
-                Open DFS Lineups →
+                See the verified record →
               </Link>
             </div>
-          </div>
+          </section>
 
-          {/* Clean 4-Card Football & Record Strip */}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-slate-800 pt-6">
-            <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                VERIFIED SEASON RECORD
-              </div>
-              <div className="mt-1 text-2xl font-extrabold text-white">
-                36-13-1 · +20.14u
-              </div>
-              <div className="mt-1 text-xs text-slate-400">
-                All-in secondary 47-19-1 · +24.92u · Entering Week 10 Sunday Main Slate &amp; Monday Night Football.
-              </div>
-            </div>
-            <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                PASS DISCIPLINE
-              </div>
-              <div className="mt-1 text-2xl font-extrabold text-white">
-                Never Force a Side
-              </div>
-              <div className="mt-1 text-xs text-slate-400">
-                If a line moves past our number, we pass and attack the props.
-              </div>
-            </div>
-            <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                EVERY MARKET COVERED
-              </div>
-              <div className="mt-1 text-2xl font-extrabold text-white">
-                Sides, Props &amp; SGPs
-              </div>
-              <div className="mt-1 text-xs text-slate-400">
-                1Q/1H derivatives, rushing &amp; receiving props, defensive tackles/sacks &amp; TDs.
-              </div>
-            </div>
-            <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                DAILY FANTASY (DFS)
-              </div>
-              <div className="mt-1 text-2xl font-extrabold text-white">
-                DK &amp; FanDuel Optimals
-              </div>
-              <div className="mt-1 text-xs text-slate-400">
-                Cash cores, Sunday main-slate builds &amp; tournament stacks with injury pivots.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Free Matchup & Game-Environment Analytics Strip / Table (Week 10 Sunday Main Slate & MNF) */}
-        <section
-          data-testid="packages-free-game-environment-analytics"
-          className="mt-8 rounded-2xl border-2 border-amber-500/40 bg-slate-900/95 p-6 shadow-xl"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
-            <div>
-              <span className="inline-block rounded bg-amber-500/20 border border-amber-400/50 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-300">
-                FREE GAME-SCRIPT INTELLIGENCE · WEEK 10 SUNDAY MAIN SLATE &amp; MNF
-              </span>
-              <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-white">
-                Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) &amp; Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview
-              </h2>
-              <p className="mt-1 text-sm text-slate-300">
-                Film-room neutral pace, trench pressure rates, coverage shell tendencies, and red-zone play-calling splits across our featured Week 10 Sunday and Monday matchups. Official sides, totals, player props, and Same-Game Parlay legs stay locked inside the packs below.
-              </p>
-            </div>
-            <span className="rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1.5 text-xs font-extrabold text-emerald-300">
-              Official Sides, Totals, Props &amp; SGPs Locked Below · Verified 36-13-1 (+20.14u) (all-in secondary 47-19-1, +24.92u)
-            </span>
-          </div>
-
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm">
-              <caption className="sr-only">
-                Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) and Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview covering neutral pace, trench pressure rates, and red-zone tendencies.
-              </caption>
-              <thead>
-                <tr className="border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-amber-300">
-                  <th scope="col" className="py-2.5 pr-4">Week 10 Matchup &amp; Window</th>
-                  <th scope="col" className="py-2.5 pr-4">Projected Neutral Pace &amp; Play Volume</th>
-                  <th scope="col" className="py-2.5 pr-4">Trench Pressure &amp; Pass-Protection Split</th>
-                  <th scope="col" className="py-2.5">Coverage Shell &amp; Red-Zone Environment</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/80 text-slate-200">
-                <tr>
-                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    NE @ DET · Sun 12:00 PM CT (Hard Rock)
-                  </th>
-                  <td className="py-3 pr-4">
-                    <strong className="text-white">26.6 sec/snap</strong> neutral pace · Projected <strong className="text-white">63.0</strong> Detroit plays vs <strong className="text-white">61.5</strong> Miami plays with pre-snap motion on <strong className="text-white">{"68.2%"}</strong> of snaps
-                  </td>
-                  <td className="py-3 pr-4">
-                    Detroit interior OL <strong className="text-white">{"71.5%"}</strong> clean-pocket rate vs Miami <strong className="text-white">{"2.34s"}</strong> quick-release timing and perimeter RPO spacing
-                  </td>
-                  <td className="py-3">
-                    Miami two-high nickel shell vs Detroit <strong className="text-white">{"61.0%"}</strong> red-zone heavy-personnel rush &amp; play-action split
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    KC @ ATL · Sun 3:25 PM CT (Gillette)
-                  </th>
-                  <td className="py-3 pr-4">
-                    <strong className="text-white">27.4 sec/snap</strong> neutral pace · Green Bay <strong className="text-white">{"58.0%"}</strong> two-TE &amp; motion formations to dictate linebacker leverage
-                  </td>
-                  <td className="py-3 pr-4">
-                    Green Bay <strong className="text-white">{"31.8%"}</strong> simulated-pressure and stunt rate vs New England quick-game &amp; tight-end hot-read outlets
-                  </td>
-                  <td className="py-3">
-                    Green Bay <strong className="text-white">58.0%</strong> two-high quarters/palms shell; compressed red-zone spacing elevates inside-the-20 field-goal stall tendencies
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    SF @ DAL · SNF 7:20 PM CT (Soldier Field)
-                  </th>
-                  <td className="py-3 pr-4">
-                    <strong className="text-white">26.9 sec/snap</strong> outdoor lakefront track · Projected <strong className="text-white">64.0</strong> combined plays per side in Sunday Night Football
-                  </td>
-                  <td className="py-3 pr-4">
-                    Tampa Bay <strong className="text-white">36.4%</strong> blitz &amp; A-gap pressure rate vs Chicago six-man slide pass protection
-                  </td>
-                  <td className="py-3">
-                    High-frequency pre-snap safety rotation forces hot-read intermediate throws and early-down RPO adjustments inside the 20
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
-                    LAC @ BAL · MNF 7:15 PM CT (U.S. Bank)
-                  </th>
-                  <td className="py-3 pr-4">
-                    <strong className="text-white">25.8 sec/snap</strong> fast indoor turf track · Buffalo <strong className="text-white">66.5%</strong> third-down conversion &amp; red-zone QB power sustain rate
-                  </td>
-                  <td className="py-3 pr-4">
-                    Minnesota <strong className="text-white">38.4%</strong> Brian Flores zero-look blitz &amp; drop-eight disguise rate vs Josh Allen scramble &amp; RB/TE checkdown outlets
-                  </td>
-                  <td className="py-3">
-                    Buffalo <strong className="text-white">61.5%</strong> two-high nickel shell; heavy play-action &amp; goal-line motion tendencies inside the 10
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        {/* Wide, High-Contrast 2-Column Pack Cards */}
-        <section id="pack-cards" className="mt-10">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                Choose Your Football Pack
-              </h2>
-              <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-8 lg:grid-cols-2">
-            {activePackages.map((pkg) => (
-              <div key={pkg.slug} id={pkg.slug}>
-                <PaywallRevealCard
-                  pkg={pkg}
-                  teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Specialty Pack Tiers (Defense/IDP, Anytime TD, Parlay/SGP, Kicking & 1Q/1H, Sun-Mon Expanded DFS) */}
-        <section id="specialty-pack-cards" className="mt-12">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
-            <div>
-              <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                WEEK 10 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MONDAY NIGHT FOOTBALL (LAC @ BAL)
-              </span>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
-                Specialty Betting &amp; Expanded Week 10 DFS Packs
-              </h2>
-              <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Target a specific edge across the Week 10 Sunday and Monday slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Week 10 DFS Core (2 Sunday Optimal Lineups + 14-Player Core Pool + SNF/MNF Builds).
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-8 lg:grid-cols-2">
-            {activeSpecialtyPacks.map((pkg) => (
-              <div key={pkg.slug} id={pkg.slug}>
-                <PaywallRevealCard
-                  pkg={pkg}
-                  teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Free Football Matchup Storylines (Teaser Only — Zero Free Picks or Confidence Numbers) */}
-        <section id="slate-dossiers" className="mt-12 rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-8">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Free Football Matchup Previews &amp; Storylines
-              </h2>
-              <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Read how each matchup sets up in the trenches and secondary, then unlock a pack above to reveal our official spread call, over/under call, and player prop bets.
-              </p>
-            </div>
-            <span className="rounded-md bg-amber-500/20 border border-amber-400/40 px-3 py-1 text-xs font-bold text-amber-300">
-              Official Picks Locked in Packs Above
-            </span>
-          </div>
-
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
-            {upcomingSundayMondayWriteups.map((writeup) => {
-              const slotLabel = formatWindowSlotLabel(writeup.windowSlot, writeup.matchup);
-
-              return (
-                <div
-                  key={writeup.id}
-                  className="flex flex-col justify-between rounded-xl border-2 border-slate-700/80 bg-slate-950 p-6 shadow-md"
-                >
-                  <div>
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
-                        {slotLabel}
-                      </span>
-                      <span className="text-xs font-semibold text-slate-300">
-                        {writeup.topProps.length} Player Prop Reads Locked
-                      </span>
-                    </div>
-
-                    <h3 className="mt-3 text-xl font-bold text-white">{writeup.matchup}</h3>
-
-                    {/* Storyline & Tempo Preview Copy (Zero Leaked Picks) */}
-                    <div className="mt-3 space-y-2">
-                      <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                        {sanitizePlainFootballText(writeup.schemeMatchup.coverageShell)}
-                      </p>
-                      <p className="text-sm sm:text-base leading-relaxed text-slate-300">
-                        {sanitizePlainFootballText(writeup.paceOfPlay.notes)}
-                      </p>
-                    </div>
-
-                    {/* Locked Official Pick Badges — Teases That Picks Exist Without Revealing Side, Total, or Confidence */}
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2 border-t border-slate-800 pt-4">
-                      <div className="rounded-lg bg-slate-900 p-3.5 border border-slate-800">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                            OFFICIAL SPREAD CALL
-                          </span>
-                          <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2.5 py-0.5 rounded text-xs">
-                            🔒 LOCKED
-                          </span>
-                        </div>
-                        <div className="mt-2 text-sm font-semibold text-white">
-                          Side Verdict &amp; Rating Inside Pack
-                        </div>
-                        <div className="mt-1 text-xs text-slate-400">
-                          Unlock above to reveal exact side or pass call
-                        </div>
-                      </div>
-
-                      <div className="rounded-lg bg-slate-900 p-3.5 border border-slate-800">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                            OFFICIAL TOTAL CALL
-                          </span>
-                          <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2.5 py-0.5 rounded text-xs">
-                            🔒 LOCKED
-                          </span>
-                        </div>
-                        <div className="mt-2 text-sm font-semibold text-white">
-                          Over/Under Verdict Inside Pack
-                        </div>
-                        <div className="mt-1 text-xs text-slate-400">
-                          Includes {writeup.topProps.length} player props &amp; parlay ticket
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 border-t border-slate-800 pt-3 flex items-center justify-between">
-                    <Link
-                      href={`/room/${writeup.gameId}`}
-                      aria-label={`Read matchup preview for ${writeup.matchup}`}
-                      className="text-sm font-bold text-amber-300 hover:text-amber-200"
-                    >
-                      Read Matchup Preview →
-                    </Link>
-                    <a
-                      href="#pack-cards"
-                      aria-label={`Unlock official picks for ${writeup.matchup}`}
-                      className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
-                    >
-                      Unlock Official Picks ↑
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      </main>
-      <Footer />
+          {/* ── Still browsing? Free surfaces ─────────────────────────── */}
+          <p className="mt-10 text-sm leading-6 text-ion-2">
+            Not ready to buy? The free board shows every published pass with its reasoning:{" "}
+            <Link href="/board" className="text-plasma transition-colors hover:text-plasma-glow">
+              open the board →
+            </Link>
+          </p>
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

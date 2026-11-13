@@ -1,217 +1,207 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { getPackageBySlug } from "@/lib/packages/catalog";
-import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
-import {
-  LIVE_SLATE_COACH_WRITEUPS,
-  formatWindowSlotLabel,
-  getRedactedTeasersForWindowSlot,
-  sanitizePlainFootballText,
-  type CoachGameWriteup,
-} from "@/lib/writeups/coach-writeup-engine";
+import { getSingleSlateOffer, singleSlateCheckoutAvailability } from "@/lib/packages/two-door-offers";
+import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
+import { scrubOfferingCopy } from "@/lib/packages/copy-fence";
+import { getRedactedTeasersForWindowSlot } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
+import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
+import type { CoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
+import board from "@/lib/week8/sealed-board.json";
+import { cardFreshness } from "@/lib/week8/card-freshness";
+import type { SealedBoard } from "@/lib/week8/types";
+import { SingleSlateCard } from "../_components/two-door-checkout";
 
-interface PackagePageProps {
-  params: { slug: string };
-  searchParams: {
-    unlocked?: string;
-    session_id?: string;
-    whop_token?: string;
-    creditBack?: string;
-  };
-}
+const sealedCard = board as unknown as SealedBoard;
 
+// Live Stage-5 state must never be cached into a stale checkout snapshot.
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: PackagePageProps): Promise<Metadata> {
-  const pkg = getPackageBySlug(params.slug);
-  if (!pkg) return { title: "Package Not Found" };
+interface PageProps {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const rawPkg = getPackageBySlug(params.slug);
+  if (!rawPkg) {
+    return { title: "Package Not Found | Galaxy Sports Edge" };
+  }
+  const pkg = scrubOfferingCopy(rawPkg);
   return {
-    title: `${pkg.title} | Galaxy Sports Edge`,
+    title: `${pkg.title} | GSE Pick Packages`,
     description: pkg.description,
   };
 }
 
-export default async function PackageDetailPage({ params, searchParams }: PackagePageProps): Promise<JSX.Element> {
-  const pkg = getPackageBySlug(params.slug);
-  if (!pkg) {
-    notFound();
-  }
-  if (pkg.forSale === false) {
+const eyebrow = "font-numerals text-[11px] uppercase tracking-[0.22em]";
+
+export default async function PackageDetailPage({ params, searchParams }: PageProps) {
+  const rawPkg = getPackageBySlug(params.slug);
+
+  if (!rawPkg) {
     return (
-      <div className="flex min-h-screen flex-col bg-obsidian">
+      <div className="min-h-screen bg-obsidian text-ion-white">
         <Nav />
-        <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 px-4 py-20 sm:px-6">
-          <p className="font-numerals text-[11px] uppercase tracking-[0.22em] text-ion-2">
-            Final · not for sale
-          </p>
-          <h1 className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">{pkg.title}</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">{pkg.description}</p>
-          <p className="mt-6 border-t border-mineral pt-6 font-numerals text-sm tabular-nums text-ion-2">
-            Verified Season Record: 47-19-1 (+24.92u (with gated props); 71.2%). All-in secondary 47-19-1 (+24.92u). Window closed  -  not for sale.
-          </p>
+        <main className="mx-auto max-w-3xl px-4 py-20 text-center">
+          <h1 className="font-display text-3xl">Package Not Found</h1>
+          <p className="mt-4 text-ion-1">The package slug &quot;{params.slug}&quot; does not exist in our catalog.</p>
+          <Link href="/packages" className="mt-6 inline-block text-plasma transition-colors hover:text-plasma-glow">
+            ← Back to Pick Packages
+          </Link>
         </main>
         <Footer />
       </div>
     );
   }
 
-  const verification = await verifyPackagePurchase({
-    sessionId: searchParams.session_id,
-    whopToken: searchParams.whop_token,
-    slug: pkg.slug,
-  });
-  const isUnlocked = verification.authorized;
-  const isCreditBackSelected = searchParams.creditBack === "1";
-
-  const relevantWriteups: CoachGameWriteup[] = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
-    if (pkg.windowSlot === "WEEKEND_PASS" || pkg.windowSlot === "WEEKLY_PASS") {
-      return true;
-    }
-    if (pkg.windowSlot === "SUN_MAIN") {
-      return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
-    }
-    return w.windowSlot === pkg.windowSlot;
-  });
-
-  const standardPrice = (pkg.standardPriceCents / 100).toFixed(0);
-  const creditBackPrice = pkg.creditBackPriceCents
-    ? (pkg.creditBackPriceCents / 100).toFixed(0)
-    : null;
-
-  const eyebrow = "font-numerals text-[11px] uppercase tracking-[0.2em] text-ion-1";
-
-  return (
-    <div className="flex min-h-screen flex-col bg-obsidian">
-      <Nav />
-      <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 px-4 py-16 sm:px-6">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
-          <Link href="/packages" className="text-plasma transition-colors hover:text-plasma-glow">
-            ← All football packs
+  // ── New two-door single-slate offers: Stage-5 gated, Whop checkout ──
+  const singleSlateOffer = getSingleSlateOffer(rawPkg.slug);
+  if (singleSlateOffer) {
+    const gate = await getStage5GateStatus();
+    const availability = singleSlateCheckoutAvailability().find(
+      (a) => a.offerSlug === singleSlateOffer.slug,
+    );
+    return (
+      <div className="min-h-screen bg-obsidian text-ion-white">
+        <Nav />
+        <main className="mx-auto w-full max-w-3xl px-4 pb-20 pt-12 sm:px-6">
+          <Link href="/packages" className={`${eyebrow} text-plasma transition-colors hover:text-plasma-glow`}>
+            ← All packs &amp; membership
           </Link>
-          <span aria-hidden>/</span>
-          <span className="text-ion-1">{pkg.title}</span>
-        </nav>
+          <header className="mt-6 border-b border-mineral pb-8">
+            <p className={`${eyebrow} text-ion-2`}>Door 2 · Single-slate pack</p>
+            <h1 className="mt-3 font-display text-4xl leading-tight text-ion-white sm:text-5xl">
+              {singleSlateOffer.title}
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
+              {singleSlateOffer.description}
+            </p>
+          </header>
 
-        {/* ── Header · filed report, not a hero plate ───────────── */}
-        <header className="mt-8 border-b border-mineral pb-8">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3">
-            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-              <span className={eyebrow}>
-                {pkg.badge || formatWindowSlotLabel(pkg.windowSlot)}
-              </span>
-              <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-plasma">
-                Verified 47-19-1 (+24.92u) (with gated props)
-              </span>
-              {isUnlocked ? (
-                <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-plasma">
-                  Unlocked
-                </span>
-              ) : (
-                <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-ion-2">
-                  Locked pack
-                </span>
-              )}
-            </div>
-
-            {!isUnlocked && (
-              <div className="text-right">
-                <div className={eyebrow}>One-time purchase</div>
-                <div className="mt-1 font-numerals text-3xl font-semibold tabular-nums text-ion-white">
-                  ${isCreditBackSelected && creditBackPrice ? creditBackPrice : standardPrice}
-                </div>
-              </div>
-            )}
+          <div className="mt-8">
+            <SingleSlateCard
+              offer={singleSlateOffer}
+              gate={gate}
+              standardConfigured={availability?.standardConfigured ?? false}
+              creditBackConfigured={availability?.creditBackConfigured ?? false}
+            />
           </div>
 
-          <h1 className="mt-5 font-display text-3xl text-ion-white sm:text-4xl">
-            {pkg.title}
-          </h1>
-          <p className="mt-2 font-numerals text-xs uppercase tracking-[0.18em] text-ion-2">
-            {pkg.subtitle}
-          </p>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-            {sanitizePlainFootballText(pkg.description)}
+          <section className="mt-10 border border-mineral bg-eclipse p-6">
+            <p className={`${eyebrow} text-ion-2`}>The verified record</p>
+            <p className="mt-2 text-sm leading-6 text-ion-1">
+              We don&apos;t quote win rates here. Every graded play and every pass is sealed
+              in the public record - read it before you spend a dollar.
+            </p>
+            <Link
+              href="/record"
+              className="mt-4 inline-block border border-plasma px-5 py-3 font-numerals text-sm uppercase tracking-[0.18em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
+            >
+              See the verified record →
+            </Link>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // ── Legacy catalog / specialty packs: existing Stripe unlock flow,
+  //    with record banners scrubbed from every rendered surface. ──
+  const pkg = scrubOfferingCopy(rawPkg);
+  const sessionId = typeof searchParams.session_id === "string" ? searchParams.session_id : undefined;
+  const whopToken = typeof searchParams.whop_token === "string" ? searchParams.whop_token : undefined;
+
+  let initialUnlockedWriteups: CoachGameWriteup[] | null = null;
+  let initialSessionId: string | undefined = undefined;
+
+  if (sessionId || whopToken) {
+    const verification = await verifyPackagePurchase({
+      sessionId,
+      whopToken,
+      slug: pkg.slug,
+    });
+
+    if (verification.authorized) {
+      initialSessionId = sessionId;
+      const { LIVE_SLATE_COACH_WRITEUPS } = await import("@/lib/writeups/coach-writeup-engine");
+      initialUnlockedWriteups = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+        if (pkg.windowSlot === "WEEKEND_PASS" || pkg.windowSlot === "WEEKLY_PASS") {
+          return true;
+        }
+        if (pkg.windowSlot === "SUN_MAIN") {
+          return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
+        }
+        return w.windowSlot === pkg.windowSlot;
+      });
+    }
+  }
+
+  const teasers = getRedactedTeasersForWindowSlot(pkg.windowSlot);
+  const cardIsStale = cardFreshness(sealedCard.generated_at).stale;
+
+  return (
+    <div className="min-h-screen bg-obsidian text-ion-white">
+      <Nav />
+      <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        {cardIsStale ? (
+          <div
+            data-testid="packages-card-pending-notice"
+            className="mb-6 border border-plasma/60 bg-eclipse p-5 text-sm leading-relaxed text-ion-1"
+          >
+            <strong className="text-plasma">Before you buy:</strong> the next card is not sealed
+            yet, so no graded plays are published right now. Your purchase covers the next sealed card
+            and every pack in the slate it names. If that is not what you want, do not buy today.
+          </div>
+        ) : null}
+        <div className="mb-6">
+          <Link href="/packages" className="text-sm font-semibold text-plasma transition-colors hover:text-plasma-glow">
+            ← Back to all Pick Packages
+          </Link>
+        </div>
+
+        <header className="border border-mineral bg-eclipse p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span className={`${eyebrow} border border-plasma px-2.5 py-1 text-plasma`}>
+                {pkg.badge ?? "GSE Pick Package"}
+              </span>
+              <h1 className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">{pkg.title}</h1>
+              <p className="mt-2 text-base text-ion-1">{pkg.subtitle}</p>
+            </div>
+            <div className="text-right">
+              <div className={`${eyebrow} text-ion-2`}>One-Time Unlock</div>
+              <div className="font-numerals text-3xl font-semibold tabular-nums text-ion-white">${pkg.standardPriceCents / 100}</div>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-ion-1">{pkg.description}</p>
+          <p className="mt-3 text-xs leading-5 text-ion-2">
+            Every graded play is sealed in the public record.{" "}
+            <Link href="/record" className="text-plasma transition-colors hover:text-plasma-glow">
+              See the verified record →
+            </Link>
           </p>
         </header>
 
-        {/* ── LOCKED  -  paywall reveal + free matchup storylines ─── */}
-        {!isUnlocked && (
-          <div className="mt-10 space-y-12">
-            <PaywallRevealCard
-              pkg={pkg}
-              teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
-              initialUnlockedWriteups={null}
-              initialSessionId={searchParams.session_id || searchParams.whop_token}
-            />
+        <section className="mt-8">
+          <PaywallRevealCard
+            pkg={pkg}
+            teasers={teasers}
+            initialUnlockedWriteups={initialUnlockedWriteups}
+            initialSessionId={initialSessionId}
+          />
+        </section>
 
-            <section aria-labelledby="games-covered-heading">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-                <h2
-                  id="games-covered-heading"
-                  className="font-display text-2xl text-ion-white"
-                >
-                  Games Covered in This Pack ({relevantWriteups.length})
-                </h2>
-                <span className={eyebrow}>Free preview</span>
-              </div>
-              <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
-                Matchup storylines and tempo notes are free below. Unlock the pack above to reveal our official spread call, over/under call, player prop bets, and same-game parlay.
-              </p>
-
-              <ol className="mt-8 border-t border-mineral">
-                {relevantWriteups.map((w, index) => (
-                  <li
-                    key={w.id}
-                    className="border-b border-mineral py-7"
-                  >
-                    <article className="grid grid-cols-1 gap-x-8 gap-y-3 lg:grid-cols-[64px_minmax(0,1fr)]">
-                      <p
-                        aria-hidden
-                        className="font-numerals text-lg tabular-nums text-ion-2"
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </p>
-                      <div>
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                          <h3 className="font-display text-xl text-ion-white">{w.matchup}</h3>
-                          <span className="font-numerals text-[11px] uppercase tracking-[0.18em] tabular-nums text-ion-2">
-                            {formatWindowSlotLabel(w.windowSlot, w.matchup)}
-                          </span>
-                        </div>
-                        <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
-                          {sanitizePlainFootballText(w.schemeMatchup.coverageShell)}
-                        </p>
-                        <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-2">
-                          {sanitizePlainFootballText(w.paceOfPlay.notes)}
-                        </p>
-                        <p className="mt-4 border-t border-mineral pt-3 font-numerals text-[11px] uppercase tracking-[0.18em] text-plasma">
-                          Official spread call · Official over/under call · {w.topProps.length} player prop reads · 3-leg parlay (locked)
-                        </p>
-                      </div>
-                    </article>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          </div>
-        )}
-
-        {/* ── UNLOCKED  -  full actionable picks revealed ─────────── */}
-        {isUnlocked && (
-          <div className="mt-10">
-            <PaywallRevealCard
-              pkg={pkg}
-              teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
-              initialUnlockedWriteups={relevantWriteups}
-              initialSessionId={searchParams.session_id || searchParams.whop_token}
-            />
-          </div>
-        )}
+        <section className="mt-10 border border-mineral bg-eclipse p-6 text-center">
+          <h2 className="font-display text-xl text-ion-white">Need help with your purchase or receipt?</h2>
+          <p className="mt-2 text-sm text-ion-1">
+            Email us at <a href="mailto:support@galaxysportsedge.com" className="text-plasma underline">support@galaxysportsedge.com</a> with your Stripe session ID or Whop membership token.
+          </p>
+        </section>
       </main>
       <Footer />
     </div>

@@ -57,6 +57,14 @@ export async function GET(req: Request) {
       if (pkg.windowSlot === "SUN_MAIN") {
         return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
       }
+      // Two-door offers: primetime pack covers the standalone night games;
+      // the Sunday full-slate pack covers every Sunday window.
+      if (pkg.windowSlot === "PRIMETIME") {
+        return w.windowSlot === "SNF" || w.windowSlot === "MNF" || w.windowSlot === "TNF";
+      }
+      if (pkg.windowSlot === "SUNDAY_FULL") {
+        return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN" || w.windowSlot === "SNF";
+      }
       return w.windowSlot === pkg.windowSlot;
     });
 

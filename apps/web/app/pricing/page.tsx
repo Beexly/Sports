@@ -4,16 +4,15 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
   LIVE_PACKAGE_CATALOG,
-  WEEK8_GAME_DAY_CATALOG_METADATA,
   type PickPackageOffering,
 } from "@/lib/packages/catalog";
-import { WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY } from "@/lib/engine/engine-live-bridge";
+import { verifiedLedger, formatWlp, formatUnits } from "@/lib/ledger/verified-ledger-view";
 import { sanitizePlainFootballText } from "@/lib/writeups/coach-writeup-engine";
 
 export const metadata: Metadata = {
   title: "Pricing & Plans | Galaxy Sports Edge",
   description:
-    "No monthly subscription needed right now. One-time Week 9 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Backed by our documented 47-19-1 (71.2% · +24.92u (with gated props)) official NFL record.",
+    "No monthly subscription needed right now. One-time Week 9 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -32,13 +31,12 @@ export default async function PricingPage(): Promise<JSX.Element> {
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF4D2E]">
-            Official Settled NFL Record: {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord} (
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedWinPct} ·{" "}
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedUnits}; all-in secondary{" "}
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsRecord} (
-            {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsUnits})) · Week 9 Sunday:{" "}
-            {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (
-            {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits})
+            Official Settled NFL Record: {formatWlp(verifiedLedger.official.wlp)} ·{" "}
+            {formatUnits(verifiedLedger.official.units.total)} · calibration{" "}
+            {verifiedLedger.official.gate.clvBackedSettled}/{verifiedLedger.official.gate.target} ·{" "}
+            <Link href="/record" className="underline underline-offset-2">
+              recomputed at /record
+            </Link>
           </p>
           <h1 className="mt-3 font-display text-4xl uppercase tracking-tight text-white sm:text-6xl">
             No Monthly Subscription Needed Right Now
@@ -182,11 +180,13 @@ export default async function PricingPage(): Promise<JSX.Element> {
             Every call published on Galaxy Sports Edge is built from coaching tendencies, offensive and defensive line pass-protection matchups, active injury reports, and de-vigged sportsbook price comparisons. If a game or prop does not give us a clear edge over the market number, we mark it <strong>PASS · NO BET</strong>. We never force action.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
-            <span>✓ Settled Record: 47-19-1 (71.2% · +24.92u (with gated props))</span>
             <span>
-              ✓ Week 9 Sunday Settled: {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (
-              {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits}) ·{" "}
-              {WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.passDisciplineAvoidedLossesCount} Avoided Losses
+              ✓ Settled Record: {formatWlp(verifiedLedger.official.wlp)} ·{" "}
+              {formatUnits(verifiedLedger.official.units.total)} (recomputed at /record)
+            </span>
+            <span>
+              ✓ Calibration progress: {verifiedLedger.official.gate.clvBackedSettled}/
+              {verifiedLedger.official.gate.target} CLV-backed settled bets
             </span>
             <span>✓ Timestamped Pre-Kickoff Ledger</span>
           </div>
