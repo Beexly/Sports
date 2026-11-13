@@ -623,18 +623,30 @@ def load_stage0_game_roster_allowlist(
             "primary_injury": "Ankle (FP, no game designation; confirmed Week 9 QB1 starter)",
         }
 
+    # nflverse/Neon store the Rams as 'LA'; canonical display stays 'LAR'
+    # (same alias T-00 uses). Resolve QB1 + exclusions through both forms.
+    _qb1_cfg = stage0_cfg.get("confirmed_qb1", {})
+
+    def _qb1_for(tm: str) -> Any:
+        return _qb1_cfg.get(tm) or _qb1_cfg.get({"LAR": "LA", "LA": "LAR"}.get(tm, tm))
+
     confirmed_qb1 = {
-        away: stage0_cfg.get("confirmed_qb1", {}).get(away),
-        home: stage0_cfg.get("confirmed_qb1", {}).get(home),
+        away: _qb1_for(away),
+        home: _qb1_for(home),
     }
     if not confirmed_qb1[away] or not confirmed_qb1[home]:
         raise Stage0RosterContaminationError(
             f"STAGE0_FAIL: Missing confirmed_qb1 for {away} or {home} in week{week} config: {confirmed_qb1}"
         )
 
+    def _team_forms(tm: str) -> set[str]:
+        alias = {"LAR": "LA", "LA": "LAR", "WSH": "WAS", "WAS": "WSH"}.get(tm)
+        return {tm, alias} if alias else {tm}
+
+    _match_teams = _team_forms(away) | _team_forms(home)
     excluded_players = [
         ep for ep in stage0_cfg.get("excluded_players", [])
-        if ep.get("team") in (away, home)
+        if ep.get("team") in _match_teams
     ]
     excluded_names_lower = {str(ep["name"]).strip().lower(): ep for ep in excluded_players}
 

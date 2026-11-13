@@ -1035,6 +1035,19 @@ def _ensure_dynamic_jev_spine(
 
     away_qb1 = str(stage0_allowlist["confirmed_qb1"].get(away, "")).strip()
     home_qb1 = str(stage0_allowlist["confirmed_qb1"].get(home, "")).strip()
+    # WP-8 doctrine (2026-11-13): Week 10+ publishable sims REQUIRE a real
+    # live-JEV spine (jevkit.client.ask on every snap) built by
+    # scripts/ops/build_week10_jev_spines.py. Never RNG-synthesize for these
+    # weeks; fail closed when the spine is missing. Week <= 9 keeps the legacy
+    # replay path (historical, non-publishable).
+    if int(week) >= 10:
+        if not dyn_spine_path.is_file():
+            raise RuntimeError(
+                f"STAGE2_GATE_FAIL: no live-JEV spine for {away}@{home} week{week} at {dyn_spine_rel}; "
+                "run scripts/ops/build_week10_jev_spines.py first (doctrine: live JEV on every snap)"
+            )
+        raw = json.loads(dyn_spine_path.read_text(encoding="utf-8"))
+        return raw, dyn_spine_rel
     tend = stage1a_receipt.get("coaching_tendencies_resolved") or {}
     aw_tend = tend.get(away) or {}
     hm_tend = tend.get(home) or {}
@@ -2831,7 +2844,7 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         expected_away_qb1=stage0_allowlist["confirmed_qb1"][away],
         expected_home_qb1=stage0_allowlist["confirmed_qb1"][home],
         max_age_hours=18.0,
-        reference_utc="2026-11-05T20:00:00Z",
+        reference_utc="2026-11-05T20:00:00Z" if week <= 9 else None,
         strict=False,
     )
     jev_tensor = build_jev_state_tensor(spine_game, enforce_freshness=False)

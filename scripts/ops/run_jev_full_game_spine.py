@@ -69,6 +69,18 @@ TRENDS_JSON_PATH = REPO_ROOT / "data" / "engine" / "nfl_2026_w1_w7_trends_and_us
 INJURIES_CSV_PATH = REPO_ROOT / "data" / "nflverse" / "injuries_2026.csv"
 DEFAULT_OUT_PATH = REPO_ROOT / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
 
+# Week-aware simulation context (2026-11-13): WP-8 runs Week 10 with w1_w9
+# trends (schema superset of w1_w7) and week 9+10 injury designations.
+SIM_WEEK = 10
+
+
+def trends_path_for_week(week: int) -> Path:
+    if int(week) >= 10:
+        p9 = REPO_ROOT / "data" / "engine" / "nfl_2026_w1_w9_trends_and_usage.json"
+        if p9.is_file():
+            return p9
+    return TRENDS_JSON_PATH
+
 WEEK8_ALL_MATCHUPS: list[tuple[str, str]] = [
     ("CAR", "GB"),
     ("BAL", "BUF"),
@@ -277,7 +289,7 @@ def normalize_team_tendencies(team: str, trends_teams: dict[str, Any]) -> dict[s
 
 
 def load_team_injury_summary(team: str) -> list[str]:
-    """Load real Week 8 practice statuses + Week 7 Out/Doubtful/Questionable from injuries_2026.csv."""
+    """Load real current-week practice statuses + prior-week Out/Doubtful/Questionable from injuries_2026.csv (week-aware via SIM_WEEK)."""
     if not INJURIES_CSV_PATH.is_file():
         return []
     out: list[str] = []
@@ -288,7 +300,7 @@ def load_team_injury_summary(team: str) -> list[str]:
     if team in ("LAR", "LA"):
         target_teams.update(("LAR", "LA"))
     with open(INJURIES_CSV_PATH, "r", encoding="utf-8") as f:
-        rows = [r for r in csv.DictReader(f) if str(r.get("week", "")) in ("7", "8")]
+        rows = [r for r in csv.DictReader(f) if str(r.get("week", "")) in (str(SIM_WEEK - 1), str(SIM_WEEK))]
     rows.sort(key=lambda r: int(r.get("week", 0)), reverse=True)
     for r in rows:
         tm = str(r.get("team", "")).strip()
@@ -999,9 +1011,12 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=7)
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--out", default=str(DEFAULT_OUT_PATH))
+    ap.add_argument("--week", type=int, default=10, help="NFL week context for trends + injuries (default 10)")
     args = ap.parse_args()
 
-    trends_raw = json.loads(TRENDS_JSON_PATH.read_text(encoding="utf-8"))
+    global SIM_WEEK
+    SIM_WEEK = int(args.week)
+    trends_raw = json.loads(trends_path_for_week(SIM_WEEK).read_text(encoding="utf-8"))
     trends_teams = trends_raw.get("teams", {})
 
     out_path = Path(args.out)
