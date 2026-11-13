@@ -236,6 +236,13 @@ export interface GameEvidenceBundle {
   readonly awayCoaching: Evidence<CoachingRecord>;
   readonly corpus: Evidence<readonly CorpusGroundingRecord[]>;
   readonly jev: Evidence<JevSpineRecord>;
+  /**
+   * Additional ingested layers (INGEST-EVERYTHING): e.g. `homeNgs`, `awayNgs`,
+   * `premiseCatalog`. Each carries its own REAL/DERIVED/MISSING status and
+   * enters the reasoning trace at emission weight 0. Optional so bundles
+   * sealed before these layers existed keep their exact shape.
+   */
+  readonly extendedLayers?: Readonly<Record<string, Evidence<unknown>>>;
   /** ISO-8601 UTC instant the bundle was assembled. */
   readonly builtAt: string;
   /** Code identity, e.g. "v5.3.1+evidence-spine.1". */
