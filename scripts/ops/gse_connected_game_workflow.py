@@ -5049,7 +5049,10 @@ def execute_connected_game_workflow(
 
     armed_gid = f"2026_{week:02d}_{away_u}_{home_u}"
     armed_bundle = build_armed_context_and_reasoning_trace(
-        game_id=armed_gid, as_of_utc="2026-11-05T18:00:00Z", persist=True
+        game_id=armed_gid,
+        # Week 9 replays keep their historical pin; Week 10+ arms at run time.
+        as_of_utc="2026-11-05T18:00:00Z" if week <= 9 else datetime.now(timezone.utc).isoformat(),
+        persist=True,
     )
     armed_pkt = armed_bundle["context_packet"]
     armed_trace = armed_bundle["reasoning_trace"]
