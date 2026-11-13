@@ -23,8 +23,9 @@ WORKER = "ling-ocr"
 LOG = os.path.join(HERE, "logs", "ling_lane.log")
 SCRATCH = os.path.join(os.environ.get("LOCALAPPDATA", ""), "hermes", "cache", "scratch", "foundry-ling-ocr")
 os.makedirs(SCRATCH, exist_ok=True)
-BATCH = 50
-DPI = 150
+BATCH = 10
+DPI = 140
+MAX_BATCHES_PER_RUN = 6
 
 
 def log(msg):
@@ -55,8 +56,8 @@ def render_pages(path, outdir):
     paths = []
     for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=DPI)
-        p = os.path.join(outdir, f"page_{i+1:04d}.png")
-        pix.save(p)
+        p = os.path.join(outdir, f"page_{i+1:04d}.jpg")
+        pix.save(p, jpg_quality=80)
         paths.append((i + 1, p))
     return paths
 
@@ -68,7 +69,7 @@ def rescue(row):
         set_status(book_id, "INSUFFICIENT_SOURCE_ACCESS", "zero renderable pages")
         return "refused-empty"
     prims = []
-    for start in range(0, len(pages), BATCH):
+    for start in range(0, min(len(pages), BATCH * MAX_BATCHES_PER_RUN), BATCH):
         batch = pages[start:start + BATCH]
         prompt = (
             "These are scanned page images (pages "

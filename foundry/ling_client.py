@@ -148,11 +148,12 @@ def chat(messages, thinking=True, max_tokens=16000):
     return text
 
 
-def image_message(text, png_paths):
+def image_message(text, img_paths):
     content = [{"type": "text", "text": text}]
-    for p in png_paths:
+    for p in img_paths:
         b64 = base64.b64encode(open(p, "rb").read()).decode()
-        content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
+        mime = "image/jpeg" if p.lower().endswith((".jpg", ".jpeg")) else "image/png"
+        content.append({"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}})
     return {"role": "user", "content": content}
 
 

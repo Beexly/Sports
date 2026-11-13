@@ -69,8 +69,8 @@ def extract_book(row):
     if len(nfull) < 2000:
         release(book_id, "text too thin after pymupdf; Qwen4/OCR lane decides")
         return "rerouted-thin"
-    head = full[:150000]
-    tail = full[-20000:] if len(full) > 170000 else ""
+    head = full[:60000]
+    tail = full[-10000:] if len(full) > 70000 else ""
     prompt = (
         "You are a sovereign-primitive extractor for the GSE/GSI Foundry. Source book text follows "
         "(page markers [PAGE n]). Extract 4-6 sovereign primitives: verbatim quotes (>=8 words, EXACT "
@@ -110,7 +110,7 @@ def extract_book(row):
     doc.update({
         "book_id": book_id, "source_status": "COMPLETE",
         "pages_total": len(pages),
-        "pages_read": len(pages) if len(full) <= 170000 else "head+tail sample (honest)",
+        "pages_read": len(pages) if len(full) <= 70000 else "head+tail sample (honest)",
         "worker_id": WORKER, "extractor_model": ling.MODEL,
     })
     errs = gatekeeper.validate(doc)
