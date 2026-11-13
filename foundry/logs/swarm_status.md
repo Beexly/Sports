@@ -451,3 +451,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - SFT: compile_prince_sft.py exit 0, disk re-read verified think tags + 954w; SFT=73 rows. Three-claim prompt:
   MSE-on-everything + point-only / overparameterized=overfit + done-at-zero-train-error / tiny-gradient=global-opt + flat=generalizes.
 - Pushes confirmed on origin: Nielsen ae23348e8. Prince cycle commit pending this entry. Next RLVR trigger 82.
+- 2026-11-13 17:06:13 | CLAIMED | 55e082c734ce5566 | worker=hermes-inline file=ReddiEtAl-2026-MachineLearningSystems-Vol2-AtScale.pdf
+- 2026-11-13 17:21:40 | COMPLETE | 55e082c734ce5566 | primitives=16 think_words=1028
