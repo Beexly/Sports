@@ -453,3 +453,6 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - Pushes confirmed on origin: Nielsen ae23348e8. Prince cycle commit pending this entry. Next RLVR trigger 82.
 - 2026-11-13 17:06:13 | CLAIMED | 55e082c734ce5566 | worker=hermes-inline file=ReddiEtAl-2026-MachineLearningSystems-Vol2-AtScale.pdf
 - 2026-11-13 17:21:40 | COMPLETE | 55e082c734ce5566 | primitives=16 think_words=1028
+- 2026-11-13 17:27:16 | CLAIMED | 4d07e5902607436f | worker=hermes-inline file=ShalevShwartz-2012-OnlineLearningAndOnlineConvexOptimization.pdf
+- 2026-11-13 17:39:34 | REJECTED | 4d07e5902607436f | reasoning think chain 820 words < 850 minimum
+- 2026-11-13 17:40:09 | COMPLETE | 4d07e5902607436f | primitives=19 think_words=943

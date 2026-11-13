@@ -1,0 +1,326 @@
+{
+  "book_id": "4d07e5902607436f",
+  "source_status": "COMPLETE",
+  "title": "ShalevShwartz-2012-OnlineLearningAndOnlineConvexOptimization",
+  "source_note": "Shai Shalev-Shwartz, 'Online Learning and Online Convex Optimization', Foundations and Trends in Machine Learning Vol.4 No.2 (2011) 107-194, DOI 10.1561/2200000018, (c) 2012. 90-page PDF read in full. Legitimate readable monograph, not retracted, title matches content. Local SHARD A (sha256 prefix 4). All verbatim quotes verified exact substrings of the extracted text after ligature/quote/whitespace normalization. Zero sportsbook odds; this is the online-learning/regret layer governing how the GSE engine learns snap-by-snap against adversarial Nature and converts that to a calibrated pre-game probability.",
+  "pages_total": 90,
+  "pages_read": 90,
+  "primitives": [
+    {
+      "primitive_id": "online_framework",
+      "name": "Online learning protocol (no statistical assumption)",
+      "verbatim_quote": "In this review we survey methods which make no statistical assumptions regarding the origin of the sequence of examples.",
+      "page": "p.109 (sec 1); protocol p.108-109",
+      "latex": "\\text{for } t=1,2,\\ldots:\\ \\text{receive } x_t\\in\\mathcal{X},\\ \\text{predict } p_t\\in\\mathcal{D},\\ \\text{receive } y_t\\in\\mathcal{Y},\\ \\text{suffer } \\ell(p_t,y_t)",
+      "symbol_and_unit_ledger": "x_t: question/instance [domain X]; p_t: prediction [domain D, possibly larger than Y]; y_t: true answer [domain Y]; l(p_t,y_t): loss [real, discrepancy]. Rounds t dimensionless. Sequence may be deterministic, stochastic, or adversarially adaptive to the learner's own behavior.",
+      "assumptions": "No i.i.d. or distributional assumption on the sequence; learning is hopeless without correlation between past and present rounds; the adversary may adapt to the learner's strategy (but not its current random coins).",
+      "breakdown_regime": "An adversary can make cumulative loss arbitrarily large (ask the same question, wait for the answer, give the opposite). Non-trivial guarantees require a restriction: realizability (a target h* in H) or randomization + regret. Without one of these, no sublinear guarantee exists.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE snap-by-snap engine is exactly this protocol: each snap is a round, x_t = down/distance/formation/personnel, p_t = the engine's predicted distribution over outcomes, y_t = the actual revealed outcome, l = calibration loss. Football is adversarially adaptive (the defense adjusts to the offense's tendencies), so the no-i.i.d. framing is the correct one — not a stochastic approximation.",
+        "source_operator": "online_framework",
+        "telemetry": "GSE telemetry: per-snap (x_t,p_t,y_t) log; verify the sequence is treated as adversarial, not i.i.d.; confirm the engine updates only on revealed outcomes."
+      }
+    },
+    {
+      "primitive_id": "regret_def",
+      "name": "Regret relative to a hypothesis class",
+      "verbatim_quote": "Online learning is the process of answering a sequence of questions given (maybe partial) knowledge of the correct answers to previous questions and possibly additional available information.",
+      "page": "p.108 (sec 1); regret eqs 1.1-1.2 p.110",
+      "latex": "\\mathrm{Regret}_T(h^\\star)=\\sum_{t=1}^{T}\\ell(p_t,y_t)-\\sum_{t=1}^{T}\\ell(h^\\star(x_t),y_t),\\qquad \\mathrm{Regret}_T(\\mathcal{H})=\\max_{h^\\star\\in\\mathcal{H}}\\mathrm{Regret}_T(h^\\star)",
+      "symbol_and_unit_ledger": "Regret_T(h*): cumulative loss minus the best fixed hypothesis in hindsight [loss units]; T: rounds [integer]; H: hypothesis class; low regret = Regret_T(H) sublinear in T, so average-loss gap to the best hypothesis -> 0 as T -> infinity.",
+      "assumptions": "Competes against the best FIXED predictor in H (not an adaptive comparator); regret, not absolute loss, is the objective; sublinearity is the success criterion.",
+      "breakdown_regime": "Absolute loss is unbounded against an adversary; only regret is meaningful. A regret bound that is linear in T is vacuous (the learner is no better than the worst case). The comparator is fixed in hindsight — switching comparators require dynamic/adaptive regret, a different object.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's objective is regret against the best fixed game plan / coverage shell in hindsight, not absolute prediction error. The engine asks: how much worse did my sequential snap predictions do than the best single fixed defensive read I could have committed to? Sublinear regret means the engine's average snap calibration converges to the best fixed read.",
+        "source_operator": "regret_def",
+        "telemetry": "GSE telemetry: cumulative snap loss vs min-over-fixed-reads cumulative loss; regret growth curve vs T (sublinear = learning); average-loss gap trajectory."
+      }
+    },
+    {
+      "primitive_id": "cover_impossibility",
+      "name": "Cover's impossibility and convexification by randomization",
+      "verbatim_quote": "To sidestep Cover's impossibility result, we must further restrict the power of the adversarial environment.",
+      "page": "p.112 (sec 1.2); randomization p.115-116",
+      "latex": "\\sum_{t=1}^{T}|p_t-y_t|-\\min_{h\\in\\mathcal{H}}\\sum_{t=1}^{T}|h(x_t)-y_t|\\ \\le\\ \\sqrt{0.5\\,\\ln(|\\mathcal{H}|)\\,T}",
+      "symbol_and_unit_ledger": "p_t in [0,1]: probability of predicting label 1 (randomized prediction) [probability]; expected 0-1 loss = |p_t-y_t|; |H|: hypothesis-class size [integer]; T: rounds. The adversary must fix y_t without seeing the learner's round-t random coins.",
+      "assumptions": "Randomized predictions (D=[0,1]) and expected regret; adversary knows the forecasting strategy and past random bits but NOT the current round's coins; finite H.",
+      "breakdown_regime": "With deterministic predictions and no realizability, even |H|=2 forces regret >= T/2 (Cover 1965): the adversary always answers opposite. Randomization (or realizability) is mandatory. Both are convexification techniques — the deep unifying theme of the survey.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the formal justification for GSE outputting CALIBRATED PROBABILITIES, not hard picks. A deterministic hard-pick engine has no sublinear-regret guarantee against an adaptive defense (Cover). By randomizing/convexifying — predicting a distribution over outcomes — GSE enters the OCO framework and earns a sqrt(ln|H| T) guarantee. Hard locks are epistemically indefensible; probabilities are the only convexifiable output.",
+        "source_operator": "cover_impossibility",
+        "telemetry": "GSE telemetry: confirm outputs are distributions (simplex), not argmax hard labels; verify expected-loss calibration; the sqrt(ln|H| T) envelope as a sanity bound on snap-regret growth."
+      }
+    },
+    {
+      "primitive_id": "halving",
+      "name": "Halving mistake bound (version-space majority)",
+      "verbatim_quote": "That way, whenever we err, we are guaranteed to remove at least half of the hypotheses from the version space.",
+      "page": "p.114 (Theorem 1.2); Consistent Corollary 1.1 p.114",
+      "latex": "M_{\\mathrm{Halving}}(\\mathcal{H})\\ \\le\\ \\log_2(|\\mathcal{H}|)",
+      "symbol_and_unit_ledger": "M_Halving(H): worst-case number of prediction mistakes [integer]; |H|: finite hypothesis-class size [integer]. Each mistake halves the version space: 1 <= |V_{T+1}| <= |H| 2^{-M}. Consistent (arbitrary consistent h) only guarantees M <= |H|-1.",
+      "assumptions": "Realizable case (all labels from some h* in H); finite H; predict by majority vote of the consistent version space V_t.",
+      "breakdown_regime": "Realizability is a strong assumption; without it Halving has no guarantee. The bound is logarithmic in |H| (exponentially better than Consistent's linear |H|-1), but realizability rarely holds for football outcomes.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE concept-elimination over a finite playbook/coverage hypothesis set: each revealed snap outcome eliminates inconsistent reads; majority-vote over the surviving version space gives a log2(|H|) mistake ceiling in the realizable limit. Derived kernel: a GSE 'consistent-read' eliminator for the finite shell library, with the halving majority as the optimal realizable aggregator.",
+        "source_operator": "halving",
+        "telemetry": "GSE telemetry: version-space size |V_t| decay per snap; mistake count vs log2(|H|); detect when realizability fails (version space empties) and switch to the regret framework."
+      }
+    },
+    {
+      "primitive_id": "ftl",
+      "name": "Follow-The-Leader and its stability failure",
+      "verbatim_quote": "The most natural learning rule is to use (at any online round) any vector which has minimal loss on all past rounds.",
+      "page": "p.124 (sec 2.2); failure Example 2.2 p.127",
+      "latex": "w_t=\\arg\\min_{w\\in S}\\sum_{i=1}^{t-1} f_i(w);\\qquad \\mathrm{Regret}_T(u)\\le \\sum_{t=1}^{T}\\big(f_t(w_t)-f_t(w_{t+1})\\big)",
+      "symbol_and_unit_ledger": "w_t: prediction vector [domain S]; f_i: past convex loss functions; regret bounded by cumulative one-step loss difference (Lemma 2.1). For online quadratic optimization FTL regret <= 4L^2(log T + 1) (Corollary 2.2); for online LINEAR optimization FTL can have regret = T (Example 2.2).",
+      "assumptions": "FTL picks the best-on-past vector; works when predictions are stable (quadratic game, w_{t+1} close to w_t); S convex.",
+      "breakdown_regime": "FTL FAILS on linear losses because predictions are unstable: w_t shifts drastically when a single loss is added, oscillating between extremes and accruing regret T. Stability, not optimality-on-past, is what guarantees low regret. This motivates regularization.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's naive 'best read so far' updater (follow-the-leader over past snaps) is unstable: a single surprising snap can flip the engine's committed coverage read wholesale, oscillating like FTL on linear losses. The GSE posterior must be STABILIZED (regularized), not just re-fit to the past — the exact FTL failure mode.",
+        "source_operator": "ftl",
+        "telemetry": "GSE telemetry: per-snap prediction jump ‖w_t−w_{t+1}‖; detect oscillation on adversarial snap sequences; compare stabilized vs unregularized regret."
+      }
+    },
+    {
+      "primitive_id": "ftrl_stability",
+      "name": "Follow-The-Regularized-Leader: stability implies low regret",
+      "verbatim_quote": "One way to stabilize FTL is by adding regularization, which is the topic of the next section.",
+      "page": "p.127 (sec 2.3); Lemma 2.3 p.128",
+      "latex": "w_t=\\arg\\min_{w\\in S}\\Big(\\sum_{i=1}^{t-1}f_i(w)+R(w)\\Big);\\qquad \\mathrm{Regret}_T(u)\\le R(u)-R(w_1)+\\sum_{t=1}^{T}\\big(f_t(w_t)-f_t(w_{t+1})\\big)",
+      "symbol_and_unit_ledger": "R(w): regularizer [loss units]; FTRL = FTL on f_0=R, f_1,...,f_T; regret <= regularizer gap + cumulative stability term. Strong convexity of R bounds the stability term (Lemma 2.10): ‖w_t−w_{t+1}‖ <= L_t/sigma.",
+      "assumptions": "R strongly convex w.r.t. the same norm as the losses' Lipschitzness; adding a convex loss to a strongly convex R preserves strong convexity.",
+      "breakdown_regime": "If R is not strongly convex in the right norm, the stability term is uncontrolled and regret can be linear. The regularizer must match the geometry of the prediction set (Euclidean for R^d, entropic for the simplex).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "FTRL IS the GSE posterior update rule: minimize cumulative past snap loss plus a regularizer that keeps the coverage-read distribution stable. The regularizer is GSE's prior over reads; strong convexity guarantees that one surprising snap cannot destabilize the whole posterior. Stability -> low regret is the engine's calibration guarantee.",
+        "source_operator": "ftrl_stability",
+        "telemetry": "GSE telemetry: regularizer gap R(u)−R(w_1); per-snap stability ‖w_t−w_{t+1}‖ bounded by L/sigma; cumulative regret decomposition."
+      }
+    },
+    {
+      "primitive_id": "ogd",
+      "name": "Online Gradient Descent regret bound",
+      "verbatim_quote": "This regret bound depends on the norms of the sub-gradients of the vectors produced by the algorithm, and is therefore not satisfactory.",
+      "page": "p.132-133 (eq 2.5, Corollary 2.7); update p.128",
+      "latex": "w_{t+1}=w_t-\\eta z_t,\\ z_t\\in\\partial f_t(w_t);\\qquad \\mathrm{Regret}_T(u)\\le \\frac{1}{2\\eta}\\|u\\|_2^2+\\eta T L^2;\\qquad \\eta=\\frac{B}{L\\sqrt{2T}}\\Rightarrow \\mathrm{Regret}_T(U)\\le BL\\sqrt{2T}",
+      "symbol_and_unit_ledger": "eta: learning rate [units of w/gradient]; B: radius of comparator set U={u:‖u‖<=B} [w units]; L: RMS Lipschitz bound (1/T Σ L_t^2 <= L^2) [loss/w units]; T: rounds. OGD = FTRL with Euclidean R(w)=(1/2eta)‖w‖^2 linearized via sub-gradients. Duality tightens to BL√T (eq 2.15).",
+      "assumptions": "Convex L-Lipschitz losses; comparator norm bounded by B; learning rate tuned to horizon T (or doubled); sub-gradients bounded in dual norm (Lemma 2.6: ‖z‖* <= L iff L-Lipschitz).",
+      "breakdown_regime": "The bound is O(√T) — sublinear but not logarithmic; for strongly convex losses one can get O(log T). The learning rate must scale as 1/√T; a fixed eta gives linear regret. The doubling trick removes the need to know T at a constant multiplicative cost.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "OGD is the GSE snap-learning rate law: the engine updates its read-weights by w_{t+1}=w_t−eta·(snap-loss subgradient), with eta=B/(L√(2T)). This sets HOW FAST GSE adapts to revealed outcomes — too fast and it oscillates (FTL failure), too slow and it lags the defense. The √T regret is the engine's calibration convergence rate.",
+        "source_operator": "ogd",
+        "telemetry": "GSE telemetry: learning-rate schedule eta_t vs 1/√t; regret vs BL√(2T) envelope; detect over/under-adaptation via the stability term."
+      }
+    },
+    {
+      "primitive_id": "convex_linearization",
+      "name": "Convexity as lower-bounding tangents (linearization)",
+      "verbatim_quote": "In words, convexity is characterized by the existence of tangents that lie below the function.",
+      "page": "p.131 (Lemma 2.5, eq 2.3); reduction eq 2.4 p.132",
+      "latex": "f(u)\\ge f(w)+\\langle u-w,z\\rangle\\ \\ \\forall u\\in S;\\qquad \\sum_{t=1}^{T}\\big(f_t(w_t)-f_t(u)\\big)\\le \\sum_{t=1}^{T}\\big(\\langle w_t,z_t\\rangle-\\langle u,z_t\\rangle\\big)",
+      "symbol_and_unit_ledger": "z in ∂f(w): sub-gradient [dual-space units]; the tangent at w lower-bounds f everywhere; regret on convex losses <= regret on the linearized losses ⟨w,z_t⟩. If f differentiable, ∂f(w)={∇f(w)}.",
+      "assumptions": "S convex; f convex (possibly non-differentiable, hence sub-gradients); z_t may depend on w_t (adversary picks f_t after seeing w_t).",
+      "breakdown_regime": "Non-convex losses break the tangent lower bound, so the linearization reduction fails — this is why convexification (randomization or surrogate loss) is a prerequisite. The surrogate must upper-bound the original loss and be convex.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE convexifies the non-convex 0-1 snap-outcome loss via a convex surrogate (hinge / log-loss) that upper-bounds it, then runs the linearized OCO update. Derived kernel: the GSE snap-loss surrogate must satisfy f_t(w_t) >= |p_t−y_t| and be convex, so the regret guarantee transfers from the surrogate to the true outcome loss.",
+        "source_operator": "convex_linearization",
+        "telemetry": "GSE telemetry: verify surrogate >= true 0-1 loss pointwise; convexity of the surrogate; regret transfer from surrogate to outcome loss."
+      }
+    },
+    {
+      "primitive_id": "strong_convexity",
+      "name": "Strong convexity (regularizer geometry)",
+      "verbatim_quote": "Intuitively, a function is strongly convex if it grows faster than a linear function.",
+      "page": "p.134-135 (Definition 2.4, Lemma 2.8)",
+      "latex": "f(u)\\ge f(w)+\\langle z,u-w\\rangle+\\frac{\\sigma}{2}\\|u-w\\|^2;\\qquad f(u)-f(w)\\ge \\frac{\\sigma}{2}\\|u-w\\|^2\\ \\ (w=\\arg\\min f)",
+      "symbol_and_unit_ledger": "sigma: strong-convexity parameter [loss/(w units)^2]; the function sits at least (sigma/2)‖u−w‖^2 above its tangent. Euclidean R=(1/2)‖w‖^2 is 1-strongly-convex w.r.t. ℓ2; entropic R=Σw[i]log w[i] is 1/B-strongly-convex w.r.t. ℓ1 on the simplex. Hessian condition: ⟨∇²R(w)x,x⟩ >= sigma‖x‖^2.",
+      "assumptions": "Norm must be specified (strong convexity is norm-dependent); scaling R by sigma scales strong convexity; restriction to a convex subset preserves it.",
+      "breakdown_regime": "A regularizer strongly convex in the WRONG norm gives no useful stability bound for the losses at hand. Euclidean regularization cannot enforce the probability simplex (it does not keep w_t in S); entropic regularization is required for expert/simplex problems.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's coverage-read distribution lives on the probability simplex, so the correct regularizer is ENTROPIC (ℓ1-strongly-convex), not Euclidean. This is why GSE's posterior update is exponentiated-gradient / mirror-descent on the simplex (KL geometry), not plain gradient descent — the regularizer geometry must match the prediction set.",
+        "source_operator": "strong_convexity",
+        "telemetry": "GSE telemetry: confirm simplex constraint ‖w‖_1=1, w>=0 preserved each snap; entropic regularizer strong-convexity in ℓ1; stability bound L/sigma."
+      }
+    },
+    {
+      "primitive_id": "reg_geometry_choice",
+      "name": "Regularizer must match loss geometry (ℓ1 vs ℓ2)",
+      "verbatim_quote": "However, the parameters B,L have different meanings in the two bounds.",
+      "page": "p.140 (Corollary 2.14 discussion, sec 2.5.3)",
+      "latex": "\\mathrm{Regret}_T(S)\\le \\frac{B\\log(d)}{\\eta}+\\eta B T L^2;\\qquad \\eta=\\frac{\\sqrt{\\log d}}{L\\sqrt{2T}}\\Rightarrow \\mathrm{Regret}_T(S)\\le BL\\sqrt{2\\log(d)\\,T}",
+      "symbol_and_unit_ledger": "Entropic regularizer R=(1/eta)Σw[i]log w[i] on S={‖w‖_1=B, w>0}; d: dimension/expert count; B: ℓ1 radius; L: ℓ1-Lipschitz bound. Euclidean gives √(2dT) for experts; entropic gives √(2log(d)T) — exponentially better in d because expert costs are ℓ∞-bounded (ℓ1-Lipschitz with L=1, not √d).",
+      "assumptions": "Losses Lipschitz w.r.t. the SAME norm the regularizer is strongly convex in; comparator has small ℓ1 norm (singleton for experts); Holder: |⟨w−u,x_t⟩| <= ‖w−u‖_1 ‖x_t‖_∞.",
+      "breakdown_regime": "Mismatching norm geometry (Euclidean regularizer for ℓ1-bounded expert costs) yields a √d penalty instead of √log d. The B and L parameters have DIFFERENT meanings in the two bounds (ℓ2 vs ℓ1 constraint / Lipschitzness).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE aggregates over d coverage-shell 'experts' with bounded per-snap costs: the entropic (ℓ1) geometry gives √(2log(d)T) regret, exponentially better in the shell-library size d than a Euclidean √(2dT). Derived kernel: GSE must use entropic regularization over the shell simplex, exploiting that per-snap costs are ℓ∞-bounded.",
+        "source_operator": "reg_geometry_choice",
+        "telemetry": "GSE telemetry: regret vs √(2log(d)T) envelope; per-snap cost ℓ∞ bound; compare entropic vs Euclidean aggregation regret as d grows."
+      }
+    },
+    {
+      "primitive_id": "omd",
+      "name": "Online Mirror Descent (link function)",
+      "verbatim_quote": "Online Mirror Descent achieves the same regret bound as FoReL but the update step is much simpler.",
+      "page": "p.141-142 (sec 2.6); Theorem 2.15 p.143",
+      "latex": "\\theta_{t+1}=\\theta_t-z_t,\\quad w_{t+1}=g(\\theta_{t+1}),\\quad g(\\theta)=\\arg\\max_{w\\in S}\\big(\\langle w,\\theta\\rangle-R(w)\\big);\\qquad \\mathrm{Regret}_T(u)\\le R(u)-\\min R+\\eta\\sum_{t=1}^{T}\\|z_t\\|_\\star^2",
+      "symbol_and_unit_ledger": "theta_t: dual-space accumulator [dual units]; g: link/mirror function mapping dual -> primal S; R: (1/eta)-strongly-convex regularizer; ‖·‖*: dual norm. OGD is the special case S=R^d, g(theta)=eta·theta. EG is g=softmax (entropic R).",
+      "assumptions": "R strongly convex; g=∇R* (Fenchel conjugate gradient); linearize convex losses via sub-gradients; dual accumulation then mirror back to S.",
+      "breakdown_regime": "If g is not the conjugate gradient of a strongly convex R, the regret bound fails. The mirror step is what keeps predictions in S (e.g. the simplex); a naive dual update without mirroring leaves the feasible set.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "OMD is the GSE posterior engine: accumulate snap-loss sub-gradients in a dual vector theta, then MIRROR back to the coverage-read simplex via the link function g (softmax for entropic R). This is exactly a KL-projection posterior update — the GSE read distribution is the mirror image of accumulated evidence.",
+        "source_operator": "omd",
+        "telemetry": "GSE telemetry: dual accumulator theta_t; link output w_t on simplex; regret vs R(u)−min R + eta Σ‖z‖*^2; verify g=∇R*."
+      }
+    },
+    {
+      "primitive_id": "bregman",
+      "name": "Bregman divergence (posterior geometry)",
+      "verbatim_quote": "However, it is not a metric measure because it is not symmetric and also does not satisfy the triangle inequality.",
+      "page": "p.148 (eq 2.12, sec 2.7.2)",
+      "latex": "D_R(w\\|u)=R(w)-\\big(R(u)+\\langle\\nabla R(u),w-u\\rangle)",
+      "symbol_and_unit_ledger": "D_R(w‖u): Bregman divergence = gap between R at w and its linearization around u [loss units]; non-negative for convex R; NOT symmetric, no triangle inequality. Euclidean R -> (1/2)‖w−u‖^2; entropic R on simplex -> KL divergence Σw[i]log(w[i]/u[i]). Strong convexity: D_R(w‖u) >= (sigma/2)‖w−u‖^2.",
+      "assumptions": "R differentiable and convex; the divergence is anchored at u (the linearization point); for the simplex the entropic Bregman divergence is exactly KL.",
+      "breakdown_regime": "Treating Bregman divergence as a metric (symmetric, triangle inequality) is wrong. The Bregman-potential proof technique requires R to be Legendre (∇R and ∇R* inverse); normalized entropy is NOT Legendre, so EG needs unnormalized entropy + a Bregman projection step.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE posterior geometry is Bregman: the distance between two coverage-read distributions is the KL divergence (entropic Bregman), not Euclidean. GSE's mirror-descent update is a KL projection, and its calibration 'distance' between posteriors must be measured in KL — the correct information geometry for probability reads.",
+        "source_operator": "bregman",
+        "telemetry": "GSE telemetry: KL(w_t‖u) between read distributions; Bregman-potential decay per snap; verify non-symmetry is respected (direction matters)."
+      }
+    },
+    {
+      "primitive_id": "strong_smooth_duality",
+      "name": "Strong/smooth duality (Fenchel)",
+      "verbatim_quote": "Not surprisingly, strong convexity and strong smoothness are dual properties.",
+      "page": "p.149 (Lemma 2.19); Fenchel-Young eq 2.11 p.147",
+      "latex": "R\\ \\beta\\text{-strongly convex w.r.t. }\\|\\cdot\\|\\ \\Longleftrightarrow\\ R^\\star\\ \\tfrac{1}{\\beta}\\text{-strongly smooth w.r.t. }\\|\\cdot\\|_\\star;\\qquad f^\\star(\\theta)=\\max_u\\big(\\langle u,\\theta\\rangle-f(u)\\big)",
+      "symbol_and_unit_ledger": "R*: Fenchel conjugate; strong convexity of R <-> strong smoothness of R* with reciprocal parameter and dual norm; Fenchel-Young: f*(theta) >= ⟨u,theta⟩−f(u), equality at u=∇f*(theta). ∇R*(theta)=argmax_w(⟨w,theta⟩−R(w))=the link function g.",
+      "assumptions": "R closed and convex; f=(f*)* iff f closed convex; the conjugate turns the primal regularizer into the dual link.",
+      "breakdown_regime": "The duality requires closedness/convexity; a non-closed or non-convex R breaks the biconjugate identity and the strong/smooth correspondence. The √2 regret improvement (Theorem 2.21) comes from this duality analysis.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's regularizer (primal, over reads) and its link function (dual, evidence->read) are Fenchel conjugates: strong convexity of the read-regularizer is dual to smoothness of the evidence-to-read map. Derived kernel: design GSE's posterior by choosing a strongly convex read-regularizer and deriving the link as its conjugate gradient, guaranteeing the tightened BL√T regret.",
+        "source_operator": "strong_smooth_duality",
+        "telemetry": "GSE telemetry: verify g=∇R*; strong-convexity parameter beta vs dual smoothness 1/beta; tightened regret constant."
+      }
+    },
+    {
+      "primitive_id": "weighted_majority",
+      "name": "Weighted Majority / prediction with expert advice",
+      "verbatim_quote": "The analysis of Weighted Majority implies online learnability of finite hypothesis classes.",
+      "page": "p.157-159 (sec 3.1, Theorem 3.1)",
+      "latex": "w_{t+1}[i]=\\frac{w_t[i]e^{-\\eta z_t[i]}}{\\sum_j w_t[j]e^{-\\eta z_t[j]}};\\qquad \\sum_{t=1}^{T}\\langle w_t,z_t\\rangle\\le \\min_i\\sum_{t=1}^{T}z_t[i]+2\\sqrt{\\log(d)\\,T}",
+      "symbol_and_unit_ledger": "w_t: expert-weight distribution on simplex; z_t[i] in [0,1]: cost of expert i at round t; eta in (0,1): learning rate; d: expert count. Weighted Majority = normalized EG. Realizable case (eta=1/2): cumulative loss <= 4log(d). Multiplicative bound: <= (1/(1−eta))(min_i Σz_t[i] + log(d)/eta).",
+      "assumptions": "Full information (all expert costs revealed each round); costs bounded [0,1]; predict by sampling an expert ~ w_t; finite hypothesis class cast as experts.",
+      "breakdown_regime": "Full-feedback assumption is essential — if only the chosen expert's cost is revealed, this becomes the bandit problem with an extra √d penalty. The multiplicative (1/(1−eta)) bound is a relative-loss guarantee, stronger than additive when the best expert is good.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE aggregates a library of d coverage-shell 'experts' by Weighted Majority: each snap, down-weight the shells whose reads incurred loss (multiplicative e^{−eta·cost}), renormalize. The engine's read distribution is the expert-weight vector; regret vs the best single shell is 2√(log(d)T). This is the GSE ensemble-of-reads aggregator.",
+        "source_operator": "weighted_majority",
+        "telemetry": "GSE telemetry: expert weights w_t over shells; per-snap cost vector z_t; regret vs best-fixed-shell; multiplicative down-weighting on mistaken reads."
+      }
+    },
+    {
+      "primitive_id": "littlestone",
+      "name": "Littlestone dimension characterizes online learnability",
+      "verbatim_quote": "We present a dimension of hypothesis classes that characterizes the best possible achievable mistake bound.",
+      "page": "p.161-164 (sec 3.2, Defs 3.2-3.3, Corollary 3.4); VC comparison Theorem 3.5 p.164",
+      "latex": "M_{\\mathrm{SOA}}(\\mathcal{H})=\\mathrm{Ldim}(\\mathcal{H}),\\qquad \\forall A:\\ M_A(\\mathcal{H})\\ge \\mathrm{Ldim}(\\mathcal{H});\\qquad \\mathrm{VCdim}(\\mathcal{H})\\le \\mathrm{Ldim}(\\mathcal{H})",
+      "symbol_and_unit_ledger": "Ldim(H): maximal depth of a shattered complete binary tree (online/adaptive shattering) [integer]; SOA (Standard Optimal Algorithm) predicts by the child with larger Ldim; achieves the exact optimal mistake bound. VCdim (batch shattering) <= Ldim, gap can be arbitrarily large (thresholds on [0,1]: VC=1, Ldim=infinity).",
+      "assumptions": "Realizable case for the exact Ldim characterization; adaptive (tree) shattering, stronger than batch (set) shattering; unrealizable case: regret O(√(Ldim·ln T·T)), lower bound Ω(√(Ldim·T)) (Theorem 3.6).",
+      "breakdown_regime": "Ldim=infinity means no finite mistake bound (e.g. halfspaces in d>=2, thresholds on a continuum). VC dimension is the WRONG measure for online learnability — a class can be batch-learnable (finite VC) but not online-learnable (infinite Ldim).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's coverage-concept classes have an online learnability dimension (Ldim), not just a batch VC dimension: a read class can be PAC-learnable from static data yet unlearnable snap-by-snap against an adaptive defense. Derived kernel: measure GSE concept classes by Ldim to know whether snap-by-snap learning is even possible, and use SOA-style Ldim-majority as the optimal realizable read selector.",
+        "source_operator": "littlestone",
+        "telemetry": "GSE telemetry: estimate Ldim of shell/coverage concept classes; compare to VCdim; flag classes with infinite Ldim as not online-learnable (need margin/realizability assumptions)."
+      }
+    },
+    {
+      "primitive_id": "perceptron_margin",
+      "name": "Perceptron margin mistake bound",
+      "verbatim_quote": "The last assumption of Theorem 3.9 is called separability with large margin.",
+      "page": "p.171-172 (Theorem 3.9); hinge surrogate p.169",
+      "latex": "|M|\\le R^2\\|u\\|^2=(R/\\gamma)^2\\quad\\text{if } y_t\\langle u,x_t\\rangle\\ge 1\\ \\forall t;\\qquad f_t(w)=[1-y_t\\langle w,x_t\\rangle]_+",
+      "symbol_and_unit_ledger": "M: mistake rounds [integer]; R=max_t‖x_t‖ [instance norm]; u: separating vector; gamma=1/‖u‖: margin [instance units]; hinge [a]_+=max{a,0}. Perceptron = OGD on the hinge surrogate, update w_{t+1}=w_t+y_t x_t on mistake. Bound (R/gamma)^2 is the classic Novikoff/Perceptron margin bound.",
+      "assumptions": "Separability with large margin (exists u with y_t⟨u,x_t⟩>=1); convex hinge surrogate upper-bounds 0-1 loss; instances bounded by R.",
+      "breakdown_regime": "Without a margin (non-separable), the bound involves the hinge violations Σ[1−y_t⟨u,x_t⟩]_+ and can be large. Halfspaces have Ldim=infinity, so the margin assumption is what rescues a finite bound — there exist zero-error u on which Perceptron still errs many times.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE linear read-separators (e.g. 'cover-2 beats this formation') earn a (R/gamma)^2 mistake bound only when the snap classes are margin-separable. Derived kernel: GSE should seek large-margin read boundaries (confident, well-separated coverage decisions) because the mistake bound scales as 1/gamma^2 — small-margin reads are mistake-prone.",
+        "source_operator": "perceptron_margin",
+        "telemetry": "GSE telemetry: margin gamma of learned read boundaries; mistake count vs (R/gamma)^2; hinge-violation sum in the non-separable regime."
+      }
+    },
+    {
+      "primitive_id": "bandit_feedback",
+      "name": "Bandit limited feedback and importance-weighted gradients",
+      "verbatim_quote": "In this section we study online learning problems where the learner knows the value of the loss function at the predicted vector but he doesn't know the value of the loss function at other points.",
+      "page": "p.177 (sec 4); estimator p.180, Corollary 4.2 p.181",
+      "latex": "z_t[j]=\\begin{cases}y_t[j]/w_t[j]&j=p_t\\\\0&\\text{else}\\end{cases},\\quad \\mathbb{E}[z_t]=y_t;\\qquad \\mathbb{E}\\Big[\\sum_t y_t[p_t]\\Big]\\le \\min_i\\sum_t y_t[i]+2\\sqrt{d\\log(d)\\,T}",
+      "symbol_and_unit_ledger": "z_t: importance-weighted unbiased gradient estimate; w_t[j]: probability of pulling arm j; only the chosen arm's cost y_t[p_t] is observed; d: arms. The 1/w_t[j] importance weight makes E[z_t]=y_t. Regret 2√(d log(d) T) — an extra √d vs full-information Weighted Majority, because only 1/d of the feedback is received.",
+      "assumptions": "Adversarial (no assumption on y_1,...,y_T); unbiased gradient estimate with bounded norm; exploration via sampling ~ w_t; the √d dependence is essentially tight/unavoidable.",
+      "breakdown_regime": "Partial feedback fundamentally costs a √d factor — you cannot match full-information regret when you only see the chosen arm. Pure exploitation (no exploration) fails; the importance weight blows up if w_t[j] -> 0, so exploration is mandatory.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE is a BANDIT: each snap it calls one play/coverage and observes ONLY that outcome's loss, never the counterfactual (what would have happened under a different call). The importance-weighted estimate z_t=y_t/w_t is exactly how GSE learns from partial feedback, and the √d penalty is the honest price of not observing counterfactuals. Exploration (trying non-greedy reads) is mandatory, not optional.",
+        "source_operator": "bandit_feedback",
+        "telemetry": "GSE telemetry: per-snap observed-vs-counterfactual feedback; importance weights 1/w_t; exploration rate; regret vs 2√(d log(d) T); detect weight blow-up as w_t[j]->0."
+      }
+    },
+    {
+      "primitive_id": "bandit_oco",
+      "name": "Bandit OCO: gradient descent without a gradient",
+      "verbatim_quote": "On one hand, we would like to pull the arm which, based on previous rounds, we believe has the lowest cost.",
+      "page": "p.179 (sec 4.2); Flaxman-Kalai-McMahan sec 4.3 p.182-185",
+      "latex": "\\hat f(w)=\\mathbb{E}_{v\\sim U_b}[f(w+\\delta v)];\\qquad \\mathbb{E}_{v\\sim U_{sp}}\\Big[\\tfrac{d}{\\delta}f(w+\\delta v)v\\Big]=\\nabla\\hat f(w);\\qquad \\mathrm{Regret}=O\\big(\\sqrt{BdFL}\\,T^{3/4}\\big)",
+      "symbol_and_unit_ledger": "f_hat: smoothed loss (expectation over a delta-ball) [loss units]; delta: smoothing radius [w units]; one-shot gradient estimate from a SINGLE function evaluation; B: domain radius, F: max loss, L: Lipschitz, d: dimension. Bandit-OCO regret T^{3/4} vs full-information T^{1/2}; dimension dependence is tight, T^{3/4} tightness open.",
+      "assumptions": "Black-box loss access (no gradients); L-Lipschitz losses; smoothing bias |f_hat−f| <= L delta (Lemma 4.3); explore by predicting w_t+delta·v on a random sphere direction.",
+      "breakdown_regime": "The price of bandit information is a worse T exponent (3/4 vs 1/2) AND dimension dependence. Smoothing introduces bias L delta that must be traded against the gradient-estimate variance (d/delta). For linear losses, better O(poly(d)√T) algorithms exist (self-concordant regularizers).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When GSE cannot compute a snap-loss gradient analytically (black-box simulator), it uses the one-shot Flaxman-Kalai-McMahan estimate: perturb the read by delta·v, observe the single simulated outcome, and form (d/delta)·loss·v as an unbiased gradient of the smoothed loss. Derived kernel: GSE's simulator-based policy improvement is bandit-OCO with a T^{3/4} convergence price for partial feedback.",
+        "source_operator": "bandit_oco",
+        "telemetry": "GSE telemetry: smoothing radius delta; one-shot gradient estimates; regret vs T^{3/4}; bias-variance tradeoff L delta vs d/delta."
+      }
+    },
+    {
+      "primitive_id": "online_to_batch",
+      "name": "Online-to-Batch conversion (regret/T generalization)",
+      "verbatim_quote": "Our goal is to demonstrate how online learning can sometimes yield an alternative algorithm for solving stochastic learning problems.",
+      "page": "p.187 (sec 5); Theorem 5.1, Corollary 5.2 p.188-189",
+      "latex": "\\mathbb{E}[C(\\bar w)]-C(u)\\ \\le\\ \\mathbb{E}\\Big[\\frac{1}{T}\\sum_{t=1}^{T}\\big(f_t(w_t)-f_t(u)\\big)\\Big]=\\frac{\\mathbb{E}[\\mathrm{Regret}_T]}{T};\\qquad \\bar w=\\frac{1}{T}\\sum_{t=1}^{T}w_t",
+      "symbol_and_unit_ledger": "C(w)=E_{psi~Q}[c(w,psi)]: true expected cost [loss units]; w_bar: averaged (or randomly sampled) online prediction; Q: unknown i.i.d. source; the batch generalization gap <= online regret / T. Averaging needs C convex (Jensen); randomization needs no convexity. E[C(w_bar)]=E[(1/T)Σf_t(w_t)] because w_t depends only on psi_1..psi_{t-1}.",
+      "assumptions": "Batch examples i.i.d. from Q (the stochastic setting); online learner run on f_t(w)=c(w,psi_t); output the average (Jensen) or a uniform random iterate; the key identity E[c(w_t,psi_t)]=E[C(w_t)] uses that w_t is independent of psi_t.",
+      "breakdown_regime": "The conversion REQUIRES i.i.d. batch data — it does not hold for adversarial sequences. Averaging requires convex C; without convexity use randomization. The guarantee is in expectation (amplifiable to high probability). This is the bridge, not a free lunch: regret/T must be small.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the crown jewel for GSE: the snap-by-snap ONLINE learner converts to a calibrated PRE-GAME (batch) probability by averaging its snap posteriors, with generalization error <= regret/T. The engine's sequential snap learning is not the deliverable — the averaged, batch-calibrated pre-game edge is. Online-to-Batch is the formal bridge from the crucible's snap simulation to the published pre-game probability, and it is valid precisely because pre-game calibration targets an i.i.d. outcome distribution.",
+        "source_operator": "online_to_batch",
+        "telemetry": "GSE telemetry: averaged posterior w_bar vs individual snap w_t; batch generalization gap vs regret/T; verify i.i.d. assumption for the pre-game target; Jensen/convexity check for averaging."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t0",
+      "think": "Shalev-Shwartz's monograph is the missing epistemic layer of the Foundry. Nielsen gave the engine its neurons, Prince gave it deep representation, Reddi gave it the fleet to run on, but none of them answers the question that actually defines GSE: how does a predictor learn, snap by snap, against an opponent who is adapting to it? That is online learning, and this survey is its constitution. The protocol is exactly GSE's: at round t receive a question x_t (down, distance, formation, personnel), predict p_t (a distribution over outcomes), receive the true answer y_t (the revealed snap result), suffer a loss. The decisive move is the refusal of any statistical assumption: the sequence may be deterministic, stochastic, or adversarially adaptive to the learner's own behavior. Football is the third case. The defense reads the offense's tendencies and adjusts; the data are not i.i.d. draws from a fixed distribution, they are the moves of an adversary. Any GSE calibration built on an i.i.d. assumption is built on sand; this monograph is the correction. The objective is regret, not absolute loss. An adversary can make absolute loss arbitrarily large, so the only meaningful goal is to be competitive with the best FIXED predictor in hindsight: Regret_T = sum of my losses minus the best fixed read's losses, and success means this grows sublinearly. For GSE the comparator is the best single coverage shell or game plan it could have committed to; sublinear regret means the engine's average snap calibration converges to that best fixed read. Cover's impossibility result is the deepest justification for GSE's probabilistic output: with deterministic hard predictions and no realizability, even two hypotheses force regret T/2, because the adversary always answers opposite. The only escape is randomization, which is convexification: predict a probability in [0,1], enter the online convex optimization framework, and earn a sqrt(0.5 ln|H| T) guarantee. Hard locks are not just bad style, they are epistemically indefensible; a calibrated distribution is the only output that admits a regret guarantee against an adaptive defense. The algorithmic core is stability. Follow-The-Leader, the naive 'best read so far' rule, fails on linear losses because its predictions oscillate: one surprising snap flips the committed read wholesale and regret is T. The fix is Follow-The-Regularized-Leader: minimize past loss plus a regularizer, and strong convexity of that regularizer bounds the one-step prediction jump by L/sigma, which bounds regret. This is GSE's posterior update law. The regularizer is the prior over reads; it must keep one surprising snap from destabilizing the whole posterior. Linearizing convex losses via sub-gradients (the tangent lower bound) yields Online Gradient Descent, w_{t+1}=w_t−eta z_t, with regret BL√(2T) at eta=B/(L√(2T)). That square-root law is GSE's adaptation-rate law: too fast and the engine oscillates like FTL, too slow and it lags the defense, and the doubling trick removes the need to know the game length. Geometry matters. The coverage-read distribution lives on the probability simplex, so the regularizer must be entropic (ℓ1-strongly-convex), not Euclidean; this is why GSE's update is exponentiated-gradient / Online Mirror Descent, accumulating evidence in a dual vector and mirroring back to the simplex through a link function g=∇R*. The natural distance between reads is the Bregman divergence, which for entropic regularization is exactly KL divergence — the correct information geometry for probability reads, not Euclidean. Strong convexity of the primal regularizer is Fenchel-dual to smoothness of the evidence-to-read link, and that duality tightens the regret constant by √2. Over a library of d coverage-shell experts, Weighted Majority multiplicatively down-weights mistaken reads and achieves √(2log(d)T) regret — exponentially better in the shell-library size than a Euclidean √(2dT), because per-snap costs are ℓ∞-bounded. Two further results are load-bearing. First, online learnability is characterized by the Littlestone dimension, not the VC dimension: a read class can be batch-learnable from static data yet unlearnable snap-by-snap against an adaptive defense (thresholds have VC=1 but Ldim=infinity). GSE must measure its concept classes by Ldim to know whether sequential learning is even possible. Second, GSE is a BANDIT: it calls one play and observes only that outcome, never the counterfactual. The importance-weighted estimate z_t=y_t/w_t is unbiased, and the price of partial feedback is an extra √d in the regret — exploration is mandatory, and the one-shot Flaxman-Kalai-McMahan gradient lets a black-box simulator improve its policy at a T^{3/4} convergence price. The crown jewel is online-to-batch. The snap-by-snap online learner is not the deliverable; the deliverable is a calibrated PRE-GAME probability. Averaging the snap posteriors (Jensen, since the cost is convex) converts online regret into batch generalization: E[C(w_bar)]−C(u) <= regret/T. This is the formal bridge from the crucible's sequential snap simulation to the published pre-game edge, and it is valid precisely because the pre-game target is an i.i.d. outcome distribution even though the in-game sequence is adversarial. The whole pipeline closes: adversarial online learning inside the game, online-to-batch conversion at the game boundary, calibrated probability out. Two practical refinements close the loop. The doubling trick removes the need to know the horizon T in advance: run epochs of geometrically growing length with a fresh learning rate each epoch, paying only a constant multiplicative factor over the tuned bound. GSE never knows how many snaps a game will contain, so this is how the engine sets its adaptation rate without a crystal ball. The multiplicative Weighted Majority bound is a relative-loss guarantee: when the best shell is nearly perfect the engine's loss stays within a small factor of it, exactly the regime a well-calibrated coverage read should occupy. And the online-to-batch expectation bound amplifies to high probability, so the published pre-game number carries a confidence guarantee, not merely an average. Every equation is a wall of that pipeline, not a metaphor.",
+      "retrocausal_genealogy": "Retrocausal genealogy: the regret framework descends from Cover's 1965 impossibility for sequential binary prediction; the OCO model from Gordon (1999) and Zinkevich (2003, who coined 'online convex programming'); FTL from Kalai-Vempala; FTRL and the duality analysis from Shalev-Shwartz's thesis and Shalev-Shwartz-Singer; the EG update from Kivinen-Warmuth (1997); the p-norm algorithm from Gentile-Littlestone; local norms from Abernethy-Hazan-Rakhlin; the Perceptron from Rosenblatt (1958) with the margin analysis of Agmon (1954) and Minsky-Papert (1969); Winnow and the Standard Optimal Algorithm and Ldim from Littlestone (1988, 1989); the adversarial bandit from Auer-Cesa-Bianchi-Freund-Schapire (2003); bandit-OCO from Flaxman-Kalai-McMahan (2005); online-to-batch from Littlestone (1989). Each GSE rule is the final cause of a decades-long chain of sequential-prediction necessity, pulled backward from the crucible's need to learn against an adapting defense and still publish a calibrated pre-game number.",
+      "theory_of_mind": "Recursive theory of mind: online learning IS a theory-of-mind game. The environment picks x_t based on the learner's past predictions p_1..p_{t-1}; the learner models the environment's adaptation; the environment models the learner's model. Shalev-Shwartz makes this explicit in the Ldim shattered-tree construction: the adversary chooses instances as a function of the labels it has forced, i.e. it reasons about the learner's reasoning. GSE mirrors this recursion exactly: the offense models the defense's coverage shell, the defense models the offense's tendency, and the engine models both. The bandit constraint sharpens it: the defense knows which play it stopped, but GSE never sees the counterfactual, so the engine must reason about what it cannot observe and explore to reduce that ignorance.",
+      "cross_layer_veto": "Cross-layer veto adjudication: the representation layer (Prince/Nielsen) wants a richer model, but the online layer VETOES any deterministic hard-pick output (Cover: no sublinear regret) and any i.i.d. calibration assumption (the sequence is adversarial). The fleet layer (Reddi) VETOES unbounded per-snap compute that breaks the crucible budget. The geometry layer VETOES Euclidean regularization on the simplex (must be entropic) and unweighted expert averaging. The bandit layer VETOES pure exploitation (exploration is mandatory; importance weights blow up as w->0). The online-to-batch layer VETOES publishing an in-game snap posterior as a pre-game number without the averaging conversion and its i.i.d. check. When layers conflict the binding constraint wins and the gatekeeper PASSes rather than fabricating a guarantee: a read class with infinite Ldim is refused as not online-learnable, not faked. Same fail-closed discipline as the pick-publication gate."
+    }
+  ],
+  "universal_lens": "Any predictor that answers a sequence of questions against an environment that may adapt to its own behavior is governed by regret, not absolute loss: success is sublinear regret versus the best fixed predictor in hindsight. Deterministic prediction without realizability is impossible (Cover); convexification by randomization is the escape. Stability of the update (strong convexity of a geometry-matched regularizer) is what converts past loss into a low-regret guarantee, and online-to-batch conversion turns sequential regret into batch generalization. These laws bind any sequential decision system — markets, routing, ad placement, and football alike.",
+  "gsi_mapping": "For GSI, this monograph is the epistemology of learning under adversarial, partial feedback. It formalizes why no i.i.d. assumption is safe when the environment adapts, why a calibrated distribution is the only defensible output (Cover), why verification must be against a fixed hindsight comparator (regret), and why partial feedback carries an unavoidable √d price that demands exploration. The Littlestone dimension tells GSI which concept classes are learnable sequentially at all, and online-to-batch gives the honest bridge from sequential evidence to a generalizing claim — the same fail-closed verification discipline the gatekeeper enforces.",
+  "gse_mapping": "For GSE, the snap-by-snap engine is an online learner against an adaptive defense: each snap is a round (x_t=down/distance/formation, p_t=outcome distribution, y_t=revealed result). Regret vs the best fixed coverage read is the objective; calibrated probabilistic output is mandatory (Cover); FTRL/OGD/OMD with entropic regularization is the posterior update on the read simplex (KL/Bregman geometry); Weighted Majority aggregates the shell library at √(2log(d)T); the bandit importance-weighted estimate handles the missing counterfactual; Ldim gates which read classes are online-learnable; and online-to-batch averaging converts snap regret into the calibrated PRE-GAME probability with generalization error <= regret/T. Every equation is a load-bearing rule of the GSE learning pipeline."
+}
