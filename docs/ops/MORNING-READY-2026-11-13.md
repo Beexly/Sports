@@ -28,10 +28,11 @@ T-00 PASS (13/13 games, 32/32 QB1s, 126 excluded), T-01 PASS, T-02 PASS
 (cost 3031, 1091ms), T-03 PASS (10/10), T-04 PASS (2708 verbatim quotes —
 WP-1 repair landed), T-05 PASS (26 pytest, Sinkhorn 0.0, 13 games), T-06 PASS
 (83 vitest, nullity purged), T-07 PASS (1096 rows/32 teams, 27 tests),
-T-08 PASS (live Shin de-vig), T-09 PASS (OOF hard_pass). T-10 re-run pending
-WP-5 completion (earlier run raced mid-edit storefront + module junctions,
-both resolved). Official verify_all_ten_gates.sh exit 0 still required before
-WP-8 — REFUSE_PROJECTION stands until then.
+T-08 PASS (live Shin de-vig), T-09 PASS (OOF hard_pass). T-10: all 4 formerly
+red guardrails fixed + re-verified standalone (trust-gate, commercial-copy,
+ngs-export, perf-claims); full re-run in flight. Official
+verify_all_ten_gates.sh exit 0 still required before WP-8 — REFUSE_PROJECTION
+stands until then.
 
 ## 3. Week 10 slate (13 remaining games — VERIFIED vs ESPN scoreboard + Neon 2026-11-13 ~04:00 CT)
 
@@ -45,8 +46,14 @@ NOTE: an earlier draft of this packet carried a fabricated slate (ATL@IND
 Berlin etc.) from a stale compaction summary — caught by re-querying ESPN +
 Neon directly; both sources agree on the slate above. T-00 reads Neon live,
 so its PASS was always against the correct games.
-CATALOG GAP (WP-5): catalog.ts is missing LAR@ARI + PIT@CIN and mislabels
-SF@DAL as SNF (SF@DAL is 4:25 ET; PIT@CIN is the SNF). Fix before deploy.
+CATALOG GAP — FIXED (WP-5, verified): catalog + two-door offers now carry the
+13-game verified slate incl LAR@ARI + PIT@CIN; SF@DAL corrected to 4:25 ET.
+Paywall leak closed: stale FREE TNF teaser removed from engine-live-bridge.
+OFFICIAL LEDGER (recomputed from Neon by scripts/verify-ledger.ts): 79-46-0,
++81.47u official slice; win rate LOCKED at 53/200 CLV-backed settled plays
+(<200 doctrine — no win rate published until 200). TNF UNDER 43.5: close
+40.625, CLV +2.875. 3386/3401 receipts hash-verified; 1 stored-vs-recomputed
+CLV mismatch disclosed in apps/web/lib/ledger/verified-ledger.json.
 
 ## 4. Live PLAY vs PASS summary — PENDING (WP-8)
 
@@ -67,30 +74,33 @@ POST /api/packages/checkout.)
 
 - wave1-tnf-autopsy.md — X thread + IG + 60s Nova script. Honest loss
   autopsy, zero excuses, gate-regime pivot. Facts verified vs ESPN + Neon.
-- wave2-munich-preview.md — PENDING (pick-free preview, staged next).
+- wave2-munich-preview.md — STAGED (pick-free preview; trust-gate clean).
 - wave3-sunday-usage.md — PENDING (needs post-gate sim splits; no fabricated
   numbers).
 All three must pass trust-gate.mjs before publish. 0 leaked paid picks,
 0 NGS data, 0 math jargon.
 
-## 8. Calibration (WP-6) — RUNNING
+## 8. Calibration (WP-6) — COMPLETE (T-09 PASS)
 
-Purged+embargoed 2026 OOF fit in progress: 4,823 dedup settled rows
+Purged+embargoed 2026 OOF fit: 4,823 dedup settled rows
 (2026-06-03..11-13), 2-param logit shift+temp, Ridge toward (-0.22, 0.78),
-100-run shuffled-time placebo. Smoke run (3 placebos): Brier 0.2612 ->
-0.2480, ECE 0.0226, raw 70 -> 0.559. Honest note: the live data deflates
+100-run shuffled-time placebo. FINAL: Brier 0.2612 -> 0.2480, ECE 0.0226,
+raw 70 -> 0.5586. Placebo max|mean CLV| 0.0020 <= 0.005; real-time selected
+mean CLV -0.00045; hard_pass true. Honest note: the live data deflates
 harder than the directive's ~64-66 band; the artifact reports the truth.
-Full fit + artifact: PENDING.
+Artifact: data/engine/oof_calibration_2026_11_13.json.
 
-## 9. Antigravity workspace review — IN PROGRESS
+## 9. Antigravity workspace review — COMPLETE
 
 1,207 conversations indexed (CLI 656 + IDE 551), 454 from November. Four
-mining lanes dispatched: OneDrive GSE workspace docs, master-plan sessions,
-forensic/wiring sessions, November long tail. Digests -> agy-review-{A..D}.md,
-consolidated into docs/ops/ANTIGRAVITY-WORKSPACE-REVIEW-2026-11-13.md.
-Early find: Master Path Forward v2.9 (2026-11-04) ADR-0003 locks the audited
-record lineage (38-13-1 / +22.85u era) and bans phantom 47-16; ADR-0005's
-crouton-alpha routing is STALE (model 404, omniroute removed 2026-11-11).
+mining lanes delivered; consolidated into
+docs/ops/ANTIGRAVITY-WORKSPACE-REVIEW-2026-11-13.md (+ digests in
+docs/ops/antigravity-review-2026-11-13/). Key catches actioned: fabricated
+slate corrected vs ESPN+Neon; catalog gaps + paywall leak fixed (WP-5);
+prop Sniper Gate + MILP floors + ticket caps queued for WP-8. Master Path
+Forward v2.9 ADR-0003 record lineage superseded by the recomputed official
+ledger (79-46-0 / +81.47u); ADR-0005 crouton-alpha routing STALE (omniroute
+removed 2026-11-11).
 
 ## 10. One-tap checklist for Garrett
 
