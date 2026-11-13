@@ -12,11 +12,24 @@ import {
   normaliseSimilarity,
   evidenceWeight,
   toOrQuery,
+  corpusKeyShape,
+  isSyntheticSelfLabel,
+  seedKeyExists,
   MAX_EVIDENCE_WEIGHT,
+  SYNTHETIC_DOWNWEIGHT,
 } from "../corpus-grounding.js";
+import { SlateCorpusCache } from "../slate-corpus-cache.js";
 import type { SqlClient } from "../literature-retrieval.js";
 
-function fakeDb(opts: { situations?: unknown[]; statements?: unknown[]; chunks?: unknown[]; failStatement?: boolean }): SqlClient & { calls: string[] } {
+function fakeDb(opts: {
+  situations?: unknown[];
+  statements?: unknown[];
+  chunks?: unknown[];
+  failStatement?: boolean;
+  /** Default true: the seed key exists in lit.corpus_chunk with an embedding. */
+  seedExists?: boolean;
+  failSeedCheck?: boolean;
+}): SqlClient & { calls: string[] } {
   const calls: string[] = [];
   return {
     calls,
@@ -27,7 +40,12 @@ function fakeDb(opts: { situations?: unknown[]; statements?: unknown[]; chunks?:
         if (opts.failStatement) throw new Error("boom");
         return { rows: opts.statements ?? [], rowCount: 0 };
       }
-      if (text.includes("WITH seed")) { calls.push("chunk-seeded"); return { rows: opts.chunks ?? [], rowCount: 0 }; }
+      if (text.includes("SELECT 1 AS ok")) {
+        calls.push("seed-exists");
+        if (opts.failSeedCheck) throw new Error("seed check boom");
+        return { rows: opts.seedExists === false ? [] : [{ ok: 1 }], rowCount: 0 };
+      }
+      if (text.includes("set_config('hnsw.ef_search'")) { calls.push("chunk-seeded"); return { rows: opts.chunks ?? [], rowCount: 0 }; }
       if (text.includes("FROM lit.corpus_chunk")) { calls.push("chunk-vector"); return { rows: opts.chunks ?? [], rowCount: 0 }; }
       throw new Error(`unexpected sql ${text.slice(0, 40)}`);
     },
@@ -64,7 +82,7 @@ describe("groundFacet", () => {
       chunks: [{ corpus_key: "c".repeat(64), chunk_index: 3, title: "Fatigue", chunk_text: "short week road team fatigue late", similarity: 0.8 }],
     });
     const g = await groundFacet(db, { family: "restFatigue", query: "short week road team fatigue" });
-    expect(db.calls).toEqual(["situation", "statement", "chunk-seeded"]);
+    expect(db.calls).toEqual(["situation", "statement", "seed-exists", "chunk-seeded"]);
     expect(g.chunkMode).toBe("seeded");
     expect(g.evidence.map((e) => e.layer).sort()).toEqual(["chunk", "situation", "statement"]);
     expect(g.support).toBeGreaterThan(0);
@@ -145,5 +163,101 @@ describe("groundGame", () => {
     ]);
     expect(g.coverage).toBe(0.5);
     expect(g.overallSupport).toBeCloseTo(g.facets[0]!.support / 2, 6);
+  });
+});
+
+describe("seed-key guard (md5 vs sha256)", () => {
+  const MD5_SIT = { ...SIT, corpus_key: "f".repeat(32) };
+
+  it("corpusKeyShape classifies sha256, md5 and other keys", () => {
+    expect(corpusKeyShape("a".repeat(64))).toBe("sha256");
+    expect(corpusKeyShape("ABCDEF".repeat(10) + "abcd")).toBe("sha256");
+    expect(corpusKeyShape("f".repeat(32))).toBe("md5");
+    expect(corpusKeyShape("not-a-key")).toBe("other");
+    expect(corpusKeyShape("")).toBe("other");
+  });
+
+  it("never runs the seeded scan for a key absent from lit.corpus_chunk", async () => {
+    const db = fakeDb({ situations: [MD5_SIT], seedExists: false });
+    const g = await groundFacet(db, { family: "restFatigue", query: "short week road team fatigue" });
+    expect(db.calls).toContain("seed-exists");
+    expect(db.calls).not.toContain("chunk-seeded");
+    expect(g.chunkMode).toBe("none");
+    expect(g.layerErrors.some((e) => e.includes("not in lit.corpus_chunk") && e.includes("(md5)"))).toBe(true);
+    // The situation evidence itself still stands; only the chunk seed is refused.
+    expect(g.evidence.some((e) => e.layer === "situation")).toBe(true);
+  });
+
+  it("a NULL-embedding seed is rejected by the existence check (same fast path)", async () => {
+    const db = fakeDb({ situations: [SIT], seedExists: false });
+    const g = await groundFacet(db, { family: "restFatigue", query: "short week road team fatigue" });
+    expect(db.calls).not.toContain("chunk-seeded");
+    expect(g.chunkMode).toBe("none");
+  });
+
+  it("falls back to a cached bge-m3 query embedding when the seed key is missing", async () => {
+    const db = fakeDb({
+      situations: [MD5_SIT],
+      seedExists: false,
+      chunks: [{ corpus_key: "d".repeat(64), chunk_index: 1, title: null, chunk_text: "short week road team fatigue late", similarity: 0.9 }],
+    });
+    let embedCalls = 0;
+    const embedder = async () => {
+      embedCalls += 1;
+      return { ok: true as const, embedding: new Array(1024).fill(0.01) };
+    };
+    const cache = new SlateCorpusCache();
+    const g = await groundFacet(db, { family: "restFatigue", query: "short week road team fatigue" }, { embedder, cache });
+    expect(g.chunkMode).toBe("embedded");
+    expect(db.calls).toContain("chunk-vector");
+    expect(db.calls).not.toContain("chunk-seeded");
+    expect(embedCalls).toBe(1);
+    // Second identical facet query: served from the cache, no new provider call.
+    const g2 = await groundFacet(db, { family: "restFatigue", query: "short week road team fatigue" }, { embedder, cache });
+    expect(g2.chunkMode).toBe("embedded");
+    expect(embedCalls).toBe(1);
+  });
+
+  it("a failed existence check is reported and skips the seeded scan", async () => {
+    const db = fakeDb({ situations: [SIT], failSeedCheck: true });
+    const g = await groundFacet(db, { family: "restFatigue", query: "short week road team fatigue" });
+    expect(db.calls).not.toContain("chunk-seeded");
+    expect(g.chunkMode).toBe("none");
+    expect(g.layerErrors.some((e) => e.includes("seed existence check failed"))).toBe(true);
+  });
+
+  it("seedKeyExists is true only when the probe returns a row", async () => {
+    expect(await seedKeyExists(fakeDb({ seedExists: true }), { corpus_key: "a".repeat(64), chunk_index: 7 })).toBe(true);
+    expect(await seedKeyExists(fakeDb({ seedExists: false }), { corpus_key: "f".repeat(32), chunk_index: 7 })).toBe(false);
+  });
+});
+
+describe("synthetic-data / prototype downweight", () => {
+  it("isSyntheticSelfLabel matches self-identifying titles and text only", () => {
+    expect(isSyntheticSelfLabel("synthetic-data fixture")).toBe(true);
+    expect(isSyntheticSelfLabel("Synthetic Data v2")).toBe(true);
+    expect(isSyntheticSelfLabel("synthetic_data")).toBe(true);
+    expect(isSyntheticSelfLabel("Prototype roster")).toBe(true);
+    expect(isSyntheticSelfLabel(null, "this chunk is a prototype")).toBe(true);
+    expect(isSyntheticSelfLabel("Fatigue study", "real game data")).toBe(false);
+    expect(isSyntheticSelfLabel(null, null)).toBe(false);
+  });
+
+  it("downweights a synthetic chunk 0.25x vs an identical real chunk", async () => {
+    const chunk = { corpus_key: "c".repeat(64), chunk_index: 3, chunk_text: "short week road team fatigue late", similarity: 0.8 };
+    const real = await groundFacet(
+      fakeDb({ situations: [SIT], chunks: [{ ...chunk, title: "Fatigue" }] }),
+      { family: "restFatigue", query: "short week road team fatigue" },
+    );
+    const synth = await groundFacet(
+      fakeDb({ situations: [SIT], chunks: [{ ...chunk, title: "synthetic-data fixture" }] }),
+      { family: "restFatigue", query: "short week road team fatigue" },
+    );
+    const realChunk = real.evidence.find((e) => e.layer === "chunk")!;
+    const synthChunk = synth.evidence.find((e) => e.layer === "chunk")!;
+    expect(realChunk.synthetic).toBeUndefined();
+    expect(synthChunk.synthetic).toBe(true);
+    expect(synthChunk.weight).toBeCloseTo(realChunk.weight * SYNTHETIC_DOWNWEIGHT, 6);
+    expect(SYNTHETIC_DOWNWEIGHT).toBe(0.25);
   });
 });

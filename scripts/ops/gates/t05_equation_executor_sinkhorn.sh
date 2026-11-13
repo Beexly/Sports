@@ -5,7 +5,7 @@
 #   - intelligence/ops/run_week10_quant_kernels.py supports --verify-only:
 #     prints JSON with sinkhorn_max_residual < 1e-9 and games >= 13, exit 0.
 set -euo pipefail
-cd "$(dirname "$0")/../.." || exit 2
+cd "$(dirname "$0")/../../.." || exit 2
 FAIL=0
 
 EXEC="$(find scripts intelligence packages -name 'honest_equation_executor.py' -not -path '*/node_modules/*' 2>/dev/null | head -1 || true)"

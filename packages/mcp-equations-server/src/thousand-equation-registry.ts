@@ -56,17 +56,18 @@ let _cachedMatrix: ThousandEquationMatrix | null = null;
  * Resolve the path to data/engine/thousand_equation_matrix_2026.json.
  */
 export function resolveMatrixPath(): string {
-  const candidates = [
-    resolve(process.cwd(), "data/engine/thousand_equation_matrix_2026.json"),
-    resolve("C:/c/wt-week8-forensic/data/engine/thousand_equation_matrix_2026.json"),
-  ];
-
+  // Module-relative repo path first: deterministic regardless of cwd. The old
+  // hardcoded C:/c/wt-week8-forensic worktree candidate is purged — it silently
+  // shadowed the repo's own matrix with a stale foreign copy whenever the cwd
+  // was not the repo root (e.g. under vitest).
+  const candidates: string[] = [];
   try {
     const curDir = typeof __dirname !== "undefined" ? __dirname : dirname(fileURLToPath(import.meta.url));
     candidates.push(resolve(curDir, "../../../data/engine/thousand_equation_matrix_2026.json"));
   } catch {
     // Ignore ESM/CJS path resolution errors
   }
+  candidates.push(resolve(process.cwd(), "data/engine/thousand_equation_matrix_2026.json"));
 
   for (const c of candidates) {
     if (existsSync(c)) return c;
@@ -149,6 +150,10 @@ export function selectCandidatePremisesByContextMask(
           : "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST";
 
     const liveDisp = signalDisplacementByFamily.get(eq.signalFamilyIdx);
+    // In live conditioning mode (signals supplied) a fired family with no
+    // measured displacement contributes ZERO — the stored matrix prior is not
+    // a substitute for a missing measurement. Without signals the compiled
+    // matrix prior is itself the data (pure prior mode).
     const conditionedDelta =
       liveDisp !== undefined
         ? Number(
@@ -158,7 +163,16 @@ export function selectCandidatePremisesByContextMask(
               Math.min(2.0, Math.max(0.25, Math.abs(liveDisp)))
             ).toFixed(6),
           )
-        : eq.rawLogOddsDelta;
+        : opts.signals !== undefined
+          ? 0
+          : eq.rawLogOddsDelta;
+
+    const tier =
+      eq.verificationStatus === "CITABLE_VERIFIED"
+        ? "CITABLE_VERIFIED"
+        : eq.verificationStatus === "COMPUTED"
+          ? "COMPUTED"
+          : "RESEARCH_HYPOTHESIS";
 
     matched.push({
       id: eq.id,
@@ -166,6 +180,7 @@ export function selectCandidatePremisesByContextMask(
       cluster: eq.cluster,
       similarity: eq.priorWeight,
       verificationStatus: vStatus,
+      verificationTier: tier,
       backtestPassed: eq.load_bearing,
       jacobianSensitivity: eq.jacobianSensitivity,
       rawLogOddsDelta: conditionedDelta,
@@ -174,27 +189,9 @@ export function selectCandidatePremisesByContextMask(
     });
   }
 
-  // If active mask bits matched fewer than topK, backfill with the highest-weighted citable core premises
-  if (matched.length < topK) {
-    const existingIds = new Set(matched.map((m) => m.id));
-    for (const eq of matrix.equations) {
-      if (matched.length >= topK) break;
-      if (!eq.load_bearing || existingIds.has(eq.id)) continue;
-      matched.push({
-        id: eq.id,
-        premise: `${eq.title}: ${eq.equationLatex}`,
-        cluster: eq.cluster,
-        similarity: eq.priorWeight * 0.85, // slight distance discount for backfilled premises
-        verificationStatus: "HIGH_PRIORITY_PRODUCTION_TARGET",
-        backtestPassed: true,
-        jacobianSensitivity: eq.jacobianSensitivity,
-        rawLogOddsDelta: eq.rawLogOddsDelta,
-        category: eq.category,
-        signalFamilyIdx: eq.signalFamilyIdx,
-      });
-      existingIds.add(eq.id);
-    }
-  }
-
+  // NO BACKFILL. The previous version padded any shortfall with the
+  // highest-weighted citable premises regardless of the context mask, so an
+  // empty or non-firing mask still moved the router. A premise whose family
+  // bit did not fire contributes nothing and is not selected.
   return matched.slice(0, topK);
 }

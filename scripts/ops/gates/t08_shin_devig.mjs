@@ -45,7 +45,7 @@ for (const r of rows) {
 }
 console.log(JSON.stringify({ status: "OK", markets: rows.length, fairProbsChecked: checked }));
 `;
-const probePath = path.join(ROOT, "scripts/ops/gates/.t08-probe.mts");
+const probePath = path.join(ROOT, ".t08-probe.mts");
 fs.writeFileSync(probePath, probe);
 const r = spawnSync(process.execPath,
   ["node_modules/tsx/dist/cli.mjs", probePath],

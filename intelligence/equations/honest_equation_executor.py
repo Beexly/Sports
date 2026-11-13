@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import math
 import re
+import unicodedata
 from dataclasses import asdict, dataclass
 from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple
 
@@ -154,6 +155,37 @@ RELATION_MACRO_REPLACEMENTS: Dict[str, str] = {
     "equiv": "==",
 }
 
+# Compatibility superscripts/subscripts that NFKC would flatten into bare
+# digits (x² -> x2, destroying the exponent). Rewrite them to explicit ^/_
+# notation BEFORE NFKC so mathematical structure survives normalization.
+_COMPAT_SUPERSCRIPTS: Tuple[Tuple[str, str], ...] = (
+    ("⁰", "^0"), ("¹", "^1"), ("²", "^2"), ("³", "^3"), ("⁴", "^4"),
+    ("⁵", "^5"), ("⁶", "^6"), ("⁷", "^7"), ("⁸", "^8"), ("⁹", "^9"),
+)
+_COMPAT_SUBSCRIPTS: Tuple[Tuple[str, str], ...] = (
+    ("₀", "_0"), ("₁", "_1"), ("₂", "_2"), ("₃", "_3"), ("₄", "_4"),
+    ("₅", "_5"), ("₆", "_6"), ("₇", "_7"), ("₈", "_8"), ("₉", "_9"),
+)
+
+
+def normalize_unicode_input(raw: str) -> str:
+    r"""NFKC-normalize LaTeX/Unicode input without destroying structure.
+
+    Glyph replacements (² -> ^2, ½ -> (1/2), Δ -> \Delta, …) run first so
+    compatibility characters that carry mathematical structure are rewritten
+    explicitly; NFKC then folds fullwidth forms (ｘ -> x), ligatures (ﬁ -> fi)
+    and other compatibility equivalences. Without this, fullwidth or ligatured
+    input silently produced unbound symbols instead of the intended equation.
+    """
+    s = raw
+    for src, dst in UNICODE_REPLACEMENTS:
+        s = s.replace(src, dst)
+    for src, dst in _COMPAT_SUPERSCRIPTS:
+        s = s.replace(src, dst)
+    for src, dst in _COMPAT_SUBSCRIPTS:
+        s = s.replace(src, dst)
+    return unicodedata.normalize("NFKC", s)
+
 
 def _identity_replacer(match: "re.Match[str]") -> str:
     """Return the matched macro untouched; used for unknown LaTeX commands."""
@@ -198,6 +230,9 @@ class HonestExecutionResult:
     operator_count: int
     evaluated_value: Optional[float]
     evaluation_mode: str
+    # True/False when the equation root is an inequality guard and it was
+    # evaluated; None when there is no guard or evaluation did not happen.
+    guard_passed: Optional[bool] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -312,6 +347,32 @@ class BinNode(MathNode):
             scale = max(1.0, abs(lv), abs(rv))
             return 1.0 if abs(lv - rv) <= 1e-2 * scale else 0.0
         return float("nan")
+
+
+class GuardNode(MathNode):
+    """An inequality guard (P <= 0.05, x > 0, …).
+
+    Evaluates to exactly 1.0 when the inequality holds and 0.0 when it does
+    not. A guard that evaluates to 0.0 means the equation does NOT fire:
+    downstream consumers must treat guard_passed=False as zero contribution,
+    never as a numeric result to blend. A guard with unbound symbols stays
+    PARSED_SYMBOLIC_ONLY — an unbound guard is never assumed to pass, and its
+    symbols are never bound to 0.0 to force a verdict.
+    """
+
+    def __init__(self, op: str, lhs: MathNode, rhs: MathNode) -> None:
+        self.op = op
+        self.lhs = lhs
+        self.rhs = rhs
+
+    def symbols(self) -> Set[str]:
+        return self.lhs.symbols() | self.rhs.symbols()
+
+    def op_count(self) -> int:
+        return 1 + self.lhs.op_count() + self.rhs.op_count()
+
+    def eval(self, env: Dict[str, float]) -> float:
+        return BinNode(self.op, self.lhs, self.rhs).eval(env)
 
 
 class FuncNode(MathNode):
@@ -457,6 +518,17 @@ def _rewrite_latex_macros(expr: str) -> str:
             break
         sub_clean = re.sub(r"[^A-Za-z0-9_]", "_", m_sub.group(1)).strip("_") or "0"
         s = f"{s[:m_sub.start()]}_{sub_clean}{s[m_sub.end():]}"
+
+    # \Delta\tau_{\text{Out}} is ONE symbol, Delta_tau_Out — the change in
+    # tau_Out — not the product Delta * tau_Out. When \Delta is immediately
+    # followed by another macro with NO whitespace, join them into a single
+    # prefixed identifier (subscript included). An explicit space keeps the
+    # product reading: \Delta \tau_{Out} -> Delta * tau_Out.
+    s = re.sub(
+        r"\\Delta\\([A-Za-z]+)((?:_[A-Za-z0-9_]+)*)",
+        lambda m: " Delta_" + m.group(1) + m.group(2) + " ",
+        s,
+    )
 
     # Convert ^{...} -> ^(...)
     for _ in range(20):
@@ -612,7 +684,7 @@ class _Parser:
         if t and t[0] == "OP" and t[1] in ("<=", ">=", "<", ">", "==", "~=", "!="):
             op = self.consume()[1]
             rhs = self.parse_expr()
-            return BinNode(op, node, rhs)
+            return GuardNode(op, node, rhs)
         return node
 
     def parse_term(self) -> MathNode:
@@ -758,11 +830,12 @@ def parse_and_execute_honestly(
 ) -> HonestExecutionResult:
     """Parse `raw_equation` without inventing missing bindings and return an `HonestExecutionResult`."""
     raw = str(raw_equation or "").strip()
+    raw_original = raw
     if not raw:
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason="empty_input",
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr="",
             lhs_target=None,
             free_symbols=[],
@@ -772,12 +845,13 @@ def parse_and_execute_honestly(
             evaluation_mode="none",
         )
 
+    raw = normalize_unicode_input(raw)
     prose_reason = _looks_like_prose_sentence(raw)
     if prose_reason is not None:
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason=prose_reason,
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr="",
             lhs_target=None,
             free_symbols=[],
@@ -793,7 +867,7 @@ def parse_and_execute_honestly(
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason=rel_err,
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr=norm,
             lhs_target=lhs_target,
             free_symbols=[],
@@ -808,7 +882,7 @@ def parse_and_execute_honestly(
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason=tok_err or "tokenization_failed",
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr=norm,
             lhs_target=lhs_target,
             free_symbols=[],
@@ -833,7 +907,7 @@ def parse_and_execute_honestly(
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason="multiword_prose_without_operators",
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr=norm,
             lhs_target=lhs_target,
             free_symbols=[],
@@ -852,7 +926,7 @@ def parse_and_execute_honestly(
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason=str(exc),
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr=norm,
             lhs_target=lhs_target,
             free_symbols=[],
@@ -864,12 +938,20 @@ def parse_and_execute_honestly(
 
     free_syms = sorted(ast_root.symbols())
     ops = ast_root.op_count()
-    # A lone bare word with 0 operators and no LHS equality is just a label, not an equation
-    if ops == 0 and lhs_target is None and len(free_syms) == 1:
+    # A lone bare UNBOUND word with 0 operators and no LHS equality is just a
+    # label, not an equation. A bound single-symbol quantity (e.g. the joined
+    # \Delta\tau_{\text{Out}} -> Delta_tau_Out with a supplied value) is a valid
+    # expression and evaluates.
+    if (
+        ops == 0
+        and lhs_target is None
+        and len(free_syms) == 1
+        and free_syms[0] not in (bindings or {})
+    ):
         return HonestExecutionResult(
             status=STATUS_UNPARSEABLE,
             reason="bare_identifier_not_equation",
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr=norm,
             lhs_target=None,
             free_symbols=free_syms,
@@ -889,7 +971,7 @@ def parse_and_execute_honestly(
             return HonestExecutionResult(
                 status=STATUS_PARSED_EVALUATED,
                 reason="ok",
-                raw_input=raw,
+                raw_input=raw_original,
                 normalized_expr=norm,
                 lhs_target=lhs_target,
                 free_symbols=free_syms,
@@ -897,11 +979,12 @@ def parse_and_execute_honestly(
                 operator_count=ops,
                 evaluated_value=float(val),
                 evaluation_mode=mode,
+                guard_passed=(float(val) == 1.0) if isinstance(ast_root, GuardNode) else None,
             )
         return HonestExecutionResult(
             status=STATUS_PARSED_SYMBOLIC_ONLY,
             reason="domain_singularity_at_supplied_bindings",
-            raw_input=raw,
+            raw_input=raw_original,
             normalized_expr=norm,
             lhs_target=lhs_target,
             free_symbols=free_syms,
@@ -922,7 +1005,7 @@ def parse_and_execute_honestly(
             return HonestExecutionResult(
                 status=STATUS_PARSED_EVALUATED,
                 reason="ok_domain_probe",
-                raw_input=raw,
+                raw_input=raw_original,
                 normalized_expr=norm,
                 lhs_target=lhs_target,
                 free_symbols=free_syms,
@@ -930,12 +1013,13 @@ def parse_and_execute_honestly(
                 operator_count=ops,
                 evaluated_value=float(val),
                 evaluation_mode="domain_probe",
+                guard_passed=(float(val) == 1.0) if isinstance(ast_root, GuardNode) else None,
             )
 
     return HonestExecutionResult(
         status=STATUS_PARSED_SYMBOLIC_ONLY,
         reason="uninterpreted_function_symbol" if parser.has_uninterpreted_call else "requires_explicit_symbol_bindings",
-        raw_input=raw,
+        raw_input=raw_original,
         normalized_expr=norm,
         lhs_target=lhs_target,
         free_symbols=free_syms,

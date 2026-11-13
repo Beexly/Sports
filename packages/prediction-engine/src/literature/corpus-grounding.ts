@@ -28,11 +28,18 @@
  *   - A failed layer is reported in `layerErrors`, never silently zero.
  *   - Embedding model must match the index (baai/bge-m3, 1024-d). A
  *     mismatched embedder is refused rather than queried.
+ *   - A seed key must EXIST in lit.corpus_chunk with an embedding before it
+ *     seeds a scan (md5 keys never do); otherwise the facet falls back to a
+ *     cached bge-m3 query embedding or reports no chunk evidence.
+ *   - Chunks/titles self-identifying as synthetic-data or prototype are
+ *     downweighted 0.25x: scaffolding is not evidence about real games.
  */
 
 import { LITERATURE_EMBEDDING_DIM, LITERATURE_EMBEDDING_MODEL, type Embedder } from "./literature-embeddings.js";
 import { vectorLiteral } from "./literature-index-builder.js";
 import type { SqlClient } from "./literature-retrieval.js";
+import { slateCorpusCache, type SlateCorpusCache } from "./slate-corpus-cache.js";
+import { runSeededInTransaction } from "./sql-batch.js";
 
 /** The six situational families from the Stage-2 doctrine, plus open-ended. */
 export type SituationalFamily =
@@ -72,6 +79,8 @@ export interface GroundingEvidence {
   readonly relevance: number;
   /** Final evidence weight in [0,1] after normalisation and layer trust. */
   readonly weight: number;
+  /** True when the source self-identifies as synthetic-data/prototype (0.25x weight). */
+  readonly synthetic?: boolean;
 }
 
 export interface FacetGrounding {
@@ -246,32 +255,83 @@ const CHUNK_BY_VECTOR_SQL = `
    LIMIT $2`;
 
 /**
- * Seeded nearest-neighbour search.
+ * Seeded nearest-neighbour search (T-02 fix).
  *
- * The seed is read as an UNCORRELATED scalar subquery, not as a joined CTE.
- * `FROM lit.corpus_chunk c, seed` forced a Nested Loop + Seq Scan over all
- * 297,326 rows even though `corpus_chunk_hnsw_idx` exists; the scalar form lets
- * the planner use `Index Scan using corpus_chunk_hnsw_idx ... Order By
- * (embedding <=> (InitPlan))`, which is what makes grounding fast.
+ * The seed is an UNCORRELATED scalar subquery repeated inside ORDER BY, which
+ * the planner lifts into a single InitPlan: `Index Scan using
+ * corpus_chunk_hnsw_idx ... Order By (embedding <=> (InitPlan))`. The earlier
+ * CTE form (`WITH seed AS ... (SELECT embedding FROM seed)`) could not be
+ * lifted — the CTE scan made the ordering expression a per-row SubPlan, which
+ * defeated the HNSW index (reported cost 68496.65, 60s timeout). Measured live
+ * on Neon after this rewrite: EXPLAIN total cost ~3.2k, sub-second latency.
  *
- * The `(SELECT embedding FROM seed) IS NOT NULL` guard matters: a corpus_key
- * that is a statement-to-situation MD5 is not in corpus_chunk, so the seed is
- * NULL and `<=>` would return NULL for every row, ordering the whole table
- * arbitrarily. With the guard the query returns nothing, which is the truth.
+ * Guards:
+ *   - `(SELECT s.embedding ...) IS NOT NULL` short-circuits a missing/NULL
+ *     seed to ZERO rows fast (a NULL seed would otherwise order the whole
+ *     table arbitrarily). Callers also existence-check the key first
+ *     (SEED_EXISTS_SQL) so an md5-shaped key never even reaches this query.
+ *   - `set_config('hnsw.ef_search','128',true)` runs as an InitPlan inside the
+ *     statement's own transaction, BEFORE the HNSW scan starts: higher recall
+ *     than the default 40, and `is_local => true` means it cannot leak onto a
+ *     pooled connection. TCP clients may instead wrap this in an explicit
+ *     BEGIN/COMMIT batch via runSeededInTransaction (sql-batch.ts).
  */
-const CHUNK_SEEDED_SQL = `
-  WITH seed AS (
-    SELECT embedding FROM lit.corpus_chunk
-     WHERE corpus_key = $1 AND chunk_index = $2 AND embedding IS NOT NULL
-     LIMIT 1)
+export const CHUNK_SEEDED_SQL = `
   SELECT c.corpus_key, c.chunk_index, c.title, c.chunk_text,
-         (1 - (c.embedding <=> (SELECT embedding FROM seed)))::float8 AS similarity
+         (1 - (c.embedding <=> (SELECT s.embedding FROM lit.corpus_chunk s
+                                 WHERE s.corpus_key = $1 AND s.chunk_index = $2
+                                   AND s.embedding IS NOT NULL LIMIT 1)))::float8 AS similarity
     FROM lit.corpus_chunk c
    WHERE c.embedding IS NOT NULL
-     AND (SELECT embedding FROM seed) IS NOT NULL
+     AND (SELECT set_config('hnsw.ef_search', '128', true)) IS NOT NULL
+     AND (SELECT s.embedding FROM lit.corpus_chunk s
+           WHERE s.corpus_key = $1 AND s.chunk_index = $2
+             AND s.embedding IS NOT NULL LIMIT 1) IS NOT NULL
      AND NOT (c.corpus_key = $1 AND c.chunk_index = $2)
-   ORDER BY c.embedding <=> (SELECT embedding FROM seed)
+   ORDER BY c.embedding <=> (SELECT s.embedding FROM lit.corpus_chunk s
+                              WHERE s.corpus_key = $1 AND s.chunk_index = $2
+                                AND s.embedding IS NOT NULL LIMIT 1)
    LIMIT $3`;
+
+/**
+ * Seed-key existence guard. lit.corpus_chunk stores sha256 corpus keys; some
+ * callers (statement-derived situations) carry md5 keys that can never match.
+ * This is a btree-only probe on corpus_chunk_unique — sub-millisecond — and it
+ * also requires a non-NULL embedding, so a NULL-embedding seed is rejected
+ * here instead of scanning. No row => do NOT run the seeded query.
+ */
+export const SEED_EXISTS_SQL = `
+  SELECT 1 AS ok
+    FROM lit.corpus_chunk
+   WHERE corpus_key = $1 AND chunk_index = $2 AND embedding IS NOT NULL
+   LIMIT 1`;
+
+/** Shape of a corpus key. The chunk index is keyed by sha256 hex (64 chars). */
+export function corpusKeyShape(key: string): "sha256" | "md5" | "other" {
+  if (/^[0-9a-f]{64}$/i.test(key)) return "sha256";
+  if (/^[0-9a-f]{32}$/i.test(key)) return "md5";
+  return "other";
+}
+
+/** True when the seed key exists in lit.corpus_chunk WITH an embedding. */
+export async function seedKeyExists(
+  db: SqlClient,
+  seed: { readonly corpus_key: string; readonly chunk_index: number },
+): Promise<boolean> {
+  const res = await db.query(SEED_EXISTS_SQL, [seed.corpus_key, seed.chunk_index]);
+  return res.rows.length > 0;
+}
+
+/**
+ * Chunks/titles that self-identify as synthetic or prototype content are
+ * downweighted 0.25x in scoring: they are scaffolding, not evidence about
+ * real games. The label must be self-applied (in the title or the text).
+ */
+export const SYNTHETIC_DOWNWEIGHT = 0.25;
+const SYNTHETIC_SELF_LABEL = /\bsynthetic[-_ ]?data\b|\bprototypes?\b/i;
+export function isSyntheticSelfLabel(title: string | null | undefined, text?: string | null): boolean {
+  return SYNTHETIC_SELF_LABEL.test(title ?? "") || SYNTHETIC_SELF_LABEL.test(text ?? "");
+}
 
 function clip(text: string, n = 600): string {
   const t = text.replace(/\s+/g, " ").trim();
@@ -294,7 +354,13 @@ export function toOrQuery(q: string): string {
 export async function groundFacet(
   db: SqlClient,
   facet: GroundingFacet,
-  opts?: { readonly embedder?: Embedder | null; readonly embedderModel?: string; readonly perLayerK?: number },
+  opts?: {
+    readonly embedder?: Embedder | null;
+    readonly embedderModel?: string;
+    readonly perLayerK?: number;
+    /** Query-embedding cache for the bge-m3 fallback. Defaults to the shared slate cache. */
+    readonly cache?: SlateCorpusCache;
+  },
 ): Promise<FacetGrounding> {
   const k = opts?.perLayerK ?? DEFAULT_PER_LAYER_K;
   const facetWeight = Math.max(0, Math.min(1, facet.weight ?? 1));
@@ -367,20 +433,42 @@ export async function groundFacet(
     let rows: ChunkRow[] = [];
     const embedder = opts?.embedder ?? null;
     const model = opts?.embedderModel ?? LITERATURE_EMBEDDING_MODEL;
+    const cache = opts?.cache ?? slateCorpusCache;
+    let vector: number[] | null = null;
     if (embedder && model !== LITERATURE_EMBEDDING_MODEL) {
       layerErrors.push(`chunk: refused embedder model ${model}; index is ${LITERATURE_EMBEDDING_MODEL}`);
     } else if (embedder) {
-      const emb = await embedder(facet.query);
-      if (emb.ok && emb.embedding.length === LITERATURE_EMBEDDING_DIM) {
-        rows = (await db.query(CHUNK_BY_VECTOR_SQL, [vectorLiteral(emb.embedding), k])).rows as ChunkRow[];
-        chunkMode = "embedded";
+      // Batched/cached bge-m3 query embedding (slate-corpus-cache). A failed
+      // embed is null, never a zero vector; the seeded path below is the fallback.
+      const [v] = await cache.embedQueries([facet.query], embedder);
+      if (v && v.length === LITERATURE_EMBEDDING_DIM) {
+        vector = v;
       } else {
-        layerErrors.push(`chunk: embedding failed: ${emb.ok ? "bad dim" : emb.error}`);
+        layerErrors.push("chunk: embedding failed (provider error, empty text, or non-1024-dim vector)");
       }
     }
-    if (chunkMode === "none" && seed) {
-      rows = (await db.query(CHUNK_SEEDED_SQL, [seed.corpus_key, seed.chunk_index, k])).rows as ChunkRow[];
-      chunkMode = "seeded";
+    if (vector) {
+      rows = (await db.query(CHUNK_BY_VECTOR_SQL, [vectorLiteral(vector), k])).rows as ChunkRow[];
+      chunkMode = "embedded";
+    } else if (seed) {
+      // SEED GUARD: only seed from a key that actually exists in lit.corpus_chunk
+      // with an embedding. md5-shaped keys (statement-derived situations) are not
+      // in the sha256-keyed chunk table; seeding from them is a wasted scan at best.
+      let seedUsable = false;
+      try {
+        seedUsable = await seedKeyExists(db, seed);
+        if (!seedUsable) {
+          layerErrors.push(
+            `chunk: seed key ${seed.corpus_key.slice(0, 12)}… (${corpusKeyShape(seed.corpus_key)}) not in lit.corpus_chunk with an embedding; seeded scan skipped`,
+          );
+        }
+      } catch (e) {
+        layerErrors.push(`chunk: seed existence check failed: ${e instanceof Error ? e.message : String(e)}`);
+      }
+      if (seedUsable) {
+        rows = (await runSeededInTransaction(db, CHUNK_SEEDED_SQL, [seed.corpus_key, seed.chunk_index, k])).rows as ChunkRow[];
+        chunkMode = "seeded";
+      }
     }
     for (const r of rows) {
       const n = normaliseSimilarity(Number(r.similarity));
@@ -388,6 +476,7 @@ export async function groundFacet(
       // Seeded neighbours inherit the seed's topic; require they still speak to the facet.
       if (!anchored(r.chunk_text)) continue;
       if (chunkMode === "seeded" && !isRelevant(facet.query, r.chunk_text)) continue;
+      const synthetic = isSyntheticSelfLabel(r.title, r.chunk_text);
       evidence.push({
         layer: "chunk",
         citation: `lit.corpus_chunk:${r.corpus_key.slice(0, 12)}#${r.chunk_index}`,
@@ -395,7 +484,8 @@ export async function groundFacet(
         text: clip(r.chunk_text),
         domain: null,
         relevance: Number(r.similarity),
-        weight: evidenceWeight("chunk", n),
+        weight: evidenceWeight("chunk", n) * (synthetic ? SYNTHETIC_DOWNWEIGHT : 1),
+        ...(synthetic ? { synthetic: true } : {}),
       });
     }
   } catch (e) {

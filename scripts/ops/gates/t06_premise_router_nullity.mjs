@@ -33,7 +33,7 @@ for (const f of files) {
 }
 
 const vitest = spawnSync(process.execPath,
-  ["node_modules/vitest/vitest.mjs", "run", "--environment=node"],
+  [path.join(ROOT, "node_modules/vitest/vitest.mjs"), "run", "--environment=node"],
   { cwd: path.join(ROOT, "packages/mcp-equations-server"), encoding: "utf8", timeout: 600000 });
 const vout = (vitest.stdout ?? "") + (vitest.stderr ?? "");
 const vtail = vout.split("\n").filter((l) => /Test Files|Tests |FAIL/.test(l)).slice(-4).join(" | ");

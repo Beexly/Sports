@@ -276,7 +276,7 @@ describe("Stage 3 Tiered Gate (Gate 0 / Gate 1 / Gate 2)", () => {
     expect(bannedRes.gate0.violations).toEqual(
       expect.arrayContaining([
         expect.stringMatching(/Banned string detected: "WE DETECT. YOU DECIDE."/),
-        expect.stringMatching(/Banned string detected: "guaranteed"/),
+        expect.stringMatching(/Banned string detected: "guaranteed win"/),
         expect.stringMatching(/Banned string detected: "model edge"/),
         expect.stringMatching(/Raw dollar amounts forbidden/)
       ])
