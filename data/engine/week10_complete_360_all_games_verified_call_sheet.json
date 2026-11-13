@@ -1,7 +1,7 @@
 {
   "week": 10,
-  "generated_at_utc": "2026-11-13T13:41:33.488717+00:00",
-  "slate_packet_sha256": "9c9b6c419d7a94990f17483591cb7e138afc787ceab5f4d84e03ad9e08e6b27e",
+  "generated_at_utc": "2026-11-13T19:20:54.163977+00:00",
+  "slate_packet_sha256": "0facda1aa78abb16f1a67978dbba87b917053b7f2567a3f95a0da47ef0f76ffd",
   "games": {
     "NE @ DET": {
       "post_sim_team_scores": {
@@ -265,14 +265,14 @@
     },
     "HOU @ CLE": {
       "post_sim_team_scores": {
-        "away_score_mean": 23.38,
-        "away_score_p50": 23.28,
-        "home_score_mean": 19.88,
-        "home_score_p50": 19.1,
-        "total_points_mean": 43.26,
-        "total_points_p50": 43.23,
-        "away_win_prob": 0.6088,
-        "home_cover_prob": 0.3249,
+        "away_score_mean": 23.27,
+        "away_score_p50": 23.41,
+        "home_score_mean": 19.77,
+        "home_score_p50": 18.88,
+        "total_points_mean": 43.05,
+        "total_points_p50": 43.72,
+        "away_win_prob": 0.6261,
+        "home_cover_prob": 0.3533,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -293,14 +293,14 @@
           "selection": "HOU +2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.6751,
-          "wilson_lower_90": 0.6674,
-          "net_edge": 0.1751,
-          "confidence_score": "71/100",
+          "post_sim_prob": 0.6467,
+          "wilson_lower_90": 0.6388,
+          "net_edge": 0.1467,
+          "confidence_score": "68/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2872,
+          "recommended_kelly_units": 0.2406,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -310,9 +310,9 @@
           "selection": "CLE -2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.3249,
-          "wilson_lower_90": 0.3172,
-          "net_edge": -0.1751,
+          "post_sim_prob": 0.3533,
+          "wilson_lower_90": 0.3455,
+          "net_edge": -0.1467,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -320,16 +320,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: CLE -2.5 post-sim cover prob 32.49% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: CLE -2.5 post-sim cover prob 35.33% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.4214,
-          "wilson_lower_90": 0.4133,
-          "net_edge": -0.0786,
+          "post_sim_prob": 0.4477,
+          "wilson_lower_90": 0.4395,
+          "net_edge": -0.0523,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -337,38 +337,38 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 44.5 post-sim prob 42.14% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 44.5 post-sim prob 44.77% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.5786,
-          "wilson_lower_90": 0.5705,
-          "net_edge": 0.0786,
-          "confidence_score": "59/100",
+          "post_sim_prob": 0.5523,
+          "wilson_lower_90": 0.5441,
+          "net_edge": 0.0523,
+          "confidence_score": "56/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 44.5 post-sim prob 57.86% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 44.5 post-sim prob 55.23% vs 50.00% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "HOU ML",
           "american_odds": 120,
           "market_prob_devig": 0.4365,
-          "post_sim_prob": 0.6088,
-          "wilson_lower_90": 0.6007,
-          "net_edge": 0.1723,
-          "confidence_score": "71/100",
+          "post_sim_prob": 0.6261,
+          "wilson_lower_90": 0.6181,
+          "net_edge": 0.1896,
+          "confidence_score": "72/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2826,
+          "recommended_kelly_units": 0.3109,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -378,9 +378,9 @@
           "selection": "CLE ML",
           "american_odds": -142,
           "market_prob_devig": 0.5635,
-          "post_sim_prob": 0.3912,
-          "wilson_lower_90": 0.3832,
-          "net_edge": -0.1723,
+          "post_sim_prob": 0.3739,
+          "wilson_lower_90": 0.366,
+          "net_edge": -0.1896,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -388,10 +388,10 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: CLE ML (-142) post-sim win prob 39.12% vs 56.35% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: CLE ML (-142) post-sim win prob 37.39% vs 56.35% de-vigged market."
         }
       ],
-      "master_bundle_sha256": "c5c82d89ca8a2bf23eb0322e0f3199fb4962e31a825579df5d3d19e81315b2ba"
+      "master_bundle_sha256": "bfd3850233bdbd8635eb90d1d56157aafcd3cb7eca1a735796abbc2589f9fa15"
     },
     "MIN @ GB": {
       "post_sim_team_scores": {
@@ -1305,14 +1305,14 @@
     },
     "SF @ DAL": {
       "post_sim_team_scores": {
-        "away_score_mean": 25.85,
-        "away_score_p50": 25.75,
-        "home_score_mean": 22.35,
-        "home_score_p50": 21.54,
-        "total_points_mean": 48.2,
-        "total_points_p50": 47.8,
-        "away_win_prob": 0.607,
-        "home_cover_prob": 0.311,
+        "away_score_mean": 26.08,
+        "away_score_p50": 25.84,
+        "home_score_mean": 22.58,
+        "home_score_p50": 21.77,
+        "total_points_mean": 48.66,
+        "total_points_p50": 47.87,
+        "away_win_prob": 0.5894,
+        "home_cover_prob": 0.3169,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -1321,11 +1321,11 @@
         "total_market_types_on_board": 69,
         "core_athlete_props_projected": 42,
         "props_with_two_sided_prices": 0,
-        "approved_plays_count": 3,
+        "approved_plays_count": 2,
         "approved_prop_bets": 0,
-        "pass_decisions_count": 47,
+        "pass_decisions_count": 48,
         "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
-        "final_board_verdict": "3 APPROVED PLAYS (publishAllowed: true)"
+        "final_board_verdict": "2 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -1333,14 +1333,14 @@
           "selection": "SF +2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.689,
-          "wilson_lower_90": 0.6813,
-          "net_edge": 0.189,
+          "post_sim_prob": 0.6831,
+          "wilson_lower_90": 0.6754,
+          "net_edge": 0.1831,
           "confidence_score": "72/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.31,
+          "recommended_kelly_units": 0.3003,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -1350,9 +1350,9 @@
           "selection": "DAL -2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.311,
-          "wilson_lower_90": 0.3034,
-          "net_edge": -0.189,
+          "post_sim_prob": 0.3169,
+          "wilson_lower_90": 0.3093,
+          "net_edge": -0.1831,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -1360,33 +1360,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: DAL -2.5 post-sim cover prob 31.10% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: DAL -2.5 post-sim cover prob 31.69% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.6399,
-          "wilson_lower_90": 0.632,
-          "net_edge": 0.1399,
-          "confidence_score": "67/100",
+          "post_sim_prob": 0.6018,
+          "wilson_lower_90": 0.5937,
+          "net_edge": 0.1018,
+          "confidence_score": "62/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2294,
-          "decision": "PLAY",
-          "publishAllowed": true,
-          "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 44.5 post-sim prob 60.18% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.3601,
-          "wilson_lower_90": 0.3522,
-          "net_edge": -0.1399,
+          "post_sim_prob": 0.3982,
+          "wilson_lower_90": 0.3902,
+          "net_edge": -0.1018,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -1394,21 +1394,21 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 44.5 prob 36.01% < 50.00% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 44.5 prob 39.82% < 50.00% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "SF ML",
           "american_odds": 120,
           "market_prob_devig": 0.4365,
-          "post_sim_prob": 0.607,
-          "wilson_lower_90": 0.5989,
-          "net_edge": 0.1705,
-          "confidence_score": "70/100",
+          "post_sim_prob": 0.5894,
+          "wilson_lower_90": 0.5813,
+          "net_edge": 0.1529,
+          "confidence_score": "68/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2796,
+          "recommended_kelly_units": 0.2507,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -1418,9 +1418,9 @@
           "selection": "DAL ML",
           "american_odds": -142,
           "market_prob_devig": 0.5635,
-          "post_sim_prob": 0.393,
-          "wilson_lower_90": 0.385,
-          "net_edge": -0.1705,
+          "post_sim_prob": 0.4106,
+          "wilson_lower_90": 0.4025,
+          "net_edge": -0.1529,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -1428,10 +1428,10 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: DAL ML (-142) post-sim win prob 39.30% vs 56.35% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: DAL ML (-142) post-sim win prob 41.06% vs 56.35% de-vigged market."
         }
       ],
-      "master_bundle_sha256": "d95b92a4ea30a2d8f1232c0ebb3e47504e3d6de56aabd9876bebd85c1253d663"
+      "master_bundle_sha256": "bbe3c00e50f9a6107da98d43e82bc87a6f17ad677c2bf59fec60f3bb196ba473"
     },
     "PIT @ CIN": {
       "post_sim_team_scores": {

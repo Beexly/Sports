@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "week": 10,
-  "generated_at_utc": "2026-11-13T13:41:33.488717+00:00",
+  "generated_at_utc": "2026-11-13T19:20:54.163977+00:00",
   "slate_source": "live Neon public.games (T-00 query shape)",
   "n_sims_per_game": 10000,
   "remaining_games_count": 13,
@@ -8564,7 +8564,7 @@
       "jev_spine_rel_path": "data/engine/jev_full_game_spine_hou_cle_week10.json",
       "confirmed_qb1": {
         "HOU": "C.J. Stroud",
-        "CLE": "Shedeur Sanders"
+        "CLE": "Deshaun Watson"
       },
       "verified_board_athletes_count": 14,
       "matchup_environment": {
@@ -8577,20 +8577,23 @@
         "home_sp_odds": -110,
         "away_ml_odds": 120,
         "home_ml_odds": -142,
-        "stadium": "CLE Home Venue",
+        "stadium": "Huntington Bank Field",
         "surface": "turf",
         "is_indoor": false,
-        "wind_mph": 7.5,
-        "temp_f": 58.0,
-        "precip_prob": 0.1,
+        "wind_mph": 9.0,
+        "temp_f": 47.0,
+        "precip_prob": 0.08,
         "short_week": 0.0,
         "away_qb_tier": "QB1",
         "home_qb_tier": "QB1",
-        "weather_note": "HOU @ CLE Week 10 standard outdoor conditions (7.5 mph wind, 58F)",
+        "weather_note": "Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, mostly cloudy, 8% precip) \u2014 NFLWeather.com forecast retrieved 2026-11-13 for Sun Nov 15 2026 1:00 PM ET kickoff",
+        "feels_like_f": 42.0,
+        "wind_gust_mph": 15.0,
+        "weather_source": "https://www.nflweather.com/en/game/2026/week-10/texans-at-browns (retrieved 2026-11-13)",
         "open_home_spread": -2.5,
         "open_total": 44.5,
         "is_dome": false,
-        "venue": "CLE Home Venue",
+        "venue": "Huntington Bank Field",
         "slot": "Week 10 Slate"
       },
       "coaching_tendencies_resolved": {
@@ -8632,8 +8635,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-13T133822Z0000-c78c7079",
-        "content_hash": "f1514766fdbe5c91f50361265132bf125bd217d25212429f1cc2d9ddb820c930",
+        "trace_id": "2026-11-13T183926Z0000-dc7c2f06",
+        "content_hash": "0ae65a6f82382776b3897d9e7446c521fc7c444ca8f8d7e1747e544048c3b02a",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -8665,15 +8668,15 @@
         "l5_epa_signal_delta": 0.035
       },
       "combined_load_bearing_priors": {
-        "away_off_epa_adj": -0.0445,
-        "home_off_epa_adj": -0.1914,
-        "away_off_epa_delta_situational": 0.036,
-        "home_off_epa_delta_situational": -0.0318,
-        "away_comp_rate_adj": 0.652,
-        "home_comp_rate_adj": 0.5026,
-        "away_pass_rate_adj": 0.5378,
-        "home_pass_rate_adj": 0.5124,
-        "fg_make_prob_delta": -0.0406,
+        "away_off_epa_adj": -0.0475,
+        "home_off_epa_adj": -0.1888,
+        "away_off_epa_delta_situational": 0.033,
+        "home_off_epa_delta_situational": -0.0292,
+        "away_comp_rate_adj": 0.6498,
+        "home_comp_rate_adj": 0.4999,
+        "away_pass_rate_adj": 0.5372,
+        "home_pass_rate_adj": 0.5115,
+        "fg_make_prob_delta": -0.0457,
         "cqr_interval_width_mult": 1.08,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
@@ -8681,8 +8684,8 @@
         "cholesky_6family_whitened_z_shift": -0.0312,
         "mega_sweep_5track_7step_epa_delta": -0.06981,
         "gsi_step2_health_net_epa_delta": -0.0001,
-        "eq_gate_12k_epa_shift": 0.001385,
-        "equation_gate_12304_clamped_delta": 0.055407,
+        "eq_gate_12k_epa_shift": 0.004141,
+        "equation_gate_12304_clamped_delta": 0.165627,
         "roster_truth_player_adjustments": {
           "player_adjustments": {},
           "wr1_absorption": {
@@ -10183,7 +10186,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -10194,7 +10197,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -11144,7 +11147,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -11155,7 +11158,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -12545,8 +12548,8 @@
           "counterfactual_perturbation_stress_test": {
             "counterfactual_worlds_tested": 8,
             "directional_survival_rate": 1.0,
-            "counterfactual_mean_epa": 0.01483,
-            "counterfactual_std_epa": 0.00485,
+            "counterfactual_mean_epa": 0.01453,
+            "counterfactual_std_epa": 0.00486,
             "counterfactual_stability_multiplier": 1.0
           },
           "gemini_agent_trajectory_verification": {
@@ -12625,63 +12628,63 @@
       },
       "situational_6family_cholesky_overlay": {
         "pressure": {
-          "raw_z": 0.4046,
-          "whitened_z": 0.3739,
-          "epa_adj": 0.00935,
+          "raw_z": 0.3982,
+          "whitened_z": 0.3631,
+          "epa_adj": 0.00908,
           "source": "execute_master_6family_cholesky_aggregator",
-          "detail": "HOU pass rush & blitz tendency vs CLE OL & Shedeur Sanders pocket survival",
-          "note": "HOU pass rush & blitz tendency vs CLE OL & Shedeur Sanders pocket survival"
+          "detail": "HOU pass rush & blitz tendency vs CLE OL & Deshaun Watson pocket survival",
+          "note": "HOU pass rush & blitz tendency vs CLE OL & Deshaun Watson pocket survival"
         },
         "weather": {
-          "raw_z": -0.1026,
-          "whitened_z": -0.1406,
-          "epa_adj": -0.00351,
+          "raw_z": -0.1728,
+          "whitened_z": -0.2025,
+          "epa_adj": -0.00506,
           "source": "execute_master_6family_cholesky_aggregator",
-          "detail": "CLE Home Venue (turf, 58.0F, wind 7.5 mph): HOU @ CLE Week 10 standard outdoor conditions (7.5 mph wind, 58F)",
-          "note": "CLE Home Venue (turf, 58.0F, wind 7.5 mph): HOU @ CLE Week 10 standard outdoor conditions (7.5 mph wind, 58F)"
+          "detail": "Huntington Bank Field (turf, 47.0F, wind 9.0 mph): Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, mostly cloudy, 8% precip) \u2014 NFLWeather.com forecast retrieved 2026-11-13 for Sun Nov 15 2026 1:00 PM ET kickoff",
+          "note": "Huntington Bank Field (turf, 47.0F, wind 9.0 mph): Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, mostly cloudy, 8% precip) \u2014 NFLWeather.com forecast retrieved 2026-11-13 for Sun Nov 15 2026 1:00 PM ET kickoff"
         },
         "restFatigue": {
           "raw_z": -0.056,
-          "whitened_z": -0.11,
-          "epa_adj": -0.00275,
+          "whitened_z": -0.1024,
+          "epa_adj": -0.00256,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Week 10 Slate rest/travel differential for HOU @ CLE",
           "note": "Week 10 Week 10 Slate rest/travel differential for HOU @ CLE"
         },
         "coveragePersonnel": {
           "raw_z": 0.3452,
-          "whitened_z": 0.2284,
-          "epa_adj": 0.00571,
+          "whitened_z": 0.2297,
+          "epa_adj": 0.00574,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "CLE MOFO/MOFC coverage shell mix vs C.J. Stroud & HOU 11/12 personnel",
           "note": "CLE MOFO/MOFC coverage shell mix vs C.J. Stroud & HOU 11/12 personnel"
         },
         "qbSkillScript": {
-          "raw_z": 1.5194,
-          "whitened_z": 1.4314,
-          "epa_adj": 0.03578,
+          "raw_z": 1.4639,
+          "whitened_z": 1.3693,
+          "epa_adj": 0.03423,
           "source": "execute_master_6family_cholesky_aggregator",
-          "detail": "Verified QB1 matchup: C.J. Stroud (HOU) vs Shedeur Sanders (CLE) with active Week 10 injury adjustments",
-          "note": "Verified QB1 matchup: C.J. Stroud (HOU) vs Shedeur Sanders (CLE) with active Week 10 injury adjustments"
+          "detail": "Verified QB1 matchup: C.J. Stroud (HOU) vs Deshaun Watson (CLE) with active Week 10 injury adjustments",
+          "note": "Verified QB1 matchup: C.J. Stroud (HOU) vs Deshaun Watson (CLE) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.108,
-          "whitened_z": -0.401,
-          "epa_adj": -0.01003,
+          "whitened_z": -0.3805,
+          "epa_adj": -0.00951,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor HOU +2.5 / CLE -2.5 (total 44.5) FWL residualized",
           "note": "Layer-1 market anchor HOU +2.5 / CLE -2.5 (total 44.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 23.38,
-        "away_score_p50": 23.28,
-        "home_score_mean": 19.88,
-        "home_score_p50": 19.1,
-        "total_points_mean": 43.26,
-        "total_points_p50": 43.23,
-        "away_win_prob": 0.6088,
-        "home_cover_prob": 0.3249,
+        "away_score_mean": 23.27,
+        "away_score_p50": 23.41,
+        "home_score_mean": 19.77,
+        "home_score_p50": 18.88,
+        "total_points_mean": 43.05,
+        "total_points_p50": 43.72,
+        "away_win_prob": 0.6261,
+        "home_cover_prob": 0.3533,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -12702,14 +12705,14 @@
           "selection": "HOU +2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.6751,
-          "wilson_lower_90": 0.6674,
-          "net_edge": 0.1751,
-          "confidence_score": "71/100",
+          "post_sim_prob": 0.6467,
+          "wilson_lower_90": 0.6388,
+          "net_edge": 0.1467,
+          "confidence_score": "68/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2872,
+          "recommended_kelly_units": 0.2406,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -12719,9 +12722,9 @@
           "selection": "CLE -2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.3249,
-          "wilson_lower_90": 0.3172,
-          "net_edge": -0.1751,
+          "post_sim_prob": 0.3533,
+          "wilson_lower_90": 0.3455,
+          "net_edge": -0.1467,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12729,16 +12732,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: CLE -2.5 post-sim cover prob 32.49% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: CLE -2.5 post-sim cover prob 35.33% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.4214,
-          "wilson_lower_90": 0.4133,
-          "net_edge": -0.0786,
+          "post_sim_prob": 0.4477,
+          "wilson_lower_90": 0.4395,
+          "net_edge": -0.0523,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12746,38 +12749,38 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 44.5 post-sim prob 42.14% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 44.5 post-sim prob 44.77% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.5786,
-          "wilson_lower_90": 0.5705,
-          "net_edge": 0.0786,
-          "confidence_score": "59/100",
+          "post_sim_prob": 0.5523,
+          "wilson_lower_90": 0.5441,
+          "net_edge": 0.0523,
+          "confidence_score": "56/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 44.5 post-sim prob 57.86% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 44.5 post-sim prob 55.23% vs 50.00% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "HOU ML",
           "american_odds": 120,
           "market_prob_devig": 0.4365,
-          "post_sim_prob": 0.6088,
-          "wilson_lower_90": 0.6007,
-          "net_edge": 0.1723,
-          "confidence_score": "71/100",
+          "post_sim_prob": 0.6261,
+          "wilson_lower_90": 0.6181,
+          "net_edge": 0.1896,
+          "confidence_score": "72/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2826,
+          "recommended_kelly_units": 0.3109,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -12787,9 +12790,9 @@
           "selection": "CLE ML",
           "american_odds": -142,
           "market_prob_devig": 0.5635,
-          "post_sim_prob": 0.3912,
-          "wilson_lower_90": 0.3832,
-          "net_edge": -0.1723,
+          "post_sim_prob": 0.3739,
+          "wilson_lower_90": 0.366,
+          "net_edge": -0.1896,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12797,18 +12800,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: CLE ML (-142) post-sim win prob 39.12% vs 56.35% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: CLE ML (-142) post-sim win prob 37.39% vs 56.35% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "c16b267671a70ac7bac85b6a57728209ee2ee08bd3ec5ae6494107a961f9ad6d",
-        "stage1a_receipt_sha256": "7c0234df16c9d99dfb33fbc0d00f045f4260a616266cb7ba8f4304dc4b7c15b5",
-        "stage1b_receipt_sha256": "256d39d2c6c6e8fead1d8d080f69e5fa8a71ab2e29d675e7a7bc620e36b37879",
-        "stage2_receipt_sha256": "e913909a2f019970ab18351b8e3337c4725915e2205d34502fafc58f3813605c",
-        "stage3_4_receipt_sha256": "4c1ec79cebeac4b66965cb6aa64a336d0da6e6ac5a3c4dc6f04b768685e3fd4c",
-        "stage5_receipt_sha256": "3cd1ac30ca11dab5cd054a71698e1b7bc1be5470a1f70d73c7a54a5f2e112b5b"
+        "stage0_receipt_sha256": "0acfc0c9fd46f0664fdab743c8a5006e357e3a36274231ead731b4ccdf5f550e",
+        "stage1a_receipt_sha256": "5b71ff50ce77bf04f535a265cfec7138ebb3d3fc2a97100f3c86421e1b51c9b7",
+        "stage1b_receipt_sha256": "b0a3af593b87b71c9db81dedee8e35f3493ced19aa359052660a4dc2879a1b77",
+        "stage2_receipt_sha256": "bac1c8bd14651ae98d56ba324bd230529108fe470a96ba204472c93ceda4444e",
+        "stage3_4_receipt_sha256": "50d176a6652345a3b606f4012160def4fb517a6f1bf925f22fec965d0538fc84",
+        "stage5_receipt_sha256": "095a4dfb6dd82c907a539bb1b28d393f92db82e10bbf24da024a97c4be7db3a8"
       },
-      "master_bundle_sha256": "c5c82d89ca8a2bf23eb0322e0f3199fb4962e31a825579df5d3d19e81315b2ba"
+      "master_bundle_sha256": "bfd3850233bdbd8635eb90d1d56157aafcd3cb7eca1a735796abbc2589f9fa15"
     },
     "MIN @ GB": {
       "matchup": "MIN @ GB",
@@ -42664,20 +42667,22 @@
         "home_sp_odds": -110,
         "away_ml_odds": 120,
         "home_ml_odds": -142,
-        "stadium": "DAL Home Venue",
+        "stadium": "AT&T Stadium",
         "surface": "turf",
-        "is_indoor": false,
-        "wind_mph": 7.5,
-        "temp_f": 58.0,
-        "precip_prob": 0.1,
+        "is_indoor": true,
+        "wind_mph": 0.0,
+        "temp_f": 70.0,
+        "precip_prob": 0.0,
         "short_week": 0.0,
         "away_qb_tier": "QB1",
         "home_qb_tier": "QB1",
-        "weather_note": "SF @ DAL Week 10 standard outdoor conditions (7.5 mph wind, 58F)",
+        "weather_note": "AT&T Stadium roof CLOSED \u2014 indoor climate-controlled (~70F, 0 mph wind, 0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed at the same venue roof-closed, Soccer America 2026 World Cup)",
+        "roof_closed": true,
+        "weather_source": "https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/ ; https://www.fantasyinfocentral.com/nfl/weather/cowboys ; https://www.socceramerica.com/the-world-cup-sparkled-magnificently-in-dallas-especially-for-spain/ (all retrieved 2026-11-13)",
         "open_home_spread": -2.5,
         "open_total": 44.5,
-        "is_dome": false,
-        "venue": "DAL Home Venue",
+        "is_dome": true,
+        "venue": "AT&T Stadium",
         "slot": "Week 10 Slate"
       },
       "coaching_tendencies_resolved": {
@@ -42719,8 +42724,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-13T134045Z0000-dc32f8ba",
-        "content_hash": "06debc5da1fcc5a984278f031f154753ffb784c1c34580abbd4b8f57b1386702",
+        "trace_id": "2026-11-13T191916Z0000-6b5b0b73",
+        "content_hash": "4c8ef466d2df5c14faf5019cc695906763736256d95920b68d4b5913329693c1",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -42752,15 +42757,15 @@
         "l5_epa_signal_delta": -0.0221
       },
       "combined_load_bearing_priors": {
-        "away_off_epa_adj": 0.0505,
-        "home_off_epa_adj": 0.0213,
-        "away_off_epa_delta_situational": -0.0189,
-        "home_off_epa_delta_situational": 0.0173,
-        "away_comp_rate_adj": 0.6941,
-        "home_comp_rate_adj": 0.5016,
-        "away_pass_rate_adj": 0.5409,
-        "home_pass_rate_adj": 0.4962,
-        "fg_make_prob_delta": -0.0406,
+        "away_off_epa_adj": 0.0512,
+        "home_off_epa_adj": 0.024,
+        "away_off_epa_delta_situational": -0.0182,
+        "home_off_epa_delta_situational": 0.02,
+        "away_comp_rate_adj": 0.7032,
+        "home_comp_rate_adj": 0.5133,
+        "away_pass_rate_adj": 0.5468,
+        "home_pass_rate_adj": 0.5051,
+        "fg_make_prob_delta": 0.0,
         "cqr_interval_width_mult": 1.08,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
@@ -42768,8 +42773,8 @@
         "cholesky_6family_whitened_z_shift": -0.0312,
         "mega_sweep_5track_7step_epa_delta": 0.04409,
         "gsi_step2_health_net_epa_delta": -5e-05,
-        "eq_gate_12k_epa_shift": 0.001385,
-        "equation_gate_12304_clamped_delta": 0.055407,
+        "eq_gate_12k_epa_shift": 0.002363,
+        "equation_gate_12304_clamped_delta": 0.094502,
         "roster_truth_player_adjustments": {
           "player_adjustments": {},
           "wr1_absorption": {
@@ -42875,7 +42880,7 @@
               "neutral_pace_sec_per_snap": 26.4,
               "trailing_8plus_script_elasticity": 0.133,
               "officiating_crew_penalty_and_drive_extension_index": 1.276684,
-              "stadium_surface_and_microclimate_index": 1.08085,
+              "stadium_surface_and_microclimate_index": 1.09285,
               "circadian_rest_travel_fatigue_index": 0.248,
               "contract_incentive_and_milestone_escalator_boost": 0.07694
             },
@@ -42955,7 +42960,7 @@
               "neutral_pace_sec_per_snap": 26.4,
               "trailing_8plus_script_elasticity": 0.133,
               "officiating_crew_penalty_and_drive_extension_index": 1.276684,
-              "stadium_surface_and_microclimate_index": 1.08085,
+              "stadium_surface_and_microclimate_index": 1.09285,
               "circadian_rest_travel_fatigue_index": 0.248,
               "contract_incentive_and_milestone_escalator_boost": 0.07694
             },
@@ -43154,7 +43159,7 @@
               "neutral_pace_sec_per_snap": 26.4,
               "trailing_8plus_script_elasticity": 0.133,
               "officiating_crew_penalty_and_drive_extension_index": 1.276684,
-              "stadium_surface_and_microclimate_index": 1.08085,
+              "stadium_surface_and_microclimate_index": 1.09285,
               "circadian_rest_travel_fatigue_index": 0.248,
               "contract_incentive_and_milestone_escalator_boost": 0.07694
             },
@@ -43234,7 +43239,7 @@
               "neutral_pace_sec_per_snap": 26.4,
               "trailing_8plus_script_elasticity": 0.133,
               "officiating_crew_penalty_and_drive_extension_index": 1.276684,
-              "stadium_surface_and_microclimate_index": 1.08085,
+              "stadium_surface_and_microclimate_index": 1.09285,
               "circadian_rest_travel_fatigue_index": 0.248,
               "contract_incentive_and_milestone_escalator_boost": 0.07694
             },
@@ -43433,7 +43438,7 @@
               "neutral_pace_sec_per_snap": 26.4,
               "trailing_8plus_script_elasticity": 0.133,
               "officiating_crew_penalty_and_drive_extension_index": 1.276684,
-              "stadium_surface_and_microclimate_index": 1.08085,
+              "stadium_surface_and_microclimate_index": 1.09285,
               "circadian_rest_travel_fatigue_index": 0.248,
               "contract_incentive_and_milestone_escalator_boost": 0.07694
             },
@@ -43513,7 +43518,7 @@
               "neutral_pace_sec_per_snap": 26.4,
               "trailing_8plus_script_elasticity": 0.133,
               "officiating_crew_penalty_and_drive_extension_index": 1.276684,
-              "stadium_surface_and_microclimate_index": 1.08085,
+              "stadium_surface_and_microclimate_index": 1.09285,
               "circadian_rest_travel_fatigue_index": 0.248,
               "contract_incentive_and_milestone_escalator_boost": 0.07694
             },
@@ -44268,7 +44273,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -44279,7 +44284,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -44328,8 +44333,8 @@
                   "runtime": "OpenCL FP16S D3Q19 Lattice Boltzmann",
                   "precision": "FP16S",
                   "memory_footprint_mb": 640,
-                  "lbm_mach_number": 0.014337,
-                  "turbulence_kinetic_energy_j_m3": 0.47988,
+                  "lbm_mach_number": 0.0,
+                  "turbulence_kinetic_energy_j_m3": 0.0,
                   "enabled": true
                 },
                 "Taichi": {
@@ -44514,7 +44519,7 @@
               "innovation_kernels_10": {
                 "sub_diffusion_fractional_ou": 0.119902,
                 "rough_heston_vol_of_vol": 0.170466,
-                "navier_stokes_wind_drag": 7.148657,
+                "navier_stokes_wind_drag": 5.103849,
                 "fisher_rao_geodesic_distance": 0.082046,
                 "marchenko_pastur_covariance_denoising": 0.564126,
                 "nhpp_sack_hazard": 0.650093,
@@ -44581,7 +44586,7 @@
               "innovation_kernels_10": {
                 "sub_diffusion_fractional_ou": 0.119902,
                 "rough_heston_vol_of_vol": 0.170466,
-                "navier_stokes_wind_drag": 7.148657,
+                "navier_stokes_wind_drag": 5.103849,
                 "fisher_rao_geodesic_distance": 0.082046,
                 "marchenko_pastur_covariance_denoising": 0.564126,
                 "nhpp_sack_hazard": 0.650093,
@@ -45229,7 +45234,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -45240,7 +45245,7 @@
               "infonce_loss": 3.6e-05,
               "contrastive_alignment_prob": 0.999964,
               "glm_logistic_prob": 0.67954,
-              "l1_l2_regularization_penalty": 0.012026,
+              "l1_l2_regularization_penalty": 0.012027,
               "regularized_drive_td_prob": 0.871795,
               "temperature": 0.15,
               "provenance": "PyTorchLightning/lightning-bolts#cpc-transforms,#simclr-transforms,#logistic-regression"
@@ -45289,8 +45294,8 @@
                   "runtime": "OpenCL FP16S D3Q19 Lattice Boltzmann",
                   "precision": "FP16S",
                   "memory_footprint_mb": 640,
-                  "lbm_mach_number": 0.014337,
-                  "turbulence_kinetic_energy_j_m3": 0.47988,
+                  "lbm_mach_number": 0.0,
+                  "turbulence_kinetic_energy_j_m3": 0.0,
                   "enabled": true
                 },
                 "Taichi": {
@@ -45475,7 +45480,7 @@
               "innovation_kernels_10": {
                 "sub_diffusion_fractional_ou": 0.119902,
                 "rough_heston_vol_of_vol": 0.170466,
-                "navier_stokes_wind_drag": 7.148657,
+                "navier_stokes_wind_drag": 5.103849,
                 "fisher_rao_geodesic_distance": 0.082046,
                 "marchenko_pastur_covariance_denoising": 0.564126,
                 "nhpp_sack_hazard": 0.650093,
@@ -45542,7 +45547,7 @@
               "innovation_kernels_10": {
                 "sub_diffusion_fractional_ou": 0.119902,
                 "rough_heston_vol_of_vol": 0.170466,
-                "navier_stokes_wind_drag": 7.148657,
+                "navier_stokes_wind_drag": 5.103849,
                 "fisher_rao_geodesic_distance": 0.082046,
                 "marchenko_pastur_covariance_denoising": 0.564126,
                 "nhpp_sack_hazard": 0.650093,
@@ -45671,7 +45676,7 @@
             "zone1_coach_mind_v2_and_7_metrics": {
               "delta_q_unit": 0.0,
               "gse_sva_i": 0.2432,
-              "kuramoto_phase_resultant_r_t": 0.998753,
+              "kuramoto_phase_resultant_r_t": 0.998762,
               "kuramoto_synchronized": true,
               "glicko2_prior_phi": 42.0,
               "glicko2_phi_prime": 42.5469,
@@ -45813,7 +45818,7 @@
             "amplitude_damping_retention": 0.96594,
             "cnf_conjunction_satisfaction_prob": 0.281096,
             "lean_soundness_verified": true,
-            "pre_projection_epa_delta": 0.003909,
+            "pre_projection_epa_delta": 0.007695,
             "kernels": {
               "sogge_local_smoothing": {
                 "spatial_dim_n": 3,
@@ -45821,8 +45826,8 @@
                 "local_smoothing_sigma": 0.235,
                 "sogge_wave_focusing_gain": 1.324392,
                 "sulcal_fundus_amplification": 1.43758,
-                "stadium_wind_phase_dispersion": 0.315494,
-                "deep_pass_trajectory_deflection_yds": 1.023702
+                "stadium_wind_phase_dispersion": 0.0,
+                "deep_pass_trajectory_deflection_yds": 0.0
               },
               "bounded_treewidth_l1": {
                 "treewidth_k": 8,
@@ -46547,7 +46552,7 @@
             "virtual_icp_deconfounded_mmhg": 15.8297,
             "kneeldown_per_snap_mass_yds": -1.06,
             "shin_insider_z": 0.041558,
-            "openai_math_721_pre_projection_epa_delta": 0.003909,
+            "openai_math_721_pre_projection_epa_delta": 0.007695,
             "openai_math_sogge_wave_focusing_gain": 1.324392,
             "openai_math_amplitude_damping_retention": 0.96594,
             "openai_math_cnf_satisfaction_prob": 0.281096,
@@ -46594,7 +46599,7 @@
             "virtual_icp_deconfounded_mmhg": 15.8297,
             "kneeldown_per_snap_mass_yds": -1.06,
             "shin_insider_z": 0.041558,
-            "openai_math_721_pre_projection_epa_delta": 0.003909,
+            "openai_math_721_pre_projection_epa_delta": 0.007695,
             "openai_math_sogge_wave_focusing_gain": 1.324392,
             "openai_math_amplitude_damping_retention": 0.96594,
             "openai_math_cnf_satisfaction_prob": 0.281096,
@@ -46710,63 +46715,63 @@
       },
       "situational_6family_cholesky_overlay": {
         "pressure": {
-          "raw_z": 0.3947,
-          "whitened_z": 0.3652,
-          "epa_adj": 0.00913,
+          "raw_z": 0.3964,
+          "whitened_z": 0.3715,
+          "epa_adj": 0.00929,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "SF pass rush & blitz tendency vs DAL OL & Dak Prescott pocket survival",
           "note": "SF pass rush & blitz tendency vs DAL OL & Dak Prescott pocket survival"
         },
         "weather": {
-          "raw_z": -0.1026,
-          "whitened_z": -0.1397,
-          "epa_adj": -0.00349,
+          "raw_z": 0.0,
+          "whitened_z": -0.045,
+          "epa_adj": -0.00113,
           "source": "execute_master_6family_cholesky_aggregator",
-          "detail": "DAL Home Venue (turf, 58.0F, wind 7.5 mph): SF @ DAL Week 10 standard outdoor conditions (7.5 mph wind, 58F)",
-          "note": "DAL Home Venue (turf, 58.0F, wind 7.5 mph): SF @ DAL Week 10 standard outdoor conditions (7.5 mph wind, 58F)"
+          "detail": "AT&T Stadium (turf, 70.0F, wind 0.0 mph): AT&T Stadium roof CLOSED \u2014 indoor climate-controlled (~70F, 0 mph wind, 0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed at the same venue roof-closed, Soccer America 2026 World Cup)",
+          "note": "AT&T Stadium (turf, 70.0F, wind 0.0 mph): AT&T Stadium roof CLOSED \u2014 indoor climate-controlled (~70F, 0 mph wind, 0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed at the same venue roof-closed, Soccer America 2026 World Cup)"
         },
         "restFatigue": {
           "raw_z": 0.0027,
-          "whitened_z": -0.0533,
-          "epa_adj": -0.00133,
+          "whitened_z": -0.0621,
+          "epa_adj": -0.00155,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Week 10 Slate rest/travel differential for SF @ DAL",
           "note": "Week 10 Week 10 Slate rest/travel differential for SF @ DAL"
         },
         "coveragePersonnel": {
           "raw_z": 0.1474,
-          "whitened_z": 0.032,
-          "epa_adj": 0.0008,
+          "whitened_z": 0.0284,
+          "epa_adj": 0.00071,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "DAL MOFO/MOFC coverage shell mix vs Brock Purdy & SF 11/12 personnel",
           "note": "DAL MOFO/MOFC coverage shell mix vs Brock Purdy & SF 11/12 personnel"
         },
         "qbSkillScript": {
-          "raw_z": 0.2711,
-          "whitened_z": 0.1942,
-          "epa_adj": 0.00486,
+          "raw_z": 0.2513,
+          "whitened_z": 0.1577,
+          "epa_adj": 0.00394,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Brock Purdy (SF) vs Dak Prescott (DAL) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Brock Purdy (SF) vs Dak Prescott (DAL) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.108,
-          "whitened_z": -0.1753,
-          "epa_adj": -0.00438,
+          "whitened_z": -0.1825,
+          "epa_adj": -0.00456,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor SF +2.5 / DAL -2.5 (total 44.5) FWL residualized",
           "note": "Layer-1 market anchor SF +2.5 / DAL -2.5 (total 44.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 25.85,
-        "away_score_p50": 25.75,
-        "home_score_mean": 22.35,
-        "home_score_p50": 21.54,
-        "total_points_mean": 48.2,
-        "total_points_p50": 47.8,
-        "away_win_prob": 0.607,
-        "home_cover_prob": 0.311,
+        "away_score_mean": 26.08,
+        "away_score_p50": 25.84,
+        "home_score_mean": 22.58,
+        "home_score_p50": 21.77,
+        "total_points_mean": 48.66,
+        "total_points_p50": 47.87,
+        "away_win_prob": 0.5894,
+        "home_cover_prob": 0.3169,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -46775,11 +46780,11 @@
         "total_market_types_on_board": 69,
         "core_athlete_props_projected": 42,
         "props_with_two_sided_prices": 0,
-        "approved_plays_count": 3,
+        "approved_plays_count": 2,
         "approved_prop_bets": 0,
-        "pass_decisions_count": 47,
+        "pass_decisions_count": 48,
         "circuit_breaker_status": "STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING",
-        "final_board_verdict": "3 APPROVED PLAYS (publishAllowed: true)"
+        "final_board_verdict": "2 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -46787,14 +46792,14 @@
           "selection": "SF +2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.689,
-          "wilson_lower_90": 0.6813,
-          "net_edge": 0.189,
+          "post_sim_prob": 0.6831,
+          "wilson_lower_90": 0.6754,
+          "net_edge": 0.1831,
           "confidence_score": "72/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.31,
+          "recommended_kelly_units": 0.3003,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -46804,9 +46809,9 @@
           "selection": "DAL -2.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.311,
-          "wilson_lower_90": 0.3034,
-          "net_edge": -0.189,
+          "post_sim_prob": 0.3169,
+          "wilson_lower_90": 0.3093,
+          "net_edge": -0.1831,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -46814,33 +46819,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: DAL -2.5 post-sim cover prob 31.10% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: DAL -2.5 post-sim cover prob 31.69% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.6399,
-          "wilson_lower_90": 0.632,
-          "net_edge": 0.1399,
-          "confidence_score": "67/100",
+          "post_sim_prob": 0.6018,
+          "wilson_lower_90": 0.5937,
+          "net_edge": 0.1018,
+          "confidence_score": "62/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2294,
-          "decision": "PLAY",
-          "publishAllowed": true,
-          "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 44.5 post-sim prob 60.18% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 44.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.3601,
-          "wilson_lower_90": 0.3522,
-          "net_edge": -0.1399,
+          "post_sim_prob": 0.3982,
+          "wilson_lower_90": 0.3902,
+          "net_edge": -0.1018,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -46848,21 +46853,21 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 44.5 prob 36.01% < 50.00% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 44.5 prob 39.82% < 50.00% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "SF ML",
           "american_odds": 120,
           "market_prob_devig": 0.4365,
-          "post_sim_prob": 0.607,
-          "wilson_lower_90": 0.5989,
-          "net_edge": 0.1705,
-          "confidence_score": "70/100",
+          "post_sim_prob": 0.5894,
+          "wilson_lower_90": 0.5813,
+          "net_edge": 0.1529,
+          "confidence_score": "68/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.2796,
+          "recommended_kelly_units": 0.2507,
           "decision": "PLAY",
           "publishAllowed": true,
           "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
@@ -46872,9 +46877,9 @@
           "selection": "DAL ML",
           "american_odds": -142,
           "market_prob_devig": 0.5635,
-          "post_sim_prob": 0.393,
-          "wilson_lower_90": 0.385,
-          "net_edge": -0.1705,
+          "post_sim_prob": 0.4106,
+          "wilson_lower_90": 0.4025,
+          "net_edge": -0.1529,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -46882,18 +46887,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: DAL ML (-142) post-sim win prob 39.30% vs 56.35% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: DAL ML (-142) post-sim win prob 41.06% vs 56.35% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "b53e18b6ff68cfa90619973752762e9eddb8e3ebdca2f1ffbe59f6cd9291d8d1",
-        "stage1a_receipt_sha256": "38bc41a19d17d7a5f262033372701a47358fe0db0cfa749452e367fe72ccd61b",
-        "stage1b_receipt_sha256": "82aea3703c5ae65e2506e50cd5e0f04548b4d6758415e5204d7ab849a807f9f0",
-        "stage2_receipt_sha256": "b44fe331297d3dea3c365522962663b99a32f7c1d87624ea60b0433632449e7a",
-        "stage3_4_receipt_sha256": "68325c00a066c3f97392d1ff62774377ecb70eb2ea5b47728d6d1b3cfb17b623",
-        "stage5_receipt_sha256": "31fef8912e8d09d6e179ea6b45d61bce314010046f4cce1c7628882f5cae4132"
+        "stage0_receipt_sha256": "90b9fe08d0168f7373610b5231188fa72a705aadf6206c91fea5a2d7c2f5e043",
+        "stage1a_receipt_sha256": "f1669e67e9ffb47d3586230285e3ab97e5dfd51d76ab913991b6bff7d8aa13da",
+        "stage1b_receipt_sha256": "fd1a2ab5528e88d5005172cdd43ebfc8a44c094bba44fb953fc8c3d453224b8a",
+        "stage2_receipt_sha256": "e225f06775121a0fbc9013d458bbf7fb0b682446008c1b4da44ac93489bfc938",
+        "stage3_4_receipt_sha256": "69022a0c00457a6961a586811c165503ec23a3f922f24a58e5705f532e0dd4d6",
+        "stage5_receipt_sha256": "cba90978be729b9cfcf1e70e4ed8134acff5dca1ed62a870bd056e80800cf2ae"
       },
-      "master_bundle_sha256": "d95b92a4ea30a2d8f1232c0ebb3e47504e3d6de56aabd9876bebd85c1253d663"
+      "master_bundle_sha256": "bbe3c00e50f9a6107da98d43e82bc87a6f17ad677c2bf59fec60f3bb196ba473"
     },
     "PIT @ CIN": {
       "matchup": "PIT @ CIN",
@@ -55419,5 +55424,5 @@
     "excluded": 126,
     "qb1s": 32
   },
-  "slate_packet_sha256": "9c9b6c419d7a94990f17483591cb7e138afc787ceab5f4d84e03ad9e08e6b27e"
+  "slate_packet_sha256": "0facda1aa78abb16f1a67978dbba87b917053b7f2567a3f95a0da47ef0f76ffd"
 }

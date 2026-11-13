@@ -508,6 +508,47 @@ WEEK10_MATCHUP_WEATHER_REGISTRY: dict[tuple[str, str], dict[str, Any]] = {
             "(retrieved 2026-11-13)"
         ),
     },
+    ("SF", "DAL"): {
+        # Venue: AT&T Stadium (Arlington, TX), Dallas home — retractable roof,
+        # CLOSED for this game. ESPN 2026 Week 10 scoreboard
+        # (data/engine/espn_2026_week10_scoreboard.json, venue.indoor=true).
+        # Roof-closed evidence (retrieved 2026-11-13):
+        #   - DK Network Week 10 weather forecast (published 2026-11-13):
+        #     "AT&T Stadium (Retractable roof, expected closed) ... With the
+        #     roof expected to be closed, none of it should reach the field."
+        #     https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/
+        #   - FantasyInfoCentral Cowboys weather page: "Retractable Dome
+        #     (likely closed) No weather impact"; 2026 Cowboys home games in
+        #     bad weather all sealed "Dome closed (no weather impact)".
+        #     https://www.fantasyinfocentral.com/nfl/weather/cowboys
+        # Game-time temperature: climate-controlled ~70F indoors. Sourced from
+        # observed roof-closed conditions at the SAME venue (2026 World Cup
+        # semifinal, Soccer America / Mike Woitalla): "players and fans enjoyed
+        # a comfortable air-conditioned 70 or so degrees inside what's usually
+        # known as AT&T Stadium."
+        # https://www.socceramerica.com/the-world-cup-sparkled-magnificently-in-dallas-especially-for-spain/
+        # (retrieved 2026-11-13). The outdoor forecast (49F, 10 mph E wind,
+        # gusts 20, 62% rain — NFLWeather.com / DK Network 2026-11-13) is
+        # immaterial inside the closed roof: wind 0, precip 0.
+        "stadium": "AT&T Stadium",
+        "is_indoor": True,
+        "roof_closed": True,
+        "wind_mph": 0.0,
+        "temp_f": 70.0,
+        "precip_prob": 0.0,
+        "weather_note": (
+            "AT&T Stadium roof CLOSED — indoor climate-controlled (~70F, 0 mph wind, "
+            "0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the "
+            "field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed "
+            "at the same venue roof-closed, Soccer America 2026 World Cup)"
+        ),
+        "weather_source": (
+            "https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/ ; "
+            "https://www.fantasyinfocentral.com/nfl/weather/cowboys ; "
+            "https://www.socceramerica.com/the-world-cup-sparkled-magnificently-in-dallas-especially-for-spain/ "
+            "(all retrieved 2026-11-13)"
+        ),
+    },
 }
 
 
@@ -2090,6 +2131,7 @@ def compile_stage1_to_stage2_simulation_priors(
     merged_game_context["temp_f"] = float(env_cfg["temp_f"])
     merged_game_context["precip_prob"] = float(env_cfg["precip_prob"])
     merged_game_context["is_indoor"] = bool(env_cfg["is_indoor"])
+    merged_game_context["roof_closed"] = bool(env_cfg.get("roof_closed", False))
     merged_game_context.setdefault("qb_context", {})
     if (away_tm, home_tm) == ("JAX", "BAL"):
         merged_game_context["qb_context"]["qb_name"] = bal_starter_name
@@ -2429,6 +2471,7 @@ def compile_stage1_to_stage2_simulation_priors(
             "wind_mph": float(env_cfg.get("wind_mph", 6.0)),
             "temp_f": float(env_cfg.get("temp_f", 62.0)),
             "is_indoor": bool(env_cfg.get("is_indoor", False)),
+            "roof_closed": bool(env_cfg.get("roof_closed", False)),
             "posted_home_spread": float(env_cfg.get("posted_home_spread", -3.0)),
             "posted_total": float(env_cfg.get("posted_total", 44.5)),
             "open_home_spread": float(env_cfg.get("open_home_spread", env_cfg.get("posted_home_spread", -3.0))),

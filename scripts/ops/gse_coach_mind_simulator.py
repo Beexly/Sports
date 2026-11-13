@@ -827,7 +827,21 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     ctx = dict(context or {})
     away_qb_tier = str(ctx.get("away_qb_tier") or (ctx.get("away") or {}).get("qb_tier") or "QB1_STARTER")
     home_qb_tier = str(ctx.get("home_qb_tier") or (ctx.get("home") or {}).get("qb_tier") or "QB1_STARTER")
-    wind_mph = float(ctx.get("weather_wind_mph") or (ctx.get("env") or {}).get("wind_mph") or 11.0)
+    _env_ctx = ctx.get("env") or {}
+    _indoor = bool(
+        ctx.get("is_indoor")
+        or ctx.get("roof_closed")
+        or _env_ctx.get("is_indoor")
+        or _env_ctx.get("roof_closed")
+    )
+    if _indoor:
+        # Dome / roof-closed venue: no wind effects reach the field (0 mph,
+        # never the 11.0 outdoor fallback — 0.0 is falsy in the `or` chain).
+        wind_mph = 0.0
+    else:
+        wind_mph = float(
+            ctx.get("weather_wind_mph") or ctx.get("wind_mph") or _env_ctx.get("wind_mph") or 11.0
+        )
 
     away_ol_out = int(ctx.get("away_ol_starters_out", 0))
     home_ol_out = int(ctx.get("home_ol_starters_out", 0))

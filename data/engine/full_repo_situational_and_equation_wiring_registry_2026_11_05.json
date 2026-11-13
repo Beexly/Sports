@@ -1,6 +1,6 @@
 {
   "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-  "generated_at_utc": "2026-11-13T18:39:53.515700+00:00",
+  "generated_at_utc": "2026-11-13T19:19:47.432294+00:00",
   "total_ts_modules_cataloged": 1493,
   "prediction_engine_ts_modules": 1483,
   "mcp_equations_server_ts_modules": 10,
@@ -14,7 +14,7 @@
   "equation_families_count": 279,
   "total_equations_routed": 12304,
   "cholesky_families_orthogonalized": 6,
-  "clamped_log_odds_delta": 0.165627,
+  "clamped_log_odds_delta": 0.094502,
   "x_situational_80_rules": {
     "evaluated_count": 80,
     "firewall_rules_evaluated_count": 7,
@@ -1823,35 +1823,35 @@
   "cognitive_router_288bit_12k": {
     "context_mask_bits": 288,
     "context_mask_words_uint32": [
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      209715199
+      4294443005,
+      4286578655,
+      4160749055,
+      2147475455,
+      4294836223,
+      4292870135,
+      4261412735,
+      3758094335,
+      218071039
     ],
     "equation_families_count": 279,
-    "active_signal_families_count": 279,
+    "active_signal_families_count": 263,
     "total_equations_routed": 12304,
     "thousand_equation_matrix_count": 1666,
     "stage_a_filtered_count": 2500,
     "stage_b_hnsw_top_k": 250,
     "stage_c_orthogonal_clusters_count": 25,
     "marchenko_pastur_denoise_factor": 0.87817,
-    "stage_d_james_stein_factor": 0.921802,
-    "raw_log_odds_delta": 0.179677,
-    "clamped_log_odds_delta": 0.165627,
+    "stage_d_james_stein_factor": 0.9299,
+    "raw_log_odds_delta": 0.101626,
+    "clamped_log_odds_delta": 0.094502,
     "max_abs_delta_log_odds_cap": 0.35,
     "domain_equation_sums": {
       "pressure": 0.039,
-      "weather": 3.9353,
+      "weather": 23.3712,
       "restFatigue": 1.4072,
       "coveragePersonnel": -0.3595,
       "qbSkillScript": 1.6456,
-      "marketMicrostructure": 3.5712
+      "marketMicrostructure": 7.7192
     }
   },
   "master_6family_cholesky_aggregator": {
@@ -1886,5 +1886,5 @@
     "probability_movement_cap": 0.12,
     "post_overlay_prob": 0.5073
   },
-  "receipt_sha256": "3dbfba4ea46e39657c65a844bf50a4267238300170097597384e4c376f767b27"
+  "receipt_sha256": "e4fdee0ff7da79707c124e494650220b3713ed8146760e6fd993792ae2303cb1"
 }
