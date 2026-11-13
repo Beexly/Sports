@@ -190,7 +190,11 @@ def main() -> int:
         key = f"{away} @ {home}"
         print(f"[WP-8] === {key} — full 5-stage + JEV spine + {args.n_sims} worlds ===", flush=True)
         try:
-            bundle = execute_connected_game_workflow(away=away, home=home, week=WEEK, n_sims=args.n_sims)
+            ct = game["commenceTime"]
+            kickoff_iso = ct.strftime("%Y-%m-%dT%H:%M:%SZ") if hasattr(ct, "strftime") else str(ct).replace(" ", "T")
+            if not kickoff_iso.endswith("Z"):
+                kickoff_iso += "Z"
+            bundle = execute_connected_game_workflow(away=away, home=home, week=WEEK, n_sims=args.n_sims, kickoff_utc=kickoff_iso)
             dossiers[key] = summarize_dossier(away, home, bundle, game)
             print(f"[WP-8] {key} OK sha256={bundle['master_bundle_sha256'][:16]}", flush=True)
         except Exception:

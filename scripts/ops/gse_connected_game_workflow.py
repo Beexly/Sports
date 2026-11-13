@@ -104,9 +104,10 @@ def build_armed_context_and_reasoning_trace(
     game_id: str = "2026_09_JAX_BAL",
     as_of_utc: str = "2026-11-05T18:00:00Z",
     persist: bool = False,
+    kickoff_utc: str | None = None,
 ) -> dict[str, Any]:
     """Build a point-in-time ContextPacket and execute the 26-layer ReasoningTrace workflow."""
-    pkt = build_context_packet(game_id=game_id, as_of_utc=as_of_utc, persist=persist)
+    pkt = build_context_packet(game_id=game_id, as_of_utc=as_of_utc, persist=persist, kickoff_utc=kickoff_utc)
     trace = execute_reasoning_workflow(pkt, persist=persist)
     return {"context_packet": pkt, "reasoning_trace": trace}
 
@@ -5086,6 +5087,7 @@ def execute_connected_game_workflow(
     week: int = 9,
     n_sims: int = 10000,
     board_rel_path: str = "data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
+    kickoff_utc: str | None = None,
 ) -> dict[str, Any]:
     """Run the entire connected Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5 pipeline."""
     away_u = away.strip().upper()
@@ -5130,6 +5132,7 @@ def execute_connected_game_workflow(
         # Week 9 replays keep their historical pin; Week 10+ arms at run time.
         as_of_utc="2026-11-05T18:00:00Z" if week <= 9 else datetime.now(timezone.utc).isoformat(),
         persist=True,
+        kickoff_utc=kickoff_utc,
     )
     armed_pkt = armed_bundle["context_packet"]
     armed_trace = armed_bundle["reasoning_trace"]
