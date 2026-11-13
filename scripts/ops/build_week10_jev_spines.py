@@ -178,10 +178,12 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    require_week(WEEK)
+    gate_cfg = require_week(WEEK)
     spine_runner.SIM_WEEK = WEEK
-    cfg = json.loads((REPO_ROOT / "data" / "engine" / "week10_stage0_preflight_config.json").read_text(encoding="utf-8"))
-    qb1_cfg = cfg.get("confirmed_qb1", {})
+    # Authoritative QB1s come from the Stage-0 gate (require_week) so the spine
+    # QB1 alignment matches what the SG-1 freshness gate verifies at run time
+    # (excludes banned/IR starters, e.g. CLE Watson -> Sanders, SEA Darnold -> Lock).
+    qb1_cfg = gate_cfg.get("confirmed_qb1", {})
 
     def qb1_name(tm: str) -> str:
         return str(qb1_cfg.get(tm) or qb1_cfg.get({"LAR": "LA", "LA": "LAR", "WSH": "WAS", "WAS": "WSH"}.get(tm, tm)) or "")

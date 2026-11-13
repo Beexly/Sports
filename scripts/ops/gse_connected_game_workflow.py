@@ -2283,6 +2283,12 @@ def compile_stage1_to_stage2_simulation_priors(
             opp_disguise_rate=float(aw_pbp_st.get("dc_man_rate", 0.28)),
             opp_blitz_rate=float(aw_pbp_st.get("dc_blitz_rate", 0.265)),
         )
+    # SG-0: the receipt must carry the Stage-0 VERIFIED starter, never the
+    # hardcoded team-default QB (which may be banned/IR, e.g. CLE Watson,
+    # SEA Darnold). resolve_qb_profile falls back to the team default when the
+    # verified name has no charted profile; pin the verified name explicitly.
+    away_qb_2x2["qb_name"] = away_starter_name
+    home_qb_2x2["qb_name"] = bal_starter_name
 
     roberts_yaida_crit = compute_critical_initialization("relu")
     vmls_rolling_tend = rolling_exp_decay_tendency(
