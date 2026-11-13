@@ -1,6 +1,6 @@
 {
- "last_compiled_complete_count": 73,
- "sft_books": 72,
+ "last_compiled_complete_count": 74,
+ "sft_books": 73,
  "rlvr_batches": [
   "batch-001",
   "batch-002",
@@ -8,7 +8,7 @@
   "rlvr_batch-004",
   "rlvr_batch-005"
  ],
- "updated_at": "2026-11-13T23:10:00+00:00",
+ "updated_at": "2026-11-13T23:40:00+00:00",
  "sft_book_ids": [
   "07089dec6f73619e",
   "090cfc0da55b02cd",
@@ -63,6 +63,7 @@
   "62af700cfd3180fa",
   "64a4e0d61f21a823",
   "65c65dec7ddaacd5",
+  "678271d94588b50d",
   "68aeef90c5264628",
   "6aeb75fe28eb9cd8",
   "6bc7d84da4bde923",
@@ -176,12 +177,14 @@
  ],
  "pending_sft_books": [],
  "pending_sft_note": "Cleared by compiler-3: every COMPLETE work has an SFT row under edition rules (47 rows vs 49 live COMPLETE). Provenance anomalies compiled as their REAL domains with notes: 65c65dec7ddaacd5 (queue title team-selection, actual 2D fracture MD) and 3c1295822da31ba0 (queue title fantasy-football, actual Raines-Chubukov Stoner transitions, arXiv id matches). NEW gap arrivals needing rows next pass: 2626db0663ce780e, 6d101348291a5c1f",
- "rlvr_books_not_yet_in_scenarios": [],
+ "rlvr_books_not_yet_in_scenarios": [
+  "678271d94588b50d"
+ ],
  "next_rlvr_batch": "rlvr_batch-006.jsonl",
  "next_rlvr_trigger_complete_count": 82,
  "stop_reason": "",
- "notes": "compiler-3: batch-005 compiled at COMPLETE=64 (trigger 64). Themes: The Interior Eight Yards (6aeb75fe x 366ba522: interior-max competing hazards + skew/bands/drawdown); The Observable Act (3fa96d69 x 7e3a32c1: effective-rule=written-rule cap verifier capability, concealment, persistence gates, two-sided corridors); The Contagion Chain (1cfd792f x 21544db0: chain amplification + herding lifts + gauge normalization + canonical blindness). Self-test: 3 compliant accepted (dict+str), 24 mutations rejected, 8 malformed rejected, disk re-read retest OK. 12 prior themes untouched. SFT gaps from the 3 newest arrivals pending next pass. INLINE COMPILER (hermes-inline, post-subagent-shutdown): appended Rockne 1925 (32d8b2d0d4f7f22f, 983-word think) and DengYu 2014 (53ff4fe1320a9a44, 909-word combined think) SFT rows. 6d101348291a5c1f (O'Reilly Football Analytics 2nd edition) intentionally has no row: edition rule, keeper 3178b5fdce0fc1a5. COMPLETE=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended ADM 2022 (7ec06be65ab3f269, 902-word think, 19 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=71, SFT=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended Garnett 2023 Bayesian Optimization (4c25fa54afee431d, 983-word think, 20 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=72, SFT=71, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended Nielsen 2015 Neural Networks and Deep Learning (3da8c2a20553953a, 933-word think, 18 primitives) SFT row; disk re-read verified think tags + word count. LibreTexts OER rendering: equations image-rendered, prose+code verbatim, latex labeled reconstructed. COMPLETE=73, SFT=72, RLVR batch-006 trigger reached (73). INLINE RLVR batch-006 (hermes-inline): 3 cross-layer veto scenarios (The Saturated Confidence, The Overfit Elephant, The Vanishing Credit) on the Nielsen learning layer + Garnett acquisition; all 3 executable verifiers self-tested (correct=True, wrong=False, JSON-string=True). Trigger 73 reached; next trigger 82; rlvr_books_not_yet_in_scenarios cleared.",
+ "notes": "compiler-3: batch-005 compiled at COMPLETE=64 (trigger 64). Themes: The Interior Eight Yards (6aeb75fe x 366ba522: interior-max competing hazards + skew/bands/drawdown); The Observable Act (3fa96d69 x 7e3a32c1: effective-rule=written-rule cap verifier capability, concealment, persistence gates, two-sided corridors); The Contagion Chain (1cfd792f x 21544db0: chain amplification + herding lifts + gauge normalization + canonical blindness). Self-test: 3 compliant accepted (dict+str), 24 mutations rejected, 8 malformed rejected, disk re-read retest OK. 12 prior themes untouched. SFT gaps from the 3 newest arrivals pending next pass. INLINE COMPILER (hermes-inline, post-subagent-shutdown): appended Rockne 1925 (32d8b2d0d4f7f22f, 983-word think) and DengYu 2014 (53ff4fe1320a9a44, 909-word combined think) SFT rows. 6d101348291a5c1f (O'Reilly Football Analytics 2nd edition) intentionally has no row: edition rule, keeper 3178b5fdce0fc1a5. COMPLETE=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended ADM 2022 (7ec06be65ab3f269, 902-word think, 19 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=71, SFT=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended Garnett 2023 Bayesian Optimization (4c25fa54afee431d, 983-word think, 20 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=72, SFT=71, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended Nielsen 2015 Neural Networks and Deep Learning (3da8c2a20553953a, 933-word think, 18 primitives) SFT row; disk re-read verified think tags + word count. LibreTexts OER rendering: equations image-rendered, prose+code verbatim, latex labeled reconstructed. COMPLETE=73, SFT=72, RLVR batch-006 trigger reached (73). INLINE RLVR batch-006 (hermes-inline): 3 cross-layer veto scenarios (The Saturated Confidence, The Overfit Elephant, The Vanishing Credit) on the Nielsen learning layer + Garnett acquisition; all 3 executable verifiers self-tested (correct=True, wrong=False, JSON-string=True). Trigger 73 reached; next trigger 82; rlvr_books_not_yet_in_scenarios cleared. INLINE COMPILER (hermes-inline): appended Prince 2023 Understanding Deep Learning (678271d94588b50d, 954-word think, 20 primitives) SFT row; disk re-read verified think tags + word count. MIT Press author draft; equations text-extractable as Unicode, latex labeled transcribed. COMPLETE=74, SFT=73, next RLVR trigger 82.",
  "salvage_note": "compiler-2 429 after batch-003; supervisor merged its 4 verified part files inline; compiler-3 filled SFT gaps 2026-11-13",
- "db_complete_count_at_update": 73,
+ "db_complete_count_at_update": 74,
  "sft_gap_at_update": []
 }

@@ -425,3 +425,29 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
   tuning-split veto, Garnett max-observed/regret), "The Vanishing Credit" (depth gradient products vanishing+exploding,
   ReLU dying zone, universality continuity). Total vetoes now 18 across batches 001-006. Next trigger 82; backlog cleared.
 - Pushes confirmed on origin: ADM ccc21ebd4, Garnett b8500f55c. Nielsen cycle commit pending this entry.
+- 2026-11-13 16:55:30 | CLAIMED | 678271d94588b50d | worker=hermes-inline file=Prince-2023-UnderstandingDeepLearning.pdf
+- 2026-11-13 17:04:30 | COMPLETE | 678271d94588b50d | primitives=20 think_words=954
+## 2026-11-13 ~17:40 CST — INLINE ERA: Prince 2023 landed (hermes-inline)
+
+- Book 678271d94588b50d — Simon Prince, *Understanding Deep Learning* (MIT Press 2023), author's freely-distributed
+  draft (udllibook.com; "Draft: please send errata to udlbookmail@gmail.com" every page; CC-BY-NC-ND (C) MIT Press).
+  541 PDF pages; PDF page = printed page + 14 (printed 57 = PDF 71; printed 402 = PDF 416); all citations PDF pages.
+- EXTRACTION: proper LaTeX-typeset PDF, mathematics IS text-extractable as Unicode glyphs (phi, theta, partial, sum,
+  sigma^2, KL). Equations render across multiple lines with eq numbers interleaved; latex fields TRANSCRIBED from the
+  printed text layer, explicitly labeled reassembled-from-multiline, never claimed as verbatim glyph images. Prose
+  verbatim. Text PDF, not image-only -> not INSUFFICIENT_OCR. (Contrast Nielsen 2015 LibreTexts OER: math image-stripped.)
+- Dense-monograph (>400pp) solo core-read 104/541 across eight blocks: 43-50 (universal approx), 70-86 (MLE/least-squares/
+  heteroscedastic/cross-entropy=KL), 91-105 (GD/SGD/momentum/Nesterov/Adam), 117-125 (backprop/He-Glorot init), 132-147
+  (bias-variance-noise/double descent/curse of dimensionality), 152-160 (explicit+implicit reg/MAP/early stopping/ensembling),
+  200-210 (ResNet/shattered gradients/BatchNorm), 416-434 (ch20 "Why does deep learning work?"). Front matter, ch1-2/4,
+  ch10 conv, ch12-19 (transformers/GNN/generative/RL), ch21 ethics, appendices/biblio/index not read.
+- 20 primitives, 954-word think, GATEKEEPER_APPROVED first try. COMPLETE=74, primitives=542. No sportsbook odds.
+- Era-chain position: the 2023 MODERN DL-THEORY layer ABOVE Nielsen 2015. Updates the learning mechanics with double
+  descent (p9), implicit regularization (p11), ResNet identity path (p13) + BatchNorm (p15), Adam (p6), He init (p7),
+  and the honest "why does it work" frontier: NP-hardness (p16), lottery tickets (p17), flat-minima caveat (p18),
+  grokking/Goldilocks (p19), no prescriptive theory (p20). Unifies with Garnett (MAP=prior eq 9.4; cross-entropy=KL
+  eq 5.31 = info quantity) and ADM (decision) under one information-theoretic objective. MLE recipe (eq 5.6) is the
+  principled loss-construction foundation Nielsen only gestures at; bias-variance-noise (eq 8.7) is the error decomposition.
+- SFT: compile_prince_sft.py exit 0, disk re-read verified think tags + 954w; SFT=73 rows. Three-claim prompt:
+  MSE-on-everything + point-only / overparameterized=overfit + done-at-zero-train-error / tiny-gradient=global-opt + flat=generalizes.
+- Pushes confirmed on origin: Nielsen ae23348e8. Prince cycle commit pending this entry. Next RLVR trigger 82.
