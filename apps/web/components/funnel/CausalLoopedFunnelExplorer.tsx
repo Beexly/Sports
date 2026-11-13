@@ -86,6 +86,9 @@ export function CausalLoopedFunnelExplorer({
 
   const safeIdx = Math.min(Math.max(selectedIdx, 0), stages.length - 1);
   const activeStage = stages[safeIdx];
+  if (!activeStage) {
+    return null;
+  }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "ArrowRight") {

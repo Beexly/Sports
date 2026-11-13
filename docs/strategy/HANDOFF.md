@@ -396,3 +396,9 @@ Still outstanding on the corpus: chunk-level retrieval needs its own table (a si
 **Opus executor claim, independently reproduced.** Ran `honest_equation_executor.parse_and_execute_honestly` over the canonical 60,051-row master (`jev-pipeline/equations-from-catalog.jsonl`): **44,435 UNPARSEABLE / 8,566 PARSED_SYMBOLIC_ONLY / 7,050 PARSED_EVALUATED, 0 exceptions**. Exact match to the reported figures, so the executor measurement stands. The supporting "25/25 executor tests" claim does **not** reproduce: `tests/test_honest_equation_executor_unicode_and_guards.py` yields 11 passed, and adding `tests/unit/test_unified_quantitative_nfl_architecture.py` brings it to 17.
 
 **Transcript verification published** as agent-bus PR #10 (`hermes/transcript-verification-2026-11-12`), opened for review rather than pushed to main.
+
+## 2026-11-13 — Week 10 master launch (hermes/week10-master-launch-2026-11-13)
+
+Overnight WP-0..WP-8 execution started 01:20 CST on branch `hermes/week10-master-launch-2026-11-13` (worktree `Sports-main-merge`), branched from `origin/main` 33c0020a9. Carry-forwards merged: `feat/hermes-research-wiring-2026-11-11` (b2cd28b9a), `origin/opus/corpus-wiring-2026-11-11` (46afcad0), PR #1272 head (2293655fc). The settle-picks conflict was resolved keeping BOTH the stale-backfill-first drain order (main) and the heartbeat/fault-isolation wrappers (PR #1272).
+
+WP-0 CI fixes landed: `unified-quantitative-nfl-architecture.ts` Acklam coefficient arrays are now `as const` tuples (TS2532 under noUncheckedIndexedAccess) with a fail-closed guard on the two-way devig self-test; `CausalLoopedFunnelExplorer.tsx` guards `activeStage`; `epistemic_gate.yml` installs pyyaml. Evidence: `tsc --noEmit -p packages/prediction-engine` exit 0; unified-architecture + signal-slate vitest suites green locally; shell-defensive PASS (0 new violations). TNF WSH @ NYG is FINAL in Neon (NYG 21, WSH 24, resultFetched=t); settlement + quarantine pass is next.
