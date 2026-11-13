@@ -1,0 +1,418 @@
+{
+  "book_id": "7ec06be65ab3f269",
+  "source_status": "COMPLETE",
+  "pages_total": 700,
+  "pages_read": 190,
+  "source_note": "Kochenderfer, Wheeler, Wray, Algorithms for Decision Making, MIT Press 2022, CC-BY-NC-ND license (footer on every page; build stamp 2025-09-21). 700 PDF pages. PDF page = printed page + 22 (printed 112 = PDF 134); all citations are PDF pages. Dense-monograph solo core-read of 190 pages across nine blocks: 133-152 (simple decisions/utility/VOI), 155-182 (MDPs/Bellman/LQR), 303-318 (policy validation/importance sampling/robust DP/trade analysis), 321-338 (exploration-exploitation/bandits), 357-376 (model-free RL/Q-learning/shaping/replay), 401-428 (POMDP beliefs/Kalman/EKF/UKF/particle filters), 429-448 (exact belief-state planning/alpha vectors), 515-538 (multiagent reasoning/Nash/correlated/level-k/fictitious play), 539-554 (Markov games/Nash Q-learning). Front matter, remaining chapters (1-5, 8-13, 16, 18, 21-23, 26+), appendices and exercises beyond the core blocks not read. This source PRINTS its equations (unlike the 1894-1925 era chain); latex fields are transcriptions of printed equations with equation numbers, and prose quotes are verbatim. Hyphenation in quotes preserved as extracted (e.g. 'ac- tions' p528). No sportsbook lines/spreads/totals/implied odds anywhere; the bandit chapter's 'one-armed bandit' slot-machine framing is the standard historical name for the problem, not betting content. Era-chain position: the 2022 formal terminal node that identifies what the 1894-1925 prose sources computed; first source in the corpus with printed executable decision-theoretic mathematics for every GSE engine component.",
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Utility representation and positive-affine uniqueness",
+      "verbatim_quote": "The utility function is unique up to a positive affine transformation. In other words, for any constants m > 0 and b, U′(S) = mU(S) + b if and only if the preferences induced by U′ are the same as U.",
+      "page": 135,
+      "latex": "U([S_1:p_1;\\dots;S_n:p_n]) = \\sum_{i=1}^{n} p_i\\,U(S_i)\\ \\text{(eq 6.2)};\\quad U'(S)=m\\,U(S)+b,\\ m>0\\ \\text{(affine uniqueness)}",
+      "symbol_and_unit_ledger": "U = utility (dimensionless utils, interval scale); S_i = outcome state; p_i = probability of outcome i (dimensionless, sums to 1); m,b = affine constants (m dimensionless >0, b in utils). The four rationality axioms (completeness, transitivity, continuity, independence) are printed as bullets on PDF p134 (printed 112); the representation theorem and affine-uniqueness are printed on PDF p135 (printed 113), eq 6.2. Source: von Neumann & Morgenstern 1944, cited fn5 p134.",
+      "assumptions": "Preferences must satisfy all four vNM axioms. Utility is an interval scale, not a ratio scale: only differences and orderings are meaningful, never ratios of utilities. The book's own analogy: 'Utilities are like temperatures' (p135).",
+      "breakdown_regime": "The independence axiom is empirically violated by the certainty effect (p145, printed 123) and by framing (p146): the book prints a worked contradiction where U(lose 75) < 0.8 U(lose 100) and the reverse both follow from stated preferences. Infinite-utility lotteries (St. Petersburg, p136) also break the representation. Any GSE confidence number treated as a ratio-scale probability inherits this interval-scale caveat.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p1",
+        "mapping": "The pick/utility layer of the GSE engine is a vNM utility over score-state lotteries. Affine uniqueness means a monotone-rescaled confidence ranking is decision-equivalent: the calibration map (memory: ranking monotone but inflated ~5.2pt) may rescale utilities without changing the argmax call, exactly as U'=mU+b preserves preferences. The certainty-effect violation is the formal reason a coach's 'sure thing' framing is not a probability.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Maximum expected utility principle",
+      "verbatim_quote": "The principle of maximum expected utility says that a rational agent should choose the action that maximizes expected utility:",
+      "page": 138,
+      "latex": "\\mathrm{EU}(a\\mid o)=\\sum_{s'} P(s'\\mid a,o)\\,U(s')\\ \\text{(eq 6.7)};\\quad a^{*}=\\arg\\max_{a}\\mathrm{EU}(a\\mid o)\\ \\text{(eq 6.8)}",
+      "symbol_and_unit_ledger": "a = action label; o = observation; s' = successor state; P(s'|a,o) = transition probability conditioned on action and observation (dimensionless); U(s') = utility (utils); EU = expected utility (utils); a* = optimal action. Printed eqs 6.7-6.8, PDF p138 (printed 116).",
+      "assumptions": "Requires a probabilistic model P(s'|o,a) and a utility U. The book states eq 6.8 'plays a central role in this book' (p138). Rationality is prescriptive here, not descriptive.",
+      "breakdown_regime": "Garbage-in: if P(s'|a,o) is misspecified the argmax is optimal for the wrong world — the book's remedy is robust dynamic programming (eq 14.14, p311). Descriptively, humans deviate; the softmax/quantal response (eq 24.4, p519) is the book's corrective model of actual choice.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p2",
+        "mapping": "off_play_call selection in the Coach-Mind simulator is exactly MEU: the router scores each candidate call by expected utility over the snap-outcome distribution P(s'|call, pre-snap observation) and takes the argmax. The JEV snap-by-snap simulation is the machinery that estimates P(s'|a,o); the de-vig/conjunction gate is a constraint layered on top of the raw argmax.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Value of information is nonnegative and action-change-gated",
+      "verbatim_quote": "The value of information is never negative. The expected utility can increase only if additional observations can lead to different optimal decisions.",
+      "page": 143,
+      "latex": "\\mathrm{VOI}(O'\\mid o)=\\sum_{o'} P(o'\\mid o)\\,\\mathrm{EU}^{*}(o,o')-\\mathrm{EU}^{*}(o)\\ \\text{(eq 6.9)};\\quad \\mathrm{VOI}\\ge 0;\\quad \\mathrm{VOI}=0\\iff a^{*}\\ \\text{unchanged}",
+      "symbol_and_unit_ledger": "O' = candidate observation variable; o,o' = observations; EU*(o) = optimal expected utility given o (utils); VOI in utils. Printed eq 6.9 and the nonnegativity/zero-action-change statement, PDF p143 (printed 121).",
+      "assumptions": "The agent can always ignore the observation, so VOI cannot be negative. VOI is zero precisely when no realization of O' changes the optimal action. Greedy highest-VOI observation selection is explicitly labeled a heuristic, not optimal (p144).",
+      "breakdown_regime": "Greedy VOI selection can be myopic when observations interact (the book flags this p144). VOI computed under a wrong P(o'|o) is itself wrong. The 'free observation' assumption fails when scouting carries cost or reveals information to the opponent (cf. Rockne 1925 signal-leak doctrine).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p3",
+        "mapping": "Pre-snap motion, hard counts, and the challenge flag are information purchases: their value is the expected utility gain from the updated defensive-shell belief, and is zero when the call would not change. This is the formal justification for the router's observation-selection step and for scouting-sample valuation. The greedy-VOI caveat warns against stacking motions whose joint information is super-additive.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Finite-horizon optimal policies are time-dependent (clock-aware risk)",
+      "verbatim_quote": "when playing basketball, it is generally not a good strategy to attempt a half-court shot unless there are only a couple of seconds remaining in the game.",
+      "page": 157,
+      "latex": "\\pi^{*}(s,t)\\ \\text{depends on time }t\\ \\text{for finite horizon};\\quad R_{\\mathrm{disc}}=\\sum_{t=1}^{h}\\gamma^{t-1} r_t\\ \\text{(eq 7.2)}",
+      "symbol_and_unit_ledger": "s = state; t = time step (dimensionless index, or seconds of game clock); h = horizon; gamma = discount factor (dimensionless, 0<=gamma<1 for infinite horizon); r_t = reward at step t (utils); R_disc = discounted return (utils). Printed eq 7.2 and the basketball half-court example, PDF p157 (printed 135).",
+      "assumptions": "For a finite horizon the optimal policy generally must depend on time remaining; a stationary policy is optimal only for the infinite-horizon discounted stationary MDP (p157). The basketball example is the book's own printed sports illustration.",
+      "breakdown_regime": "A stationary 'always play safe when ahead' heuristic is suboptimal near the horizon: with seconds left, a low-probability high-payoff attempt (half-court heave / hook-and-lateral) becomes optimal. The discount formulation also breaks when reward is unbounded (p157).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p4",
+        "mapping": "This is the printed formal basis for clock-aware risk posture in the situational router: the end-of-half heave and the two-minute drill are finite-horizon optimal policies that a stationary lead-protection heuristic (Rockne 1925 'When ahead; play safe', p171) would veto incorrectly. The state tuple must carry time-to-horizon, not just score differential.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Bellman residual convergence certificate",
+      "verbatim_quote": "called the Bellman residual. If the Bellman residual drops below a threshold δ, then the iterations terminate.",
+      "page": 164,
+      "latex": "\\|U_{k+1}-U_k\\|_{\\infty}<\\delta\\ \\Rightarrow\\ \\|U_k-U^{*}\\|_{\\infty}\\le \\epsilon=\\frac{\\delta\\gamma}{1-\\gamma};\\quad \\text{policy loss}\\le \\frac{2\\epsilon\\gamma}{1-\\gamma}",
+      "symbol_and_unit_ledger": "U_k = value iterate (utils); delta = Bellman residual threshold (utils); gamma = discount (dimensionless); epsilon = value error bound (utils). The residual definition and termination rule are printed PDF p164 (printed 142); the epsilon=delta*gamma/(1-gamma) bound is printed in the same paragraph; the policy-loss bound 2*epsilon*gamma/(1-gamma) cites Singh & Yee 1994 (p164).",
+      "assumptions": "Value iteration is a gamma-contraction in sup-norm, so the residual bounds the distance to the fixed point. The bound inflates as gamma->1 (printed: 'Discount factors closer to 1 significantly inflate this error').",
+      "breakdown_regime": "As gamma approaches 1 the certificate degrades (epsilon diverges), so a near-undiscounted long-horizon sim needs many more iterations for the same guarantee. With function approximation the contraction property can fail (the book's later chapters address approximation).",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p5",
+        "mapping": "The snap-by-snap JEV drive simulator is value iteration over drive states; the Bellman residual gives a printable convergence certificate for the 10,000-world PBP engine: stop iterating a drive's value when the residual is below delta, and report the resulting epsilon bound rather than claiming exact optimality. This is the honesty layer for simulator convergence.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Certainty equivalence (plan on the mean under linear-Gaussian noise)",
+      "verbatim_quote": "Note that the optimal action is independent of the zero-mean disturbance distribution.",
+      "page": 172,
+      "latex": "s_{t+1}=T_s s_t+T_a a_t+w_t,\\ w_t\\sim\\mathcal{N}(0,\\Sigma);\\quad a^{*}\\ \\text{independent of the distribution of }w_t\\ \\text{(LQR, sec 7.8)}",
+      "symbol_and_unit_ledger": "s_t = state vector; a_t = action vector; T_s,T_a = dynamics matrices; w_t = zero-mean Gaussian disturbance with covariance Sigma; a* = optimal action. Printed statement PDF p172 (printed 150) fn25; the LQG reuse ('treat mu_b as the true state') is printed PDF p441 (printed 419).",
+      "assumptions": "Linear dynamics, quadratic reward, zero-mean additive noise. The optimal action depends only on the mean state, not on the noise covariance; the covariance affects expected cost but not the argmax. This is the certainty equivalence principle (fn25 p172, restated p441).",
+      "breakdown_regime": "Fails for nonlinear dynamics, non-Gaussian or multimodal noise, and non-quadratic reward: then the mean is not a sufficient statistic and planning on mu_b is biased. The book's EKF/UKF/particle chapters exist precisely because certainty equivalence breaks outside the linear-Gaussian-quadratic class.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p6",
+        "mapping": "When execution noise (wind, snap timing, route depth) is approximately zero-mean Gaussian and the value model is locally quadratic, the router may plan on the mean belief mu_b. The breakdown regime is the formal warning: a bimodal defensive-shell read (two-high vs single-high) is multimodal, so certainty equivalence is invalid and the engine must carry the full belief (alpha vectors / particles), not a point estimate.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "Reward-shaping policy invariance (potential-based iff)",
+      "verbatim_quote": "a policy that is optimal under the original reward remains optimal under the shaped reward if and only if",
+      "page": 365,
+      "latex": "F(s,a,s')=\\gamma\\,\\beta(s')-\\beta(s)\\ \\text{(eq 17.15)}\\iff \\pi^{*}\\ \\text{unchanged under }R+F",
+      "symbol_and_unit_ledger": "F = shaping reward (utils); R = original reward (utils); beta = potential function over states (utils); gamma = discount (dimensionless); s,s' = states; a = action. Printed eq 17.15 and the iff statement, PDF p365 (printed 343); cites Ng, Harada & Russell, ICML 1999 (fn10).",
+      "assumptions": "The shaped reward R+F preserves the optimal policy if and only if F is the discounted difference of a state potential. This is a theorem, not a heuristic; any other shaping can change what is optimal.",
+      "breakdown_regime": "Non-potential shaping (e.g. a flat bonus for 'first down' or a penalty for 'incomplete pass') changes the optimal policy and can reward hacking the shaping term rather than winning. The book's chess example (penalize losing a piece) is explicitly a policy-changing shaping chosen for training speed, not invariance.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p7",
+        "mapping": "This is the audit gate for GSE RLVR reward design: every auxiliary reward added to a veto scenario's verifier must be potential-based (gamma*beta(s')-beta(s)) or it silently redefines the optimal policy. EPA-style shaping terms must be checked against eq 17.15; a reward that pays for yardage rather than for win-probability potential is a policy-changing shaping and must be declared as such, never smuggled in as 'just a bonus'.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "Importance sampling for rare-event policy evaluation",
+      "verbatim_quote": "importance sampling, which involves sampling from an alternative distribution and weighting the results appropriately to arrive at an unbiased estimate.",
+      "page": 309,
+      "latex": "\\hat{U}=\\frac{1}{n}\\sum_{i} f_{\\mathrm{traj}}(\\tau^{(i)})\\frac{P(\\tau^{(i)})}{P'(\\tau^{(i)})},\\ \\tau^{(i)}\\sim P'\\ \\text{(eq 14.12)};\\quad P^{*}(\\tau)\\propto |f_{\\mathrm{traj}}(\\tau)|\\,P(\\tau)\\ \\text{(eq 14.13)}",
+      "symbol_and_unit_ledger": "tau = trajectory; P = true trajectory distribution; P' = proposal distribution; f_traj = trajectory metric (e.g. return, utils); weight P(tau)/P'(tau) dimensionless; n = sample count. Printed eqs 14.10-14.12 PDF p309 (printed 287); optimal proposal 14.13 PDF p310 (printed 288). Support condition fn6 p309: P' must not assign zero likelihood to any trajectory with P>0.",
+      "assumptions": "Unbiasedness requires the proposal to cover the support of P (fn6). The optimal proposal weights by |f_traj| but is generally impractical to compute exactly (p310); domain expertise is used to bias toward important regions (e.g. the initial state).",
+      "breakdown_regime": "If P' assigns zero probability to a trajectory that P supports, the estimator is undefined/biased — the never-zero-probability rule. High variance when the proposal misses the rare-event region; the relative standard error (eq 14.6) diagnoses this. The book's rare-event framing (Bucklew 2004, fn5) is the explicit use case.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p8",
+        "mapping": "The 10,000-world PBP vector engine is Monte Carlo policy evaluation (eq 14.1). Blowout, injury, and late-game-turnover tails are rare events: naive sampling gives huge relative SE on exactly the branches the veto gate cares about. Importance sampling with a biased proposal (and reweighting by P/P') is the printed method to resolve tails efficiently, and the support condition is the formal reason the engine must never zero out a plausible snap outcome.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p9",
+      "name": "Robust dynamic programming (minimax over a model suite)",
+      "verbatim_quote": "committing to a particular transition model, we have a suite of transition models T1:n and reward models R1:n. We can revise the Bellman update equation from equation (7.16) to provide robustness to different models as follows: Uk+1(s) = max a min i Ri(s, a) + γ∑ s′ Ti(s′ | s, a)Uk(s′) ! (14.14) The update uses the action that maximizes expected utility when using the model that minimizes our utility.",
+      "page": 311,
+      "latex": "U_{k+1}(s)=\\max_{a}\\min_{i}\\left[R_i(s,a)+\\gamma\\sum_{s'}T_i(s'\\mid s,a)\\,U_k(s')\\right]\\ \\text{(eq 14.14)}",
+      "symbol_and_unit_ledger": "T_1:n, R_1:n = suite of transition and reward models; i = model index; a = action; gamma = discount; U_k = value iterate (utils). Printed eq 14.14 and the max-min interpretation, PDF p311 (printed 289); cites Iyengar 2005 (fn7) and Kochenderfer et al. 2010 collision-avoidance robustness.",
+      "assumptions": "Instead of one model, carry a suite T_1:n, R_1:n representing modeling uncertainty. The update picks the action maximizing utility under the worst-case (utility-minimizing) model. This is a deliberate conservatism, not an estimate of the true model.",
+      "breakdown_regime": "Over-conservatism: if the suite includes implausibly adversarial models the policy becomes uselessly cautious. The suite must encode genuine modeling error, not paranoia. The book motivates it specifically for sensitivity to modeling assumptions (p311) and collision avoidance (fn7).",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p9",
+        "mapping": "Cross-layer veto adjudication is a max-min over a model suite: the engine evaluates a call under the worst credible combination of injury overlay, roster uncertainty, and defensive-shell model, and a layer vetoes when the worst-case utility falls below the fallback. Eq 14.14 is the printed formal shape of the conjunction gate's conservatism — PASS when the minimizing model makes the call worse than the default.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p10",
+      "name": "Do-not-deploy as a first-class remediation option",
+      "verbatim_quote": "Do not deploy the system. If the policy is unsafe, it may be better not to deploy it in the real world.",
+      "page": 316,
+      "latex": "\\text{Remediation menu: }\\{\\text{more data},\\ \\text{better model},\\ \\text{better discretization},\\ \\text{better approximation},\\ \\neg\\text{deploy}\\}",
+      "symbol_and_unit_ledger": "No numeric equation; this is a printed enumerated list of five remediation options after trade analysis finds an unsafe policy, PDF p316 (printed 294). Option 5 verbatim: 'Do not deploy the system. If the policy is unsafe, it may be better not to deploy it in the real world.' The other four options are printed immediately above (more data / better transition model / refine discretization / different approximation).",
+      "assumptions": "Trade analysis (sec 14.4) can reveal that a computed policy is unsafe; the book treats abstention from deployment as a legitimate terminal option alongside model improvement, not as a failure of the method.",
+      "breakdown_regime": "None stated — this is a normative safety option. The relevant failure mode is organizational: treating 'must output a pick' as a constraint and thereby excluding option 5. The book explicitly rejects that framing.",
+      "domain": "cs",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p10",
+        "mapping": "This is the printed ancestor of the GSE PASS doctrine: a bad board is a badge of honor, not a missed bet. The MIT Press text lists 'do not deploy' as option 5 of 5 in the remediation menu — abstention is a first-class output of a rational decision pipeline, exactly as the conjunction gate's PASS is a first-class settlement. No fake CLV floor, no forced pick.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p11",
+      "name": "Discrete belief update and the overconfidence guard",
+      "verbatim_quote": "The success of the belief update depends on having accurate observation and transition models. In cases where these models are not well known, it is generally advisable to use simplified models with more diffuse distributions to help prevent overconfidence, which leads to brittleness in the state estimates.",
+      "page": 405,
+      "latex": "b'(s')\\propto O(o\\mid a,s')\\sum_{s}T(s'\\mid s,a)\\,b(s)\\ \\text{(eq 19.7)};\\quad b\\ge 0,\\ \\mathbf{1}^{\\top}b=1\\ \\text{(eq 19.1-19.2)}",
+      "symbol_and_unit_ledger": "b = belief vector (dimensionless probability mass over states, sums to 1); O(o|a,s') = observation likelihood; T(s'|s,a) = transition; a = action; o = observation. Printed eq 19.7 and the diffuse-model advice, PDF p405 (printed 383); belief simplex constraints eqs 19.1-19.2 p403. Zero-belief guard: algorithm 19.2 returns uniform if the update is a zero vector (p406); exercise 19.9 (p422) warns to avoid assigning zero probability to observations.",
+      "assumptions": "Recursive Bayesian estimation under the POMDP independence assumptions. The book advises simplified, more diffuse models when T and O are uncertain, to prevent overconfidence and brittleness (p405).",
+      "breakdown_regime": "A zero belief vector arises when an observation has zero likelihood under every reachable state (ex 19.9) — the model/reality mismatch case; the guard resets to uniform. Overconfident beliefs that converge to a wrong state fail catastrophically when new observations contradict them (ex 19.3, the stopped-vehicle covariance-floor remedy).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p11",
+        "mapping": "The two-high quarters shell belief is a POMDP belief vector updated by pre-snap observations (motion, alignment, personnel) via eq 19.7. The overconfidence guard is the formal reason the engine must keep diffuse priors on shell reads and never assign zero probability to a shell it has not seen — a zero-likelihood observation (a look the model never anticipated) must trigger a belief reset, not a confident wrong call.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p12",
+      "name": "Particle deprivation and adaptive injection",
+      "verbatim_quote": "particle filters can fail in practice. Low particle coverage and the stochastic nature of the resampling procedure can cause there to be no particles near the true state.",
+      "page": 412,
+      "latex": "w_{\\mathrm{fast}}\\leftarrow w_{\\mathrm{fast}}+\\alpha_{\\mathrm{fast}}(\\bar w-w_{\\mathrm{fast}});\\quad m_{\\mathrm{inject}}=\\left\\lfloor m\\max\\!\\left(0,1-\\nu\\frac{w_{\\mathrm{fast}}}{w_{\\mathrm{slow}}}\\right)\\right\\rceil\\ \\text{(eqs 19.27-19.29)}",
+      "symbol_and_unit_ledger": "w_fast,w_slow = fast/slow exponential moving averages of mean particle weight (dimensionless); alpha_fast=0.1, alpha_slow=0.001, nu=2 (printed recommended values, PDF p417/printed 395, algorithm 19.9 caption); m = particle count; m_inject = injected particles. Deprivation statement printed PDF p412 (printed 390); injection eqs 19.27-19.29 p416 (printed 394); Spelunker Joe example 19.5 p415.",
+      "assumptions": "Resampling is stochastic; with low coverage or a large state space the particle set can collapse to a single wrong state even with no new information (Spelunker Joe, ex 19.5). Adaptive injection adds particles from a broad distribution when the fast weight average drops below 1/nu of the slow average.",
+      "breakdown_regime": "Injection reduces posterior accuracy (p416) — it trades bias for coverage. With perfect observations all weights are 1, w_fast/w_slow=1, and nu>=1 injects nothing (ex 19.6), so deprivation under perfect sensing is not fixed by this mechanism. nu<1 injects even when current likelihood exceeds history (ex 19.7), usually undesirable.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p12",
+        "mapping": "The 10,000-world ensemble is a particle filter over game trajectories; particle deprivation is ensemble collapse — all worlds converging to one script and losing the true tail. Adaptive injection (eqs 19.27-19.29, with the printed alpha_fast=0.1/alpha_slow=0.001/nu=2) is the mechanism for re-diversifying worlds when observation weights crash, keeping the rare-event branches alive for the veto gate.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p13",
+      "name": "Alpha-vector value function is piecewise-linear and convex",
+      "verbatim_quote": "Each alpha vector defines a hyperplane in belief space. The optimal value function given in equation (20.11) is the maximum over these hyperplanes: U∗(b) = max π α⊤ π b (20.12) making the value function piecewise-linear and convex.",
+      "page": 433,
+      "latex": "U^{\\pi}(b)=\\alpha_{\\pi}^{\\top}b\\ \\text{(eq 20.11)};\\quad U^{*}(b)=\\max_{\\pi}\\alpha_{\\pi}^{\\top}b\\ \\text{(eq 20.12)}",
+      "symbol_and_unit_ledger": "b = belief vector (dimensionless, on the simplex); alpha_pi = alpha vector of conditional plan pi (components are utilities, utils, dimension |S|); U*(b) = optimal belief value (utils). Printed eqs 20.11-20.12 and the PWL-convex statement, PDF p433 (printed 411); dominance pruning LP eq 20.16 p437; conditional-plan count |A|^{(|O|^h-1)/(|O|-1)} p433.",
+      "assumptions": "A finite-horizon discrete POMDP's optimal value function is the upper envelope of finitely many hyperplanes, hence piecewise-linear and convex in the belief (fn4 extends convexity to continuous-state POMDPs by a discretization limit). Each alpha vector is a conditional plan's per-state expected utility.",
+      "breakdown_regime": "The number of conditional plans grows better-than-exponentially in the observation count (ex 20.4: |O| matters more than |A|), so exact enumeration is intractable; pruning dominated alpha vectors via the LP (eq 20.16) is required. Convexity is in belief, not in state — a point-estimate planner loses it.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p13",
+        "mapping": "A game plan is a set of conditional plans (alpha vectors) over the defensive-shell belief; the optimal call at a belief is the dominating alpha vector. Rockne 1925's 'not good until the defense changes' (p236) is exactly a plan that is dominated at the current belief and becomes dominating after the belief updates. Pruning dominated plans (eq 20.16) is the formal version of dropping plays that are never optimal against any read.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p14",
+      "name": "Quantal (softmax) response: errors scale with cheapness",
+      "verbatim_quote": "agents are more likely to make errors in their optimization when those errors are less costly.",
+      "page": 519,
+      "latex": "\\pi_i(a_i)\\propto \\exp\\!\\big(\\lambda\\,U_i(a_i,\\pi_{-i})\\big)\\ \\text{(eq 24.4)};\\quad \\lambda\\to 0:\\ \\text{uniform};\\ \\lambda\\to\\infty:\\ \\text{best response}",
+      "symbol_and_unit_ledger": "pi_i(a_i) = probability agent i plays a_i (dimensionless); U_i(a_i,pi_-i) = utility of a_i against others' policies (utils); lambda = precision parameter (units 1/utils, >=0). Printed eq 24.4 and the error-cost principle, PDF p519 (printed 497); also called logit/quantal response (fn4). lambda learnable by maximum likelihood (sec 4.1).",
+      "assumptions": "Humans are not perfect expected-utility optimizers; the model's principle is that optimization errors are more likely when they are less costly. This is predictive (descriptive) rather than prescriptive, but a predictive model of humans is useful for prescribing optimal behavior against them (p519).",
+      "breakdown_regime": "A single lambda may not capture heterogeneous rationality across agents or situations; the hierarchical softmax (p526) adds depth k. The model assumes utility differences drive choice frequencies; if agents use heuristics unrelated to utility, the fit degrades.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p14",
+        "mapping": "This is the printed coach/quarterback error model for the recursive theory-of-mind layer: in low-cost situations (early downs, garbage time, large lead) decision precision lambda is effectively lower, so mistakes are more frequent — the formal reason a defense can relax its read precision when the offense's error cost is low, and why Rockne's 'relax after he sees the ball passed back' (p144) habituation exploit works. lambda is fit from play-call data by MLE, not assumed.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p15",
+      "name": "Hierarchical softmax: bounded-depth recursive theory of mind",
+      "verbatim_quote": "A level 0 agent plays its actions uniformly at random. A level 1 agent assumes the other players adopt level 0 strategies and selects actions according to a softmax response with precision λ. A level k agent selects actions according to a softmax model of the other players",
+      "page": 526,
+      "latex": "\\pi^{(0)}=\\mathrm{uniform};\\quad \\pi^{(k)}_i(a_i)\\propto\\exp\\!\\big(\\lambda\\,U_i(a_i,\\pi^{(k-1)}_{-i})\\big)\\ \\text{(level-}k\\text{, sec 24.7)}",
+      "symbol_and_unit_ledger": "k = depth of rationality (dimensionless integer >=0); lambda = precision (1/utils); pi^(k) = level-k policy. Printed level-0/1/k definition, PDF p526 (printed 504); also called quantal-level-k / logit-level-k, cites Stahl & Wilson 1994 (fn11). k and lambda learnable from joint-action data by MLE or Bayesian inference (Wright & Leyton-Brown 2010/2012, fn12-13).",
+      "assumptions": "A level-0 agent plays uniformly; a level-k agent softmax-best-responds to the belief that others play level-(k-1). This is a finite recursion, not an infinite regress or a fixed point. Humans typically sit at low k (the traveler's dilemma, fig 24.1).",
+      "breakdown_regime": "If the opponent's actual depth differs from the assumed k-1, the best response is mis-specified; the model must learn k from data rather than assume it. Nash equilibrium is the k->infty fixed point and is often a poor predictor of human play (p526: humans may not compute it, may doubt opponents can, or face equilibrium selection).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p15",
+        "mapping": "This is the exact printed formalism for GSE recursive theory of mind: 'the OC thinks the DC thinks the OC will run' is a finite level-k softmax recursion, with k and lambda estimated from tendency data — not an infinite regress and not a Nash assumption. The JEV snap simulation's off_play_call modeling def_shell_call modeling off_play_call is level-k reasoning; the depth must be learned, and the traveler's-dilemma evidence (p18) bounds it.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p16",
+      "name": "Fictitious play: empirical-frequency opponent modeling",
+      "verbatim_quote": "This section focuses on fictitious play, where the agents use maximum likelihood estimates (as described in section 16.1) of the policies followed by the other agents. Each agent follows its own best response, assuming that the other agents act according to those estimates.",
+      "page": 527,
+      "latex": "\\pi_j(a_j)\\propto N_i(j,a_j)\\ \\text{(eq 24.9)};\\quad a_i^{*}=\\arg\\max_{a_i}U_i(a_i,\\hat{\\pi}_{-i})",
+      "symbol_and_unit_ledger": "N_i(j,a_j) = count of agent j's action a_j tracked by agent i (dimensionless count, often initialized to 1 for uniform uncertainty); pi_j = estimated stochastic policy of j (dimensionless); a_i* = best response. Printed eq 24.9 and the maximum-likelihood description, PDF p527 (printed 505); cites Brown 1951 and Robinson 1951 (fn14). MG generalization eq 25.9-25.11 p543-545.",
+      "assumptions": "Each agent maintains maximum-likelihood counts of others' actions and best-responds to those empirical frequencies. Traditional fictitious play is rational learning with a Dirichlet prior (p531). Counts may be initialized to 1.",
+      "breakdown_regime": "Fictitious play is NOT guaranteed to converge to Nash (p529, Berger 2007 fn15); it cycles in rock-paper-scissors and fails to converge in almost-rock-paper-scissors (ex 24.6, p537). The empirical-frequency model is exploitable by an opponent who detects the counting and plays a non-stationary counter — the formal reason coordinators randomize rather than follow tendencies.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p16",
+        "mapping": "Tendency scouting is fictitious play: Rockne 1925's thirty-game play-class table (p172) is exactly the count table N_i(j,a_j), and the best response to it is the game plan. The non-convergence result is the printed warning that a pure tendency-follower is exploitable and that mixed strategies (Rockne's mixed punt numbers {13,11,66,99,44}, pp208-209) are the rational counter — cycling is why the engine must randomize, not just best-respond to frequencies.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p17",
+      "name": "Markov-game best response reduces to a single-agent MDP",
+      "verbatim_quote": "If the policies of the other agents are fixed, then the problem reduces to an MDP.",
+      "page": 541,
+      "latex": "T'(s'\\mid s,a_i)=T(s'\\mid s,a_i,\\pi_{-i}(s))\\ \\text{(eq 25.4)};\\quad R'(s,a_i)=R_i(s,a_i,\\pi_{-i}(s))\\ \\text{(eq 25.5)}",
+      "symbol_and_unit_ledger": "pi_-i = fixed policies of the other agents; T',R' = induced single-agent transition and reward; a_i = agent i's action; s = shared state. Printed eqs 25.4-25.5 and the reduction statement, PDF p541 (printed 519). Markov games (stochastic games) cite Shapley 1953 and Littman 1994 (p539).",
+      "assumptions": "With opponents' policies fixed, agent i faces an ordinary MDP whose transition and reward fold the opponents into the environment; solving it yields a best response. A deterministic best response suffices for utility maximization (ex 25.2); stochastic policies are needed only to sustain equilibrium.",
+      "breakdown_regime": "The reduction is only as good as the fixed opponent model pi_-i; if opponents adapt (they are not stationary), the induced MDP is wrong and the best response is exploitable. This is precisely the fictitious-play non-stationarity problem (p16) lifted to sequential games.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p17",
+        "mapping": "This is the formal license for the GSE simulation architecture: to simulate one team's drive, fix the opponent's tendency policy pi_-i (from scouting counts) and solve the resulting single-agent MDP over snap states. The JEV snap-by-snap engine is exactly this induced MDP. The breakdown regime is the standing caveat: the opponent is adaptive, so the fixed-policy sim must be re-run as the opponent model updates, never trusted as a stationary oracle.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p18",
+      "name": "Traveler's dilemma: empirical bound on human rationality depth",
+      "verbatim_quote": "People tend to select ac- tions between $97 and $100, even though the Nash equilibrium is only $2.",
+      "page": 528,
+      "latex": "a_{\\mathrm{human}}\\in[97,100]\\ \\text{vs}\\ a_{\\mathrm{Nash}}=2\\ \\text{(traveler's dilemma, fig 24.1)}",
+      "symbol_and_unit_ledger": "a = claimed dollar amount (USD, source unit); Nash equilibrium of the traveler's dilemma is $2; empirical human choices cluster $97-$100. Printed in figure 24.1 caption, PDF p528 (printed 506); game defined in appendix F.12. Iterated best response converges to the $2 Nash (ex 24.7, p538) while humans do not.",
+      "assumptions": "The traveler's dilemma has a unique Nash equilibrium at the minimum claim ($2) reached by iterated dominance, but experimental subjects choose near the maximum. The hierarchical softmax with low k and moderate lambda reproduces the human cluster (fig 24.1).",
+      "breakdown_regime": "The gap between Nash ($2) and human play ($97-100) is the empirical demonstration that equilibrium reasoning is a poor behavioral predictor; any model that assumes opponents play Nash will mispredict badly. The depth k that fits humans is small and must be learned, not assumed infinite.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p18",
+        "mapping": "This is the printed empirical anchor justifying level-k over Nash for coach modeling: real decision-makers do not iterate dominance to the fixed point. A GSE theory-of-mind layer that assumes the opposing coordinator plays the game-theoretic equilibrium will mispredict, exactly as Nash predicts $2 while humans claim $97-100. The engine must fit a bounded depth k to tendency data.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p19",
+      "name": "Nash equilibrium computation is PPAD-complete",
+      "verbatim_quote": "Computing a Nash equilibrium is PPAD-complete, a class that is distinct from NP-complete (appendix C.2) but also has no known polynomial time algorithm.",
+      "page": 520,
+      "latex": "\\text{Nash}(k\\text{-agent})\\in\\mathrm{PPAD\\text{-}complete};\\quad \\text{correlated equilibrium}\\in\\mathrm{P}\\ \\text{(LP, eq 24.8)}",
+      "symbol_and_unit_ledger": "No numeric equation; printed complexity statement PDF p520 (printed 498), citing Daskalakis, Goldberg & Papadimitriou 2009 (fn8). Contrast: correlated equilibrium is computable by linear programming (eq 24.8, p523) in polynomial time, though the joint action space grows exponentially in agent count (p525).",
+      "assumptions": "A Nash equilibrium always exists for finite action spaces (Nash 1951), but computing one is PPAD-complete — a class distinct from NP-complete with no known polynomial-time algorithm. The book frames Nash finding as a nonlinear program (eq 24.5).",
+      "breakdown_regime": "Exact Nash computation is intractable in general; the book's practical alternatives are iterated best response (no convergence guarantee), fictitious play (no guarantee), hierarchical softmax (behavioral), and correlated equilibrium (LP, tractable but exponentially large joint space). Assuming a cheaply computable exact Nash is the failure mode.",
+      "domain": "cs",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p19",
+        "mapping": "The engine must not assume it can compute an exact game-theoretic equilibrium of coordinator interaction cheaply — it is PPAD-complete. The tractable substitutes are the ones GSE already uses: empirical-frequency best response (fictitious play), bounded-depth softmax (level-k), and correlated play-calling (correlated equilibrium LP). This complexity result is the formal reason the simulator approximates rather than solves for equilibrium.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Algorithms for Decision Making is the formal terminal node that the extracted era chain was groping toward a century earlier, and reading it retrocausally reorganizes everything the 1894-1925 coaches wrote in prose. The genealogy the book itself prints is the spine: von Neumann and Morgenstern 1944 (fn5 p134) give the utility axioms; Nash 1951 gives the equilibrium; Shapley 1953 gives stochastic games (p539); Kalman 1960 gives the filter; Astrom 1965 gives the belief-state MDP (p429); Thompson 1933 gives posterior sampling (p328); Brown 1951 gives fictitious play (p527); Stahl and Wilson 1994 give level-k (p526); Ng, Harada and Russell 1999 give reward-shaping invariance (p365); Watkins 1989 gives Q-learning; Hu and Wellman 2003 give Nash Q-learning (p548). Now run the chain backward. Reed 1913 (52b5d36325e11cd7) contains a source-stated matching-coins mixed-strategy endgame; that is precisely the rock-paper-scissors mixed Nash the book works out in example 24.3 (p521), where any deterministic strategy is countered and the uniform mixture is the equilibrium. Reed was computing a Nash fixed point in prose forty years before Nash. Rockne 1925 (32d8b2d0d4f7f22f) prints a thirty-game play-class table (p172); that table is exactly the fictitious-play count array N_i(j,a_j) of equation 24.9, and his game plan is the best response to those empirical frequencies. Rockne's mixed punt numbers {13,11,66,99,44} (pp208-209) are a mixed strategy over a covert signal alphabet, and the book's non-convergence theorem for fictitious play (p529, ex 24.6) explains why Rockne had to randomize: a pure tendency-follower is exploitable, so cycling is rational. Rockne's sifting-end duel, 'who will show first' (p143), is a level-k commitment game; his sacrifice plays (p237), correct while gaining almost nothing, are reward shaping that deliberately changes the optimal policy to buy a future externality, which equation 17.15 says is only safe if it is potential-based or explicitly declared policy-changing. The retrocausal claim is therefore precise: the 2022 formalism identifies what the era-chain prose was computing, and the era-chain prose is the empirical evidence that the formalism's behavioral assumptions (bounded k, frequency counting, mixed strategies) were already in use on the field before they were written down.\n\nThe recursive theory of mind in this book is not a metaphor; it is printed as a finite recursion with learnable parameters. The hierarchical softmax (sec 24.7, p526) defines a level-0 agent who plays uniformly, a level-1 agent who softmax-best-responds to level-0, and a level-k agent who softmax-best-responds to level-(k-1). That is exactly 'the offensive coordinator thinks the defensive coordinator thinks the offense will run,' truncated at a learned depth k rather than spun into an infinite regress or collapsed to a Nash fixed point. The quantal response (eq 24.4, p519) supplies the error model: agents make optimization errors more often when those errors are less costly, with precision lambda fit by maximum likelihood. The traveler's dilemma (fig 24.1, p528) is the empirical bound: humans claim $97-$100 where Nash says $2, so the depth that fits real players is small. Fictitious play (eq 24.9) is the opponent-modeling loop, and the Markov-game reduction (eqs 25.4-25.5, p541) is the license to fold a fixed opponent policy into the environment and solve a single-agent MDP. The GSE JEV snap-by-snap simulation is this entire stack instantiated: off_play_call is a level-k softmax response to a def_shell_call belief, the belief is a POMDP filter (eq 19.7) updated by pre-snap observations, the opponent tendency model is a fictitious-play count table, and the drive is the induced single-agent MDP. The book insists k and lambda be learned from joint-action data, never assumed; that is the discipline the engine must inherit.\n\nCross-layer veto adjudication is where the book earns its place beside the era chain, because it prints the exact shapes of every veto the GSE gate uses. Robust dynamic programming (eq 14.14, p311) is a max-min over a suite of transition and reward models: choose the action that maximizes utility under the model that minimizes it. That is the conjunction gate's conservatism written as a Bellman update, and it is the formal shape of a layer vetoing a call when the worst credible injury/roster/shell model makes it worse than the fallback. The remediation menu (p316) lists 'Do not deploy the system' as option 5 of 5: abstention is a first-class output of a rational pipeline, which is the PASS doctrine printed in an MIT Press textbook, a badge of honor rather than a missed bet. Reward-shaping invariance (eq 17.15, p365) is the RLVR reward audit: any auxiliary reward must be potential-based, gamma*beta(s')-beta(s), or it silently redefines the optimal policy, so a yardage bonus is a policy-changing shaping that must be declared, never smuggled. Importance sampling (eq 14.12, p309) carries the support condition (fn6) that the proposal must never zero out a trajectory the true model supports, which is the never-zero-probability rule for the 10,000-world PBP engine; particle deprivation and adaptive injection (eqs 19.27-19.29, p416, with printed alpha_fast=0.1, alpha_slow=0.001, nu=2) are the ensemble-collapse veto and its remedy; the zero-belief guard (algorithm 19.2, ex 19.9) resets to uniform when an observation has zero likelihood under every reachable state, the formal reason a shell read the model never anticipated must trigger a reset rather than a confident wrong call. The Bellman residual certificate (p164) bounds simulator error honestly, and the PPAD-completeness of Nash (p520) is the reason the engine approximates equilibrium with fictitious play, level-k, and correlated-equilibrium linear programs rather than pretending to solve it exactly. Every veto is a cross-layer constraint overriding a single-layer maximand, and every one is printed.",
+      "retrocausal_genealogy": "ADM 2022 is the formal endpoint of the extracted era chain. Its own citations supply the spine: vNM 1944 (p134), Nash 1951, Shapley 1953 stochastic games (p539), Kalman 1960, Astrom 1965 belief MDP (p429), Thompson 1933 (p328), Brown 1951 fictitious play (p527), Stahl-Wilson 1994 level-k (p526), Ng-Harada-Russell 1999 shaping (p365), Watkins 1989 Q-learning, Hu-Wellman 2003 Nash-Q (p548). Read backward: Reed 1913's matching-coins endgame is the RPS mixed Nash of example 24.3; Rockne 1925's thirty-game table (p172) is the fictitious-play count array N_i(j,a_j) (eq 24.9); his mixed punt numbers are a mixed strategy whose necessity the non-convergence theorem (p529) explains; his sifting-end 'who will show first' is a level-k commitment duel; his sacrifice plays are policy-changing reward shaping audited by eq 17.15. The 2022 formalism identifies what the 1894-1925 prose computed; the prose is field evidence that bounded-k, frequency-counting, mixed-strategy behavior predates its formalization.",
+      "theory_of_mind": "Recursive theory of mind is printed as a finite, learnable recursion: hierarchical softmax (p526) defines level-0 uniform, level-k softmax-best-response to level-(k-1), with depth k and precision lambda fit by MLE from joint actions. The quantal response (eq 24.4, p519) models errors as more likely when cheaper. The traveler's dilemma (fig 24.1, p528) bounds human depth: $97-100 chosen vs $2 Nash. Fictitious play (eq 24.9, p527) is empirical opponent modeling; the MG reduction (eqs 25.4-25.5, p541) folds fixed opponents into a single-agent MDP. The JEV snap stack instantiates all of it: off_play_call is level-k softmax over a POMDP shell belief (eq 19.7), opponents are count-table tendencies, the drive is the induced MDP. k and lambda must be learned, never assumed; Nash is the k->infinity fixed point and a poor behavioral predictor.",
+      "cross_layer_veto": "Printed cross-layer veto shapes: (1) robust DP max-min over a model suite (eq 14.14, p311) = worst-case adjudication across injury/roster/shell layers; (2) 'Do not deploy the system' (p316, option 5 of 5) = PASS as first-class output; (3) reward-shaping invariance iff potential-based (eq 17.15, p365) = RLVR reward audit, yardage bonuses are policy-changing and must be declared; (4) importance-sampling support condition (fn6 p309) = never zero a plausible trajectory; (5) particle deprivation + adaptive injection (eqs 19.27-19.29, p416; alpha_fast=0.1, alpha_slow=0.001, nu=2) = ensemble-collapse veto and re-diversification; (6) zero-belief guard (alg 19.2, ex 19.9) = reset to uniform on a zero-likelihood observation; (7) Bellman residual certificate (p164) = honest simulator error bound; (8) Nash PPAD-completeness (p520) = approximate, never claim exact equilibrium. Each is a cross-layer constraint overriding a single-layer maximand."
+    }
+  ],
+  "universal_lens": "Read through a polymath decision-theory lens, ADM 2022 is the unified formalism the foundry's separate strands converge on: utility theory (the pick layer), MDP/POMDP control (the drive and shell-belief layers), Bayesian filtering (the tracking layer), Monte Carlo rare-event estimation (the 10,000-world engine), robust minimax optimization (the veto gate), and behavioral game theory (the recursive theory-of-mind layer). It is the rare source that prints both the prescriptive optimum and the descriptive human deviation from it.",
+  "gsi_mapping": "The belief-update overconfidence guard (p405) and the covariance-floor remedy (ex 19.3) map to stress-modulated execution fidelity: an overconfident physiological state estimate is brittle under new evidence. The quantal error-cost principle (p519) maps to arousal-dependent decision precision. Particle deprivation (p412) is a model for ensemble collapse in any sampled physiological simulator. No clinical telemetry exists in this methods text; all bindings are labeled derived and LATENT_UNIDENTIFIABLE until measured.",
+  "gse_mapping": "MEU (eq 6.8) is off_play_call selection; VOI (eq 6.9) is pre-snap motion / challenge valuation; finite-horizon time-dependence (p157) is clock-aware risk posture; the Bellman residual (p164) is the JEV simulator convergence certificate; certainty equivalence (p172/p441) licenses mean-planning only in the linear-Gaussian regime; reward-shaping invariance (eq 17.15) is the RLVR reward audit gate; importance sampling (eq 14.12) resolves rare-event tails in the PBP engine; robust DP (eq 14.14) is the conjunction gate's max-min; do-not-deploy (p316) is PASS; the POMDP belief filter (eq 19.7) is the two-high shell read; alpha vectors (eq 20.12) are conditional game plans; level-k softmax (p526) is recursive theory of mind; fictitious play (eq 24.9) is tendency scouting; the MG reduction (eqs 25.4-25.5) licenses the single-team drive sim. No odds, no publication from this lane."
+}
