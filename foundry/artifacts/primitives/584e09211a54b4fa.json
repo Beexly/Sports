@@ -1,0 +1,165 @@
+{
+  "book_id": "584e09211a54b4fa",
+  "source_status": "COMPLETE",
+  "pages_total": 297,
+  "pages_read": 297,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Expected Points Added (EPA) as the before/after expected-points difference",
+      "verbatim_quote": "Expected Points Added is a measure of how well a team/player performed on a single play against relative expectations. At its core, EPA is the difference in expected points before and after each play.",
+      "page": 290,
+      "latex": "\\mathrm{EPA} = \\mathrm{EP}_{\\mathrm{after}} - \\mathrm{EP}_{\\mathrm{before}}",
+      "symbol_and_unit_ledger": "EPA: expected points added on a single play, in points (pt). EP_before: expected points of the pre-play situation (down, distance, field position), in points. EP_after: expected points of the post-play situation, in points. The difference is in points and can be positive or negative. The review prints the definition in prose ('the difference in expected points before and after each play', p. 290) and a worked example '0.8 - 0.5 = 0.3 points'; the LaTeX formalizes that printed definition. EP itself is a historical-data estimate of average points scored from a situation, so EPA inherits the units of points.",
+      "assumptions": "As printed: EPA is the difference in expected points before and after each play; EP is estimated from historical data conditional on down, distance, and field position. Implicit: the EP model is a well-calibrated value function over game states; the same EP model evaluates both sides of the difference; contextual factors (down, distance, position) fully capture the situation.",
+      "breakdown_regime": "EPA is only as good as the underlying EP model: a mis-calibrated or era-mismatched EP model biases every play's value. Garbage-time states (win probability near 0 or 1) distort behavior and thus EP (the book's 5-95% wp filter, p. 99). EPA is a per-play marginal value, not a guarantee of scoring; rare high-leverage plays dominate aggregates. Special-teams/no-play rows must be excluded (p. 291).",
+      "domain": "football",
+      "timescales": [
+        "tau_0: single play (~5-10 s)",
+        "tau_1: drive (sequence of plays)",
+        "tau_2: game (win probability)",
+        "tau_3: season (EPA/play aggregates)"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to the per-play reward signal of the 22-player Markov decision process: the game state s = (down, distance, field position, score, time) has value EP(s), and a play transitions s -> s' with reward EPA = EP(s') - EP(s). The Coach-Mind play-call policy maximizes expected cumulative EPA (equivalently expected points / win probability). This is the football-native valuation kernel; the imported invariant is the value-difference structure, mapped explicitly onto drive transitions and lineup decisions.",
+        "source_operator": "p1",
+        "telemetry": "nflfastR ep and epa per play, down, ydstogo, yardline_100, play_type; calibrate the EP value function on historical play-by-play; aggregate passing_epa/rushing_epa/receiving_epa per player (load_player_stats)."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Success rate: from yardage-fraction thresholds to the EPA>0 indicator",
+      "verbatim_quote": "Prior to the formulation of EP and EPA, success rate was calculated based on the percentage of yardage gained on a play (40% of the necessary yards on 1st down, 60% on 2nd down, and 100% of the yards needed for a 1st down on both 3rd and 4th downs). However, modern success rate is determined simply by whether or not the specific play had an EPA greater than 0.",
+      "page": 294,
+      "latex": "\\mathrm{Success} = \\mathbb{1}[\\mathrm{EPA} > 0]",
+      "symbol_and_unit_ledger": "Success: dimensionless binary indicator (1 if the play is successful, else 0). EPA: expected points added in points (p1); the indicator tests its sign. Historical (pre-EP) definition printed on p. 294: success = gaining >= 40% of needed yards on 1st down, >= 60% on 2nd down, >= 100% on 3rd/4th down (a dimensionless yardage fraction per down). Modern definition: EPA > 0. The LaTeX formalizes the printed modern rule; success rate is the mean of this indicator over plays (dimensionless fraction in [0,1]).",
+      "assumptions": "As printed: modern success rate is whether a play had EPA greater than 0; historically it was a down-dependent yardage fraction (40/60/100%). Implicit: EPA>0 is a valid proxy for a 'successful' play; the indicator is averaged over a sufficiently large, filtered sample (official plays, non-missing down).",
+      "breakdown_regime": "The yardage-fraction and EPA definitions disagree on plays that gain yards but lose expected points (e.g., a short gain on 3rd-and-long), so the choice of definition changes rankings. Small samples inflate individual success rates to 1.0 (the book's 200-attempt minimum, p. 58). Success rate measures consistency, not explosiveness or magnitude; a team can be high-success but low-EPA/play.",
+      "domain": "football",
+      "timescales": [
+        "tau_0: single play success indicator",
+        "tau_1: per-down conversion gate",
+        "tau_2: drive consistency",
+        "tau_3: season run/pass success profile"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a per-down conversion gate in the drive Markov chain: success rate is the empirical probability of a positive-value transition, a binary consistency operator over the same EPA reward kernel (p1). The historical-to-modern shift (yardage fraction -> EPA>0) is isomorphic to replacing a hand-tuned proxy threshold with a value-function-derived reward sign. In the simulator it gates whether a play-call 'advances' the drive state, separating consistent methodical drives from boom-or-bust ones.",
+        "source_operator": "p2",
+        "telemetry": "nflfastR success flag per play, play_type, down; team and player success_rate = mean(success) with minimum-attempt filters; compare run vs pass success profiles."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Completion Percentage Over Expected (CPOE) as a situation-conditioned accuracy residual",
+      "verbatim_quote": "A pre-calculated metric based on historical attempts in similar situations, CPOE take into account multiple variables, including: field position, down, yards to go, total air yards, etc.",
+      "page": 288,
+      "latex": "\\mathrm{CPOE} = \\mathrm{Comp\\%}_{\\mathrm{actual}} - \\mathrm{Comp\\%}_{\\mathrm{expected}}",
+      "symbol_and_unit_ledger": "CPOE: completion percentage over expected, in percentage points (pp). Comp%_actual: the quarterback's observed completion percentage (dimensionless fraction expressed as %). Comp%_expected: the completion percentage expected from historical attempts in similar situations (field position, down, yards to go, total air yards), in %. The difference is in percentage points and can be negative. The review defines CPOE in prose as a pre-calculated metric over expected completion in similar situations (p. 288, Ben Baldwin's nflfastR CP model); the LaTeX formalizes the 'over expected' residual. The Sam Bradford example (71.6% completion but 6.4 yards/attempt, p. 288) motivates the context adjustment.",
+      "assumptions": "As printed: CPOE is based on historical attempts in similar situations and accounts for field position, down, yards to go, total air yards. Implicit: the expected-completion (CP) model is calibrated; air yards and situation capture attempt difficulty; a minimum-attempt filter stabilizes the mean (300 attempts, p. 288).",
+      "breakdown_regime": "Raw completion percentage is misleading without difficulty context (the Bradford paradox): a high completion% on short throws can mask low skill. CPOE inherits CP-model bias and is unstable at low attempt counts. Binning air yards (Negative/Short/Medium/Deep, p. 61) changes the residual; 'pure passing' situations (>=70% pass probability, p. 198) are a further selection filter.",
+      "domain": "football",
+      "timescales": [
+        "tau_0: single attempt completion residual",
+        "tau_1: per-air-yard-bin accuracy",
+        "tau_2: game passing efficiency",
+        "tau_3: season CPOE leaderboard"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to a quarterback skill/accuracy state in the 22-player system: CPOE is the residual of actual over situation-expected completion, separating decision/execution quality from attempt difficulty. In the deception engine it conditions the receiver-separation and throw-quality channels: a QB with high CPOE on deep air yards sustains explosive-play probability, while a high-raw-completion% low-CPOE QB is a dink-and-dunk profile whose drive EPA (p1) caps out. Imported residual structure mapped onto QB evaluation and DFS exposure.",
+        "source_operator": "p3",
+        "telemetry": "nflfastR cpoe and cp per attempt, air_yards, down, ydstogo, yardline_100; mean_cpoe with >=300-attempt filter; air-yard bins and pure-passing (xPass>=70%) selection."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Logistic (binary) regression link: linear predictor mapped to a probability",
+      "verbatim_quote": "Moreover, a logistic regression model does not model the relationship between the predictors and the response variables in a linear fashion.",
+      "page": 234,
+      "latex": "P(Y=1|X) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1X_1 + \\beta_2X_2 + ... + \\beta_nX_n)}}",
+      "symbol_and_unit_ledger": "P(Y=1|X): probability of the binary event Y=1 given predictors X, dimensionless in [0,1]. beta_0: intercept; beta_1..beta_n: coefficients; X_1..X_n: predictor variables (the linear combination beta_0 + beta_1 X_1 + ... + beta_n X_n is the dimensionless log-odds). e: Euler's constant 2.71828 (printed p. 234). The numerator 1 keeps the probability in [0,1]; the denominator 1 + e^{-(...)} is >= 1. This is the EXACT equation printed on p. 234. Units: coefficients carry inverse units of their predictors so the exponent is dimensionless; the output is a pure probability.",
+      "assumptions": "As printed: the response is categorical/binary (yes/no); the model maps predictors to a value between 0 and 1 via the logistic function rather than a linear relationship. Implicit (stated for the multinomial case, p. 243, and standard): independent observations, no multicollinearity among predictors, correct logit link.",
+      "breakdown_regime": "Perfect separation drives fitted probabilities numerically to 0 or 1 (the glm.fit warning, p. 238), typical of rare events (one MVP per season). Under class imbalance, accuracy is misleading (p. 239). Coefficient signs can flip due to correlated predictors or non-linearity (the cmp_rank anomaly, p. 242). The link saturates: extreme linear predictors give probabilities indistinguishable from 0/1.",
+      "domain": "math",
+      "timescales": [
+        "tau_0: single-event probability (win/convert/MVP)",
+        "tau_1: per-play binary outcome",
+        "tau_2: game win probability",
+        "tau_3: season award/rare-event prediction"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to every belief-to-probability operator in the 22-player system: the logistic link maps a linear combination of game-state features to a win probability, third-down conversion probability, or pass-completion probability. It is the same sigmoid structure as the Coach-Mind mapping from a recursive belief state to a action-confidence. The invariant (a linear log-odds core wrapped by a saturating link) is imported mathematics; Layer-2 is its explicit instantiation as the win-probability and conversion operators, with no fabricated football origin for the logistic function itself.",
+        "source_operator": "p4",
+        "telemetry": "glm(family=binomial) coefficients on features (points scored/allowed, home-field, EPA ranks); predicted type='response' probabilities; confusion-matrix precision/recall/F1 for rare events."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Multinomial logit play-call policy over run/pass categories",
+      "verbatim_quote": "The construction of a multinomial regression will allow us to find the probability of each play type based on factors in the game. Such a model speaks directly to coach play-calling tendencies given the situation.",
+      "page": 243,
+      "latex": "\\log \\left( \\frac{P(Y = k)}{P(Y = K)} \\right) = \\beta_{k0} + \\beta_{k1} X_1 + \\beta_{k2} X_2 + \\ldots + \\beta_{kp} X_p",
+      "symbol_and_unit_ledger": "P(Y=k): probability of play-call category k; P(Y=K): probability of the reference category K (the book uses five categories: run inside, run outside, short pass, medium pass, long pass; p. 243). The log ratio log(P(Y=k)/P(Y=K)) is the dimensionless log-odds of category k vs the reference. beta_k0: category-specific intercept; beta_k1..beta_kp: category-specific coefficients; X_1..X_p: predictors (down, distance, score differential, time, shotgun, previous play, etc.). K: number of categories. A softmax (p. 242) normalizes the probabilities to sum to 1. This is the EXACT equation printed on p. 243. Coefficients carry inverse predictor units so each linear combination is dimensionless.",
+      "assumptions": "As printed (p. 242-243): the dependent variable is categorical with multiple unordered categories; predictors may be continuous or categorical; no multicollinearity; independent observations; softmax ensures probabilities total 1. The model estimates coach play-calling tendencies given the situation.",
+      "breakdown_regime": "The reference-category choice (K) changes coefficient interpretation; probabilities are relative, not absolute. Multicollinearity among game-state features destabilizes coefficients. The policy is descriptive of historical tendencies, not optimal play-calling; a coach deviating from tendency (a trap) is exactly the out-of-distribution event the model cannot predict. Era changes (air_yards only available from 2006, p. 244) limit the training window.",
+      "domain": "football",
+      "timescales": [
+        "tau_0: single play-call categorical choice",
+        "tau_1: drive sequence (previous_play feature)",
+        "tau_2: game situational tendency",
+        "tau_3: season coach policy profile"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to the coach's play-call policy pi(action | state) in the 22-player system: the multinomial logit is the conditional distribution over {run inside, run outside, short/medium/long pass} given down, distance, score, time, and previous play. The deception engine models the defense's estimate of this policy and the recursive clash between a comfort call (high-probability tendency) and a tendency trap (deliberate deviation). This is the football-native policy kernel; the imported invariant is the multinomial-logit/softmax structure mapped explicitly onto play-calling and counter-strategy.",
+        "source_operator": "p5",
+        "telemetry": "tidymodels multinomial regression on play_type categories with features down, ydstogo, yardline_100, score_differential, wp, shotgun, no_huddle, timeouts, previous_play, in_red_zone, in_fg_range, two_min_drill; predicted category probabilities per situation."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Rare-event class-imbalance accuracy paradox and the F1 harmonic mean",
+      "verbatim_quote": "Because of this, a model could always predict “not MVP” and, as a result, also have an accuracy of 97%.",
+      "page": 239,
+      "latex": "F_1 = 2\\,\\frac{\\mathrm{precision}\\cdot\\mathrm{recall}}{\\mathrm{precision}+\\mathrm{recall}}",
+      "symbol_and_unit_ledger": "precision (Positive Predictive Value): true positives / all positive predictions, dimensionless in [0,1] (p. 240). recall (Sensitivity / True Positive Rate): true positives / all actual positives, dimensionless in [0,1]. F1: harmonic mean of precision and recall, dimensionless in [0,1]. The review prints the formula as R code 'f1 <- 2 * (precision * recall) / (precision + recall)' (p. 240) and defines F1 as the harmonic mean; the LaTeX restates it. The accuracy paradox (p. 239): with ~3% MVP base rate, always predicting 'not MVP' yields ~97% accuracy, so accuracy alone is uninformative for rare events.",
+      "assumptions": "As printed: accuracy can be trivially high under class imbalance (97% by predicting the majority class); precision, recall, and F1 give per-class granularity. Implicit: a fixed 0.5 probability cutoff for binary classification (p. 239); the confusion matrix is computed on a withheld test set; positive class is the rare event of interest.",
+      "breakdown_regime": "F1 is undefined when precision+recall=0 (no true positives and no positive predictions). The 0.5 cutoff is arbitrary and wrong for rare events where the optimal threshold is far below 0.5. F1 ignores true negatives, so it can look healthy while the model still misses the rare positive class; precision/recall trade off and a single F1 hides which failure mode dominates.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: single classification decision",
+        "tau_1: per-season rare-event (MVP/injury/turnover) prediction",
+        "tau_2: model evaluation on withheld test set",
+        "tau_3: cross-season model selection"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to every rare-event prediction task in the GSE/GSI program: injury occurrence, turnover, explosive play, and DFS tail-risk outcomes are all low-base-rate positives where raw accuracy is a trap. The invariant (evaluate with precision/recall/F1, not accuracy, and tune the decision threshold to the base rate) governs the injury-availability kernel and the DFS portfolio tail-risk gate. Imported evaluation mathematics mapped explicitly onto rare football events; no football origin claimed for the F1 metric.",
+        "source_operator": "p6",
+        "telemetry": "caret confusionMatrix on withheld test predictions; precision (Pos Pred Value), recall (Sensitivity), F1; base-rate-aware threshold instead of 0.5; class-stratified train/test splits (rsample strata)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "The valuation spine of this book is Expected Points Added, and reading it bidirectionally turns a tutorial into a control kernel. Forward direction: every game state s = (down, distance, field position) carries a value EP(s) estimated from historical data, and a play produces reward EPA = EP(s') - EP(s) (584e09211a54b4fa:p1, p. 290), with the worked example 0.8 - 0.5 = 0.3 points. Success rate collapses this continuous reward to a binary consistency gate, EPA > 0 (584e09211a54b4fa:p2, p. 294), and CPOE isolates the quarterback's accuracy residual after conditioning on attempt difficulty (584e09211a54b4fa:p3, p. 288). Together these three operators form the per-play reward, the per-down conversion gate, and the per-attempt skill residual of the 22-player Markov decision process. The play-call policy maximizes expected cumulative EPA, which is why the book's multinomial model speaks directly to coach tendencies. Retrocausal direction: the EP value function is itself a fossil of historical outcomes, so every EPA reading inherits the era and calibration of the data that trained it. Run backward from a single play's EPA and you reach a hidden state written by thousands of prior plays; the Sam Bradford paradox (71.6% completion at 6.4 yards per attempt, p. 288) shows that a surface statistic can be the scar of a conservative throw distribution rather than evidence of skill. The garbage-time filter is the same retrocausal caution made operational: the book restricts win probability to 5-95% (p. 99) because outside that band teams change behavior, so plays there are generated by a different policy and must not be pooled into the same value estimate. Ben Baldwin's caution that the Vegas win-probability model incorporates market lines and can exceed 85% early in games means the very state variable used for filtering is model-dependent. The cross-layer veto is that a high raw completion percentage or a benign success rate cannot authorize a high-EV passing call when CPOE is negative on deep air yards or when the win-probability state is in the garbage band: the difficulty-conditioned residual and the behavior-regime gate override the surface metric. The derived kernel therefore carries EP as a value function, EPA as reward, success as a binary gate, and CPOE as a skill residual, and it refuses to evaluate plays outside the calibrated win-probability band. No football origin is fabricated for the value-difference structure; it is imported as the valuation invariant and mapped explicitly onto drive transitions, QB evaluation, and DFS exposure, calibrated by the nflfastR telemetry named in each primitive. Every quantity is dimensionally homogeneous: EPA and EP carry points, success and CPOE are dimensionless fractions and percentage points respectively, and the win-probability filter is a pure probability, so no heuristic shortcut enters the valuation kernel. The minimum-attempt guards (200 rushes, 300 pass attempts) are the small-sample veto that keeps a 100% success rate on ten carries from masquerading as skill.",
+      "retrocausal_genealogy": "Every EPA value is a fossil of the historical outcomes that trained the EP model, so the hidden state behind a single play's value was written by thousands of prior plays (584e09211a54b4fa:p1, p. 290). The Sam Bradford record, 71.6% completion at only 6.4 yards per attempt (p3, p. 288), is the scar of a conservative throw distribution masquerading as skill. The garbage-time band is the same caution operationalized: outside 5-95% win probability teams change behavior (p. 99), so those plays descend from a different policy and must not be pooled into one value estimate.",
+      "theory_of_mind": "The coach, the quarterback, and the analyst each model the others' incentives. The coach calls a high-probability comfort play to protect a lead; the quarterback inflates completion percentage on short throws to look efficient; the analyst suspects both and conditions on difficulty via CPOE and on regime via the win-probability filter (584e09211a54b4fa:p3, p. 288; p. 99). The recursive clash is that the defense reads the same tendency model the offense uses, so a comfort call is exactly what a prepared defense expects. The kernel must weight the difficulty-conditioned residual above the manipulable surface statistic.",
+      "cross_layer_veto": "A high raw completion percentage or a benign success rate cannot authorize a high-EV deep passing call when CPOE is negative on deep air yards (584e09211a54b4fa:p3, p. 288) or when the win-probability state sits in the garbage band where behavior changes (p. 99). The difficulty-conditioned residual and the behavior-regime gate override the surface metric. The veto is asymmetric: a clean CPOE does not license a call in a garbage-time state, because the EP value function is not calibrated for that regime. Both gates must pass."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The modeling chapter supplies the policy and evaluation machinery, and its deepest invariant is that probability and accuracy are not the same thing. Forward direction: the logistic link maps a linear combination of game-state features to a binary-event probability (584e09211a54b4fa:p4, p. 234), and the multinomial logit generalizes this to a full play-call policy over run inside, run outside, and short, medium, and long pass, normalized by softmax (584e09211a54b4fa:p5, pp. 242-243). This is precisely the coach's conditional tendency distribution pi(action | state), the object the deception engine must estimate and exploit. The book states the model speaks directly to coach play-calling tendencies given the situation, and the previous_play feature makes the policy recursive: the next call depends on the last call, which is the same recursive belief structure as a tendency trap. Retrocausal direction: a fitted coefficient is a scar of the training distribution, and the book's MVP example exposes how that scar can mislead. The glm.fit warning that fitted probabilities are numerically 0 or 1 (p. 238) is the signature of perfect separation in a rare-event problem, only one MVP per season. The model reports 98% accuracy, yet because roughly 3% of quarterbacks win MVP, a model that always predicts not-MVP also reaches 97% (584e09211a54b4fa:p6, p. 239). The high accuracy is therefore not evidence of skill but a base-rate artifact, and the honest evaluation moves to precision, recall, and the F1 harmonic mean (p. 240). The cmp_rank coefficient with the wrong sign (p. 242) is another scar, likely a correlated predictor or non-linearity, warning that a single coefficient cannot be read causally. Cross-layer veto: the rare-event structure vetoes any high-EV call that relies on raw accuracy. Injury prediction, turnover prediction, and DFS tail-risk are all low-base-rate positives, so a model that looks accurate can be worthless on the positive class that actually matters; the F1 and a base-rate-aware threshold override the accuracy headline. The isomorphic transfer is that the multinomial logit is the football-native play-call policy kernel, the logistic link is the win-probability and conversion operator, and the imbalance invariant governs every rare-event gate in the simulator. No football origin is fabricated for the logistic function, the softmax, or the F1 metric; they are imported mathematics and evaluation theory, and Layer-2 is their explicit mapping onto play-calling, counter-strategy, and rare-event availability, calibrated by the tidymodels and caret telemetry named in each primitive. The softmax normalization is what turns the per-category log-odds into a proper probability distribution summing to one, and the ordinal-regression injury-severity example (mild, moderate, severe, season-ending, p. 235) is the explicit bridge from these football operators to ordered clinical outcomes, where the same link and the same rare-event evaluation discipline apply.",
+      "retrocausal_genealogy": "A fitted coefficient is a scar of its training distribution, and the MVP model shows how that scar misleads (584e09211a54b4fa:p4, p. 234). The glm.fit warning of probabilities numerically 0 or 1 (p. 238) is the signature of perfect separation in a rare event, one MVP per season. The 98% accuracy is a base-rate artifact, since always predicting not-MVP also reaches 97% (p6, p. 239). The wrong-sign cmp_rank coefficient (p. 242) is a further scar of correlation or non-linearity, warning that no single coefficient reads causally.",
+      "theory_of_mind": "The offense and defense estimate the same tendency model. The multinomial logit is the coach's conditional play-call distribution, and the previous_play feature makes it recursive (584e09211a54b4fa:p5, p. 243). A comfort call is high-probability precisely because it is the tendency a prepared defense expects; a trap is a deliberate deviation the fitted policy cannot predict. The recursive clash is that each side models the other's model of the tendency, so the exploitable edge lives in the out-of-distribution deviation, not in the modal call.",
+      "cross_layer_veto": "The rare-event structure vetoes any high-EV decision that trusts raw accuracy. Injury, turnover, and DFS tail-risk outcomes are low-base-rate positives, so a model with high accuracy can be worthless on the positive class that matters (584e09211a54b4fa:p6, p. 239). Precision, recall, and the F1 harmonic mean (p. 240), with a base-rate-aware threshold instead of 0.5, override the accuracy headline. The veto is asymmetric: a healthy F1 does not license ignoring the base rate, because the decision threshold must still match the rarity of the event."
+    }
+  ],
+  "universal_lens": "A polymath audit lens: a surface statistic is a scar of the distribution that generated it, and a probability is not an accuracy. This book supplies three transferable invariants, a value-difference reward (EPA), a saturating belief-to-probability link (logistic/multinomial logit), and a rare-event evaluation rule (F1 over accuracy). The auditor's question across domains is always: which hidden value function or base rate is being ignored, which coefficient is a correlation scar, and where does the saturating link or the imbalance trap make a confident number meaningless?",
+  "gsi_mapping": "For GSI's bioenergetics and clinical-telemetry program the transfer is methodological: the logistic and multinomial-logit links (584e09211a54b4fa:p4, p. 234; p5, p. 243) are the operators that map physiological feature vectors to categorical clinical outcomes (injury severity mild/moderate/severe/season-ending, p. 235), and the rare-event F1 invariant (p6, p. 239) governs evaluation of low-base-rate clinical events. The ordinal-regression injury-severity example is the explicit bridge from football analytics to clinical outcome modeling.",
+  "gse_mapping": "For GSE's Coach-Mind simulator and deception/DFS tail-risk: EPA is the per-play reward and EP the value function (584e09211a54b4fa:p1, p. 290); the multinomial logit is the coach play-call policy pi(action|state) that the deception engine estimates and exploits via comfort-call versus tendency-trap clashes (p5, p. 243); CPOE conditions QB skill on difficulty (p3, p. 288). The rare-event F1 gate (p6, p. 239) governs injury-availability and DFS portfolio tail-risk, never sportsbook odds."
+}

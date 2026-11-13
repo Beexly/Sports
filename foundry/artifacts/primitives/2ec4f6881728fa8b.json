@@ -1,0 +1,165 @@
+{
+ "book_id": "2ec4f6881728fa8b",
+ "source_status": "COMPLETE",
+ "pages_total": 67,
+ "pages_read": 67,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Model as reversible access to MDP dynamics (survey definition)",
+   "verbatim_quote": "A model is a form of reversible access to the MDP dynamics (known or learned).",
+   "page": 4,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "MDP formalization {S, A, T, R, p(s0), gamma} as printed in Sec. 2 (p.3-4): transition function T : S x A -> p(S), reward R : S x A x S -> R, discount gamma in [0,1]. The definition presumes the dynamics can be queried repeatedly at any preferred state-action pair in any preferred order (reversibility), whether the model is known (given rules) or learned from data.",
+   "breakdown_regime": "Reversibility fails for the real environment itself: the survey states model-free RL has irreversible access, so the definition does not apply to live interaction. A learned model's reversible access is only trustworthy near observed data; Sec. 4.6 shows multi-step rollouts accumulate error and diverge from true dynamics, and Sec. 4.5 shows non-stationarity invalidates a previously learned model.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one irreversible real-environment step",
+    "tau_1: one reversible model query at a chosen (s,a)",
+    "tau_2: one planning cycle between real steps",
+    "tau_3: model lifetime before re-identification under non-stationarity"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthesis mapping, not a source claim: the Coach-Mind film-room simulator is exactly 'reversible access to the MDP dynamics' — a coach may re-run the same down-and-distance from any alignment in any order, while the live snap is the irreversible step. The 22-player system is the MDP state space (player positions, velocities, ball state); the learned dynamics model is the coaching staff's tendency model of how a play develops. The survey's Table 1 distinction (model +/- global solution) classifies coaching architectures: pure game-planning (local solution, discarded after the drive) vs a season-long installed playbook (global policy).",
+    "source_operator": "p1",
+    "telemetry": "Planning budget per real step (number of simulated rollouts per live snap, cf. Dyna 100 vs AlphaGo Zero ~320000 model calls, p.20); film-study hours vs practice reps; fraction of simulated branches that stay inside charted (data-close) regions."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Bellman equation for the action-value function (Eq. 2)",
+   "verbatim_quote": "This equation can be written in a recursive form, better known as the Bellman equation:",
+   "page": 4,
+   "latex": "Q^{\\pi}(s,a) = \\mathbb{E}_{s' \\sim T(\\cdot|s,a)}\\left[ R(s,a,s') + \\gamma\\, \\mathbb{E}_{a' \\sim \\pi(\\cdot|s')}\\left[ Q^{\\pi}(s',a') \\right] \\right] \\tag{2}",
+   "symbol_and_unit_ledger": "s, s' in S: states (dimensionless indices of the state space); a, a' in A: actions (dimensionless); T(.|s,a): transition probability measure over S (probability, dimensionless, sums to 1); R(s,a,s'): scalar reward (utility units, dimensionless scalar); gamma in [0,1]: discount factor (dimensionless); pi(.|s'): policy probability measure over A (probability, dimensionless); Q^pi(s,a): expected discounted return (same utility units as R); E: expectation under the indicated probability measure. Dimensional homogeneity: both sides are utility units; gamma^k weighting is dimensionless.",
+   "assumptions": "Markov property (next state depends only on current state-action), stationary T and R, policy pi fixed during evaluation, discount gamma in [0,1], finite K or infinite-horizon return J_t = sum_{k=0}^{K} gamma^k r_{t+k} as defined on p.4. Expectations are over both the policy and the transition dynamics (E_{pi,T} in Eq. 1).",
+   "breakdown_regime": "Fails under partial observability (Sec. 4.4: current observation lacks ground-truth state information, requiring belief states/windowing/recurrency), non-stationarity (Sec. 4.5: T or R change over time), and learned-model bias: Sec. 4.6 shows feeding one-step predictions back compounds error so multi-step rollouts diverge. With function approximation the fixed point need not exist or be stable (survey notes model-free RL instability under function approximation, p.41).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one transition (s,a) -> s'",
+    "tau_1: one Bellman backup",
+    "tau_2: finite trace horizon K",
+    "tau_3: infinite-horizon discount scale 1/(1-gamma)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthesis mapping: the recursion is the value-backup kernel for play-call evaluation in the 22-player system. Q(play call, game state) = expected immediate outcome utility of the snap + gamma times the continuation value of the resulting down-distance-field-position state under the staff's policy. The kernel binds to the transition kernel T(next game state | call, current state) estimated from charted snaps; it is a derived evaluation operator, not a claim that football obeys Bellman's equation physically.",
+    "source_operator": "p2",
+    "telemetry": "Charted per-snap outcomes (yards gained, turnover, score) as the reward channel; down-distance transitions as s'; held-out drive sequences to calibrate gamma and the continuation estimate; model prediction error on unseen alignments flags where the backup leaves the data-close region."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Tabular maximum-likelihood transition estimator (Eq. 4)",
+   "verbatim_quote": "a tabular maximum likelihood model (Sutton, 1991) estimates the probability of each possible transition as",
+   "page": 7,
+   "latex": "\\hat{T}(s'|s,a) = \\frac{n(s,a,s')}{\\sum_{s'} n(s,a,s')} \\tag{4}",
+   "symbol_and_unit_ledger": "T-hat(s'|s,a): estimated transition probability (probability, dimensionless; the printed estimator carries an accent mark that text extraction renders as plain T — the source says 'T denotes the approximation of the true dynamics T'); T: true dynamics (probability measure); n(s,a,s'): count of observed transitions s->s' under action a (integer count, dimensionless); sum over s' of n(s,a,s'): total visits to (s,a) (integer count). Ratio of counts is a probability, dimensionless; rows sum to 1 wherever the denominator is positive.",
+   "assumptions": "Discrete (or discretized) MDP; transitions are i.i.d. samples from a stationary T during the counting window; maximum-likelihood estimation by normalizing observed transition counts (p.7). Tabular representation maintains a separate entry for every possible transition.",
+   "breakdown_regime": "Zero-count singularity: for an unvisited (s,a) the denominator is 0 and the estimator is undefined (no probability mass can be assigned). Curse of dimensionality: p.8 states the table size scales exponentially in the dimensionality of S, so the estimator does not scale to high-dimensional problems. Non-stationarity (Sec. 4.5) invalidates pooled counts when the true dynamics change; Fig. 6 shows a network fit to mixed-regime data fails to adapt.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one observed transition (count increment)",
+    "tau_1: one normalization sweep over counts",
+    "tau_2: data-collection window assuming stationarity",
+    "tau_3: regime lifetime before counts become stale"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthesis mapping: this is precisely the defensive coordinator's tendency estimator built from charted plays — T(next front/coverage | offensive formation, down, distance) = normalized counts of what was previously seen in that cell. The 22-player state is discretized into formation/down/distance cells; the offense's learned model of the defense is the same count-normalization operator. The zero-count singularity is the 'never-seen-this-alignment' problem that forces smoothing or abstraction.",
+    "source_operator": "p3",
+    "telemetry": "Charted play counts per (formation, down-distance) cell; number of zero-count cells encountered per game; count-weighted prediction error on next-front prediction; regime-switch detection via prediction-error spikes (cf. Da Silva et al. 2006 cited on p.12)."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Regret definition (Eq. 8) and minimax lower bound (Table 7)",
+   "verbatim_quote": "The regret measures the average total loss of reward of the learned policy compared to the optimal policy. The regret at timestep T is therefore deﬁned as",
+   "page": 44,
+   "latex": "\\mathrm{Regret}(T) = \\mathbb{E}_{\\pi^\\star}\\left[\\sum_{t=1}^{T} r_t\\right] - \\mathbb{E}_{\\pi}\\left[\\sum_{t=1}^{T} r_t\\right] \\tag{8}",
+   "symbol_and_unit_ledger": "T: total number of samples/timesteps (integer count, dimensionless); r_t: scalar reward at timestep t (utility units); pi-star: optimal policy (probability measure over actions); pi: the changing policy of the learning algorithm; E: expectation over trajectories induced by the indicated policy and the MDP dynamics; Regret(T): cumulative expected reward loss (utility units, same as r_t). Table 7 bounds use H: MDP horizon (timestep count), |S|, |A|: state/action space cardinalities (counts); the stated lower bound is Omega(sqrt(H|S||A|T)) (Jaksch et al. 2010; Osband and Van Roy 2016), and UCBVI achieves O-tilde(sqrt(H|S||A|T) + H sqrt(T)) — all dimensionless sample-complexity quantities multiplying utility-scale regret.",
+   "assumptions": "Finite tabular MDP with horizon H; worst-case (minimax) regret over the learning trajectory; the comparison policy pi-star is optimal for the true MDP. Table 7 bounds assume full planning (p.44-45); EULER additionally assumes bounds on the variance of the optimal value function. Bayesian PSRL variants use a less strict Bayesian regret formulation.",
+   "breakdown_regime": "The minimax lower bound Omega(sqrt(H|S||A|T)) is an irreducible exploration cost: no algorithm can beat it in worst case, so 'zero-regret learning' claims violate the bound. Bounds assume full planning and tabular finite S, A; they do not transfer unchanged to function approximation or continuous state spaces. Efroni et al. (2019b) shows one-step greedy planning can match UCRL2/EULER regret with lower time/space complexity — the full-planning assumption is sufficient, not necessary.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one timestep reward r_t",
+    "tau_1: one episode of horizon H",
+    "tau_2: learning horizon T (total samples)",
+    "tau_3: asymptotic large-T regime where bounds are stated"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthesis mapping: season-long decision-loss accounting for the coaching policy. Regret(T) = expected cumulative outcome utility of the hindsight-optimal play-call sequence minus that of the actual calls over T snaps. The sqrt(H|S||A|T) lower bound is the structural veto against claims that a staff can 'solve' a season with no exploration cost: novel formations and uncharted alignments must be sampled, and the bound quantifies the minimum price. It binds to the portfolio of play calls as a derived accounting kernel, not a physical law of football.",
+    "source_operator": "p4",
+    "telemetry": "Per-snap outcome utility vs a hindsight-optimal baseline computed on held-out games (internal only, no sportsbook odds); cumulative regret curve over the season; exploration rate on zero-count cells; variance of the value estimate used to gate planning depth (cf. STEVE, p.24)."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Task-conflated intrinsic/extrinsic reward mixture (Eq. 5)",
+   "verbatim_quote": "Writing ri(s) or ri(s, a, s′) for speciﬁc intrinsic reward of a certain state or transition, these methods use a total reward that combines the intrinsic and extrinsic part:",
+   "page": 39,
+   "latex": "r_t(s,a,s') = r_e(s,a,s') + \\eta \\cdot r_i(s,a,s') \\tag{5}",
+   "symbol_and_unit_ledger": "r_t(s,a,s'): total scalar reward (utility units); r_e(s,a,s'): external/extrinsic task reward (utility units); r_i(s,a,s'): intrinsic reward, e.g. BEB novelty r_i proportional to 1/(1+n(s,a)) (Eq. 6, p.39) or recency r_i = sqrt(l(s,a)) (Eq. 7, p.39) (utility units by construction); eta in R: dimensionless hyperparameter controlling relative strength of intrinsic motivation; n(s,a): visit count (integer, dimensionless); l(s,a): timesteps since last trial at (s,a) (timestep count). Addition is dimensionally homogeneous: all terms are utility units.",
+   "assumptions": "Additive separability of intrinsic and extrinsic channels into one scalar reward; a single global value/policy function absorbs both (task-conflated propagation, p.38); eta fixed during the learning window; intrinsic reward computable from interaction history (counts, prediction error, information gain).",
+   "breakdown_regime": "Task-conflated contamination: p.38 states that after an intrinsic reward has worn out, it may take time before its effect on the value function has faded out — the global solution keeps chasing exhausted novelty. The detachment problem (Ecoffet et al. 2019, p.38): one-step back-ups into a deep network may not propagate far enough to change behavior at start states, so the agent cannot return to a discovered region. Task-separated back-ups (Shyam et al. 2019) are the stated remedy at extra computational/memory cost.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one transition reward",
+    "tau_1: one visit-count update n(s,a)",
+    "tau_2: novelty decay timescale as counts accumulate",
+    "tau_3: value-function fade-out time after the intrinsic bonus wears off"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthesis mapping: practice-objective shaping in the 22-player system. r_e = game-outcome utility of a play; r_i = installation/learning-progress bonus for a new package or motion; eta = how strongly the staff weights development vs winning the rep. The contamination regime is the coach who keeps calling a pet novelty play long after the defense has charted it (counts high, bonus should be gone, but the global 'playbook value' still overweights it). Task-separated back-ups correspond to keeping a separate development ledger from the game-plan value function.",
+    "source_operator": "p5",
+    "telemetry": "Installation rep counts per package; learning-progress curves (competence-based IM, p.39-40); frequency of calls to packages whose novelty count has saturated; separation audit between development ledger and game-plan rankings."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Options framework for temporal abstraction (initiation set, sub-policy, termination probability)",
+   "verbatim_quote": "Each option u has its own initiation set Iu ∈S from which the option can be started, a sub- policy πu for execution, and a state-dependent termination probability βu(s) for the option 15 <<<PAGE 16>>> Figure 7: Conceptual illustration of a two-level hierarchy, partially based on Nachum et al. (2018). Standard low-level interaction is shown with solid lines, temporal abstraction is shown with dashed lines. The high-level controller picks a high-level action (goal) gt according to πhigh. After ﬁxing gt, the low level controller executes the relevant subpolicy, for example in the form of a goal-conditioned policy πlow(s, g). The number of steps between high-level actions can be ﬁxed or variable, depending on the framework. The illustration assumes full observability, in which case we only need to condition πhigh on the current observation. We may also feed g back into the next high-level decision to enable temporal correlation between goals. to end in a reached state.",
+   "page": 15,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Semi-MDP structure as printed (p.15-16): each option u has initiation set I_u (subset of S), sub-policy pi_u for execution, and state-dependent termination probability beta_u(s) in [0,1]. Full observability assumed for the two-level hierarchy illustration (Fig. 7, p.16); temporal abstraction implies multi-step prediction (Fig. 2 caption, p.7). The framework cites Sutton, Precup and Singh (1999).",
+   "breakdown_regime": "Degeneration in end-to-end option discovery (p.17): a single subroutine starts to solve the entire task, or every subroutine terminates after one step, collapsing the abstraction. Bottleneck-based discovery does not scale to high-dimensional problems (p.17). If the latent/abstract dynamics cannot be represented consistently, repeated feeding of predictions diverges (p.14, latent-level planning). Options fix initiation/termination on state information, unlike GCVFs which can initiate and terminate everywhere.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one low-level atomic action a_t",
+    "tau_1: one option execution until termination",
+    "tau_2: high-level decision interval between options",
+    "tau_3: option discovery / curriculum timescale"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthesis mapping: a play call is an option in the 22-player semi-MDP. Initiation set I_u = the down-distance-field-position-hash region where the call is legal/sensible; sub-policy pi_u = the route concept, protection rules and QB progression executed over multiple timesteps (snap to whistle); termination probability beta_u(s) = state-dependent triggers (checkdown, throwaway, scramble, sack) that end the option. Temporal abstraction reduces the depth of the coaching search tree exactly as the survey claims (p.15, citing Brunskill and Li 2014; Mann and Mannor 2014).",
+    "source_operator": "p6",
+    "telemetry": "Charted option initiation frequencies per game-state cell; termination-trigger distribution (checkdown vs deep shot vs scramble); snap-to-whistle duration per option; degeneration audit (one package dominating all calls, or calls aborting after one step)."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The architectural invariant of this survey is the split between reversible and irreversible access to the dynamics. A model, defined on page 4 as reversible access to the MDP dynamics, lets an agent query any state-action pair in any order, while the real environment forces the agent forward from whatever next state actually occurred. Everything else in the 67 pages is a consequence of that split. Once access is reversible, the agent can spend computation instead of experience: Dyna samples up to 100 one-step transitions per real step, while AlphaGo Zero spends roughly 320,000 model calls (1600 traces of depth about 200) between real steps (page 20). The budget is not free. The survey is explicit that planning budget measured in model calls understates true effort when each call invokes expensive neural network evaluations. The hidden state that governs whether this trade pays is model trustworthiness, and the survey decomposes it into two uncertainties that must never be conflated: aleatoric stochasticity, which is fundamental transition noise that can never be reduced, and epistemic uncertainty due to limited data, which shrinks with more observations (page 10, citing Der Kiureghian and Ditlevsen 2009). A deterministic network trained with mean-squared error on a stochastic transition learns the conditional mean, which for a multimodal next-state distribution is a state that may never actually occur (page 9, Figure 3). That is the precise mechanism by which a comfortable average-case simulation lies to a planner. The second mechanism is compounding: a one-step model was never optimized for long-range prediction, so feeding its own output back in accumulates error until multi-step rollouts diverge from the true dynamics (page 13, Sec. 4.6). The survey's remedies form a coherent doctrine: stay data-close (Dyna samples start states at visited states and only one step deep), or propagate uncertainty explicitly so that predictions spread out and the learning signal naturally vanishes when the plan leaves the observed region (page 23). PILCO propagates Gaussian uncertainty analytically; PETS and Deep PILCO propagate particles; STEVE reweights value targets of different depths by their uncertainty (page 24). Translated into the 22-player football dynamical system as an explicit isomorphism, the coach's film-room simulator is the reversible model and the live snap is the irreversible step. The coaching staff's tendency model is a count-normalized estimator (Eq. 4) over formation-down-distance cells, and the zero-count cells are exactly where epistemic uncertainty is maximal. A high-EV deep rollout that routes through three uncharted alignments is the football analogue of a rollout that diverges from the true dynamics: each conditional prediction is conditioned on the previous prediction's error. The calibrating telemetry is the planning budget per real snap, the fraction of simulated branches inside charted regions, and the prediction-error spike that signals a regime switch (Sec. 4.5, Figure 6). The survey's own benchmarking warning (page 46) closes the loop: comparisons must hold total computational or sample budget equal, because a model-based method consumes far more samples per episode than a model-free one, and reporting 'episodes' on the x-axis silently hides that cost.",
+   "retrocausal_genealogy": "The lineage runs from Samuel's 1967 checkers program and Bellman's dynamic programming through Korf's Learning Real-Time A* (1990) and Sutton's Dyna (1990), all cited on page 5. The historical scar that created the hidden state is the curse of dimensionality: tabular planning died because table size grows exponentially in state dimensionality (page 8), forcing function approximation, which introduced model bias and instability. The survey's entire uncertainty apparatus (Sec. 4.3, Sec. 5.3) is scar tissue over that wound: reversible access was never free, it was mortgaged against approximation error, and the mortgage comes due exactly when a planner leaves the data-close region.",
+   "theory_of_mind": "Under pressure the belief clash is recursive. The head coach's comfort call is a breadth-one, depth-one Dyna update: cheap, data-close, emotionally safe. The defensive coordinator models the offense's tendency estimator (Eq. 4) and sets a trap in a cell the offense's counts say is safe — the DC is reasoning about the offense's model of the DC. The quarterback's internal clock is a termination probability beta_u(s) on the passing option: he must decide whether the coach's simulated progression survives contact with the actual pass rush. Each layer holds a model of the layer below's model, and the trap works precisely when the offense trusts its reversible simulation more than the irreversible evidence of the live snap.",
+   "cross_layer_veto": "The cross-layer veto fires when epistemic uncertainty dominates expected value. A play call with high simulated EV whose rollout passes through zero-count cells (unvisited state-action pairs where the tabular estimator is undefined) must be vetoed or shortened to data-close depth, because Sec. 4.6 guarantees compounding divergence and Sec. 4.3 says the uncertainty is reducible only by real data, not more simulation. Psychology compounds the veto: the coach's comfort bias inflates trust in the familiar branch, so the uncertainty gate must be mechanical (count thresholds, ensemble variance as in STEVE) rather than discretionary. The high-EV call survives only if its depth stays inside the charted region."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second invariant is that exploration has an irreducible price, and the survey states it as a theorem rather than a heuristic. Regret, defined in Eq. 8 on page 44 as the expected cumulative reward of the optimal policy minus that of the learning policy over T samples, is bounded below by Omega(sqrt(H|S||A|T)) (Jaksch et al. 2010; Osband and Van Roy 2016). Table 7 places the model-based algorithms against that floor: UCRL2 at O-tilde(H|S|sqrt(|A|T)), UCBVI at O-tilde(sqrt(H|S||A|T) + H sqrt(T)), EULER matching the lower bound under additional variance assumptions on the optimal value function, and model-free Q-learning at O-tilde(sqrt(H^3|S||A|T)). The structural reading is that model-based RL buys better sample complexity at the cost of worse computational time and space, because it must estimate and store the transition function and (in all the cited bounds) plan fully. Efroni et al. (2019b) then shows one-step greedy planning can match UCRL2 and EULER regret while reducing time and space complexity — the full-planning assumption is sufficient, not necessary, which is the survey's quiet correction to the 'more search is always better' intuition. The exploration machinery that pays the irreducible price is organized by two distinctions (Table 6, page 37): one-phase versus two-phase exploration, and value-based versus state-based (intrinsic motivation). Model-based agents run two-phase: an aggressive exploration strategy inside the reversible planning cycle, and a conservative greedy strategy on the irreversible real step. Knowledge-based intrinsic motivation adds a bonus to the reward channel, Eq. 5: r_t = r_e + eta * r_i, with BEB novelty r_i proportional to 1/(1+n(s,a)) (Eq. 6) or Sutton's recency bonus sqrt(l(s,a)) (Eq. 7). The survey flags the failure mode of this task-conflated propagation: after the intrinsic reward wears out, its effect on the global value function fades slowly (page 38), and the detachment problem means a one-step back-up into a deep network may never change behavior at the start states, so the agent finds an interesting region and then cannot return to it. Competence-based intrinsic motivation (page 39-40) answers with learning progress rather than novelty: a state visited often but still improving remains interesting, generating an automatic curriculum. Temporal abstraction (Sec. 4.8) is the third lever: options with initiation sets, sub-policies and state-dependent termination probabilities reduce both sample and computational complexity (Brunskill and Li 2014; Mann and Mannor 2014), and the survey warns of degeneration — one subroutine solving everything, or every subroutine terminating after one step. In the 22-player system these compose: the season is a regret-accounting horizon, novel packages are the exploration budget that the lower bound says must be paid, the development ledger must be task-separated from the game-plan value function to avoid contamination, and each play call is an option whose termination triggers are charted from real snaps. The telemetry that calibrates all of this is internal: cumulative decision regret against a hindsight-optimal baseline on held-out games, exploration rate on zero-count cells, learning-progress curves per package, and option initiation/termination frequencies. No sportsbook odds enter any channel; the reward is outcome utility only.",
+   "retrocausal_genealogy": "The regret lineage runs Lai and Robbins (1985) on adaptive allocation, through Jaksch et al. (2010) UCRL2 and its lower bound, Azar et al. (2017) UCBVI, Zanette and Brunskill (2019) EULER, to Efroni et al. (2019b) greedy-planning bounds (pages 44-45). The historical scar is the exploration-exploitation dilemma formalized as bandit theory: early RL treated exploration as epsilon-noise, and the minimax lower bound proved that naive jittering pays more than the necessary price. The hidden state inherited by every model-based agent is that optimism under uncertainty is not a heuristic but a rate-optimal strategy, and that the price of information is quantified before any data is collected.",
+   "theory_of_mind": "The recursive belief clash here is about budgets. The coordinator wants exhaustive search (infinite planning effort) because each extra simulated branch feels free; the head coach models the coordinator's tendency to over-plan and imposes a snap-clock constraint; the quarterback models both and knows that a play designed for a 320,000-call budget must execute in the irreversible window of a live snap. The DC meanwhile models the offense's novelty bonus: a package the offense is still 'learning' (competence-based IM) is exactly the package the DC should expect to see again, because learning progress keeps it interesting even after its novelty count saturates. Each agent's model of the others' exploration schedule is itself a target of deception.",
+   "cross_layer_veto": "Two vetoes compose. First, the lower bound vetoes any claim of zero-cost mastery: a staff that refuses to sample uncharted alignments is not saving regret, it is paying it invisibly, because Omega(sqrt(H|S||A|T)) is irreducible in worst case. Second, the contamination regime vetoes high-EV calls that are still riding an exhausted intrinsic bonus: if a package's novelty count has saturated and its learning progress is flat, the task-conflated value function overvalues it, and the call must be re-scored on extrinsic utility alone (task-separated back-up, Shyam et al. 2019). Physics-level veto: option degeneration (every call aborting after one step) means the temporal abstraction has collapsed and the search depth must be rebuilt before any EV ranking is trusted."
+  }
+ ],
+ "universal_lens": "The polymath audit lens is the reversible/irreversible access distinction: every discipline that plans — control, neuroscience, economics, coaching — pays the same model-bias tax when it substitutes simulation for experience. Audit any claimed simulation advantage by asking three questions the survey answers: where was the model validated (data-close region), what budget was spent (model calls, not episodes), and how does uncertainty propagate with depth (analytic, particles, or not at all).",
+ "gsi_mapping": "Explicit isomorphism, not a source claim: the epistemic/aleatoric split maps to clinical telemetry — reducible measurement uncertainty versus irreducible physiological stochasticity. Belief-state POMDPs (Sec. 4.4) map to inferring latent autonomic state from partial observations such as heart-rate variability; non-stationarity detection (Sec. 4.5) maps to regime switches in patient physiology; options map to motor primitives with initiation and termination windows, where axonal-shear risk acts as a hard termination constraint on the sub-policy.",
+ "gse_mapping": "Coach-Mind simulation is the learned dynamics model; play-calling is the policy; film study is reversible access; the planning budget per snap is the Dyna/AlphaGo trade-off. Deception is manipulation of the opponent's learned model — the DC's count-normalized tendency estimator (Eq. 4) is exactly what charting builds. DFS/portfolio tail risk maps to regret accounting (Eq. 8) and uncertainty-weighted depth selection (STEVE), with task-separated ledgers preventing novelty contamination. Internal only; no odds, no publication."
+}

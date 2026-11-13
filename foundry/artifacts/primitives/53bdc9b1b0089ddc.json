@@ -1,0 +1,132 @@
+{
+  "book_id": "53bdc9b1b0089ddc",
+  "source_status": "COMPLETE",
+  "pages_total": 2,
+  "pages_read": 2,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Simultaneous Alignment Selection with Pre-Snap Defensive Shift Gate",
+      "verbatim_quote": "Anytime before the ball is hiked defense may shift the alignment.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed on p2: 'Offense and Defense select alignments simul- taneously. Both teams then move to the line of scrimmage.' The defense retains a shift right 'Anytime before the ball is hiked', and the hike is gated: 'Ball can b~ hiked only after new defensive alignment is set.' (the 'b~' is an OCR artifact of 'be'). Protocol assumes a single pre-snap commitment window closed by the hike.",
+      "breakdown_regime": "The shift right is extinguished at the hike; once the ball is hiked the alignment is frozen and no further defensive re-alignment is legal in this model. The gate also breaks if the offense hikes before the defense has set (the printed rule forbids this), so the invariant holds only inside the pre-snap window and assumes both sides honor the set-before-hike ordering.",
+      "domain": "football",
+      "timescales": [
+        "tau_0: pre-snap alignment/shift window (seconds)",
+        "tau_1: post-hike play execution (seconds)"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pre-snap phase is a simultaneous-move commitment game with a last-mover information edge: offense and defense commit alignments simultaneously, then the defense may revise until the hike gate closes. In the 22-player dynamical system this binds to the pre-snap belief-update kernel — the offense's protection/answer call is a best response to a defensive look that can still change, so the QB's check is a commitment under residual defensive uncertainty bounded by the hike gate. The shift right is the defense's bounded late-move advantage.",
+        "source_operator": "p1",
+        "telemetry": "Pre-snap motion timestamps, defensive alignment at the instant of hike, QB check/audible cadence, and the frequency with which the offense's answer is mis-matched to the final (post-shift) look."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Nine-Zone Passing Geometry with Even/Odd Parity Partition",
+      "verbatim_quote": "There are 9 PASSING ZONES, EVEN numbered zones on the TOP of your TV screen . ODD numbered zones on the BOTTOM.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed on p1: the continuous field is collapsed to exactly 9 discrete passing zones; even-numbered zones map to the top of the screen, odd to the bottom, '(Going either way.)' — i.e. the partition is direction-agnostic. The pass target is a categorical zone choice (1 through 9), not a continuous aim point.",
+      "breakdown_regime": "The discretization fails to represent intermediate trajectories, throw timing, and any target between zones; it is a coarse categorical abstraction, so it cannot resolve coverage beats that live inside a zone or between adjacent zones. The parity convention is a screen-coordinate artifact, not a field-geometry invariant, and breaks if the viewing orientation is changed.",
+      "domain": "football",
+      "timescales": [
+        "tau_1: pass-target selection and throw (seconds)",
+        "tau_2: drive-level zone tendency (series of downs)"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 9-zone partition is a categorical action kernel over pass destinations: the QB's throw-location decision is a finite mixture over coverage-beating zones rather than a continuous optimization. In the 22-player system this binds to the information channel between the QB's pre-snap read and the executed throw — the zone choice is the quantized output of a read that must beat the coverage shell. The even/odd parity is a coordinate convention layered on the underlying left/right + deep/short field geometry.",
+        "source_operator": "p2",
+        "telemetry": "Target-zone distribution against coverage shell (Cover-2/3/4), completion rate and yards-after-catch by zone, and the entropy of the zone-selection distribution as a deception/variety measure."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Hybrid Human-Computer Defensive Control (Single Control Man)",
+      "verbatim_quote": "Coordinate the movements of your \"control\" man (defensive captain) with the rest of your defenders.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed on p2: 'There are 9 basic defensive formations . All have: ... YOU control defender ... COMPUTER control defender.' Exactly one defender is user-actuated (the 'control' man / 'defensive captain'); the remaining defenders are computer-controlled. Effective defense requires the human to coordinate the single actuated agent with the autonomous teammates.",
+      "breakdown_regime": "Partial controllability is the binding constraint: the human cannot directly command all eleven defenders, so the control man is a single actuation bottleneck. The invariant degrades when the human deviates from the computer's autonomous logic (gap mis-fit, blown coverage), and it assumes the computer policy is fixed per formation — it cannot model a defense where every agent is independently actuated.",
+      "domain": "football",
+      "timescales": [
+        "tau_1: control-man movement during the play (seconds)",
+        "tau_2: coordination across a series (drive)"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is a mixed-autonomy multi-agent transition kernel: one actuated degree of freedom (the control man) coupled to a fixed autonomous policy for the other agents. In the 22-player system it binds to the defensive play-call as setting the autonomous policy, while the play-caller's attention / the user-controlled safety or linebacker is the single actuated variable. The derived constraint is that defensive value is limited by how well the one actuated agent is coordinated with the autonomous gap/coverage logic — a controllability bound, not a full-control optimum.",
+        "source_operator": "p3",
+        "telemetry": "Control-man displacement versus team gap integrity, blown-coverage rate when the actuated agent leaves its assigned lane, and the correlation between control-man positioning and stopping the ball carrier."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Possession-First First-Down Priority (Score-vs-Possession Tradeoff)",
+      "verbatim_quote": "Don't be in too much of a hurry to score! Go for the first down to maintain possession !",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed on p2 under STRATEGY: 'Offense - Don't be in too much of a hurry to score! Go for the first down to maintain possession ! Learn your play book and use it wisely!' The heuristic assumes a game state where sustaining the drive (possession) dominates immediate scoring, and that tempo restraint is available (no urgent clock constraint).",
+      "breakdown_regime": "This is a printed heuristic, not a state-dependent optimum. It fails when clock/score state demands urgency — trailing late, two-minute drill, or end-of-half — where maximizing immediate points or clock management overrides possession maintenance. The source prints no explicit dependence on down, distance, score, or clock, so applying it uniformly outside its intended state is a category error.",
+      "domain": "football",
+      "timescales": [
+        "tau_2: drive-level possession continuation (series of downs)",
+        "tau_3: game-level clock/score state (quarters)"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The possession-first rule is a reward-shaping kernel that weights drive continuation (option value of keeping the ball) over immediate points. In the Coach-Mind sim it binds to the drive-level value function: a first-down conversion sustains the drive's future option value, so the play-call objective is not pure expected-points-now but expected-points-now plus the continuation value of retained possession. The derived insight is that the optimal call is state-dependent — the heuristic is the high-possession-value corner of a larger clock/score-conditioned policy.",
+        "source_operator": "p4",
+        "telemetry": "Down-and-distance conversion rates, drive continuation value (expected points from sustained possession), and the divergence between scoring-rate-maximizing and possession-maximizing call sets by game state."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Blitz / Red-Dog Risk Acknowledgment (Pressure-vs-Coverage Gamble)",
+      "verbatim_quote": "When you \"red dog\" or \"blitz\", you're taking a chance",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed on p2 under GOOD TIMING: 'Defense- Coordinate the movements of your \"control\" man (defensive captain) with the rest of your defenders. When you \"red dog\" or \"blitz\", you're taking a chance'. The source explicitly frames the blitz/red-dog as a risk ('taking a chance') that requires coordination of the control man with the rest of the defense.",
+      "breakdown_regime": "The risk is acknowledged but unquantified in the source — no probability or payoff is printed. The gamble fails against quick-pass / hot-route answers that exploit the vacated coverage, and against offenses that identify the blitz pre-snap (see p1 shift gate). It assumes the added pressure is worth the coverage integrity surrendered; that assumption breaks when the offense's answer is faster than the pressure arrives.",
+      "domain": "football",
+      "timescales": [
+        "tau_0: pre-snap blitz recognition (seconds)",
+        "tau_1: pressure-vs-throw race during the play (seconds)"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The blitz is a high-variance defensive action that trades coverage integrity for pressure — a risk/return gamble on the defensive transition kernel. In the 22-player system it binds to the DC tendency trap in the belief clash: the defense gambles that pressure arrives before the QB's hot-route answer, while the offense's internal clock and hot read are the counter. The isomorphism is to a variance-increasing bet whose payoff is gated by a timing race (pressure arrival vs throw release), not by a static advantage.",
+        "source_operator": "p5",
+        "telemetry": "Pressure rate versus big-play-allowed rate when blitzing, blitz frequency by down/distance, and the time-to-pressure versus time-to-throw distribution that decides the race."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Start from what this artifact actually is: a two-page 1979 Mattel Intellivision Football playbook, licensed by National Football League Properties (the trademark line on p1), and OCR'd via Adobe Paper Capture. It is not a coaching treatise; it is a consumer instruction sheet that encodes American football as a finite-state machine. That framing is the whole value of the source. The continuous 22-player game is collapsed into a small discrete action algebra: nine offensive formations (p1), two eligible receivers (#1 or #2, p1), nine passing zones (p1), nine defensive formations (p2), and a fixed hike/enter protocol. The printed instruction 'USE COMBINATIONS OF ELIGIBLE RECEIVERS, PASSING ZONES AND RUNNERS TO TREMENDOUSLY EXPAND THE OFFENSIVE POSSIBILITIES.' (p1, 53bdc9b1b0089ddc:p2 neighborhood) is an explicit statement that the play space is a Cartesian product of small finite sets. This is a historical act of formalization: one of the earliest mass-market encodings of NFL strategy into a discrete state space, and it is honest about its own abstraction. I treat the primitives as invariants of that abstraction, not as claims about the continuous game. The simultaneous-alignment protocol (p1, 53bdc9b1b0089ddc:p1) is the cleanest invariant: offense and defense commit at the same time, then the defense may shift until the hike gate closes. Reading it as a game theorist, this is a simultaneous-move game with a bounded last-mover advantage — the defense gets a late revision, but only inside a window the offense can close by hiking. The nine-zone parity partition (53bdc9b1b0089ddc:p2) is a quantization of the throw-location decision: even zones top, odd zones bottom, direction-agnostic. The interesting consequence is that the QB's read becomes a categorical classifier over nine bins rather than a continuous aim, which is exactly the structure a coverage-beating model must learn. I am careful not to overclaim: the source prints no probabilities, no payoffs, no equations, so every primitive carries latex=null and the quantitative structure lives only in the Layer-2 mapping, labeled as derived. The breakdown regimes are real: the zone model cannot resolve a beat that lives between zones; the shift right dies at the hike; the parity convention is a screen artifact. The retrocausal point is that hardware scarcity in 1979 forced this discretization, and the manual's own emphasis — 'PASSING is ... the indispensable key to victory' (p2) — reflects a pass-leaning design choice. I read that emphasis as a design signal of its era, not as a measured statistic; the source gives no numbers to support a win-rate claim, and I make none. The synthesis I extract is structural: football strategy can be faithfully approximated by a small finite action algebra with a simultaneous-commitment pre-snap phase and a quantized target space, and that approximation is the ancestor of every modern discrete play-call model.",
+      "retrocausal_genealogy": "The hidden state here was created by a specific historical scar: 1979 console hardware could not simulate a continuous 22-player game, so Mattel's designers, working under an NFL Properties license (printed p1), were forced to quantize football into nine formations, two receivers, nine zones, and a fixed enter/hike protocol. That scarcity is the lineage of every discrete play-call abstraction that followed. The manual's pass-first emphasis ('the indispensable key to victory', p2) is a design choice of its moment, echoing the late-1970s liberalization of the passing game; I flag that era context as my inference, not a printed statistic. The genealogy matters because it explains why the source is a faithful finite-state skeleton rather than a continuous physics model.",
+      "theory_of_mind": "Model the three minds at the line. The coach's comfort call is a familiar run into a known look — low variance, high floor. The defensive coordinator's tendency trap is the pre-snap shift (53bdc9b1b0089ddc:p1): the DC shows one look, then revises inside the shift window to bait the comfort call into a bad gap. The quarterback's internal clock is the hike gate — he can close the defense's revision window by hiking, but hiking early freezes his own protection answer too. The belief clash is recursive: the QB knows the DC may shift, the DC knows the QB may hike early to deny the shift, and the coach's comfort call is exactly the predictable behavior the trap punishes. Under pressure the comfort call is the attractor, and the trap is built to exploit it.",
+      "cross_layer_veto": "Cross-layer veto: the discretization itself vetoes a class of high-EV continuous calls. A throw that beats coverage between two of the nine zones (53bdc9b1b0089ddc:p2) has positive expected value in the continuous game but is unrepresentable in this action algebra, so the model must veto it as out-of-support rather than score it. Likewise the shift gate (p1) vetoes any defensive re-alignment after the hike — a call that depends on post-snap re-alignment is illegal in the model and must be rejected before its EV is ever computed. The physics/protocol layer thus constrains the decision layer: feasibility precedes expected value."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The second cluster of invariants is about control and risk under partial authority. The defensive control structure (53bdc9b1b0089ddc:p3) prints that every one of the nine defensive formations has exactly one user-controlled defender and the rest computer-controlled, and that winning requires coordinating the 'control' man (defensive captain) with the autonomous teammates. This is a controllability bound, and it is the most transferable idea in the source. In a full 22-player system the defensive coordinator sets a policy, but only a subset of agents are directly actuated in any given moment — attention, the called stunt, the user-controlled safety in a sim. The derived kernel is that defensive value is limited by the coordination of the few actuated degrees of freedom with the fixed autonomous gap/coverage logic, not by a full-control optimum. I label this [DERIVED KERNEL] because the source prints the control split but not the bound; the bound is my synthesis from the printed structure. The blitz invariant (53bdc9b1b0089ddc:p5) is the risk twin: 'When you \"red dog\" or \"blitz\", you're taking a chance' (p2). The source explicitly names the blitz as a gamble and ties it to coordinating the control man. Reading it as a timing race, the blitz trades coverage integrity for pressure, and its payoff is gated by whether pressure arrives before the QB's hot-route answer — a variance-increasing bet, not a static edge. The possession-first heuristic (53bdc9b1b0089ddc:p4) — 'Go for the first down to maintain possession !' (p2) — is the objective twin: it shapes reward toward drive continuation rather than immediate points. The crucial discipline is that all three are state-dependent. The possession heuristic breaks when the clock demands urgency; the blitz breaks against a faster hot read; the control bound breaks when the actuated agent leaves its lane. I extract them as corners of a larger conditioned policy, not as universal rules. No probabilities or payoffs are printed, so I assign none and keep latex=null throughout; the quantitative content is confined to the Layer-2 telemetry that would calibrate each kernel. The synthesis is that football decision-making is a partially-actuated, risk-aware, possession-valued control problem, and this 1979 sheet — despite being a game manual — states its structural constraints with unusual clarity. It is that clarity, not any numeric claim, that makes it a legitimate sovereign source for the Foundry. I also note the combinatorial discipline the manual implies but never computes: nine formations times two eligible receivers times nine zones is a finite pass-play space the sheet invites the player to explore, and I deliberately leave that count as a structural observation rather than inventing a probability over it, because the source prints no distribution and a fabricated one would violate the dimensional and truth gates alike.",
+      "retrocausal_genealogy": "The lineage of the control bound is the same hardware scar as t1, but its consequence is different: because only one defender could be user-actuated on a 1979 console, the designers had to make the rest autonomous and then explicitly teach coordination (p2, 'Coordinate the movements of your \"control\" man'). That necessity is the ancestor of modern mixed-autonomy defensive modeling, where a called policy governs most agents and a few actuated variables carry the play. The blitz-as-gamble and possession-first lines descend from coaching heuristics the designers borrowed to make the finite game feel strategic; I treat them as printed heuristics, not measured optima, and trace their authority to the manual's own STRATEGY and GOOD TIMING headings rather than to any data.",
+      "theory_of_mind": "Recursive belief clash on defense: the DC's comfort call is a base coverage that keeps every gap filled — safe, low variance. The trap is the blitz (53bdc9b1b0089ddc:p5): the DC gambles that the offense's protection is the comfort call and that pressure beats the throw. The offense's mind is the QB's internal clock and hot read — he knows the blitz is a chance the DC is taking, and his counter is the quick answer into the vacated zone. The control-man constraint (p3) sharpens the clash: because only one defender is actuated, the blitz's success hinges on whether that one agent's timing is coordinated with the autonomous rush, and the QB reads exactly that coordination. Each mind models the other's comfort and the other's gamble, recursively, under the clock.",
+      "cross_layer_veto": "Cross-layer veto: the controllability bound (53bdc9b1b0089ddc:p3) vetoes any defensive call whose EV assumes full independent actuation of all eleven — if the call's value depends on the control man being in two places, the physics of partial control rejects it before scoring. The blitz timing race (p5) vetoes a high-pressure call when the offense's time-to-throw is shorter than time-to-pressure: the coverage layer overrules the pressure layer because the gamble is lost before it pays. And the possession heuristic (p4) is itself vetoed by the clock/score layer when trailing late — the decision layer must override the printed heuristic. Veto authority flows from feasibility and timing, not from expected value alone."
+    }
+  ],
+  "universal_lens": "A polymath audit lens reads this 1979 game manual as an early formalization of a continuous multi-agent game into a finite action algebra: a simultaneous-commitment pre-snap phase, a quantized target space, a partial-controllability constraint, and state-dependent risk and possession heuristics. The transferable invariant is the structure of the abstraction, not any numeric claim, and the lens audits where the discretization vetoes otherwise high-value continuous actions.",
+  "gsi_mapping": "For GSI the control-bound primitive (p3) is the cleanest analogy to axonal and bioenergetic constraint: a system with one actuated degree of freedom coupled to fixed autonomous physiology must coordinate the actuated variable with the autonomous substrate, and clinical telemetry (like the control-man displacement versus gap integrity) measures coordination failure. The blitz timing race (p5) maps to a fluid/axonal shear threshold where a fast insult outruns the protective response — a race condition, not a static load.",
+  "gse_mapping": "For GSE the primitives bind directly to the Coach-Mind sim: the simultaneous pre-snap shift gate (p1) is the deception channel, the nine-zone kernel (p2) is the quantized throw decision, the control bound (p3) is the defensive actuation constraint, and the blitz gamble (p5) plus possession heuristic (p4) are the DC tendency trap and the drive-value objective. DFS/portfolio tail risk inherits the blitz structure: a variance-increasing bet whose payoff is gated by a timing race, never by sportsbook odds."
+}

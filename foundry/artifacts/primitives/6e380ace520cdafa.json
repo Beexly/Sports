@@ -1,0 +1,237 @@
+{
+ "book_id": "6e380ace520cdafa",
+ "source_status": "COMPLETE",
+ "pages_total": 324,
+ "pages_read": 324,
+ "primitives": [
+  {
+   "primitive_id": "g1_entropy_ergodic_theorem",
+   "name": "Entropy ergodic theorem / Shannon-McMillan-Breiman: sample entropy converges a.e. to entropy rate (Gray Lemma 3.2.1, printed p51)",
+   "verbatim_quote": "Lemma 3.2.1 Given a finite alphabet source {Xn} with a stationary ergodic distribution m, we have that lim n→∞ −ln m(Xn) n = h; m −a.e., where h(x) is the invariant function defined by h(x) = ¯Hm(X).",
+   "page": 72,
+   "page_printed": 51,
+   "latex": "\\lim_{n\\to\\infty} -\\frac{\\ln m(X^n)}{n} = h(x) = \\bar{H}_m(X)\\qquad m\\text{-a.e.}",
+   "symbol_and_unit_ledger": {
+    "{Xn}": "finite-alphabet random process (source); symbols dimensionless",
+    "m": "stationary ergodic probability distribution of the source; dimensionless measure",
+    "m(X^n)": "probability of the length-n prefix X^n=(X_0,...,X_{n-1}); dimensionless probability in (0,1]",
+    "ln": "natural logarithm; information measured in nats",
+    "-ln m(X^n)/n": "sample entropy per symbol of the observed prefix; units nats/symbol",
+    "h(x)": "shift-invariant limit function; for ergodic m it is the constant entropy rate; nats/symbol",
+    "Hbar_m(X)": "entropy rate of the source under m; nats/symbol; both sides of the equality carry nats/symbol (dimensionally homogeneous)",
+    "m-a.e.": "convergence holds m-almost everywhere, not for every sequence"
+   },
+   "assumptions": [
+    "finite alphabet",
+    "stationary ergodic distribution m (ergodicity makes the limit a constant rather than a random invariant function)",
+    "natural logarithms (nats); base-2 version used for coding applications (printed p68)",
+    "almost-everywhere convergence via the Ornstein-Weiss parsing approach as corrected in the 2023 printing"
+   ],
+   "breakdown_regime": "Non-ergodic stationary sources: the limit is a non-constant invariant function h(x) (ergodic decomposition needed, Ch 3). Non-stationary sources require the AMS machinery developed in the chapter. Zero-probability prefixes give infinite sample entropy. Convergence is a.e.: an atypical bad set of sequences always exists at finite n, quantified by the AEP (printed p67-68). The 2023 Notes on proof (printed p51) document that Gray's original counting argument was erroneous and propagated into the 2011 Second Edition before repair; the theorem statement stands, the corrected proof adds two constraints to the Ornstein-Weiss construction.",
+   "domain": [
+    "cs",
+    "information-theory",
+    "ergodic-theory"
+   ],
+   "timescales": [
+    "tau_0: one symbol / one play call",
+    "tau_1: one drive (prefix of length n)",
+    "tau_2: one game (sample-entropy estimate stabilizes)",
+    "tau_3: season-long entropy-rate estimation of a scheme"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "g1_entropy_ergodic_theorem",
+    "mapping": "Synthesis (not a source claim): a team's play-calling process is a finite-alphabet source; its per-play surprise -ln m(play)/n converges to the scheme's entropy rate. A low-entropy-rate scheme is asymptotically predictable: the opponent's film model assigns the observed sequence probability near e^{-n Hbar}. The invariant function h(x) is the scheme's intrinsic unpredictability, independent of any single game's realization. This converts 'tendency' from folklore into a measurable rate with a convergence theorem and an explicit atypical-set caveat.",
+    "telemetry": "Empirical -(1/n) ln mhat(play sequence) from play-by-play under a fitted call model, tracked across drives and games against the estimated entropy rate Hbar; fraction of sequences inside the AEP band; convergence diagnostics as n grows."
+   }
+  },
+  {
+   "primitive_id": "g2_aep_typical_set_counting",
+   "name": "Asymptotic equipartition property: ~e^{n Hbar} equiprobable typical sequences (Gray §3.5, printed p68)",
+   "verbatim_quote": "Thus there are two sets of n- tuples: a “good” set of approximately en ¯ H n-tuples having approximately equal probability of e−n ¯ H and the complement of this set which has small total prob- ability.",
+   "page": 89,
+   "page_printed": 68,
+   "latex": "P(G_n) > 1-\\varepsilon,\\qquad |G_n| \\le e^{n(\\bar{H}+\\varepsilon)},\\qquad e^{-n(\\bar{H}+\\varepsilon)} \\le m(x^n) \\le e^{-n(\\bar{H}-\\varepsilon)}\\ \\ (x^n\\in G_n)",
+   "symbol_and_unit_ledger": {
+    "G_n": "typical ('good') set of length-n sequences; a set, counting measure dimensionless",
+    "n": "block length, dimensionless count",
+    "varepsilon": "tolerance > 0, dimensionless; N depends on epsilon",
+    "Hbar": "entropy rate of the AMS ergodic source; nats/symbol",
+    "m(x^n)": "probability of sequence x^n; dimensionless",
+    "e^{n(Hbar+eps)}": "upper bound on the number of typical sequences; dimensionless count; exponent n*Hbar is nats (dimensionless)",
+    "e^{-n Hbar}": "approximate common probability of each typical sequence; dimensionless",
+    "units": "all probabilities dimensionless; exponents carry nats consistently (n symbols * nats/symbol); counting bound and probability bound are dimensionally homogeneous"
+   },
+   "assumptions": [
+    "AMS ergodic source with entropy rate Hbar (Theorem 3.1.1 consequence, printed p67-68)",
+    "n > N(epsilon): the guarantee is asymptotic in block length",
+    "the source text's displayed set definition (printed p68) uses |n^{-1}h_n - Hbar| >= epsilon as printed; the prose and standard AEP interpretation take the typical band |n^{-1}h_n - Hbar| < epsilon; the quote above is the book's own prose summary of the good set",
+    "natural-log nats in the theorem; base-2 in the coding example"
+   ],
+   "breakdown_regime": "At finite n the bad set has positive probability: the almost-noiseless code built from the AEP (printed p68) has error probability that can be made arbitrarily small but 'cannot in general make it 0'. Non-ergodic sources split into components with different rates. The counting bound is an upper bound on |G_n|, not an exact count; the equiprobability is approximate (within e^{±n epsilon}).",
+   "domain": [
+    "cs",
+    "information-theory",
+    "source-coding"
+   ],
+   "timescales": [
+    "tau_0: one sequence realization",
+    "tau_1: one block / one drive of n plays",
+    "tau_2: game-plan indexing horizon",
+    "tau_3: seasonal typical-set census of opponent schemes"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "g2_aep_typical_set_counting",
+    "mapping": "Synthesis: the typical-set counting kernel gives the minimum number of distinct play sequences a film-study model must index to cover an opponent's typical behavior over a horizon of n plays: about e^{n Hbar}. A playbook with fewer installed answers than the typical-set size cannot cover the opponent's typical sequences without a certified error floor (the bad-set probability). This turns 'we have an answer for everything' into a counting statement with an explicit failure probability, and it explains why low-entropy schemes are cheap to game-plan against while high-entropy schemes explode the required coverage.",
+    "telemetry": "Estimated Hbar of opponent play-calling; number of installed distinct answers vs e^{n Hbar} over drive-length horizons; observed fraction of opponent sequences falling outside the installed coverage (empirical bad-set rate)."
+   }
+  },
+  {
+   "primitive_id": "g3_divergence_inequality",
+   "name": "Divergence inequality: D(P||M) >= 0 with equality iff P = M (Gray Lemma 5.2.1, printed p84)",
+   "verbatim_quote": "Lemma 5.2.1 The Divergence Inequality: For any two probability measures P and M D(P∥M) ≥0 with equality if and only if P = M.",
+   "page": 105,
+   "page_printed": 84,
+   "latex": "D(P\\|M) := \\sup_{\\mathcal{Q}} \\sum_{Q\\in\\mathcal{Q}} P(Q)\\ln\\frac{P(Q)}{M(Q)} \\ge 0,\\qquad D(P\\|M)=0 \\iff P=M",
+   "symbol_and_unit_ledger": {
+    "P, M": "probability measures on a common measurable space (Omega, B); dimensionless measures",
+    "Q (partition)": "finite measurable partition of Omega; supremum over all such partitions (Eq 5.1, printed p83)",
+    "P(Q), M(Q)": "atom probabilities; dimensionless",
+    "ln(P(Q)/M(Q))": "log-likelihood ratio per atom; nats",
+    "D(P||M)": "relative entropy / Kullback-Leibler divergence; units nats (expectation of a log-ratio under P); nonnegative",
+    "units": "both sides of the inequality are nats vs 0 (nats); the equality condition is measure-theoretic, dimensionless; if P is not absolutely continuous w.r.t. M then D = infinity (printed p86)"
+   },
+   "assumptions": [
+    "P and M are probability measures on the same space",
+    "divergence defined as supremum over finite measurable partitions (equivalently finite-alphabet measurements, Eq 5.1)",
+    "natural logarithm (nats)",
+    "general (possibly continuous) alphabets; finite-alphabet case is Theorem 2.3.1"
+   ],
+   "breakdown_regime": "D(P||M) = infinity when P is not absolutely continuous with respect to M (printed p86): a model that assigns zero probability to an event the truth realizes is infinitely wrong. Divergence is not a metric: asymmetric and no triangle inequality (printed p84), so D(P||M) and D(M||P) answer different questions. Finite-sample plug-in estimates are biased; the supremum-over-partitions definition means coarse partitions understate divergence (data-processing, Corollary 5.2.2 printed p92).",
+   "domain": [
+    "cs",
+    "information-theory",
+    "statistics"
+   ],
+   "timescales": [
+    "tau_0: one model-vs-observation comparison",
+    "tau_1: one game's calibration audit",
+    "tau_2: weekly tendency-model refit",
+    "tau_3: seasonal model-selection pressure"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "g3_divergence_inequality",
+    "mapping": "Synthesis: divergence is the certified dissimilarity between a coach's tendency model M and the opponent's true call distribution P. D = 0 iff the model is exactly right; any residual divergence is a lower bound on the expected surprise the model will suffer. The asymmetry is operationally meaningful: D(P||M) is the expected extra surprise of the truth under the model (the cost of being wrong about the opponent), while D(M||P) is the cost of the model's own hallucinated tendencies. The infinite-divergence case is the formal version of 'the opponent ran something we never even considered'.",
+    "telemetry": "Empirical KL between predicted and observed call frequencies over a state partition (down-distance-personnel-field position); tracked per game as the calibration gate; zero-probability-event audits to catch the D=infinity regime before it is realized on the field."
+   }
+  },
+  {
+   "primitive_id": "g4_feinstein_lemma",
+   "name": "Feinstein's lemma: one-shot channel code error <= M e^{-a} + P(i <= a) (Gray Lemma 12.2.1, printed p255)",
+   "verbatim_quote": "Lemma 12.2.1 Given an integer M and a > 0 there exist xi ∈A; i = 1, . . . , M and a measurable partition F = {Γi; i = 1, . . . , M} of B such that ν(Γc i|xi) ≤Me−a + PXY (i ≤a).",
+   "page": 276,
+   "page_printed": 255,
+   "latex": "\\nu(\\Gamma_i^{c}\\mid x_i) \\le M e^{-a} + P_{XY}\\bigl(i(X;Y) \\le a\\bigr)",
+   "symbol_and_unit_ledger": {
+    "M": "number of messages / codewords; dimensionless positive integer count",
+    "a": "information-density threshold; nats (same units as i(X;Y))",
+    "x_i": "channel input codewords in A; dimensionless symbols",
+    "Gamma_i": "measurable output decision regions partitioning B; dimensionless sets",
+    "nu(Gamma_i^c | x_i)": "conditional probability of decoding error given codeword x_i; dimensionless probability",
+    "i(X;Y)": "information density ln(dP_{XY}/d(P_X x P_Y)); nats",
+    "P_{XY}(i <= a)": "probability the information density falls at or below threshold a; dimensionless probability",
+    "M e^{-a}": "dimensionless (count times dimensionless exponential); both RHS terms are probabilities, matching the LHS (dimensionally homogeneous)"
+   },
+   "assumptions": [
+    "channel [A, nu, B] with source mu and hookup distribution P_{XY} = mu nu",
+    "single use of the channel: the lemma needs no memory or stationarity assumptions (printed p253-254)",
+    "a > 0, M a positive integer",
+    "the bound is existential: it constructs codewords and decision regions by a greedy maximal-code argument"
+   ],
+   "breakdown_regime": "The bound is useful only when a is chosen near ln M with margin and the information density concentrates above a; if i(X;Y) does not concentrate (non-ergodic or heavy-tailed channels) the term P(i <= a) stays large and no rate is achievable from the lemma alone. Asymptotic coding theorems require additional ergodicity and d-continuity (Lemma 12.4.4, Theorem 12.6.1, printed p263, p269). Finite-blocklength operation pays the M e^{-a} backoff; the lemma is a one-shot bound, not a capacity statement.",
+   "domain": [
+    "cs",
+    "information-theory",
+    "channel-coding"
+   ],
+   "timescales": [
+    "tau_0: one channel use / one snap",
+    "tau_1: one play (single-shot decision)",
+    "tau_2: drive-level code repetition",
+    "tau_3: season-long reliable-communication rate"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "g4_feinstein_lemma",
+    "mapping": "Synthesis: the offense communicates one of M play concepts through the 'channel' of the defense's recognition; the defense's read is the decoder. Feinstein's bound gives a certified floor on the probability that the defense misidentifies the call, in terms of the information density between the call and the observed alignment. The derived kernel is the confusion operator: to keep the defense's error above a target, the offense must keep the information density below threshold a with high probability, i.e. make distinct calls look alike pre-snap. Disguise is literally the engineering of P(i <= a).",
+    "telemetry": "Empirical distribution of the log-likelihood ratio (information density) between observed pre-snap looks and call hypotheses, estimated from tracking + play-by-play; P(i <= a) as the confusion floor; per-call error rates vs the M e^{-a} + P(i <= a) bound."
+   }
+  },
+  {
+   "primitive_id": "g5_capacity_equality_coding",
+   "name": "Equality of operational, AMS, stationary, ergodic and Shannon capacities; R < C achievable (Gray Lemma 12.4.3 + Cor 12.4.1, printed p263)",
+   "verbatim_quote": "Lemma 12.4.3 Given a finite alphabet stationary channel ν with no input memory or anticipation, C = CAMS = Cs = Cs, e = CShannon.",
+   "page": 284,
+   "page_printed": 263,
+   "latex": "C = C_{\\mathrm{AMS}} = C_{s} = C_{s,e} = C_{\\mathrm{Shannon}},\\qquad R < C \\implies \\exists\\,(\\lfloor e^{nR}\\rfloor, n, \\varepsilon)\\ \\text{channel code for large }n",
+   "symbol_and_unit_ledger": {
+    "C": "operational channel capacity: supremum of reliably achievable rates; nats per channel use",
+    "C_AMS": "information-rate capacity over AMS input processes; nats/use",
+    "C_s": "capacity restricted to stationary inputs; nats/use",
+    "C_{s,e}": "capacity restricted to stationary ergodic inputs; nats/use",
+    "C_Shannon": "lim_n (1/n) max over input distributions of I(X^n; Y^n); nats/use",
+    "nu": "finite-alphabet stationary channel with no input memory or anticipation; dimensionless transition measure",
+    "R": "code rate; nats per channel use; ln M / n",
+    "n": "block length; dimensionless count",
+    "varepsilon": "target error probability; dimensionless",
+    "units": "all five capacities and R carry nats per channel use; the equality is dimensionally homogeneous; the code existence statement is a counting/probability claim (dimensionless M and epsilon)"
+   },
+   "assumptions": [
+    "finite alphabet channel",
+    "stationary channel with no input memory and no input anticipation (printed p263)",
+    "equality of the five capacity notions is the content of Lemma 12.4.3",
+    "Corollary 12.4.1: for AMS ergodic channel with no input memory/anticipation, R < C implies existence of (floor(e^{nR}), n, epsilon) channel codes for sufficiently large n"
+   ],
+   "breakdown_regime": "With input memory or anticipation the capacity equalities can fail and the process definitions diverge from the computable Shannon capacity. Non-stationary channels need the full AMS machinery. R >= C is impossible (converse direction); capacity is asymptotic, so finite block length pays a rate backoff. The Shannon capacity is numerically computable while the process capacities are not always (printed p263), which is why the equality is operationally valuable.",
+   "domain": [
+    "cs",
+    "information-theory",
+    "channel-coding"
+   ],
+   "timescales": [
+    "tau_0: one channel use",
+    "tau_1: one block / one drive",
+    "tau_2: game-level reliable rate",
+    "tau_3: season-long capacity estimation of the recognition channel"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "g5_capacity_equality_coding",
+    "mapping": "Synthesis: the maximum rate at which the offense can reliably communicate intent through the defense's recognition channel equals the information-rate capacity of that channel, and the five capacity notions coincide under stationarity and no memory. Disguise and complexity lower C; the offense cannot reliably run more distinct concepts per snap than C permits, no matter how clever the codebook. The equality matters because the computable Shannon capacity (a mutual-information maximization) certifies the operational limit, turning 'how much can we install' into a measurable rate with a converse.",
+    "telemetry": "Mutual-information rate between call signals and observed defensive reactions estimated from tracking; achievable reliable play-calling rate vs the estimated C; finite-n backoff measured as the gap between installed concept count and e^{n C}."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "g_t1_entropy_rate_coverage_genealogy",
+   "think": "Gray's corrected edition hands the football systems engineer a single load-bearing idea: unpredictability is a rate, and coverage is a counting problem. The entropy ergodic theorem, Lemma 3.2.1, says that for a stationary ergodic finite-alphabet source the per-symbol sample entropy -ln m(X^n)/n converges almost everywhere to the entropy rate Hbar. Applied to play calling, this means a scheme's tendency is not a vague scouting adjective but a measurable rate with a convergence theorem: over a long enough horizon the observed surprise per play settles to the scheme's intrinsic entropy rate, and the opponent's film model can predict the observed sequence with probability near e^{-n Hbar}. The asymptotic equipartition property then converts that rate into a counting statement. There is a good set of roughly e^{n Hbar} sequences, each of probability about e^{-n Hbar}, carrying total probability above 1-epsilon, and its complement has small probability. The operational consequence is sharp: to cover an opponent's typical behavior over a horizon of n plays, a game plan must index on the order of e^{n Hbar} distinct sequences. A low-entropy scheme is cheap to cover; a high-entropy scheme explodes the required coverage exponentially in the horizon. This is the formal reason coordinators oscillate between installing more answers and simplifying the opponent's problem space, and it gives a telemetry gate: compare the number of installed distinct answers to e^{n Hbar} estimated from play-by-play, and measure the empirical bad-set rate, the fraction of opponent sequences that fall outside installed coverage. The AEP also carries an honest caveat that the book states explicitly: the almost-noiseless code built from the typical set has an error probability that can be made arbitrarily small but cannot in general be made zero. No game plan covers everything; the residual is the bad set, and it must be budgeted rather than denied. The most remarkable material in this edition is not a theorem but the 2023 Notes on proof attached to Lemma 3.2.1. Gray documents that his original Ornstein-Weiss counting argument contained a critical error, suggested for correction by Paul Shields in the late 1980s, never repaired because Shields suffered a brain aneurysm in 2006 and the conversation never happened, propagated into the 2011 Second Edition, was caught by Wei Mao at Caltech in 2012, and was finally fixed in this 2023 corrected printing after Jun Muramatsu of NTT pointed out further mistakes, with Gray himself having forgotten the pending errata through retirement and two moves. This is a documented retrocausal genealogy of a hidden state: a flawed counting argument, invisible inside the proof, shaped two editions and roughly twenty years of readers' understanding until an external reader retrocausally repaired it. The football analogue is exact and non-fabricated because it is labeled synthesis: a miscounting in a tendency model, for example an incorrect census of distinct coverage shells, propagates silently through seasons of game plans because everyone inside the system shares the same flawed partition, and only an outside analyst with a different counting method exposes it. The discipline the book models is to attach the correction history to the theorem rather than hide it, which is precisely the discipline this artifact follows by recording breakdown regimes and provenance. Theory of mind enters because the opponent is also running the AEP against you: if your own entropy rate is low, the opponent can index your typical set with few resources, so raising your Hbar is not vanity but a direct increase in the opponent's required coverage count. The defensive coordinator's job, in this frame, is to raise the offense's conditional entropy about the coverage while keeping the offense's observable pre-snap information density low, which is the Feinstein side of the same coin.",
+   "retrocausal_genealogy": "The book itself documents a retrocausal repair: Gray's original counting error in the entropy ergodic theorem proof, flagged by Shields in the late 1980s, lost to Shields's 2006 aneurysm, propagated into the 2011 Second Edition, caught by Wei Mao in 2012, forgotten by Gray through retirement and moves, and finally corrected in the 2023 printing after Muramatsu's notes (printed p51). A hidden flawed partition shaped twenty years of understanding until an external counter repaired it. The football synthesis is a miscounted coverage-shell census propagating through seasons of game plans until an outside analyst exposes it; the lesson is to attach correction history to the model, not hide it.",
+   "theory_of_mind": "The opponent runs the AEP against you: a low own-entropy-rate lets the opponent index your typical set with few resources, so raising your Hbar directly raises the opponent's required coverage count e^{n Hbar}. The defensive coordinator simultaneously tries to raise the offense's conditional entropy about coverage while keeping pre-snap information density low. Each side is modeling the other's typical set and counting the cost of covering it, which is a recursive, quantifiable theory of mind rather than a psychological metaphor.",
+   "cross_layer_veto": "A high-EV call is vetoed when the installed-answer count falls below the typical-set size e^{n Hbar} for the relevant horizon (AEP counting gate), when the empirical bad-set rate exceeds budget, or when the opponent's observed sequence lies in the atypical complement the plan never covered. The physical window vetoes independently. The veto is the product of the counting gate and the physical gate; a call that is merely marginal on either is rejected, and the residual bad-set probability is budgeted, never set to zero, exactly as the book states the almost-noiseless code cannot in general have zero error."
+  },
+  {
+   "trace_id": "g_t2_calibration_capacity_veto",
+   "think": "The second trace binds divergence and capacity to calibration and communication limits, and then runs the veto. The divergence inequality, Lemma 5.2.1, certifies that D(P||M) is nonnegative and zero only when the model M equals the truth P. This is the calibration gate: any residual divergence between a tendency model and observed call frequencies is a certified lower bound on expected surprise, and the asymmetry of divergence matters operationally. D(P||M) measures the cost of being wrong about the opponent, the expected extra surprise of the truth under the model; D(M||P) measures the cost of the model's own hallucinated tendencies. The infinite-divergence regime, where P is not absolutely continuous with respect to M, is the formal version of the opponent running a concept the model never assigned any probability, and the book's statement that D equals infinity there is a warning to audit zero-probability events before they are realized on the field. Feinstein's lemma, Lemma 12.2.1, supplies the one-shot communication bound: for M messages and threshold a there exist codewords and decision regions with error at most M e^{-a} + P(i <= a), where i is the information density. Read as a model of the defense recognizing the offense's call, this says the defense's misidentification floor is governed by how often the information density between call and observed alignment falls below threshold. Disguise is the engineering of that probability: make distinct calls look alike pre-snap so the information density stays low and P(i <= a) stays high. The capacity equality, Lemma 12.4.3, then caps the whole enterprise: under stationarity and no input memory or anticipation, the operational, AMS, stationary, stationary-ergodic, and Shannon capacities all coincide, and Corollary 12.4.1 makes R < C achievable. The offense cannot reliably communicate more distinct intent per snap than the recognition channel's capacity permits, and the computable Shannon capacity certifies that operational limit. The cross-layer veto now has three information gates plus the physical gate carried over from the companion volume. Gate one, calibration: if the empirical divergence between the tendency model and observed calls exceeds the budget, the model is not trustworthy and any high-EV call that depends on it is vetoed. Gate two, confusion floor: if the estimated P(i <= a) for the intended call is too low, meaning the defense will likely identify it, the call's deception value is void and the call is vetoed regardless of nominal expected value. Gate three, capacity: if the installed concept rate exceeds the estimated recognition-channel capacity C, the excess concepts are not reliably communicable and the plan is over capacity, so the marginal concept is vetoed. Physics vetoes independently when the ball-flight and window timescale cannot accommodate the decision, and the veto is the product of gates, never an average. The same structure transfers honestly to the sister institute as a labeled mapping: the entropy rate of physiological telemetry characterizes a patient's baseline variability; divergence between a bioenergetic model and observed response is the calibration gate; the AEP bad set is exactly where atypical, injury-relevant transients such as high-frequency axonal shear live, because they are the sequences the typical-set model assigns small probability; and the capacity of a clinical monitoring channel caps how much distinct physiological intent can be reliably inferred per measurement window. The fail-closed discipline is identical: a load prescription is vetoed when calibration, confusion, or capacity gates fire, and the atypical-set residual is budgeted rather than denied. Every gate is tied to a named lemma with a printed page, a verbatim quote, a dimensional ledger, and an explicit breakdown regime, and every football and clinical binding is labeled synthesis rather than attributed to Gray.",
+   "retrocausal_genealogy": "The calibration gate is itself a scar turned into a constraint: the divergence budget is set from past games where the tendency model assigned zero probability to a concept that was actually run, the infinite-divergence regime. Those failures create the present zero-probability audit. The capacity budget is likewise retrocausal, calibrated from past seasons where over-installation exceeded the recognition channel's reliable rate. The book's own genealogy, Pinsker's influence and the Dobrushin and Gelfand-Yaglom-Perez attribution of the divergence computation (printed p84), shows the same pattern: each tool exists because an earlier measure failed to control a failure mode.",
+   "theory_of_mind": "The offense models the defense's decoder and chooses calls to keep the information density below threshold a, maximizing P(i <= a), the defense's confusion floor. The defense models the offense's codebook and chooses alignments to raise the information density, collapsing the confusion. This is a zero-sum game on the information density, and Feinstein's bound gives both sides a certified objective rather than a guess. The quarterback's confidence is rational only to the extent the estimated P(i <= a) supports it; apparent simplicity of a look is evidence of engineered confusion, not of safety.",
+   "cross_layer_veto": "The clinical analogue veto is identical in form: a bioenergetic model is gated by its divergence from observed telemetry; an atypical shear transient in the AEP bad set voids the typical-set guarantee; a load prescription exceeding the monitoring channel's capacity is over capacity and vetoed; and the physical recovery window vetoes independently. The veto requires all information gates and the physical gate to pass, never averaging a marginal gate against a strong one. This is the fail-closed discipline the gatekeeper enforces on this artifact, mirrored in the decision loop it describes."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any predictive system: unpredictability is an entropy rate, coverage is a typical-set counting problem, calibration is a divergence gate, and reliable communication is a capacity limit. Audit a model by measuring its entropy rate, comparing installed coverage to e^{n Hbar}, gating on divergence from truth, and checking that its concept rate stays below the channel capacity, budgeting the atypical residual rather than denying it.",
+ "gsi_mapping": "Mapping (synthesis, not a source claim) to the sister institute: the entropy rate of physiological telemetry characterizes baseline variability; divergence between a bioenergetic model and observed response is the calibration gate; the AEP bad set is where atypical injury-relevant transients such as high-frequency axonal shear live, since the typical-set model assigns them small probability; and the capacity of a clinical monitoring channel caps how much distinct physiological state can be reliably inferred per measurement window, with a fail-closed load veto.",
+ "gse_mapping": "Mapping (synthesis) to GSE: the Coach-Mind simulator's play-calling source has a measurable entropy rate (Lemma 3.2.1); game-plan coverage must index about e^{n Hbar} typical sequences (AEP); tendency-model calibration is a divergence gate (Lemma 5.2.1); deception engineers the Feinstein confusion floor P(i <= a) (Lemma 12.2.1); and installed concept rate is capped by the recognition-channel capacity (Lemma 12.4.3), which bounds DFS exposure to over-installed, unreliably communicable concepts."
+}

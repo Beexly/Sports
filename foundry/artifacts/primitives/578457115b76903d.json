@@ -1,0 +1,142 @@
+{
+  "book_id": "578457115b76903d",
+  "source_status": "COMPLETE",
+  "pages_total": 19,
+  "pages_read": 19,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Season projection operator S(R) (sum of optimal weekly lineup scores)",
+      "verbatim_quote": "The projected total for the remaining portion of the season for a roster 𝑅, denoted 𝑆(𝑅), is the sum of optimal weekly lineup scores",
+      "page": 3,
+      "latex": "S(R) = \\sum_{w=w_c}^{17} L(R,w)",
+      "symbol_and_unit_ledger": "S(R): season projected total for roster R [fantasy points, the league's additive dimensionless scoring measure]; R: roster, a set of players with positions {QB,RB,WR,TE,K,D/ST} [set]; w: week index [integer weeks, 1..17]; w_c: current week [integer weeks, =8 in the experiment]; L(R,w): optimal weekly lineup score [fantasy points per week], selecting 1 QB, 2 RB, 2 WR, 1 TE, 1 FLEX (RB/WR/TE), 1 K, 1 D/ST, with best-available free-agent points filling any positional gap. The sum aggregates a per-week points quantity over a dimensionless week count, yielding points; dimensionally homogeneous in the scoring measure (not SI).",
+      "assumptions": "ESPN weekly projections p_{i,w} are treated as fixed deterministic inputs cached at the current week; the optimal lineup is a greedy top-per-position selection with one FLEX; roster gaps (bye week or missing position) are filled by the best available free agent's projection; the season is fixed at 17 weeks; no variance or uncertainty is modeled (stated limitation, p.7).",
+      "breakdown_regime": "Projections diverge from realized output via injuries, coaching changes, or weather (p.7); bye-week zero entries and free-agent fallback create discontinuities in L(R,w); greedy per-position selection need not be globally optimal under FLEX coupling; with no variance term, tail risk is invisible to S(R).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: single NFL snap / play (~6 s) that generates the underlying box score",
+        "tau_1: weekly lineup lock and scoring (1 week)",
+        "tau_2: trade negotiation / waiver cycle (days to weeks)",
+        "tau_3: remaining-season horizon w_c..17 (weeks 8-17 here)"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L(R,w) is a max-over-roster projection that collapses the full 22-player game-state Markov kernel (drive outcomes, scoring distributions) into a single scalar weekly score via argmax lineup selection; S(R) then integrates that scalar kernel over the remaining-season week index. It is the observable projection layer through which the latent on-field dynamical system is read into a decision variable.",
+        "source_operator": "p1",
+        "telemetry": "ESPN projected points p_{i,w} versus realized box-score fantasy points per week; lineup-lock timestamps; the bye-week zero pattern (e.g. Drake Maye week 14 = 0.0, p.15) and free-agent fallback selections used to fill gaps."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Mass-conserving playoff-weighted gain g_a^w with non-playoff weight alpha_n",
+      "verbatim_quote": "where 𝛼𝑝is the playoff weight (default 1.2), and 𝛼𝑛= (𝑛𝑝+ 𝑛𝑛−𝛼𝑝· 𝑛𝑝)/𝑛𝑛is the non-playoff weight",
+      "page": 3,
+      "latex": "g_a^{w} = \\sum_{w \\in W_p} \\alpha_p\\, l_{a,w} + \\sum_{w \\notin W_p} \\alpha_n\\, l_{a,w}, \\qquad \\alpha_n = \\frac{n_p + n_n - \\alpha_p\\, n_p}{n_n}",
+      "symbol_and_unit_ledger": "g_a^w: playoff-weighted gain for team A [fantasy points]; l_{a,w} = L(T'_a,w) - L(T_a,w): per-week gain [fantasy points per week]; W_p: playoff week set, default {15,16,17} [set of week indices]; alpha_p: playoff weight [dimensionless, default 1.2]; alpha_n: non-playoff weight [dimensionless]; n_p = |W_p ∩ [w_c,17]|: remaining playoff weeks [integer count]; n_n: remaining non-playoff weeks [integer count]. Weights are dimensionless multipliers on a points-per-week quantity summed over week counts, so g_a^w is in points; homogeneous. Conservation: alpha_p*n_p + alpha_n*n_n = n_p + n_n, so under constant l_{a,w}, g_a^w = g_a (the unweighted gain).",
+      "assumptions": "Per-week gains l_{a,w} are well-defined from the lineup operator; W_p defaults to {15,16,17}; alpha_p > 1 to amplify playoffs; team B is evaluated unweighted (equivalent playoff weight 1) to preserve apparent fairness; conservation holds exactly only when per-week gains are constant.",
+      "breakdown_regime": "alpha_n is undefined when n_n = 0 (all remaining weeks are playoffs, w_c >= 15): a division-by-zero singularity. alpha_n turns negative when alpha_p > 1 + n_n/n_p (with n_p=3, n_n=7 at week 8, threshold alpha_p > 3.33), i.e. the regular season is negatively weighted. The 'apparent fairness' breaks if the partner scrutinizes playoff weeks; conservation no longer holds once per-week gains vary (the intended amplification).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: snap-level scoring that feeds each week's projection",
+        "tau_1: per-week gain l_{a,w} (1 week)",
+        "tau_2: trade decision horizon before playoff seeding locks",
+        "tau_3: playoff window W_p = weeks 15-17 (championship-deciding)"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reweighting is a Radon-Nikodym-style change of measure on the week index that tilts mass toward playoff weeks while preserving total mass under flat gains (alpha_p*n_p + alpha_n*n_n = n_p+n_n). This is isomorphic to end-game leverage management in the 22-player system: the same total expected points are redistributed toward high-leverage possessions (fourth-quarter / playoff drives) without changing the season-long mean, exactly as a coordinator conserves expected value while concentrating it where win probability is most sensitive.",
+        "source_operator": "p2",
+        "telemetry": "Per-week gain deltas l_{a,w} across weeks 8-17; realized playoff-week scoring versus regular-season scoring for the acquired assets; the n_p, n_n counts as the season clock advances (which drive alpha_n and its singularity)."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Fairness-penalized trade cost c with win-win constraints",
+      "verbatim_quote": "Here, 𝛼, 𝛽, and 𝛾are hyperparameters controlling the emphasis on user’s gain, trade partner’s gain, and fairness, respectively.",
+      "page": 3,
+      "latex": "c = -\\left(\\alpha\\, g_a^{w} + \\beta\\, g_b - \\gamma\\, \\lvert g_a^{w} - g_b \\rvert\\right), \\quad g_a>0,\\ g_b>0,\\ |P_a|\\le m,\\ |P_b|\\le m",
+      "symbol_and_unit_ledger": "c: cost to minimize [fantasy points]; alpha: user-gain emphasis [dimensionless, default 1.0]; beta: partner-gain emphasis [dimensionless, default 1.0]; gamma: fairness emphasis [dimensionless, default 0.25]; g_a^w: weighted user gain [points]; g_b = S(T'_b) - S(T_b): unweighted partner gain [points]; |g_a^w - g_b|: gain disparity [points]; P_a, P_b: traded player subsets [sets]; m: max players per side [integer count, default 3]; g_a, g_b: unweighted gains [points]. Every term inside the parentheses is in points, so c is in points; dimensionally homogeneous in the scoring measure.",
+      "assumptions": "Both unweighted gains strictly positive (win-win feasibility constraint); alpha, beta, gamma fixed hyperparameters; trade size capped at m=3 per side (larger trades deemed unrealistic, p.3); fairness is measured between the weighted user gain g_a^w and the unweighted partner gain g_b.",
+      "breakdown_regime": "The fairness term mixes weighted g_a^w with unweighted g_b, so 'apparent fairness' is deceptive by construction and collapses if the partner recomputes weighted gains; the strict g_a,g_b>0 constraint excludes variance-reducing or loss-avoiding trades that could be optimal under uncertainty; large gamma can force a parity that no feasible trade satisfies; the objective is a point estimate with no risk term.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: snap-level outcomes underlying projected gains",
+        "tau_1: weekly scoring that defines g_a, g_b",
+        "tau_2: negotiation / acceptance window for a proposal",
+        "tau_3: season-long championship objective the cost serves"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The penalty gamma*|g_a^w - g_b| is a negotiation-acceptance kernel: apparent fairness is the observable channel through which a proposal must pass the counterparty's theory-of-mind filter before it can execute. This maps onto deception acceptance in the 22-player system (a play-action fake must be 'accepted' by the defense's read before the hidden advantage pays off); the win-win constraint g_b>0 is the structural requirement that the counterparty still perceives benefit.",
+        "source_operator": "p3",
+        "telemetry": "Trade acceptance / rejection / league-veto events; the gain disparity |g_a - g_b| at the moment of acceptance; commissioner collusion flags (p.7); acceptance rate as a function of gamma across the five configurations."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Hybrid per-partner elitism with six mutation operators (diversity preservation)",
+      "verbatim_quote": "Select the top 𝑁trades overall (default 𝑁= 15) based on lowest cost, plus the top two trades per trade partner to ensure diversity.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "Six mutation operators with default probabilities keep-same 0.2 and the other five 0.16 each (sum = 1.0): keep-same, add/remove player, combine trades, exchange player, add-from-other-trade, spawn-new; population capped at 100; 5000 generations; elites = top 15 overall plus top 2 per partner; duplicates removed by team pair and player sets; probabilistic filtering keeps higher-cost trades with probability 0.3; equal-cost similar trades pruned toward fewer total players.",
+      "breakdown_regime": "No global optimality guarantee (the Travers 2023 knapsack lineage is explicitly 'without global optimality guarantees', p.2); disabling per-partner elitism risks premature convergence onto a single opponent; dedup by player sets can collapse strategically distinct deals; the 5000x100 budget is heuristic and projection error can dominate the small cost differences between elites.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: one mutation / evaluation step",
+        "tau_1: one generation of the evolutionary loop",
+        "tau_2: convergence over 5000 generations",
+        "tau_3: re-optimization as projections update mid-season"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Per-partner elitism (top two trades per opponent) is isomorphic to maintaining multiple coverage-scheme hypotheses per opponent rather than collapsing to a single best call: diversity is preserved against premature convergence the way a defense keeps disguised coverages alive so the offense cannot key on one tendency. The spawn-new operator (random opponent B') is the exploration analogue of installing a novel look against an unfamiliar opponent.",
+        "source_operator": "p4",
+        "telemetry": "Count of unique trades per opponent across generations (the paper's diversity metric, p.5); the cost distribution / entropy of the population; fraction of elites retained per partner versus overall."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Empirical gain-ratio lever law (alpha and beta control user-opponent gain ratio)",
+      "verbatim_quote": "These results confirm that 𝛼and 𝛽act as effective levers for controlling the user–opponent gain ratio.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "Observational claim across five parameter configurations on a single 12-team ESPN league at week 8 of the 2025 NFL season; alpha raises user gain (High alpha=1.2 gave average g_a 13.62), beta reduction permits asymmetric user-dominant deals (Low beta=0.8 gave the single best g_a 22.44 against opponent 10.82); all final trades satisfied g_a,g_b>0.",
+      "breakdown_regime": "Single-league, single-week snapshot; lever effects are confounded with the author's specific roster composition and are not a proven monotonic law; projection error (injury/coaching/weather, p.7) can exceed the gain differences the levers produce; generalization requires more leagues and uncertainty modeling.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: snap-level scoring feeding projections",
+        "tau_1: weekly gain realization",
+        "tau_2: a single trade negotiation",
+        "tau_3: season-long lever tuning across configurations"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "alpha and beta act as an aggressiveness dial that trades own expected value against concession to the counterparty, isomorphic to a coordinator's go-for-it versus punt decision where own win-probability gain is weighed against field-position conceded. Reducing beta (de-emphasizing the opponent) is the analogue of a high-variance aggressive call that extracts disproportionate benefit when the opponent's roster imbalance is exploitable.",
+        "source_operator": "p5",
+        "telemetry": "Realized g_a/g_b ratio per configuration (Default 14.32/15.06; High alpha 17.95/20.69; Low beta 22.44/10.82; Fairness 20.01/18.94); average g_a per configuration; acceptance outcomes of asymmetric versus balanced deals."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Begin from the invariant the paper actually proves rather than the headline gain. The season operator S(R) integrates an optimal-lineup kernel L(R,w) over the remaining week index, and the playoff reweighting introduces a second measure on that same index. The crucial structural fact is the conservation identity alpha_p*n_p + alpha_n*n_n = n_p + n_n, which forces g_a^w = g_a whenever per-week gains are constant. Read as a change of measure, the Radon-Nikodym derivative is alpha_p on playoff weeks and alpha_n elsewhere, normalized so total mass is preserved under a flat gain profile. This is why the bias is described as subtle: an opponent who audits only the unweighted total sees no distortion, because the distortion lives entirely in the covariance between the weight field and the per-week gain field. If gains are flat, the covariance is zero and the deception is invisible even in principle; the advantage materializes only when the acquired assets have asymmetric late-season schedules. Now bind this to the 22-player dynamical system. The same conservation structure governs end-game leverage management: a coordinator does not create expected points out of nothing, but redistributes a fixed season-long expectation toward the possessions where win probability is most sensitive, namely fourth-quarter and playoff drives. The week index in the fantasy kernel is isomorphic to the possession-leverage index in the game kernel; alpha_p is the leverage multiplier; n_n is the stock of low-leverage possessions from which mass is borrowed. The singularity at n_n = 0 is the moment there are no low-leverage possessions left to borrow from, which is exactly the two-minute / playoff regime where every snap is high-leverage and the reweighting denominator vanishes. The projection tables make the hidden state concrete. Kimani Vidal's projection collapses from roughly 14 points in weeks 8-11 to roughly 2.5-3.0 in weeks 13-17 (p.17), a regime break baked into the ESPN field that the GA reads as a tradable asset depreciation. Drake Maye carries a week-14 zero (bye, p.15) and strong weeks 15-17, which is precisely the late-season asymmetry the playoff weight is designed to harvest. Brandon Aiyuk is zero through week 14 then reappears near 8 points (p.14), an injury-return discontinuity. These are not noise; they are the non-stationary structure that makes the covariance term nonzero and the deception profitable. Finally, the cross-layer caution: S(R) and g_a^w are point estimates with no variance term, and the paper itself flags injury, coaching, and weather divergence (p.7). A gain computed on a collapsing projection is a tail-risk trap, so the mathematically optimal reweighting can be vetoed by the physical uncertainty it ignores. The invariant survives; the decision built on it must be gated by realized-versus-projected telemetry before execution.",
+      "retrocausal_genealogy": "The paper's own related work (p.2) is the lineage that created the hidden state: Travers 2023 fused GAs with knapsack team selection, Ramos 2021 paired linear programming with GAs for FPL, Nederlof 2018 evolved DFS lineups, and MacDonald and You 2018 used reinforcement learning for fantasy strategy. Every one of these optimized selection or lineup construction, so the field inherited tools that can pick a roster but cannot negotiate a roster change. The scar is stated on p.1: manual trade evaluation is time-consuming and subjective, overlooking positional balance, bye weeks, and future projections. That gap left temporal biasing and deceptive fairness unexplored, which is exactly the hidden state this GA inherits and exploits.",
+      "theory_of_mind": "Three belief states clash under pressure. The initiator (team A) believes playoff weeks decide championships and weights them 1.2-1.5x. The partner (team B) evaluates on unweighted overall projections and, the paper assumes, does not scrutinize playoff weeks (p.3). The commissioner models both for collusion and can veto (p.7). Recursively, A models B's unweighted audit, B may suspect A's intent, and the commissioner watches the pair. This is the coach comfort call (the apparently fair trade B accepts) versus the DC tendency trap (A's hidden playoff tilt) versus the QB internal clock (the seeding deadline that forces the decision).",
+      "cross_layer_veto": "The high-EV low-beta trade (22.44 versus 10.82) is vetoed by two lower layers. Psychology vetoes execution: the asymmetry triggers rejection or a collusion veto, so the nominally optimal deal never lands. Physics vetoes the estimate: the gain rests on ESPN projections that diverge via injury, coaching, and weather (p.7), and on a collapsing asset (Vidal's weeks 13-17 drop to ~2.5, p.17) with no variance term. The structural g_b>0 constraint is itself a veto on pure extraction. High EV on a point estimate is therefore not actionable EV."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The second invariant is the acceptance kernel hidden inside the cost function. The term gamma*|g_a^w - g_b| penalizes disparity, but it measures disparity between the weighted user gain and the unweighted partner gain. That asymmetry is the deception: the user optimizes a playoff-tilted objective while the fairness channel displays an unweighted comparison the partner is expected to perform. The win-win constraints g_a>0 and g_b>0 are the structural guarantee that the counterparty still perceives benefit, which is what makes the proposal executable at all. In effect the cost function encodes a theory of mind of the partner: most partners evaluate overall projections without scrutinizing playoff weeks (p.3), so the apparent-fairness channel is calibrated to that specific belief. Map this onto the 22-player system as a deception-acceptance kernel. A play-action fake only pays off if the defense accepts the run read; the hidden advantage (the pass behind the linebackers) is gated by the counterparty's belief state. The fairness penalty is the analogue of making the fake look structurally sound enough to be accepted, while the playoff weight is the hidden advantage that only resolves after acceptance. The commissioner veto and collusion concerns (p.7) are the league-level theory of mind that can reject a proposal even when both managers accept, adding a third recursive layer: the user models the partner, the partner may model the user's intent, and the commissioner models both. The evolutionary machinery is the search over this acceptance-constrained space. Hybrid elitism keeps the top fifteen overall plus the top two per partner, which is diversity preservation against premature convergence onto a single opponent, isomorphic to keeping multiple disguised coverages alive so the offense cannot key on one tendency. The six mutation operators, with keep-same at 0.2 and the rest at 0.16, balance local refinement (exchange, add/remove) against broad exploration (spawn-new with a random opponent B'). The probabilistic 0.3 retention of higher-cost trades is an explicit exploration temperature that prevents the population from collapsing into a single basin. The empirical lever law closes the loop. High alpha=1.2 maximizes user gain (average 13.62) but concedes more to the opponent (20.69 on the top trade); low beta=0.8 extracts the most asymmetric deal (22.44 versus 10.82) by exploiting roster imbalance; high gamma=0.4 produces the most negotiable balanced deal (20.01 versus 18.94). These are aggressiveness dials, isomorphic to go-for-it versus punt: own expected value weighed against concession. The cross-layer veto is decisive here. The low-beta 22.44-point gain is nominally highest EV, but it is vetoed twice: by psychology, because the asymmetry triggers rejection or a collusion veto so the trade never executes, and by physics, because the gain rests on projections that can collapse (Vidal's late-season drop) and on a single-league snapshot with no variance model. The win-win constraint g_b>0 is itself a built-in veto on pure extraction. The lesson for the Coach-Mind sim and for DFS portfolio construction is identical: a point-estimate optimum that ignores acceptance feasibility and tail variance is not an optimum at all, and no sportsbook odds are needed or used to see this.",
+      "retrocausal_genealogy": "The acceptance kernel descends from the same selection-only lineage (p.2): because prior GAs optimized lineups rather than negotiations, they never had to model a counterparty's belief, so no acceptance channel existed. The historical scar is the subjective, veto-prone manual trade process (p.1, p.7). This paper inherits that scar and converts it into an explicit fairness penalty calibrated to the partner's unweighted audit, creating a deceptive-fairness mechanism the authors note no prior work implemented (p.2). The hidden state is thus a negotiation channel that earlier tools structurally lacked.",
+      "theory_of_mind": "The cost function is a frozen theory of mind of the partner: gamma*|g_a^w - g_b| is tuned to a counterparty who compares unweighted totals, while the user secretly optimizes the weighted g_a^w. Under pressure the partner may recompute weighted gains and detect the tilt, the commissioner may read collusion, and the user must anticipate both. This mirrors the coach's comfort call versus the DC's tendency trap versus the QB's internal clock: the visible fairness is the comfort call that gets accepted, the playoff tilt is the trap that resolves only after acceptance, and the seeding clock forces the timing.",
+      "cross_layer_veto": "The fairness-emphasis deal (20.01 versus 18.94, gamma=0.4) is the negotiable optimum, yet even it is vetoed when projection uncertainty dominates: a balanced point estimate built on diverging ESPN inputs (p.7) carries tail risk the objective cannot see. Psychology vetoes the asymmetric low-beta alternative outright through rejection and veto risk. The cross-layer rule is that execution feasibility (a psychological acceptance channel) and realized-versus-projected variance (a physical channel) both override the raw cost minimum, so the GA's lowest-cost trade is not automatically the decision."
+    }
+  ],
+  "universal_lens": "A polymath audit lens for any optimization: decompose the objective into a change of measure plus an acceptance channel. Ask whether the weighting preserves total mass, whether the fairness the counterparty observes is the same quantity the optimizer secretly tilts, and where the normalizing denominator vanishes. The invariant is the conservation identity; the deception is the covariance between the weight field and the gain field; the singularity is the regime with no low-leverage mass left to borrow.",
+  "gsi_mapping": "The mass-conserving reweighting is isomorphic to bioenergetic budget reallocation under fixed total metabolic capacity: the same ATP budget is tilted toward high-demand windows without raising the season-long mean, and the alpha_n singularity at n_n=0 mirrors a reserve-depletion regime where no non-peak window remains to borrow from. Projection collapse (Vidal's late-season drop) is a biomarker trend break. GSI clinical telemetry, heart-rate variability and lactate trends, is the realized-versus-projected channel that vetoes a nominally optimal training load before it causes axonal or metabolic overload.",
+  "gse_mapping": "For the Coach-Mind sim, the deceptive-fairness kernel is a deception-acceptance model (play-action must be read as run before the hidden pass pays off), alpha and beta are aggressiveness dials (go-for-it versus punt), and per-partner elitism is scheme diversity against tendency keying. For DFS and portfolio tail risk, the lesson is to never trust a point-estimate optimum without variance and acceptance feasibility: the low-beta 22.44-point gain is a tail trap. No sportsbook odds are used as inputs anywhere; only ESPN fantasy projections and realized box-score telemetry."
+}

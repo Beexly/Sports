@@ -1,0 +1,142 @@
+{
+  "book_id": "203aeb745b1aed40",
+  "source_status": "COMPLETE",
+  "pages_total": 189,
+  "pages_read": 189,
+  "primitives": [
+    {
+      "name": "Perceptron Convergence Theorem (Rosenblatt)",
+      "page": 45,
+      "latex": "k \\leq \\frac{1}{\\gamma^2}, \\qquad \\mathrm{margin}(D,w,b) = \\begin{cases} \\min_{(x,y)\\in D} y\\,(w\\cdot x + b) & \\text{if } w \\text{ separates } D \\\\ -\\infty & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "k = number of weight updates (dimensionless count); γ = margin, the minimum labeled activation y(w·x+b) over D, dimensionless because the theorem normalizes ||x|| ≤ 1 (if ||x|| ≤ R the bound scales as R²/γ²); w = weight vector (units reciprocal to feature units so w·x is a dimensionless activation); b = bias (activation units, dimensionless); x = feature vector (dimensionless after normalization); y ∈ {−1,+1} (dimensionless label); D = training dataset / empirical distribution (probability measure, dimensionless). Every term dimensionless; the bound is dimensionally homogeneous.",
+      "assumptions": "Linear separability of D; margin γ > 0; ||x|| ≤ 1 for all x ∈ D; labels y ∈ {−1,+1}; online error-driven update w ← w + yx, b ← b + y triggered exactly when ya ≤ 0 (Algorithm 5, p. 39); the proof uses a fixed unit-norm maximum-margin witness w* whose existence separability guarantees.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: one example / one update",
+        "tau_1: one pass over the training set",
+        "tau_2: convergence horizon 1/γ² updates",
+        "tau_3: distribution-shift horizon where the fixed-margin witness fails"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bind the mistake bound to the GSE tendency-adaptation kernel: each play is an example x (normalized formation/motion/personnel features, ||x|| ≤ 1 enforced by the feature-normalization pipeline, pp. 55–56), y is the observed coverage outcome, and the coaching staff's coverage classifier updates only on mispredicted plays. The kernel outputs an adaptation budget: at most 1/γ² corrective plays are needed when the opponent's tendencies are linearly separable with margin γ; small-γ (ambiguous) formations provably require more film. This is a derived transfer of Rosenblatt's bound, not a claim that football generated it.",
+        "source_operator": "p1",
+        "telemetry": "Per-play formation features and post-snap coverage labels from tracking data; count of classifier updates per game; realized margin of the fitted separator on held-out games; compare predicted 1/γ² budget against observed correction count."
+      },
+      "verbatim_quote": "Theorem 1 (Perceptron Convergence Theorem). Suppose the perceptron algorithm is run on a linearly separable data set D with margin γ > 0. Assume that ||x|| ≤1 for all x ∈D. Then the algorithm will converge after at most 1 γ2 updates.",
+      "breakdown_regime": "Non-separable data: the algorithm never converges (bias-only oscillation example, p. 43). The bound guarantees separation, not the maximum-margin separator: data separable at margin 0.9 may yield a perceptron separator of margin 0.000001 (p. 46). With ||x|| ≤ R the budget scales as R²/γ²; as γ → 0 the update budget diverges. Non-stationary D invalidates the fixed-witness argument.",
+      "primitive_id": "p1"
+    },
+    {
+      "name": "Expected-loss formalization of induction (Eqs 1.1–1.2)",
+      "page": 16,
+      "latex": "\\epsilon \\triangleq E_{(x,y)\\sim D}\\big[\\ell(y, f(x))\\big] = \\sum_{(x,y)} D(x,y)\\,\\ell(y, f(x)); \\qquad \\hat{\\epsilon} \\triangleq \\frac{1}{N}\\sum_{n=1}^{N} \\ell(y_n, f(x_n))",
+      "symbol_and_unit_ledger": "ε = expected loss (units of ℓ: dimensionless probability under 0/1 loss, squared target units under squared loss); ε̂ = empirical training loss (same units as ℓ); D = unknown data-generating distribution (probability measure over (x,y), dimensionless, sums to 1); ℓ(y, f(x)) = loss function (units set by the task: 0/1 dimensionless, squared loss [y]²); N = number of training examples (dimensionless count); f = learned predictor; x input, y label. Both sides of each equation carry identical loss units — dimensionally homogeneous.",
+      "assumptions": "A fixed but unknown distribution D over input/output pairs; training data is a random sample from D; future/test examples are drawn from the same D; the loss ℓ is chosen by the designer to encode what matters (p. 14); no parametric form is assumed for D (p. 15).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: one example's loss",
+        "tau_1: empirical average over a training sample",
+        "tau_2: expected loss over the population D",
+        "tau_3: distribution-shift horizon where D itself changes"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The expected-loss objective is the scoring invariant of the Coach-Mind simulation: D is the distribution of game situations (down, distance, formation, personnel) the offense will face, f is the play-call policy, ℓ is the outcome loss (yards relative to a success threshold, or a dimensionless success indicator). The isomorphism is structural: any GSE evaluation must minimize loss on future unseen games drawn from the same situation distribution, never on the games used to fit the policy — the book's 'never touch your test data' (p. 21) is the held-out-discipline doctrine in source form.",
+        "source_operator": "p2",
+        "telemetry": "Play-by-play situation tags and outcomes; training-game vs held-out-game loss gap; split unit = whole game (not play), mirroring the image-not-pixel rule on p. 62."
+      },
+      "verbatim_quote": "Given (i) a loss function ℓand (ii) a sample D from some unknown distribution D, you must compute a function f that has low expected error ϵ over D with respect to ℓ.",
+      "breakdown_regime": "Distribution shift between training and deployment breaks the link between ε̂ and ε (cross-validation warning, p. 62: test data must really look like training data). Correlated examples (pixels within one image, plays within one game) violate the independent-draw assumption and make held-out estimates over-optimistic unless splits respect the independence unit (p. 62). Memorization drives ε̂ → 0 while ε stays high (p. 16).",
+      "primitive_id": "p2"
+    },
+    {
+      "name": "Bayes Optimal Classifier and Bayes error floor (Theorem 8)",
+      "page": 101,
+      "latex": "f^{(BO)}(\\hat{x}) = \\arg\\max_{\\hat{y}\\in Y} D(\\hat{x}, \\hat{y}); \\qquad \\epsilon_{Bayes} = E_{(x,y)\\sim D}\\big[\\,y \\neq f^{Bayes}(x)\\,\\big]",
+      "symbol_and_unit_ledger": "f^(BO) = Bayes-optimal classifier (mapping inputs to labels); D(x̂,ŷ) = joint probability of an input-label pair under the true distribution (probability measure, dimensionless); Y = label space; ε_Bayes = Bayes error rate (probability in [0,1], dimensionless); the indicator [y ≠ f(x)] is dimensionless. Homogeneous: both sides are probabilities.",
+      "assumptions": "The true distribution D is known (hypothetical oracle access); zero/one loss; comparison against deterministic classifiers (the text notes the stronger randomized-classifier result holds but is messier, p. 102); labels drawn jointly with inputs from D.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: one prediction's irreducible error",
+        "tau_1: error rate over a sample of situations",
+        "tau_2: population Bayes error under fixed D",
+        "tau_3: horizon over which execution-noise statistics drift"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Bayes error is the irreducible-outcome floor of the 22-player system: even with oracle knowledge of the defense's call distribution, execution variance (route depth, ball placement, collision outcomes) leaves a strictly positive error rate. It binds as a hard ceiling constraint on every GSE projection model: claimed accuracy above the estimated floor is evidence of leakage or overfitting, not skill. In Coach-Mind it caps the achievable value of any deception strategy.",
+        "source_operator": "p3",
+        "telemetry": "LATENT_UNIDENTIFIABLE from finite samples — only upper-bounded by the best held-out error achieved; calibrate the bound via outcome variance across repeated near-identical situations (same down/distance/formation/personnel)."
+      },
+      "verbatim_quote": "Theorem 8 (Bayes Optimal Classiﬁer). The Bayes Optimal Classiﬁer f (BO) achieves minimal zero/one error of any deterministic classiﬁer.",
+      "breakdown_regime": "D is never known in practice — the plug-in classifier using an estimate D̂ inherits estimation error and can be beaten by simpler discriminative models; the 20%-noise example (pp. 139–140) shows no algorithm can beat the Bayes floor, so 'perfect prediction' targets are incoherent; under label noise the floor is strictly positive.",
+      "primitive_id": "p3"
+    },
+    {
+      "name": "Soft-margin SVM: optimal slack equals hinge loss (Eqs 6.44–6.46)",
+      "page": 99,
+      "latex": "\\min_{w,b}\\ \\frac{1}{2}\\|w\\|^2 + C\\sum_{n} \\ell^{(hin)}(y_n, w\\cdot x_n + b), \\qquad \\ell^{(hin)}(y,\\hat{y}) = \\max\\{0,\\, 1 - y\\hat{y}\\}",
+      "symbol_and_unit_ledger": "w = weight vector (units reciprocal to feature units; dimensionless under normalized features); b = bias (activation units, dimensionless); ||w||²/2 = squared-norm regularizer (dimensionless under normalization; equals 1/(2γ²) via the margin identity γ = 1/||w||, Eq 6.43); C > 0 = slack-price hyperparameter (inverse loss units, dimensionless here); ξ_n = slack on example n (activation units, dimensionless); ℓ^(hin) = hinge loss (dimensionless); y ∈ {−1,+1}; x_n = feature vector. Every term dimensionless — homogeneous.",
+      "assumptions": "Labels ±1; convex hinge surrogate upper-bounds 0/1 loss (p. 87); the optimal slack satisfies ξ_n = max{0, 1 − y_n(w·x_n+b)} exactly (Eq 6.45); C trades margin size against total slack; the feasible region is never empty, unlike hard-margin SVM (p. 98).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: one example's slack / hinge loss",
+        "tau_1: one training pass over film-derived features",
+        "tau_2: margin convergence under fixed C",
+        "tau_3: label-noise regime drift where C must be re-tuned"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived noise-robust tendency kernel for GSE: fit a max-margin coverage classifier on film-derived features, where ξ_n pays for noisy labels (a blown assignment that does not reflect the called coverage). C is the explicit dial for 'how much may one anomalous play move the staff's belief'; support vectors (α_n > 0, KKT condition Eq 9.39, p. 136) are exactly the boundary formations where two coverages are confusable — the deception frontier. Transfer is structural, not historical.",
+        "source_operator": "p4",
+        "telemetry": "Number and identity of support-vector formations; total slack Σξ_n per game; held-out coverage error vs C sweep; α_n weights from the dual (Eq 9.38)."
+      },
+      "verbatim_quote": "In other words, the optimal value for a slack variable is exactly the hinge loss on the corresponding example!",
+      "breakdown_regime": "Large C overfits label noise (every mislabeled point is forcibly moved); small C underfits by allowing excessive slack; hinge loss is non-differentiable at yŷ = 1 and requires subgradients (pp. 92–93); the margin identity γ = 1/||w|| assumes the canonical scaling y_n(w·x_n+b) ≥ 1 − ξ_n.",
+      "primitive_id": "p4"
+    },
+    {
+      "name": "K-Means Convergence Theorem (Theorem 15)",
+      "page": 164,
+      "latex": "L(z,\\mu; D) = \\sum_{n} \\|x_n - \\mu_{z_n}\\|^2 = \\sum_{k}\\sum_{n: z_n = k} \\|x_n - \\mu_k\\|^2",
+      "symbol_and_unit_ledger": "L = clustering objective, sum of squared distances (units [x]²; dimensionless under normalized features); x_n = data point (feature units); µ_k = cluster-k centroid (same units as x); z_n ∈ {1..K} = assignment index (dimensionless); K = number of clusters (dimensionless count); N = number of points. Both forms of L carry identical squared-feature units.",
+      "assumptions": "Euclidean distance; centroid update is the exact mean of assigned points (the mean minimizes sum of squared distances, p. 164); assignment step picks the nearest centroid; finite dataset; convergence measured by L ceasing to change; both steps can only decrease L, which is lower-bounded by zero.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0: one assignment / centroid-update step",
+        "tau_1: one full iteration over N points",
+        "tau_2: finite convergence horizon to a local optimum",
+        "tau_3: restart / initialization horizon (book advises ~10 runs, p. 164)"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived coverage-taxonomy kernel: cluster opponent plays (features = formation, motion, personnel, down/distance) into K coverage families. The theorem guarantees the staff's iterative taxonomy refinement terminates, but only at a local optimum — two staffs starting from different initial film sessions can carve the same opponent into different, equally self-consistent taxonomies. This is a formal veto against treating any single clustering as the true coverage structure; K-means++ (Theorem 16, p. 166) gives an E[L̂] ≤ 8(log K + 2)L(opt) restart guarantee that GSE uses as its restart budget.",
+        "source_operator": "p5",
+        "telemetry": "Within-cluster sum of squares L across ≥10 random restarts; furthest-first vs K-means++ initialization comparison; cluster stability under bootstrap resampling of games."
+      },
+      "verbatim_quote": "For any dataset D and any number of clusters K, the K-means algorithm converges in a ﬁnite num- ber of iterations, where convergence is measured by L ceasing the change.",
+      "breakdown_regime": "Convergence is only to a local optimum of L — poor initialization yields bad partitions (p. 31, p. 164); worst-case convergence time can be exponential in N (smoothed analysis gives polynomial under perturbation, p. 165); no guarantee of recovering the 'right' clustering because unsupervised learning has no ground-truth labels (p. 31); furthest-first initialization is outlier-sensitive (p. 165).",
+      "primitive_id": "p5"
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "think": "The invariant that organizes this entire book is the gap between two quantities: the training error epsilon-hat that we can compute, and the expected loss epsilon over the unknown distribution D that we actually care about (p. 16). Every algorithm in the text is a bridge across that gap, and every failure mode is a bridge collapse. The decision-tree chapter makes the collapse concrete: a fully grown tree achieves lower training error but higher test error than a pruned tree (p. 19). Memorization is not learning. This is the first veto the book hands us: any GSE model scored on the games it was fit on is measuring epsilon-hat, not epsilon, and the doctrine 'never touch your test data' (p. 21) is the operational form of that veto.\n\nThe perceptron gives the gap a quantitative shape. Theorem 1 (p. 45) says that if the data are linearly separable with margin gamma and all inputs satisfy ||x|| <= 1, then error-driven updates converge after at most 1/gamma-squared mistakes. Read carefully, the bound is a statement about an adaptation budget: the number of corrections needed is controlled by how cleanly the classes separate, not by the number of examples seen. The proof's telescoping argument — the weight vector's projection onto the optimal separator grows by at least gamma per mistake while its norm grows by at most one — is a conservation-law-style reasoning: progress is bounded by geometry. But the theorem also carries two scars. First, convergence is guaranteed only under separability; on non-separable data the algorithm can oscillate forever (the bias-only example, p. 43). Second, the perceptron is indifferent to margin quality: it may return a separator of margin 0.000001 on data separable at margin 0.9 (p. 46). The SVM chapter exists precisely to repair that second scar.\n\nTransferring this to the 22-player system as a derived kernel: each play is an example whose features are normalized formation, motion, and personnel descriptors (the normalization pipeline on pp. 55-56 is what makes ||x|| <= 1 literally true), and whose label is the observed coverage outcome. A coaching staff's tendency classifier that updates only on mispredicted plays inherits the bound: at most 1/gamma-squared corrective plays are needed when the opponent's tendencies separate with margin gamma. Ambiguous formations — trips bunch versus condensed split, where two coverages are nearly confusable — have small gamma and provably demand more film. The bound also tells us when to stop trusting the classifier: if the opponent changes coordinator at halftime, the fixed-margin witness w* no longer exists for the new distribution, and the convergence guarantee evaporates exactly when a staff most needs it. The i.i.d. assumption the book calls 'usually false but sufficiently close' (p. 103) is, in football, sometimes catastrophically false within a single game. Finally, the cross-validation warning on p. 62 — split by image, not by pixel — dictates the held-out unit: whole games, never individual plays, because plays within a game are correlated draws.",
+      "retrocausal_genealogy": "Rosenblatt's 1958 perceptron (p. 45) was the first machine that learned from its own mistakes, and its convergence theorem was the field's first guarantee. The hidden state that shaped everything after: the perceptron returns any separator, not the best one, and Minsky and Papert's XOR analysis (pp. 49-50) showed linear boundaries cannot even represent exclusive-or, which 'killed research on linear classifiers for a decade or two.' The margin concept — and the SVM built on it — is the scar tissue from that winter: Vapnik's program (Kanellakis 2008, p. 139) made the quality of the separator, not mere convergence, the objective. The genealogy runs failure, then invariant, then repair.",
+      "theory_of_mind": "Three belief systems collide on every snap. The head coach models the defensive coordinator as a stationary tendency distribution — 'they play Cover 3 on early downs' — and calls his comfort play against that model. The DC knows the coach holds that model and deliberately feeds it: he shows Cover 3 leverage pre-snap and rotates late, so the coach's classifier is trained on deception. The quarterback carries a third, faster model — his internal clock believes the window closes in under three seconds, so he throws before the post-snap evidence resolves. Each agent is modeling the others' models, and the play's outcome is the fixed point of that recursion, not the argmax of any single classifier.",
+      "cross_layer_veto": "The classifier's margin says the deep post is open: single-high safety, large gamma, high expected value. Physiology vetoes. Late in the fourth quarter the quarterback's shoulder is fatigued — bioenergetic depletion lengthens his release, and the offensive line's pass-rush win rate has collapsed, so the pocket the margin was computed under no longer exists. The realized gamma shrinks below the regime where the bound is useful, and the remaining plays on the clock are fewer than the 1/gamma-squared adaptation budget the error-driven update would need. The high-EV call is rejected not because the model is wrong but because its assumptions have expired mid-game.",
+      "trace_id": "t1"
+    },
+    {
+      "think": "If the perceptron chapter bounds how fast we can learn, the Bayes-optimal chapter bounds how well anyone can ever do. Theorem 8 (p. 101) says that if we knew the true distribution D, the classifier that returns argmax over labels of D(x-hat, y-hat) achieves minimal zero/one error among all deterministic classifiers. The corollary is the Bayes error: the irreducible floor of the task. The book's label-noise example (pp. 139-140) makes it visceral — if twenty percent of labels are coin flips, no algorithm, however clever, can beat that floor. This is the second veto: any GSE projection claiming accuracy above the estimated irreducible variance of repeated identical situations is claiming to beat the Bayes error, which means it is leaking, overfitting, or lying. The floor itself is latent — unidentifiable from finite samples — so we can only upper-bound it with the best held-out error we achieve, and calibrate it from outcome variance across near-identical down/distance/formation/personnel situations.\n\nBut D is never known. The generative chapters show what we do instead: we invent a story about how the data were produced and fit its parameters. Naive Bayes (p. 105) assumes words are conditionally independent given the label — an assumption the book admits is false, since 'the' and 'and' co-occur constantly — yet the classifier works because the decision boundary can be right even when the probability model is wrong. That is a profound engineering lesson: a model's assumptions are a bet about which errors are tolerable, not a claim of literal truth. The SVM's slack variables make the same bet explicit. Equation 6.45 (p. 99) shows the optimal slack on an example is exactly its hinge loss, so the soft-margin objective (1/2)||w||^2 + C times the sum of hinge losses is a single dial — C — controlling how much one noisy play may move the staff's belief. A blown assignment that does not reflect the called coverage is label noise; large C forces the model to contort around it, small C lets it slide. The support vectors, where alpha_n > 0 (KKT condition, p. 136), are exactly the boundary formations where two coverages are confusable — the deception frontier.\n\nUnsupervised learning removes the labels and the floor with them. K-means (Theorem 15, p. 164) converges in finitely many iterations because both steps — nearest-centroid assignment and mean re-estimation — can only decrease the sum-of-squares objective L, which is bounded below by zero. But convergence is only to a local optimum. Two staffs starting from different initial film sessions can carve the same opponent into different, equally self-consistent coverage taxonomies, and the theorem offers no way to prefer one. The book's own advice is to run it ten times with different initializations and keep the best L (p. 164); K-means++ (Theorem 16, p. 166) upgrades that heuristic to a guarantee, E[L-hat] <= 8(log K + 2) L-opt. EM (p. 172) then softens the hard assignments: a disguised coverage is not Cover 3 or Cover 1 but a fractional responsibility over both, and the Jensen lower-bound argument (p. 175) shows we can optimize a touching bound on the true likelihood instead of the intractable log-sum. The through-line: every layer of the book replaces an intractable ideal — known D, global optimum, hard truth — with a tractable surrogate, and the discipline is knowing exactly what the surrogate gave up.",
+      "retrocausal_genealogy": "Valiant's 1984 PAC framework (p. 140) was born from two impossibilities the book names: induction cannot guarantee zero error because of label noise, and an unlucky sample can mislead any learner. 'Probably approximately correct' is the scar tissue of those failures — a guarantee weakened until it becomes true. Occam's razor, quoted from William of Occam circa 1320 (p. 138), supplies the prior: simple solutions generalize. K-means, mid-1950s vintage, had exponential worst-case convergence until smoothed analysis in 2001 (p. 31) showed perturbed inputs converge in polynomial time. Each formalism is a repair of its predecessor's broken promise.",
+      "theory_of_mind": "The defensive coordinator's disguise is a theory-of-mind weapon aimed at the quarterback's read heuristic. The QB reads coverage pre-snap like a naive Bayes classifier: safety depth, corner leverage, and linebacker width treated as independent evidence. The DC knows this and exploits the conditional dependence — under a disguised look those features are correlated by design, so the QB's independent-evidence sum overconfirms the wrong coverage. A QB who models the DC's intent ('they want me to think Cover 2') must hold a soft, EM-style belief over coverages and collapse it only on post-snap movement. The disguise wins exactly when the QB hard-assigns too early.",
+      "cross_layer_veto": "A slate optimizer loves a high-variance stack justified by a clustering of game scripts. The veto is structural: K-means converges only to a local optimum, so the 'game script cluster' the stack's correlation structure rests on is initialization-dependent — an early touchdown against the script can flip the assignment and invalidate the entire correlation model mid-slate. Physiology compounds it: accumulated collision workload changes player outcome distributions across a season, violating the stationarity the clustering assumed. The tail-risk position is rejected because its foundational partition is a local optimum masquerading as ground truth.",
+      "trace_id": "t2"
+    }
+  ],
+  "universal_lens": "The universal invariant is the gap between the measurable surrogate and the unreachable ideal: training error versus expected loss, local optimum versus global structure, plug-in estimate versus Bayes floor. Every discipline's methodology is a bridge over that gap, and every failure is a bridge collapse mistaken for the far shore.",
+  "gsi_mapping": "Error-driven perceptron updates map to motor learning's sensory-prediction-error adaptation: synaptic weights change only on movement errors, and the margin bound becomes a statement about how many repetitions a clean motor pattern needs. The Bayes error floor maps to irreducible physiological variability in repeated movements; K-means local optima map to movement-pattern taxonomies in clinical gait telemetry whose recovered structure depends on the patient's initial state; EM soft assignments map to fractional muscle-synergy recruitment.",
+  "gse_mapping": "Coach-Mind consumes the expected-loss formalization as its scoring invariant — held-out games only, split by game not play — the margin bound as its adaptation-budget calculator, SVM slack as the noise-robustness dial for tendency extraction, and EM soft assignments as its pre-snap coverage-belief state. Deception is modeled as deliberate violation of the conditional independence the quarterback's read heuristic assumes. No odds, no sportsbook quantities: outcomes are yards, success indicators, and coverage labels."
+}

@@ -1,0 +1,193 @@
+{
+ "book_id": "6c532aecbad020e8",
+ "source_status": "COMPLETE",
+ "pages_total": 23,
+ "pages_read": 23,
+ "primitives": [
+  {
+   "id": "p1",
+   "primitive_id": "p1",
+   "domain": "football",
+   "name": "Third-down conversion as a binomial rate operator",
+   "verbatim_quote": "Prairie View A&M converted 10 of 20 third downs while Northwestern State was successful on 2 of 13.",
+   "quotes": [
+    "Prairie View A&M converted 10 of 20 third downs while Northwestern State was successful on 2 of 13.",
+    "3rd-down conversion 14/35 8/28 3rd-down pct 40% 29%"
+   ],
+   "page": 1,
+   "latex": "\\hat{p}_{3} = \\frac{k}{n}, \\qquad SE(\\hat{p}_{3}) = \\sqrt{\\frac{\\hat{p}_{3}(1-\\hat{p}_{3})}{n}}",
+   "symbol_and_unit_ledger": "k: successful third-down conversions [count]; n: third-down attempts [count]; p̂_3: conversion probability estimate [dimensionless, 0..1]; SE: standard error of the estimate [dimensionless]. Count/count is dimensionless; the binomial SE formula requires independent attempts with common p, an approximation here because distance-to-go varies.",
+   "assumptions": "Attempts are Bernoulli trials with a stable success probability within the stratum being compared; the document reports the raw operator twice — single game (10/20 vs 2/13, p. 1) and two-game season (14/35 = 40% vs 8/28 = 29%, p. 14). Verified: SE = 0.112 for 10/20, 0.100 for 2/13, 0.083 for 14/35. Comparison of two teams' rates is only meaningful with these error bars and with distance-to-go mix held comparable.",
+   "breakdown_regime": "Small-n regime: 13 attempts carries SE ~ 0.10, so a 2/13 line is compatible with true rates from ~0.02 to ~0.45; a single-game conversion gap can be pure noise. Confounding regime: 3rd-and-1 and 3rd-and-15 are different experiments pooled into one number; game script (who is leading) changes the attempt mix. The season line (40% vs 29%) is the same operator at larger n, and the two snapshots must not be mixed in one comparison.",
+   "timescales": [
+    "tau_0: single third-down attempt",
+    "tau_1: one drive / one game",
+    "tau_2: season-to-date pool (35 attempts here)",
+    "tau_3: multi-season tendency baseline"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Coach-Mind third-down kernel: estimate conversion probability stratified by distance-to-go, field zone, and offensive personnel, with binomial (Wilson) intervals attached; the play-call value of a third-down option is p(convert) times the expected continuation value minus the failure cost. This packet is the calibration specimen: 10/20 and 2/13 are the raw inputs, and the kernel must refuse to treat a 34.6-point single-game gap as a stable tendency when the pooled SEs are ~0.10 each. DFS exposure: third-down backs inherit attempt-mix volatility.",
+    "source_operator": "p1",
+    "telemetry": "Attempts and conversions by distance bucket and field zone; Wilson interval width per stratum; attempt-mix shift between game script states; gap-vs-SE ratio for any cross-team comparison; season-pool vs single-game divergence flag."
+   }
+  },
+  {
+   "id": "p2",
+   "primitive_id": "p2",
+   "domain": "football",
+   "name": "Possession-time conservation and its audit",
+   "verbatim_quote": "PV won the time of possession battle 37:29 to 22:31.",
+   "quotes": [
+    "PV won the time of possession battle 37:29 to 22:31."
+   ],
+   "page": 1,
+   "latex": "TOP_{A} + TOP_{B} = T_{\\mathrm{game}}, \\qquad 37{:}29 + 22{:}31 = 60{:}00 = 3600\\ \\mathrm{s}",
+   "symbol_and_unit_ledger": "TOP_A, TOP_B: time of possession for each team [min:sec, convertible to seconds]; T_game: regulation game clock [s], 3600 s in college football. Both sides are durations — dimensionally consistent. Verified: 2249 s + 1351 s = 3600 s exactly for the Northwestern State game.",
+   "assumptions": "At every instant of the game clock the ball is credited to exactly one team's possession account (dead-ball intervals are assigned by the official scorer's convention); regulation length is 60:00; the two accounts are exhaustive and mutually exclusive. The packet's own season table gives TOP/GM 30:12 (PVAM) and 26:45 (opponents), p. 14.",
+   "breakdown_regime": "Audit failure found in the source itself: 2 x 30:12 + 2 x 26:45 = 6834 s, but two regulation games require 7200 s — a 366 s (6:06) gap, meaning the published per-game averages do not conserve. The Texas Southern game row also carries attendance 0 (p. 13, 15), consistent with partially recorded statistics for that game. Overtime extends T_game beyond 3600 s, so the conservation check must use the actual game length. Any possession-based model built on these season averages inherits the 6:06 accounting hole.",
+   "timescales": [
+    "tau_0: one play's clock run",
+    "tau_1: one drive",
+    "tau_2: one game (conservation check)",
+    "tau_3: season per-game averages (audit regime)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 22-player dynamical system has exactly one ball and one game clock: possession time is a conserved resource, and every clock-management or possession-value model in Coach-Mind must respect TOP_A + TOP_B = T_game per game. The sovereign transfer is the audit, not just the law: before any tempo or time-of-possession feature enters a model, run the conservation check on the source table; this packet demonstrates a real 6:06 season-level gap that would silently bias a pace feature. Isomorphic to any exclusive-resource accounting (snap counts, target shares) where per-game averages must reconcile to game totals.",
+    "source_operator": "p2",
+    "telemetry": "Per-game TOP sum residual (target 0 s); season-average reconciliation gap (366 s found here); overtime flag; dead-ball assignment convention version; correlation of accounting gaps with missing-data markers (attendance 0)."
+   }
+  },
+  {
+   "id": "p3",
+   "primitive_id": "p3",
+   "domain": "football",
+   "name": "Net rushing yardage decomposition under NCAA convention",
+   "verbatim_quote": "Yards gained rushing 270 296 Yards lost rushing 65 32",
+   "quotes": [
+    "Yards gained rushing 270 296 Yards lost rushing 65 32"
+   ],
+   "page": 14,
+   "latex": "Y_{\\mathrm{net}} = Y_{\\mathrm{gain}} - Y_{\\mathrm{loss}}, \\qquad \\bar{y} = \\frac{Y_{\\mathrm{net}}}{\\mathrm{att}}",
+   "symbol_and_unit_ledger": "Y_gain: positive rushing yardage [yards]; Y_loss: yardage lost on rushes including QB sacks under NCAA convention [yards]; Y_net: net rushing yardage [yards]; att: rushing attempts [count]; ȳ: yards per attempt [yards/attempt]. Verified: 270 - 65 = 205 (PVAM), 296 - 32 = 264 (opponents); 205/73 = 2.81 -> printed 2.8; 264/65 = 4.06 -> printed 4.1.",
+   "assumptions": "Every rushing attempt is booked with its gross gain and its loss separately; under NCAA rules sacks count as rushing attempts and sack yardage as rushing loss for the quarterback (Cameron Peters: 11 att, 40 gain, 27 loss, 13 net, p. 16 — the 27 loss yards are sack-dominated). The NFL convention instead deducts sack yardage from team passing yardage, so the same plays produce different rushing lines.",
+   "breakdown_regime": "Convention-mixing regime: comparing an NCAA rushing line to an NFL rushing line without rebooking sacks corrupts both QB rushing value and team pass efficiency. Negative-rusher regime: Lucas Coley 6 att, 4 gain, 21 loss, -17 net and Shemar Savage -5 net (p. 16) show the loss term can dominate; a gross-gain-only metric would rank these players above zero when their true contribution is negative. Small-sample per-rush averages over 1-11 attempts are unstable.",
+   "timescales": [
+    "tau_0: one rush attempt",
+    "tau_1: one game's rushing line",
+    "tau_2: season net-yards pool",
+    "tau_3: cross-code (NCAA/NFL) convention reconciliation"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rushing-value kernel for Coach-Mind and DFS: decompose every rush into gain and loss components, book sacks under a declared convention flag, and compute net yards per attempt with the loss term explicit. The kernel must refuse cross-convention comparisons unless sacks are rebooked; this packet is the NCAA-convention calibration specimen (Peters' 1.2 ypc is a sack artifact, not a rushing skill signal). EPA-style rush valuation inherits the same decomposition: the loss term is where tackle-for-loss and sack value live.",
+    "source_operator": "p3",
+    "telemetry": "Gain/loss split per rusher; sack-yardage share of team rushing loss; convention flag on every imported line; negative-net-rusher count; per-attempt sample size and interval; rebooking delta when converting NCAA lines to NFL convention."
+   }
+  },
+  {
+   "id": "p4",
+   "primitive_id": "p4",
+   "domain": "football",
+   "name": "Red-zone efficiency: scores, touchdowns, and points per trip",
+   "verbatim_quote": "Prairie View allowed just three points in two Northwestern State trips to the red zone.",
+   "quotes": [
+    "Red-zone scores (6-7) 86% (4-5) 80% Red-zone touchdowns (3-7) 43% (2-5) 40%",
+    "Prairie View allowed just three points in two Northwestern State trips to the red zone."
+   ],
+   "page": 15,
+   "latex": "E_{\\mathrm{score}} = \\frac{S}{T}, \\quad E_{\\mathrm{TD}} = \\frac{TD}{T}, \\quad PPT = \\frac{7\\,TD + 3\\,FG}{T}",
+   "symbol_and_unit_ledger": "T: red-zone trips [count]; S: trips ending in any score [count]; TD: red-zone touchdowns [count]; FG: red-zone field goals [count], S = TD + FG; E_score, E_TD: dimensionless rates; PPT: points per trip [points/trip], with PAT assumed made (packet: PAT 4-4 and 7-7, p. 15). Verified: PVAM 6 scores / 7 trips = 86%, 3 TD / 7 = 43%, PPT = (3x7 + 3x3)/7 = 4.29; the game note reports 3 points allowed in 2 Northwestern State trips = 1.5 PPT (p. 1).",
+   "assumptions": "A trip is any possession reaching the opponent's 20-yard line; scores are partitioned into TD and FG with no other scoring type inside the zone except safety edge cases; PAT success is separate and here perfect. The two rates answer different questions: E_score measures finishing, E_TD measures ceiling, PPT measures actual yield.",
+   "breakdown_regime": "Conflation regime: an 86% 'score' rate sounds elite but hides that only 43% of trips became touchdowns — three of six scores were field goals, so the yield is 4.29 PPT, not the ~6 PPT a touchdown-heavy profile would give. Small-trip regime: 7 and 5 trips carry binomial SE ~ 0.13-0.18 on the rates; one missed FG or one turnover inside the 20 moves the percentage double digits. End-of-game kneel-downs and turnover-on-downs inside the zone must be counted as trips or the denominator is gamed.",
+   "timescales": [
+    "tau_0: one red-zone snap",
+    "tau_1: one trip",
+    "tau_2: one game (2 trips here)",
+    "tau_3: season trip pool (7 trips)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Coach-Mind red-zone play-calling kernel: value each call by its expected PPT contribution, not by 'score probability' alone — a call that trades a 7-point outcome for a 3-point outcome can raise E_score while lowering PPT. The packet supplies both sides of the calibration: PVAM's 4.29 PPT for and 1.5 PPT against in the Northwestern game. DFS: red-zone target share is only valuable multiplied by the TD/FG split of the offense; a high-E_score, low-E_TD offense deflates touchdown-dependent props.",
+    "source_operator": "p4",
+    "telemetry": "Trips, TD, FG, turnovers-inside-20 per game; PPT for/against; E_score vs E_TD divergence; PAT rate; trip-count sample size and interval; end-of-game trip inclusion audit."
+   }
+  },
+  {
+   "id": "p5",
+   "primitive_id": "p5",
+   "domain": "football",
+   "name": "Small-denominator percentage: 1-for-1 is not 100 percent ability",
+   "verbatim_quote": "Prairie View A&M went 1-for-1 on fourth down, converting on 100 percent of attempts.",
+   "quotes": [
+    "Prairie View A&M went 1-for-1 on fourth down, converting on 100 percent of attempts."
+   ],
+   "page": 1,
+   "latex": "\\hat{p} = \\frac{1}{1} = 1.0, \\qquad p_{\\mathrm{Wilson,lower}}^{95\\%} = \\frac{\\hat{p} + \\frac{z^{2}}{2n} - z\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n} + \\frac{z^{2}}{4n^{2}}}}{1 + \\frac{z^{2}}{n}} \\approx 0.207 \\ (n=1)",
+   "symbol_and_unit_ledger": "p̂: observed conversion fraction [dimensionless]; n: attempts [count]; z: 1.96 normal quantile [dimensionless]; Wilson lower bound [dimensionless]. Verified numerically: for 1/1 the 95% Wilson lower bound is 0.2065. The packet's own season table corrects the game note: 4th-down conversion 1/2 = 50% for PVAM, 2/2 for opponents (pp. 14-15).",
+   "assumptions": "The '100 percent' claim is arithmetically true of the sample but says almost nothing about the underlying probability; a shrinkage or interval estimator is required before the number enters any decision. The document itself exhibits the correction one page later in the season pool (1/2), which is the honest denominator.",
+   "breakdown_regime": "n <= 2 regime: with one attempt the data are compatible with true rates from ~0.21 to 1.0; with two attempts (1/2) the interval is wider still in relative terms. Selection regime: fourth-down attempts are chosen precisely when the coach believes conversion is likely, so the attempt pool is not a random sample of fourth-down situations — the 100% line is doubly inflated, by small n and by selection. Publishing '100%' without n is the exact failure mode Huff's 33-and-1/3-percent Hopkins example catalogs.",
+   "timescales": [
+    "tau_0: one fourth-down decision",
+    "tau_1: one game (1 attempt)",
+    "tau_2: season pool (2 attempts)",
+    "tau_3: multi-season fourth-down tendency"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fourth-down decision kernel: never consume a raw conversion percentage at n < ~20; use a shrunk estimate (league prior plus observed attempts) and attach the Wilson interval. This packet is the calibration specimen for the veto: the promotional game note says 100%, the season table says 1/2, and a kernel that believed the headline would overvalue go-for-it states for this offense. The selection bias correction matters equally: observed fourth-down attempts are coach-selected, so the kernel's prior must be conditioned on distance, field zone, and score state, not on the raw attempt pool.",
+    "source_operator": "p5",
+    "telemetry": "Attempt count behind every published percentage; Wilson/shrunk interval vs raw value; selection covariates (distance, field zone, score differential) per attempt; headline-vs-pool divergence flag (100% vs 50% found here)."
+   }
+  },
+  {
+   "id": "p6",
+   "primitive_id": "p6",
+   "domain": "football",
+   "name": "NCAA passer-efficiency composite operator (reconstructed and verified)",
+   "verbatim_quote": "Cameron Peters 2 119.7 28-53-2 52.8 391 2 47 195.5",
+   "quotes": [
+    "Cameron Peters 2 119.7 28-53-2 52.8 391 2 47 195.5"
+   ],
+   "page": 16,
+   "latex": "R = 8.4\\,\\frac{Y}{A} + 330\\,\\frac{TD}{A} + 100\\,\\frac{C}{A} - 200\\,\\frac{I}{A}",
+   "symbol_and_unit_ledger": "Y: passing yards [yards]; A: attempts [count]; C: completions [count]; TD: passing touchdowns [count]; I: interceptions [count]; R: efficiency index [dimensionless index points]. Each ratio is per-attempt; the coefficients (8.4, 330, 100, 200) carry the inverse units that render every term in index points. Verified against all four printed ratings: Peters (28-53-2, 391 yds, 2 TD) -> 119.71 vs printed 119.7; Coley (8-20-0, 108, 0) -> 85.36 vs 85.4; team total (36-73-2, 499, 2) -> 110.30 vs 110.3; opponents (31-60-1, 357, 2) -> 109.31 vs 109.3.",
+   "assumptions": "The composite is a fixed-weight linear functional of four per-attempt rates; weights are the NCAA convention (distinct from the NFL's capped-component formula). The reconstruction matching all four printed values to 0.05 confirms the packet uses this operator. Completion percentage, yards per attempt, TD rate and INT rate are the sufficient statistics — the raw play sequence is discarded.",
+   "breakdown_regime": "Information-loss regime: two quarterbacks with identical R can have opposite risk profiles (deep-shot variance vs check-down consistency); the linear weights let a high TD rate buy back interceptions at a fixed exchange (330/200 = 1.65 TD per INT in index terms). Cross-formula regime: an NCAA R of 119.7 is not comparable to an NFL rating of 119.7 — different weights and caps. Small-sample regime: Peters' 53 attempts and Coley's 20 attempts give the component rates large SEs; the composite inherits them with the weights amplified.",
+   "timescales": [
+    "tau_0: one pass attempt",
+    "tau_1: one game's passing line",
+    "tau_2: season composite (53/20 attempts)",
+    "tau_3: cross-code formula reconciliation"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The composite is the template for any weighted multi-component player index in the 22-player system (grades, EPA-based value, DFS projections): a fixed linear functional over per-opportunity rates. The sovereign lessons transfer intact — declare the weights, verify the operator reproduces published values before trusting an imported index (done here for all four lines), attach component-level uncertainty, and never compare indices built under different formulas. The 1.65 TD-per-INT exchange rate embedded in the weights is a concrete specimen of how a composite silently prices risk.",
+    "source_operator": "p6",
+    "telemetry": "Reconstruction residual per imported rating (target < 0.05); component rates and their SEs; weight vector and formula-version flag; TD/INT index exchange rate; cross-formula comparison veto count."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "id": "t1",
+   "trace_id": "t1",
+   "think": "This document is a sports-information game-notes packet: Prairie View A&M at Michigan State, September 14, 2024, the first meeting between the programs, issued by PVAMU athletics communications ahead of game three of the season. It is a two-game statistical snapshot wrapped in promotional and historical material — coach biography, the Billy Nicks dynasty, the eighty-game losing streak of the 1990s, Panthers in the NFL, the two-deep, the roster. The sovereign content is not the narrative but the measurement layer: pages 14 through 22 are standard NCAA statistical tables, and those tables define operators that map the play-by-play event stream of the 22-player system into summary quantities. I extracted six of them, and the distinguishing feature of this extraction is that every operator was verified arithmetically against the packet's own numbers before being admitted. The passer-efficiency composite is the strongest specimen. The packet prints four ratings — Peters 119.7, Coley 85.4, team 110.3, opponents 109.3 — without giving the formula. I reconstructed the standard NCAA linear functional R = 8.4(Y/A) + 330(TD/A) + 100(C/A) - 200(I/A) and it reproduces all four printed values to within 0.05. That reconstruction is the kind of grounding the corpus exists for: the operator is not asserted from memory, it is demonstrated against the source's own outputs, and the ledger records the units of every component. The same verification discipline applied to the net-rushing decomposition (270 minus 65 equals 205; 296 minus 32 equals 264; per-attempt values round to the printed 2.8 and 4.1) and to the possession-time conservation law, where the Northwestern game's 37:29 plus 22:31 sums to exactly 3600 seconds. The conservation check then produced the most valuable finding in the book: it fails at season level. Two games at the published per-game averages of 30:12 and 26:45 sum to 6834 seconds against a required 7200 — a 366-second, 6:06 accounting hole. The Texas Southern game row carries attendance zero and its statistics appear partially recorded, which is the likely source of the gap. A pipeline that ingested those season averages into a tempo or possession-value feature would inherit a silent bias; the audit catches it. This is exactly why conservation laws are first-class primitives: they are cheap to check and they expose incomplete data that no amount of downstream modeling can repair. The small-sample structure of the packet is pervasive and I treated it as a regime, not a footnote. Ten of twenty third downs versus two of thirteen is a 34.6-point gap with standard errors around 0.10-0.11 per side; the season pool (14/35 versus 8/28) is the same operator at larger n and tells a milder story. The fourth-down '100 percent' headline is one attempt; the Wilson 95% lower bound for 1/1 is 0.207, and the packet's own season table one page later corrects the figure to 1/2. Red-zone '86% scores' conceals that only 43% of trips became touchdowns — the points-per-trip yield is 4.29, and the defense's 1.5 points per trip allowed in the Northwestern game is the complementary specimen. Each of these is a football-native instance of the measurement discipline the corpus needs: rates carry denominators, denominators carry uncertainty, and composite percentages conceal their mix. Data-hygiene flags recorded for downstream consumers: the Tale of the Tape column on page 1 disagrees slightly with the detailed tables (rush yards per game 104.5 versus 102.5, total offense 354.0 versus 352.0, total defense 314.0 versus 310.5, rush average 2.9 versus 2.8) — a snapshot or transcription ambiguity I flag rather than resolve; the left Tale-of-the-Tape column appears to be Michigan State's lines and cannot be verified from this document; and the anthropometric fields disagree between the two-deep and the roster (Warren Shankle listed 5-11, 225, SR on the depth chart versus 6-1, 230, JR in the roster; Efren Jasso 6-0, 225 versus 6-2, 205), which matters for any body-metric database. Page 23 is blank in the text layer. Provenance and limits: this is an institutional promotional document with a neutral statistical core; the stats pages follow NCAA accounting conventions (sacks as rushing loss), and every primitive declares that convention because cross-code comparison without rebooking is a breakdown regime. Nothing here is a theory of football; it is the measurement algebra the theory must consume, extracted with its failure modes attached. The two-game sample means none of these numbers should be used as talent estimates; their corpus value is as verified operator specimens and as a real-world audit case. Two further accounting identities were checked and hold, which is worth recording because they complete the packet's conservation structure. The all-purpose yardage aggregation is an exhaustive sum over disjoint channels: rush plus receiving plus punt-return plus kick-return plus interception-return equals the printed total. For Shemar Savage, minus 5 plus 238 equals 233; for the team, 205 plus 499 minus 11 plus 149 plus 0 equals 842; for the opponents, 264 plus 357 plus 19 plus 160 plus 53 equals 853 — all matching the printed totals exactly. The defensive tackle ledger is likewise exhaustive: unassisted plus assisted equals total, Jayven Jackson's 6 plus 6 equals 12, and the team's 65 plus 62 equals 127 against the opponents' 68 plus 86 equals 154. Together with possession-time conservation and the gain-minus-loss rushing identity, these give the packet four independent reconciliation checks, three of which pass cleanly while the season-level possession average fails — a useful reminder that an accounting system can be locally consistent and still leak at the aggregation boundary. The negative punt-return channel (minus 11 team yards, Nevon Cooper minus 8 over five returns) is itself a regime specimen: a return unit whose average is negative is destroying field position, and the all-purpose sum correctly carries the sign rather than flooring at zero, which a naive highlight metric would not do.",
+   "retrocausal_genealogy": "Genealogy, grounded in what the document shows. The statistical tables follow the NCAA's standard category scheme — gain/loss/net rushing, comp-att-int passing, red-zone scores split from touchdowns, per-game possession averages — a reporting convention that descended from mid-twentieth-century collegiate statistical standardization; the packet itself gives no formula history, so the passer-rating weights are admitted on the strength of the numerical reconstruction, not on claimed lineage. The program history in the packet runs from the 1907 first games through Billy Nicks's 127-39-8 record and five black college national titles, the post-integration talent drain, the 80-loss streak, and the 2009 SWAC championship; that narrative explains why an FCS program's notes carry such heavy historical ballast, but it yields no quantitative invariant and was not mined for primitives. The operators themselves come from the scoring rules of the game, not from any author's invention.",
+   "theory_of_mind": "Modeling the author's incentives. A game-notes packet is written by an SID whose job is to promote the program while informing the media; the selection pressure is visible in exactly the places Huff's doctrine predicts. The headline bank chooses 10-of-20 third downs, 100 percent fourth-down conversion, and three points allowed in two red-zone trips — all true, all one-sided, all small-n. The neutral counter-mind is the stats department: pages 14-22 give the opponent column equal space and let the season pool contradict the headline (1/2 on fourth down). So the packet contains both the incentivized selector and the honest accountant, sometimes one page apart. Downstream consumers must model every imported line as produced under this dual mandate: trust the accounting tables after audit, discount the headline bank, and never let a promotional percentage enter a decision kernel without its denominator.",
+   "cross_layer_veto": "Cross-layer veto assignments. Data layer: p2's conservation audit vetoes any possession or tempo feature whose source table fails TOP_A + TOP_B = T_game (a 6:06 gap was found here); p3's convention flag vetoes any NCAA/NFL rushing comparison without sack rebooking. Estimation layer: p1 vetoes cross-team third-down comparisons that ignore binomial error and distance mix; p5 vetoes any decision input expressed as a percentage with n < 20 unless shrunk with an interval attached. Representation layer: p4 vetoes red-zone 'score rate' reporting without the TD/FG split and PPT; p6 vetoes any composite index whose weights are undeclared or whose reconstruction against published values fails. Decision layer: fourth-down and red-zone kernels consume only interval-carrying, convention-declared estimates. A veto at any layer blocks the downstream product; the packet's own 100%-versus-1/2 contradiction is the standing test case.",
+   "primitive_refs": [
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ]
+  }
+ ],
+ "universal_lens": "Through the universal lens the packet is a measurement chart for the 22-player dynamical system: each table is an operator from the event stream (plays, clock, field position) to a summary algebra. The invariants are conservation laws (one ball, one clock, exhaustive possession accounts; yardage booked gain-minus-loss) and sampling structure (every rate is k/n with binomial uncertainty). The sovereign extraction is the operators plus their breakdown regimes — not the two-game numbers, which are snapshots, not constants.",
+ "gsi_mapping": "For GSI (body and behavior): the packet's anthropometric fields are a live data-quality specimen — height, weight, and class disagree between the two-deep and the roster for multiple players (Shankle 5-11/225/SR versus 6-1/230/JR; Jasso 6-0/225 versus 6-2/205), so any GSI body-metric database must reconcile sources before allometric or load modeling. The games-played column is the exposure denominator for per-player load rates, and the gain/loss decomposition is the template for separating positive and negative mechanical contributions in movement assessment.",
+ "gse_mapping": "For GSE (Coach-Mind, DFS, tail-risk): p1 is the stratified third-down conversion kernel with binomial intervals; p5 is the small-denominator veto on fourth-down inputs, with the packet's 100%-versus-1/2 contradiction as the calibration case; p4 is the red-zone PPT kernel separating finishing from ceiling; p3 is the convention-declared rushing decomposition; p6 is the verified composite-index template with its embedded TD/INT risk price; p2 is the possession-accounting audit that guards every tempo feature. DFS exposure inherits the games-played denominator and the TD/FG split for touchdown-dependent props."
+}

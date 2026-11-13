@@ -1,0 +1,139 @@
+{
+ "book_id": "0c444afcd300d1c3",
+ "source_status": "COMPLETE",
+ "pages_total": 3,
+ "pages_read": 3,
+ "primitives": [
+  {
+   "id": "p1",
+   "primitive_id": "p1",
+   "domain": "psych",
+   "name": "Dose-responsive dementia risk in injury severity and repetition, genotype-moderated",
+   "verbatim_quote": "dementia risk rising in a dose-responsive manner with injury severity and repetition and moderated by factors such as ApoE4.",
+   "quotes": [
+    "especially rotational acceleration and tissue deformation, to diffuse axonal injury (DAI) and white matter vulnerability.",
+    "dementia risk rising in a dose-responsive manner with injury severity and repetition and moderated by factors such as ApoE4."
+   ],
+   "page": 1,
+   "latex": "R = f(S, N \\mid G), \\qquad \\frac{\\partial f}{\\partial S} > 0, \\quad \\frac{\\partial f}{\\partial N} > 0",
+   "symbol_and_unit_ledger": "R: later dementia risk [probability, dimensionless]; S: injury severity [ordinal clinical/biomechanical scale]; N: injury repetition count [count]; G: moderator genotype (ApoE4 carrier status) [categorical]. The monotonicity statements are the editorial's 'dose-responsive' claim formalized; the editorial supplies no functional form, so f is declared unspecified. Rotational acceleration and tissue deformation are named as the physical insult variables upstream of S.",
+   "assumptions": "Secondary-source caveat: this document is a 3-page editorial summarizing eight cited contributions; the claim is the editorial's characterization of the cited primary work (Katramadou et al., IJMS 2026, 27, 1570), not a direct report of its data. No effect sizes, cohorts, or functional forms are given in the editorial. The dose-response is asserted across severity and repetition jointly; ApoE4 is named as a moderator, implying the population-average curve hides genotype strata. The physical channel is rotational acceleration producing tissue deformation and diffuse axonal injury, with secondary cascades (BBB disruption, neuroinflammation, mitochondrial dysfunction, protein aggregation) as the mediating biology.",
+   "breakdown_regime": "No functional form, threshold, or saturation is given: the monotone claim licenses ranking, not calibration. Confounding regime: injury exposure correlates with position, era, and reporting practice, so observational dose-response can be inflated by selection. Genotype regime: a single pooled curve is invalid for ApoE4-stratified decisions. The editorial's own framing ('possible link', 'potential cause-and-effect') marks causality as not settled.",
+   "timescales": [
+    "tau_0: single impact event",
+    "tau_1: one season's cumulative exposure",
+    "tau_2: career dose accumulation",
+    "tau_3: decades-long neurodegenerative latency"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSI head-impact load kernel for the 22-player system: count and severity-weight rotational-acceleration events from helmet telemetry into a cumulative dose (S, N), and treat later neurodegenerative risk as monotone in both, stratified by genotype where known. The kernel's output is a ranking and an exposure-budget constraint, not a calibrated probability — the source licenses no more. Return-to-play and career-load decisions must price repetition, not only single-event severity, because the dose-response runs through N as well as S. This is a mapping of the editorial's mechanism onto football telemetry; the editorial itself is about TBI/CTE generally and claims no football origin.",
+    "source_operator": "p1",
+    "telemetry": "Per-player impact count N and severity distribution S from helmet sensors; rotational-acceleration peak per event; cumulative dose rate by position and era; ApoE4 stratification flag; exposure-budget utilization; monotonicity audit of any fitted risk curve."
+   }
+  },
+  {
+   "id": "p2",
+   "primitive_id": "p2",
+   "domain": "physiology",
+   "name": "BBB disruption increases with injury frequency; 'mild' phenotypes carry measurable vascular compromise",
+   "verbatim_quote": "The disruption of BBB, which becomes evident as a result of the administered dextran and IgG extravasation, correlates with functional deficits and increases with injury frequency.",
+   "quotes": [
+    "The disruption of BBB, which becomes evident as a result of the administered dextran and IgG extravasation, correlates with functional deficits and increases with injury frequency.",
+    "links “mild” injury phenotypes to measurable vascular compromise"
+   ],
+   "page": 1,
+   "latex": "P_{\\mathrm{BBB}} = g(N_{\\mathrm{CBI}}), \\qquad g' > 0, \\qquad \\mathrm{extravasation}(\\mathrm{dextran}, \\mathrm{IgG}) \\uparrow \\ \\text{with}\\ N_{\\mathrm{CBI}}",
+   "symbol_and_unit_ledger": "P_BBB: blood-brain-barrier permeability/disruption [tracer extravasation per tissue mass, e.g. amount/mg]; N_CBI: number of closed-head concussive injuries [count]; dextran and IgG extravasation: tracer leakage markers [amount per tissue mass]; g: monotone increasing function, form unspecified. Functional deficits are stated to correlate with the disruption.",
+   "assumptions": "Secondary-source caveat: this document is a 3-page editorial summarizing eight cited contributions; the claim is the editorial's characterization of the cited primary work (Blaschke et al., IJMS 2024, 25, 4837), not a direct report of its data. No effect sizes, cohorts, or functional forms are given in the editorial. Evidence base is a mouse CBI model with multimodal assessment (MRI, PET with [18F]DPA-714, histology); single vs repetitive injury comparison. Tracer extravasation is the operational measure of barrier failure.",
+   "breakdown_regime": "Clinical-label regime: injuries classified 'mild' by phenotype still produce measurable vascular compromise, so symptom-based mildness does not bound biological damage. Species regime: mouse-to-human extrapolation is not established by the editorial. Measurement regime: extravasation markers require administered tracers or imaging surrogates; the editorial's companion contribution (Joseph, 3D ASL MRI late-phase perfusion) is proposed as the non-invasive surrogate for athletes.",
+   "timescales": [
+    "tau_0: one concussive event",
+    "tau_1: acute post-injury barrier window",
+    "tau_2: repetitive-injury accumulation",
+    "tau_3: chronic vascular remodeling"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 22-player system's subconcussive regime is the direct isomorph: repeated 'mild' head impacts accumulate barrier damage even when each event passes symptom-based clearance. The sovereign transfer is the clearance veto — return-to-sport decisions after mTBI should not rest on symptoms alone when physiology-sensitive measures (perfusion imaging, fluid biomarkers) can detect ongoing vascular compromise; the editorial explicitly proposes this for athletes (Joseph contribution). GSI load management inherits the frequency term: the damage variable is cumulative injury count, not just the worst single event.",
+    "source_operator": "p2",
+    "telemetry": "Impact frequency per player-season; symptom-vs-biomarker discordance rate; perfusion/biomarker trajectory post-event; clearance decisions overridden by physiological evidence; tracer or imaging surrogate availability flag."
+   }
+  },
+  {
+   "id": "p3",
+   "primitive_id": "p3",
+   "domain": "physiology",
+   "name": "HIF-1 biphasic regime inversion: protective in mild/early hypoxia, toxic in chronic/advanced",
+   "verbatim_quote": "boosting HIF-1 in early disease or mild hypoxia to support neuronal survival and reduce inflammation, but potentially suppressing it in chronic hypoxia or advanced AD where harmful effects may dominate",
+   "quotes": [
+    "HIF-1 can be protective in some contexts yet proinflammatory and neurotoxic in others.",
+    "Its effects likely depend on the severity and duration of hypoxia and related conditions.",
+    "boosting HIF-1 in early disease or mild hypoxia to support neuronal survival and reduce inflammation, but potentially suppressing it in chronic hypoxia or advanced AD where harmful effects may dominate"
+   ],
+   "page": 2,
+   "latex": "\\mathrm{sign}\\!\\left(\\frac{\\partial\\,\\mathrm{outcome}}{\\partial\\,\\mathrm{HIF}\\text{-}1}\\right) = \\begin{cases} +1 & \\text{mild hypoxia / early disease} \\\\ -1 & \\text{chronic hypoxia / advanced AD} \\end{cases}",
+   "symbol_and_unit_ledger": "HIF-1: hypoxia-inducible factor 1 activity [concentration/activity, arbitrary units]; outcome: neuronal survival vs neurodegeneration [clinical/functional scale]; hypoxia severity [oxygen tension, e.g. pO2 in mmHg, or ordinal]; duration [time]. The sign-flip is the editorial's stated context-dependence; the threshold surface in (severity, duration) space is unspecified.",
+   "assumptions": "Secondary-source caveat: this document is a 3-page editorial summarizing eight cited contributions; the claim is the editorial's characterization of the cited primary work (Mitroshina & Vedunova, IJMS 2024, 25, 4581), not a direct report of its data. No effect sizes, cohorts, or functional forms are given in the editorial. The editorial states the effect depends on severity and duration of hypoxia 'and related conditions', and frames the therapeutic rule as boost-early / suppress-chronic. The inversion is qualitative; no threshold values are given.",
+   "breakdown_regime": "The inversion itself is the breakdown regime for any monotone intervention model: a single-direction HIF-1 therapy is beneficial in one regime and harmful in the other, so 'more is better' and 'block it entirely' are both invalid as universal rules. Context regime: AD and PD are both cited, and 'related conditions' implies the sign depends on comorbid state, not hypoxia alone. The editorial's hedging ('can be', 'likely depend', 'potentially') marks this as a mechanistic hypothesis, not a calibrated decision rule.",
+   "timescales": [
+    "tau_0: acute hypoxic episode",
+    "tau_1: early disease / mild hypoxia window",
+    "tau_2: chronic hypoxia establishment",
+    "tau_3: advanced neurodegeneration"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Regime-gated intervention kernel for GSI recovery and neuroprotection: any modality with a biphasic dose-response (hypoxia-conditioning, inflammation modulation, stress-response targeting) must carry a regime classifier over (severity, duration) and an intervention sign per regime, with the crossover region flagged as no-decision. The HIF-1 case is the calibration specimen for the general veto against monotone recovery kernels: the same factor that supports survival early can drive damage late, so timing is a first-class decision variable, not a covariate. No football origin is claimed; this is a mapped decision rule.",
+    "source_operator": "p3",
+    "telemetry": "Regime classifier inputs (severity, duration, comorbidity flags); intervention sign per regime; crossover-region width and no-decision rate; outcome delta when regime gating is applied vs monotone protocol; timing-of-intervention distribution."
+   }
+  },
+  {
+   "id": "p4",
+   "primitive_id": "p4",
+   "domain": "physiology",
+   "name": "Calcium-driven enzyme network as shared TBI-AD secondary-injury cascade, calpain control node",
+   "verbatim_quote": "calcium-driven enzyme networks (kinases, phosphatases, proteases) that promote synaptic dysfunction, axonal degeneration, amyloid- β accumulation, and tau hyperphosphorylation, with calpain positioned as a key regulator.",
+   "quotes": [
+    "calcium-driven enzyme networks (kinases, phosphatases, proteases) that promote synaptic dysfunction, axonal degeneration, amyloid- β accumulation, and tau hyperphosphorylation, with calpain positioned as a key regulator."
+   ],
+   "page": 2,
+   "latex": "[\\mathrm{Ca}^{2+}]_{i}\\ \\uparrow \\ \\Rightarrow \\ \\{\\mathrm{kinases}, \\mathrm{phosphatases}, \\mathrm{proteases}\\}\\ \\Rightarrow \\ \\{\\text{synaptic dysfunction}, \\text{axonal degeneration}, \\mathrm{A}\\beta\\ \\text{accumulation}, \\tau\\ \\text{hyperphosphorylation}\\}",
+   "symbol_and_unit_ledger": "[Ca2+]_i: intracellular calcium concentration [mol/L]; kinase/phosphatase/protease activities [catalytic rate, e.g. mol/(L·s)]; Aβ: amyloid-beta peptide amount [concentration]; tau phosphorylation: phosphate stoichiometry [mol phosphate per mol tau]. The cascade is a causal-graph claim: calcium dysregulation activates the enzyme network which produces the four listed pathologies; calpain (a calcium-dependent protease) is named as key regulator.",
+   "assumptions": "Secondary-source caveat: this document is a 3-page editorial summarizing eight cited contributions; the claim is the editorial's characterization of the cited primary work (Neuschmid et al., IJMS 2025, 26, 9245), not a direct report of its data. No effect sizes, cohorts, or functional forms are given in the editorial. Calcium homeostasis is framed as the shared vulnerability across TBI and AD; the editorial calls for combined inhibition of selected calcium-dependent enzymes, implying single-node inhibition is insufficient. TBI phenotyping, long-term observation, and polygenic risk scoring are named as the needed evidence base.",
+   "breakdown_regime": "Network-redundancy regime: because the cascade is a network with multiple enzyme classes, inhibiting one node (e.g. calpain alone) may be compensated — the editorial's call for combined inhibition is the explicit acknowledgment. Phase regime: acute neuronal injury and chronic neurodegeneration are different stages of the same cascade (the cited review's subtitle), so an intervention timed for one phase need not work in the other. The causal graph is asserted qualitatively; edge weights and thresholds are absent.",
+   "timescales": [
+    "tau_0: acute calcium influx post-impact",
+    "tau_1: acute enzyme activation window",
+    "tau_2: chronic protein aggregation",
+    "tau_3: long-term neurodegeneration"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Secondary-injury cascade model for head trauma in the 22-player system: the mechanical insult (p1's rotational acceleration) is only the trigger; the damage that matters for long-term outcomes is the downstream biochemical cascade — barrier failure, inflammation, calcium-driven enzyme activation, protein pathology. The sovereign transfer is the protection-window concept: interventions target the cascade's phase and nodes, not merely the impact, and combined-node strategies are favored over single-node ones by the source's own reasoning. GSI biomarker panels (tau, amyloid, inflammatory mediators) are the observable outputs of this graph, and their time-since-impact trajectory is the phase classifier.",
+    "source_operator": "p4",
+    "telemetry": "Biomarker panel trajectories (tau, Aβ, inflammatory cytokines) vs time since impact; phase classification accuracy; single-node vs combined intervention outcome delta; calpain-pathway activity surrogate; cascade-model fit residuals per phase."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "id": "t1",
+   "trace_id": "t1",
+   "think": "This document is a three-page editorial by Dimitrios Kanakis (University of Nicosia), published in the International Journal of Molecular Sciences in 2026 (27, 2266, DOI 10.3390/ijms27052266), introducing a special issue on whether traumatic brain injury and chronic traumatic encephalopathy cause Alzheimer's disease. It summarizes eight contributions and contains no original data, no equations, and no effect sizes. That provenance determines the extraction strategy: the sovereign objects here are mechanistic invariants as stated by the editorial, each carrying an explicit secondary-source caveat naming the primary paper it characterizes. I extracted four, and the honest limitation — qualitative claims, mouse models for two of them, hedged language throughout — is recorded in every assumptions field rather than smoothed away. The first primitive is the dose-response claim: dementia risk rises with injury severity and repetition, moderated by ApoE4, with rotational acceleration and tissue deformation named as the physical insult producing diffuse axonal injury. I formalized this as a monotone function R = f(S, N | G) and was careful to declare f unspecified: the editorial licenses ranking, not calibration. The moderation term matters operationally — a pooled dose-response curve is invalid for genotype-stratified decisions, and the long latency between exposure and outcome (decades) makes this a tau_3 phenomenon that no short-horizon study can calibrate. The second primitive is the blood-brain-barrier frequency result from the Blaschke mouse CBI model: tracer extravasation (dextran, IgG) increases with injury frequency and correlates with functional deficits, and — the part with the most operational force — 'mild' injury phenotypes still show measurable vascular compromise. That single clause is a veto on symptom-based clearance: clinical mildness does not bound biological damage. The editorial's third contribution (Joseph) supplies the proposed remedy, physiology-sensitive perfusion imaging (3D ASL MRI) to decide when an athlete with mTBI can return to sport, which is why I attached the return-to-sport mapping to this primitive rather than treating it as a separate one. The third primitive is the cleanest regime object in the document: HIF-1's effect sign flips with hypoxia severity and duration — protective in mild hypoxia and early disease, proinflammatory and neurotoxic in chronic hypoxia and advanced AD. The editorial's therapeutic rule is explicitly bidirectional: boost early, suppress late. I formalized the sign-flip as a piecewise derivative and left the threshold surface unspecified, because the source gives none. This is the textbook structure of a breakdown regime for monotone intervention models, and it generalizes: any recovery or neuroprotection modality with a biphasic dose-response needs a regime classifier and a no-decision zone around the crossover, not a single-direction protocol. The fourth primitive is the calcium cascade: dysregulated intracellular calcium activates kinase, phosphatase, and protease networks that produce synaptic dysfunction, axonal degeneration, amyloid-beta accumulation, and tau hyperphosphorylation, with calpain as the named control node. The editorial's call for combined enzyme inhibition is itself evidence of the network-redundancy breakdown regime — single-node blockade can be compensated. This primitive supplies the phase structure (acute injury to chronic degeneration) that the biomarker trajectories would need to classify. Two epistemic cautions shaped the trace. First, the editorial's eighth contribution (Volloch and Rits-Volloch) is an active theory revision: it argues the amyloid cascade should be replaced by a sustained neuronal integrated-stress-response model centered on C99, with proteolytic A-beta production suppressed in AD-affected neurons, and expresses skepticism that extracellular A-beta-targeted therapy reverses symptomatic disease. I recorded this as context and as a cross-layer veto against reifying the amyloid cascade, but did not promote it to a sovereign primitive: it is a contested perspective proposal, not an invariant, and the corpus must hold competing frameworks without collapsing them. Second, the editorial's own language — 'possible link', 'potential cause-and-effect', 'can be', 'likely depend' — is uniformly hedged, and the special issue title ends in a question mark. The extraction preserves that hedge: these are mechanistic hypotheses with named primary sources, suitable as kernel structure and veto rules, not as calibrated risk numbers. For the institutes, the value is concentrated in GSI: head-impact telemetry is a direct measurement channel for the 22-player system, and the four primitives give the load kernel (dose in severity and repetition), the clearance veto (symptoms insufficient), the intervention-timing rule (regime-gated, biphasic), and the secondary-injury phase model (cascade, not impact). Every Layer-2 entry is tagged as a mapping; the editorial makes no football-origin claim and neither do I. The document is complete and readable across all three pages, the retraction scan found no retraction, withdrawal, erratum, corrigendum, or expression-of-concern language, and the source status is COMPLETE. Two contributions remain to be situated, and both reinforce the extracted structure rather than adding new primitives. Egoraeva's SDEA study is a concrete multi-process repair specimen: a single omega-3 ethanolamide reduces astrocytic reactivity, restores Arc expression, improves CA1 dendritic spine density and morphology, and partially rescues dentate-gyrus proliferative activity (Ki-67), with those molecular changes coinciding with better anxiety-like behavior and working memory in the mTBI mouse. That pattern — one agent, several cellular targets, behavioral rescue — is exactly the multi-node strategy the calcium-cascade primitive's redundancy regime calls for, and it is why the editorial frames omega-3 ethanolamides as multi-target candidates. Pszczolowska's CTE-AD synthesis supplies the discrimination caution: the two conditions overlap in tau- and amyloid-related pathology but differ in BBB-related damage patterns, and the editorial's stated priorities are prevention of the primary injuries plus limitation of neuroinflammation. The sovereign lesson there is that shared histopathology does not license treating CTE as a subtype of Alzheimer's — the 'intersections and distinctions' framing is a veto on disease-identity collapse, and the prevention-first priority is the operational conclusion: for the 22-player system, reducing the primary mechanical dose dominates any downstream pharmacology, because every cascade primitive in this artifact is triggered by the impact that prevention would have removed.",
+   "retrocausal_genealogy": "Genealogy, bounded by what the editorial itself supplies. The cited primary works span 2024 to 2026 in the same journal: Blaschke's CBI mouse model (2024), Joseph's ASL perfusion review (2024), Mitroshina and Vedunova's oxygen-homeostasis review (2024), Pszczolowska's CTE-AD synthesis (2024), Neuschmid's calcium signaling review (2025), Volloch's ISR theory revision (2025), Katramadou's multilevel mechanism review (2026), and Egoraeva's SDEA repair study (2026). The editorial is therefore a snapshot of a live, unsettled research front, not a settled textbook lineage; its own framing question mark and the Volloch revision make that explicit. The deeper roots — rotational mechanics of head injury, calcium excitotoxicity, the amyloid cascade — are named only through these citations, and no historical origin beyond them is asserted here.",
+   "theory_of_mind": "Modeling the author's position. An editorial introducing a special issue has a curatorial mandate: the editor selected these eight contributions and frames them as converging on a possible TBI/CTE-to-AD link, while the issue title's question mark and the pervasive hedging preserve deniability about causality. The editor is also an author on contribution 1 (Katramadou, Bender, Kanakis), so the framing review is partly self-citation — a selection pressure to note, not an accusation. The Volloch inclusion shows the editor admitting a rival framework that undermines the amyloid reading of the other contributions, which is evidence of genuine curatorial honesty. Downstream, the corpus should treat the editorial as a curated map of a contested field: useful for structure and vetoes, unreliable for settled effect sizes, and always one step removed from the primary data.",
+   "cross_layer_veto": "Cross-layer veto assignments. Data layer: p2 vetoes symptom-only return-to-sport clearance when physiological evidence of barrier compromise is available or obtainable; p1's genotype moderation vetoes pooled dose-response curves applied to ApoE4-stratified decisions. Estimation layer: p1's unspecified functional form vetoes any calibrated probability claim built from the editorial alone — ranking only. Representation layer: the Volloch ISR revision vetoes reifying the amyloid cascade as settled mechanism in any generated explanation; competing frameworks must be carried as alternatives. Decision layer: p3 vetoes monotone intervention protocols for biphasic factors — regime classification and a no-decision crossover zone are mandatory; p4 vetoes single-node cascade interventions presented as sufficient. A veto at any layer blocks the downstream product.",
+   "primitive_refs": [
+    "p1",
+    "p2",
+    "p3",
+    "p4"
+   ]
+  }
+ ],
+ "universal_lens": "Through the universal lens the editorial maps a multi-scale causal chain: mechanical energy (rotational acceleration, tissue deformation) transduces into barrier failure and calcium dysregulation, which drives enzyme networks and protein pathology, which manifests as cognitive decline decades later. The invariants are the monotone dose structure, the frequency-dependence of barrier damage, and the sign-flipping context dependence of HIF-1 — each a constraint on any admissible model of the chain, and each carrying an explicit breakdown regime.",
+ "gsi_mapping": "For GSI (body and behavior): this is the head-trauma core. p1 gives the cumulative impact-load kernel (severity times repetition, genotype-moderated) for helmet-telemetry monitoring; p2 gives the clearance veto — symptoms do not bound vascular damage, so physiology-sensitive measures gate return-to-sport; p3 gives the regime-gated intervention rule for biphasic recovery modalities; p4 gives the secondary-injury phase model that biomarker trajectories (tau, amyloid, cytokines) must classify. Together they define the neuroprotection module's structure and its vetoes.",
+ "gse_mapping": "For GSE (Coach-Mind, DFS, tail-risk): the direct product is availability and tail-risk modeling — cumulative head-impact dose and regime-gated recovery determine player availability distributions, and the symptom-vs-biomarker discordance is a hidden-state risk that naive injury reports miss. Coach-Mind explanations must carry the amyloid-vs-ISR framework veto (no settled-mechanism claims). DFS pricing of concussion-related absence inherits the frequency-dependent damage model rather than single-event severity. No odds or wagering content is produced; this is internal risk structure only."
+}

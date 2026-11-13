@@ -1,0 +1,142 @@
+{
+ "book_id": "29a9a56fe196f2f2",
+ "source_status": "COMPLETE",
+ "pages_total": 262,
+ "pages_read": 262,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Pre-participation physician-clearance gate (Ames rule)",
+   "verbatim_quote": "that no one shall be allowed to play football until his physical condition has been passed upon favorably by a competent physician, the objection of physical danger will, I believe, lose almost all its force.",
+   "page": 29,
+   "latex": "\\forall i \\in \\mathrm{Squad}:\\ \\mathrm{Play}(i) \\Rightarrow \\mathrm{PhysicianCleared}(i)",
+   "symbol_and_unit_ledger": "i = player index (dimensionless); Play(i), PhysicianCleared(i) in {0,1} dimensionless predicates; no physical units enter. Predicate-logic formalization of the printed prose rule (PDF p.29, printed p.15, Prof. James Barr Ames); no source equation exists in this qualitative source.",
+   "assumptions": "As printed: a 'competent physician' must pass favorably upon the candidate's physical condition BEFORE participation ('until'); Ames frames the danger reduction as conditional belief ('will, I believe, lose almost all its force'), and in the same letter concedes the game 'has been unnecessarily dangerous' and that rules revision must also continue. The gate is a necessary filter, not a sufficient safety guarantee.",
+   "breakdown_regime": "Fails when clearance is stale (condition drifts in-season: Waters' weak knee and Emmons' overtraining, PDF pp.53-54), when the examiner is not competent, or when institutions waive the gate for desirable players (the pressure to keep/admit boys 'because he can play football' is documented in the faculty letters, PDF p.83). The gate filters entrants only; it does not remove in-play hazards (mass plays, ground condition). It is a belief statement, not a measured effect size.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Eligibility predicate as a hard pre-transition constraint on the lineup-selection kernel of the 22-player football dynamical system: a candidate enters the active-roster state only if the medical-clearance flag is true. It is an absorbing safety filter upstream of every collision kernel, not a term in the win-probability objective; any call that fields an uncleared player is vetoed regardless of its expected yardage.",
+    "source_operator": "p1",
+    "telemetry": "Pre-participation examination records and clearance dates; injury incidence before/after gate adoption (historical); modern analogues: PPE logs, availability reports, re-injury rates after premature return."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Vital index = lung-capacity / weight (Beyer)",
+   "verbatim_quote": "relation to the subject of \" vital index,\" or the result of a simple division of lung-capacity by weight, and to which we shall again refer later on.",
+   "page": 39,
+   "latex": "VI = L / W",
+   "symbol_and_unit_ledger": "VI = vital index [in^3/lb] (cubic inches of lung capacity per pound of body weight); L = lung-capacity [in^3] (source states 'Capacity of lungs is given in cubic inches', PDF p.25); W = body weight [lb] ('items of strength of back and legs, and of weight, are given in pounds', PDF p.25). Printed values: 50 naval cadets VI 0.067 -> 0.066 over six months' gymnastics (PDF p.40; second value printed with comma decimal '0,066'); both football series (17 players 1892, 25 players 1893) record a decrease in vital index (PDF p.40).",
+   "assumptions": "As printed: lung-capacity and weight measured before and after a defined training period with the same protocol; the ratio is a definitional identity, not a causal law. Beyer's cross-sport comparison (football vs gymnasium drill vs boating) assumes comparable measurement conditions and acknowledges selection: 'Has the football field exercised a certain natural selection in the choice of its devotees' (PDF p.40).",
+   "breakdown_regime": "Ratio confounding: in the football cohorts weight rose 4.9% (1892) / 4.7% (1893) while lung-capacity rose 0% / 3.9%, so VI fell although absolute capacity never decreased - a falling vital index is NOT evidence of physiological decline. Small n (17 and 25), two-month windows, and pre-selected athletic populations limit generalization. OCR defect: '0,066' comma decimal on PDF p.40 must be read as 0.066.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived (not printed) capacity-per-unit-mass conditioning state: aerobic supply scales with lung-capacity L while the mechanical cost of transporting the body scales with weight W, so L/W bounds sustainable repeated-effort output late in the game. In the 22-player system it enters the fatigue state of the transition kernel as a per-player endurance ceiling; the source's own finding (weight gain outrunning capacity gain) is the calibration warning that mass acquisition can degrade this ceiling even as strength rises.",
+    "source_operator": "p2",
+    "telemetry": "Historical: Beyer's paired spirometry + scale-weight protocol (PDF pp.38-40). Modern calibration: VO2max per kg, repeated-sprint decrement, body-composition vs endurance tracking."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Mass-play mean-weight-mismatch hazard (King's 25-pound threshold)",
+   "verbatim_quote": "Teams from different schools are much more apt to differ in weight than college teams, and in those massed plays a twenty-five pounds difference in average weight is damaging and may be disastrous.",
+   "page": 103,
+   "latex": "\\mathrm{MassPlay} \\land \\left|\\bar{m}_A - \\bar{m}_B\\right| \\geq 25\\ \\mathrm{lb} \\Rightarrow \\mathrm{DamageRisk}",
+   "symbol_and_unit_ledger": "m_bar_A, m_bar_B = mean player weights of the two teams [lb] (printed unit; 25 lb ~ 11.3 kg); MassPlay, DamageRisk in {0,1} dimensionless predicates. The 25 lb threshold is King's printed expert judgment (PDF p.103, printed p.89), not a measured constant. Predicate-logic formalization of printed prose rule; no source equation.",
+   "assumptions": "As printed: the hazard is specific to 'massed plays' (closed, momentum-driven contact), not open play; school teams 'are much more apt to differ in weight than college teams'; the mechanism is amplified by the over-age over-size schoolboy - 'At school a dull but mature student may often be found ... too old for his mates and far larger than the boys with whom he can play. He will be used in the mass plays and injuries to the smaller boys result' (committee conclusion, PDF p.248).",
+   "breakdown_regime": "Threshold is qualitative judgment without uncertainty bounds; ignores velocity, technique, and conditioning; direction of the mismatch determines who is injured (the smaller boys). Does not transfer to open play: Trinity's Luther reports every serious accident he witnessed occurred in the open phase at full speed (PDF p.139), so removing mass plays does not remove collision hazard - it changes its regime.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mass-differential constraint on the collision transition kernel: in momentum-driven mass plays the impulse asymmetry delivered to the lighter side grows with the mean-weight mismatch, so roster construction and play-call selection must bound |delta m_bar| or the injury-hazard term spikes. Binds as a constraint on the lineup/play-call kernel for mismatched (school vs school, small-college vs large-college) matchups, exactly the Wesleyan mechanism Loveland documents (PDF p.55).",
+    "source_operator": "p3",
+    "telemetry": "Printed roster weights and school injury reports (King, PDF p.103; Loveland's Wesleyan vs Yale/Harvard/Princeton casualty comparison, PDF p.55); modern: roster mass distributions, collision counts, injury incidence stratified by weight mismatch."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Original Rugby on-side invariant (behind-the-ball predicate)",
+   "verbatim_quote": "The most important rule of the whole list, in my opinion, is this one defining \" off side \" play. The whole idea of the Rugby game centers on this point, that to be \" on side \" a player must be behind the ball.",
+   "page": 175,
+   "latex": "\\mathrm{OnSide}(i,t) \\iff x_i(t) \\leq x_b(t)",
+   "symbol_and_unit_ledger": "x_i(t) = position of player i along the field axis oriented toward the opponents' goal [length; only the ordering is used, so units cancel]; x_b(t) = ball position on the same axis; OnSide(i,t) in {0,1} dimensionless predicate. Formalization of the printed prose rule recited by H. S. Seaman (PDF p.175, printed p.161) as the original 1874 rule; no source equation.",
+   "assumptions": "As printed (Seaman's recitation of the original rule): a player is off-side when the ball has been caught or touched, or is being run with, by a teammate behind him; he is put on-side when an opponent touches the ball or the carrier runs past him; while off-side he is 'out of the game' - cannot touch the ball or in any way interrupt a play or obstruct a player. The rule is a hard spatial constraint, not a discretionary judgment.",
+   "breakdown_regime": "Enforcement decay: Tyler's diagnosis - 'The moment the \"snap-back\" was invented, the systematic violation of the off-side rules began, and the whole progeny of evasions and distortions of the rules followed inevitably' (PDF p.84); under the original rule every man lined up after a down is off-side the moment the ball touches the quarter-back's hands. When the verifier (umpire) cannot observe the predicate inside the pile, the effective rule drifts from the written rule and mass play/interference become the de facto game.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "State-dependent legality mask on the transition kernel: at each snap only players satisfying the behind-the-ball predicate may legally engage, block, or receive; the mask defines the legal action set of the 22-player system. Its erosion (snap-back + unobservable line-of-scrimmage violations) is a documented phase transition from open to mass play - the constraint's verification cost, not its text, determines the game's equilibrium.",
+    "source_operator": "p4",
+    "telemetry": "Formation tracking at the snap; off-side/holding penalty counts; historical rule texts and revision records (1894 rules committee premium on open kicking, PDF p.248)."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Exposure-normalized injury rate (Dartmouth player-game denominator)",
+   "verbatim_quote": "This gives a minimum estimate of 1210 men plaj^ing once, in all degrees of fitness and unfitness for the game. I did not witness all these game and cannot speak with certainty, but with reasonable confidence, subject to correction. The injuries were bruises about tlie head and knees, sprained ankles, strained muscles and ligaments. I estimate the number of fresh disabling injuries at 20.",
+   "page": 127,
+   "latex": "\\hat{\\lambda} = N_{\\mathrm{inj}} / N_{\\mathrm{exposure}} = 20 / 1210",
+   "symbol_and_unit_ledger": "N_inj = 20 fresh disabling injuries (printed estimate, dimensionless count); N_exposure = 1210 player-games (printed minimum estimate: 880 practice + 220 varsity-match + 66 class-game + 44 Thanksgiving exposures, PDF pp.126-127); lambda_hat ~ 0.0165 [injuries per player-game]. Rate definition is the extractor's formalization; both counts are printed verbatim in the anonymous Dartmouth faculty letter.",
+   "assumptions": "As printed: exposure unit is 'men playing once'; the 1210 figure is explicitly a MINIMUM estimate and the author 'did not witness all these game and cannot speak with certainty, but with reasonable confidence, subject to correction'; injuries counted are 'fresh disabling' ones, with the author explicitly flagging the difficulty of separating fresh injuries from temporary aggravation of old ones (PDF p.126); the pool mixes 'all degrees of fitness and unfitness for the game'.",
+   "breakdown_regime": "Self-reported, unverified denominator; heterogeneous fitness pools one hazard rate over subpopulations with different risks; one of the 20 injuries possibly permanent; not comparable to match-only rates unless the exposure definition is held fixed; survivorship bias - boys who quit after injury vanish from later exposure counts (the Albany High School principal flags exactly this exclusion, PDF p.88).",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived calibration principle: the injury-risk term of any football play-call or load-management kernel must be calibrated on exposure-normalized hazard (injuries per player-game), never on raw injury counts or press fatality headlines. The Dartmouth letter is a printed 1894 instance of the denominator discipline the foundry enforces: risk = events / exposures, with the exposure definition declared.",
+    "source_operator": "p5",
+    "telemetry": "Printed player-game counts and injury logs (PDF pp.126-127); modern: snap counts, practice participation logs, injury reports stratified by session type."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The 1894 Camp committee is a designed investigation, not a scrapbook, and its design choices are the first sovereign object to extract. The hidden state that created it was the 1893 crisis: wholesale press attacks on football after a season of reported fatalities left parents in 'an uncomfortable uncertainty', and a Boston gentleman's formal petition to the Harvard Board of Overseers forced an inquiry (PDF p.13). The committee's response was measurement with a control population. They searched for prior work and found exactly one thorough study - Dr. Morgan's Oxford investigation of boating men - and 'determined to take his summary as the basis of comparison' (PDF p.14). Morgan's printed table reads: Benefited by rowing 115, Uninjured by rowing 132, Injured by rowing 17 (PDF p.15), a denominator of 264 oarsmen. The committee then matched populations deliberately: Harvard, Yale, Princeton players from the introduction of Rugby in 1876 onward numbered 'very close to the number of men who rowed in varsity races' in Morgan's window (PDF p.14). Their football return: 337 answers, 328 benefited, 3 injured, 2 failed to reply, 4 no effect (PDF p.73). Read as base rates, the comparison is stark - but the instrument differs, and that is the invariant to carry forward. Morgan's categories were benefit/injury attributions; the football question asked men whether they 'considered themselves benefited'. Loveland's independent survey of 187 former players found 39 - 'a little over 20 per cent' - reporting some permanent injury, 18 of them seriously inconvenienced (PDF p.55). Both numbers are honest; they answer different questions. The foundry rule this teaches: never transport a rate across instruments; store the question wording with the number, or the number becomes a weapon. The second lesson is physiological and comes from Beyer's vital index. His football cohorts gained weight faster than lung-capacity, so the ratio L/W fell in both series even though absolute capacity never declined (PDF pp.39-40). A metric can move opposite to the underlying quantity it is supposed to track; the committee's own data show football inferior to gymnastics and boating on that metric, which the pro-game narrative cannot explain away. The third lesson is the denominator discipline of the Dartmouth letter: 20 fresh disabling injuries against a minimum of 1210 player-games of exposure, explicitly 'subject to correction' (PDF pp.126-127). Raw counts and headlines are not rates. Finally, the selection structure is visible and must be flagged, not hidden: player letters were 'so unanimously in favor of the sport that only a few are given' (PDF p.16), while faculty letters were printed in full, favorable and unfavorable alike. The committee knew its player sample was self-selected and said so. That disclosure is itself a sovereign methodological invariant: a defense artifact that declares its own bias is usable; one that conceals it is not.",
+   "retrocausal_genealogy": "The lineage that produced this book is a political scar: the 1893 fatality season and the newspaper crusade - Whitney's rebuttal names the Evening Post's editor and the 'hysteria' of the attack (PDF pp.43-46) - which made the game's institutional survival an open question. The Harvard Overseers petition converted panic into an audit, and the committee's choice of Morgan's rowing study as control was forced by scarcity: it was 'the only thorough enquiry' into benefit and injury in any sport (PDF p.14). Every number in the volume therefore carries the prior of an existence proof: the game was on trial, and the measurement design itself is part of the defense. Read the tables with that hidden state in view, and the disclosure of selection bias becomes the most trustworthy signal in the book.",
+   "theory_of_mind": "The committee models three audiences simultaneously. Alarmist parents read fatality headlines and need base rates; faculty skeptics - President Eliot's report is cited repeatedly by the head-masters (PDF pp.94, 101) - need scholarship evidence; the players themselves have identity invested and answer unanimously in favor. Camp's credibility move is to print the unfavorable faculty letters in full (PDF p.16), anticipating the accusation of a stacked sample. The players recursively model the public in turn: Belknap insists the rabid opponents 'know absolutely nothing about the game, and, in fact, have never even seen it played' (PDF pp.210-211), and he documents a press-reported football death that investigation showed involved a man who never played at all. Each side attributes the other's belief to ignorance rather than to a different loss function - parents optimize child survival, players optimize identity and glory - and that belief clash is exactly what the committee's controlled comparison was built to adjudicate.",
+   "cross_layer_veto": "Three vetoes adjudicate cleanly. The physiology layer vetoes the rhetoric layer: Beyer's own measurements show football producing a falling vital index while gymnastics and boating do better (PDF p.40), so no pro-game argument may claim physical superiority on that metric - the honest claim is moral and mental discipline, which the letters support. The exposure layer vetoes the headline layer: 20 disabling injuries per 1210 player-games is a different object from 'deaths every week', and any risk model calibrated on press counts is mis-specified. And the medical gate vetoes the win-probability objective itself: Ames's clearance rule (PDF p.29) is a hard constraint upstream of lineup selection - fielding an uncleared star is forbidden at any expected yardage, exactly as Waters' weak knee and Emmons' overtrained collapse (PDF pp.53-54) show the cost of ignoring it."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The off-side invariant and its erosion are the book's deepest dynamical lesson, and they must be extracted as a constraint-decay mechanism, not as nostalgia. Seaman's letter recites the original 1874 rule with operational precision: a player is off-side when a teammate behind him has caught, touched, or is running with the ball; he is restored on-side when an opponent touches the ball or the carrier runs past him; while off-side he is out of the game entirely - cannot touch the ball, interrupt a play, or obstruct a player (PDF p.175). His summary is the sovereign statement: 'The whole idea of the Rugby game centers on this point, that to be on side a player must be behind the ball.' Formalized, this is a spatial predicate on every player at every instant, a legality mask over the action set. Tyler's letter then supplies the decay dynamics. The snap-back was invented, and 'the systematic violation of the off-side rules began, and the whole progeny of evasions and distortions of the rules followed inevitably' (PDF p.84). His reductio is exact: under the original rule, every man lined up after a down is off-side the moment the ball touches the quarter-back's hands, so the entire modern line is illegal at the snap, and 'all those attempts to define holding in the line are simply meaningless babble'. The mechanism generalizes: a constraint that is cheap to state but expensive to verify decays under competitive pressure, because the payoff to violating it is private - wins, yardage, glory - while the cost is diffuse: injuries to smaller boys, brutal spectacle, public alarm. The umpire's observation bandwidth is the bottleneck; inside the pile the predicate is unobservable, so the effective rule drifts from the written rule until the evasion becomes the rule itself, as Keith puts it (PDF p.243). The downstream externality is quantified by King: in massed plays a twenty-five pounds difference in average weight 'is damaging and may be disastrous' (PDF p.103), and the committee identifies the amplification vector - the over-age, over-size schoolboy used in mass plays while 'injuries to the smaller boys result' (PDF p.248). The reform debate then shows the veto is not monotone. Tyler demands restoration of the original off-side rule as the only radical fix; Luther counters that every serious accident he ever witnessed occurred in the OPEN phase, with the runner at full speed (PDF p.139), so opening the game trades mass-collision hazard for high-speed collision hazard rather than eliminating it. The committee's actual settlement - increased premium on the open kicking game, 'something of a reduction of the mass plays' (PDF p.248) - is the adjudicated compromise between two genuine physical vetoes. The foundry lesson: model the enforcement technology alongside the rule text; a rule without a verifier is a suggestion, and any simulation of the 22-player system that encodes only the written constraint will mispredict the equilibrium the players actually reach.",
+   "retrocausal_genealogy": "The lineage runs from the Rugby school's handling game through the 1874 Harvard-McGill matches - Tyler played half-back in what he calls the first Rugby game played in the United States (PDF p.81) - to the American snap-back and interference innovations of the 1880s and early 1890s. Each innovation was a local optimization against the written constraint, and the accumulated distortions produced the 1893 crisis that called the committee into existence. The scar is visible in the vocabulary the players themselves use as indictments: 'battering-ram', 'flying wedge', 'mass play', 'the progeny of evasions'. The genealogy of the rule's decay is thus endogenous to the competition, not imposed from outside it.",
+   "theory_of_mind": "The captain calling a wedge models the umpire's observation bandwidth, not the rulebook: he knows the pile hides the off-side predicate and that the payoff to the hidden violation is private. The umpire, in turn, knows that calling every infraction destroys the spectacle the crowd pays for - the gate-money discussions make the revenue dependence explicit (PDF pp.250-251) - so enforcement effort is not incentive-compatible for anyone on the field. Tyler models both players and concludes that only a geometric reset, restoring the original behind-the-ball rule, changes the equilibrium, because adding referees treats the symptom while the verification cost remains. Luther models the reformer in turn and warns that the reset has its own casualty regime at full speed. Each agent's belief about the others' enforcement behavior is what selects the actual game, not the printed rule.",
+   "cross_layer_veto": "The physics layer vetoes the mass-play strategy for mismatched school teams: King's twenty-five-pound mean-weight threshold makes the impulse asymmetry damaging regardless of the play's expected yardage gain, and the committee's over-age-schoolboy mechanism identifies who absorbs the damage (PDF pp.103, 248). The institutional layer then vetoes the naive 'just enforce better' fix, and Luther's open-play testimony vetoes the naive 'just open the game' fix: his serious accidents all came at full speed in the open phase (PDF p.139). The committee's compromise - premium on kicking, reduction rather than abolition of mass plays - is the adjudicated settlement between two real vetoes, and any modern play-call kernel must carry both hazard terms rather than assuming either reform is free."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any claimed benefit: identify the control population, the exposure denominator, the measurement instrument, and the enforcement technology behind every headline number. The 1894 committee demonstrates that a ratio can fall while its numerator rises, that rates cannot cross instruments, and that a written rule decays whenever its verifier is absent.",
+ "gsi_mapping": "GSI clinical telemetry: the vital index is a historical capacity-per-mass conditioning marker whose confounding - weight gain masking stable lung capacity - is the same trap as modern body-composition versus performance metrics. The physician-clearance gate is the ancestor of pre-participation screening, and the exposure-normalized injury rate is the correct unit for load-management and return-to-play hazard models.",
+ "gse_mapping": "GSE Coach-Mind: the off-side invariant is a legality mask on the action set, and its snap-back erosion is a deception-verification arms race - model the referee's observation bandwidth, not just the rulebook. King's weight-mismatch threshold bounds mass-play call selection for mismatched rosters; the medical gate is a hard veto upstream of every lineup decision. Internal only; no odds anywhere."
+}

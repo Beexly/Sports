@@ -1,0 +1,211 @@
+{
+ "book_id": "345052dfaf01a062",
+ "source_status": "COMPLETE",
+ "pages_total": 548,
+ "pages_read": 119,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Action-value definition for the k-armed bandit (Eq. 2.1)",
+   "verbatim_quote": "The value then of an arbitrary action a, denoted q⇤(a), is the expected reward given that a is selected:",
+   "page": 48,
+   "latex": "q_*(a) \\doteq \\mathbb{E}\\!\\left[R_t \\mid A_t = a\\right] \\tag{2.1}",
+   "symbol_and_unit_ledger": "a: an action (dimensionless index over the action set); A_t: the action actually selected at time t (random variable); R_t: scalar reward at time t (utility units, dimensionless scalar); q_*(a): true action-value = expected reward conditional on selecting a (same utility units as R_t); E[. | A_t=a]: conditional expectation over the reward distribution induced by action a. Dimensional homogeneity: both sides are utility units. The '.=' in the source is definitional equality (doteq).",
+   "assumptions": "Stationary reward distribution per action (the bandit case of Sec. 2.1); the value is an expectation, so a single sample is a noisy estimate; no state transition (one-step bandit). The source notes nonstationary variants require tracking (Exercise 2.5).",
+   "breakdown_regime": "Nonstationarity: if the reward distribution drifts, a fixed sample average is biased and constant-step-size tracking is required (Sec. 2.5). The expectation is undefined if the reward has no finite mean. With function approximation and off-policy bootstrapping the estimate can diverge (deadly triad, Ch. 11).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one action selection and reward sample",
+    "tau_1: one incremental value update",
+    "tau_2: the exploration/exploitation horizon",
+    "tau_3: reward-distribution stationarity lifetime"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthesis mapping: a play call in the 22-player system is a bandit arm when evaluated myopically — q_*(call) = expected immediate outcome utility of that call. The coaching staff's tendency chart is the sample-average estimator of these action-values. This is the myopic limit of the full MDP value; it ignores continuation value, which is exactly what the Bellman backup (p2) adds.",
+    "source_operator": "p1",
+    "telemetry": "Charted per-call outcome counts and mean utility per call; visit count n(a) per call; variance of the reward estimate; nonstationarity detected as drift in per-call mean across games."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Bellman optimality equation for the action-value function (Eq. 3.20)",
+   "verbatim_quote": "Intuitively, the Bellman optimality equation expresses the fact that the value of a state under an optimal policy must equal the expected return for the best action from that state:",
+   "page": 85,
+   "latex": "q_*(s,a) = \\sum_{s',r} p(s',r \\mid s,a)\\left[\\,r + \\gamma \\max_{a'} q_*(s',a')\\,\\right] \\tag{3.20}",
+   "symbol_and_unit_ledger": "s, s' in S: states (dimensionless indices); a, a' in A: actions (dimensionless); p(s',r|s,a): joint transition-reward probability (probability, dimensionless, sums to 1 over s',r); r: scalar reward (utility units); gamma in [0,1]: discount factor (dimensionless); max_{a'}: maximization over next actions (selects the greedy continuation); q_*(s,a): optimal action-value (utility units). Both sides are utility units; the max makes this a nonlinear fixed-point equation, unlike the linear policy-evaluation Bellman equation (3.14).",
+   "assumptions": "Finite MDP with known dynamics p(s',r|s,a); Markov property; discount gamma in [0,1]; the optimal value function is the unique fixed point. The source (p.88) states solving it directly requires three rarely-held assumptions: (1) accurate knowledge of environment dynamics, (2) enough computational resources, (3) the Markov property.",
+   "breakdown_regime": "The source explicitly states the Bellman optimality equation is rarely directly useful because its three assumptions are seldom satisfied (p.88); it is a theoretical anchor, not a practical algorithm. With unknown dynamics one must learn (TD/Q-learning); with large state spaces the sum/max is intractable (curse of dimensionality); with partial observability the Markov property fails.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one transition (s,a)->(s',r)",
+    "tau_1: one Bellman optimality backup",
+    "tau_2: finite horizon of the return",
+    "tau_3: infinite-horizon discount scale 1/(1-gamma)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthesis mapping: the optimal play-call evaluation kernel for the 22-player system. q_*(call, game state) = expected immediate snap utility + gamma times the best continuation value over the resulting down-distance-field-position state. The max over a' is the coordinator choosing the best follow-up call; the sum over s',r is the stochastic outcome of the snap (the pass rush, coverage, and ball-carrier result are the environment's transition kernel). It is a derived evaluation operator, not a claim that football physically obeys Bellman's equation.",
+    "source_operator": "p2",
+    "telemetry": "Charted snap outcomes as r; down-distance transitions as s'; held-out drive sequences to calibrate gamma; the gap between the learned q and the hindsight-optimal q as a model-error signal."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "TD(0) update and the temporal-difference error (Eqs. 6.2, 6.5)",
+   "verbatim_quote": "Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to V (St) (only then is Gt known), TD methods need to wait only until the next time step.",
+   "page": 142,
+   "latex": "V(S_t) \\leftarrow V(S_t) + \\alpha\\left[R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)\\right] \\tag{6.2}\\\\ \\delta_t \\doteq R_{t+1} + \\gamma V(S_{t+1}) - V(S_t) \\tag{6.5}",
+   "symbol_and_unit_ledger": "V(S_t): estimated state-value at time t (utility units); alpha in (0,1]: step-size (dimensionless); R_{t+1}: observed next reward (utility units); gamma in [0,1]: discount (dimensionless); V(S_{t+1}): current estimate of next-state value (utility units, the bootstrap); delta_t: TD error (utility units) = better estimate minus current estimate. The bracket [R_{t+1}+gamma V(S_{t+1}) - V(S_t)] is dimensionally homogeneous (all utility units). TD bootstraps: the target uses the current estimate V(S_{t+1}).",
+   "assumptions": "Markov state representation; the estimate V is updated online after each transition (no waiting for episode end); alpha small enough for convergence (stochastic-approximation conditions 2.7 for the tabular case). The source proves TD(0) converges to v_pi in the tabular on-policy case.",
+   "breakdown_regime": "With function approximation the update becomes semi-gradient (it ignores the effect of weights on the bootstrap target, Sec. 9.3) and is not true gradient descent; combined with off-policy training it can diverge (deadly triad, Ch. 11, Baird's counterexample). A poor state representation causes bias and poor generalization (p.287).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one transition and reward",
+    "tau_1: one TD(0) backup (online, per step)",
+    "tau_2: episode horizon",
+    "tau_3: eligibility-trace decay scale when extended to TD(lambda)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SOURCE-STATED isomorphism (Sec. 15.3, Montague-Daylan-Sejnowski 1996; Schultz experiments): the phasic activity of dopamine-producing neurons is hypothesized to convey exactly this TD error delta_t — a reward prediction error. The book lists four parallels: response only to unpredicted reward; cues gain predictive value with learning; the response shifts to the earliest predictive cue; omission of predicted reward drops firing below baseline. In the 22-player system the same kernel is the coaching staff's moment-by-moment surprise signal that updates play-value estimates.",
+    "source_operator": "p3",
+    "telemetry": "For the neuroscience mapping: phasic dopamine firing rate minus background rate (the source notes delta can be negative but firing cannot, so the mapped quantity is delta + background). For football: per-snap prediction error between expected and actual outcome utility."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Q-learning: off-policy TD control (Eq. 6.8)",
+   "verbatim_quote": "the learned action-value function, Q, directly approximates q⇤, the optimal action-value function, independent of the policy being followed.",
+   "page": 153,
+   "latex": "Q(S_t,A_t) \\leftarrow Q(S_t,A_t) + \\alpha\\left[R_{t+1} + \\gamma \\max_{a} Q(S_{t+1},a) - Q(S_t,A_t)\\right] \\tag{6.8}",
+   "symbol_and_unit_ledger": "Q(S_t,A_t): estimated action-value (utility units); alpha in (0,1]: step-size (dimensionless); R_{t+1}: next reward (utility units); gamma in [0,1]: discount (dimensionless); max_a Q(S_{t+1},a): greedy next-action value (utility units) — this max is what makes Q-learning off-policy: the target uses the greedy policy regardless of the behavior policy that actually generated the data. Both sides utility units.",
+   "assumptions": "Tabular representation; all state-action pairs visited infinitely often; alpha decreased appropriately (the source's convergence conditions). The learned Q directly approximates q_* independent of the policy being followed (off-policy). The behavior policy must still explore (e.g. epsilon-greedy).",
+   "breakdown_regime": "The max operator makes Q-learning off-policy; with function approximation this enters the deadly triad and can diverge (the source notes Q-learning counterexamples with linear approximation, p.285, and Bradtke 1993's destabilizing LQR policy). The source states Q-learning has never been observed to diverge when the behavior policy is epsilon-greedy close to the target, but there is no theoretical guarantee (p.285).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one transition",
+    "tau_1: one off-policy Q backup",
+    "tau_2: episode horizon",
+    "tau_3: exploration schedule decay"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthesis mapping: the staff can learn the optimal play-value q_* from charted games (the behavior policy = whatever was actually called) without those calls being optimal — this is the off-policy property. The max over next calls is the coordinator evaluating the best follow-up regardless of what was historically called. The deadly-triad warning binds: combining this off-policy bootstrap with a neural play-value approximator risks divergence, so the coaching model needs on-policy distribution or gradient-TD/emphatic corrections.",
+    "source_operator": "p4",
+    "telemetry": "Charted (state, call, outcome, next-state) tuples as off-policy data; divergence monitor on the play-value weights; behavior-vs-target policy distance (importance-sampling ratio) as a stability gate."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "The reward hypothesis (Sec. 3.2)",
+   "verbatim_quote": "That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward).",
+   "page": 75,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Goals and purposes are representable as maximization of the expected cumulative sum of a scalar reward signal R_t in R. The source (p.76) adds the critical design constraint: the reward signal communicates WHAT you want achieved, not HOW — it is not the place to impart prior knowledge about subgoals.",
+   "breakdown_regime": "Reward hacking / subgoal mis-specification: the source's explicit example (p.76) is a chess agent rewarded for taking pieces or controlling the center may achieve those subgoals while losing the game. If the scalar reward does not truly indicate the real goal, maximizing it achieves the wrong thing. This is the formal root of specification gaming.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one scalar reward sample",
+    "tau_1: one return accumulation",
+    "tau_2: episode / task horizon",
+    "tau_3: goal-stability lifetime"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthesis mapping: the coaching reward design problem. If the staff rewards subgoals (yards after contact, first-downs) instead of the true goal (winning), the play-value learner will optimize the proxy and may lose the game — exactly the source's chess example. The 'what not how' principle is the doctrine that the reward channel must encode the terminal objective, leaving the means to the learner.",
+    "source_operator": "p5",
+    "telemetry": "Audit of the reward definition against the true objective; correlation between proxy-reward maximization and win probability; detection of calls that maximize the proxy but reduce win probability."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "The deadly triad: function approximation + bootstrapping + off-policy training (Sec. 11.3)",
+   "verbatim_quote": "the instability arises in the simpler prediction case whenever it includes all three elements of the deadly triad.",
+   "page": 286,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The three elements as defined by the source: (1) function approximation (scalable generalization, e.g. linear or ANN); (2) bootstrapping (update targets include existing estimates, as in DP/TD, rather than complete returns as in MC); (3) off-policy training (training on a transition distribution other than the target policy's, including uniform DP sweeps). The source states instability arises in the simpler PREDICTION case whenever all three are present.",
+   "breakdown_regime": "This IS the breakdown regime: Baird's counterexample (p.284) shows semi-gradient TD(0) weights diverge to infinity for ANY positive step size, even with expected DP updates and a known environment. The danger is not due to control, learning, or environment uncertainty — it occurs in planning with a fully known model. If any two of the three are present but not all three, instability can be avoided (p.286). Remedies: on-policy distribution, gradient-TD (SGD on projected Bellman error), emphatic-TD reweighting.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one semi-gradient update",
+    "tau_1: divergence growth timescale (any positive step size)",
+    "tau_2: update-distribution mixing time",
+    "tau_3: stability-restoration timescale via reweighting"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthesis mapping: the structural stability veto on the coaching model. If the staff uses a neural play-value approximator (function approximation), bootstraps continuation values (bootstrapping), and trains on charted games called under a different historical policy (off-policy), all three triad elements are present and the value weights can diverge even though the 'environment' (the game rules) is fully known. The remedy is to respect the on-policy distribution or use gradient-TD/emphatic corrections.",
+    "source_operator": "p6",
+    "telemetry": "Weight-norm divergence monitor on the play-value network; count of triad elements present; behavior-vs-target distribution mismatch; step-size sensitivity sweep (instability for any positive alpha is the signature)."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Reward prediction error hypothesis of dopamine neuron activity (Sec. 15.3)",
+   "verbatim_quote": "The reward prediction error hypothesis of dopamine neuron activity proposes that one of the functions of the phasic activity of dopamine-producing neurons in mammals is to deliver an error between an old and a new estimate of expected future reward to target areas throughout the brain.",
+   "page": 403,
+   "latex": "\\delta_{t-1} = R_t + \\gamma V(S_t) - V(S_{t-1})",
+   "symbol_and_unit_ledger": "delta_{t-1}: the TD error available at time t (utility units); R_t: reward (utility units); V(S_t), V(S_{t-1}): state-value estimates (utility units); gamma: discount (dimensionless). The source (footnote, p.402) notes the neuroscience literature's delta_t equals this delta_{t-1} because of a one-step indexing convention, and that because a TD error can be negative but a neuron cannot fire negatively, the mapped quantity is delta_{t-1} + b_t where b_t is the background firing rate (spikes/time). A negative TD error is a drop below background rate.",
+   "assumptions": "The hypothesis (Montague, Dayan & Sejnowski 1996) is a conjecture supported by Schultz's experiments, not a proven identity. It assumes a complete-serial-compound (CSC) input representation to capture timing, and that phasic dopamine conveys an action-free TD error. The source explicitly notes situations where predictions do not match observations and that input representation is critical (p.405).",
+   "breakdown_regime": "The source states the hypothesis does not match all observed dopamine activity; the choice of input representation is critical for timing details; dopamine's role in aversive/punishment processing remains controversial (p.405); not every monitored neuron behaved in all four predicted ways. It is a resilient but imperfect model, not a law.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one phasic dopamine burst (sub-second)",
+    "tau_1: one TD error / reward prediction update",
+    "tau_2: conditioning trial / learning timescale",
+    "tau_3: tonic background firing-rate baseline"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SOURCE-STATED cross-layer isomorphism (the book itself makes this bridge, Ch. 15): the neuromodulator dopamine distributes a scalar reinforcement signal to widely distributed synaptic sites, and synaptic efficacies are the weights adjusted by learning. This is the GSI bridge — phasic dopamine = TD reward-prediction error, synaptic plasticity = weight update, background firing = the baseline that lets a negative error be represented. It is stated by the source as a hypothesis with experimental support, not fabricated.",
+    "source_operator": "p7",
+    "telemetry": "Phasic dopamine firing rate relative to background (delta + b_t); the four conditioning signatures (unpredicted-reward response, cue predictive-value acquisition, shift to earliest cue, omission dip below baseline); clinical reward-learning telemetry as the observable correlate."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "The lambda-return: compound update unifying TD and Monte Carlo (Eq. 12.2)",
+   "verbatim_quote": "The TD(λ) algorithm can be understood as one particular way of averaging n-step updates.",
+   "page": 311,
+   "latex": "G_t^{\\lambda} \\doteq (1-\\lambda)\\sum_{n=1}^{\\infty} \\lambda^{n-1} G_{t:t+n} \\tag{12.2}",
+   "symbol_and_unit_ledger": "G_t^lambda: the lambda-return (utility units); lambda in [0,1): bootstrapping parameter (dimensionless); G_{t:t+n}: the n-step return (utility units); (1-lambda)lambda^{n-1}: the weight on the n-step return (dimensionless, sums to 1 over n). At lambda=0 the return reduces to the one-step TD target G_{t:t+1}; at lambda=1 it reduces to the full Monte Carlo return G_t (Eq. 12.3 makes the terminal term explicit). Both sides utility units; the weights form a normalized geometric distribution over update depths.",
+   "assumptions": "Episodic task for the infinite-sum form (12.2); the truncated form (12.3) separates post-termination terms. The weights sum to 1 by the (1-lambda) normalization. The source notes lambda=1 gives only an equivalence in EXPECTATION with Monte Carlo for off-line updating, not episode-by-episode, because traces make irrevocable updates (p.334).",
+   "breakdown_regime": "For lambda<1 with off-policy function approximation the deadly triad applies (p.334): stability guaranteed only for tabular/state-aggregation cases; linear and general approximation can diverge. The compound update can only be done when the longest component update is complete, introducing delay (p.311). High variance arises with importance sampling in off-policy traces.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one n-step return component",
+    "tau_1: one compound lambda-return update",
+    "tau_2: the longest component horizon (update delay)",
+    "tau_3: eligibility-trace half-life tau_lambda = ln(2)/(-ln lambda)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthesis mapping: the coaching staff's credit-assignment depth dial. lambda=0 is pure next-snap bootstrap (fast, reactive); lambda=1 is full-drive Monte Carlo (wait for the drive outcome); intermediate lambda weights short and long horizons geometrically. TD-Gammon (Sec. 16.1) is the source's existence proof that TD(lambda) + nonlinear approximation reaches grandmaster play — the same architecture pattern a play-value learner would use.",
+    "source_operator": "p8",
+    "telemetry": "Chosen lambda and its trace half-life; update-delay distribution; variance of the lambda-return vs pure MC; TD-Gammon-style win-probability calibration as the value target."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The spine of this textbook is a single recursive idea — bootstrapping, updating an estimate from other estimates — and the entire 548-page architecture is an exploration of where that idea is safe and where it diverges. It begins with the bandit action-value q_*(a) = E[R_t | A_t = a] (Eq. 2.1), a pure expectation with no recursion, then adds the Bellman optimality equation (3.20), which makes the value of a state-action pair depend on the best continuation value. That single max operator is the hinge of the whole book: it turns a linear expectation into a nonlinear fixed point, and it is what makes Q-learning off-policy, because the target uses the greedy next action regardless of what the behavior policy actually did. The temporal-difference error delta_t = R_{t+1} + gamma V(S_{t+1}) - V(S_t) (6.5) is the online, sample-based version of the Bellman residual, and the book's central claim is that you can learn from this error after every single step instead of waiting for the episode to end. The hidden state that governs everything is whether the bootstrap target is trustworthy. In the tabular on-policy case it is: TD(0) and Q-learning converge. But the moment you add function approximation, the update becomes semi-gradient — it accounts for the effect of the weights on the estimate but ignores their effect on the target (Sec. 9.3) — and is no longer true gradient descent. Add off-policy training and you have the deadly triad, and Baird's counterexample shows the weights diverge to infinity for ANY positive step size, even with a fully known environment and expected DP updates. This is the book's deepest lesson: the instability is not caused by learning, or control, or uncertainty about the world; it is caused by the combination of three design choices, and it appears even in pure planning. The lambda-return (12.2) is the unifying dial: lambda=0 is one-step TD, lambda=1 is Monte Carlo, and intermediate lambda geometrically weights all n-step returns. TD-Gammon is the existence proof that TD(lambda) plus a nonlinear network reaches grandmaster backgammon. Translated as an explicit isomorphism into the 22-player football dynamical system, the coaching staff's play-value learner is exactly this architecture: charted snaps are the experience, the play-value network is the function approximator, continuation-value bootstrapping is the TD target, and learning from historical games called under a different policy is off-policy training. All three triad elements are present, so the stability veto is real: the value weights can diverge even though the rules of football are fully known. The calibrating telemetry is the weight-norm divergence monitor, the behavior-versus-target distribution mismatch, and the step-size sensitivity sweep whose signature is instability for any positive alpha. The remedy the book prescribes — respect the on-policy distribution, or use gradient-TD or emphatic reweighting — is the doctrine the coaching model must inherit.",
+   "retrocausal_genealogy": "The lineage runs from Bellman's dynamic programming (1957) through Samuel's checkers program, Watkins's Q-learning (1989), Sutton's TD learning (1988), and Tsitsiklis and Van Roy's analysis of the deadly triad (1997), with the name 'deadly triad' coined by Sutton (2015a) and Baird's counterexample (1995). The historical scar is that early RL treated bootstrapping as unconditionally good because it is data- and compute-efficient; the counterexamples proved that efficiency mortgaged against function approximation and off-policy data can diverge. The hidden state inherited by every modern deep-RL system is that stability is a property of the update distribution, not of the algorithm's intentions.",
+   "theory_of_mind": "The recursive belief clash is about trust in the bootstrap. The coordinator wants to bootstrap continuation values aggressively because it learns faster; the head coach models the coordinator's tendency to over-trust a neural approximator and imposes a stability gate; the quarterback models both and knows that a play-value estimate trained off-policy on last season's charted games may be confidently wrong about this season's defense. Each layer holds a model of the layer below's value estimates, and the divergence works precisely when the staff trusts the reversible simulation of the value network more than the irreversible evidence of the live snap. The defensive coordinator, meanwhile, models the offense's learned tendencies and sets a trap in the cell the offense's off-policy estimates rate as safe.",
+   "cross_layer_veto": "The cross-layer veto is the deadly triad itself. When all three elements — function approximation, bootstrapping, off-policy training — are present, the physics-level instability (weight divergence for any positive step size, even with a known model) vetoes any claim that the play-value network is trustworthy, regardless of how good its backtested predictions look. Psychology compounds the veto: the coordinator's confidence in a fast-learning bootstrap inflates trust in the familiar branch. The gate must be mechanical — monitor weight norms, measure behavior-versus-target mismatch, and require the on-policy distribution or a gradient-TD/emphatic correction before any high-EV call derived from the network is trusted."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second invariant is that goals are a scalar reward and that learning and planning share one machinery. The reward hypothesis (Sec. 3.2) states that all of what we mean by goals and purposes can be thought of as maximizing the expected cumulative sum of a scalar reward, and the book immediately adds the design constraint that makes or breaks every application: the reward signal communicates WHAT you want achieved, not HOW. The chess example is the formal root of specification gaming — reward an agent for taking pieces and it may take pieces while losing the game. This is not a peripheral warning; it is the doctrine that the reward channel must encode the terminal objective and leave the means to the learner. The Dyna architecture (Sec. 8.2) then unifies planning and learning: real experience improves the model and directly improves the value function, while the model generates simulated experience that improves the value function by the SAME backup machinery. The book calls the reinforcement learning method the 'final common path' for both learning and planning — they differ only in the source of their experience. This is the deep reason the football film-room simulator and the live snap can share one play-value update: planning is learning from simulated experience, learning is planning from real experience. The policy gradient theorem (Ch. 13) adds the third pillar: parameterize the policy directly and ascend its performance gradient, which gives smoother convergence than epsilon-greedy action-value methods and can represent the stochastic optimal policies that action-value methods cannot (the bluffing-in-poker example). The book's two source-stated cross-layer isomorphisms are the crown jewels for a polymath corpus. First, Hamilton's principal function in classical physics IS an action-value function, and Newtonian dynamics are greedy with respect to it (p.93) — the least-action principle is a greedy policy over an action-value. Second, the reward prediction error hypothesis (Sec. 15.3) equates phasic dopamine activity with the TD error, with four experimentally supported parallels and the explicit caveat that the mapped quantity is delta plus background firing rate because neurons cannot fire negatively. Both bridges are stated by the source, not fabricated. In the 22-player system the reward-hacking warning is the coaching reward-design audit: reward first-downs instead of winning and the play-value learner optimizes the proxy. The Dyna unification is the film-room/live-snap shared backup. The dopamine isomorphism is the GSI bridge to clinical reward-learning telemetry. The calibrating telemetry is the proxy-versus-true-objective correlation, the planning budget per real snap, and the phasic-dopamine-relative-to-background signal. No sportsbook odds enter any channel; the reward is outcome utility only, and the doctrine is internal, never published.",
+   "retrocausal_genealogy": "The reward-hypothesis lineage runs from Thorndike's Law of Effect through the optimal-control and dynamic-programming tradition to Sutton and Barto's formalization; the Dyna architecture is Sutton (1990, 1991); the policy gradient theorem is due to Sutton, McAllester, Singh and Mansour (2000) building on Williams's REINFORCE (1992); the dopamine reward-prediction-error hypothesis is Montague, Dayan and Sejnowski (1996) interpreting Schultz's experiments. The historical scar is the behaviorist reduction of purpose to reward, which the book both embraces and disciplines with the 'what not how' constraint. The hidden state inherited by every reward-designed system is that the scalar signal is a communication channel, and mis-specifying it is the original sin of the field.",
+   "theory_of_mind": "The recursive belief clash is about the reward channel. The owner sets a win-now reward; the coach models the owner's impatience and the coordinator models the coach's reward shaping; the quarterback models all three and knows that a play-value learner rewarded for first-downs will call a safe draw on fourth-and-long when the true objective demands a shot. Each layer holds a model of the layer below's reward definition, and specification gaming works precisely when the learner's proxy diverges from the principal's terminal goal. The dopamine analogy is exact: the neuromodulator broadcasts a scalar teaching signal to widely distributed sites, and if that signal encodes the wrong prediction error, every synapse it touches learns the wrong thing.",
+   "cross_layer_veto": "Two vetoes compose. First, the reward-hacking veto: if the proxy reward (yards, first-downs) is not the true objective (winning), any call that maximizes the proxy while reducing win probability must be vetoed — the source's chess example is the proof that this failure is structural, not incidental. Second, the dopamine-hypothesis humility veto: the source explicitly states the TD-error model of dopamine does not match all observations and depends critically on input representation, so any GSI mapping that treats phasic dopamine as a literal TD error must carry that caveat and be gated on the four conditioning signatures rather than asserted as identity. The high-EV call survives only if its reward is the true objective and its value estimate is stability-gated."
+  }
+ ],
+ "universal_lens": "The polymath audit lens is bootstrapping-with-a-trust-gate: every discipline that updates estimates from estimates — control, neuroscience, economics, coaching — inherits the same deadly-triad risk when it combines scalable approximation, self-referential targets, and data from a different policy. Audit any claimed learning advantage by asking whether the update distribution is on-policy, whether the target is a true gradient, and whether the scalar reward encodes the terminal goal rather than a proxy.",
+ "gsi_mapping": "SOURCE-STATED bridge (Ch. 15), not fabricated: phasic dopamine activity is hypothesized to convey the TD reward-prediction error, synaptic efficacies are the learning weights, and the neuromodulator distributes a scalar reinforcement signal to widely distributed sites. The mapped observable is delta plus background firing rate (neurons cannot fire negatively); the four conditioning signatures are the telemetry. The caveat is explicit: the hypothesis is resilient but imperfect and representation-dependent. This anchors clinical reward-learning telemetry and bioenergetic cost-of-plasticity accounts to a concrete, source-cited operator.",
+ "gse_mapping": "Coach-Mind is the value/policy learner; charted snaps are experience; the film-room simulator is Dyna's model generating simulated experience through the same 'final common path' backup as live-snap learning. The deadly triad is the stability veto on a neural play-value approximator trained off-policy; the reward hypothesis is the 'what not how' audit against rewarding first-downs instead of winning. The lambda-return is the credit-assignment depth dial; TD-Gammon is the existence proof. Internal only; no odds, no publication."
+}

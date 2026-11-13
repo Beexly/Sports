@@ -1,0 +1,135 @@
+{
+  "book_id": "cea9c306f975be55",
+  "source_status": "COMPLETE",
+  "pages_total": 15,
+  "pages_read": 15,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Component-wise PPR fantasy-point aggregation (Eqs. 1-2)",
+      "verbatim_quote": "Rather than predicting fantasy points as a whole, the models were trained to forecast each component of the fantasy scoring formula independently.",
+      "page": 4,
+      "latex": "FP_{QB} = \\frac{PY}{25} + 4(PTD) + \\frac{RY}{10} + 6(RTD) - 2(INT) - 2(FUM); \\quad FP_{Skill} = \\frac{RecY}{10} + 6(RecTD) + REC + \\frac{RY}{10} + 6(RTD) - 2(FUM)",
+      "symbol_and_unit_ledger": "FP_{QB}, FP_{Skill}: fantasy points (pt), a league-defined scoring unit. PY, RY, RecY: passing/rushing/receiving yards (yd). The printed divisors 25 and 10 are conversion constants carrying units yd/pt (25 passing yards per point; 10 rushing or receiving yards per point), so PY/25, RY/10, RecY/10 each resolve to pt. PTD, RTD, RecTD, INT, FUM, REC: event counts (dimensionless integers). Coefficients: 4 pt per passing TD, 6 pt per rushing/receiving TD, +1 pt per reception (PPR), -2 pt per interception and per fumble. Every additive term resolves to pt; both sums are dimensionally homogeneous in pt. Source: Eqs. (1)-(2), p.4, modified ESPN PPR format (Scoring Formats, 2014).",
+      "assumptions": "As printed: each scoring component is forecast independently, then aggregated through modified ESPN PPR formulas; noisy cross-position outputs are removed (receiving statistics for QBs, passing statistics for RB/WR/TE) so rankings are not skewed by unrelated metrics; scoring weights are fixed by the PPR league format; models trained per position (QB, RB, WR, TE) on 2012-2023 data with 2024 held out.",
+      "breakdown_regime": "Linear aggregation assumes component forecast errors do not interact; touchdown-heavy projections inherit the low predictability of the TD channel (R2 near 0.20-0.30 vs 0.34-0.42 for yardage, pp.6-7). Any scoring-format change (half-PPR, non-PPR, TE premium) invalidates the printed weights. Component independence ignores within-game coupling such as game-script correlation between rushing and receiving volume.",
+      "domain": "football",
+      "timescales": ["tau_0", "tau_1", "tau_2", "tau_3"],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The PPR functional is a linear observable on the 22-player football dynamical system: per-play contributions (yards gained, scoring events, turnovers) are projected to a scalar reward. The component decomposition is isomorphic to a play-level contribution ledger in GSE, where each term is a distinct information channel from the on-field state to the fantasy observable; play timescale tau_0 (seconds), drive tau_1 (minutes), game tau_2 (hours), season aggregation tau_3 (months).",
+        "source_operator": "p1",
+        "telemetry": "Per-game box-score components (PY, RY, RecY, TD counts, INT, FUM, REC); NGS sub-second RFID tracking for yardage validation; Table 1 per-component R2 as channel-quality calibration."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Coefficient of Determination R2 (Eq. 3)",
+      "verbatim_quote": "R2 offers a standardized measurement of the effectiveness of the algorithm in transforming raw historical data into a predictive tool.",
+      "page": 5,
+      "latex": "R^2 = 1 - \\frac{\\sum_{i=1}^{n}(y_i - \\hat{y}_i)^2}{\\sum_{i=1}^{n}(y_i - \\bar{y})^2}",
+      "symbol_and_unit_ledger": "y_i: actual observed value of the target statistic; \\hat{y}_i: XGBoost-predicted value; \\bar{y}: mean of observed values. All three share the target statistic's unit (yd for yardage targets; dimensionless counts for TD/REC/FUM targets). Numerator and denominator are both squared target units, so their ratio is dimensionless; R^2 is dimensionless, bounded above by 1, and may be negative on held-out data when the model is worse than the mean. n: number of player-season observations (dimensionless count). Source: Eq. (3), p.5.",
+      "assumptions": "As printed: R2 monitored on unseen 2024 data after training on 2012-2023; computed per statistical component (9 variables across four position models); the regressor objective is reg:squarederror, so the squared-error decomposition is the native fit criterion.",
+      "breakdown_regime": "R2 near zero for rare events (TE rushing statistics, pass-catcher fumbles, p.7) means those channels are chance-driven; even the best channels (yardage) explain only 34-42% of variance, so a majority of variance remains unexplained. Negative held-out R2 is possible. Single-season holdout (2024 only) limits generalization, a limitation the author states explicitly on p.12.",
+      "domain": "math",
+      "timescales": ["tau_0", "tau_1", "tau_2", "tau_3"],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "R2 becomes an admissibility gate on candidate transition kernels in the GSE state estimator: a kernel for a stat channel is admissible only if its held-out variance explained clears that channel's noise floor. The measured hierarchy (yardage high, touchdowns low, rare events near zero) is a per-channel predictability prior over the season timescale tau_3, derived from the source fit statistic rather than assumed.",
+        "source_operator": "p2",
+        "telemetry": "Table 1 per-metric R2: yardage 0.34-0.42 across positions; touchdowns ~0.20-0.30; rare events ~0. Recomputed per season as new holdouts arrive."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Rank-based Mean Absolute Error (Eq. 4)",
+      "verbatim_quote": "By calculating the average distance between a player’s predicted rank and their actual end-of-season rank, the metric provides a direct measure of the models’ ranking accuracy",
+      "page": 5,
+      "latex": "MAE_{Rank} = \\frac{1}{n}\\sum_{i=1}^{n}\\left|R_{p,i} - R_{a,i}\\right|",
+      "symbol_and_unit_ledger": "n: number of ranked players (dimensionless count). R_{p,i}: predicted ordinal rank of player i; R_{a,i}: actual end-of-season ordinal rank of player i; both dimensionless positive integers in rank-position units. |R_{p,i} - R_{a,i}|: absolute displacement in rank positions. MAE_{Rank}: mean displacement, in rank-position units (dimensionless count). Every term shares rank-position units; the expression is dimensionally homogeneous. Source: Eq. (4), p.5.",
+      "assumptions": "As printed: evaluation restricted to the top 20 QBs and TEs, top 50 RBs, top 60 WRs (p.7); the paper states MAE 'is susceptible to outliers' (p.5); an injury-accounted variant removes six players who played zero games (all RBs and WRs) and recomputes both metrics (p.9).",
+      "breakdown_regime": "Outlier-sensitive: one large rank miss dominates the mean. Pool truncation hides errors outside the top-N cutoffs. Removing zero-game players changes the comparison set asymmetrically across positions (QB/TE results unchanged, RB/WR gap narrowed, p.9). Ordinal distance ignores tier boundaries, so equal MAE can mask very different draft-relevant structure.",
+      "domain": "math",
+      "timescales": ["tau_0", "tau_1", "tau_2", "tau_3"],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rank displacement is the loss functional for belief-state updates over the draft board / depth chart in Coach-Mind simulation: the expected absolute displacement between projected and realized ordering calibrates how aggressively a projection kernel may move a player's tier. It is a derived kernel because the source defines it as an evaluation metric, and GSE repurposes it as a training/admissibility loss on ordinal state.",
+        "source_operator": "p3",
+        "telemetry": "Figures 2 and 4: per-position MAE, XGBoost vs ESPN, before and after the six-player injury filter; QB slight model edge, RB/WR ESPN advantage persisting after adjustment."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Spearman's Rank Correlation Coefficient, no-ties closed form (Eq. 5)",
+      "verbatim_quote": "SRCC is used to evaluate the “strength and direction of association between two ranked variables”",
+      "page": 5,
+      "latex": "\\rho = 1 - \\frac{6\\sum d_i^2}{n(n^2 - 1)}",
+      "symbol_and_unit_ledger": "\\rho: Spearman rank correlation, dimensionless, in [-1, 1]. d_i: difference between predicted and actual rank for player i (dimensionless integer rank difference); d_i^2 its square. n: total number of players in the sample (dimensionless count). The factor 6 and the normalization n(n^2-1) are the combinatorial constants of the no-ties rank-difference identity; all terms are dimensionless, so the expression is dimensionally homogeneous. Source: Eq. (5), printed across pp.5-6.",
+      "assumptions": "As printed: SRCC evaluates ordinal association between two ranked variables; the paper states SRCC 'is resistant to outliers' (p.5); negative values indicate inverse association, values near zero no correlation. The printed closed form is the standard no-ties shortcut (no tie correction is printed). Same restricted top-N pools as the MAE evaluation (p.7).",
+      "breakdown_regime": "Tied ranks invalidate the printed closed form; the Pearson-on-ranks definition must be used instead. Empirically the ordinal signal itself collapses below the elite QB tier: XGBoost SRCC near zero and ESPN negative (p.9). WR SRCC decreased after injury adjustment (p.10), showing the metric is not stable under comparison-set changes.",
+      "domain": "math",
+      "timescales": ["tau_0", "tau_1", "tau_2", "tau_3"],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SRCC measures order-preservation between two leaderboard lattices: an order-isomorphism test between the projected tier partial order and the realized one. In GSE it binds to the constraint that a deception-aware projection kernel must preserve tier structure even when absolute magnitudes drift, which is exactly the WR dissociation (bad MAE, comparable SRCC) observed in the source.",
+        "source_operator": "p4",
+        "telemetry": "Figures 3 and 5: per-position SRCC, XGBoost vs ESPN, raw and injury-accounted; TE model dominant while ESPN shows negligible correlation with final season outcome (p.9)."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Career-max ceiling feature and lag-window observational equivalence",
+      "verbatim_quote": "exclusive reliance on these features risks the models rendering a mid-tier player at their peak and an elite player in a slump as statistically identical.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "As printed: a three-year rolling window is implemented by lagging every feature (Past-1, Past-2, Past-3 prefixes); career_max features are generated for rushing, receiving, and passing yards and updated through the 2024 season; the career max is interpreted as an indicator of a player's ceiling; 1,933 unique variables are supplied without hand-picking, relying on XGBoost's built-in feature selection. Worked example (p.4): two WRs with three consecutive 800-yard seasons are identical to the lag window, but career maxima of 1,500 vs 850 yards distinguish them.",
+      "breakdown_regime": "Empirical falsification in the source: none of the career_max metrics appeared in any model's top-10 feature importance (p.7), so the fitted models preferred recent data and the intended ceiling mechanism was not actually used. The career max is a single order statistic, sensitive to one outlier season and to usage/era changes; lag windows alone still conflate a peaking mid-tier player with a slumping elite player.",
+      "domain": "cs",
+      "timescales": ["tau_0", "tau_1", "tau_2", "tau_3"],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The ceiling prior breaks observational equivalence between two trajectory states of the 22-player system: identical recent output can correspond to distinct latent-talent states, and the career-max order statistic is a cheap upper bound on the support of the player's production transition kernel. GSE derives a latent-ceiling constraint from it, while inheriting the source's warning that the constraint must be verified as actually used by the fitted model.",
+        "source_operator": "p5",
+        "telemetry": "Past-1..Past-3 lagged features and career-max yardage per player; Figure 1 feature-importance plots as the calibration check that falsified the intended mechanism in this study."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Four-bias taxonomy of judgmental adjustment (Hirsimäki framework, applied)",
+      "verbatim_quote": "algorithm aversion—losing confidence in models after a mistake; anchoring bias—over-relying on the first piece of information; optimism bias—producing unrealistically positive estimates; and misinterpretation bias—seeing trends in noisy data",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "As printed: the taxonomy is imported from Hirsimäki's (2024) literature review of human judgmental adjustment in business forecasting; the paper asserts the underlying mechanisms transfer to fantasy football. The hybrid pipeline is defined via Clay (2025) as 'a mixture of statistical calculations and subjective inputs' in which algorithmic outputs are subsequently corrected by human experts.",
+      "breakdown_regime": "The taxonomy is descriptive, not a quantified correction operator. Its efficacy is position-dependent: human correction helps RB/WR where qualitative context (offensive line, scheme, game script, depth chart, training-camp reports) is missing from the feature space (pp.11-12), but acts as cognitive interference at QB/TE where public narrative contaminates evaluation. It cannot, without held-out evidence, distinguish bias from genuine private information.",
+      "domain": "psych",
+      "timescales": ["tau_0", "tau_1", "tau_2", "tau_3"],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The human correction step is a bias-injection channel cascaded on the algorithmic baseline: baseline -> expert adjustment -> published projection. Each bias is a structured distortion operator (anchor = prior overweighting; algorithm aversion = gain reduction after observed error; misinterpretation = spurious trend detection in noise). The same operators model coach/DC tendency traps and media-narrative contamination inside the GSE Coach-Mind simulation.",
+        "source_operator": "p6",
+        "telemetry": "ESPN-vs-model rank deltas as labeled pairs: Caleb Williams ESPN 17th vs model 10th vs actual 5th; Kyle Pitts ESPN 17th vs model 8th vs actual 2nd (pp.11-12); per-position MAE/SRCC gaps as aggregate channel distortion measurements."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "The central claim this paper earns is not that algorithms beat experts, but that the value of human correction is channel-dependent: it is negative where narrative load is high and the stat channel is noisy, and positive where private contextual information exists that the feature space cannot represent. The evidence is a paired natural experiment at quarterback and tight end. ESPN's hybrid pipeline, described by Clay as a mixture of statistical calculations and subjective inputs, treats the algorithmic output as a draft to be corrected. The correction step is where the four Hirsimäki biases enter: algorithm aversion after a visible miss, anchoring on the first information received, optimism, and misinterpretation of noise as trend. At quarterback, the most scrutinized position in the league, every throw and body-language cue is dissected publicly, so the expert's input channel is contaminated before any football reasoning begins. The Caleb Williams case isolates anchoring: a first-overall pick whose rookie season failed to meet expectations was ranked seventeenth by ESPN, tenth by the pure model, and finished fifth. The debut season acted as a disproportionate anchor on the expert prior, while the lagged-production model carried less of that scar. The Kyle Pitts case isolates the mirror failure: a historic thousand-yard rookie season followed by three sub-seven-hundred-yard seasons produced an ESPN rank of seventeen against a model rank of eight and an actual finish of second. Here the expert abandoned the career ceiling after a multi-year slump, an emotional response to recent variance, while the production-focused model gave the historical elite a statistical chance to rebound. Two honest caveats bound the claim. First, the pure model also underestimated both players; it was closer, not correct, so the result is a bias-mitigation finding, not an oracle finding. Second, both forecasters collapsed on quarterback SRCC: the model near zero, ESPN negative, which means that below the elite tier the ordinal signal itself is weak, and winning a rank comparison there is partly winning a noise comparison. The derived doctrine for the Foundry is a routing rule: route human correction only to channels where the expert plausibly holds private information not in the feature space, such as scheme, depth chart, offensive-line quality, and game script, and strip it from channels where the expert's input is dominated by public narrative. The paper's own feature-importance plots add a falsification worth keeping: the career_max ceiling features, designed precisely to carry the Pitts-style history, never appeared in any top-ten importance list, so the model's tight-end edge came from production features rather than the intended ceiling prior. A mechanism that was designed but not used is still a mechanism that must be audited before it is trusted.",
+      "retrocausal_genealogy": "The hidden state here is a lineage scar. Expert projection descends from box-score tracking, trade publications, and insider communication, then absorbed the Next Gen Statistics RFID tracking era, and settled into the hybrid correction doctrine. Williams's heavily scrutinized rookie season became the anchor that depressed ESPN's prior; Pitts's thousand-yard rookie year became the ceiling anchor ESPN abandoned after three sub-seven-hundred seasons. The model's career_max features were engineered to carry exactly that history, yet the importance plots show they were never used, so the genealogy that mattered was production lag, not designed ceiling.",
+      "theory_of_mind": "Recursive belief clash under pressure: the ESPN analyst models the public narrative and fears visible error on a high-profile bust, so algorithm aversion and anchoring compound; the analyst believes the pure model misses context the analyst can see. The pure model holds no beliefs, only lagged production. Williams himself carries an internal clock and confidence state under scrutiny that box scores only partially observe. Defensive coordinators adjust to a rookie's tendencies, depressing year-one output, which the expert misreads as talent rather than as an adversarial transient.",
+      "cross_layer_veto": "Psychology vetoes the high-expected-value call to trust expert correction at quarterback and tight end: where narrative load is high, the correction channel demonstrated negative value, with ESPN's quarterback SRCC turning negative. Availability physics vetoes the pure model at running back and wide receiver: without offensive-line, scheme, game-script, and injury context, its confident rankings are inadmissible, and the six zero-game removals prove the injury layer can dominate the talent layer. Neither layer receives unconditional authority; each vetoes the other outside its calibrated channel."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The second invariant this paper establishes is that predictability is a property of the stat channel, not of the model, and the R-squared hierarchy is the measurement. Yardage and receptions, high-volume repeated measurements, yielded R-squared between 0.34 and 0.42 across positions; touchdowns, low-count events contingent on single plays and specific coaching decisions, fell to roughly 0.20 to 0.30; rare events such as tight-end rushing and pass-catcher fumbles sat near zero. A player accumulates a hundred yards through repeatable contribution, but a touchdown often depends on one play or one decision, so the touchdown channel carries irreducible small-sample variance that no feature set can remove. This is why the component-wise design matters: forecasting each scoring component independently and aggregating through the PPR formula lets the pipeline allocate trust per channel instead of blending everything into one opaque fantasy-point prediction. The evaluation then separates two observables that naive benchmarks conflate. Rank-based MAE measures average displacement; Spearman rho measures whether the tier lattice survives. The wide-receiver result is the cleanest dissociation in the paper: the pure model vastly underperformed ESPN on MAE yet matched it on SRCC, meaning its magnitudes were wrong while its ordering of tiers was roughly right. For draft decisions, where tier boundaries dominate value, that distinction changes which model you would actually use. The injury analysis supplies the veto layer. Six players who never appeared in a single game, all running backs and wide receivers, were removed and both metrics recomputed; the MAE gap narrowed materially, and wide-receiver SRCC actually decreased after the adjustment, showing that availability noise was inflating one metric and deflating another in opposite directions. The structural lesson is that collision-position output is conditioned on an absorbing availability state that lagged production cannot predict, and that any ranking pipeline without an injury layer is silently scoring ghosts. The paper's two proposed remedies close the loop honestly: aggregate team-level projections to recover the environmental context, offensive-line strength, scheme, and game script, that the pure model lacks, and append injury-history features so durability becomes a learnable channel. Both are admissions that the pure model's feature space, not its optimizer, was the binding constraint. The regularization choices reinforce this reading: four hundred shallow trees of depth three, a learning rate of 0.05, and subsampling at 0.7 were all selected to prevent overfitting, so the remaining error is dominated by missing information rather than excess model capacity. The limitation that bounds everything is the two-season evaluation: 2024 for fit, 2025 for the benchmark, one split, no cross-era validation. The Foundry inherits the hierarchy and the routing rule, not a claim of general superiority.",
+      "retrocausal_genealogy": "The dataset window itself is the hidden state: 2012 through 2024 player-seasons, with three-year lag prefixes encoding each trajectory, and a training era spanning the transition from box-score to tracking-data regimes. The single-split design, 2024 for fit and 2025 for benchmark, is a methodological scar that bounds every claim. The six season-ending injuries concentrated exclusively at running back and wide receiver reflect the collision exposure baked into those positions, a structural feature of the corpus that any future kernel must carry as an availability prior.",
+      "theory_of_mind": "The coach's mind holds private information before the statistics do: a philosophy shift, a depth-chart promotion, a training-camp report that the hybrid analyst reads and the lagged model cannot represent. The running back's output depends on the offensive line's collective execution and on the coach's game-script decision, running to protect a lead versus passing to catch up. The portfolio constructor must therefore model the analyst's model of the coach, a third-order belief, because the edge lives in the gap between private context and public lagged production.",
+      "cross_layer_veto": "Availability physics vetoes any draft or portfolio call that ignores season-ending injury risk: an elite-talent player who plays zero games scores zero fantasy points, an absorbing state no lagged-production kernel predicts. The injury-filter recompute narrowed the MAE gap and decreased wide-receiver SRCC, proving the veto is measurable, not cosmetic. Conversely, the context gap vetoes exporting the pure model's quarterback and tight-end victory to running back and wide receiver. Bioenergetic durability is the missing layer that both proposed remedies, team aggregation and injury features, point toward."
+    }
+  ],
+  "universal_lens": "A forecasting pipeline is a cascade of channels with distinct signal-to-noise ratios. Audit each channel's held-out predictability before permitting any correction operator, human or algorithmic, to touch it, and score rank structure separately from absolute error, because they are different observables with different failure modes and different decision consequences.",
+  "gsi_mapping": "Injury volatility and post-setback drop-off map directly onto GSI clinical telemetry: durability features from medical history, return-to-play load management, and collision-exposure proxies for running backs and wide receivers supply the missing context layer. Ordinal risk-tier preservation, measured by Spearman rho rather than absolute error alone, is the correct metric for ranking clinical deterioration trajectories.",
+  "gse_mapping": "Coach-Mind simulation consumes the four-bias taxonomy as structured distortion operators on expert channels; deception detection uses ESPN-versus-model rank deltas as labeled pairs; DFS portfolio tail risk is bounded by the injury absorbing-state veto and channel-wise R-squared gates. No sportsbook odds enter any kernel, and all artifacts remain internal to the Foundry."
+}

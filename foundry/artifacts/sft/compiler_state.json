@@ -1,0 +1,217 @@
+{
+ "last_compiled_complete_count": 64,
+ "sft_books": 66,
+ "rlvr_batches": [
+  "batch-001",
+  "batch-002",
+  "rlvr_batch-003",
+  "rlvr_batch-004",
+  "rlvr_batch-005"
+ ],
+ "updated_at": "2026-11-13T21:22:54+00:00",
+ "sft_book_ids": [
+  "8a1ae44d89418bd2",
+  "a84d79326cdf925d",
+  "102f952911d380f9",
+  "33df04255621d53b",
+  "578457115b76903d",
+  "cea9c306f975be55",
+  "090cfc0da55b02cd",
+  "4e3d8fd8a23059fc",
+  "3178b5fdce0fc1a5",
+  "62af700cfd3180fa",
+  "28ced3431e66ee6f",
+  "95719becd340bcea",
+  "68aeef90c5264628",
+  "5c31b5de385d42ac",
+  "1976064dcffc0e42",
+  "553c5528787d2538",
+  "49ef6f06a351a3f7",
+  "584e09211a54b4fa",
+  "2ec4f6881728fa8b",
+  "7b8723df5531a5a9",
+  "539b52ea8d0a6d37",
+  "6e380ace520cdafa",
+  "73c11ea388c2e5f6",
+  "345052dfaf01a062",
+  "53d47a558cf53d1f",
+  "5ebcc3f3acfef4c9",
+  "192267e30813837d",
+  "74b7272fc5b1919d",
+  "6e0d7d342ecb2ea6",
+  "7f0f084cdb020856",
+  "537da7b7adb2e1dd",
+  "53bdc9b1b0089ddc",
+  "366ba522490b1573",
+  "25294936f511d828",
+  "5e3d2c14003c9e74",
+  "0c444afcd300d1c3",
+  "13afe72d1ef6bdbd",
+  "21544db09ed29308",
+  "4d067ce7fd44a2d1",
+  "5e3094b6f359a758",
+  "6c532aecbad020e8",
+  "719c464f186464cd",
+  "77d4ee5161695968",
+  "6cf36a29e51c0a02",
+  "65c65dec7ddaacd5",
+  "3c1295822da31ba0",
+  "409f5dad119c06ed",
+  "2626db0663ce780e",
+  "47da7cd12f78ad9c",
+  "1a04a74c1cd2528c",
+  "2435ddad2e0ddd16",
+  "385d408a043b611b",
+  "4f974188ca231968",
+  "7e3a32c1d8621611",
+  "5fee5df924431396",
+  "1cfd792f9b7396d1",
+  "29a9a56fe196f2f2",
+  "6aeb75fe28eb9cd8",
+  "3fa96d690212683b",
+  "6bc7d84da4bde923",
+  "39871d5617848573",
+  "55d0f88972ad63be",
+  "2d97f3a1f7fad21e",
+  "07089dec6f73619e",
+  "10c8c515e69e40f4",
+  "52b5d36325e11cd7"
+ ],
+ "edition_caveats": [
+  {
+   "work": "Hal Daume III - A Course in Machine Learning (drafts/editions)",
+   "book_ids": [
+    "8a1ae44d89418bd2",
+    "118c462e78e37fa7",
+    "203aeb745b1aed40"
+   ],
+   "sft_row_kept": "8a1ae44d89418bd2",
+   "richness": {
+    "8a1ae44d89418bd2": {
+     "primitives": 5,
+     "trace_words": 1694
+    },
+    "118c462e78e37fa7": {
+     "primitives": 4,
+     "trace_words": 1169
+    },
+    "203aeb745b1aed40": {
+     "primitives": 5,
+     "trace_words": 1670
+    }
+   },
+   "richest_artifact": "8a1ae44d89418bd2",
+   "action_next_dispatch": "none - kept row is richest",
+   "rule": "ONE SFT row per work (prefer richest artifact); never independent sources in RLVR"
+  },
+  {
+   "work": "Eager & Erickson - Football Analytics with Python and R (O'Reilly editions)",
+   "book_ids": [
+    "3178b5fdce0fc1a5",
+    "6d101348291a5c1f"
+   ],
+   "sft_row_kept": "3178b5fdce0fc1a5",
+   "richness": {
+    "3178b5fdce0fc1a5": {
+     "primitives": 6,
+     "trace_words": 1670
+    },
+    "6d101348291a5c1f": {
+     "primitives": 5,
+     "trace_words": 1560
+    }
+   },
+   "dropped_from_sft": [
+    "6d101348291a5c1f"
+   ],
+   "rule": "ONE SFT row per work (prefer richest artifact); never independent sources in RLVR"
+  },
+  {
+   "work": "PVAMU_MSU_FOOTBALL_GAMENOTES_2024.pdf (same file, two queue rows)",
+   "book_ids": [
+    "6c532aecbad020e8",
+    "0a31ef31857e287d"
+   ],
+   "sft_row_kept": "6c532aecbad020e8",
+   "dropped_from_sft": [
+    "0a31ef31857e287d"
+   ],
+   "rule": "ONE SFT row per work; supervisor-verified keeper 6c532aec (NCAA passer-rating reconstructed+verified, 6:06 TOP gap found); 0a31ef31 now DUPLICATE_WORK in DB",
+   "action_next_dispatch": "none - keeper row compiled by compiler-3"
+  },
+  {
+   "work": "Python Machine Learning Projects (DigitalOcean, Tagliaferri/Morales/Birbeck/Wan) - machine-learning-projects-python.pdf, two queue rows",
+   "book_ids": [
+    "4d067ce7fd44a2d1",
+    "54c95039290a80fb"
+   ],
+   "sft_row_kept": "4d067ce7fd44a2d1",
+   "richness": {
+    "4d067ce7fd44a2d1": {
+     "primitives": 8,
+     "trace_words": 1063
+    },
+    "54c95039290a80fb": {
+     "primitives": 6,
+     "trace_words": 979
+    }
+   },
+   "dropped_from_sft": [
+    "54c95039290a80fb"
+   ],
+   "rule": "ONE SFT row per work (prefer richest artifact); never independent sources in RLVR; supervisor-verified keeper 4d067ce7 (8 primitives vs 6); 54c95039 now DUPLICATE_WORK in DB",
+   "action_next_dispatch": "none - keeper row compiled by compiler-3; DB reclassification already done by supervisor"
+  }
+ ],
+ "sft_dedup_dropped": [
+  "0a31ef31857e287d",
+  "54c95039290a80fb",
+  "6d101348291a5c1f"
+ ],
+ "pending_sft_books": [],
+ "pending_sft_note": "Cleared by compiler-3: every COMPLETE work has an SFT row under edition rules (47 rows vs 49 live COMPLETE). Provenance anomalies compiled as their REAL domains with notes: 65c65dec7ddaacd5 (queue title team-selection, actual 2D fracture MD) and 3c1295822da31ba0 (queue title fantasy-football, actual Raines-Chubukov Stoner transitions, arXiv id matches). NEW gap arrivals needing rows next pass: 2626db0663ce780e, 6d101348291a5c1f",
+ "rlvr_books_not_yet_in_scenarios": [
+  "07089dec6f73619e",
+  "0c444afcd300d1c3",
+  "10c8c515e69e40f4",
+  "13afe72d1ef6bdbd",
+  "192267e30813837d",
+  "1976064dcffc0e42",
+  "1a04a74c1cd2528c",
+  "2435ddad2e0ddd16",
+  "25294936f511d828",
+  "29a9a56fe196f2f2",
+  "2d97f3a1f7fad21e",
+  "385d408a043b611b",
+  "39871d5617848573",
+  "49ef6f06a351a3f7",
+  "4d067ce7fd44a2d1",
+  "4f974188ca231968",
+  "52b5d36325e11cd7",
+  "537da7b7adb2e1dd",
+  "539b52ea8d0a6d37",
+  "53bdc9b1b0089ddc",
+  "53d47a558cf53d1f",
+  "553c5528787d2538",
+  "55d0f88972ad63be",
+  "584e09211a54b4fa",
+  "5c31b5de385d42ac",
+  "5e3094b6f359a758",
+  "5e3d2c14003c9e74",
+  "5fee5df924431396",
+  "65c65dec7ddaacd5",
+  "68aeef90c5264628",
+  "6bc7d84da4bde923",
+  "6c532aecbad020e8",
+  "77d4ee5161695968"
+ ],
+ "next_rlvr_batch": "rlvr_batch-006.jsonl",
+ "next_rlvr_trigger_complete_count": 73,
+ "stop_reason": "",
+ "notes": "compiler-3: batch-005 compiled at COMPLETE=64 (trigger 64). Themes: The Interior Eight Yards (6aeb75fe x 366ba522: interior-max competing hazards + skew/bands/drawdown); The Observable Act (3fa96d69 x 7e3a32c1: effective-rule=written-rule cap verifier capability, concealment, persistence gates, two-sided corridors); The Contagion Chain (1cfd792f x 21544db0: chain amplification + herding lifts + gauge normalization + canonical blindness). Self-test: 3 compliant accepted (dict+str), 24 mutations rejected, 8 malformed rejected, disk re-read retest OK. 12 prior themes untouched. SFT gaps from the 3 newest arrivals pending next pass.",
+ "salvage_note": "compiler-2 429 after batch-003; supervisor merged its 4 verified part files inline; compiler-3 filled SFT gaps 2026-11-13",
+ "db_complete_count_at_update": 67,
+ "sft_gap_at_update": [
+  "6d101348291a5c1f"
+ ]
+}

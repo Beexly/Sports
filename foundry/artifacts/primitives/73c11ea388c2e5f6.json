@@ -1,0 +1,209 @@
+{
+ "book_id": "73c11ea388c2e5f6",
+ "source_status": "COMPLETE",
+ "pages_total": 716,
+ "pages_read": 716,
+ "primitives": [
+  {
+   "primitive_id": "j1_plasticity_habit",
+   "name": "Habit as plasticity: structure weak enough to yield, strong enough not to yield all at once (James Ch IV, printed p105)",
+   "verbatim_quote": "Plasticity, then, in the wide sense of the word, means the possession of a struc- ture weak enough to yield to an influence, but strong enough not to yield all at once. Each relatively stable phase of equilibrium in such a structure is marked by what we may call a new set of habits.",
+   "page": 122,
+   "page_printed": 105,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": [
+    "Source is a 19th-century OCR scan; the verbatim quote is reproduced exactly as extracted, including OCR line-hyphenation and artifacts. No text was silently corrected.",
+    "habit is grounded in the plasticity of nervous tissue (printed p105-107): a structure that yields to influence but retains the new form",
+    "each stable equilibrium phase of the plastic structure corresponds to a set of habits",
+    "qualitative physiological-psychological principle; the source gives no equation here, so none is fabricated",
+    "companion claims in the same chapter: habit is 'the enormous fly-wheel of society' (printed p121) and education should 'make our nervous system our ally instead of our enemy' by automating useful actions (printed p122)"
+   ],
+   "breakdown_regime": "Plasticity is bounded: a structure too weak yields all at once (no stable habit forms), too strong never yields (no learning). Habit 'sets like plaster' by about age thirty for professional habits and below twenty for personal habits such as accent and gesture (printed p121-122), so the principle has a sensitive-period limit. Automatism diminishes attention (printed p115): once habitual, an action no longer recruits focal awareness, which is the benefit and also the risk (the habit runs without supervision). The fly-wheel is conservative: it preserves both useful and disadvantageous habits alike.",
+   "domain": [
+    "psych",
+    "habit",
+    "motor-learning",
+    "neuroplasticity"
+   ],
+   "timescales": [
+    "tau_0: one repetition",
+    "tau_1: one practice session (a new equilibrium phase)",
+    "tau_2: weeks of installation (habit consolidation)",
+    "tau_3: years / sensitive-period setting like plaster"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "j1_plasticity_habit",
+    "mapping": "Synthesis (not a source claim): the quarterback's throwing mechanics and the coordinator's play-calling tendencies are habits in James's exact sense, stable equilibrium phases of a plastic nervous system. Practice must make the mechanics automatic (the fly-wheel) so that focal attention is freed for the coverage read; this is James's maxim of making the nervous system an ally. The conservative fly-wheel also explains why a defender's habitual read is exploitable: play-action works because habit is predictable and runs without re-deliberation. The sensitive-period limit maps to the youth acquisition window for motor patterns.",
+    "telemetry": "Repetition counts and mechanics-consistency metrics across practice; fraction of snaps where mechanics run without conscious correction (automatism proxy); age-of-acquisition vs later modifiability of a motor pattern; play-action success rate as a function of the defender's habitual read."
+   }
+  },
+  {
+   "primitive_id": "j2_stream_of_thought",
+   "name": "The stream of thought: consciousness is continuous, not chopped into bits (James Ch IX, printed p239)",
+   "verbatim_quote": "It is nothing jointed; it flows. A ‘river’ or a ‘stream’ are the metaphors by which it is most naturally described. In talking of it hereafter, let us call it the stream of thought, of consciousness, or of subjective life.",
+   "page": 256,
+   "page_printed": 239,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": [
+    "Source is a 19th-century OCR scan; the verbatim quote is reproduced exactly as extracted, including OCR line-hyphenation and artifacts. No text was silently corrected.",
+    "consciousness is sensibly continuous even across time gaps (printed p237-239); the 'stream' is the descriptive metaphor James adopts",
+    "the stream has 'substantive' resting parts and 'transitive' flying parts, feelings of relation and tendency, and a 'fringe' about each object (printed p248-258)",
+    "qualitative introspective psychology; no equation in the source, none fabricated",
+    "the five characters of thought (personal form, constant change, sensible continuity, substantive/transitive parts, cognitive function) are enumerated in the chapter (printed p225-271)"
+   ],
+   "breakdown_regime": "The continuity is 'sensible' (phenomenal), not a claim that no neural discontinuity exists; James explicitly rejects the 'mind-stuff' chaining of discrete ideas (Ch VI). The substantive/transitive distinction is introspective and hard to operationalize; the transitive 'feelings of tendency' are precisely what resist named, measured states. The stream metaphor breaks down under dissociation and alternating selves (Ch X), where the personal form fragments.",
+   "domain": [
+    "psych",
+    "consciousness",
+    "attention",
+    "cognition"
+   ],
+   "timescales": [
+    "tau_0: one substantive fixation",
+    "tau_1: one transitive transition between objects",
+    "tau_2: one read progression (a stream segment)",
+    "tau_3: the personal stream across a career"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "j2_stream_of_thought",
+    "mapping": "Synthesis: the quarterback's pre-snap read is a stream of thought, not a sequence of discrete snapshots. The substantive parts are fixations on individual defenders; the transitive parts are the felt relations and tendencies between them (the 'fringe' that signals a coverage tendency before it is named). Coaching that treats the read as a checklist of discrete keys misses the transitive tissue that actually carries the recognition. The personal-form character means the stream is always the quarterback's own, shaped by his history, which is why two quarterbacks given the same keys read differently.",
+    "telemetry": "Eye-tracking fixation sequences and saccade transitions during the read; dwell-time distribution (substantive) vs transition structure (transitive); verbalized 'feel' of tendency vs named coverage; divergence of reads between quarterbacks on identical looks."
+   }
+  },
+  {
+   "primitive_id": "j3_attention_withdrawal",
+   "name": "Attention as focalization with withdrawal; its opposite is distraction (James Ch XI, printed p404)",
+   "verbatim_quote": "Focalization, concentration, of consciousness are of its essence. It implies withdrawal from some things in order to deal effectively with others, and is a condition which has a real opposite in the confused, dazed, scatter- brained state which in French is called distraction, and Zer- streuthett in German.",
+   "page": 421,
+   "page_printed": 404,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": [
+    "Source is a 19th-century OCR scan; the verbatim quote is reproduced exactly as extracted, including OCR line-hyphenation and artifacts. No text was silently corrected.",
+    "attention is 'the taking possession by the mind, in clear and vivid form, of one out of what seem several simultaneously possible objects or trains of thought' (printed p403-404)",
+    "focalization and concentration are of its essence; it implies withdrawal from some things to deal effectively with others",
+    "its real opposite is the confused, dazed, scatter-brained state (distraction / Zerstreuung) (printed p404)",
+    "qualitative definition; the chapter also asks how many things can be attended at once (printed p405) and treats voluntary vs passive attention (printed p416-420); no equation, none fabricated"
+   ],
+   "breakdown_regime": "Attention is zero-sum and selective: gaining focus on one object means withdrawing from others, so it cannot be simultaneously maximal on all inputs. The number of objects attendable at once is limited (printed p405). Fatigue and monotonous automatic occupations tend to produce the scattered distraction state (printed p404). Voluntary attention is effortful and may be a resultant rather than a force (printed p447-450); under the distraction state the 'wheels of life' stop until an unexplained energy re-gathers them.",
+   "domain": [
+    "psych",
+    "attention",
+    "cognitive-load",
+    "executive-control"
+   ],
+   "timescales": [
+    "tau_0: one focal fixation",
+    "tau_1: one attentional shift / withdrawal",
+    "tau_2: one play under load",
+    "tau_3: fatigue-driven drift toward distraction across a game"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "j3_attention_withdrawal",
+    "mapping": "Synthesis: the quarterback cannot attend maximally to the pass rush and the safety rotation at once; attention is withdrawal, so every focal choice is a sacrifice of another cue. The distraction state (Zerstreuung) is the formal description of the panicked, scattered read under pressure, where the foreground fills with a 'solemn sense of surrender to the empty passing of time' and the background knows what to do but cannot start. Designing the read to minimize required simultaneous withdrawals is therefore a hard cognitive constraint, not a preference, and the fatigue drift toward distraction is a game-long risk.",
+    "telemetry": "Eye-tracking focal dwell vs peripheral cue detection under pressure; read-error rate as a function of simultaneous cues required; self-reported and behavioral distraction indicators late in games; reaction-time and personal-equation measures (printed p413) as load proxies."
+   }
+  },
+  {
+   "primitive_id": "j4_fechner_weber_psychophysics",
+   "name": "Fechner's psychophysical measure formula S = C log R, built on Weber's constant-fraction law (James Ch XIII, printed p539-540)",
+   "verbatim_quote": "If we call the stimulus R, and the constant factor C, we get the formula S = C log R, which is what Fechner calls the psychophysischer Maas- forme.",
+   "page": 556,
+   "page_printed": 539,
+   "latex": "S = C\\,\\log R,\\qquad \\frac{\\Delta R}{R} \\approx k\\ \\text{(Weber's constant fraction, printed p540)}",
+   "symbol_and_unit_ledger": {
+    "S": "sensation magnitude; psychological 'units of sensation', where the unit is the just-perceptible increment above zero (printed p539); units = sensation-units",
+    "R": "stimulus intensity (Fechner's R for Reiz); physical units of the relevant modality (e.g. luminance, weight); in the formula R is taken relative to the unit stimulus r (the increment giving the first perceptible sensation, printed p539), so the log argument R/r is dimensionless",
+    "C": "constant factor varying with the kind of sensation (printed p539); units = sensation-units per (dimensionless log unit), so C*log(R/r) carries sensation-units, matching S (dimensionally homogeneous once R is normalized to r)",
+    "Delta R": "just-discernible increment of stimulus; same physical units as R",
+    "Delta R / R": "Weber difference-threshold; dimensionless fraction, constant if Weber's law holds universally (printed p540)",
+    "k": "Weber fraction; dimensionless constant per modality",
+    "log": "logarithm; the dimensional stimulus must be normalized to the threshold unit r before taking log, which the source's 'unit of stimulus' convention supplies"
+   },
+   "assumptions": [
+    "Source is a 19th-century OCR scan; the verbatim quote is reproduced exactly as extracted, including OCR line-hyphenation and artifacts. No text was silently corrected.",
+    "Weber's law: the difference-threshold is a constant fraction of the stimulus, independent of its size (printed p540); Fechner integrated it to S = C log R (printed p539)",
+    "the unit of sensation is the just-perceptible increment above zero; the unit of stimulus is the increment r producing it (printed p539)",
+    "the source explicitly frames the formula as Fechner's reasoning 'as I understand it' and flags its speculative status"
+   ],
+   "breakdown_regime": "James's own caveat is decisive: 'no human being, in any investigation into which sensations entered, has ever used the numbers computed in this or any other way in order to test a theory or to reach a new result. The whole notion of measuring sensations numerically, remains in short a mere mathematical speculation about possibilities, which has never been applied to practice' (printed p539). Weber's law holds only approximately and in special cases (printed p536-537); near threshold, accidental fluctuations of inner sensibility require averaging many appreciations (printed p540); the log integration assumes Weber's law universally, which James questions. Use the relative/log functional form as a structural insight, not as calibrated sensation numbers.",
+   "domain": [
+    "psych",
+    "psychophysics",
+    "discrimination",
+    "measurement"
+   ],
+   "timescales": [
+    "tau_0: one discrimination judgment",
+    "tau_1: one averaged threshold estimate",
+    "tau_2: a session of psychophysical measurement",
+    "tau_3: modality-specific calibration of C and k"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "j4_fechner_weber_psychophysics",
+    "mapping": "Synthesis: the quarterback's discrimination of coverage differences is relative, not absolute (Weber): a small change in a high-intensity, crowded, noisy stimulus is harder to detect than the same absolute change in a quiet setting, exactly James's example that the stars are invisible by day (printed p536). The derived kernel is the discrimination operator: detectability scales with the fractional change Delta R / R, so deception should hide a coverage change inside a high baseline intensity. The Fechner log form says perceived change compresses as baseline grows. The honest constraint, per James, is that this gives a functional form, not calibrated sensation numbers.",
+    "telemetry": "Coverage-change detection accuracy as a function of baseline crowd/noise/visual intensity; estimated Weber fraction for relevant visual discriminations; fractional vs absolute change in pre-snap looks and the corresponding read-error rate; threshold-averaging across many reps."
+   }
+  },
+  {
+   "primitive_id": "j5_retentiveness_elaborating_associates",
+   "name": "Native retentiveness is unchangeable; memory improvement is elaborating associates (James Ch XVI, printed p663-664)",
+   "verbatim_quote": "ONE’S NATIVE RETENTIVENESS IS UNCHANGEABLE. It will now appear clear that all improvement of the memory lies in the line of ELABORATING THE ASSOCIATES of each of the several things to be remembered.",
+   "page": 680,
+   "page_printed": 663,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": [
+    "Source is a 19th-century OCR scan; the verbatim quote is reproduced exactly as extracted, including OCR line-hyphenation and artifacts. No text was silently corrected.",
+    "native (physiological) retentiveness is a quality given once for all with organization, fluctuating only with health/hygiene, not trainable at large (printed p663-664)",
+    "all improvement of memory lies in elaborating the associates of each thing to be remembered (printed p663)",
+    "memory is due to 'paths' of association in the brain; a fact in a system is retained by the combined suggestive power of all other facts (printed p663)",
+    "qualitative; the source cites Ebbinghaus (1885) and gives the actors/schoolboys examples of 'better remembering by better thinking' (printed p664); no equation, none fabricated"
+   ],
+   "breakdown_regime": "The claim that general retentiveness is untrainable is James's position against the common belief that rote practice strengthens memory at large; he reports questioning mature actors who denied that learning parts improved general memory (printed p664). It is a 19th-century claim and modern transfer-of-training evidence is more nuanced, so it is recorded as the source's thesis, not as settled fact. Cramming fails because few associative paths lead to the material (printed p663); the principle predicts spaced, varied, contextual repetition outperforms massed study. Native tenacity still fluctuates with fatigue, illness, and age (printed p664).",
+   "domain": [
+    "psych",
+    "memory",
+    "learning",
+    "association"
+   ],
+   "timescales": [
+    "tau_0: one encoding event",
+    "tau_1: one repetition in a new context (a new path)",
+    "tau_2: spaced study across days/weeks",
+    "tau_3: a career's associative network (the athlete's store of records)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "j5_retentiveness_elaborating_associates",
+    "mapping": "Synthesis: film study does not improve the quarterback's raw retentiveness; it builds a network of associative paths so that a new look is caught up into a pre-existing net-work, like James's merchant's prices or athlete's store of records (printed p664). Cramming the playbook the night before fails because few paths lead to it; spaced walkthroughs in varied contexts build many paths and make recall robust. The scouting/tendency model is exactly such an associative system: each fact retained by the suggestive power of all the others, so a well-connected scheme is hard to forget and hard to surprise. This is the formal basis for spacing and contextual variability in installation.",
+    "telemetry": "Recall accuracy of installed concepts vs spacing/variety of rehearsal; number of distinct contextual paths per concept; cramming-vs-spaced retention curves across a season; surprise-play success rate as a function of associative connectivity of the game plan."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "j_t1_habit_attention_stream",
+   "think": "James's first volume gives the football systems engineer a cognitive architecture grounded in three load-bearing principles: habit as plasticity, the stream of thought, and attention as withdrawal. Habit, in Chapter IV, is defined through plasticity: a structure weak enough to yield to an influence but strong enough not to yield all at once, with each stable equilibrium phase marked by a new set of habits. This is precisely the tradeoff of skill acquisition. Repetition installs automaticity, and James's pedagogic maxim is to make the nervous system our ally instead of our enemy by automating as many useful actions as possible, so that the higher powers of mind are set free for their proper work. For the quarterback this means the throwing mechanics must become the fly-wheel, running without volitional deliberation, so that focal attention is available for the coverage read. The miserable human being James describes, in whom nothing is habitual but indecision and every trivial act is a subject of express volitional deliberation, is the exact portrait of a quarterback whose mechanics are not yet automatic and who therefore spends his attention on his own body instead of on the defense. Attention, Chapter XI, is focalization and concentration, and it implies withdrawal from some things in order to deal effectively with others. This is a hard zero-sum constraint: the quarterback cannot attend maximally to the pass rush and the safety rotation simultaneously, so every focal choice sacrifices another cue, and the read must be designed to minimize the number of required simultaneous withdrawals. The real opposite of attention is the confused, dazed, scatter-brained state James calls distraction or Zerstreuung, in which the eyes fix on vacancy, the foreground fills with a solemn sense of surrender to the empty passing of time, and the background knows what to do but cannot start. That is the formal description of the panicked read under pressure, and fatigue and monotonous automatic occupations tend to produce it, so it is a game-long drift risk, not merely a single-snap failure. The stream of thought, Chapter IX, supplies the microstructure: consciousness is nothing jointed, it flows, and it has substantive resting parts and transitive flying parts, feelings of relation and tendency, and a fringe about each object. The read is therefore not a checklist of discrete keys but a stream whose transitive tissue, the felt tendency between defenders, carries the recognition before it is named. Coaching that reduces the read to discrete snapshots amputates precisely the part that does the work. The retrocausal genealogy is explicit in James: habit sets like plaster by about thirty for professional habits and below twenty for personal habits such as accent and gesture, an invisible law as strong as gravitation keeping a man within his orbit. The quarterback's mechanics and the coordinator's tendencies are historical scars laid down in a sensitive period, which is why youth acquisition of motor patterns matters and why late change is costly. Theory of mind enters because the defender also has a habit stream, and the fly-wheel is conservative and predictable: play-action works because the defender's habitual read runs without re-deliberation and bites on the familiar stimulus. Deception is the engineering of another agent's automatism. The cross-layer veto follows: a high-EV call is vetoed when the required attentional withdrawal exceeds the quarterback's available focus, when the mechanic is not yet habitual and still demands volitional deliberation, or when the read asks for more simultaneous objects than attention can hold. The physical window vetoes independently, and the veto is the product of gates, never an average.",
+   "retrocausal_genealogy": "James states that habit sets like plaster by about thirty for professional habits and below twenty for personal habits such as accent and gesture, an invisible law as strong as gravitation (printed p121-122). The quarterback's mechanics and the coordinator's tendencies are therefore historical scars laid down in a sensitive period, and the present read is causally downstream of that early installation. The fly-wheel is conservative: it preserves disadvantageous habits as faithfully as useful ones, which is why a bad mechanic installed young is costly to rewrite and why a defender's habitual read can be reliably exploited by play-action.",
+   "theory_of_mind": "The defender also has a habit stream, and the fly-wheel runs without re-deliberation, so deception is the engineering of another agent's automatism: play-action makes the defender bite on the familiar stimulus because his habitual read is predictable. The quarterback models the defender's habit, the defender models the quarterback's tendency, and the coordinator models both. The stream-of-thought principle means each agent's read is a personal, history-shaped flow, not a shared checklist, which is why identical keys produce different reads in different quarterbacks.",
+   "cross_layer_veto": "A high-EV call is vetoed when the required attentional withdrawal exceeds the quarterback's available focus (attention is zero-sum, printed p404), when the mechanic is not yet habitual and still demands volitional deliberation (James's indecision portrait, printed p122), or when the read asks for more simultaneous objects than attention can hold (printed p405). The distraction state is the failure mode the veto guards against. The physical window vetoes independently, and the veto is the product of the cognitive and physical gates, never an average of a marginal one against a strong one."
+  },
+  {
+   "trace_id": "j_t2_psychophysics_memory_veto",
+   "think": "The second trace binds James's psychophysics and memory theory to the calibration of the sensing and learning system, and runs the veto with the author's own epistemic caution attached. Weber's law, as James presents it in Chapter XIII, says the difference-threshold is a constant fraction of the stimulus, independent of its size; Fechner integrated this into the measure formula S = C log R, with the unit of sensation being the just-perceptible increment above zero and the unit of stimulus the increment r that produces it. The structural consequence for the quarterback is that discrimination is relative, not absolute: a small coverage change hidden inside a high-intensity, crowded, noisy baseline is harder to detect than the same absolute change in a quiet setting, exactly James's example that the stars are invisible by day while the same addition to twilight is considerable. The derived discrimination kernel says detectability scales with the fractional change Delta R over R, so deception should hide a coverage change inside a high baseline intensity, and the log form says perceived change compresses as baseline grows. But James attaches a decisive caveat that this artifact preserves rather than hides: no human being has ever used the numbers computed by this or any other sensation-measurement method to test a theory or reach a new result, and the whole notion of measuring sensations numerically remains a mere mathematical speculation about possibilities which has never been applied to practice. The honest use is therefore the functional form, relative and logarithmic discrimination, not fabricated calibrated sensation numbers. This is the same fail-closed discipline the gatekeeper enforces: a quantitative relation is recorded with its dimensional ledger and its explicit breakdown, and where the source itself disclaims application, the artifact disclaims it too rather than inventing telemetry precision. Memory, Chapter XVI, supplies the learning principle: native retentiveness is unchangeable, a physiological quality given once for all, fluctuating only with health and hygiene, and all improvement of memory lies in elaborating the associates of each thing to be remembered. A fact embedded in a system is retained by the combined suggestive power of all the other facts, so forgetfulness becomes well-nigh impossible, whereas cramming, committing points in a few hours for one purpose, leaves few associative paths and speedy oblivion is its almost inevitable fate. For the quarterback, film study does not improve raw memory; it builds a network of paths so that a new look is caught up into a pre-existing net-work, like James's merchant's prices or the athlete's store of records. This is the formal basis for spaced, varied, contextual walkthroughs over massed cramming, and it explains why a well-connected scheme is hard to forget and hard to surprise. The retrocausal genealogy is that the associative network is itself a history: each path was laid by a past repetition in a particular context, so the present recall is causally downstream of the spacing and variety of past study, and the sensitive-period and habit-plaster findings of Chapter IV compound it. Theory of mind: the opponent models your associative network and tries to present looks that fall outside it, the surprise play; a densely connected network resists this because every fact is held by many paths. The cross-layer veto: a high-EV call is vetoed when the required discrimination falls below the Weber fraction for the current baseline intensity, when the concept is crammed rather than elaborated and thus fragile under pressure, or when attention has drifted toward distraction. The sister-institute mapping is honest and labeled: Weber-Fechner relative discrimination applies to a patient's perception of exertion or pain relative to baseline, the log compression to clinical telemetry scaling, and motor relearning in rehabilitation is elaboration of associative paths rather than improvement of raw retentiveness, with the same attentional-withdrawal gate on cognitive load. Every gate is tied to a named chapter and printed page, a verbatim OCR-exact quote, and an explicit breakdown, and every football and clinical binding is labeled synthesis rather than attributed to James.",
+   "retrocausal_genealogy": "The associative network is itself a history: each path was laid by a past repetition in a particular context, so present recall is causally downstream of the spacing and variety of past study, and the habit-plaster and sensitive-period findings of Chapter IV compound it. James's own intellectual genealogy is also retrocausal and honest: he reports questioning mature actors who denied that learning parts improved general memory (printed p664), and he preserves Fechner's formula while recording that sensation-measurement has never been applied to practice (printed p539). The discipline is to attach the correction and the caveat to the claim rather than hide it, which is exactly what this artifact does.",
+   "theory_of_mind": "The opponent models your associative network and tries to present looks that fall outside it, the surprise play. A densely connected network resists this because every fact is held by many suggestive paths, whereas a crammed concept with few paths is fragile and easily surprised. The quarterback's counter-theory-of-mind is to distrust a look that seems discriminable only because the baseline is quiet: by Weber's law the same fractional change is harder to detect in a high-intensity crowded setting, so apparent clarity in a calm pre-snap may be an artifact of low baseline, not genuine recognition.",
+   "cross_layer_veto": "A high-EV call is vetoed when the required discrimination falls below the Weber fraction for the current baseline intensity (printed p540), when the concept is crammed rather than elaborated and thus fragile under pressure (printed p663), or when attention has drifted toward distraction (printed p404). The clinical analogue veto is identical: a load or perception judgment is gated by relative discrimination against baseline, by the associative robustness of the motor plan, and by cognitive load, with the physical recovery window vetoing independently. The veto requires all gates to pass, mirroring the fail-closed discipline the gatekeeper enforces on this artifact."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any skilled agent: skill is habit installed in a plastic nervous system during a sensitive period, perception is a continuous stream with substantive and transitive parts, attention is zero-sum withdrawal, discrimination is relative (Weber-Fechner), and memory improvement is elaboration of associative paths, not raw retentiveness. Audit a performer by automatism of mechanics, attentional budget, fractional discriminability, and associative connectivity, preserving the source's own caveats rather than inventing precision.",
+ "gsi_mapping": "Mapping (synthesis, not a source claim) to the sister institute: Weber-Fechner relative discrimination applies to a patient's perception of exertion or pain relative to baseline, with logarithmic compression of perceived change as baseline grows; motor relearning in rehabilitation is elaboration of associative paths rather than improvement of native retentiveness; habit plasticity governs the sensitive period of motor recovery; and the attentional-withdrawal gate bounds cognitive load in clinical monitoring, with a fail-closed veto when discrimination, associative robustness, or attention gates fire.",
+ "gse_mapping": "Mapping (synthesis) to GSE: the Coach-Mind simulator's quarterback is a habit-stream agent whose mechanics must be automatic (James Ch IV) to free attention (Ch XI) for a continuous read (Ch IX); deception engineers the defender's automatism and hides coverage changes inside high baseline intensity (Weber, Ch XIII); installation must elaborate associative paths via spaced varied rehearsal rather than cram (Ch XVI); and DFS/portfolio exposure is bounded by the fragility of single-path, crammed concepts versus densely connected schemes."
+}

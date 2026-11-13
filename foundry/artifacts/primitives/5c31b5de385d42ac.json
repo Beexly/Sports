@@ -1,0 +1,164 @@
+{
+  "book_id": "5c31b5de385d42ac",
+  "source_status": "COMPLETE",
+  "pages_total": 27,
+  "pages_read": 27,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "PFR state-mean kernel: score differential + drive expected points + linearly time-discounted kickoff line",
+      "verbatim_quote": "Specifically the equations for the PFR model’s mean and standard deviation are as follows: MPFR = (pts.off – pts.def) + exp.pts + line / (60 / min.rem),",
+      "page": 4,
+      "latex": "M_{\\mathrm{PFR}} = (\\mathrm{pts.off} - \\mathrm{pts.def}) + \\mathrm{exp.pts} + \\frac{\\mathrm{line}}{60/\\mathrm{min.rem}}",
+      "symbol_and_unit_ledger": {
+        "M_PFR": "points (NFL scoring units); center of the outcome normal curve",
+        "pts.off": "points scored by team on offense (dimensionless scoring count)",
+        "pts.def": "points scored by team on defense",
+        "exp.pts": "expected points for current drive; bounded [-2.49, 6.971] per p5 (1st-and-goal at the 1 -> 6.971; 4th-and-10 at own 1 -> -2.49)",
+        "line": "points; Vegas line at kickoff, positive when offense favored, negative otherwise (source input; forbidden in GSE lane, see layer2 veto)",
+        "min.rem": "minutes remaining in regulation; 60 at kickoff, 0 at end of regulation",
+        "60": "minutes; regulation length (NFL four 15-minute quarters)"
+      },
+      "assumptions": "All additive terms are in points, so the sum is dimensionally homogeneous. The kickoff line is discounted linearly by fraction of game elapsed (p6 worked example: 7-point favorite adds 7/(60/15)=1.75 points at the start of the 4th quarter). Expected points come from PFR's series of linear equations in down, distance, field position (p5, p13); they are bounded, not a true conditional expectation over all drive outcomes. Normal-outcome assumption: final margin given state is treated as Gaussian with this mean.",
+      "breakdown_regime": "min.rem -> 0 makes the line term line/(60/min.rem) -> 0 but the companion SD collapses (p2), and at literal min.rem = 0 the model divides by zero on untimed downs (a game cannot end on a defensive penalty, p13). Overtime clock reset is invalid: time means something different strategically and OT rules changed over eras (2012 first-possession field-goal rule; regular-season ties allowed, postseason not, p6), so the authors refuse to use PFR in OT (p7). Known EP defect: on 1st down inside own 10, expected points improve slightly with worse field position - data rarity or equation error, unresolved (p19).",
+      "timescales": [
+        "tau_0: seconds - single play, untimed-down risk at regulation end",
+        "tau_1: minutes - drive expected-points horizon within the 60-minute regulation clock",
+        "tau_2: game - linear line discount over elapsed game fraction",
+        "tau_3: seasons - kickoff line encodes pre-game team strength estimated across eras"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p1",
+        "mapping": "GSE Coach-Mimic state-mean kernel: current margin + drive expected points + a prior team-strength term discounted by elapsed game fraction. DOCTRINE VETO: the source's 'line' is a Vegas point spread; sportsbook odds are forbidden as model input in our lane, so the derived kernel replaces it with a non-odds strength prior (e.g., play-by-play-derived Elo) or zeroes it, and flags the substitution explicitly. The linear discount structure itself is odds-free and transfers intact.",
+        "telemetry": "Per-play score differential, down/distance/field position feeding EP; calibration bins of predicted WP vs realized win frequency on 2001-2016 holdout plays (source reports r > .99 binned calibration, p12); odd/even game split for leak-free evaluation (p11)."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "PFR uncertainty kernel: square-root time decay of outcome variance with empirical 13.45-point anchor",
+      "verbatim_quote": "SDPFR = uncertainty ´ sqrt(min.rem / 60), where pts.off is the number of points scored by the team on offense, pts.def is the number of points scored by the team on defense, exp.pts is the expected points for the current drive, line is the Vegas line at kickoff (coded here as the amount by which the team on offense is favored to win, negative if they were favored to lose), min.rem is the time remaining in the game expressed as minutes (e.g., 60 min at kickoff, 7.5 min midway through the 4th quarter, 0 min at the end of regulation play), and uncertainty is the standard deviation of the difference between actual game outcomes (score differential) and Vegas lines (i.e., final game pts.off minus pts.def minus line). PFR uses uncertainty = 13.45 based on their analysis of historical game outcomes.",
+      "page": 5,
+      "latex": "SD_{\\mathrm{PFR}} = \\mathrm{uncertainty} \\times \\sqrt{\\mathrm{min.rem}/60}",
+      "symbol_and_unit_ledger": {
+        "SD_PFR": "points; spread of the expected final-margin distribution",
+        "uncertainty": "points; empirical SD of (final pts.off - pts.def - line); PFR value 13.45; revised app value 13.40022 estimated on all 5,324 games of 2000-2019 (p1)",
+        "min.rem": "minutes remaining in regulation",
+        "60": "minutes; regulation length; ratio min.rem/60 dimensionless so sqrt is dimensionless and SD carries points"
+      },
+      "assumptions": "Uncertainty is anchored to the historical residual SD of final margin around the kickoff line, i.e. the line is treated as the best pre-game predictor of margin. The sqrt(t/T) decay assumes outcome variance contracts proportionally to time remaining, a diffusion-bridge-style contraction. The anchor constant is era-specific: 13.45 (original PFR) vs 13.40022 (2000-2019 recompute), a 0.37% shift.",
+      "breakdown_regime": "As min.rem -> 0, SD -> 0: the normal curve collapses to a point mass and win probabilities jump dramatically and erratically late in games (p13); at min.rem = 0 the model is unusable (division by zero in the mean term, p13). The sqrt law over-discounts uncertainty near the end relative to realized late-game variance, which is exactly what the 450-second floor modification repairs (p4). In overtime the decay has no valid clock to run on (p6-p7).",
+      "timescales": [
+        "tau_0: seconds - late-game variance collapse regime",
+        "tau_1: minutes - sqrt decay over remaining regulation",
+        "tau_2: game - full 60-minute contraction from 13.45 points to 0",
+        "tau_3: seasons - re-estimation of the anchor constant across eras (13.45 -> 13.40022)"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p2",
+        "mapping": "The sqrt(t/T) variance contraction is isomorphic to a diffusion bridge pinned at a terminal horizon: remaining-time uncertainty shrinks as the square root of the remaining interval. In GSE it becomes the posterior-SD schedule on game outcome, calibrated per time bucket against empirical residual margins instead of a single global constant; in GSI the same horizon-shrinking filter pattern applies to clinical telemetry trend alarms approaching an event horizon (isomorphism only - the source makes no physiological claim).",
+        "telemetry": "Bin plays by min.rem; compute empirical SD of (final margin - non-odds prior) per bucket and compare to anchor*sqrt(t/60); source anchors: 13.45 points (original), 13.40022 (2000-2019, 5,324 games); late-game WP jump magnitude before/after floor (Figs 4-5)."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Win probability as Gaussian tail area with half-mass tie correction",
+      "verbatim_quote": "Win probability is calculated as the area under the curve above a threshold of 0.5 (which represents favorable game outcomes for the team on offense, or the probability that they will win) plus one-half the area between thresholds of -0.5 and 0.5 (which represents a tied game at the end of regulation, for which PFR assigns an equal likelihood of winning or losing in overtime).",
+      "page": 5,
+      "latex": "WP = \\Pr(X > 0.5) + \\tfrac{1}{2}\\Pr(-0.5 \\le X \\le 0.5), \\quad X \\sim \\mathcal{N}(M_{\\mathrm{PFR}},\\, SD_{\\mathrm{PFR}}^{2})",
+      "symbol_and_unit_ledger": {
+        "WP": "dimensionless probability in [0,1] that the team on offense wins",
+        "X": "points; latent final score margin (offense minus defense) under the state-conditioned normal",
+        "0.5": "points; threshold separating integer margins: X > 0.5 iff margin >= 1 (win)",
+        "-0.5, 0.5": "points; band capturing exactly margin = 0 (tie at end of regulation)",
+        "M_PFR, SD_PFR": "points; from p1 and p2"
+      },
+      "assumptions": "Final margin is conditionally Gaussian given the state. Integer scoring means the 0.5 thresholds cleanly partition win/tie/loss. Ties are split 50/50 because PFR assigns equal overtime win likelihood; this is a modeling convention, valid for regular-season games that may end tied, not a derived property of postseason overtime (which cannot end tied, p6).",
+      "breakdown_regime": "When SD_PFR -> 0 the tail area becomes a step function of the mean and the tie band contributes a discontinuous half-mass exactly at margin 0 - the erratic late-game jumps of p13. The 50/50 tie convention breaks for postseason overtime rules and for OT rule eras (pre/post 2012 first-possession field-goal rule, p6). The Gaussian assumption itself is untested in the tails; the paper validates calibration in bins, not tail shape (p12).",
+      "timescales": [
+        "tau_0: seconds - per-play WP update",
+        "tau_1: minutes - drive-level shifts of the mean",
+        "tau_2: game - tie-mass handling at regulation end and OT transition",
+        "tau_3: seasons - OT rule-era dependence of the tie convention"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p3",
+        "mapping": "GSE fourth-down decision kernel: evaluate go-for-it vs kick by the change in this tail-area WP across successor states, with the tie half-mass retained for regular-season contexts and replaced by a rule-era-aware OT model in postseason contexts. The kernel is closed-form (normal CDF), spreadsheet-cheap (p8), and fits the Coach-Mimic persona layer that must explain decisions to non-statistical coaches (p17).",
+        "telemetry": "Realized win frequency within predicted-WP bins (source: r > .99 for both models, p12); fourth-down subset calibration; MSE of WP vs dichotomous outcome (.15185 PFR baseline, p10); decision-level audit of go/kick choices vs kernel recommendation."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Late-game time-floor regularization and overtime extension of the PFR kernel",
+      "verbatim_quote": "Rather than allowing the time remaining to continue all the way down to 0, our modified PFR model sets a floor at 450 seconds remaining. Compare the upper-left and upper-right graphs in Figure 4 to see how this changes the time discounting function. This modified PFR model, which only allowed time to run down to 450 seconds, exhibited MSE = .1509.",
+      "page": 14,
+      "latex": "t_{\\mathrm{eff}} = \\max(t_{\\mathrm{rem}},\\, 450\\ \\mathrm{s})",
+      "symbol_and_unit_ledger": {
+        "t_eff": "seconds; effective time fed to the discount functions",
+        "t_rem": "seconds; actual time remaining in regulation",
+        "450 s": "floor = 7.5 minutes; chosen by systematically varying the minimum (sweet-spot search, p14)",
+        "0.25": "dimensionless fixed time-discount value for all overtime plays in the final modified model (p15)",
+        "MSE": "dimensionless (probability squared); .1509 floor-only regulation, .1512 floor+OT, .1511 final modified model all plays, vs random forest .1522 all plays (p14)"
+      },
+      "assumptions": "The floor variant clamps time abruptly; the final variant instead stretches the discount curve so it approaches 450 s smoothly all along, steepens discounting in the final two minutes of regulation because probabilities were too modest late, and fixes OT discount at 0.25 (p14-p15). Overtime plays are treated as contextually equivalent to the final minutes of regulation: the game can end on any play (p14). The 450 s value is empirically tuned on 2001-2016 data, not derived.",
+      "breakdown_regime": "Without the floor, t_rem = 0 on untimed downs (game cannot end on a defensive penalty) causes division by zero (p13); near-zero time makes WP jump erratically. The abrupt floor introduces a kink in the discount curve (straight-line segment, p14) which the stretched variant removes. The OT constant 0.25 is a regime patch, not a clock model: it inherits all OT rule-era dependence (2012 first-possession FG rule; tie-allowed regular season vs postseason, p6). Tuned floor may not transfer across eras with different scoring pace.",
+      "timescales": [
+        "tau_0: seconds - untimed-down and final-play singularity",
+        "tau_1: minutes - 450 s floor and final-two-minute steepening",
+        "tau_2: game - regulation-to-OT continuity via fixed 0.25 discount",
+        "tau_3: seasons - floor tuned on 2001-2016, era-transfer caveat"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p4",
+        "mapping": "GSE clock-management regularizer: clamp effective horizon at a tuned floor before variance discounting, smooth the clamp (stretch rather than kink), steepen the final window, and carry a fixed discount into any sudden-death extension. This is the general pattern for preventing singular confidence at event horizons in any real-time decision engine, and it is the specific fix that let the modified PFR beat the random forest including overtime (.1511 vs .1522, p14).",
+        "telemetry": "MSE vs time-elapsed curves (Figs 3 and 5: PFR better early, RF better after halftime pre-fix; modified PFR better throughout post-fix); late-game WP jump variance pre/post floor; regulation-only MSE .1509 vs .15185 baseline; all-plays MSE .1511 vs RF .1522."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Calibration-gated accuracy-complexity null: closed-form PFR matches 500-tree random forest",
+      "verbatim_quote": "We used the mean squared error of prediction (MSE; win probability vs. a dichotomous variable representing whether the team on offense ultimately won the game) to evaluate the accuracy of a model. The MSE for the PFR model was .15185.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": {},
+      "assumptions": "MSE is defined verbally by the source as mean squared error of predicted win probability against the dichotomous realized outcome (no symbolic equation is printed, hence latex null). Evaluation sample: 4,524 games / 674,311 plays after dropping zero-down plays, the miscoded 2000 season, and tied games; regulation-only analyses use 4,240 games / 669,924 plays (p9). Random forest uses ntree=500, mtry=2, nodesize=200 per Lock & Nettleton (2014), reduced to 100 trees for the training-year sweep because MSE stabilizes between 50 and 100 trees (p4, p10). Odd/even game split gives leak-free full-sample evaluation (p11).",
+      "breakdown_regime": "The aggregate MSE parity masks time-resolved differences: PFR is more accurate early, the random forest surpasses it soon after halftime through end of regulation (p12, Fig 3) - so a single global MSE is an insufficient acceptance statistic. Calibration correlation r > .99 is computed on binned points, not per-play, and binning can hide tail miscalibration. Training-year gains show diminishing returns; test year, offset, and absolute offset were not significant (p11), but the sample only reaches 2001, so decade-scale rule changes (rush-to-pass era shift) are untested (p19).",
+      "timescales": [
+        "tau_0: seconds - per-play squared error",
+        "tau_1: minutes - time-resolved MSE curves within a game",
+        "tau_2: game - odd/even split unit",
+        "tau_3: seasons - training-window length, era offsets, diminishing returns"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p5",
+        "mapping": "Isomorphic governance pattern for the GSE engine queue: (1) parsimony gate - a closed-form kernel that matches a complex learner's held-out MSE earns deployment preference, because complexity must pay for itself; (2) leak-free evaluation - odd/even game splitting is isomorphic to any group-disjoint holdout that prevents contamination; (3) calibration acceptance - binned predicted-vs-observed correlation as a fail-closed gate before any persona consumes the kernel. The source's own failed upgrades (RF expected points, time-in-EP, p13) are evidence that complexity additions must clear this gate, not bypass it.",
+        "telemetry": "MSE PFR .15185 vs RF odd/even .15188 (p10-p12); binned calibration r > .99 both models (p12); time-resolved MSE curves (Fig 3); training-year sweep with diminishing returns and null offset effects (p11, Fig 1); failed RF-EP replacement (p13)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "scenario": "Fourth-and-one at opponent 35, 2:10 remaining, trailing by 2: Coach-Mimic comfort call (field goal) vs delta-WP kernel recommendation, with DC tendency and QB clock as persona inputs.",
+      "think": "Scenario: fourth-and-one at the opponent's 35, 2:10 left in regulation, offense trailing by two. The Coach-Mimic persona defaults to the field-goal attempt: it ties the game and, in the source's own words about coaches, lets them escape blame for a loss. The defensive coordinator's tendency sheet expects a kick; the quarterback's internal clock says there is time for two more plays if the first down converts. The sovereign kernel disagrees with the comfort call only if the numbers survive the breakdown gates. First, the state mean (p1) takes the current margin of -2, adds drive expected points for fourth-and-one at the opponent 35 - a high-leverage, near-boundary EP state - and adds the discounted strength prior. The doctrine veto fires immediately on the source's line term: it is a Vegas spread, and odds are forbidden inputs in our lane, so the kernel substitutes a play-by-play-derived strength prior and logs the substitution. Second, the uncertainty kernel (p2) at 130 seconds remaining would, unmodified, collapse the spread toward zero and make the win probability jump erratically - exactly the pathology the authors document. The p4 floor clamps effective time at 450 seconds, so the kernel evaluates the decision under stabilized variance instead of singular confidence. Third, the tail-area operator (p3) converts both successor states - made first down versus made field goal versus turnover on downs - into win probabilities with the tie half-mass intact, because this is a regular-season context where a tie is a legal terminal outcome. The go-for-it branch keeps the drive alive with a fresh set of downs inside field-goal range; the kick branch surrenders possession with a coin-flip overtime convention attached. The kernel's recommendation is therefore a delta-WP comparison, not a narrative. The QB's clock intuition and the DC's tendency expectation are persona inputs that the explanation layer must address, not probability inputs. What makes this trace sovereign is that every number carries its regime: the EP bounds [-2.49, 6.971], the 13.45-point anchor with its 13.40022 revision, the 450-second floor tuned on 2001-2016, and the explicit refusal to let the model speak at literal time zero or in unpatched overtime. A decision engine that cannot state where its own equations die is not allowed to advise a fourth-down call.",
+      "retrocausal_genealogy": "This kernel's lineage runs Lindsey (1961), who estimated baseball win probabilities from run differential and inning, through Burke (2014), the first NFL model built on score differential, time, down, distance and field position - now proprietary and owned by ESPN, which is why this paper could not test it. Lock and Nettleton (2014) added the Vegas line and a 500-tree random forest; Pro Football Reference published the closed-form normal-curve model with its 13.45-point uncertainty anchor; Ruscio and Brady's 2021 draft inherits all of it and repairs the time discounting. The historical scars are explicit: Ganguly and Frank (2018) critiqued the opacity of public win-probability numbers; the purchased dataset's 2000 season had game-time coding errors and was dropped entirely; and the PFR expected-points equations misbehave on first down inside the offense's own 10, an unresolved flaw the authors attribute to data rarity or an equation mistake. Every one of those scars is a reason the derived kernel carries provenance and regime labels rather than presenting itself as ground truth.",
+      "theory_of_mind": "The coach is modeled as blame-averse: the source states coaches want to maximize winning chances or at least escape blame for a loss, so the field goal is the safe reputation choice even when delta-WP favors going for it. The defensive coordinator expects the kick because tendency sheets reward predictability, and the quarterback experiences the clock as opportunity - two more plays if the conversion hits - which conflicts with the kernel's 450-second floor that deliberately refuses to treat 130 seconds as 130 seconds of variance. Fans and pundits, the source notes, identify defining moments only in hindsight and subjectively; the kernel exists precisely to replace that hindsight with a prospective, auditable number. The explanation layer must therefore translate delta-WP into the coach's blame calculus, not lecture him about Gaussian tails.",
+      "cross_layer_veto": "Three vetoes fire. Doctrine veto: the source's mean equation ingests the Vegas line, and sportsbook odds are forbidden model inputs in our lane, so the line term is replaced by a non-odds strength prior before any GSE use. Physics-of-clock veto: a game cannot end on a defensive penalty, so untimed downs exist at literal time zero and the unmodified model divides by zero there - the kernel must refuse to emit at t=0 without the floor. Rules-era veto: overtime clock reset is invalid because OT strategy and rules differ (2012 first-possession field-goal change; regular-season ties versus postseason continuation), so the tie half-mass convention is only valid in regular-season contexts and the OT patch is a fixed 0.25 discount, not a clock model."
+    },
+    {
+      "trace_id": "t2",
+      "scenario": "Engine-queue acceptance audit: sqrt-time variance singularity, the 450-second floor repair, and the accuracy-complexity null between closed-form PFR and the random forest.",
+      "think": "The second trace audits the engine's acceptance discipline rather than a single play. The mathematical pathology is the square-root variance decay: SD = uncertainty * sqrt(min.rem/60) drives the spread to zero as regulation expires, so the Gaussian tail area becomes a step function and win probabilities jump dramatically and erratically in the final minutes. The authors' repair is a textbook regularizer: clamp the effective horizon at a tuned floor of 450 seconds, then smooth the clamp by stretching the discount curve so it approaches the floor asymptotically, then steepen the final two minutes because raw probabilities were too modest late. The empirical payoff is small but real and, crucially, measured out of sample: regulation MSE falls from .15185 to .1509, and with overtime included the final modified model reaches .1511 against the random forest's .1522. The deeper result is the complexity null. A 500-tree forest with mtry=2 and nodesize=200, trained on odd games and tested on even games and vice versa, returns MSE .15188 - statistically indistinguishable from the closed-form PFR model's .15185, with both binned calibration curves at r > .99. Complexity did not pay. The authors even tried to spend complexity where it seemed most warranted - replacing the linear expected-points equations with a random forest, and injecting time remaining into expected points - and both attempts failed to improve anything. That is the governance lesson: the acceptance gate is held-out error plus calibration, not architectural ambition. The training-year sweep reinforces it: more seasons help with rapidly diminishing returns, while test year, chronological offset and absolute offset explain almost nothing, suggesting the 2001-onward rule changes did not break the model's stationarity within the observed window. But the window itself is a limitation - decade-scale shifts from rushing to passing eras are untested because the data start in 2001. Two methodological details deserve their own weight. The odd/even split is not a convenience: plays inside one game are strongly correlated because they share the same outcome, so a play-level random split would leak the label across the train/test boundary and inflate every accuracy number; splitting whole games is the smallest leak-free unit, and averaging the two directional forests lets the full 674,311-play sample serve as both training and test without contamination. The calibration statistic is similarly coarse by construction: plays are grouped into twenty bins of width .05 and each bin becomes one case in the correlation, so r > .99 certifies the shape of the calibration curve, not per-play reliability in the extreme bins where sample counts thin out. An engine that imports these gates must inherit both caveats rather than quoting the headline numbers alone. For the GSE engine queue this compiles into three standing gates: a parsimony gate that prefers the closed-form kernel unless a complex challenger beats it on group-disjoint holdout error; a calibration gate that bins predicted against realized outcomes before any persona consumes the number; and a singularity gate that refuses emission where the equations divide by zero or collapse to a point mass. The modified PFR earns deployment not because it is sophisticated but because it is cheap, transparent, calibrated, and honest about the regimes where it dies - which is exactly the standard a coach-facing decision engine must meet.",
+      "retrocausal_genealogy": "The random forest branch descends from Breiman (2001) through Lock and Nettleton (2014), who fixed ntree=500, mtry=2, nodesize=200 by cross-validation; this paper inherits those settings, drops to 100 trees for the training-year sweep after observing MSE stabilize between 50 and 100 trees, and then fails to improve the forest at all. The closed-form branch descends from the PFR website model, whose expected-points equations the authors obtained by direct contact with PFR - a transparency scar in a domain where Burke's original model is locked inside ESPN and even PFR's own live calculator uses an undocumented overtime adaptation. The failed upgrades (random-forest expected points, time-aware expected points) are recorded negative results, and the successful upgrade is the humble time floor. The genealogy teaches that the durable knowledge is the regularization pattern and the evaluation discipline, not either architecture.",
+      "theory_of_mind": "Three minds are modeled. The pundit believes no lead is safe in the modern NFL; the data say win probabilities are about as predictable now as in 2001, so the engine must not inflate late-game uncertainty to flatter that narrative. The coach without a statistical background will accept a spreadsheet-transparent model sooner than a 500-tree black box, and the source explicitly notes the purist stigma against analytics - so explainability is an adoption constraint, not a luxury. The modeler is tempted to spend complexity because statistical intuition says more trees and more data must help; the null result and the failed EP replacements discipline that temptation. The engine's acceptance gates encode all three: calibration against reality, transparency for the coach, and held-out proof before complexity spend.",
+      "cross_layer_veto": "The singularity veto refuses emission at literal time zero (untimed downs after defensive penalties) and wherever the unfloored sqrt decay collapses the spread to a point mass; the floor is mandatory, not optional. The calibration veto refuses any kernel whose binned predicted-versus-observed correlation fails the r > .99-style gate, and it refuses to accept a single global MSE as sufficient because the time-resolved curves show the models trade places across the game. The era veto refuses naive pooling of training seasons without checking offset effects, and flags that the 2001-onward window cannot certify decade-scale rule eras. The odds veto again strips the Vegas line from any GSE deployment of the mean kernel."
+    }
+  ],
+  "universal_lens": "Any real-time decision engine that converts a noisy state into a probability must regularize its uncertainty as the horizon shrinks: unregularized variance collapse produces overconfident, erratic outputs exactly where stakes peak. Calibration against realized outcomes, not architectural complexity, is the acceptance gate, and group-disjoint held-out splits are the minimum evidentiary standard. Every deployed equation must carry the regime where it dies.",
+  "gsi_mapping": "This football source makes no physiological claim, so the GSI transfer is labeled isomorphism only. The importable structure is the horizon-shrinking uncertainty filter: clinical telemetry predictors such as glucose or hemodynamic trend alarms face the same variance-collapse singularity near an event horizon, and the tuned-floor regularizer plus binned predicted-versus-observed calibration validation is the fail-closed pattern to import into GSI clinical telemetry, never sourced physiology.",
+  "gse_mapping": "The GSE engine queue gains a closed-form win-probability kernel family: state mean with discounted strength prior, sqrt-time uncertainty decay anchored at 13.45 points, Gaussian tail area with tie half-mass, 450-second late-game floor, and fixed 0.25 overtime discount. Doctrine veto: the source's Vegas-line input is forbidden in our lane and is replaced by a non-odds strength prior. Acceptance gates: binned calibration, odd/even game holdout, and MSE parity proof before any complexity spend."
+}

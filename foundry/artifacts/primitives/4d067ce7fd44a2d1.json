@@ -1,0 +1,204 @@
+{
+ "book_id": "4d067ce7fd44a2d1",
+ "source_status": "COMPLETE",
+ "pages_total": 135,
+ "pages_read": 135,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Q-learning temporal-difference update (Bellman backup with learning-rate blending)",
+   "verbatim_quote": "These two insights are codiﬁed in the following equations: Q(state, action) = (1 - learning_rate) * Q(state, action) + learning_rate * Q_target Q_target = reward + discount_factor * max_{action'} Q(state', action')",
+   "page": 74,
+   "latex": "Q(state, action) = (1 - learning_rate) * Q(state, action) + learning_rate * Q_target;  Q_target = reward + discount_factor * max_{action'} Q(state', action')",
+   "symbol_and_unit_ledger": "state, state': elements of the discrete state space (dimensionless indices; state' is the next state given action a). action, action': elements of the finite action set (dimensionless). Q(state, action): expected discounted cumulative reward, units = reward points (game score increments, a dimensionless count). reward: instantaneous score increment at the current step [points]. learning_rate: dimensionless blending weight in (0,1]; printed values 0.9 (Q-table agent), 0.15 (network agent). discount_factor: dimensionless gamma in [0,1); printed values 0.8 (table), 0.99 (network), 0.85 (least-squares); defined in source as how much reward 'degrades' as it propagates. max_{action'}: maximization over all possible next actions. Dimensional check: both sides of each equation carry reward points; (1-alpha)*Q + alpha*(reward + gamma*max Q) is homogeneous in points.",
+   "assumptions": "As printed: state is the state at the current time step; action is the action taken at the current time step; reward is the reward for the current time step; state' is the new state for the next time step given that action a was taken; action' ranges over all possible actions. Estimation premise printed with the Bellman discussion: taking a particular action from a particular state many times yields a good Q-value estimate (running average). Implicit: Markov state representation, stationary environment, sufficient revisitation of state-action pairs.",
+   "breakdown_regime": "Fails when the state is non-Markov (a single rendered frame lacks velocity; the book later stacks four downsampled frames to repair this), when the environment is non-stationary, when learning_rate is too high (oscillating Q values), and when gamma approaches 1 in continuing tasks (undiscounted sums diverge). The max operator over noisy Q estimates is upward-biased. The tabular form breaks when states are too many to list (Space Invaders), which motivates function approximation.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one env.step transition (single frame)",
+    "tau_1: one episode until the done flag",
+    "tau_2: 100-episode reporting window",
+    "tau_3: 4000-episode training run"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Possession-level transition-kernel learner for the 22-player football dynamical system: state = (down, distance, field position, personnel, score differential, clock), action = play call, reward = points produced by the drive (no sportsbook odds anywhere). The TD blend is the coordinator's belief update: learning_rate is the staff's adaptation speed to new film evidence, discount_factor sets drive-horizon versus game-horizon credit, and the max term propagates scoring value back to the earlier calls that created the position.",
+    "source_operator": "p1",
+    "telemetry": "Play-by-play transition logs, per-call point outcomes, drive results from internal tracking; learning_rate identifiable from week-over-week call-share adaptation curves, discount_factor from how far back drive credit is assigned in sequence-level outcome models."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Greedy policy extraction: policy = argmax over Q",
+   "verbatim_quote": "Reformulating the earlier policy more formally, we have: policy: state -> argmax_{action} Q(state, action)",
+   "page": 74,
+   "latex": "policy: state -> argmax_{action} Q(state, action)",
+   "symbol_and_unit_ledger": "policy: a decision-making function mapping state space to the finite action set (dimensionless selector). Q(state, action): expected discounted reward [reward points]. argmax_{action}: returns the action index attaining the maximal Q value; output is a categorical action, no physical units. The source states this satisfies the requirement of a decision-making function: given a state, it decides an action.",
+   "assumptions": "Printed premise: 'this solution depends on knowing Q(state, action) for every state and action.' Q is deterministic (the source notes Q(s1) is correlated with Q(s0) because the Q-function is deterministic). Ties broken arbitrarily. The agent later adds exploration: noise ~ Uniform(0,1)/episode^2 added to the Q row, and an explicit exploration_probability = 50/(episode+10) schedule for the network agent.",
+   "breakdown_regime": "Pure greed breaks under estimation noise (max over noisy estimates selects upward-biased values), under partial observability, and whenever exploration is needed to discover better actions; the book's noise schedules exist precisely because greedy argmax alone freezes on early estimates. Also fails when the state space cannot be enumerated, requiring an approximated Q.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-decision action selection",
+    "tau_1: episode-level policy execution",
+    "tau_2: exploration decay over episodes (1/episode^2 noise)",
+    "tau_3: convergence of the policy over the training run"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Play-call selection as argmax over learned call values: the offensive policy maps game state to the call with maximal estimated drive value. The exploration term is the isomorph of scripted probes and misdirection calls that deliberately deviate from the greedy call so the defense cannot collapse its belief onto a single tendency; the decaying noise schedule mirrors a season in which a staff explores early and exploits a settled identity late.",
+    "source_operator": "p2",
+    "telemetry": "Call distribution versus estimated-value ranking, fourth-down decision logs, pre-snap motion and probe-call frequency by week; deviation rate from the modal call calibrates the exploration coefficient."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Ridge-regression closed-form Q-function fit with model blending",
+   "verbatim_quote": "I = np.eye(X.shape[1]) newW = np.linalg.inv(X.T.dot(X) + 10e-4 * I).dot(X.T.dot(y)) W = w_lr * newW + (1 - w_lr) * W",
+   "page": 119,
+   "latex": "newW = np.linalg.inv(X.T.dot(X) + 10e-4 * I).dot(X.T.dot(y));  W = w_lr * newW + (1 - w_lr) * W",
+   "symbol_and_unit_ledger": "X: n x d design matrix of one-hot state indicators (dimensionless 0/1 entries; buffer capped at n = 10000 samples, d = n_obs states, 16 for FrozenLake). y: n x a label matrix of TD-blended Q targets [reward points]. I = np.eye(X.shape[1]): d x d identity (dimensionless). 10e-4 = 0.001: ridge penalty lambda (dimensionless) added to the Gram matrix X^T X, the Tikhonov term that keeps the inverse defined. newW: d x a coefficient matrix [reward points per state indicator], the closed-form ridge solution (X^T X + lambda I)^{-1} X^T y. w_lr = 0.5: dimensionless blend weight between the new fit and the prior model W. Dimensional check: X^T X and lambda*I are dimensionless, X^T y carries reward points, so newW and W carry reward points; the blend is homogeneous.",
+   "assumptions": "Linear Q model: makeQ returns lambda X: X.dot(model), i.e. Q(s) = Ws with one-hot states (the network agent prints the same form: 'your output Q(s) is a matrix W multiplied by your input s'). Labels are generated by the same TD rule with learning_rate 0.9 and discount_factor 0.85; the model is refit every 10 collected steps; the sample buffer is flushed when it reaches 10000 entries; lambda is fixed at 10e-4; weights initialized from N(0, 0.1).",
+   "breakdown_regime": "A linear model cannot represent nonlinear value surfaces (state interactions such as hole-adjacency geometry beyond linear separability); without the lambda*I term the Gram matrix is singular for rarely visited states; the 10000-sample flush discards history (catastrophic forgetting); labels are bootstrapped from the current model, so this agent inherits the moving-target instability the DQN section later diagnoses (it has no frozen target network).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-step sample collection",
+    "tau_1: refit every 10 steps",
+    "tau_2: buffer flush at 10000 samples",
+    "tau_3: 5000-episode training run"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Low-capacity formation-value estimator for small-sample regimes (early season, new coordinator, short week): the ridge penalty shrinks sparse formation samples toward the prior game plan, and the w_lr blend is the staff's conservatism in adopting new film evidence over the installed base. This is the capacity-control fallback when the sample budget cannot support a deep model.",
+    "source_operator": "p3",
+    "telemetry": "Formation sample counts, per-formation success variance, week-over-week coefficient drift; lambda and w_lr calibrate against out-of-sample formation performance on internal tracking data."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Cross-entropy (log-loss) objective for softmax classification",
+   "verbatim_quote": "A popular choice of loss function in TensorFlow programs is cross-entropy, also known as log-loss, which quantiﬁes the difference between two probability distributions (the predictions and the labels). A perfect classiﬁcation would result in a cross-entropy of 0, with the loss completely minimized.",
+   "page": 49,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: cross-entropy quantifies the difference between two probability distributions, the predictions and the labels; a perfect classification yields cross-entropy 0. Implementation context: labels are one-hot over 10 digit classes, logits pass through tf.nn.softmax_cross_entropy_with_logits, and tf.reduce_mean averages the loss over the batch; minimized by the Adam optimizer at learning rate 1e-4.",
+   "breakdown_regime": "Diverges when the predicted probability of the true class approaches zero (log 0 singularity); punishes overconfident wrong predictions far more than uncertain ones; assumes mutually exclusive classes and normalized distributions; with soft or noisy labels the zero-loss ideal no longer holds, and the mean-over-batch form hides per-example tail losses.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-batch loss evaluation (batch_size 128)",
+    "tau_1: per-iteration Adam update",
+    "tau_2: 100-iteration reporting cadence",
+    "tau_3: 1000-iteration training run"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Calibration scoring rule for tendency and coverage classifiers in the 22-player system: the defense's formation-to-coverage probability forecast is scored by cross-entropy, which charges a confident wrong read (the QB's pre-snap certainty against a disguised coverage) far more than an uncertain one. This is exactly the asymmetric cost structure of deception and recognition under pressure.",
+    "source_operator": "p4",
+    "telemetry": "Log-loss and Brier score on held-out tendency predictions, calibration curves by down-and-distance bucket, confidence-versus-accuracy gaps on disguised-coverage snaps from internal tracking."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Bias-variance tradeoff: model complexity versus sample complexity",
+   "verbatim_quote": "To maintain the same error rate, increasing model complexity increases the sample complexity exponentially.",
+   "page": 108,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: true error is mean squared error (MSE), 'the expected difference between our predicted labels and the true labels'; the bias-variance decomposition breaks true error into bias and variance. The comparison is stated for two models attaining the same performance. Empirical anchor printed: adding a second layer to the Q-network quadruples the necessary training episodes; the least-squares agent solves FrozenLake (100-episode average 0.78 threshold) with roughly the same episode budget as the network, showing simple models suffice there.",
+   "breakdown_regime": "The 'exponentially' claim is the tutorial's stated scaling, not a universal theorem: actual sample-complexity growth depends on hypothesis class, noise, and inductive bias, so it must be treated as a qualitative constraint and calibrated per model family. The MSE decomposition assumes squared loss and expectation over training sets; it does not directly govern 0-1 classification error or tail risk.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-sample information gain",
+    "tau_1: episode budget to reach a fixed error rate",
+    "tau_2: architecture-change cost (layer added -> 4x episodes)",
+    "tau_3: season-long accumulation of labeled samples"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scheme-installation constraint for the coaching organization: a more complex playbook (higher model complexity) demands proportionally more practice reps (samples) to reach the same execution error rate, so a short week forces a smaller game plan. Bias is the rigid base scheme that misses opponent-specific structure; variance is overfitting to last week's film and breaking against a new look.",
+    "source_operator": "p5",
+    "telemetry": "Rep counts per install, execution error rate on unseen opponent looks, practice-to-game transfer deltas, number of distinct concepts carried per game versus available practice days."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "DQN stabilization: experience replay buffer and frozen target network",
+   "verbatim_quote": "Every time we update Q, we change L, meaning that our model is trying to learn a moving target. This is an issue, as the models we use assume a ﬁxed distribution.",
+   "page": 124,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed diagnosis: consecutive states s0 and s1 are correlated (aliens move one pixel), so updating Q(s0) can counter the update to Q(s1), producing fluctuating Q values; and because Q is both the model and the label source, every update changes the label distribution L, a moving target, while the models assume a fixed distribution. Printed fixes: a replay buffer storing observed states and training on random subsets (p. 124-125), and duplicating Q into Q_current (updated) and Q_target (fixed, used to generate labels), re-duplicated periodically (p. 125).",
+   "breakdown_regime": "Replay fails when the buffer is too small to decorrelate or when the environment is non-stationary and stale experience misleads; frozen targets lag the true value surface, so the copy frequency trades stability against staleness; neither fix removes function-approximation bias or the max-operator overestimation, and both assume enough compute to store and resample experience.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-step buffer append",
+    "tau_1: random minibatch resampling from the buffer",
+    "tau_2: periodic Q_target <- Q_current copy",
+    "tau_3: millions-of-samples training horizon (24h on four Titan X GPUs for the pretrained Space Invaders agent)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Organizational learning kernel for a coaching staff: film study samples randomly across games and seasons (replay) to break the correlation of consecutive-week narratives, and the scouting baseline (target network) is held fixed for a game-plan cycle while current beliefs update, then refreshed at the cycle boundary. This prevents the staff from chasing a moving target mid-week, the exact instability the source diagnoses.",
+    "source_operator": "p6",
+    "telemetry": "Week-over-week tendency drift, scouting-report revision frequency, game-plan volatility versus performance; copy cadence calibrates against how fast the opponent's own policy changes."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Holdout evaluation: train/test split on unseen data",
+   "verbatim_quote": "To evaluate how well a classiﬁer is performing, you should always test the model on unseen data.",
+   "page": 31,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: before building a model, split data into a training set (used to train and evaluate during development) and a test set of unseen data (used for final predictions); this gives a sense of performance and robustness. Worked example: train_test_split with test_size=0.33 and random_state=42, i.e. 33% held out, reproducible random split; the NB classifier then reports 94.15% accuracy on the held-out tumors.",
+   "breakdown_regime": "Random splits leak under temporal or grouped dependence (the same patient, game, or possession appearing in both sets); a single split is a high-variance estimate; repeated tuning against the test set silently converts it into training data (adaptive overfitting), which is why sealed baselines must never be re-scored during fitting.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one split decision before any fitting",
+    "tau_1: development loop on the training partition",
+    "tau_2: single final evaluation on the test partition",
+    "tau_3: cross-season re-validation on genuinely new data"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The corpus's held-out discipline itself: never grade a game plan on the drives used to design it, and never overwrite sealed baseline hashes while tuning. The train/test boundary is the isomorph of the design-drive versus live-drive boundary; adaptive overfitting is the isomorph of a coordinator convincing himself on his own scrimmages.",
+    "source_operator": "p7",
+    "telemetry": "Out-of-sample opponent games, sealed Tuesday baseline hashes (tau=0.42) with split-provenance logs, design-drive versus live-drive performance deltas."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "Delayed-reward credit assignment",
+   "verbatim_quote": "Space Invaders is a game with delayed rewards: the player is rewarded when the alien is blown up and not when the player shoots. However, the player taking an action by shooting is the true impetus for the reward.",
+   "page": 74,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: Space Invaders rewards the player when the alien is blown up, not when the player shoots, yet shooting is the true impetus; the Q-function must therefore assign (state0, shoot) a positive reward. Mechanism: the discounted max term in Q_target propagates reward backward through time so the originating action receives value.",
+   "breakdown_regime": "Credit dilutes geometrically as gamma^k over k steps, so beyond the effective horizon 1/(1-gamma) the originating action receives negligible value; in sparse-reward environments credit may never propagate without sustained exploration; confounded intermediate actions cause misattribution of value to the wrong step.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: the initiating action (shot)",
+    "tau_1: delay interval until reward (alien destroyed)",
+    "tau_2: effective credit horizon 1/(1-gamma)",
+    "tau_3: episode-level return accumulation"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Drive-level credit assignment in the 22-player system: a scoring play's value belongs partly to the early-down calls that created the position (the first-down run that made third-and-manageable). The discount factor sets how far back credit flows along the possession; without this propagation the call-value learner would reinforce only the terminal play and starve the setup calls.",
+    "source_operator": "p8",
+    "telemetry": "Drive-start field position versus points, sequence-level per-play attribution from internal tracking, early-down success rates conditioned on eventual drive outcome."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "This book is a compiled tutorial collection, Python Machine Learning Projects from DigitalOcean, written by Lisa Tagliaferri, Michelle Morales, Ellie Birbeck, and Alvin Wan under a Creative Commons Attribution-NonCommercial-ShareAlike license. It is not a monograph and it proves nothing; its value to the Foundry is that it prints, in working code and plain prose, the exact update rules and the exact failure diagnoses that a learning system needs. I read all 135 pages. The sovereign content concentrates in three chapters: the scikit-learn classifier (holdout discipline), the TensorFlow digit network (cross-entropy, dropout, Adam), and the Atari reinforcement-learning chapter (Q-learning, the Bellman backup, bias-variance, and the DeepMind stabilization tricks). The first thing to establish is what the Layer-1 invariants are and what they are not. The temporal-difference update Q(state, action) = (1 - learning_rate) * Q(state, action) + learning_rate * Q_target with Q_target = reward + discount_factor * max_{action'} Q(state', action') is a contracting blend toward a bootstrapped Bellman target. It is dimensionally clean: every term carries reward points, the blending weight and the discount factor are dimensionless, and the max is over a finite action set. The greedy policy extraction policy: state -> argmax_{action} Q(state, action) is the decision rule that turns values into behavior, and the book is honest that it depends on knowing Q for every state and action, which is exactly the assumption that breaks at scale. The ridge closed form newW = inv(X^T X + 10e-4 * I) X^T y, blended as W = w_lr * newW + (1 - w_lr) * W, is the low-capacity fallback: a Tikhonov-regularized linear value model refit every ten steps on a capped buffer. Cross-entropy is the calibration objective, zero only at perfect classification and singular when a true class gets zero predicted probability. The bias-variance section states the constraint that governs everything else: to maintain the same error rate, increasing model complexity increases sample complexity, with the printed empirical anchor that adding a second layer to the Q-network quadruples the required episodes. The DQN section diagnoses two pathologies, correlated consecutive states and a moving label distribution because Q is both model and label source, and prescribes the replay buffer and the frozen target network. Finally the holdout rule, test on unseen data, and the delayed-reward observation, that the shot is the true impetus even though the reward arrives when the alien dies, complete the set. Now the composition. These eight primitives are not eight independent tricks; they are one architecture for belief update under scarcity, and the football system is precisely a scarcity system. A team gets roughly seventeen games and on the order of a hundred fifty possessions of labeled experience per season, the reward is delayed (points arrive at the end of a drive, not at the snap), consecutive plays are highly correlated (the same personnel, the same field position, one pixel of alien movement in the source's analogy), and the opponent adapts, so the environment is non-stationary. The TD kernel is the call-value learner: state is down, distance, field position, personnel, score differential and clock; action is the call; reward is drive points. The learning rate is the staff's adaptation speed and the discount factor is the horizon over which credit flows. Greedy argmax is the comfort call, and the exploration noise the book adds, decaying as 1/episode^2, is the scripted probe that keeps the defense from collapsing its belief onto a single tendency. The ridge fallback is what a staff should run in a short week or early season, when the sample budget cannot support a deep model: shrink sparse formation evidence toward the installed base. Cross-entropy scores the tendency classifier and charges confident wrong reads, which is the exact cost of a quarterback certain against a disguised coverage. The bias-variance constraint caps how much scheme can be installed per practice rep. Replay and the frozen target are the organizational-learning rules: sample film across games to decorrelate the narrative, and hold the scouting baseline fixed for a game-plan cycle so the staff is not chasing a moving target mid-week. The holdout rule is the evaluation law, and delayed credit is what lets the setup calls eat. The tensions are where the reasoning earns its keep. First, greed versus exploration: the coach's comfort call is an argmax over a stale, low-variance Q estimate, effectively a learning rate set too small, and the defensive coordinator who models the offense as near-greedy can stack against it; the exploration term is the counter, but it costs short-term expected value, so it must be budgeted, not maximized. Second, the bias-variance veto: a newly installed complex concept has high variance after one week of reps, and the source's own scaling statement forbids deploying it no matter how good the simulation looks, because the sample budget has not been paid. Third, the moving-target veto: wholesale mid-week revision of the game plan is exactly the instability the frozen target network warns against; the staff should update current beliefs against a fixed scouting baseline and only re-copy at the cycle boundary. Fourth, the evaluation veto: the holdout primitive forbids grading the plan on the design drives, and the corpus's sealed-baseline doctrine is the same law at the institutional layer. I must also record what the book does not license. The exponential sample-complexity claim is tutorial-level scaling, not a theorem; it depends on hypothesis class and noise, so the Foundry adopts it as a qualitative capacity constraint to be calibrated per model family, never as a precise law. The book's empirical anchors are its own: FrozenLake is solved at a 100-episode average of 0.78, reached by the Q-table agent in 4000 episodes, by the one-layer network in 4000, and by the least-squares agent at 0.82 in 5000; the random Space Invaders baseline averages about 150 to 163.5, while the pretrained DQN agent averages 2756 over ten episodes and around 2500 over a hundred, after 24 hours on four Titan X GPUs. Those numbers are cited as the source's measurements, not as football claims, and no win-rate headline is extracted from them. The compiled stance is therefore: adopt the update rules as kernels, the tradeoffs as vetoes, and the holdout as law; bind them to the 22-player system only through explicit Layer-2 mappings with calibrating telemetry, and refuse to fabricate a football origin for any of the mathematics, whose true lineage is dynamic programming and statistical learning, not the gridiron.",
+   "retrocausal_genealogy": "The hidden state in these kernels is historical scar tissue. The discount factor is the scar of divergent infinite-horizon sums in Bellman's 1950s dynamic programming at RAND: gamma less than one is what makes the value functional finite. The running-average blend in the Q-update is Watkins' 1989 Q-learning scar, estimating values from sampled trajectories without a model of the environment. The replay buffer and the frozen target network are the scars the book explicitly attributes to DeepMind's DQN work: correlated-state oscillation and moving-target collapse observed when neural networks first met reinforcement learning. The 10e-4 * I ridge term is the Tikhonov scar of singular Gram matrices in least squares, and the holdout split is the scar of adaptive overfitting. None of these has a football origin; the football binding is Layer-2 only, and claiming otherwise would launder a fabricated genealogy into the corpus.",
+   "theory_of_mind": "Under pressure the beliefs clash recursively. The head coach's comfort call is a greedy argmax over a stale, low-variance value estimate: comfort is a prior whose learning rate has been set too small, so new evidence barely moves it. The defensive coordinator models the offense as near-greedy and stacks against the argmax action, the tendency trap; he knows the coach knows the tendency, so the comfort call is doubly anticipated. The quarterback's internal clock is a short effective discount factor: pressure collapses gamma, so routes whose credit arrives late never accrue value in his read, and a high-EV deep shot is vetoed by the pass rush's timescale before the coordinator's value model is ever consulted. The exploration noise the book schedules is the offense's only escape from this recursive trap, because a probe call is precisely the action the coordinator's greedy model assigns low probability.",
+   "cross_layer_veto": "Four cross-layer vetoes bind any high-EV call. The sample-complexity veto: a complex concept installed with one week of reps has high execution variance, and the bias-variance primitive forbids deploying it regardless of simulated expected value, because the sample budget has not been paid. The execution-timescale veto: a call whose value assumes 3.5 seconds of pocket time is physically vetoed when pass-rush telemetry says 2.4, and the quarterback's collapsed discount factor reinforces the veto from the psychology layer. The evaluation veto: the holdout primitive forbids grading the call on the drives used to design it, so a call validated only on design drives cannot be promoted. The moving-target veto: wholesale mid-week revision is the instability the frozen target network diagnoses; beliefs update against a fixed baseline, and the baseline re-copies only at the cycle boundary. Physics and psychology outrank the value model whenever they conflict."
+  }
+ ],
+ "universal_lens": "Any adaptive system, organism, organization, or optimizer, faces the same four scarcities: samples, time-to-feedback, stationarity, and evaluation independence. This book's eight invariants form the universal audit checklist: is the update rule contracting, is model capacity matched to the sample budget, is experience decorrelated, is the target frozen, and is the test set sealed? Wherever a system answers no, it is accumulating the exact pathology the source diagnoses.",
+ "gsi_mapping": "Motor skill acquisition is temporal-difference learning with delayed reward: a repetition's value arrives at the outcome, and the discount factor propagates credit back to the initiating movement. Variable practice is dropout, randomly silencing units to force redundant representations; sleep consolidation is experience replay, decorrelated reactivation. Clinical telemetry calibrates it: reaction-time distributions, error rates across rehabilitation sessions, and retention on transfer tests, which are the holdout set of the nervous system.",
+ "gse_mapping": "Coach-Mind sim uses the TD kernel for call-value learning with the ridge fallback in small samples; deception is controlled exploration noise against the defensive coordinator's tendency model, scored by cross-entropy calibration. DFS and portfolio tail risk are governed by the bias-variance constraint (never overfit small-sample player splits) and by the holdout law: sealed baselines, no sportsbook odds as inputs, internal artifacts only, and no win-rate headlines."
+}

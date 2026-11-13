@@ -1,0 +1,165 @@
+{
+ "book_id": "3fa96d690212683b",
+ "source_status": "COMPLETE",
+ "pages_total": 549,
+ "pages_read": 549,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Fresh-substitute-over-crippled-star law and the injury-concealment incentive",
+   "verbatim_quote": "It is an imwritten law in football that a fresh substitute is far superior to a crippled star. The keen de- sire to remain in the game is so firmly fixed in his mind that he is willing to sacrifice himself, and at the same time by concealing his injury from the trainer and coaches he, unconsciously, is sacri- ficing his team ; his power is gone.",
+   "page": 280,
+   "latex": "\\forall i:\\ \\mathrm{Crippled}(i) \\land \\exists j\\,\\mathrm{Fresh}(j) \\Rightarrow \\mathrm{Replace}(i, j)",
+   "symbol_and_unit_ledger": "i, j = player indices (dimensionless); Crippled, Fresh, Replace in {0,1} dimensionless predicates. Predicate-logic formalization of the printed 'unwritten law' (PDF p.280, printed p.235, Edwards); this qualitative source prints no equation.",
+   "assumptions": "As printed: the law is stated as an unwritten law of the game, and the same passage supplies the failure mechanism - the player's 'keen desire to remain in the game' leads him to conceal injury from trainer and coaches, 'unconsciously ... sacrificing his team; his power is gone'. The book documents the concealment pattern repeatedly: Stewart Jarvis danced on a tibia the X-ray next morning showed completely fractured (PDF pp.279-280); Frank Bergen played until Val Flood forced his removal and three broken ribs were found, one near piercing his lungs (PDF pp.282-283); Arthur Cable concealed a broken collar-bone through a whole half (PDF p.283).",
+   "breakdown_regime": "The law fails as a decision rule whenever availability is self-reported: the incentive to stay in makes 'crippled' unobservable to the coach, so the substitution trigger never fires. It also fails when no fresh substitute exists (small squads, the Army's 1902 eleven played start to finish, PDF p.264) or when the star's degraded output still exceeds the substitute's (the book's own counter-cases of gameness). The trainer's diagnostic skill - Sweeney foretelling an injury from 'signs of weakening' (PDF p.382), Murphy reading condition by 'mental attitude' (PDF p.372) - is the printed countermeasure to the concealment bias.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rotation policy in the 22-player football dynamical system: the substitution kernel must rank verified-fresh availability above injured-star reputation, and because players strategically conceal injury, the availability state must be estimated by an independent medical observer rather than self-report. The unwritten law is the objective; the concealment incentive is the measurement-noise model; the trainer is the state estimator.",
+    "source_operator": "p1",
+    "telemetry": "Injury reports and concealment cases (PDF pp.279-283); substitution logs; modern analogues: independent medical spotters, snap-count degradation curves, return-to-play verification."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Adversary-consent exit gate (the 1887 no-substitution attrition rule)",
+   "verbatim_quote": "In those days an injured player was not al- lowed to leave the field of play without the con- sent of the opponents' captain* One can easily grasp the fact that your adversaries' captain was not apt to permit a player, battered almost to :worthlessness, to go to the bench and to allow you to substitute a strong and fresh player.",
+   "page": 341,
+   "latex": "\\mathrm{Exit}(i, t) \\Rightarrow \\mathrm{Consent}_{\\mathrm{oppCaptain}}(i, t)",
+   "symbol_and_unit_ledger": "i = player index, t = time (dimensionless indices); Exit, Consent in {0,1} dimensionless predicates. Predicate-logic formalization of the printed rule recited by Luther Price (PDF p.341, printed p.288, 'The Bloody Angle' chapter); no source equation.",
+   "assumptions": "As printed: an injured player could not leave the field without the opposing captain's consent, and the adversary 'was not apt to permit a player, battered almost to worthlessness, to go to the bench and to allow you to substitute a strong and fresh player'. Price states the consequence directly: 'Had the present rules applied there would have been a long string of substitutes in the game and the caption of The Bloody Angle could not have been applied' (PDF p.341). The 1887 Harvard-Princeton game is the printed instance: Cowan disqualified, Holden carried off with a broken chest bone, Price himself propped against a goal post before being helped off (PDF pp.342-346).",
+   "breakdown_regime": "The gate converts every injury into an absorbing degraded state: because consent is controlled by the agent who benefits from denying it, exit is systematically blocked and attrition compounds within a single game. The rule breaks down as a safety mechanism entirely - it is the mechanism that produced the 'bloodiest game' in the book. It was superseded by free-substitution rules; any model of pre-1890s games that assumes modern substitution dynamics is mis-specified.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "State-transition constraint in the 22-player system: an exit/replacement transition gated by an adversarial agent produces absorbing damaged states and compounding attrition, because the gatekeeper's incentive is aligned against the transition. The historical rule change (removing the consent gate) is a mechanism-design intervention that restores the substitution kernel's ability to refresh player states; it is the direct ancestor of the modern free-substitution regime.",
+    "source_operator": "p2",
+    "telemetry": "1887 Harvard-Princeton casualty sequence (PDF pp.342-346); historical rule texts on substitution; modern: substitution rules and injury-time-out protocols."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Strict-liability enforcement of the below-knees tackling rule (intent unobservable)",
+   "verbatim_quote": "There was a rule at that time that intentional tackling below the knees was a foul and the pen- alty was disqualification.",
+   "page": 165,
+   "latex": "\\mathrm{Observed}(\\mathrm{BelowKneeContact}) \\Rightarrow \\mathrm{Disqualify},\\quad \\mathrm{Intent}\\ \\text{unobservable to verifier}",
+   "symbol_and_unit_ledger": "Observed, BelowKneeContact, Disqualify in {0,1} dimensionless predicates; Intent is a latent binary state the verifier cannot observe. Predicate-logic formalization of the printed rule (Cowan, PDF p.165, printed p.118) and its enforcement (Terry, PDF p.470, printed p.399); no source equation.",
+   "assumptions": "As printed: the written rule made 'intentional tackling below the knees' a foul with disqualification as penalty (Cowan, PDF p.165). Terry's own account of enforcing it: 'The question of intent was not allowed me, for I had to decide on the facts as they presented themselves' (PDF p.470). Cowan's account: his hands slipped from Holden's waist to below the knees, and 'as tackling below the knees was foul, he quickly let go' - yet he was disqualified (PDF p.342). Both witnesses agree on the observable contact and disagree on the unobservable intent.",
+   "breakdown_regime": "The effective rule diverges from the written rule whenever the verifier cannot observe the qualifying mental state: 'intentional' in the text becomes strict liability in enforcement. The cost is printed: Princeton lost 'the larger part of our offensive power' with Cowan (PDF p.342), and Terry reports he 'never appeared again in that or any other official capacity' (PDF p.470). The rule also fails in the opposite direction when officials do allow intent arguments - the 1904 Harvard-Penn case where both captains agreed to waive removals, forcing the Rules Committee to close the loophole the next year (PDF pp.467-468).",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Effective-rule = written-rule intersected with verifier capability: in the 22-player system's legality mask, any foul definition that references an unobservable mental state collapses to strict liability on the observable act. This binds technique selection (low tackling carries disqualification risk regardless of intent) and explains rule-evolution pressure toward observable criteria. It is the same enforcement-decay mechanism as the off-side invariant's collapse under the snap-back in the 1894 Camp symposium.",
+    "source_operator": "p3",
+    "telemetry": "Cowan disqualification accounts from both sides (PDF pp.165-166, 342, 469-470); 1904 captains' waiver case and the next-year rule amendment (PDF pp.467-468); modern: observable-criteria foul definitions, ejection records."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Punt hang-time coverage constraint (Haughton's kick-height rule)",
+   "verbatim_quote": "You must kick high enough for your ends to cover the distance.",
+   "page": 375,
+   "latex": "t_{\\mathrm{hang}} \\geq d_{\\mathrm{punt}} / v_{\\mathrm{end}}",
+   "symbol_and_unit_ledger": "t_hang = punt hang-time [s]; d_punt = punt distance [yd]; v_end = covering end's downfield speed [yd/s]. Dimensional check: [T] >= [L]/[L T^-1] = [T], homogeneous. Formalization of the printed prose constraint 'You must kick high enough for your ends to cover the distance' (Haughton to Mahan, PDF p.375, printed p.316); the source prints no equation - the inequality is the extractor's kinematic rendering of the printed rule.",
+   "assumptions": "As printed: Haughton rejected Mahan's 70-yard low punts because 'your ends never can cover those punts', and Mahan's straight-up reply kick demonstrated the trade-off (PDF pp.375-376). The constraint assumes ends run downfield under the kick at roughly constant speed and that coverage, not raw distance, is the objective of the punt; it is a coupling constraint between the kicking and coverage subsystems, stated as coaching doctrine.",
+   "breakdown_regime": "Fails when the coverage premise breaks: ends blocked or slow (v_end small makes the constraint tighter, not looser), wind altering flight (the book's Penn-Princeton 1892 gale nullified punts entirely, PDF pp.396-397), or when the strategic objective is a coffin-corner kick rather than coverage. Maximizing d_punt alone violates the constraint and degrades net field position - the printed lesson is that distance without hang-time is a liability.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived coupling constraint in the special-teams transition kernel: punt selection must satisfy hang-time >= distance / coverage-speed, so the kick kernel cannot be optimized independently of the coverage kernel. In the 22-player system this bounds the punt-action set by the state of the covering ends; it converts 'longest punt' into 'best net field position given coverage'.",
+    "source_operator": "p4",
+    "telemetry": "Printed coaching exchange (PDF pp.375-376); modern calibration: punt distance and hang-time tracking, end speed, net punting average, coverage-unit grades."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Public-observation scouting doctrine (Knox's provenance rule)",
+   "verbatim_quote": "I have never unconr sciously noted a signal even for a kick, much less made a deliberate attempt to learn the oppo- nents* signals or code. What little I know of their ultimate plans is merely by applying com- mon sense to their problem, based on the material and metliods which they conm[iand.",
+   "page": 441,
+   "latex": "\\mathrm{OppModel} = \\mathcal{F}(\\mathrm{PublicGames}, \\mathrm{Material}, \\mathrm{Methods}) \\land \\neg\\mathrm{SignalTheft}",
+   "symbol_and_unit_ledger": "OppModel = coach's belief state about opponent plans (dimensionless information object); PublicGames, Material (roster), Methods = publicly observable information sets (dimensionless); F = inference operator ('applying common sense to their problem'); SignalTheft in {0,1}. Predicate-logic formalization of the printed doctrine (Jimmy Knox, PDF pp.440-441, printed pp.371-372); no source equation.",
+   "assumptions": "As printed: Knox states five years of experience without ever seeing opponents except in public games, never noting a signal 'even for a kick', and inferring plans 'merely by applying common sense to their problem, based on the material and methods which they command'. He adds the systemic function: scout reports 'give the various coaching corps a fixed objective', standardizing the game so final games are 'a uniform examination to pass' (PDF p.441). Reggie Brown's parallel practice: scouting findings carried in his head, at Yale Field every Saturday (PDF p.440).",
+   "breakdown_regime": "The doctrine is a provenance constraint, not a completeness claim: public-only observation misses closed-practice innovations (the book's own counter-case is Warner's hidden leather-football jersey ruse, which Haughton had to counter with a painted ball, PDF p.305). It fails if the opponent's material or methods change faster than public games reveal, and it is explicitly not signal theft - the public misconception of scouting as spying is what Knox corrects.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived opponent-model prior for the play-call kernel: beliefs about opponent plans must be constructed from public observations plus roster-material and method constraints, with a hard provenance veto on stolen signals. The doctrine also has a meta-game effect: shared public scouting standardizes systems across teams, raising the common knowledge level of the equilibrium.",
+    "source_operator": "p5",
+    "telemetry": "Printed scouting doctrine (PDF pp.440-441); modern: public game film, roster and formation data, tendency reports built from observable down-distance-position states."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Condition-over-drill taper doctrine (Chadwick-Murphy pre-game load rule)",
+   "verbatim_quote": "but it seemed to me that the men knew a lot of football. They were fundamentally good and what they really needed was condition to enable them to show their foot- ball knowledge.",
+   "page": 322,
+   "latex": "\\mathrm{FundamentallyGood}(\\mathrm{team}) \\land \\mathrm{PreGame} \\Rightarrow \\mathrm{Optimize}(\\mathrm{Condition}) \\succ \\mathrm{Optimize}(\\mathrm{DrillVolume})",
+   "symbol_and_unit_ledger": "FundamentallyGood, PreGame in {0,1} dimensionless predicates; Condition, DrillVolume = training-state and practice-load arguments (dimensionless ordering); Optimize-preference relation. Predicate-logic formalization of the printed doctrine (George Chadwick, PDF pp.321-322, printed pp.271-272); no source equation. Printed load anchor: 'only about five minutes' scrimmage during the week and a half preceding the Princeton game' plus three days with no practice at Ardsley (PDF p.322).",
+   "assumptions": "As printed: the old policy was 'to work the men to death, to drill them to endure long hours of practice scrimmage'; Chadwick, influenced by Mike Murphy, judged the men already knew football and 'really needed was condition to enable them to show their football knowledge', so they overruled the older coaches and tapered. The printed outcome: the team played well against Princeton and was 'at the top of our form' in the 23-0 Harvard win (PDF p.322). The doctrine assumes skill is already acquired - it is a taper rule, not a skill-acquisition rule.",
+   "breakdown_regime": "Fails when the team is not fundamentally good (skill still missing, so drill volume is the binding input), when the taper is so long that sharpness decays, or when condition is already maximal. The book preserves the opposing doctrine as a live counter-position ('football must be knocked into the men by hard work'), and the overtraining disaster cases - the 1894 Yale team 'all over-trained' at Springfield (PDF p.503) - mark the failure mode of the drill-maximizing policy.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived fatigue/taper state in the training-load kernel: once skill is acquired, marginal pre-game scrimmage load reduces game-day output, so the load schedule must taper to maximize condition at game time. In the 22-player system this is the pre-game state-preparation constraint on every player's fatigue variable; the printed five-minute scrimmage anchor is a historical calibration point.",
+    "source_operator": "p6",
+    "telemetry": "Printed load reduction and outcomes (PDF pp.321-322); overtraining counter-case (PDF p.503); modern: practice-load logs, taper protocols, game-day performance vs weekly load."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "Edwards's 1916 volume is a participant-compiled archive, and its epistemology must be extracted before its content can be trusted. Edwards played Princeton guard in 1896-1899 and later became one of the game's most respected referees, and he assembled the book from his own memory plus signed letters and recorded talks from dozens of participants - Cowan, Terry, Woodruff, Rodgers, Mahan, Knox, Price. That structure creates a rare verification opportunity: the same event is sometimes narrated by opposed witnesses. The 1887 Cowan disqualification is the cleanest case. Cowan says his hands slipped from Holden's waist to below the knees and he let go at once because tackling below the knees was foul (PDF p.342); Terry says 'The question of intent was not allowed me, for I had to decide on the facts as they presented themselves' (PDF p.470). Both agree on the observable contact; they diverge only on the unobservable intent. The invariant this teaches is about verifiers, not about football: whenever a rule qualifies on a mental state the official cannot see, the effective rule becomes strict liability on the observable act, and the cost is borne by the team that loses its best player - Princeton lost 'the larger part of our offensive power' (PDF p.342). The book then shows the institutional response loop: the 1904 Harvard-Penn game where both captains mutually agreed to waive two disqualifications, and the Rules Committee's next-year amendment forbidding exactly that collusion (PDF pp.467-468). Rules evolve by closing the loopholes that enforcement creates. The second epistemic object is the injury-concealment incentive. The book states the decision law - 'a fresh substitute is far superior to a crippled star' - and in the same breath the mechanism that defeats it: the player conceals his injury from trainer and coaches and 'unconsciously ... is sacrificing his team' (PDF p.280). The case studies are clinical: Jarvis danced on a completely fractured tibia before the X-ray (PDF pp.279-280); Bergen played on three broken ribs until Val Flood forced him out (PDF pp.282-283); Cable hid a broken collar-bone through a half (PDF p.283). This is systematic under-reporting produced by identity and loyalty incentives, and the book's countermeasure is the trainer as independent diagnostician - Sweeney predicting injuries from 'signs of weakening' (PDF p.382), Murphy reading condition by 'mental attitude' (PDF p.372). The third object is the attrition rule: before free substitution, an injured man could not leave without the opposing captain's consent, so the adversary controlled the exit gate and damage compounded - the printed mechanism of the 'Bloody Angle' game (PDF p.341). Read together, these three invariants form a coherent theory of the early game as a system with unobservable states, adversarial gates, and incentive-driven measurement noise. The memoir's own thesis - that the modern game is cleaner and safer than the old (PDF pp.339-340, 461-462) - is the retrospective judgment of a referee, and it is supported by the rule-change evidence he prints, but it is also a defense artifact: the book exists to honor the game's heroes, and its selection of gameness stories glorifies the very concealment behavior its decision law condemns. The foundry must hold both: the law and the culture that violates it.",
+   "retrocausal_genealogy": "The lineage is the game's own safety crisis cycle. The 1887 Harvard-Princeton 'Bloody Angle' game left 'secret bitterness' and contributed to the rupture between the colleges (PDF p.340); the 1894 Springfield game was so severe that relations were suspended for three years (PDF p.503). Each crisis produced rule amendments - the below-knees disqualification regime, then the closure of the captains' waiver loophole in 1905, then the opening of mass play. Edwards writes in 1916 from the far side of that cycle, with Camp's introduction framing forty years of heroes. The hidden state shaping every chapter is the game's legitimacy: the memoir is simultaneously a memorial and a brief for the reformed game, which is why the brutal old rules are printed as history and the modern clean game as achievement.",
+   "theory_of_mind": "Each agent in the book models the others' observation limits. The injured player models the trainer's belief: he knows concealment keeps him in the game, so he hides the fracture - Jarvis discards his crutches and dances before the doctor arrives (PDF p.279). The trainer models the player's incentive in reverse: Sweeney watches for 'signs of weakening' precisely because self-report is unreliable (PDF p.382). The captain models the adversary's incentive under the consent rule and knows the opposing captain will never grant a fresh substitution (PDF p.341). The official models both teams' pressure and knows one visible mistake ends his career - Dashiell's 'walking on ice so thin that one bad mistake ... would break it' (PDF p.461). Terry's withdrawal from officiating after 1887 is the equilibrium response to that belief. Recursive belief about enforcement, not the rulebook, selects the behavior actually observed.",
+   "cross_layer_veto": "Three vetoes adjudicate. The verifier-capability layer vetoes any technique model that treats the below-knees rule as intent-based: Terry could not observe intent, so low tackling carried strict-liability disqualification risk regardless of the tackler's mind (PDF p.470). The incentive layer vetoes any availability estimate built on player self-report: the concealment cases prove the signal is strategically corrupted, so an independent medical observer is required (PDF pp.279-283). And the fresh-substitute law vetoes the gameness culture whenever a fresh alternative exists: 'it is not intelligent football' to play a crippled star, the book says explicitly (PDF p.280) - the culture of playing hurt is admissible only when no fresh substitute exists, which is exactly the small-squad condition the Army's 1902 eleven illustrates (PDF p.264)."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second extraction target is the coaching epistemology the book preserves, and it resolves into four doctrines that map directly onto the components of a football decision system. First, rule literacy as an edge: Jack de Saulles knew the exact dead-ball predicate - 'the ball is never dead until it is touched down' - and in the 1902 West Point game picked up an untouched missed field-goal ball and walked it downfield while the Army lined up to receive a kick from the 25-yard line, until referee Vail realized the ball was live (PDF pp.405-406). The invariant is that the written rule text, not customary practice, defines the state-transition legality; the gap between custom and text is an exploitable free-ball state. The same literacy runs in reverse in the 1904 captains' waiver case, where custom tried to override the text and the Rules Committee closed the gap the next year (PDF pp.467-468). Second, opponent modeling with a provenance constraint: Knox's five-year doctrine - never see opponents except in public games, never note a signal, infer plans 'by applying common sense to their problem, based on the material and methods which they command' (PDF p.441). This is opponent modeling from public observations plus material constraints, with an explicit veto on signal theft, and Knox adds the systemic effect: scouting standardizes the game into 'a uniform examination to pass'. The book's counter-case - Warner's hidden leather-football jerseys, which Haughton countered by preparing a crimson-painted ball (PDF p.305) - marks the limit of public-only observation: closed-practice deception exists, and the response is rule study plus counter-deception, not spying. Third, state preparation over volume: Chadwick and Murphy's taper - the men 'were fundamentally good and what they really needed was condition', so the varsity got about five minutes' scrimmage in the week and a half before Princeton and three rest days at Ardsley, and played 'at the top of our form' (PDF pp.321-322). The doctrine is conditional on skill already being acquired; it is a taper rule, and the book preserves both the opposing drill-maximizing creed and its failure cases, the over-trained 1894 Yale team (PDF p.503). Fourth, subsystem coupling: Haughton's rejection of Mahan's 70-yard low punts - 'You must kick high enough for your ends to cover the distance' (PDF p.375). The punt is not an isolated action; its value is net field position after coverage, so hang-time must satisfy the coverage-speed constraint. Distance without hang-time is a liability. Together the four doctrines are a complete coaching epistemology: know the exact legality predicates, build opponent beliefs only from clean provenance, prepare the physical state rather than accumulate drill volume, and optimize coupled subsystems rather than isolated actions. The foundry translation is direct: legality masks on the transition kernel, provenance-constrained opponent priors, a fatigue/taper state in the load kernel, and a coverage-coupled punt kernel. Each is printed as prose doctrine with named witnesses and dated games, which is the strongest evidence class this qualitative source can offer - and none of it requires inventing a single equation the book does not contain.",
+   "retrocausal_genealogy": "These doctrines descend from the professionalization of coaching the book itself chronicles: 'There were no coaches in the old days' (PDF p.411), then captain-coaches like Camp, then graduate systems, then position specialists and scouts under Haughton. Knox's scouting doctrine and Reggie Brown's memory-based scouting belong to the Harvard system of the 1900s-1910s; Chadwick's taper belongs to the Murphy school of conditioning that displaced the old 'knock football into them' creed; Haughton's coverage constraint belongs to the special-teams refinement of the same era. The genealogy is a shift from individual heroics to systematized knowledge - the book's explicit thesis that competition made coaching 'resemble ... the plans for national preparedness - costly, but apparently necessary' (PDF p.412).",
+   "theory_of_mind": "The doctrines are belief-management tools. Knox models the opponent as a rational agent with observable material and methods, and models the public's misconception of scouting as spying well enough to correct it explicitly (PDF p.441). De Saulles models the other team's customary belief - they assume the missed kick is dead - and exploits the gap between their belief and the rule text (PDF pp.405-406). Haughton models his own kicker's pride: Mahan thought his 70-yard punt was great, so Haughton had to break the distance-maximizing belief before installing the coverage objective (PDF pp.375-376). Chadwick models the older coaches' drill creed and the players' fatigue state, and overrules the creed with Murphy's authority (PDF p.322). In each case the coach's real work is correcting someone's belief - the opponent's, the public's, the player's, or the staff's - not merely calling plays.",
+   "cross_layer_veto": "The provenance layer vetoes any opponent model built on stolen signals or private practice access: Knox's doctrine admits only public games plus material-and-method inference, and the foundry inherits that veto as a data-provenance constraint (PDF p.441). The coupling layer vetoes distance-maximizing punt selection: a 70-yard low punt that ends cannot cover is worse than a shorter high one (PDF pp.375-376). The skill-condition layer vetoes drill-volume maximization for a team that is fundamentally good: pre-game scrimmage then destroys the condition that lets acquired skill show (PDF p.322). And the rule-text layer vetoes custom-based state assumptions: the ball is live until touched down, whatever both teams believe (PDF pp.405-406). Each veto is a hard constraint on the decision kernel, not a preference."
+  }
+ ],
+ "universal_lens": "A polymath lens for any rule-governed competitive system: the effective rule is the written rule intersected with what the verifier can observe; availability reports are strategically corrupted by the reporter's incentives; and exit gates controlled by adversaries produce compounding damage. The 1916 memoir demonstrates all three with named witnesses and dated games.",
+ "gsi_mapping": "GSI clinical telemetry: the injury-concealment cases (fractured tibia danced on, three broken ribs played on) prove self-reported availability is unreliable, so independent medical observation is required - the ancestor of modern spotters and return-to-play verification. The Chadwick-Murphy taper is a printed load-management doctrine: condition, not drill volume, is the pre-game objective once skill is acquired.",
+ "gse_mapping": "GSE Coach-Mind: the fresh-substitute law is a hard rotation constraint with a medical state-estimator attached; Knox's doctrine is a provenance-constrained opponent-model prior; Haughton's coverage inequality couples the punt kernel to the coverage kernel; de Saulles's dead-ball predicate is a rule-literacy edge on state transitions. Internal only; no odds anywhere."
+}

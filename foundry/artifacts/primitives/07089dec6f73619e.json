@@ -1,0 +1,213 @@
+{
+ "book_id": "07089dec6f73619e",
+ "source_status": "COMPLETE",
+ "pages_total": 276,
+ "pages_read": 276,
+ "extractor_model": "qwen4-max-preview (worker ext-45)",
+ "source_note": "J. W. Wilce, M.D., Football: How to Play It and How to Understand It (Charles Scribner's Sons, 1923); author was head football coach at Ohio State University. Internet Archive scan (isobn_9781258229580), 276 PDF pages, all read in full chunks; pages 275-276 blank. Page citations are 1-based PDF page numbers (the book's printed page numbers run about 12 lower). Page-1 retraction check: none; no retraction markers anywhere; no betting/odds content. OCR defects quarantined (no primitives built on them): 'Copyeicut'/'Amenca' (p. 4), 'towch-down' (p. 15), 'CHAPLE RANI' for Chapter VI (p. 82), mirrored plate captions (e.g. pp. 37, 65), footnote 'too yards' for 100 (p. 71), garbled signal examples '2¢-7-14-6' and '2/-g-15-3' (p. 229), 'o~-20-yard line' (p. 235). Verbatim quotes preserve source hyphenation artifacts ('stand- points', p. 243) and em-dashes exactly as whitespace-normalized. All LaTeX are explicitly labeled formalizations of printed prose rules; the source contains no equations. Rule statements are 1923-era and must not be read as modern NFL rules.",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Down-and-distance possession renewal rule (four tries, ten yards)",
+   "verbatim_quote": "If at the end of four tries B has advanced the ball ten yards or more, it is allowed to retain the ball and have the privilege of four more tries.",
+   "page": 18,
+   "latex": "\\mathrm{retain} \\iff \\exists k \\in \\{1,2,3,4\\} : \\sum_{i=1}^{k} g_i \\ge 10\\,\\mathrm{yd}, \\qquad D_k = 10\\,\\mathrm{yd} - \\sum_{i=1}^{k} g_i",
+   "symbol_and_unit_ledger": "g_i = signed yards gained on down i [yd, length]; D_k = remaining distance to first down after down k [yd]; k = down index, dimensionless integer 1..4; 10 yd = printed first-down threshold (PDF p. 18); retain = Boolean possession-renewal predicate, dimensionless. Formalization of printed prose rule; the source prints no equation. All terms are lengths or dimensionless; dimensionally homogeneous.",
+   "assumptions": "Printed 1923 intercollegiate rules: four tries to advance ten yards; any kind of play legal on any down (PDF p. 19); undisputed possession until the snap (PDF p. 16); only yards toward the opponent's goal count, lateral distance does not (PDF p. 132). Formalization of printed prose rule, no source equation.",
+   "breakdown_regime": "Era-bound 1923 rule structure, not modern code. The renewal predicate is voided mid-series by any possession change (fumble recovery, interception), by scoring, by penalty-driven automatic first downs, or by end of half. The source's own strategic exception: early-down kicks near own goal deliberately surrender the series to avoid fumble liability (PDF p. 20).",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to the drive-level state (down d, distance D, field position x) of the 22-player football dynamical system: each series is a 4-trial budget to earn 10 yd of the field-position coordinate; the per-play transition kernel P(g | play, defense, x) advances the Markov state, and failure transfers possession at the dead-ball spot. The renewal predicate is the series-conversion constraint of any drive simulator.",
+    "source_operator": "p1",
+    "telemetry": "Down-and-distance sequences, per-play signed gain, series conversion rate, turnover spot — all observable from play-by-play logs; no odds required."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Fumble-equivalent field-position cost (thirty to fifty yards)",
+   "verbatim_quote": "the distance a kick would cover—thirty to fifty yards. When we remember the difficulties of gaining such a distance by a series of plays we realize what a costly mistake a fumble may be and how absolutely fundamental is the practice in handling the ball.",
+   "page": 57,
+   "latex": "\\Delta x_{\\mathrm{fumble}} \\approx D_{\\mathrm{punt}}, \\qquad D_{\\mathrm{punt}} \\in [30,50]\\,\\mathrm{yd}",
+   "symbol_and_unit_ledger": "Delta x_fumble = field-position swing conceded by a lost fumble [yd]; D_punt = distance a punt would cover [yd]; the interval [30,50] yd is the author's printed estimate (PDF p. 57), not a measured distribution. Formalization of the printed prose equivalence (PDF pp. 56-57); no source equation. Homogeneous in length.",
+   "assumptions": "Printed equivalence: 'a fumble is really equivalent to a definite loss of ground by the team making it' (PDF p. 56), handing the opponent the distance a kick would cover. Author's 1923 coaching estimate of typical punt distance; assumes comparable field position and no return after recovery. Formalization of printed prose, no source equation.",
+   "breakdown_regime": "Era-bound estimate: modern punt distributions and return rules shift the interval. Breaks down when the offense recovers its own fumble (no swing), on end-zone fumbles (touchback/safety geometry), or when a return follows recovery (swing exceeds D_punt). It is not a probability model: the source prints no fumble hazard, only the yardage equivalence.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Turnover kernel of the drive simulator: a lost-fumble event flips the possession flag and relocates the ball by Delta x ~ D_punt, converting a ball-security failure into an immediate field-position liability. It prices the tail risk of carry volume and of any play near own goal, and feeds the conservative punt doctrine (p6).",
+    "source_operator": "p2",
+    "telemetry": "Fumble rate per carry/contact, recovery team and spot, punt distance distribution from play-by-play; per-contact fumble hazard by ball-carrier technique is LATENT_UNIDENTIFIABLE from this source alone."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Net punt gain and coverage constraint (hang time vs distance)",
+   "verbatim_quote": "My kick has resulted in a thirty-yard gain—the forty yards I kicked less the ten yards you returned the ball before the end tackled you.",
+   "page": 70,
+   "latex": "G_{\\mathrm{net}} = D_{\\mathrm{kick}} - D_{\\mathrm{return}}, \\qquad t_{\\mathrm{flight}} \\ge t_{\\mathrm{cover}}",
+   "symbol_and_unit_ledger": "G_net = net field-position gain of the punt [yd]; D_kick = kick distance [yd]; D_return = return yards after catch [yd]; t_flight = ball hang time [s]; t_cover = time for covering ends to reach the receiver [s]. Printed arithmetic example: 40 yd - 10 yd = 30 yd (PDF p. 70). The coverage inequality formalizes the printed prose requirement that ends arrive as the ball is caught; no source equation. Lengths and times each homogeneous.",
+   "assumptions": "Printed: a 40-yd low kick returned 10 yd nets 30 yd, equal to a 30-yd high kick tackled immediately (PDF p. 70); 'Three kicks of thirty yards each are better than two kicks of forty yards each and one kick that is missed entirely' (PDF p. 71). Assumes ends can cover the kick. Formalization of printed prose, no source equation.",
+   "breakdown_regime": "Fails when the kick is blocked or shanked (source: missed punts conceded about forty yards each, PDF p. 71), on a fair catch (D_return = 0 by rule), in wind or with a wet ball (PDF pp. 74, 76), or when coverage is beaten laterally. Hang time is necessary, not sufficient: direction and out-of-bounds placement also gate value (PDF p. 69).",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Special-teams value kernel: punt utility is net field position G_net under a hang-time/coverage constraint, not raw distance — a constrained trade-off over (distance, height, direction) that grades punt decisions and coverage-unit speed inside the 22-player system's field-position coordinate.",
+    "source_operator": "p3",
+    "telemetry": "Punt distance, hang time, return yards, coverage distance at catch, fair-catch rate — standard special-teams play-by-play observables."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Openness mean-variance ordering of play classes (equal-strength printed means)",
+   "verbatim_quote": "the following is true, that the more open the play the greater the chance of good gain, but also the greater the danger of loss of distance.",
+   "page": 133,
+   "latex": "\\mu_{\\mathrm{plunge}} \\approx 2\\,\\mathrm{yd},\\quad \\mu_{\\mathrm{tackle}} \\in [2,4]\\,\\mathrm{yd},\\quad \\mu_{\\mathrm{end}} \\in [3,5]\\,\\mathrm{yd},\\quad \\sigma^{2}_{\\mathrm{end}} > \\sigma^{2}_{\\mathrm{plunge}}",
+   "symbol_and_unit_ledger": "mu_play = expected gain per attempt of the named play class [yd]; sigma^2_play = variance of gain [yd^2]. Printed means: plunge 'an average of about two yards' (PDF p. 125), off-tackle 'two to four yard gains' (PDF p. 127), end run 'average 3-5 yard gain' (PDF pp. 132-133). The variance ordering formalizes the printed prose 'more open ... greater chance of good gain ... greater danger of loss of distance' (PDF p. 133); no variance numbers are printed, no source equation. Homogeneous in length/length^2.",
+   "assumptions": "Explicit printed assumption: 'In all plays we are supposing teams are of equal strength' (PDF p. 126). 1923 rules and formations; the means are the author's coaching estimates, not measured statistics. Formalization of printed prose, no source equation.",
+   "breakdown_regime": "The equal-strength assumption is voided by talent mismatch (the source admits plays then 'gain much more easily', PDF p. 126). Era-bound: modern defensive geometry changes the means. The variance ordering is qualitative — no distributional form is printed, so no tail quantile may be invented from it.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mean-variance frontier over action classes in the play-selection kernel: low-openness actions (plunge) are low-mean/low-variance, high-openness actions (end run, deep pass) are high-mean/high-variance with loss tails; the down-and-distance state selects the point on the frontier — short yardage demands low variance, long yardage demands high variance.",
+    "source_operator": "p4",
+    "telemetry": "Per-play-class gain distributions (mean, variance, loss frequency) from play-by-play; defense-strength controls needed to test the equal-strength assumption."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Companion plays: deception by identical observable prefix",
+   "verbatim_quote": "One of the greatest sources of deception in football is the use of companion plays, or plays",
+   "page": 150,
+   "latex": "\\mathrm{obs}_{A}(0{:}t) = \\mathrm{obs}_{B}(0{:}t)\\ \\ \\forall t < t_{\\mathrm{div}} \\;\\Rightarrow\\; \\frac{\\Pr(\\mathrm{obs}\\mid A)}{\\Pr(\\mathrm{obs}\\mid B)} = 1",
+   "symbol_and_unit_ledger": "obs_A, obs_B = observable action prefixes (formation, backfield motion, line charge) of companion plays A and B, dimensionless observation sequences; t = time since snap [s]; t_div = divergence time when the plays become distinguishable [s]; Pr(.|A) = likelihood of the observation under play A, probability measure on [0,1], dimensionless. Formalization of the printed prose definition of companion plays (PDF p. 150); no source equation.",
+   "assumptions": "Printed: companion plays 'start the same and appear to be the same, but which finish differently' (PDF p. 150); in pairing, one play follows the other so the defense learns the shared prefix (PDF p. 150). Assumes the defense's read is based on the observable prefix. Formalization of printed prose, no source equation.",
+   "breakdown_regime": "Fails if any pre-snap tell distinguishes the pair — the source itself warns teams 'give their plays away by pointing with their feet or looking in the direction' (PDF p. 230); fails against a defense that watches the ball rather than the prefix (PDF p. 189); the divergence must occur before the defense can re-route, else the belief advantage decays.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Information-channel invariant for deception: play-calling is a signaling game in which the offense maximizes the defense's posterior entropy over play type by holding likelihood ratios at 1 until t_div; companion plays, fakes, and shifted eligibility are all prefix-identity operations on the defense's belief state.",
+    "source_operator": "p5",
+    "telemetry": "Pre-snap formation and motion, initial post-snap flow, defensive reaction latency and mis-step rate — chartable from film; no odds."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Conservative generalship: fourth-down punt doctrine and doubt-kick rule",
+   "verbatim_quote": "Never run the ball on fourth down, certainly never in your own territory.",
+   "page": 234,
+   "latex": "\\pi(d{=}4,\\ x \\in \\mathrm{own\\ territory}) = \\mathrm{punt}, \\qquad \\mathrm{doubt} \\Rightarrow \\mathrm{punt}",
+   "symbol_and_unit_ledger": "pi = generalship policy mapping game state to action label, dimensionless; d = down index (1..4), dimensionless; x = field position [yd from own goal-line]; 'own territory' and 'doubt' are printed qualitative predicates (PDF pp. 234-235), not numeric thresholds; punt = action label, dimensionless. Formalization of printed prose rules 1 and 3 of conservative generalship; no source equation.",
+   "assumptions": "Printed rules: 'Never run the ball on fourth down, certainly never in your own territory'; 'When in doubt as to your next move, kick'; 'If the ball is kicked on fourth down, no matter what the distance to go, it is the safest policy with even an average punter' (all PDF p. 234). Assumes an average punter and 1923 field-position economics. Formalization of printed prose, no source equation.",
+   "breakdown_regime": "The source itself lists exceptions: against the wind the early-down kick rule is suspended (rule 2, PDF p. 234); inside kicking range the policy shifts to field-goal-first (rule 4); trailing late-game states force 'pull the unexpected' (rule 5) and 'brainstorm' fourth-down plays when out of kicking range (PDF p. 236). The doctrine is a prior, not an optimal policy.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "State-dependent risk policy in the Coach-Mind sim: a conservative field-position prior that punts away tail risk when the turnover liability (p2) sits near own goal; the simulator can encode it as the 1923 baseline policy and measure modern fourth-down deviations against it.",
+    "source_operator": "p6",
+    "telemetry": "Fourth-down decisions by field position, punt rate in own territory, fourth-down conversion success rate — play-by-play observables."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Lateral zone generalship: 20-yard policy partition of the field",
+   "verbatim_quote": "The field may be divided into 20-yard zones from goal to goal.",
+   "page": 235,
+   "latex": "x \\in Z_j,\\quad Z_j = [20(j-1),\\, 20j)\\,\\mathrm{yd},\\ j \\in \\{1,\\dots,5\\}; \\qquad Z_{1,2} \\Rightarrow \\neg\\mathrm{fwdpass}",
+   "symbol_and_unit_ledger": "x = field position measured from own goal-line [yd]; Z_j = the j-th 20-yard zone, a [yd] interval; j = zone index, dimensionless; fwdpass = forward-pass action label, dimensionless; the negation formalizes the printed theoretical restriction 'no forward passes are attempted in the Danger or Defensive Zones' (PDF p. 235). Formalization of printed prose zoning; no source equation. Homogeneous in length.",
+   "assumptions": "Printed: field divided into 20-yard zones named Danger (0-20), Defensive (20-40), Middle/Zone of Offensive Change (40-40), True Offensive (40-20), True Scoring (20-0) (PDF p. 235); zone generalship is 'comparatively formal and does not consider the opponent's defense as its primary basis' (PDF p. 235). Formalization of printed prose, no source equation.",
+   "breakdown_regime": "The source's own veto: 'if a weak spot is found in the opponents' defense all generalship rules are modified and the weak spot is hammered' (PDF p. 236). The no-pass rule is stated 'theoretically' — Diagram IX shows a pass from punt formation near own goal as deliberate rule-breaking generalship (PDF p. 214). Era-bound: 1923 pass restrictions (passer more than five yards back of the line, PDF p. 100) shape the zones.",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Partition of the field-position coordinate into policy regions — a piecewise stationary prior over the play-selection kernel; the Coach-Mind sim can encode zone-conditional action masks and audit where observed play-calling violates the mask, since the violation itself is a deception signal.",
+    "source_operator": "p7",
+    "telemetry": "Play type by field-position zone, pass rate in Danger/Defensive zones, zone-specific conversion rates — chartable from play-by-play."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "Fatigue-gated practice load: ninety-minute cap and end-of-session injury hazard",
+   "verbatim_quote": "The active-practice period of a football team is usually about an hour and a half an afternoon. More than this is too much from several stand- points.",
+   "page": 243,
+   "latex": "T_{\\mathrm{practice}} \\lesssim 90\\,\\mathrm{min}, \\qquad \\frac{\\partial h_{\\mathrm{injury}}}{\\partial F} > 0",
+   "symbol_and_unit_ledger": "T_practice = active daily practice duration [min]; 90 min = printed 'about an hour and a half an afternoon' cap (PDF p. 243); h_injury = injury hazard rate [1/time]; F = fatigue state, dimensionless proxy (printed 'exhausted', 'let down'); the monotone-hazard clause formalizes the printed prose that most bruises come near the end of practice when players let down (PDF p. 244). No source equation; time units homogeneous.",
+   "assumptions": "Printed: active practice about an hour and a half an afternoon, 'More than this is too much from several stand- points' (PDF p. 243, hyphenation preserved); 'Never continue scrimmage or indulge in the roughest work when you are exhausted' (PDF p. 244); 'Captains and coaches, always remember, underwork rather than overwork' (PDF p. 244). 1923 coaching hygiene; formalization of printed prose, no source equation.",
+   "breakdown_regime": "The 90-minute cap is a 1923 prescription for college squads, not a measured dose-response curve; no injury rates are printed. The hazard clause is qualitative — no functional form or numbers may be invented. Modern load management differs; treat as a historical invariant of fatigue-aware scheduling, not a clinical dose.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fatigue-gated exposure constraint for the GSI bioenergetics lane: contact-load scheduling must cap session duration and gate high-impact drills on fatigue state; the same invariant binds practice-plan simulation and return-to-play load ramps in the athlete-state model.",
+    "source_operator": "p8",
+    "telemetry": "Session duration, drill type, fatigue proxies (RPE, velocity decay), injury timing within session — standard sports-medicine observables; the 1923 source supplies the rule, modern telemetry calibrates it."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The deepest invariant in Wilce's 1923 manual is that American football is a field-position economy: possession is a budget, yards are the currency, and every decision is priced in expected yards and in tail risk. The budget itself is printed as a rule, not derived: four tries to advance ten yards, renewal on success, surrender on failure (p1, PDF p. 18). What makes this a sovereign primitive rather than a trivia item is that the entire strategic superstructure of the book is a set of policies over that budget. The state of the economy is (down, distance, field position), and the book's generalship chapters are, in modern language, a piecewise policy over that state. The first pricing operation is the fumble equivalence: a lost fumble hands the opponent the distance a punt would cover, thirty to fifty yards (p2, PDF p. 57). This is the book's only explicit exchange rate between a ball-security failure and field position, and it explains behavior that otherwise looks irrational. Why kick on first down near your own goal? Because the fumble liability is denominated in punt yards, and near your own goal those yards land the opponent in scoring territory; the kick is a purchase of insurance at the price of the series (PDF p. 20). The second pricing operation is the punt itself. Wilce refuses to price a punt by its distance: his worked arithmetic shows a forty-yard kick returned ten yards nets thirty, exactly equal to a thirty-yard high kick tackled on arrival (p3, PDF p. 70). The correct objective is net field position under a coverage constraint — hang time must buy the ends enough time to arrive at the catch. This is a constrained trade-off, and the book even states the reliability version: three thirty-yard kicks beat two forty-yard kicks and one miss, because a missed punt concedes about forty yards (PDF p. 71). The third pricing operation is the play-class frontier. Under the explicit equal-strength assumption, plunges average about two yards, off-tackle drives two to four, end runs three to five, and the more open the play the greater both the chance of good gain and the danger of loss (p4, PDF pp. 125-133). That is a mean-variance ordering stated in prose: low-openness actions are low-mean, low-variance; high-openness actions carry loss tails. The down-and-distance state then selects the point on the frontier — third and one demands the low-variance plunge, second and twelve forbids it (PDF pp. 234-235). Composing these three pricings yields the drive-level Markov decision process that any football simulator must contain: a renewal constraint (p1), a turnover kernel priced in punt yards (p2), a special-teams value kernel with a hang-time constraint (p3), and an action frontier with state-dependent risk selection (p4). The conservative generalship rules — never run on fourth down in your own territory, kick when in doubt (p6, PDF p. 234) — are the era's baseline policy over that process, and the zone partition (p7, PDF p. 235) is its piecewise stationary prior. Two honesty constraints govern the extraction. First, every number here is a printed coaching estimate under equal strength, not a measurement; the book contains no probabilities, no distributions, and no odds, so no quantitative tail may be invented from it. Second, the rules are 1923 rules; the kernels are structural isomorphisms into the modern 22-player dynamical system, and their parameters must be re-estimated from play-by-play telemetry, never copied from Wilce's estimates as if they were modern data. The value of the source is the structure of the economy — what is priced, in what units, under which constraints — and that structure survives the century intact.",
+   "retrocausal_genealogy": "The hidden state of the 1923 game was forged by the violence of the mass-play era. Wilce prints that the forward pass was introduced 'to make the game more interesting, more skilful, and less rough,' and that mass plays finish 'with a heap of players in one place' (PDF p. 82). The scar lineage is rules responding to injury: the pass opened the field, and Ohio State's shifted-eligibility principle, used since 1913 (PDF p. 198), turned the new eligibility geometry into a weapon. The four-down, ten-yard budget is the sedimented constraint that makes field position a currency; every primitive in this book is a strategy for earning or protecting that currency under the era's rules, which is why the economy reads as coherent rather than arbitrary.",
+   "theory_of_mind": "On third down and seven, Wilce's quarterback reasons aloud: 'since we have advanced only three yards in our first two tries it will be very hard for us to gain seven yards in two more tries' (PDF p. 19). The defensive captain runs the same recursion in reverse — he knows the quarterback knows the budget is failing, so he expects the pass or the kick and positions his lines accordingly (PDF p. 23). The clash is recursive: the team that kicks on first down near its own goal is not playing the down, it is playing the defense's belief about its fear of the fumble liability (PDF p. 20). The coach's comfort call and the coordinator's tendency trap live exactly in this gap between what the budget demands and what the opponent believes you will do.",
+   "cross_layer_veto": "Physics and physiology veto the high-EV call in print. The high punt is best 'except when: you are kicking against the wind' (PDF p. 74); with a wet ball the spiral is vetoed — 'Play safe and kick the ball so that it travels end over end' (PDF p. 76). The tired player tackles high and the excited player forgets ball security (PDF pp. 52, 63), so fatigue raises the fumble hazard that p2 prices at thirty to fifty yards. A fourth-down gamble in own territory is vetoed by the conservative doctrine (PDF p. 234) because the turnover kernel's tail outweighs the conversion upside; the veto is the doctrine's entire reason for existing."
+  },
+  {
+   "trace_id": "t2",
+   "think": "If the first half of Wilce's book is an economy, the second half is an information war, and the two halves are coupled through execution. The offense is a sender, the defense a Bayesian receiver, and the channel is everything observable before and just after the snap. The book's central deception invariant is the companion play: plays 'which start the same and appear to be the same, but which finish differently' (p5, PDF p. 150). In channel terms the offense engineers the observable prefix so that the likelihood ratio between the two candidate plays stays at one until the divergence moment; the defense's posterior cannot update because the evidence was designed to be uninformative. Pairing matters: one play must follow the other so the defense learns the prefix and commits to it (PDF p. 150). The same operation appears at three other scales. At the signal scale, number codes with blinds, key numbers, digit concatenation, and addition systems (PDF pp. 228-229) encrypt the play call against the opponent's receiver; the printed admission that teams 'give their plays away by pointing with their feet or looking in the direction' (PDF p. 230) records the side-channel arms race that makes encryption necessary. At the formation scale, shifted eligibility (PDF pp. 144-145, 200) attacks the defense's assignment map itself: the defense covers the men it sees eligible, the offense shifts a yard before the snap, and a new receiver exists faster than the defense can reassign — the book's own description of the 1913 Ohio State plays says the defense is 'fooled into protecting against the group to the outside' (PDF p. 200). At the individual scale, the decoy pass works because the defender models the passer's eyes: 'Passer P looks down the field at D as though planning to pass to him' while the real receiver stops short (PDF p. 143). The defense's counter-channel is sign-reading and ball-watching: the fullback 'must decide quickly what the play is' and holds position in doubt (PDF p. 177), and the back-field men are coached to read whether an end is setting to block or edging out to receive (PDF pp. 175-176). The split buck and delayed plunge exist precisely to manufacture that doubt (PDF pp. 146, 148). This is a recursive belief game: each side models the other's read, and the companion-play pair wins by making the first read correct and the second read wrong. Two vetoes bound the game. The rules layer vetoes the unfair starting signal — charging on the third number when the snap is agreed for the fourth is 'an absolutely illegal practice' (PDF p. 232) — so a simulator must mask that timing edge out even when it is high-EV. The execution layer vetoes deception that the personnel cannot perform: 'If one player does not execute what he individually is supposed to do, the whole play usually suffers' (PDF p. 158), and a few plays well learned beat many plays partly learned (PDF p. 160). That is why the training chapter is the substrate of the information war. The book's learning protocol — demonstrate duties, walk through, run on signal, partial resistance, full speed, then scrimmage (PDF pp. 264-265) — is a curriculum for building the shared internal model that makes prefix-identity believable under pressure. And the load doctrine caps it: about ninety minutes of active practice, no rough work when exhausted, underwork rather than overwork, because most bruises come near the end when players let down (p8, PDF pp. 243-244). Fatigue is therefore not merely a physiological variable; it is an information-theoretic one, because a tired player's tells get louder and his execution of the shared prefix degrades, collapsing the likelihood-ratio advantage that every deception play depends on. The zone generalship prior (p7) closes the loop: it is 'comparatively formal,' so a smart opponent exploits it, and Wilce's own override — hammer any weak spot found (PDF p. 236) — is the admission that a fixed policy is itself a tell.",
+   "retrocausal_genealogy": "Deception in this book descends from the same rule scar that opened the field: once the pass made five or six men eligible (PDF p. 99), the defense's assignment problem became combinatorial, and Ohio State's 1913 shifted-eligibility plays (PDF pp. 198, 200) exploited the lag between a shift and the defense's reassignment. The signal systems — blinds, key numbers, digit and addition codes (PDF pp. 228-229) — are the covert-channel descendants of the era's open audible calls. The printed warning about foot-pointing and eye-gaze tells (PDF p. 230) records the side-channel arms race that created the hidden state every deception play in the book depends on.",
+   "theory_of_mind": "The fullback is the defense's recursive thinker: he 'must decide quickly what the play is' and 'in case of doubt ... holds position or backs away' (PDF p. 177), while the offense's split buck and delayed plunge are built precisely to manufacture that doubt (PDF pp. 146, 148). The decoy pass works because the defender models the passer's eyes: 'Passer P looks down the field at D as though planning to pass to him' (PDF p. 143). Each layer believes the other is reading signs; the companion-play pair wins by making the first read correct and the second read wrong — belief updated on a prefix engineered to be uninformative, then betrayed at the divergence moment.",
+   "cross_layer_veto": "The rules layer vetoes the timing edge: the unfair starting signal — linemen charging on the third number when the snap is agreed for the fourth — is 'an absolutely illegal practice' (PDF p. 232), so the simulator must mask it out even when it is high-EV. The physiology layer vetoes volume: 'underwork rather than overwork' (PDF p. 244), no rough work when exhausted, because injury hazard concentrates at session end (PDF p. 244); a coach's extra-scrimmage impulse is vetoed by the fatigue-injury kernel (p8). Deception that requires a tired player to execute a new play perfectly is vetoed by the execution layer (PDF p. 158)."
+  }
+ ],
+ "universal_lens": "Read Wilce 1923 as a field-position economy plus an information-warfare manual: every chapter prices decisions in yards or in belief. The polymath audit separates printed rule invariants (downs, scoring, eligibility) from era artifacts (zone names, diet hygiene), keeps the author's estimates labeled as estimates, and refuses to promote any 1923 number into a modern measurement.",
+ "gsi_mapping": "The training chapter supplies fatigue-aware load invariants: a ninety-minute active-practice cap, no rough work when exhausted, injury hazard concentrated at session end, and muscle-tendon-ligament conditioning before contact (PDF pp. 238, 243-244). GSI maps these to bioenergetic load ramps and clinical telemetry (RPE, session injury timing); the 1923 diet and tobacco hygiene rules are quarantined as era beliefs, not clinical evidence.",
+ "gse_mapping": "GSE's Coach-Mind sim inherits the drive-level MDP: (down, distance, field position) state, play-class gain kernels with the printed mean-variance ordering, a turnover kernel priced at punt distance, and zone-conditional policy priors. Deception is prefix-identity on the defense's belief state; DFS/portfolio tail risk is the fumble and interception swing. No sportsbook odds anywhere; calibration comes from play-by-play telemetry only."
+}

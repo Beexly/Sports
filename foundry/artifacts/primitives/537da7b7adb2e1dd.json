@@ -1,0 +1,211 @@
+{
+ "book_id": "537da7b7adb2e1dd",
+ "source_status": "COMPLETE",
+ "pages_total": 578,
+ "pages_read": 578,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Shannon entropy (Definition 2.13)",
+   "verbatim_quote": "Deﬁnition 2.13. The entropy H(X) of a random variable X is deﬁned as H(X) = − X x p(x) log p(x). (2.35)",
+   "page": 26,
+   "latex": "H(X) = -\\sum_{x} p(x)\\log p(x)",
+   "symbol_and_unit_ledger": "H(X): entropy of discrete random variable X, units bits when log base 2 (nats for base e); x: element of the support of X (dimensionless symbol); p(x): probability mass Pr{X=x}, probability measure in [0,1], dimensionless; sum taken over the support of X only, per the book's convention immediately after (2.35), so p(x)log p(x) is never evaluated at p(x)=0; log: logarithm with chosen base fixing the information unit (bit for base 2). Equation (2.35), p.26 (printed p.13).",
+   "assumptions": "X is a discrete random variable; summation is taken over the corresponding support (stated convention, necessary because p(x)log p(x) is undefined at p(x)=0); the base of the logarithm can be chosen freely and fixes the unit; all information measures in the book are linear combinations of entropies.",
+   "breakdown_regime": "Undefined as written for continuous variables (differential entropy is a different object and can be negative); may be infinite for countably infinite alphabets with heavy tails (Theorem 2.43 gives finiteness conditions); the support convention fails if one naively extends the sum to zero-mass symbols; entropy is not a measure of uncertainty for non-probability measures.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to the Coach-Mind state variable H(play-call distribution | down, distance, field zone): the offensive call distribution is a discrete source whose entropy is the defense's irreducible pre-snap uncertainty. This is an explicit isomorphism of the source-invariant definition, not a claimed football origin of entropy.",
+    "source_operator": "p1",
+    "telemetry": "Charted play-call and formation frequencies per down-distance bucket give empirical p(x); H computed in bits per play. Identifiable from charting logs; no latent variables needed at this level."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Data Processing Theorem (Theorem 2.42)",
+   "verbatim_quote": "Theorem 2.42 (Data Processing Theorem). If U →X →Y →V forms a Markov chain, then I(U; V ) ≤I(X; Y ). (2.154)",
+   "page": 45,
+   "latex": "U \\to X \\to Y \\to V \\;\\Rightarrow\\; I(U;V) \\le I(X;Y)",
+   "symbol_and_unit_ledger": "U,X,Y,V: discrete random variables forming a Markov chain (Definition 2.6: each variable conditionally independent of the past given the present); I(U;V), I(X;Y): mutual informations, units bits (log base 2); arrow: Markov-chain conditional-independence relation, dimensionless structural constraint. Equation (2.154), p.45 (printed p.29).",
+   "assumptions": "U -> X -> Y -> V forms a Markov chain (conditional independence as in Definition 2.6); information measures well-defined (discrete variables, finite entropies); proof uses Proposition 2.10 (subchains of Markov chains are Markov) and Lemma 2.41 applied twice, then (2.155)-(2.156).",
+   "breakdown_regime": "The inequality is vacuous when the Markov condition fails (memory, feedback, or side channels coupling U to V outside X,Y); equality can hold (no information loss) so the bound does not quantify how much is lost; says nothing about computational cost of processing; for continuous variables the discrete proof does not carry over unchanged.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived constraint on the football information pipeline: defensive intent (U) -> pre-snap observable (X) -> QB processed read (Y) -> post-snap action (V). Any transition kernel along this chain cannot increase mutual information: I(defensive intent; final action) <= I(defensive intent; pre-snap observable). Deception schemes are kernels chosen to minimize the information the offense extracts, and the offense's processing cannot recover what the observable never carried.",
+    "source_operator": "p2",
+    "telemetry": "Charted pre-snap coverage shell vs post-snap coverage outcome gives empirical I(X;Y) estimates in bits; stage-by-stage loss is identifiable where charting exists, LATENT_UNIDENTIFIABLE for the defense's true intent U."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Fano's Inequality (Theorem 2.47)",
+   "verbatim_quote": "Theorem 2.47 (Fano’s Inequality). Let X and ˆX be random variables taking values in the same alphabet X. Then H(X| ˆX) ≤hb(Pe) + Pe log(|X| −1), (2.171) where hb is the binary entropy function.",
+   "page": 47,
+   "latex": "H(X|\\hat{X}) \\le h_b(P_e) + P_e \\log(|X|-1)",
+   "symbol_and_unit_ledger": "X: true discrete random variable on alphabet X; X-hat (printed ˆX): estimate of X on the same alphabet; H(X|X-hat): conditional entropy, bits; h_b: binary entropy function h_b(p) = -p log p - (1-p) log(1-p), bits; P_e = Pr{X != X-hat}: error probability, probability measure in [0,1], dimensionless; |X|: alphabet cardinality, dimensionless count; log base 2 throughout so all terms are bits. Equation (2.171), p.47 (printed p.31).",
+   "assumptions": "X and X-hat take values in the same alphabet X; P_e is the probability of the error event {X != X-hat}; proof introduces the error indicator Y (2.172) with H(Y)=h_b(P_e) and uses the chain rule plus the independence bound; |X| >= 2 implicit for log(|X|-1) to be defined.",
+   "breakdown_regime": "Degenerates at |X|=1 (log 0 undefined, problem trivial); bound is loose for large alphabets with structured errors and for large P_e (h_b(P_e) <= 1 bit so the P_e log(|X|-1) term dominates); it is an upper bound on residual uncertainty, equivalently a lower bound on P_e given H(X|X-hat); continuous-alphabet versions require different constants.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to coverage identification: X = true defensive coverage shell, X-hat = the offense's charted/processed coverage ID. Fano converts residual uncertainty H(X|X-hat) into a hard floor on misidentification probability P_e. No processing of the same observables can beat this floor - it is a source-invariant constraint on any classifier built on the same cues.",
+    "source_operator": "p3",
+    "telemetry": "Charted coverage ID vs verified post-snap coverage gives empirical P_e; |X| = number of coverage shells in the taxonomy (e.g. 6-8); H(X|X-hat) estimated from the joint charting distribution. All three observables are chartable."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Weak Asymptotic Equipartition Property (Theorem 5.3, Weak AEP II)",
+   "verbatim_quote": "Theorem 5.3 (Weak AEP II). The following hold for any ϵ > 0: 1) If x ∈W n [X]ϵ, then 2−n(H(X)+ϵ) ≤p(x) ≤2−n(H(X)−ϵ). (5.9) 2) For n suﬃciently large, Pr{X ∈W n [X]ϵ} > 1 −ϵ. (5.10)",
+   "page": 114,
+   "latex": "2^{-n(H(X)+\\epsilon)} \\le p(\\mathbf{x}) \\le 2^{-n(H(X)-\\epsilon)} \\quad \\text{for } \\mathbf{x}\\in W^n_{[X]\\epsilon}; \\qquad \\Pr\\{\\mathbf{X}\\in W^n_{[X]\\epsilon}\\} > 1-\\epsilon",
+   "symbol_and_unit_ledger": "X=(X_1,...,X_n): i.i.d. source sequence; p(x): sequence probability, probability measure, dimensionless; H(X): single-letter entropy, bits; n: block length, dimensionless count; epsilon (printed ϵ): arbitrary positive tolerance, dimensionless; W^n_[X]ϵ: weakly typical set (definition (5.7)); 2^{-n(H±ϵ)}: dimensionless probability bounds; Pr: probability measure. Equations (5.9)-(5.10), p.114 (printed p.100-101).",
+   "assumptions": "X_1,...,X_n drawn i.i.d. according to p(x); epsilon > 0 arbitrary; n sufficiently large (asymptotic statement); finite entropy H(X); Theorem 5.3 is equivalent to Theorem 5.1 (Weak AEP I) as remarked on p.115; Property 3 (5.11) bounds the typical-set cardinality by (1-ϵ)2^{n(H-ϵ)} <= |W| <= 2^{n(H+ϵ)}.",
+   "breakdown_regime": "Fails for non-i.i.d. sources as stated (stationary ergodic sources need the Shannon-McMillan-Breiman theorem, Section 5.4); at finite n the epsilon slack is real and atypical sequences carry the error probability; the source coding application (5.21)-(5.23) only drives rate to H(X) and P_e to 0 as n -> infinity and epsilon -> 0.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived null model for play-sequence prediction: if a team's calls were i.i.d. from a fixed distribution, length-n drive sequences would concentrate on ~2^{nH} typical sequences each of probability ~2^{-nH}. Real play-calling is adaptive and state-dependent, so the AEP is used only as a calibration baseline: deviation of empirical sequence log-probabilities from -nH quantifies the exploitable non-i.i.d. structure.",
+    "source_operator": "p4",
+    "telemetry": "Empirical per-sequence log-probability under the fitted i.i.d. model vs -nH(play) from charted call logs; concentration measured as the fraction of sequences inside the empirical typical band. Identifiable from charting; the i.i.d. assumption itself is the falsifiable part."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Channel Coding Theorem (Theorem 7.15) with DMC capacity (Definition 7.6)",
+   "verbatim_quote": "Theorem 7.15 (Channel Coding Theorem). A rate R is achievable for a discrete memoryless channel if and only if R ≤C, the capacity of the channel.",
+   "page": 161,
+   "latex": "R \\text{ achievable} \\iff R \\le C, \\qquad C = \\max_{p(x)} I(X;Y)",
+   "symbol_and_unit_ledger": "R: communication rate, bits per channel use (n^{-1} log M, M codewords, block length n); C: channel capacity, bits per channel use; p(y|x): discrete memoryless channel transition probability, probability measure, dimensionless; p(x): input distribution optimized over, probability measure; I(X;Y): mutual information between channel input and output, bits; max over input distributions. Capacity definition (7.52) p.155 (printed p.141); theorem statement p.161 (printed p.147).",
+   "assumptions": "Discrete memoryless channel p(y|x); finite input and output alphabets (assumed in Section 7.1); decoder knows the transition matrix (stated in Section 7.2); block length n -> infinity with average probability of error P_e = Pr{W-hat != W} -> 0 (Definition 7.12); achievability via random coding and joint typicality decoding (Section 7.4), converse via Fano's inequality (Section 7.3).",
+   "breakdown_regime": "Asymptotic only: at finite block length rates near C carry non-negligible error; channels with memory violate the memoryless assumption; feedback does not increase C for a DMC (Section 7.5, Remark) though it can simplify coding and enable zero-error variable-length schemes; Gaussian channels require an explicit power constraint (Chapter 11); compound/arbitrarily varying channels have different capacity notions.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for the QB-receiver link: the pass rush is channel noise, route/timing choices are the input distribution p(x), and the completion/ separation outcome is Y. The theorem's structure says there is a maximum reliable information rate C for this link under the current noise regime, and pushing the 'rate' (depth and difficulty of the route concept) beyond C collapses reliability. This is an isomorphic constraint, not a claim that football invented channel coding.",
+    "source_operator": "p5",
+    "telemetry": "Pressure/hurry flags, time-to-throw, air yards, and completion outcomes give empirical I(X;Y) estimates per pressure regime; C identified as the envelope of reliable rate. Where pressure is uncharted the noise law is LATENT_UNIDENTIFIABLE."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Max-Flow Bound for network coding (Theorem 18.3)",
+   "verbatim_quote": "Theorem 18.3 (Max-Flow Bound). For a graph G with rate constraints R, if ω is achievable, then ω ≤min l maxﬂow(tl). (18.30)",
+   "page": 435,
+   "latex": "\\omega \\le \\min_{l}\\, \\mathrm{maxflow}(t_l)",
+   "symbol_and_unit_ledger": "omega (printed ω): multicast information rate, symbols (bits when the base field is GF(2)) per unit time; G: directed graph with source node s and sink nodes t_l; R: edge rate constraints (assumed positive integers for simplicity, Section 18.1), symbols per channel use; maxflow(t_l): value of a maximum flow from s to sink t_l under R, symbols per unit time (Theorem 18.1 equates it to min-cut capacity); min over sinks l. Equation (18.30), p.435 (printed p.421).",
+   "assumptions": "Single source s multicasting to a collection of sinks T={t_l}; graph G with rate constraints R; omega achievable in the sense of the (n, (eta_e), tau) network-code definition of Section 18.3 (n transactions, eta_e symbols per edge, tau message symbols recovered); the bound holds for ANY network code, including nonlinear and probabilistic ones - the proof only uses that each sink's message is a function of the symbols crossing any s-t_l cut.",
+   "breakdown_regime": "Necessary but not sufficient in general: for arbitrary (multi-source) networks the max-flow bound is not always achievable and the full capacity region is not characterized by min-cuts alone (multi-source discussion, Chapters 17 and 21); for a single multicast it is tight (achieved by linear codes, Chapter 19); the bound is asymptotic in the number of transactions n and allows vanishing error, not zero error at finite n.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to option delivery as multicast: the ball-carrier/QB is source s, eligible receivers are sinks t_l, and the protection/eligibility structure is the capacitated graph. The rate at which distinct viable options can be delivered to ALL eligible receivers is bounded by the minimum cut over that graph - a collapsed pocket or an ineligible-receiver penalty is a cut whose capacity falls below the number of options being multicast, making the concept infeasible regardless of 'creativity'.",
+    "source_operator": "p6",
+    "telemetry": "Time-to-throw, sack/hurry/pressure rates, and eligible-receiver counts per play estimate effective edge capacities and cut values; option-delivery rate = distinct viable targets actually reachable per play. Identifiable from charting + tracking."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Max-Flow Bound for Linear Network Coding (Theorem 19.10)",
+   "verbatim_quote": "Theorem 19.10 (Max-Flow Bound for Linear Network Coding). For an ω-dimensional linear network code on an acyclic network, for any collection T of non-source nodes, dim(VT ) ≤min{ω, maxﬂow(T )}. (19.34)",
+   "page": 449,
+   "latex": "\\dim(V_T) \\le \\min\\{\\omega,\\ \\mathrm{maxflow}(T)\\}",
+   "symbol_and_unit_ledger": "omega (printed ω): dimension of the linear network code = number of source symbols, dimensionless count over base field F; V_T: vector space spanned by the global encoding kernels of the channels incoming to the collection T of non-source nodes, a subspace of F^omega; dim(V_T): its dimension over F, dimensionless; maxflow(T): max-flow value from s to the collection T (generalized via a supersink, Section 18.1), symbols per unit time; F: finite base field (GF(2) for bits). Equation (19.34), p.449 (printed p.435).",
+   "assumptions": "Acyclic network G; all channels unit capacity without loss of generality (parallel channels allowed, Section 19.2); omega-dimensional LINEAR network code over base field F (local and global encoding mappings linear, Definitions 19.6-19.7); V_T is the span of global encoding kernels at T; proof cuts the network and notes V_T is spanned by the kernels across any s-T cut.",
+   "breakdown_regime": "Cyclic networks require convolutional/delay-aware codes outside this theorem; achievability of the bound depends on topology, omega, and field size - sufficiently large base field needed for linear multicast/broadcast/dispersion existence (Theorem 19.20, Corollaries 19.21-19.22); the bound is necessary only, and restricted coding (e.g. routing) can fall strictly below it (butterfly network, Chapter 17).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for route-combination design: route stems combined at intermediate nodes (mesh, spacing, option reads) are linear combinations over a finite field of the omega source 'messages' (route intents). dim(V_T) bounds the number of linearly independent route messages the defense at node set T can possibly distinguish; a concept whose encoding kernels are linearly dependent at the read point carries redundant, decodable-by-the-defense information.",
+    "source_operator": "p7",
+    "telemetry": "Defender reaction time and separation at break points calibrate whether distinct route messages are actually distinguished; the encoding-kernel matrix is a design object (LATENT_UNIDENTIFIABLE from broadcast film alone, identifiable from all-22 charting of route geometry)."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "I-Measure construction: information measures as a signed set measure (Theorem 3.6, eqs. 3.40-3.41)",
+   "verbatim_quote": "We now construct the I-Measure µ∗on Fn using Theorem 3.6 by deﬁning µ∗( ˜XG) = H(XG) (3.40) for all nonempty subsets G of Nn. In order for µ∗to be meaningful, it has to be consistent with all Shannon’s information measures (via the substitution of symbols in (3.19)). In that case, the following must hold for all (not necessarily disjoint) subsets G, G′, G′′ of Nn where G and G′ are nonempty: µ∗( ˜XG ∩˜XG′ −˜XG′′) = I(XG; XG′|XG′′). (3.41)",
+   "page": 70,
+   "latex": "\\mu^*(\\tilde{X}_G) = H(X_G); \\qquad \\mu^*(\\tilde{X}_G \\cap \\tilde{X}_{G'} - \\tilde{X}_{G''}) = I(X_G; X_{G'} \\mid X_{G''})",
+   "symbol_and_unit_ledger": "mu* (printed µ∗): the I-Measure, a signed measure on the field F_n generated by sets X-tilde_i, units bits (values are Shannon information measures); X-tilde_G (printed ˜XG): union of the sets corresponding to variables indexed by nonempty subset G of N_n={1,...,n}; H(X_G): joint entropy of the variables in G, bits; I(X_G; X_G'|X_G''): conditional mutual information, bits; set intersection/difference: set operations, dimensionless; F_n: field of sets generated by the X-tilde_i. Equations (3.40)-(3.41), p.70 (printed p.56); Theorem 3.6 p.68.",
+   "assumptions": "n discrete random variables; B = {X-tilde_G : G nonempty subset of N_n} has 2^n - 1 elements; Theorem 3.6: a signed measure on F_n is completely specified by its values on B, which can be ANY set of real numbers; consistency with Shannon's measures via the substitution of symbols (3.19) forces (3.41) for all (not necessarily disjoint) G, G', G'' with G, G' nonempty.",
+   "breakdown_regime": "mu* is a SIGNED measure: atoms can be negative for n >= 3 (interaction information / synergy), so Venn-diagram 'area = information' intuition breaks; the entropy region Gamma*_n is not fully characterized by Shannon-type inequalities for n >= 4 (Chapter 15, non-Shannon-type inequalities), so set-theoretic reasoning alone cannot prove every valid information inequality.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to multi-agent information accounting in the Coach-Mind: protection, QB read, and coverage are three 'variables' whose shared, unique, and synergistic information decomposes exactly as the I-Measure decomposes set unions/intersections/differences. Negative atoms correspond to synergy - information present only in the JOINT observation of protection and coverage, invisible to any single cue - which is precisely what deception exploits.",
+    "source_operator": "p8",
+    "telemetry": "Union values (joint entropies, conditional mutual informations) estimable from joint charting distributions; individual atoms of the three-way decomposition are LATENT_UNIDENTIFIABLE without experimental intervention on the cues."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The extraction begins where Yeung begins, with a convention that looks trivial and is not: every information measure is a linear combination of entropies, and the entropy sum runs over the support only, because p(x)log p(x) is undefined at zero mass (p1, Definition 2.13, p.26). That single sentence encodes a hidden state of the whole theory: zero-probability events are not merely rare, they are structurally excluded from the accounting, and every later theorem inherits that exclusion. From this definition the book builds the basic inequalities, then the Data Processing Theorem (p2, Theorem 2.42, p.45): if U -> X -> Y -> V is a Markov chain, I(U;V) <= I(X;Y). The proof is two applications of Lemma 2.41, but the content is an impossibility law: no amount of downstream processing can manufacture information that the observable never carried. Fano's inequality (p3, Theorem 2.47, p.47) then turns residual uncertainty into a hard error floor, H(X|X-hat) <= h_b(P_e) + P_e log(|X|-1), and it is Fano that powers the converse of the channel coding theorem. The weak AEP (p4, Theorem 5.3, p.114) is the bridge from single-letter quantities to blocks: i.i.d. sequences concentrate on roughly 2^{nH} typical sequences of probability roughly 2^{-nH}, which is why the source coding rate can approach H(X) with vanishing error (equations 5.21-5.23, p.117). The channel coding theorem (p5, Theorem 7.15, p.161) closes the loop: R is achievable if and only if R <= C = max_{p(x)} I(X;Y), with the direct part by random coding and the converse by Fano. Notice the architecture: definition, monotonicity law, error floor, typicality, fixed point. Each layer is a constraint, not a recipe. Then the book makes its signature leap. For forty years the implicit assumption in networking was that store-and-forward routing is optimal; the butterfly example in Chapter 17 shows it is not, because coding at intermediate nodes lets two bits reach two sinks where routing can deliver only one and a half on average. The Max-Flow Bound (p6, Theorem 18.3, p.435) says omega <= min_l maxflow(t_l) for ANY code, linear or not, and its proof is a cut argument: a sink's message must be a function of the symbols crossing any cut separating it from the source. The linear version (p7, Theorem 19.10, p.449) sharpens this to dim(V_T) <= min{omega, maxflow(T)}, and Chapter 19 shows the bound is achievable with linear codes over a sufficiently large field. The lesson that transfers is structural: whenever a system multicasts information through a capacitated graph, the min-cut is a veto that no cleverness at the nodes can override. In the football instantiation, the pocket is the graph, eligible receivers are the sinks, and a collapsed protection is a cut whose capacity drops below the number of options the concept tries to multicast. The high-EV deep shot that ignores this cut is not bold, it is infeasible: the information cannot arrive. Similarly, the Data Processing Theorem vetoes any scheme that claims to recover the defense's true intent from observables that never encoded it, and Fano puts a floor on coverage misidentification that no amount of film study can remove if the cues are fixed. These are not analogies for decoration; they are the same inequalities instantiated on different variables, and they bind with the same force.",
+   "retrocausal_genealogy": "The historical scar that created this hidden state is the 1948 Bell Labs mandate: Shannon was asked to make communication reliable over noisy channels, and the entropy definition with its support convention was the price of a clean accounting. Fano's inequality descends from his MIT coding lineage, where the converse direction - proving you CANNOT do better - mattered as much as constructions. The network coding leap carries its own scar: for decades store-and-forward was assumed optimal, and the butterfly counterexample existed only because Ahlswede, Cai, Li and Yeung asked whether intermediate nodes could do more than route. Yeung's book arranges chapters in logical rather than chronological order precisely to hide the contingency: the min-cut veto looks inevitable once seen, but it was discovered against an entrenched assumption.",
+   "theory_of_mind": "Under pressure the belief clash is recursive. The coach wants the comfort call, the high-probability run that fits his self-image as a ball-control team; the defensive coordinator is setting a tendency trap, loading the box because he believes the coach believes the run is safe; the quarterback's internal clock is simultaneously running down because the pass rush is channel noise shrinking his effective block length. Each agent models the others' beliefs: the QB must decide whether the loaded box is the trap or the true coverage, knowing the DC knows the coach's tendency. The Data Processing Theorem says the QB cannot extract more from the pre-snap look than it encodes; Fano says his coverage ID has an error floor; the min-cut says his options are bounded by the pocket. The comfort call is exactly the call that ignores all three constraints at once.",
+   "cross_layer_veto": "The cross-layer veto adjudication is where physics and information theory overrule the high-EV call. Suppose the deep shot has the highest expected value on the play-call sheet. Fano's inequality (p3) vetoes it if the coverage-classification error floor P_e is high given the available cues: the receiver and QB will misidentify the shell too often for the route to function. The Data Processing Theorem (p2) vetoes any 'we'll figure it out post-snap' justification, because post-snap processing cannot add information the pre-snap observable lacked. The Max-Flow Bound (p6) vetoes the option-route version if protection has collapsed: the cut capacity is below the number of options being multicast, so the concept is infeasible regardless of its nominal EV. The physics layer (pass-rush force, pocket geometry) sets the edge capacities; the information layer converts them into a hard rate veto. The high-EV call survives only if it passes every layer."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second trace follows the book's deepest thread: the I-Measure and the discovery that Shannon's laws are not the whole story. Theorem 3.6 (p.68) shows a signed measure on the field F_n is completely specified by its values on the 2^n - 1 unions X-tilde_G, and those values can be ANY real numbers. Yeung then DEFINES the I-Measure by mu*(X-tilde_G) = H(X_G) (p8, equation 3.40, p.70) and proves consistency forces mu*(X-tilde_G cap X-tilde_G' - X-tilde_G'') = I(X_G; X_G'|X_G'') (3.41). This is a genuine isomorphism between Shannon's measures and set theory, but with a sting: mu* is a SIGNED measure. For three or more variables the atoms can be negative, which means interaction information - synergy - is real and cannot be pictured as area in a Venn diagram. The information diagram is a valid bookkeeping device, not a proof engine. Chapter 15 geometrizes this: the entropy region Gamma*_n is a convex cone (Theorem 15.5, p.370), Shannon-type inequalities are exactly the linear-programming consequences of the basic inequalities, and they can be machine-proved (ITIP). But Gamma*_n is strictly smaller than the Shannon cone Gamma_n for n >= 4: non-Shannon-type inequalities exist, first found by Zhang and Yeung. The consequence for any audit system is severe: a checker that only verifies Shannon-type (pairwise, conditional-mutual-information) constraints can certify a configuration that is actually impossible, because the missing constraints live at four or more variables. This is the formal version of the swarm's own rule that cross-layer vetoes must compose at least two books and look for higher-order structure. In the football instantiation, the three-way I-Measure decomposition of protection, QB read, and coverage has negative atoms exactly where deception lives: information that exists only in the joint observation and is invisible to any single cue. A defense that shows one look pre-snap and another post-snap is engineering a negative atom; an offense that audits only pairwise cue relationships will miss it. The linear max-flow bound (p7) adds the design-side veto: route combinations are linear codes, and if the encoding kernels are linearly dependent at the defender's read point, the messages are not distinguishable and the concept leaks. Achievability needs a sufficiently large base field - in football terms, enough distinct, independently-readable route stems - or the bound is not reached. The synthesis is that both the impossibility side (non-Shannon gaps, signed atoms) and the achievability side (field size, min-cut) must be checked; neither alone certifies a concept.",
+   "retrocausal_genealogy": "The scar here is the 1998 Zhang-Yeung discovery that Shannon's inequalities were incomplete. For fifty years the field believed the basic inequalities plus conditional independence generated every valid information inequality; the non-Shannon-type inequality broke that belief and forced the geometric program of Chapters 13-15. Yeung's I-Measure, developed earlier, turned out to be the right language precisely because it tolerates negative atoms - the very objects the Shannon cone cannot see. The retrocausal point: the tool (signed set measure) was built before the phenomenon (non-Shannon gaps) was found, and only the phenomenon revealed why the tool's sign mattered. The book's logical ordering again conceals this contingency; the extraction restores it.",
+   "theory_of_mind": "Recursive theory of mind in route combinations is a four-variable game, which is exactly where non-Shannon constraints appear. The defender believes the QB believes the coverage is shell A; the QB believes the defender believes the QB will check to the hot route; the receiver must decide whether the break is against the believed shell or the true one. The synergy information - the negative atom of the I-Measure - is the content of 'what the defense is really doing given the joint look', and it is not recoverable from any single cue. The DC's trap works by making the pairwise cues consistent with shell A while the joint distribution encodes shell B. An offense auditing only pairwise relationships certifies the wrong coverage; the four-variable structure is where the trap lives.",
+   "cross_layer_veto": "The cross-layer veto on the design side is the linear max-flow bound (p7, Theorem 19.10). A 'creative' route combination that asks the defense to distinguish more independent messages than dim(V_T) allows is vetoed by linear algebra, not by taste. If the encoding kernels at the read point are dependent, the concept leaks regardless of its nominal spacing. On the impossibility side, the non-Shannon gap (Chapter 15) vetoes any audit that claims completeness from pairwise checks alone: for four or more interacting variables there exist valid constraints the Shannon cone misses. The physics layer supplies the field-size analogue - the number of independently readable route stems is bounded by separation, timing, and the defender's reaction bandwidth - and the information layer converts that into the dim(V_T) ceiling. A concept passes only if it is both achievable (large enough field, full-rank kernels) and consistent with the higher-order constraints."
+  }
+ ],
+ "universal_lens": "The polymath audit lens this book supplies is the impossibility-law lens: information inequalities govern what CANNOT be done, and any claimed edge in any domain must be checked against the data-processing, Fano, and min-cut bounds before it is believed. A bound proved for coding transfers as a veto to any system that instantiates the same Markov-chain or capacitated-cut structure, regardless of the substrate. The auditor's first question is always: which cut, which chain, which error floor does this claim silently violate?",
+ "gsi_mapping": "For GSI, the same kernels bind to physiological information channels: Fano's inequality floors the error of injury-risk classification from wearable telemetry given a fixed cue set; the entropy rate of heart-rate and acceleration streams is a load monitor; axonal shear or vascular compromise acts as a physical cut that reduces the max-flow of sensorimotor information, and the bioenergetic cost of neural coding is the metabolic price per bit. Clinical telemetry calibrates the channel; the bounds veto overconfident classification.",
+ "gse_mapping": "For GSE, Coach-Mind carries play-call entropy and the data-processing chain as state variables; deception is channel coding against a noisy defender read, and the min-cut bound vetoes infeasible option concepts. DFS portfolio tail risk is a network-coding problem: correlated lineups share a cut, so one chalk failure severs many lineups at once, and diversification is the field-size enlargement that restores rank. No sportsbook odds are used as inputs anywhere; all calibration is from charting and tracking telemetry."
+}

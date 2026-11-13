@@ -1,0 +1,165 @@
+{
+ "book_id": "68aeef90c5264628",
+ "source_status": "COMPLETE",
+ "pages_total": 35,
+ "pages_read": 35,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Rub/Pick Route Crossing Constraint (Bunch Play 1 vs Man to Man)",
+   "verbatim_quote": "The two shorter routes (X and Z receivers) will work as a rub route. The offensive players want to cross paths and be within an arm’s length of each other. The Z receiver on the rub route should slow down the X receiver’s defender which will help him get open.",
+   "page": 3,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; prose playbook). Layer-2 quantities only: n_receivers(R,t), n_defenders(R,t) = dimensionless integer counts; separation, defender depth, displacement = meters (m), 1 yd = 0.9144 m; t = seconds (s) from snap; completion probability = dimensionless in [0,1].",
+   "assumptions": "As printed: defense plays man to man (section 'Offensive Plays vs Man to Man'); X and Z run the two shorter crossing routes; receivers cross paths within an arm's length of each other; the Z receiver slows the X receiver's defender. General tip (p2): bunch and stacked formations work well against man to man because they cause confusion on who to guard.",
+   "breakdown_regime": "Fails against zone coverage (defenders guard areas, not men, so crossings force no assignment switch); fails when defenders communicate and switch cleanly; spacing tighter than arm's length risks collision; in tackle football the same contact geometry risks offensive pass interference. The playbook's own defensive section (p31) excludes man in the red zone and vs bunch, so the advantage is situation-dependent.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 pre-snap alignment (1-10 s)",
+    "tau_1 snap-to-throw window (0-4 s)",
+    "tau_2 ball flight (0.5-2 s)",
+    "tau_3 post-catch / flag-pull (0-5 s)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Man coverage is a defender-to-receiver matching; crossing within arm's length forces a re-binding (switch) or a collision-avoidance detour. In the 22-player system this is a perturbation of the coverage bipartite matching: the transition from pre-snap assignment to post-cross assignment has a latency, and separation is created inside that latency window. Binds to state variable 'defender assignment identity' and its switch latency; flag-to-tackle translation preserves the matching logic but adds contact-rule vetoes.",
+    "source_operator": "p1",
+    "telemetry": "Player tracking: defender identity-swap events at route crossings, separation (m) at the cross point and +0.5/+1.0 s, completion rate on rub concepts vs man. LATENT_UNIDENTIFIABLE from box-score data alone."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Flood Overload Counting Invariant (Trips Play 1 vs Cover 3)",
+   "verbatim_quote": "This Flood concept is designed to overflow an area. You will get more receivers in an area than the Cover 3 has defenders.",
+   "page": 23,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; prose playbook). Layer-2 quantities only: n_receivers(R,t), n_defenders(R,t) = dimensionless integer counts; separation, defender depth, displacement = meters (m), 1 yd = 0.9144 m; t = seconds (s) from snap; completion probability = dimensionless in [0,1].",
+   "assumptions": "As printed: Cover 3 shell (general note: 'they will have more defenders(five) than you have receivers'); receivers are routed into one area so that 'You will get more receivers in an area than the Cover 3 has defenders.' Static zone responsibilities are assumed while the play develops; the overload must hold at the moment of the throw.",
+   "breakdown_regime": "Fails if the defense rotates or disguises post-snap, if a defender abandons his zone to chase (the playbook itself notes a run-pass option 'could cause a defender to leave their zone'), if receiver arrivals are staggered so simultaneous occupancy never exceeds the defender count, or if the QB cannot deliver before the rush. The invariant is about simultaneous occupancy, not cumulative arrivals.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 pre-snap alignment (1-10 s)",
+    "tau_1 snap-to-throw window (0-4 s)",
+    "tau_2 ball flight (0.5-2 s)",
+    "tau_3 post-catch / flag-pull (0-5 s)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pigeonhole constraint on zone occupancy: for a field region R, if n_receivers(R,t) > n_defenders(R,t) at throw time t, at least one receiver is unguarded - a structural separation lower bound independent of speed. In the 22-player system this is a local density constraint on the offense/defense point processes; the binding dynamics are defender redistribution velocity versus receiver arrival timing. Binds to the play-design feasibility constraint 'local overload at throw'.",
+    "source_operator": "p2",
+    "telemetry": "Tracking: receiver/defender counts per zone polygon at snap+1.5/2.5/3.5 s, time-to-overload, completion rate split by overload-at-throw achieved vs not. Calibratable from player-tracking data; LATENT_UNIDENTIFIABLE from broadcast box scores."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Single-Defender High-Low Binary Read (Twins Stack Play 1 vs Cover 1)",
+   "verbatim_quote": "From there you just need to read the one defender. If the defender tries to get deep you throw the out (C or Z), if the defender sits in the flat you will throw vertical (X or Y).",
+   "page": 12,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; prose playbook). Layer-2 quantities only: n_receivers(R,t), n_defenders(R,t) = dimensionless integer counts; separation, defender depth, displacement = meters (m), 1 yd = 0.9144 m; t = seconds (s) from snap; completion probability = dimensionless in [0,1].",
+   "assumptions": "As printed: Cover 1 with 'only one deep defender' who 'cannot take away both sides'; the QB first reads which side the deep safety goes away from, then reads the one defender on that side; the defender's choice is treated as binary - get deep (throw the out, C or Z) or sit in the flat (throw vertical, X or Y).",
+   "breakdown_regime": "Fails if the flat defender plays intermediate depth and commits to neither branch, if the safety rotates late, if a disguised robber adds a second underneath defender, or if the rush collapses the read window before the decision resolves. The kernel assumes full defender commitment to one of two depths - an assumption, not a law.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 pre-snap alignment (1-10 s)",
+    "tau_1 snap-to-throw window (0-4 s)",
+    "tau_2 ball flight (0.5-2 s)",
+    "tau_3 post-catch / flag-pull (0-5 s)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The QB decision policy is a depth-threshold classifier on one defender's vertical state: throw out if defender depth exceeds threshold, throw vertical if he sits shallow. In the 22-player system this reduces an 11-defender inference problem to a single scalar read after the safety-side branch, binding the transition kernel 'QB read -> target selection'. Flag-to-tackle: the logic transfers, but tackle adds intermediate-depth robbers that break the binary commitment assumption.",
+    "source_operator": "p3",
+    "telemetry": "Defender depth (m from line of scrimmage) and vertical velocity at the QB decision frame; chosen throw location; completion rate by read branch. Requires tracking plus charting; All-22 film gives coarse depth only."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Cover 2 Middle-of-Field Soft Spot",
+   "verbatim_quote": "The soft spots in Cover 2 are in the middle of the field.",
+   "page": 14,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; prose playbook). Layer-2 quantities only: n_receivers(R,t), n_defenders(R,t) = dimensionless integer counts; separation, defender depth, displacement = meters (m), 1 yd = 0.9144 m; t = seconds (s) from snap; completion probability = dimensionless in [0,1].",
+   "assumptions": "As printed: standard Cover 2 with two deep safeties; companion tips: 'In breaking routes are going to be something you want to focus on' and 'With the inside zones being weak in this defense a quick hitting run could be effective.' Assumes the safeties hold wide, deep half-field responsibilities.",
+   "breakdown_regime": "Fails against a middle-linebacker deep drop (Tampa-2 style, absent from this playbook), against post-snap rotation to Cover 1/3, or when safeties align narrow. The soft spot is a property of the static two-deep partition, not of the 'Cover 2' label; any redistribution that fills the middle erases it.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 pre-snap alignment (1-10 s)",
+    "tau_1 snap-to-throw window (0-4 s)",
+    "tau_2 ball flight (0.5-2 s)",
+    "tau_3 post-catch / flag-pull (0-5 s)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The two-deep half-field partition leaves an interior seam between safety responsibility regions; in the 22-player system this is a gap in the coverage partition where minimum defender-receiver distance is maximized, and in-breaking routes are the geodesics into that gap. Binds to state variable 'middle-of-field defender density' and to the route-selection constraint against two-deep shells.",
+    "source_operator": "p4",
+    "telemetry": "Middle-third defender occupancy at snap+2 s; safety width/depth at snap; completion rate on in-breaking routes vs Cover 2 versus other shells. Calibratable from tracking and charting."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Play-Action Forward-Step Deception Mechanism",
+   "verbatim_quote": "At the start of the play you will fake a handoff to the Running Back. This will help to get the defense to take a step forward which could give you the extra step needed to get open.",
+   "page": 2,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; prose playbook). Layer-2 quantities only: n_receivers(R,t), n_defenders(R,t) = dimensionless integer counts; separation, defender depth, displacement = meters (m), 1 yd = 0.9144 m; t = seconds (s) from snap; completion probability = dimensionless in [0,1].",
+   "assumptions": "As printed: formation contains a Running Back; the fake handoff occurs at the start of the play; the defense takes a step forward; that step converts into 'the extra step needed to get open.' The no-RB jet-sweep variant requires snapping before the motioning receiver reaches the QB and 'works best if the receiver is running a shorter route.'",
+   "breakdown_regime": "Fails against defenses that key the ball rather than the back, against play-action-heavy tendencies (the defense stops biting), when the fake costs the QB time against a fast rush, and when the jet-variant snap timing is mistimed. The payoff is belief-dependent: it exists only while the defense still assigns probability to the run.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 pre-snap alignment (1-10 s)",
+    "tau_1 snap-to-throw window (0-4 s)",
+    "tau_2 ball flight (0.5-2 s)",
+    "tau_3 post-catch / flag-pull (0-5 s)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The run fake is a signal in a signaling game: offense emits a run-like observable from a pass play, the defender's run/pass belief updates, linebackers step forward (negative depth displacement), opening the vertical channel behind them. In the 22-player system this is an information-channel manipulation - identical backfield observables emitted by run and pass force a Bayesian defender to hedge depth. Binds to the transition kernel 'defender depth update on fake' and to the deception policy layer.",
+    "source_operator": "p5",
+    "telemetry": "Linebacker forward displacement (m) on play-action versus non-PA drops; separation behind linebackers; PA success rate versus the defense's charted PA-aggressiveness tendency. Charting plus tracking."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Coverage Call Exclusion Rule (NFL Flag Man: Red Zone / Bunch)",
+   "verbatim_quote": "When the offense is in the Red Zone or when the offense is in a bunch formation",
+   "page": 31,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; prose playbook). Layer-2 quantities only: n_receivers(R,t), n_defenders(R,t) = dimensionless integer counts; separation, defender depth, displacement = meters (m), 1 yd = 0.9144 m; t = seconds (s) from snap; completion probability = dimensionless in [0,1].",
+   "assumptions": "As printed: 'When NOT to Use: When the offense is in the Red Zone or when the offense is in a bunch formation'; man is otherwise chosen 'When you feel that you matchup well one on one vs the offense.' Complementary rule (p35): Cover 4 'When to Use: When the offense is in the Red Zone.'",
+   "breakdown_regime": "A heuristic policy, not an invariant: fails when man matchups are elite even against bunch (clean switch technique), when red-zone compression is offset by safety help, or when the offense's bunch is static and releases no crossing threat. The rule encodes the same crossing-ambiguity geometry as p1, from the defensive side.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 drive/huddle call selection (10-40 s)",
+    "tau_1 pre-snap alignment check (1-10 s)",
+    "tau_2 snap-to-throw (0-4 s)",
+    "tau_3 outcome / next-down state update (0-5 s)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Coverage selection is a state-conditional policy pi(coverage | field_position, formation): man is masked out when (red_zone OR bunch). In the 22-player system this is a hard veto region in the defensive play-call policy's state space, complementary to the offensive rub advantage (p1) - one geometric fact appearing as offensive weapon and defensive exclusion. Binds to the policy-constraint layer of the Coach-Mind sim.",
+    "source_operator": "p6",
+    "telemetry": "Charted defensive shell by field zone and offensive formation; man-coverage success rate in red zone/bunch versus alternatives. The playbook rule is a prior to test, not a measured result."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The load-bearing invariant of this playbook is a counting argument, and reading it correctly requires separating what the source actually guarantees from what a coach hopes. Page 23 states the Flood premise in its purest form: you will get more receivers in an area than the Cover 3 has defenders. That is a pigeonhole claim about simultaneous occupancy, and it is only true at a moment in time. Three receivers entering a zone at staggered depths do not overload it; three receivers arriving inside the same throwing window do. So the primitive is not 'flood beats Cover 3' but a feasibility constraint on route timing: the offense must synchronize arrivals faster than the defense can redistribute. The high-low read on page 12 is the decision kernel that cashes the constraint once it holds. After the safety-side branch, the QB reduces an eleven-defender inference problem to one scalar: the flat defender's depth. If he gets deep, throw the out; if he sits in the flat, throw vertical. This is a threshold classifier, and its hidden assumption is full commitment - the defender must pick a depth, not hover between. The playbook never states what happens against a defender who plays intermediate depth, and that silence is the breakdown regime: the binary read has no branch for a hedging defender, which is exactly what disciplined zone defenders are trained to do. Translating from NFL FLAG to the 22-player game changes the timing budget but not the logic. Flag has a rusher from distance and no pass protection, so the read window is compressed and the QB's internal clock dominates; tackle adds protection that widens the window but also adds linebackers who can rob the intermediate depths the flag game leaves empty. The counting constraint survives the translation because it is combinatorial, not athletic. The binary read survives only if the commitment assumption is re-verified against the specific defense. Calibration path: from player tracking, count receivers and defenders inside each zone polygon at snap plus 1.5, 2.5 and 3.5 seconds, measure time-to-overload, and split completion rate by whether overload was achieved at throw time. Then chart the flat defender's depth at the QB's decision frame and test whether the threshold policy predicts target selection. Two falsifiers would demote these primitives: if overload-at-throw does not raise completion probability, the counting constraint is not binding in real games; if defender depth does not predict the chosen branch, the read kernel is mis-specified. Until those tests run, the primitives are source-true design constraints, not measured edges, and this artifact records them as such. Note also the complementary defensive rule on page 31: man is excluded in the red zone and against bunch, which is the same geometry viewed from the other side of the ball - a coherence check that the playbook's offensive and defensive halves share one spatial model.",
+   "retrocausal_genealogy": "The hidden state of this document is its audience and revision history, both readable on the surface. Three stamps - Revised:05012020, 05/2020, 11/18/2020 - show a playbook revised twice inside six months, and the duplicated Advanced Coaching Points block across all five coverage sections shows copy-paste assembly for volunteer youth-flag coaches who need self-contained pages. The stray 'handoFoff' typo in the Cover 1 block is a copy-editing scar. These features created the playbook's core assumption: each page must work standalone against a named, static coverage shell, which is why disguise and rotation are absent from every read.",
+   "theory_of_mind": "Under pressure the beliefs collide. The coach's comfort call is the early-down flood the playbook lists for nearly every shell; it feels safe because it worked in practice. The defensive coordinator's trap is to show Cover 3 pre-snap and rotate to Cover 1 at the snap, invalidating the counting premise the coach is relying on. The QB's internal clock, trained against a flag rusher, expects the read to resolve in under three seconds. Recursively, the QB must model the DC modeling his own tendency: if the DC knows the flood is coming, the overload is anticipated and the flat defender hedges depth instead of committing, breaking the binary read.",
+   "cross_layer_veto": "Physics and execution veto the high-EV call in two places. First, the counting layer says overload guarantees an open receiver, but the biomechanics layer notes the rusher is instructed to force the QB to his non-throwing hand; a deep vertical thrown off-platform from the non-dominant side loses accuracy and velocity, so the structurally open receiver is not a completable target. Second, the read kernel assumes a committed defender; a disciplined zone defender hovering at intermediate depth removes both branches, and the QB's clock - not the coverage - then decides the play. The veto rule: never let a counting or read advantage override a degraded throwing platform or an unresolved read."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second cognitive structure in this playbook is deception treated as a coverage-agnostic overlay, and the document's own construction reveals it. The identical Advanced Coaching Points block - motion to force alignment change, play action to pull a step forward - is pasted before every coverage section, Man through Cover 4. That repetition is a scar: the authors treat deception not as a counter to a specific shell but as a universal perturbation applied on top of any call. The play-action mechanism on page 2 is explicit about the causal chain: fake the handoff, the defense takes a step forward, that step becomes the extra step needed to get open. In information terms the offense emits a run-like observable from a pass play, forcing a Bayesian defender who keys backfield action to hedge his depth. The payoff is belief-dependent: it works only while the defense still assigns probability to the run. The no-RB jet-sweep variant exposes the timing fragility - snap before the motioning receiver reaches the QB, fake, then release him on a short route - a sequence with a narrow correct-order window that a fast rush can close. The rub route on page 3 is the spatial twin of the same idea: instead of manipulating what the defender believes, it manipulates who the defender is bound to. Man coverage is a matching; crossing within arm's length forces a switch or a detour, and separation lives in the switch latency. The recursive theory-of-mind stack is where this gets dangerous for a coach. The coach calls play action because it worked last week; the defensive coordinator, having watched that film, keys the ball and ignores the fake; the QB, expecting the linebacker to bite, holds the ball a half-beat longer waiting for a window that never opens, and the rush arrives. Each layer models the layer below, and the playbook's static shells are the fragile assumption underneath all of them: every 'vs Cover X' heading presumes the defense stays in X. The cross-layer veto is concrete. The defensive section on page 31 instructs the rusher to force the QB to his non-throwing hand; a high-EV deep shot called into that pressure is vetoed by biomechanics - a non-dominant-side throw under duress degrades accuracy and velocity regardless of how open the receiver is. And the rub's arm's-length spacing is a safety parameter as much as a tactical one: in flag, contact is prohibited, so the crossing must create the detour without collision; in tackle, the same geometry risks offensive pass interference and collision injury. The counting and deception layers propose; the execution and rules layers dispose. A faithful extraction therefore carries three tags on every deception primitive: the belief state it manipulates, the timing window it requires, and the rules/physics veto that can cancel it.",
+   "retrocausal_genealogy": "The deception overlay's lineage is visible in its redundancy: the same motion and play-action paragraphs precede Man, Cover 1, Cover 2, Cover 3 and Cover 4, meaning the authors inherited a template where deception is bolted onto any call rather than derived from a specific coverage weakness. The jet-sweep fake variant for formations without a Running Back is an adaptation scar to flag rosters that often lack a true back. The revision stamps show the template survived two edits untouched, which is why its timing instructions remain precise while its coverage assumptions remain static.",
+   "theory_of_mind": "The belief clash is recursive. The coach calls play action because the linebacker bit last game; the DC, having charted that tendency, instructs his linebackers to key the ball and ignore the fake; the QB, modeling the DC's old behavior, waits an extra half-beat for the window to open. Meanwhile the motioning receiver in the jet variant must trust the snap comes before he reaches the QB - a shared-timing belief between center and QB that, if broken, turns the deception into a live-ball fumble risk. Each agent's model of the others is one film session stale.",
+   "cross_layer_veto": "The rules and physiology layers veto the deception layer's best ideas. The rub route's arm's-length crossing is legal spacing in flag, where contact is prohibited, but the identical geometry in tackle football invites offensive pass interference and high-speed collision; the mapping must carry a rules veto, not just a coverage label. Play action's forward step costs the QB time against a fast rush, so the deception's payoff is capped by the rush clock. And a defense that has stopped believing the run removes the deception payoff entirely while leaving its timing cost - the worst asymmetry in the playbook."
+  }
+ ],
+ "universal_lens": "A polymath reads this playbook as three transferable structures: a pigeonhole occupancy constraint on competing point processes, a binary threshold classifier reducing a high-dimensional inference to one scalar, and a signaling game where identical observables carry different hidden actions. Each is domain-free; the football content is the calibration surface.",
+ "gsi_mapping": "Mapping to GSI's domain by analogy, not source claim: defenders flowing through zone seams resemble fluid flux through a partition gap, with overload as a local density threshold; the QB's sub-three-second read is a conduction-and-decision latency budget comparable to axonal reflex arcs; flag-pull deceleration and repeated-sprint routes load the same bioenergetic and shear-telemetry channels GSI instruments clinically. These are structural analogies for instrument design, not physiological findings from this book.",
+ "gse_mapping": "For GSE, the playbook compiles into a Coach-Mind policy prior: coverage-conditional play selection with hard exclusion regions (man masked out in red zone/bunch), deception as a belief-state perturbation with a decaying payoff, and shot plays as explicit tail-risk allocations. The counting and read kernels become feasibility constraints in simulation; no sportsbook odds enter any layer, and all outputs stay internal per doctrine."
+}

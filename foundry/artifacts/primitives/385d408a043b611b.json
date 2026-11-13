@@ -1,0 +1,198 @@
+{
+ "book_id": "385d408a043b611b",
+ "source_status": "COMPLETE",
+ "pages_total": 123,
+ "pages_read": 123,
+ "source_title_actual": "Neurological and neuropsychiatric disorders affecting military personnel and veterans, volume II (Frontiers Research Topic ebook, August 2026; eds. Chen Lin, Lisa C. Krishnamurthy, Mary Jo Pugh, William Walker, Venkatagiri Krishnamurthy; Frontiers Media SA; doi 10.3389/978-2-8325-8566-5)",
+ "page_convention": "Citations use printed book pagination; PDF page number = printed page + 1.",
+ "chapters": [
+  {
+   "pages": "5-7",
+   "doi": "10.3389/fneur.2026.1923368",
+   "title": "Editorial (Krishnamurthy et al.)"
+  },
+  {
+   "pages": "8-18",
+   "doi": "10.3389/fneur.2024.1442715",
+   "title": "Belding et al. - concussion/TBI, MCI and early-onset dementia in military retirees"
+  },
+  {
+   "pages": "19-25",
+   "doi": "10.3389/fpubh.2024.1483077",
+   "title": "Zhao et al. - exercise intervention mechanisms for PTSD (review)"
+  },
+  {
+   "pages": "26-33",
+   "doi": "10.3389/fneur.2025.1524004",
+   "title": "Lin et al. - EXERT-Stroke pilot RCT (exercise + neurostimulation for post-stroke pain)"
+  },
+  {
+   "pages": "34-45",
+   "doi": "10.3389/fneur.2025.1605157",
+   "title": "Oberman et al. - ADEPT Bayesian adaptive aiTBS trial protocol"
+  },
+  {
+   "pages": "46-56",
+   "doi": "10.3389/fneur.2025.1621265",
+   "title": "McDonald et al. - C4 questionnaire development"
+  },
+  {
+   "pages": "57-63",
+   "doi": "10.3389/fneur.2025.1706223",
+   "title": "Panahi et al. - epilepsy+mTBI neurobehavioral phenotypes"
+  },
+  {
+   "pages": "64-81",
+   "doi": "10.3389/fpubh.2026.1742802",
+   "title": "Hamama-Raz & Hamama - gendered network analysis of parents of service members"
+  },
+  {
+   "pages": "82-102",
+   "doi": "10.3389/fpsyg.2026.1698432",
+   "title": "McCready et al. - Charles Bonnet Syndrome toolkit co-production"
+  },
+  {
+   "pages": "103-122",
+   "doi": "10.3389/fneur.2026.1752206",
+   "title": "Manhapra et al. - polytrauma clinical triad as complex chronic pain syndrome (FREIDEM)"
+  }
+ ],
+ "retraction_check": "All 123 pages extracted (672,678 normalized chars) and scanned for RETRACTED/retraction/Expression of Concern/Corrigendum/Erratum: zero hits. Original Frontiers research-topic articles, CC BY, not derivative summaries. Note: several chapters are protocols/hypothesis papers (ADEPT, EXERT-Stroke, FREIDEM) - primitives record them as designs/theories, not validated outcomes.",
+ "extractor_model": "qwen4-max-preview (worker ext-32)",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Concussion -> neurodegenerative adjusted hazard ratios (Cox AHR) with confounding reversal and case-definition attenuation (Belding et al.)",
+   "verbatim_quote": "Veterans who sustained a concussion during active duty service were significantly more likely to be diagnosed with any of the neurodegenerative conditions of interest (including MCI and memory loss; AHR = 4.61), any dementia (excluding MCI and memory loss, AHR = 1.64), memory loss (AHR = 4.14), MCI (AHR = 4.44) and other dementia (AHR = 1.91; see Table 4).",
+   "page": 11,
+   "latex": "h(t \\mid X) = h_{0}(t)\\,\\exp\\!\\left(\\beta_{\\mathrm{conc}}\\,X_{\\mathrm{conc}} + \\sum_{j}\\beta_{j} Z_{j}\\right), \\qquad \\mathrm{AHR} = e^{\\beta_{\\mathrm{conc}}}",
+   "symbol_and_unit_ledger": "h(t|X): hazard of diagnosis at follow-up time t, units 1/time (events per person-time). h_0(t): baseline hazard, 1/time. X_conc: concussion-during-service indicator, dimensionless (0/1). Z_j: covariates - branch of service, year of birth, paygrade classification, race, cardiovascular disease, diabetes, hypercholesterolemia, hyperlipidemia, any mental health condition, obesity, any sleep disturbance, any substance abuse (indicators/years, dimensionless or years). beta_conc, beta_j: log-hazard ratios, dimensionless. AHR = exp(beta_conc): dimensionless ratio of hazards. Table 4 values (printed pp. 13-14): any cognitive disorder AHR 4.61 (95% CI 4.46-4.77); any dementia excluding MCI/memory loss 1.64 (1.47-1.83); memory loss 4.14 (4.00-4.29); MCI 4.44 (4.06-4.86); other dementia 1.91 (1.69-2.16); LLB occupational risk: any cognitive disorder 1.11 (1.08-1.14), memory loss 1.16 (1.12-1.20). Unadjusted any-dementia HR 0.52 (0.46-0.57) reverses to adjusted 1.64. The Cox model is named in the text (survival analysis, refs Clark/Bradburn); the equation is its standard form, not printed as a numbered equation in the source.",
+   "assumptions": "Proportional hazards over decades of follow-up; N=1,211,972 military retirees (mean age at end of follow-up 65.8, SD 10.6); strict significance threshold p<0.001; main analysis uses single ICD-9/10 code case definitions; adjustment set as listed in the Table 4 note. Supporting quotes: unadjusted->adjusted reversal row: Any dementia (excluding memory loss and MCI) 0.52 0.46 0.57 <0.001 1.64 1.47 1.83 <0.001 | sensitivity (>=2 diagnosis codes): For example, the association between concussion and any cognitive disorder remained significant (AHR = 3.01, 95% CI: 2.83, 3.20). | LLB: cognitive disorder of interest (including MCI and memory loss, AHR = 1.11) and memory loss (AHR = 1.16). | covariates: AHRs were identified using survival analysis and are reported when controlling for branch of service, year of birth, paygrade classification, race, cardiovascular disease, diabetes, hypercholesterolemia, hyperlipidemia, any mental health condition, obesity, any sleep disturbance, and any substance abuse.",
+   "breakdown_regime": "Single-code case definitions misclassify: requiring >=2 codes attenuates the any-cognitive-disorder AHR from 4.61 to 3.01 (2.83-3.20), quantifying the measurement-error inflation. The unadjusted any-dementia HR of 0.52 (apparently protective) reverses to 1.64 after adjustment - raw associations are confounded and directionally untrustworthy (healthy-warrior/selection effects). Proportional hazards may fail over multi-decade follow-up; ICD coding practice drifts across the study window; early-onset logistic results (concussion AOR 1.13, p=0.04) do not meet the authors' own p<0.001 bar and must not be read as significant.",
+   "domain": "medicine",
+   "timescales": [
+    "tau_0: years-to-decades - latency from service concussion to neurodegenerative diagnosis",
+    "tau_1: career exposure window (active-duty service years)",
+    "tau_2: follow-up through retirement (mean end age 65.8 y)",
+    "tau_3: surveillance cadence - annual cognitive assessment implied by lifespan framing"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The adjusted-hazard structure binds to career collision-exposure pricing in the 22-player football system: cumulative head-impact load (career snaps, instrumented impact counts) plays X_conc, and late-life cognitive outcomes are priced as adjusted hazards, never raw correlations. The confounding reversal (0.52 -> 1.64) is the sovereign lesson for football analytics: position, age, era and selection effects can flip the sign of an unadjusted exposure-outcome association, so any roster, contract or surveillance decision priced on unadjusted correlations is invalid. The case-definition attenuation (4.61 -> 3.01) binds to measurement discipline: single-source injury flags inflate risk estimates; require corroborated events.",
+    "source_operator": "p1",
+    "telemetry": "Instrumented mouthguard/head-impact telemetry, career snap and collision counts, longitudinal baseline-plus-annual cognitive testing, position/age/era covariates; calibrate hazard ratios on held-out cohorts. LATENT: subclinical neuropathology is not observable from tracking data."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Bayesian adaptive decision gates with simulation-calibrated family-wise type-I error (ADEPT trial, Oberman et al.)",
+   "verbatim_quote": "When combined with the early stopping rules, the full trial will maintain 2.5% type 1 error accounting for both the multiplicity of 2 arms and the 2 interim analyses, based on 100,000 simulations.",
+   "page": 41,
+   "latex": "\\mathrm{drop}\\ B \\iff \\Pr(\\theta_{A} > \\theta_{B} \\mid \\mathcal{D}_{n}) \\ge 0.60; \\quad \\mathrm{futility} \\iff \\max_{a \\in \\{A,B\\}} \\Pr(\\theta_{a} > \\theta_{\\mathrm{sham}} \\mid \\mathcal{D}_{n}) \\le 0.60; \\quad \\mathrm{success} \\iff \\Pr(\\theta_{a} > \\theta_{\\mathrm{sham}} \\mid \\mathcal{D}_{n}) \\ge 0.9975",
+   "symbol_and_unit_ledger": "theta_a: true mean MADRS change from baseline for arm a (MADRS points, 0-60 scale; the trial hypothesizes >=4 points active-vs-sham improvement). D_n: accruing data at interim enrollment n in {90, 135}; max N=198, flexible 99-198 with 10% consent-to-treatment attrition. Posterior probabilities and thresholds 0.60 / 0.9975 (interim success) / 0.99 (final success) are dimensionless. Initial allocation 1:1:1 (rsfMRI-targeted aiTBS, Beam F3 scalp-targeted aiTBS, sham); after arm drop, 2:1 active:sham. Family-wise type-I error 2.5% across 2 arms and 2 interims, calibrated by 100,000 simulations. The thresholds are printed in prose and Figure 1; the LaTeX formalizes those printed rules (no numbered equation in source). Power simulations: 4-point effect -> 81-82% power, expected N=150; 5-point -> 95% power, N=137; null -> expected N=147.",
+   "assumptions": "Non-informative priors at start; Bayesian posterior superiority comparisons at N=90 and N=135; MADRS primary endpoint; gatekeeping - secondary outcomes tested only if primary succeeds, with Benjamini-Hochberg FDR control; intention-to-treat (>=1 session), per-protocol >=32/40 sessions. Supporting quotes: If either active arm has a 60% or greater Bayesian posterior probability of being superior to the other active arm, the inferior active arm will be dropped from the study, with the remaining trial maintaining the 2:1 active:sham randomization, but with only one active arm. | If either active arm obtains a 99.75% posterior probability of being superior to sham, the trial will stop for success.",
+   "breakdown_regime": "Operating characteristics are design-specific: the 2.5% type-I error holds only for this N schedule, endpoint, prior and 10% attrition assumption under the 100,000-simulation calibration; transferring the 60%/99.75%/99% thresholds to another trial without re-simulation invalidates the error control. Posterior probabilities depend on the likelihood/prior model; early success stopping demands very strong data; the design is a protocol (results not yet reported), so the gates are commitments, not validated outcomes.",
+   "domain": "medicine",
+   "timescales": [
+    "tau_0: per-session treatment (8 aiTBS sessions/day, 60-min spacing)",
+    "tau_1: 5-business-day intervention course (40 sessions)",
+    "tau_2: interim decision points at enrollment N=90 and N=135",
+    "tau_3: 6-month follow-up horizon"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The posterior-probability gate structure binds to in-game play-calling under uncertainty: keep a play-type arm alive only while its posterior success probability clears the drop threshold; call futility on a game plan when no arm beats the baseline; commit to a high-variance decision (fourth-down go, trick play) only at the high success threshold. The 2.5% family-wise error discipline is the sovereign anti-tilt invariant: repeatedly peeking at noisy scoreboard evidence and switching plans on each fluctuation inflates false confidence exactly as uncalibrated interim looks inflate type-I error; gates must be simulation-calibrated before the game, not improvised during it.",
+    "source_operator": "p2",
+    "telemetry": "Per-play success/EPA posterior updates by play type, down-distance-state transition counts, defensive-personnel responses; calibrate gate thresholds by full-season simulation (the analog of the 100,000 trial simulations). LATENT_UNIDENTIFIABLE: true opponent intent from broadcast data."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Bridge strength and path length govern symptom propagation, not density (gendered networks, Hamama-Raz & Hamama)",
+   "verbatim_quote": "In mothers, healthcare visits served as the primary bridge with a bridge strength of 1.302, whereas in fathers, this value was only 0.117.",
+   "page": 72,
+   "latex": "S_{i} = \\sum_{j \\sim i} |w_{ij}|, \\qquad EI_{i} = \\sum_{j \\sim i} w_{ij}, \\qquad BS_{i} = \\sum_{j:\\, c(j) \\neq c(i)} |w_{ij}|",
+   "symbol_and_unit_ledger": "w_ij: partial-correlation edge weight between nodes i and j, dimensionless (-1 to 1), estimated by EBIC glasso (tuning 0.25) then unpenalized refit. S_i: strength centrality (sum of absolute edge weights, printed Figure 4 caption). EI_i: expected influence (signed sum, accounts for positive and negative connections). BS_i: bridge strength (sum of edge weights to other communities, printed Figure 6 caption; absolute-value form used per standard convention). c(i): community label. All three indices dimensionless. Key values: healthcare-visits bridge strength mothers 1.302 vs fathers 0.117 (~11x); bridge betweenness 20 (mothers); average path length mothers 9.44 vs fathers 11.82; density 0.500 vs 0.551; clustering 0.559 vs 0.611; connectivity 0.074 vs 0.072; global strength 5.79 vs 5.65; mean node predictability 0.081 vs 0.060 (Mann-Whitney p=0.026, Cohen's d=1.04). N=402 (201 mothers, 201 fathers, unrelated households); NCT 1,000 iterations; FDR 10%.",
+   "assumptions": "Cross-sectional Gaussian graphical model (edges = partial correlations controlling all other nodes); 12.85% missing, MAR (MCAR rejected) -> 13 multiply imputed datasets; robust statistics (all measures non-normal, 93 multivariate outliers at 97.5% chi-square cutoff); self-report questionnaires (PHQ-4, IUS-12, SSS-8, JSS, SF-MPQ); Israeli parents of serving soldiers, data August 7-14 2025. Supporting quotes: Importantly, mothers showed substantially shorter average path lengths (9.44) than did fathers (11.82). | Strength centrality (leftmost) represents the sum of absolute edge weights connected to each node. | Bridge strength (right) represents the sum of edge weights connecting a node to other communities. | The mean predictability among non-zero values was signiﬁcantly higher in mothers than in fathers, with mothers showing a mean of 0.081 vs. fathers’ 0.060.",
+   "breakdown_regime": "Cross-sectional: no causal direction or temporal propagation can be inferred from the partial correlations. Centrality stability is index-dependent: expected influence stays >0.90 at 30% case sampling but betweenness drops below 0.40 (fathers) - betweenness claims are unreliable. None of the four nominally significant edge differences survived FDR (all q>0.10). Self-report and masculine under-reporting bias the fathers' network; cultural/wartime specificity limits generalization; density alone misleads - mothers are less dense yet faster-propagating.",
+   "domain": "medicine",
+   "timescales": [
+    "tau_0: 2-week symptom recall windows (PHQ-4, SSS-8 past 7 days)",
+    "tau_1: 1-month sleep window (Jenkins Sleep Scale)",
+    "tau_2: wartime sustained-stress exposure (months)",
+    "tau_3: cross-sectional snapshot - no longitudinal dynamics measured"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The propagation-structure invariant binds to stress transmission in football organizations: nodes are play-calling pressure, player fatigue, morale, media scrutiny, injury burden; edges are partial associations. The sovereign content is that propagation speed is governed by bridge structure and path length, not connection count: a denser but compartmentalized staff (fathers' mode, density 0.551, paths 11.82) buffers cascades, while a sparser short-path organization (mothers' mode, density 0.500, paths 9.44) transmits distress rapidly and is vulnerable to losing its single dominant bridge (the coordinator who translates between units, bridge strength 1.302 vs 0.117). Predictability (0.081 vs 0.060) prices how much of a unit's state is determined by the rest of the network - high predictability means targeted intervention on hubs propagates system-wide.",
+    "source_operator": "p3",
+    "telemetry": "Communication-network logs between coaching units, per-unit performance variance propagation after turnovers/losses, time-to-recovery across units, staff turnover as bridge-removal events; estimate partial-correlation networks on held-out seasons with bootstrap stability checks."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Allostatic opponent effect: repetitive relief-seeking resets baseline and induces paradoxical pain management-induced pain (Manhapra et al., FREIDEM)",
+   "verbatim_quote": "This paradoxical pain is unresponsive to escalation of pain management and often worsens with it (84–87).",
+   "page": 113,
+   "latex": "\\frac{dO}{dt} = \\frac{R(t) - O(t)}{\\tau_{O}}, \\qquad b_{k+1} = b_{k} + \\eta\\, O_{\\mathrm{peak},k}, \\qquad P_{\\mathrm{exp}}(t) = b_{k} + O(t) - R(t)",
+   "symbol_and_unit_ledger": "R(t): relief drive from a relief intervention (reward-mediated), distress units per time. O(t): opponent distress process, distress units. tau_O: opponent adaptation time constant, time. b_k: allostatic baseline distress at dose cycle k, distress units. eta: allostatic reset gain, dimensionless. O_peak,k: peak opponent distress in cycle k, distress units. P_exp(t): experienced pain/distress, distress units - every term in P_exp is in distress units: dimensionally homogeneous. Cycle index k dimensionless. This is a DERIVED minimal formalization of the dynamics described in Figure 5A-D (opponent onset earlier, longer, stronger with repetition; baseline reset upward; tolerance and rebound); the source prints no equations. Source anchors: relief is reward-mediated and mechanistically separate from nociceptive analgesia; analgesia neither necessary nor sufficient for relief; tolerance = higher dose for equivalent relief with heightened rebound.",
+   "assumptions": "Relief (removal of distress, reward-mediated) is distinct from analgesia (nociceptive); repeated distress-relief cycles drive opponent-process adaptation in reward and anti-reward systems; allostasis resets baseline upward to conserve resources; the effect is largely agnostic to distress type and relief modality (addictive substances higher risk). FREIDEM is an untested Hypothesis-and-Theory model, explicitly requiring empirical validation. Supporting quotes: If left unchecked, the allostatic effect gradually intensifies along with the opponent effect, leading to worsening of baseline pain in addition to decreasing levels of relief with pain management, creat­ ing an additional paradoxical pain management-induced chronic pain syndrome (Figures 5B,D). | Thus, analgesia is neither necessary nor sufficient for pain relief and increased function, and they can be achieved by direct stimulation of the reward system with­ out analgesia (e.g., as with opioids, alcohol, cocaine, etc.) (53). | Relief from pain or other distressing symptoms is a non-specific expe­ rience mediated by the reward system (53, 82, 83) and is thus mecha­ nistically separate from analgesia, which is mediated by nociceptive systems (53, 82, 83).",
+   "breakdown_regime": "Conceptual model: opponent/allostatic parameters are not measured in this paper and FREIDEM has no outcome validation yet. With established dependence, de-escalation itself generates protracted withdrawal (months-years) that mimics and worsens the baseline syndrome - both continuation and cessation can produce paradoxical pain, so the kernel has no safe default action without treating dependence first. Not applicable to moderate/severe TBI with severe cognitive compromise; cognitive impairment limits engagement with the recovery model. The linear opponent formalization here is a first-order kernel, not the full nonlinear neuroadaptation.",
+   "domain": "medicine",
+   "timescales": [
+    "tau_0: minutes-hours - relief onset and opponent onset within a dose cycle",
+    "tau_1: days-weeks - tolerance and rebound escalation across cycles",
+    "tau_2: months-years - allostatic baseline reset and dependence",
+    "tau_3: months-years - protracted withdrawal after de-escalation"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived comfort-call escalation kernel for Coach-Mind: a high-relief play (quick completion against pressure) is R; the defense's adaptation is the opponent O; repeated reliance resets the scheme's baseline effectiveness downward (b rises as predictability rises); relief shortens and rebound worsens - the scheme is 'solved' despite escalating reliance on its comfort call, the exact paradoxical-worsening signature. The kernel prices when to stop relief-seeking and invest in recovery-building (new structure, graded exposure to harder concepts) instead of demanding relief before function. Same structure binds to portfolio hedging: repeated identical hedges reset the risk baseline and decay in efficacy.",
+    "source_operator": "p4",
+    "telemetry": "Per-play-type success decay across within-game repetitions and across weeks, defensive personnel and alignment adaptation indicators, EPA rebound after comfort-call sequences; calibrate tau_O and eta on held-out seasons. LATENT_UNIDENTIFIABLE: defensive coaching intent."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Karvonen reserve-based target-heart-rate prescription kernel with MIIT and rTMS dosing (EXERT-Stroke, Lin et al.)",
+   "verbatim_quote": "Heart rate reserve was calculated using the Karvonen formula: pt’s maximum HR – resting HR. Max heart rate = 220-age. Our exercise target was based on the following: Heart rate reserve x %target + resting HR.",
+   "page": 28,
+   "latex": "HR_{\\mathrm{target}} = f \\cdot \\left(HR_{\\max} - HR_{\\mathrm{rest}}\\right) + HR_{\\mathrm{rest}}, \\qquad HR_{\\max} = 220 - \\mathrm{age}",
+   "symbol_and_unit_ledger": "HR_target, HR_max, HR_rest: heart rates, beats/min (1/min). f: %target, dimensionless fraction. age: years. HR_max = 220 - age: age-predicted maximum, beats/min (220 has units beats/min per year of age offset; the formula is an empirical population regression). Each term of HR_target is beats/min: dimensionally homogeneous. Printed in prose on printed p. 27 (Karvonen formula and target equation). Companion dosing from the same protocol: MIIT 'on' 60% of peak watts (range 55-65%), 'off' 45% (40-50%), on-interval HR <= 60% HR reserve, 13 min on / 12 min off over 25 min; rTMS 10 Hz, 30 trains of 10 s with 30 s intertrain interval, 3,000 pulses, intensity 90% of resting motor threshold (RMT).",
+   "assumptions": "Age-predicted HRmax (220-age) rather than measured max; stroke survivors with persistent pain, many on heart-rate-affecting medications; pilot feasibility design - no power calculation, no hypothesis testing, 12 per arm recommended for pilots; exercise stopping rules for inappropriate HR/BP responses; trial stopped if serious adverse events in >=20% of participants. Supporting quotes: The “on” interval began at 60% of peak watts (range: 55–65%) followed by the “off” interval at 45% of peak watts (range: 40–50%). The average HR for the “on” intervals should not exceed 60% HR reserve. | rTMS dose: trains of 10 s in duration (30 s intertrain interval) at a stimulation rate of 10 Hz (3,000 pulses) and an intensity set at 90% of RMT.",
+   "breakdown_regime": "220-age is a population regression with wide individual scatter (external caveat: individual SD of order 10-12 beats/min), and beta-blockers/other stroke medications blunt the HR response, so reserve-based dosing can mis-prescribe intensity for medicated patients - the protocol's HR/BP stopping rules are the guard. Feasibility results are not efficacy: 220 prescreened -> 10 consented -> 9 randomized, 66.7% retention, recruitment 0.42/month; the pilot cannot estimate treatment effects. The kernel is only valid within the tested on/off fractions and the 60% HRR ceiling.",
+   "domain": "medicine",
+   "timescales": [
+    "tau_0: beat-to-beat HR response (seconds)",
+    "tau_1: 1-min on / 1-min off MIIT intervals (25 min session)",
+    "tau_2: rTMS session structure (10 s trains, 30 s intertrain)",
+    "tau_3: multi-week intervention course and follow-up"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived reserve-based conditioning kernel for player load prescription: dose intensity as a fraction of the individual's tested reserve (max minus rest), never as an absolute workload - the same f applies to a recovered starter and a returning injured player but produces different absolute loads. The MIIT structure (on/off at fractions of peak with an HR ceiling) is a ready-made interval-load kernel for return-to-play progressions, and the stopping rules bind as hard physiological vetoes on session continuation. This is a derived kernel: the source invariant is the reserve-based prescription formula, not a football claim.",
+    "source_operator": "p5",
+    "telemetry": "Resting HR and HRV, individually tested max HR and peak watts, session RPE, GPS high-speed running and accelerometer load; per-player calibration of f and the HR ceiling; monitor medication effects on HR response. LATENT: individual true HRmax without maximal testing."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "Reason bidirectionally across the volume's epidemiological and network invariants. Forward: Belding et al. (book 385d408a043b611b, printed pp. 8-18) establish that service concussion carries an adjusted hazard ratio of 4.61 for any cognitive disorder, 4.44 for MCI and 4.14 for memory loss in 1.21 million retirees, and the most important datum is not the magnitude but the reversal: the unadjusted any-dementia hazard ratio is 0.52, apparently protective, and becomes 1.64 after adjustment. The invariant that survives is therefore methodological as much as substantive - exposure-outcome associations in selected populations are directionally untrustworthy until confounders are priced. In the football system the same structure governs career collision-exposure pricing: position, era, age and healthy-warrior selection can flip the sign of a raw head-impact correlation, so long-horizon cognitive risk must be priced as an adjusted hazard, and the case-definition attenuation from 4.61 to 3.01 under a two-code requirement prices the cost of single-source injury flags. Panahi et al. (printed pp. 57-63) add the temporal-order invariant: the same two conditions produce different phenotypes depending on sequence - TBI before epilepsy clusters into high cognitive risk (33.5%), epilepsy before TBI into high behavioral risk (29.0%) - so injury order, not just injury count, is a state variable. Backward: start from the observed phenomena - a veteran linebacker's late-career cognitive decline, a post-injury behavioral phenotype that does not match the diagnostic label - and ask which invariant constrains them. The decline is constrained by the adjusted-hazard structure and its latency; the phenotype mismatch is constrained by temporal order and by the RDoC-dimensional clustering that produced it (39 NLP features, UMAP to two dimensions, severity-by-content axes). Hamama-Raz and Hamama (printed pp. 64-81) supply the third invariant: propagation is governed by bridge structure and path length, not density. Mothers' networks are less dense (0.500 vs 0.551) yet faster (paths 9.44 vs 11.82), with one dominant bridge (healthcare visits, bridge strength 1.302 vs 0.117); fathers' denser networks are compartmentalized and buffered. The cross-check against the corpus's materials-science volume is instructive and must be stated honestly: there, crystalline uniformity produced brittle cascade and amorphous heterogeneity produced delayed sequential failure; here, higher density with compartmentalization buffers while sparser short paths accelerate. The directions differ because the systems differ, but the shared sovereign invariant is that failure propagation is a property of structure - localization, bridges, path length - never of raw connection count or raw exposure magnitude. That invariant licenses the football mapping: a densely connected but compartmentalized coaching staff buffers a bad loss; a sparser staff with one translator-node between units propagates distress fast and collapses when that node leaves. The veto hook: all three invariants are observational, so none licenses causal intervention claims without held-out validation; the network is cross-sectional and its betweenness estimates are unstable below 0.40 at 30% sampling, so any intervention targeting betweenness-central nodes must be vetoed until stability is established.",
+   "retrocausal_genealogy": "Three hidden states made this volume possible. Military TBI was long framed as an acute return-to-duty problem; the aging of the post-9/11 cohorts inverted that frame into lifespan surveillance, which is the scar Belding et al. exploit. Chronic pain care inherited Fordyce's behavioral management dogma - pain interminable and incurable - until pain reprocessing therapy showed patients could become pain-free, enabling the FREIDEM recovery inversion. And gendered socialization, long treated as noise in symptom reporting, is revealed by network methods as a structuring principle of distress architecture. The football-side analogs are explicit Layer-2 mappings, not origins of the medical science.",
+   "theory_of_mind": "The recursive belief clash is clinician versus patient versus system. The patient reports 'pain' but lives the whole megillah - polysymptomatic distress - and believes relief is the goal; the clinician must model the patient's relief-seeking belief while holding the recovery model, and model the fragmented care system that will misroute the patient to psychiatric services for a deafferentation syndrome. In football the coach models the defense as static, the DC models the coach's comfort tendency, and the QB models the pocket as reconstructing; each model is one level shallow, and the opponent effect punishes the shallowest model first.",
+   "cross_layer_veto": "Epidemiology and neuroscience veto the competitive layer at the lifespan threshold: a player whose cumulative head-impact load crosses the surveillance boundary is removed from play regardless of the win-probability model's pricing, because the adjusted-hazard structure operates on a decades-long horizon the game model cannot see. The confounding reversal supplies a second veto: any decision priced on an unadjusted exposure-outcome correlation is invalid until position, age, era and selection are priced, because the sign itself can flip. Observational network structure vetoes betweenness-targeted interventions until bootstrap stability is demonstrated."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second chain runs from the pain-and-recovery theory through the decision gates to the exercise kernel. Forward: Manhapra et al. (printed pp. 103-122) invert the purpose of pain - from threat signal to recovery instrument - and derive the allostatic opponent effect: relief is reward-mediated and distinct from analgesia; repeated distress-relief cycles strengthen an opponent process that starts earlier, lasts longer and peaks higher; allostasis resets the baseline upward; the result is tolerance, rebound, and a paradoxical pain management-induced syndrome that worsens with escalation. The derived kernel dO/dt = (R-O)/tau_O with baseline reset b_{k+1} = b_k + eta*O_peak captures exactly the Figure 5 trajectory. In Coach-Mind the comfort call is the relief intervention: the quick completion removes pressure-distress, the defense is the opponent process, and repeated reliance resets the scheme's baseline effectiveness downward until the scheme is solved despite - because of - escalation. Backward: a second-half offensive collapse is not evidence that the play-caller got unlucky; read through the kernel it is the signature of an established opponent effect, and the correct response is not more relief (more comfort calls) but recovery-building - new structure, graded exposure - which is precisely the FREIDEM inversion of demanding pain control before function. The ADEPT gates (Oberman et al., printed pp. 34-45) supply the discipline that keeps the kernel from being misused: drop an arm at 60% posterior superiority, stop for futility when no arm clears 60% over baseline, stop for success only at 99.75% interim or 99% final, with family-wise type-I error held at 2.5% by 100,000 simulations. Translated: the play-caller may not switch plans on every noisy fluctuation; the gates must be calibrated before the game, and the high success threshold prevents committing to a high-variance decision on weak evidence. The Karvonen kernel (Lin et al., printed pp. 26-33) is the recovery-building dosing rule: prescribe intensity as a fraction of individual reserve, with hard HR/BP stopping rules - the physiological veto that ends a session regardless of the plan. The three invariants compose: the opponent kernel says when relief-seeking is destroying the baseline; the Bayesian gates say when evidence is strong enough to change course; the reserve kernel says how to dose the recovery work safely. The cross-layer veto adjudicates the collisions: a high-EV comfort call is vetoed once the opponent effect is established, because the kernel that priced it has left its validity domain; a player whose cumulative concussion load crosses the surveillance threshold is removed regardless of win probability, because the lifespan hazard structure outranks the single-game objective; and a conditioning session is stopped at the HR ceiling regardless of the prescribed fraction, because the stopping rule is the physiology layer's veto over the planning layer.",
+   "retrocausal_genealogy": "The opponent-process result descends from two lineages the paper cites explicitly: Patrick Wall's 1979 rejection of pain-as-threat in favor of pain-as-recovery-initiation, and the opioid-epidemic evidence that repetitive relief-seeking worsens the condition it treats (refs 84-87 for the allostatic opponent effect). The scar is the analgesia-equals-relief conflation: because relief is reward-mediated, any relief intervention - not just opioids - can generate the paradoxical syndrome. The Bayesian adaptive lineage runs through FDA adaptive-trial guidance and simulation-calibrated error control; the exercise lineage through Karvonen's reserve method. Football mappings are explicit derived kernels, not historical origins.",
+   "theory_of_mind": "Under pressure the relief-seeker's belief state is the trap: the patient - or the coach - experiences the brief relief as evidence the intervention still works, while the opponent process and the reset baseline are invisible to them; the clinician - or the analytics staff - must model that salience bias recursively, knowing the decision-maker will discount rebound pain because relief is reward-coded and highly salient. The staff must also model the coordinator modeling the players as still in the linear regime, and force the course correction before the baseline reset consolidates, because dependence makes later reversal itself a paradoxical-pain generator.",
+   "cross_layer_veto": "The opponent-process layer vetoes escalation of any relief intervention once tolerance and rebound are established: more comfort calls, more identical hedges, more of the same analgesic cannot recover the baseline and will worsen it, so the high-EV pricing computed inside the pre-adaptation regime is void. The dependence layer adds an ordering veto: treat dependence before de-escalating, because abrupt cessation generates protracted withdrawal that mimics the baseline syndrome. The physiology layer owns the session: the HR/BP stopping rules end exercise regardless of the prescribed fraction or the competitive objective."
+  }
+ ],
+ "universal_lens": "An audit lens for any system under chronic load: distinguish relief from recovery; test whether repeated relief-seeking is resetting the baseline through opponent/allostatic adaptation; measure propagation structure (bridges, path length, localization) rather than connection count; price long-horizon hazards with adjustment because unadjusted signs can flip; and gate decisions by simulation-calibrated posterior thresholds instead of noisy peeking. Structure, not magnitude, governs failure.",
+ "gsi_mapping": "Directly GSI-native: lifespan TBI-to-neurodegeneration hazard surveillance with adjusted hazards; nociplastic pain and reward/anti-reward allostasis in the polytrauma triad; exercise mechanisms for PTSD (70% heart-rate-reserve dosing, NPY release above 70% VO2max, hippocampal neurogenesis); Karvonen reserve-based dosing for post-stroke and post-concussion rehabilitation; rsfMRI-targeted accelerated iTBS (DAN-DMN anticorrelation targeting, 90% RMT, FEM head-model conductivities); clinical telemetry via MADRS, PHQ-4, SSS-8, Jenkins sleep scale, HRV and head-impact sensors.",
+ "gse_mapping": "Coach-Mind gains three kernels: a scheme-collapse propagation kernel keyed to bridge structure and path length (not density), a comfort-call opponent kernel (relief -> adaptation -> baseline reset -> paradoxical worsening despite escalation), and Bayesian adaptive play-calling gates (drop/futility/success posterior thresholds with family-wise error discipline). DFS and portfolio tail risk inherit adjusted long-horizon hazard pricing for career-length exposure and the concentrated-versus-diversified bridge-structure trade. No odds inputs; internal only."
+}

@@ -1,0 +1,165 @@
+{
+ "book_id": "25294936f511d828",
+ "source_status": "COMPLETE",
+ "pages_total": 24,
+ "pages_read": 24,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Implicit bias (NIH definition as quoted in the case study)",
+   "verbatim_quote": "a form of bias that occurs automatically and unintentionally, that nevertheless affects judgments, decisions, and behaviors",
+   "page": 7,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Quoted from the NIH via the case study (physical page 7, printed page 05). Bias operates automatically and unintentionally; the decision-maker is unaware of holding it. The accompanying prevalence figure (70-75 percent of Americans who try Greenwald's test) is a self-selected test-taker statistic, not a population parameter. The report's chosen intervention is collecting and documenting disparity data, not debiasing.",
+   "breakdown_regime": "The definition is descriptive, not a quantitative model: no effect size or functional form is supplied. Awareness alone does not change minds (the cited Mason 2020 reference). Prevalence generalization fails because IAT takers self-select. The bias term cannot be identified from self-report; only conditional behavioral comparison can expose its group differential.",
+   "domain": "psych",
+   "timescales": [
+    "tau_0: single judgment or decision (seconds to days)",
+    "tau_1: one hiring cycle (weeks to months)",
+    "tau_2: career trajectory of affected candidates (years)",
+    "tau_3: institutional prevalence and norms (decades)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent group-correlated offset in the hiring selection kernel: the decision compares resume utilities plus an unobserved bias term that sits outside the agent's self-model. It binds as a constraint on the Coach-Mind selection transition: identifiable only from group-differential hiring and reentry rates conditional on resume observables (wins, losses, playoff appearances, years of NFL experience, previous position).",
+    "source_operator": "p1",
+    "telemetry": "Conditional hiring and rehire rates by self-reported race from the diverse-hiring and reshuffling tabs; the offset itself is LATENT_UNIDENTIFIABLE from self-report, its group differential is observable in the joined dataset."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Reshuffling effect (asymmetric reentry into the head-coach pipeline)",
+   "verbatim_quote": "white head coaching candidates are given second or even third chances to act as a head coach, while candidates of color are generally only given one chance at a head coaching role",
+   "page": 16,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "NFL head-coach hires 1993-2023 (30 seasons, 32 teams, 168 head coaches); race self-reported; profootballreference.com coaching tables joined with NFL race data; new-coach, first-time-coach, previous-position, tenure-value and missing-years flags built in the Alteryx architecture (physical page 12, printed page 10).",
+   "breakdown_regime": "As quoted the claim is unconditional on resume quality, so it is a disparity observation, not a causal bias estimate. Small effective N for candidates of color (mostly single spells) destabilizes group-specific reentry hazards. Stationarity is assumed across three decades of rule and franchise changes; pre-1993 history is excluded as incomplete and inconsistent.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one hiring decision (weeks)",
+    "tau_1: one tenure spell (seasons)",
+    "tau_2: multi-spell career and reentry gap (years)",
+    "tau_3: pipeline composition across the 1993-2023 window (decades)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Group-asymmetric reentry transition in the coaching-labor renewal process over states {employed, unemployed-eligible, exited}: P(rehire | fired, group) differs by group, so the process recycles known candidates instead of injecting new talent. Tenure spells are the sufficient statistics; spell length feeds a discrete-time firing hazard, and the asymmetry shrinks the effective candidate pool in any Coach-Mind simulation of coach quality draws.",
+    "source_operator": "p2",
+    "telemetry": "Per-group counts of first-time versus repeat hires, number of distinct head-coach spells per coach, time-off gaps, and spell lengths from the reshuffling-effect tab; win/loss record and team win/loss history as conditioning covariates."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Compassion fade and psychic numbing (Slovic, as quoted in the case study)",
+   "verbatim_quote": "Psychologist Paul Slovic uses the terms ‘compassion fade’ and ‘psychic numbing’ to explain how the brain responds to numbers that have no human connection.",
+   "page": 9,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Quoted secondhand via Ricchiardi (International Journalists' Network), not from Slovic's primary papers (physical page 9, printed page 07). Qualitative claim about action probability; no parameterized gain function supplied. The design response is to take data down to individual coaches' careers instead of aggregating at head-coach, GM, race, or team level.",
+   "breakdown_regime": "No quantitative dose-response (how action gain falls with aggregation level) is given. The claim concerns readers with no human connection to the data, so it need not apply to expert audiences with direct stakes. It cannot be calibrated from the case study itself; it requires action-rate telemetry at different aggregation levels.",
+   "domain": "psych",
+   "timescales": [
+    "tau_0: single reader exposure to a visual (seconds)",
+    "tau_1: one decision to act on information (minutes to days)",
+    "tau_2: campaign-level awareness accumulation (weeks to months)",
+    "tau_3: norm adoption across the audience (years)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregation-dependent gain on the information-to-action channel: gain decreases as data are aggregated above the individual level, and drilling to individual career trajectories restores it. Binds to any feedback channel in the Coach-Mind sim or in clinical telemetry that must convert observation into action; an aggregate-only channel can be information-rich and action-poor.",
+    "source_operator": "p3",
+    "telemetry": "Dashboard drill-down usage and downstream action rates by aggregation level; LATENT_UNIDENTIFIABLE as a neural mechanism from this source, observable only behaviorally."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Pilula chart encoding (run-length serialization of tenure spells)",
+   "verbatim_quote": "Red bars indicate a racially diverse coach. Gray bars indicate a white coach. Each row is a team. The length of the bars indicate the total seasons filling the role. We plot time on the x-axis, where each data mark is a football season, and we group those where a unique coach is in succession.",
+   "page": 15,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Run-length grouping of consecutive seasons under one unique coach; color encodes self-reported racial category (red = diverse, gray = white); each row is a franchise under its modern name; x-axis is the season. The case-study figure carries the explicit disclaimer that its values are mere approximations for illustrative purposes (physical page 15, printed page 13).",
+   "breakdown_regime": "The illustrative artwork cannot calibrate any quantitative claim. Adjacent same-color spells can visually merge and hide turnover; within-spell performance dynamics are discarded by the encoding. It assumes season-granular tenure and clean franchise identity continuity (the Oakland-to-Las Vegas renaming repair was required upstream).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one season mark (one season)",
+    "tau_1: one tenure spell / bar (seasons to a decade)",
+    "tau_2: franchise hiring history across the window (decades)",
+    "tau_3: league-wide encoding comparison (1993-2023)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Lossless run-length encoding of the tenure-spell process: bar length in seasons is the sufficient statistic for a discrete-time survival/hazard view of coach turnover, color is the group label, and the chart is a serialization of exactly the renewal process that the reshuffling kernel (p2) governs. High-turnover franchises appear as many short bars; consistent hires as few long bars.",
+    "source_operator": "p4",
+    "telemetry": "Spell-length distributions per franchise and per group from the published dashboard data (never the case-study artwork); turnover frequency as inverse mean spell length in seasons."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Diffusion of innovations critical mass (Rogers, as cited in the case study)",
+   "verbatim_quote": "he examines how new behaviors can rapidly spread once a critical mass of people have adopted the behavior",
+   "page": 4,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Everett Rogers, Diffusion of Innovations, cited via a Community Tool Box social-marketing chapter rather than the primary text (physical page 4, printed page 02). Qualitative threshold claim about behavior spread; applied in the report to awareness and adoption of DE&I hiring norms.",
+   "breakdown_regime": "No threshold value, adoption-rate parameter, or network structure is given; critical mass is not quantitatively defined in this source. The rapid-spread claim fails below threshold and in poorly connected networks, and cannot be fitted from the case study. Treat as a qualitative contagion kernel with named lineage, not a parameterized law.",
+   "domain": "psych",
+   "timescales": [
+    "tau_0: one individual adoption decision (days to weeks)",
+    "tau_1: one team's adoption of a hiring practice (a hiring cycle)",
+    "tau_2: league-wide adoption fraction dynamics (seasons)",
+    "tau_3: norm entrenchment or decay (decades)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold contagion kernel for adoption of structured, bias-free hiring criteria: the state variable is the fraction of teams adopting; below critical mass adoption decays without external support, above it the practice self-propagates through normative and competitive pressure. Binds to intervention persistence in the Coach-Mind meta-game: a single adopting team is not a regime change.",
+    "source_operator": "p5",
+    "telemetry": "Adoption fraction of teams using objective hiring criteria over seasons; persistence of the practice after its champion departs; the threshold itself is LATENT_UNIDENTIFIABLE from this source alone."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Measurement-window scoping and provenance regime (1993-2023)",
+   "verbatim_quote": "While there are records dating back to the 1920s, the data is incomplete and inconsistent, so we chose to focus on a smaller set of data that is more reliable and relevant to our audience.",
+   "page": 11,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Window 1993-2023 chosen for reliability over the incomplete 1920s-onward record; roles limited to GM, HC, OC, DC; race self-reported by each coach; franchise identities repaired to modern names; wins, losses, and playoff appearances joined from profootballreference.com (physical page 11, printed page 09). Summary counts: 30 seasons, 32 teams, 168 head coaches, 149 general managers.",
+   "breakdown_regime": "The window is a stationarity assumption: rules, franchise locations, and the coordinator-to-HC pipeline change inside it. Self-reported race carries missingness and misclassification risk. Pre-1993 exclusion censors any long-run historical claim, and the 168-HC / 149-GM counts bound all subgroup precision. Any downstream fit inherits this cutoff.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one scraped coach table (one career)",
+    "tau_1: one season of the panel (one season)",
+    "tau_2: the 30-season estimation window (1993-2023)",
+    "tau_3: the censored pre-1993 history (1920s-1992)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Censoring and measurement-channel specification for every downstream kernel: defines the support of the renewal process, the group-label channel (self-report), and the identity-continuity repair. Any Foundry fit inherits this window as a cutoff: no post-2023 leakage, no fit scored on its own training rows, and no odds-derived labels anywhere in the pipeline.",
+    "source_operator": "p6",
+    "telemetry": "Dataset summary counts (30 seasons, 32 teams, 168 head coaches, 149 general managers); missing-years flags; self-report coverage of the race field."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The Playfair case study is not a theorem book; it is a measurement-and-encoding report, and its sovereign content is a set of structural claims about the NFL's coaching labor market that can be lifted into the Foundry as kernels with explicit failure regimes. The central object is the reshuffling effect: the source states that white head coaching candidates receive second and third chances while candidates of color generally receive one. Read as a dynamical system, the head-coach population is a Markov-like renewal process over states {employed, unemployed-but-eligible, exited}, and the claim is that the reentry transition probability P(rehire | fired) is group-dependent. That is a testable kernel, not a slogan: the data architecture on page 12 builds exactly the sufficient statistics for it, namely a new-head-coach flag, a first-time-coach flag, previous position, tenure value, and missing years. Tenure spells are the run-length encoding of this process, and the Pilula chart on page 15 is a lossless visual serialization of spell lengths: bar length equals total seasons filling the role, color encodes the self-reported racial category, rows are teams, and the x-axis is the season. The encoding choice matters because spell length is the observable from which a discrete-time firing hazard can be estimated; a team that cycles quickly through short spells has a high hazard, and the dashboard's stated purpose is to find exactly those teams. The second kernel is the proposed mechanism: implicit bias, which the source quotes from the NIH as automatic and unintentional yet effective on judgments, decisions, and behaviors. The crucial word is unintentionally: the decision-maker's self-model contains no bias term, so introspection cannot identify it. The only identification route is statistical, comparing hiring and reentry rates across groups conditional on resume observables (wins, losses, playoff appearances, years of NFL experience, previous position), which the pipeline explicitly joins. The source's own scoping decisions define the measurement regime: 1993 through 2023, thirty seasons, thirty-two teams, 168 head coaches and 149 general managers, with earlier records rejected as incomplete and inconsistent. That window is a stationarity assumption, not a law of nature: rules, franchise locations, and the coordinator-to-head-coach pipeline itself change inside it, and the team-renaming step (Oakland to Las Vegas) shows the engineers already had to repair identity continuity. Race is self-reported, which makes it a measurement channel with its own missingness and misclassification risk rather than ground truth. Three failure regimes must travel with these kernels. First, the Pilula figure in the case study carries an explicit disclaimer that its values are mere approximations for illustrative purposes, so no quantitative claim may be calibrated from the case-study artwork; only the published dashboard data could calibrate it. Second, the reshuffling claim as quoted is unconditional, it does not control for resume quality, so it is a disparity observation, not yet a bias estimate; the gap between those two is exactly where omitted-variable confounding lives. Third, the one-chance pattern for candidates of color means small effective sample sizes for group-specific reentry hazards; pooling across decades buys precision at the cost of the stationarity assumption. A sovereign extraction therefore records the kernel, its sufficient statistics, and all three vetoes, and refuses to upgrade the descriptive claim into a causal one without the conditional comparison.",
+   "retrocausal_genealogy": "The hidden state this book exposes was manufactured by decades of hiring practice before the measurement window even opens: the source itself rejects pre-1993 records as incomplete and inconsistent, so the observable era begins already shaped by unrecorded exclusion. The lineage of the mechanism claim runs through Greenwald's implicit-association test and the NIH definition the report quotes, a research program built precisely because decision-makers cannot introspect the offset. The 1993 cutoff, the self-reported race field, and the franchise-renaming repair are scars of that history surviving inside the data architecture; every kernel extracted here inherits them as assumptions, not as neutral facts.",
+   "theory_of_mind": "Recursion runs through every hiring node. The GM models the owner's tolerance for a risky first-time hire; the owner models fan and media reaction; the candidate models whether his resume will even be read. Because the bias is automatic and unintentional by definition, each agent's self-model is sincerely meritocratic while the aggregate kernel is not, a belief clash that cannot be resolved by asking anyone their intentions. Under pressure the comfort call dominates: rehiring a known white retread is defensible in every recursive model because he has done the job before, while the equally qualified first-time candidate of color is risky in at least one layer. The dashboard is an intervention in this recursion: it gives each layer observable evidence about the others' actual behavior.",
+   "cross_layer_veto": "Three vetoes travel with these kernels. The measurement layer vetoes any calibration from the case-study Pilula artwork, because the source explicitly labels its values illustrative approximations. The statistical layer vetoes upgrading the unconditional reshuffling disparity into a causal bias estimate without conditioning on wins, losses, experience, and previous position; omitted-variable confounding is not a footnote here, it is the whole gap. And the small-sample layer vetoes group-specific hazard estimates for candidates of color whose spells are mostly singletons; pooling is allowed only with the stationarity cost declared. A high-EV fire-and-rehire-the-retread call is vetoed by the pipeline-collapse dynamics: it is locally defensible and globally pool-destroying."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The remaining kernels govern the information channel between the measurement and the action, and they are where this case study binds to the Coach-Mind simulation and to GSI telemetry. Slovic's compassion fade and psychic numbing, quoted on page 9, state that numbers without human connection lose their power to drive action: if readers do not relate to the information, they are less likely to act and use it. Formally this is a gain function on the information-to-action channel that decreases with aggregation level. The Playfair design response, drilling from team-and-role aggregates down to individual career journeys, is a channel-gain restoration strategy, and it is testable: the same disparity shown as a league aggregate versus as one named coach's resume should produce different action rates. The diffusion kernel from Rogers, quoted on page 4, closes the loop: new behaviors spread rapidly once a critical mass has adopted, which is a threshold contagion process. Applied to the case study's own goal of bias-free, merit-based hiring, the adoption fraction of teams using structured, objective criteria is the state variable, and the critical mass is the tipping point above which the practice self-propagates. Below it, each adopting team bears the full cost alone; above it, non-adopters face normative and competitive pressure. The conclusion on page 19 is consistent with this reading: sustainable change requires the selection process itself to become merit-based, not more dashboards. For the GSE Coach-Mind simulation, the composition is concrete. The 22-player dynamical system is nested inside a coaching labor market whose reentry kernel is group-asymmetric. Simulating coach quality draws without that asymmetry overstates the effective candidate pool: reshuffling recycles known quantities instead of injecting new talent, which reduces the variance of the quality distribution and fattens the left tail of long-run team performance, a portfolio tail-risk statement, not a win-rate headline. The simulation must therefore carry the hiring kernel as a constraint layer above the play-level system, with implicit bias as a latent offset in the selection utility and compassion fade as a gain on any feedback channel that is supposed to correct the offset. For GSI, the isomorphism is clinical: alarm fatigue and aggregate-versus-patient telemetry are the same channel-gain problem, a ward-level statistic does not move a clinician the way one identified patient's trajectory does, and implicit bias is the same latent-offset problem in triage and treatment decisions. The audit lens is identical in both institutes: find the latent offset, find the channel gain, find the adoption threshold, and demand telemetry at the level where action actually happens. The discipline constraints bind here too. The 1993-2023 window is the source's cutoff; any Foundry fit using these kernels must respect held-out discipline, no fit scored on its own training rows, no post-cutoff leakage, and no sportsbook odds anywhere in the pipeline. The case study's joins use wins, losses, and playoff appearances as performance covariates, which are legitimate observables; odds are not, and nothing in this extraction introduces them.",
+   "retrocausal_genealogy": "The channel-gain kernel inherits an older scar than the NFL itself: Slovic's psychophysics of numbing was built to explain why aggregate suffering fails to motivate, and the case study imports it through journalism (Ricchiardi) rather than from the lab. Rogers' diffusion lineage enters through a community-toolbox social-marketing chapter, a translation chain that already stripped the original model's quantitative structure. What survives is the threshold idea: adoption is self-propagating only past critical mass. The Foundry must treat both as qualitative kernels with named lineage, not as parameterized laws, because the source supplies no rates, no thresholds, and no coefficients.",
+   "theory_of_mind": "The audience model is explicit and recursive: Playfair assumes NFL fans with average data literacy, comfortable with line and bar charts but not treemaps, and designs downward to that model. The fan, in turn, models the coach as a person only when the data reaches individual level; above that, compassion fade numbs the response. The hiring decision-maker sits in the same loop: presented with league aggregates he sees a statistic, presented with one named coach's blocked resume he sees a person. The design insight is that theory of mind is not just for opponents, it is the specification of the information channel's receiver, and getting it wrong silently zeroes the channel gain.",
+   "cross_layer_veto": "The psychology layer vetoes the high-EV communication call: an aggregate-only dashboard maximizes information density and minimizes action probability, so efficiency metrics that ignore compassion fade select the wrong design. The diffusion layer vetoes declaring victory at first adoption: below critical mass the practice dies with its champion, so a single team's bias-free hiring is not evidence of a regime change. And the doctrine layer vetoes any temptation to score these kernels with odds-derived labels or to fit them on their own training rows; the 1993-2023 window is a cutoff to respect, not a convenience to extend."
+  }
+ ],
+ "universal_lens": "The polymath audit lens this book supplies is a four-question stack for any institutional decision system: where is the latent offset that agents cannot introspect; what is the sufficient statistic of the renewal process (here, tenure spells); how does channel gain fall with aggregation; and where is the adoption threshold that separates isolated virtue from self-propagating norm. Any audit that answers all four with telemetry, and declares its measurement window, is sovereign; any that skips one is vulnerable to exactly the failures this case study documents.",
+ "gsi_mapping": "For GSI the bindings are isomorphisms, not claims about physiology. Compassion fade is the clinical alarm-fatigue kernel: ward-level aggregate telemetry loses action-driving gain exactly as league-level hiring aggregates do, and the remedy, drilling to the identified individual patient trajectory, is the same channel restoration. Implicit bias is the latent-offset kernel in triage and treatment-selection decisions, identifiable only from conditional outcome comparisons, never from clinician self-report. Diffusion critical mass governs protocol adoption across a service. Clinical telemetry calibrates all three: response times to individual versus aggregate alerts, conditional treatment rates, and adoption fractions.",
+ "gse_mapping": "For GSE the reshuffling kernel becomes a constraint layer above the 22-player Coach-Mind simulation: group-asymmetric reentry shrinks the effective candidate pool, lowers quality-draw variance, and fattens the left tail of long-run franchise performance, a portfolio tail-risk statement with no win-rate headline and no odds anywhere. Implicit bias enters as a latent offset in the simulated selection utility; compassion fade sets the gain on any feedback channel meant to correct it; the critical-mass threshold decides whether a bias-free hiring intervention persists. Deception detection inherits the audit lens: compare stated meritocratic criteria against conditional hiring telemetry."
+}

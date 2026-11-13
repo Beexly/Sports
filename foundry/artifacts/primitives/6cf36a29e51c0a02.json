@@ -1,0 +1,279 @@
+{
+ "book_id": "6cf36a29e51c0a02",
+ "title": "The Hidden Game of Football",
+ "author": "Bob Carroll, Pete Palmer, John Thorn (foreword by Aaron Schatz)",
+ "year": "1988 (2023 University of Chicago Press reissue)",
+ "source_status": "COMPLETE",
+ "pages_total": 426,
+ "pages_read": 426,
+ "primitives": [
+  {
+   "primitive_id": "hg-point-potential-linear",
+   "name": "Linear field-position point potential (1 point per 12.5 yards)",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "If you look at all the first down situations from anywhere on the field, you get a straight line which passes through—2 points at your own goal line, 0 at your 25, + 2 at midfield, +4 at the far 25, and +6 at the other goal line. Your point potential increases by about a point every 12.5 yards.",
+   "page": 106,
+   "chapter": "7 (The Hidden Game / point potential)",
+   "latex": "V(x) = -2 + \\frac{x}{12.5}, \\quad x \\in [0, 100]",
+   "symbol_and_unit_ledger": {
+    "x": "yards from the possessing team's own goal line (0 = own goal, 100 = opponent goal) [yd]",
+    "V(x)": "expected net points from a first-and-10 at x, league-average teams [points]",
+    "1/12.5": "potential gradient 0.08 [points/yd]; anchors V(0)=-2, V(25)=0, V(50)=+2, V(75)=+4, V(100)=+6"
+   },
+   "explanation": "The book's central valuation kernel: every field position carries a scoring potential equal to the expected net points of the next score, and across first-and-10 situations the empirical curve is well approximated by an affine function rising 1 point per 12.5 yards. This turns raw yardage into a common currency of points and makes every play measurable as a change in potential.",
+   "assumptions": [
+    "First-and-10 situations only; down-and-distance effects averaged out",
+    "League-average offense vs league-average defense (team strength not conditioned)",
+    "1980s NFL scoring environment and rules (no two-point conversion, pre-1988 data)",
+    "Drives started in the final two minutes of each half excluded from the underlying sample",
+    "Affine approximation to an empirical next-score expectation, not a structural law"
+   ],
+   "breakdown_regime": "Near either goal line the empirical curve deviates from the line: from the 1-yard line potential is 'a bit over 6 points (instead of a full 7)', so the final inch is worth almost a full point and the affine model underprices goal-to-go states. End-of-half possessions, non-first-and-10 downs, and era shifts in scoring rate (the gradient is calibration-dependent) all break the simple linear form.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "hg-next-score-ep",
+    "mapping": "Affine potential function obtained by linearizing the empirical next-score expectation operator EP(x). The spatial gradient dV/dx = 0.08 points/yd is the per-yard value of territorial advance; structurally analogous to a linear potential whose gradient gives a constant force, but the analogy is structural only — the kernel is a football-native construction from 1980s play data, not borrowed physics.",
+    "telemetry": "GSE drive-EP baseline: use V(x) as the era-1980s prior; log residual (empirical EP table minus affine fit) per field-position bucket; modern EPA curves are nonlinear refinements of this kernel, so flag any bucket where |residual| > 0.5 points for recalibration."
+   }
+  },
+  {
+   "primitive_id": "hg-next-score-ep",
+   "name": "Next-score expected-points estimator (midfield = 1.96 points)",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "Of these 771 first downs, the offense scored next in 467 cases (298 TDs, 165 field goals, and 4 safeties) for 2,589 points. The team on defense at the time was the next to score 191 times (126 TDs and 65 field goals) for 1,077 points. And 113 times neither team scored.",
+   "page": 105,
+   "chapter": "7 (point potential derivation)",
+   "latex": "EP(x) = \\frac{P_{\\mathrm{off}}(x) - P_{\\mathrm{def}}(x)}{N(x)}; \\quad EP(50) = \\frac{2589 - 1077}{771} = 1.96",
+   "symbol_and_unit_ledger": {
+    "N(x)": "count of first-and-10 possessions observed at field position x [drives]; N(50)=771",
+    "P_off(x)": "total points scored next by the possessing offense [points]; 2589 at midfield (298 TDs, 165 FGs, 4 safeties in 467 cases)",
+    "P_def(x)": "total points scored next by the defense [points]; 1077 at midfield (126 TDs, 65 FGs in 191 cases)",
+    "EP(x)": "expected net points of the next score from x [points]; 113 of 771 midfield possessions had no next score"
+   },
+   "explanation": "The empirical ancestor of expected points added: condition on field position, count who scores next and how much, and take the net mean. At midfield the offense scores next 467/771 times, the defense 191/771, and 113 possessions produce no score; the net expectation is +1.96 points, which the linear model rounds to +2. The book explicitly warns the figures 'can never be absolute — one freakish field goal can mess up a decimal point'.",
+   "assumptions": [
+    "Next-score attribution: all points until the next change of scoring possession are credited to the state",
+    "Sample: 1980s NFL games, first-and-10 only, final-two-minute drives of each half excluded (27 drives dropped at midfield)",
+    "League-average teams; no conditioning on score, time, or team strength",
+    "Field position bucketed (midfield sample spans roughly plus/minus 2 yards)"
+   ],
+   "breakdown_regime": "Small-N buckets (deep own territory, opponent goal line) have wide sampling error; the estimator is blind to score/time context (a possession worth 1.96 points in a tie is worth very different win probability when trailing late); no-score possessions contribute zero net points but consume a drive, so EP is not drive-exhaustive value. The book's own caveat: freakish field goals perturb decimals.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "hg-point-potential-linear",
+    "mapping": "Conditional-expectation operator over next-score events — the empirical measure from which the affine potential is derived. Isomorphic in form to a discounted state-value estimate in a stochastic game, with 'next score' as the terminating event; the isomorphism is structural, the estimator is football-native.",
+    "telemetry": "GSE EP calibration table: store (N, P_off, P_def) per bucket with binomial/binomial-mixture uncertainty; midfield anchor N=771, EP=1.96 vs affine 2.0 gives residual -0.04; recompute per era and log drift of the gradient."
+   }
+  },
+  {
+   "primitive_id": "hg-turnover-swing",
+   "name": "Turnover point-potential swing is a field-position-independent 4 points",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "A turnover (with no change of line of scrimmage) causes a four-point change in point potential no matter where it occurs on the field!",
+   "page": 108,
+   "chapter": "7 (point potential, two-offense chart)",
+   "latex": "\\Delta V_{\\mathrm{TO}}(x) = V(x) + V(100 - x) = \\left(-2 + \\frac{x}{12.5}\\right) + \\left(-2 + \\frac{100 - x}{12.5}\\right) = 4",
+   "symbol_and_unit_ledger": {
+    "x": "line of scrimmage at the turnover, yards from the losing team's own goal [yd]",
+    "V(x)": "losing team's potential before the turnover [points]",
+    "V(100-x)": "gaining team's potential at the same spot, measured from its own goal [points]",
+    "Delta V_TO": "total swing = lost potential plus gained potential [points]; constant 4 under the affine model"
+   },
+   "explanation": "Because the potential is affine with V(x)+V(100-x)=4, a possession change at an unchanged line of scrimmage swings exactly 4 points regardless of field position — the book's counterintuitive headline result. The book's independent season-level regression cross-checks the magnitude: its scoring equation carries a 2.08-points-per-turnover coefficient (per team, i.e. ~4.16 for the pair), and the tables' Predicted Net Points formula uses net turnovers times four.",
+   "assumptions": [
+    "Affine potential model holds (see hg-point-potential-linear)",
+    "No return yardage: turnover at unchanged line of scrimmage",
+    "Symmetric league-average scoring for both teams",
+    "Regression cross-check: 560 team-seasons (28 teams x 10 years, offense and defense), 1977-86"
+   ],
+   "breakdown_regime": "Real turnovers move the ball: the book charges 50 yards for a fumble and 45 for an interception (average INT return ~11-14 yards vs ~19-yard average pass), so actual swings are position-dependent; an interception at the end of a half 'doesn't really cost anything'; near the goal lines the empirical curve's deviation from affine breaks the exact constancy. The 4-point figure is a model invariant, not a measured constant of nature.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "hg-point-potential-linear",
+    "mapping": "Conserved quantity under possession exchange: the sum of the two teams' potentials at a shared spot is invariant (4 points) because the affine potentials are mirror images. Structurally analogous to a conservation law following from a symmetry (here, mirror symmetry of the field plus affine form); derived algebraically from the source kernel, not asserted.",
+    "telemetry": "GSE turnover-EPA weighting: prior swing = 4.0 points; compare against measured swing distribution conditioned on return yardage and field position; regression cross-check coefficient 2.08 per team (pair ~4.16) logged as era-1980s calibration; flag end-of-half turnovers for zero-cost override."
+   }
+  },
+  {
+   "primitive_id": "hg-fourth-down-ep-rule",
+   "name": "Fourth-down go/kick decision by expected point potential (0.7*5.8 + 0.3*1.6 = 4.54)",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "The net will be 0.7 (70 percent success rate) times 5.8 plus 0.3 (30 percent failure rate) times 1.6—or 4.5 points (the math working out to 4.06 + 0.48 = 4.54).",
+   "page": 163,
+   "chapter": "10 (Kicking Up a Storm)",
+   "latex": "\\text{go iff } p\\,V_s + (1-p)\\,V_f > V_{\\mathrm{alt}}; \\quad p^{*} = \\frac{V_{\\mathrm{alt}} - V_f}{V_s - V_f}; \\quad 0.7(5.8) + 0.3(1.6) = 4.54",
+   "symbol_and_unit_ledger": {
+    "p": "probability of converting the fourth down [dimensionless]; 0.7 assumed for fourth-and-1",
+    "V_s": "point potential after success (first-and-goal at the 3) [points]; 5.8",
+    "V_f": "point potential after failure, opponent takes over at its 16; opponent potential -1.6 enters as +1.6 for the offense [points]",
+    "V_alt": "point potential of the alternative (field goal or punt) [points]",
+    "p*": "break-even conversion probability [dimensionless]"
+   },
+   "explanation": "The founding fourth-down calculus: value each branch by its point potential, weight by conversion probability, and compare against the kick. Worked example: fourth-and-1 at the opponent 5, success leaves first-and-goal at the 3 (5.8 points, not 7, because the last three yards still must be negotiated), failure hands the opponent the ball at its 16; net 4.54 points. The book's derived policy: do not kick a field goal unless fourth-and-6 or more, and inside the opponent 10 do not kick at any distance. Crucially the book also shows the objective matters: with six minutes left, fourth-and-1 at the 10, two points behind, the win-probability calculation reverses the verdict — kick (.85 x 76.2 + .15 x 24.2 = 68.4) beats go (52.3).",
+   "assumptions": [
+    "Conversion rates from the book's 1982-86 empirical table (70% for fourth-and-1)",
+    "Success = one yard more than required; failure = no gain (book's simplifying convention)",
+    "Point potentials from the book's empirical table, league-average teams",
+    "EP objective maximizes expected points; WP objective maximizes win probability — they can disagree",
+    "Blocked punts (~1%) and fakes excluded from the punt comparison"
+   ],
+   "breakdown_regime": "Late-game score/time states flip the EP-optimal choice (the 68.4-vs-52.3 example); the no-gain-on-failure convention understates failure cost when the opponent returns the ball; conversion probabilities are era- and distance-specific; inside the 10 the empirical potential curve is non-affine so table values, not the linear formula, must be used. The book's prose parenthetical for the failure branch prints '+.6' while the arithmetic uses 1.6 — the arithmetic (4.06 + 0.48 = 4.54) is the operative value.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "hg-next-score-ep",
+    "mapping": "One-step stochastic decision rule (Bellman comparison over two branches) built on the expected-points operator, with an explicit break-even probability p*. The EP-vs-WP reversal is the key structural lesson: the optimal action depends on which value function (points or wins) is being maximized — a objective-choice sensitivity that any decision kernel must expose.",
+    "telemetry": "GSE fourth-down bot: implement go/kick/punt as argmax over branch expectations with both EP and WP value heads; log p* per (distance, field position, score, time); replay the book's two worked cases (4.54 EP go; 68.4 vs 52.3 WP kick) as regression tests; flag decisions where EP and WP heads disagree."
+   }
+  },
+  {
+   "primitive_id": "hg-drive-wp-value",
+   "name": "Win probability as a game-state value function; drive value = delta WP",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "The main point we want to make concerns what we’ll call Win Probability, that is, the probability of a team winning a football game based on any given game situation. A game situation consists of the score, how much time is left, who has the ball, and where they have it.",
+   "page": 78,
+   "chapter": "6 (Driving for Glory)",
+   "latex": "WP = f(s, t, \\mathrm{poss}, x); \\quad \\Delta WP_{\\mathrm{drive}} = WP_{\\mathrm{end}} - WP_{\\mathrm{start}}; \\quad 266 - 145 = 121",
+   "symbol_and_unit_ledger": {
+    "s": "score state (points for/against) [points]",
+    "t": "time remaining [game clock]",
+    "poss": "possession indicator [dimensionless]",
+    "x": "field position [yd]",
+    "WP": "probability of winning, estimated from historical game corpus; book scales 0-1000 ('out of a thousand') [probability x 1000]",
+    "Delta WP_drive": "value added by a drive [WP points on the 0-1000 scale]"
+   },
+   "explanation": "Win Probability is defined as the probability of winning from a game situation (score, time left, possession, field position), estimated by tracing hundreds of games and thousands of situations. Drive value is the change in WP: the Jets example moves from 145 to 266 (per mille) for +121 WP points on a touchdown drive that still leaves them trailing 14-7. The same game supplies the null case: a late touchdown making it 48-17 with 1:05 left is worth 'absolutely nothing — zilch', because WP was already ~1000. This is the first public treatment of score/time/field-position win probability and the direct ancestor of modern WP models.",
+   "assumptions": [
+    "Historical frequency estimate over the traced game corpus (league-average teams)",
+    "Pre-1988 rules and scoring environment; no two-point conversion, era-specific overtime",
+    "WP expressed per mille (0-1000) in the book's tables",
+    "State variables limited to score, time, possession, field position (no timeouts/roster conditioning)"
+   ],
+   "breakdown_regime": "Garbage time: scores in already-decided games add ~0 WP, so raw point totals overstate value; blowout and final-minute regions have near-degenerate WP (0 or 1000) where deltas are meaningless; the corpus estimate is noisy in rare states (large deficit, little time); WP is not additive across plays without respecting the state path. The book's own 'zilch' touchdown is the canonical demonstration.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "hg-next-score-ep",
+    "mapping": "WP is a state-value function over a stochastic game, extending the points-valued EP operator with score and clock so that terminal outcome (win/loss) replaces next-score as the payoff. Isomorphic to a value function in dynamic programming and to path-dependent valuation in finance; the isomorphism is structural — the book constructs it from football game logs, not from imported theory.",
+    "telemetry": "GSE live WP model: state = (score diff, seconds remaining, possession, field position, down/distance); drive attribution = WP_end - WP_start; garbage-time filter (WP > 0.99 or < 0.01 => flag delta as non-informative); validate against the book's 145->266 = +121 and zero-value late TD as sanity anchors."
+   }
+  },
+  {
+   "primitive_id": "hg-down-success-thresholds",
+   "name": "Down-dependent success thresholds (40% / 60% / 100% of yards to go)",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "but the ratio stays the same—the play must gain about 40 percent of the necessary yardage. For example: first-and-15 (1–15) means 6 yards are necessary. On second down, a play must gain 60 percent of the yardage necessary for a first down to register a “win.”",
+   "page": 72,
+   "chapter": "8 (The Success Rate)",
+   "latex": "\\mathrm{success} = \\mathbb{1}[\\, g \\ge \\tau_d \\, y \\,], \\quad \\tau = (0.4,\\ 0.6,\\ 1.0,\\ 1.0) \\text{ for downs } 1..4",
+   "symbol_and_unit_ledger": {
+    "g": "yards gained on the play [yd]",
+    "y": "yards necessary for a first down (adjusted by penalties or goal line) [yd]",
+    "tau_d": "fraction of y required for the play to count as a 'win' on down d [dimensionless]; 0.4 first, 0.6 second, 1.0 third/fourth",
+    "success": "binary play outcome: keeps the drive on schedule [dimensionless]"
+   },
+   "explanation": "A play 'wins' not by gaining a first down but by gaining the fraction of necessary yardage that keeps the drive on schedule: about 40% on first down (first-and-15 needs 6 yards), 60% on second down (second-and-6 needs 4 yards), and the full amount on third and fourth. The ratio is invariant when penalties or the goal line change the absolute yardage. This converts every play into a binary schedule-maintenance event and is the ancestor of modern success-rate and EPA-per-play baselines.",
+   "assumptions": [
+    "'Win' means staying on the down-and-distance schedule, not converting a first down",
+    "Thresholds are league-average conventions calibrated on 1980s NFL play distributions",
+    "Yardage necessary y is recomputed after penalties and capped by the goal line",
+    "Binary outcome discards magnitude beyond the threshold"
+   ],
+   "breakdown_regime": "Goal-to-go states cap y and change the meaning of 'schedule'; late-game clock management overrides schedule logic (a 3-yard gain that runs 40 seconds can be a win even below threshold); fourth-down 'success' interacts with the go/kick decision (hg-fourth-down-ep-rule) rather than standing alone; the 40/60/100 vector is era-calibrated, not a rule of the game.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "hg-drive-wp-value",
+    "mapping": "State-dependent threshold policy: the acceptance bar is a function of the current state (down, distance), exactly as reorder-point/safety-stock policies in inventory control set thresholds from state, and as satisficing procedures in bounded rationality replace global optimization with state-indexed aspiration levels. Structural isomorphism only; the thresholds are football-native empirical conventions.",
+    "telemetry": "GSE drive-success feature: compute per-play success indicator with tau=(0.4,0.6,1.0,1.0); log success rate by down as a drive-health signal; cross-check against EPA-per-play baselines; recalibrate tau per era and flag goal-to-go and final-two-minute states for override."
+   }
+  },
+  {
+   "primitive_id": "hg-era-relative-rate",
+   "name": "Era-relative dominance RATE and the 10/45 new passer rating",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "AYD/L = Adjusted Yards per Game divided by the league leader as a percent (so 100 means the player led the league), Y/14G = Net Yards adjusted to a 14-game schedule, N/14G = Net Receptions adjusted to a 14-game schedule, Y-RATE = our New Passer Rating, which is (Yards + 10 × TD—45 × interceptions)/Attempts.",
+   "page": 395,
+   "chapter": "18 (Theory of Relativity) + Part Four tables key",
+   "latex": "\\mathrm{RATE}_{i,s} = 100 \\cdot \\frac{a_{i,s}}{\\max_j a_{j,s}}; \\quad \\mathrm{RATE}^{\\mathrm{career}}_i = \\sum_s w_{i,s}\\,\\mathrm{RATE}_{i,s}, \\quad w_{i,s} = \\frac{\\mathrm{att}_{i,s}}{\\sum_s \\mathrm{att}_{i,s}}; \\quad NW = \\frac{Y + 10\\,TD - 45\\,INT}{\\mathrm{Att}}",
+   "symbol_and_unit_ledger": {
+    "a_{i,s}": "adjusted yards per game for player i in season s; for rushers/receivers adjusted yards = Yards + 10 x TD [yd/game]",
+    "max_j a_{j,s}": "league leader's adjusted yards per game in season s — the era gauge [yd/game]",
+    "RATE_{i,s}": "percent of the league leader (100 = led the league) [percent]",
+    "w_{i,s}": "attempt-weighted share of career seasons [dimensionless]",
+    "Y, TD, INT, Att": "passing yards [yd], touchdown passes [count], interceptions [count], attempts [count]",
+    "NW": "new passer rating: yards per attempt with +10 per TD and -45 per INT [yd/attempt]"
+   },
+   "explanation": "Cross-era comparison by gauge fixing: divide each player's adjusted per-game production by the league leader's in the same season, so 100 always means 'best in his era', then aggregate seasons weighted by attempts. The book applies this to show Don Hutson's 96.7 career RATE towers over later receivers, and defines the new passer rating as (Yards + 10 x TD - 45 x INT)/Attempts — a linear yards-per-attempt metric with explicit touchdown bonus and interception penalty, in contrast to the NFL's capped multi-factor rating.",
+   "assumptions": [
+    "League leader is a valid era gauge (leader quality varies by era)",
+    "Adjusted yards = Yards + 10 x TD for rushers/receivers; 10-yard TD bonus mirrors the potential model's touchdown bonus",
+    "Career aggregation weighted by attempts (volume-weighted, not season-average)",
+    "Per-game rates absorb schedule-length changes (12/14/16-game eras)",
+    "10 and 45 are the authors' conventions, not NFL official coefficients"
+   ],
+   "breakdown_regime": "Leader-relative normalization compresses differences in weak eras and inflates them in strong ones; small-sample seasons (injury, war years, AAFC/AFL transitions) distort both the gauge and the weights; the linear NW rating is unbounded and can be gamed by volume; the 10/45 coefficients encode one era's scoring environment. The book itself flags war-year and rival-league selections as inconsistently discounted.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "hg-scoring-regression",
+    "mapping": "Gauge fixing by cohort maximum: normalizing each observation by its cohort's leader removes era-level drift, isomorphic to index-number normalization in economics (base-period = 100) and to cohort standardization in statistics. The attempt-weighted career aggregate is a volume-weighted mean, the same operator used to aggregate rates across unequal samples.",
+    "telemetry": "GSE cross-era player comparison: store per-season leader gauge; compute RATE and attempt-weighted career RATE; log gauge drift across eras; use NW=(Y+10TD-45INT)/Att as a linear passing feature alongside capped NFL rating; flag seasons with Att below a reliability floor."
+   }
+  },
+  {
+   "primitive_id": "hg-scoring-regression",
+   "name": "Season scoring regression: yards/14.03, turnovers x 2.08, intercept 38.7 (560 team-seasons)",
+   "layer": 1,
+   "domain": "football",
+   "verbatim_quote": "The equation says that a team with a total offense (rushing and passing minus sack yards) of 6,324 yards and a net of—10 turnovers should score (6324/14.03)—(10 × 2.08—39), or 391 points.",
+   "page": 239,
+   "chapter": "15 (Profile of a Winner)",
+   "latex": "P = \\frac{Y}{14.03} - 2.08\\,T - 38.7; \\quad \\frac{6324}{14.03} - 2.08(10) - 38.7 \\approx 391",
+   "symbol_and_unit_ledger": {
+    "P": "predicted season points [points]",
+    "Y": "total offense yards (rushing + passing - sack yards) [yd]",
+    "T": "net turnovers, giveaways minus takeaways [count]; Miami 1986 worked example uses T=+10",
+    "14.03": "yards per point coefficient [yd/point]",
+    "2.08": "points per net turnover [points/count]",
+    "38.7": "fit intercept [points]; no structural meaning outside the fitted range"
+   },
+   "explanation": "A linear fit over 560 samples (28 teams x 10 years, offense and defense, 1977-86) predicting season points from total yards and net turnovers. The coefficients 14.03, 2.08, 38.7 are stated explicitly; the worked example (Miami 1986: 6,324 yards, net -10 turnovers, 430 actual points) predicts 391, and the book notes most teams land within 25 points. The 2.08 per-team turnover coefficient independently corroborates the 4-point swing kernel (~4.16 per pair). Related bridges: ~12 yards of offense per point realized (vs 12.5 in the potential model) and, for 1977-86, 34 points of scoring differential per win (36 in high-scoring games, 32 in low-scoring).",
+   "assumptions": [
+    "Linear model fitted on 1977-86 team-seasons (560 samples); coefficients are era-specific ratio numbers",
+    "Sign convention: T = giveaways - takeaways reproduces the 391-point worked example; the book's prose parenthetical '(6324/14.03)-(10 x 2.08-39)' is internally inconsistent with 391 and rounds 38.7 to 39 — the stated coefficients plus the worked result are the reliable anchors",
+    "Total offense excludes punt/return yardage in the base form",
+    "34 points/win is a 1977-86 empirical bridge, not a constant (the book shows it varies with game scoring level)"
+   ],
+   "breakdown_regime": "The intercept -38.7 has no structural meaning: a zero-yard, zero-turnover team cannot score negative points, so extrapolation outside the observed yardage/turnover range is invalid; the fit is a central-range approximation ('most teams will come within 25 points'); era changes in scoring environment shift all three coefficients; the 34-points-per-win bridge degrades for extreme win-loss records where 'wasted' scores vanish.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "hg-turnover-swing",
+    "mapping": "Season-level linear production function whose turnover coefficient is the aggregate shadow of the possession-swing kernel: 2.08 points per team per net turnover ~ 4.16 per pair, matching the 4-point invariant derived from the affine potential. The yards coefficient 14.03 yd/point is the regression's realized-scoring exchange rate (turnovers partialled out), to be compared with the raw aggregate ~12 yd/point and the potential gradient 12.5 yd/point; the spread among the three reflects conditioning differences, not a single universal constant.",
+    "telemetry": "GSE team-strength prior: P = Y/14.03 - 2.08T - 38.7 as era-1980s baseline; log residual distribution (book: most within 25 points); cross-check turnover coefficient against measured EPA swing; use 34 points/win (1977-86) only as an era-flagged Pythagorean-style bridge, never as a universal constant."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0-ep-kernel-genealogy",
+   "think": "The Hidden Game of Football (Carroll, Palmer, Thorn; 1988, reissued 2023 by Chicago with Aaron Schatz's foreword) builds the founding kernel of modern football analytics in a strict dependency order, and reading it end to end makes that order explicit. Step one is measurement doctrine: raw totals are situation-blind, so the authors insist that every play be evaluated against down, distance, field position, score, and time. Step two is the empirical next-score estimator: from 771 midfield first-and-10 possessions the offense scored next 467 times for 2,589 points, the defense 191 times for 1,077, and 113 possessions produced no score; net expectation (2589-1077)/771 = 1.96 points. Step three is compression: across all first-down situations the empirical curve is approximately affine, V(x) = -2 + x/12.5, anchored at -2 on the own goal line, 0 at the own 25, +2 at midfield, +4 at the far 25, +6 at the opponent goal. Step four is algebraic consequence: because V(x) + V(100-x) = 4, a turnover at an unchanged line of scrimmage swings exactly four points anywhere on the field — a conserved quantity derived from the mirror symmetry of the affine potential, not an observed regularity asserted without proof. Step five is decision: fourth-down choices become branch expectations, 0.7(5.8) + 0.3(1.6) = 4.54 for fourth-and-1 at the opponent 5, with an explicit break-even probability and a derived policy (no field goal inside the opponent 10; kick only on fourth-and-6 or more). Step six is objective sensitivity: the same book shows that with six minutes left, fourth-and-1 at the 10, two points behind, win probability reverses the verdict — kick 68.4 versus go 52.3 — because the value function changed from points to wins. Step seven is aggregation: drive value is delta WP (145 to 266 = +121 per mille), garbage-time touchdowns are worth zilch, and season scoring regresses on yards and turnovers with coefficients 14.03, 2.08, 38.7 over 560 team-seasons, whose turnover coefficient (~4.16 per pair) independently corroborates the four-point swing. The intellectual honesty of the construction is part of the kernel: the authors warn that one freakish field goal can mess up a decimal point, they exclude end-of-half drives from the sample, and they distinguish potential (12.5 yards per point) from realized scoring (about 12 yards per point). Every later layer — EPA, DVOA, modern win-probability models, fourth-down bots — is a refinement of this dependency chain, which is why the book reads today as a specification rather than a period piece.",
+   "retrocausal_genealogy": "The 2023 reissue is itself the retrocausal anchor: Schatz's foreword states that Hidden Game featured the first public discussion of win probability from score, time, and field position, and the first measurement of expected points added in the NFL, and traces the lineage forward through Football Outsiders' DVOA to the present analytics consensus. The dependency runs backward from today's EPA and WP models to the 1988 next-score estimator and affine potential: modern nonlinear EPA curves are refinements of V(x), modern fourth-down bots implement the branch-expectation rule with break-even probabilities, and modern drive attribution is delta WP with a garbage-time filter. The book's own 1977-86 regression and 34-points-per-win bridge prefigure Pythagorean-style team-strength models. Nothing in this genealogy is borrowed from physics or mathematics historically; the kernels are football-native constructions that later happen to be isomorphic to value functions and conservation arguments.",
+   "theory_of_mind": "The authors write against a specific opponent: the 1988 coach's conventional wisdom, which they personify as The Coach's Book of Conventional Wisdom and illustrate with the USA Today headline 'Gamble Fails But Steelers Win 17-16' about Chuck Noll's fourth-and-1 decision. They anticipate that arithmetic alone will not persuade — 'getting a coach to go against conventional wisdom is like getting a rooster to swear off dawn' — so they arm the reader with worked numbers, humor, and repeated concrete cases rather than abstract proofs. Schatz, as the 2023 reader, models the vindication arc: a cult book that went out of print and became the specification of the field. Understanding both audiences — the resistant 1988 coach and the retrospective 2023 analyst — explains why the book mixes satire with tables and why its invariants are stated as approximations with explicit caveats rather than as laws.",
+   "cross_layer_veto": "Three vetoes applied. First, Chapter 17's betting material (point spreads, vigorish, margin distributions relative to expectations) is excluded from every primitive: the contract forbids sportsbook odds, and none of the extracted kernels depend on that chapter. Second, the book's numeric tables (point potential chart, win probability chart, success-rate table) are image plates in this PDF; no verbatim quote is taken from them, and every cited number appears in extractable body text verified against the normalized dump and the PDF page. Third, era-specific constants (12.5 yards per point, 4-point swing, 14.03/2.08/38.7, 34 points per win, 70% fourth-and-1 conversion) are flagged as 1980s NFL calibrations, not universal constants; the physics analogies (potential gradient, conservation under possession exchange) are declared structural isomorphisms, never historical origins."
+  },
+  {
+   "trace_id": "t1-causality-measurement-gauge",
+   "think": "The second spine of the book is a theory of measurement and causality, and it is as load-bearing as the expected-points kernel. The causality reversal is stated with the rooster-and-sun image: the team did not win because the back gained 100 yards; the back gained 100 yards because the team won. The game-script data make this quantitative — teams leading by more than seven run 46% of first-half plays and 61% of second-half plays, while teams trailing by more than seven run 42% then 27% — so rushing volume is an effect of the score state, not a cause of victory, and any model that treats 100-yard rushers as a winning input has the arrow backward. The strongest-link lecture supplies a production constraint: an offensive line is so interdependent that it cannot be better than its strongest link, which is why rookie linemen rarely improve a team immediately and why line statistics resist individual attribution. The turnover accounting supplies a yardage currency: 50 yards charged per fumble, 45 per interception (average return about 11-14 yards against a 19-yard average pass), a 10-yard touchdown bonus because the potential at the 1 is a bit over 6 rather than 7, and the observation that an interception at the end of a half costs essentially nothing. The era-normalization chapter supplies the gauge: RATE divides adjusted yards per game by the league leader's so that 100 always means best-in-era, aggregates career seasons by attempt weight, and shows Don Hutson's 96.7 career RATE towering over later receivers; the new passer rating (Yards + 10 TD - 45 INT) per Attempt replaces the NFL's capped multi-factor formula with a transparent linear yards-per-attempt metric. Finally the season regression ties the currencies together: points = yards/14.03 - 2.08 x net turnovers - 38.7, with the worked Miami 1986 example predicting 391 against 430 actual, and the 34-points-per-win bridge (36 in high-scoring games, 32 in low-scoring) converting scoring differential into wins. The yardage currency even yields a quick equivalence: at about 12 yards of offense per point, the 50-yard fumble charge and 45-yard interception charge mean a team must give the ball away roughly two more times than its opponent to lose about one touchdown — which is why the authors call turnovers overrated as a raw count while still pricing each one precisely. And the two independent measurements of the yard-to-point exchange rate agree to within half a yard: the realized rate from total offense and total scoring is about 12 yards per point, while the first-down potential curve rises one point per 12.5 yards — a cross-validation between an aggregate ratio and a state-conditioned expectation, not a coincidence the book leaves unexamined. Read together, these form a discipline: condition on state before attributing value, respect interdependence constraints, price events in a common currency, fix the era gauge before comparing across time, and validate every linear fit against worked examples — including catching the book's own inconsistent parenthetical in the regression example, where the stated coefficients plus the 391 result are reliable but the printed arithmetic is not.",
+   "retrocausal_genealogy": "These measurement doctrines descend directly into modern practice: game-script-adjusted rushing stats and the rejection of 100-yard-rusher narratives implement the rooster-sun reversal; EPA's state-conditioning implements 'the situation is everything'; era-adjusted Hall-of-Fame and cross-era player comparisons implement the leader-relative RATE gauge; and linear passing metrics (the 10/45 new rating is an ancestor of adjusted yards per attempt) implement the transparent yards-per-attempt currency. The strongest-link constraint anticipates modern lineup-interdependence and weakest-link production models. The genealogy is internal to football analytics: the book's 1988 arguments are the documented source, confirmed by the 2023 foreword, and no external physics or mathematics origin is claimed for any of them.",
+   "theory_of_mind": "The authors' rhetorical strategy reveals their model of the reader's mind: they expect resistance from coaches and fans who equate volume with value, so they lead with humor and concrete counterexamples (the rooster, the 'zilch' garbage-time touchdown, the ten satirical rules for getting into the Hall of Fame) before presenting arithmetic. The Hall-of-Fame rules are a theory of selector psychology — stay alive, stay in the limelight, don't succeed a superstar — and the all-pro points system (8 consensus, 5 first-team, 3 second-team) is an explicit model of how perceived excellence is aggregated. Reading these as models of other agents' beliefs, not as jokes, explains why the book insists on perception-independent metrics: the authors are designing measurements that survive the biases of the humans who will use them.",
+   "cross_layer_veto": "Vetoes: the strongest-link claim is a constraint heuristic argued by example, not a proven theorem, so it is recorded as an assumption-laden production constraint rather than a law; the RATE gauge and the 10/45 coefficients are conventions whose era-dependence is flagged in every breakdown regime; the regression's printed parenthetical is internally inconsistent with its own 391-point result, so the primitive uses the stated coefficients (14.03, 2.08, 38.7) verified against the worked example and documents the discrepancy instead of silently repairing it. No betting content from Chapter 17 enters any primitive, no image-plate table is quoted, and no physics isomorphism is presented as a historical origin — all analogies are declared structural."
+  }
+ ],
+ "universal_lens": "A founding text of state-dependent valuation in a stochastic territorial game: an empirical next-score expectation compressed into an affine potential, a conserved four-point swing under possession exchange, threshold policies indexed by down and distance, a win-probability value function with garbage-time null states, and era gauge fixing for cross-time comparison. The template generalizes to any domain that values states by expected future outcomes and must separate potential from realized value, effect from cause, and era drift from individual signal.",
+ "gsi_mapping": "GSI compiles the measurement doctrine: condition on situation before attributing value (the situation is everything), reverse causal arrows before crediting inputs (rooster-sun game-script check), respect interdependence constraints (strongest-link production), price events in a common currency (turnover yardage and point swing), fix the era gauge before cross-era comparison (leader-relative RATE), and validate every fit against worked examples including its own errata. These become GSI's feature-quality gates and narrative-audit checks for any corpus-derived claim.",
+ "gse_mapping": "GSE receives operational kernels with named hooks: EP(x) = -2 + x/12.5 as the era-1980s drive-EP prior with per-bucket residual logging; the next-score estimator (N=771, EP=1.96 midfield) as the calibration anchor; the 4-point turnover swing as the EPA turnover prior cross-checked by the 2.08 regression coefficient; the fourth-down branch rule with break-even p* and dual EP/WP heads (regression tests: 4.54 go, 68.4-vs-52.3 kick); delta-WP drive attribution with a garbage-time filter (145->266 = +121 anchor); tau=(0.4,0.6,1.0,1.0) success thresholds; and leader-relative RATE plus NW=(Y+10TD-45INT)/Att as era-normalized player features. Every constant carries an era-calibration flag."
+}

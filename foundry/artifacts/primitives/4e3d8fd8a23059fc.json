@@ -1,0 +1,142 @@
+{
+  "book_id": "4e3d8fd8a23059fc",
+  "source_status": "COMPLETE",
+  "pages_total": 14,
+  "pages_read": 14,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "ASPOGAMO camera-view player trajectory determination (Automated Sports Game Analysis Models)",
+      "verbatim_quote": "They propose ASPOGAMO, a visual tracking system that determines the coordinates and trajectories of football players in camera view based on TV broadcasts.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "Source is a prose resource directory (Football-Analytics-101, readthedocs, Jun 30 2020); no equations are printed, so latex is null rather than fabricated notation. The entry (printed p.4, PDF p.8) describes the 2007 IJCAI system ASPOGAMO, an extension of <ASPOGAMO: Automated Sports Game Analysis Models>. Stated operating assumption: player coordinates and trajectories are recoverable in CAMERA VIEW from monocular TV broadcast footage (i.e. image-plane, not pitch-plane, coordinates; broadcast camera geometry and occlusion handling are implicit and not specified in this directory).",
+      "breakdown_regime": "Fails or degrades when broadcast assumptions break: camera cuts/zoom changes reset the image-plane frame; heavy occlusion (crowded box, pile-ups) and motion blur break per-player identity; off-ball players outside the frame are unobservable; no metric pitch calibration is claimed, so camera-view coordinates cannot be treated as SI metre positions without a homography the source never provides. The directory gives no accuracy figure for ASPOGAMO, so its error regime is LATENT here.",
+      "domain": "football",
+      "timescales": [
+        "tau_frame ~ 0.04 s (25 fps broadcast)",
+        "tau_track ~ 1-10 s (per-player trajectory segment)",
+        "tau_possession ~ 10-60 s",
+        "tau_match ~ 90 min"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds to the OBSERVATION CHANNEL of the 22-player football dynamical system: the true state x_t (22 player positions/velocities + ball) is only partially observed through a camera-view projection y_t = H(x_t) + noise. ASPOGAMO is the source-side instance of estimating trajectory state from a lossy broadcast projection; in the gridiron sim the same operator is the tracking->state estimator whose observation matrix H and occlusion-induced missingness must be modelled before any transition kernel is trusted.",
+        "source_operator": "p1",
+        "telemetry": "Per-frame image-plane detections and track IDs, track continuity / identity-switch counts, fraction of players in-frame, camera-cut timestamps. Metric pitch coordinates and true velocities are LATENT_UNIDENTIFIABLE from this directory alone (no homography or accuracy reported)."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Wisdom-of-the-crowd projection aggregation (mean / weighted average / robust average)",
+      "verbatim_quote": "One of their contributions is that they propose to calculate “wisdom of the crowd” projections by aggegating multiple sources of projections, which allows users to aggregate the sources by calculating a mean, weighted average, or robust average.",
+      "page": 14,
+      "latex": "\\hat{y} = \\sum_{i=1}^{N} w_i\\, y_i, \\qquad \\sum_{i=1}^{N} w_i = 1, \\quad w_i \\ge 0",
+      "symbol_and_unit_ledger": "DERIVED FORMALIZATION, not printed source notation: the source (printed p.10, PDF p.14) states the operation only in prose ('calculating a mean, weighted average, or robust average'); the LaTeX is the standard dimensionally-homogeneous formalization of that prose. y_i = projection from source i [unit: fantasy points, dimensionless scoring measure]; w_i = aggregation weight for source i [dimensionless, probability simplex, sum=1, w_i>=0]; N = number of projection sources [count, dimensionless]; \\hat{y} = fused crowd projection [fantasy points, same unit as y_i]. Mean is w_i=1/N; robust average replaces the arithmetic mean with a trimmed/median-type location estimator over the same y_i (units unchanged). No force/fatigue/effort terms; expression is a convex combination, dimensionally homogeneous.",
+      "assumptions": "Prose-only directory entry for 'Fantasy Football Analytics' (printed p.10, PDF p.14). Stated method: aggregate multiple independent projection sources by mean, weighted average, or robust average. Implicit statistical assumptions for the weighted form to reduce variance: sources are at least partially independent and individually unbiased-ish; weights reflect reliability. The source does NOT state independence, correlation, or bias structure, so those are assumptions of the derived kernel, not claims of the book.",
+      "breakdown_regime": "Breaks when sources are correlated (shared injury news / shared model lineage => effective N collapses toward 1 and variance reduction vanishes); when one source is systematically biased the mean inherits the bias (robust average resists outliers but not shared bias); when a source is stale or leaked post-cutoff information the fusion is contaminated. Weights chosen on the same rows used to score the fusion violate held-out discipline. Doctrine veto: sportsbook odds must never enter y_i or w_i.",
+      "domain": "math",
+      "timescales": [
+        "tau_update ~ weekly / pre-game projection refresh",
+        "tau_news ~ hours (injury/lineup shocks)",
+        "tau_score ~ per-game settlement",
+        "tau_season ~ 17-18 weeks"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to the GSE projection-fusion / DFS-portfolio kernel: treat each model or provider as a source y_i and fuse with correlation-aware weights w_i on the probability simplex, preferring a robust location estimator for tail-risk control. The convex-combination operator is the transition from a vector of candidate projections to a single portfolio input; the constraint sum w_i = 1 is the budget/simplex constraint of the fusion, and robustness is the tail-risk guard against a single corrupted source.",
+        "source_operator": "p2",
+        "telemetry": "Per-source projection vectors y_i over players, pairwise source correlation / residual covariance, weight vector w_i, dispersion (MAD/trim fraction) of the crowd, and held-out settlement error of mean vs weighted vs robust fusion. Source independence is LATENT_UNIDENTIFIABLE unless residual correlation is measured."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Armchair Analysis play-level custom charting schema (QB Pressure / Hits / Hurries; Defenders in the Box; Contested Balls)",
+      "verbatim_quote": "they chart 38 different custom variables that are available 7 days after each game. QB Pressure, Hits, Hurries; Defenders in the Box; Contested Balls.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "Prose directory entry (printed p.10, PDF p.14). Stated facts: play-by-play charting for every play of every game for every player since the 2000 season; 700+ data points across 30 tables joined by specific play/player/game IDs; 38 custom charted variables available 7 days after each game; explicitly not scraped/regurgitated stats. Assumption: human/charted labels (pressure, hits, hurries, box count, contested balls) are consistent enough across charters to serve as ground-truth-ish observables; the directory does not report inter-rater reliability.",
+      "breakdown_regime": "Breaks where charting subjectivity dominates: 'pressure' and 'contested' are judgement calls with unreported inter-rater agreement; the 7-day latency means the variables are unavailable for in-game or same-week real-time decisions; pre-2000 plays are absent (left-censoring); ID joins fail if play/player/game keys are misaligned. Treat labels as noisy proxies, not exact physical measurements.",
+      "domain": "football",
+      "timescales": [
+        "tau_play ~ 4-6 s (snap to whistle)",
+        "tau_drive ~ 2-4 min",
+        "tau_latency = 7 days (charting release)",
+        "tau_history ~ 2000-present"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds to the HIDDEN-STATE OBSERVABLES of the 22-player system: QB Pressure/Hits/Hurries are noisy measurements of the latent pass-rush pressure field acting on the quarterback; Defenders in the Box is a count observable of the latent run-stopping mass concentration; Contested Balls labels the latent separation/coverage state at the catch point. These are the calibration targets that turn a latent defensive-state variable into something measurable in the Coach-Mind sim.",
+        "source_operator": "p3",
+        "telemetry": "Per-play counts of pressures/hits/hurries, box-defender count, contested-target flag, joined by play/player/game IDs; 7-day release lag. Inter-rater reliability and the exact pressure definition are LATENT_UNIDENTIFIABLE from the directory (must be obtained from the vendor codebook)."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Google Research Football reinforcement-learning environment (Gameplay Football base)",
+      "verbatim_quote": "Google Research Football is an RL environment based on open-source game Gameplay Football.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "Prose directory entry (printed p.5, PDF p.9). Stated: Google Research Football is an RL environment based on the open-source game Gameplay Football. Assumption inherited from any game-based RL env: the simulator's dynamics are a faithful enough proxy for the real game that a policy trained in sim transfers; the directory asserts no fidelity bound, reward specification, or sim-to-real gap.",
+      "breakdown_regime": "Breaks at the sim-to-real boundary: policies exploit simulator physics/agent quirks (reward hacking) that do not exist on grass; unmodelled fatigue, contact, and perception noise make the learned transition kernel optimistic; the directory provides no validation that the env matches real match statistics, so transfer is an unverified assumption.",
+      "domain": "cs",
+      "timescales": [
+        "tau_step ~ 0.1 s (sim tick)",
+        "tau_episode ~ 90 min sim match",
+        "tau_train ~ 1e6-1e9 steps",
+        "tau_eval ~ held-out match set"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds to the Coach-Mind SIMULATOR substrate: an RL environment is the controlled transition kernel P(s'|s,a) in which a coaching policy is trained before deployment. GRF is the source-side instance of 'learn a policy inside a game engine'; the gridiron analogue is training play-call / tendency policies inside the 22-player sim, with the same sim-to-real veto that the directory silently omits.",
+        "source_operator": "p4",
+        "telemetry": "Sim reward curves, episode return distribution, policy win-rate in sim vs held-out real match statistics, and a measured sim-to-real divergence metric. Real-match transfer fidelity is LATENT_UNIDENTIFIABLE from this directory (no fidelity bound printed)."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "DeepMind MuJoCo Multi-Agent Soccer Environment (2v2 physics-engine simulator)",
+      "verbatim_quote": "DeepMind MuJoCo Multi-Agent Soccer Environment, a simulator which is a 2v2 soccer game using the MuJoCo physics engine.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "",
+      "assumptions": "Prose directory entry (printed p.5, PDF p.9). Stated: a 2v2 soccer simulator using the MuJoCo physics engine. Assumptions: rigid-body contact dynamics from MuJoCo approximate player/ball interaction; 2v2 is a tractable reduction of the full 11v11 multi-agent problem; physical fidelity of the engine is taken as given. The directory prints no equations, contact parameters, or agent count scaling claim.",
+      "breakdown_regime": "Breaks on scaling and contact realism: 2v2 does not capture the combinatorial off-ball space of 11v11/22-player; MuJoCo rigid-body contact idealizes soft-tissue collision, turf, and fatigue; policies overfit the small agent count. The physics engine is a modelling choice, not a guarantee of biological or tactical validity.",
+      "domain": "physics",
+      "timescales": [
+        "tau_physics ~ 1e-3 s (MuJoCo integrator step)",
+        "tau_action ~ 0.1 s (agent control)",
+        "tau_episode ~ minutes (2v2 game)",
+        "tau_curriculum ~ 2v2 -> larger agent counts"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to the CONTACT / MULTI-AGENT transition kernel of the 22-player system: MuJoCo supplies the physics-based P(s'|s,a) for collisions and ball dynamics, and the 2v2 reduction is a curriculum kernel that must be lifted to full agent count. In GSE this is the substrate for modelling tackle/contest mechanics and for scaling a learned multi-agent policy from a small scrim to the full 22-player state without re-deriving contact physics.",
+        "source_operator": "p5",
+        "telemetry": "Contact impulse / collision counts, ball trajectory error vs real tracking, policy performance as agent count scales 2v2->11v11, integrator energy drift. Full-game tactical validity is LATENT_UNIDENTIFIABLE from the directory (no scaling result printed)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Start from what this source actually is, because that constrains every downstream claim. Football-Analytics-101 is a fourteen-page readthedocs directory dated Jun 30 2020, not a theorem book. It contains no printed equations, so the sovereign move is to refuse to invent source notation: four of the five primitives carry latex=null, and only the crowd-aggregation entry carries a derived convex-combination kernel that is explicitly labelled as a formalization of prose, with a full unit ledger. This is the dimensional gate doing real work: a directory that lists products and papers is exactly where a lazy extractor would smuggle in a toy 'success = force / fatigue' style heuristic, and the contract forbids it. The honest invariant here is epistemic, not algebraic: every entry is a claim about what is observable, at what latency, and with what unreported error. Take the observation chain first. ASPOGAMO (PDF p.8) determines player coordinates and trajectories in camera view from TV broadcasts. That single phrase 'in camera view' is the hidden state: image-plane coordinates are a projection H(x) of the true pitch state, and the directory never gives a homography, so metric positions are latent. SkillCorner, two pages later, advertises 'up to 95% accuracy' for live broadcast tracking with no definition of the metric, no confusion matrix, and no identity-switch rate. Read together, these two entries are a lesson in observation-channel humility: the same physical quantity (a player trajectory) is reported by one source as an uncalibrated camera projection and by another as an undefined marketing percentage. A sovereign extractor records the channel, not the headline. Now the fusion layer. Fantasy Football Analytics (PDF p.14) proposes wisdom-of-the-crowd projections by aggregating sources with a mean, weighted average, or robust average. The derived kernel y_hat = sum w_i y_i with sum w_i = 1 is a convex combination on the probability simplex, dimensionally homogeneous in fantasy points. Its power is variance reduction under independence; its failure mode is correlation. If every source ingests the same injury wire, the effective sample size collapses toward one and the crowd is a single opinion wearing N hats. The robust average guards against a lone outlier but not against shared bias, and weights tuned on the same rows used to score the fusion break held-out discipline. The doctrine adds a hard veto the directory itself tempts you to violate: NBAstuffer's entry openly lists DFS cheatsheets and odds products, and Opta sells to betting websites. None of that may enter y_i or w_i. The aggregation kernel is only admissible on non-odds projections. Finally the calibration and simulation layers close the loop. Armchair Analysis (PDF p.14) charts 38 custom variables, seven days after each game, including QB Pressure, Hits, Hurries, Defenders in the Box, and Contested Balls. These are the noisy observables that make latent defensive state measurable: pressure is a proxy for the pass-rush field acting on the quarterback, box count is a proxy for run-stopping mass, contested balls is a proxy for coverage separation. The seven-day lag is a structural constraint, not a footnote: these labels cannot drive an in-game decision. Google Research Football and the MuJoCo 2v2 environment (PDF p.9) supply the simulator substrate where a policy is trained before it ever meets those observables, and both silently assume a sim-to-real fidelity the directory never bounds. The through-line of the whole book is therefore a single audit discipline: name the observation channel, name its latency and its unreported error, fuse only independent non-odds sources, calibrate against charted hidden-state proxies, and treat every simulator's transfer claim as unverified until measured. That is the cognitive source code worth committing from a directory that pretends to be just a list of links.",
+      "retrocausal_genealogy": "The hidden state of this directory was created by a specific historical scar: the proprietary lock-in of sports telemetry. The text says it was 'activated by NBAstuffer-Analytics-101', a hobby site Serhat Ugur started in 2007, and it credits Sean Lahman with the first significant effort to make a baseball database freely available. That lineage runs from Lahman's open archive, through the 2007 ASPOGAMO broadcast-tracking paper, to StatsBomb's 2016 decision to release certain leagues free for research. Each step is a reaction to the same wound: Opta and InStat selling event and tracking data behind paywalls while betting websites buy it. The directory's structure, data sources first and companies second, is the sediment of that open-versus-closed struggle, and it explains why so many entries are uncalibrated vendor claims rather than reproducible kernels.",
+      "theory_of_mind": "Model three agents reading the same directory under pressure. The scout trusts InStat Scout because stats are linked to supporting video, a comfort signal that feels like ground truth. The data scientist trusts SkillCorner's 'up to 95% accuracy' because a number looks like a measurement, even though the metric is undefined. The coach trusts the eye test and the comfort call. Recurse one level: the data scientist knows the scout is anchored on video, so he expects the scout to reject a tracking-only signal; the scout knows the data scientist over-trusts the percentage, so he expects to be overridden by a spurious precision. The defensive coordinator sets a tendency trap that the quarterback's internal clock, ticking down under pressure, will misread as coverage. None of these agents can see the other's calibration error, which is exactly why the charted pressure and box-count observables, not anyone's confidence, must arbitrate.",
+      "cross_layer_veto": "Adjudicate a high-EV call against the layers. Suppose a crowd-fused projection and an AFA-style aggressive fourth-down model both say go for it, a genuinely high-EV call. The physics/psychology veto fires if Armchair's charted QB Pressure, Hits, and Hurries show the quarterback's internal clock collapsing under a heavy rush, because the projection assumed a clean pocket the hidden state contradicts. A second veto fires if the crowd's apparent N is really one correlated injury wire, so the confidence is illusory. A third, doctrinal veto fires if any source smuggled sportsbook odds into the fusion. The high-EV call is overturned not because the math is wrong but because the observation channel and the latent state refuse to support it."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The second pass reads the directory as a curriculum for building the 22-player dynamical system from the bottom up, and asks where each layer is allowed to veto the one above it. Begin with the physics substrate. The MuJoCo 2v2 environment (PDF p.9) is a rigid-body contact simulator; its integrator runs at millisecond scale and its agents at roughly a tenth of a second. This is the only entry in the book that names a physics engine, and it is the correct anchor for the contact kernel: tackles, contests, and ball bounces are impulse events, not smooth fields. But 2v2 is a reduction, and the combinatorial off-ball space of the full game is absent. The derived-kernel move is to treat 2v2 as a curriculum stage whose learned contact policy must be lifted to full agent count, with a measured scaling curve, not assumed to transfer. Google Research Football (PDF p.9) sits one level up: a full-game RL environment built on Gameplay Football. It supplies the transition kernel P(s'|s,a) in which a coaching policy is trained. The danger here is reward hacking and the unbounded sim-to-real gap. A policy that wins in sim by exploiting agent quirks is not a coaching insight; it is an artifact of the engine. The directory prints no fidelity bound, so the sovereign stance is to treat every sim win-rate as a hypothesis until it is checked against held-out real match statistics. This is the same held-out discipline that forbids scoring a fit on its own training rows, applied to simulator transfer. The observation layer then constrains what the simulator is even allowed to claim. ASPOGAMO gives camera-view trajectories without a homography; SkillCorner gives an undefined 95% accuracy. If the simulator's state is calibrated against such a channel, the calibration inherits the channel's missingness and identity switches. The cross-layer veto is explicit: a physics-faithful MuJoCo contact model cannot rescue a policy whose state estimate is built on an uncalibrated broadcast projection, because garbage observables corrupt the transition kernel regardless of how clean the contact physics is. The decision layer fuses projections with the crowd kernel and must respect both correlation and doctrine. The robust average is the tail-risk guard for a DFS portfolio, but it only works if the sources are genuinely independent and odds-free. The charted Armchair variables, arriving seven days late, are the slow calibration signal that tells you whether your pressure and coverage proxies were right, and their latency means they validate last week's model, never this week's live call. Putting the layers in order gives the veto hierarchy the book implies but never states: doctrine (no odds, no leaked post-cutoff data) vetoes everything; the observation channel vetoes the simulator's state; the physics contact kernel vetoes tactically impossible policies; the charted hidden-state proxies veto overconfident projections; and the fusion kernel's correlation structure vetoes the crowd's apparent confidence. A directory that looks like a link list is, read sovereignly, a stack of constraints where each lower layer holds a veto over the one above. Committing that hierarchy, with every vendor number flagged as latent until calibrated, is the durable artifact. Nothing here is a football-era origin myth for a pure kernel; the aggregation math is standard, the physics is MuJoCo's, and the football content is the observation and decision context the directory actually documents.",
+      "retrocausal_genealogy": "The simulator entries carry their own genealogy. MuJoCo descends from decades of rigid-body contact dynamics built for robotics and biomechanics, not for sport; its presence in a soccer directory is a migration of a physics tool into a game, which is why it idealizes soft tissue and fatigue. Google Research Football descends from the open-source Gameplay Football engine and from the reinforcement-learning lineage that treats a game as a Markov decision process. The scar that shaped both is the sim-to-real gap: every lab that trained a policy in a clean engine and watched it fail on grass learned to distrust unbounded transfer claims. That historical wound is exactly the fidelity bound the directory omits, and reading the omission as a scar rather than a fact is what keeps the extractor honest.",
+      "theory_of_mind": "Recurse the beliefs of the people who build and use these environments. The RL engineer believes the reward function captures winning; the coach believes winning is about tendencies and matchups the reward never encoded; the engineer knows the coach will dismiss sim results as a video game, so he overstates the win-rate to buy credibility; the coach, anticipating that overstatement, discounts it further than warranted. Meanwhile the defensive coordinator models the quarterback as an agent with a decaying internal clock and sets a trap that looks like open coverage. The quarterback models the coordinator as blitz-prone and speeds his clock, which is precisely the misread the trap wants. Each agent is modelling the others' calibration errors, and the only stable arbiter is the charted pressure observable that none of them can argue with after the fact.",
+      "cross_layer_veto": "Let the layers veto in sequence. A MuJoCo-trained policy proposes a tackle angle that is physically legal in the engine but, lifted to 22 players, ignores the off-ball space the 2v2 reduction never saw; the scaling veto rejects it. A GRF policy proposes a high-EV aggressive call that the observation channel cannot support because the broadcast tracking dropped half the players in occlusion; the observation veto rejects it. The crowd fusion proposes a confident projection that is really one correlated, odds-tainted source; the doctrine and correlation vetoes reject it. Only a call that survives physics, observation, hidden-state calibration, and doctrine is admissible, and the directory's silence on each bound is the reason every survival must be measured, not assumed."
+    }
+  ],
+  "universal_lens": "A polymath audit lens for any resource directory: every entry is a claim about an observation channel, so before trusting it name what is measured, at what latency, with what metric definition and what unreported error. Treat vendor percentages and simulator win-rates as latent until calibrated, refuse to invent notation the source never printed, and read the ordering of sections as the sediment of a historical open-versus-closed data struggle rather than as neutral fact.",
+  "gsi_mapping": "Map the tracking and charting kernels onto GSI telemetry: player trajectories are flow fields whose occlusion-induced missingness mirrors gaps in clinical capture; QB Pressure, Hits, and Hurries are mechanical-load proxies that feed axonal-shear and cumulative-impact risk models; Defenders in the Box and Contested Balls are contact-exposure observables. The MT-Sports smart-wearable entry (PDF p.12) is the bioenergetic channel, and the seven-day charting lag is the same latency constraint that governs post-injury clinical telemetry reconciliation.",
+  "gse_mapping": "Map the aggregation kernel to GSE DFS-portfolio projection fusion with correlation-aware simplex weights and a robust location estimator for tail-risk control, strictly odds-free per doctrine. Google Research Football and MuJoCo 2v2 are the Coach-Mind simulator substrate for training play-call and tendency policies with an explicit sim-to-real veto. Armchair's charted pressure and box-count variables are the deception-detection observables that calibrate latent defensive state, and their seven-day lag bounds them to model validation, never live calls."
+}

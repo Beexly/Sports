@@ -1,0 +1,188 @@
+{
+ "book_id": "53d47a558cf53d1f",
+ "source_status": "COMPLETE",
+ "pages_total": 88,
+ "pages_read": 88,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Axioms I-V: field of probability (Ch. I §1, printed p. 2; PDF p. 13)",
+   "verbatim_quote": "I. 55 is a field3 of sets. II. 55 contains the set E. III. To each set A in 55 is assigned a non-negative real number P(A). This number P(A) is called the probability of the event A. IV. P (E) equals 1. V. If A and B have no element in common, then P(A + B ) = P ( A ) + P ( B )",
+   "page": 13,
+   "latex": "P(A) \\ge 0,\\quad P(E) = 1,\\quad AB = \\varnothing \\;\\Rightarrow\\; P(A + B) = P(A) + P(B)",
+   "symbol_and_unit_ledger": "E = basic set of elementary events (dimensionless set); A, B = random events, subsets of E (dimensionless); P(A) = probability of A, a dimensionless real number in [0,1] (probability measure, no SI units); '+' = union of disjoint sets (A+B printed for disjoint sum); AB = set intersection; varnothing = null set 0. All quantities are pure measure values; dimensional homogeneity is trivial (dimensionless = dimensionless). OCR note: the FineReader text layer renders the script field symbol as '55' and elementary events xi as '£'; the quote preserves that rendering exactly.",
+   "assumptions": "As printed: the system of sets (OCR '55') is a field of sets in Hausdorff's sense (sum, product, difference of two sets of the system belong to the system); it contains E; to each set A is assigned a non-negative real number P(A); P(E)=1; additivity is stated only for disjoint A, B (finite additivity). Axioms I-V alone define a 'field of probability'; countable additivity (Axiom VI) is added only in Chapter II.",
+   "breakdown_regime": "Finite additivity does not yield countable additivity: for infinite fields Axiom VI is independent of I-V (printed p. 15), so limit theorems fail in 'generalized fields of probability' without it. Also P(A)=0 does NOT imply impossibility of A (Remark 2, printed p. 5): a zero-probability event can occur in a long series of tests. The empirical frequency interpretation m/n -> P(A) holds only 'under certain conditions' and only practically, not as a theorem (Ch. I §2).",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 22-player football system is modeled as a field of probability: E = all a priori possible outcome variants of a play under a fixed complex of conditions S (down, distance, field position, personnel, score, clock); the field of sets = the observable event algebra (completion, turnover, sack, penalty...); P = the measure calibrated from play-by-play frequencies under matched condition complexes. Axiom V binds only disjoint events: 'gain >= 5 yards' and 'turnover' on one play must be coded disjoint or additivity is violated.",
+    "source_operator": "p1",
+    "telemetry": "Play-by-play outcome logs stratified by the condition complex S; empirical ratios m/n per event per stratum; audit that coded events are pairwise disjoint and exhaustive (sum of stratum probabilities = 1)."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Conditional probability and Theorem of Bayes, formula (14) (Ch. I §4, printed pp. 6-8; PDF pp. 17-19)",
+   "verbatim_quote": "A u A2, . . . , An are often called “hypotheses” and formula (14) is considered as the probability P*(Aj) of the hypothesis Ai after the occurrence of event X. [P(A{) then denotes the a priori probability of A;.]",
+   "page": 19,
+   "latex": "P_X(A_i) = \\frac{P(A_i)\\,P_{A_i}(X)}{\\sum_{j=1}^{n} P(A_j)\\,P_{A_j}(X)},\\quad i = 1, 2, \\ldots, n",
+   "symbol_and_unit_ledger": "A_1,...,A_n = mutually exclusive hypotheses forming a decomposition A_1+...+A_n = E (dimensionless events); X = arbitrary observed event (dimensionless); P(A_i) = a priori probability of hypothesis A_i, dimensionless in [0,1]; P_{A_i}(X) = conditional probability of X under hypothesis A_i (the likelihood), dimensionless in [0,1]; P_X(A_i) = posterior probability of A_i after X occurs, dimensionless in [0,1]; denominator = total probability P(X) via formula (13), dimensionless. All terms are probability measures; the ratio is dimensionless. OCR note: subscripts are garbled in the text layer (P*(Aj), PAi{X)); the formula above restores the printed subscript notation of formula (14).",
+   "assumptions": "As printed: A_1 + A_2 + ... + A_n = E with the events mutually exclusive (a decomposition); X arbitrary; conditional probability P_A(B) = P(AB)/P(A) defined only when P(A) > 0 (formula (5), printed p. 6); the denominator P(X) must be positive for the posterior to be defined.",
+   "breakdown_regime": "Conditioning on an event of probability zero is undefined at this elementary level; Chapter V §2 (Borel paradox, printed p. 51) proves 'the concept of a conditional probability with regard to an isolated given hypothesis whose probability equals 0 is inadmissible' - the conditional law depends on the chosen partition (meridian-circle example). If the hypotheses do not exhaust E or overlap, formula (14) is invalid.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bayes formula (14) is the belief-update kernel for defensive-call inference: hypotheses A_i = coverage/blitz families, X = observed pre-snap formation and motion. Prior P(A_i) = historical tendency under the same condition complex; likelihood P_{A_i}(X) = formation-given-call frequency from film; posterior P_X(A_i) drives the QB's protection and progressions. The partition must be declared: conditioning on an isolated, never-before-seen alignment is a Borel-paradox trap, not a tendency.",
+    "source_operator": "p2",
+    "telemetry": "Joint counts of (formation, motion) x called coverage per down-distance stratum; held-out log-loss / Brier calibration of the posterior; minimum-support thresholds enforcing P(X) > 0 before any posterior is emitted."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Mutual independence of events; pairwise independence insufficient, 2^n - n - 1 conditions (Ch. I §5, Definition II and eq. (4), printed pp. 10-11; PDF pp. 21-22)",
+   "verbatim_quote": "It need hardly be remarked that from the independence of the events A1( A2, . . . , A, in pairs, i.e. from the relations P(A{A,) = P(A4)P(Aj) <*■«> it does not at all follow that when n > 2 these events are inde­ pendent* 12.",
+   "page": 22,
+   "latex": "P(A_{i_1} A_{i_2} \\cdots A_{i_m}) = P(A_{i_1})\\,P(A_{i_2}) \\cdots P(A_{i_m}),\\quad m = 1, 2, \\ldots, n,\\; 1 \\le i_1 < i_2 < \\cdots < i_m \\le n",
+   "symbol_and_unit_ledger": "A_1,...,A_n = events (dimensionless sets); P(A_{i_1}...A_{i_m}) = joint probability of the intersection, dimensionless in [0,1]; product of marginals P(A_{i_k}), each dimensionless in [0,1]; m = subset size (dimensionless integer); n = number of events (dimensionless integer); the full system contains 2^n - n - 1 mutually independent equations (dimensionless count). All quantities are probabilities; both sides dimensionless. OCR note: the text layer garbles subscripts (A;, Ail, A iJ) and the pairwise relation marker (<*■«>); the quote preserves the source rendering.",
+   "assumptions": "As printed: mutual independence of events is defined via independence of the two-result decompositions E = A_k + complement(A_k); ALL 2^n - n - 1 product equations (4) must hold, and they are mutually independent constraints. For n=2 this reduces to the single condition P(A_1 A_2) = P(A_1)P(A_2) (eq. (5)). Bernstein's four-element counterexample (footnote 12) exhibits pairwise independence with P(ABC) = 1/4 != (1/2)^3.",
+   "breakdown_regime": "Pairwise factorization P(A_i A_j) = P(A_i)P(A_j) for all pairs does NOT imply mutual independence when n > 2 (the quoted remark). Also (Ch. VI §1, printed p. 58) mutual independence of every finite subfamily does not necessarily give independence of the whole family in more inclusive fields. Any joint-probability computation that multiplies marginals on pairwise evidence alone is invalid.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Per-player matchup outcomes (receiver-vs-corner win, edge-rusher win, safety rotation) are pairwise-correlated observables of one 22-player joint system. Multiplying pairwise win rates into a joint 'all blocks hold' or parlay-style probability assumes mutual independence, which Bernstein's counterexample shows is a strictly stronger condition: coverage rotations couple the pairs. The 2^n - n - 1 constraint count is the audit budget for verifying factorization before any joint EV is computed.",
+    "source_operator": "p3",
+    "telemetry": "Joint distribution of per-player assignment outcomes from charted film vs the product of marginals; mutual-information / chi-square gap per subset size m; flag any joint model whose factorization was validated only at m=2."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Axiom VI (Axiom of Continuity) and complete additivity; infinite fields as idealized models (Ch. II §1, printed pp. 14-15; PDF pp. 25-26)",
+   "verbatim_quote": "Since the new axiom is essential for infinite fields of probability only, it is almost im­ possible to elucidate its empirical meaning, as has been done, for example, in the case of Axioms I - V in § 2 of the first chapter. For, in describing any observable random process we can obtain only finite fields of probability. Infinite fields of probability occur only as idealized models of real random processes.",
+   "page": 26,
+   "latex": "A_1 \\supseteq A_2 \\supseteq \\cdots,\\; \\bigcap_{n} A_n = \\varnothing \\;\\Rightarrow\\; \\lim_{n\\to\\infty} P(A_n) = 0;\\qquad P\\Big(\\sum_{n} A_n\\Big) = \\sum_{n} P(A_n)",
+   "symbol_and_unit_ledger": "A_n = events in the field (dimensionless sets), decreasing sequence with empty intersection; P(A_n) = dimensionless probability in [0,1]; limit as n -> infinity of dimensionless quantities, dimensionless; sum_n A_n = countable disjoint union; Generalized Addition Theorem (eq. (5), printed p. 15) equates two dimensionless probability values. n = dimensionless countable index. No SI units anywhere; pure measure theory.",
+   "assumptions": "As printed: the sequence is decreasing (A_1 contains A_2 contains ...) with product (intersection) equal to the null set; the axiom is imposed in addition to I-V; a 'probability field' henceforth means a field satisfying I-VI. Equivalent to P being a completely additive (countably additive) set function; for finite fields Axiom VI follows from I-V.",
+   "breakdown_regime": "Axiom VI is independent of I-V for infinite fields and has no direct empirical meaning: 'in describing any observable random process we can obtain only finite fields of probability. Infinite fields of probability occur only as idealized models of real random processes.' The restriction to models satisfying VI is declared arbitrary ('We limit ourselves, arbitrarily'). Without VI, countable sums of probabilities and all limit arguments (LLN, convergence of series) are unavailable.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A drive or season modeled as a countable sequence of plays lives in an infinite probability field only by idealization; Axiom VI is what licenses drive-level quantities like P(eventual score) = sum over disjoint first-scoring-play events, and the decay P(drive lasts > n plays) -> 0. Any infinite-horizon simulator must verify its kernel is countably additive, i.e., that truncation mass vanishes, or its long-run outputs are artifacts of a generalized (non-countably-additive) field.",
+    "source_operator": "p4",
+    "telemetry": "Empirical tail mass of drive-length distributions: fraction of drives exceeding n plays must decay toward 0 as n grows; truncation-error audit of simulated infinite-horizon quantities against finite-season data."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Markov chain definition and basic composition formula p(k,n) = p(k,m)p(m,n) (Ch. I §6, printed p. 13; PDF p. 24)",
+   "verbatim_quote": "Thus, Markov chains form a natural generalization of se­ quences of mutually independent experiments. If we set Pirn(*»,») = P^“> (A™) m < n , then the basic formula of the theory of Markov chains will assume the form: Pqttn(k’n) = 2 p qtgn(k,m)-pgml)n(m,n), k < m < n . (1) Qm If we denote the matrix \\\\pqmqn{m, n)\\\\ by p(m, n), (1) can be written as15: p(k,n) = p(k,m)p(m,n) k < m < n . (2)",
+   "page": 24,
+   "latex": "P_{\\mathfrak{A}^{(1)}\\mathfrak{A}^{(2)}\\cdots\\mathfrak{A}^{(n-1)}}\\big(A_q^{(n)}\\big) = P_{\\mathfrak{A}^{(n-1)}}\\big(A_q^{(n)}\\big);\\qquad p(k,n) = p(k,m)\\,p(m,n),\\quad k < m < n",
+   "symbol_and_unit_ledger": "A^(i) = decomposition (experiment/trial) i of E; A_q^(n) = q-th result of trial n (dimensionless events); P_{...}(A_q^(n)) = conditional probability, dimensionless in [0,1]; p(k,n) = matrix of transition probabilities from trial k to trial n, entries dimensionless in [0,1], each row summing to 1; k, m, n = dimensionless integer trial indices with k < m < n; matrix product = composition of kernels (dimensionless x dimensionless = dimensionless). OCR note: the text layer garbles the conditional-probability subscripts (Paid)aii2i..., P^“-0) and the summation form (1); the matrix form (2) 'p(k,n) = p(k,m)p(m,n)' survives cleanly and is quoted exactly.",
+   "assumptions": "As printed: the sequence of experiments forms a Markov chain iff for arbitrary n and q the conditional probability of the n-th result given ALL preceding experiments equals the conditional probability given only the (n-1)-th experiment. Transition probabilities p_qmqn(m,n) defined for m < n; the composition formula holds for any intermediate index m with k < m < n.",
+   "breakdown_regime": "The Markov property fails whenever the next outcome depends on history beyond the immediately preceding trial: long-memory dependence (accumulated fatigue, score-and-clock-dependent strategy, scripted opening drives) violates it unless the state is augmented to include those variables. Composing p(k,m)p(m,n) over a non-Markov process silently discards history and miscomputes multi-step probabilities.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Drive evolution as a Markov kernel over state = (down, distance, field position, score differential, clock bucket, personnel): p(k,n) composes per-play kernels into drive-outcome distributions via Chapman-Kolmogorov. The state must carry every variable the next play depends on; if coaching strategy depends on the whole drive history, the state is augmented or the kernel is invalid.",
+    "source_operator": "p5",
+    "telemetry": "Play-by-play transition counts between state buckets; held-out verification that empirical multi-play transitions match p(k,m)p(m,n) within sampling error; residual dependence on pre-history flags state augmentation."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Law of Large Numbers: general idea and Markov condition for normal stability (Ch. VI §3, printed pp. 61-63; PDF pp. 72-74)",
+   "verbatim_quote": "The general idea of all these theorems known as the law of large numbers, consists in the fact that if the depend­ ence of variables sn upon each separate trial 2lfc (fc = 1, 2, . . ., n) is very small for a large n, then the variables sn are stable.",
+   "page": 74,
+   "latex": "P\\{|s_n - E(s_n)| \\ge \\varepsilon\\} \\le \\frac{\\sigma^2(s_n)}{n^2\\,\\varepsilon^2}\\ \\text{(Tchebycheff)};\\qquad \\frac{\\sigma^2(s_n)}{n^2} \\to 0\\ \\text{(Markov condition)} \\Rightarrow \\text{normal stability}",
+   "symbol_and_unit_ledger": "s_n = arithmetic mean (x_1+...+x_n)/n of random variables, carrying whatever unit the x_k carry (e.g. yards, seconds - the inequality is homogeneous in that unit); E(s_n) = mathematical expectation, same unit as s_n; sigma^2(s_n) = E[(s_n - E(s_n))^2] = variance, unit = (unit of s_n)^2; epsilon > 0 = deviation threshold, same unit as s_n; n = dimensionless count; both sides of the inequality dimensionless probabilities. Markov condition: variance of the SUM divided by n^2 tends to 0 (printed condition (3), PDF p. 72; the OCR layer loses the fraction and prints 'r„'). Tchebycheff inequality is Ch. IV §3 eq. (6), printed p. 42.",
+   "assumptions": "As printed: stability means P{|s_n - d_n| > epsilon} -> 0 for some numerical sequence d_n; normal stability takes d_n = E(s_n). The Markov condition sigma^2(s_n)/n^2 -> 0 is sufficient for normal stability; for uniformly bounded centered sums it is also necessary. Tchebycheff's theorem: pairwise uncorrelated summands with sum of variances = o(n^2) give normal stability of the means; weakly correlated case requires sum of correlation bounds c(k) = o(n).",
+   "breakdown_regime": "If dependence of s_n on individual trials does not vanish (strong long-range correlation, heavy tails with infinite variance), stability can fail; the generalized expectation E*(x) (Ch. VI §4) exists for distributions where E|x| diverges (printed density example f(a) ~ 1/((|a|+2)^2 ln(|a|+2))), and then E(x+y) = E(x)+E(y) is not always true. The bound is distribution-free but loose; it says nothing about the rate beyond variance.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Season-long per-play averages (yards per carry, EPA per dropback) are stable estimators only when the Markov condition holds: variance of the sum must grow slower than n^2. Game-level clustering (same opponent, same weather, garbage-time plays) inflates effective variance; the effective sample size is smaller than the play count. The 'general idea' quoted - weak dependence of the aggregate on each single trial - is the precise criterion for trusting a season average.",
+    "source_operator": "p6",
+    "telemetry": "Variance-of-sum scaling check: estimate sigma^2(sum of n plays) vs n^2 across seasons; autocorrelation of per-play residuals by opponent/game cluster; effective-n correction before any ranking is published internally."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Zero-or-One Law for tail events (Appendix, printed pp. 69-70; PDF pp. 80-81)",
+   "verbatim_quote": "T h e o r e m : Let xx, x2, . . . , x,.......be any random variables and let f ( x u x2, . . . , x„, . . .) be a Baire function2 of the variables xu x2.........x„, . . . such that the conditional probability Pi, x„ {/ (*) = 0} of the relation = 0 remains, when the first n variables xu x2, .. . , x n are known, equal to the absolute probability P{/(*)=0} (1) for every n. Under these conditions the probability (1) equals zero or one.",
+   "page": 80,
+   "latex": "P_{x_1,\\ldots,x_n}\\{f(x) = 0\\} = P\\{f(x) = 0\\}\\ \\forall n \\;\\Rightarrow\\; P\\{f(x) = 0\\} \\in \\{0, 1\\}",
+   "symbol_and_unit_ledger": "x_1, x_2, ... = random variables (units arbitrary, fixed per coordinate); f = Baire function of the whole sequence (dimensionless indicator argument: event {f(x)=0}); P{f(x)=0} = dimensionless probability in [0,1]; P_{x_1,...,x_n} = conditional probability given the first n variables, dimensionless; n = dimensionless integer. Conclusion restricts the probability to the two-point set {0,1} (dimensionless). OCR note: subscripts garbled in the text layer (Pi, x„); quote preserves source rendering.",
+   "assumptions": "As printed: f is a Baire function (obtained by successive limits starting from polynomials); the conditional probability of {f(x)=0} given the first n variables equals the absolute probability for EVERY n. In particular the assumptions hold if the x_n are mutually independent AND f is unchanged when only finitely many variables are changed (tail event). Proof extends equality of two completely additive set functions from the finite-coordinate field to its Borel extension.",
+   "breakdown_regime": "Fails without the conditional-invariance hypothesis: for correlated sequences, or for events that depend on any finite prefix (e.g. 'the first play is a turnover'), intermediate probabilities are perfectly possible. The law is about genuinely asymptotic events only; applying it to finite-horizon claims is a category error.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Audit lens for long-run football claims: under an i.i.d. play model, any event invariant to changing finitely many plays (asymptotic win frequency, convergence of a series of outcomes) has probability 0 or 1 - so an internal model assigning 0.6 to such a tail event is internally inconsistent with its own independence assumption. Conversely, any claim with an intermediate probability must be prefix-dependent, i.e., a finite-horizon claim in disguise; the law forces the modeler to say which.",
+    "source_operator": "p7",
+    "telemetry": "LATENT_UNIDENTIFIABLE for true infinite-horizon events from finite seasons; operational proxy: finite-prefix sensitivity tests - perturb the first k plays of a simulated season and check whether the claimed tail event's indicator changes."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "Kolmogorov's 1933 monograph is the moment probability stopped being a collection of counting tricks and became a measure-theoretic discipline, and reading it as an extractor for a football decision foundry forces a confrontation with what every tendency model silently assumes. The first sovereign object is the field of probability itself: a system of sets closed under sum, product and difference, containing the sure event E, equipped with a non-negative normalized additive set function P. Nothing in Axioms I-V says what the elements are. That abstraction is the point: the same algebra governs coin tosses, Brownian paths, and the outcome space of a football play under a fixed complex of conditions. When an analytics pipeline codes 'success on third down' it is choosing a field of sets, and the axioms impose obligations that are usually invisible: events must be disjoint before their probabilities are added, the sure event must have probability one, and zero probability is not impossibility. Remark 2 of Chapter I is a quiet warning that every rare-event model ignores at its peril: P(A)=0 does not mean A cannot happen, only that it is practically impossible in a single realization. A once-in-a-season alignment is not a logical contradiction; it is a measure-zero-ish event whose conditioning requires care. That care is exactly what Chapter V delivers, and it is the deepest lesson for deception modeling. The elementary definition P_A(B) = P(AB)/P(A) requires P(A) > 0. The Borel paradox on the sphere shows that conditioning on an isolated hypothesis of probability zero is inadmissible: the conditional distribution of latitude given a meridian depends on which partition of the sphere into meridians you chose, and different pole choices give different answers, one of them non-uniform with density proportional to |cos theta|. Translated: a defensive tendency conditioned on an alignment that has never occurred is not a well-defined object until you declare the partition - the family of alignments it belongs to. The posterior is a property of the partition, not of the isolated point. Bayes' formula (14) is therefore not a license to update on anything; it is a kernel that is well-defined only on a declared decomposition A_1+...+A_n = E with positive-probability cells. The foundry's Coach-Mind simulator must carry its partition explicitly, and every tendency query must pass a support check before a posterior is emitted. This is the difference between a belief-update kernel and a storytelling machine. The second lesson is about what the axioms do not give you. Axioms I-V are finitely additive; the passage to infinite sequences of plays requires Axiom VI, the continuity axiom, which Kolmogorov explicitly declares independent of I-V for infinite fields and empirically unelucidatable: any observable random process yields only finite fields, and infinite fields are idealized models we arbitrarily restrict to countably additive ones. A drive simulator that sums over infinitely many possible drive lengths is using Axiom VI as an engineering assumption, and the honest audit is a truncation check: does the probability mass of drives longer than n plays decay to zero in the data? If the model's tail mass does not vanish, its infinite-horizon outputs are artifacts. The monograph thus supplies both the license and the audit protocol for every infinite-horizon quantity the foundry computes, from eventual-score probabilities to season-long convergence claims. Reading the preface against the appendix, the architecture is clear: elementary algebra of events, continuity to pass to the limit, random variables as measurable functions, expectation as abstract Lebesgue integral, conditional expectation via Nikodym's theorem, and finally independence and the zero-or-one law as the boundary discipline on what long-run claims can even mean.",
+   "retrocausal_genealogy": "The hidden state of modern sports analytics was created by a nineteenth-century scar: classical probability's principle of indifference produced paradoxes (Bertrand-style), and the frequentist reaction of von Mises tried to ground probability in collectives of trials. Kolmogorov's preface names the lineage precisely - Lebesgue's measure and integration made the analogy between measure of a set and probability of an event visible, Frechet abstracted it away from geometry, and the 1933 monograph arbitrated by axiomatizing rather than philosophizing. The empirical deduction section still credits von Mises for the premises of applicability. That arbitration is why today's tendency models inherit a measure-theoretic skeleton nobody audits: the field, the partition, the support condition are historical settlements, not choices each analyst re-makes.",
+   "theory_of_mind": "Under pressure the three minds hold different conditional fields. The coach's comfort call is a prior-heavy posterior: P(run | short-yardage) dominated by decades of base-rate comfort, barely updated by the current game's evidence. The defensive coordinator sets a tendency trap: he wants the offense's likelihood model P(formation | call) to be stale, so he shows a blitz look his calls rarely produce, attacking the partition the QB conditions on. The QB's internal clock truncates the observation window: his posterior is computed on a censored sample of the pre-snap picture, and the deeper the pressure, the coarser the partition he can resolve. Each agent models the others' partitions; the trap works precisely when the QB's declared partition differs from the DC's actual call decomposition.",
+   "cross_layer_veto": "The cross-layer veto fires where the mathematics forbids the high-EV call. First, the Borel-paradox veto: a tendency claim conditioned on an isolated, never-observed alignment is inadmissible without a declared partition, so any play call whose edge rests on such a conditional is vetoed regardless of its nominal EV. Second, the censoring veto from psychology: the QB's internal clock under pressure means the likelihood was computed on a truncated observation window; a deep shot whose read requires the full pre-snap picture is vetoed when pressure telemetry shows the window collapses before the read completes. Physics of the pocket and measure theory of the condition agree: the posterior is not what the game plan assumed."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second half of the monograph - independence, Markov chains, the law of large numbers, and the zero-or-one law - is where the foundry's football kernels live or die. Independence is not a convenience assumption; Kolmogorov devotes Chapter I §5 to showing it is the concept that gave probability theory its peculiar stamp, and he is exact about its cost: mutual independence of n events requires all 2^n - n - 1 product equations, and pairwise independence is strictly weaker for n > 2. Bernstein's four-element counterexample is printed in the footnote: three events, each of probability one-half, pairwise independent, yet P(ABC) = 1/4 instead of 1/8. Every parlay-style joint probability in the foundry - all blocks hold, receiver wins and quarterback delivers and ball arrives - is a mutual-independence claim, and the audit budget is the full subset lattice, not the pairwise margins. Coverage rotations are exactly the mechanism that couples pairs: the safety's leverage correlates the corner's outcome with the edge rusher's lane, so the joint distribution is not the product. The correct posture is to measure the mutual-information gap at each subset size and to refuse factorization where the gap exceeds sampling noise. Markov chains are the sanctioned weakening of independence, and the definition is austere: the conditional probability of the next result given the entire past equals the conditional probability given only the last result. The basic formula p(k,n) = p(k,m)p(m,n) for k < m < n is Chapman-Kolmogorov composition, and it is valid only to the extent the state captures everything the next play depends on. A football drive is not Markov in (down, distance, field position) alone: coaches script openings, manage clock by score differential, and rest or target players by accumulated load. The honest engineering move is state augmentation until the residual history-dependence vanishes in held-out transition data, and the honest refusal is to stop composing multi-step kernels when it does not. The monograph's own trajectory - from independent experiments to Markov's weaker condition, then to the law of large numbers for weakly dependent summands - is a ladder of dependence assumptions, each rung with an explicit validity test. The law of large numbers chapter supplies the criterion for trusting averages: the general idea, quoted verbatim in the artifact, is that if the dependence of the aggregate s_n on each separate trial is very small for large n, then s_n is stable. The Markov condition - variance of the sum growing slower than n^2 - is the quantitative form, with Tchebycheff's inequality as the engine. Season averages of per-play production are clustered by opponent, weather, and game state; the effective sample size is smaller than the play count, and the variance-of-sum scaling check is the audit that exposes it. Finally the zero-or-one law closes the system: under mutual independence, any event unchanged by altering finitely many coordinates has probability zero or one. This is a consistency veto on long-run claims. If an internal model assigns 0.6 to an asymptotic event while assuming i.i.d. plays, the model contradicts its own axioms; either the event is prefix-dependent (a finite-horizon claim wearing a tail costume) or the independence assumption is false. The law forces the declaration. Taken together these four primitives form a complete audit stack for the foundry's dynamical models: factorization audit, kernel-composition audit, averaging-stability audit, and tail-claim consistency audit - each one a theorem with printed assumptions and a printed breakdown regime, not a heuristic.",
+   "retrocausal_genealogy": "The independence lineage runs Laplace, Poisson, Tchebychev, Markov, Liapounov, Mises, Bernstein - Kolmogorov lists them himself in §5 as the workers who gave probability its peculiar stamp by studying series of independent variables. The scar is older: multiplying marginals was the classical default, and Bernstein's counterexample (printed as footnote 12) is the exact wound that forced the 2^n - n - 1 accounting. Markov's weakening of independence to one-step memory created the chain concept the play-by-play era inherited; Khintchine and Kolmogorov's own 1925-1930 series-convergence papers, cited in the appendix and §5, are the direct ancestors of every strong-law claim a season simulator makes. The zero-or-one law appendix, crediting Levy for related cases, is the boundary settlement that keeps asymptotic claims honest.",
+   "theory_of_mind": "The coach believes plays are independent draws from a stable distribution - his comfort call is a frequency estimate that assumes the Markov condition holds. The defensive coordinator knows better: he scripts constraint plays precisely to break the offense's one-step model, so the QB who models the defense as a Markov chain in visible state is modeling a process whose true state includes the DC's script. Recursively, the DC models the QB's model: he chooses the look that maximizes the divergence between the QB's transition kernel and the true one. On third-and-long the belief clash is sharpest - the coach's stable-average prior, the QB's one-step kernel, and the DC's history-dependent trap each compute a different probability for the same conversion, and only the augmented-state kernel is defensible.",
+   "cross_layer_veto": "Three vetoes compose. The factorization veto: any joint EV built from pairwise-checked marginals is rejected until the full subset lattice is checked, because Bernstein's counterexample shows pairwise data cannot certify the product. The composition veto: Chapman-Kolmogorov p(k,n)=p(k,m)p(m,n) is forbidden over a drive whose state omits score, clock, or fatigue, because the Markov property fails and multi-step probabilities silently discard history; the high-EV fourth-down decision computed from such a kernel is vetoed until state augmentation passes held-out transition tests. The tail veto: the zero-or-one law rejects any intermediate probability assigned to a genuinely prefix-invariant event under an independence model - the long-run claim must be reclassified as finite-horizon or the independence assumption dropped."
+  }
+ ],
+ "universal_lens": "Kolmogorov's axioms are a polymath audit checklist: any quantitative claim must name its probability field, its conditioning partition with positive-support cells, its independence level (pairwise versus mutual), and its additivity regime (finite versus countable). A number without these declarations is a metaphor, not a measure; the audit lens applies identically to physics ensembles, clinical risk models, and football tendency engines.",
+ "gsi_mapping": "Cumulative axonal shear exposure across a countable ensemble of impacts is a measure only if countable additivity (Axiom VI) holds, licensing dose-tail limits; conditional expectation E_u(y) via the Nikodym construction formalizes injury-risk stratification given a biomarker partition u, with the Borel-paradox warning against conditioning on isolated zero-probability load states; the Markov condition governs when averaged bioenergetic telemetry stabilizes, and Tchebycheff bounds tail deviations of shear dose.",
+ "gse_mapping": "Coach-Mind simulates drives as Markov kernels over augmented game state, composed by Chapman-Kolmogorov and audited against held-out transitions; Bayes formula (14) is the deception/tendency inference kernel with declared partitions and support checks; the pairwise-versus-mutual independence veto guards joint DFS outcome models; the zero-or-one law audits long-run tail claims. Internal only: no sportsbook odds as inputs, no publication from this lane."
+}

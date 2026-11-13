@@ -1,0 +1,165 @@
+{
+  "book_id": "553c5528787d2538",
+  "source_status": "COMPLETE",
+  "pages_total": 31,
+  "pages_read": 31,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Acute-to-chronic ratio of player load (ACWR)",
+      "verbatim_quote": "The common measure used in these types of studies is the acute-to-chronic ratio of player load, which is usually computed as the ratio between the player load in the week of the injury, labeled as acute workload, and the player load in the month of the injury (labeled as chronic workload).",
+      "page": 19,
+      "latex": "\\mathrm{ACWR} = \\frac{L_{\\mathrm{acute}}}{L_{\\mathrm{chronic}}}",
+      "symbol_and_unit_ledger": "ACWR: dimensionless ratio (player-load units cancel). L_acute: player load over the acute window = the week of the injury (7 d), in accelerometer-derived player-load arbitrary units (au). L_chronic: player load over the chronic window = the month of the injury (28 d), same au. Same device/scale across windows makes the quotient dimensionless. The review prints this definition in prose (p. 19); the LaTeX is a faithful formalization of that printed definition, not a displayed equation. Variant (ref [155], p. 20): 7/14, 7/21, 7/28-day windows with an exponentially weighted moving average and 3-day or 7-day injury lag.",
+      "assumptions": "As printed: acute workload = player load in the week of the injury; chronic workload = player load in the month of the injury; ratio of the two. Implicit: identical measurement scale across windows; player load is a valid proxy for external mechanical load; windows aligned retrospectively to the injury date. The EWMA variant additionally assumes exponentially decaying weights over 14/21/28-day chronic windows.",
+      "breakdown_regime": "Singular when L_chronic -> 0 (first preseason week, identified as the highest-workload week, or return from absence): the ratio diverges. Non-causal and selection-biased: windows anchor to the injury date and 3-day vs 7-day lag changes the ratio. Sensitive to chronic-window length (7/14 vs 7/21 vs 7/28) and EWMA vs simple averaging, so values are not comparable across studies. Player-load au are device-specific; cross-device ratios invalid.",
+      "domain": "physiology",
+      "timescales": [
+        "tau_0: single session (~1-3 h)",
+        "tau_1: acute window = 7 d",
+        "tau_2: chronic window = 28 d (14/21 d EWMA variants)",
+        "tau_3: full season"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to a per-player fatigue/injury-hazard transition kernel in the 22-player dynamical system: for player i, hazard h_i(t) is gated by ACWR_i = L_i,7d / L_i,28d from inertial/GPS player load. The kernel maps the external-load state to a soft-tissue injury probability per session; a rising ratio (sudden spike) increases transition weight into the injured state, removing that player from the available-lineup state. No football origin claimed for the ratio; it is a sports-science invariant imported as a constraint on lineup-availability transitions.",
+        "source_operator": "p1",
+        "telemetry": "Per-session GPS/inertial player load (au), weekly and 28-day rolling aggregates, injury dates with 3/7-day lag labels; calibrate hazard slope on observed injury counts. Internal cross-check via sRPE (p2) and lnRMSSD (p6)."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Session rating-of-perceived-exertion training load (sRPE x time)",
+      "verbatim_quote": "internal load: session ratings of perceived exertion, a scale from 0 to 10, multiplied by the time of the training session",
+      "page": 19,
+      "latex": "\\mathrm{Load}_{\\mathrm{sRPE}} = \\mathrm{RPE}_{\\mathrm{session}} \\times t_{\\mathrm{session}}, \\quad \\mathrm{RPE}_{\\mathrm{session}} \\in [0,10]",
+      "symbol_and_unit_ledger": "Load_sRPE: internal training load in RPE-minutes (arbitrary units au = dimensionless RPE score x minutes). RPE_session: session rating of perceived exertion on the printed 0-10 scale (dimensionless score used as a multiplier). t_session: training-session duration in minutes (min). Product units: min (RPE dimensionless). Prose definition printed in Table 11 ref [147], p. 19; LaTeX formalizes 'a scale from 0 to 10, multiplied by the time of the training session'.",
+      "assumptions": "As printed: a 0-10 perceived-exertion scale multiplied by session time. Implicit: the subjective score is a stable, comparable multiplier across players and sessions; a single post-session rating represents the whole session; the rating captures the integral of effort.",
+      "breakdown_regime": "Ceiling at RPE=10 truncates maximal sessions; zero-duration sessions give zero load regardless of intensity. Subjective perception is non-stationary under heat, fatigue and wellness state (the review links RPE to subjective wellness and heat), so identical external work yields different sRPE load. Treating an ordinal scale as a ratio-scale multiplier can fail across individuals.",
+      "domain": "physiology",
+      "timescales": [
+        "tau_0: post-session perceived-exertion rating",
+        "tau_1: session duration (~1-3 h)",
+        "tau_2: weekly internal-load accumulation",
+        "tau_3: season-long wellness trend"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the latent internal-effort/stress state in the Coach-Mind simulator: sRPE load is the subjective-channel observation of the same hidden fatigue accumulator that external player load (p1) observes mechanically. The two channels (external au vs internal RPE-min) are isomorphic summaries of one underlying stress state; disagreement flags mis-calibrated perception (e.g., a player under-reporting effort). Used as the internal-load observation operator, not a football-origin claim.",
+        "source_operator": "p2",
+        "telemetry": "Post-session 0-10 RPE questionnaire x session minutes; paired with external player load and 0-5 wellness questionnaires (fatigue/sleep/soreness) to calibrate the perception-to-load mapping."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Head-impact severity distribution (population median peak linear and rotational acceleration)",
+      "verbatim_quote": "The magnitude of most experienced head impacts by players was skewed toward low severities, with a median peak linear acceleration of 20.5 g and a median peak rotational acceleration of 1400 rad/s2 [73].",
+      "page": 8,
+      "latex": "\\tilde{a}_{\\mathrm{lin}} = 20.5\\,g, \\qquad \\tilde{a}_{\\mathrm{rot}} = 1400\\,\\mathrm{rad\\,s^{-2}}",
+      "symbol_and_unit_ledger": "a_lin tilde: population MEDIAN peak linear acceleration of experienced head impacts = 20.5 g, g = 9.80665 m/s^2 (standard gravity), so 20.5 g = 201.0 m/s^2. a_rot tilde: population MEDIAN peak rotational acceleration = 1400 rad/s^2 (source prints 'rad/s2'). Both are medians over a skewed low-severity distribution from helmet head-impact telemetry (HIT), ref [73], p. 8. Same page reports mTBI median 66.7 g / 2963 rad/s^2 (HIT, 51 cases) and LAB means 72.2 g (with loss of consciousness) vs 46.8 g (without), rotational 5247 vs 3457 rad/s^2. LaTeX restates the printed numeric values with explicit SI units.",
+      "assumptions": "As printed: median (not mean) of a distribution skewed toward low severities; measured by spring-mounted helmet accelerometers (HIT) in vivo during training and games. Implicit: helmet-mounted kinematics proxy skull kinematics; population medians summarize exposure, not individual injury thresholds.",
+      "breakdown_regime": "Medians hide the high-severity tail where injuries occur; a low median does not bound individual risk. Helmet-sensor coupling differs from mouthguard/skull coupling, biasing magnitudes. Linear-only summaries are inadequate (p4): rotational acceleration carries essential concussion information. Values are cohort-specific (collegiate) and do not transfer as universal thresholds.",
+      "domain": "physics",
+      "timescales": [
+        "tau_0: single impact pulse (~5-15 ms)",
+        "tau_1: per-session impact count",
+        "tau_2: per-season exposure (median 415 impacts/season, IQR 190-727, ref [82])",
+        "tau_3: multi-season cumulative exposure"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to a per-player cumulative head-impact exposure state in the 22-player system: each collision updates a magnitude-frequency accumulator (impacts binned by peak linear/rotational acceleration and location). The kernel maps exposure to a sub-concussive/concussive hazard and a long-term availability constraint. Position groups (linemen with the most front-head impacts) enter as different exposure-rate parameters. Imported biomechanical invariant; no football origin fabricated.",
+        "source_operator": "p3",
+        "telemetry": "HIT/instrumented-mouthguard peak linear (g) and rotational (rad/s^2) acceleration per impact, impact location, impacts per practice/game; calibrate exposure rates by position against the reported medians."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Multidimensional concussion invariant (no universal severity-only threshold)",
+      "verbatim_quote": "An issue that emerges from the literature is the fact that concussion was shown to be a complex multidimensional event that does not depend solely on severity but also on impact location, frequency of impacts, posture of the head, neck muscle activation patterns [95,100], and visual perfor- mance of the athletes [77].",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: concussion depends on impact location, frequency of impacts, head posture, neck muscle activation patterns, and visual performance, not solely on severity. The review states 'a universal concussion threshold based solely on measures of severity is difficult to define' (p. 22) and that linear-only metrics (Gadd severity index, head injury criterion) are inadequate because rotational acceleration plays an essential role. Implicit: these factors are jointly necessary; risk is a function of a vector, not a scalar.",
+      "breakdown_regime": "Any scalar severity threshold (a single g cutoff) fails because it ignores location, frequency, posture, neck activation and awareness. Linear-only injury metrics (GSI/HIC) break down for rotational-dominant impacts. Population risk curves are reliable only for population screening, not individual diagnosis; clinical recovery trajectory is not predicted by impact biomechanics (refs [67,68,75,81]).",
+      "domain": "physiology",
+      "timescales": [
+        "tau_0: impact event and neck pre-activation (~10-100 ms)",
+        "tau_1: acute clinical recovery (days-weeks)",
+        "tau_2: season exposure frequency",
+        "tau_3: career-long cumulative risk"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a multi-channel vulnerability/awareness state in the 22-player dynamical system: a player's injury susceptibility is a vector over (exposure frequency, head posture, anticipatory neck activation, visual awareness) rather than a scalar hit strength. This mirrors the deception/awareness layer: a player who perceives incoming contact (high visual awareness, pre-activated neck) transitions to a protected state, as a defender who reads a play avoids the worst outcome. The invariant forbids collapsing this vector to a single severity number in the simulator. No football origin claimed for the medical invariant.",
+        "source_operator": "p4",
+        "telemetry": "Impact location and frequency (HIT), head posture (video/motion capture), neck EMG activation latency (LATENT_UNIDENTIFIABLE in broadcast footage), visual-performance test scores; clinical symptom/recovery scores for validation."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Anticipatory neck-muscle activation (awareness) reduces head-injury metrics, not strength",
+      "verbatim_quote": "Neck muscle strength does not seem to signiﬁcantly affect head injury metrics [95,100], whereas early activation of neck muscles, representing an awareness of the impact [95], and a proper head posture [100], signiﬁcantly decrease the injury metrics.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: neck muscle strength does not significantly affect head injury metrics, whereas EARLY activation of neck muscles (representing awareness of the impact) and proper head posture significantly decrease the injury metrics. Based on computer modeling of neck muscle fibers and skull during severe impacts (refs [95,100]). Implicit: activation latency (timing/anticipation), not maximal force capacity, is the protective variable; awareness precedes the impact.",
+      "breakdown_regime": "Protective effect vanishes when the impact is unanticipated (no early activation): the awareness channel is the gate, so surprise contacts remove the benefit. Strength-only interventions fail (no significant effect). Modeling-derived: depends on finite-element neck/head model validity and activation-latency parameters; latency cannot be read directly from broadcast video (latent).",
+      "domain": "psych",
+      "timescales": [
+        "tau_0: neck pre-activation latency before impact (~tens of ms)",
+        "tau_1: impact pulse (~5-15 ms)",
+        "tau_2: per-play anticipation/awareness state",
+        "tau_3: season-long awareness/visual-performance adaptation"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the recursive theory-of-mind / anticipation layer of the Coach-Mind simulator: the protective variable is the player's belief that contact is imminent (awareness), operationalized as early neck activation, not raw strength. A player who correctly models the opponent's intent pre-activates (braces, adjusts posture) and reduces injury metrics; a misread play leaves the neck unprepared. This is the same belief-clash structure as a comfort call vs a tendency trap: the internal model of the opponent gates the physical outcome. Medical invariant imported as an awareness-to-protection mapping, not a football origin.",
+        "source_operator": "p5",
+        "telemetry": "Neck EMG onset latency relative to impact (LATENT_UNIDENTIFIABLE from video), head posture, impact-anticipation labels from video review; visual-performance scores (ref [77]) as an awareness proxy."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Vagal-tone recovery index lnRMSSD and linemen autonomic impairment",
+      "verbatim_quote": "It has been shown that linemen experience a decrease in vagal tone throughout the season [153,154,165], and they do not fully recover baseline vagal activity on consecutive training days [159].",
+      "page": 21,
+      "latex": "\\mathrm{lnRMSSD} = \\ln\\!\\left(\\sqrt{\\tfrac{1}{N-1}\\sum_{i=1}^{N-1}(RR_{i+1}-RR_i)^2}\\right)",
+      "symbol_and_unit_ledger": "RR_i: successive R-R (inter-beat) intervals in milliseconds (ms). N: number of RR intervals (dimensionless count). RMSSD = root mean square of successive differences, in ms. lnRMSSD = natural logarithm of RMSSD, reported in ln(ms) (log of a dimensional quantity is conventional HRV practice; argument is RMSSD in ms). The review NAMES this metric verbatim ('natural logarithm root mean square of successive differences', Table 11 refs [159],[153],[154],[165], p. 20) as a time-domain index of vagal tone; the LaTeX is the standard definition of that named metric (the review does not display the formula). Resting heart rate (beats/min) is the companion internal-load measure.",
+      "assumptions": "As printed: lnRMSSD is a time-domain index of vagal (parasympathetic) tone, sampled by mobile/finger sensors just before each training session; linemen show a season-long decrease and fail to recover baseline on consecutive training days. Implicit: artifact-free, approximately stationary RR series during the short recording; vagal interpretation of RMSSD holds; individual baseline referenced.",
+      "breakdown_regime": "Ectopic beats/arrhythmia and motion artifact corrupt successive differences; RMSSD=0 makes ln undefined. Confounded by heat, dehydration, and concussion (ref [154] documents daily HRV fluctuation in a concussed player), so low lnRMSSD is not specific to training fatigue. Population linemen trend does not give an individual return-to-play threshold.",
+      "domain": "physiology",
+      "timescales": [
+        "tau_0: morning pre-session HRV recording (~1-5 min)",
+        "tau_1: day-to-day recovery between sessions",
+        "tau_2: weekly autonomic balance",
+        "tau_3: season-long vagal-tone decline (linemen)"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to a per-player recovery state variable r_i(t) = lnRMSSD_i(t) - baseline_i in the 22-player system, acting as the internal-load gate on the practice-load allocation kernel: when r_i falls below an individual threshold (incomplete vagal recovery, as documented for linemen on consecutive days), the kernel down-weights that player's assigned contact/load and flags reduced availability. Couples to the external ACWR kernel (p1) as the internal-channel counterpart. Imported HRV invariant; no football origin fabricated.",
+        "source_operator": "p6",
+        "telemetry": "Morning finger-sensor lnRMSSD (ln(ms)) and resting HR (beats/min), individual baseline, position group (linemen vs others), concussion status; calibrate recovery thresholds against next-day wellness and reactive-strength-index tests."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "The load-recovery loop in this review is a closed feedback system, and reading it bidirectionally exposes why a single number cannot govern it. Forward direction: external mechanical work is transduced by GPS/inertial sensors into player load (arbitrary units), aggregated into an acute week and a chronic month, and divided into the acute-to-chronic ratio (553c5528787d2538:p1, p. 19). That ratio is a hazard gate, not a cause: a sudden spike relative to the rolling month raises soft-tissue injury probability. In parallel, the same session is observed through a subjective channel, the session rating of perceived exertion multiplied by session time (553c5528787d2538:p2, p. 19), and through an autonomic channel, the morning lnRMSSD vagal index (553c5528787d2538:p6, pp. 20-21). Three operators observe one hidden stress accumulator from different angles. The control decision, how much contact and running to assign tomorrow, must fuse them, because the review's central empirical finding is that linemen neither recover baseline vagal activity on consecutive training days nor escape a season-long vagal decline (p6, p. 21), even when external load looks periodized. Retrocausal direction: start from the injury and run the kernel backward. The injury date anchors the acute window; the month before it defines chronic exposure; the 3-day or 7-day lag choice (p1 EWMA variant, p. 20) decides which load spike is even visible. This backward anchoring is a selection bias built into the metric: we only ever compute the ratio for players who got hurt, so the ratio's apparent predictive power is partly an artifact of conditioning on the outcome. The honest inference is that ACWR is a screening constraint on lineup availability, not an individual diagnosis. The veto structure is the key transferable invariant: when the internal channel (depressed lnRMSSD, elevated sRPE for the same external work) disagrees with a benign external ACWR, physiology vetoes the high-load call. The review documents exactly this dissociation, external load can be periodized while internal recovery fails, so a coach who reads only the external ratio is blind to the accumulating autonomic debt. The derived kernel therefore carries two state variables per player, an external-load ratio and an internal-recovery residual, and transitions to the injured/removed state when either crosses its gate, with the internal gate dominating for linemen. No football origin is claimed for ACWR, sRPE, or lnRMSSD; they are sports-science and physiology invariants imported as constraints, and the football content is the explicit mapping onto the 22-player availability and practice-allocation kernels, calibrated by the telemetry named in each primitive. Every quantity here is dimensionally homogeneous: the ACWR is a dimensionless ratio of like player-load units, sRPE load carries RPE-minutes, and lnRMSSD is the log of an RR-interval statistic in milliseconds, so no heuristic force-over-fatigue shortcut enters the kernel.",
+      "retrocausal_genealogy": "The hidden state that produces an injury was written weeks earlier by the load history, and the metric itself inherits a scar from how it is computed. Because the acute and chronic windows are anchored to the injury date (553c5528787d2538:p1, p. 19), the ratio is only ever evaluated on players who were hurt, a selection bias baked into the lineage. The 3-day versus 7-day lag and the 7/14, 7/21, 7/28 EWMA windows (p. 20) are historical choices that decide which spike is visible. The first preseason week, the highest-workload week, has no chronic history, so the ratio's denominator is undefined exactly where risk concentrates.",
+      "theory_of_mind": "Three agents read the same player and disagree. The strength coach trusts the external ACWR and wants the planned contact load; the sports scientist reads a depressed morning lnRMSSD and elevated sRPE for identical external work and argues for recovery; the player, motivated to keep his roster spot, under-reports perceived exertion. The recursive clash is that each model of the others' incentives distorts the signal: the coach suspects the scientist of over-caution, the scientist suspects the player of masking fatigue, and the lineman's culture of playing through soreness biases the subjective channel. The kernel must weight the objective autonomic channel above the manipulable subjective one.",
+      "cross_layer_veto": "Physiology vetoes the high-EV load call when internal and external channels dissociate. The review's empirical core is that linemen fail to recover baseline vagal activity on consecutive training days and decline across the season (553c5528787d2538:p6, p. 21) even under periodized external load. Therefore a benign ACWR cannot authorize full contact when lnRMSSD is suppressed: the autonomic gate overrides the mechanical gate. The veto is asymmetric, internal debt blocks load, but a clean internal reading does not license an external spike, because the ACWR hazard still applies. Both gates must pass."
+    },
+    {
+      "trace_id": "t2",
+      "think": "Concussion in this review refuses to be a scalar, and that refusal is the sovereign invariant. The population medians are deceptively calm: a median peak linear acceleration of 20.5 g and rotational acceleration of 1400 rad/s^2 for everyday impacts (553c5528787d2538:p3, p. 8), rising to 66.7 g and 2963 rad/s^2 for mild traumatic brain injury. A naive model would set a threshold somewhere between and classify hits. The review explicitly forbids this: concussion is a complex multidimensional event depending on impact location, frequency, head posture, neck muscle activation patterns, and visual performance, so a universal severity-only threshold is difficult to define (553c5528787d2538:p4, p. 22). Linear-only metrics such as the Gadd severity index and head injury criterion are inadequate because rotational acceleration plays an essential role. Forward direction: the injury kernel must take a vector, not a magnitude. The most surprising component is anticipation. Neck muscle strength does not significantly affect injury metrics, whereas early activation of neck muscles, representing awareness of the impact, and proper head posture significantly decrease them (553c5528787d2538:p5, p. 11). The protective variable is timing and belief, not force capacity. A player who perceives the incoming contact pre-activates the neck and braces; a player who is surprised does not, and the same physical hit produces a worse outcome. This is a recursive theory-of-mind structure embedded in tissue: the body's protection depends on its model of the opponent's intent. Retrocausal direction: reconstruct a concussion from its hidden state. The clinical recovery trajectory is not predicted by impact biomechanics (p4, p. 22, refs [67,68,75,81]), so running backward from symptom resolution to a single hit magnitude fails; the genealogy runs through cumulative frequency, location, and the awareness state at each impact, not through one peak g. Cross-layer veto: the awareness channel can veto a physically safe hit classification, a low-magnitude impact to an unbraced, unaware player is not safe, and conversely a high-magnitude hit to a pre-activated, properly postured player may be survivable. The same logic couples to heat: linemen, who train at lower self-generated airspeed, have lower convective and evaporative heat-loss potential and higher exertional-heat-illness risk (p. 18), and their autonomic recovery is already impaired (p6). A high-EV contact call for a lineman in heat is vetoed by the conjunction of thermal strain and incomplete vagal recovery, even when the hit kinematics look acceptable. The isomorphic transfer to the 22-player system is the deception/awareness layer: vulnerability is a vector over exposure, posture, anticipation, and perception, and the simulator must never collapse it to a scalar severity. No football origin is fabricated for the medical invariant; Layer-1 is the source's multidimensional concussion finding, Layer-2 is the explicit mapping onto belief-gated protection and availability.",
+      "retrocausal_genealogy": "A concussion's genealogy is cumulative and anticipatory, not a single peak. The review shows clinical recovery is not predicted by impact biomechanics (553c5528787d2538:p4, p. 22), so the hidden state cannot be reconstructed from one hit magnitude. It is written by season-long impact frequency and location (p3, p. 8), by head posture and neck activation patterns at each contact, and by visual performance (p4). Linemen carry the highest front-head impact counts and a season-long vagal decline (p6, p. 21), a lineage of repeated sub-concussive exposure plus autonomic debt that no scalar threshold captures.",
+      "theory_of_mind": "Protection depends on the player's model of the opponent's intent. Early neck activation represents awareness of the impending impact and significantly reduces injury metrics, while neck strength does not (553c5528787d2538:p5, p. 11). The recursive belief clash: a defender who reads the play pre-activates and braces; one who is deceived by a misdirection or comfort call arrives unaware and unbraced, so the same physical contact injures him. The quarterback's internal clock and the defender's tendency read are the same anticipation variable. A high visual performer is less likely to suffer high-severity impacts (p4, ref [77]), confirming that awareness, not toughness, is the protective belief state.",
+      "cross_layer_veto": "The awareness and thermal layers veto a kinematically safe classification. A low-magnitude hit to an unaware, unbraced player is not safe (553c5528787d2538:p5, p. 11), so the scalar severity gate is overridden by the anticipation gate. For linemen in heat, lower self-generated airspeed reduces convective and evaporative heat loss and raises exertional-heat-illness risk (p. 18), while vagal recovery is already impaired (p6, p. 21). The conjunction of thermal strain and autonomic debt vetoes a high-EV contact call even when head kinematics look acceptable. Physics and physiology jointly overrule the play-call EV."
+    }
+  ],
+  "universal_lens": "A polymath audit lens: any risk model that collapses a multidimensional state to a scalar threshold is structurally blind. This review supplies three transferable invariants, a ratio hazard gate with a singular denominator (ACWR), a subjective-channel observation of a hidden accumulator (sRPE), and a belief-gated protection mechanism (anticipatory neck activation). The auditor's question across domains is always: which hidden vector is being scalarized, which channel is manipulable, and where does the denominator vanish or the awareness gate fail?",
+  "gsi_mapping": "For GSI's fluid/axonal-shear and bioenergetics program: rotational acceleration (median 1400 rad/s^2, mTBI 2963 rad/s^2, 553c5528787d2538:p3, p. 8) is the axonal-shear driver, and the review's insistence that linear-only metrics fail (p4, p. 22) mandates strain-based brain-deformation measures (maximal principal strain, von Mises stress). Clinical telemetry: lnRMSSD vagal recovery, core temperature and time-to-40C under uniform heat stress (p. 18), and the linemen autonomic-decline phenotype as a bioenergetic-recovery biomarker.",
+  "gse_mapping": "For GSE's Coach-Mind simulator and deception/DFS tail-risk: the multidimensional concussion invariant maps to a belief-gated vulnerability vector over the 22 players, where anticipation (early neck activation) is the theory-of-mind protection variable. ACWR and lnRMSSD become per-player availability transition kernels; the internal-channel veto blocks high-load calls for autonomic-debt linemen. DFS/portfolio tail risk is the same structure: a scalar severity rating misses the unaware, unbraced exposure, so lineup construction must respect the internal-recovery gate, never sportsbook odds."
+}

@@ -1,0 +1,12 @@
+{
+  "book_id": "1eb756d93ff49446",
+  "source_status": "INSUFFICIENT_OCR",
+  "refusal_reason": "Image-only scan with no text layer: 428-page PDF produced by 'ScanFix(TM) Enhanced' / libtiff tiff2pdf (20100615), encrypted Standard V2 R3 128-bit RC4. pymupdf page.get_text() returns 0 characters on all sampled pages (0-7, 107, 214, 321, 426). No OCR engine available in the worker environment (no tesseract binary, no pytesseract/easyocr/rapidocr modules in ocr-venv). Per standing order 2026-11-13, image-only scans without OCR get INSUFFICIENT_OCR; no content was guessed or fabricated. Clark L. Hull, Principles of Behavior (1943) is a genuine Tier-A psych monograph and should be re-queued once an OCR pass or a text-layer edition is available.",
+  "pages_total": 428,
+  "pages_read": 0,
+  "primitives": [],
+  "reasoning_traces": [],
+  "universal_lens": "Refusal record: source access insufficient (image-only scan, no OCR tooling). No extraction performed; no primitives claimed.",
+  "gsi_mapping": "Refusal record: no source content available, so no GSI mapping is asserted. Re-extract after OCR.",
+  "gse_mapping": "Refusal record: no source content available, so no GSE mapping is asserted. Re-extract after OCR."
+}

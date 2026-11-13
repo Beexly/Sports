@@ -1,0 +1,165 @@
+{
+ "book_id": "0a31ef31857e287d",
+ "source_status": "COMPLETE",
+ "pages_total": 23,
+ "pages_read": 23,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Third-Down Conversion Asymmetry (PVAMU 10/20 vs Northwestern State 2/13, Sept 7 2024)",
+   "verbatim_quote": "Prairie View A&M converted 10 of 20 third downs while Northwestern State was successful on 2 of 13.",
+   "page": 1,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; statistical tables only). Derived quantities: conversion rate = conversions/attempts, dimensionless in [0,1]; possession time = minutes:seconds, summing to 60:00 per regulation game; points per red-zone trip = points/trips (dimensionless ratio); yardage = yards (1 yd = 0.9144 m).",
+   "assumptions": "As printed: single-game observation from the Sept. 7, 2024 game at Northwestern State (W, 37-31 per the Team Results table). Conversions counted as printed; no down-and-distance or game-state split is given in the notes.",
+   "breakdown_regime": "n=20 and n=13 attempts are small samples against one opponent; no distance buckets; game state (Northwestern State trailing) likely made their third downs predictable passing situations. The rate is a game-specific observation, not a stable team parameter, and transfers poorly across opponent tiers.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 weekly preparation / notes production (days)",
+    "tau_1 drive / down cycle (25-40 s)",
+    "tau_2 single play (4-8 s)",
+    "tau_3 quarter / halftime phase (15 min)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Third down is the continuation gate of the drive Markov chain: P(continue | 3rd down) sets expected drives per game, hence possession and scoring volume. The printed 10/20 (0.50) versus 2/13 (~0.154) is a measured transition-rate asymmetry that compounds across a game's drive sequence. In the 22-player system this binds to the transition kernel '3rd-down outcome -> drive continuation'; the TOP margin in p3 is its time integral.",
+    "source_operator": "p1",
+    "telemetry": "Play-by-play third-down attempts/conversions by distance and game state; calibratable from public PBP. This document supplies only the aggregate - distance splits are LATENT_UNIDENTIFIABLE from it."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Red-Zone Trip Suppression (3 points allowed on 2 Northwestern State trips)",
+   "verbatim_quote": "Prairie View allowed just three points in two Northwestern State trips to the red zone.",
+   "page": 1,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; statistical tables only). Derived quantities: conversion rate = conversions/attempts, dimensionless in [0,1]; possession time = minutes:seconds, summing to 60:00 per regulation game; points per red-zone trip = points/trips (dimensionless ratio); yardage = yards (1 yd = 0.9144 m).",
+   "assumptions": "As printed: two Northwestern State red-zone trips yielded three points total (one field goal and one stop implied). Single game. The season table elsewhere in the notes shows opponents scoring on 4 of 5 trips (80%) with 2 touchdowns - the broader sample against which this game must be read.",
+   "breakdown_regime": "Two trips cannot estimate a rate; red-zone outcomes carry high variance (turnovers, penalties, field-position cap at the 20). The document's own season row (80% opponent red-zone scoring) shows the single-game suppression is not a season-level invariant - an internal cross-check that bounds any claim built on it.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 weekly preparation / notes production (days)",
+    "tau_1 drive / down cycle (25-40 s)",
+    "tau_2 single play (4-8 s)",
+    "tau_3 quarter / halftime phase (15 min)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Inside the 20 the field compresses and the scoring kernel shifts from P(touchdown) to a mixture over {TD, FG, stop}; points-per-trip is the constrained output (here 1.5). In the 22-player system this binds to the field-position-conditioned scoring mixture: the same offense produces different mixture weights as the goal line caps vertical space. Telemetry must condition on trip starting field position.",
+    "source_operator": "p2",
+    "telemetry": "Red-zone trip outcomes (TD/FG/stop/turnover) and starting field position from play-by-play; the notes give only the single-game point total and the season (4-5) 80% aggregate."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Time-of-Possession Conservation (37:29 to 22:31)",
+   "verbatim_quote": "PV won the time of possession battle 37:29 to 22:31.",
+   "page": 1,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; statistical tables only). Derived quantities: conversion rate = conversions/attempts, dimensionless in [0,1]; possession time = minutes:seconds, summing to 60:00 per regulation game; points per red-zone trip = points/trips (dimensionless ratio); yardage = yards (1 yd = 0.9144 m).",
+   "assumptions": "As printed: PVAMU held the ball 37:29, Northwestern State 22:31. Standard 60-minute regulation game; the two values sum to exactly 60:00, consistent with a shared-clock conservation identity and no overtime.",
+   "breakdown_regime": "TOP is a zero-sum accounting identity, not a causal driver: it measures possession share, not efficiency. A team can win TOP and lose the game (PVAMU won this game, but the season's first loss shows possession share alone does not decide outcomes). Overtime or abnormal clock stoppages change the total; the identity holds only over the full regulation game.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 weekly preparation / notes production (days)",
+    "tau_1 drive / down cycle (25-40 s)",
+    "tau_2 single play (4-8 s)",
+    "tau_3 quarter / halftime phase (15 min)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Possession time is a conserved shared resource: t_offense + t_opponent = T_game (60:00). In the 22-player system this is a budget constraint coupling the two units through the clock - every second of offensive possession denies the opponent a second. The 14:58 margin here is the time integral of the third-down continuation asymmetry (p1): more conversions extend drives, which consumes clock. Binds to the resource-allocation layer.",
+    "source_operator": "p3",
+    "telemetry": "Per-drive possession seconds from play-by-play clock data; the identity is verifiable directly from the printed totals (37:29 + 22:31 = 60:00)."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Season Third-Down Rates Through Two Games (14/35 = 40% vs opponents 8/28 = 29%)",
+   "verbatim_quote": "3rd-down conversion 14/35 8/28 3rd-down pct 40% 29% 4rd-down conversion 1/2 2/2",
+   "page": 14,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; statistical tables only). Derived quantities: conversion rate = conversions/attempts, dimensionless in [0,1]; possession time = minutes:seconds, summing to 60:00 per regulation game; points per red-zone trip = points/trips (dimensionless ratio); yardage = yards (1 yd = 0.9144 m).",
+   "assumptions": "As printed in PANTHERS OVERALL STATS: two-game aggregate (Texas Southern L 9-27; at Northwestern State W 37-31). PVAMU 14/35 (40%), opponents 8/28 (29%); fourth down 1/2 versus 2/2. The single-game 10/20 in p1 is a subset: 4 conversions on 15 attempts versus Texas Southern.",
+   "breakdown_regime": "35 and 28 attempts over two games; opponent quality differs from the upcoming FBS opponent (Michigan State); printed percentages are rounded (8/28 = 0.2857 -> 29%); no distance split. The aggregate is a prior, not a transferable rate - opponent strength must re-weight it before use.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 weekly preparation / notes production (days)",
+    "tau_1 drive / down cycle (25-40 s)",
+    "tau_2 single play (4-8 s)",
+    "tau_3 quarter / halftime phase (15 min)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The same drive-continuation gate kernel as p1 at season-aggregate scale: the 11-point gap (40% vs 29%) is the prior for a continuation advantage entering the next fixture. In the 22-player system this binds to the transition kernel with an opponent-strength covariate: the rate is conditional on the defense faced, so the FCS-derived prior must be shrunk toward the FBS base rate. Binds to prior-weighting in the sim.",
+    "source_operator": "p4",
+    "telemetry": "Play-by-play aggregates across games; this document is itself a two-game calibration snapshot. Consistency check available internally: 14-10=4 conversions on 35-20=15 attempts in the other game."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Third-Quarter Scoring Peak (10 points vs Northwestern State)",
+   "verbatim_quote": "PVAM had their highest scoring quarter in the third period when they scored 10 points.",
+   "page": 1,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; statistical tables only). Derived quantities: conversion rate = conversions/attempts, dimensionless in [0,1]; possession time = minutes:seconds, summing to 60:00 per regulation game; points per red-zone trip = points/trips (dimensionless ratio); yardage = yards (1 yd = 0.9144 m).",
+   "assumptions": "As printed: the third period was PVAMU's highest-scoring quarter of the game with 10 points. The season Score by Periods table (13/13/13/7 across two games) is consistent: 13 third-quarter points minus 10 implies 3 versus Texas Southern.",
+   "breakdown_regime": "Quarter-level scoring is a coarse, high-variance aggregate; one 10-point quarter can be a single touchdown plus a field goal and establishes no mechanism. The notes offer no causal account (no adjustment or play-call data), so any halftime-adjustment story is inference, not source fact.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 weekly preparation / notes production (days)",
+    "tau_1 drive / down cycle (25-40 s)",
+    "tau_2 single play (4-8 s)",
+    "tau_3 quarter / halftime phase (15 min)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Halftime is an information-update boundary: both staffs observe first-half tendencies and re-select policies; a third-quarter scoring spike is the observable signature of a successful update - or of opponent variance. In the 22-player system this binds to the between-phase policy-update kernel. The mapping is structural; the document cannot identify which mechanism produced the spike.",
+    "source_operator": "p5",
+    "telemetry": "Quarter-level scoring splits plus play-call charting around halftime. Mechanism attribution is LATENT_UNIDENTIFIABLE from scoring totals alone."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Fourth-Down Aggression Sample (1-for-1, 100% in game; 1/2 season)",
+   "verbatim_quote": "Prairie View A&M went 1-for-1 on fourth down, converting on 100 percent of attempts.",
+   "page": 1,
+   "latex": null,
+   "symbol_and_unit_ledger": "No source equations (latex=null; statistical tables only). Derived quantities: conversion rate = conversions/attempts, dimensionless in [0,1]; possession time = minutes:seconds, summing to 60:00 per regulation game; points per red-zone trip = points/trips (dimensionless ratio); yardage = yards (1 yd = 0.9144 m).",
+   "assumptions": "As printed: one fourth-down attempt, one conversion versus Northwestern State. The season table elsewhere shows 1/2 overall (50%) - the other attempt, versus Texas Southern, failed. Both facts are in the same document.",
+   "breakdown_regime": "n=1 in-game and n=2 season: no rate can be estimated. Fourth-down decisions are state-dependent (distance, field position, score); the 100% figure is a small-sample artifact, and the document itself contains the counterexample (season 1/2). Any headline built on the 100% is vetoed by the aggregate row.",
+   "domain": "football",
+   "timescales": [
+    "tau_0 weekly preparation / notes production (days)",
+    "tau_1 drive / down cycle (25-40 s)",
+    "tau_2 single play (4-8 s)",
+    "tau_3 quarter / halftime phase (15 min)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fourth down is an optimal-stopping decision: continue iff expected points from the attempt exceed the punt/field-goal alternative given field position and distance. The 1/2 season record is a two-sample trace of that policy's outcomes. In the 22-player system this binds to the decision-policy layer of the Coach-Mind sim, where the threshold is a function of state, not a fixed aggression constant.",
+    "source_operator": "p6",
+    "telemetry": "Fourth-down attempts with distance, field position, score state and outcome from play-by-play; the notes give only counts."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "These game notes are a small-sample estimation problem, and the sovereign content is the set of measurable process quantities, not the narrative around them. The strongest kernel is the third-down asymmetry on page 1: Prairie View converted 10 of 20 while Northwestern State managed 2 of 13. Read structurally, third down is the continuation gate of the drive Markov chain, and a gap of 0.50 versus roughly 0.154 compounds across every drive sequence in the game. The time-of-possession line is the integral of that gate: 37:29 to 22:31, which sums to exactly 60:00 - a conservation identity, not an independent fact. That identity matters because it tells us TOP is an accounting output of continuation rates, not a lever a coach pulls directly. The red-zone line completes the picture: three points allowed on two trips means the compressed-field scoring mixture landed on one field goal and one stop, 1.5 points per trip. But the document contains its own falsifier: the season table shows opponents scoring on 4 of 5 red-zone trips, 80 percent, so the single-game suppression is variance, not a stable defensive property. A faithful extraction must carry both numbers together. The same discipline applies to the fourth-down headline: 1-for-1, 100 percent, sits on page 1 while the season row on page 14 reads 1/2. The aggregate is the honest sample; the game line is a subset. Cross-checks inside the document confirm the arithmetic is coherent: the season third-down total 14/35 minus the game's 10/20 leaves 4 conversions on 15 attempts against Texas Southern, and the 13 third-quarter points in the season period table minus the 10-point quarter leaves 3 in the other game. These internal consistencies are what make the document usable as a calibration snapshot despite its size. The transfer caveat is the cross-layer veto: every rate here is measured against FCS opponents, and the next fixture is Michigan State, an FBS program. The 40 percent continuation prior must be shrunk toward the FBS base rate before it enters any simulation; using it raw would be a category error. The telemetry path is standard play-by-play: attempts, conversions, distance, game state, possession seconds, red-zone trip outcomes. The notes supply aggregates; the splits are latent and must be re-derived from PBP before any kernel is calibrated. Until then these primitives are source-true observations with explicit sample bounds, which is exactly what the artifact records. The punt unit deserves its own line: six returns for minus-11 yards means the coverage unit is losing field position on average, a hidden special-teams tax the narrative never mentions. Any possession model built from these notes must include that leak, because net field position, not gross yardage, sets the starting state of every continuation gate.",
+   "retrocausal_genealogy": "The hidden state is a two-game sample produced by an athletics communications office under a weekly deadline, one day before the fixture (metadata: created and modified 2024-09-13). The Tale of the Tape interleaves two teams' stat columns without machine-readable headers, and the schedule block carries a prior-season result into a future game. These production constraints created the document's core property: aggregates without context - no down-distance splits, no game-state conditioning - which is precisely what a scout must re-derive from play-by-play before any rate becomes a parameter.",
+   "theory_of_mind": "The SID wants a compelling narrative and selects the flattering aggregates: 100 percent fourth down, 10-of-20 third downs, a 47.8-yard punt average. The coach knows the sample is two games and the next opponent is FBS, so he reads the same numbers as fragile. The opposing scout reads them as exploitable tendencies - for instance the punt-return unit's minus-11 yards on six returns. Recursively, the scout models the SID's selection bias: the buried points-off-turnovers row (PVAMU 0, opponents 17) is as informative as the highlighted third-down line, because omission is a choice.",
+   "cross_layer_veto": "Three vetoes bind. The strength-of-schedule layer vetoes direct transfer: 40 percent third-down conversion against FCS opponents is not a prior for Michigan State's defense without shrinkage. The small-sample layer vetoes the 100 percent fourth-down headline, because the document's own season row reads 1/2. The accounting layer notes TOP is an identity, not an edge: a 14:58 possession margin is the integral of continuation rates, and the season's first loss shows possession share alone does not decide games. No primitive may be promoted past these vetoes."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second reading treats the document as an artifact with a production history, because its scars determine which numbers can be trusted. The PDF metadata dates creation and modification to September 13, 2024, one day before the Michigan State fixture, and the content shows template reuse rather than fresh authorship. The clearest scar is on the cover schedule: the November 16 Alcorn State game is listed as 'W, 23-20' - a result for a game that had not been played. The 2023 results block elsewhere in the same document contains 'Sept. 23 @ Alcorn State W, 23-20', so the future result is a copy-paste carryover from the prior season's template. A second scar: the cover reads 'VS. MICHIGAN' while the schedule, venue (Spartan Stadium, East Lansing) and series line identify Michigan State. A third: the two-deep lists Trejon Spiller as a senior while the alphabetical roster lists him as a junior, and Cameron Franklin appears as a free safety in the two-deep but a wide receiver in the alpha roster. These are not random noise; they are the signature of a weekly communications pipeline assembling blocks from a prior-season master under deadline. The theory-of-mind stack follows from that pipeline. The sports information director builds a promotional artifact - championship banners, NFL alumni lists, glowing game notes - and selects the most flattering aggregates (100 percent fourth down, 10-of-20 third downs). The coaching staff supplies the roster and depth chart, where class-year and position conflicts survive because nobody reconciles the blocks. The opposing scout consumes all of it as data. Each layer believes the others' output is authoritative, and the scout who ingests the schedule block as ground truth will ingest a fabricated future result; the scout who trusts the cover will model the wrong opponent. The cross-layer veto is therefore a provenance veto: any pipeline reading these notes must cross-validate every result against the Team Results table, which lists only the two actual games, resolve the opponent label from venue and schedule rather than the cover, and join players by jersey number plus name before any tracking merge. The omission pattern is informative too: points off turnovers reads PVAMU 0, opponents 17, buried in the stats table while the narrative highlights third downs. What the artifact emphasizes versus what it contains is itself a signal about intent, and a sovereign extraction records both the numbers and the selection bias that framed them. The practical rule for the swarm is to tag every extracted number with its provenance block - narrative, stats table, schedule, or roster - because the blocks disagree in known ways, and a number without a block label cannot be cross-validated when the next weekly edition arrives with fresh scars.",
+   "retrocausal_genealogy": "The template scars are datable within the document. The 2024 schedule lists 'Nov. 16 | W, 23-20' versus Alcorn - a result belonging to the 2023 schedule, whose results block reads 'Sept. 23 @ Alcorn State W, 23-20'. The cover says 'VS. MICHIGAN' while venue and schedule identify Michigan State. Roster class-years conflict between the two-deep and the alpha roster. Together with the 2024-09-13 metadata stamps, these scars show a prior-season master template reassembled under deadline, which is why some blocks are stale while the stats tables are current.",
+   "theory_of_mind": "Three intents collide in one artifact. The SID builds promotion: banners, NFL alumni, flattering game notes. The coaching staff supplies roster and depth chart, where position and class-year conflicts survive because no one reconciles the blocks. The scout consumes everything as data, believing each layer authoritative. The recursive failure mode is concrete: a scout who trusts the schedule's future 'results' ingests a fabricated game, and one who trusts the cover models the wrong opponent - each error propagates silently into downstream preparation.",
+   "cross_layer_veto": "The provenance layer vetoes naive ingestion. Any pipeline reading the schedule block as ground truth will ingest a fabricated future result; the fix is cross-validation against the Team Results table, which lists only the two actual games. The opponent-label layer vetoes 'Michigan' as the fixture label in favor of venue plus schedule evidence. The roster-conflict layer requires resolving player identity by jersey number plus name before any tracking join, because the two-deep and alpha roster disagree on positions and class-years."
+  }
+ ],
+ "universal_lens": "A polymath reads these game notes as a small-sample estimation problem wrapped in a persuasion artifact: Markov continuation gates, a conserved clock budget, a compressed-field scoring mixture, and an optimal-stopping decision - all reported at n=2 games, with template scars that reveal how the numbers were assembled and which of them can bear weight.",
+ "gsi_mapping": "By analogy, not source claim: the 60-minute possession budget is a shared-resource allocation like clinical time-or-dose budgets; third-down continuation is a survival-analysis transition hazard; the red-zone mixture is a constrained-output dose-response curve; and the document's template scars are the kind of provenance audit GSI applies to clinical telemetry before any reading is trusted.",
+ "gse_mapping": "For GSE these notes compile into a two-game prior with explicit uncertainty: drive-continuation rates, a TOP budget identity, red-zone mixture weights, and a fourth-down stopping policy - all flagged small-sample and opponent-dependent. The Coach-Mind sim ingests them as priors to be re-weighted against FBS competition; no sportsbook odds enter any layer, and outputs stay internal per doctrine."
+}

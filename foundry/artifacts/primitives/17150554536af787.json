@@ -1,0 +1,12 @@
+{
+  "book_id": "17150554536af787",
+  "source_status": "INSUFFICIENT_OCR",
+  "refusal_reason": "James-1890-PrinciplesOfPsychology-Vol2.pdf (726 pages, Google Books scan, producer 'Google Books PDF Converter (rel 1 21/8/06)') is image-only: full pymupdf sweep of all 726 pages found extractable text on exactly 1 page (page 0, the 2,940-char Google Books boilerplate). Pages 1-725 contain embedded raster scans with zero text layer (verified get_text() char counts across every page; page 100 confirms 1 embedded image, 0 text chars). No OCR text layer exists in the file, so no verbatim quote, page-anchored definition, or equation can be verified against source text. Per foundry-scholar standing order, image-only scans without OCR are refused with INSUFFICIENT_OCR rather than fabricated. Vol 1 of the same work is separately queued/claimed (worker ext-19); if that copy carries a text layer, Vol 2 should be re-sourced from a text-layer edition or OCR'd before re-extraction.",
+  "pages_total": 726,
+  "pages_read": 1,
+  "primitives": [],
+  "reasoning_traces": [],
+  "universal_lens": "Refusal audit lens: a 22.8 MB raster-only scan of a canonical 1890 psychology monograph carries no machine-verifiable text layer, so the polymath audit must treat every downstream claim from this file as unverifiable until an OCR or text-layer edition is sourced.",
+  "gsi_mapping": "No GSI kernels can be bound from this file: James's stream-of-consciousness, habit, and will chapters are physically present as images but absent as citable text, so axonal/bioenergetic mappings would be fabricated. Re-source with OCR before any clinical-telemetry compilation.",
+  "gse_mapping": "No GSE kernels extractable: Coach-Mind and deception mappings require verbatim source invariants with page anchors, which this image-only scan cannot supply. Queue note for supervisor: obtain a text-layer edition of James Vol 2 or run OCR, then requeue."
+}

@@ -1,0 +1,142 @@
+{
+ "book_id": "24cd6351f8d171a6",
+ "source_status": "COMPLETE",
+ "pages_total": 118,
+ "pages_read": 118,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "F1 score as the harmonic mean of Precision and Recall (single-number evaluation metric)",
+   "verbatim_quote": "It is the “harmonic mean” between Precision and Recall, and is calculated as 2/((1/Precision)+(1/Recall)).",
+   "page": 21,
+   "latex": "F1 = 2/((1/Precision)+(1/Recall))",
+   "symbol_and_unit_ledger": "Precision = TP/(TP+FP), dimensionless probability in [0,1] (fraction of positive-labeled dev/test examples that truly are positive; defined in footnote 3, p20). Recall = TP/(TP+FN), dimensionless probability in [0,1] (fraction of true positives correctly labeled; footnote 3, p20). F1 = harmonic mean of the two, dimensionless in [0,1]; the printed formula is 2/((1/Precision)+(1/Recall)) (footnote 4, p21). TP, FP, FN are integer counts of dev/test examples (unit: examples). All terms dimensionless; the expression is homogeneous. Undefined when Precision=0 or Recall=0 (division by zero).",
+   "assumptions": "Supervised binary classification with a fixed labeled dev/test set drawn from the distribution of interest (ch5-6, p14-18); Precision and Recall computed on the same set; the team needs a total ordering over candidate classifiers, so two numbers must be collapsed to one (ch8, p20-21). Footnote 3 (p20): 'There is often a tradeoff between having high precision and high recall.'",
+   "breakdown_regime": "F1 is undefined at Precision=0 or Recall=0 (1/0 singularity). It is a design choice, not a law: the source explicitly allows plain averaging or weighted averages instead (p21), and ch9 (p22-23) shows cases where combining accuracy and running time into one formula is 'unnatural' and a satisficing constraint is preferable. F1 also ignores true negatives, so it misranks classifiers on heavily skewed tasks where negative-class performance matters.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: single play evaluation (~6 s)",
+    "tau_1: drive-level aggregation",
+    "tau_2: game-level model selection",
+    "tau_3: season-long metric governance"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In the 22-player football dynamical system, a deception/play-type detector (e.g., run-vs-pass or play-action flag from formation and motion) trades precision against recall exactly as the cat classifier does. F1 binds as the single-number state-value ranking over candidate detector configurations in the Coach-Mind sim: each configuration is a transition-kernel hypothesis about how the offense's observable pre-snap state maps to hidden intent, and F1 gives a total order so the sim can select one kernel per iteration instead of arguing over two numbers.",
+    "source_operator": "p1",
+    "telemetry": "Charted play outcomes (run/pass/play-action labels) on a held-out set of games; per-configuration TP/FP/FN counts from tracking-derived pre-snap features; Precision, Recall, F1 recomputed each evaluation wave. No sportsbook odds anywhere in the loop."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Error decomposition: Bias = Optimal error rate (unavoidable bias) + Avoidable bias; Variance = dev error - training error",
+   "verbatim_quote": "Bias = Optimal error rate (“unavoidable bias”) + Avoidable bias",
+   "page": 47,
+   "latex": "Bias = Optimal error rate (“unavoidable bias”) + Avoidable bias",
+   "symbol_and_unit_ledger": "Every term is an error rate: a probability in [0,1] (fraction of misclassified examples), dimensionless. Optimal error rate = Bayes error rate (named on p47), the irreducible floor. Avoidable bias = training error - optimal error rate (printed p47: 'This is calculated as the difference between the training error and the optimal error rate.'). Variance = dev error - training error (printed p47: 'The difference between the dev error and the training error.'). The identity is dimensionally homogeneous (probability = probability + probability). Footnote 9 (p47) states these are 'Error we attribute to bias', not the statisticians' formal bias/variance.",
+   "assumptions": "Training, dev and test sets from the same distribution for the basic two-term split (ch20, p42); an estimate of the optimal error rate exists (human-level proxy, ch33-34, p66-68); error metric is a rate. Footnote 6 (p42-43): for mean squared error one can prove Total Error = Bias + Variance formally; the book uses the informal rate version. Footnote 8 (p47): negative avoidable bias means the algorithm has over-memorized the training set.",
+   "breakdown_regime": "When train/dev distributions differ, the two-term split confounds variance with data mismatch; ch40-41 (p77-80) adds a Training-dev set to separate them. When the optimal error rate is unknown (tasks humans cannot do, p48, p66-67) the unavoidable/avoidable split is unidentifiable. Avoidable bias < 0 signals memorization, and the prescription flips to variance reduction (footnote 8, p47). The informal identity is not the statistical bias-variance decomposition (footnote 9).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-play prediction error",
+    "tau_1: drive/game error aggregation",
+    "tau_2: within-era held-out evaluation",
+    "tau_3: cross-era distribution shift"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived diagnostic kernel for the GSE model stack: partition a play-outcome model's error into (i) unavoidable bias (irreducible randomness of the 22-player system, proxied by expert-consensus grading error), (ii) avoidable bias (training error above that floor), (iii) variance (held-out error above training error within the same era), and (iv) data mismatch (error jump when moving to a new era's distribution, isolated with a Training-dev set per ch40-41). Each component selects a different intervention: bigger model/features for avoidable bias, more data or regularization for variance, era-matched data for mismatch. This is the triage rule that decides which lever the Coach-Mind sim pulls next.",
+    "source_operator": "p2",
+    "telemetry": "Training error on logged plays; error on a same-era held-out split; error on a Training-dev split drawn from the training distribution; error on the current-era dev set; expert-consensus grade error as the human-level proxy for the Bayes floor. All rates computed from charted/tracking data, never from sportsbook odds."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Optimization Verification test (search-failure vs scoring-function-failure attribution)",
+   "verbatim_quote": "To apply the Optimization Verification test in practice, you should examine the errors in your dev set.",
+   "page": 86,
+   "latex": "Score_A(S*) > Score_A(S_out)",
+   "symbol_and_unit_ledger": "Score_A(S) = P(S|A), a probability in [0,1], dimensionless (printed p85: 'you might try to estimate Score_A(S) = P(S|A), the probability that the correct output transcription is the sentence S, given that the input audio was A'). A = input audio clip; S* = correct output sentence; S_out = sentence actually emitted by the approximate search. The test compares two probabilities, so it is dimensionally homogeneous. Case 1 (inequality holds): search-algorithm problem. Case 2 (Score_A(S*) <= Score_A(S_out)): objective/scoring-function problem (p86).",
+   "assumptions": "A computable scoring function Score_x(y) exists and an approximate maximization (e.g., beam search keeping K top candidates, p85) is used because exhaustive enumeration is infeasible ((50,000)^N sentences of length N, p85). A superior reference output y* is available - it need not be optimal, only better than the current output (ch46, p89, human-pilot trajectory variant). Errors are examined on the dev set and counted per cause (p86).",
+   "breakdown_regime": "If no superior reference y* exists (machine already surpasses human level and no better output is known), the test cannot attribute blame (ch35, p69; ch46 assumes T_human is 'pretty good, even if not optimal'). If the scoring function itself is miscalibrated, the inequality still partitions blame correctly but the estimated fractions inherit that miscalibration. The test says nothing about errors where both search and score are jointly at fault beyond the inequality's binary verdict.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: single play-call decision (~seconds)",
+    "tau_1: drive-level search budget",
+    "tau_2: game-level scoring-model refit",
+    "tau_3: off-season search-algorithm redesign"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Coach-Mind play-call engine is exactly the 'learned score + approximate search' pattern: a win-probability-added model Score_state(play) ranks candidate plays, and a bounded search (clock, personnel, formation constraints) picks one. When the emitted call underperforms an expert reference call on a reviewed snap, compute Score(reference) vs Score(emitted): if the reference scores higher, the search is at fault (widen the candidate set / relax pruning); otherwise the scoring model is at fault (refit the transition kernel). The per-error counts give the ceiling on what fixing either half can buy, binding effort allocation in the sim.",
+    "source_operator": "p3",
+    "telemetry": "Logged candidate-play score vectors at decision time; the emitted call; expert/charted reference calls on the same snaps; realized play outcomes; the fraction of reviewed errors with Score(reference) > Score(emitted). Tracking and charting data only; no odds inputs."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Error-analysis ceiling: category fraction bounds the maximum achievable error reduction",
+   "verbatim_quote": "if you find that only 5% of the misclassified images are dogs, then no matter how much you improve your algorithm’s performance on dog images, you won’t get rid of more than 5% of your errors.",
+   "page": 30,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "A sample of ~100 misclassified dev-set examples is manually categorized (ch14, p30); categories may overlap so percentages need not sum to 100% (ch15, p32); the proposed improvement targets one category. The source states the bound in words: the category fraction is a 'ceiling' (maximum possible amount) on how much the project could help (p30). Worked example: 90% accuracy (10% error) with 5% of errors in the category gives at best 90.5% accuracy (9.5% error), p30.",
+   "breakdown_regime": "The ceiling assumes fixing the category fixes those errors completely and creates no new errors elsewhere; interactions between categories (an example in two categories, p32) make the bound loose. Small samples (~100) give noisy fractions; ch18 (p38) warns that with only ~10 errors it is hard to estimate category impact accurately. The bound is on error reduction, not on accuracy points directly, and it says nothing about the cost of the fix (ch15, p33: 'Error analysis does not produce a rigid mathematical formula that tells you what the highest priority task should be.').",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-snap error inspection",
+    "tau_1: weekly error-category census",
+    "tau_2: feature-development sprint (weeks)",
+    "tau_3: season-level roadmap"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived investment gate for GSE feature work: before building a new observable (e.g., a pressure or leverage metric), census ~100 held-out prediction errors and count the fraction f in the category the feature could address. The maximum error reduction is f * current_error (both dimensionless rates; e.g., f=0.05 at 10% error caps the gain at 0.5 accuracy points, exactly the source's worked example). Any proposed feature whose ceiling is below the sim's meaningful-change threshold is vetoed before a week of engineering is spent. This is the quantitative prioritization kernel for the Coach-Mind feature backlog.",
+    "source_operator": "p4",
+    "telemetry": "Error-category spreadsheet over ~100 misclassified held-out plays (categories: coverage misread, pressure miscount, formation mismatch, mislabeled chart, etc.); per-category fractions; current held-out error rate; realized error reduction after each feature ships, compared against the predicted ceiling."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Optimizing vs satisficing metrics (constrained single-objective formulation)",
+   "verbatim_quote": "to minimize the false negative rate (optimizing metric), subject to there being no more than one false positive every 24 hours of operation (satisficing metric).",
+   "page": 23,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "N criteria are in play; N-1 are designated satisficing (must merely meet a threshold) and one is the optimizing metric (ch9, p22). The source's worked goal: minimize false negative rate subject to at most one false positive per 24 hours of operation (p23). The source explicitly rejects blending incommensurable quantities into one formula ('Accuracy - 0.5*RunningTime' is called 'unnatural', p22) - that blend is dimensionally inhomogeneous and is NOT adopted here. Thresholds are set by product judgment (e.g., 100ms acceptable running time, p22).",
+   "breakdown_regime": "If the satisficing threshold is set wrong (too tight: no feasible classifier; too loose: the constraint stops protecting the product), the formulation degrades. When the metric itself stops measuring what the product needs (ch11, p26, pornographic-image example), the whole objective must be replaced, not re-weighted. The approach assumes the constraints are measurable at decision time; latent constraints cannot be satisficed and must be proxied.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: per-call latency budget (milliseconds to seconds)",
+    "tau_1: play-clock window (~40 s)",
+    "tau_2: game-level fatigue accumulation",
+    "tau_3: season roster-constraint planning"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In-game call selection is a constrained optimization isomorphic to the wakeword example: optimize expected win-probability added (the optimizing metric, a dimensionless probability difference) subject to satisficing constraints - decision latency within the play-clock window, personnel/formation legality, and a fatigue/hit-exposure budget accumulated over the game. The false-positive/false-negative asymmetry maps to false aggression (a call that fails catastrophically) vs false conservatism (a safe call that wastes a down): the sim minimizes the latter subject to a hard cap on the former, rather than blending them into one score.",
+    "source_operator": "p5",
+    "telemetry": "Decision latency logs from the sim and from charted real-game huddle-to-snap timing; constraint violation counts (illegal personnel, clock expiry); per-game fatigue proxies from snap counts and tracking-derived workload; catastrophic-failure rate of aggressive calls. All internal telemetry; no sportsbook odds."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "Machine Learning Yearning is not a book of theorems; it is a book of diagnostics, and its deepest invariant is that every improvement lever must be selected by reading the error structure of the current system, not by intuition. Ng opens with the cat-startup scenario precisely because the failure mode is universal: a team under pressure holds a menu of plausible directions - more data, a bigger network, more training iterations, regularization - and no principled way to choose. The book's answer is a decomposition. Dev error splits into the training error (informally, bias) and the gap between dev and training error (informally, variance); once an estimate of the optimal error rate exists, bias splits again into unavoidable bias (the Bayes floor) and avoidable bias. Each cell of that decomposition licenses a different intervention, and the wrong intervention is not merely useless but actively wasteful: adding data to a high-bias system makes the training problem harder without touching the bottleneck. The learning-curve chapters turn this into a visual extrapolation discipline - if the training-error curve already sits above the desired performance and can only rise with more data, then no amount of data collection can reach the goal, and months of collection are vetoed before they are spent. For the GSE model stack this is the triage kernel we have been missing. Our play-outcome models are trained on logged plays from past seasons and evaluated on the current one, so the basic same-distribution assumption is violated by construction. Ng's chapters 40-41 supply the exact repair: hold out a Training-dev set drawn from the training distribution, and read the three errors - training, training-dev, dev - as a syndrome. A small training error with a large training-dev error is variance; a large training error is avoidable bias; a small gap within the training distribution but a large jump to the dev distribution is data mismatch, which is what an era shift looks like when rule changes or schematic evolution move the underlying distribution. The decomposition tells us whether to spend the next wave on more seasons of data, on a bigger model, or on era-matched reweighting - and the beta-weighting idea from chapter 39 (give the out-of-distribution bulk a lower weight, beta=1/40 in the worked example) is the cheap compromise when compute cannot afford to model both distributions fully. Two further disciplines bind directly to our held-out doctrine. First, the Eyeball/Blackbox dev split: the portion of the dev set an analyst manually reviews overfits faster, so a divergence between Eyeball and Blackbox performance is the alarm that the review process itself is contaminating the estimate. That is exactly the mechanism our sealed-baseline discipline guards against, and Ng gives us the detector, not just the rule. Second, the mislabeling analysis: when the system is at 10% error, 0.6% of label noise is tolerable; at 2% error the same 0.6% is 30% of all remaining error and must be cleaned - and cleaned on dev and test together, or the same-distribution invariant breaks. The ceiling argument of chapter 14 completes the loop: before any feature is built, count the fraction of errors it could possibly address, because that fraction times the current error is the maximum it can ever buy. A month of engineering for a 0.5-point ceiling is a vetoed investment, and the veto is quantitative, not political. The human-level chapters add the calibration anchor: use the best available human proxy (the team-of-doctors 2% example, not the junior doctor's 10%) as the estimate of the optimal error rate, because any weaker proxy is necessarily too high and will mislabel avoidable bias as unavoidable. For football, the analogous proxy is expert-consensus grading on charted plays, and its error rate is the floor below which our models cannot meaningfully be pushed. Everything above that floor is engineering; everything at it is the irreducible randomness of twenty-two coupled agents, and the honest response to it is variance reduction and better constraints, not pretending the floor can be broken.",
+   "retrocausal_genealogy": "The hidden state of this book is accumulated waste: every heuristic is a scar from a team that spent months pulling the wrong lever. Its lineage runs from statistical decision theory's Bayes error through the late-twentieth-century bias-variance tradition (Ng flags in footnote 6 that mean-squared error admits a formal Total Error = Bias + Variance proof) into 2018 deep-learning practice, where scale loosened the classical tradeoff. The draft was written to be printed and handed to teammates - a belief-coordination artifact born from the observation that technical direction fails socially before it fails technically.",
+   "theory_of_mind": "Under pressure the coach defaults to the comfort call - run up the middle on third-and-long because it feels safe - while the defensive coordinator models that comfort and stacks the box, and the quarterback's internal clock, shortened by anticipated pressure, vetoes the very reads the comfort call depends on. Each agent is modeling the others recursively. Ng's single-number metric is a device for breaking that hall of mirrors: it replaces private intuition with a shared ordering, so the coach, the coordinator, and the analyst argue about one number instead of three incommensurable beliefs.",
+   "cross_layer_veto": "Even when the win-probability model ranks a deep shot highest, physiology and clock physics veto it: the quarterback's time-to-throw under pressure is bounded by rush arrival, fatigue accumulates across the game, and hit exposure compounds. The satisficing constraint - decision latency inside the play-clock window, workload inside the fatigue budget - dominates the optimizing metric. The veto is not a model failure; it is a constraint the model must internalize, exactly as Ng's wakeword system minimizes false negatives only subject to a hard false-positive cap."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second sovereign pattern in the book is the separation of scoring from search, and the Optimization Verification test is the instrument that keeps the two honest. Any system that learns an approximate Score_x(y) and then approximately maximizes it - speech recognition with beam search, machine translation, reinforcement learning over helicopter trajectories - can fail in two distinct ways, and the failure modes demand opposite investments. The test is a single computed inequality: score the known-superior reference output and the emitted output under the same scoring function. If the reference scores higher, the search failed to find what the model already knew was better; widen the beam, relax the pruning, improve the optimizer. If the reference does not score higher, the model itself is blind to the truth; no search improvement can help, and the learning algorithm must be refit. Ng's worked census - 95% of errors due to the scoring function, 5% to search - converts directly into a ceiling: perfecting the search eliminates at most 5% of errors. The Coach-Mind play-call engine is precisely this pattern. A win-probability-added model scores candidate plays from the current state, and a bounded search - constrained by clock, personnel, formation, and the fatigue budget - emits one call. When a reviewed snap shows the emitted call underperforming an expert reference call, we compute both scores and attribute the error. Over a census of such snaps we get the fraction of failures that live in the search versus the fraction that live in the transition kernel, and that fraction decides where the next wave of engineering goes. The reference need not be optimal - Ng's helicopter chapter explicitly allows a human-pilot trajectory that is merely superior - which matters because expert charted calls are available even where no provably optimal call exists. Error analysis by parts extends the same attribution logic to pipelines. The perfect-input substitution test - replace component A's output with a hand-labeled perfect output and rerun B and C - assigns each error to exactly one component along the DAG, and the generalization to A, B, C ordered by the directed acyclic graph means our perception-prediction-decision stack can be audited the same way. The crown jewel is the flawed-pipeline theorem of chapter 57: if every component is at human-level performance given its inputs, yet the whole system falls far short of human-level, the pipeline itself is flawed - the intermediate representation is discarding information the decision needs. The lane-markings example is the template: the fix is not a better planner but a new perception channel feeding the planner. For football, if our formation and personnel modules are each near expert-level yet the call engine underperforms, the missing channel is something like leverage, alignment, or motion intent, and the theorem tells us to add the channel rather than refit the planner. Finally, the metric-design chapters close the loop. F1's harmonic mean punishes imbalance, so a deception detector with high precision and low recall cannot hide behind its precision; and the optimizing/satisficing split forbids the dimensionally inhomogeneous blend of accuracy and latency into one score, forcing instead a constrained formulation whose thresholds are explicit and auditable. Together these give the sim a governance layer: one number to rank, one inequality to attribute blame, one ceiling to gate investment, and one constraint set to keep the whole thing inside the physical and physiological envelope of the actual game.",
+   "retrocausal_genealogy": "The test descends from classical AI's separation of a learned evaluation function from heuristic search, and from control's reward-versus-policy split - Ng's autorotation helicopter example is the same pattern wearing a different costume. The scar that produced the chapter is researchers randomly choosing which half to fix: 'some researchers will randomly decide to work on the search algorithm; others will randomly work on a better way to learn values for Score.' The test exists to replace that coin flip with a computed inequality.",
+   "theory_of_mind": "The analyst believes the model is wrong; the coach believes the play-selection logic is wrong; each discounts the other's evidence because neither can see inside the other's component. The Optimization Verification test is a belief-arbitration protocol: it replaces authority with a number both sides can compute. Recursive theory of mind enters on the scoring side - the model must represent the defensive coordinator's expectations about our tendencies - while the search side stays a bounded optimizer, keeping the two belief layers from contaminating each other.",
+   "cross_layer_veto": "Information theory vetoes downstream investment when the pipeline's intermediate representation has already discarded what the decision needs: no planner, however good, can recover lane markings that were never perceived, and no play-caller can recover leverage that the formation module threw away. Psychology adds a second veto: an analyst who has manually reviewed a hundred plays overfits the Eyeball set, and a widening Eyeball-Blackbox gap forbids promoting that analyst's favored configuration until fresh data restores the gap."
+  }
+ ],
+ "universal_lens": "A polymath audit lens: any iterative learning system - athletic, clinical, or engineered - must first decompose its error into irreducible floor, avoidable deficit, generalization gap, and distribution mismatch, then let that decomposition, not intuition or authority, select the next intervention and bound its maximum payoff.",
+ "gsi_mapping": "GSI reads the decomposition as clinical triage: the Bayes floor is measurement noise no therapy can remove; avoidable bias is a treatable deficit; variance is overfitting to one patient cohort; data mismatch is applying a protocol trained on one population to another. Satisficing constraints become safety thresholds (dose, latency, exposure) that dominate the optimizing outcome, and the Eyeball/Blackbox split guards clinician-review bias in telemetry adjudication.",
+ "gse_mapping": "GSE binds these kernels into the Coach-Mind sim: F1 ranks deception detectors, the error decomposition triages era-shifted play-outcome models, the Optimization Verification test attributes call failures to search versus scoring, the category ceiling gates feature investment, and satisficing latency and fatigue constraints keep aggressive calls inside the physical envelope. DFS/portfolio tail risk is managed by the same ceiling logic: cap exposure to any single error category. No sportsbook odds enter any layer; all artifacts remain internal."
+}
