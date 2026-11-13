@@ -4331,6 +4331,62 @@ def run_stage5_360_conjunction_gate(
         std_v = max(min_std_req, float(st_quant["std"]))
         line_f = float(line)
 
+        # --- Prop Sniper Gate (Week 8 forensic doctrine; wired 2026-11-13) ---
+        # The exact Week 8 failure was backup micro-lines (7-8, -1.64u).
+        # Hard participation + line floors BEFORE any prop can publish:
+        #   route_share >= 0.45, snap_share >= 0.40 (snap-leak veto),
+        #   WR/TE rec-yds line >= 18.5, RB rush-yds line >= 24.5.
+        # Shares come from the Stage 1B 213-feature empirical PBP summary.
+        _213 = (stage1b_receipt.get("gse_213_athlete_evaluations") or {}).get(ath) or {}
+        _route_sh = float(_213.get("route_participation", 0.0))
+        _snap_sh = float(_213.get("snap_share", 0.0))
+        _pos = str(athlete_projs[ath]["position"]).upper()
+        _vol_rec = stat_key in ("rec_yds", "receptions", "rush_plus_rec_yds")
+        _vol_rush = stat_key in ("rush_yds", "carries")
+        sniper_vetoes: list[str] = []
+        if _pos in ("WR", "TE", "RB") and (_vol_rec or _vol_rush):
+            if _snap_sh < 0.40:
+                sniper_vetoes.append(f"snap-leak veto: snap_share {_snap_sh:.2f} < 0.40")
+            if _vol_rec and _route_sh < 0.45:
+                sniper_vetoes.append(f"route_share {_route_sh:.2f} < 0.45")
+            if _pos in ("WR", "TE") and stat_key == "rec_yds" and line_f < 18.5:
+                sniper_vetoes.append(f"WR/TE rec-yds micro-line {line_f} < 18.5")
+            if _pos == "RB" and stat_key == "rush_yds" and line_f < 24.5:
+                sniper_vetoes.append(f"RB rush-yds micro-line {line_f} < 24.5")
+        if sniper_vetoes:
+            prop_evaluations.append({
+                "athlete": ath,
+                "team": athlete_projs[ath]["team"],
+                "position": athlete_projs[ath]["position"],
+                "market": mkt,
+                "line": line_f,
+                "open_line": p.get("open_line"),
+                "post_sim_mean": mean_v,
+                "post_sim_p50": p50_v,
+                "post_sim_std": round(std_v, 4),
+                "post_sim_p25": st_quant["p25"],
+                "post_sim_p75": st_quant["p75"],
+                "model_lean": "NONE",
+                "model_prob_over": 0.0,
+                "model_prob_under": 0.0,
+                "win_prob_on_lean": 0.0,
+                "wilson_lower_90_on_lean": 0.0,
+                "edge_vs_minus_110_breakeven": 0.0,
+                "edge_vs_devig_50": 0.0,
+                "confidence_score": "0/100",
+                "playable_to_american_odds": None,
+                "market_over_american": p.get("over_american") if p.get("has_price") else None,
+                "market_under_american": p.get("under_american") if p.get("has_price") else None,
+                "has_two_sided_price": bool(p.get("has_price")),
+                "is_decoy_trap": bool((decoy_audit.get(ath) or {}).get("is_decoy_trap", False)),
+                "sniper_gate": {"route_share": _route_sh, "snap_share": _snap_sh, "vetoes": sniper_vetoes},
+                "recommended_kelly_units": 0.0,
+                "decision": "PASS_SNIPER_GATE",
+                "publishAllowed": False,
+                "gate_reason": "PASS_SNIPER_GATE: " + "; ".join(sniper_vetoes),
+            })
+            continue
+
         # Retrieve conserved 10,000-world trajectory vector from Stage 3/4 (zero Gaussian shortcut)
         cached_emp_vec = _STAGE3_4_EMPIRICAL_VECTORS_CACHE.get((away, home, ath, stat_key))
         if cached_emp_vec is not None and len(cached_emp_vec) == n_sims:
@@ -4543,6 +4599,14 @@ def run_stage5_360_conjunction_gate(
     )
     sgp_eval["student_t_copula_df_nu"] = student_t_copula_df_nu
     sgp_eval["afml_meta_label_kelly_multiplier"] = afml_meta_label_kelly_multiplier
+
+    # Ticket-exposure caps (antigravity review item 4, wired 2026-11-13):
+    # max 1 Anchor + 1 SGP per leg, no ML+(-1.5) double-stake inside |spread|<=2.5,
+    # no sub-20.5-yard props in parlays. Fail-closed: implicated tickets refused.
+    from scripts.ops.ticket_exposure_guard import enforce_ticket_exposure
+    correlated_sgp_constructions, refused_tickets = enforce_ticket_exposure(correlated_sgp_constructions)
+    if refused_tickets:
+        sgp_eval["ticket_exposure_refusals"] = refused_tickets
 
     # 4. Load Dual-Panel Official Ledger (15,947 Replay beside 47-19-1 Official New Engine Ledger)
     ledger_audit_path = REPO_ROOT / "data" / "engine" / "replay_15947_vs_16_5_audit_2026_11_05.json"

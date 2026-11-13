@@ -984,7 +984,13 @@ def build_slate_dataframe(csv_path: Path, emp_stats: Dict[str, Dict[str, Any]]) 
             + 0.30 * (sub["value_ratio"] / max(sub["value_ratio"].max(), 1.0))
             + 0.20 * (sub["AvgPointsPerGame"] / max(sub["AvgPointsPerGame"].max(), 1.0))
         )
-        valid_mask = (sub["proj_fpts"] > 3.5).values
+        # Promised projection floors (antigravity review 2026-11-13): skill 8.5,
+        # DST 5.5 — sub-floor trap players get no ownership mass. If a whole
+        # position is sub-floor, only its top projection carries the target.
+        _fpts_floor = 5.5 if pos == "DST" else 8.5
+        valid_mask = (sub["proj_fpts"] > _fpts_floor).values
+        if not valid_mask.any():
+            valid_mask = (sub["proj_fpts"] >= sub["proj_fpts"].max()).values
         logits = np.where(valid_mask, score.values * 7.2, -10.0)
         logits -= np.max(logits)
         w = np.exp(logits)
@@ -2287,7 +2293,7 @@ def main() -> None:
         require_cpt_name="Jayden Daniels",
         require_flex_names=["Tanner McKee", "Dallas Goedert"],
         exclude_names=["Saquon Barkley"],
-        min_salary=48000,
+        min_salary=48500,
     )
     sd_snf_2 = solve_showdown_dk_lineup(
         df_13,
@@ -2297,7 +2303,7 @@ def main() -> None:
         subtitle="Dallas Goedert ($4,700 Base / $7,050 CPT) Captain Leverage capturing DeVonta Smith ($6,700 OUT) + Dontayvion Wicks ($4,900 OUT) target funnel with Darius Cooper & Makai Lemon.",
         require_cpt_name="Dallas Goedert",
         require_flex_names=["Tanner McKee", "Jayden Daniels", "Darius Cooper"],
-        min_salary=48000,
+        min_salary=48500,
     )
     sd_mnf_1 = solve_showdown_dk_lineup(
         df_13,
@@ -2307,7 +2313,7 @@ def main() -> None:
         subtitle="Jaxon Smith-Njigba CPT (2.87 YPRR vs Man) + Caleb Williams + Colston Loveland ($4,200, Cole Kmet OUT 82% route participation surge).",
         require_cpt_name="Jaxon Smith-Njigba",
         require_flex_names=["Caleb Williams", "Colston Loveland"],
-        min_salary=48000,
+        min_salary=48500,
     )
     sd_mnf_2 = solve_showdown_dk_lineup(
         df_13,
@@ -2317,7 +2323,7 @@ def main() -> None:
         subtitle="Ship It Nation (09:42) Low-Total Defense Captain Leverage: Bears DST CPT ($3,900) boosted by the Jeffery Simmons trade vs Sam Darnold's 0.214 P2S (#30) + D'Andre Swift + Colston Loveland.",
         require_cpt_name="Bears",
         require_flex_names=["D'Andre Swift", "Colston Loveland", "Jaxon Smith-Njigba"],
-        min_salary=48000,
+        min_salary=48500,
     )
 
     # =========================================================================
