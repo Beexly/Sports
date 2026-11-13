@@ -87,14 +87,14 @@ export function normalPpf(p: number): number {
     138.357751867269,
     -30.66479806614716,
     2.506628277459239,
-  ];
+  ] as const;
   const b = [
     -54.47609879822406,
     161.5858368580409,
     -155.6989798598866,
     66.80131188771972,
     -13.28068155288572,
-  ];
+  ] as const;
   const c = [
     -0.007784894002430293,
     -0.3223964580411365,
@@ -102,13 +102,13 @@ export function normalPpf(p: number): number {
     -2.549732539343734,
     4.374664141464968,
     2.938163982698783,
-  ];
+  ] as const;
   const d = [
     0.007784695709041462,
     0.3224671290700398,
     2.445134137142996,
     3.754408661907416,
-  ];
+  ] as const;
   const pLow = 0.02425;
   const pHigh = 1 - pLow;
   if (pc < pLow) {
@@ -465,8 +465,8 @@ export function evaluateUnifiedQuantitativeArchitectureOverlay(input: {
   );
 
   return {
-    devig2WayUnderdogShin: Number(devig.Shin[1].toFixed(4)),
-    devig2WayUnderdogPower: Number(devig.Power[1].toFixed(4)),
+    devig2WayUnderdogShin: Number((devig.Shin[1] ?? Number.NaN).toFixed(4)),
+    devig2WayUnderdogPower: Number((devig.Power[1] ?? Number.NaN).toFixed(4)),
     pr618NetEp: pr618,
     cfbdCarryLineYardsSample: Number(cfbdPiecewiseLineYards(input.sampleRushYards ?? 6).toFixed(3)),
     circadianIndex: circadian,
