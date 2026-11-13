@@ -1,6 +1,6 @@
 {
   "directive": "hermes_overnight_goal_2026_11_12.md",
-  "updated_at_ct": "2026-11-13T02:50:00-06:00",
+  "updated_at_ct": "2026-11-13T05:20:00-06:00",
   "branch": "hermes/week10-master-launch-2026-11-13",
   "worktree": "C:/Users/Garrett/Sports-main-merge",
   "base": "origin/main 33c0020a9",
@@ -29,37 +29,77 @@
       ]
     },
     "WP-1": {
-      "status": "dispatched",
-      "subagent": "sa-0-a06a728b",
-      "lane": "corpus-grounding HNSW InitPlan fix (T-02 cost<12000, <5s) + seed-key guard + situation-tactical-priors.ts bounded [-0.025,0.025]"
+      "status": "complete",
+      "verified_by_parent": true,
+      "done": [
+        "2708 situations verbatim re-derived (0 md5-keyed, 0 normalized)",
+        "tactical priors bounded [-0.025,0.025]",
+        "corpus cache + repair script w/ dry-run & final reports",
+        "T-04 LIVE PASS"
+      ]
     },
     "WP-2": {
-      "status": "dispatched",
-      "subagent": "sa-1-7302ae40",
-      "lane": "router fallback purge + lit.premise wiring + honest_equation_executor + run_week10_quant_kernels.py + multimodal_decisions_router/gemini-decision-client (Vertex-only)"
+      "status": "complete",
+      "verified_by_parent": true,
+      "done": [
+        "honest_equation_executor 26 pytest PASS (committed a89ce913e)",
+        "week10 quant kernels --verify-only: Sinkhorn residual 0.0, 13 games",
+        "cognitive router + registry nullity purge 83 vitest PASS",
+        "T-05 + T-06 LIVE PASS"
+      ]
     },
     "WP-3": {
-      "status": "dispatched",
-      "subagent": "sa-2-62120e9b",
-      "lane": "neon-odds-devig-loader + neon-injury-roster-loader (player_gp denominators) + /api/health/data-freshness"
+      "status": "complete",
+      "verified_by_parent": true,
+      "done": [
+        "neon-injury-roster-loader player_gp denominators 27 tests PASS",
+        "Shin de-vig loader live probe (no 0.5238 anchor)",
+        "wk10 injuries re-ingested 1096 rows / 32 teams",
+        "T-07 + T-08 LIVE PASS"
+      ]
     },
     "WP-4": {
-      "status": "dispatched",
-      "subagent": "sa-2-62120e9b",
-      "lane": "W1-9 trends + charting/funnels regeneration (real PBP >= 2026-11-09) + Mongo adapter gated on MONGODB_URI"
+      "status": "complete",
+      "verified_by_parent": true,
+      "done": [
+        "w1-w9 trends + charting/funnels regen (committed a89ce913e)",
+        "neon_week10_schedule artifact committed",
+        "Mongo adapter gated on MONGODB_URI"
+      ]
     },
     "WP-5": {
-      "status": "dispatched",
-      "subagent": "sa-3-3600e10c",
-      "lane": "verify-ledger.ts + /record /calibration (n/200) + two-doctrines board + two-door packages + store-credit-ledger + /parlay-mri + posthog/sentry"
+      "status": "complete",
+      "verified_by_parent": true,
+      "commit": "a89ce913e",
+      "done": [
+        "paywall leak closed: stale FREE TNF teaser removed; Week-9 proofs locked historical free:false",
+        "catalog 13-game verified slate incl LAR@ARI + PIT@CIN; SF@DAL 4:25 ET corrected",
+        "verify-ledger.ts DB recompute: official 79-46-0 +81.47u; win rate LOCKED 53/200 CLV-backed (<200 doctrine)",
+        "TNF evidence UNDER 43.5 LOSS close 40.625 CLV 2.875; 1 stored-vs-recomputed CLV mismatch disclosed in artifact",
+        "/record + two-door + stage5-gate + copy-fence + store-credit + doctrine board + parlay xray",
+        "215 tests green (83+71+61); apps/web tsc 0 errors; dossier-guard PASS"
+      ]
     },
     "WP-6": {
-      "status": "pending_depends_WP1-5",
-      "lane": "full 5-stage engine run + OOF calibration + snap-by-snap JEV/GD1 sim infra (gse_coach_mind_simulator.py return_vectors verified present)"
+      "status": "complete",
+      "verified_by_parent": true,
+      "done": [
+        "OOF fit artifact data/engine/oof_calibration_2026_11_13.json: Brier 0.2612->0.2480, ECE 0.0226, raw70->0.5586",
+        "100-run placebo max|meanCLV| 0.0020; real-time selected CLV -0.00045; hard_pass true",
+        "T-09 LIVE PASS"
+      ]
     },
     "WP-7": {
-      "status": "pending",
-      "lane": "verify_all_ten_gates.sh - must be built; T-01..T-10; WP-8 blocked until 10/10 exit 0"
+      "status": "in_progress",
+      "done": [
+        "T-00..T-09 ALL LIVE PASS individually",
+        "SG1..SG10 forensic suite 39/39 (5727bb770)",
+        "T-10 full re-run in flight (t10-run3.log)"
+      ],
+      "remaining": [
+        "T-10 green",
+        "official verify_all_ten_gates.sh exit 0"
+      ]
     },
     "WP-8": {
       "status": "blocked_until_WP7_10_of_10",
@@ -74,7 +114,7 @@
     "zero fabricated data; PASS is a valid outcome",
     "subagents do not run git; parent commits checkpoints serially"
   ],
-  "head": "028c840c3 (push in flight; remote at 57017739f)",
+  "head": "a89ce913e (push in flight)",
   "morning_packet_neon_counts": {
     "before": {
       "future_picks_total": 1238,

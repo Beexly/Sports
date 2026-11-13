@@ -142,6 +142,11 @@ def assert_lineup_rules(salary: int, teams: list[str], classic: bool = True,
         raise PreflightRosterGateError(f"classic lineup has {worst} players from one team (max {max_per_team})")
 
 
+def _week_config_path(week: int) -> Path:
+    """Canonical per-week roster/transaction config naming convention."""
+    return ROOT / "data" / "nflverse" / f"week{week}_live_roster_transactions_and_starters_2026.json"
+
+
 def require_week(week: int, config_path: str | Path = DEFAULT_CONFIG) -> dict:
     """Hard gate for any simulation/pick entry point: a roster config for `week` must exist and be fresh.
 
@@ -150,6 +155,13 @@ def require_week(week: int, config_path: str | Path = DEFAULT_CONFIG) -> dict:
     if os.environ.get("STAGE0_RETROSPECTIVE") == "1":
         print("[STAGE 0] RETROSPECTIVE mode - output is NOT publishable")
         return {}
+    # Week-aware default (2026-11-13): when the caller did not pin a config,
+    # prefer the config named for the requested week. Fail-closed: if it does
+    # not exist, load_config below still raises on stale/mismatched defaults.
+    if Path(config_path) == DEFAULT_CONFIG:
+        week_specific = _week_config_path(int(week))
+        if week_specific.is_file():
+            config_path = week_specific
     cfg = load_config(config_path)
     if int(cfg["week"]) != int(week):
         raise PreflightRosterGateError(
