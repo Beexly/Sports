@@ -174,7 +174,15 @@ export type BackfillDb = {
           game: { commenceTime: Date } | null;
         } | null>;
       };
-      pickSettlementEvent: { create: (args: unknown) => Promise<unknown> };
+      pickSettlementEvent: {
+        create: (args: unknown) => Promise<unknown>;
+        /**
+         * Optional so every injected test double keeps working. Production
+         * always has it: `pickId` is @unique, so a re-opened pick that still
+         * owns its original event row needs an upsert, not a create.
+         */
+        upsert?: (args: unknown) => Promise<unknown>;
+      };
       postSettlementWork: unknown;
       game: {
         updateMany: (args: unknown) => Promise<{ count: number }>;
@@ -571,27 +579,50 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
       }
       return updated;
     }
-    await tx.pickSettlementEvent.create({
-      data: {
-        pickId: args.pickId,
-        gameId: args.gameId,
-        result: args.result,
-        settledAt: args.settledAt,
-        status: "PENDING",
-        // SETTLE-TIME EVIDENCE (C-120), same contract as the free runner: the
-        // score this grade was computed from, recorded inside the settlement
-        // transaction, because nothing else records it and a later game-row
-        // overwrite makes it unrecoverable.
-        payload: {
-          settledWith: {
-            homeScore: args.homeScore,
-            awayScore: args.awayScore,
-            sources: [...(args.sources ?? [])],
-            path: "free-backfill",
-          },
+    const eventData = {
+      pickId: args.pickId,
+      gameId: args.gameId,
+      result: args.result,
+      settledAt: args.settledAt,
+      status: "PENDING",
+      // SETTLE-TIME EVIDENCE (C-120), same contract as the free runner: the
+      // score this grade was computed from, recorded inside the settlement
+      // transaction, because nothing else records it and a later game-row
+      // overwrite makes it unrecoverable.
+      payload: {
+        settledWith: {
+          homeScore: args.homeScore,
+          awayScore: args.awayScore,
+          sources: [...(args.sources ?? [])],
+          path: "free-backfill",
         },
       },
-    });
+    };
+    // A pick can carry only ONE settlement event (`pickId String @unique`).
+    // A pick that was settled, withdrawn and re-opened still owns its original
+    // row, so `create()` throws P2002 and the whole transaction rolls back —
+    // production logged exactly that on every cycle:
+    //   stale backfill failed: Unique constraint failed on the fields: (pickId)
+    // Upsert rewrites the existing row and resets it to PENDING so the outbox
+    // re-announces the corrected outcome instead of the withdrawn one.
+    if (tx.pickSettlementEvent.upsert) {
+      await tx.pickSettlementEvent.upsert({
+        where: { pickId: args.pickId },
+        create: eventData,
+        update: {
+          gameId: args.gameId,
+          result: args.result,
+          settledAt: args.settledAt,
+          status: "PENDING",
+          payload: eventData.payload,
+          claimedAt: null,
+          deliveredAt: null,
+          completedAt: null,
+        },
+      });
+    } else {
+      await tx.pickSettlementEvent.create({ data: eventData });
+    }
     await enqueuePostSettlementWork(
       tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
       [

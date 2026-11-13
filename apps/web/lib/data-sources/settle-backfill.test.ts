@@ -667,4 +667,43 @@ describe("backfill stamps the line-archive CLOSE after a successful settle (C-95
     expect(result.settled).toBe(1);
     expect(tx.pick.updateMany).toHaveBeenCalledTimes(1);
   });
+
+  it("re-settles a pick that already owns a settlement event (pickId is @unique)", async () => {
+    // Production: `stale backfill failed: Unique constraint failed on the
+    // fields: (pickId)`. A pick that was settled, withdrawn and re-opened
+    // still owns its original event row, so create() threw P2002 and rolled
+    // the whole transaction back. The lane must upsert instead.
+    const upsert = vi.fn(async (args: unknown) => args);
+    const create = vi.fn(async () => {
+      throw Object.assign(new Error("Unique constraint failed on the fields: (`pickId`)"), {
+        code: "P2002",
+      });
+    });
+    const tx = {
+      pick: {
+        updateMany: vi.fn(async () => ({ count: 1 })),
+        findUnique: vi.fn(async () => ({ result: "PENDING", game: { commenceTime: KICKOFF } })),
+      },
+      pickSettlementEvent: { create, upsert },
+      postSettlementWork: { createMany: vi.fn(async () => ({ count: 2 })) },
+      game: {
+        updateMany: vi.fn(async () => ({ count: 1 })),
+        findUnique: vi.fn(async () => ({ homeScore: null, awayScore: null })),
+      },
+    };
+    const db = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+      $transaction: async (fn: TxFn) => fn(tx),
+    };
+
+    const result = await backfillStaleSettlement({
+      db: db as unknown as BackfillDb,
+      now: NOW,
+      fetchScores: async () => scores([navyFinal()]),
+    });
+
+    expect(result.settled).toBe(1);
+    expect(upsert).toHaveBeenCalledTimes(1);
+    expect(create).not.toHaveBeenCalled();
+  });
 });
