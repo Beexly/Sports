@@ -381,6 +381,24 @@ def cmd_sync_cloud(args):
     print(json.dumps({"marked": marked, "hashes_seen": len(hashes), "files_seen": len(names)}))
 
 
+def cmd_skip_duplicate(args):
+    """Mark a queue row as DUPLICATE_WORK of a keeper book (same work, different file/draft)."""
+    con = connect()
+    row = con.execute("SELECT status, worker_id FROM corpus_queue WHERE book_id=?", (args.book_id,)).fetchone()
+    keeper = con.execute("SELECT book_id FROM corpus_queue WHERE book_id=?", (args.keeper,)).fetchone()
+    if not row:
+        print(json.dumps({"error": "unknown book_id"})); return
+    if not keeper:
+        print(json.dumps({"error": "unknown keeper book_id"})); return
+    if row["status"] == "CLAIMED" and row["worker_id"] != args.worker:
+        print(json.dumps({"error": "claimed by another worker; do not touch"})); return
+    con.execute("UPDATE corpus_queue SET status='DUPLICATE_WORK', worker_id=NULL WHERE book_id=?", (args.book_id,))
+    con.execute("INSERT INTO events(ts,book_id,event,detail) VALUES(strftime('%s','now'),?,?,?)",
+                (args.book_id, "DUPLICATE_WORK", f"same work as keeper {args.keeper}; marked by {args.worker}"))
+    con.commit()
+    print(json.dumps({"marked": args.book_id, "keeper": args.keeper}))
+
+
 def cmd_status(args):
     con = connect()
     counts = [dict(r) for r in con.execute("SELECT tier, status, COUNT(*) n FROM corpus_queue GROUP BY tier, status ORDER BY tier, status")]
@@ -398,9 +416,10 @@ def main():
     m = sub.add_parser("commit"); m.add_argument("artifact")
     r = sub.add_parser("release-stale"); r.add_argument("--minutes", type=int, default=20)
     sub.add_parser("sync-cloud")
+    d = sub.add_parser("skip-duplicate"); d.add_argument("book_id"); d.add_argument("--keeper", required=True); d.add_argument("--worker", required=True)
     sub.add_parser("status")
     args = ap.parse_args()
-    {"scan": cmd_scan, "claim": cmd_claim, "commit": cmd_commit, "release-stale": cmd_release_stale, "sync-cloud": cmd_sync_cloud, "status": cmd_status}[args.cmd](args)
+    {"scan": cmd_scan, "claim": cmd_claim, "commit": cmd_commit, "release-stale": cmd_release_stale, "sync-cloud": cmd_sync_cloud, "skip-duplicate": cmd_skip_duplicate, "status": cmd_status}[args.cmd](args)
 
 
 if __name__ == "__main__":
