@@ -1,45 +1,96 @@
 {
   "directive": "hermes_overnight_goal_2026_11_12.md",
-  "updated_at_ct": "2026-11-13T02:05:00-06:00",
+  "updated_at_ct": "2026-11-13T02:50:00-06:00",
   "branch": "hermes/week10-master-launch-2026-11-13",
   "worktree": "C:/Users/Garrett/Sports-main-merge",
   "base": "origin/main 33c0020a9",
   "cost_spent_usd": 0,
   "work_packages": {
     "WP-0": {
-      "status": "in_progress",
+      "status": "complete",
+      "commit": "028c840c3",
       "done": [
         "carry-forward merges (research-wiring b2cd28b9a, opus/corpus-wiring 46afcad0, PR-1272 2293655fc)",
-        "CI fixes: TS2532 tuples, TS18048 activeStage guard, pyyaml epistemic gate",
-        "tsc prediction-engine exit 0; tsc apps/web zero errors; 54 vitest tests green; shell-defensive PASS",
-        "watch-warm */3 -> */10 both vercel.json + manifest; quiet-window guard in 4 cron routes (4/4 tests)",
+        "CI fixes verified: TS2532 tuples, TS18048 activeStage guard, pyyaml epistemic gate, shell-defensive PASS",
+        "generate-signal-slate.test.ts collects + passes 7/7 (alias fix; directive's '-gate' filename does not exist)",
+        "watch-warm */3 -> */10 both vercel.json + manifest; quiet-window guard in 4 cron routes (4/4 tests); ESPN-only live signal",
         "neon_workflow.yml delete job always() + fallback + continue-on-error",
-        "Neon branches pruned: mve-experiment, hermes-census-20260818 (36 -> 34)"
+        "Neon branches pruned: mve-experiment, hermes-census-20260818 (36 -> 34)",
+        "pick_quarantine_audit DDL + 113 live un-gated future picks unpublished (111 UNGATED_FUTURE_Q1 + 2 PRESEASON_LOOKAHEAD_ZOMBIE), full row snapshots, zero DELETEs, 0 live future rows remain",
+        "hard write gate futurePickPublishable() wired into process-sport create + supersede fallback + generate-signal-slate create; 10/10 tests; publication suite 37/37; ingestion tsc exit 0",
+        "live settlement: 173 picks NFL/CFB/NBA/NHL/MLB; TNF WSH@NYG UNDER 43.5 = LOSS; all 15 Week 9 NFL rows FINAL; WSH-LAR flipped row corrected; 0 past-game PENDING remain",
+        "pickSettlementEvent P2002 upserts in free-settlement-runner + zero-sit-lane",
+        "Week 10 dedupe census: 14 rows clean, no SF/SAN DAL/DLS WAS/WSH duplicates"
       ],
-      "remaining": [
-        "live settlement: TNF UNDER 43.5 + 5 Week 9 SCHEDULED rows + 97 PENDING drain",
-        "pick_quarantine_audit DDL + Q1/Q2 quarantine + hard write gate",
-        "duplicate game-row check (no merge executed yet)"
-      ],
-      "discrepancies": [
-        "29-orphan-branch claim false: most pr-1219..1271 PRs still OPEN; kept their branches",
-        "Week 9 pending NFL rows: 5 actual vs 11 claimed"
+      "discrepancies_vs_directive": [
+        "30 preview/pr-* branches belong to OPEN PRs (gh verified) - not orphans; kept; workflow fix prevents future leaks",
+        "Week 9: 15 game rows all FINAL after settlement (directive said 11 pending picks; actual drain 173 picks across 5 sports)",
+        "generate-signal-slate-gate.test.ts does not exist; failing-collect test was generate-signal-slate.test.ts - now green"
       ]
     },
-    "WP-1": { "status": "pending", "lane": "injury/roster freshness + player_gp denominators" },
-    "WP-2": { "status": "pending", "lane": "corpus retrieval gates (HNSW cost, semantic, verbatim quotes)" },
-    "WP-3": { "status": "pending", "lane": "equation executor + Sinkhorn kernels" },
-    "WP-4": { "status": "pending", "lane": "odds de-vig + market breadth (77 DK types)" },
-    "WP-5": { "status": "pending", "lane": "two-door pricing + publication gate wiring" },
-    "WP-6": { "status": "pending", "lane": "purged OOF calibration fit + placebo" },
-    "WP-7": { "status": "pending", "lane": "verify_all_ten_gates.sh — script does not exist yet, must be built" },
-    "WP-8": { "status": "blocked_until_WP7_10_of_10", "lane": "full-board sim + commitments + deploy + morning packet" }
+    "WP-1": {
+      "status": "dispatched",
+      "subagent": "sa-0-a06a728b",
+      "lane": "corpus-grounding HNSW InitPlan fix (T-02 cost<12000, <5s) + seed-key guard + situation-tactical-priors.ts bounded [-0.025,0.025]"
+    },
+    "WP-2": {
+      "status": "dispatched",
+      "subagent": "sa-1-7302ae40",
+      "lane": "router fallback purge + lit.premise wiring + honest_equation_executor + run_week10_quant_kernels.py + multimodal_decisions_router/gemini-decision-client (Vertex-only)"
+    },
+    "WP-3": {
+      "status": "dispatched",
+      "subagent": "sa-2-62120e9b",
+      "lane": "neon-odds-devig-loader + neon-injury-roster-loader (player_gp denominators) + /api/health/data-freshness"
+    },
+    "WP-4": {
+      "status": "dispatched",
+      "subagent": "sa-2-62120e9b",
+      "lane": "W1-9 trends + charting/funnels regeneration (real PBP >= 2026-11-09) + Mongo adapter gated on MONGODB_URI"
+    },
+    "WP-5": {
+      "status": "dispatched",
+      "subagent": "sa-3-3600e10c",
+      "lane": "verify-ledger.ts + /record /calibration (n/200) + two-doctrines board + two-door packages + store-credit-ledger + /parlay-mri + posthog/sentry"
+    },
+    "WP-6": {
+      "status": "pending_depends_WP1-5",
+      "lane": "full 5-stage engine run + OOF calibration + snap-by-snap JEV/GD1 sim infra (gse_coach_mind_simulator.py return_vectors verified present)"
+    },
+    "WP-7": {
+      "status": "pending",
+      "lane": "verify_all_ten_gates.sh - must be built; T-01..T-10; WP-8 blocked until 10/10 exit 0"
+    },
+    "WP-8": {
+      "status": "blocked_until_WP7_10_of_10",
+      "lane": "13-game + Friday NBA/NHL/NCAAF full-board sim, 77 DK market types, SHA-256 commitments, merge/deploy/live assertions, morning packet + content lab"
+    }
   },
   "hard_rules": [
     "WP-8 simulation only after WP-7 10/10 gates exit 0",
     "REFUSE_PROJECTION on any red gate; no fake confidence penalties",
     "no pick publication without full 5-stage + snap-by-snap JEV sim",
     "public surfaces: /packages (paid) + /fantasy/dfs only",
-    "zero fabricated data; PASS is a valid outcome"
-  ]
+    "zero fabricated data; PASS is a valid outcome",
+    "subagents do not run git; parent commits checkpoints serially"
+  ],
+  "head": "028c840c3 (push in flight; remote at 57017739f)",
+  "morning_packet_neon_counts": {
+    "before": {
+      "future_picks_total": 1238,
+      "live_future_picks": 113,
+      "q1_hits_all_future": 412,
+      "q2_hits_all_future": 87,
+      "tnf": "SCHEDULED, pick PENDING",
+      "week9_nfl": "pending picks present"
+    },
+    "after": {
+      "live_future_picks": 0,
+      "past_game_pending_picks": 0,
+      "settled_this_run": 173,
+      "week9_nfl_rows_final": "15/15",
+      "tnf_pick": "cmw8urf40001y74il5elw2dyj UNDER 43.5 = LOSS (NYG 21 WSH 24, total 45)",
+      "quarantine_batch": "hermes-wp0-2026-11-13 (113 audit rows, restorable)"
+    }
+  }
 }
