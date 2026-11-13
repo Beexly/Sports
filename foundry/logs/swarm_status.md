@@ -353,3 +353,16 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 15:19:36 | CLAIMED | 7ec06be65ab3f269 | worker=ext-46 file=Kochenderfer-Wheeler-Wray-2022-AlgorithmsForDecisionMaking.pdf
 - 2026-11-13 15:19:45 | COMPLETE | 07089dec6f73619e | primitives=8 think_words=1267
 - 2026-11-13 15:19:55 | CLAIMED | 53ff4fe1320a9a44 | worker=ext-45 file=DengYu-2014-DeepLearningMethodsAndApplications.pdf
+- 2026-11-13 15:24:38 | COMPLETE | 64a4e0d61f21a823 | primitives=6 think_words=1152
+- 2026-11-13 15:24:51 | CLAIMED | 4c25fa54afee431d | worker=ext-44 file=Garnett-2023-BayesianOptimization.pdf
+- 2026-11-13 15:27:16 | COMPLETE | 53ff4fe1320a9a44 | primitives=8 think_words=909
+- 2026-11-13 15:27:33 | CLAIMED | 3da8c2a20553953a | worker=ext-45 file=Nielsen-2015-NeuralNetworksAndDeepLearning.pdf
+- 2026-11-13 15:29:54 | CLAIMED | 32d8b2d0d4f7f22f | worker=hermes-inline file=Rockne-1925-Coaching-The-Way-of-the-Winner.pdf
+- 2026-11-13 15:45:07 | COMPLETE | 32d8b2d0d4f7f22f | primitives=14 think_words=983
+
+## 2026-11-13 ~15:50 CST — INLINE ERA: Rockne 1925 landed (hermes-inline)
+- 32d8b2d0d4f7f22f Rockne-1925-Coaching-The-Way-of-the-Winner.pdf COMPLETE: 14 primitives, 983-word think, GATEKEEPER_APPROVED first try. 264/294 pages read (pp31-294 full body incl. gap ch IX-XIV; front matter skipped). Era chain now EIGHT primary sources 1894-1925; first with printed distributional priors (thirty-game table p172, red-zone void inside the 10).
+- Key primitives: tactical-situation state tuple (p86); sacrifice/check play externalities (pp236-237); 30-game empirical play-class distributions (p172); guard pull-out within-game A/B '35% more efficient' (pp125-126, confounded); sifting-end 'who will show first' commitment duel w/ printed 65/75-degree angles (p143); bounded-downside long pass = punt equivalence (p259); weak-spot nursing (p256); mixed punt numbers {13,11,66,99,44} (pp208-209); scouting sample-selection easy-vs-hard games (p188); scout honesty 'This is all I can get' (p202); 30-min scrimmage cap + six-week window (p218); intentional safety conjunctive gate (p251); lead-magnitude irrelevance '7 to 6 ... just as good as 14 to 6' (p254); triple-pass relaxation trap (p144).
+- Inline compiler pass: SFT rows appended for 32d8b2d0d4f7f22f (983w) and 53ff4fe1320a9a44 DengYu 2014 (909w, ext-45's last commit). First append lost think blocks to escape mangling; rebuilt from artifacts and verified from disk. SFT=69 rows. 6d101348291a5c1f (O'Reilly 2nd ed) intentionally row-less per edition rule (keeper 3178b5fdce0fc1a5).
+- COMPLETE=70; next RLVR trigger 73 (batch-006). Push b089fb03e verified on origin.
+- 2026-11-13 15:49:18 | CLAIMED | 7ec06be65ab3f269 | worker=hermes-inline file=Kochenderfer-Wheeler-Wray-2022-AlgorithmsForDecisionMaking.pdf
