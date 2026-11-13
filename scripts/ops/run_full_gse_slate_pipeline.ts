@@ -23,6 +23,9 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { groundGame, type GameGrounding } from "../../packages/prediction-engine/src/literature/corpus-grounding.js";
+import { facetsForGame } from "../../packages/prediction-engine/src/literature/situational-facets.js";
+import { neonHttpSqlClient } from "../../packages/prediction-engine/src/literature/neon-http-sql-client.js";
 
 import {
   loadStage0Config,
@@ -833,7 +836,38 @@ function stage0PreflightForWeek(
   return { mode: "LIVE", asOf: cfg.as_of, qb1OutTeams: [...qb1Out.keys()] };
 }
 
-function main() {
+/**
+ * Stage 2 corpus grounding, computed per game BEFORE the synchronous overlay.
+ * Needs CORPUS_DATABASE_URL (or DATABASE_URL) pointing at the Neon branch that
+ * holds lit.*. Set CORPUS_GROUNDING=off to skip. On any failure the game runs
+ * without grounding and the overlay reports the stream as not called — the
+ * pipeline never stalls on the corpus.
+ */
+async function computeCorpusGroundings(
+  slate: readonly Week8GameSpec[],
+): Promise<Map<string, GameGrounding>> {
+  const out = new Map<string, GameGrounding>();
+  const url = process.env.CORPUS_DATABASE_URL ?? process.env.DATABASE_URL;
+  if (process.env.CORPUS_GROUNDING === "off" || !url) {
+    console.log(`[STAGE 2 CORPUS] skipped (${!url ? "no CORPUS_DATABASE_URL/DATABASE_URL" : "CORPUS_GROUNDING=off"})`);
+    return out;
+  }
+  const db = neonHttpSqlClient(url);
+  for (const g of slate) {
+    try {
+      const grounding = await groundGame(db, g.slug, facetsForGame(g));
+      out.set(g.slug, grounding);
+      console.log(
+        `[STAGE 2 CORPUS] ${g.slug}: support=${grounding.overallSupport.toFixed(3)} coverage=${grounding.coverage} ${grounding.latencyMs}ms`,
+      );
+    } catch (err) {
+      console.log(`[STAGE 2 CORPUS] ${g.slug}: FAILED (${err instanceof Error ? err.message : String(err)}) — running without grounding`);
+    }
+  }
+  return out;
+}
+
+async function main() {
   const trendsRaw = JSON.parse(fs.readFileSync(TRENDS_PATH, "utf-8"));
   const trendsTeams: Record<string, any> = trendsRaw.teams ?? {};
 
@@ -926,6 +960,7 @@ function main() {
     byGameId: byGameIdAdvance,
   } satisfies AdvanceInjuryInput);
 
+  const corpusGroundings = await computeCorpusGroundings(ACTIVE_SLATE);
   const verdictsByGame: Record<string, any> = {};
   const mindFeedRecords: string[] = [];
 
@@ -1207,6 +1242,7 @@ function main() {
       familyDeltas,
       marketAnchorProb,
       independentEdgeDecision: Math.abs(stageDResult.clampedTotalLogOddsDelta) >= 0.04 ? "SPEAK" : "PASS",
+      ...(corpusGroundings.has(g.slug) ? { corpusGrounding: corpusGroundings.get(g.slug)! } : {}),
       featureUnderTest: {
         name: "pass_epa_per_dropback",
         definition: "opponent-adjusted pass EPA per dropback in neutral script",
@@ -1628,6 +1664,23 @@ function main() {
       },
     };
     verdictsByGame[g.espnEventId] = gameVerdict;
+    // Cited corpus evidence + per-family shrink multipliers, so every verdict shows
+    // which literature backed (or failed to back) each situational family.
+    const cg = situationalOverlay.corpusGrounding;
+    (gameVerdict as any).corpusGrounding = cg
+      ? {
+          overallSupport: cg.grounding.overallSupport,
+          coverage: cg.grounding.coverage,
+          adjustments: cg.adjustments,
+          facets: cg.grounding.facets.map((f) => ({
+            family: f.family,
+            query: f.query,
+            support: f.support,
+            layerErrors: f.layerErrors,
+            topEvidence: f.evidence.slice(0, 3).map((e) => ({ layer: e.layer, citation: e.citation, title: e.title, weight: e.weight, text: e.text.slice(0, 280) })),
+          })),
+        }
+      : null;
     verdictsByGame[g.slug] = gameVerdict;
     verdictsByGame[`${g.away}@${g.home}`] = gameVerdict;
     if (g.home === "WAS") {
@@ -1659,4 +1712,7 @@ function main() {
   );
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
