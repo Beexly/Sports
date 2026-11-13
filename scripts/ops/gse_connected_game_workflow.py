@@ -4743,8 +4743,19 @@ def render_connected_master_call_sheet_markdown(
                 q = projs["kicking_points"]
                 st_lbl = "Kicking Pts"
             else:
-                q = projs["tackles_plus_assists"]
+                q = projs.get("tackles_plus_assists")
                 st_lbl = "Tackles + Ast"
+                if not isinstance(q, dict) or "mean" not in q or "p50" not in q:
+                    # IDP projection may key a different stat (sacks, INTs); fall
+                    # back to the first available projection rather than crash.
+                    fallback = next(
+                        (v for v in projs.values() if isinstance(v, dict) and "mean" in v and "p50" in v),
+                        None,
+                    )
+                    if fallback is None:
+                        continue
+                    q = fallback
+                    st_lbl = next(k for k, v in projs.items() if v is fallback)
             dyn_lines.append(
                 f"| `{tm}` | `{pos}` | **{name}** | {gp} | {st_lbl} | {q['mean']:.1f} | **{q['p50']:.1f}** |"
             )

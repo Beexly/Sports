@@ -54,6 +54,26 @@ def fetch_json(url: str, timeout: int = 20):
     return json.loads(urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8"))
 
 
+def _norm_name(name: str) -> str:
+    n = str(name).strip().lower()
+    for suf in (" jr.", " sr.", " iii", " ii"):
+        n = n.replace(suf, "")
+    return n.replace(".", "").replace("'", "").strip()
+
+
+def stage0_excluded() -> set[str]:
+    """Authoritative Stage-0 exclusion set (require_week), normalized."""
+    sys.path.insert(0, str(REPO_ROOT))
+    from scripts.ops.preflight_live_roster_injury_gate import require_week
+    cfg = require_week(WEEK)
+    out: set[str] = set()
+    for ep in cfg.get("excluded_players", []):
+        nm = ep.get("name") if isinstance(ep, dict) else str(ep)
+        if nm:
+            out.add(_norm_name(nm))
+    return out
+
+
 def team_id_map() -> dict[str, str]:
     d = fetch_json("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams?limit=50")
     out = {}
@@ -97,7 +117,7 @@ def fetch_event_propbets(ev_id: str) -> list[dict]:
     return items
 
 
-def build_board(ev_id: str, away: str, home: str, tid_map: dict[str, str]) -> dict:
+def build_board(ev_id: str, away: str, home: str, tid_map: dict[str, str], excluded: set[str]) -> dict:
     raw = fetch_event_propbets(ev_id)
     by_key: dict[tuple, dict] = {}
     refs: set[str] = set()
@@ -132,6 +152,8 @@ def build_board(ev_id: str, away: str, home: str, tid_map: dict[str, str]) -> di
         a = info.get(ref, {"name": "Unknown", "position": "", "team": ""})
         if a["team"] not in (away, home):
             continue
+        if _norm_name(a["name"]) in excluded:
+            continue
         props.append({
             "athlete": a["name"], "team": a["team"], "position": a["position"],
             "market": t_name, "line": v["line"], "open_line": v["open_line"],
@@ -162,7 +184,8 @@ def main() -> int:
 
     sb = json.loads((REPO_ROOT / "data" / "engine" / "espn_2026_week10_scoreboard.json").read_text(encoding="utf-8"))
     tid_map = team_id_map()
-    print(f"team id map: {len(tid_map)} teams", flush=True)
+    excluded = stage0_excluded()
+    print(f"team id map: {len(tid_map)} teams | Stage-0 excluded: {len(excluded)} names", flush=True)
     now = datetime.now(timezone.utc)
     games = []
     for ev in sb.get("events", []):
@@ -192,7 +215,7 @@ def main() -> int:
             built += 1
             continue
         try:
-            board = build_board(ev_id, away, home, tid_map)
+            board = build_board(ev_id, away, home, tid_map, excluded)
             if board["props_count"] == 0:
                 raise RuntimeError("zero props fetched")
             out.write_text(json.dumps(board, indent=2), encoding="utf-8")
