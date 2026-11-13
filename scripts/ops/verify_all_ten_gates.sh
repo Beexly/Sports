@@ -8,12 +8,12 @@
 #
 # Usage: bash scripts/ops/verify_all_ten_gates.sh [--skip-dry-run]
 #   --skip-dry-run: development convenience ONLY; the WP-8 invocation must NOT use it.
-set -u
+set -euo pipefail
 cd "$(dirname "$0")/../.." || exit 2
 
 GATES_DIR="scripts/ops/gates"
 SKIP_DRY=0
-[ "${1:-}" = "--skip-dry-run" ] && SKIP_DRY=1
+if [ "${1:-}" = "--skip-dry-run" ]; then SKIP_DRY=1; fi
 
 # Read-only Neon URL for DB gates (never printed).
 if [ -z "${DATABASE_URL:-}" ]; then
@@ -40,7 +40,7 @@ declare -a NAMES=(
 run_gate() {
   local prefix="$1" label="$2"
   local script
-  script="$(ls "$GATES_DIR"/${prefix}_* 2>/dev/null | head -1)"
+  script="$(ls "$GATES_DIR"/${prefix}_* 2>/dev/null | head -1 || true)"
   if [ -z "$script" ]; then
     echo "FAIL  $label — NOT IMPLEMENTED ($GATES_DIR/${prefix}_* missing)"
     return 1
