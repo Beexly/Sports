@@ -73,6 +73,14 @@ export type FreeScorePersistSportResult = {
   finals: number;
   gamesMatched: number;
   gamesUpdated: number;
+  /**
+   * Matches whose final was refused because at least one contributing source
+   * does not hold storage rights (GSE-SEC-051). Reported per sport so a
+   * permanently-unwritable lane looks like a rights state, not an empty slate.
+   */
+  rightsRefused: number;
+  /** Registry ids that refused storage for this sport's finals. */
+  rightsDeniedSources: readonly string[];
   error?: string;
 };
 
@@ -148,6 +156,42 @@ async function loadHenry(free: Sport): Promise<readonly NcaaGame[]> {
 }
 
 /**
+ * Storage clearance for a final's ACTUAL provenance (GSE-SEC-051).
+ *
+ * The gate this replaces hardcoded `espn-public-api` for every match. That was
+ * wrong in two ways. A final only henrygd carried was judged against ESPN's
+ * rights entry, so the registry answered a question about a source the data did
+ * not come from. And a CONFIRMED final's provenance is BOTH ids — clearing one
+ * says nothing about the other — so a single-id check can only ever be right by
+ * accident. Every contributing source must clear storage on its own; an empty
+ * source list fails closed because an unattributable final has no rights basis.
+ */
+export function storageClearanceForFinal(sources: readonly string[]): {
+  allowed: boolean;
+  denied: readonly string[];
+  blocks: readonly string[];
+} {
+  if (sources.length === 0) {
+    return { allowed: false, denied: [], blocks: ["NO_SOURCE_ATTRIBUTION"] };
+  }
+  const denied: string[] = [];
+  const blocks: string[] = [];
+  for (const sourceId of sources) {
+    const clearance = checkClearance({
+      source_id: sourceId,
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["storage"],
+    });
+    if (!clearance.allowed) {
+      denied.push(sourceId);
+      blocks.push(...clearance.blocks.map((b) => `${sourceId}:${b.code}`));
+    }
+  }
+  return { allowed: denied.length === 0, denied, blocks };
+}
+
+/**
  * For each sport: fetch free finals, match pending/incomplete games in DB, stamp scores.
  * Skips DISPUTED finals. Prefer CONFIRMED then SINGLE_SOURCE.
  */
@@ -172,6 +216,8 @@ export async function persistFreeScores(options?: {
         finals: 0,
         gamesMatched: 0,
         gamesUpdated: 0,
+        rightsRefused: 0,
+        rightsDeniedSources: [],
       });
       continue;
     }
@@ -269,6 +315,8 @@ export async function persistFreeScores(options?: {
 
       let matched = 0;
       let updated = 0;
+      let rightsRefused = 0;
+      const rightsDeniedSources = new Set<string>();
 
 
       for (const g of games) {
@@ -439,18 +487,15 @@ export async function persistFreeScores(options?: {
         const hit = matchesByTeam.find((c) => c.f === chosen)!.hit;
         matched++;
 
-        // GSE-SEC-051: ESPN (espn-public-api) has storage_allowed=false in the rights
-        // registry. The scores above were sourced from ESPN via fetchScoresMultiSource;
-        // before writing them into the Game table (a storage intent), confirm clearance.
-        // If storage is denied, skip the DB write — facts may still be used transiently
-        // but must not be persisted.
-        const persistClearance = checkClearance({
-          source_id: "espn-public-api",
-          mode: "public_logged_off_fact_extract",
-          tool_id: "fetch-native",
-          intents: ["storage"],
-        });
+        // GSE-SEC-051: the scores above came from the free feeds, and writing
+        // them into the Game table is a storage intent. Gate on the final's OWN
+        // sources (see storageClearanceForFinal) — not on a stand-in id. A final
+        // whose contributing feeds do not all hold storage rights is skipped;
+        // the facts may still be used transiently but must not be persisted.
+        const persistClearance = storageClearanceForFinal(chosen.sources);
         if (!persistClearance.allowed) {
+          rightsRefused++;
+          for (const sourceId of persistClearance.denied) rightsDeniedSources.add(sourceId);
           continue;
         }
 
@@ -512,6 +557,19 @@ export async function persistFreeScores(options?: {
         }
       }
 
+      // A rights block is not a quiet success. Without this line the lane reads
+      // as an empty slate: finals fetched, matches found, nothing written, no
+      // reason recorded — which is how 345 past-dated rows sat SCHEDULED with
+      // nobody able to tell whether the feeds were empty or the gate was shut.
+      if (rightsRefused > 0) {
+        console.warn(
+          `[free-score-persist] GSE-SEC-051 storage DENIED for ${sport.key} — ` +
+            `${rightsRefused}/${matched} matched final(s) refused; ` +
+            `denied=[${[...rightsDeniedSources].join(",") || "none"}] ` +
+            `(facts used transiently, nothing persisted)`,
+        );
+      }
+
       out.push({
         sport: sport.key,
         freeSport,
@@ -519,6 +577,8 @@ export async function persistFreeScores(options?: {
         finals: finals.length,
         gamesMatched: matched,
         gamesUpdated: updated,
+        rightsRefused,
+        rightsDeniedSources: [...rightsDeniedSources],
       });
     } catch (err) {
       out.push({
@@ -528,6 +588,8 @@ export async function persistFreeScores(options?: {
         finals: 0,
         gamesMatched: 0,
         gamesUpdated: 0,
+        rightsRefused: 0,
+        rightsDeniedSources: [],
         error: err instanceof Error ? err.message : String(err),
       });
     }
