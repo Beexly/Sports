@@ -16,6 +16,7 @@ import hashlib
 import json
 import math
 import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1918,7 +1919,7 @@ def simulate_matchup_pbp(
 simulate_full_game = simulate_matchup_pbp
 
 
-SLATE_WEEK = 9  # default live slate is Week 9 (supports --week 8 retrospective)
+SLATE_WEEK = 10  # default live slate is Week 10 (2026-11-13 launch; --week 9 retrospective)
 
 
 def main():
@@ -1941,7 +1942,16 @@ def main():
         action="store_true",
         help="Validate ContextPacket and ReasoningTrace handoff contract without running simulations",
     )
+    ap.add_argument(
+        "--dry-run-pre-sim",
+        action="store_true",
+        help="WP-7 T-00: validate every remaining Week 10 game is simulation-ready (no sims, no JEV calls)",
+    )
     args = ap.parse_args()
+
+    if args.dry_run_pre_sim:
+        gate = Path(__file__).resolve().parent / "gates" / "t00_dry_run_pre_sim.py"
+        raise SystemExit(subprocess.call([sys.executable, str(gate)]))
 
     if args.from_context_packet or args.from_reasoning_trace:
         pkt_obj = {}
@@ -2006,7 +2016,13 @@ def main():
 
     # STAGE 0: no simulation may run without a fresh roster/transaction config for this slate's week.
     if os.environ.get("STAGE0_RETROSPECTIVE") != "1":
-        require_week(args.week)
+        _week_cfg = Path(__file__).resolve().parents[2] / "data" / "nflverse" / (
+            f"week{args.week}_live_roster_transactions_and_starters_2026.json"
+        )
+        if _week_cfg.exists():
+            require_week(args.week, _week_cfg)
+        else:
+            require_week(args.week)
     sealed_obj, digest = load_sealed_object_readonly(args.sealed_json)
     cand_bundle = load_week7_candidate_ratings_readonly()
     cand_msg = ""
