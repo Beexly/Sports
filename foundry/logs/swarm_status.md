@@ -391,3 +391,37 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - Backward era links: Rockne 1925 'fairly easy game' scouting (p188) = nonadaptive Hotelling design feeding his thirty-game best-response table (p172); Reed 1913 play-revelation option value = Lindley information gain / knowledge gradient.
 - Inline SFT pass: appended Garnett row (983-word think), disk re-read verified think tags + word count. SFT=71. 6d101348291a5c1f (O'Reilly 2nd ed) remains intentionally deduped (keeper 3178b5fdce0fc1a5).
 - COMPLETE=72, primitives=504, SFT=71. Next RLVR trigger 73 (batch-006). compiler_state: sft_books=71, last_compiled=72.
+- 2026-11-13 16:35:10 | CLAIMED | 3da8c2a20553953a | worker=hermes-inline file=Nielsen-2015-NeuralNetworksAndDeepLearning.pdf
+- 2026-11-13 16:43:44 | COMPLETE | 3da8c2a20553953a | primitives=18 think_words=933
+## 2026-11-13 ~17:10 CST — INLINE ERA: Nielsen 2015 landed + RLVR batch-006 (hermes-inline)
+
+- Book 3da8c2a20553953a — Michael Nielsen, *Neural Networks and Deep Learning* (2015), LibreTexts OER
+  republication (CC BY-NC 3.0; original neuralnetworksanddeeplearning.com, code github.com/mnielsen/...).
+  Title page spells author "Michael Nielson" (LibreTexts catalog spelling); work is Michael Nielsen's.
+  215 PDF pages; PDF page = printed page + 7 (printed 19 = PDF 26; printed 157 = PDF 164); all citations PDF pages.
+- EXTRACTION LIMITATION (disclosed in source_note): this LibreTexts rendering typesets inline math as
+  images/MathJax that pymupdf get_text() does not extract, so equation glyphs are largely absent from the
+  text layer. PROSE and PYTHON CODE are fully verbatim-extractable. Sovereign primitives are verbatim prose
+  + verbatim code quotes; latex is either transcribed from verbatim code (p7 sigmoid_prime, p14 weight init)
+  or explicitly labeled RECONSTRUCTED from prose (p2, p11, p16, p17), never claimed as verbatim glyph extraction.
+  Text PDF with image-rendered math, NOT an image-only scan -> not INSUFFICIENT_OCR; conceptual+code content complete.
+- Core-read 96/215 pages across seven blocks: 26-35 (gradient descent/SGD/impl), 50-60 (backprop BP1-BP4/code/speed),
+  64-72 (cross-entropy), 76-100 (overfitting/regularization/weight init/code), 120-131 (momentum/tanh/ReLU/universality),
+  154-166 (vanishing/unstable gradient), 170-185 (convolutional networks). Front matter, ch3.5 heuristics detail,
+  ch4 visual-proof steps, ch6.3+ code, ch7 appendix beyond core not read.
+- 18 primitives, 933-word think, GATEKEEPER_APPROVED first try. COMPLETE=73. No sportsbook odds anywhere.
+- Era-chain position: the 2015 LEARNING-ALGORITHM layer beneath ADM (decision) and Garnett (experiment design).
+  It prints how the value model is fit and the pathologies that veto naive training claims: smooth-surrogate
+  requirement (p1), learning-rate breakdown (p2), SGD mini-batch=polling (p3), backprop=chain rule (p5),
+  saturation slowdown (p6), sigmoid'<=1/4 (p7), cross-entropy cancels saturation (p8), Fermi elephant (p9),
+  hold-out method (p10), L2 kludge (p11), Occam/no-free-lunch (p12), dropout-as-averaging (p13),
+  1/sqrt(n_in) init (p14), universality caveats (p15), unstable gradient product (p16), ReLU dying zone (p17),
+  conv translation-invariance/pooling (p18).
+- SFT: compile_nielsen_sft.py exit 0, disk re-read verified think tags + 933w; SFT=72 rows. Three-claim prompt:
+  tune on win count / in-sample fit + tune-on-test / uniform deep learning + ReLU-never-stops.
+- RLVR batch-006 (trigger 73 reached): 3 cross-layer veto scenarios, all executable verifiers SELF-TESTED
+  (correct=True, wrong=False, JSON-string=True): "The Saturated Confidence" (quadratic vs cross-entropy gradient
+  at saturation, win-count smoothness, init variance), "The Overfit Elephant" (overfit gaps, held-out selection,
+  tuning-split veto, Garnett max-observed/regret), "The Vanishing Credit" (depth gradient products vanishing+exploding,
+  ReLU dying zone, universality continuity). Total vetoes now 18 across batches 001-006. Next trigger 82; backlog cleared.
+- Pushes confirmed on origin: ADM ccc21ebd4, Garnett b8500f55c. Nielsen cycle commit pending this entry.

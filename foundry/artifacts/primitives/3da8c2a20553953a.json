@@ -1,0 +1,385 @@
+{
+  "book_id": "3da8c2a20553953a",
+  "source_status": "COMPLETE",
+  "pages_total": 215,
+  "pages_read": 96,
+  "source_note": "Michael Nielsen, Neural Networks and Deep Learning (2015), LibreTexts OER republication (https://LibreTexts.org), CC BY-NC 3.0; original at neuralnetworksanddeeplearning.com, code at github.com/mnielsen/neural-networks-and-deep-learning. Title page spells the author 'Michael Nielson' (LibreTexts catalog spelling); the work is Michael Nielsen's. 215 PDF pages. PDF page = printed page + 7 (printed 19 = PDF 26; printed 157 = PDF 164); all citations are PDF pages. EXTRACTION LIMITATION (disclosed): this LibreTexts rendering typesets inline mathematics as images/MathJax that pymupdf get_text() does not extract, so equation glyphs are largely absent from the text layer; the PROSE and the PYTHON CODE are fully verbatim-extractable. Sovereign primitives are therefore verbatim prose quotes and verbatim code quotes; latex fields are either transcribed from verbatim printed code (p7 sigmoid_prime, p14 weight initializer) or explicitly labeled RECONSTRUCTED from printed prose (p2, p11, p16, p17), never claimed as verbatim glyph extraction. This is a text PDF with image-rendered math, NOT an image-only scan, so it is not INSUFFICIENT_OCR; the conceptual and code content is complete and readable. Dense-monograph solo core-read of 96 pages across seven blocks: 26-35 (gradient descent/SGD/implementation), 50-60 (backprop assumptions/BP1-BP4/algorithm/code/speed), 64-72 (cross-entropy), 76-100 (overfitting/regularization/weight init/code), 120-131 (momentum/tanh/ReLU/universality), 154-166 (vanishing/unstable gradient), 170-185 (convolutional networks). Front matter, ch3.5 hyperparameter heuristics detail, ch4 visual-proof steps, ch6.3+ code and ch7 appendix beyond the core blocks not read. No sportsbook lines/spreads/totals/implied odds anywhere. Era-chain position: the 2015 learning-algorithm layer beneath ADM (decision) and Garnett (experiment design) — it prints how the value model is fit and the pathologies (saturation, overfitting, unstable gradients) that veto naive training claims.",
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Smooth surrogate cost, not raw classification count",
+      "verbatim_quote": "the number of images correctly classified is not a smooth function of the weights and biases in the network.",
+      "page": 26,
+      "latex": null,
+      "assumptions": "The number of correctly classified images is not a smooth function of weights/biases: small parameter changes usually cause no change in the count, so it gives no gradient signal. A smooth proxy (quadratic cost) is minimized first, and classification accuracy examined only afterward (PDF p26-27 / printed 19-20).",
+      "breakdown_regime": "The proxy is not the true objective; the book revisits and modifies the cost function later (cross-entropy). Minimizing a smooth surrogate can diverge from the discrete metric one actually cares about, so the surrogate choice is a declared modeling decision, not a free lunch.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p1",
+        "mapping": "GSE cannot gradient-tune on the raw discrete win/loss count (it is piecewise-constant in the parameters); it must optimize a smooth surrogate game-value surface and only then check the discrete decision metric. This is the printed justification for the engine's continuous value model sitting above the binary win/loss outcome, and the warning that the surrogate is a declared proxy, not the truth.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Gradient descent update and learning-rate breakdown",
+      "verbatim_quote": "we need to choose the learning rate ηη to be small enough that Equation (1.6.4) is a good approximation. If we don't, we might end up with , which obviously would not be good! At the same time, we don't want to be too small, since that will make the changes tiny, and thus the gradient descent algorithm will work very slowly.",
+      "page": 29,
+      "latex": "\\Delta v=-\\eta\\nabla C\\ \\text{(eq 1.6.5)};\\quad \\Delta C\\approx\\nabla C\\cdot\\Delta v=-\\eta\\lVert\\nabla C\\rVert^2\\le 0\\ \\text{(eq 1.6.4-1.6.6)}",
+      "symbol_and_unit_ledger": "v = parameter vector (weights/biases, mixed units); C = cost (objective units); eta = learning rate (small positive parameter, units of v per gradient-unit); nabla C = gradient vector (objective units per v-unit). RECONSTRUCTED from printed prose eqs 1.6.4-1.6.6 (PDF p28-29 / printed 21-22); the equation glyphs are image-rendered and not text-extractable in this LibreTexts OER version. The prose states Delta C <= 0 is guaranteed within the linear approximation.",
+      "assumptions": "The update guarantees cost decrease only within the first-order (linear) approximation of eq 1.6.4. eta must be small enough that the approximation holds, but not so small that steps are tiny and learning crawls.",
+      "breakdown_regime": "If eta is too large, Delta C may become positive (cost increases) — the linear approximation breaks. If eta is too small, learning is impractically slow. In practice eta is varied to keep the approximation valid without crawling. Gradient descent also need not find the global minimum.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p2",
+        "mapping": "Any gradient-based tuning of GSE parameters (calibration map, value-surface weights) inherits the learning-rate breakdown: too large a step overshoots and increases error, too small a step crawls. The engine must validate the local-linear regime of its update and adapt the step, never assume a fixed step is safe across the parameter space.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Stochastic gradient descent: mini-batch as political polling",
+      "verbatim_quote": "all we really care about is moving in a general direction that will help decrease , and that means we don't need an exact computation of the gradient.",
+      "page": 31,
+      "latex": null,
+      "assumptions": "The full gradient is an average over per-example gradients; a randomly chosen mini-batch gives a good estimate of that average, speeding learning. The book's analogy: sampling a mini-batch is like political polling versus running a full election. Statistical fluctuations are acceptable because only the general descent direction matters (PDF p30-31 / printed 23-24).",
+      "breakdown_regime": "The estimate is noisy; an extreme mini-batch of size 1 is online/incremental learning. The speedup factor is roughly (full set size)/(mini-batch size), e.g. 60,000/10 = 6000x for MNIST, but the gradient is never exact.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p3",
+        "mapping": "This is the printed justification for GSE's mini-batch world sampling: the engine need not simulate every world to estimate the value gradient — a random mini-batch of worlds gives a usable descent direction, exactly as polling estimates an election. The 10,000-world ensemble is a large mini-batch; the doctrine is that an approximate direction suffices, an exact gradient is not required.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Two assumptions backpropagation requires of the cost",
+      "verbatim_quote": "The first assumption we need is that the cost function can be written as an average over cost functions for individual training examples, . This is the case for the quadratic cost function, where the cost for a single training example is . This assumption will also hold true for all the other cost functions we'll meet in this book.",
+      "page": 50,
+      "latex": null,
+      "assumptions": "Backprop requires (1) the cost is an average over per-training-example costs, so per-example partial derivatives can be computed and then averaged; and (2) the cost can be written as a function of the network's output activations (the desired output y is a fixed parameter, not learned). Both hold for quadratic and cross-entropy cost (PDF p50 / printed 43).",
+      "breakdown_regime": "A cost that is not decomposable into per-example terms, or that depends on internal weights directly rather than through outputs, breaks the backprop derivation. The Hadamard (elementwise) product is the key nonstandard operation used.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p4",
+        "mapping": "GSE's value-model training inherits these structural assumptions: the loss must decompose per simulated world (so per-world gradients average), and must be a function of the model's outputs (the predicted game value), not of internal weights directly. Any reward term that couples worlds non-decomposably breaks the per-world backprop structure.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Backpropagation is the chain rule; one forward plus one backward pass",
+      "verbatim_quote": "What's clever about backpropagation is that it enables us to simultaneously compute all the partial derivatives using just one forward pass through the network, followed by one backward pass through the network.",
+      "page": 58,
+      "latex": null,
+      "assumptions": "Backprop computes all partial derivatives with one forward pass plus one backward pass (backward cost ~ forward cost), versus a million-and-one forward passes for finite-difference per-weight estimation. It is 'a way of computing the gradient of the cost function by systematically applying the chain rule' (PDF p55, p58 / printed 48, 51). The speedup was first fully appreciated in 1986 (p59).",
+      "breakdown_regime": "Backprop is not a panacea; even in the late 1980s deep networks hit limits. The finite-difference alternative is conceptually simpler but computationally catastrophic (O(number of weights) forward passes).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p5",
+        "mapping": "The engine's sensitivity analysis (how each input feature moves the predicted value) should use a chain-rule backward pass, not per-feature finite differences — the printed complexity argument (one forward + one backward vs a million forward passes) is the exact reason. This is the computational backbone of any gradient-based GSE attribution.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "BP4 consequence: low-activation and saturated neurons learn slowly",
+      "verbatim_quote": "a weight will learn slowly if either the input neuron is low-activation, or if the output neuron has saturated, i.e., is either high- or low-activation.",
+      "page": 53,
+      "latex": null,
+      "assumptions": "From BP4 (gradient = input activation x output error), a weight learns slowly when its input neuron is low-activation; from BP1's sigma' term, an output weight learns slowly when the output neuron saturates (near 0 or 1). The four fundamental equations hold for ANY activation function, not just sigmoid, because the proofs use no special property of sigma (PDF p53 / printed 46).",
+      "breakdown_regime": "The reasoning 'won't hold if the weight has large enough entries to compensate for the smallness of sigma'' — it is a general tendency, not an absolute. This saturation slowdown is the seed of the vanishing-gradient problem in deep nets.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p6",
+        "mapping": "GSE features that are near-zero (low activation) or a value model pushed to a saturated confident extreme learn slowly — the engine's gradient signal vanishes exactly where it is most confidently wrong or most uninformed. This is the printed mechanism behind why a saturated confident forecast resists correction, and why activation/feature design matters.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "Sigmoid derivative (verbatim printed code) and its 1/4 ceiling",
+      "verbatim_quote": "def sigmoid_prime(z): \"\"\"Derivative of the sigmoid function.\"\"\" return sigmoid(z)*(1-sigmoid(z))",
+      "page": 58,
+      "latex": "\\sigma(z)=\\frac{1}{1+e^{-z}};\\quad \\sigma'(z)=\\sigma(z)\\bigl(1-\\sigma(z)\\bigr);\\quad \\max_z\\sigma'(z)=\\tfrac14\\ \\text{at }z=0",
+      "symbol_and_unit_ledger": "z = weighted input (dimensionless logit); sigma(z) = sigmoid activation in (0,1) (dimensionless); sigma'(z) = derivative (dimensionless), maximum 1/4 at z=0. The code 'return sigmoid(z)*(1-sigmoid(z))' and 'return 1.0/(1.0+np.exp(-z))' are VERBATIM printed Python (PDF p58 / printed 51; also p34). The 1/4 ceiling is stated in prose at PDF p164 (printed 157). latex transcribed from the verbatim printed code.",
+      "assumptions": "The derivative identity is exact for the sigmoid. The 1/4 maximum is the key constant in the vanishing-gradient argument: each backprop layer multiplies by sigma' <= 1/4.",
+      "breakdown_regime": "sigma' becomes very small when z is large in magnitude (saturation), so the derivative ceiling is only attained at z=0; saturated neurons contribute near-zero gradient.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p7",
+        "mapping": "The 1/4 ceiling on sigma' is the printed constant that makes deep gradient products shrink: every sigmoid layer multiplies the backward signal by at most 1/4. Any GSE value model built from saturating sigmoids inherits this exponential signal decay with depth — the executable kernel for the vanishing-gradient veto.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "Cross-entropy cancels the saturation slowdown: error controls learning rate",
+      "verbatim_quote": "the rate at which the weight learns is controlled by , i.e., by the error in the output. The larger the error, the faster the neuron will learn.",
+      "page": 67,
+      "latex": null,
+      "assumptions": "With quadratic cost the gradient carries a sigma' factor that vanishes at saturation, causing learning slowdown when the neuron is badly wrong. Cross-entropy is specially chosen so the sigma' term cancels: the weight's learning rate is controlled by the output error (a - y), so the larger the error, the faster the neuron learns (PDF p66-67 / printed 59-60). 'This cancellation is the special miracle ensured by the cross-entropy cost function.'",
+      "breakdown_regime": "The cancellation holds for sigmoid output neurons; with linear output neurons the quadratic cost has no slowdown either (p70). The input-activation factor x in the gradient cannot be eliminated by any cost choice (p72 problem), so low-input weights still learn slowly.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p8",
+        "mapping": "GSE should learn fastest when it is most wrong, not slowest — the cross-entropy design principle. A loss whose gradient vanishes exactly when the prediction is confidently wrong (saturation) is the defect; the engine's loss must keep the error term driving the update. This is the printed fix for the 'confidently wrong and stuck' failure mode.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p9",
+      "name": "Fermi's elephant: the true test is prediction on unseen situations",
+      "verbatim_quote": "The true test of a model is its ability to make predictions in situations it hasn't been exposed to before.",
+      "page": 76,
+      "latex": null,
+      "assumptions": "Models with many free parameters can fit almost any dataset of a given size without capturing genuine insight; agreement with available data does not make a model good. Fermi (via von Neumann): 'with four parameters I can fit an elephant, and with five I can make him wiggle his trunk.' The true test is prediction in situations not previously exposed to (PDF p76 / printed 69).",
+      "breakdown_regime": "A 30-hidden-neuron MNIST net has ~24,000 parameters; a 100-neuron net ~80,000; deep nets millions/billions. Training on only 1,000 images makes overfitting evident: training cost keeps dropping while test accuracy stalls (epoch 280) — 'the improvement is an illusion'.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p9",
+        "mapping": "This is the foundry's core epistemic veto in printed form: a GSE model that fits historical games beautifully may just be fitting an elephant with enough parameters. The only valid test is out-of-sample prediction on unseen games. In-sample fit is never evidence of edge; the held-out crucible is the elephant test.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p10",
+      "name": "Early stopping and the hold-out method: validation, not test, for hyperparameters",
+      "verbatim_quote": "you can think of the validation data as a type of training data that helps us learn good hyper-parameters.",
+      "page": 79,
+      "latex": null,
+      "assumptions": "Stop training when validation accuracy saturates (early stopping). Use validation_data, NOT test_data, to choose hyperparameters, because tuning on test data overfits the hyperparameters to the test set; the test set is reserved for a final generalization estimate. This is the hold-out method (PDF p79 / printed 72).",
+      "breakdown_regime": "Even after a final test evaluation one may change architecture and re-tune, risking an infinite regress of datasets; the book acknowledges this is a deep problem and pragmatically uses the basic three-way hold-out. A plateau may be temporary, so early stopping requires judgment.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p10",
+        "mapping": "This is the printed anchor for GSE's held-out-discipline doctrine: hyperparameters (confidence thresholds, calibration) must be tuned on validation games, never on the test crucible, or the engine overfits its knobs to the very games it claims to predict. The test set is a one-shot generalization estimate, exactly as the book prescribes.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p11",
+      "name": "L2 regularization / weight decay: a compromise, and a kludge",
+      "verbatim_quote": "regularization can be viewed as a way of compromising between finding small weights and minimizing the original cost function.",
+      "page": 81,
+      "latex": "C=C_0+\\frac{\\lambda}{2n}\\sum_w w^2\\ \\text{(L2)};\\quad w\\to\\Bigl(1-\\frac{\\eta\\lambda}{n}\\Bigr)w-\\eta\\frac{\\partial C_0}{\\partial w}\\ \\text{(weight decay)}",
+      "symbol_and_unit_ledger": "C0 = unregularized cost (objective units); lambda = regularization parameter (dimensionless); n = training-set size (count); w = weight (mixed units); eta = learning rate. The regularization term sums squared WEIGHTS only, not biases. RECONSTRUCTED from printed prose (PDF p80-81 / printed 73-74); equation glyphs image-rendered, not text-extractable. The prose states the weight is rescaled by (1 - eta*lambda/n) before the gradient step.",
+      "assumptions": "Small lambda prefers minimizing the original cost; large lambda prefers small weights. Biases are not regularized because a large bias does not make a neuron sensitive to its inputs the way large weights do (p88). Regularized runs are more replicable; unregularized runs get stuck in local minima as the weight vector grows long.",
+      "breakdown_regime": "The book calls regularization 'something of a kludge' (p87): it often helps but there is no entirely satisfactory systematic understanding of why. The 'smaller weights = lower complexity' story is heuristic, not a proof.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p11",
+        "mapping": "GSE's value model should prefer small weights (simple, noise-resistant surfaces) unless large weights considerably improve fit — the printed compromise. But the engine must declare regularization as a heuristic kludge, not a principled guarantee of generalization, and must not regularize its bias/offset terms. The replicability benefit (regularized runs less stuck) is a concrete operational gain.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p12",
+      "name": "Occam caution and no-free-lunch: simplicity is not a scientific principle",
+      "verbatim_quote": "There is no a priori logical reason to prefer simple explanations over more complex explanations.",
+      "page": 86,
+      "latex": null,
+      "assumptions": "There is no a priori logical reason to prefer simple explanations; sometimes the more complex one is correct (Bethe vs Schein's particle; Le Verrier's Mercury anomaly resolved by Einstein's more complex general relativity, 1916). 'The true test of a model is not simplicity, but rather how well it does in predicting new phenomena, in new regimes of behaviour.' The problem of induction (Hume 1748) has its ML form in the no-free-lunch theorem (Wolpert & Macready 1997) (PDF p86-87 / printed 79-80).",
+      "breakdown_regime": "Regularization's preference for simplicity is an empirical rule of thumb, not a theorem; the book explicitly warns against zealously applying Occam's Razor as a general principle. No algorithm is universally best across all problems (no-free-lunch).",
+      "domain": "cs",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p12",
+        "mapping": "This vetoes any GSE claim that a simpler model is automatically better, or that one engine configuration is universally superior. The no-free-lunch theorem is the printed reason the engine must be validated per-regime (per matchup type, per season) rather than assumed globally optimal. Predictive power on new regimes, not elegance, is the criterion.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p13",
+      "name": "Dropout as averaging many networks; robust features via co-adaptation breaking",
+      "verbatim_quote": "the dropout procedure is like averaging the effects of a very large number of different networks. The different networks will overfit in different ways, and so, hopefully, the net effect of dropout will be to reduce overfitting.",
+      "page": 90,
+      "latex": null,
+      "assumptions": "Dropout randomly deletes half the hidden neurons per mini-batch, trains the thinned net, then restores and re-thins; at test time outgoing weights are halved to compensate. Heuristically this averages a very large number of different networks that overfit in different ways. Krizhevsky et al. 2012: it 'reduces complex co-adaptations of neurons, since a neuron cannot rely on the presence of particular other neurons... forced to learn more robust features' (PDF p89-90 / printed 82-83).",
+      "breakdown_regime": "Dropout modifies the network, not the cost (unlike L1/L2). It is applied to fully-connected layers, not convolutional layers, because shared weights already give conv layers inbuilt overfitting resistance (p184). The explanation remains heuristic.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p13",
+        "mapping": "Dropout is the printed formal cousin of GSE's ensemble/10,000-world robustness: by preventing any single feature (or world) from being relied upon, the model is forced to learn robust patterns useful across many random subsets. The engine's value estimate should be robust to the loss of any individual piece of evidence, exactly as dropout makes a neuron robust to the loss of its partners.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p14",
+      "name": "Weight initialization 1/sqrt(n_in) avoids hidden-neuron saturation",
+      "verbatim_quote": "self.weights = [np.random.randn(y, x)/np.sqrt(x) for x, y in zip(self.sizes[:-1], self.sizes[1:])]",
+      "page": 100,
+      "latex": "w\\sim\\mathcal{N}\\!\\left(0,\\,\\frac{1}{n_{\\mathrm{in}}}\\right)\\ \\text{(standard deviation }1/\\sqrt{n_{\\mathrm{in}}}\\text{)};\\quad b\\sim\\mathcal{N}(0,1)",
+      "symbol_and_unit_ledger": "w = weight (mixed units); n_in = number of input connections to the neuron (count); b = bias. The code 'np.random.randn(y, x)/np.sqrt(x)' is VERBATIM printed Python (default_weight_initializer, PDF p100 / printed 93). The old large_weight_initializer uses np.random.randn(y,x) (std 1). latex transcribed from the verbatim printed code; the prose (p96-97) gives the variance argument.",
+      "assumptions": "With std-1 Gaussian weights and many inputs, the weighted sum z has a broad Gaussian distribution (std ~ sqrt(n_in/2 + 1)), so the neuron likely saturates near 0 or 1 and learns slowly. Initializing weights with std 1/sqrt(n_in) sharply peaks z, avoiding saturation. Biases stay std 1 (or 0).",
+      "breakdown_regime": "The improved initialization mainly speeds learning; final accuracy is often similar, though Chapter 4 shows cases where long-run behavior is also better. L2 weight decay can implicitly produce a similar effect (p99 problem).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p14",
+        "mapping": "GSE value-model weights must be scaled by 1/sqrt(fan-in) to avoid starting saturated — the printed initialization kernel. A model initialized with unscaled weights begins confidently wrong and learns slowly; the engine's parameter initialization is a declared, code-verbatim design choice with a concrete variance argument.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p15",
+      "name": "Universality theorem and its two caveats",
+      "verbatim_quote": "a more precise statement of the universality theorem is that neural networks with a single hidden layer can be used to approximate any continuous function to any desired precision.",
+      "page": 128,
+      "latex": null,
+      "assumptions": "A single-hidden-layer network can approximate any CONTINUOUS function to any desired precision (Cybenko 1989 via Hahn-Banach/Riesz/Fourier; Hornik-Stinchcombe-White 1989 via Stone-Weierstrass). Two caveats: (1) approximation, not exact computation — more hidden neurons improve accuracy; (2) only continuous functions — discontinuous sharp jumps cannot in general be approximated (PDF p127-128 / printed 120-121).",
+      "breakdown_regime": "Universality is an existence result, not a construction or learning guarantee: knowing a network exists that translates Chinese to English does not give techniques to build or recognize it. Discontinuous targets break it; the book proves a slightly weaker two-hidden-layer version visually.",
+      "domain": "math",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p15",
+        "mapping": "Universality justifies GSE's use of a flexible function approximator for the game-value surface (any continuous value function is representable), but the two caveats are vetoes: existence is not learnability, and a discontinuous regime switch (e.g. a sudden rule change or injury cliff) is not approximable by a smooth net. The engine must not cite universality as a guarantee it can learn or find the right network.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p16",
+      "name": "Unstable gradient: early-layer gradient is a product of all later layers",
+      "verbatim_quote": "the gradient in early layers is the product of terms from all the later layers. When there are many layers, that's an intrinsically unstable situation.",
+      "page": 165,
+      "latex": "\\frac{\\partial C}{\\partial b_1}=\\sigma'(z_1)\\,w_2\\,\\sigma'(z_2)\\,w_3\\cdots w_L\\,\\sigma'(z_L)\\,\\frac{\\partial C}{\\partial a_L};\\quad |w_j\\sigma'(z_j)|<\\tfrac14\\ \\text{typically}",
+      "symbol_and_unit_ledger": "b1 = first-layer bias; z_j = weighted input to layer j; w_j = weight; sigma'(z_j) <= 1/4; a_L = output activation; C = cost. With std-1 Gaussian init, |w_j| < 1 typically and sigma' <= 1/4, so each factor |w_j sigma'(z_j)| < 1/4 and the product decays exponentially with depth. RECONSTRUCTED from printed prose (PDF p162-165 / printed 155-158); equation glyphs image-rendered. The single-neuron-per-layer toy expression is described term-by-term in the prose.",
+      "assumptions": "The early-layer gradient is a product over all later layers' w*sigma' terms. If factors are < 1 the gradient vanishes exponentially; if weights grow so factors exceed 1, it explodes. The book's measured example: first hidden layer learns ~100x slower than the final layer (p161). Hochreiter 1991; Hochreiter-Bengio-Frasconi-Schmidhuber 2001.",
+      "breakdown_regime": "The real problem is instability, not vanishing alone: 'the only way all layers can learn at close to the same speed is if all those products of terms come close to balancing out', which is unlikely by chance. Avoiding vanishing requires |w sigma'| >= 1, but large w pushes z into the sigmoid wings where sigma' is tiny — a narrow escape window.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p16",
+        "mapping": "This is the printed depth veto for any deep GSE value model: the credit-assignment signal to early features is a product of all later layers' gains, so it intrinsically vanishes or explodes — early features (raw formation/ personnel signals) learn wildly slower than late features. The engine must use mechanisms (ReLU, residual/identity paths, careful init) that balance the product, never assume uniform learning across depth.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p17",
+      "name": "ReLU: no positive-side saturation, but dying on negative input",
+      "verbatim_quote": "increasing the weighted input to a rectified linear unit will never cause it to saturate, and so there is no corresponding learning slowdown. On the other hand, when the weighted input to a rectified linear unit is negative, the gradient vanishes, and so the neuron stops learning entirely.",
+      "page": 122,
+      "latex": "\\mathrm{ReLU}(z)=\\max(0,z);\\quad \\frac{d}{dz}\\mathrm{ReLU}(z)=\\begin{cases}1 & z>0\\\\ 0 & z<0\\end{cases}",
+      "symbol_and_unit_ledger": "z = weighted input (dimensionless); ReLU output = max(0,z) (dimensionless). The prose (PDF p122 / printed 115) states the rectifying function max(0,z); the derivative is 1 for positive input, 0 for negative. RECONSTRUCTED from printed prose definition; the glyph is image-rendered. Empirically ReLU nets consistently outperform sigmoid nets on MNIST (p181).",
+      "assumptions": "Unlike sigmoid/tanh, a ReLU never saturates for large positive input, so no positive-side learning slowdown. But for negative weighted input the gradient is exactly zero and the neuron stops learning entirely (the 'dying ReLU' problem).",
+      "breakdown_regime": "The book stresses we lack a deep theory of when/why ReLU is preferable; the common 'doesn't saturate' justification is 'hardly a detailed justification, more of a just-so story' (p181). A neuron stuck in the negative region never recovers via gradient descent.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p17",
+        "mapping": "ReLU is the printed partial fix for GSE's vanishing-gradient problem (no positive-side saturation), but it introduces a hard zero-gradient dead zone: a feature driven negative stops learning permanently. The engine must monitor for dead units and not assume ReLU solves credit assignment — the book itself calls the justification a just-so story.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p18",
+      "name": "Convolutional architecture: shared weights, translation invariance, pooling",
+      "verbatim_quote": "convolutional networks are well adapted to the translation invariance of images: move a picture of a cat (say) a little ways, and it's still an image of a cat",
+      "page": 173,
+      "latex": null,
+      "assumptions": "Convolutional nets use local receptive fields, shared weights/biases (a feature map / kernel / filter), and pooling. Shared weights mean every hidden neuron detects the same feature at different locations, exploiting translation invariance and greatly reducing parameter count versus fully-connected layers. Max-pooling asks whether a feature appears anywhere in a region and 'throws away the exact positional information' (PDF p171-176 / printed 164-169). LeCun et al. 1998 LeNet-5; LeCun: the biological inspiration is 'very tenuous'.",
+      "breakdown_regime": "Pooling discards exact position, which helps when rough relative location matters but loses fine spatial detail. Conv layers have inbuilt overfitting resistance from shared weights, so dropout is applied only to the fully-connected layers (p184). The architecture must match the input's spatial structure; a tabula-rasa fully-connected net ignores it.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p18",
+        "mapping": "The convolutional principle — detect the same local pattern everywhere via shared weights, then pool away exact position — maps to GSE's formation/feature detectors: a route concept or coverage shell should be recognized regardless of where on the field it appears (translation invariance), with shared detectors reducing parameters. This is a derived architectural analogy, not a printed football claim; the spatial-structure-must-match-the-architecture lesson is the transferable kernel.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Neural Networks and Deep Learning is the learning-algorithm layer of the foundry corpus, the printed mechanics of how a flexible function approximator is actually trained, and it sits directly beneath ADM's decision layer and Garnett's experiment-design layer. Where ADM prints how to choose given a model and Garnett prints how to design the next observation, Nielsen prints how the model itself is fit: gradient descent, backpropagation, the cross-entropy fix for saturation, regularization, weight initialization, universality, and the unstable-gradient pathology of depth. Read retrocausally, the book's own citations are the genealogy: the perceptron of the 1950s, the backpropagation speedup 'first fully appreciated in 1986' (Rumelhart-Hinton-Williams, cited p59), Cybenko 1989 and Hornik-Stinchcombe-White 1989 proving universality via Hahn-Banach/Riesz and Stone-Weierstrass, LeCun-Bottou-Bengio-Haffner 1998 LeNet-5 and the 'self-regularization' conjecture, Hochreiter 1991 and Hochreiter-Bengio-Frasconi-Schmidhuber 2001 on the vanishing gradient, Glorot-Bengio 2010 on sigmoid saturation, Krizhevsky-Sutskever-Hinton 2012 and Hinton et al. 2012 on dropout and ReLU, Simard-Steinkraus-Platt 2003 on elastic data expansion, Wolpert-Macready 1997 no-free-lunch, and Hume 1748 on induction. Now run that backward into the extracted era and the decision spine. The book's Fermi/von Neumann elephant (p76) is the same epistemic veto the foundry inherits from the calibration work: in-sample fit is not edge. Its hold-out method (p79) is the printed ancestor of the held-out-discipline doctrine. Its cross-entropy 'measure of surprise' (p72) is the same information-theoretic quantity Garnett's entropy search and ADM's value-of-information optimize. Its dropout-as-averaging (p90) is the formal cousin of the 10,000-world ensemble. The prose era computed best-response from scouting tables; Nielsen prints the gradient machinery that would let a modern engine learn those tables from data instead of hand-counting them.\n\nThe recursive theory of mind here is the network modeling its own error and the experimenter modeling the network's learning dynamics. The backpropagation 'demon' (p51) is a literal theory of mind: a hypothetical agent perturbs a neuron's weighted input and watches how the cost responds, defining error as the sensitivity of cost to that perturbation — the engine asking 'if I nudged this feature, how much would the outcome change?'. The cross-entropy design is a theory of mind about learning itself: the author reasons that a neuron should learn fastest when badly wrong, then derives the unique cost (up to a constant) whose gradient is the output error, canceling the saturation term — 'the cross-entropy isn't something that was miraculously pulled out of thin air' (p72). The unstable-gradient analysis (p165) is a theory of mind about depth: the early layer's learning signal is a product of all later layers' gains, so the experimenter must model how credit propagates backward through the whole stack, not just the local gradient. And the book's recurring honesty — 'our theoretical tools are very weak' (LeCun, p123), regularization is 'a kludge', ReLU's advantage is 'a just-so story' — is the meta-cognitive layer: the author models the limits of his own field's understanding and refuses to dress heuristics as theorems.\n\nCross-layer veto adjudication is where Nielsen earns its place, because it prints the exact pathologies that veto naive engine claims. The smooth-surrogate requirement (p27) vetoes gradient-tuning on the raw discrete win count. The learning-rate breakdown (p29) vetoes a fixed step size assumed safe everywhere. The saturation slowdown (p53, p66) vetoes a loss that learns slowest when confidently wrong; cross-entropy is the printed fix. Fermi's elephant and the hold-out method (p76, p79) veto in-sample fit as evidence and veto tuning hyperparameters on the test crucible. The Occam caution and no-free-lunch (p86-87) veto 'simpler is automatically better' and 'one configuration is universally best'. Universality's two caveats (p128) veto citing existence as learnability and smooth approximation of a discontinuous regime cliff. The unstable-gradient product (p165) veto uniform learning across depth, and ReLU's dying zone (p122) vetoes assuming ReLU solves credit assignment. Each is a cross-layer constraint overriding a single-layer maximand, and together they make Nielsen the learning-and-pathology layer the foundry was missing. The extraction itself is honest about its limits: this is the LibreTexts OER rendering, whose inline equations are image-rendered and not text-extractable, so the sovereign content here is the verbatim prose and the verbatim Python code, with any LaTeX explicitly labeled as transcribed from code or reconstructed from prose, never claimed as a verbatim glyph extraction. That disclosure is itself a foundry discipline: state what the source actually gives you, and refuse to fabricate the rest. The book's remaining lessons reinforce the same posture. The momentum co-efficient is explicitly renamed as friction, not physics momentum (p120), a warning against importing a familiar word's baggage into a model. The tanh analysis (p121) shows that with all-positive sigmoid activations every weight into a neuron must move in the same direction, a structural defect that zero-centered activations relieve — the engine must check that its feature signs do not lock updates into a single direction. The data-versus-algorithm discussion (p94) is perhaps the most important practical veto: more training data can compensate for a weaker algorithm, and the correct answer to 'is algorithm A better than B?' is 'what training data set are you using?', so a whiz-bang improvement of X percent on benchmark Y may be an accident of the benchmark's size rather than a real advance. Finally, the closing synthesis (p185) admits that deep networks are trainable not because the unstable-gradient problem was solved but because it was worked around — convolutional layers cut parameters, dropout and shared weights resist overfitting, ReLU speeds training, and GPUs plus patience buy enough epochs — 'we haven't avoided these results.' That is the honest engineering posture the foundry inherits: the pathologies are real and permanent, and success comes from a concert of mitigations, not a single silver bullet.",
+      "retrocausal_genealogy": "Nielsen's printed citations are the spine: perceptrons 1950s; backprop speedup 'first fully appreciated in 1986' (p59); Cybenko 1989 (Hahn-Banach/Riesz/Fourier) and Hornik-Stinchcombe-White 1989 (Stone-Weierstrass) universality (p127); LeCun-Bottou-Bengio-Haffner 1998 LeNet-5 + 'self-regularization' conjecture (p88, p171); Hochreiter 1991 / Hochreiter-Bengio-Frasconi-Schmidhuber 2001 vanishing gradient (p161); Glorot-Bengio 2010 sigmoid saturation (p166); Krizhevsky-Sutskever-Hinton 2012 + Hinton et al. 2012 dropout/ReLU (p90, p181); Simard-Steinkraus-Platt 2003 elastic expansion (p92); Wolpert-Macready 1997 no-free-lunch + Hume 1748 induction (p87). Backward links: Fermi/von Neumann elephant (p76) = the foundry's in-sample-fit-is-not-edge veto; hold-out method (p79) = ancestor of held-out-discipline; cross-entropy 'measure of surprise' (p72) = the information quantity Garnett entropy-search / ADM VOI optimize; dropout-as-averaging (p90) = formal cousin of the 10,000-world ensemble.",
+      "theory_of_mind": "The backprop 'demon' (p51) is a literal theory of mind: a hypothetical agent perturbs a neuron's weighted input and watches the cost respond, defining error as cost-sensitivity to that perturbation — 'if I nudged this feature, how much would the outcome change?'. Cross-entropy is a theory of mind about learning: reason that a neuron should learn fastest when badly wrong, then derive the unique cost (up to a constant) whose gradient is the output error, canceling saturation — 'not miraculously pulled out of thin air' (p72). The unstable-gradient analysis (p165) models how credit propagates backward through the whole stack, not just locally. The meta-cognitive layer is the book's honesty: 'our theoretical tools are very weak' (LeCun p123), regularization 'a kludge' (p87), ReLU's edge 'a just-so story' (p181) — modeling the limits of the field's own understanding.",
+      "cross_layer_veto": "Printed cross-layer vetoes: (1) smooth surrogate required — raw win count is not smooth in parameters (p27); (2) learning-rate breakdown — too large overshoots, too small crawls (p29); (3) saturation slowdown — a loss that learns slowest when confidently wrong is defective, cross-entropy cancels sigma' (p53, p66-67); (4) Fermi elephant + hold-out — in-sample fit is not edge, never tune hyperparameters on the test crucible (p76, p79); (5) Occam caution + no-free-lunch — simpler is not automatically better, no universal best configuration (p86-87); (6) universality caveats — existence is not learnability, discontinuous cliffs not approximable (p128); (7) unstable gradient product — early-layer signal is a product of all later gains, vanishes or explodes (p165); (8) ReLU dying zone — negative input gives exactly zero gradient, neuron stops learning (p122). Each overrides a single-layer maximand."
+    }
+  ],
+  "universal_lens": "Read through a polymath learning-theory lens, Nielsen 2015 is the unified mechanics of fitting a flexible approximator: optimization (gradient descent/SGD/momentum), credit assignment (backprop as chain rule), loss design (cross-entropy as surprise), generalization (regularization/dropout/hold-out/no-free-lunch), representation (universality), and depth pathology (unstable gradients). It is the rare source that prints both the executable training code and an honest account of where the field's theoretical understanding is weak.",
+  "gsi_mapping": "The saturation/learning-slowdown mechanism (sigma' vanishing at extreme activation, p53/p66) maps to a physiological signal that stops responding once a biomarker saturates at an extreme; the cross-entropy fix (error-driven learning, p67) maps to a diagnostic that should respond fastest when most wrong. The regularization-as-complexity-control (p81) maps to preferring parsimonious physiological models. No clinical telemetry exists in this methods text; all bindings are labeled derived and LATENT_UNIDENTIFIABLE until measured.",
+  "gse_mapping": "The learning layer beneath the JEV simulator: gradient descent/SGD (p28-31) tunes the value surface; backprop (p50-58) is the chain-rule sensitivity engine; cross-entropy (p67) keeps learning fast when confidently wrong; the hold-out method (p79) is the held-out-discipline ancestor; Fermi's elephant (p76) vetoes in-sample fit as edge; dropout-as-averaging (p90) is the 10,000-world robustness cousin; universality caveats (p128) veto existence-as-learnability; the unstable-gradient product (p165) vetoes uniform learning across depth; ReLU's dying zone (p122) and conv translation-invariance/pooling (p173-176) inform feature-detector architecture. No odds, no publication from this lane."
+}
