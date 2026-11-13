@@ -7,6 +7,7 @@
  */
 
 import { db } from "@sports/db";
+import { publicationAllowed } from "@sports/ingestion-pipeline/src/publication-gate";
 import {
   FOUNDER_MODEL_VERSION,
   founderFactorBreakdown,
@@ -101,7 +102,12 @@ export async function createFounderPick(
     factorBreakdown: JSON.parse(JSON.stringify(founderFactorBreakdown(input, underlying))),
     modelVersion: FOUNDER_MODEL_VERSION,
     isBootstrap: false,
-    isPublished: true,
+    // Fail-closed, same rule as the engine path. A founder pick is a human
+    // decision, but it is still a public claim: it goes out unpublished unless
+    // PUBLIC_PICKS_ENABLED is "true", a sealed pregame verdict exists for the
+    // game, and the walk-forward emission gate has passed. The emission gate
+    // reads passed:false today, so this is false until the owner opens it.
+    isPublished: publicationAllowed(),
     isFeatured: true,
     // Lock the published terms write-once with the CLV lock, same as engine picks.
     clvLockLine: input.pickType === "MONEYLINE" ? null : input.line,

@@ -1,0 +1,1358 @@
+{
+  "manifest": {
+    "hash": "a6f8f1c903c269e3c17cf5d6fcac6e676fe8d366c20e46c3703cc32c346d344f",
+    "codeVersion": "v5.3.1+evidence-spine.1",
+    "sealedAt": "2026-11-12T23:21:25.714Z",
+    "canonical": "{\"codeVersion\":\"v5.3.1+evidence-spine.1\",\"payload\":{\"bundle\":{\"awayCharting\":{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"reason\":\"no pressure-rate column in trends or ftn_charting\",\"source\":\"trends:nfl_2026_w1_w7+ftn_charting_2026\",\"status\":\"MISSING\"},\"awayCoaching\":{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"note\":\"offensiveCoordinator absent from source; defensiveCoordinator absent from source; fourthDownAggression = staffAggression (empirical 4th-and-short go rate)\",\"source\":\"coach-sim:COACH_32_STAFF_PROFILES\",\"status\":\"REAL\",\"value\":{\"defensiveCoordinator\":null,\"fourthDownAggression\":0.77,\"headCoach\":\"K.Shanahan\",\"offensiveCoordinator\":null,\"team\":\"SF\"}},\"awayForm\":{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"source\":\"trends:nflverse-pbp\",\"status\":\"REAL\",\"value\":{\"defEpaPerPlay\":0.020382,\"gamesPlayed\":7,\"neutralPassRate\":null,\"offEpaPerPlay\":0.136582,\"passEpaPerPlay\":0.247327,\"playActionPct\":null,\"pointsAllowedPerGame\":null,\"pointsPerGame\":null,\"proePct\":null,\"rushEpaPerPlay\":0.095014,\"successRate\":null,\"team\":\"SF\",\"weeksCovered\":[1,8]}},\"builtAt\":\"2026-11-12T23:21:25.714Z\",\"codeVersion\":\"v5.3.1+evidence-spine.1\",\"corpus\":{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"note\":\"support < 0.8 reported as 0 (topical match is not agreement)\",\"source\":\"lit:corpus-grounding\",\"status\":\"REAL\",\"value\":[{\"citations\":[{\"score\":0.437787,\"title\":\"undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf\",\"uri\":\"lit.corpus_chunk:fbd6a2c6b3ca#15\"},{\"score\":0.412285,\"title\":\"undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf\",\"uri\":\"lit.corpus_chunk:fbd6a2c6b3ca#30\"},{\"score\":0.410321,\"title\":\"undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf\",\"uri\":\"lit.corpus_chunk:fbd6a2c6b3ca#16\"},{\"score\":0.409529,\"title\":\"undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf\",\"uri\":\"lit.corpus_chunk:fbd6a2c6b3ca#2\"},{\"score\":0.406944,\"title\":\"undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf\",\"uri\":\"lit.corpus_chunk:fbd6a2c6b3ca#11\"},{\"score\":0.37037,\"title\":\"\",\"uri\":\"lit.situation:924d3837fbc4#43\"},{\"score\":0.37037,\"title\":\"\",\"uri\":\"lit.situation:f132e5185303#59\"},{\"score\":0.35,\"title\":\"\",\"uri\":\"lit.situation:fbd6a2c6b3ca#5\"},{\"score\":0.35,\"title\":\"\",\"uri\":\"lit.situation:94484fae9a86#56\"},{\"score\":0.333333,\"title\":\"\",\"uri\":\"lit.situation:f3c94eb45d5d#26\"},{\"score\":0.259259,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.259259,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.233333,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.224,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.21,\"title\":\"\",\"uri\":\"lit.corpus_statement:2a485ad684fcp131\"}],\"facet\":\"pass rush pressure blitz quarterback sacks offensive line protection\",\"family\":\"pressure\",\"support\":0.805158},{\"citations\":[{\"score\":0.6,\"title\":\"\",\"uri\":\"lit.situation:8d17a3b7ae94#40\"},{\"score\":0.555556,\"title\":\"\",\"uri\":\"lit.situation:8d17a3b7ae94#23\"},{\"score\":0.469552,\"title\":\"2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf\",\"uri\":\"lit.corpus_chunk:8d17a3b7ae94#39\"},{\"score\":0.44118,\"title\":\"2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf\",\"uri\":\"lit.corpus_chunk:8d17a3b7ae94#36\"},{\"score\":0.4375,\"title\":\"\",\"uri\":\"lit.situation:8d17a3b7ae94#0\"},{\"score\":0.4375,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.428571,\"title\":\"\",\"uri\":\"lit.situation:8d17a3b7ae94#40\"},{\"score\":0.416667,\"title\":\"\",\"uri\":\"lit.situation:8254f435c0e1#100\"},{\"score\":0.412745,\"title\":\"2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf\",\"uri\":\"lit.corpus_chunk:8d17a3b7ae94#38\"},{\"score\":0.40834,\"title\":\"2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf\",\"uri\":\"lit.corpus_chunk:8d17a3b7ae94#37\"},{\"score\":0.382519,\"title\":\"2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf\",\"uri\":\"lit.corpus_chunk:8d17a3b7ae94#45\"},{\"score\":0.35,\"title\":\"Coaching-The-Way-of-the-Winner\",\"uri\":\"lit.corpus_statement:8254f435c0e1p100\"},{\"score\":0.35,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.21,\"title\":\"\",\"uri\":\"lit.corpus_statement:8687507e628ap784\"},{\"score\":0.21,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"}],\"facet\":\"man coverage zone coverage cornerback receiver matchup\",\"family\":\"coveragePersonnel\",\"support\":0.905698},{\"citations\":[{\"score\":0.47014,\"title\":\"2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf\",\"uri\":\"lit.corpus_chunk:f3c94eb45d5d#29\"},{\"score\":0.443708,\"title\":\"2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf\",\"uri\":\"lit.corpus_chunk:f3c94eb45d5d#28\"},{\"score\":0.432908,\"title\":\"2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf\",\"uri\":\"lit.corpus_chunk:f3c94eb45d5d#19\"},{\"score\":0.407792,\"title\":\"2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf\",\"uri\":\"lit.corpus_chunk:f3c94eb45d5d#7\"},{\"score\":0.406584,\"title\":\"2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf\",\"uri\":\"lit.corpus_chunk:f3c94eb45d5d#43\"},{\"score\":0.355555,\"title\":\"\",\"uri\":\"lit.situation:8348efb46ad1#54\"},{\"score\":0.35,\"title\":\"\",\"uri\":\"lit.situation:f3c94eb45d5d#20\"},{\"score\":0.333333,\"title\":\"\",\"uri\":\"lit.situation:708938c12c8a#181\"},{\"score\":0.32,\"title\":\"\",\"uri\":\"lit.situation:94484fae9a86#56\"},{\"score\":0.3,\"title\":\"\",\"uri\":\"lit.situation:94484fae9a86#56\"},{\"score\":0.233333,\"title\":\"\",\"uri\":\"lit.corpus_statement:cd99c6b72cc0p786\"},{\"score\":0.224,\"title\":\"\",\"uri\":\"lit.corpus_statement:2a485ad684fcp69\"},{\"score\":0.21,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"}],\"facet\":\"quarterback passing accuracy completion decision under pressure play action\",\"family\":\"qbSkillScript\",\"support\":0.832846},{\"citations\":[],\"facet\":\"betting market point spread closing line odds efficiency\",\"family\":\"marketMicrostructure\",\"support\":0},{\"citations\":[{\"score\":0.6,\"title\":\"\",\"uri\":\"lit.situation:7e98ad100cb6#33\"},{\"score\":0.6,\"title\":\"\",\"uri\":\"lit.situation:1acab2f2b51d#0\"},{\"score\":0.5,\"title\":\"\",\"uri\":\"lit.situation:708938c12c8a#27\"},{\"score\":0.4,\"title\":\"\",\"uri\":\"lit.situation:fa86f2d38c6f#6\"},{\"score\":0.4,\"title\":\"\",\"uri\":\"lit.situation:4f3611a2c66e#82\"},{\"score\":0.291667,\"title\":\"Inside-Football\",\"uri\":\"lit.corpus_statement:b6fb6ecaeaddp181\"},{\"score\":0.291667,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.186667,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"},{\"score\":0.186667,\"title\":\"\",\"uri\":\"lit.corpus_statement:p?\"}],\"facet\":\"fourth down decision go for it punt field goal win probability\",\"family\":\"other\",\"support\":0.92},{\"citations\":[{\"score\":0.46917,\"title\":\"PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION\",\"uri\":\"lit.corpus_chunk:6b7d4b42bf90#10\"},{\"score\":0.434758,\"title\":\"PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION\",\"uri\":\"lit.corpus_chunk:6b7d4b42bf90#7\"},{\"score\":0.413823,\"title\":\"PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION\",\"uri\":\"lit.corpus_chunk:6b7d4b42bf90#3\"},{\"score\":0.410857,\"title\":\"PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION\",\"uri\":\"lit.corpus_chunk:6b7d4b42bf90#2\"},{\"score\":0.36,\"title\":\"\",\"uri\":\"lit.situation:6b7d4b42bf90#6\"},{\"score\":0.357142,\"title\":\"\",\"uri\":\"lit.situation:55b7cd9535fe#99\"},{\"score\":0.342857,\"title\":\"\",\"uri\":\"lit.situation:d38807dd253e#227\"},{\"score\":0.32,\"title\":\"\",\"uri\":\"lit.situation:2ce1d4d2ced1#11\"},{\"score\":0.32,\"title\":\"\",\"uri\":\"lit.situation:1370caa08130#64\"},{\"score\":0.233333,\"title\":\"\",\"uri\":\"lit.corpus_statement:0bb0d9695cdcp62\"},{\"score\":0.224,\"title\":\"\",\"uri\":\"lit.corpus_statement:0bb0d9695cdcp213\"},{\"score\":0.224,\"title\":\"\",\"uri\":\"lit.corpus_statement:b0b4f2da68dfp21\"},{\"score\":0.224,\"title\":\"\",\"uri\":\"lit.corpus_statement:0bb0d9695cdcp35\"},{\"score\":0.21,\"title\":\"\",\"uri\":\"lit.corpus_statement:76b01a0d674dp47\"}],\"facet\":\"short week rest fatigue recovery between games\",\"family\":\"restFatigue\",\"support\":0.824119}]},\"homeCharting\":{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"reason\":\"no pressure-rate column in trends or ftn_charting\",\"source\":\"trends:nfl_2026_w1_w7+ftn_charting_2026\",\"status\":\"MISSING\"},\"homeCoaching\":{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"note\":\"offensiveCoordinator absent from source; defensiveCoordinator absent from source; fourthDownAggression = staffAggression (empirical 4th-and-short go rate)\",\"source\":\"coach-sim:COACH_32_STAFF_PROFILES\",\"status\":\"REAL\",\"value\":{\"defensiveCoordinator\":null,\"fourthDownAggression\":0.7,\"headCoach\":\"M.McCarthy\",\"offensiveCoordinator\":null,\"team\":\"DAL\"}},\"homeForm\":{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"source\":\"trends:nflverse-pbp\",\"status\":\"REAL\",\"value\":{\"defEpaPerPlay\":0.09722,\"gamesPlayed\":7,\"neutralPassRate\":null,\"offEpaPerPlay\":0.122677,\"passEpaPerPlay\":0.1559,\"playActionPct\":null,\"pointsAllowedPerGame\":null,\"pointsPerGame\":null,\"proePct\":null,\"rushEpaPerPlay\":0.040299,\"successRate\":null,\"team\":\"DAL\",\"weeksCovered\":[1,8]}},\"identity\":{\"awayTeam\":\"SF\",\"commenceTime\":\"2026-11-15T21:25:00.000Z\",\"gameId\":\"cmt4fewsp00jxeat5auo8dp90\",\"homeTeam\":\"DAL\",\"league\":\"NFL\",\"season\":2026,\"sport\":\"americanfootball_nfl\",\"venue\":{\"reason\":\"games table has no venue column\",\"status\":\"MISSING\"},\"week\":10},\"injuries\":{\"asOf\":\"2026-11-12 11:19:43.235\",\"source\":\"espn:injuries\",\"status\":\"REAL\",\"value\":[{\"playerName\":\"Caleb Downs\",\"position\":\"S\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Joey Porter Jr.\",\"position\":\"CB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"DAL\"},{\"playerName\":\"DeMarvion Overshown\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"DAL\"},{\"playerName\":\"KaVontae Turpin\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"DAL\"},{\"playerName\":\"Luke Schoonmaker\",\"position\":\"TE\",\"practiceStatus\":\"\",\"primaryInjury\":\"Knee\",\"reportStatus\":\"Out\",\"team\":\"DAL\"},{\"playerName\":\"Devin Moore\",\"position\":\"CB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Ankle\",\"reportStatus\":\"Injured Reserve\",\"team\":\"DAL\"},{\"playerName\":\"George Pickens\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"DAL\"},{\"playerName\":\"Tyler Goodson\",\"position\":\"RB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Knee\",\"reportStatus\":\"Out\",\"team\":\"DAL\"},{\"playerName\":\"Ryan Flournoy\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Hamstring\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Jake Ferguson\",\"position\":\"TE\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Out\",\"team\":\"DAL\"},{\"playerName\":\"Donovan Ezeiruaku\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Ankle\",\"reportStatus\":\"Questionable\",\"team\":\"DAL\"},{\"playerName\":\"P.J. Locke\",\"position\":\"S\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Out\",\"team\":\"DAL\"},{\"playerName\":\"Brevyn Spann-Ford\",\"position\":\"TE\",\"practiceStatus\":\"\",\"primaryInjury\":\"Knee\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Ajani Cornelius\",\"position\":\"OT\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Tyrus Wheat\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Brandon Aubrey\",\"position\":\"PK\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Dak Prescott\",\"position\":\"QB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Hamstring\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Javonte Williams\",\"position\":\"RB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"CeeDee Lamb\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Hamstring\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Dee Winters\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Concussion\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Jonathan Mingo\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Ankle\",\"reportStatus\":\"Questionable\",\"team\":\"DAL\"},{\"playerName\":\"Marist Liufau\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Jonathan Bullard\",\"position\":\"DT\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Injured Reserve\",\"team\":\"DAL\"},{\"playerName\":\"Malachi Lawrence\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Ankle\",\"reportStatus\":\"Injured Reserve\",\"team\":\"DAL\"},{\"playerName\":\"Tyler Smith\",\"position\":\"G\",\"practiceStatus\":\"\",\"primaryInjury\":\"Ankle\",\"reportStatus\":\"Active\",\"team\":\"DAL\"},{\"playerName\":\"Jaden Dugger\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Dre Greenlaw\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Fred Warner\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"C.J. West\",\"position\":\"DT\",\"practiceStatus\":\"Limited Participation in Practice\",\"primaryInjury\":\"Knee\",\"reportStatus\":\"Injured Reserve\",\"team\":\"SF\"},{\"playerName\":\"Deommodore Lenoir\",\"position\":\"CB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Foot\",\"reportStatus\":\"Questionable\",\"team\":\"SF\"},{\"playerName\":\"Renardo Green\",\"position\":\"CB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Back\",\"reportStatus\":\"Questionable\",\"team\":\"SF\"},{\"playerName\":\"Deebo Samuel Sr.\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"SF\"},{\"playerName\":\"Mike Evans\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"SF\"},{\"playerName\":\"Upton Stout\",\"position\":\"CB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"SF\"},{\"playerName\":\"Siran Neal\",\"position\":\"S\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Questionable\",\"team\":\"SF\"},{\"playerName\":\"Gracen Halton\",\"position\":\"DT\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Injured Reserve\",\"team\":\"SF\"},{\"playerName\":\"Brandin Cooks\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Hamstring\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Demarcus Robinson\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Ankle\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Mac Jones\",\"position\":\"QB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Jordan James\",\"position\":\"RB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Eddy Pineiro\",\"position\":\"PK\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Brandon Aiyuk\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Knee\",\"reportStatus\":\"Out\",\"team\":\"SF\"},{\"playerName\":\"Khalid Kareem\",\"position\":\"DE\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Tatum Bethune\",\"position\":\"LB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Enrique Cruz Jr.\",\"position\":\"OT\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Kurtis Rourke\",\"position\":\"QB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Kaelon Black\",\"position\":\"RB\",\"practiceStatus\":\"\",\"primaryInjury\":\"Back\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Jordan Watkins\",\"position\":\"WR\",\"practiceStatus\":\"\",\"primaryInjury\":\"Hamstring\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"George Kittle\",\"position\":\"TE\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"},{\"playerName\":\"Brock Purdy\",\"position\":\"QB\",\"practiceStatus\":\"\",\"primaryInjury\":\"\",\"reportStatus\":\"Active\",\"team\":\"SF\"}]},\"jev\":{\"asOf\":\"2026-11-12T23:21:24.619832Z\",\"note\":\"unvalidated classifier shadow output; emission weight 0\",\"source\":\"jev:spine\",\"status\":\"DERIVED\",\"value\":{\"contentHash\":\"8844a4bfd75fc61d39b306ed2c45db60e53f6b51f14d7ce7b7e49a9faf97f6d2\",\"diagnosticDelta\":0,\"emissionWeight\":0,\"gameId\":\"cmt4fewsp00jxeat5auo8dp90\",\"generatedAt\":\"2026-11-12T23:21:24.619832Z\",\"label\":\"UNVALIDATED_CLASSIFIER_SHADOW\",\"snapCount\":12}},\"market\":{\"awayMoneyline\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"reason\":\"no moneyline rows for game\",\"source\":\"the-odds-api\",\"status\":\"MISSING\"},\"bestAwayPrice\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"reason\":\"every away price was more than 0.05 from consensus (4 outliers)\",\"source\":\"the-odds-api\",\"status\":\"MISSING\"},\"bestHomePrice\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"reason\":\"every home price was more than 0.05 from consensus (4 outliers)\",\"source\":\"the-odds-api\",\"status\":\"MISSING\"},\"bookmakerCount\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"source\":\"the-odds-api\",\"status\":\"REAL\",\"value\":4},\"consensusNoVigHome\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"source\":\"consensusNoVig\",\"status\":\"DERIVED\",\"value\":0.4359},\"homeMoneyline\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"reason\":\"no moneyline rows for game\",\"source\":\"the-odds-api\",\"status\":\"MISSING\"},\"spread\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"source\":\"the-odds-api\",\"status\":\"REAL\",\"value\":1.25},\"total\":{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"source\":\"the-odds-api\",\"status\":\"REAL\",\"value\":54.5}},\"rest\":{\"asOf\":\"2026-11-12T23:02:43.099Z\",\"source\":\"games\",\"status\":\"REAL\",\"value\":{\"awayBackToBack\":false,\"awayRestDays\":7,\"homeBackToBack\":false,\"homeRestDays\":7}},\"weather\":{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"note\":\"indoor venue: climate-controlled dome, no outdoor weather applies\",\"source\":\"nws:weather\",\"status\":\"REAL\",\"value\":{\"condition\":\"Indoors (dome)\",\"isDome\":true,\"precipitationChance\":null,\"temperatureF\":72,\"windDirectionDeg\":null,\"windMph\":0}}},\"outputs\":{\"completeness\":{\"checkedAt\":\"2026-11-12T23:21:25.714Z\",\"degraded\":[\"market.homeMoneyline\",\"market.awayMoneyline\",\"market.bestHomePrice\",\"market.bestAwayPrice\",\"homeCharting\",\"awayCharting\",\"identity.venue\"],\"missing\":[],\"stale\":[],\"verdict\":\"READY\"},\"corpusShrink\":{\"adjustments\":[{\"after\":0,\"before\":0,\"family\":\"restFatigue\",\"multiplier\":0.91206,\"support\":0.824119}],\"appliedFamilies\":[\"rest\"],\"floor\":0.5,\"unmappedFamilies\":[\"weather\",\"formEpa\",\"injuries\",\"coaching\",\"corpusTactical\",\"premisesAndEquations\",\"nflFarmPriors\"]},\"familyDeltas\":[{\"corpusMultiplier\":0.91206,\"corpusSupport\":0.824119,\"delta\":0,\"deviation\":0,\"emissionWeight\":0,\"family\":\"rest\",\"note\":\"away rest days minus home rest days\",\"reference\":7,\"shrunkDeviation\":0,\"status\":\"REAL\",\"unit\":\"days\",\"value\":7},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":null,\"emissionWeight\":0,\"family\":\"weather\",\"note\":\"venue wind speed; the NWS reading carries no direction\",\"reference\":null,\"shrunkDeviation\":null,\"status\":\"REAL\",\"unit\":\"mph\",\"value\":0},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":0.06293299999999999,\"emissionWeight\":0,\"family\":\"formEpa\",\"note\":\"home offence-vs-away defence minus away offence-vs-home defence\",\"reference\":0.03936200000000001,\"shrunkDeviation\":0.06293299999999999,\"status\":\"REAL\",\"unit\":\"EPA/play\",\"value\":0.102295},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":3,\"emissionWeight\":0,\"family\":\"injuries\",\"note\":\"home unavailable minus away unavailable; positive favours the away team\",\"reference\":1,\"shrunkDeviation\":3,\"status\":\"REAL\",\"unit\":\"players out or doubtful\",\"value\":4},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":-0.07000000000000006,\"emissionWeight\":0,\"family\":\"coaching\",\"note\":\"home fourth-down go rate minus away\",\"reference\":0.77,\"shrunkDeviation\":-0.07000000000000006,\"status\":\"REAL\",\"unit\":\"go-rate\",\"value\":0.7},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":null,\"emissionWeight\":0,\"family\":\"corpusTactical\",\"note\":\"shrink-only; support measures topical match, not agreement\",\"reference\":null,\"shrunkDeviation\":null,\"status\":\"REAL\",\"unit\":\"mean facet support 0..1\",\"value\":0.7146368333333334},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":null,\"emissionWeight\":0,\"family\":\"premisesAndEquations\",\"note\":\"no equation is bound to a bundle field; 41 of 62,900 are candidate-bindable\",\"reference\":null,\"shrunkDeviation\":null,\"status\":\"MISSING\",\"unit\":\"log-odds\",\"value\":null},{\"corpusMultiplier\":1,\"corpusSupport\":null,\"delta\":0,\"deviation\":null,\"emissionWeight\":0,\"family\":\"nflFarmPriors\",\"note\":\"nfl-farm cycle ledger is not wired into the bundle\",\"reference\":null,\"shrunkDeviation\":null,\"status\":\"MISSING\",\"unit\":\"log-odds\",\"value\":null}],\"liveDelta\":0,\"marketPrior\":0.4359,\"posterior\":0.4359,\"pricing\":{\"away\":{\"edge\":null,\"implied\":null,\"price\":null},\"bestEdge\":null,\"bestSide\":null,\"home\":{\"edge\":null,\"implied\":null,\"price\":null},\"threshold\":0.02},\"projection\":{\"fourthDownWP\":0.05004247613434816,\"marginMean\":2.1416115,\"playerStats\":{\"RB\":{\"mean\":3.999998332820949,\"p10\":1.9999991664104746,\"p90\":5.999997499231424},\"SLOT\":{\"mean\":0.0000033261134901070106,\"p10\":0.0000016630567450535053,\"p90\":0.000004989170235160516},\"TE\":{\"mean\":3.999998332820949,\"p10\":1.9999991664104746,\"p90\":5.999997499231424},\"WR1\":{\"mean\":8.24461105344209e-9,\"p10\":4.122305526721045e-9,\"p90\":1.2366916580163134e-8}},\"scheme\":{\"fired\":{\"blitz\":222958,\"box\":40252,\"motion\":600104,\"no_huddle\":120644,\"play_action\":186140,\"qb_out_of_pocket\":158986,\"rpo\":53748},\"plays\":1411900,\"yardsPerPlay\":0.00005384480457744923},\"scoreMean\":24.90785,\"targetShares\":[{\"playerId\":\"WR1\",\"share\":1.0305763816802613e-9},{\"playerId\":\"SLOT\",\"share\":4.157641862633763e-7},{\"playerId\":\"TE\",\"share\":0.49999979160261865},{\"playerId\":\"RB\",\"share\":0.49999979160261865}],\"totalP10\":29.3157,\"totalP90\":64.31569999999999,\"winProbHome\":0.4007},\"publicationAuthority\":{\"blockedBy\":[\"walk_forward_emission_gate_closed\"],\"publishable\":false},\"publishable\":false,\"reasoningTrace\":[{\"asOf\":null,\"detail\":\"games table has no venue column\",\"emissionWeight\":0,\"layer\":\"identity\",\"source\":null,\"status\":\"MISSING\"},{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"detail\":\"home-perspective spread\",\"emissionWeight\":0,\"layer\":\"market.spread\",\"source\":\"the-odds-api\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"detail\":\"game total\",\"emissionWeight\":0,\"layer\":\"market.total\",\"source\":\"the-odds-api\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"detail\":\"de-vigged consensus, the prior\",\"emissionWeight\":0,\"layer\":\"market.consensusNoVigHome\",\"source\":\"consensusNoVig\",\"status\":\"DERIVED\"},{\"asOf\":\"2026-11-12T23:02:28.816Z\",\"detail\":\"books pooled\",\"emissionWeight\":0,\"layer\":\"market.bookmakerCount\",\"source\":\"the-odds-api\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12 11:19:43.235\",\"detail\":\"injury report\",\"emissionWeight\":0,\"layer\":\"injuries\",\"source\":\"espn:injuries\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"detail\":\"venue forecast\",\"emissionWeight\":0,\"layer\":\"weather\",\"source\":\"nws:weather\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:02:43.099Z\",\"detail\":\"rest days\",\"emissionWeight\":0,\"layer\":\"rest\",\"source\":\"games\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"detail\":\"offensive and defensive EPA per play\",\"emissionWeight\":0,\"layer\":\"homeForm\",\"source\":\"trends:nflverse-pbp\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"detail\":\"offensive and defensive EPA per play\",\"emissionWeight\":0,\"layer\":\"awayForm\",\"source\":\"trends:nflverse-pbp\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"detail\":\"no pressure-rate column in trends or ftn_charting\",\"emissionWeight\":0,\"layer\":\"homeCharting\",\"source\":\"trends:nfl_2026_w1_w7+ftn_charting_2026\",\"status\":\"MISSING\"},{\"asOf\":\"2026-11-12T21:55:01.344Z\",\"detail\":\"no pressure-rate column in trends or ftn_charting\",\"emissionWeight\":0,\"layer\":\"awayCharting\",\"source\":\"trends:nfl_2026_w1_w7+ftn_charting_2026\",\"status\":\"MISSING\"},{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"detail\":\"staff and fourth-down aggression\",\"emissionWeight\":0,\"layer\":\"homeCoaching\",\"source\":\"coach-sim:COACH_32_STAFF_PROFILES\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"detail\":\"staff and fourth-down aggression\",\"emissionWeight\":0,\"layer\":\"awayCoaching\",\"source\":\"coach-sim:COACH_32_STAFF_PROFILES\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:21:25.714Z\",\"detail\":\"lit.* grounding, shrink-only\",\"emissionWeight\":0,\"layer\":\"corpus\",\"source\":\"lit:corpus-grounding\",\"status\":\"REAL\"},{\"asOf\":\"2026-11-12T23:21:24.619832Z\",\"detail\":\"unvalidated classifier shadow output\",\"emissionWeight\":0,\"layer\":\"jev\",\"source\":\"jev:spine\",\"status\":\"DERIVED\"}],\"verdict\":\"NO_BET\"}}}"
+  },
+  "bundle": {
+    "identity": {
+      "gameId": "cmt4fewsp00jxeat5auo8dp90",
+      "homeTeam": "DAL",
+      "awayTeam": "SF",
+      "commenceTime": "2026-11-15T21:25:00.000Z",
+      "venue": {
+        "status": "MISSING",
+        "reason": "games table has no venue column"
+      },
+      "sport": "americanfootball_nfl",
+      "league": "NFL",
+      "season": 2026,
+      "week": 10
+    },
+    "market": {
+      "consensusNoVigHome": {
+        "status": "DERIVED",
+        "value": 0.4359,
+        "source": "consensusNoVig",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "spread": {
+        "status": "REAL",
+        "value": 1.25,
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "total": {
+        "status": "REAL",
+        "value": 54.5,
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "homeMoneyline": {
+        "status": "MISSING",
+        "reason": "no moneyline rows for game",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "awayMoneyline": {
+        "status": "MISSING",
+        "reason": "no moneyline rows for game",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "bookmakerCount": {
+        "status": "REAL",
+        "value": 4,
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "bestHomePrice": {
+        "status": "MISSING",
+        "reason": "every home price was more than 0.05 from consensus (4 outliers)",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      },
+      "bestAwayPrice": {
+        "status": "MISSING",
+        "reason": "every away price was more than 0.05 from consensus (4 outliers)",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z"
+      }
+    },
+    "injuries": {
+      "status": "REAL",
+      "value": [
+        {
+          "playerName": "Caleb Downs",
+          "team": "DAL",
+          "position": "S",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Joey Porter Jr.",
+          "team": "DAL",
+          "position": "CB",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "DeMarvion Overshown",
+          "team": "DAL",
+          "position": "LB",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "KaVontae Turpin",
+          "team": "DAL",
+          "position": "WR",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Luke Schoonmaker",
+          "team": "DAL",
+          "position": "TE",
+          "reportStatus": "Out",
+          "practiceStatus": "",
+          "primaryInjury": "Knee"
+        },
+        {
+          "playerName": "Devin Moore",
+          "team": "DAL",
+          "position": "CB",
+          "reportStatus": "Injured Reserve",
+          "practiceStatus": "",
+          "primaryInjury": "Ankle"
+        },
+        {
+          "playerName": "George Pickens",
+          "team": "DAL",
+          "position": "WR",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Tyler Goodson",
+          "team": "DAL",
+          "position": "RB",
+          "reportStatus": "Out",
+          "practiceStatus": "",
+          "primaryInjury": "Knee"
+        },
+        {
+          "playerName": "Ryan Flournoy",
+          "team": "DAL",
+          "position": "WR",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Hamstring"
+        },
+        {
+          "playerName": "Jake Ferguson",
+          "team": "DAL",
+          "position": "TE",
+          "reportStatus": "Out",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Donovan Ezeiruaku",
+          "team": "DAL",
+          "position": "LB",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": "Ankle"
+        },
+        {
+          "playerName": "P.J. Locke",
+          "team": "DAL",
+          "position": "S",
+          "reportStatus": "Out",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Brevyn Spann-Ford",
+          "team": "DAL",
+          "position": "TE",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Knee"
+        },
+        {
+          "playerName": "Ajani Cornelius",
+          "team": "DAL",
+          "position": "OT",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Tyrus Wheat",
+          "team": "DAL",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Brandon Aubrey",
+          "team": "DAL",
+          "position": "PK",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Dak Prescott",
+          "team": "DAL",
+          "position": "QB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Hamstring"
+        },
+        {
+          "playerName": "Javonte Williams",
+          "team": "DAL",
+          "position": "RB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "CeeDee Lamb",
+          "team": "DAL",
+          "position": "WR",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Hamstring"
+        },
+        {
+          "playerName": "Dee Winters",
+          "team": "DAL",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Concussion"
+        },
+        {
+          "playerName": "Jonathan Mingo",
+          "team": "DAL",
+          "position": "WR",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": "Ankle"
+        },
+        {
+          "playerName": "Marist Liufau",
+          "team": "DAL",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Jonathan Bullard",
+          "team": "DAL",
+          "position": "DT",
+          "reportStatus": "Injured Reserve",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Malachi Lawrence",
+          "team": "DAL",
+          "position": "LB",
+          "reportStatus": "Injured Reserve",
+          "practiceStatus": "",
+          "primaryInjury": "Ankle"
+        },
+        {
+          "playerName": "Tyler Smith",
+          "team": "DAL",
+          "position": "G",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Ankle"
+        },
+        {
+          "playerName": "Jaden Dugger",
+          "team": "SF",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Dre Greenlaw",
+          "team": "SF",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Fred Warner",
+          "team": "SF",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "C.J. West",
+          "team": "SF",
+          "position": "DT",
+          "reportStatus": "Injured Reserve",
+          "practiceStatus": "Limited Participation in Practice",
+          "primaryInjury": "Knee"
+        },
+        {
+          "playerName": "Deommodore Lenoir",
+          "team": "SF",
+          "position": "CB",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": "Foot"
+        },
+        {
+          "playerName": "Renardo Green",
+          "team": "SF",
+          "position": "CB",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": "Back"
+        },
+        {
+          "playerName": "Deebo Samuel Sr.",
+          "team": "SF",
+          "position": "WR",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Mike Evans",
+          "team": "SF",
+          "position": "WR",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Upton Stout",
+          "team": "SF",
+          "position": "CB",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Siran Neal",
+          "team": "SF",
+          "position": "S",
+          "reportStatus": "Questionable",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Gracen Halton",
+          "team": "SF",
+          "position": "DT",
+          "reportStatus": "Injured Reserve",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Brandin Cooks",
+          "team": "SF",
+          "position": "WR",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Hamstring"
+        },
+        {
+          "playerName": "Demarcus Robinson",
+          "team": "SF",
+          "position": "WR",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Ankle"
+        },
+        {
+          "playerName": "Mac Jones",
+          "team": "SF",
+          "position": "QB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Jordan James",
+          "team": "SF",
+          "position": "RB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Eddy Pineiro",
+          "team": "SF",
+          "position": "PK",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Brandon Aiyuk",
+          "team": "SF",
+          "position": "WR",
+          "reportStatus": "Out",
+          "practiceStatus": "",
+          "primaryInjury": "Knee"
+        },
+        {
+          "playerName": "Khalid Kareem",
+          "team": "SF",
+          "position": "DE",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Tatum Bethune",
+          "team": "SF",
+          "position": "LB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Enrique Cruz Jr.",
+          "team": "SF",
+          "position": "OT",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Kurtis Rourke",
+          "team": "SF",
+          "position": "QB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Kaelon Black",
+          "team": "SF",
+          "position": "RB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Back"
+        },
+        {
+          "playerName": "Jordan Watkins",
+          "team": "SF",
+          "position": "WR",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": "Hamstring"
+        },
+        {
+          "playerName": "George Kittle",
+          "team": "SF",
+          "position": "TE",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        },
+        {
+          "playerName": "Brock Purdy",
+          "team": "SF",
+          "position": "QB",
+          "reportStatus": "Active",
+          "practiceStatus": "",
+          "primaryInjury": ""
+        }
+      ],
+      "source": "espn:injuries",
+      "asOf": "2026-11-12 11:19:43.235"
+    },
+    "weather": {
+      "status": "REAL",
+      "value": {
+        "temperatureF": 72,
+        "windMph": 0,
+        "windDirectionDeg": null,
+        "precipitationChance": null,
+        "condition": "Indoors (dome)",
+        "isDome": true
+      },
+      "source": "nws:weather",
+      "asOf": "2026-11-12T23:21:25.714Z",
+      "note": "indoor venue: climate-controlled dome, no outdoor weather applies"
+    },
+    "rest": {
+      "status": "REAL",
+      "value": {
+        "homeRestDays": 7,
+        "awayRestDays": 7,
+        "homeBackToBack": false,
+        "awayBackToBack": false
+      },
+      "source": "games",
+      "asOf": "2026-11-12T23:02:43.099Z"
+    },
+    "homeForm": {
+      "status": "REAL",
+      "value": {
+        "team": "DAL",
+        "gamesPlayed": 7,
+        "offEpaPerPlay": 0.122677,
+        "defEpaPerPlay": 0.09722,
+        "passEpaPerPlay": 0.1559,
+        "rushEpaPerPlay": 0.040299,
+        "successRate": null,
+        "pointsPerGame": null,
+        "pointsAllowedPerGame": null,
+        "neutralPassRate": null,
+        "proePct": null,
+        "playActionPct": null,
+        "weeksCovered": [
+          1,
+          8
+        ]
+      },
+      "source": "trends:nflverse-pbp",
+      "asOf": "2026-11-12T21:55:01.344Z"
+    },
+    "awayForm": {
+      "status": "REAL",
+      "value": {
+        "team": "SF",
+        "gamesPlayed": 7,
+        "offEpaPerPlay": 0.136582,
+        "defEpaPerPlay": 0.020382,
+        "passEpaPerPlay": 0.247327,
+        "rushEpaPerPlay": 0.095014,
+        "successRate": null,
+        "pointsPerGame": null,
+        "pointsAllowedPerGame": null,
+        "neutralPassRate": null,
+        "proePct": null,
+        "playActionPct": null,
+        "weeksCovered": [
+          1,
+          8
+        ]
+      },
+      "source": "trends:nflverse-pbp",
+      "asOf": "2026-11-12T21:55:01.344Z"
+    },
+    "homeCharting": {
+      "status": "MISSING",
+      "reason": "no pressure-rate column in trends or ftn_charting",
+      "source": "trends:nfl_2026_w1_w7+ftn_charting_2026",
+      "asOf": "2026-11-12T21:55:01.344Z"
+    },
+    "awayCharting": {
+      "status": "MISSING",
+      "reason": "no pressure-rate column in trends or ftn_charting",
+      "source": "trends:nfl_2026_w1_w7+ftn_charting_2026",
+      "asOf": "2026-11-12T21:55:01.344Z"
+    },
+    "homeCoaching": {
+      "status": "REAL",
+      "value": {
+        "team": "DAL",
+        "headCoach": "M.McCarthy",
+        "offensiveCoordinator": null,
+        "defensiveCoordinator": null,
+        "fourthDownAggression": 0.7
+      },
+      "source": "coach-sim:COACH_32_STAFF_PROFILES",
+      "asOf": "2026-11-12T23:21:25.714Z",
+      "note": "offensiveCoordinator absent from source; defensiveCoordinator absent from source; fourthDownAggression = staffAggression (empirical 4th-and-short go rate)"
+    },
+    "awayCoaching": {
+      "status": "REAL",
+      "value": {
+        "team": "SF",
+        "headCoach": "K.Shanahan",
+        "offensiveCoordinator": null,
+        "defensiveCoordinator": null,
+        "fourthDownAggression": 0.77
+      },
+      "source": "coach-sim:COACH_32_STAFF_PROFILES",
+      "asOf": "2026-11-12T23:21:25.714Z",
+      "note": "offensiveCoordinator absent from source; defensiveCoordinator absent from source; fourthDownAggression = staffAggression (empirical 4th-and-short go rate)"
+    },
+    "corpus": {
+      "status": "REAL",
+      "value": [
+        {
+          "family": "pressure",
+          "facet": "pass rush pressure blitz quarterback sacks offensive line protection",
+          "support": 0.805158,
+          "citations": [
+            {
+              "uri": "lit.corpus_chunk:fbd6a2c6b3ca#15",
+              "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+              "score": 0.437787
+            },
+            {
+              "uri": "lit.corpus_chunk:fbd6a2c6b3ca#30",
+              "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+              "score": 0.412285
+            },
+            {
+              "uri": "lit.corpus_chunk:fbd6a2c6b3ca#16",
+              "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+              "score": 0.410321
+            },
+            {
+              "uri": "lit.corpus_chunk:fbd6a2c6b3ca#2",
+              "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+              "score": 0.409529
+            },
+            {
+              "uri": "lit.corpus_chunk:fbd6a2c6b3ca#11",
+              "title": "undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf",
+              "score": 0.406944
+            },
+            {
+              "uri": "lit.situation:924d3837fbc4#43",
+              "title": "",
+              "score": 0.37037
+            },
+            {
+              "uri": "lit.situation:f132e5185303#59",
+              "title": "",
+              "score": 0.37037
+            },
+            {
+              "uri": "lit.situation:fbd6a2c6b3ca#5",
+              "title": "",
+              "score": 0.35
+            },
+            {
+              "uri": "lit.situation:94484fae9a86#56",
+              "title": "",
+              "score": 0.35
+            },
+            {
+              "uri": "lit.situation:f3c94eb45d5d#26",
+              "title": "",
+              "score": 0.333333
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.259259
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.259259
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.233333
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.224
+            },
+            {
+              "uri": "lit.corpus_statement:2a485ad684fcp131",
+              "title": "",
+              "score": 0.21
+            }
+          ]
+        },
+        {
+          "family": "coveragePersonnel",
+          "facet": "man coverage zone coverage cornerback receiver matchup",
+          "support": 0.905698,
+          "citations": [
+            {
+              "uri": "lit.situation:8d17a3b7ae94#40",
+              "title": "",
+              "score": 0.6
+            },
+            {
+              "uri": "lit.situation:8d17a3b7ae94#23",
+              "title": "",
+              "score": 0.555556
+            },
+            {
+              "uri": "lit.corpus_chunk:8d17a3b7ae94#39",
+              "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+              "score": 0.469552
+            },
+            {
+              "uri": "lit.corpus_chunk:8d17a3b7ae94#36",
+              "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+              "score": 0.44118
+            },
+            {
+              "uri": "lit.situation:8d17a3b7ae94#0",
+              "title": "",
+              "score": 0.4375
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.4375
+            },
+            {
+              "uri": "lit.situation:8d17a3b7ae94#40",
+              "title": "",
+              "score": 0.428571
+            },
+            {
+              "uri": "lit.situation:8254f435c0e1#100",
+              "title": "",
+              "score": 0.416667
+            },
+            {
+              "uri": "lit.corpus_chunk:8d17a3b7ae94#38",
+              "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+              "score": 0.412745
+            },
+            {
+              "uri": "lit.corpus_chunk:8d17a3b7ae94#37",
+              "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+              "score": 0.40834
+            },
+            {
+              "uri": "lit.corpus_chunk:8d17a3b7ae94#45",
+              "title": "2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf",
+              "score": 0.382519
+            },
+            {
+              "uri": "lit.corpus_statement:8254f435c0e1p100",
+              "title": "Coaching-The-Way-of-the-Winner",
+              "score": 0.35
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.35
+            },
+            {
+              "uri": "lit.corpus_statement:8687507e628ap784",
+              "title": "",
+              "score": 0.21
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.21
+            }
+          ]
+        },
+        {
+          "family": "qbSkillScript",
+          "facet": "quarterback passing accuracy completion decision under pressure play action",
+          "support": 0.832846,
+          "citations": [
+            {
+              "uri": "lit.corpus_chunk:f3c94eb45d5d#29",
+              "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+              "score": 0.47014
+            },
+            {
+              "uri": "lit.corpus_chunk:f3c94eb45d5d#28",
+              "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+              "score": 0.443708
+            },
+            {
+              "uri": "lit.corpus_chunk:f3c94eb45d5d#19",
+              "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+              "score": 0.432908
+            },
+            {
+              "uri": "lit.corpus_chunk:f3c94eb45d5d#7",
+              "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+              "score": 0.407792
+            },
+            {
+              "uri": "lit.corpus_chunk:f3c94eb45d5d#43",
+              "title": "2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf",
+              "score": 0.406584
+            },
+            {
+              "uri": "lit.situation:8348efb46ad1#54",
+              "title": "",
+              "score": 0.355555
+            },
+            {
+              "uri": "lit.situation:f3c94eb45d5d#20",
+              "title": "",
+              "score": 0.35
+            },
+            {
+              "uri": "lit.situation:708938c12c8a#181",
+              "title": "",
+              "score": 0.333333
+            },
+            {
+              "uri": "lit.situation:94484fae9a86#56",
+              "title": "",
+              "score": 0.32
+            },
+            {
+              "uri": "lit.situation:94484fae9a86#56",
+              "title": "",
+              "score": 0.3
+            },
+            {
+              "uri": "lit.corpus_statement:cd99c6b72cc0p786",
+              "title": "",
+              "score": 0.233333
+            },
+            {
+              "uri": "lit.corpus_statement:2a485ad684fcp69",
+              "title": "",
+              "score": 0.224
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.21
+            }
+          ]
+        },
+        {
+          "family": "marketMicrostructure",
+          "facet": "betting market point spread closing line odds efficiency",
+          "support": 0,
+          "citations": []
+        },
+        {
+          "family": "other",
+          "facet": "fourth down decision go for it punt field goal win probability",
+          "support": 0.92,
+          "citations": [
+            {
+              "uri": "lit.situation:7e98ad100cb6#33",
+              "title": "",
+              "score": 0.6
+            },
+            {
+              "uri": "lit.situation:1acab2f2b51d#0",
+              "title": "",
+              "score": 0.6
+            },
+            {
+              "uri": "lit.situation:708938c12c8a#27",
+              "title": "",
+              "score": 0.5
+            },
+            {
+              "uri": "lit.situation:fa86f2d38c6f#6",
+              "title": "",
+              "score": 0.4
+            },
+            {
+              "uri": "lit.situation:4f3611a2c66e#82",
+              "title": "",
+              "score": 0.4
+            },
+            {
+              "uri": "lit.corpus_statement:b6fb6ecaeaddp181",
+              "title": "Inside-Football",
+              "score": 0.291667
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.291667
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.186667
+            },
+            {
+              "uri": "lit.corpus_statement:p?",
+              "title": "",
+              "score": 0.186667
+            }
+          ]
+        },
+        {
+          "family": "restFatigue",
+          "facet": "short week rest fatigue recovery between games",
+          "support": 0.824119,
+          "citations": [
+            {
+              "uri": "lit.corpus_chunk:6b7d4b42bf90#10",
+              "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+              "score": 0.46917
+            },
+            {
+              "uri": "lit.corpus_chunk:6b7d4b42bf90#7",
+              "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+              "score": 0.434758
+            },
+            {
+              "uri": "lit.corpus_chunk:6b7d4b42bf90#3",
+              "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+              "score": 0.413823
+            },
+            {
+              "uri": "lit.corpus_chunk:6b7d4b42bf90#2",
+              "title": "PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION",
+              "score": 0.410857
+            },
+            {
+              "uri": "lit.situation:6b7d4b42bf90#6",
+              "title": "",
+              "score": 0.36
+            },
+            {
+              "uri": "lit.situation:55b7cd9535fe#99",
+              "title": "",
+              "score": 0.357142
+            },
+            {
+              "uri": "lit.situation:d38807dd253e#227",
+              "title": "",
+              "score": 0.342857
+            },
+            {
+              "uri": "lit.situation:2ce1d4d2ced1#11",
+              "title": "",
+              "score": 0.32
+            },
+            {
+              "uri": "lit.situation:1370caa08130#64",
+              "title": "",
+              "score": 0.32
+            },
+            {
+              "uri": "lit.corpus_statement:0bb0d9695cdcp62",
+              "title": "",
+              "score": 0.233333
+            },
+            {
+              "uri": "lit.corpus_statement:0bb0d9695cdcp213",
+              "title": "",
+              "score": 0.224
+            },
+            {
+              "uri": "lit.corpus_statement:b0b4f2da68dfp21",
+              "title": "",
+              "score": 0.224
+            },
+            {
+              "uri": "lit.corpus_statement:0bb0d9695cdcp35",
+              "title": "",
+              "score": 0.224
+            },
+            {
+              "uri": "lit.corpus_statement:76b01a0d674dp47",
+              "title": "",
+              "score": 0.21
+            }
+          ]
+        }
+      ],
+      "source": "lit:corpus-grounding",
+      "asOf": "2026-11-12T23:21:25.714Z",
+      "note": "support < 0.8 reported as 0 (topical match is not agreement)"
+    },
+    "jev": {
+      "status": "DERIVED",
+      "value": {
+        "gameId": "cmt4fewsp00jxeat5auo8dp90",
+        "generatedAt": "2026-11-12T23:21:24.619832Z",
+        "contentHash": "8844a4bfd75fc61d39b306ed2c45db60e53f6b51f14d7ce7b7e49a9faf97f6d2",
+        "snapCount": 12,
+        "label": "UNVALIDATED_CLASSIFIER_SHADOW",
+        "emissionWeight": 0,
+        "diagnosticDelta": 0
+      },
+      "source": "jev:spine",
+      "asOf": "2026-11-12T23:21:24.619832Z",
+      "note": "unvalidated classifier shadow output; emission weight 0"
+    },
+    "builtAt": "2026-11-12T23:21:25.714Z",
+    "codeVersion": "v5.3.1+evidence-spine.1"
+  },
+  "outputs": {
+    "verdict": "NO_BET",
+    "completeness": {
+      "verdict": "READY",
+      "missing": [],
+      "stale": [],
+      "degraded": [
+        "market.homeMoneyline",
+        "market.awayMoneyline",
+        "market.bestHomePrice",
+        "market.bestAwayPrice",
+        "homeCharting",
+        "awayCharting",
+        "identity.venue"
+      ],
+      "checkedAt": "2026-11-12T23:21:25.714Z"
+    },
+    "reasoningTrace": [
+      {
+        "layer": "identity",
+        "status": "MISSING",
+        "source": null,
+        "asOf": null,
+        "detail": "games table has no venue column",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "market.spread",
+        "status": "REAL",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z",
+        "detail": "home-perspective spread",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "market.total",
+        "status": "REAL",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z",
+        "detail": "game total",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "market.consensusNoVigHome",
+        "status": "DERIVED",
+        "source": "consensusNoVig",
+        "asOf": "2026-11-12T23:02:28.816Z",
+        "detail": "de-vigged consensus, the prior",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "market.bookmakerCount",
+        "status": "REAL",
+        "source": "the-odds-api",
+        "asOf": "2026-11-12T23:02:28.816Z",
+        "detail": "books pooled",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "injuries",
+        "status": "REAL",
+        "source": "espn:injuries",
+        "asOf": "2026-11-12 11:19:43.235",
+        "detail": "injury report",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "weather",
+        "status": "REAL",
+        "source": "nws:weather",
+        "asOf": "2026-11-12T23:21:25.714Z",
+        "detail": "venue forecast",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "rest",
+        "status": "REAL",
+        "source": "games",
+        "asOf": "2026-11-12T23:02:43.099Z",
+        "detail": "rest days",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "homeForm",
+        "status": "REAL",
+        "source": "trends:nflverse-pbp",
+        "asOf": "2026-11-12T21:55:01.344Z",
+        "detail": "offensive and defensive EPA per play",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "awayForm",
+        "status": "REAL",
+        "source": "trends:nflverse-pbp",
+        "asOf": "2026-11-12T21:55:01.344Z",
+        "detail": "offensive and defensive EPA per play",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "homeCharting",
+        "status": "MISSING",
+        "source": "trends:nfl_2026_w1_w7+ftn_charting_2026",
+        "asOf": "2026-11-12T21:55:01.344Z",
+        "detail": "no pressure-rate column in trends or ftn_charting",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "awayCharting",
+        "status": "MISSING",
+        "source": "trends:nfl_2026_w1_w7+ftn_charting_2026",
+        "asOf": "2026-11-12T21:55:01.344Z",
+        "detail": "no pressure-rate column in trends or ftn_charting",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "homeCoaching",
+        "status": "REAL",
+        "source": "coach-sim:COACH_32_STAFF_PROFILES",
+        "asOf": "2026-11-12T23:21:25.714Z",
+        "detail": "staff and fourth-down aggression",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "awayCoaching",
+        "status": "REAL",
+        "source": "coach-sim:COACH_32_STAFF_PROFILES",
+        "asOf": "2026-11-12T23:21:25.714Z",
+        "detail": "staff and fourth-down aggression",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "corpus",
+        "status": "REAL",
+        "source": "lit:corpus-grounding",
+        "asOf": "2026-11-12T23:21:25.714Z",
+        "detail": "lit.* grounding, shrink-only",
+        "emissionWeight": 0
+      },
+      {
+        "layer": "jev",
+        "status": "DERIVED",
+        "source": "jev:spine",
+        "asOf": "2026-11-12T23:21:24.619832Z",
+        "detail": "unvalidated classifier shadow output",
+        "emissionWeight": 0
+      }
+    ],
+    "publicationAuthority": {
+      "publishable": false,
+      "blockedBy": [
+        "walk_forward_emission_gate_closed"
+      ]
+    },
+    "projection": {
+      "scoreMean": 24.90785,
+      "marginMean": 2.1416115,
+      "totalP10": 29.3157,
+      "totalP90": 64.31569999999999,
+      "winProbHome": 0.4007,
+      "playerStats": {
+        "WR1": {
+          "mean": 8.24461105344209e-9,
+          "p10": 4.122305526721045e-9,
+          "p90": 1.2366916580163134e-8
+        },
+        "SLOT": {
+          "mean": 0.0000033261134901070106,
+          "p10": 0.0000016630567450535053,
+          "p90": 0.000004989170235160516
+        },
+        "TE": {
+          "mean": 3.999998332820949,
+          "p10": 1.9999991664104746,
+          "p90": 5.999997499231424
+        },
+        "RB": {
+          "mean": 3.999998332820949,
+          "p10": 1.9999991664104746,
+          "p90": 5.999997499231424
+        }
+      },
+      "fourthDownWP": 0.05004247613434816,
+      "targetShares": [
+        {
+          "playerId": "WR1",
+          "share": 1.0305763816802613e-9
+        },
+        {
+          "playerId": "SLOT",
+          "share": 4.157641862633763e-7
+        },
+        {
+          "playerId": "TE",
+          "share": 0.49999979160261865
+        },
+        {
+          "playerId": "RB",
+          "share": 0.49999979160261865
+        }
+      ],
+      "scheme": {
+        "plays": 1411900,
+        "yardsPerPlay": 0.00005384480457744923,
+        "fired": {
+          "play_action": 186140,
+          "rpo": 53748,
+          "qb_out_of_pocket": 158986,
+          "no_huddle": 120644,
+          "blitz": 222958,
+          "box": 40252,
+          "motion": 600104
+        }
+      }
+    },
+    "familyDeltas": [
+      {
+        "family": "rest",
+        "value": 7,
+        "reference": 7,
+        "deviation": 0,
+        "unit": "days",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "REAL",
+        "note": "away rest days minus home rest days",
+        "corpusSupport": 0.824119,
+        "corpusMultiplier": 0.91206,
+        "shrunkDeviation": 0
+      },
+      {
+        "family": "weather",
+        "value": 0,
+        "reference": null,
+        "deviation": null,
+        "unit": "mph",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "REAL",
+        "note": "venue wind speed; the NWS reading carries no direction",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": null
+      },
+      {
+        "family": "formEpa",
+        "value": 0.102295,
+        "reference": 0.03936200000000001,
+        "deviation": 0.06293299999999999,
+        "unit": "EPA/play",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "REAL",
+        "note": "home offence-vs-away defence minus away offence-vs-home defence",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": 0.06293299999999999
+      },
+      {
+        "family": "injuries",
+        "value": 4,
+        "reference": 1,
+        "deviation": 3,
+        "unit": "players out or doubtful",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "REAL",
+        "note": "home unavailable minus away unavailable; positive favours the away team",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": 3
+      },
+      {
+        "family": "coaching",
+        "value": 0.7,
+        "reference": 0.77,
+        "deviation": -0.07000000000000006,
+        "unit": "go-rate",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "REAL",
+        "note": "home fourth-down go rate minus away",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": -0.07000000000000006
+      },
+      {
+        "family": "corpusTactical",
+        "value": 0.7146368333333334,
+        "reference": null,
+        "deviation": null,
+        "unit": "mean facet support 0..1",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "REAL",
+        "note": "shrink-only; support measures topical match, not agreement",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": null
+      },
+      {
+        "family": "premisesAndEquations",
+        "value": null,
+        "reference": null,
+        "deviation": null,
+        "unit": "log-odds",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "MISSING",
+        "note": "no equation is bound to a bundle field; 41 of 62,900 are candidate-bindable",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": null
+      },
+      {
+        "family": "nflFarmPriors",
+        "value": null,
+        "reference": null,
+        "deviation": null,
+        "unit": "log-odds",
+        "emissionWeight": 0,
+        "delta": 0,
+        "status": "MISSING",
+        "note": "nfl-farm cycle ledger is not wired into the bundle",
+        "corpusSupport": null,
+        "corpusMultiplier": 1,
+        "shrunkDeviation": null
+      }
+    ],
+    "corpusShrink": {
+      "appliedFamilies": [
+        "rest"
+      ],
+      "unmappedFamilies": [
+        "weather",
+        "formEpa",
+        "injuries",
+        "coaching",
+        "corpusTactical",
+        "premisesAndEquations",
+        "nflFarmPriors"
+      ],
+      "adjustments": [
+        {
+          "family": "restFatigue",
+          "support": 0.824119,
+          "multiplier": 0.91206,
+          "before": 0,
+          "after": 0
+        }
+      ],
+      "floor": 0.5
+    },
+    "marketPrior": 0.4359,
+    "liveDelta": 0,
+    "posterior": 0.4359,
+    "pricing": {
+      "home": {
+        "price": null,
+        "implied": null,
+        "edge": null
+      },
+      "away": {
+        "price": null,
+        "implied": null,
+        "edge": null
+      },
+      "bestSide": null,
+      "bestEdge": null,
+      "threshold": 0.02
+    },
+    "publishable": false
+  }
+}

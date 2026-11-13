@@ -26,6 +26,7 @@ import { db } from "@sports/db";
 import {
   supersedeUnpublishedPendingPick,
 } from "./supersede-unpublished-pick.js";
+import { publicationAllowed } from "./publication-gate.js";
 import {
   OddsApiClient,
   DataNormalizer,
@@ -1574,13 +1575,14 @@ export async function processSport(
         ingestionRunId: run.id,
         isBootstrap,
         isFeatured,
-        // A publishing mint OMITS the flag so the schema default (true) applies;
-        // only an explicit veto (`canExposePublicPicks === false`) sets it. The
-        // previous `isPublic ? {} : {isPublished:false}` form treated `undefined`
-        // as a veto, which broke the lane-B test whose partial gate fixture never
-        // sets the flag — and in production the gate is a required boolean, so
-        // unspecified only happens in that fixture. Default to publishing.
-        ...(isPublic === false ? { isPublished: false } : {}),
+        // Publication is FAIL-CLOSED. A pick is public only when the existing
+        // gate says yes AND the publication gate says yes. The gate requires
+        // PUBLIC_PICKS_ENABLED === "true", a sealed pregame verdict for this
+        // game, and a passed walk-forward emission gate. The emission gate
+        // reads passed:false today, so this is false in production until the
+        // owner opens it. Previously this line omitted the flag entirely and
+        // the schema default (true) published every pick.
+        isPublished: isPublic === true && publicationAllowed(),
         // CLV lock snapshot — the line/price we ACTUALLY published at, captured
         // once at creation. Absent from the updateMany above, so the refresh
         // cycle can never overwrite it. `Pick.line` is now frozen alongside it

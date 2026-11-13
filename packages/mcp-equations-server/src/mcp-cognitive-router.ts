@@ -489,11 +489,17 @@ export interface PreProjectionCognitiveRouterOutput {
   readonly routerResult: StageDCoupledResult & { readonly contextMask: Uint32Array };
   readonly injectedSignalsCount: number;
   readonly snapTransitionPriorDelta: number;
-  readonly passEfficiencyPriorDelta: number;
-  readonly pressureDisruptionHazardDelta: number;
-  readonly secondHalfTutFatigueDecayRate: number;
-  readonly gsiSnapShareCap: number;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly passEfficiencyPriorDelta: number | null;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly pressureDisruptionHazardDelta: number | null;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly secondHalfTutFatigueDecayRate: number | null;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly gsiSnapShareCap: number | null;
   readonly reverse8Step5ApiCascadeActive: true;
+  /** Families skipped because their input was absent, with the field name. */
+  readonly missingInputs: ReadonlyArray<{ family: number; field: string; reason: string }>;
 }
 
 /**
@@ -504,53 +510,92 @@ export interface PreProjectionCognitiveRouterOutput {
 export function buildUniversalAndSecondOrderCognitiveSignals(
   input: PreProjectionOmniscienceRouterInput = {},
 ): Signal[] {
-  return [
-    // Family 12: Pressure & Weakest-Link Trench Collapse
-    {
-      family: 12,
-      displacement: (input.trenchWeakLinkCollapseProb ?? 0.58) - 0.35,
-      n: 120,
-    },
-    // Family 48: QB Post-Hit Trauma Hysteresis & Clean-Pocket Clock Compression
-    {
-      family: 48,
-      displacement: input.qbTraumaCompressionSec ?? -0.26,
-      n: 85,
-    },
-    // Family 94: Causal FWL Unschemed Skill vs Scheme-Manufactured Volume
-    {
-      family: 94,
-      displacement: input.causalUnschemedEpaDelta ?? 0.14,
-      n: 140,
-    },
-    // Family 132: Coordinator Opening-15 Script Cliff & 3-Snap Tendency Trap
-    {
-      family: 132,
-      displacement: input.coordinatorScriptCliffDelta ?? -0.35,
-      n: 65,
-    },
-    // Family 176: GSI Sports Medicine & OpenAlex Orthopedic Return-to-Play Degradation
-    {
-      family: 176,
-      displacement: -(input.gsiBiomechanicalEfficiencyLossPct ?? 0.12),
-      n: 95,
-    },
-    // Family 210: Kaggle BDB Voronoi Control + arXiv Disguise KL + HF All-22 Pre-Snap Tell
-    {
-      family: 210,
-      displacement:
-        0.4 * (input.kaggleVoronoiControlAdvantage ?? 0.11) +
-        0.35 * (input.arxivOptimalTransportDisguiseKl ?? 0.18) +
-        0.25 * (input.huggingFaceAll22StanceTellScore ?? 0.15),
-      n: 110,
-    },
-    // Family 254: Referee Score-State Reflexivity & True Steam vs Head-Fake Buyback
-    {
-      family: 254,
-      displacement: (input.refereeMarketTrueSteamProb ?? 0.72) - 0.5,
-      n: 75,
-    },
-  ];
+  const signals: Signal[] = [];
+  const push = (family: number, displacement: number | undefined, n: number): void => {
+    // A family whose input is absent is NOT emitted. The previous version
+    // substituted a hand-set default (0.58, -0.26, 0.14, -0.35, 0.12, 0.11,
+    // 0.18, 0.15, 0.72) and emitted a signal anyway, so an unmeasured family
+    // moved the router exactly as if it had been measured. Absence is now
+    // absence; `describeMissingRouterInputs` reports what was skipped.
+    if (displacement === undefined || !Number.isFinite(displacement)) return;
+    signals.push({ family, displacement, n });
+  };
+
+  // Family 12: Pressure & Weakest-Link Trench Collapse
+  push(
+    12,
+    input.trenchWeakLinkCollapseProb === undefined
+      ? undefined
+      : input.trenchWeakLinkCollapseProb - 0.35,
+    120,
+  );
+  // Family 48: QB Post-Hit Trauma Hysteresis & Clean-Pocket Clock Compression
+  push(48, input.qbTraumaCompressionSec, 85);
+  // Family 94: Causal FWL Unschemed Skill vs Scheme-Manufactured Volume
+  push(94, input.causalUnschemedEpaDelta, 140);
+  // Family 132: Coordinator Opening-15 Script Cliff & 3-Snap Tendency Trap
+  push(132, input.coordinatorScriptCliffDelta, 65);
+  // Family 176: GSI Sports Medicine & OpenAlex Orthopedic Return-to-Play Degradation
+  push(
+    176,
+    input.gsiBiomechanicalEfficiencyLossPct === undefined
+      ? undefined
+      : -input.gsiBiomechanicalEfficiencyLossPct,
+    95,
+  );
+  // Family 210: Kaggle BDB Voronoi Control + arXiv Disguise KL + HF All-22 Pre-Snap Tell
+  // A weighted sum is only meaningful when every weight has a value. One absent
+  // term would silently renormalise the other two.
+  if (
+    input.kaggleVoronoiControlAdvantage !== undefined &&
+    input.arxivOptimalTransportDisguiseKl !== undefined &&
+    input.huggingFaceAll22StanceTellScore !== undefined
+  ) {
+    push(
+      210,
+      0.4 * input.kaggleVoronoiControlAdvantage +
+        0.35 * input.arxivOptimalTransportDisguiseKl +
+        0.25 * input.huggingFaceAll22StanceTellScore,
+      110,
+    );
+  }
+  // Family 254: Referee Score-State Reflexivity & True Steam vs Head-Fake Buyback
+  push(
+    254,
+    input.refereeMarketTrueSteamProb === undefined
+      ? undefined
+      : input.refereeMarketTrueSteamProb - 0.5,
+    75,
+  );
+
+  return signals;
+}
+
+/**
+ * Which router families were skipped because their input was absent, and why.
+ * This is the diagnostic that replaces the old silent defaults: the reasoning
+ * trace can say "family 12 was not computed because trenchWeakLinkCollapseProb
+ * was not supplied" instead of quietly using 0.58.
+ */
+export function describeMissingRouterInputs(
+  input: PreProjectionOmniscienceRouterInput = {},
+): Array<{ family: number; field: string; reason: string }> {
+  const out: Array<{ family: number; field: string; reason: string }> = [];
+  const need = (family: number, field: string, value: number | undefined): void => {
+    if (value === undefined || !Number.isFinite(value)) {
+      out.push({ family, field, reason: `${field} was not supplied` });
+    }
+  };
+  need(12, "trenchWeakLinkCollapseProb", input.trenchWeakLinkCollapseProb);
+  need(48, "qbTraumaCompressionSec", input.qbTraumaCompressionSec);
+  need(94, "causalUnschemedEpaDelta", input.causalUnschemedEpaDelta);
+  need(132, "coordinatorScriptCliffDelta", input.coordinatorScriptCliffDelta);
+  need(176, "gsiBiomechanicalEfficiencyLossPct", input.gsiBiomechanicalEfficiencyLossPct);
+  need(210, "kaggleVoronoiControlAdvantage", input.kaggleVoronoiControlAdvantage);
+  need(210, "arxivOptimalTransportDisguiseKl", input.arxivOptimalTransportDisguiseKl);
+  need(210, "huggingFaceAll22StanceTellScore", input.huggingFaceAll22StanceTellScore);
+  need(254, "refereeMarketTrueSteamProb", input.refereeMarketTrueSteamProb);
+  return out;
 }
 
 /**
@@ -567,27 +612,40 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
   const omniscienceSignals = buildUniversalAndSecondOrderCognitiveSignals(input);
   const combinedSignals = [...baseSignals, ...omniscienceSignals];
   const routerResult = routeInMemoryFourStage(combinedSignals, {
+    // tauHatCoach is a router parameter, not a measurement. When it is absent
+    // the router runs on its own documented default and the trace says so.
     tauHatCoach: input.tauHatCoach ?? 0.46,
   });
 
   const clampedDelta = routerResult.clampedTotalLogOddsDelta;
-  const traumaSec = input.qbTraumaCompressionSec ?? -0.26;
-  const collapseProb = input.trenchWeakLinkCollapseProb ?? 0.58;
-  const gsiLoss = input.gsiBiomechanicalEfficiencyLossPct ?? 0.12;
+  const traumaSec = input.qbTraumaCompressionSec;
+  const collapseProb = input.trenchWeakLinkCollapseProb;
+  const gsiLoss = input.gsiBiomechanicalEfficiencyLossPct;
 
   const snapTransitionPriorDelta = Number((0.45 * clampedDelta).toFixed(6));
-  const passEfficiencyPriorDelta = Number(
-    (0.35 * clampedDelta + 0.15 * (input.causalUnschemedEpaDelta ?? 0.14) - 0.25 * gsiLoss).toFixed(6),
-  );
-  const pressureDisruptionHazardDelta = Number(
-    (0.22 * Math.max(0, collapseProb - 0.35) + 0.18 * Math.abs(traumaSec)).toFixed(6),
-  );
-  const secondHalfTutFatigueDecayRate = Number(
-    (0.045 + 0.06 * collapseProb + 0.04 * gsiLoss).toFixed(6),
-  );
-  const gsiSnapShareCap = Number(
-    Math.max(0.45, Math.min(1.0, input.openAlexOrthopedicSnapCap ?? 1.0 - 1.5 * gsiLoss)).toFixed(6),
-  );
+
+  // Each derived delta is computed only when every input it needs is present.
+  // An absent input yields null, not a substituted constant.
+  const passEfficiencyPriorDelta =
+    input.causalUnschemedEpaDelta === undefined || gsiLoss === undefined
+      ? null
+      : Number(
+          (0.35 * clampedDelta + 0.15 * input.causalUnschemedEpaDelta - 0.25 * gsiLoss).toFixed(6),
+        );
+  const pressureDisruptionHazardDelta =
+    collapseProb === undefined || traumaSec === undefined
+      ? null
+      : Number((0.22 * Math.max(0, collapseProb - 0.35) + 0.18 * Math.abs(traumaSec)).toFixed(6));
+  const secondHalfTutFatigueDecayRate =
+    collapseProb === undefined || gsiLoss === undefined
+      ? null
+      : Number((0.045 + 0.06 * collapseProb + 0.04 * gsiLoss).toFixed(6));
+  const gsiSnapShareCap =
+    input.openAlexOrthopedicSnapCap !== undefined
+      ? Number(Math.max(0.45, Math.min(1.0, input.openAlexOrthopedicSnapCap)).toFixed(6))
+      : gsiLoss === undefined
+        ? null
+        : Number(Math.max(0.45, Math.min(1.0, 1.0 - 1.5 * gsiLoss)).toFixed(6));
 
   return {
     routerResult,
@@ -598,6 +656,7 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
     secondHalfTutFatigueDecayRate,
     gsiSnapShareCap,
     reverse8Step5ApiCascadeActive: true,
+    missingInputs: describeMissingRouterInputs(input),
   };
 }
 

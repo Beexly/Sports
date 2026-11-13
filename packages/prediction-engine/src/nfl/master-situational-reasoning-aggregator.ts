@@ -32,6 +32,11 @@
  */
 
 import { createHash } from "node:crypto";
+import {
+  applyCorpusGroundingToFamilyDeltas,
+  type GameGrounding,
+  type FamilyGroundingAdjustment,
+} from "../literature/corpus-grounding.js";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
 import {
@@ -612,6 +617,11 @@ export interface OverlayInput {
   universal360Overrides?: UniversalNfl360DossierOverrides;
   /** Optional Mega-Sweep 2026-11-06 Reasoning & Hardware-Aware Pipeline input. */
   megaSweepPipelineInput?: MegaSweepPipelineInput;
+  /**
+   * Optional corpus grounding (literature/corpus-grounding.ts groundGame),
+   * computed by the async caller. Shrinks undocumented family deltas only.
+   */
+  corpusGrounding?: GameGrounding;
 }
 
 export interface OverlayResult {
@@ -644,6 +654,7 @@ export interface OverlayResult {
   publishAllowed: boolean;
   feedRecord: MindFeedEmission;
   fwlResidual?: readonly number[];
+  corpusGrounding?: { grounding: GameGrounding; adjustments: FamilyGroundingAdjustment[] };
 }
 
 /**
@@ -668,6 +679,12 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     const mean = fwlResidual.reduce((sum, v) => sum + v, 0) / fwlResidual.length;
     familyDeltas = { ...input.familyDeltas, pressure: mean };
   }
+  let corpusAdjustments: FamilyGroundingAdjustment[] = [];
+  if (input.corpusGrounding) {
+    const applied = applyCorpusGroundingToFamilyDeltas(familyDeltas, input.corpusGrounding);
+    familyDeltas = applied.deltas as FamilyDeltas;
+    corpusAdjustments = applied.adjustments;
+  }
   const result: OverlayResult = {
     streamCalls: calls,
     universal360AndDeepKernels: evaluateUniversalNfl360MetricAndSituationalDossier(
@@ -678,12 +695,26 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     ),
     orthogonalization: orthogonalizeAndShrink(familyDeltas, input.marketAnchorProb),
     ...(fwlResidual ? { fwlResidual } : {}),
+    ...(input.corpusGrounding
+      ? { corpusGrounding: { grounding: input.corpusGrounding, adjustments: corpusAdjustments } }
+      : {}),
     independentEdgeDecision: input.independentEdgeDecision,
     publishAllowed: input.independentEdgeDecision === "SPEAK",
     feedRecord: { feedPath: "", lineBytes: 0, inputHash: "", streamId: "", scrubbed: false },
   };
 
   const mark = (stream: string, called: boolean, detail: string) => calls.push({ stream, called, detail });
+
+  if (input.corpusGrounding) {
+    mark(
+      "corpus:applyCorpusGroundingToFamilyDeltas",
+      true,
+      `coverage=${input.corpusGrounding.coverage} support=${input.corpusGrounding.overallSupport}; ` +
+        corpusAdjustments.map((a) => `${a.family}x${a.multiplier}`).join(" "),
+    );
+  } else {
+    mark("corpus:applyCorpusGroundingToFamilyDeltas", false, "no corpus grounding supplied");
+  }
 
   if (input.coverageFrames && input.coverageFrames.length > 0) {
     result.coverage = runNgsAwsCnnAttentionCoveragePipeline({ frames: input.coverageFrames });

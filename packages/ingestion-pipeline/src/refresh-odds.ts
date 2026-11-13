@@ -313,32 +313,37 @@ export async function refreshOdds(
     // first request; a governor that was unavailable (fail-open) has not, and
     // the accounting below then marks every request of the run.
     let slotReserved = true;
+    // When the credit governor holds the PAID call, the sport still runs on the
+    // free path. Skipping the sport entirely also skipped ESPN/Rundown, which is
+    // why the odds feed only moved once an hour while the cron fired every
+    // fifteen minutes. The governor gates the paid request, not the sport.
+    let freeFallback = false;
     if (governor) {
       const decision = await governedDecision(governor, sport.key);
       if (!decision.allow) {
         console.info(
-          `[cron:refresh-odds] ${sport.key}: paid odds fetch skipped, credit governor: ${decision.reason}`,
+          `[cron:refresh-odds] ${sport.key}: paid odds fetch skipped, credit governor: ${decision.reason}; running the free path`,
         );
-        results.push({
-          sport: sport.key,
-          ok: true,
-          oddsInserted: 0,
-          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: ${decision.reason}`,
-        });
-        continue;
+        freeFallback = true;
+      } else {
+        slotReserved = decision.reserved;
+        // decide() has already reserved this sport's hourly slot and written the
+        // marker for the first paid request, so concurrent callers see it before
+        // the fetch. Additional paid requests in the run are marked below.
       }
-      slotReserved = decision.reserved;
-      // decide() has already reserved this sport's hourly slot and written the
-      // marker for the first paid request, so concurrent callers see it before
-      // the fetch. Additional paid requests in the run are marked below.
     }
     try {
       // processSport NEVER throws on a provider/normalization failure — it
       // catches internally and RESOLVES { status: "failed", error }. Inspect
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
-      const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
-      if (governor) {
+      const effectiveKey = freeFallback
+        ? rundownKey
+          ? "rundown-free-path"
+          : "espn-free-path"
+        : processKey;
+      const res = await processSport(sport, effectiveKey, gates, "[cron:refresh-odds]");
+      if (governor && !freeFallback) {
         await recordPaidRunAccounting(governor, sport.key, res, { reserved: slotReserved });
       }
       const note = res.note ?? "";
