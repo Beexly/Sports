@@ -3,21 +3,22 @@
 scripts/ops/build_week10_jev_spines.py
 
 WP-8 Stage 2A prerequisite: build a REAL snap-by-snap JEV decision spine for
-every remaining Week 10 game — jevkit.client.ask on EVERY snap (Q1 15:00 ->
-Q4 0:00), querying off_play_call, def_shell_call, target_carrier, snap_outcome,
-pressure_disruption (+ aggressive_coaching_edge). No RNG-synthesized spines:
-Garrett's hard doctrine requires live JEV on every snap for publishable output.
+every remaining Week 10 game via run_jev_full_game_spine.simulate_full_game_with_jev
+(live jevkit.client.ask on EVERY snap, Q1 15:00 -> Q4 0:00, querying off_play_call,
+def_shell_call, target_carrier, snap_outcome, pressure_disruption,
+aggressive_coaching_edge). No RNG-synthesized spines for publishable Week 10+.
 
-Per game writes data/engine/jev_full_game_spine_{away}_{home}_week10.json with
-a fresh envelope (updated_at=now, week=10, away_qb1/home_qb1 from the Stage 0
-config, provenance) so verify_jev_spine_freshness_and_qb1 passes (<=18h).
+Per game writes data/engine/jev_full_game_spine_{away}_{home}_week10.json in the
+exact envelope the connected workflow consumes:
+  spine_raw["games"]["AWAY@HOME"] -> game node with snap_by_snap_log + jev_decisions
+  (gse_coach_mind_simulator.build_jev_state_tensor), fresh updated_at (<=18h),
+  week=10, away_qb1/home_qb1 aligned to the Stage 0 config (SG-1 freshness gate).
 
-Context: w1_w9 trends (WP-3/4 regen) + week 9/10 injury designations from
-injuries_2026.csv (SIM_WEEK=10 in run_jev_full_game_spine).
+Context: w1_w9 trends (trends_path_for_week(10)) + week 9/10 injury designations
+from data/nflverse/injuries_2026.csv (SIM_WEEK=10).
 
 Resume-safe: a game with a fresh (<18h) spine file is skipped unless --force.
-Fail-closed: any game whose spine fails to build is recorded; exit 1 unless
-every slate game has a valid spine.
+Fail-closed: exit 1 unless every slate game has a valid fresh spine.
 
 Usage:
   python scripts/ops/build_week10_jev_spines.py --dry-run
@@ -43,6 +44,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import scripts.ops.run_jev_full_game_spine as spine_runner  # noqa: E402
+from scripts.ops.gse_coach_mind_simulator import verify_jev_spine_freshness_and_qb1  # noqa: E402
 from scripts.ops.run_week10_full_slate_connected_workflow import (  # noqa: E402
     FULL_TO_ABBR,
     fetch_remaining_slate,
@@ -58,17 +60,23 @@ def spine_path(away: str, home: str) -> Path:
     return REPO_ROOT / "data" / "engine" / f"jev_full_game_spine_{away.lower()}_{home.lower()}_week{WEEK}.json"
 
 
+def _game_node(data: dict, away: str, home: str) -> dict:
+    return (data.get("games") or {}).get(f"{away}@{home}", data)
+
+
 def fresh_spine_exists(away: str, home: str) -> bool:
     p = spine_path(away, home)
     if not p.is_file():
         return False
     try:
         data = json.loads(p.read_text(encoding="utf-8"))
-        updated = datetime.fromisoformat(str(data.get("updated_at")).replace("Z", "+00:00"))
+        node = _game_node(data, away, home)
+        ts = node.get("updated_at") or node.get("generated_at") or data.get("updated_at")
+        updated = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
         age_h = (datetime.now(timezone.utc) - updated).total_seconds() / 3600.0
-        snaps = data.get("spine", [])
+        snaps = node.get("snap_by_snap_log", [])
         return age_h <= MAX_AGE_HOURS and len(snaps) >= 100 and all(
-            isinstance(s.get("snap_outcome"), dict) and "yards_gained" in s["snap_outcome"] for s in snaps
+            isinstance(s.get("jev_decisions"), dict) and s.get("resolved_play") for s in snaps
         )
     except Exception:
         return False
@@ -94,70 +102,89 @@ def get_git_sha() -> str:
         raise RuntimeError(f"git rev-parse failed: {exc}") from exc
 
 
-def build_game_spine(away: str, home: str, qb1s: dict[str, str], model: str, trends: dict, git_sha: str) -> dict[str, Any]:
-    a_qb1 = qb1s.get(away, "")
-    h_qb1 = qb1s.get(home, "")
+def build_game_spine(away: str, home: str, a_qb1: str, h_qb1: str, model: str,
+                     trends_teams: dict, git_sha: str, seed: int) -> dict[str, Any]:
     if not a_qb1 or not h_qb1:
         raise RuntimeError(f"{away}@{home}: missing confirmed QB1 ({away}={a_qb1!r}, {home}={h_qb1!r})")
     game_key = f"{away}@{home}"
-    print(f"[{game_key}] START live JEV spine build (QB1s: {a_qb1} / {h_qb1})", flush=True)
-    spine = spine_runner.simulate_game_spine(
-        away_team=away, home_team=home, away_qb1=a_qb1, home_qb1=h_qb1,
-        trends=trends, model=model, max_snaps=220,
-    )
-    if len(spine) < 100:
-        raise RuntimeError(f"{game_key}: spine too short ({len(spine)} snaps)")
-    for i, snap in enumerate(spine):
-        for field in ("off_play_call", "def_shell_call", "target_carrier", "snap_outcome", "pressure_disruption"):
-            if not snap.get(field):
-                raise RuntimeError(f"{game_key}: snap {i} missing {field}")
+    print(f"[{game_key}] START live JEV spine build (QB1s: {a_qb1} / {h_qb1}, seed={seed})", flush=True)
+    sim = spine_runner.simulate_full_game_with_jev(away, home, trends_teams, model=model, seed=seed)
+    snaps = sim.get("snap_by_snap_log", [])
+    if len(snaps) < 100:
+        raise RuntimeError(f"{game_key}: spine too short ({len(snaps)} snaps)")
+    for i, s in enumerate(snaps):
+        jev = s.get("jev_decisions") or {}
+        for field in ("off_play_call", "def_shell_call", "target_carrier", "snap_outcome"):
+            if not jev.get(field):
+                raise RuntimeError(f"{game_key}: snap {i} missing jev_decisions.{field}")
+        if "pressure_disruption_noul" not in jev:
+            raise RuntimeError(f"{game_key}: snap {i} missing pressure_disruption_noul")
+        if not s.get("resolved_play"):
+            raise RuntimeError(f"{game_key}: snap {i} missing resolved_play")
     now = datetime.now(timezone.utc).isoformat()
-    out = {
-        "schema": "jev_full_game_snap_decision_spine_v1",
+    game_node = {
+        **sim,
         "week": WEEK,
-        "away_team": away,
-        "home_team": home,
+        "season": 2026,
+        "updated_at": now,
+        "generated_at": now,
+        "away": away,
+        "home": home,
         "away_qb1": a_qb1,
         "home_qb1": h_qb1,
-        "updated_at": now,
+        "confirmed_qb1": {away: a_qb1, home: h_qb1},
         "provenance": {
             "generator": "build_week10_jev_spines.py",
-            "engine": "run_jev_full_game_spine.simulate_game_spine",
+            "engine": "run_jev_full_game_spine.simulate_full_game_with_jev",
             "jev_model": model,
             "jev_transport": "jevkit.client.ask (live OpenRouter)",
             "git_sha": git_sha,
             "trends_window": "w1_w9",
-            "injuries_source": "data/nfl/injuries_2026.csv (weeks 9-10)",
+            "injuries_source": "data/nflverse/injuries_2026.csv (weeks 9-10)",
+            "seed": seed,
             "generated_at": now,
         },
-        "snap_count": len(spine),
-        "spine": spine,
     }
+    spine_obj = {
+        "schema": "gse_jev_full_game_spine_v1",
+        "week": WEEK,
+        "updated_at": now,
+        "away_qb1": a_qb1,
+        "home_qb1": h_qb1,
+        "confirmed_qb1": {away: a_qb1, home: h_qb1},
+        "total_drives": sim.get("total_drives"),
+        "games": {game_key: game_node},
+    }
+    # SG-1 freshness + QB1 gate on the exact node the workflow will consume.
+    chk = verify_jev_spine_freshness_and_qb1(
+        game_node, expected_week=WEEK, expected_away_qb1=a_qb1,
+        expected_home_qb1=h_qb1, max_age_hours=MAX_AGE_HOURS, strict=True,
+    )
     p = spine_path(away, home)
     with _write_lock:
-        p.write_text(json.dumps(out, indent=2), encoding="utf-8")
-    ok, msg = spine_runner.verify_jev_spine_freshness_and_qb1(p, away, home, a_qb1, h_qb1)
-    if not ok:
-        raise RuntimeError(f"{game_key}: freshness gate failed post-write: {msg}")
-    print(f"[{game_key}] DONE {len(spine)} snaps -> {p.name} ({msg})", flush=True)
-    return {"game": game_key, "snaps": len(spine), "path": str(p), "status": "built"}
+        p.write_text(json.dumps(spine_obj, indent=2), encoding="utf-8")
+    print(f"[{game_key}] DONE {len(snaps)} snaps -> {p.name} ({chk['reason']}, "
+          f"cost ${sim.get('usage', {}).get('total_cost_usd', 0):.4f})", flush=True)
+    return {"game": game_key, "snaps": len(snaps), "path": str(p), "status": "built",
+            "cost_usd": sim.get("usage", {}).get("total_cost_usd", 0)}
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build live-JEV Week 10 spines for every remaining game.")
-    ap.add_argument("--workers", type=int, default=3, help="Concurrent games (default 3; snaps within a game are sequential)")
+    ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--model", default="~typesafe/jev-latest")
-    ap.add_argument("--force", action="store_true", help="Rebuild even if a fresh spine exists")
-    ap.add_argument("--only", default="", help="Comma-separated AWAY@HOME filters")
-    ap.add_argument("--dry-run", action="store_true", help="Validate slate + context only; no JEV calls")
+    ap.add_argument("--force", action="store_true")
+    ap.add_argument("--only", default="")
+    ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     require_week(WEEK)
+    spine_runner.SIM_WEEK = WEEK
     cfg = json.loads((REPO_ROOT / "data" / "engine" / "week10_stage0_preflight_config.json").read_text(encoding="utf-8"))
     qb1_cfg = cfg.get("confirmed_qb1", {})
 
     def qb1_name(tm: str) -> str:
-        return str(qb1_cfg.get(tm) or qb1_cfg.get({"LAR": "LA", "LA": "LAR"}.get(tm, tm)) or "")
+        return str(qb1_cfg.get(tm) or qb1_cfg.get({"LAR": "LA", "LA": "LAR", "WSH": "WAS", "WAS": "WSH"}.get(tm, tm)) or "")
 
     games = fetch_remaining_slate()
     slate: list[tuple[str, str]] = []
@@ -173,8 +200,9 @@ def main() -> int:
         slate = [s for s in slate if s in wanted]
     print(f"Week {WEEK} spine build: {len(slate)} games, workers={args.workers}, model={args.model}", flush=True)
 
-    trends = spine_runner.load_w1_w9_trends()
-    print(f"trends loaded: {len(trends.get('teams', {}))} teams, window w1_w9", flush=True)
+    trends_raw = json.loads(spine_runner.trends_path_for_week(WEEK).read_text(encoding="utf-8"))
+    trends_teams = trends_raw.get("teams", {})
+    print(f"trends loaded: {len(trends_teams)} teams from {spine_runner.trends_path_for_week(WEEK).name}", flush=True)
     if args.dry_run:
         for away, home in slate:
             print(f"  {away}@{home}: QB1s {qb1_name(away)!r} / {qb1_name(home)!r}, fresh_spine={fresh_spine_exists(away, home)}")
@@ -183,18 +211,19 @@ def main() -> int:
     git_sha = get_git_sha()
     results: list[dict[str, Any]] = []
     todo = []
-    for away, home in slate:
+    for idx, (away, home) in enumerate(slate):
         if not args.force and fresh_spine_exists(away, home):
             print(f"[{away}@{home}] SKIP fresh spine exists", flush=True)
             results.append({"game": f"{away}@{home}", "status": "skipped_fresh"})
         else:
-            todo.append((away, home))
+            todo.append((idx, away, home))
 
     errors: list[dict[str, str]] = []
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {
-            pool.submit(build_game_spine, away, home, {t: qb1_name(t) for t in (away, home)}, args.model, trends, git_sha): f"{away}@{home}"
-            for away, home in todo
+            pool.submit(build_game_spine, away, home, qb1_name(away), qb1_name(home),
+                        args.model, trends_teams, git_sha, 20261113 + idx * 101): f"{away}@{home}"
+            for idx, away, home in todo
         }
         for fut in as_completed(futures):
             game = futures[fut]
