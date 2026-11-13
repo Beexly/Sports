@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Ling OCR-rescue lane: image-only / INSUFFICIENT_OCR books -> foundry.db.
+"""Ling OCR-rescue lane v2: image-only / INSUFFICIENT_OCR books -> foundry.db.
 
-Renders pages to PNG at 150 DPI (pymupdf), batches <=50 page images per
-vision request to ling-3.2-flash:free with thinking ON, assembles
-gatekeeper-schema artifacts, commits. Fail-fast: any Ling unavailability or
-one gate rejection returns the row for the Qwen4 lane; never blocks it.
-Run with the ocr-venv python.
+Two-phase to stay inside the 15s TTFT guardrail:
+  phase 1: downscaled JPEG batches (<=8 pages, max side 1200px, q55),
+           thinking OFF — pure fast transcription with page markers.
+  phase 2: thinking ON, TEXT-ONLY calls for sovereign primitives + traces.
+Fail-fast: any Ling unavailability or one gate rejection returns the row for
+the Qwen4 lane; never blocks it. Run with the ocr-venv python.
 """
 import json
 import os
@@ -23,8 +24,9 @@ WORKER = "ling-ocr"
 LOG = os.path.join(HERE, "logs", "ling_lane.log")
 SCRATCH = os.path.join(os.environ.get("LOCALAPPDATA", ""), "hermes", "cache", "scratch", "foundry-ling-ocr")
 os.makedirs(SCRATCH, exist_ok=True)
-BATCH = 10
-DPI = 140
+BATCH = 8
+MAX_SIDE = 1200
+JPEG_Q = 55
 MAX_BATCHES_PER_RUN = 6
 
 
@@ -49,15 +51,21 @@ def set_status(book_id, status, why):
     con.close()
 
 
+def norm(s):
+    return re.sub(r"\s+", " ", s or "").strip()
+
+
 def render_pages(path, outdir):
     import pymupdf
     doc = pymupdf.open(path)
     os.makedirs(outdir, exist_ok=True)
     paths = []
     for i, page in enumerate(doc):
-        pix = page.get_pixmap(dpi=DPI)
+        long_side = max(page.rect.width, page.rect.height)
+        dpi = min(140, int(72 * MAX_SIDE / long_side)) if long_side else 100
+        pix = page.get_pixmap(dpi=max(72, dpi))
         p = os.path.join(outdir, f"page_{i+1:04d}.jpg")
-        pix.save(p, jpg_quality=80)
+        pix.save(p, jpg_quality=JPEG_Q)
         paths.append((i + 1, p))
     return paths
 
@@ -68,55 +76,64 @@ def rescue(row):
     if not pages:
         set_status(book_id, "INSUFFICIENT_SOURCE_ACCESS", "zero renderable pages")
         return "refused-empty"
-    prims = []
+    # phase 1: fast transcription, thinking OFF
+    transcribed = []
     for start in range(0, min(len(pages), BATCH * MAX_BATCHES_PER_RUN), BATCH):
         batch = pages[start:start + BATCH]
         prompt = (
-            "These are scanned page images (pages "
-            f"{batch[0][0]}-{batch[-1][0]}) of a book. Read them with full scholarly rigor. Extract up to "
-            "3 sovereign primitives PER BATCH as JSON: {primitives:[{name, verbatim_quote (>=8 words EXACTLY "
-            "as printed), page (the printed page number), latex (exact printed equation or null), "
-            "symbol_and_unit_ledger, assumptions, breakdown_regime}]}. If pages are unreadable/blank, "
-            "return {primitives:[]}. NO odds, NO toy equations, NO invented text. ONLY JSON."
+            f"Transcribe these scanned book pages (pages {batch[0][0]}-{batch[-1][0]}) EXACTLY as printed. "
+            "Output plain text with a [PAGE n] marker before each page's text. Preserve equations in LaTeX "
+            "where printed. Skip blank pages. No commentary, no invention."
         )
         msg = ling.image_message(prompt, [p for _, p in batch])
-        raw = ling.chat([msg], thinking=True, max_tokens=12000)
-        m = re.search(r"\{.*\}", raw, re.S)
-        if m:
-            for p in json.loads(m.group(0)).get("primitives", []):
-                p["primitive_id"] = f"p{len(prims)+1}"
-                prims.append(p)
-        if len(prims) >= 6:
-            break
-    if len(prims) < 3:
-        set_status(book_id, "PENDING", f"OCR rescue got {len(prims)} primitives; Qwen4 lane decides")
+        raw = ling.chat([msg], thinking=False, max_tokens=16000)
+        transcribed.append(raw)
+    full = "\n".join(transcribed)
+    nfull = norm(full)
+    if len(nfull) < 2000:
+        set_status(book_id, "PENDING", f"OCR transcription too thin ({len(nfull)} chars); Qwen4 lane decides")
         return "rerouted-thin"
-    for p in prims:
-        p.setdefault("layer2", None)
-    prims[0]["layer2"] = {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "OCR-rescued source operator mapped to the GSE 22-player dynamical system; calibration pending telemetry.",
-        "source_operator": prims[0]["primitive_id"],
-        "telemetry": "LATENT_UNIDENTIFIABLE",
-    }
+    # phase 2: primitives, thinking ON, text only
+    prompt = (
+        "You are a sovereign-primitive extractor for the GSE/GSI Foundry. The following text is an OCR "
+        "transcription of a scanned book (page markers [PAGE n]). Extract 4-6 sovereign primitives: "
+        "verbatim quotes (>=8 words, EXACT substrings of the transcription), page numbers, exact LaTeX "
+        "when equations appear (null otherwise), symbol_and_unit_ledger for every latex, assumptions, "
+        "breakdown_regime, and at least one layer2 object {tag:'[ISOMORPHISM]' or '[DERIVED KERNEL]', "
+        "mapping, source_operator: primitive id, telemetry}. NO sportsbook odds, NO toy equations, NO "
+        "fabricated football origins for pure math. Also universal_lens, gsi_mapping, gse_mapping "
+        "(>=30 words each). ONLY JSON: {primitives:[{primitive_id:'p1',name,verbatim_quote,page,latex,"
+        "symbol_and_unit_ledger,assumptions,breakdown_regime,layer2}], universal_lens, gsi_mapping, "
+        "gse_mapping}.\n\nTRANSCRIPTION:\n" + full[:60000]
+    )
+    raw = ling.chat([{"role": "user", "content": prompt}], thinking=True, max_tokens=16000)
+    m = re.search(r"\{.*\}", raw, re.S)
+    doc = json.loads(m.group(0))
+    prims = []
+    for i, p in enumerate(doc.get("primitives", [])):
+        p["primitive_id"] = p.get("primitive_id") or f"p{i+1}"
+        if norm(p.get("verbatim_quote", "")) and norm(p["verbatim_quote"]) in nfull:
+            prims.append(p)
+    if len(prims) < 3:
+        set_status(book_id, "PENDING", f"only {len(prims)} verbatim-verified OCR primitives; Qwen4 decides")
+        return "rerouted-quotes"
+    doc["primitives"] = prims[:6]
     tprompt = (
         "Write TWO reasoning traces for these OCR-rescued primitives as JSON: {reasoning_traces:[{trace_id,"
         "think, retrocausal_genealogy, theory_of_mind, cross_layer_veto}, ...]}. think >=450 words each "
         "(combined >=900); each section >=70 words. Ground in the primitives; no odds/toy math/fabricated "
-        "citations. ONLY JSON.\n" + json.dumps(prims, ensure_ascii=False)[:20000]
+        "citations. ONLY JSON.\n" + json.dumps(doc["primitives"], ensure_ascii=False)[:20000]
     )
     raw2 = ling.chat([{"role": "user", "content": tprompt}], thinking=True, max_tokens=12000)
     m2 = re.search(r"\{.*\}", raw2, re.S)
-    traces = json.loads(m2.group(0)).get("reasoning_traces", [])
-    doc = {
-        "book_id": book_id, "source_status": "COMPLETE", "primitives": prims[:6],
-        "reasoning_traces": traces,
-        "universal_lens": "OCR-rescued source: the printed operators become auditable lenses for any complex system once transcribed with page-level provenance; the rescue itself demonstrates that unreadable scans are a pipeline state, not a knowledge boundary.",
-        "gsi_mapping": "Rescued physical/physiological operators map to GSI clinical-telemetry and bioenergetic audit kernels, with breakdown regimes preserved exactly as printed.",
-        "gse_mapping": "Rescued strategic/psychological operators feed GSE Coach-Mind simulation and cross-layer veto adjudication, cited to printed pages.",
-        "pages_total": len(pages), "pages_read": f"OCR vision batches of {BATCH} at {DPI} DPI",
+    doc["reasoning_traces"] = json.loads(m2.group(0)).get("reasoning_traces", [])
+    doc.update({
+        "book_id": book_id, "source_status": "COMPLETE",
+        "pages_total": len(pages),
+        "pages_read": f"OCR vision: {min(len(pages), BATCH*MAX_BATCHES_PER_RUN)} pages in batches of {BATCH}, max side {MAX_SIDE}px q{JPEG_Q}; quotes verified against OCR transcription",
         "worker_id": WORKER, "extractor_model": ling.MODEL,
-    }
+        "ocr_note": "Image-only scan rescued via ling vision transcription; verbatim quotes are exact substrings of the transcription, page-cited.",
+    })
     errs = gatekeeper.validate(doc)
     if errs:
         set_status(book_id, "PENDING", "OCR pre-validation failed: " + "; ".join(errs)[:200])
@@ -126,13 +143,16 @@ def rescue(row):
         json.dump(doc, f, ensure_ascii=False, indent=1)
     out = gk("commit", apath)
     if "GATEKEEPER_APPROVED" in out:
-        log(f"OCR COMPLETE {book_id} {row['file_name']} prims={len(prims[:6])}")
+        log(f"OCR COMPLETE {book_id} {row['file_name']} prims={len(doc['primitives'])}")
         return "complete"
     set_status(book_id, "PENDING", "OCR gate rejected once: " + out[:200])
     return "rerouted-gate"
 
 
 def main():
+    if not ling.circuit_ok():
+        log("circuit cooldown active; not starting (Qwen4 lane unaffected)")
+        return
     con = gatekeeper.connect()
     rows = [dict(r) for r in con.execute(
         "SELECT * FROM corpus_queue WHERE status='INSUFFICIENT_OCR' LIMIT 4").fetchall()]
