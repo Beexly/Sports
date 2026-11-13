@@ -10,7 +10,7 @@ import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Galaxy Sports Edge | NFL Picks, Player Props & Parlays",
+  title: { absolute: "Galaxy Sports Edge | NFL Picks, Player Props & Parlays" },
   description: "Plain-English NFL picks, player props and parlays. See the field, choose your pack, and unlock the official slate.",
 };
 

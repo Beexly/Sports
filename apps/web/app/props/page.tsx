@@ -12,7 +12,7 @@ const card = board as unknown as SealedBoard;
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "NFL Player Props | Galaxy Sports Edge",
+  title: { absolute: "NFL Player Props | Galaxy Sports Edge" },
   description: "Official verified record 47-19-1 (71.2% · +24.92u (with gated props)). Locked player props and the 360-degree watchlist from the sealed card.",
 };
 
@@ -26,7 +26,7 @@ export default function PropsPage(): JSX.Element {
     return (
       <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
         <Nav />
-        <main className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+        <main id="main-content" className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
           <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Locked props</p>
           <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Props withheld</h1>
           <div className="mt-10">
@@ -40,7 +40,7 @@ export default function PropsPage(): JSX.Element {
   return (
     <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />
-      <main className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+      <main id="main-content" className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
         <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">47-19-1 (71.2% · +24.92u (with gated props))</p>
         <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Locked props</h1>
         <div className="mt-10">

@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 
 export const metadata: Metadata = {
-  title: "Player Lab Under Construction | Galaxy Sports Edge",
+  title: { absolute: "Player Lab Under Construction | Galaxy Sports Edge" },
   description:
     "This section is currently under construction while we focus full-time on GALAXY PICKS (PAID) and DFS.",
   alternates: { canonical: "/players" },

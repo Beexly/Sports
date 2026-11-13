@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 
 export const metadata: Metadata = {
-  title: "Board Moved: Galaxy Picks & DFS | Galaxy Sports Edge",
+  title: { absolute: "Board Moved: Galaxy Picks & DFS | Galaxy Sports Edge" },
   description:
     "The public slate lives in GALAXY PICKS (PAID) and the DFS optimizer. This route no longer publishes a record.",
   alternates: { canonical: "/board" },

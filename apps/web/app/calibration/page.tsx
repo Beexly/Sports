@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 
 export const metadata: Metadata = {
-  title: "Calibration Proof Room | Galaxy Sports Edge",
+  title: { absolute: "Calibration Proof Room | Galaxy Sports Edge" },
   description:
     "Verified probability calibration, Brier score benchmarks, and official 47-19-1 (71.2% · +24.92u (with gated props)) NFL ledger for Galaxy Sports Edge (base 38-13-1 · +22.85u).",
   alternates: { canonical: "/calibration" },

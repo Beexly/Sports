@@ -920,6 +920,12 @@ export async function askJarvisWithMemory(
   }
 }
 
+/**
+ * Reads the live wiring telemetry bundle for a game — stage gates, primitive
+ * coverage, and the engine versions actually wired at runtime — so an answer
+ * can cite what the pipeline really executed rather than what it was designed
+ * to execute.
+ */
 export function readLiveWiringTelemetry(gameId = "2026_09_JAX_BAL"): {
   readonly packet_id: string | null;
   readonly trace_id: string | null;

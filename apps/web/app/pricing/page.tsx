@@ -11,7 +11,7 @@ import { WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY } from "@/lib/engine/engine-live-bri
 import { sanitizePlainFootballText } from "@/lib/writeups/coach-writeup-engine";
 
 export const metadata: Metadata = {
-  title: "Pricing & Plans | Galaxy Sports Edge",
+  title: { absolute: "Pricing & Plans | Galaxy Sports Edge" },
   description:
     "No monthly subscription needed right now. One-time Week 9 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Backed by our documented 47-19-1 (71.2% · +24.92u (with gated props)) official NFL record.",
   alternates: { canonical: "/pricing" },

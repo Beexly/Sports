@@ -10,7 +10,7 @@ import {
 } from "@/lib/writeups/coach-writeup-engine";
 
 export const metadata: Metadata = {
-  title: "DFS Lineup Optimizer & Stacks | Galaxy Sports Edge",
+  title: { absolute: "DFS Lineup Optimizer & Stacks | Galaxy Sports Edge" },
   description:
     "Plain-English NFL DFS environment breakdowns, cash cores, tournament stacks, and captain leverage writeups for Week 8.",
 };

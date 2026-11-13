@@ -18,7 +18,7 @@ const sealedCard = board as unknown as SealedBoard;
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "NFL Betting Packs, Player Props, Parlays & DFS | Galaxy Sports Edge",
+  title: { absolute: "NFL Betting Packs, Player Props, Parlays & DFS | Galaxy Sports Edge" },
   description:
     "Plain-English NFL matchup breakdowns, official game picks, player props, correlated Same-Game Parlays, and DraftKings/FanDuel DFS lineups.",
 };

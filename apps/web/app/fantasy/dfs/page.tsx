@@ -14,7 +14,7 @@ import {
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const metadata: Metadata = {
-  title: "DFS Slate Breakdown & Lineup Builder | Galaxy Sports Edge",
+  title: { absolute: "DFS Slate Breakdown & Lineup Builder | Galaxy Sports Edge" },
   description:
     "Plain-English NFL DFS game-environment breakdowns, target volume notes, cash cores, and tournament stack blueprints.",
   alternates: { canonical: "/fantasy/dfs" },

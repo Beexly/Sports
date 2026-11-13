@@ -13,7 +13,7 @@ const card = board as unknown as SealedBoard;
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Locked NFL Board | Galaxy Sports Edge",
+  title: { absolute: "Locked NFL Board | Galaxy Sports Edge" },
   description: "Official verified NFL record 47-19-1 (71.2% · +24.92u (with gated props)). Locked plays from the sealed card only.",
   alternates: { canonical: "/picks" },
 };

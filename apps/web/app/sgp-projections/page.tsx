@@ -5,7 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { getEntitledSgpRows } from "@/lib/engine/engine-live-bridge";
 
 export const metadata: Metadata = {
-  title: "Correlated SGP Projections | Galaxy Sports Edge",
+  title: { absolute: "Correlated SGP Projections | Galaxy Sports Edge" },
   description:
     "Same-Game Parlay game-script pricing, connected player prop pairings, and live line value across all NFL matchups. Official verified record 47-19-1 (71.2% · +24.92u (with gated props)).",
   alternates: { canonical: "/sgp-projections" },
