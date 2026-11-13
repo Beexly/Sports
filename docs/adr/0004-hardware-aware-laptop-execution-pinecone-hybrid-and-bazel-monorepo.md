@@ -1,8 +1,7 @@
-# ADR-0004: Hardware-Aware Laptop Execution (`i7-1255U` + `Iris Xe`), Pinecone Hybrid Index & Bazel Monorepo Build Optimization
+# ADR 0004 — Hardware-Aware Laptop Execution (`i7-1255U` + `Iris Xe`), Pinecone Hybrid Index & Bazel Monorepo Build Optimization
 
-## Status
-
-Accepted (`2026-11-06`)
+**Date:** 2026-11-06
+**Status:** Accepted
 
 ## Context
 

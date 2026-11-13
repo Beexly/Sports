@@ -1,8 +1,7 @@
-# ADR-0002: Situational-First 5-Stage Engine Gate & Full-Game Snap-by-Snap JEV Trajectory Pipeline
+# ADR 0002 — Situational-First 5-Stage Engine Gate & Full-Game Snap-by-Snap JEV Trajectory Pipeline
 
-## Status
-
-Accepted (`2026-11-06`)
+**Date:** 2026-11-06
+**Status:** Accepted
 
 ## Context
 
