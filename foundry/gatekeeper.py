@@ -146,9 +146,10 @@ def cmd_scan(args):
                 else:
                     tier = "B"
                 book_id = digest[:16]
+                init_status = "DELEGATED_GCP" if digest[0] >= "8" else "PENDING"  # shard B belongs to GCP
                 con.execute(
-                    "INSERT OR IGNORE INTO corpus_queue(book_id,file_path,sha256,file_name,title,primary_domain,tier,status) VALUES(?,?,?,?,?,?,?, 'PENDING')",
-                    (book_id, path, digest, fn, os.path.splitext(fn)[0], guess_domain(fn), tier),
+                    "INSERT OR IGNORE INTO corpus_queue(book_id,file_path,sha256,file_name,title,primary_domain,tier,status) VALUES(?,?,?,?,?,?,?,?)",
+                    (book_id, path, digest, fn, os.path.splitext(fn)[0], guess_domain(fn), tier, init_status),
                 )
                 added += 1
                 tiers[tier] += 1
@@ -304,7 +305,10 @@ def cmd_release_stale(args):
     cutoff = now() - args.minutes * 60
     rows = con.execute("SELECT book_id FROM corpus_queue WHERE status='CLAIMED' AND claimed_at < ?", (cutoff,)).fetchall()
     for r in rows:
-        con.execute("UPDATE corpus_queue SET status='PENDING', worker_id=NULL WHERE book_id=?", (r["book_id"],))
+        con.execute(
+            "UPDATE corpus_queue SET status=CASE WHEN substr(sha256,1,1) >= '8' THEN 'DELEGATED_GCP' ELSE 'PENDING' END, worker_id=NULL WHERE book_id=?",
+            (r["book_id"],),
+        )
         log_event(con, r["book_id"], "RELEASED_STALE", f">{args.minutes}min")
     con.commit()
     print(json.dumps({"released": len(rows)}))
