@@ -30,7 +30,11 @@ jobs:
   check-scheduler-health:
     name: Poll public-surface-truth for scheduler/settlement health
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    # 2 fetch attempts × 75s fetch ceiling + 5s gap + 15s webhook ≈ 170s.
+    # The old 3-minute ceiling could not fit a retry; 5 minutes does, with
+    # margin, and is still far below the sibling external-cron.yml budgets
+    # (5–8 minutes).
+    timeout-minutes: 5
     steps:
       - name: Fetch and evaluate live status
         env:
@@ -43,9 +47,37 @@ jobs:
           scheduler_status="unknown"
           settlement_health="unknown"
           age_minutes="unknown"
-          response=$(curl -sS -o /tmp/status.json -w "%{http_code}" \
-            --location --max-time 30 \
-            "https://www.galaxysportsedge.com/api/ops/public-surface-truth") || response="000"
+          response="000"
+          attempt=0
+          max_attempts=2
+          # ── Fetch with a bounded retry ─────────────────────────────────────
+          # WHY (2026-11-13): the endpoint is a ~30-loader ops surface. Warm it
+          # answers in 6.5–8.8s (measured, 12 sequential polls), but the FIRST
+          # request to a cold serverless function took 31.5s. This step's old
+          # single-shot `--max-time 30` therefore aborted on the cold hit with
+          # `curl (28)`, and EVERY failure it produced was that abort — HTTP
+          # 000, never a real scheduler/settlement verdict (checked the last
+          # four failed runs). A monitor that pages on one slow response is the
+          # permanently-red alarm this workflow's header — and
+          # __tests__/github-workflow-contract.test.ts — exists to prevent:
+          # operators mute it and the outage it was built to catch never pages.
+          # A single cold start is not an outage, so retry once before
+          # believing it. 75s per attempt leaves ~2x headroom over the observed
+          # cold worst case; the endpoint's own maxDuration is 120s, so a
+          # genuinely hung handler still reports as a timeout rather than a pass.
+          while [ "${attempt}" -lt "${max_attempts}" ]; do
+            attempt=$((attempt + 1))
+            response=$(curl -sS -o /tmp/status.json -w "%{http_code}" \
+              --location --max-time 75 \
+              "https://www.galaxysportsedge.com/api/ops/public-surface-truth") || response="000"
+            echo "attempt ${attempt}/${max_attempts}: HTTP ${response}"
+            if [ "${response}" = "200" ]; then
+              break
+            fi
+            if [ "${attempt}" -lt "${max_attempts}" ]; then
+              sleep 5
+            fi
+          done
           echo "HTTP ${response}"
 
           if [ "${response}" != "200" ]; then
