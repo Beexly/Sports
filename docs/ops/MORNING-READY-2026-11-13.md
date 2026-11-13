@@ -31,13 +31,20 @@ statement rows + 1,027 normalized quotes found; fix recipe delivered).
 T-05..T-10 contracts written; lanes WP-2/3/4 building the implementations.
 WP-8 simulation is REFUSED until verify_all_ten_gates.sh exits 0.
 
-## 3. Week 10 slate (13 remaining games)
+## 3. Week 10 slate (13 remaining games — VERIFIED vs ESPN scoreboard + Neon 2026-11-13 ~04:00 CT)
 
-Sun early: NE@DET (Munich), ATL@IND (Berlin), NO@CAR, BUF@HOU, TEN@NYJ,
-JAX@LV, CHI@MIN, CLE@PIT. Sun late: ARI@SEA, DEN@KC, TB@SF, DAL@PHI.
-MNF: LAC@BAL. QB1 map + Stage 0 exclusions verified in
+Sun Nov 15: NE@DET 9:30 ET (Munich, Allianz Arena); 1:00 ET: KC@ATL, HOU@CLE,
+MIN@GB, MIA@IND, CAR@NO, JAX@TEN, BUF@NYJ; 4:05 ET: SEA@LV, LAR@ARI;
+4:25 ET: SF@DAL; 8:20 ET SNF: PIT@CIN. Mon Nov 16 8:15 ET MNF: LAC@BAL.
+TNF WSH@NYG already FINAL (settled). NO Berlin game this week.
+QB1 map + Stage 0 exclusions (team-level) verified in
 data/nflverse/week10_live_roster_transactions_and_starters_2026.json.
-MIA@WAS is 2026-11-16 Madrid (Week 11 window) — NOT in this slate.
+NOTE: an earlier draft of this packet carried a fabricated slate (ATL@IND
+Berlin etc.) from a stale compaction summary — caught by re-querying ESPN +
+Neon directly; both sources agree on the slate above. T-00 reads Neon live,
+so its PASS was always against the correct games.
+CATALOG GAP (WP-5): catalog.ts is missing LAR@ARI + PIT@CIN and mislabels
+SF@DAL as SNF (SF@DAL is 4:25 ET; PIT@CIN is the SNF). Fix before deploy.
 
 ## 4. Live PLAY vs PASS summary — PENDING (WP-8)
 
