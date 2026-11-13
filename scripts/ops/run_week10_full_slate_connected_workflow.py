@@ -74,9 +74,17 @@ def fetch_remaining_slate() -> list[dict[str, Any]]:
 
     url = os.environ.get("DATABASE_URL", "").strip()
     if not url:
+        import shutil
+        neon = shutil.which("neonctl") or shutil.which("neonctl.cmd")
+        if not neon:
+            cand = Path(os.path.expandvars(r"%APPDATA%\npm\neonctl.cmd"))
+            if cand.exists():
+                neon = str(cand)
+        if not neon:
+            raise RuntimeError("neonctl not found on PATH and DATABASE_URL unset")
         url = subprocess.run(
-            ["neonctl", "connection-string", "main", "--project-id", "summer-brook-99380762", "--role-name", "hermes_ro"],
-            capture_output=True, text=True, check=True,
+            [neon, "connection-string", "main", "--project-id", "summer-brook-99380762", "--role-name", "hermes_ro"],
+            capture_output=True, text=True, check=True, shell=(os.name == "nt"),
         ).stdout.strip().splitlines()[-1]
     conn = psycopg2.connect(url)
     try:
