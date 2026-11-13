@@ -85,3 +85,86 @@ export function evaluatePublication(input: PublicationInput = {}): PublicationDe
 export function publicationAllowed(input: PublicationInput = {}): boolean {
   return evaluatePublication(input).allowed;
 }
+
+/**
+ * WP-0 hard write gate (owner directive 2026-11-13).
+ *
+ * No INSERT/UPDATE may set isPublished=TRUE on a FUTURE-game pick unless its
+ * factorBreakdown carries a fiveStageReceipt with schemaVersion
+ * '2026-11-13-v1' AND the pick was generated at/after the freshness of the
+ * game data it claims to use. This is the row-level companion to the
+ * env/verdict gate above: even with PUBLIC_PICKS_ENABLED open and a sealed
+ * verdict, an un-receipted future pick stays dark.
+ *
+ * Q3a exemption: past games (commenceTime <= now) are the historical record —
+ * the gate never blocks them, so settlement history can never be unpublished
+ * by this rule. An UNKNOWN kickoff fails closed (we cannot prove the
+ * exemption).
+ */
+export const FIVE_STAGE_RECEIPT_SCHEMA_VERSION = "2026-11-13-v1";
+
+export interface FuturePickPublishInput {
+  /** pick.factorBreakdown (jsonb) — must carry fiveStageReceipt. */
+  readonly factorBreakdown?: unknown;
+  /** When the pick row is minted (creation uses the DB now() default). */
+  readonly generatedAt?: Date | string | null;
+  /** Freshness of the game data the pick was generated from. */
+  readonly gameDataFreshnessAt?: Date | string | null;
+  /** Scheduled kickoff of the pick's game. */
+  readonly gameCommenceTime?: Date | string | null;
+  readonly now?: Date;
+}
+
+function toEpochMs(value: Date | string | null | undefined): number | null {
+  if (value == null) return null;
+  const ms = value instanceof Date ? value.getTime() : Date.parse(value);
+  return Number.isFinite(ms) ? ms : null;
+}
+
+export function evaluateFuturePickPublication(input: FuturePickPublishInput): PublicationDecision {
+  const nowMs = (input.now ?? new Date()).getTime();
+  const kickoffMs = toEpochMs(input.gameCommenceTime);
+  if (kickoffMs !== null && kickoffMs <= nowMs) {
+    return { allowed: true, reason: "past game — historical record exempt (Q3a)", blockedBy: [] };
+  }
+
+  const blockedBy: string[] = [];
+  if (kickoffMs === null) {
+    blockedBy.push("game commenceTime unknown — cannot prove historical exemption");
+  }
+
+  const fb = input.factorBreakdown;
+  const receipt =
+    fb !== null && typeof fb === "object"
+      ? ((fb as Record<string, unknown>).fiveStageReceipt as Record<string, unknown> | undefined)
+      : undefined;
+  if (
+    receipt === null ||
+    typeof receipt !== "object" ||
+    receipt.schemaVersion !== FIVE_STAGE_RECEIPT_SCHEMA_VERSION
+  ) {
+    blockedBy.push(`fiveStageReceipt.schemaVersion must be ${FIVE_STAGE_RECEIPT_SCHEMA_VERSION}`);
+  }
+
+  const generatedMs = toEpochMs(input.generatedAt);
+  const freshnessMs = toEpochMs(input.gameDataFreshnessAt);
+  if (generatedMs === null || freshnessMs === null) {
+    blockedBy.push("generatedAt and gameDataFreshnessAt are both required");
+  } else if (generatedMs < freshnessMs) {
+    blockedBy.push("generatedAt < gameDataFreshnessAt — pick predates its own data");
+  }
+
+  if (blockedBy.length > 0) {
+    return {
+      allowed: false,
+      reason: `future pick publication blocked: ${blockedBy.join("; ")}`,
+      blockedBy,
+    };
+  }
+  return { allowed: true, reason: "future pick publication allowed", blockedBy: [] };
+}
+
+/** Convenience: the boolean a future-pick write site needs. */
+export function futurePickPublishable(input: FuturePickPublishInput): boolean {
+  return evaluateFuturePickPublication(input).allowed;
+}

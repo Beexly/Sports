@@ -243,29 +243,50 @@ export async function writeFreeSettlementInTx(
     });
     return { count: 0, refusal: "KICKOFF_MOVED", kickoffAt: moved?.commenceTime ?? null };
   }
-  await tx.pickSettlementEvent.create({
-    data: {
-      pickId: args.pickId,
-      gameId: args.gameId,
-      result: args.result,
-      settledAt: args.settledAt,
-      status: "PENDING",
-      // SETTLE-TIME EVIDENCE (C-120): the score this grade was computed from,
-      // recorded inside the settlement transaction. Nothing else records it,
-      // so once a game row is overwritten there is no way to tell a MIS-GRADED
-      // pick from one graded correctly against a score that later changed —
-      // the ambiguity blocking C-115. The outbox worker carries this key
-      // across expansion instead of rebuilding it.
-      payload: {
-        settledWith: {
-          homeScore: args.homeScore,
-          awayScore: args.awayScore,
-          sources: [...(args.sources ?? [])],
-          path: "free",
-        },
+  const eventData = {
+    pickId: args.pickId,
+    gameId: args.gameId,
+    result: args.result,
+    settledAt: args.settledAt,
+    status: "PENDING",
+    // SETTLE-TIME EVIDENCE (C-120): the score this grade was computed from,
+    // recorded inside the settlement transaction. Nothing else records it,
+    // so once a game row is overwritten there is no way to tell a MIS-GRADED
+    // pick from one graded correctly against a score that later changed —
+    // the ambiguity blocking C-115. The outbox worker carries this key
+    // across expansion instead of rebuilding it.
+    payload: {
+      settledWith: {
+        homeScore: args.homeScore,
+        awayScore: args.awayScore,
+        sources: [...(args.sources ?? [])],
+        path: "free",
       },
     },
-  });
+  };
+  // pickId is @unique: a pick that was settled, withdrawn and re-opened still
+  // owns its original event row, so create() throws P2002 and rolls back the
+  // WHOLE sport pass (observed live 2026-11-13 on the overnight drain). Upsert
+  // rewrites the row and resets it to PENDING so the outbox re-announces the
+  // corrected outcome. Same pattern as settle-backfill.ts.
+  if (tx.pickSettlementEvent.upsert) {
+    await tx.pickSettlementEvent.upsert({
+      where: { pickId: args.pickId },
+      create: eventData,
+      update: {
+        gameId: args.gameId,
+        result: args.result,
+        settledAt: args.settledAt,
+        status: "PENDING",
+        payload: eventData.payload,
+        claimedAt: null,
+        deliveredAt: null,
+        completedAt: null,
+      },
+    });
+  } else {
+    await tx.pickSettlementEvent.create({ data: eventData });
+  }
   await enqueuePostSettlementWork(
     tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
     [

@@ -924,16 +924,35 @@ async function persistZeroSitVoid(
     // TRANSACTIONAL OUTBOX (same lane as settle-sport.ts and the free runner):
     // the event rides in the settlement transaction; the outbox worker closes
     // VOID events as receipts (non-decisive) and never rewrites this payload.
-    await tx.pickSettlementEvent.create({
-      data: {
-        pickId: row.id,
-        gameId: row.game.id,
-        result: "VOID",
-        settledAt: now,
-        status: "PENDING",
-        payload,
-      },
-    });
+    // pickId is @unique — a re-VOIDed pick still owns its original event row,
+    // so create() would throw P2002 and roll back the lane (same fix as the
+    // free runner / settle-backfill, 2026-11-13).
+    const eventData = {
+      pickId: row.id,
+      gameId: row.game.id,
+      result: "VOID",
+      settledAt: now,
+      status: "PENDING",
+      payload,
+    };
+    if (tx.pickSettlementEvent.upsert) {
+      await tx.pickSettlementEvent.upsert({
+        where: { pickId: row.id },
+        create: eventData,
+        update: {
+          gameId: row.game.id,
+          result: "VOID",
+          settledAt: now,
+          status: "PENDING",
+          payload,
+          claimedAt: null,
+          deliveredAt: null,
+          completedAt: null,
+        },
+      });
+    } else {
+      await tx.pickSettlementEvent.create({ data: eventData });
+    }
     await enqueuePostSettlementWork(
       tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
       [
