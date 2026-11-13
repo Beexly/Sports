@@ -152,8 +152,8 @@ def cmd_scan(args):
                 )
                 added += 1
                 tiers[tier] += 1
-                if added % 25 == 0:
-                    con.commit()
+                con.commit()  # per-file: never hold a write lock across slow Drive hashing
+                if added % 100 == 0:
                     print(f"progress: {added} enqueued", flush=True)
     con.commit()
     log_event(con, None, "SCAN", f"roots={args.roots} added={added} dupes={dupes} tiers={tiers}")
