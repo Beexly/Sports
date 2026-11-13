@@ -1,6 +1,6 @@
 {
- "last_compiled_complete_count": 71,
- "sft_books": 70,
+ "last_compiled_complete_count": 72,
+ "sft_books": 71,
  "rlvr_batches": [
   "batch-001",
   "batch-002",
@@ -8,7 +8,7 @@
   "rlvr_batch-004",
   "rlvr_batch-005"
  ],
- "updated_at": "2026-11-13T22:10:00+00:00",
+ "updated_at": "2026-11-13T22:30:00+00:00",
  "sft_book_ids": [
   "07089dec6f73619e",
   "090cfc0da55b02cd",
@@ -40,6 +40,7 @@
   "409f5dad119c06ed",
   "47da7cd12f78ad9c",
   "49ef6f06a351a3f7",
+  "4c25fa54afee431d",
   "4d067ce7fd44a2d1",
   "4e3d8fd8a23059fc",
   "4f974188ca231968",
@@ -211,13 +212,14 @@
   "6bc7d84da4bde923",
   "6c532aecbad020e8",
   "77d4ee5161695968",
-  "7ec06be65ab3f269"
+  "7ec06be65ab3f269",
+  "4c25fa54afee431d"
  ],
  "next_rlvr_batch": "rlvr_batch-006.jsonl",
  "next_rlvr_trigger_complete_count": 73,
  "stop_reason": "",
- "notes": "compiler-3: batch-005 compiled at COMPLETE=64 (trigger 64). Themes: The Interior Eight Yards (6aeb75fe x 366ba522: interior-max competing hazards + skew/bands/drawdown); The Observable Act (3fa96d69 x 7e3a32c1: effective-rule=written-rule cap verifier capability, concealment, persistence gates, two-sided corridors); The Contagion Chain (1cfd792f x 21544db0: chain amplification + herding lifts + gauge normalization + canonical blindness). Self-test: 3 compliant accepted (dict+str), 24 mutations rejected, 8 malformed rejected, disk re-read retest OK. 12 prior themes untouched. SFT gaps from the 3 newest arrivals pending next pass. INLINE COMPILER (hermes-inline, post-subagent-shutdown): appended Rockne 1925 (32d8b2d0d4f7f22f, 983-word think) and DengYu 2014 (53ff4fe1320a9a44, 909-word combined think) SFT rows. 6d101348291a5c1f (O'Reilly Football Analytics 2nd edition) intentionally has no row: edition rule, keeper 3178b5fdce0fc1a5. COMPLETE=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended ADM 2022 (7ec06be65ab3f269, 902-word think, 19 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=71, SFT=70, next RLVR trigger 73 (batch-006).",
+ "notes": "compiler-3: batch-005 compiled at COMPLETE=64 (trigger 64). Themes: The Interior Eight Yards (6aeb75fe x 366ba522: interior-max competing hazards + skew/bands/drawdown); The Observable Act (3fa96d69 x 7e3a32c1: effective-rule=written-rule cap verifier capability, concealment, persistence gates, two-sided corridors); The Contagion Chain (1cfd792f x 21544db0: chain amplification + herding lifts + gauge normalization + canonical blindness). Self-test: 3 compliant accepted (dict+str), 24 mutations rejected, 8 malformed rejected, disk re-read retest OK. 12 prior themes untouched. SFT gaps from the 3 newest arrivals pending next pass. INLINE COMPILER (hermes-inline, post-subagent-shutdown): appended Rockne 1925 (32d8b2d0d4f7f22f, 983-word think) and DengYu 2014 (53ff4fe1320a9a44, 909-word combined think) SFT rows. 6d101348291a5c1f (O'Reilly Football Analytics 2nd edition) intentionally has no row: edition rule, keeper 3178b5fdce0fc1a5. COMPLETE=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended ADM 2022 (7ec06be65ab3f269, 902-word think, 19 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=71, SFT=70, next RLVR trigger 73 (batch-006). INLINE COMPILER (hermes-inline): appended Garnett 2023 Bayesian Optimization (4c25fa54afee431d, 983-word think, 20 primitives) SFT row; disk re-read verified think tags + word count. 6d101348291a5c1f remains intentionally deduped (O'Reilly edition, keeper 3178b5fdce0fc1a5). COMPLETE=72, SFT=71, next RLVR trigger 73 (batch-006).",
  "salvage_note": "compiler-2 429 after batch-003; supervisor merged its 4 verified part files inline; compiler-3 filled SFT gaps 2026-11-13",
- "db_complete_count_at_update": 71,
+ "db_complete_count_at_update": 72,
  "sft_gap_at_update": []
 }

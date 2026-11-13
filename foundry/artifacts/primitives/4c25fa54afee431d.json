@@ -1,0 +1,433 @@
+{
+  "book_id": "4c25fa54afee431d",
+  "source_status": "COMPLETE",
+  "pages_total": 376,
+  "pages_read": 144,
+  "source_note": "Roman Garnett, Bayesian Optimization, Cambridge University Press 2023, DOI 10.1017/9781108348973. Free-to-view author version (footer on every page: 'This version is free to view and download for personal use only. Not for redistribution, resale, or use in derivative works. (c) Roman Garnett 2023. https://bayesoptbook.com/'). 376 PDF pages. PDF page = printed page + 18 (printed 1 = PDF 19; printed 287 = PDF 305); all citations are PDF pages. Dense-monograph solo core-read of 144 pages across eight blocks: 19-32 (ch1 formalization/Bayesian approach/BO loop), 33-44 (ch2 GP definition/exact+noisy inference), 105-124 (ch5 decision theory/sequential fixed budget/cost-aware termination), 127-138 (ch6 utility functions EI/PI/information gain), 141-174 (ch7 policies EI/KG/PI/entropy search/bandits/UCB/Thompson), 175-198 (ch8 computing policies with GPs: EI/PI/UCB closed forms, noisy EI, KG, Thompson, predictive entropy search), 231-250 (ch10 regret/GP-UCB convergence/lower bounds), 305-312 (ch12 history). Front matter, ch3-4 (covariance/model selection), ch9 (scaling), ch11 (extensions), appendices and exercises beyond the core blocks not read. This source PRINTS its equations; latex fields transcribe printed equations with equation numbers, prose quotes verbatim. Hyphenation preserved as extracted ('un- certainty' p232, 'pro- cedures' p306). vNM utility axioms cited fn5 (ch5), linking to ADM 2022. No sportsbook lines/spreads/totals/implied odds anywhere; 'multi-armed bandit' is the standard historical problem name (slot-machine origin), not betting content. Era-chain position: the 2023 sequential-experiment-design / acquisition terminal node above ADM's decision layer — it prints how to design the next simulation, plus the regret lower bounds and misspecification gaps that veto overconfident engine claims.",
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Founding premise: experiments designed with purpose, aware of ignorance",
+      "verbatim_quote": "experiments should be designed with purpose, both guided by our knowl- edge and aware of our ignorance.",
+      "page": 305,
+      "latex": null,
+      "assumptions": "The Bayesian approach to optimization rests on designing each experiment guided by current knowledge AND aware of current ignorance; policies are 'statistical manifestations of rational inquiry' (ch12.1, PDF p305 / printed 287).",
+      "breakdown_regime": "A design that ignores ignorance (pure exploitation of the current best estimate) or ignores knowledge (pure space-filling exploration) violates the premise; the book's regret analysis (ch10) quantifies the cost of each failure.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p1",
+        "mapping": "This is the doctrine governing the GSE simulation/experiment queue: each 10,000-world PBP batch and each JEV snap query is an experiment that must be designed to reveal maximal information about the game's latent value, guided by the current belief and aware of where that belief is uncertain. A sim plan that only re-confirms the favorite call wastes budget; one that ignores the current model wastes budget differently.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Maximum noisy observation is a spurious goalpost (not a utility)",
+      "verbatim_quote": "the maximum observed value is most likely spurious rather than a meaningful goalpost.",
+      "page": 182,
+      "latex": null,
+      "assumptions": "With very noisy data the maximum observed value max y is most likely spurious; using it as the expected-improvement incumbent (plug-in eq 8.17) inflates the threshold and drives excessive exploration. The simple-reward plug-in max mu_D(x) (eq 8.18) is less biased (PDF p182-183 / printed 164-165).",
+      "breakdown_regime": "Picheny et al. discard max y as 'naive' and empirically inferior; Nguyen et al. call it 'standard' and empirically preferable — the book prints the disagreement. The estimator can be biased by a single spurious observation 'for a considerable time'. Huang et al. recommend a low quantile Phi(-1)~0.16 for risk aversion.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p2",
+        "mapping": "Direct veto on trusting the single best noisy observation in GSE: the highest observed EPA/yards-success play in a small sample is most likely a spurious goalpost, not the true best call. The engine must rank calls by a posterior-mean (simple-reward) estimate, not by the max noisy realization, exactly as the book rejects max y as the EI incumbent. This is the printed formal anchor for the never-trust-noisy-max discipline already inherited from ADM.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Noiseless-EI approximations must be avoided under significant noise",
+      "verbatim_quote": "all approximation schemes based on reducing to exact expected improvement should be avoided with significant noise levels",
+      "page": 184,
+      "latex": null,
+      "assumptions": "Reinterpolation and plug-in schemes compute expectations over the unobservable latent phi rather than the observed y, ignoring observation noise entirely; this disconnects the policy from the true observation process. The author's opinion: avoid all such reductions with significant noise; they are reasonable only when y~phi and s~sigma (PDF p184-185 / printed 166-167).",
+      "breakdown_regime": "The heuristic y~phi breaks down in high-noise regimes; with heteroskedastic noise the plug-in estimators are oblivious to where observations reveal more information and elect to explore the noisy region. Huang's augmented EI multiplies by 1 - sigma_n/s (only sensible when signal-to-noise >= 1).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p3",
+        "mapping": "The GSE simulator's reward is noisy (a sampled world is one realization, not the latent game value). Any acquisition that treats a sampled world's outcome as the exact objective — reinterpolating a noiseless surrogate onto sampled means — inherits this defect. The engine must reason about the joint predictive distribution of the next observation, not the marginals, and must penalize low signal-to-noise locations.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "UCB closed form and the fixed-beta vs fixed-target non-equivalence",
+      "verbatim_quote": "sequentially maximizing an upper confidence bound with a fixed exploration parameter is not equivalent to maximizing probability of improvement with a fixed improvement target.",
+      "page": 189,
+      "latex": "\\alpha_{\\mathrm{ucb}}(x;D,\\pi)=\\mu+\\beta\\sigma,\\ \\beta=\\Phi^{-1}(\\pi)\\ \\text{(eq 8.25)};\\quad \\tau(\\beta)=\\max_{x'}(\\mu+\\beta\\sigma)\\ \\text{(eq 8.26 correspondence)}",
+      "symbol_and_unit_ledger": "mu = posterior mean of phi=f(x) (objective units); sigma = posterior standard deviation (objective units); beta = exploration parameter = Phi^{-1}(pi) (dimensionless quantile of standard normal); pi in (0,1) = confidence level; tau(beta) = equivalent improvement target (objective units), data- and model-dependent. Printed eqs 8.25-8.26, PDF p188-189 (printed 170-171). Footnote 21 warns beta is sometimes written sqrt(beta) as a weight on variance sigma^2.",
+      "assumptions": "Gaussian process predictive distribution; a point maximizing PI for target tau also maximizes some UCB and vice versa (Jones 2001; Wang et al. 2016 lemma 3.1). The correspondence target tau(beta) changes iteration to iteration.",
+      "breakdown_regime": "Sequentially maximizing UCB with a FIXED exploration parameter is NOT equivalent to maximizing PI with a FIXED improvement target, because tau(beta) is data-dependent. Treating the two as interchangeable with frozen hyperparameters is the failure mode.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p4",
+        "mapping": "mu+beta*sigma is the executable optimism-under-uncertainty score for ranking candidate calls/scenarios in GSE: posterior mean value plus an exploration bonus proportional to posterior uncertainty. The non-equivalence warns that a fixed 'confidence bonus' schedule and a fixed 'improvement threshold' schedule are different policies; the engine must not assume tuning one tunes the other.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Knowledge-gradient KGCP: do not spend evaluations confirming belief",
+      "verbatim_quote": "we should not necessarily waste precious evaluations confirming what we already believe.",
+      "page": 194,
+      "latex": "\\alpha_{\\mathrm{kg}}(x;D)\\approx \\alpha_{\\mathrm{ei}}(x;D)-\\max(\\mu-\\mu^{*},0)\\ \\text{(KGCP, \\S 8.6)};\\quad \\mu^{*}=\\max \\mu_D(x)",
+      "symbol_and_unit_ledger": "alpha_kg = knowledge gradient = expected one-step gain in global reward (objective units); alpha_ei = expected improvement (objective units); mu = posterior mean at proposed x (objective units); mu* = max posterior mean over observed locations (objective units). KGCP approximation of Scott et al. 2011, printed PDF p193-194 (printed 175-176).",
+      "assumptions": "The global-reward utility already reflects large expected values at observed points, so confirming them adds little; KGCP punishes points for already having large expected value. In the running example KGCP globally reduces to EI because the posterior mean never exceeds the highest observed point.",
+      "breakdown_regime": "KGCP 'cannot necessarily be trusted to be unconditionally faithful' to the true knowledge gradient; it is a lightweight drop-in that may offer a slight boost when global reward is preferred to simple reward. Exact KG is intractable in continuous domains (nonconvex global optimization inside the expectation).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p5",
+        "mapping": "This is the formal budget-allocation veto for the sim queue: do not spend precious simulation evaluations confirming what the engine already believes about the favorite call. The knowledge gradient values an experiment by how much it could MOVE the global best estimate, not by how good the current best already is. GSE should direct 10,000-world budget at uncertain, decision-relevant scenarios rather than re-sampling the chalk.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Regret is an unavoidable consequence of decision under uncertainty",
+      "verbatim_quote": "Regret is an unavoidable consequence of decision making under un- certainty.",
+      "page": 232,
+      "latex": "r_\\tau=f^{*}-\\max\\boldsymbol{\\phi}_\\tau\\ \\text{(simple, eq 10.1)};\\quad \\rho=f^{*}-\\phi\\ \\text{(instantaneous, eq 10.2)};\\quad R_\\tau=\\tau f^{*}-\\sum_i\\phi_i\\ \\text{(cumulative, eq 10.3)}",
+      "symbol_and_unit_ledger": "f* = global maximum of objective (objective units); phi_tau = objective values at observed locations (objective units); r_tau = simple regret (objective units, nonnegative, vanishes only if data contain a global optimum); rho = instantaneous regret (objective units); R_tau = cumulative regret (objective units); tau = dataset size / number of steps (count). Printed eqs 10.1-10.3, PDF p232 (printed 214).",
+      "assumptions": "Without foreknowledge of the global optimum some search is necessary; even optimal actions under uncertainty may seem disappointing in retrospect. Regret measures depend on latent phi, not observed y, tacitly assuming y is informative about phi in the large-sample limit.",
+      "breakdown_regime": "Neither regret notion is itself a valid utility function (f* and phi would be random variables in that context, fn6). Simple regret is nonincreasing with data; cumulative regret is nondecreasing; they are not directly comparable without normalization.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p6",
+        "mapping": "Exploration cost in GSE is irreducible: without foreknowledge of the optimal game plan, some simulated worlds must be spent searching, and even the best-designed query can look disappointing in retrospect. The engine must budget regret honestly rather than pretend a finite sim sweep identifies the true optimum. Simple regret (best world found) vs cumulative regret (total value lost across all worlds) are different objectives and must not be conflated.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "Simple vs cumulative regret: no-regret is strictly stronger",
+      "verbatim_quote": "simple regret is more tolerant of exploration: we only need to visit the global optimum once to converge in terms of simple regret, whereas effectively all observations must eventually become effectively optimal to achieve the no-regret property.",
+      "page": 233,
+      "latex": "r_\\tau\\le R_\\tau/\\tau\\ \\text{(eq 10.4)};\\quad \\lim_{\\tau\\to\\infty}R_\\tau/\\tau=0\\ \\text{(no-regret, eq 10.5)}",
+      "symbol_and_unit_ledger": "r_tau = simple regret (objective units); R_tau = cumulative regret (objective units); tau = number of observations (count); R_tau/tau = average regret (objective units). The mean of a vector lower-bounds its maximum, giving eq 10.4. Printed PDF p233 (printed 215).",
+      "assumptions": "No-regret (sublinear cumulative regret) implies convergence in simple regret by the squeeze theorem 0 <= r_tau <= R_tau/tau -> 0. The reverse fails: a no-regret policy modified to pick a fixed suboptimal point every other observation still has vanishing simple regret (half as fast) but linear cumulative regret.",
+      "breakdown_regime": "Simple regret only needs to visit the global optimum ONCE; no-regret requires effectively ALL observations to become effectively optimal. A engine that reports 'we found the best play' (simple) has NOT thereby shown its average sim spend is efficient (no-regret).",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p7",
+        "mapping": "This separates two GSE success claims: 'the simulator found a high-value world' (simple regret -> 0) versus 'the simulator's average query is asymptotically efficient' (no-regret). The first is cheap — one lucky world suffices; the second is a much stronger certificate the engine must not claim from a single good batch. The counterexample (fixed suboptimal point every other step) is the formal warning against intermittent wasteful queries.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "Density theorem: convergence on all continuous functions iff eventual density",
+      "verbatim_quote": "There is simply too much freedom for functions to “hide” their optima in inconvenient places.",
+      "page": 234,
+      "latex": null,
+      "assumptions": "On a compact metric space, a policy converges in simple regret on ALL continuous functions iff its eventually-observed points are always dense (theorem, PDF p234 / printed 216). If density fails, an adversarial 'needle in a haystack' — a continuous bump vanishing outside an unobserved ball — foils the policy.",
+      "breakdown_regime": "The space of all continuous functions is too large for strong guarantees: functions can hide optima in arbitrarily inconvenient places. This motivates restricting to GP sample paths or an RKHS ball (ch10.2) where complexity is controlled.",
+      "domain": "math",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p8",
+        "mapping": "A GSE simulator that never queries some region of scenario space (e.g. a rare defensive shell or weather regime) can be foiled by a 'needle' — a high-value outcome concentrated entirely in that unqueried region. Coverage of the scenario domain is not optional for any worst-case guarantee; the engine must maintain eventual density over decision-relevant states or accept that an unmodeled regime can dominate.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p9",
+      "name": "Worst-case simple regret is unbounded at every finite stage",
+      "verbatim_quote": "the worst-case regret will be unbounded at every stage of the algorithm.",
+      "page": 235,
+      "latex": null,
+      "assumptions": "Unless the domain is finite, running any policy for any finite number of iterations leaves unobserved 'holes' that can be filled with arbitrarily tall needles; thus worst-case regret is unbounded at every stage (PDF p235 / printed 217).",
+      "breakdown_regime": "No finite-budget worst-case guarantee exists over all continuous functions. Rapid convergence requires restricting the function space (GP sample paths / RKHS ball); convergence rates on the unit interval are then stated as shrinkage of the subinterval containing the optimum, not simple regret.",
+      "domain": "math",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p9",
+        "mapping": "This is the honest-limit veto on any GSE claim of a finite-sample worst-case guarantee: with a continuous, unbounded scenario space and finite sim budget, an adversary can always hide a dominating outcome in an unqueried hole. The engine may claim average-case (Bayesian) performance under a declared prior, never an unconditional worst-case bound. PASS on a bad board is the rational response to this unboundedness.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p10",
+      "name": "GP sample paths almost surely do not lie in their RKHS",
+      "verbatim_quote": "sample paths from a Gaussian process almost surely do not lie in the corresponding rkhs",
+      "page": 237,
+      "latex": "\\Pr(f\\in\\mathcal{H}_K)=0\\ \\text{(unless }\\mathcal{H}_K\\text{ finite-dimensional)};\\quad \\mu_D\\in\\mathcal{H}_K\\ \\text{always}",
+      "symbol_and_unit_ledger": "f = GP sample path (objective-valued function); H_K = reproducing kernel Hilbert space of covariance K; mu_D = posterior mean function (always in H_K by construction eq 10.8). Printed PDF p237 (printed 219), citing Lukic & Beder 2001; Kanagawa et al. 2018 theorem 4.12. Matérn finite-nu sample paths are one-time less differentiable than H_K members.",
+      "assumptions": "The posterior mean is a (limit of) linear combination(s) of covariance sections and always lies in H_K; a random sample path almost surely does not. Averaging over sample paths 'smooths out' their erratic behavior in the posterior mean.",
+      "breakdown_regime": "This is the model-misspecification gap: a frequentist worst-case analysis assumes f in an RKHS ball H_K[B], but the Bayesian algorithm's own prior generates paths OUTSIDE that ball. Guarantees proved on H_K[B] do not automatically cover the prior's typical draws.",
+      "domain": "math",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p10",
+        "mapping": "The GSE posterior-mean game-value surface is smooth (in the RKHS), but any single realized game (a sample path) is rougher than that surface — almost surely outside the smooth class the mean lives in. The engine must not assume the realized world is as smooth as its posterior mean; the misspecification gap between mean and sample path is the formal reason a confident smooth forecast can be surprised by a jagged actual game.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p11",
+      "name": "RKHS norm of posterior mean equals Mahalanobis data-fit score",
+      "verbatim_quote": "the rkhs norm of the posterior mean is the Mahalanobis norm of the observed data y under their Gaussian prior distribution",
+      "page": 238,
+      "latex": "\\lVert\\mu_D\\rVert_{\\mathcal{H}_K}^2=\\mathbf{y}^\\top\\boldsymbol{\\Sigma}^{-1}\\mathbf{y}\\ \\text{(eq 10.10)};\\quad \\boldsymbol{\\Sigma}=K(\\mathbf{x},\\mathbf{x})",
+      "symbol_and_unit_ledger": "mu_D = posterior mean (objective units); ||.||_{H_K} = RKHS norm (complexity measure, objective units); y = observed values vector (objective units); Sigma = prior covariance at observed locations (objective units squared); y^T Sigma^{-1} y = Mahalanobis norm (dimensionless). This same score is the data-fit term of the log marginal likelihood (eq 4.8). Printed PDF p238 (printed 220).",
+      "assumptions": "For exact observations D=(x,y) with centered GP, mu_D(x)=K(x,x)Sigma^{-1}y. The RKHS norm measures function complexity 'explainability' by the covariance; needles in haystacks have extraordinarily large RKHS norm if they lie in H_K at all.",
+      "breakdown_regime": "The identity is for the posterior mean under exact observation; with noise the marginal-likelihood fit term acquires the noise covariance. More unusual data (low marginal likelihood) yield higher-complexity posterior means — the GP and RKHS judge the same scenario two ways.",
+      "domain": "math",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p11",
+        "mapping": "This unifies GSE's model-fit and model-complexity audits into one number: the Mahalanobis norm of the observed data under the prior IS the RKHS complexity of the fitted mean AND the marginal-likelihood fit term. A game-value surface that fits surprising data well is necessarily complex; the engine can use y^T Sigma^{-1} y as a single diagnostic for overfitting / implausible smoothness, exactly as the book links the three interpretations.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p12",
+      "name": "Rougher objectives require more observations (smoothness-sample complexity)",
+      "verbatim_quote": "rougher objectives require more observations to learn with a similar level of confidence, and to optimize with a similar level of success.",
+      "page": 239,
+      "latex": null,
+      "assumptions": "Rougher functions give the optimum more places to hide and require more information to describe; each observation reveals limited information, so rougher objectives need more observations to learn and optimize with similar confidence (PDF p239 / printed 221). Made precise via information capacity gamma_tau.",
+      "breakdown_regime": "The Matérn smoothness parameter nu controls sample-path differentiability (ceil(nu)-1 continuous derivatives); as nu->infty (squared exponential) information capacity drops to logarithmic growth. The intuition is formalized by gamma_tau bounds (eqs 10.15-10.16), which are NP-hard to compute exactly.",
+      "domain": "math",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p12",
+        "mapping": "The smoothness of the latent game-value surface determines GSE's required sim budget: a rough, high-variance matchup (many local optima, sharp regime changes) needs far more worlds to optimize confidently than a smooth, predictable one. The engine should scale its 10,000-world budget to the estimated roughness (Matérn nu) of the value surface rather than spend uniformly.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p13",
+      "name": "Russo-Van Roy: regret can only be high when learning compensates",
+      "verbatim_quote": "regret can only be high when we also learn a great deal about the objective function to compensate",
+      "page": 244,
+      "latex": "\\rho_i\\le 2\\beta_i\\sigma_i\\ \\text{(eq 10.23)};\\quad \\sum_{i=1}^{\\tau}\\sigma_i^2=O(\\gamma_\\tau)\\ \\text{(eq 10.18)}",
+      "symbol_and_unit_ledger": "rho_i = instantaneous regret at step i (objective units); beta_i = exploration parameter (dimensionless); sigma_i = predictive standard deviation at selection (objective units); gamma_tau = information capacity (nats/bits, max mutual information over tau observations). Printed eqs 10.23, 10.18, PDF p242-244 (printed 224-226). Russo & Van Roy 2014 interpretation.",
+      "assumptions": "If confidence intervals phi in [mu - beta_i sigma, mu + beta_i sigma] are universally valid, the chosen point's interval contains f*, bounding instantaneous regret by interval width. The sum of predictive variances is bounded by information capacity.",
+      "breakdown_regime": "The bound requires the confidence intervals to be universally valid with high probability (achieved by the growing beta schedule eq 10.21); if intervals fail, the regret-information coupling breaks. High regret is only justified when it buys proportional information.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p13",
+        "mapping": "This is the GSE exploration-accountability rule: a costly simulated world (high regret) is only justified if it buys a proportional reduction in uncertainty about the game value. The engine must couple its regret budget to information gain — an expensive query that teaches nothing is a veto, not a sacrifice. rho_i <= 2 beta_i sigma_i is the per-query audit inequality.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p14",
+      "name": "GP-UCB no-regret convergence certificate (Srinivas 2010)",
+      "verbatim_quote": "gp-ucb achieves no regret with high probability for the Matérn family.",
+      "page": 246,
+      "latex": "\\beta_i^2=2\\log\\!\\left(\\frac{i^2\\pi^2|\\mathcal{X}|}{6\\delta}\\right)\\ \\text{(eq 10.21)};\\quad R_\\tau=O^{*}\\!\\left(\\sqrt{\\tau\\,\\gamma_\\tau\\log|\\mathcal{X}|}\\right)\\ \\text{(eq 10.25)};\\quad R_\\tau=O^{*}\\!\\left(\\sqrt{\\tau}\\,(\\log\\tau)^d\\right)\\ \\text{(SE, eq 10.29)}",
+      "symbol_and_unit_ledger": "beta_i = time-dependent exploration parameter (dimensionless); i = iteration index (count); |X| = finite domain size (count); delta in (0,1) = failure probability; R_tau = cumulative regret (objective units); gamma_tau = information capacity (nats); d = input dimension (count); O* suppresses dimension-independent log factors. Printed eqs 10.21, 10.25, 10.29, PDF p243-246 (printed 225-228). Srinivas et al. 2010 (ICML). Continuous case R_tau=O*(sqrt(d tau gamma_tau)) eq 10.27.",
+      "assumptions": "Objective is a centered GP sample path; iid homoskedastic Gaussian noise scale sigma_n>0; K(x,x)<=1; finite domain first, then continuous via discretization + Lipschitz tail bound (eq 10.26, holds for Matérn nu>1). Confidence intervals universally valid with prob >= 1-delta.",
+      "breakdown_regime": "The bound is high-probability Bayesian (average over the prior), NOT a frequentist worst-case guarantee; it requires the GP prior to be correctly specified. For Matérn the growth is sublinear for all nu (no-regret); practical computable Lipschitz constants need nu>2 (Ghosal & Roy 2006).",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p14",
+        "mapping": "This is the printed convergence certificate GSE can cite for an optimism-based sim scheduler: with the beta_i schedule growing like sqrt(2 log(i^2 pi^2 |X| / 6 delta)), cumulative regret grows sublinearly (no-regret) for the whole Matérn family. The engine inherits a provable asymptotic efficiency guarantee for its exploration schedule — but only under a declared, correctly specified prior, never as an unconditional worst-case bound.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p15",
+      "name": "Scarlett lower bound: expected cumulative regret Omega(sqrt(tau)) via Fano",
+      "verbatim_quote": "an optimization algorithm is prone to “prefer the wrong function,” and in doing so, incur high regret.",
+      "page": 249,
+      "latex": "\\mathbb{E}[R_\\tau]=\\Omega(\\sqrt{\\tau})\\ \\text{(eq 10.35)};\\quad f_{\\pm}:x\\mapsto f(x\\pm\\Delta)\\ \\text{(translation construction, eq 10.36)}",
+      "symbol_and_unit_ledger": "E[R_tau] = expected cumulative regret (objective units); tau = number of observations (count); Delta>0 = translation offset (input units); f = reference GP sample path on [-Delta, 1+Delta]. The lower bound holds for any algorithm on the unit interval with twice-differentiable stationary GP sample paths. Printed eqs 10.35-10.36, PDF p249 (printed 231). Scarlett 2018 (ICML); matches the convex-optimization lower bound (Shamir 2013). Proof uses Fano's inequality on adaptive hypothesis testing between two translations.",
+      "assumptions": "Stationary GP with twice-differentiable sample paths on [0,1]; the objective is one of two equal-probability translations of a reference path; a 'genie' gives access to the reference path (extra information cannot impede optimization).",
+      "breakdown_regime": "This is an algorithm-AGNOSTIC lower bound: no policy can beat Omega(sqrt(tau)) expected cumulative regret in this setting, so GP-UCB/GP-TS at O*(sqrt(tau) (log tau)^d) are near-tight (within log factors). For rougher Brownian paths the bound weakens to Omega(sqrt(tau/log tau)) (eq 10.37).",
+      "domain": "math",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p15",
+        "mapping": "This is the fundamental-limit veto on GSE sim efficiency: even with a perfect model class, expected cumulative regret cannot grow slower than sqrt(tau) — there is an irreducible information-theoretic cost to identifying the optimum (Fano: the data can prefer the wrong translation). The engine must not promise faster-than-sqrt(tau) learning; it is already near-optimal if it matches this rate, and any claim of vastly superior sample efficiency is suspect.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p16",
+      "name": "Chernoff: non-Bayesian sequential procedures are dangerous",
+      "verbatim_quote": "Although I regard myself as non-Bayesian, I feel in sequential prob- lems it is rather dangerous to play around with non-Bayesian pro- cedures.",
+      "page": 306,
+      "latex": null,
+      "assumptions": "Chernoff, a student of Wald and a self-described non-Bayesian, remarked in an interview that in sequential problems it is 'rather dangerous to play around with non-Bayesian procedures' (PDF p306 / printed 288, citing Bather 1996). Sequential design forces belief updates that frequentist fixed-sample tools do not license.",
+      "breakdown_regime": "The warning is specific to SEQUENTIAL problems: fixed-sample non-Bayesian design (Hotelling 1941, Fisher 1935) is valid in its nonadaptive regime; the danger arises when experiments are designed adaptively from accumulating data.",
+      "domain": "history",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p16",
+        "mapping": "GSE's snap-by-snap and world-by-world simulation is inherently sequential — each query is designed from the accumulating belief. Chernoff's warning is the historical anchor for why the engine must update a Bayesian belief state between queries rather than apply fixed-sample frequentist thresholds to an adaptive sim loop. The JEV belief filter is the sequential-procedure discipline.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p17",
+      "name": "Kushner 1962: all major ideas of modern BO already present",
+      "verbatim_quote": "All of the major ideas in modern Bayesian optimization were already in place in this initial work",
+      "page": 307,
+      "latex": null,
+      "assumptions": "Kushner's 1962/1964 pair of papers on a noisy one-dimensional objective already contained a GP model of the objective and Bayesian decision theory to derive policies; after dismissing the optimal global-reward policy as 'notoriously difficult' / 'virtually impossible to compute', he proposed UCB and probability of improvement as the first BO policies (PDF p307 / printed 289).",
+      "breakdown_regime": "Kushner favored PI and gave practical advice on managing the improvement threshold interactively with a human expert in the loop; he proved no performance guarantee for UCB and abandoned it. The optimal policy he dismissed remains computationally infeasible today.",
+      "domain": "history",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p17",
+        "mapping": "Genealogical anchor: the entire GSE acquisition stack (GP surrogate + decision-theoretic acquisition + human-in-the-loop threshold management) was already assembled in 1962. The engine's 'optimal but intractable, so approximate with a heuristic acquisition' structure is Kushner's original move, not a modern compromise. The human-in-the-loop threshold advice anticipates the book's ch12.6 'bring them back into the loop'.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p18",
+      "name": "Attribution correction: Saltenis 1971 introduced EI, not Mockus",
+      "verbatim_quote": "Expected improvement had been introduced by šaltenis in 1971, one year before mockus",
+      "page": 308,
+      "latex": null,
+      "assumptions": "Expected improvement was introduced by Saltenis in 1971, one year before Mockus's first BO contribution; Mockus cited Saltenis and his acquisition is defined w.r.t. the GLOBAL reward (knowledge gradient), not the simple reward (EI). The frequent citation of Mockus as EI's origin is inaccurate (PDF p308 / printed 290).",
+      "breakdown_regime": "The subtlety: for Wiener and Ornstein-Uhlenbeck (Gauss-Markov) models the posterior mean is always maximized at an observed location, so simple and global reward coincide and KG=EI; this is why early literature conflated them. The attribution error persists because of this special-case equality.",
+      "domain": "history",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p18",
+        "mapping": "Provenance discipline for the foundry: the corpus must attribute EI to Saltenis 1971 and KG to Mockus 1972, and must not conflate them except in the Gauss-Markov special case where they provably coincide. This mirrors the foundry's own keeper/attribution rules — a result's true origin and the special case under which two operators agree must both be recorded, never collapsed.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p19",
+      "name": "Thompson: never eliminate a treatment even against overwhelming evidence",
+      "verbatim_quote": "one should never eliminate either treatment at any stage of investigation, even in the face of overwhelming evidence.",
+      "page": 310,
+      "latex": null,
+      "assumptions": "Thompson 1933 argued one should never eliminate either treatment at any stage of investigation, even in the face of overwhelming evidence; he proposed a perpetual clinical trial (two-armed bandit) selecting each treatment by its posterior probability of superiority (PDF p310 / printed 292).",
+      "breakdown_regime": "The policy maintains a diminishing but NONZERO probability of selecting the apparently worse arm, forcing continual exploration until the better becomes obvious; in the long term the correct treatment is assigned with probability approaching certainty. Eliminating an arm permanently (greedy) violates this and risks locking onto a spurious early leader.",
+      "domain": "history",
+      "timescales": [
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p19",
+        "mapping": "This is the never-permanently-bench-a-play doctrine for GSE: even a call that looks overwhelmingly bad on early evidence must retain a diminishing but nonzero selection probability, because a spurious early leader can lock the engine into a suboptimal policy. Thompson's perpetual-trial principle is the formal anchor for maintaining exploration mass on every viable call rather than greedy elimination.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p20",
+      "name": "Thompson sampling as a hallucinated objective function",
+      "verbatim_quote": "a hallucinated objective function that is plausible under our belief.",
+      "page": 167,
+      "latex": "x\\sim p(x^{*}\\mid D)\\ \\text{(eq 7.19)};\\quad \\alpha_{\\mathrm{ts}}(x;D)\\sim p(f\\mid D),\\ x=\\arg\\max \\alpha_{\\mathrm{ts}}\\ \\text{(eq 7.20)}",
+      "symbol_and_unit_ledger": "x* = location of global optimum (input units); f = objective function (objective-valued); D = data; p(x*|D) = posterior distribution of the optimum location; alpha_ts = a sampled ('hallucinated') objective function drawn from the GP posterior p(f|D). Maximizing a posterior draw yields a sample from p(x*,f*|D). Printed eqs 7.19-7.20, PDF p166-167 (printed 148-149); computation ch8.7 PDF p194-197.",
+      "assumptions": "A Bayesian decision-theoretic policy chooses the optimal action in expectation averaging over the posterior; Thompson sampling instead optimizes a single plausible draw. Except in special cases (e.g. Wiener process, arcsine distribution) p(x*|D) cannot be computed analytically, so one maximizes a posterior function draw.",
+      "breakdown_regime": "Thompson sampling can converge slowly: the book's running example has median 38 iterations and only 12/100 seeds succeed in the first 20 (PDF p168 / printed 150). On-demand sampling (Algorithm 8.1) builds a fictitious dataset to guarantee joint correctness via the chain rule; sparse-spectrum approximation (eq 8.33) accelerates stationary kernels.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p20",
+        "mapping": "This is the exact formal description of GSE's 10,000-world PBP engine: each simulated world is a 'hallucinated objective function' — a single plausible draw from the posterior over games — and the engine optimizes within that draw. Sampling a world and playing it out IS Thompson sampling over the game-value posterior. The slow-convergence caveat (median 38, 12/100 seeds) warns that a handful of worlds is not enough; the engine needs the full ensemble to approximate p(x*|D).",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Bayesian Optimization is the sequential-experiment-design terminal node of the foundry corpus, and it completes the decision-math spine that ADM 2022 opened. Where ADM prints how to choose the best action GIVEN a model, Garnett prints how to design the NEXT observation that improves the model — the acquisition layer that sits above the simulator and decides which of the 10,000 worlds to actually run. Read retrocausally, the book's own chapter 12 history is the genealogy: Gergonne 1815 and Peirce 1876 on the economy of research, Smith 1918 on minimizing predictive uncertainty in polynomial design, Fisher 1935 at Rothamsted, Hotelling 1941 on locating a maximum nonadaptively (the first rigorous batch optimization), Wald 1945 sequential analysis (classified during the war), Friedman and Savage 1947 on sequential over nonadaptive design, Box and Wilson 1951 steepest ascent versus the ridge-prone one-factor-at-a-time heuristic, Chernoff 1959 adaptive sequential testing, Raiffa-Schlaifer 1961 and Lindley 1972 Bayesian decision theory, then Kushner 1962 who assembled every major idea of modern BO at once — GP surrogate plus decision-theoretic acquisition — and dismissed the optimal policy as virtually impossible to compute, proposing UCB and probability of improvement instead. Saltenis 1971 introduced expected improvement (not Mockus, as is frequently and wrongly cited); Mockus 1972 introduced the knowledge gradient against the global reward; Jones, Schonlau and Sacks 1998 rediscovered EI as EGO for computer experiments; Srinivas 2010 proved GP-UCB no-regret; Snoek 2012 made BO the hyperparameter-tuning workhorse, after which over half the book's citations appear. Now run that chain backward into the extracted era. Rockne 1925 (32d8b2d0d4f7f22f) scouts a 'fairly easy game' to build his play table (p188) — that is a nonadaptive fixed design in Hotelling's sense, and his thirty-game distribution (p172) is the data from which he best-responds. Reed 1913 (52b5d36325e11cd7) values a play for the information it reveals about the defense, which is precisely Lindley's expected information gain and the knowledge gradient: an experiment chosen for what it teaches, not only for what it scores. The 1894-1925 prose was doing sequential experimental design a half-century before Wald formalized it; Garnett 2023 is the printed mathematics that names what they computed.\n\nThe recursive theory of mind here is not between two coaches but between the experimenter and the unknown function, and it is printed as a belief over what the next observation will reveal. The acquisition function IS a theory of mind about the future data: expected improvement asks 'how much could this observation raise my best estimate', the knowledge gradient asks 'how much could it move the global best', entropy search asks 'how much would it shrink my uncertainty about where the optimum is', and Thompson sampling optimizes a single hallucinated objective function drawn from the posterior — a plausible world imagined under the current belief. That last is the exact formal description of the GSE 10,000-world PBP engine: each world is a posterior draw, and playing it out is Thompson sampling over the game-value posterior. The book's slow-convergence caveat (median 38 iterations, only 12 of 100 seeds succeeding in the first 20) is the printed warning that a handful of imagined worlds is not the posterior; the engine needs the full ensemble. The UCB policy embodies optimism in the face of uncertainty — treat each point as good as its credible upper bound — and the PI-versus-UCB correspondence (a point maximizing PI for target tau also maximizes some UCB, but the target tau(beta) is data-dependent) is the formal reason a frozen confidence bonus and a frozen improvement threshold are different policies, not interchangeable knobs.\n\nCross-layer veto adjudication is where Garnett earns its place beside ADM and the era chain, because it prints the exact limits that veto overconfident engine claims. The maximum noisy observation is a spurious goalpost (p182): the best single realized play in a small sample is most likely noise, so the engine must rank by posterior mean, never by max realization — the same never-trust-noisy-max discipline ADM prints, here derived from the EI incumbent. All noiseless-EI approximations must be avoided under significant noise (p184) because they reason about the latent value rather than the observed one; a sampled world is an observation, not the objective. The density theorem and the needle-in-a-haystack construction (p234-235) veto any finite-budget worst-case guarantee: an unqueried scenario region can hide a dominating outcome, so coverage is mandatory and PASS on a bad board is the rational response to unbounded worst-case regret. The RKHS gap (p237) — sample paths almost surely lie outside the smooth class the posterior mean inhabits — vetoes the assumption that a realized game is as smooth as its forecast; the Mahalanobis-equals-RKHS-norm identity (p238) gives the single overfitting diagnostic. The Russo-Van Roy coupling (p244) vetoes expensive queries that teach nothing: regret is only justified when it buys proportional information. The Srinivas GP-UCB certificate (p246) grants a provable no-regret guarantee but ONLY under a declared, correctly specified prior, and the Scarlett Omega(sqrt(tau)) lower bound via Fano (p249) vetoes any claim of faster-than-sqrt learning. Thompson's never-eliminate principle (p310) vetoes greedy permanent benching of a call. Every one of these is a cross-layer constraint overriding a single-layer maximand, and together they make Garnett the acquisition-and-limits layer the foundry was missing. The book even prints its own unfinished frontier in chapter 12.6: effective GP modeling in high dimension, nonmyopic policies beyond one-step lookahead, and bringing the human back into the loop for scientific discovery where the user understands the mechanism. Those are exactly the open problems the GSE engine faces — a high-dimensional scenario space, a myopic per-snap acquisition, and a founder whose football intuition should re-enter the loop rather than be replaced by a black box. Garnett thus closes the corpus's decision-math arc not with a finished algorithm but with a printed map of the remaining terrain, which is the honest posture the foundry inherits: executable kernels where they exist, declared limits where they do not, and PASS wherever the gate cannot be cleared.",
+      "retrocausal_genealogy": "Garnett's ch12 prints the spine: Gergonne 1815 / Peirce 1876 economy of research, Smith 1918 predictive-uncertainty design, Fisher 1935 Rothamsted, Hotelling 1941 nonadaptive maximum-location (first batch optimization), Wald 1945 classified sequential analysis, Friedman-Savage 1947 sequential design, Box-Wilson 1951 steepest ascent vs ridge-prone one-factor-at-a-time, Chernoff 1959 adaptive testing, Raiffa-Schlaifer 1961 / Lindley 1972 Bayesian decision theory, Kushner 1962 (all major BO ideas at once; optimal policy dismissed as intractable; UCB+PI proposed), Saltenis 1971 (first EI, NOT Mockus), Mockus 1972 (knowledge gradient vs global reward), Jones-Schonlau-Sacks 1998 EGO, Srinivas 2010 GP-UCB no-regret, Snoek 2012 watershed (over half the citations post-2012). Backward into the era: Rockne 1925's 'fairly easy game' scouting (p188) is a nonadaptive Hotelling design feeding his thirty-game best-response table (p172); Reed 1913's play-revelation option value is Lindley information gain / the knowledge gradient. The prose computed sequential experimental design before Wald named it.",
+      "theory_of_mind": "The acquisition function is a theory of mind about future data: EI asks how much an observation could raise the best estimate, KG how much it could move the global best, entropy search how much it shrinks uncertainty about the optimum location, and Thompson sampling optimizes a single hallucinated objective drawn from the posterior (eq 7.20, p167) — a plausible imagined world. That is exactly the GSE 10,000-world engine: each world is a posterior draw, playing it out is Thompson sampling over game value. The slow-convergence caveat (median 38 iterations, 12/100 seeds in first 20, p168) warns a few worlds are not the posterior. UCB is optimism in the face of uncertainty (p163); the PI-UCB correspondence has a data-dependent target tau(beta) (p189), so a frozen confidence bonus and a frozen improvement threshold are different policies.",
+      "cross_layer_veto": "Printed cross-layer vetoes: (1) max noisy observation is a spurious goalpost (p182) — rank by posterior mean, never max realization; (2) avoid all noiseless-EI approximations under significant noise (p184) — a sampled world is an observation, not the objective; (3) density theorem + needle-in-a-haystack (p234-235) — no finite-budget worst-case guarantee, coverage mandatory, PASS rational; (4) GP sample paths a.s. outside the RKHS the mean inhabits (p237) — realized games are rougher than forecasts; (5) RKHS norm = Mahalanobis = marginal-likelihood fit (p238) — single overfitting diagnostic; (6) Russo-Van Roy rho_i <= 2 beta_i sigma_i (p244) — costly queries must buy proportional information; (7) GP-UCB no-regret only under a declared correct prior (p246); (8) Scarlett Omega(sqrt(tau)) Fano lower bound (p249) — no faster-than-sqrt learning; (9) Thompson never-eliminate (p310) — no greedy permanent benching. Each overrides a single-layer maximand."
+    }
+  ],
+  "universal_lens": "Read through a polymath experimental-design lens, Garnett 2023 is the unified formalism for choosing the next experiment under uncertainty: Gaussian-process surrogate modeling (the belief layer), Bayesian decision theory (the utility layer), acquisition functions EI/PI/UCB/KG/entropy/Thompson (the query-selection layer), information theory (the information-capacity layer), and asymptotic regret analysis (the convergence-and-limits layer). It is the rare source that prints both the executable acquisition formulas and the algorithm-agnostic lower bounds that bound what any such policy can achieve.",
+  "gsi_mapping": "The information-capacity / smoothness relation (rougher objectives need more observations, p239) maps to stress-modulated learning: a noisier, rougher physiological signal requires more samples to estimate with equal confidence. The RKHS sample-path gap (p237) models the difference between a smooth population-average physiological trajectory and a jagged individual realization. The Russo-Van Roy regret-information coupling (p244) maps to the cost of a clinical measurement that must buy proportional diagnostic information. No clinical telemetry exists in this methods text; all bindings are labeled derived and LATENT_UNIDENTIFIABLE until measured.",
+  "gse_mapping": "The acquisition layer sits above the JEV simulator and decides which worlds to run: EI (eq 8.9) and KG (eq 7.4) rank candidate queries by expected gain; UCB mu+beta*sigma (eq 8.25) is optimism-under-uncertainty call scoring; Thompson sampling (eq 7.20) IS the 10,000-world PBP engine (each world a hallucinated posterior draw); KGCP (p194) vetoes wasting budget confirming the favorite; the noisy-max veto (p182) forbids ranking by best realized play; the density/needle veto (p234-235) mandates scenario coverage and rationalizes PASS; the RKHS gap (p237) warns realized games are rougher than forecasts; the GP-UCB certificate (p246) grants prior-conditional no-regret; the Scarlett Omega(sqrt(tau)) bound (p249) caps learning-rate claims; Thompson never-eliminate (p310) forbids greedy permanent benching. No odds, no publication from this lane."
+}
