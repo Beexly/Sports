@@ -111,6 +111,7 @@ const EXEMPT_TREES: ReadonlyArray<readonly [string, string]> = [
   // there are third-party vendor / market prices as captured on their date,
   // never GSE tier pricing. Rewriting them would be falsifying the record.
   ["data/snapshots/", "frozen snapshot archive  -  third-party prices captured on their date, preserved as-shipped"],
+  ["data/corpus/", "dated third-party corpus captures (Instagram/X reports); dollar figures are other people's captions or vendor prices, never GSE tier pricing"],
 ];
 
 /**
@@ -157,6 +158,14 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
   [
     "docs/strategy/HANDOFF.md",
     "running handoff log (same precedent as the exempt handoff/ tree): the flagged $19 is a quoted button label from a prior run's note, not a subscription price being advertised",
+  ],
+  [
+    "docs/ops/FUNDING-INVENTORY-2026-11-06.md",
+    "dated grant/fellowship inventory: the flagged amount is a third-party application fee, not a GSE tier price",
+  ],
+  [
+    "apps/web/public/social/week9_friday_promo/WEEK9-FRIDAY-SOCIAL-COPY-PACK.md",
+    "dated Week 9 campaign copy as shipped; its package/pass prices and 47-19-1 ledger were current when the pack was stamped 2026-11-06, and rewriting posted copy would falsify the record. Current door price is set by the packages storefront, not by this pack",
   ],
 ];
 
