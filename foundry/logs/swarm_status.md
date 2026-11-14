@@ -520,3 +520,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 23:10:49 | COMPLETE | 4f750a0c8577fe9a | primitives=18 think_words=872
 - 2026-11-13 23:13:44 | CLAIMED | e2e0f698eee97fdc | worker=hermes-inline targeted hand-delivered file=preview-9781135284923_A25776191.pdf
 - 2026-11-13 23:14:16 | COMPLETE | e2e0f698eee97fdc | primitives=15 think_words=856
+- 2026-11-13 23:28:08 | CLAIMED | 6ebc61ec0f7d055c | worker=hermes-inline targeted hand-delivered file=Player_Progression_Guide_Template__331225796__Full_Book-20190725135347.pdf
+- 2026-11-13 23:28:53 | COMPLETE | 6ebc61ec0f7d055c | primitives=19 think_words=852

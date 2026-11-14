@@ -1,0 +1,455 @@
+{
+ "book_id": "6ebc61ec0f7d055c",
+ "title": "USA Football Development Model: Player Progression Guide",
+ "author": "USA Football (Football Development Model; ESPN-supported FDM Pilot Program)",
+ "year": 2019,
+ "source_pdf": "C:/Users/Garrett/Downloads/Player_Progression_Guide_Template__331225796__Full_Book-20190725135347 (1).pdf",
+ "source_note": "USA Football Development Model (FDM) Player Progression Guide, 282 pages, full read via pymupdf. Domain football (catalog correct, American football). LTAD (long-term athlete development) framework spanning early childhood to high school; ESPN-supported FDM Pilot. Skill-decomposition ontology: Skill -> Progression Steps -> KPIs -> Drills. KPI = foundational action/movement identifying success/failure within a skill aspect (e.g. 'Cleats in the Grass' in passing Posture). Four stages: Stage 1 Discover&Play (no scoreboard/competition, fundamental movement run/jump/kick/throw/catch via play, 'everything is cross-training' Buddy Morris, transferable to any sport); Stage 2 Play&Develop; Stage 3 Develop&Achieve (sport-specific, compete, manage matchups, Rookie Tackle, tackle progression air->bags->controlled->full contact); Stage 4 Achieve&Advance (technical + tactical awareness, adolescence, decoupled physical/mental/emotional maturity, not high-school athletes). Matchup management = zone-of-proximal-development tradeoff (overmatched loses confidence; exploiting stalls improvement; equal competition optimal). Skill progressions: Passing (Pre-pass Grip/Base -> Posture Neutral -> Arm Mechanics Fluidity -> Finish Balance); Receiving (Feet -> Hands -> Vision/Locate -> Finish/Secure); Kicking (Prepare -> Contact Mechanics Eye-foot -> Power Leg-swing -> Finish Follow-through); Prep for Contact (global athleticism, fall/tumble/crawl safely); Blocking (remove helmet as contact tool, hands+hips, brace/pop step). Quantitative benchmarks: 7/10 hands-only catches on route, 7/10 leading partner, 15+ yd distance, Stage 4 20+ yd directional control. Preseason/postseason per-player written+online skill evaluation. Qualitative framework with proficiency benchmarks, no fitted statistical equations -> mostly no_equation_domain; hierarchy/progressions/matchup-tradeoff formalized as labeled structures. No sportsbook lines used as model inputs.",
+ "domain": "football",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "fdm_ltad_framework",
+   "name": "Football Development Model: long-term athlete development, developmentally appropriate",
+   "verbatim_quote": "Based on long-term athlete development, the FDM is a framework helping parents, coaches and program leaders provide what players need to grow in a developmentally appropriate manner.",
+   "page": 4,
+   "latex": "\\text{FDM}=\\text{LTAD framework}:\\ \\text{training}=\\text{function}(\\text{developmental stage},\\ \\text{maturity})",
+   "symbol_and_unit_ledger": {
+    "FDM": "Football Development Model [framework]",
+    "LTAD": "long-term athlete development [approach]"
+   },
+   "assumptions": [
+    "The FDM is based on long-term athlete development (LTAD)",
+    "It spans early childhood into the high school years, providing developmentally appropriate growth"
+   ],
+   "breakdown_regime": "no_equation_domain: a developmental framework, not a fitted law; it breaks down if training is imposed without regard to the athlete's developmental stage and maturity.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE LTAD stage-appropriate development IS this FDM framework: the engine models player development as long-term and stage-appropriate (training matched to developmental stage and maturity), the LTAD discipline that avoids premature specialization and age-inappropriate demands. GSI: long-term stage-appropriate development matched to maturity.",
+    "source_operator": "fdm_ltad_framework",
+    "telemetry": "FDM; LTAD; developmentally appropriate; early childhood to high school; 4 stages"
+   }
+  },
+  {
+   "primitive_id": "four_stages",
+   "name": "Four developmental stages: Discover/Play, Play/Develop, Develop/Achieve, Achieve/Advance",
+   "verbatim_quote": "This guide covers four stages of the Football Development Model.",
+   "page": 5,
+   "latex": "\\text{Stage 1 Discover\\&Play}\\rightarrow\\text{Stage 2 Play\\&Develop}\\rightarrow\\text{Stage 3 Develop\\&Achieve}\\rightarrow\\text{Stage 4 Achieve\\&Advance}",
+   "symbol_and_unit_ledger": {
+    "Stage 1": "Discover & Play (fundamental movement, no competition) [stage]",
+    "Stage 4": "Achieve & Advance (technical+tactical, pre-high-school) [stage]"
+   },
+   "assumptions": [
+    "The four stages progress from free play to competitive technical/tactical football",
+    "Each stage has an overview, developmental checklist, skill progressions, KPIs, drills, and practice plans"
+   ],
+   "breakdown_regime": "no_equation_domain: a staged developmental taxonomy, not an equation; it breaks down if stages are skipped or athletes are pushed ahead of their readiness.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE four-stage development taxonomy IS this FDM staging: the engine organizes player development into the four progressive stages (fundamental movement -> play -> sport-specific competition -> technical/tactical), the staged-readiness taxonomy gating skill introduction. GSI: staged developmental taxonomy gating skill introduction by readiness.",
+    "source_operator": "four_stages",
+    "telemetry": "4 stages; Discover&Play; Play&Develop; Develop&Achieve; Achieve&Advance"
+   }
+  },
+  {
+   "primitive_id": "skill_progression_hierarchy",
+   "name": "Skill decomposition: Skill -> Progression Steps -> KPIs -> Drills",
+   "verbatim_quote": "Within each skill is a progression that provides steps to help players perform or coaches teach that skill.",
+   "page": 6,
+   "latex": "\\text{Skill}\\supset\\{\\text{Progression Steps}\\}\\supset\\{\\text{KPIs}\\}\\supset\\{\\text{Drills}\\}",
+   "symbol_and_unit_ledger": {
+    "Skill": "a football skill (passing/receiving/etc.) [skill]",
+    "Progression Step": "an ordered sub-step of the skill [step]",
+    "KPI": "Key Performance Indicator within a step [indicator]",
+    "Drill": "a training exercise targeting a KPI [exercise]"
+   },
+   "assumptions": [
+    "Each skill contains an ordered progression of steps",
+    "Each progression step contains KPIs, and drills support each KPI; this gives coaches consistent language and keys"
+   ],
+   "breakdown_regime": "no_equation_domain: a hierarchical skill-decomposition ontology, not a fitted equation; it breaks down if skills are taught as monoliths without decomposed steps and measurable KPIs.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE skill-decomposition ontology IS this Skill->Step->KPI->Drill hierarchy: the engine decomposes each football skill into ordered progression steps with measurable KPIs and supporting drills, the process-grade decomposition that gives consistent coaching keys and connects to execution-grade credit. GSI: hierarchical skill decomposition into ordered steps with measurable indicators.",
+    "source_operator": "skill_progression_hierarchy",
+    "telemetry": "Skill -> Progression Steps -> KPIs -> Drills; consistent language; coaching keys"
+   }
+  },
+  {
+   "primitive_id": "kpi_definition",
+   "name": "KPI: foundational action identifying success/failure within a skill aspect",
+   "verbatim_quote": "KPIs are foundational actions or movements that identify reasons for success or failure within a specific aspect of the sport.",
+   "page": 6,
+   "latex": "\\text{KPI}=\\text{foundational action/movement}\\Rightarrow \\text{diagnoses success/failure of a skill aspect}",
+   "symbol_and_unit_ledger": {
+    "KPI": "Key Performance Indicator [foundational action]"
+   },
+   "assumptions": [
+    "A KPI is a foundational action or movement that identifies reasons for success or failure",
+    "Example: 'Cleats in the Grass' is a KPI within the passing Posture step; posture basics must be mastered to pass successfully"
+   ],
+   "breakdown_regime": "no_equation_domain: a diagnostic-indicator definition, not a fitted equation; it breaks down if KPIs are outcome scores rather than foundational process actions.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE KPI process-diagnostic IS this definition: the engine uses KPIs as foundational process actions that diagnose success/failure of a skill aspect (e.g. 'Cleats in the Grass' for passing posture), the process-grade diagnostic that credits execution mechanics independent of outcome. GSI: foundational process-action indicators diagnosing skill-aspect success/failure.",
+    "source_operator": "kpi_definition",
+    "telemetry": "KPI foundational action; success/failure diagnosis; Cleats in the Grass; passing Posture"
+   }
+  },
+  {
+   "primitive_id": "stage1_no_competition",
+   "name": "Stage 1: no scoreboard, no formal competition — activity and exposure",
+   "verbatim_quote": "At this stage, there is no scoreboard nor is there formal competition. The focus is on activity and exposure.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stage 1 (Discover & Play) has no scoreboard or formal competition",
+    "The focus is activity and exposure; keep everyone moving, shrink games to their size, use appropriate-sized equipment"
+   ],
+   "breakdown_regime": "no_equation_domain: a developmental-stage principle, not an equation; it breaks down if competitive scoring is imposed on early-childhood fundamental-movement play.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE early-stage exposure-over-outcome IS this Stage-1 principle: the engine recognizes that early development prioritizes activity/exposure and fundamental movement over competitive outcomes (no scoreboard), the exposure-first stage that builds the base before outcome pressure. GSI: early-stage exposure and fundamental movement before competitive outcome pressure.",
+    "source_operator": "stage1_no_competition",
+    "telemetry": "Stage 1; no scoreboard; no formal competition; activity/exposure; appropriate equipment"
+   }
+  },
+  {
+   "primitive_id": "transferable_cross_training",
+   "name": "Everything is cross-training: fundamental skills transferable to any sport",
+   "verbatim_quote": "You may use footballs and use football terminology in your drills, but what kids learn should be transferable to any sport or activity they join.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Buddy Morris: 'At this age, everything is cross-training'",
+    "Early skills underpin everything learned later and should transfer to any sport, not just football"
+   ],
+   "breakdown_regime": "no_equation_domain: a general-athleticism-before-specialization principle, not an equation; it breaks down if early training is narrowly sport-specific instead of transferable.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE transferable-fundamentals principle IS this cross-training stance: the engine values transferable fundamental movement skills (general athleticism) before narrow specialization, the broad-base-before-specialization discipline that builds robust athletic foundations. GSI: transferable fundamental skills before narrow specialization.",
+    "source_operator": "transferable_cross_training",
+    "telemetry": "everything cross-training; Buddy Morris; transferable to any sport; underpins later learning"
+   }
+  },
+  {
+   "primitive_id": "fundamental_movement_skills",
+   "name": "Fundamental movement skills: run, jump, kick, throw, catch via play",
+   "verbatim_quote": "Young children need the opportunity to develop basic movement skills such as running, jumping, kicking, throwing and catching in a fun setting built around informal play, exploration and positive reinforcement.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Basic movement skills (running, jumping, kicking, throwing, catching) are developed through informal play",
+    "The setting is fun, exploratory, and positively reinforced; some children lack prerequisites and drills are adapted"
+   ],
+   "breakdown_regime": "no_equation_domain: a fundamental-movement development principle, not an equation; it breaks down if technical drill replaces play-based fundamental movement at this stage.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE play-based fundamental movement IS this principle: the engine recognizes that basic movement literacy (run/jump/kick/throw/catch) is built through play and exploration with positive reinforcement, the movement-literacy foundation underlying all later technical skill. GSI: play-based fundamental movement literacy as the foundation for technical skill.",
+    "source_operator": "fundamental_movement_skills",
+    "telemetry": "run/jump/kick/throw/catch; informal play; exploration; positive reinforcement; adapt to prerequisites"
+   }
+  },
+  {
+   "primitive_id": "matchup_management",
+   "name": "Manage matchups: overmatched loses confidence, exploiting stalls development",
+   "verbatim_quote": "A less skilled player who is overmatched consistently will lose confidence, which often can lead to giving up the sport, while a player with more refined skills who is allowed to exploit matchups may gain regular success but is not improving as rapidly as he or she would against someone of equal size, strength and talent.",
+   "page": 91,
+   "latex": "\\text{development rate maximized at matched competition};\\quad \\text{overmatched}\\rightarrow\\text{confidence loss};\\quad \\text{exploiting}\\rightarrow\\text{slower improvement}",
+   "symbol_and_unit_ledger": {
+    "matchup": "relative size/strength/talent of competitors [relative level]"
+   },
+   "assumptions": [
+    "Consistently overmatched players lose confidence and may quit",
+    "Players exploiting weaker matchups gain success but improve slower than against equal competition; manage matchups in practice and games"
+   ],
+   "breakdown_regime": "no_equation_domain: a zone-of-proximal-development tradeoff, not a fitted equation; it breaks down if matchups are ignored (either chronic overmatch or chronic exploitation).",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE matched-competition development IS this matchup-management tradeoff: the engine recognizes development is maximized at matched competition (overmatch erodes confidence, exploiting weaker opponents slows improvement), the zone-of-proximal-development discipline for practice and game matchmaking. GSI: development maximized at matched competition; balance confidence and challenge.",
+    "source_operator": "matchup_management",
+    "telemetry": "overmatched -> confidence loss; exploiting -> slower improvement; equal competition optimal; manage matchups"
+   }
+  },
+  {
+   "primitive_id": "tackle_contact_progression",
+   "name": "Tackle progression: air -> bags -> controlled contact -> full contact",
+   "verbatim_quote": "Young athletes just starting out in tackle football must show they possess the required skills against air and soft-sided bags before progressing to controlled contact and ultimately full contact.",
+   "page": 91,
+   "latex": "\\text{air}\\rightarrow\\text{soft bags}\\rightarrow\\text{controlled contact}\\rightarrow\\text{full contact (skill-gated)}",
+   "symbol_and_unit_ledger": {
+    "air": "no-contact reps [stage]",
+    "controlled contact": "limited live contact [stage]",
+    "full contact": "full live tackle [stage]"
+   },
+   "assumptions": [
+    "Tackle skills must be demonstrated against air and soft-sided bags first",
+    "Progression to controlled then full contact is gated on possessing the required skills; always cover basics before player-on-player contact"
+   ],
+   "breakdown_regime": "no_equation_domain: a safety-gated skill progression, not an equation; it breaks down if full contact is introduced before the prerequisite skills are demonstrated.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE safety-gated contact progression IS this tackle progression: the engine models contact introduction as a skill-gated sequence (air -> bags -> controlled -> full contact), the safety-progression discipline that gates live contact on demonstrated prerequisite skill. GSI: safety-gated progression where live risk is unlocked only after prerequisite skill is shown.",
+    "source_operator": "tackle_contact_progression",
+    "telemetry": "air -> bags -> controlled -> full contact; skill-gated; basics before player-on-player"
+   }
+  },
+  {
+   "primitive_id": "stage4_technical_tactical",
+   "name": "Stage 4: technical skill plus dawning tactical awareness",
+   "verbatim_quote": "Technical skill development and the dawning of tactical awareness mark athletes at this stage.",
+   "page": 161,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stage 4 (Achieve & Advance) combines technical skill with emerging tactical awareness",
+    "Players test more complex strategies in flag, 7-on-7, and full-field youth tackle; adolescence brings strength and speed"
+   ],
+   "breakdown_regime": "no_equation_domain: a developmental-stage characterization, not an equation; it breaks down if tactical complexity is introduced before the technical base.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE technical-plus-tactical stage IS this Stage-4 characterization: the engine recognizes the stage where technical skill merges with tactical awareness (complex strategies), the technical-tactical integration stage preceding high-school competition. GSI: technical skill integrated with emerging tactical awareness.",
+    "source_operator": "stage4_technical_tactical",
+    "telemetry": "Stage 4; technical + tactical awareness; complex strategies; flag/7-on-7/youth tackle; adolescence"
+   }
+  },
+  {
+   "primitive_id": "maturity_variability",
+   "name": "Maturity varies widely: physical, mental, emotional decoupled",
+   "verbatim_quote": "The range of maturity levels are the most varied at this stage. Some athletes will have fully completed puberty while others may still be a year or two away.",
+   "page": 161,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At Stage 4 maturity levels are most varied; some have completed puberty, others are years away",
+    "Physical, mental, and emotional maturity are decoupled: a physically developed teen may be emotionally immature, and vice versa"
+   ],
+   "breakdown_regime": "no_equation_domain: a developmental-variability observation, not an equation; it breaks down if chronological age is used as a proxy for physical/mental/emotional readiness.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE decoupled-maturity model IS this variability observation: the engine treats physical, mental, and emotional maturity as decoupled dimensions (not chronological age), so readiness and matchups are assessed per-dimension, the biological-vs-chronological-age discipline. GSI: decoupled physical/mental/emotional maturity assessed per-dimension, not by chronological age.",
+    "source_operator": "maturity_variability",
+    "telemetry": "maturity most varied; puberty timing; physical vs mental/emotional decoupled; not high school athletes"
+   }
+  },
+  {
+   "primitive_id": "not_high_school_athletes",
+   "name": "These are not high school athletes — physically, mentally, emotionally",
+   "verbatim_quote": "However, it's important to remember that these are not high school athletes. Not physically, mentally or emotionally.",
+   "page": 161,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stage 4 practices/rules resemble high school but the athletes are not high-school-ready",
+    "Coaches must not impose high-school physical/mental/emotional demands on pre-high-school athletes"
+   ],
+   "breakdown_regime": "no_equation_domain: a developmental-caution principle, not an equation; it breaks down if high-school demands are imposed on younger athletes because the format resembles high school.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE format-not-readiness caution IS this principle: the engine recognizes that resembling a higher level's format does not mean the athletes are ready for its demands, the readiness-over-format discipline preventing age-inappropriate load. GSI: format resemblance does not imply readiness for higher-level demands.",
+    "source_operator": "not_high_school_athletes",
+    "telemetry": "not high school athletes; physically/mentally/emotionally; format resembles but readiness differs"
+   }
+  },
+  {
+   "primitive_id": "passing_progression",
+   "name": "Passing progression: pre-pass position, posture, arm mechanics, finish",
+   "verbatim_quote": "Creating a solid base from which to throw by having feet shoulder width apart, ball centered at chest, with a firm grip on the ball.",
+   "page": 11,
+   "latex": "\\text{Passing}=\\text{Pre-pass (Grip,Base)}\\rightarrow\\text{Posture (Neutral)}\\rightarrow\\text{Arm Mechanics (Fluidity)}\\rightarrow\\text{Finish (Balance)}",
+   "symbol_and_unit_ledger": {
+    "Pre-pass": "body/grip/arm position before the throw [step]",
+    "Posture": "neutral posture as throw begins [step]",
+    "Arm Mechanics": "coordinated throwing motion [step]",
+    "Finish": "follow-through and balance [step]"
+   },
+   "assumptions": [
+    "Passing decomposes into pre-pass position (Grip, Base), Posture (Neutral Posture), Arm Mechanics (Fluidity), Finish (Balance)",
+    "Each step has KPIs: ankle/hip/shoulder pointed at target; single fluid motion; maintain balance on completion"
+   ],
+   "breakdown_regime": "no_equation_domain: a skill-progression decomposition, not a fitted equation; it breaks down if throwing is taught as one motion without the decomposed posture/mechanics/finish steps.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE passing-mechanics decomposition IS this progression: the engine decomposes passing into pre-pass base/grip, neutral posture, fluid arm mechanics, and balanced finish with per-step KPIs, the mechanics-decomposition that grades throwing process step by step. GSI: decompose a motor skill into ordered mechanics steps with per-step indicators.",
+    "source_operator": "passing_progression",
+    "telemetry": "pre-pass Grip/Base; Posture Neutral; Arm Mechanics Fluidity; Finish Balance; ankle/hip/shoulder to target"
+   }
+  },
+  {
+   "primitive_id": "receiving_vision_locate",
+   "name": "Receiving vision: track the ball into the hands, focus through distraction",
+   "verbatim_quote": "Tracking the football through the air and into the hands. Learning to focus through distraction and with the body in various orientations.",
+   "page": 14,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Receiving Vision is tracking the ball through the air into the hands",
+    "The KPI is Locate: judging depth and distance of a ball in flight, focusing through distraction and varied body orientations"
+   ],
+   "breakdown_regime": "no_equation_domain: a perceptual-skill definition, not an equation; it breaks down if receiving is reduced to hands-only without the visual tracking/locate component.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE receiving-visual-tracking IS this Vision/Locate skill: the engine models receiving as visual ball-tracking (judging depth/distance, focusing through distraction) into the hands, the perceptual Locate component that precedes the physical catch. GSI: perceptual tracking/locate component preceding a physical interception skill.",
+    "source_operator": "receiving_vision_locate",
+    "telemetry": "Vision; Locate; track ball into hands; depth/distance; focus through distraction"
+   }
+  },
+  {
+   "primitive_id": "prep_contact_global_athleticism",
+   "name": "Prep for contact: global athleticism, fall/tumble/crawl safely",
+   "verbatim_quote": "Not focused on sport-specific skills but on fundamental development of global athleticism",
+   "page": 15,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Prep for Contact builds global athleticism, not sport-specific skills",
+    "KPIs: coordination, kinesthetic awareness, spatial awareness, balance, stability; ability to fall, tumble, crawl safely"
+   ],
+   "breakdown_regime": "no_equation_domain: a general-athleticism preparation principle, not an equation; it breaks down if contact prep is sport-specific drill instead of global movement/fall safety.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE global-athleticism contact prep IS this principle: the engine models contact preparation as global athleticism and safe falling/tumbling/crawling (kinesthetic/spatial awareness, balance), the general-movement safety base before sport-specific contact. GSI: general athleticism and safe-fall movement base before specific contact skill.",
+    "source_operator": "prep_contact_global_athleticism",
+    "telemetry": "global athleticism; fall/tumble/crawl safely; kinesthetic/spatial awareness; balance/stability"
+   }
+  },
+  {
+   "primitive_id": "kicking_power_legswing",
+   "name": "Kicking power: multiple muscles and leg speed generate force at contact",
+   "verbatim_quote": "Using multiple muscles and leg speed to generate strength behind the kick in order to achieve longer distance and/or height.",
+   "page": 16,
+   "latex": "\\text{kick distance/height}\\propto \\text{force at contact}=\\text{function}(\\text{multi-muscle coordination},\\ \\text{leg speed})",
+   "symbol_and_unit_ledger": {
+    "Power": "force generated at contact via muscles + leg speed [N]",
+    "leg-swing": "the KPI for the Power step [motion]"
+   },
+   "assumptions": [
+    "Kicking Power uses multiple muscles and leg speed to generate force for distance/height",
+    "The progression is Prepare (Body Position) -> Contact Mechanics (Eye-foot Coordination) -> Power (Leg-swing) -> Finish (Follow-through)"
+   ],
+   "breakdown_regime": "no_equation_domain: a biomechanical principle (force from coordination + leg speed), not a fitted equation; it breaks down if power is reduced to leg strength alone without coordination and speed.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE kicking-force generation IS this Power principle: the engine models kick distance/height as force at contact from multi-muscle coordination and leg speed, the biomechanical force-generation chain (prepare -> contact -> power -> follow-through). GSI: force generation from coordinated multi-muscle action and segment speed.",
+    "source_operator": "kicking_power_legswing",
+    "telemetry": "Power; multi-muscle + leg speed; force at contact; Prepare/Contact/Power/Finish; eye-foot coordination"
+   }
+  },
+  {
+   "primitive_id": "quantitative_benchmarks",
+   "name": "Developmental benchmarks: 7-of-10 completion, distance thresholds",
+   "verbatim_quote": "Catch 7 out of 10 accurately thrown balls with hands only while running a specified route",
+   "page": 92,
+   "latex": "\\text{Stage 3 receiving benchmark}:\\ \\ge 7/10\\ \\text{hands-only catches on a specified route};\\quad \\text{passing}:\\ 7/10\\ \\text{leading partner},\\ 15+\\ \\text{yd for distance}",
+   "symbol_and_unit_ledger": {
+    "7/10": "completion benchmark ratio [dimensionless]",
+    "distance": "throw/kick distance thresholds [yd]"
+   },
+   "assumptions": [
+    "Stage 3 checklist: catch 7/10 hands-only on a route; throw 7/10 leading a partner; throw 15+ yd for distance",
+    "Stage 4: 7/10 moving throws to stationary and moving targets; kick/punt 20+ yd with directional control"
+   ],
+   "breakdown_regime": "no_equation_domain: the 7/10 and yardage figures are developmental proficiency benchmarks, not fitted statistical laws; they break down if treated as precise population thresholds rather than stage checkpoints.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE stage proficiency benchmarks IS this checklist: the engine uses stage-specific proficiency benchmarks (7/10 completion, distance thresholds) as developmental checkpoints, the measurable readiness criteria gating progression between stages. GSI: stage-specific measurable proficiency benchmarks gating progression.",
+    "source_operator": "quantitative_benchmarks",
+    "telemetry": "7/10 hands-only catches; 7/10 leading partner; 15+ yd; Stage 4 20+ yd directional; checkpoints"
+   }
+  },
+  {
+   "primitive_id": "longitudinal_evaluation",
+   "name": "Preseason/postseason skill evaluation tracks individual progress",
+   "verbatim_quote": "Long-term athlete development is at the core of the Football Development Model (FDM). This includes understanding player progress.",
+   "page": 281,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Preseason and postseason assessments evaluate each individual player's development",
+    "Written + online per-player assessments gauge where players are in their progression and build plans to improve"
+   ],
+   "breakdown_regime": "no_equation_domain: a longitudinal-assessment practice, not an equation; it breaks down if development is judged by a single snapshot rather than preseason/postseason progress.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE longitudinal player tracking IS this evaluation practice: the engine tracks individual player progress via preseason/postseason assessments (not a single snapshot), the longitudinal-development measurement that gauges progression and informs training plans. GSI: longitudinal pre/post assessment of individual progress, not single snapshots.",
+    "source_operator": "longitudinal_evaluation",
+    "telemetry": "preseason/postseason; per-player; written + online; gauge progression; build improvement plans"
+   }
+  },
+  {
+   "primitive_id": "blocking_hands_hips",
+   "name": "Blocking: remove helmet as contact tool, use hands with hips",
+   "verbatim_quote": "Teach players to use the hands in conjunction with their hips",
+   "page": 162,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stage 4 blocking removes the helmet as a tool for contact",
+    "Players use hands in conjunction with hips; footwork and hand placement set up success; brace step and pop step establish position/power"
+   ],
+   "breakdown_regime": "no_equation_domain: a blocking technique/safety principle, not an equation; it breaks down if the helmet is used as the contact instrument rather than hands/hips.",
+   "domain": "football",
+   "confidence": 0.85,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE hands-hips blocking technique IS this principle: the engine models safe blocking as hands-in-conjunction-with-hips with helmet removed as a contact tool (footwork/hand placement, brace/pop steps), the technique-and-safety decomposition of blocking. GSI: technique decomposition emphasizing safe contact instruments (hands/hips, not helmet).",
+    "source_operator": "blocking_hands_hips",
+    "telemetry": "remove helmet as contact tool; hands + hips; footwork/hand placement; brace step/pop step"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "usafootball_fdm_player_progression",
+   "think": "This inline cycle extracts the USA Football Development Model Player Progression Guide, a two-hundred-eighty-two-page youth-football development framework produced by USA Football with ESPN support for the FDM Pilot Program. The provenance is clean: the catalog domain football is correct and this is American football, the guide spans early childhood into the high school years, and it is organized around long-term athlete development. Eighteen primitives are extracted, each with a verified verbatim quote, a page anchor, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. The guide is a qualitative coaching and development framework with quantitative proficiency benchmarks but no fitted statistical equations, so most primitives are labeled no_equation_domain while the skill-decomposition hierarchy, the contact progression, and the matchup tradeoff are formalized as labeled structures, and no sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the long-term athlete development (LTAD) literature and USA Football's Football Development Model into this progression guide, with the NFL strength-coaching tradition (Buddy Morris's 'at this age, everything is cross-training') informing the early-stage philosophy. The load-bearing object is the skill-decomposition ontology: each Skill contains an ordered set of Progression Steps, each step contains Key Performance Indicators, and drills support each KPI, giving coaches consistent language and diagnostic keys. A KPI is defined as a foundational action or movement that identifies reasons for success or failure within a specific aspect of the sport, exemplified by 'Cleats in the Grass' within the passing Posture step. The four stages (Discover and Play, Play and Develop, Develop and Achieve, Achieve and Advance) progress from no-scoreboard fundamental movement to technical skill merged with dawning tactical awareness.\n\nThe recursive theory of mind models the coach as a reasoner who must match training to the athlete's developmental stage and decoupled maturity, and the player as a developing agent whose confidence and improvement rate depend on matchup quality. The matchup-management principle is a zone-of-proximal-development tradeoff: a consistently overmatched player loses confidence and may quit, while a player exploiting weaker matchups gains success but improves more slowly than against equal size, strength, and talent, so development is maximized at matched competition. The tackle progression is safety-gated (air, then soft bags, then controlled contact, then full contact, each unlocked by demonstrated skill), and the maturity observation decouples physical, mental, and emotional readiness so chronological age is not a valid proxy. The passing, receiving, kicking, and blocking progressions decompose each motor skill into ordered mechanics steps with per-step KPIs.\n\nThe cross-layer veto adjudication places this player-development and skill-decomposition layer beside the rulebook constraint layer, the mental-conditioning layers, and the attribution and expected-points layers. The first veto is the skill-decomposition veto: skills are taught and graded as decomposed progression steps with measurable KPIs, not monoliths, connecting directly to the execution-grade process credit in the attribution layer (a KPI is a process grade). The second veto is the stage-appropriateness veto: training is matched to developmental stage and decoupled maturity, never imposing high-school demands because the format resembles high school. The third veto is the matched-competition veto: development is maximized at matched competition, balancing confidence against challenge, the zone-of-proximal-development discipline for practice and game matchmaking. The fourth veto is the safety-gated-contact veto: live contact is unlocked only after prerequisite skill is demonstrated against air and bags. The fifth veto is the longitudinal-measurement veto: player progress is tracked via preseason and postseason assessments, not a single snapshot, with quantitative proficiency benchmarks (seven-of-ten completion, distance thresholds) as stage checkpoints.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The early-stage philosophy prioritizes activity and exposure over competition (no scoreboard in Stage 1), builds fundamental movement literacy (run, jump, kick, throw, catch) through informal play and positive reinforcement, and insists the skills be transferable to any sport rather than narrowly football-specific. The passing progression runs pre-pass position (Grip, Base) to Posture (Neutral, ankle/hip/shoulder pointed at the target) to Arm Mechanics (Fluidity, a single fluid motion) to Finish (Balance); receiving runs Feet/Footwork to Hands to Vision (Locate, judging depth and distance through distraction) to Finish (Secure); kicking runs Prepare to Contact Mechanics (Eye-foot Coordination) to Power (Leg-swing, force from multi-muscle coordination and leg speed) to Finish (Follow-through). Prep for Contact builds global athleticism and safe falling/tumbling/crawling rather than sport-specific drill, and Stage 4 blocking removes the helmet as a contact tool in favor of hands working with hips. The developmental checklists also include a cognitive-affective dimension (taking turns, sharing, following simple directions, memorizing more complex plays at Stage 4), and each stage closes with sample practice plans and a shared drill glossary, so the framework couples physical skill with the social and cognitive maturity the game demands. The quantitative benchmarks (catch seven of ten hands-only on a route, throw seven of ten leading a partner, fifteen-plus yards for distance, twenty-plus yards with directional control at Stage 4) are developmental proficiency checkpoints, not population statistical laws. These invariants ground the engine's skill-decomposition process grading, stage-appropriate development, matched-competition matchmaking, safety-gated contact, and longitudinal player tracking, completing a sovereign player-development layer that connects KPI process grades to the attribution layer, all grounded in clean verbatim prose with honestly labeled formalizations.",
+   "retrocausal_genealogy": "The genealogy runs from the long-term athlete development (LTAD) literature and USA Football's Football Development Model into this progression guide (ESPN-supported FDM Pilot), with NFL strength-coaching tradition (Buddy Morris 'at this age everything is cross-training') informing early-stage philosophy. Load-bearing object: skill-decomposition ontology Skill -> Progression Steps -> KPIs -> Drills, giving consistent coaching language and diagnostic keys. KPI = foundational action identifying success/failure of a skill aspect (e.g. 'Cleats in the Grass' in passing Posture). Four stages: Discover&Play (no scoreboard, fundamental movement) -> Play&Develop -> Develop&Achieve (sport-specific, compete) -> Achieve&Advance (technical + tactical).",
+   "theory_of_mind": "The coach matches training to developmental stage and decoupled maturity; the player's confidence and improvement depend on matchup quality. Matchup management is a zone-of-proximal-development tradeoff: chronic overmatch loses confidence (may quit), exploiting weaker matchups gains success but slower improvement than equal competition -> development maximized at matched competition. Tackle progression safety-gated (air -> bags -> controlled -> full contact, skill-unlocked). Maturity decouples physical/mental/emotional (chronological age invalid proxy). Passing/receiving/kicking/blocking decompose into ordered mechanics steps with per-step KPIs.",
+   "cross_layer_veto": "Five vetoes adjudicate beside the rulebook constraint, mental-conditioning, and attribution/expected-points layers. Skill-decomposition veto: teach/grade skills as decomposed steps with measurable KPIs (a KPI IS a process grade, connecting to execution-grade credit). Stage-appropriateness veto: match training to stage/decoupled maturity, never high-school demands by format resemblance. Matched-competition veto: development maximized at matched competition (confidence vs challenge). Safety-gated-contact veto: live contact unlocked only after prerequisite skill vs air/bags. Longitudinal-measurement veto: track progress via preseason/postseason assessments with proficiency benchmarks (7/10, distance) as stage checkpoints, not single snapshots."
+  }
+ ],
+ "universal_lens": "The USA Football FDM Player Progression Guide contributes the player-development / skill-decomposition layer: the Skill->Progression Steps->KPIs->Drills ontology (a KPI is a foundational process action diagnosing success/failure), four LTAD developmental stages from no-scoreboard fundamental movement to technical-plus-tactical, stage-appropriate training matched to decoupled maturity, the matched-competition zone-of-proximal-development tradeoff, the safety-gated contact progression (air->bags->controlled->full), transferable fundamental movement before specialization, per-skill mechanics decomposition with per-step KPIs, quantitative proficiency benchmarks as stage checkpoints, and longitudinal preseason/postseason player tracking.",
+ "gsi_mapping": "For GSI these primitives are the general skill-development and competency-decomposition layer: decompose each skill into ordered progression steps with measurable process indicators (KPIs) and supporting drills; organize development into staged readiness levels gating skill introduction; match training to developmental stage and decoupled physical/mental/emotional maturity (not chronological age); maximize development at matched competition (balance confidence and challenge); gate live-risk progression on demonstrated prerequisite skill; build transferable fundamentals before specialization; and track individual progress longitudinally via pre/post assessments with proficiency benchmarks rather than single snapshots.",
+ "gse_mapping": "For GSE this maps onto the engine's player-development and process-grading layers: the Skill->Step->KPI->Drill ontology IS the skill-decomposition that produces execution-grade process credit (a KPI IS a process grade, connecting to the Knowlton coach-grade layer); the four LTAD stages IS stage-appropriate development; matchup management IS the matched-competition development tradeoff; the tackle air->bags->controlled->full progression IS the safety-gated contact gate; decoupled maturity IS the biological-vs-chronological-age readiness model; per-skill mechanics progressions IS motor-skill decomposition; the 7/10 and distance benchmarks IS stage proficiency checkpoints; and preseason/postseason evaluation IS longitudinal player tracking. Formalizations are labeled from clean prose; benchmarks are developmental checkpoints not population laws; no sportsbook line is a model input."
+}
