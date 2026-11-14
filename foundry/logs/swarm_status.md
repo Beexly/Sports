@@ -461,3 +461,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 17:58:58 | CLAIMED | 1498481931694bd8 | worker=hermes-inline file=Szepesvari-2010-AlgorithmsForReinforcementLearning.pdf
 - 2026-11-13 18:05:02 | REJECTED | 1498481931694bd8 | primitive[13]: verbatim_quote missing or <8 words (exact source text required)
 - 2026-11-13 18:05:37 | COMPLETE | 1498481931694bd8 | primitives=18 think_words=902
+- 2026-11-13 18:14:34 | CLAIMED | 5bb26b9323c43ddb | worker=hermes-inline file=ZhangEtAl-2023-DiveIntoDeepLearning.pdf
+- 2026-11-13 18:37:26 | COMPLETE | 5bb26b9323c43ddb | primitives=20 think_words=863

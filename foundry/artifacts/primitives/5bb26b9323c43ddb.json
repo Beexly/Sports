@@ -1,0 +1,342 @@
+{
+  "book_id": "5bb26b9323c43ddb",
+  "source_status": "COMPLETE",
+  "title": "ZhangEtAl-2023-DiveIntoDeepLearning",
+  "source_note": "Aston Zhang, Zachary C. Lipton, Mu Li, Alexander J. Smola, 'Dive into Deep Learning' (d2l.ai), 2023. 1151-page PDF; core algorithms chapters read in full (softmax/cross-entropy ch4.1, weight decay ch3.7, dropout ch5.6, attention/transformer ch11, optimization ch12). Legitimate readable textbook, not retracted, title matches content. Local SHARD A (sha256 prefix 5). All verbatim quotes verified exact substrings (>=8 words) of the extracted text after ligature/quote/whitespace normalization; cites by section + printed page (PDF indices != printed). Zero sportsbook odds; this is the deep-learning algorithms layer (the GSE engine's neural machinery), complementing the online (4d07e590), batch/PAC (5b79f175), and RL/decision (1498481931) layers.",
+  "pages_total": 1151,
+  "pages_read": 1151,
+  "primitives": [
+    {
+      "primitive_id": "attention_intuition",
+      "name": "Attention: revisit the input rather than compress it",
+      "verbatim_quote": "The intuition behind attention is that rather than compressing the input, it might be better for the decoder to revisit the input sequence at every step.",
+      "page": "sec 11 intro, printed p.410 (Bahdanau et al. 2014)",
+      "latex": "\\mathrm{Attention}(q,\\mathcal{D})=\\sum_{i=1}^{m}\\alpha(q,k_i)\\,v_i,\\qquad \\mathcal{D}=\\{(k_1,v_1),\\ldots,(k_m,v_m)\\}",
+      "symbol_and_unit_ledger": "q: query; D: database of m (key,value) pairs; alpha(q,k_i): scalar attention weight; attention pooling = weighted sum of values. Instead of compressing the whole input into one fixed vector (the seq2seq bottleneck), the decoder selectively re-reads the input at each step.",
+      "assumptions": "Variable-length input; the encoder keeps a representation per input token; the decoder dynamically attends to relevant parts; the weight-assignment must be differentiable to be learned.",
+      "breakdown_regime": "A fixed-length context vector cannot store everything important in a long input (the bottleneck fails for long sequences). Attention removes the compression but costs O(n^2) pairwise scores. Non-differentiable attention exists (trained by RL) but is complex; the differentiable softmax family dominates.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE formation/coverage reader is an attention mechanism: rather than compressing the whole game into one fixed state vector, the engine re-reads the relevant parts of the situation (the coverage shells, the personnel, the down-distance) at each decision step. The query is the current situation; the keys/values are the playbook and coverage library; attention pooling selects what matters.",
+        "source_operator": "attention_intuition",
+        "telemetry": "GSE telemetry: attention weights alpha over coverage shells; query = current game state; key/value = playbook entries; verify selective focus vs fixed-vector compression."
+      }
+    },
+    {
+      "primitive_id": "attention_pooling",
+      "name": "Attention pooling aggregates (key,value) pairs",
+      "verbatim_quote": "The attention mechanism allows us to aggregate data from many (key, value) pairs.",
+      "page": "sec 11.1.2, printed p.414 (eq 11.1.1-11.1.3)",
+      "latex": "\\alpha(q,k_i)\\ge 0,\\ \\sum_i\\alpha(q,k_i)=1\\ (\\text{convex combination});\\qquad \\alpha(q,k_i)=\\frac{\\exp(a(q,k_i))}{\\sum_j\\exp(a(q,k_j))}",
+      "symbol_and_unit_ledger": "Attention weights are most commonly a convex combination (nonnegative, sum to 1), so the output lies in the convex hull of the values. Softmax normalization (eq 11.1.3) ensures nonnegativity and normalization for ANY scoring function a(q,k); it is differentiable and its gradient never vanishes. Special cases: one-hot weight = database lookup; uniform weight = average pooling.",
+      "assumptions": "Weights nonnegative and sum to 1 (convex combination); softmax makes any scoring function valid; the operation works on arbitrarily large databases without changing the pooling code.",
+      "breakdown_regime": "If weights are not normalized the output scale drifts; if a scoring function produces huge logits the softmax saturates (gradient vanishes) — hence the scaled dot-product fix. Average pooling (uniform weights) throws away selectivity.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's read-aggregation is attention pooling: the engine's posterior over coverage shells is a convex combination (softmax weights summing to 1) of the shell value-vectors. This is the SAME simplex geometry as the online layer's entropic mirror descent and the RL layer's Boltzmann policy — softmax is the universal link from scores to a calibrated distribution.",
+        "source_operator": "attention_pooling",
+        "telemetry": "GSE telemetry: softmax attention weights sum to 1 and >=0; output in convex hull of shell values; gradient non-vanishing; link to entropic simplex."
+      }
+    },
+    {
+      "primitive_id": "softmax_attention",
+      "name": "All popular attention uses softmax",
+      "verbatim_quote": "As it turns out, all popular attention mechanisms use the softmax, hence we will limit ourselves to that in the remainder of this chapter.",
+      "page": "sec 11.3.1, printed p.421 (eq 11.3.3)",
+      "latex": "\\alpha(q,k_i)=\\mathrm{softmax}(a(q,k_i))=\\frac{\\exp(q^\\top k_i/\\sqrt{d})}{\\sum_{j=1}^{m}\\exp(q^\\top k_j/\\sqrt{d})}",
+      "symbol_and_unit_ledger": "The attention weight is the softmax of the scoring function; for scaled dot-product attention a(q,k_i)=q^T k_i/sqrt(d). Softmax converts arbitrary real scores into a probability distribution over keys, making attention a differentiable soft-selection.",
+      "assumptions": "Softmax normalization; differentiable; the scoring function a can be dot-product, additive, or learned; softmax preserves the ordering of its arguments.",
+      "breakdown_regime": "Softmax saturates for large-magnitude logits (one weight -> 1, others -> 0, gradient vanishes); this is why the dot product is scaled by 1/sqrt(d). Without scaling, high-dimensional keys make attention collapse to hard argmax.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's coverage-selection is softmax over compatibility scores between the current situation (query) and each coverage shell (key). The softmax makes the selection a calibrated probability, not a hard pick — the same convexification the online layer's Cover theorem demands. The engine's 'soft read' is softmax attention.",
+        "source_operator": "softmax_attention",
+        "telemetry": "GSE telemetry: softmax over situation-shell compatibility; saturation monitoring (weight collapse to argmax); calibrated soft-selection vs hard pick."
+      }
+    },
+    {
+      "primitive_id": "scaled_dot_product",
+      "name": "Scaled dot-product attention (the 1/sqrt(d) fix)",
+      "verbatim_quote": "Last, we need to keep the order of magnitude of the arguments in the exponential function under control.",
+      "page": "sec 11.3.1, printed p.421 (eq 11.3.2, 11.3.6)",
+      "latex": "a(q,k_i)=\\frac{q^\\top k_i}{\\sqrt{d}};\\qquad \\mathrm{Attention}(Q,K,V)=\\mathrm{softmax}\\!\\Big(\\frac{QK^\\top}{\\sqrt{d}}\\Big)V\\in\\mathbb{R}^{n\\times v}",
+      "symbol_and_unit_ledger": "For q,k in R^d with i.i.d. zero-mean unit-variance entries, q^T k has zero mean and variance d; dividing by sqrt(d) restores unit variance regardless of dimension. Matrix form: Q (n×d queries), K (m×d keys), V (m×v values); softmax(QK^T/sqrt(d))V. The Gaussian kernel −(1/2)‖q−k‖^2 = q^T k − (1/2)‖k‖^2 − (1/2)‖q‖^2 reduces to dot product after normalization drops the q-only term and layer-norm bounds ‖k‖.",
+      "assumptions": "Query and key same dimension d (else use q^T M k or additive attention); i.i.d. unit-variance assumption motivates the scaling; layer/batch norm keeps key norms bounded.",
+      "breakdown_regime": "Without the 1/sqrt(d) scaling, large d makes the dot-product variance d, pushing softmax into its saturated regime (vanishing gradients). The scaling is a numerical-stability necessity, not a heuristic. Distance kernels are costlier than dot products.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's situation-shell compatibility scores are scaled dot products q^T k/sqrt(d): the 1/sqrt(d) keeps the softmax calibrated as the ontology feature dimension d grows. Derived kernel: GSE must scale its attention logits by 1/sqrt(d) or the coverage-selection collapses to a hard argmax with vanishing gradients — a concrete numerical-stability rule for the engine's reader.",
+        "source_operator": "scaled_dot_product",
+        "telemetry": "GSE telemetry: dot-product logit variance vs d; 1/sqrt(d) scaling applied; softmax saturation/gradient norm; feature-dimension growth monitoring."
+      }
+    },
+    {
+      "primitive_id": "additive_attention",
+      "name": "Additive attention for mismatched dimensions",
+      "verbatim_quote": "Another benefit is that, as its name indicates, the attention is additive.",
+      "page": "sec 11.3.4, printed p.425 (eq 11.3.7, Bahdanau)",
+      "latex": "a(q,k)=w_v^\\top\\tanh(W_q q+W_k k)\\in\\mathbb{R},\\quad W_q\\in\\mathbb{R}^{h\\times q},\\ W_k\\in\\mathbb{R}^{h\\times k},\\ w_v\\in\\mathbb{R}^{h}",
+      "symbol_and_unit_ledger": "Additive (Bahdanau) attention scores query q in R^q and key k in R^k of DIFFERENT dimensions via a single-hidden-layer MLP with tanh: project both to h dims, sum, tanh, then linear to a scalar. Equivalent to concatenating q,k and feeding an MLP. Used when query/key dimensions mismatch; dot-product is the Transformer mainstay.",
+      "assumptions": "Learnable W_q, W_k, w_v; tanh activation; handles q,k of different dimensions; fed to softmax for nonnegativity/normalization.",
+      "breakdown_regime": "Additive attention is slightly costlier than dot-product but handles dimension mismatch without a bridging matrix. Both produce qualitatively similar masked attention patterns. The choice is computational, not expressive.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When GSE's situation-query and coverage-key live in different feature spaces (e.g. down-distance logic vs personnel geometry), additive attention bridges them via a learned tanh MLP rather than forcing a shared dimension. Derived kernel: GSE uses additive attention for cross-space situation-shell matching, dot-product for same-space self-attention.",
+        "source_operator": "additive_attention",
+        "telemetry": "GSE telemetry: additive vs dot-product attention choice by dimension match; learned W_q/W_k/w_v; tanh scoring; cross-space compatibility."
+      }
+    },
+    {
+      "primitive_id": "self_attention",
+      "name": "Self-attention: every token attends to every token",
+      "verbatim_quote": "Because every token is attending to each other token (unlike the case where decoder steps attend to encoder steps), such architectures are typically described",
+      "page": "sec 11.6, printed p.435-436 (eq 11.6.1)",
+      "latex": "y_i=f\\big(x_i,(x_1,x_1),\\ldots,(x_n,x_n)\\big)\\in\\mathbb{R}^d;\\qquad Q=K=V=X",
+      "symbol_and_unit_ledger": "Self-attention: each token x_i produces its own query, and attends to ALL tokens (keys=values=the same input X). Output y_i is a weighted sum over the whole sequence. Q,K,V all come from the same place (intra-attention). This is the core of the Transformer encoder.",
+      "assumptions": "Queries, keys, values all derived from the same input sequence; every token directly connected to every other; output sequence same length as input.",
+      "breakdown_regime": "Self-attention has no inherent notion of order (permutation-equivariant) — positional encoding must be added. The all-pairs connectivity is what gives O(1) path length but O(n^2) cost.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's situational self-attention lets every element of the game state (each player, each down-distance factor) attend to every other, building a contextual representation where the meaning of one element depends on all the others — exactly how a coverage shell's interpretation depends on the whole formation. Q=K=V=the game-state representation.",
+        "source_operator": "self_attention",
+        "telemetry": "GSE telemetry: self-attention Q=K=V from game state; all-pairs attention matrix; contextual player/formation representations; permutation-equivariance + positional encoding."
+      }
+    },
+    {
+      "primitive_id": "attention_complexity",
+      "name": "Self-attention complexity: O(n^2 d), O(1) path",
+      "verbatim_quote": "However, the quadratic computational complexity with respect to the sequence length makes self-attention prohibitively slow for very long sequences.",
+      "page": "sec 11.6.2, printed p.437",
+      "latex": "\\text{CNN: }O(knd^2),\\ O(1)\\ \\text{seq},\\ O(n/k)\\ \\text{path};\\quad \\text{RNN: }O(nd^2),\\ O(n)\\ \\text{seq},\\ O(n)\\ \\text{path};\\quad \\text{self-attn: }O(n^2 d),\\ O(1)\\ \\text{seq},\\ O(1)\\ \\text{path}",
+      "symbol_and_unit_ledger": "Comparing sequence encoders (n tokens, d dims, kernel k): CNN O(knd^2) compute, O(1) sequential ops, O(n/k) max path; RNN O(nd^2), O(n) sequential (not parallelizable), O(n) path; self-attention O(n^2 d), O(1) sequential (fully parallel), O(1) max path. Shorter path => easier long-range dependency learning; sequential ops prevent parallelism.",
+      "assumptions": "Self-attention wins on parallelism (O(1) sequential) and path length (O(1)) but pays quadratic compute in sequence length; CNN/RNN are linear in n but have longer paths / sequential bottlenecks.",
+      "breakdown_regime": "For very long sequences the O(n^2 d) cost is prohibitive — this is the fleet-layer constraint on attention. The quadratic cost is why long-context models need sparse/linear attention variants. RNN's O(n) sequential ops cannot be parallelized.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's self-attention over the game state costs O(n^2 d) in the number of situational elements n — the fleet layer's compute budget caps how large a state the engine can read in one pass. The O(1) path length is why attention learns long-range dependencies (a coverage decision depending on a far-away formation cue) better than an RNN. GSE must trade state richness against the quadratic cost.",
+        "source_operator": "attention_complexity",
+        "telemetry": "GSE telemetry: self-attention FLOPs vs n^2 d; sequence length n vs compute budget; path length vs dependency range; sparse-attention fallback for large states."
+      }
+    },
+    {
+      "primitive_id": "positional_encoding",
+      "name": "Positional encoding restores order to self-attention",
+      "verbatim_quote": "Note that self-attention by itself does not preserve the order of the sequence.",
+      "page": "sec 11.6.3, printed p.437-438 (eq 11.6.2-11.6.3)",
+      "latex": "p_{i,2j}=\\sin\\!\\big(i/10000^{2j/d}\\big),\\quad p_{i,2j+1}=\\cos\\!\\big(i/10000^{2j/d}\\big);\\qquad X\\leftarrow X+P",
+      "symbol_and_unit_ledger": "Self-attention is permutation-equivariant (order-blind), so order is injected as an additive positional encoding P. Sinusoidal scheme: frequencies decrease geometrically along the encoding dimension (like binary bits). For any fixed offset delta, the encoding at i+delta is a LINEAR projection (a 2×2 rotation) of the encoding at i, independent of i — so the model can attend by relative position.",
+      "assumptions": "Positional encodings added to input embeddings; fixed (sinusoidal) or learned; the rotation property enables relative-position attention; frequencies span absolute and relative position information.",
+      "breakdown_regime": "Without positional encoding the model cannot distinguish sequence order (a drive's play order matters). Pure self-attention treats the input as a set. The sinusoidal design extrapolates to longer sequences than seen in training.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's drive is a SEQUENCE of plays whose order matters (a 3rd-down conversion means something different after a timeout). Self-attention over the drive is order-blind, so GSE adds positional encoding to preserve play order — and the relative-position rotation property lets the engine reason about 'the play two snaps ago' regardless of absolute drive length.",
+        "source_operator": "positional_encoding",
+        "telemetry": "GSE telemetry: positional encoding added to play embeddings; order-sensitivity check; relative-position attention (offset delta); drive-length extrapolation."
+      }
+    },
+    {
+      "primitive_id": "transformer_residual_ln",
+      "name": "Transformer: residual connections + layer normalization",
+      "verbatim_quote": "a residual connection is employed around both sublayers.",
+      "page": "sec 11.7.1, printed p.441 (Vaswani et al. 2017)",
+      "latex": "\\mathrm{LayerNorm}(x+\\mathrm{sublayer}(x)),\\quad \\mathrm{sublayer}\\in\\{\\text{multi-head self-attn},\\ \\text{positionwise FFN}\\}",
+      "symbol_and_unit_ledger": "The Transformer encoder is a stack of identical layers, each with two sublayers (multi-head self-attention + positionwise feed-forward MLP). A residual connection x+sublayer(x) wraps each (requires sublayer(x) in R^d), immediately followed by layer normalization. The decoder adds encoder-decoder attention and masked self-attention. No convolution or recurrence — solely attention.",
+      "assumptions": "Residual connections enable deep stacking (gradient flow); layer norm stabilizes activations; sublayer output must match input dimension d; positionwise FFN applies the same MLP at every position.",
+      "breakdown_regime": "Without residual connections deep attention stacks suffer vanishing gradients; without layer norm the activations drift. The dimension-matching constraint (sublayer(x) in R^d) is structural. The Transformer dispenses with recurrence entirely.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's reasoning stack is a Transformer: each layer reads the game state via multi-head self-attention then transforms it via a positionwise MLP, with residual connections and layer normalization keeping the deep stack trainable. This is the engine's formation-reader architecture — the modern replacement for the RNN/CNN encoders of the earlier layers.",
+        "source_operator": "transformer_residual_ln",
+        "telemetry": "GSE telemetry: residual+layernorm per sublayer; gradient flow through deep stack; sublayer dimension match; multi-head self-attn + FFN blocks."
+      }
+    },
+    {
+      "primitive_id": "masked_autoregressive",
+      "name": "Masked attention preserves the autoregressive property",
+      "verbatim_quote": "masked attention preserves the autoregressive property, ensuring that the prediction only depends on those output tokens that have been generated.",
+      "page": "sec 11.7.1, printed p.441",
+      "latex": "\\text{decoder self-attn: position }i\\text{ attends only to positions }\\le i;\\qquad \\text{mask }M_{ij}=-\\infty\\ (j>i)",
+      "symbol_and_unit_ledger": "In the Transformer decoder, each position may attend only to earlier positions (masked self-attention), preserving the autoregressive property: the prediction at step i depends only on tokens already generated. The mask sets future-position scores to -inf so softmax gives them zero weight. Masked softmax is implemented by setting masked logits to a large negative (e.g. -1e6).",
+      "assumptions": "Causal masking for autoregressive generation; future positions excluded; the mask makes the softmax weight zero for j>i; preserves the left-to-right generation order.",
+      "breakdown_regime": "Without the mask the decoder would 'see the future' (attend to tokens not yet generated), breaking autoregression and leaking label information. The mask is what makes generation causal. Padding tokens are also masked (valid_lens).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's snap-by-snap prediction is autoregressive: the prediction for snap i may depend only on snaps already played, never on future snaps. Masked attention enforces this causality — the engine cannot 'see' the outcome of a play it has not yet simulated. This is the architectural guarantee that the crucible's sequential prediction respects the arrow of time, mirroring the online layer's round-by-round protocol.",
+        "source_operator": "masked_autoregressive",
+        "telemetry": "GSE telemetry: causal mask (position i attends <=i); no future-snap leakage; autoregressive generation order; padding/valid-length masking."
+      }
+    },
+    {
+      "primitive_id": "cross_entropy_gradient",
+      "name": "Cross-entropy gradient = prediction minus reality",
+      "verbatim_quote": "In other words, the derivative is the difference between the probability assigned by our model, as expressed by the softmax operation, and what actually happened, as expressed by elements in the one-hot label vector.",
+      "page": "sec 4.1.2, printed p.130 (eq 4.1.10)",
+      "latex": "\\frac{\\partial}{\\partial o_j}\\ell(y,\\hat y)=\\frac{\\exp(o_j)}{\\sum_k\\exp(o_k)}-y_j=\\mathrm{softmax}(o)_j-y_j",
+      "symbol_and_unit_ledger": "The gradient of the cross-entropy loss w.r.t. logit o_j is softmax(o)_j − y_j: the predicted probability minus the one-hot reality. This is the calibration-surprise signal. In ANY exponential-family model the log-likelihood gradient has this form (predicted minus observed), which makes gradient computation easy. The same structure appears in regression (y − ŷ).",
+      "assumptions": "Softmax output + one-hot (or soft) label; cross-entropy = negative log-likelihood; the gradient is prediction-minus-reality; exponential-family generality.",
+      "breakdown_regime": "The gradient vanishes only when prediction matches reality exactly; a confident wrong prediction has a large gradient. This is the universal calibration-update direction shared by classification, the online TD error, and the RL reward surprise.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cross-entropy gradient softmax(o)−y IS GSE's calibration-surprise signal: predicted coverage probability minus the revealed outcome. This is the SAME object as the RL layer's TD error and the online layer's loss subgradient — the universal 'prediction minus reality' update that drives all three learning layers. GSE's backprop updates the reader along this gradient.",
+        "source_operator": "cross_entropy_gradient",
+        "telemetry": "GSE telemetry: cross-entropy gradient softmax(o)−y per snap; calibration-surprise magnitude; link to TD error / online subgradient; exponential-family gradient form."
+      }
+    },
+    {
+      "primitive_id": "cross_entropy_loss",
+      "name": "Cross-entropy loss penalizes confident errors infinitely",
+      "verbatim_quote": "any error made when assigning such high confidence would incur infinite loss",
+      "page": "sec 4.1.2, printed p.129-130 (eq 4.1.8-4.1.9)",
+      "latex": "\\ell(y,\\hat y)=-\\sum_{j=1}^{q}y_j\\log\\hat y_j=\\log\\sum_{k=1}^{q}\\exp(o_k)-\\sum_{j=1}^{q}y_j o_j;\\qquad \\ell\\ge 0,\\ \\ell=0\\iff\\hat y=y",
+      "symbol_and_unit_ledger": "Cross-entropy loss = negative log-likelihood of the true class; for one-hot y only the true-class term survives. Bounded below by 0; zero only if the true label is predicted with certainty (impossible for finite weights, since softmax->1 needs logit->inf). A confident wrong prediction (probability 0 on the true class) incurs infinite loss (−log 0 = inf). The log-sum-exp form (4.1.9) is numerically stable.",
+      "assumptions": "Maximum-likelihood estimation; labels one-hot (or a full distribution); loss = −log P(true class); the log-sum-exp trick avoids overflow; infinite penalty for zero-probability errors.",
+      "breakdown_regime": "The infinite-loss property means GSE must NEVER assign zero probability to a possible outcome (a 'lock' that rules out an outcome is infinitely penalized if wrong). This is the loss-level enforcement of the Cover convexification: keep all outcomes possible. Numerically, use log-sum-exp, not naive exp.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's training loss is cross-entropy, and its infinite penalty for confident errors is the mathematical death of the 'lock': a model that assigns probability 0 to an outcome that occurs suffers infinite loss. GSE must keep every possible outcome nonzero — the loss-level twin of the online layer's Cover theorem and the calibration discipline. The log-sum-exp form is GSE's numerically stable implementation.",
+        "source_operator": "cross_entropy_loss",
+        "telemetry": "GSE telemetry: cross-entropy loss; zero-probability-outcome guard (no locks); log-sum-exp numerical stability; loss vs calibration confidence."
+      }
+    },
+    {
+      "primitive_id": "sgd_unbiased",
+      "name": "SGD: unbiased gradient at O(1) cost",
+      "verbatim_quote": "Stochastic gradient descent (SGD) reduces computational cost at each iteration.",
+      "page": "sec 12.4.1, printed p.493 (eq 12.4.1-12.4.4)",
+      "latex": "f(x)=\\frac1n\\sum_{i=1}^n f_i(x),\\quad x\\leftarrow x-\\eta\\nabla f_i(x),\\quad \\mathbb{E}_i[\\nabla f_i(x)]=\\nabla f(x)",
+      "symbol_and_unit_ledger": "The objective is the average per-example loss; full gradient descent costs O(n) per iteration; SGD samples one index i uniformly and steps along ∇f_i(x), costing O(1). The stochastic gradient is UNBIASED: E_i[∇f_i(x)] = ∇f(x). The noise injects variance even near the minimum, so a constant learning rate never settles — the rate must decay.",
+      "assumptions": "Objective = average of per-example losses; uniform sampling; unbiased single-example gradient; O(1) vs O(n) cost; learning rate must decrease to converge.",
+      "breakdown_regime": "A constant learning rate leaves persistent variance (never converges to the optimum); too small a rate makes no progress, too large diverges. The resolution is dynamic learning-rate decay. SGD's noise is the price of O(1) cost; minibatching trades variance for compute.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE trains its reader by SGD: each step samples one historical game and steps along its unbiased loss gradient, at O(1) cost instead of O(n) over the whole corpus. This is the same single-fresh-example unbiased gradient as the PAC layer's SGD-for-risk and the RL layer's Q-learning update — the universal scalable-learning mechanism. The decaying learning rate is GSE's convergence contract.",
+        "source_operator": "sgd_unbiased",
+        "telemetry": "GSE telemetry: SGD unbiased-gradient check; O(1) per-step cost; learning-rate decay schedule; residual variance near convergence; minibatch size."
+      }
+    },
+    {
+      "primitive_id": "dynamic_learning_rate",
+      "name": "Dynamic learning-rate decay",
+      "verbatim_quote": "The only way to resolve these conflicting goals is to reduce the learning rate",
+      "page": "sec 12.4.2, printed p.494-495 (eq 12.4.5)",
+      "latex": "\\eta(t)=\\eta_i\\ (t_i\\le t\\le t_{i+1})\\ \\text{piecewise};\\quad \\eta_0 e^{-\\lambda t}\\ \\text{exponential};\\quad \\eta_0(\\beta t+1)^{-\\alpha}\\ \\text{polynomial}",
+      "symbol_and_unit_ledger": "Three basic schedules: piecewise-constant (drop on stall), exponential decay (often stops prematurely), polynomial decay (alpha=0.5 popular, well-behaved for convex objectives). Exponential decay can fail to converge even after 1000 steps; polynomial inverse-sqrt decay converges better. For nonconvex problems meaningful guarantees are hard (minimizing nonconvex is NP-hard in general).",
+      "assumptions": "Learning rate must decay to balance initial progress vs final precision; polynomial alpha=0.5 is the convex-safe choice; warmup-then-decay and cyclical schedules also exist.",
+      "breakdown_regime": "Too-fast decay stops prematurely; too-slow wastes time and leaves noise. Exponential decay is aggressive and often premature. Nonconvex deep-learning objectives lack the convex convergence guarantees — the schedule is empirical. This connects to the PAC layer's Robbins-Monro conditions.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's training schedule decays the learning rate dynamically: polynomial inverse-sqrt decay (the convex-safe alpha=0.5) for the stable calibration target, piecewise drops on stall. This is the deep-learning counterpart of the RL layer's Robbins-Monro step-size contract and the online layer's eta=B/(L sqrt(2T)) — the same 1/sqrt(t) law appears across all three learning layers.",
+        "source_operator": "dynamic_learning_rate",
+        "telemetry": "GSE telemetry: learning-rate schedule (polynomial/piecewise/exponential); decay exponent alpha; convergence vs schedule; link to RM conditions and online eta law."
+      }
+    },
+    {
+      "primitive_id": "momentum_velocity",
+      "name": "Momentum: velocity as a leaky average of gradients",
+      "verbatim_quote": "It accumulates past gradients similar to how a heavy ball rolling down the objective function landscape integrates over past forces.",
+      "page": "sec 12.6.1, printed p.510-511 (eq 12.6.2-12.6.5, Polyak 1964)",
+      "latex": "v_t=\\beta v_{t-1}+g_{t,t-1}=\\sum_{\\tau=0}^{t-1}\\beta^\\tau g_{t-\\tau,t-\\tau-1};\\qquad v_t\\leftarrow\\beta v_{t-1}+g_{t,t-1},\\quad x_t\\leftarrow x_{t-1}-\\eta_t v_t",
+      "symbol_and_unit_ledger": "Momentum replaces the instantaneous gradient with a velocity v_t = leaky (exponential) average of past gradients, beta in (0,1). Large beta = long-range average; small beta = slight correction. The update uses v_t instead of g_t. This realizes batch-averaging's variance reduction without computing the batch, and accelerates ill-conditioned problems.",
+      "assumptions": "beta in (0,1) controls the averaging horizon; velocity accumulates aligned gradients and cancels oscillating ones; Polyak heavy-ball (1964); Nesterov acceleration variant.",
+      "breakdown_regime": "Momentum helps most on ill-conditioned objectives (narrow canyons): it aggregates well-aligned gradients in the flat direction and cancels oscillations in the steep direction. Without momentum, a single learning rate cannot handle both directions (small => slow in flat, large => diverge in steep).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's optimizer uses momentum: the velocity averages past snap-gradients, accelerating progress along consistent calibration directions and cancelling the oscillations from noisy individual games. This is the heavy-ball that lets GSE traverse the ill-conditioned loss landscape of a high-dimensional ontology — the same variance-reduction idea as the online layer's gradient averaging.",
+        "source_operator": "momentum_velocity",
+        "telemetry": "GSE telemetry: momentum beta; velocity v_t; oscillation cancellation in steep directions; acceleration in flat directions; ill-conditioning ratio."
+      }
+    },
+    {
+      "primitive_id": "momentum_illconditioned",
+      "name": "Momentum stabilizes ill-conditioned descent",
+      "verbatim_quote": "Furthermore, they allow us to average over subsequent gradients to obtain more stable directions of descent.",
+      "page": "sec 12.6.1, printed p.511",
+      "latex": "f(x)=0.1 x_1^2+2 x_2^2\\ (\\text{ill-conditioned canyon});\\qquad \\text{GD: small }\\eta\\Rightarrow\\text{slow }x_1,\\ \\text{large }\\eta\\Rightarrow\\text{diverge }x_2",
+      "symbol_and_unit_ledger": "On an ill-conditioned objective (flat in x_1, steep in x_2), gradient descent is trapped: a small learning rate converges slowly in the flat direction, a large one diverges in the steep direction. Momentum averages gradients — aggregating aligned ones in the flat direction (faster progress) and cancelling oscillating ones in the steep direction (stable descent). Acceleration even for noise-free convex problems is a key reason momentum works.",
+      "assumptions": "Ill-conditioning = directions with very different curvature; momentum's averaging resolves the single-learning-rate dilemma; acceleration is provable for convex problems (Nesterov).",
+      "breakdown_regime": "Without momentum the optimizer cannot simultaneously satisfy the flat and steep directions. The condition number (ratio of curvatures) sets how badly GD struggles; momentum mitigates but does not eliminate the need for preconditioning (Adagrad/Adam).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's ontology loss landscape is ill-conditioned (some coverage features have much larger curvature than others). Derived kernel: GSE uses momentum (and per-coordinate preconditioning via Adam) to traverse the canyon — averaging gradients to stabilize the steep directions while accelerating the flat ones, rather than tuning a single learning rate that cannot serve both.",
+        "source_operator": "momentum_illconditioned",
+        "telemetry": "GSE telemetry: loss-landscape condition number; momentum stabilization of steep directions; per-coordinate curvature; preconditioning need."
+      }
+    },
+    {
+      "primitive_id": "adam_algorithm",
+      "name": "Adam: momentum + per-coordinate scaling + bias correction",
+      "verbatim_quote": "Adam (Kingma and Ba, 2014) combines all these techniques into one efficient learning algorithm.",
+      "page": "sec 12.10, printed p.532-533 (eq 12.10.1-12.10.4)",
+      "latex": "v_t=\\beta_1 v_{t-1}+(1-\\beta_1)g_t,\\ s_t=\\beta_2 s_{t-1}+(1-\\beta_2)g_t^2;\\quad \\hat v_t=\\frac{v_t}{1-\\beta_1^t},\\ \\hat s_t=\\frac{s_t}{1-\\beta_2^t};\\quad g_t'=\\frac{\\eta\\hat v_t}{\\sqrt{\\hat s_t}+\\epsilon},\\ x_t\\leftarrow x_{t-1}-g_t'",
+      "symbol_and_unit_ledger": "Adam combines SGD (12.4), minibatching (12.5), momentum (12.6), per-coordinate preconditioning (12.7 Adagrad), and decoupled scaling (12.8 RMSProp). It keeps EWMA of the gradient (v_t, momentum) and squared gradient (s_t, second moment); beta1=0.9, beta2=0.999 (variance moves slower). Bias correction v̂=v/(1−beta1^t), ŝ=s/(1−beta2^t) fixes the zero-init bias. Update g'=eta v̂/(sqrt(ŝ)+eps), eps=1e-6.",
+      "assumptions": "beta1=0.9, beta2=0.999, eps=1e-6 typical; EWMA (leaky averaging) of first and second moments; bias correction for slow startup; per-coordinate adaptive learning rate.",
+      "breakdown_regime": "Adam is robust but NOT universally convergent — Reddi et al. (2019) show it can diverge in convex settings due to poor variance control (s_t blows up). Yogi (Zaheer et al. 2018) fixes the second-moment update. Larger minibatches also help. The bias correction is essential at startup.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's default optimizer is Adam: per-coordinate adaptive learning rates (rare coverage features get larger steps), momentum for stability, bias correction for clean startup. This is the engine's training workhorse — but GSE must respect its failure mode (divergence under high gradient variance) and fall back to Yogi or larger minibatches, the fail-closed discipline applied to optimization.",
+        "source_operator": "adam_algorithm",
+        "telemetry": "GSE telemetry: Adam v_t/s_t moments; beta1/beta2/eps; bias correction; per-coordinate step sizes; divergence monitor (s_t blow-up); Yogi fallback."
+      }
+    },
+    {
+      "primitive_id": "adam_divergence",
+      "name": "Adam can diverge; Yogi fixes the second moment",
+      "verbatim_quote": "They can be amended by using larger minibatches or by switching to an improved estimate",
+      "page": "sec 12.10, printed p.532 (eq 12.10.5-12.10.6, Yogi)",
+      "latex": "s_t\\leftarrow s_{t-1}+(1-\\beta_2)(g_t^2-s_{t-1})\\ \\text{(Adam)};\\qquad s_t\\leftarrow s_{t-1}+(1-\\beta_2)g_t^2\\odot\\mathrm{sgn}(g_t^2-s_{t-1})\\ \\text{(Yogi)}",
+      "symbol_and_unit_ledger": "Adam's second-moment update s_t += (1−beta2)(g_t^2 − s_{t-1}) can forget past values too quickly when g_t^2 has high variance or updates are sparse, causing divergence even in convex settings. Yogi replaces the deviation (g_t^2 − s_{t-1}) with g_t^2 ⊙ sgn(g_t^2 − s_{t-1}), so the update magnitude no longer depends on the deviation amount — controlling variance. Yogi also advises initializing momentum on a larger batch.",
+      "assumptions": "Adam divergence is a real, proven failure mode (Reddi et al. 2019), not a bug; Yogi's sign-based update bounds the second-moment growth; larger minibatches reduce gradient variance.",
+      "breakdown_regime": "Treating Adam as universally convergent is WRONG — it can diverge in convex problems. GSE must monitor the second moment and switch to Yogi (or larger batches) when variance is high. This is the optimizer-level fail-closed gate.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE must not assume Adam always converges. Derived kernel: GSE monitors the second-moment estimate s_t for blow-up and switches to Yogi's sign-controlled update (or larger minibatches) when gradient variance is high — a concrete fail-closed optimizer gate, refusing to publish a model trained by a diverging optimizer.",
+        "source_operator": "adam_divergence",
+        "telemetry": "GSE telemetry: second-moment s_t trajectory; divergence detection; Yogi switch trigger; gradient-variance estimate; minibatch size vs variance."
+      }
+    },
+    {
+      "primitive_id": "weight_decay",
+      "name": "Weight decay (ℓ2 regularization) restricts parameter size",
+      "verbatim_quote": "Rather than directly manipulating the number of parameters",
+      "page": "sec 3.7.1, printed p.119-120 (eq 3.7.2-3.7.3)",
+      "latex": "L(w,b)+\\frac{\\lambda}{2}\\|w\\|^2;\\qquad w\\leftarrow(1-\\eta\\lambda)w-\\frac{\\eta}{|B|}\\sum_{i\\in B}x^{(i)}(w^\\top x^{(i)}+b-y^{(i)})",
+      "symbol_and_unit_ledger": "Weight decay adds (lambda/2)‖w‖^2 to the loss, measuring complexity by distance of parameters from zero (f=0 is 'simplest'). lambda>=0 tuned on validation; lambda=0 recovers the unregularized loss. The SGD update shrinks w by (1−eta lambda) each step (hence 'decay'). ℓ2 = ridge (distributes weight evenly, robust to single-variable noise); ℓ1 = lasso (sparse, feature selection). Bias often not regularized.",
+      "assumptions": "lambda tuned on validation data; ℓ2 penalty biases toward evenly-distributed weights; ℓ1 toward sparsity; weight decay == ℓ2 reg ONLY for SGD (not necessarily for other optimizers like Adam).",
+      "breakdown_regime": "Too-large lambda underfits (focuses on shrinking weights, not fitting); too-small overfits. The ℓ2-vs-ℓ1 choice is a robustness-vs-sparsity tradeoff. Weight decay and ℓ2 regularization diverge for adaptive optimizers (AdamW decouples them). The bias term is usually left unregularized.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's reader is regularized by weight decay: the (lambda/2)‖w‖^2 penalty keeps the ontology weights small, the deep-learning twin of the PAC layer's Tikhonov stabilizer and the RL layer's regularized value fit. lambda is tuned on validation (never training), and GSE uses AdamW-style decoupled decay because plain Adam conflates weight decay with ℓ2 regularization. This is the stability that bounds the generalization gap.",
+        "source_operator": "weight_decay",
+        "telemetry": "GSE telemetry: weight-decay lambda (validation-tuned); ‖w‖^2 trajectory; ridge-vs-lasso choice; AdamW decoupling; bias unregularized; generalization gap vs lambda."
+      }
+    },
+    {
+      "primitive_id": "dropout",
+      "name": "Dropout: input noise = Tikhonov regularization",
+      "verbatim_quote": "Bishop (1995) formalized this idea when he proved that training with input noise is equivalent to Tikhonov regularization.",
+      "page": "sec 5.6, printed p.194-195 (eq 5.6.1, Srivastava et al. 2014)",
+      "latex": "h'=\\begin{cases}0&\\text{prob }p\\\\ h/(1-p)&\\text{prob }1-p\\end{cases},\\qquad \\mathbb{E}[h']=h",
+      "symbol_and_unit_ledger": "Dropout zeros each hidden activation with probability p and rescales survivors by 1/(1−p), so E[h']=h (unbiased). It injects noise into internal layers (Srivastava et al. 2014), breaking co-adaptation (no unit can rely on a specific pattern of others). Bishop (1995): training with input noise == Tikhonov regularization, linking smoothness/simplicity to perturbation resilience. Disabled at test time; test-time dropout can estimate uncertainty (agreement across dropout samples = confidence).",
+      "assumptions": "Dropout probability p per layer (lower near input); unbiased rescaling 1/(1−p); training-only (disabled at test); breaks co-adaptation; equivalent to an ensemble of sub-networks.",
+      "breakdown_regime": "Dropout p=1 zeros everything; p=0 is no regularization. Test-time dropout is a heuristic uncertainty estimate, not the standard. The co-adaptation-breaking is the mechanism; the Bishop/Tikhonov link is the theoretical justification (smoothness = simplicity).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE regularizes its reader with dropout: randomly zeroing coverage-feature activations during training breaks co-adaptation (no single feature can carry the prediction), the noise-injection twin of weight decay and the PAC stability principle. Test-time dropout gives GSE an uncertainty estimate — agreement across dropout samples is the engine's confidence signal, feeding the calibration discipline. Bishop's theorem ties it to the Tikhonov regularizer of the PAC layer.",
+        "source_operator": "dropout",
+        "telemetry": "GSE telemetry: dropout probability p per layer; unbiased rescaling; co-adaptation breaking; test-time dropout uncertainty (sample agreement); link to Tikhonov/stability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t0",
+      "think": "The Foundry's stack now has its neurons (Nielsen), representations (Prince), fleet (Reddi), in-game online constitution (Shalev-Shwartz 2012), pre-game generalization epistemology (Shalev-Shwartz & Ben-David 2014), and play-call decision theory (Szepesvari). Zhang, Lipton, Li and Smola's textbook supplies the algorithms layer: the actual neural machinery that implements all of it. This is where the abstract laws become runnable components. The centerpiece is attention. The intuition is that rather than compressing the whole input into one fixed vector — the seq2seq bottleneck that fails on long sequences — the decoder should revisit the input at every step and selectively focus on what matters. For GSE this is the formation/coverage reader: the query is the current game state, the keys and values are the playbook and coverage library, and attention pooling aggregates them into a contextual read. The weights are a convex combination — nonnegative, summing to one — produced by softmax, which is the SAME simplex link function as the online layer's entropic mirror descent and the RL layer's Boltzmann policy. Softmax is the universal differentiable map from scores to a calibrated distribution, and its gradient never vanishes. The scaled dot-product scoring function q^T k/sqrt(d) is a numerical-stability necessity: for d-dimensional unit-variance keys the dot product has variance d, and without the 1/sqrt(d) rescaling the softmax saturates into a hard argmax with vanishing gradients. GSE must scale its situation-shell logits by 1/sqrt(d) or its coverage selection collapses. Additive attention bridges mismatched query/key feature spaces via a learned tanh MLP. Multi-head attention runs several such poolings in parallel over different learned representation subspaces, so the engine can simultaneously attend to coverage, personnel, and down-distance cues rather than committing to a single similarity notion. Self-attention lets every element of the game state attend to every other, building the contextual representation where a coverage shell's meaning depends on the whole formation; it has O(1) path length (easy long-range dependencies) and O(1) sequential operations (fully parallel) but O(n^2 d) compute — the fleet layer's budget caps how large a state the engine can read. Because self-attention is order-blind, positional encoding restores the drive's play order, and its rotation property lets the engine reason about relative snap offsets. The Transformer stacks multi-head self-attention and positionwise feed-forward sublayers with residual connections and layer normalization, and masked decoder attention preserves the autoregressive property — GSE's prediction for snap i may depend only on snaps already played, never on the future, the architectural twin of the online layer's round-by-round causality. The output head is softmax plus cross-entropy, and its gradient is the most important single equation in the book for GSE: softmax(o)_j − y_j, the predicted probability minus the revealed reality. This is the calibration-surprise signal, and it is the SAME object as the RL layer's TD error and the online layer's loss subgradient — the universal prediction-minus-reality update that drives all three learning layers, a consequence of the exponential-family structure of the log-likelihood. The cross-entropy loss itself is bounded below by zero and incurs INFINITE loss for a confident wrong prediction (−log 0 = infinity). This is the loss-level death of the tout's lock: a model that assigns probability zero to an outcome that occurs is infinitely penalized, so GSE must keep every possible outcome nonzero — the loss-level twin of the online layer's Cover convexification. The training dynamics are the optimization chapter. SGD samples one example and steps along its unbiased gradient at O(1) cost instead of O(n), the same single-fresh-example mechanism as the PAC layer's SGD-for-risk and the RL layer's Q-learning. A constant learning rate never settles (persistent noise), so the rate must decay dynamically — polynomial inverse-sqrt (alpha=0.5) is the convex-safe choice, the same 1/sqrt(t) law as the online layer's eta and the RL layer's Robbins-Monro conditions. Momentum replaces the instantaneous gradient with a velocity, a leaky average of past gradients (the heavy ball), aggregating aligned gradients in flat directions and cancelling oscillations in steep ones — the cure for the ill-conditioned canyon of a high-dimensional ontology loss landscape. Adam combines SGD, minibatching, momentum, and per-coordinate preconditioning with bias-corrected EWMA moments (beta1=0.9, beta2=0.999, eps=1e-6), and is GSE's training workhorse. But Adam is NOT universally convergent: Reddi et al. proved it can diverge in convex settings when the second moment blows up, and Yogi's sign-controlled update fixes it. GSE must monitor the second moment and fall back to Yogi or larger minibatches — the fail-closed discipline applied to the optimizer itself. Finally regularization. Weight decay adds (lambda/2)‖w‖^2, restricting parameter size, the deep-learning twin of the PAC layer's Tikhonov stabilizer; lambda is tuned on validation, and because plain Adam conflates weight decay with ℓ2 regularization GSE uses decoupled AdamW. Dropout zeros activations with probability p and rescales survivors by 1/(1−p) (unbiased), breaking co-adaptation; Bishop's theorem that input-noise training equals Tikhonov regularization ties it to the same stability principle, and test-time dropout gives GSE an uncertainty estimate — agreement across dropout samples is the engine's confidence signal. Every equation is a load-bearing component of GSE's neural engine: the attention reader, the calibrated softmax head, the prediction-minus-reality gradient, the SGD/momentum/Adam training dynamics, and the weight-decay/dropout regularization that bounds generalization. The algorithms layer is where the Foundry's abstract laws become a runnable, calibrated, fail-closed predictor.",
+      "retrocausal_genealogy": "Retrocausal genealogy: attention descends from Bahdanau et al. (2014, learning to align) and Graves (2013, handwriting alignment), with the Nadaraya-Watson kernel-regression precursor (Nadaraya 1964, Watson 1964); the Transformer from Vaswani et al. (2017, Attention Is All You Need); scaled dot-product and multi-head attention from the same; positional encoding from Vaswani et al.; residual connections from He et al. (ResNet, Section 8.6); layer normalization from Ba et al. (2016); softmax from Gibbs (1902, statistical physics); cross-entropy / maximum likelihood from the exponential-family tradition; SGD from Robbins-Monro (1951); momentum from Polyak (1964, heavy ball) and Nesterov acceleration; Adagrad from Duchi et al. (2011); RMSProp from Hinton; Adam from Kingma-Ba (2014); Adam's divergence from Reddi et al. (2019) and the Yogi fix from Zaheer et al. (2018); weight decay / ridge from the ℓ2 regularization tradition and lasso from ℓ1; dropout from Srivastava et al. (2014) with the input-noise = Tikhonov equivalence from Bishop (1995). Each GSE component is the final cause of a decades-long chain of deep-learning necessity.",
+      "theory_of_mind": "Recursive theory of mind: attention is a differentiable theory-of-mind mechanism — the query models what the decoder needs to know, the keys model what each input token offers, and the softmax weights are the decoder's belief about which tokens are relevant to its current prediction. In GSE the recursion is literal: the engine's query (the current situation) attends over the coverage library (the defense's possible responses), weighting each shell by its compatibility — a model of the defense's mind. Self-attention extends this to every element modeling every other, the formation reading itself. The cross-entropy gradient (prediction minus reality) is the engine correcting its model of the world against what actually happened, the same surprise-driven belief update as the online and RL layers.",
+      "cross_layer_veto": "Cross-layer veto adjudication: the fleet layer (Reddi) VETOES self-attention states whose O(n^2 d) cost exceeds the crucible budget. The numerical layer VETOES unscaled dot-product logits (softmax saturation, vanishing gradients) — the 1/sqrt(d) scaling is mandatory. The online layer (Cover) and the loss layer VETO any zero-probability outcome (infinite cross-entropy penalty for a confident wrong lock). The causality layer VETOES unmasked decoder attention (future-snap leakage). The optimizer layer VETOES treating Adam as universally convergent (Reddi divergence) and demands a Yogi/larger-batch fallback under high gradient variance. The PAC layer VETOES tuning weight decay on training data (must be validation) and VETOES conflating Adam weight decay with ℓ2 regularization (use AdamW). When layers conflict the binding constraint wins and the gatekeeper PASSes rather than fabricating a guarantee: a diverging optimizer or a saturated attention head is refused, not published. Same fail-closed discipline as the pick-publication gate."
+    }
+  ],
+  "universal_lens": "Any deep predictive system is governed by the algorithms layer: attention selectively aggregates a variable-size input via softmax-weighted convex combinations (scaled dot-product for numerical stability); self-attention gives O(1) path length at O(n^2 d) cost and needs positional encoding for order; the Transformer stacks attention+FFN with residual+layernorm and causal masking; softmax+cross-entropy yields a calibrated output whose gradient is prediction-minus-reality and whose loss infinitely penalizes confident errors; SGD/momentum/Adam provide scalable unbiased training with dynamic learning rates; and weight decay/dropout regularize via parameter-size restriction and noise injection (Bishop: input noise = Tikhonov). These laws bind any deep learner — vision, language, speech, and football prediction alike.",
+  "gsi_mapping": "For GSI, this textbook is the engineering epistemology of deep prediction: why attention must be scaled (numerical stability), why softmax is the universal calibrated link, why the cross-entropy gradient is the universal prediction-minus-reality update, why a confident wrong prediction is infinitely penalized (no locks), why Adam can diverge and must be gated, and why regularization (weight decay, dropout) is the stability that bounds generalization. It gives GSI the fail-closed discipline for the neural machinery: refuse saturated attention, diverging optimizers, and zero-probability outcomes.",
+  "gse_mapping": "For GSE, this is the neural-machinery layer: the formation/coverage reader is scaled dot-product / multi-head self-attention (query=game state, keys/values=playbook), the output head is softmax+cross-entropy (gradient = calibration surprise = TD error = online subgradient), the training dynamics are SGD/momentum/Adam with dynamic learning rates and a Yogi fallback, and regularization is weight decay (AdamW) + dropout (test-time uncertainty). The Transformer's causal masking enforces snap-by-snap autoregression; the O(n^2 d) attention cost is the fleet budget constraint; the infinite cross-entropy penalty for confident errors is the loss-level death of the lock. This layer turns the Foundry's abstract laws into a runnable, calibrated, fail-closed predictor."
+}
