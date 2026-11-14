@@ -586,3 +586,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 03:40:50 | COMPLETE | 0fbcbcb524c750ad | primitives=27 think_words=889
 - 2026-11-14 03:41:49 | CLAIMED | 02cfc3cad2b9f911 | worker=hermes-inline shard03 file=2024 - Optimizing Football Squad Planning Balancing Competitive Success and Financial Sustainability - Unknown Authors.pdf
 - 2026-11-14 03:47:27 | COMPLETE | 02cfc3cad2b9f911 | primitives=25 think_words=870
+- 2026-11-14 03:48:34 | CLAIMED | 039b0af9d963efda | worker=hermes-inline shard03 file=2026 - Comparative Efficacy of Different Aquatic Exercise Modalities on Cognitive Function in The Elderly A Systematic Review and Network Meta-Anal - Song et al.pdf
+- 2026-11-14 03:54:26 | COMPLETE | 039b0af9d963efda | primitives=22 think_words=869
