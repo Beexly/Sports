@@ -516,3 +516,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 22:58:35 | REFUSAL_ACCEPTED | 527e4d714a574106 | INSUFFICIENT_SOURCE_ACCESS: INSUFFICIENT_SOURCE_ACCESS: the delivered PDF is a download-page placeholder, not the source book. It is 1 page / 60 characters containing only the title 'Match Quarters: A Modern Guidebook to Split-F
 - 2026-11-13 23:04:38 | CLAIMED | 64f765ba0a849b1d | worker=hermes-inline targeted hand-delivered file=ops-2026-NFL-Rulebook-FINAL.pdf
 - 2026-11-13 23:04:38 | COMPLETE | 64f765ba0a849b1d | primitives=26 think_words=992
+- 2026-11-13 23:09:22 | CLAIMED | 4f750a0c8577fe9a | worker=hermes-inline targeted hand-delivered file=Chapter-1-Mental-Game-of-Football.pdf
+- 2026-11-13 23:10:49 | COMPLETE | 4f750a0c8577fe9a | primitives=18 think_words=872
