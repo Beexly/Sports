@@ -1,0 +1,12 @@
+{
+  "name": "@sports/stealth-skeleton-provider",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OpenRouter Provider Integration v2.4 document/chat/mcp implementation shared by the Cloudflare worker gateway and the Vercel API routes. Lives in packages/ because production imports it: workers/ is not deployed (see workers/README.md), so a worker-only home would make undeployed code load-bearing.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "node --experimental-strip-types --test src/__tests__/stealth-skeleton-provider.test.ts",
+    "typecheck": "tsc --noEmit"
+  }
+}

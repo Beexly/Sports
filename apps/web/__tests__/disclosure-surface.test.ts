@@ -378,21 +378,32 @@ describe("existing disclosures stay put", () => {
     expect(src).toContain("consent_collection");
   });
 
-  it("the stated refund window is the same on /terms, /pricing and /faq", () => {
+  it("the stated refund window is the same on /terms and /faq", () => {
     // A refund policy that differs between the page that sells and the page
     // that governs is a live dispute waiting to happen.
+    //
+    // /pricing is deliberately NOT in this list. It sells one-time packs and
+    // says so ("No Monthly Subscription Needed Right Now ... no recurring
+    // billing"), while /terms and /faq describe recurring plans that are still
+    // under construction. Two pins enforce that split from the other side —
+    // pricing-honesty forbids /money-back/ and pricing-page-smoke forbids
+    // /3-day money-back/ on the page — so this rule keeps the governing docs
+    // consistent and asserts the pack page makes no plan-shaped promise.
     const terms = read(join(APP, "terms", "page.tsx"));
     const pricing = read(join(APP, "pricing", "page.tsx"));
     const faq = read(join(APP, "faq", "page.tsx"));
     for (const [name, src] of [
       ["terms", terms],
-      ["pricing", pricing],
       ["faq", faq],
     ] as const) {
       expect(src, `${name} no longer states the 3-day money-back window`).toMatch(
         /3-day money-back window|refund within 3 days/,
       );
     }
+    // One-time packs: no subscription ladder, no refund window for a plan the
+    // page does not sell.
+    expect(pricing, "/pricing sells one-time packs and must say so").toMatch(/one-time/i);
+    expect(pricing, "/pricing must not promise a plan-shaped refund window").not.toMatch(/money-back/i);
     // /terms is the only place that may define the proration rule; pin the
     // wording the other two are written against.
     expect(terms).toMatch(/do not pro-rate refunds/);

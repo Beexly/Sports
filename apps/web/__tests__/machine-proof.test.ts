@@ -178,7 +178,9 @@ describe("route handlers", () => {
 
   it("GET /llms.txt → 200 text/plain, agent manifest", async () => {
     const { GET } = await import("@/app/llms.txt/route");
-    const res = GET();
+    // The handler is async — without the await this read `undefined.status` and
+    // passed a broken contract (the route was never actually exercised).
+    const res = await GET();
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toMatch(/text\/plain/);
     const body = await res.text();

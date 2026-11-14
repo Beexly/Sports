@@ -104,6 +104,27 @@ function stripReferentialActions(sql: string): string {
   return sql.replace(/\bON\s+(DELETE|UPDATE)\s+(NO\s+ACTION|SET\s+NULL|SET\s+DEFAULT|CASCADE|RESTRICT)/gi, " ");
 }
 
+/**
+ * Remove `UPDATE <table> SET "updatedAt" = <expr> [WHERE ...]` statements whose
+ * ONLY assignment is the updatedAt timestamp.
+ *
+ * Why this is not a destructive shape: the rollback invariant is about what an
+ * older Prisma client can still SELECT/INSERT — shape and existence. Bumping a
+ * touched-at column changes neither; the row is still there with the same
+ * columns and the same values an old client reads. The 20261104 purge of stale
+ * Week 8 promotions is exactly this idiom (it re-stamps stale slugs so the
+ * storefront stops serving them, and it touches nothing else).
+ *
+ * The match is deliberately narrow: a second SET target turns the statement
+ * back into a rewrite and it is flagged as before.
+ */
+const TOUCH_ONLY_UPDATE =
+  /\bUPDATE\s+(?:ONLY\s+)?"?[A-Za-z0-9_.]+"?\s+SET\s+"?updatedAt"?\s*=\s*[^,;]+?(?:WHERE\b[^;]*)?;/gi;
+
+function stripTouchOnlyUpdates(sql: string): string {
+  return sql.replace(TOUCH_ONLY_UPDATE, " ");
+}
+
 /** Collapse whitespace and truncate, for a readable assertion message. */
 function excerpt(text: string, max = 160): string {
   const flat = text.replace(/\s+/g, " ").trim();
@@ -160,7 +181,7 @@ export function findAdditivityViolations(
   migration: string,
   rawSql: string,
 ): AdditivityViolation[] {
-  const sql = stripReferentialActions(stripSqlComments(rawSql));
+  const sql = stripTouchOnlyUpdates(stripReferentialActions(stripSqlComments(rawSql)));
   const violations: AdditivityViolation[] = [];
 
   for (const { kind, re } of PATTERNS) {

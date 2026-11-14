@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { NextResponse } from "next/server";
-import { handleStealthSkeletonRequest } from "../../../../../../../workers/stealth-skeleton-provider/src/index";
+import { handleStealthSkeletonRequest } from "@sports/stealth-skeleton-provider";
 
 function resolveOpenRouterKey(): string | undefined {
   const fromEnv = process.env["OPENROUTER_API_KEY"]?.trim();

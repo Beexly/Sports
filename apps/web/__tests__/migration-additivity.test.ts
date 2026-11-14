@@ -196,6 +196,27 @@ describe("findAdditivityViolations does not flag the additive idioms this repo u
     `;
     expect(findAdditivityViolations("synthetic", sql)).toEqual([]);
   });
+
+  it("allows a touch-only UPDATE that bumps updatedAt and nothing else", () => {
+    // Shape of 20261104_purge_stale_packages: it re-stamps stale Week 8
+    // promotions so the storefront stops serving them. No column is removed,
+    // no value an older client reads is rewritten — see stripTouchOnlyUpdates.
+    const sql = `
+      UPDATE "Promotion"
+      SET "updatedAt" = CURRENT_TIMESTAMP
+      WHERE "slug" LIKE '%WEEK_08%' OR "headline" LIKE '%Week 8%';
+    `;
+    expect(findAdditivityViolations("synthetic", sql)).toEqual([]);
+  });
+
+  it("still flags an UPDATE that rewrites a real column alongside updatedAt", () => {
+    const sql = `
+      UPDATE "Promotion"
+      SET "updatedAt" = CURRENT_TIMESTAMP, "headline" = 'Retired'
+      WHERE "slug" LIKE '%WEEK_08%';
+    `;
+    expect(findAdditivityViolations("synthetic", sql).map((v) => v.kind)).toContain("update_rows");
+  });
 });
 
 describe("index builds that would lock an existing table", () => {
@@ -218,6 +239,12 @@ describe("index builds that would lock an existing table", () => {
     expect(byMigration).toEqual([
       "20260902230000_game_merge_alias:games",
       "20260902231000_week1_hot_path_indexes:picks",
+      // 2026-09-24: a plain UNIQUE index on the pre-existing source_snapshots
+      // table (provider, sourceKind, externalId). Additive, but the build holds
+      // a SHARE lock for its duration, so writes to source_snapshots block.
+      // Accepted deliberately: the table is a research ingest sink, not a
+      // request-path write target, so the window is off-peak and short.
+      "20260924191000_research_artifact_source_kind:source_snapshots",
     ]);
   });
 
