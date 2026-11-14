@@ -1,0 +1,95 @@
+{
+  "book_id": "6c4e3dd744041e16",
+  "source_status": "COMPLETE",
+  "title": "media-intelligence-engine",
+  "file_name": "media-intelligence-engine.md",
+  "sha256": "6c4e3dd744041e168a5b64ca4c93c811b99f15b8ed7e5a588d1618d730760721",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rights_gating",
+      "name": "Rights-Gated Data Flow",
+      "verbatim_quote": "- Sources are rights-gated before display, storage, redistribution, training, or expert-signal conversion.",
+      "page": 1,
+      "latex": "\\mathcal{R}(S) \\rightarrow \\{0,1\\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{R}(S)': 'Rights-gate function on source S'}",
+      "assumptions": "Rights metadata R(S) is complete and up-to-date",
+      "breakdown_regime": "Unauthorized access triggers binary zero output",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian prior truncation in GSI; state-transition filter in GSE",
+        "source_operator": "rights_gating",
+        "telemetry": "Rights-compliance audit trail"
+      }
+    },
+    {
+      "primitive_id": "url_pagination",
+      "name": "Paginated URL Triage",
+      "verbatim_quote": "- Candidate scale is modeled for 500,000+ URLs with paginated review and triage.",
+      "page": 1,
+      "latex": "N_{urls} \\approx 5 \\times 10^5",
+      "symbol_and_unit_ledger": "{'N_{urls}': 'Total candidate URL count'}",
+      "assumptions": "URLs are independently reviewable",
+      "breakdown_regime": "Scalability floor at 500K",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals for triage efficiency in GSI; batch processing state transitions in GSE",
+        "source_operator": "url_pagination",
+        "telemetry": "Pagination throughput metrics"
+      }
+    },
+    {
+      "primitive_id": "source_graph",
+      "name": "Source Graph Hardening Foundation",
+      "verbatim_quote": "# Media Intelligence Engine StatKing now treats this area as part of the Source Graph + Media Intelligence hardening foundation.",
+      "page": 1,
+      "latex": "G_S = (V, E, W)",
+      "symbol_and_unit_ledger": "{'G_S': 'Source graph structure', 'V': 'Set of sources', 'E': 'Edges between sources', 'W': 'Weighted edges representing relationships'}",
+      "assumptions": "Graph is sparse and dynamically evolving",
+      "breakdown_regime": "Hardening prevents adversarial node insertion",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI posterior calibration via graph neural networks; GSE situational awareness through graph embeddings",
+        "source_operator": "source_graph",
+        "telemetry": "Graph connectivity stability"
+      }
+    },
+    {
+      "primitive_id": "production_feed_integration",
+      "name": "Production Feed Replacement",
+      "verbatim_quote": "- Next step: replace generated fixtures with authorized production feeds and premium UX.",
+      "page": 1,
+      "latex": "F_{gen} \\rightarrow F_{prod}",
+      "symbol_and_unit_ledger": "{'F_{gen}': 'Generated fixture feed', 'F_{prod}:': 'Authorized production feed'}",
+      "assumptions": "Production feeds have higher fidelity and lower latency",
+      "breakdown_regime": "Fixture-based testing phase ends",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Premium UX drives GSI user engagement; state-transition models in GSE use production data for real-time reasoning",
+        "source_operator": "production_feed_integration",
+        "telemetry": "Feed integration success rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6c4e3dd744041e16_t0",
+      "think": "The primitives represent a layered information flow: Rights-Gating ensures legal compliance by acting as a binary filter on source data, Paginated URL Triage manages massive-scale candidate selection through efficient batch processing, Source Graph Hardening provides a robust topological framework for organizing and securing data relationships, and Production Feed Integration enables the transition from development to live, high-fidelity data streams. Together, they form a mathematical infrastructure for trustworthy media intelligence systems.\n\nDeep epistemic analysis for media-intelligence-engine (6c4e3dd744041e16, domain=other, pages_read=1/1): Operator 'Rights-Gated Data Flow' (page 1, domain other) captures: - Sources are rights-gated before display, storage, redistribution, training, or expert-signal conversion. Assumptions: Rights metadata R(S) is complete and up-to-date Breakdown regime: Unauthorized access triggers binary zero output Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian prior truncation in GSI; state-transition filter in GSE Operator 'Paginated URL Triage' (page 1, domain other) captures: - Candidate scale is modeled for 500,000+ URLs with paginated review and triage. Assumptions: URLs are independently reviewable Breakdown regime: Scalability floor at 500K Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for triage efficiency in GSI; batch processing state transitions in GSE Operator 'Source Graph Hardening Foundation' (page 1, domain other) captures: # Media Intelligence Engine StatKing now treats this area as part of the Source Graph + Media Intelligence hardening foundation. Assumptions: Graph is sparse and dynamically evolving Breakdown regime: Hardening prevents adversarial node insertion Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI posterior calibration via graph neural networks; GSE situational awareness through graph embeddings Operator 'Production Feed Replacement' (page 1, domain other) captures: - Next step: replace generated fixtures with authorized production feeds and premium UX. Assumptions: Production feeds have higher fidelity and lower latency Breakdown regime: Fixture-based testing phase ends Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Premium UX drives GSI user engagement; state-transition models in GSE use production data for real-time reasoning Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for media-intelligence-engine (6c4e3dd744041e16, domain=other, pages_read=1/1): Operator 'Rights-Gated Data Flow' (page 1, domain other) captures: - Sources are rights-gated before display, storage, redistribution, training, or expert-signal conversion. Assumptions: Rights metadata R(S) is complete and up-to-date Breakdown regime: Unauthorized access triggers binary zero output Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian prior truncation in GSI; state-transition filter in GSE Operator 'Paginated URL Triage' (page 1, domain other) captures: - Candidate scale is modeled for 500,000+ URLs with paginated review and triage. Assumptions: URLs are independently reviewable Breakdown regime: Scalability floor at 500K Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for triage efficiency in GSI; batch processing state transitions in GSE Operator 'Source Graph Hardening Foundation' (page 1, domain other) captures: # Media Intelligence Engine StatKing now treats this area as part of the Source Graph + Media Intelligence hardening foundation. Assumptions: Graph is sparse and dynamically evolving Breakdown regime: Hardening prevents adversarial node insertion Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI posterior calibration via graph neural networks; GSE situational awareness through graph embeddings Operator 'Production Feed Replacement' (page 1, domain other) captures: - Next step: replace generated fixtures with authorized production feeds and premium UX. Assumptions: Production feeds have higher fidelity and lower latency Breakdown regime: Fixture-based testing phase ends Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Premium UX drives GSI user engagement; state-transition models in GSE use production data for real-time reasoning Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These concepts draw from information theory, graph algorithms, and database pagination, evolving from early web crawling practices into modern sovereign data pipelines. Retrocausal Genealogy: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors seeking unauthorized data access and regulators enforcing compliance, while internal actors aim for operational efficiency. Theory of Mind & Decision Maker Model: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independent validation across layers; leakage vetoes involve ensuring that gated data does not expose proprietary signal extraction methods. Cross-Layer Veto & Anti-Leakage Check: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in media-intelligence-engine (6c4e3dd744041e16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

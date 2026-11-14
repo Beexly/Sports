@@ -1,0 +1,78 @@
+{
+  "book_id": "1adfd4631e0b516b",
+  "source_status": "COMPLETE",
+  "title": "2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors",
+  "file_name": "2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors.pdf",
+  "sha256": "1adfd4631e0b516b9d2bf2ff0d516b78664d09c4399563ad5c5ab9392d91f1d3",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "difference_in_differences",
+      "name": "Difference-in-Differences",
+      "verbatim_quote": "I demonstrate this potential by analyzing the effect of the 2023 shift ban at both the overall and player-specific levels.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Parallel trends assumption between treatment and control groups, no anticipation effects, stable unit treatment value assumption (SUTVA)",
+      "breakdown_regime": "Violation leads to biased causal estimates when trends diverge",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Posterior predictive checks for counterfactual outcomes. GSE: State-transition models with invariant baseline hazard ratios.",
+        "source_operator": "difference_in_differences",
+        "telemetry": "Placebo tests on pre-treatment periods"
+      }
+    },
+    {
+      "primitive_id": "synthetic_control_analysis",
+      "name": "Synthetic Control Analysis",
+      "verbatim_quote": "For individual players, synthetic control analyses identify several players whose offensive performance (OBP, OPS, and wOBA) improved significantly because of the rule change, and other players with previously high shift rates for whom it had little effect.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Convex combination weights sum to one, sparsity constraint, good balance on pre-intervention covariates",
+      "breakdown_regime": "Overfitting occurs when donor pool is too large relative to pre-treatment periods",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conformalized weighted ensemble predictions. GSE: Robust state-action value functions under distribution shifts.",
+        "source_operator": "synthetic_control_analysis",
+        "telemetry": "Cross-validation mean squared prediction error on pre-treatment"
+      }
+    },
+    {
+      "primitive_id": "interrupted_time_series",
+      "name": "Interrupted Time Series",
+      "verbatim_quote": "However, for a variety of reasons, this has generally not been the case.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Stationarity of residuals, no autocorrelation beyond intervention effect, sufficient pre-intervention length",
+      "breakdown_regime": "Autocorrelation violates standard error estimates, leading to inflated Type I errors",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Bayesian structural time series with forecast-error variance shrinkage. GSE: Reinforcement learning with temporal difference learning.",
+        "source_operator": "interrupted_time_series",
+        "telemetry": "Ljung-Box test for autocorrelation in residuals"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1adfd4631e0b516bt0",
+      "think": "These sovereign primitives arise from the fundamental challenge of isolating causal effects in non-randomized sports interventions. Difference-in-differences exploits parallel trends between treated and control groups, assuming that without the rule change, outcomes would have evolved similarly. Synthetic control analysis constructs a weighted composite of untreated units to serve as a counterfactual, while interrupted time series examines abrupt changes in level or slope at the intervention point. Failure modes include autocorrelation, pre-existing trend differences, and anticipation effects, which can bias estimates. These methods are duals of each other under certain linear constraints, forming a unified framework for quasi-experimental inference.\n\nDeep epistemic analysis for 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b, domain=other, pages_read=13/13): Operator 'Difference-in-Differences' (page 1, domain other) captures: I demonstrate this potential by analyzing the effect of the 2023 shift ban at both the overall and player-specific levels. Assumptions: Parallel trends assumption between treatment and control groups, no anticipation effects, stable unit treatment value assumption (SUTVA) Breakdown regime: Violation leads to biased causal estimates when trends diverge Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior predictive checks for counterfactual outcomes. GSE: State-transition models with invariant baseline hazard ratios. Operator 'Synthetic Control Analysis' (page 1, domain other) captures: For individual players, synthetic control analyses identify several players whose offensive performance (OBP, OPS, and wOBA) improved significantly because of the rule change, and other players with previously high shift rates for whom it had little effect. Assumptions: Convex combination weights sum to one, sparsity constraint, good balance on pre-intervention covariates Breakdown regime: Overfitting occurs when donor pool is too large relative to pre-treatment periods Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformalized weighted ensemble predictions. GSE: Robust state-action value functions under distribution shifts. Operator 'Interrupted Time Series' (page 1, domain other) captures: However, for a variety of reasons, this has generally not been the case. Assumptions: Stationarity of residuals, no autocorrelation beyond intervention effect, sufficient pre-intervention length Breakdown regime: Autocorrelation violates standard error estimates, leading to inflated Type I errors Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Bayesian structural time series with forecast-error variance shrinkage. GSE: Reinforcement learning with temporal difference learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b, domain=other, pages_read=13/13): Operator 'Difference-in-Differences' (page 1, domain other) captures: I demonstrate this potential by analyzing the effect of the 2023 shift ban at both the overall and player-specific levels. Assumptions: Parallel trends assumption between treatment and control groups, no anticipation effects, stable unit treatment value assumption (SUTVA) Breakdown regime: Violation leads to biased causal estimates when trends diverge Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior predictive checks for counterfactual outcomes. GSE: State-transition models with invariant baseline hazard ratios. Operator 'Synthetic Control Analysis' (page 1, domain other) captures: For individual players, synthetic control analyses identify several players whose offensive performance (OBP, OPS, and wOBA) improved significantly because of the rule change, and other players with previously high shift rates for whom it had little effect. Assumptions: Convex combination weights sum to one, sparsity constraint, good balance on pre-intervention covariates Breakdown regime: Overfitting occurs when donor pool is too large relative to pre-treatment periods Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformalized weighted ensemble predictions. GSE: Robust state-action value functions under distribution shifts. Operator 'Interrupted Time Series' (page 1, domain other) captures: However, for a variety of reasons, this has generally not been the case. Assumptions: Stationarity of residuals, no autocorrelation beyond intervention effect, sufficient pre-intervention length Breakdown regime: Autocorrelation violates standard error estimates, leading to inflated Type I errors Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Bayesian structural time series with forecast-error variance shrinkage. GSE: Reinforcement learning with temporal difference learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Rubin's potential outcomes framework and Neyman's finite population causality, these techniques were popularized in economics by Angrist and Krueger, then adapted for sports analysis by学者如Klemker et al. Retrocausal Genealogy: Rooted in 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Sports leagues may selectively report favorable findings, while teams might resist rule changes that harm star players. Fans expect improvements in competitiveness, while players prioritize safety and skill display. Theory of Mind & Decision Maker Model: Rooted in 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Collinearity between shift ban and era trends (e.g., launch angle revolution) must be checked via variance inflation factors; leakage occurs if post-change data influence pre-change synthetic controls. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2024 - Panel Data Methods to Evaluate the Impact of Rule Changes - Unknown Authors (1adfd4631e0b516b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

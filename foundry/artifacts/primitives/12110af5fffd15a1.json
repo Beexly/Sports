@@ -1,0 +1,95 @@
+{
+  "book_id": "12110af5fffd15a1",
+  "source_status": "COMPLETE",
+  "title": "1153-policy-learning-with-abstention",
+  "file_name": "1153-policy-learning-with-abstention.md",
+  "sha256": "12110af5fffd15a188bcf02aeac5f9e8dd5f84521bd8d481aa639236c573c926",
+  "primary_domain": "cs",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "disagreement_abstention_framework",
+      "name": "Disagreement Abstention Framework",
+      "verbatim_quote": "**Verdict:** ADAPT The disagreement-based abstention construction (abstain exactly where near-optimal policies disagree) and the abstention-powered safe-policy-improvement protocol are both directly adaptable: the first to GSE's post/no-post decision, the second to certifying engine version upgrades before public deployment.",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Binary treatment space, unknown propensities, bounded rewards, stable observational distribution",
+      "breakdown_regime": "High uncertainty regions where optimal policies disagree",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE situational reasoning: abstain when posterior predictive intervals overlap beyond a threshold, preserving coverage while maximizing expected value.",
+        "source_operator": "disagreement_abstention_framework",
+        "telemetry": "Post-abstention selective ROI on held-out test data, compared to a fixed baseline policy"
+      }
+    },
+    {
+      "primitive_id": "doubly_robust_pseudo_outcomes",
+      "name": "Doubly-Robust Pseudo-Outcomes",
+      "verbatim_quote": "**Unknown propensities (§3.2, Algorithm 4):** replace IPW with doubly-robust pseudo-outcomes φ̂(x,d,y) = ĝ(d,x) + [dD/p̂(x) + (1-d)(1-D)/(1-p̂(x))](y - ĝ(d,x)); same construction with expanded α.",
+      "page": 1,
+      "latex": "\\widehat{\\varphi}(x,d,y) = \\widehat{g}(d,x) + \\left[\\frac{dD}{\\widehat{p}(x)} + \\frac{(1-d)(1-D)}{1-\\widehat{p}(x)}\\right]\\bigl(y - \\widehat{g}(d,x)\\bigr)",
+      "symbol_and_unit_ledger": "ŷ-hat: outcome estimate (same units as Y), p-hat: propensity estimate (dimensionless), φ-hat: pseudo-outcome (same units as Y)",
+      "assumptions": "Overlap (propensity bounded away from 0 and 1), consistent nuisance models g(d,x) and p(x)",
+      "breakdown_regime": "Near-extreme propensities where inverse-propensity weighting becomes unstable",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI conformal prediction: use a machine learning model to predict centered outcomes (residuals) and add them to a point forecast, yielding valid predictive intervals without distributional assumptions.",
+        "source_operator": "doubly_robust_pseudo_outcomes",
+        "telemetry": "Mean squared error on the pseudo-outcomes, evaluated out-of-sample"
+      }
+    },
+    {
+      "primitive_id": "abstention_bonus_p",
+      "name": "Abstention Bonus p",
+      "verbatim_quote": "Method / model **Framework:** abstention earns reward (Y(1)+Y(0))/2 + p — the value of a random guess plus a small fixed bonus p ≥ 0.",
+      "page": 1,
+      "latex": "V^{(p)}(\\pi) = \\mathbb{E}\\Bigl[\\mathbf{1}_{\\pi(X)\\neq\\ast}v(\\pi,X) + \\mathbf{1}_{\\pi(X)=\\ast}\\Bigl(\\frac{Y(1)+Y(0)}{2}+p\\Bigr)\\Bigr]",
+      "symbol_and_unit_ledger": "p: fixed abstention bonus (same units as reward Y), v(π,x): conditional value of action π(x), V(p): expected abstaining value",
+      "assumptions": "Bounded rewards Y ∈ [0,1], known baseline value (Y(1)+Y(0))/2",
+      "breakdown_regime": "p → 0+ (small bonus shrinks the incentive to abstain)",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE post/no-post decision: set p equal to the expected profit margin per accepted bet, balancing the cost of wrong abstentions against the benefit of correct abstentions.",
+        "source_operator": "abstention_bonus_p",
+        "telemetry": "Total profit on accepted picks, net of costs associated with abstaining on losing bets"
+      }
+    },
+    {
+      "primitive_id": "safe_policy_improvement_gate",
+      "name": "Safe Policy Improvement Gate",
+      "verbatim_quote": "**Verdict:** ADAPT The disagreement-based abstention construction (abstain exactly where near-optimal policies disagree) and the abstention-powered safe-policy-improvement protocol are both directly adaptable: the first to GSE's post/no-post decision, the second to certifying engine version upgrades before public deployment.",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Independent test set, valid confidence bounds, baseline policy with known value",
+      "breakdown_regime": "Test set size insufficient to distinguish between policies with similar empirical performance",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE engine upgrade certification: treat the candidate engine as a new policy, construct a one-sided lower confidence bound on its value relative to the current production engine, and deploy only if the bound exceeds a regulatory threshold.",
+        "source_operator": "safe_policy_improvement_gate",
+        "telemetry": "Pass/Fail decision based on whether the lower confidence bound crosses zero"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "12110af5fffd15a1_t0",
+      "think": "220 to 320 words concise mathematical derivation of the operators, dualities, and failure modes\n\nDeep epistemic analysis for 1153-policy-learning-with-abstention (12110af5fffd15a1, domain=cs, pages_read=4/4): Operator 'Disagreement Abstention Framework' (page 1, domain cs) captures: **Verdict:** ADAPT The disagreement-based abstention construction (abstain exactly where near-optimal policies disagree) and the abstention-powered safe-policy-improvement protocol are both directly adaptable: the first to GSE's post/no-post decision, the second to certifying engine version upgrades before public deployment. Assumptions: Binary treatment space, unknown propensities, bounded rewards, stable observational distribution Breakdown regime: High uncertainty regions where optimal policies disagree Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE situational reasoning: abstain when posterior predictive intervals overlap beyond a threshold, preserving coverage while maximizing expected value. Operator 'Doubly-Robust Pseudo-Outcomes' (page 1, domain cs) captures: **Unknown propensities (§3.2, Algorithm 4):** replace IPW with doubly-robust pseudo-outcomes φ̂(x,d,y) = ĝ(d,x) + [dD/p̂(x) + (1-d)(1-D)/(1-p̂(x))](y - ĝ(d,x)); same construction with expanded α. Assumptions: Overlap (propensity bounded away from 0 and 1), consistent nuisance models g(d,x) and p(x) Breakdown regime: Near-extreme propensities where inverse-propensity weighting becomes unstable Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI conformal prediction: use a machine learning model to predict centered outcomes (residuals) and add them to a point forecast, yielding valid predictive intervals without distributional assumptions. Operator 'Abstention Bonus p' (page 1, domain cs) captures: Method / model **Framework:** abstention earns reward (Y(1)+Y(0))/2 + p — the value of a random guess plus a small fixed bonus p ≥ 0. Assumptions: Bounded rewards Y ∈ [0,1], known baseline value (Y(1)+Y(0))/2 Breakdown regime: p → 0+ (small bonus shrinks the incentive to abstain) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE post/no-post decision: set p equal to the expected profit margin per accepted bet, balancing the cost of wrong abstentions against the benefit of correct abstentions. Operator 'Safe Policy Improvement Gate' (page 1, domain cs) captures: **Verdict:** ADAPT The disagreement-based abstention construction (abstain exactly where near-optimal policies disagree) and the abstention-powered safe-policy-improvement protocol are both directly adaptable: the first to GSE's post/no-post decision, the second to certifying engine version upgrades before public deployment. Assumptions: Independent test set, valid confidence bounds, baseline policy with known value Breakdown regime: Test set size insufficient to distinguish between policies with similar empirical performance Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE engine upgrade certification: treat the candidate engine as a new policy, construct a one-sided lower confidence bound on its value relative to the current production engine, and deploy only if the bound exceeds a regulatory threshold. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1153-policy-learning-with-abstention (12110af5fffd15a1, domain=cs, pages_read=4/4): Operator 'Disagreement Abstention Framework' (page 1, domain cs) captures: **Verdict:** ADAPT The disagreement-based abstention construction (abstain exactly where near-optimal policies disagree) and the abstention-powered safe-policy-improvement protocol are both directly adaptable: the first to GSE's post/no-post decision, the second to certifying engine version upgrades before public deployment. Assumptions: Binary treatment space, unknown propensities, bounded rewards, stable observational distribution Breakdown regime: High uncertainty regions where optimal policies disagree Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE situational reasoning: abstain when posterior predictive intervals overlap beyond a threshold, preserving coverage while maximizing expected value. Operator 'Doubly-Robust Pseudo-Outcomes' (page 1, domain cs) captures: **Unknown propensities (§3.2, Algorithm 4):** replace IPW with doubly-robust pseudo-outcomes φ̂(x,d,y) = ĝ(d,x) + [dD/p̂(x) + (1-d)(1-D)/(1-p̂(x))](y - ĝ(d,x)); same construction with expanded α. Assumptions: Overlap (propensity bounded away from 0 and 1), consistent nuisance models g(d,x) and p(x) Breakdown regime: Near-extreme propensities where inverse-propensity weighting becomes unstable Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI conformal prediction: use a machine learning model to predict centered outcomes (residuals) and add them to a point forecast, yielding valid predictive intervals without distributional assumptions. Operator 'Abstention Bonus p' (page 1, domain cs) captures: Method / model **Framework:** abstention earns reward (Y(1)+Y(0))/2 + p — the value of a random guess plus a small fixed bonus p ≥ 0. Assumptions: Bounded rewards Y ∈ [0,1], known baseline value (Y(1)+Y(0))/2 Breakdown regime: p → 0+ (small bonus shrinks the incentive to abstain) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE post/no-post decision: set p equal to the expected profit margin per accepted bet, balancing the cost of wrong abstentions against the benefit of correct abstentions. Operator 'Safe Policy Improvement Gate' (page 1, domain cs) captures: **Verdict:** ADAPT The disagreement-based abstention construction (abstain exactly where near-optimal policies disagree) and the abstention-powered safe-policy-improvement protocol are both directly adaptable: the first to GSE's post/no-post decision, the second to certifying engine version upgrades before public deployment. Assumptions: Independent test set, valid confidence bounds, baseline policy with known value Breakdown regime: Test set size insufficient to distinguish between policies with similar empirical performance Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE engine upgrade certification: treat the candidate engine as a new policy, construct a one-sided lower confidence bound on its value relative to the current production engine, and deploy only if the bound exceeds a regulatory threshold. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "65 to 85 words modeling opposing agents / decision actors Theory of Mind & Decision Maker Model: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "65 to 85 words anti-collinearity and leakage veto conditions Cross-Layer Veto & Anti-Leakage Check: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1153-policy-learning-with-abstention (12110af5fffd15a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

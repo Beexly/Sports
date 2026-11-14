@@ -1,0 +1,865 @@
+{
+ "book_id": "38738d44582f1727",
+ "source_status": "COMPLETE",
+ "source_note": "David A. Levin and Yuval Peres, with contributions by Elizabeth L. Wilmer, 'Markov Chains and Mixing Times', second edition, American Mathematical Society, 2017. Local source: publisher PDF at library/books-must-have/LevinPeresWilmer-2017-MarkovChainsAndMixingTimes2.pdf, 4855824 bytes, sha256 38738d44582f172716371fda8983c79e6672fb8c2f5e610f49300f049c574798 (book_id = first 16 hex of sha256 over str(size) + file bytes, the gatekeeper scan digest). Read in full from the extracted text at text/books-must-have/LevinPeresWilmer-2017-MarkovChainsAndMixingTimes2.pdf.txt (1,411,217 chars, 25,117 lines, 26 chapters plus appendices). Text quality: clean born-digital extraction; prose is exact, while some mathematical glyphs are linearized by the extractor (norm bars render as the letter k, the spectral star renders as ?), so verbatim quotes were chosen from prose passages and every quote was verified as a contiguous normalized substring of the text file. Cataloging note: the second edition (2017) is sometimes mis-cited with Wilmer as co-author; the title page reads Levin and Peres 'with contributions by Elizabeth L. Wilmer'. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "markov_chain_kernel_and_evolution",
+   "name": "Markov property: the next state depends on the past only through the current state, transitions are encoded in a stochastic matrix P, and distributions evolve by mu_t = mu_0 P^t",
+   "verbatim_quote": "A Markov chain is a process which moves among the elements of a set X in the following manner: when at x ∈ X , the next position is chosen according to a fixed probability distribution P (x, ·) depending only on x.",
+   "page": "Ch. 1, §1.1, p. 2; eq. (1.1) and (1.10)",
+   "latex": "\\mu_t = \\mu_0 P^t, \\qquad P\\{X_{t+1}=y \\mid X_t=x\\} = P(x,y)",
+   "symbol_and_unit_ledger": {
+    "mu_t": "row vector, distribution of the chain at time t (probabilities, dimensionless)",
+    "P": "transition matrix, entries P(x,y) are one-step transition probabilities",
+    "t": "number of discrete steps"
+   },
+   "assumptions": [
+    "Finite state space X",
+    "Time-homogeneous transitions (the same P at every step)",
+    "The Markov property (1.1) holds exactly"
+   ],
+   "breakdown_regime": "If the real process has memory longer than one step, or transitions drift over time, the one-step kernel misstates the dynamics; the state must be enriched (made Markov by augmentation) or the model fails.",
+   "domain": "markov chains",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine that tracks a system through discrete states (possession state, field position band, score differential band, player availability state) is a kernel of this form: a one-step transition law plus matrix powers for multi-step forecasts. The reasoning engine uses P^t as the exact multi-step propagator rather than re-simulating step by step.",
+    "source_operator": "markov_chain_kernel_and_evolution",
+    "telemetry": "Logged state sequences from play-by-play and game-state data give empirical transition counts that estimate each row P(x, .)."
+   }
+  },
+  {
+   "primitive_id": "random_mapping_representation",
+   "name": "Every transition matrix has a random mapping representation X_n = f(X_{n-1}, Z_n) with shared exogenous noise Z, which is what makes simulation and coupling possible",
+   "verbatim_quote": "A random mapping representation of a transition matrix P on state space X is a function f : X ×Λ → X , along with a Λ-valued random variable Z, satisfying P{f (x, Z) = y} = P (x, y).",
+   "page": "Ch. 1, §1.2, p. 5; Proposition 1.5",
+   "latex": "P\\{f(x,Z)=y\\} = P(x,y), \\qquad X_n = f(X_{n-1}, Z_n)",
+   "symbol_and_unit_ledger": {
+    "f": "update function from state and noise to next state",
+    "Z, Z_n": "auxiliary random variable(s), i.i.d. across steps",
+    "Lambda": "the noise space"
+   },
+   "assumptions": [
+    "An i.i.d. noise sequence (Z_t) independent of the initial state exists",
+    "Finite state space (Proposition 1.5 is stated for finite X)"
+   ],
+   "breakdown_regime": "The representation is highly non-unique; a careless choice of f destroys the monotonicity or coalescence properties that coupling and perfect simulation rely on, even though the one-chain law is unchanged.",
+   "domain": "markov chains",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine-room primitive for every counterfactual the reasoning engine runs: drive many scenarios with the SAME noise sequence Z and differences in output are attributable to the scenario, not to sampling luck. It is also the literal construction behind coupled trajectories and coupling from the past.",
+    "source_operator": "random_mapping_representation",
+    "telemetry": "A seeded random number stream plus the logged update rule for each simulated system; reproducibility is checked by replaying the seed."
+   }
+  },
+  {
+   "primitive_id": "irreducibility_periodicity_laziness",
+   "name": "Irreducibility (every state reachable from every state) and period 1 (aperiodicity) are the gate conditions for convergence; the lazy chain Q = (I+P)/2 repairs periodicity at the cost of halving speed",
+   "verbatim_quote": "A chain P is called irreducible if for any two states x, y ∈ X there exists an integer t (possibly depending on x and y) such that P t (x, y) > 0.",
+   "page": "Ch. 1, §1.3, p. 7; Proposition 1.7",
+   "latex": "Q = \\frac{I+P}{2}",
+   "symbol_and_unit_ledger": {
+    "Q": "lazy version of the transition matrix P",
+    "I": "identity matrix on the state space",
+    "P^t(x,y)": "t-step transition probability from x to y"
+   },
+   "assumptions": [
+    "Irreducibility is checked on the directed graph of positive-probability transitions",
+    "Period is the gcd of return times, shared by all states in an irreducible chain (Lemma 1.6)"
+   ],
+   "breakdown_regime": "A periodic chain (for example simple random walk on an even cycle) oscillates and its distribution never converges; a reducible chain has several closed classes and the limit depends on the start. Laziness at most doubles the mixing time but cannot fix reducibility.",
+   "domain": "markov chains",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before the engine trusts any long-run frequency it must audit the state graph: is the empirical transition graph one communicating class, and is there parity oscillation (a period-2 artifact shows up as alternating home/away or win/loss state flipping)? The lazy transform is the standard repair when a period artifact is structural rather than real.",
+    "source_operator": "irreducibility_periodicity_laziness",
+    "telemetry": "The support graph of the estimated transition matrix: reachability classes and return-time gcd computed from logged transitions."
+   }
+  },
+  {
+   "primitive_id": "stationary_distribution_existence_uniqueness",
+   "name": "An irreducible finite chain has exactly one stationary distribution pi with pi = pi P, the long-run occupation measure of the chain",
+   "verbatim_quote": "There exists a unique probability distribution π satisfying π = πP .",
+   "page": "Ch. 1, §1.5, pp. 9-13; Corollary 1.17",
+   "latex": "\\pi = \\pi P, \\qquad \\pi(y) = \\sum_{x \\in X} \\pi(x) P(x,y)",
+   "symbol_and_unit_ledger": {
+    "pi": "stationary distribution, a probability row vector",
+    "P": "transition matrix",
+    "X": "finite state space"
+   },
+   "assumptions": [
+    "P is irreducible (Corollary 1.17)",
+    "State space is finite, so expected return times are finite (Lemma 1.13)"
+   ],
+   "breakdown_regime": "With several essential communicating classes there is one stationary distribution per class and uniqueness fails (Proposition 1.29); stationary mass is zero on inessential (transient) states (Proposition 1.28).",
+   "domain": "markov chains",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stationary distributions are the engine's baseline rates: the long-run share of time a system spends in each state under its own dynamics. Every deviation claim the engine makes (a team visiting a state more or less often than baseline) is measured against this pi, so pi must be the unique one of a verified irreducible chain, not an artifact of the starting window.",
+    "source_operator": "stationary_distribution_existence_uniqueness",
+    "telemetry": "Long state sequences per system; occupation frequencies converge to pi and are cross-checked against the eigenvector of the estimated P."
+   }
+  },
+  {
+   "primitive_id": "mean_recurrence_time_identity",
+   "name": "Stationary mass is reciprocal mean recurrence time: pi(z) = 1 / E_z(tau_z^+), so rare states are exactly the states with long expected return times",
+   "verbatim_quote": "Proposition 1.14 implies that πz is a stationary distribution, so πz = π.",
+   "page": "Ch. 1, §1.5.4, p. 13; Proposition 1.19, eq. (1.28)",
+   "latex": "\\pi(z) = \\frac{1}{E_z \\tau_z^+}",
+   "symbol_and_unit_ledger": {
+    "pi(z)": "stationary probability of state z",
+    "E_z": "expectation for the chain started at z",
+    "tau_z^+": "first return time to z, the earliest t >= 1 with X_t = z"
+   },
+   "assumptions": [
+    "P irreducible, so E_z(tau_z^+) is finite for every z",
+    "Excursions between returns to z are i.i.d. segments (strong Markov property)"
+   ],
+   "breakdown_regime": "For infinite or null-recurrent chains the expected return time is infinite and no stationary probability exists; the identity also degrades when returns are so rare that the expectation cannot be estimated from observed excursions.",
+   "domain": "markov chains",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine can estimate a state's long-run weight two independent ways, by occupation frequency and by mean recurrence time between visits, and the identity forces the two estimates to agree. Disagreement is a diagnostic: it flags state mislabeling, non-stationarity in the window, or a state definition too fine to recur.",
+    "source_operator": "mean_recurrence_time_identity",
+    "telemetry": "Visit timestamps per state: inter-visit gaps give empirical return times; occupation shares give the frequency estimate."
+   }
+  },
+  {
+   "primitive_id": "detailed_balance_and_reversibility",
+   "name": "Detailed balance pi(x)P(x,y) = pi(y)P(y,x) is a sufficient, locally checkable condition for stationarity; a chain satisfying it is reversible, statistically identical forwards and backwards in time",
+   "verbatim_quote": "Suppose a probability distribution π on X satisfies π(x)P (x, y) = π(y)P (y, x) for all x, y ∈ X .",
+   "page": "Ch. 1, §1.6, p. 13; eq. (1.29), Proposition 1.20, eq. (1.32)",
+   "latex": "\\pi(x)P(x,y) = \\pi(y)P(y,x), \\qquad \\hat{P}(x,y) := \\frac{\\pi(y)P(y,x)}{\\pi(x)}",
+   "symbol_and_unit_ledger": {
+    "pi": "candidate stationary distribution",
+    "P(x,y)": "one-step transition probability",
+    "P-hat": "time-reversed transition matrix"
+   },
+   "assumptions": [
+    "The candidate pi must have full support on the states considered",
+    "Detailed balance is sufficient, not necessary, for stationarity (Proposition 1.20)"
+   ],
+   "breakdown_regime": "Many real chains are irreversible (the biased walk on a cycle has uniform pi but violates detailed balance when the bias is not 1/2); forcing reversibility on such a system changes its dynamics. Non-reversible chains need the general stationary equation, not balance.",
+   "domain": "markov chains",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Detailed balance is the fastest audit the engine has for a proposed equilibrium: check pairwise flux equality edge by edge instead of solving a global eigenproblem. Where it holds, forward and backward trajectory statistics coincide, so a sequence and its time reversal carry the same information, a symmetry the engine exploits when it learns from sequences read in either direction.",
+    "source_operator": "detailed_balance_and_reversibility",
+    "telemetry": "Empirical edge fluxes: counts of x to y moves weighted by occupation shares, compared against y to x counts on the same edges."
+   }
+  },
+  {
+   "primitive_id": "graph_walk_degree_stationary",
+   "name": "Simple random walk on a graph has stationary distribution proportional to degree, pi(y) = deg(y) / (2|E|); on a regular graph it is uniform",
+   "verbatim_quote": "If G has the property that every vertex has the same degree d, we call G d-regular . In this case 2|E| = d|V | and the uniform distribution π(y) = 1/|V | for every y ∈ V is stationary.",
+   "page": "Ch. 1, §1.4-1.5, p. 9; Example 1.12, eq. (1.16)",
+   "latex": "\\pi(y) = \\frac{\\deg(y)}{2|E|}",
+   "symbol_and_unit_ledger": {
+    "deg(y)": "degree of vertex y, the number of incident edges",
+    "E": "edge set of the graph",
+    "V": "vertex set"
+   },
+   "assumptions": [
+    "The walk chooses a uniformly random neighbor at each step",
+    "The graph is undirected, so the walk is reversible"
+   ],
+   "breakdown_regime": "Weighted or directed networks break the degree formula; the stationary law then comes from conductances (Chapter 9) or the general balance equations. Disconnected graphs break uniqueness.",
+   "domain": "random walks on graphs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Whenever the engine models movement on a network (teams through a schedule graph, players through lineup combinations, states of a drive chart), the degree law gives the null model for visit frequencies: hubs are visited in proportion to their degree, with no further mechanism needed. Deviations from the degree prediction are the signal; the degree prediction itself is not.",
+    "source_operator": "graph_walk_degree_stationary",
+    "telemetry": "Graph structure alone: vertex degrees and edge counts of the network under study."
+   }
+  },
+  {
+   "primitive_id": "gamblers_ruin_hitting_laws",
+   "name": "Gambler's ruin: for fair unit bets absorbed at 0 or n, P_k(hit n before 0) = k/n and the expected absorption time is E_k(tau) = k(n-k), both from first-step harmonic equations",
+   "verbatim_quote": "Assume that a gambler making fair unit bets on coin flips will abandon the game when her fortune falls to 0 or rises to n.",
+   "page": "Ch. 2, §2.1, p. 21; Proposition 2.1, eqs. (2.1)-(2.2)",
+   "latex": "P_k\\{X_\\tau = n\\} = \\frac{k}{n}, \\qquad E_k(\\tau) = k(n-k)",
+   "symbol_and_unit_ledger": {
+    "k": "starting fortune (state), 0 <= k <= n",
+    "n": "upper absorbing barrier",
+    "tau": "absorption time, first hitting of 0 or n",
+    "X_tau": "fortune at absorption"
+   },
+   "assumptions": [
+    "Fair bets: up and down steps each have probability 1/2",
+    "Barriers 0 and n are absorbing",
+    "First-step conditioning gives the linear equations (2.3) and (2.4)"
+   ],
+   "breakdown_regime": "With biased steps the hitting probability becomes a ratio of geometric sums and can be exponentially small in n; with no absorbing barrier the expected absorption time is infinite. The formulas are exact only for the homogeneous nearest-neighbor walk.",
+   "domain": "hitting times",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the template for every race-to-a-threshold question the engine answers: probability that a cumulative process (score differential, yardage balance, win total in a season segment) reaches the favorable barrier before the unfavorable one, and how long the race takes. The method, first-step equations solved as a linear system, generalizes to any finite chain even when closed forms do not exist.",
+    "source_operator": "gamblers_ruin_hitting_laws",
+    "telemetry": "Barrier levels and step distribution estimated from the logged increments of the cumulative process."
+   }
+  },
+  {
+   "primitive_id": "coupon_collector_law",
+   "name": "Coupon collector: the expected time to complete a set of n equally likely types is E(tau) = n H_n, about n log n, with exponential tail P{tau > n log n + cn} <= e^{-c}",
+   "verbatim_quote": "The expectation E(τ ) can be computed by writing τ as a sum of geometric random variables.",
+   "page": "Ch. 2, §2.2, pp. 22-23; Propositions 2.3 and 2.4, eqs. (2.6)-(2.7)",
+   "latex": "E(\\tau) = n \\sum_{k=1}^{n} \\frac{1}{k} = n H_n, \\qquad P\\{\\tau > n\\log n + cn\\} \\le e^{-c}",
+   "symbol_and_unit_ledger": {
+    "tau": "time to collect all n types",
+    "H_n": "n-th harmonic number, sum of 1/k",
+    "c": "tail parameter in units of n extra draws"
+   },
+   "assumptions": [
+    "Each draw is uniform over the n types and independent",
+    "Completion time decomposes into independent geometric waiting times for each new type"
+   ],
+   "breakdown_regime": "Unequal type probabilities change the answer completely: the rarest type dominates and the expectation is governed by 1/p_min rather than n log n. The harmonic law is the uniform benchmark, not a universal one.",
+   "domain": "waiting times",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coverage questions in the engine are coupon problems: how many plays, games, or simulations until every state, matchup type, or scenario cell has been observed at least once. The n log n law with its exponential tail sets the sampling budget and tells the engine when an unobserved cell is evidence of impossibility rather than of insufficient sampling.",
+    "source_operator": "coupon_collector_law",
+    "telemetry": "Counts of distinct observed categories versus total draws; the empirical completion curve is compared against n H_n."
+   }
+  },
+  {
+   "primitive_id": "projection_lumping_ehrenfest",
+   "name": "Projection (lumping): if transition probabilities into equivalence classes are constant on each class, the projected process is again a Markov chain; the Ehrenfest urn is the Hamming-weight projection of hypercube walk",
+   "verbatim_quote": "The process of constructing a new chain by taking equivalence classes for an equivalence relation compatible with the transition matrix (in the sense of (2.10)) is called projection, or sometimes lumping .",
+   "page": "Ch. 2, §2.3.1, p. 25; Lemma 2.5, eq. (2.10)",
+   "latex": "P(x,[y]) = P(x',[y]) \\quad \\text{whenever } x \\sim x', \\qquad \\hat{P}([x],[y]) := P(x,[y])",
+   "symbol_and_unit_ledger": {
+    "[y]": "equivalence class of y",
+    "P(x,[y])": "probability of moving from x into the class [y] in one step",
+    "P-hat": "transition matrix of the projected chain"
+   },
+   "assumptions": [
+    "The compatibility condition (2.10) must hold for every pair of states in the same class and every target class"
+   ],
+   "breakdown_regime": "If (2.10) fails, the lumped process is generally not Markov: its future depends on which member of the current class the chain occupies, so class-level transition estimates drift with the within-class distribution. Most naive aggregations fail this test.",
+   "domain": "model reduction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "State aggregation is the engine's main compression move, and this lemma is its license: a coarse state space (for example win probability bands instead of exact scores) supports exact Markov reasoning only when the lumping condition holds. Where it fails, the engine must either refine the classes or carry the within-class distribution as extra state, and the failure itself is measurable from data.",
+    "source_operator": "projection_lumping_ehrenfest",
+    "telemetry": "Class-level transition counts stratified by member state: equality of rows within a class is the empirical test of (2.10)."
+   }
+  },
+  {
+   "primitive_id": "birth_death_product_form",
+   "name": "Every birth-and-death chain is reversible, with explicit stationary weights w_k = prod_{i=1}^k p_{i-1}/q_i and pi_k = w_k / sum_j w_j; hitting times follow by summing one-step crossing means",
+   "verbatim_quote": "A birth-and-death chain has state space X = {0, 1, 2, . . . , n}. In one step the state can increase or decrease by at most 1.",
+   "page": "Ch. 2, §2.5, p. 26; Proposition 2.8, eqs. (2.11)-(2.14)",
+   "latex": "w_0 = 1, \\qquad w_k = \\prod_{i=1}^{k} \\frac{p_{i-1}}{q_i}, \\qquad \\pi_k = \\frac{w_k}{\\sum_{j=0}^{n} w_j}",
+   "symbol_and_unit_ledger": {
+    "p_k": "probability of a birth (step up) from state k",
+    "q_k": "probability of a death (step down) from state k",
+    "w_k": "unnormalized stationary weight of state k",
+    "pi_k": "stationary probability of state k"
+   },
+   "assumptions": [
+    "Moves change the state by at most 1",
+    "q_0 = p_n = 0 at the boundaries",
+    "Detailed balance p_{k-1} w_{k-1} = q_k w_k holds edge by edge"
+   ],
+   "breakdown_regime": "The product form collapses when any q_i = 0 in the interior (the chain splits) and becomes numerically extreme when the ratio p/q is far from 1 over many levels, where weights vary over orders of magnitude.",
+   "domain": "birth-and-death chains",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One-dimensional score and count processes (lead size, drive count, cumulative differential) are birth-and-death chains, and the product form gives their long-run distribution in closed form from local up/down rates alone. The engine reads equilibrium skew directly off the ratio profile p_k/q_k: a level where the ratio crosses 1 is where the process piles up or drains away.",
+    "source_operator": "birth_death_product_form",
+    "telemetry": "Empirical up, down, and stay frequencies at each level of the one-dimensional process."
+   }
+  },
+  {
+   "primitive_id": "group_walk_uniform_stationary",
+   "name": "Random walk on a finite group with increment distribution mu has the uniform distribution stationary, and is reversible when mu is symmetric, mu(g) = mu(g^{-1})",
+   "verbatim_quote": "Let P be the transition matrix of a random walk on a finite group G and let U be the uniform probability distribution on G. Then U is a stationary distribution for P .",
+   "page": "Ch. 2, §2.6, pp. 27-29; Propositions 2.12 and 2.14",
+   "latex": "P(g, hg) = \\mu(h), \\qquad U(g) = \\frac{1}{|G|}",
+   "symbol_and_unit_ledger": {
+    "G": "finite group, the state space",
+    "mu": "increment distribution on G",
+    "h": "random increment, applied by left multiplication",
+    "U": "uniform distribution on G"
+   },
+   "assumptions": [
+    "Increments are i.i.d. with law mu and independent of the current state",
+    "Irreducibility holds exactly when the support of mu generates G (Proposition 2.13)"
+   ],
+   "breakdown_regime": "Uniformity of the stationary law is a symmetry fact, not a mixing fact: the walk can still mix arbitrarily slowly (tiny generating sets, near-periodic increments). Non-symmetric mu gives a non-reversible walk whose analysis needs the reversed increment law.",
+   "domain": "random walks on groups",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Permutation and rotation systems (lineup orders, batting orders, deck orders, schedule rotations) are group walks: increments compose, and the uniform law is the correct null distribution for a fully mixed order. The engine uses the generating-set criterion to decide whether a restricted move set can reach every configuration at all before asking how fast it mixes.",
+    "source_operator": "group_walk_uniform_stationary",
+    "telemetry": "The increment multiset actually used by the system (which swaps, rotations, or substitutions occur) and its empirical frequencies."
+   }
+  },
+  {
+   "primitive_id": "metropolis_hastings_construction",
+   "name": "Metropolis-Hastings: to sample from a target pi using proposals Psi, accept a proposed move x to y with probability 1 ∧ [pi(y) Psi(y,x)] / [pi(x) Psi(x,y)]; only ratios of pi are needed, so the normalizing constant is never computed",
+   "verbatim_quote": "For this choice, the acceptance probability a(x, y) is equal to (π(y)/π(x)) ∧ 1.",
+   "page": "Ch. 3, §3.2, pp. 38-41; eqs. (3.1)-(3.5), Remark 3.1; Notes: Metropolis et al. (1953), Hastings (1970)",
+   "latex": "a(x,y) = 1 \\wedge \\frac{\\pi(y)\\Psi(y,x)}{\\pi(x)\\Psi(x,y)}, \\qquad P(x,y) = \\Psi(x,y)\\, a(x,y) \\ (y \\neq x)",
+   "symbol_and_unit_ledger": {
+    "pi": "target distribution, known up to a normalizing constant",
+    "Psi": "base (proposal) transition matrix",
+    "a(x,y)": "acceptance probability for the proposed move",
+    "wedge": "minimum of the two arguments"
+   },
+   "assumptions": [
+    "The base chain Psi must be irreducible so the Metropolized chain can reach the whole support of pi",
+    "pi(x) > 0 wherever the chain is expected to travel; ratios pi(y)/pi(x) must be computable"
+   ],
+   "breakdown_regime": "A badly matched proposal makes acceptance rare and the chain mixes slowly even though stationarity is exact; stationarity is a correctness property, not an efficiency guarantee. If pi has isolated modes separated by near-zero density, the chain is practically reducible.",
+   "domain": "mcmc",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's generic sampler for any distribution it can score up to a constant: posterior distributions over parameters, ratings, and latent strengths. The design lesson transfers directly: build the proposal from a cheap symmetric exploration, correct with the acceptance ratio, and never waste computation on normalizing constants.",
+    "source_operator": "metropolis_hastings_construction",
+    "telemetry": "Proposal transition counts, acceptance rates per move type, and the unnormalized target scores h(x) logged during simulation."
+   }
+  },
+  {
+   "primitive_id": "glauber_dynamics_gibbs_sampler",
+   "name": "Glauber dynamics (Gibbs sampler): pick a site uniformly and resample its value from pi conditioned on all other sites; the resulting chain is reversible with stationary distribution pi",
+   "verbatim_quote": "The (single-site) Glauber dynamics for π is a reversible Markov chain with state space X , stationary distribution π, and the transition probabilities we describe below.",
+   "page": "Ch. 3, §3.3.2, pp. 42-43; eqs. (3.6)-(3.7)",
+   "latex": "\\pi^{x,v}(y) = \\frac{\\pi(y)}{\\pi(\\mathcal{X}(x,v))} \\quad \\text{for } y \\in \\mathcal{X}(x,v)",
+   "symbol_and_unit_ledger": {
+    "V": "set of sites (vertices)",
+    "S": "set of values a site can take",
+    "X(x,v)": "configurations agreeing with x at every site except possibly v",
+    "pi^{x,v}": "pi conditioned on the set X(x,v)"
+   },
+   "assumptions": [
+    "pi has support X, a subset of the configuration space S^V",
+    "Single-site conditional distributions of pi must be computable",
+    "The configuration graph under single-site changes must be connected for irreducibility"
+   ],
+   "breakdown_regime": "At low temperature or under hard constraints, single-site updates can be trapped for exponential times (the Ising model below its critical temperature, Chapter 15); block updates or nonlocal moves are then required. Glauber correctness never implies Glauber speed.",
+   "domain": "mcmc",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coordinatewise resampling is how the engine samples joint configurations (full lineups, full game scripts, joint player states) when only local conditionals are tractable: freeze everything, resample one component from its conditional, rotate. The same structure diagnoses dependence: a component whose conditional barely depends on its neighbors mixes fast, one locked by its neighbors is a bottleneck variable.",
+    "source_operator": "glauber_dynamics_gibbs_sampler",
+    "telemetry": "Single-site conditional frequencies from logged configurations; update acceptance and flip rates per site."
+   }
+  },
+  {
+   "primitive_id": "total_variation_distance",
+   "name": "Total variation distance: the maximum probability gap over all events, equal to half the L1 distance, the working metric for closeness to stationarity",
+   "verbatim_quote": "The total variation distance between two probability distributions µ and ν on X is defined by",
+   "page": "Ch. 4, §4.1, p. 47; eq. (4.1), Proposition 4.2 eq. (4.2)",
+   "latex": "\\|\\mu - \\nu\\|_{TV} = \\max_{A \\subseteq X} |\\mu(A) - \\nu(A)| = \\frac{1}{2} \\sum_{x \\in X} |\\mu(x) - \\nu(x)|",
+   "symbol_and_unit_ledger": {
+    "mu, nu": "probability distributions on X",
+    "A": "an event, a subset of the state space",
+    "TV subscript": "total variation"
+   },
+   "assumptions": [
+    "X is a finite set in this book's treatment",
+    "The maximizing event is B = {x : mu(x) >= nu(x)} (proof of Proposition 4.2)"
+   ],
+   "breakdown_regime": "Total variation is insensitive to geometry: two distributions on nearby but distinct states are as far apart as distributions on distant states. Where the state space has a metric, transportation distances (Chapter 14) carry more information.",
+   "domain": "mixing theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Total variation is the engine's standard for 'close enough to equilibrium': it is the largest error the current distribution can make on ANY yes-no question, so a small TV bound certifies every downstream probability the engine reports, uniformly. Half-L1 makes it computable from raw frequency tables without optimization.",
+    "source_operator": "total_variation_distance",
+    "telemetry": "Empirical state frequencies versus the stationary or target frequencies; the max gap is found on the superlevel set B."
+   }
+  },
+  {
+   "primitive_id": "coupling_characterization_of_tv",
+   "name": "Coupling characterization: total variation distance equals the minimum, over all couplings, of P{X != Y}; an optimal coupling exists that attains it",
+   "verbatim_quote": "Proposition 4.7 uses coupling to give another probabilistic interpretation: kµ − νkTV measures how close to identical we can force two random variables realizing µ and ν to be.",
+   "page": "Ch. 4, §4.2, pp. 49-52; Proposition 4.7, eq. (4.8)",
+   "latex": "\\|\\mu - \\nu\\|_{TV} = \\inf \\{ P\\{X \\neq Y\\} : (X,Y) \\text{ a coupling of } \\mu \\text{ and } \\nu \\}",
+   "symbol_and_unit_ledger": {
+    "(X,Y)": "pair of random variables on one probability space with marginals mu and nu",
+    "inf": "infimum over all couplings; it is attained (Remark 4.8)"
+   },
+   "assumptions": [
+    "Both marginals must be matched exactly by the joint law",
+    "Any single coupling gives an upper bound; the characterization is the minimum over couplings"
+   ],
+   "breakdown_regime": "The optimal coupling is usually not the one a simulation naturally produces; a lazy or independent coupling can have P{X != Y} far above the TV value, so coupling bounds are only as good as the coupling design.",
+   "domain": "coupling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This identity converts a distributional question into a probabilistic construction problem: to prove two engine states are close, exhibit a joint simulation in which they agree with high probability. It is the license for every paired-simulation comparison the engine runs, where shared randomness makes two scenarios literally the same random object until they diverge.",
+    "source_operator": "coupling_characterization_of_tv",
+    "telemetry": "Paired simulation logs: the empirical disagreement rate of coupled runs estimates the TV gap from above."
+   }
+  },
+  {
+   "primitive_id": "convergence_theorem_geometric",
+   "name": "Convergence Theorem: an irreducible aperiodic finite chain converges to its stationary distribution geometrically fast, max_x ||P^t(x,.) - pi||_TV <= C alpha^t with alpha < 1",
+   "verbatim_quote": "Theorem 4.9 (Convergence Theorem). Suppose that P is irreducible and aperiodic, with stationary distribution π. Then there exist constants α ∈ (0, 1) and C > 0 such that",
+   "page": "Ch. 4, §4.3, p. 52; Theorem 4.9, eq. (4.14)",
+   "latex": "\\max_{x \\in X} \\|P^t(x,\\cdot) - \\pi\\|_{TV} \\le C \\alpha^t",
+   "symbol_and_unit_ledger": {
+    "alpha": "geometric rate in (0,1), from a one-step minorization P^r(x,y) >= delta pi(y)",
+    "C": "constant, 1/theta in the proof",
+    "r": "number of steps after which all entries of P^r are positive (Proposition 1.7)"
+   },
+   "assumptions": [
+    "P irreducible and aperiodic",
+    "Finite state space"
+   ],
+   "breakdown_regime": "The theorem gives existence of a geometric rate, not its size: C and alpha from the proof are usually far too pessimistic to run a simulation by. Periodic or reducible chains fail the conclusion entirely.",
+   "domain": "mixing theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's warranty that equilibrium analysis is meaningful at all: forget the initial condition and the system's law settles to pi at a geometric rate. The proof's minorization move, one step that samples from pi with probability delta regardless of the past, is also a design pattern: injecting a small chance of a fresh draw from the baseline distribution guarantees forgetting and bounds dependence on initial conditions.",
+    "source_operator": "convergence_theorem_geometric",
+    "telemetry": "Distance-from-baseline curves over time for chains started from extreme states; a straight line on a log scale confirms geometric decay."
+   }
+  },
+  {
+   "primitive_id": "mixing_time_and_amplification",
+   "name": "Mixing time t_mix(eps) = min{t : d(t) <= eps}, with the convention t_mix = t_mix(1/4); submultiplicativity of the pairwise distance d-bar amplifies one bound to all accuracies, t_mix(eps) <= ceil(log2 eps^{-1}) t_mix",
+   "verbatim_quote": "It is useful to introduce a parameter which measures the time required by a Markov chain for the distance to stationarity to be small.",
+   "page": "Ch. 4, §4.5, p. 54; eqs. (4.30)-(4.34), Lemma 4.11",
+   "latex": "t_{mix}(\\varepsilon) := \\min\\{t : d(t) \\le \\varepsilon\\}, \\qquad d(\\ell \\, t_{mix}) \\le 2^{-\\ell}, \\qquad t_{mix}(\\varepsilon) \\le \\lceil \\log_2 \\varepsilon^{-1} \\rceil \\, t_{mix}",
+   "symbol_and_unit_ledger": {
+    "d(t)": "worst-case TV distance to pi after t steps, max over starting states",
+    "d-bar(t)": "worst-case pairwise TV distance between two t-step distributions",
+    "eps": "target accuracy"
+   },
+   "assumptions": [
+    "d and d-bar are within a factor 2 (Lemma 4.10)",
+    "The threshold must be below 1/2 for amplification to contract (the 1/4 convention)"
+   ],
+   "breakdown_regime": "Mixing time is a worst-case-over-starts, single-number summary: it hides that typical starts mix faster, and it says nothing about separation or L_p distances, which can behave differently (Chapter 18.4).",
+   "domain": "mixing theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine needs one auditable number for 'how long until history stops mattering', and t_mix is it: run lengths, burn-in lengths, and independence claims are all set in units of t_mix. Amplification is the budgeting rule: each additional t_mix of run length at least halves the worst-case error, so accuracy requests translate linearly into compute.",
+    "source_operator": "mixing_time_and_amplification",
+    "telemetry": "Empirical d(t) curves from replicate chains started at extreme states; the 1/4 crossing is read off directly."
+   }
+  },
+  {
+   "primitive_id": "coupling_inequality_for_mixing",
+   "name": "Coupling inequality: for a coalescing coupling, ||P^t(x,.) - P^t(y,.)||_TV <= P_{x,y}{tau_couple > t}, hence t_mix <= 4 max_{x,y} E_{x,y}(tau_couple)",
+   "verbatim_quote": "Theorem 5.4. Let {(Xt , Yt )} be a coupling satisfying (5.2) for which X0 = x and Y0 = y. Let τcouple be the coalescence time of the chains:",
+   "page": "Ch. 5, §5.2, p. 62; Theorem 5.4 eq. (5.4), Corollary 5.5",
+   "latex": "\\|P^t(x,\\cdot) - P^t(y,\\cdot)\\|_{TV} \\le P_{x,y}\\{\\tau_{couple} > t\\}, \\qquad t_{mix} \\le 4 \\max_{x,y} E_{x,y}(\\tau_{couple})",
+   "symbol_and_unit_ledger": {
+    "tau_couple": "coalescence time, first t after which the two chains agree forever",
+    "P_{x,y}": "law of the coupled pair started from (x,y)"
+   },
+   "assumptions": [
+    "The coupling must be faithful: each marginal chain has transition matrix P",
+    "The chains are glued together after meeting (condition (5.2))",
+    "Markov's inequality converts the mean bound into the t_mix <= 4 max E bound"
+   ],
+   "breakdown_regime": "The bound is only as good as the coupling: a poorly designed coupling has a heavy-tailed coalescence time even for a fast-mixing chain (the book's first coupling for random transpositions loses a large factor; the sharp bound needs a better construction).",
+   "domain": "coupling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's main proof technique for forgetting: run two copies of a system from the two most different starting states under shared randomness, and the time until their trajectories merge bounds the time until the initial state stops mattering. In simulation it is directly executable, so an abstract mixing claim becomes a measurable coalescence time.",
+    "source_operator": "coupling_inequality_for_mixing",
+    "telemetry": "Paired-run coalescence times from extreme starting pairs; their maximum and tail give the bound."
+   }
+  },
+  {
+   "primitive_id": "strong_stationary_times_and_separation",
+   "name": "Strong stationary time: a stopping time tau with X_tau distributed as pi and independent of tau; it bounds both TV and separation distance, s_x(t) <= P_x{tau > t}, and with a halting state the bound is exact",
+   "verbatim_quote": "In words, Xτ has distribution π and is independent of τ .",
+   "page": "Ch. 6, §6.4, pp. 78-79; eqs. (6.3), (6.6), Proposition 6.11, Lemma 6.12",
+   "latex": "s_x(t) := \\max_{y \\in X} \\left[ 1 - \\frac{P^t(x,y)}{\\pi(y)} \\right], \\qquad \\|P^t(x,\\cdot) - \\pi\\|_{TV} \\le s_x(t) \\le P_x\\{\\tau > t\\}",
+   "symbol_and_unit_ledger": {
+    "tau": "strong stationary time for the given starting state",
+    "s_x(t)": "separation distance from start x at time t",
+    "X_tau": "state at the stopping time, exactly pi-distributed"
+   },
+   "assumptions": [
+    "tau must be a stopping time for a filtration to which the chain is adapted",
+    "Independence of tau and X_tau is the strong requirement; ordinary stationary times (Section 6.3) do not suffice"
+   ],
+   "breakdown_regime": "Strong stationary times can be hard or impossible to construct sharply for a given chain, and separation distance can decay much more slowly than TV, so an SST bound can overstate the TV mixing time badly (complete graph example, Section 6.4).",
+   "domain": "strong stationary times",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A strong stationary time is a certificate of perfect forgetting with a timestamp: after tau, the state is an exact draw from equilibrium, not an approximation. The engine uses the same idea as a stopping rule for simulations and as a diagnostic: find an observable event (every coordinate refreshed, every unit cycled) after which the current state is provably memoryless, and measure everything from that event.",
+    "source_operator": "strong_stationary_times_and_separation",
+    "telemetry": "Timestamps of refresh-complete events in the logged process; the tail of their waiting time bounds residual dependence on the start."
+   }
+  },
+  {
+   "primitive_id": "bottleneck_ratio_conductance",
+   "name": "Bottleneck ratio (conductance) Phi(S) = Q(S,S^c)/pi(S) with Q the stationary edge flow; the worst set lower-bounds mixing: t_mix >= 1/(4 Phi_*)",
+   "verbatim_quote": "Theorem 7.4. If Φ? is the bottleneck ratio defined in (7.7), then",
+   "page": "Ch. 7, §7.2, pp. 89-90; eqs. (7.5)-(7.7), Theorem 7.4 eq. (7.9)",
+   "latex": "\\Phi(S) := \\frac{Q(S,S^c)}{\\pi(S)}, \\qquad \\Phi_* := \\min_{S : \\pi(S) \\le 1/2} \\Phi(S), \\qquad t_{mix} \\ge \\frac{1}{4\\Phi_*}",
+   "symbol_and_unit_ledger": {
+    "Q(x,y)": "stationary edge flow pi(x)P(x,y)",
+    "Q(S,S^c)": "stationary probability of crossing from S to its complement in one step",
+    "Phi_*": "bottleneck ratio of the chain (conductance, expansion, Cheeger constant)"
+   },
+   "assumptions": [
+    "P irreducible with stationary distribution pi",
+    "Only sets with pi(S) <= 1/2 enter the minimum"
+   ],
+   "breakdown_regime": "Conductance sees only the single worst cut: a chain can have a decent Phi_* yet mix slowly for other reasons, and the lower bound 1/(4 Phi_*) can be far below the true t_mix when the bottleneck is dynamic rather than a fixed set.",
+   "domain": "mixing lower bounds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bottleneck analysis is how the engine finds where a system gets stuck: partition the state space, measure stationary flow across each cut, and the smallest flow-to-mass ratio names the trap (a game script region, a lineup family, a schedule cluster that the process rarely leaves). Any claim that the system equilibrates quickly must first survive the worst cut.",
+    "source_operator": "bottleneck_ratio_conductance",
+    "telemetry": "Empirical crossing counts between candidate state regions, weighted by occupation mass, from logged trajectories."
+   }
+  },
+  {
+   "primitive_id": "distinguishing_statistics_lower_bound",
+   "name": "Distinguishing statistic: if a real-valued statistic f has means under two laws separated by r standard deviations, then ||mu - nu||_TV >= 1 - 8/r^2 (Chebyshev); projections can only shrink TV distance (Lemma 7.10)",
+   "verbatim_quote": "Lemma 7.10 can be used to lower bound the distance of some chain from stationarity in terms of the corresponding distance for a projection (in the sense of Section 2.3.1) of that chain.",
+   "page": "Ch. 7, §7.3, pp. 92-94; Proposition 7.9, Lemma 7.10",
+   "latex": "\\| \\mu - \\nu \\|_{TV} \\ge 1 - \\frac{8}{r^2} \\quad \\text{when } |E_\\nu f - E_\\mu f| \\ge r \\sigma_*, \\ \\sigma_*^2 := \\max\\{\\mathrm{Var}_\\mu f, \\mathrm{Var}_\\nu f\\}",
+   "symbol_and_unit_ledger": {
+    "f": "real-valued statistic on the state space",
+    "sigma_*": "larger of the two standard deviations of f under mu and nu",
+    "r": "mean separation in units of sigma_*"
+   },
+   "assumptions": [
+    "f must have finite variance under both laws",
+    "Chebyshev's inequality supplies the constant 8; sharper tail control improves the constant"
+   ],
+   "breakdown_regime": "A statistic with heavy tails or with means that coincide under both laws certifies nothing; the method lower-bounds distance only along the one-dimensional shadow f casts, and a poor choice of f misses the true separation entirely.",
+   "domain": "mixing lower bounds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's falsification tool: pick one observable (a counting statistic of the state) whose equilibrium mean and variance are known, track its mean under the current distribution, and a persistent multi-sigma gap proves the system has NOT equilibrated, with a quantitative lower bound on the error. It is the cheapest possible audit because it needs only one scalar time series.",
+    "source_operator": "distinguishing_statistics_lower_bound",
+    "telemetry": "Mean and variance of the chosen statistic under the running process versus its stationary values."
+   }
+  },
+  {
+   "primitive_id": "card_shuffling_mixing_scales",
+   "name": "Shuffle scales: random transpositions mix an n-card deck in at most (2+o(1)) n log n steps via a strong stationary time (sharp order n log n), and riffle shuffles mix in O(log n) shuffles, at most 2 log_2(4n/3) by the birthday strong stationary time",
+   "verbatim_quote": "Corollary 8.10. For the random transposition chain on an n-card deck, tmix ≤ (2 + o(1))n log n.",
+   "page": "Ch. 8, §8.2 p. 106 (Corollary 8.10), §8.3 p. 109 (Proposition 8.12); Notes p. 112 on Bayer and Diaconis (1992)",
+   "latex": "t_{mix} \\le (2 + o(1))\\, n \\log n \\ \\text{(random transpositions)}, \\qquad t_{mix} \\le 2 \\log_2 \\frac{4n}{3} \\ \\text{(riffle)}",
+   "symbol_and_unit_ledger": {
+    "n": "number of cards",
+    "t_mix": "total variation mixing time of the shuffle chain"
+   },
+   "assumptions": [
+    "Transpositions choose a card and a position independently and uniformly",
+    "The riffle bound uses inverse shuffling and the birthday problem for label collisions"
+   ],
+   "breakdown_regime": "Constants from strong stationary times are not sharp: the exact transposition cutoff sits at a smaller constant multiple of n log n (spectral methods, Chapter 13), and Bayer and Diaconis (1992) located the riffle cutoff precisely and computed that 7 shuffles bring a 52-card deck to TV distance about 0.3341, not to near zero.",
+   "domain": "card shuffling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shuffles are the engine's calibration family: permutation systems whose mixing is understood exactly, used to sanity-check samplers that randomize orders (schedules, draft orders, scenario orderings). The lesson that scale depends on the move set, n log n for local swaps versus log n for global riffles, tells the engine when a randomization procedure is structurally too weak for its state space.",
+    "source_operator": "card_shuffling_mixing_scales",
+    "telemetry": "Empirical permutation statistics after k randomization rounds, compared against the uniform permutation law."
+   }
+  },
+  {
+   "primitive_id": "electrical_networks_effective_resistance",
+   "name": "Reversible chains are electrical networks: effective resistance R(a<->z) is the minimal energy of a unit flow (Thomson), decreases under edge addition (Rayleigh), and gives escape probabilities P_a{tau_z < tau_a^+} = 1/(c(a) R(a<->z))",
+   "verbatim_quote": "Thomson's Principle (Theorem 9.10) says that the effective resistance is the minimal possible energy of a unit flow from a to z.",
+   "page": "Ch. 9, §9.4, pp. 119-124; Theorems 9.10 and 9.12, Corollary 9.13",
+   "latex": "P_a\\{\\tau_z < \\tau_a^+\\} = \\frac{1}{c(a)\\, R(a \\leftrightarrow z)}, \\qquad R(a \\leftrightarrow z) = \\min_{\\theta \\text{ unit flow}} \\sum_e r(e)\\, \\theta(e)^2",
+   "symbol_and_unit_ledger": {
+    "c(a)": "total conductance at vertex a, sum of c(a,y) over neighbors",
+    "r(e)": "resistance of edge e, reciprocal of conductance",
+    "theta": "a flow from a to z of unit strength",
+    "R(a<->z)": "effective resistance between a and z"
+   },
+   "assumptions": [
+    "The chain is the random walk on a network with conductances c(x,y) = c(y,x)",
+    "Thomson's principle: resistance is the infimum of flow energy over unit flows"
+   ],
+   "breakdown_regime": "The electrical dictionary is exact only for reversible chains on networks; directed or non-reversible dynamics have no resistance analogue. Resistance also grows only logarithmically in 2D grids (Proposition 9.17), so grid-like state spaces are far better connected than path-like ones.",
+   "domain": "electrical networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The network picture gives the engine a second, independent calculus for reachability: two regions are effectively close when many low-resistance paths join them, whatever the step-by-step chain says. Escape probabilities computed from resistance answer 'will the process reach the target region before returning home' questions that are expensive to simulate, and monotonicity lets the engine bound them by simplifying the graph.",
+    "source_operator": "electrical_networks_effective_resistance",
+    "telemetry": "Graph topology and edge weights of the state network; hitting-before-return frequencies from logged trajectories as cross-checks."
+   }
+  },
+  {
+   "primitive_id": "random_target_lemma",
+   "name": "Random Target Lemma: for an irreducible chain, the expected time to hit a pi-random target, t_a = sum_x E_a(tau_x) pi(x), is the same for every starting state a",
+   "verbatim_quote": "Lemma 10.1 (Random Target Lemma). For an irreducible Markov chain on the state space X with stationary distribution π, the target time ta does not depend on a ∈ X .",
+   "page": "Ch. 10, §10.2, p. 129; Lemma 10.1, eqs. (10.2)-(10.5)",
+   "latex": "t^\\dagger := \\sum_{x \\in X} E_a(\\tau_x)\\, \\pi(x) = \\sum_{x,y} \\pi(x)\\pi(y) E_x(\\tau_y), \\quad \\text{independent of } a",
+   "symbol_and_unit_ledger": {
+    "t_a": "expected time to hit a target drawn from pi, starting from a",
+    "E_a(tau_x)": "expected hitting time of x from a",
+    "t-dagger": "the common target time"
+   },
+   "assumptions": [
+    "P irreducible on a finite state space",
+    "The proof uses harmonicity of the averaged hitting function and Lemma 1.16"
+   ],
+   "breakdown_regime": "The constancy is an average over pi-distributed targets: individual hitting times E_a(tau_x) vary enormously with both a and x. The lemma fails without irreducibility, since unreachable targets have infinite hitting time.",
+   "domain": "hitting times",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The lemma gives the engine a start-independent constant of a system: the expected time to encounter a typical (pi-weighted) state. Because it does not depend on where the chain starts, it is a clean system fingerprint for comparing processes, and any measured dependence on the start exposes non-stationarity or a broken state definition in the data.",
+    "source_operator": "random_target_lemma",
+    "telemetry": "Hitting times to sampled target states from multiple starting states; equality across starts is the empirical check."
+   }
+  },
+  {
+   "primitive_id": "commute_time_identity",
+   "name": "Commute Time Identity: for random walk on a network, E_a(tau_b) + E_b(tau_a) = c_G R(a<->b), so round-trip hitting times are computed by a resistance",
+   "verbatim_quote": "Proposition 10.7 (Commute Time Identity). Let (G, {c(e)}) be a network, and let (Xt ) be the random walk on this network.",
+   "page": "Ch. 10, §10.3, p. 132; Proposition 10.7, eq. (10.14)",
+   "latex": "t_{a \\leftrightarrow b} := E_a(\\tau_b) + E_b(\\tau_a) = c_G \\, R(a \\leftrightarrow b), \\qquad c_G = \\sum_{x \\in V} c(x) = 2 \\sum_{e \\in E} c(e)",
+   "symbol_and_unit_ledger": {
+    "t_{a<->b}": "commute time between a and b",
+    "c_G": "total conductance of the network",
+    "R(a<->b)": "effective resistance between a and b"
+   },
+   "assumptions": [
+    "The walk is the network random walk with transition probabilities proportional to conductances",
+    "Uses the Green function identity of Lemma 10.5 and the voltage relation of Lemma 9.6"
+   ],
+   "breakdown_regime": "One-way hitting times can be wildly asymmetric even when the commute time is small (Exercise 10.3 territory); the identity controls only the round trip. It also requires the network (reversible) setting.",
+   "domain": "hitting times",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Round-trip costs between regions are often what the engine actually needs (how long until a system leaves a regime and comes back), and the identity prices them from static network data, no simulation required. Combined with resistance monotonicity, it also yields bounds: simplify the network and the commute time bound follows rigorously.",
+    "source_operator": "commute_time_identity",
+    "telemetry": "Pairwise hitting-time estimates from trajectories, summed in both directions and checked against the resistance computed from the graph."
+   }
+  },
+  {
+   "primitive_id": "matthews_method_cover_times",
+   "name": "Matthews method: the cover time of an n-state chain is sandwiched by hitting times, t_cov <= t_hit (1 + 1/2 + ... + 1/(n-1)), with matching lower bounds from well-separated subsets",
+   "verbatim_quote": "Theorem 11.2 (Matthews (1988a)). Let (Xt ) be an irreducible finite Markov chain on n > 1 states.",
+   "page": "Ch. 11, §11.2, pp. 150-151; Theorem 11.2, Proposition 11.4",
+   "latex": "t_{cov} \\le t_{hit} \\sum_{k=1}^{n-1} \\frac{1}{k} = t_{hit}\\, H_{n-1}",
+   "symbol_and_unit_ledger": {
+    "t_cov": "worst-case expected cover time, time to visit every state",
+    "t_hit": "worst-case expected hitting time max_{x,y} E_x(tau_y)",
+    "H_{n-1}": "harmonic number, about log n + gamma"
+   },
+   "assumptions": [
+    "P irreducible on n states, n > 1",
+    "The proof randomizes the order in which states are checked (a uniform random permutation)"
+   ],
+   "breakdown_regime": "The harmonic factor is the price of the worst state ordering; chains whose hard-to-hit states cluster (a subset with large internal hitting times) saturate the lower bound instead, and cover time is then governed by that subset, not by n.",
+   "domain": "cover times",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Full-coverage questions (see every opponent, every scenario, every state at least once) are priced by the engine with this sandwich: the worst pairwise hitting time times a log factor. It converts an expensive global simulation question into pairwise hitting estimates the engine already maintains, and the lower-bound version identifies which subset of states actually sets the coverage clock.",
+    "source_operator": "matthews_method_cover_times",
+    "telemetry": "Pairwise hitting-time matrix estimates; the maximum and the worst separated subset drive the bound."
+   }
+  },
+  {
+   "primitive_id": "spectral_gap_relaxation_time",
+   "name": "Spectral gap and relaxation time: gamma = 1 - lambda_2, t_rel = 1/gamma_*, with two-sided mixing control t_mix(eps) <= t_rel log(1/(eps pi_min)) and t_mix(eps) >= (t_rel - 1) log(1/(2 eps)); variationally gamma = min E(f)/Var_pi(f) over nonconstant f (Dirichlet form)",
+   "verbatim_quote": "The spectral gap of a reversible chain is defined by γ := 1 − λ2 .",
+   "page": "Ch. 12, §12.2, p. 163 (eqs. (12.6)-(12.11), Theorems 12.4-12.5); Ch. 13, §13.2.1, p. 181 (Lemma 13.7, eq. (13.3))",
+   "latex": "\\gamma := 1 - \\lambda_2, \\qquad t_{rel} := \\frac{1}{\\gamma_*}, \\qquad \\gamma = \\min_{f : \\mathrm{Var}_\\pi(f) > 0} \\frac{\\mathcal{E}(f)}{\\mathrm{Var}_\\pi(f)}, \\qquad \\mathcal{E}(f) = \\frac{1}{2} \\sum_{x,y} [f(x)-f(y)]^2 \\pi(x) P(x,y)",
+   "symbol_and_unit_ledger": {
+    "lambda_2": "second largest eigenvalue of the reversible transition matrix P",
+    "gamma_*": "absolute spectral gap, 1 - max|lambda| over lambda != 1",
+    "E(f)": "Dirichlet form of f, expected squared one-step change under stationarity, halved",
+    "pi_min": "smallest stationary probability"
+   },
+   "assumptions": [
+    "Reversibility gives real eigenvalues and an orthonormal eigenbasis in L^2(pi)",
+    "The variational formula (13.3) holds for reversible chains; test functions give upper bounds on gamma"
+   ],
+   "breakdown_regime": "The pi_min term makes the upper bound weak for chains with rare states, and the gap alone cannot detect cutoff-scale behavior or non-normal transient growth in non-reversible chains. A lazy version is often needed so the smallest eigenvalue does not fake a small absolute gap.",
+   "domain": "spectral methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The relaxation time is the engine's intrinsic clock for a system: the time constant of its slowest mode. Every correlation the engine measures between observations separated by t steps decays like (1 - gamma_*)^t in the worst mode, which sets how far apart samples must be to count as independent and how long a regime's influence persists. The variational form turns this into an optimization: the slowest mode is the function that changes least per step relative to its variance.",
+    "source_operator": "spectral_gap_relaxation_time",
+    "telemetry": "Autocorrelation decay of scalar observables over lag; the slowest observed decay rate estimates gamma_*, and near-constant-per-step functions identify the slow mode."
+   }
+  },
+  {
+   "primitive_id": "cheeger_inequality",
+   "name": "Cheeger inequality for chains: conductance and spectral gap are polynomially equivalent, Phi_*^2 / 2 <= gamma <= 2 Phi_*",
+   "verbatim_quote": "The following theorem bounds γ in terms of the bottleneck ratio:",
+   "page": "Ch. 13, §13.2.2, p. 183; Theorem 13.10 (Sinclair and Jerrum 1989; Lawler and Sokal 1988), eq. (13.6)",
+   "latex": "\\frac{\\Phi_*^2}{2} \\le \\gamma \\le 2 \\Phi_*",
+   "symbol_and_unit_ledger": {
+    "Phi_*": "bottleneck ratio (conductance) of the chain",
+    "gamma": "spectral gap 1 - lambda_2 of the reversible transition matrix"
+   },
+   "assumptions": [
+    "P reversible and irreducible",
+    "Both bounds are the correct order on some family of examples (text after Theorem 13.10)"
+   ],
+   "breakdown_regime": "The square in the lower bound is a real loss: for expander-like chains gamma is of order Phi_*, while for path-like chains gamma is of order Phi_*^2, so conductance alone cannot pin the gap closer than this quadratic window.",
+   "domain": "spectral methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cheeger is the engine's two-way translator between geometry and spectrum: find a bottleneck cut and you have bounded the slowest mode; measure the slowest mode and you know a bottleneck exists. It justifies using whichever side is measurable in a given system, cut flows from trajectory data or decay rates from autocorrelation, to certify the other.",
+    "source_operator": "cheeger_inequality",
+    "telemetry": "Cut flow ratios and autocorrelation decay rates measured on the same system; the inequality is the consistency check between them."
+   }
+  },
+  {
+   "primitive_id": "path_coupling_contraction",
+   "name": "Path coupling (Bubley-Dyer): if one-step coupling contracts a path metric, E rho(X_1,Y_1) <= e^{-alpha} rho(x,y), on every adjacent pair, then it contracts for all pairs and t_mix(eps) <= (log diam + log(1/eps)) / alpha",
+   "verbatim_quote": "While Bubley and Dyer (1997) discovered the following theorem and applied it to mixing, the key idea is the application of the triangle inequality for the transportation metric, which goes back to Kantorovich (1942).",
+   "page": "Ch. 14, §14.2, pp. 203-204; Theorem 14.6 eqs. (14.8)-(14.9), Corollary 14.8",
+   "latex": "E_{x,y}\\big[\\rho(X_1, Y_1)\\big] \\le e^{-\\alpha} \\rho(x,y) \\ \\text{on edges} \\ \\Longrightarrow \\ \\rho_K(\\mu P, \\nu P) \\le e^{-\\alpha} \\rho_K(\\mu, \\nu), \\qquad t_{mix}(\\varepsilon) \\le \\frac{\\log \\mathrm{diam}(\\mathcal{X}) + \\log(1/\\varepsilon)}{\\alpha}",
+   "symbol_and_unit_ledger": {
+    "rho": "path metric induced by edge lengths l >= 1 on a graph over the state space",
+    "rho_K": "Kantorovich (transportation) distance between distributions under rho",
+    "alpha": "one-step contraction rate",
+    "diam": "diameter of the state space in the metric rho"
+   },
+   "assumptions": [
+    "Contraction must be verified only for pairs at distance given by a single edge of the auxiliary graph",
+    "Edge lengths at least 1, so rho(x,y) >= 1{x != y} and TV is dominated by rho_K (eq. (14.7))"
+   ],
+   "breakdown_regime": "If the one-step expected distance does not contract on some edge (alpha <= 0 locally), the method fails even for chains that mix by other mechanisms; designing the metric rho is the art, and a poor metric manufactures a false negative.",
+   "domain": "path coupling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Path coupling is the engine's local-to-global certificate: define a distance between configurations that counts weighted local disagreements, verify that one update round shrinks expected distance for configurations differing in exactly one place, and global forgetting follows with an explicit rate. It is exactly how the engine reasons about systems updated one component at a time, where only neighboring configurations can be analyzed by hand.",
+    "source_operator": "path_coupling_contraction",
+    "telemetry": "Paired simulations of configurations at distance 1: the empirical mean distance after one update round estimates the contraction factor."
+   }
+  },
+  {
+   "primitive_id": "optional_stopping_theorem",
+   "name": "Optional Stopping Theorem: a stopped martingale keeps its mean, E(M_tau) = E(M_0) under boundedness or integrability conditions; the engine behind exact hitting-time and variance computations",
+   "verbatim_quote": "Theorem 17.6 (Optional Stopping Theorem, Version 1). If (Mt ) is a martingale with respect to the filtration {Ft } and τ is a stopping time for {Ft }, then (Mt∧τ ) is a martingale with respect to {Ft }.",
+   "page": "Ch. 17, §17.2, p. 244; Theorem 17.6, Corollary 17.7",
+   "latex": "E(M_\\tau) = E(M_0)",
+   "symbol_and_unit_ledger": {
+    "M_t": "martingale adapted to the filtration F_t",
+    "tau": "stopping time with respect to F_t",
+    "M_{t∧tau}": "the stopped process, itself a martingale"
+   },
+   "assumptions": [
+    "Version 2 requires P{tau < infinity} = 1 and a uniform bound |M_{t∧tau}| <= K (Corollary 17.7)"
+   ],
+   "breakdown_regime": "Without the side conditions the conclusion is false: the first passage time to 1 of simple random walk has E(M_tau) = 1 != 0 = E(M_0) for the walk itself as a martingale (Section 17.2's opening example). Unbounded stopping in favorable games is exactly where naive applications break.",
+   "domain": "martingales",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Optional stopping is the engine's exact-arithmetic tool for event times: build a martingale from the process (for random walk, X_t, X_t^2 - t, and higher polynomial martingales), stop it at the event of interest, and read off exact hitting probabilities, expected durations, and variances without simulation. It also disciplines sequential analysis: a fair score process cannot be beaten by any stopping rule, which bounds what adaptive peeking can manufacture.",
+    "source_operator": "optional_stopping_theorem",
+    "telemetry": "Event-time logs (first passage times) plus the process path; moment identities are checked against the observed stopping distributions."
+   }
+  },
+  {
+   "primitive_id": "evolving_sets_duality",
+   "name": "Evolving sets (Morris-Peres): the set-valued chain S~ = {y : Q(S,y)/pi(y) >= U} is dual to the original chain, P^t(x,y) = [pi(y)/pi(x)] P_{ {x} }{y in S_t}, and yields mixing bounds through the conductance profile without reversibility (Theorem 17.10)",
+   "verbatim_quote": "The evolving-set process is a Markov chain on subsets of X .",
+   "page": "Ch. 17, §17.4, pp. 249-250; eq. (17.13), Lemma 17.12 eq. (17.15), Theorem 17.10; Notes eq. (17.43)-(17.44)",
+   "latex": "\\tilde{S} = \\left\\{ y \\in X : \\frac{Q(S,y)}{\\pi(y)} \\ge U \\right\\}, \\qquad P^t(x,y) = \\frac{\\pi(y)}{\\pi(x)} P_{\\{x\\}}\\{y \\in S_t\\}",
+   "symbol_and_unit_ledger": {
+    "U": "a uniform[0,1] random variable, redrawn each step",
+    "Q(S,y)": "stationary flow from the set S into state y",
+    "S_t": "the evolving set at time t, started from {x}",
+    "Phi(r)": "conductance profile, worst bottleneck ratio among sets of pi-mass near r"
+   },
+   "assumptions": [
+    "Theorem 17.10 assumes a lazy chain, P(x,x) >= 1/2",
+    "The duality (17.15) holds for general chains; the sharp integral bound uses the conductance profile Phi(r)"
+   ],
+   "breakdown_regime": "Evolving sets is a proof technology more than a simulation algorithm (the state space is all subsets); its bounds degrade when the conductance profile is much worse at small scales than at the worst-set scale, which is precisely the extra information it exploits.",
+   "domain": "evolving sets",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The duality flips the engine's viewpoint from tracking one state to tracking a cloud of plausible states: the probability of being at y after t steps is proportional to the chance that the cloud grown from x covers y. Growing-set dynamics expose bottlenecks at every scale simultaneously, so mixing estimates inherit the true multiscale geometry instead of the single worst cut.",
+    "source_operator": "evolving_sets_duality",
+    "telemetry": "Set-growth simulations from singleton starts at several scales; coverage probabilities estimate the duality identity directly."
+   }
+  },
+  {
+   "primitive_id": "cutoff_phenomenon",
+   "name": "Cutoff: a family of chains has cutoff when t_mix(eps)/t_mix(1-eps) -> 1 for every eps, equivalently the distance curve converges to a step function at t_mix; a necessary condition is the product condition t_mix/(t_rel - 1) -> infinity",
+   "verbatim_quote": "In fact, this property characterizes when a sequence of chains has a cutoff.",
+   "page": "Ch. 18, §18.1, p. 261 (eq. (18.3), Lemma 18.1); §18.3, p. 267 (product condition)",
+   "latex": "\\lim_{n \\to \\infty} \\frac{t^{(n)}_{mix}(\\varepsilon)}{t^{(n)}_{mix}(1-\\varepsilon)} = 1 \\quad \\text{for all } \\varepsilon \\in (0,1), \\qquad \\text{pre-cutoff} \\ \\Longrightarrow \\ \\frac{t_{mix}}{t_{rel} - 1} \\to \\infty",
+   "symbol_and_unit_ledger": {
+    "t^{(n)}_{mix}(eps)": "mixing time of the n-th chain in the family at accuracy eps",
+    "t_rel": "relaxation time of the chain",
+    "d_n(t)": "worst-case distance to stationarity of the n-th chain at time t"
+   },
+   "assumptions": [
+    "The definition is asymptotic in a family of chains indexed by n",
+    "The window w_n of the transition satisfies w_n = o(t_mix)"
+   ],
+   "breakdown_regime": "Most chains do not have a cutoff; when t_mix and t_rel are of the same order the distance decays gradually and no cliff exists. Pre-cutoff is strictly weaker (Section 18.3 gives families with pre-cutoff but no cutoff).",
+   "domain": "cutoff phenomenon",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cutoff tells the engine that equilibration can be a cliff, not a ramp: below a threshold time the system carries almost full memory of its start, above it almost none, with a transition window negligible next to the time itself. Resource decisions change completely under a cliff: running 90 percent of t_mix buys almost nothing, so budgets must clear the threshold or not be spent. The product condition is the quick screen: if t_mix is not much larger than t_rel, no cliff should be expected.",
+    "source_operator": "cutoff_phenomenon",
+    "telemetry": "Distance-versus-time curves across a size parameter (states, players, games); sharpening of the transition as size grows is the empirical signature."
+   }
+  },
+  {
+   "primitive_id": "censoring_inequality",
+   "name": "Censoring inequality (Peres-Winkler): for a monotone spin system started from the maximal state, deleting updates from an update sequence can only increase the distance to stationarity; more updates never hurt",
+   "verbatim_quote": "In words, censoring updates never decreases the distance to stationarity.",
+   "page": "Ch. 22, §22.6, pp. 314-315; Theorem 22.20",
+   "latex": "\\|\\mu - \\pi\\|_{TV} \\le \\|\\nu - \\pi\\|_{TV}",
+   "symbol_and_unit_ledger": {
+    "mu": "distribution after the full update sequence v_1..v_m from the maximal state",
+    "nu": "distribution after a censored subsequence of those updates, same start",
+    "pi": "the monotone system's target distribution"
+   },
+   "assumptions": [
+    "pi is a monotone spin system whose state space has a maximal state",
+    "The chain starts from the maximal state (a dual statement holds from the minimal state)"
+   ],
+   "breakdown_regime": "Monotonicity and the extremal start are essential: for general systems or mid-range starts, extra updates can in principle move the distribution away in TV, and the inequality fails. The result compares update schemes, not wall-clock efficiency per update.",
+   "domain": "monotone chains",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Censoring gives the engine a free comparison principle for update schedules: a systematic sweep and a random-site schedule can be ranked without analyzing either fully, because dropping updates from the richer schedule lower-bounds its error by the poorer one. It also licenses lazy engineering: if a cheap schedule is a subsequence of a trusted one, its error is at least the trusted error, and if the cheap one already meets tolerance the question is closed.",
+    "source_operator": "censoring_inequality",
+    "telemetry": "Error-versus-updates curves for nested update schedules started from the extremal configuration."
+   }
+  },
+  {
+   "primitive_id": "coupling_from_the_past",
+   "name": "Coupling from the past (Propp-Wilson): run the chain's random-mapping updates from time -T forward from ALL states at once; if the trajectories have coalesced by time 0, the common value is an exact sample from pi, with no initialization bias, and T is increased until coalescence occurs",
+   "verbatim_quote": "The \"coupling from the past\" (CFTP) procedure introduced by Propp and Wilson (1996) provides one way of getting around this problem.",
+   "page": "Ch. 25 (guest chapter by Propp and Wilson), §25.1, p. 348; §25.2 monotone CFTP, §25.3 perfect sampling",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chain must admit a random mapping representation whose updates can be replayed from the recorded randomness",
+    "Coalescence from all starting states must be detectable (monotone systems: tracking only the maximal and minimal states suffices, Section 25.2)",
+    "Update randomness must be reused identically when T is extended backward, never redrawn"
+   ],
+   "breakdown_regime": "CFTP gives exactness, not speed: for slowly mixing chains the coalescence time is correspondingly long, and for non-monotone systems tracking all states can be infeasible without dominating processes or other structure. A bug that redraws randomness when extending T silently destroys exactness.",
+   "domain": "perfect simulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "CFTP is the engine's answer when an approximate sample is not good enough: equilibrium draws with zero burn-in bias, because the algorithm itself decides how much history the present actually depends on and reports it. The coalescence time doubles as a measurement: it is the true memory length of the system under its own update rule, observed rather than bounded.",
+    "source_operator": "coupling_from_the_past",
+    "telemetry": "Coalescence times over repeated CFTP runs; their distribution is the empirical memory profile of the system."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "38738d44582f1727-t1",
+   "think": "This book is the modern reference for a single question: given a finite Markov chain, how long until its distribution is close to its stationary distribution, and how can that time be proved from the structure of the chain. Its machinery fits together as a layered system. The foundation layer is algebraic: a chain is a stochastic matrix P, distributions are row vectors evolving by mu_t = mu_0 P^t, and stationarity is the fixed-point equation pi = pi P. Chapter 1 adds the two structural gate conditions, irreducibility and aperiodicity, shows the stationary distribution exists and is unique, identifies it with long-run occupation through the return-time identity pi(z) = 1/E_z tau_z^+, and gives detailed balance as a locally checkable sufficient condition whose equality case is reversibility, where the chain reads the same forwards and backwards. The second layer is the metric layer of Chapter 4: total variation distance, defined as the worst event gap and equal to half the L1 distance, is the error measure; the Convergence Theorem guarantees geometric decay of that error; and the mixing time t_mix, conventionally at accuracy 1/4, compresses the whole decay curve into one number, with submultiplicativity amplifying a single bound to every accuracy. The third layer is a toolbox of proof technologies, each attacking the mixing time from a different side. Coupling turns distance into a coalescence probability: build two copies on one probability space and the chance they have not met bounds the distance. Strong stationary times invert the idea, exhibiting a random time after which the state is exactly stationary and independent of the time, which bounds the stronger separation distance exactly when a halting state exists. Spectral methods diagonalize reversible chains: the gap gamma = 1 - lambda_2 sets the relaxation time, the Dirichlet form turns gap estimation into a variational problem over test functions, and Cheeger's inequality ties the gap to the conductance Phi_*, the worst bottleneck ratio, within a square. Lower bounds are equally systematic: a bottleneck set caps the escape flow and forces t_mix >= 1/(4 Phi_*), and a distinguishing statistic with separated means certifies non-mixing through Chebyshev. Two later technologies refine the picture: path coupling reduces global contraction to a one-step check on neighboring configurations in a well-chosen metric, and evolving sets dualize the chain into a growing set process that reads bottlenecks at every scale at once. Around this core the book hangs exact computations on canonical families: gambler's ruin and birth-and-death chains solved by first-step equations, coupon collector and cover times priced by harmonic sums through the Matthews method, random walks on networks translated into electrical networks where the commute time identity prices round trips by resistance, and card shuffles whose sharp scales (n log n for transpositions, log n order for riffles) both calibrate the theory and exhibit the cutoff phenomenon, where the distance curve collapses to a step function. For computation, the book's stance is that a sampling algorithm is only as good as its mixing bound: Metropolis-Hastings and Glauber dynamics construct chains with any prescribed stationary law, and coupling from the past removes initialization bias entirely by running the update maps from the distant past until all starting states coalesce. What this changes for a reasoning engine is discipline: equilibrium claims must name their metric, their starting state, and their time scale; forgetting is never assumed, it is certified by a coupling, a stopping time, a spectral gap, or a bottleneck audit; and time itself becomes a measured quantity with units, the number of steps after which history stops mattering, estimable from data through coalescence times, autocorrelation decay, and return-time statistics. Two further layers reward attention. The exact-methods layer of Chapters 2 and 10 through 11 shows how far first-step analysis goes: hitting probabilities and expected hitting times for any finite chain solve a linear system built from one-step conditioning, and for structured families the system closes in form, as with the birth-and-death product weights, the coupon collector harmonic sum, and the Matthews sandwich that prices full coverage from worst pairwise hitting times. The advanced layer then relaxes the book's own default assumptions one at a time: Chapter 17 drops reversibility by tracking sets instead of states and replaces the spectral picture with optional stopping and martingale identities; Chapter 22 studies chains with a monotone order, where comparison principles like the censoring inequality let one update scheme certify another; Chapter 18 asks not how large the mixing time is but how it behaves across a growing family, and discovers cutoff, a phase transition in time itself; and Chapter 25 turns coupling from an inequality into an algorithm that returns exact draws. The failure-mode catalogue is equally explicit and equally important. Periodicity destroys convergence outright and is repaired, at a factor of two, by laziness. A chain with a tiny bottleneck set mixes slowly no matter how benign the rest of the state space looks, and the spectral gap inherits that verdict quadratically through Cheeger. A chain can mix in total variation while its separation distance is still large, so the choice of metric changes the answer and must match the use. Strong stationary times and path couplings can each fail on chains that mix by other mechanisms, so a failed bound is evidence about the tool, not about the chain. And worst-case mixing time is exactly that, worst case over starting states; typical starts and typical states often equilibrate far sooner, which the book notes but refuses to blur into the headline number. Held together, the work is less a list of theorems than a decision procedure: given a chain, choose the certificate that fits its structure, compute the time scale, and only then reason about equilibrium as if the start had been forgotten.",
+   "retrocausal_genealogy": "The lineage starts with Markov's 1906 papers on chains of linked variables, cited in the Chapter 1 notes, and runs through the classical fixed-chain theory of Feller and the Perron-Frobenius approach that the notes name as the standard route to existence and uniqueness. The mixing-time viewpoint is much younger: the preface traces it to a convergence in the 1980s and 1990s of statistical physics (Dobrushin, Shlosman, Stroock, Martinelli and others on spin systems), theoretical computer science (sampling and approximate counting, Jerrum and Sinclair, Alon and Milman on eigenvalues and expansion), and the Aldous-Diaconis work on card shuffling. Specific tools carry dated credits throughout: Metropolis, Rosenbluth, Teller and Teller (1953) with Hastings (1970) generalizing; Matthews (1988) on cover times; Sinclair and Jerrum (1989) and Lawler and Sokal (1988) on the conductance-gap inequality; Bayer and Diaconis (1992) on riffle shuffles; Bubley and Dyer (1997) on path coupling with Kantorovich (1942) behind the metric; Morris and Peres (2005) on evolving sets; Propp and Wilson (1996) on coupling from the past, with precursors in Loynes (1962) and Letac (1986). The book itself was begun at the 2005 MSRI program on Probability, Algorithms, and Statistical Physics, and the second edition adds chapters on monotone chains, the exclusion process, and the equivalence of geometric mixing times.",
+   "theory_of_mind": "The authors write as mathematicians who believe the reader's intuition is best built by exact small cases before general theorems: a two-state frog chain opens the book, and almost every general method is first forced to reproduce a hands-on answer for the hypercube, the cycle, or a deck of cards. Their model of the domain is that mixing is a geometric property of the chain, governed by bottlenecks, symmetry, and spectrum, and that the right response to a huge state space is not asymptotics in t for a fixed chain but precise asymptotics in the size of the space. They assume undergraduate probability and linear algebra, flag starred sections as optional depth, and consistently prefer a theorem with an explicit constant over an existence claim. They also model intellectual honesty about method limits: bounds are labeled as off by factors when they are, and a full chapter of open problems closes the book.",
+   "cross_layer_veto": "This work vetoes several tempting shortcuts in any larger reasoning system. First, it vetoes equilibrium language without a time scale: a stationary distribution existing says nothing about whether the process has reached it, so any layer that consumes long-run frequencies must first produce a mixing certificate or stand down. Second, it vetoes aggregation without the lumping condition: a coarse state description that fails the projection test is not Markov, and downstream layers may not treat its transitions as state-dependent constants. Third, it vetoes reversibility assumptions for directed dynamics: detailed balance is a property to verify from fluxes, and where it fails, spectral and electrical methods are off the table and only coupling, evolving sets, or direct analysis survive. Fourth, it vetoes extrapolation across accuracy levels without the amplification bookkeeping, and across system sizes without checking for cutoff, where partial progress toward the mixing time is worth almost nothing."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a theory of forgetting in finite dynamical systems: a state, a transition law, an equilibrium, and a certified time after which the initial condition no longer matters. Its template applies anywhere a system evolves by local updates among finitely many configurations: identify the invariant law, find the bottleneck that traps the dynamics, choose a coupling or a test function that exposes the slowest mode, and report the memory length in units of the system's own steps. The recurring moral is that global behavior is controlled by the worst local obstruction, and that the obstruction can be found either geometrically, as a cut with little flow, or analytically, as a function that barely changes per step.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the mathematical core for teaching and research on sequential decision systems: Markov models of evolving states, exact hitting and cover time computations, and the spectral and coupling methods for certifying convergence. It anchors coursework and reference material on how long simulations must run before their outputs can be trusted, how aggregated state descriptions can silently break the Markov property, and how phase transitions in mixing (cutoff, Ising criticality) mark qualitative regime changes in a system's behavior. Its open problems chapter is a ready source of research questions stated precisely enough to work on.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, this is the operating manual for every state-evolution model the engine runs: transition kernels estimated from play-by-play and game-state sequences, stationary baselines for state occupation, and mixing times that set simulation lengths and independence assumptions between observations. Bottleneck ratios locate the regimes a modeled system gets trapped in, distinguishing statistics audit whether an observed run of form is real separation from equilibrium or noise, and coupling constructions power the paired counterfactual simulations the engine uses to compare scenarios under shared randomness. Nothing here touches wagering mechanics; the value is entirely in the prediction and reasoning layer: knowing what a system does in equilibrium, how fast it gets there, and when the data say it has not."
+}

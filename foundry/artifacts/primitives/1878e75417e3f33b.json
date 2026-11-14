@@ -1,0 +1,95 @@
+{
+  "book_id": "1878e75417e3f33b",
+  "source_status": "COMPLETE",
+  "title": "Lecture13",
+  "file_name": "Lecture13.pdf",
+  "sha256": "1878e75417e3f33befcb27fcb491b6968f511dc1fe8d458346b79d1310d5f1e9",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sinkhorn_scaling",
+      "name": "Sinkhorn Scaling",
+      "verbatim_quote": "Math 612: Single Cell Analysis 2019W Term 1 Lecture 13: October 17 Lecturer: Geoffrey Schiebinger Scribe: Delbert Yip 13.1 Sinkhorn's Algorithm for Entropic Optimal Transport Theorem 13.1 The solution to entropic optimal transport, min π X ij πijcij + ε X ij log πij s.t.",
+      "page": 1,
+      "latex": "min_π Σ_ij π_ij c_ij + ε Σ_ij π_ij log π_ij s.t. π1 = a, π^T 1 = b",
+      "symbol_and_unit_ledger": "{'π_ij': 'Transport plan element (dimensionless)', 'c_ij': 'Cost matrix element (arbitrary units)', 'ε': 'Entropic regularization parameter (same units as c_ij)', 'a': 'Source marginal distribution (unit mass)', 'b': 'Target marginal distribution (unit mass)'}",
+      "assumptions": "Positive cost matrix c_ij, strictly positive marginals a,b > 0, small regularization parameter ε > 0.",
+      "breakdown_regime": "Fails when ε → 0+ (classical OT singularity) or when marginals have disjoint supports.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to Wasserstein Barycenter computation in GSI; corresponds to policy evaluation in Markov decision processes on graphs in GSE.",
+        "source_operator": "sinkhorn_scaling",
+        "telemetry": "Relative entropy gap between consecutive iterates ||π^{(t)} - π^{(t-1)}||_2 / ||π^{(t-1)}||_2"
+      }
+    },
+    {
+      "primitive_id": "entropic_optimal_transport",
+      "name": "Entropic Optimal Transport",
+      "verbatim_quote": "π1 = a πT 1 = b is unique and has the form: π∗ ij = uiKijvj (13.1) for scaling vectors u ∈Rn, v ∈Rm, where K is a matrix with elements Kij = exp \u0000-cij ε \u0001 .",
+      "page": 1,
+      "latex": "π*_{ij} = u_i K_{ij} v_j, K_{ij} = exp(-c_{ij}/ε)",
+      "symbol_and_unit_ledger": "{'u_i': 'Row scaling factor (reciprocal of units of a_i)', 'v_j': 'Column scaling factor (reciprocal of units of b_j)', 'K_{ij}': 'Kernel matrix element (dimensionless)', 'c_{ij}': 'Cost matrix element (arbitrary units)', 'ε': 'Entropic regularization parameter (same units as c_{ij})'}",
+      "assumptions": "Non-negative cost matrix, strictly positive marginals, ε > 0.",
+      "breakdown_regime": "Reduces to standard linear program as ε → ∞; recovers sparse optimal transport at ε → 0+.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to Gibbs distribution maximization in GSI; maps to value iteration kernel in GSE with exponential transition costs.",
+        "source_operator": "entropic_optimal_transport",
+        "telemetry": "Optimal transport cost C*(ε) = Σ_ij π*_{ij} c_{ij} + ε Σ_ij π*_{ij} log π*_{ij}"
+      }
+    },
+    {
+      "primitive_id": "sinkhorn_algorithm",
+      "name": "Sinkhorn Algorithm",
+      "verbatim_quote": "13-2 Lecture 13: October 17 13.1.1 Scaling Algorithm Now, we solve for the vectors u = exp ν(1) i ε !",
+      "page": 2,
+      "latex": "u^{(l+1)} = a / (K v^{(l)}), v^{(l+1)} = b / (K^T u^{(l+1)})",
+      "symbol_and_unit_ledger": "{'u^{(l)}': 'Row scaling vector at iteration l (reciprocal of a)', 'v^{(l)}': 'Column scaling vector at iteration l (reciprocal of b)', 'K': 'Kernel matrix with elements exp(-c_{ij}/ε)', 'a': 'Source marginal distribution (unit mass)', 'b': 'Target marginal distribution (unit mass)'}",
+      "assumptions": "Positive entries in K, strictly positive marginals a,b > 0, small ε > 0.",
+      "breakdown_regime": "Convergence slows near ε = 0+; fails if rows/columns of K sum to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Used for fast approximate Bayesian posterior updates in GSI; serves as transition probability kernel in GSE policy evaluation.",
+        "source_operator": "sinkhorn_algorithm",
+        "telemetry": "Row-sum error max_i |Σ_j π_{ij} - a_i| / max(a)"
+      }
+    },
+    {
+      "primitive_id": "alternating_projections",
+      "name": "Alternating Projections",
+      "verbatim_quote": "Theorem 13.2 Let C and D be closed convex sets.",
+      "page": 3,
+      "latex": "x^{k+1} = P_C(P_D(x^k)), y^{k+1} = P_D(P_C(y^k))",
+      "symbol_and_unit_ledger": "{'P_C': 'Euclidean projection onto convex set C', 'P_D': 'Euclidean projection onto convex set D', 'x^k': 'Point at iteration k (state space)', 'y^k': 'Point at iteration k (dual space)'}",
+      "assumptions": "Closed, convex sets C,D ⊆ R^n, non-empty intersection C ∩ D.",
+      "breakdown_regime": "Does not converge if either set is non-convex; slow convergence when sets are nearly parallel.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to expectation-maximization in GSI; corresponds to policy iteration in MDPs in GSE.",
+        "source_operator": "alternating_projections",
+        "telemetry": "Distance reduction ||x^{k+1} - x^k||_2 / ||x^k - x^{k-1}||_2"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1878e75417e3f33b_t0",
+      "think": "The Sinkhorn algorithm solves entropic optimal transport by iteratively rescaling a kernel matrix K via alternating projections onto marginal constraints. This fixed-point scaling yields a unique solution π* = diag(u) K diag(v). The method's computational efficiency stems from its low-rank structure and differentiable objective, making it ideal for large-scale Bayesian inference in GSI (e.g., posterior approximation) and policy evaluation in GSE (e.g., Markov decision processes). Failure occurs when ε → 0+ (classical OT degeneracy) or when marginals have disjoint support, leading to numerical instability. Cross-layer veto conditions require that the underlying cost matrix remains positive definite and that the scaling factors remain bounded.\n\nDeep epistemic analysis for Lecture13 (1878e75417e3f33b, domain=other, pages_read=6/6): Operator 'Sinkhorn Scaling' (page 1, domain other) captures: Math 612: Single Cell Analysis 2019W Term 1 Lecture 13: October 17 Lecturer: Geoffrey Schiebinger Scribe: Delbert Yip 13.1 Sinkhorn's Algorithm for Entropic Optimal Transport Theorem 13.1 The solution to entropic optimal transport, min π X ij πijcij + ε X ij log πij s.t. Assumptions: Positive cost matrix c_ij, strictly positive marginals a,b > 0, small regularization parameter ε > 0. Breakdown regime: Fails when ε → 0+ (classical OT singularity) or when marginals have disjoint supports. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to Wasserstein Barycenter computation in GSI; corresponds to policy evaluation in Markov decision processes on graphs in GSE. Operator 'Entropic Optimal Transport' (page 1, domain other) captures: π1 = a πT 1 = b is unique and has the form: π∗ ij = uiKijvj (13.1) for scaling vectors u ∈Rn, v ∈Rm, where K is a matrix with elements Kij = exp \u0000-cij ε \u0001 . Assumptions: Non-negative cost matrix, strictly positive marginals, ε > 0. Breakdown regime: Reduces to standard linear program as ε → ∞; recovers sparse optimal transport at ε → 0+. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to Gibbs distribution maximization in GSI; maps to value iteration kernel in GSE with exponential transition costs. Operator 'Sinkhorn Algorithm' (page 2, domain other) captures: 13-2 Lecture 13: October 17 13.1.1 Scaling Algorithm Now, we solve for the vectors u = exp ν(1) i ε ! Assumptions: Positive entries in K, strictly positive marginals a,b > 0, small ε > 0. Breakdown regime: Convergence slows near ε = 0+; fails if rows/columns of K sum to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used for fast approximate Bayesian posterior updates in GSI; serves as transition probability kernel in GSE policy evaluation. Operator 'Alternating Projections' (page 3, domain other) captures: Theorem 13.2 Let C and D be closed convex sets. Assumptions: Closed, convex sets C,D ⊆ R^n, non-empty intersection C ∩ D. Breakdown regime: Does not converge if either set is non-convex; slow convergence when sets are nearly parallel. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to expectation-maximization in GSI; corresponds to policy iteration in MDPs in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Lecture13 (1878e75417e3f33b, domain=other, pages_read=6/6): Operator 'Sinkhorn Scaling' (page 1, domain other) captures: Math 612: Single Cell Analysis 2019W Term 1 Lecture 13: October 17 Lecturer: Geoffrey Schiebinger Scribe: Delbert Yip 13.1 Sinkhorn's Algorithm for Entropic Optimal Transport Theorem 13.1 The solution to entropic optimal transport, min π X ij πijcij + ε X ij log πij s.t. Assumptions: Positive cost matrix c_ij, strictly positive marginals a,b > 0, small regularization parameter ε > 0. Breakdown regime: Fails when ε → 0+ (classical OT singularity) or when marginals have disjoint supports. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to Wasserstein Barycenter computation in GSI; corresponds to policy evaluation in Markov decision processes on graphs in GSE. Operator 'Entropic Optimal Transport' (page 1, domain other) captures: π1 = a πT 1 = b is unique and has the form: π∗ ij = uiKijvj (13.1) for scaling vectors u ∈Rn, v ∈Rm, where K is a matrix with elements Kij = exp \u0000-cij ε \u0001 . Assumptions: Non-negative cost matrix, strictly positive marginals, ε > 0. Breakdown regime: Reduces to standard linear program as ε → ∞; recovers sparse optimal transport at ε → 0+. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to Gibbs distribution maximization in GSI; maps to value iteration kernel in GSE with exponential transition costs. Operator 'Sinkhorn Algorithm' (page 2, domain other) captures: 13-2 Lecture 13: October 17 13.1.1 Scaling Algorithm Now, we solve for the vectors u = exp ν(1) i ε ! Assumptions: Positive entries in K, strictly positive marginals a,b > 0, small ε > 0. Breakdown regime: Convergence slows near ε = 0+; fails if rows/columns of K sum to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used for fast approximate Bayesian posterior updates in GSI; serves as transition probability kernel in GSE policy evaluation. Operator 'Alternating Projections' (page 3, domain other) captures: Theorem 13.2 Let C and D be closed convex sets. Assumptions: Closed, convex sets C,D ⊆ R^n, non-empty intersection C ∩ D. Breakdown regime: Does not converge if either set is non-convex; slow convergence when sets are nearly parallel. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to expectation-maximization in GSI; corresponds to policy iteration in MDPs in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kantorovich's linear programming formulation (1942), accelerated by Sinkhorn's matrix scaling theorem (1964), modernized by Cuturi's entropic regularization (2013), and now applied to machine learning via differentiable dynamic programming. Retrocausal Genealogy: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "In GSI, practitioners model uncertainty via approximate posteriors; the Sinkhorn kernel provides a tractable surrogate. In GSE, decision-makers seek optimal policies; the algorithm yields efficient value functions. Both agents must account for regularization bias and computational complexity trade-offs. Theory of Mind & Decision Maker Model: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents information leakage between GSI and GSE layers by ensuring distinct cost structures: GSI uses probabilistic distances while GSE employs deterministic transition costs. Cross-Layer Veto & Anti-Leakage Check: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in Lecture13 (1878e75417e3f33b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

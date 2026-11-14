@@ -1,0 +1,863 @@
+{
+ "book_id": "a465f45c94709a31",
+ "source_status": "COMPLETE",
+ "source_note": "Sanjeev Arora and Boaz Barak, Computational Complexity: A Modern Approach. The local file is the authors free Internet draft of the book, title page dated January 2007 (web draft 2007-01-08), later published by Cambridge University Press in 2009; the catalog filename carries the 2009 print year, but the content extracted here is the 2007 draft, whose references and attributions the authors themselves flag as preliminary. Local PDF: AroraBarak-2009-ComputationalComplexity.pdf, 4572986 bytes, sha256 a465f45c94709a31fcab9e8239d2ab49084010142777088254d094dcf5612a7d, book_id = first 16 hex chars of the gatekeeper digest (sha256 over str(size) plus full file bytes). Text layer is born-digital LaTeX extraction, clean prose; a minority of math glyphs are flattened or dropped by the extraction (subset and epsilon symbols occasionally lost, overlines for complements dropped, footnote numerals fused to words), so every verbatim quote was taken from a clean prose passage and verified as an exact substring of the whitespace-normalized extracted text, and displayed equations are transcribed in standard notation from the printed displays. 35 primitives, one reasoning trace. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "tm_computes_function",
+   "name": "A Turing machine computes a function when, started on input x, it halts within the time bound with f(x) on its output tape; this is the formal unit of computation every class is built from",
+   "verbatim_quote": "if M is initialized to the start configuration on input x, then after at most T (|x|) steps it halts with f (x) written on its output tape.",
+   "page": "Ch 1, §1.2.1, Definition 1.4 (txt line 1282)",
+   "latex": "f : \\{0,1\\}^* \\to \\{0,1\\}^*",
+   "symbol_and_unit_ledger": {
+    "f": "the function being computed, mapping binary strings to binary strings",
+    "x": "input string",
+    "T(|x|)": "step budget as a function of input length [steps]"
+   },
+   "assumptions": [
+    "Machines are multi-tape TMs with a fixed finite alphabet and a read-only input tape.",
+    "Running time is counted in machine steps as a function of input length only."
+   ],
+   "breakdown_regime": "The model abstracts away constant factors and hardware detail; it says nothing about which functions are feasible, only which are computable at all.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every signal family as a machine in this sense: a well-defined map from an input state (game context) to an output, with an explicit cost in steps. A signal that cannot be specified as such a map is not yet a computable input to the reasoning layer.",
+    "telemetry": "per-signal evaluation cost, input sizes, and output values logged per game state",
+    "source_operator": "tm_computes_function"
+   }
+  },
+  {
+   "primitive_id": "universal_turing_machine",
+   "name": "There is a single universal TM U that simulates any other machine M_alpha on input x with only a C*T*log(T) slowdown, where C depends on the simulated machine alone",
+   "verbatim_quote": "There exists a TM U such that for every x, α ∈ {0, 1}∗ , U(x, α) = Mα (x), where Mα denotes the TM represented by α.",
+   "page": "Ch 1, §1.3.1, Theorem 1.13 (txt line 1642)",
+   "latex": "U(x, \\alpha) = M_\\alpha(x)",
+   "symbol_and_unit_ledger": {
+    "U": "the universal Turing machine",
+    "alpha": "a binary string encoding a Turing machine",
+    "M_alpha": "the machine encoded by alpha",
+    "x": "input string",
+    "T": "step count of the simulated run [steps]",
+    "C": "constant depending only on the simulated machine (alphabet, tapes, states)"
+   },
+   "assumptions": [
+    "Every TM has a finite binary encoding, so machines themselves are data.",
+    "Simulation overhead is a logarithmic factor in the simulated running time."
+   ],
+   "breakdown_regime": "Simulation is never free: the log factor and the constant C grow with the simulated machine description, so universality is an existence statement, not an efficiency guarantee for arbitrary encodings.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The reasoning engine is a universal layer over specialist models in exactly this sense: any specialist procedure can be encoded as data and executed by the general reasoner, at a bounded overhead. This is the license for a single engine core that hosts many sport-specific procedures without rewriting the core.",
+    "telemetry": "encoded procedure registry, simulation/evaluation latency per procedure, overhead versus native implementations",
+    "source_operator": "universal_turing_machine"
+   }
+  },
+  {
+   "primitive_id": "halting_problem_uncomputable",
+   "name": "The halting function HALT, which reports whether machine M_alpha halts on input x, is not computable by any Turing machine, by diagonalization against the universal machine",
+   "verbatim_quote": "Unfortunately, this is not possible, even if we were willing to wait an arbitrary long time: Theorem 1.17 HALT is not computable by any TM.",
+   "page": "Ch 1, §1.4.1, Theorem 1.17",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Programs and inputs are both finite strings, so a decider would have to answer for every pair.",
+    "The proof assumes a total decider exists and feeds it its own code."
+   ],
+   "breakdown_regime": "Uncomputability is about exact, always-terminating decision; it does not block heuristics, partial procedures, or resource-bounded approximations, which are what practice uses.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for engine humility: some questions about arbitrary procedures have no exact decider, so the engine must not promise a terminating exact verdict for unrestricted self-referential queries. It answers with bounded procedures and explicit resource limits instead.",
+    "telemetry": "query classes submitted to the engine, timeout and abstention rates on unbounded queries",
+    "source_operator": "halting_problem_uncomputable"
+   }
+  },
+  {
+   "primitive_id": "class_p_polynomial_time",
+   "name": "DTIME(T(n)) collects the Boolean functions computable in c*T(n) time, and P, the union over all DTIME(n^c), is the working formalization of problems that are efficiently solvable",
+   "verbatim_quote": "We let DTIME(T (n)) be the set of all Boolean (one bit output) functions that are computable in c · T (n)-time for some constant c > 0.",
+   "page": "Ch 1, §1.5, Definitions 1.19 and 1.20 (txt line 1825)",
+   "latex": "\\mathrm{P} = \\bigcup_{c \\geq 1} \\mathrm{DTIME}(n^c)",
+   "symbol_and_unit_ledger": {
+    "n": "input length [bits]",
+    "c": "a constant exponent, independent of n",
+    "DTIME(n^c)": "languages decidable in O(n^c) steps"
+   },
+   "assumptions": [
+    "Polynomial time is identified with feasible computation (the Cobham-Edmonds thesis).",
+    "The class is robust across reasonable machine models because simulations cost at most polynomial overhead."
+   ],
+   "breakdown_regime": "Polynomial can still be impractical (huge exponents or constants), and the identification is a thesis, not a theorem; massively parallel or quantum hardware pressure the strong form of the thesis.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "P is the template for the engine feasibility budget: a signal pipeline is production-grade only if its cost grows polynomially in the size of the slate it processes, with small exponents. Anything super-polynomial in slate size is research code, not a live signal.",
+    "telemetry": "measured runtime scaling of each pipeline against slate size, fitted exponents in nightly benchmarks",
+    "source_operator": "class_p_polynomial_time"
+   }
+  },
+  {
+   "primitive_id": "np_certificate_definition",
+   "name": "A language is in NP when membership has a short certificate checkable in polynomial time: x is in L iff some string u of polynomial length makes the verifier M accept (x, u)",
+   "verbatim_quote": "A language L ⊆ {0, 1}∗ is in NP if there exists a polynomial p : N → N and a polynomial-time TM M such that for every x ∈ {0, 1}∗ , x ∈ L ⇔ ∃u ∈ {0, 1}p(|x|) s.t. M (x, u) = 1",
+   "page": "Ch 2, §2.1, Definition 2.1",
+   "latex": "x \\in L \\iff \\exists u \\in \\{0,1\\}^{p(|x|)} : M(x, u) = 1",
+   "symbol_and_unit_ledger": {
+    "L": "the language (decision problem)",
+    "x": "instance string",
+    "u": "certificate (witness) string",
+    "p": "polynomial bounding certificate length",
+    "M": "polynomial-time verifier machine"
+   },
+   "assumptions": [
+    "Certificates are at most polynomial in the instance size.",
+    "Verification is deterministic polynomial time; all power sits in guessing the certificate."
+   ],
+   "breakdown_regime": "The definition captures verifiability, not findability: it gives no method to locate u, and most NP problems are believed to have none that is efficient.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the shape of an engine claim: a projection is an NP-style assertion whose certificate is the evidence bundle behind it. The engine stores, for every emitted claim, a polynomial-size witness (the signals and intermediate values) that a cheap checker can re-verify without redoing the search.",
+    "telemetry": "evidence bundles per projection, checker pass rates, bundle sizes",
+    "source_operator": "np_certificate_definition"
+   }
+  },
+  {
+   "primitive_id": "karp_reduction_np_completeness",
+   "name": "A polynomial-time Karp reduction maps instances of A to instances of B preserving membership; B is NP-hard if every A in NP reduces to it, and NP-complete if it is also in NP",
+   "verbatim_quote": "We say that B is NP-hard if A ≤p B for every A ∈ NP. We say that B is NP-complete if B is NP-hard and B ∈ NP.",
+   "page": "Ch 2, §2.2, Figure 2.1 and following definitions",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reductions must run in polynomial time and preserve yes/no answers exactly.",
+    "The reduction relation is transitive, so hardness propagates along chains."
+   ],
+   "breakdown_regime": "Reductions transfer hardness, not practical difficulty: constant factors, instance structure, and average behavior are all invisible to the Karp notion.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reductions are how the engine reuses work: a new market or stat question is mapped onto an already-solved canonical problem (a rating, a matchup kernel) by an explicit answer-preserving transform, and difficulty assessments transfer along the same map. An unmapped question is flagged as genuinely new work.",
+    "telemetry": "registry of question-to-kernel transforms, reuse rate of solved kernels per new question",
+    "source_operator": "karp_reduction_np_completeness"
+   }
+  },
+  {
+   "primitive_id": "cook_levin_computation_is_local",
+   "name": "Cook-Levin theorem: SAT and 3SAT are NP-complete, because each step of a Turing machine is local, so a whole polynomial-time computation tableau can be encoded as a polynomial-size Boolean formula",
+   "verbatim_quote": "To get a smaller formula we use the fact that M runs in polynomial time, and that each basic step of a Turing machine is highly local (in the sense that it examines and changes only a few bits of the machine’s tapes).",
+   "page": "Ch 2, §2.3, Theorem 2.10 and §2.3.4 proof",
+   "latex": "\\psi_x(u) = M(x, u)",
+   "symbol_and_unit_ledger": {
+    "psi_x": "the Boolean formula encoding the computation of M on input x",
+    "u": "certificate / nondeterministic choice string",
+    "M": "the polynomial-time verifier machine"
+   },
+   "assumptions": [
+    "The machine can be taken oblivious: head positions depend only on the time step, not the input content.",
+    "Locality: one step reads and writes only constantly many tape cells, so each tableau cell is a small Boolean function of its neighbors."
+   ],
+   "breakdown_regime": "The encoding is polynomial but with real size blow-up; it proves completeness, and practical solvers live or die on structure the theorem ignores.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Locality is the derived kernel behind feature engineering: a global game state can be encoded as constraints over local interactions (a blocker versus a rusher, a shooter versus a closeout), because each local interaction depends on few variables. The engine builds constraint encodings of matchups exactly the way the tableau encodes a computation.",
+    "telemetry": "local interaction tables per matchup, constraint counts, solver/checker runtimes on encoded states",
+    "source_operator": "cook_levin_computation_is_local"
+   }
+  },
+  {
+   "primitive_id": "decision_vs_search_self_reducibility",
+   "name": "For NP languages, deciding membership is as powerful as finding certificates: if P = NP then a polynomial-time machine can output an actual certificate for every yes-instance, by fixing the witness bit by bit (downward self-reducibility of SAT)",
+   "verbatim_quote": "Suppose that P = NP. Then, for every NP language L there exists a polynomial-time TM B that on input x ∈ L outputs a certificate for x.",
+   "page": "Ch 2, §2.5, Theorem 2.19",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The decision oracle answers modified instances obtained by fixing certificate bits one at a time.",
+    "The relation between instance and certificate is the NP verifier from Definition 2.1."
+   ],
+   "breakdown_regime": "Self-reducibility is a property of SAT-like relations; arbitrary NP relations need not be downward self-reducible, and the search procedure costs polynomially many oracle calls.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never stops at a yes/no verdict when a witness exists: given a decision procedure for a projection class, it extracts the witnessing configuration (which players, which splits, which conditions) by re-querying with components fixed one at a time. Verdicts ship with their witnesses or not at all.",
+    "telemetry": "witness extraction success rate, oracle calls per extracted witness, verdicts shipped without witnesses (target zero)",
+    "source_operator": "decision_vs_search_self_reducibility"
+   }
+  },
+  {
+   "primitive_id": "time_hierarchy_theorem",
+   "name": "Time hierarchy: with a little more time, strictly more languages become decidable; if f(n) log f(n) = o(g(n)) for time-constructible f and g, then DTIME(f(n)) is strictly contained in DTIME(g(n)), proved by diagonalization against the universal machine",
+   "verbatim_quote": "If f, g are time-constructible functions satisfying f (n) log f (n) = o(g(n)), then DTIME(f (n)) ( DTIME(g(n))",
+   "page": "Ch 3, §3.1, Theorem 3.1",
+   "latex": "f(n) \\log f(n) = o(g(n)) \\;\\Rightarrow\\; \\mathrm{DTIME}(f(n)) \\subsetneq \\mathrm{DTIME}(g(n))",
+   "symbol_and_unit_ledger": {
+    "f, g": "time-constructible resource bounds [steps]",
+    "o(g(n))": "little-o: f log f grows strictly slower than g",
+    "DTIME": "languages decidable within the stated time bound"
+   },
+   "assumptions": [
+    "f and g are time-constructible, so a machine can clock itself.",
+    "The diagonal machine needs to simulate arbitrary machines with logarithmic overhead (Theorem 1.13)."
+   ],
+   "breakdown_regime": "The log-factor slack means the hierarchy is coarse: it separates polynomial from exponential scales but cannot separate, say, n^2 from n^2 log n budgets, and it relativizes, so it cannot settle P versus NP.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Compute budgets in the engine are hierarchical in this sense: granting a pipeline a genuinely larger time class buys provably new reachable conclusions, while shaving constants buys nothing structural. Capacity planning is therefore done by budget class (pregame, live, postgame), not by seconds.",
+    "telemetry": "per-class compute budgets, conclusions reachable per budget class in replay benchmarks",
+    "source_operator": "time_hierarchy_theorem"
+   }
+  },
+  {
+   "primitive_id": "ladner_np_intermediate",
+   "name": "Ladner theorem: if P differs from NP, the NP landscape is not dichotomous; there exist languages in NP that are neither in P nor NP-complete, constructed by padding SAT with a carefully grown number of dummy symbols",
+   "verbatim_quote": "Suppose that P 6= NP. Then there exists a language L ∈ NP \\ P that is not NP-complete.",
+   "page": "Ch 3, §3.4, Theorem 3.4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hypothesis P not equal NP is essential; if P = NP the statement is vacuous.",
+    "The padding function H(n) is polynomial-time computable and is tuned by diagonalizing against both polynomial-time machines and polynomial-time reductions."
+   ],
+   "breakdown_regime": "The constructed intermediate problems are artificial (padded SAT); natural candidates such as factoring and graph isomorphism are only conjectured intermediate, not proved.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine does not force every problem into tractable or hopeless bins. Between the solved core and the complete problems there is a real middle tier of questions that yield to structure-specific methods; the roadmap keeps an explicit intermediate tier instead of misclassifying those questions as either free or impossible.",
+    "telemetry": "problem registry tier assignments, solve-rate by tier over time",
+    "source_operator": "ladner_np_intermediate"
+   }
+  },
+  {
+   "primitive_id": "baker_gill_solovay_relativization",
+   "name": "Baker-Gill-Solovay: there are oracles A and B with P^A = NP^A but P^B different from NP^B, so any proof technique that relativizes (including plain diagonalization) cannot resolve P versus NP",
+   "verbatim_quote": "The next theorem implies that whichever of P = NP or P 6= NP is true, it cannot be a relativizing result. Theorem 3.9 (Baker, Gill, Solovay [BGS75]) There exist oracles A, B such that PA = NPA and PB 6= NPB .",
+   "page": "Ch 3, §3.5, Theorem 3.9",
+   "latex": "\\exists A, B : \\mathrm{P}^A = \\mathrm{NP}^A \\ \\wedge\\ \\mathrm{P}^B \\neq \\mathrm{NP}^B",
+   "symbol_and_unit_ledger": {
+    "A, B": "oracle languages (black-box information sources)",
+    "P^O, NP^O": "the classes computed by machines with oracle access to O"
+   },
+   "assumptions": [
+    "An oracle machine can query membership in the oracle language at unit cost.",
+    "A relativizing proof is one that still works when every machine is given the same oracle."
+   ],
+   "breakdown_regime": "The barrier rules out a family of techniques, not the question itself; non-relativizing ingredients (arithmetization, as in IP = PSPACE) later broke through barriers of exactly this kind.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine audit kernel for method validity: if an evaluation method would give the same verdict no matter what extra information source is plugged in (an injury feed, a tracking feed), then it cannot distinguish the hypotheses that source decides between. Methods are tested against information-source swaps before their conclusions are trusted.",
+    "telemetry": "method sensitivity audits: verdict changes under feed ablation and feed substitution",
+    "source_operator": "baker_gill_solovay_relativization"
+   }
+  },
+  {
+   "primitive_id": "savitch_theorem",
+   "name": "Savitch theorem: nondeterministic space can be simulated deterministically with only quadratic space blow-up, NSPACE(S(n)) inside SPACE(S(n)^2) for S(n) at least log n, by recursively checking reachability in the configuration graph and reusing space",
+   "verbatim_quote": "For any space-constructible S : N → N with S(n) ≥ logn, NSPACE(S(n)) ⊆ SPACE(S(n)2 )",
+   "page": "Ch 4, §4.3.1, Theorem 4.12",
+   "latex": "\\mathrm{NSPACE}(S(n)) \\subseteq \\mathrm{SPACE}(S(n)^2)",
+   "symbol_and_unit_ledger": {
+    "S(n)": "space bound as a function of input length [tape cells]",
+    "NSPACE / SPACE": "nondeterministic / deterministic space classes",
+    "configuration graph": "graph whose vertices are machine configurations, 2^O(S(n)) of them"
+   },
+   "assumptions": [
+    "Space is counted in work-tape cells; the input tape is read-only and free.",
+    "Reachability in the configuration graph is decided by the midpoint recursion reach?(u, v, i), reusing space across recursive calls."
+   ],
+   "breakdown_regime": "The simulation can take time 2^Omega(S(n)): it trades an exponential time bill for a quadratic space bill, so it is a structural result, not a practical algorithm.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reachability over an explicitly built state graph, with midpoint recursion and aggressive space reuse, is the same move the engine makes when it searches game-state graphs (drive states, rotation states) under a memory budget: guess-and-verify search is replaced by deterministic reachability with bounded memory.",
+    "telemetry": "state graph sizes per sport, memory high-water marks in search jobs, reachability query latencies",
+    "source_operator": "savitch_theorem"
+   }
+  },
+  {
+   "primitive_id": "immerman_szelepcsenyi_nl_conl",
+   "name": "Immerman-Szelepcsenyi theorem: NL = coNL; the complement of PATH is in NL, because non-reachability can be certified in logarithmic space by inductively counting the set of vertices reachable within i steps and certifying each count",
+   "verbatim_quote": "Unlike in the case of PATH, there is no natural certificate for the non-existence of a path from s to t and thus it seemed “obvious” to researchers that PATH 6∈ NL, until the discovery of the following theorem in the 1980s proved them wrong.",
+   "page": "Ch 4, §4.4.2, Theorem 4.18",
+   "latex": "\\mathrm{NL} = \\mathrm{coNL}",
+   "symbol_and_unit_ledger": {
+    "NL": "nondeterministic logarithmic space",
+    "coNL": "languages whose complements are in NL",
+    "PATH": "directed s-t reachability; its complement is certified by the inductive counting procedure"
+   },
+   "assumptions": [
+    "Certificates are read-once: the log-space verifier cannot revisit certificate bits.",
+    "The count of reachable vertices at each radius can itself be certified and checked in log space."
+   ],
+   "breakdown_regime": "The symmetry is special to space: the analogous statement for time, NP = coNP, is open and doubted, so closure under complement must never be assumed for certificate classes in general.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Negative claims need certificates too. When the engine asserts an absence (a player will not reach a threshold, a scheme has no answer for a look), it must produce a checkable certificate of the absence, built by exhaustive accounting over the reachable set, not a mere failure to find a positive example.",
+    "telemetry": "negative-claim certificates issued, audit pass rate on absence claims versus presence claims",
+    "source_operator": "immerman_szelepcsenyi_nl_conl"
+   }
+  },
+  {
+   "primitive_id": "polynomial_hierarchy",
+   "name": "The polynomial hierarchy stacks quantifiers: Sigma_2^p languages are those where x is in L iff there exists a short u such that for all short v a polynomial-time check passes; higher levels alternate more quantifier blocks, and if any level equals its complement twin the hierarchy collapses to that level",
+   "verbatim_quote": "The class Σp2 is defined to be the set of all languages L for which there exists a polynomial-time TM M and a polynomial q such that x ∈ L ⇔ ∃u ∈ {0, 1}q(|x|) ∀v ∈ {0, 1}q(|x|) M (x, u, v) = 1",
+   "page": "Ch 5, §5.1, Definition 5.1; collapse properties §5.2.1",
+   "latex": "x \\in L \\iff \\exists u \\in \\{0,1\\}^{q(|x|)} \\, \\forall v \\in \\{0,1\\}^{q(|x|)} : M(x, u, v) = 1",
+   "symbol_and_unit_ledger": {
+    "u, v": "existentially and universally quantified certificate strings",
+    "q": "polynomial bounding certificate length",
+    "M": "polynomial-time checking machine",
+    "Sigma_2^p": "second level of the polynomial hierarchy"
+   },
+   "assumptions": [
+    "Each quantified string is polynomially bounded in the input length.",
+    "Alternating Turing machines give an equivalent definition of the same levels."
+   ],
+   "breakdown_regime": "The hierarchy is believed strict but unproved; every level is contained in PSPACE, and PH = PSPACE would follow if TQBF had short certificates, which is not believed.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Alternating quantification is the grammar of adversarial reasoning in the engine: there exists a game plan such that for all opponent responses the evaluation holds. Depth of alternation is tracked explicitly, because each added alternation is a genuinely harder reasoning class, and claims are labeled by the alternation depth their certificates actually support.",
+    "telemetry": "alternation depth of stored claims, solve time by alternation depth in the reasoning traces",
+    "source_operator": "polynomial_hierarchy"
+   }
+  },
+  {
+   "primitive_id": "advice_and_p_poly",
+   "name": "Non-uniform computation: a machine with advice gets one extra string alpha_n per input length, and DTIME(T(n))/a(n) collects languages decidable with that much advice; P/poly, polynomial time with polynomial advice, equals polynomial-size circuit families and even contains undecidable unary languages",
+   "verbatim_quote": "The class of languages decidable by time-T (n) TM’s with a(n) advice, denoted DTIME(T (n))/a(n) , contains every L such that there exists a sequence {αn }n∈N of strings with αn ∈ {0, 1}a(n) and a TM M satisfying M (x, αn ) = 1 ⇔ x ∈ L",
+   "page": "Ch 6, §6.1.1, Definition 6.9",
+   "latex": "M(x, \\alpha_{|x|}) = 1 \\iff x \\in L",
+   "symbol_and_unit_ledger": {
+    "alpha_n": "advice string for inputs of length n [bits]",
+    "a(n)": "advice length bound",
+    "M": "a single fixed machine using the advice",
+    "P/poly": "polynomial time with polynomial-length advice"
+   },
+   "assumptions": [
+    "The advice may be an arbitrary, even uncomputable, function of the input length.",
+    "One machine must work for all lengths; only the advice changes with n."
+   ],
+   "breakdown_regime": "Advice smuggles in uncomputable information, so P/poly membership is weak evidence about uniform feasibility; it is an upper-bound tool (and a barrier yardstick), not an algorithmic claim.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precomputed per-context tables in the engine are advice in exactly this sense: a fixed general procedure plus a per-length, per-season, or per-venue string prepared offline. The isomorphism warns both ways: advice makes the online step fast, and advice can secretly carry information the procedure itself could never compute, so advice tables are audited as data, not trusted as reasoning.",
+    "telemetry": "advice table sizes and provenance per pipeline, online latency with and without precomputed tables",
+    "source_operator": "advice_and_p_poly"
+   }
+  },
+  {
+   "primitive_id": "karp_lipton_theorem",
+   "name": "Karp-Lipton theorem: if NP is contained in P/poly, so SAT has polynomial-size circuits, then the polynomial hierarchy collapses to its second level, PH = Sigma_2^p; hence proving SAT has no small circuits is at least as deep as separating PH levels",
+   "verbatim_quote": "Theorem 6.13 (Karp-Lipton, with improvements by Sipser) If NP ⊆ P/poly then PH = Σp2 .",
+   "page": "Ch 6, §6.2, Theorem 6.13",
+   "latex": "\\mathrm{NP} \\subseteq \\mathrm{P/poly} \\;\\Rightarrow\\; \\mathrm{PH} = \\Sigma_2^p",
+   "symbol_and_unit_ledger": {
+    "P/poly": "polynomial time with polynomial advice (polynomial-size circuits)",
+    "PH": "the polynomial hierarchy, union of all Sigma_k^p levels",
+    "Sigma_2^p": "second level of the hierarchy"
+   },
+   "assumptions": [
+    "Uses the search-to-decision reduction (Theorem 2.19) to turn a circuit that decides satisfiability into a circuit that outputs a satisfying assignment.",
+    "The circuit family itself can be guessed as an existential certificate at the second level."
+   ],
+   "breakdown_regime": "The collapse is to the second level, not to P: small circuits for SAT are consistent with everything the theorem says, so the route to circuit lower bounds through PH must find finer leverage.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for consistency checks across engine layers: if a fast approximate oracle for a hard core problem existed inside the system, whole stacks of higher-level distinctions built on top of it would collapse. The engine runs collapse tests: when a new fast solver appears, it checks which previously separated claim classes suddenly become indistinguishable, and re-audits them.",
+    "telemetry": "claim-class separation audits triggered by new solver or model additions",
+    "source_operator": "karp_lipton_theorem"
+   }
+  },
+  {
+   "primitive_id": "bpp_randomized_computation",
+   "name": "BPP is polynomial time with coin flips: a probabilistic TM decides L in time T(n) if it halts within the bound on every random path and outputs L(x) with probability at least 2/3 on every input",
+   "verbatim_quote": "For T : N → N and L ⊆ {0, 1}∗ , we say that a PTM M decides L in time T (n), if for every x ∈ {0, 1}∗ , M halts in T (|x|) steps regardless of its random choices, and Pr[M (x) = L(x)] ≥ 2/3, where we denote L(x) = 1 if x ∈ L and L(x) = 0 if x 6∈ L.",
+   "page": "Ch 7, §7.1, Definition 7.1",
+   "latex": "\\Pr[M(x) = L(x)] \\geq \\tfrac{2}{3}, \\qquad \\mathrm{BPP} = \\bigcup_{c} \\mathrm{BPTIME}(n^c)",
+   "symbol_and_unit_ledger": {
+    "M": "probabilistic Turing machine",
+    "Pr": "probability over the machine coin tosses only",
+    "L(x)": "1 if x in L, else 0",
+    "BPTIME(n^c)": "languages decided with error at most 1/3 in O(n^c) time"
+   },
+   "assumptions": [
+    "Error is over the algorithm internal randomness, worst-case over inputs: BPP is still a worst-case class.",
+    "The constant 2/3 is arbitrary; any constant strictly between 1/2 and 1 gives the same class by amplification."
+   ],
+   "breakdown_regime": "Whether randomness adds power is open: BPP = P is conjectured under hardness assumptions, so the class boundary is a bet on derandomization, not a settled fact.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Monte Carlo components of the engine are specified the BPP way: a stated runtime bound that holds on every random path and a stated per-query error bound that holds on every input, not on average over convenient inputs. Components that cannot state both numbers do not ship as randomized components.",
+    "telemetry": "per-component stated versus measured error rates, worst-input error audits on replay suites",
+    "source_operator": "bpp_randomized_computation"
+   }
+  },
+  {
+   "primitive_id": "error_reduction_amplification",
+   "name": "Error reduction by repetition and majority vote: a polynomial-time randomized machine that is right with probability only 1/2 + n^(-c) can be boosted to error below 2^(-n^d) by running it k = 8*n^(2d+c) times and taking the majority, by the Chernoff bound",
+   "verbatim_quote": "The machine M 0 is quite simple: for every input x ∈ {0, 1}∗ , run M (x) for k times obtaining k outputs y1 , . . . , yk ∈ {0, 1}, where k = 8|x|2d+c . If the majority of these values are 1 then accept, otherwise reject.",
+   "page": "Ch 7, §7.4.1, Theorem 7.10 and Corollary 7.11",
+   "latex": "\\Pr\\left[\\left|\\frac{1}{k}\\sum_{i=1}^{k} X_i - p\\right| > \\delta\\right] < \\exp\\left(-\\frac{\\delta^2 p k}{4}\\right)",
+   "symbol_and_unit_ledger": {
+    "X_i": "indicator that repetition i returned the correct answer",
+    "p": "single-run success probability, at least 1/2 + n^(-c)",
+    "k": "number of independent repetitions",
+    "delta": "allowed deviation of the empirical mean from p"
+   },
+   "assumptions": [
+    "Repetitions use independent randomness, so the X_i are independent.",
+    "The single-run advantage over 1/2 is at least an inverse polynomial in the input size."
+   ],
+   "breakdown_regime": "Amplification fails when runs are correlated (shared data, shared model bias) or when the base advantage is exponentially small; majority vote then concentrates around the wrong answer.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ensembling in the engine is amplification with this exact contract: many weak, decorrelated evaluators plus a majority or median rule drives decision error down exponentially in the number of evaluators, but only while their errors stay independent. Correlation between evaluators is therefore measured and budgeted, because correlated votes break the Chernoff premise.",
+    "telemetry": "pairwise error correlation across ensemble members, measured versus Chernoff-predicted error decay as members are added",
+    "source_operator": "error_reduction_amplification"
+   }
+  },
+  {
+   "primitive_id": "interactive_proof_ip_definition",
+   "name": "An interactive proof lets a polynomial-time randomized verifier V exchange messages with an unbounded prover P: completeness says yes-instances have a prover convincing V with probability at least 2/3, soundness says no prover convinces V on no-instances with probability above 1/3; IP is the union over polynomial round bounds",
+   "verbatim_quote": "A language L is in IP[k] if there is a Turing machine V such that on inputs x, r, a1 , . . . , ai , V runs in time polynomial in |x|",
+   "page": "Ch 8, §8.2, Definition 8.5 (txt line 7916)",
+   "latex": "x \\in L \\Rightarrow \\exists P : \\Pr[\\mathrm{out}_V(\\langle V, P \\rangle(x)) = 1] \\geq \\tfrac{2}{3}; \\qquad x \\notin L \\Rightarrow \\forall P : \\Pr[\\mathrm{out}_V(\\langle V, P \\rangle(x)) = 1] \\leq \\tfrac{1}{3}",
+   "symbol_and_unit_ledger": {
+    "V": "polynomial-time randomized verifier",
+    "P": "unbounded prover function",
+    "k(n)": "number of interaction rounds",
+    "out_V": "verifier output bit after the interaction"
+   },
+   "assumptions": [
+    "The verifier coins are private: the prover sees only the messages sent to it, not the random string.",
+    "The prover is computationally unbounded; all discipline comes from soundness against every prover."
+   ],
+   "breakdown_regime": "Deterministic verifiers collapse IP to NP, and constant-round public-coin proofs sit inside PH; the full power needs many rounds of private-coin interaction.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine evaluation is run as an interactive proof: a proposing component (the prover) asserts a projection, and a cheap independent verifier interrogates it with fresh randomized challenges the proposer cannot predict. Acceptance means the claim survived adversarial questioning, not that the proposer sounded confident.",
+    "telemetry": "challenge-response evaluation transcripts, false-accept rates under red-team proposers, rounds to acceptance",
+    "source_operator": "interactive_proof_ip_definition"
+   }
+  },
+  {
+   "primitive_id": "ip_equals_pspace",
+   "name": "IP = PSPACE: interaction plus randomness proves exactly the polynomial-space languages, far beyond NP, via arithmetization of quantified Boolean formulas",
+   "verbatim_quote": "In this section we show a surprising characterization of the set of languages that have interactive proofs. Theorem 8.17 (LFKN, Shamir, 1990) IP = PSPACE.",
+   "page": "Ch 8, §8.5, Theorem 8.17 (txt line 8341)",
+   "latex": "\\mathrm{IP} = \\mathrm{PSPACE}",
+   "symbol_and_unit_ledger": {
+    "IP": "languages with polynomial-round interactive proofs",
+    "PSPACE": "languages decidable in polynomial space"
+   },
+   "assumptions": [
+    "The verifier is polynomial-time and randomized with private coins; the prover is unbounded.",
+    "The hard direction encodes TQBF into a low-degree polynomial identity checked by the sumcheck protocol."
+   ],
+   "breakdown_regime": "The equality is about proof power, not efficient provability: the honest prover for a PSPACE statement may need exponential time, so the theorem does not yield practical provers.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The ceiling lesson for engine verification: a well-designed challenge protocol between a strong proposer and a weak verifier can certify statements as complex as anything checkable with polynomial working memory. Verification architecture, not verifier size, sets the ceiling on what the engine can certify.",
+    "telemetry": "complexity of certified statements per protocol design, verifier cost per certified statement",
+    "source_operator": "ip_equals_pspace"
+   }
+  },
+  {
+   "primitive_id": "sumcheck_arithmetization",
+   "name": "The sumcheck protocol verifies a claimed exponential sum K = sum over the Boolean cube of a low-degree polynomial g by having the prover send one univariate polynomial per round and the verifier spot-check it at a random point, reducing an exponential claim to one random evaluation",
+   "verbatim_quote": "If n = 1 check that g(1) + g(0) = K. If so accept, otherwise reject.",
+   "page": "Ch 8, §8.5.2, Sumcheck protocol (txt lines 8421-8462)",
+   "latex": "K = \\sum_{b_1 \\in \\{0,1\\}} \\cdots \\sum_{b_n \\in \\{0,1\\}} g(b_1, \\ldots, b_n)",
+   "symbol_and_unit_ledger": {
+    "g": "degree-d polynomial in n variables over a field mod prime p",
+    "K": "the claimed value of the sum",
+    "b_i": "Boolean summation variables",
+    "h(X_1)": "the univariate polynomial the prover sends in round one"
+   },
+   "assumptions": [
+    "g has low degree d in each variable, so a cheating prover is caught with probability at least 1 - dn/|F| by the random spot check.",
+    "The verifier can evaluate g at arbitrary points efficiently (true when g arithmetizes a formula)."
+   ],
+   "breakdown_regime": "Soundness degrades linearly with degree and rounds over small fields; the protocol certifies algebraic identities, and translating a non-algebraic claim into this form is the real cost (arithmetization).",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for auditing large aggregates: an engine total claimed over an exponential space of lineups or game states can be verified by recursive decomposition plus random spot checks, instead of recomputation. Aggregate claims in reports are published with a sumcheck-style audit path: decompose, commit intermediate values, accept random challenges.",
+    "telemetry": "aggregate audit transcripts, spot-check catch rates on seeded errors, audit cost versus full recomputation cost",
+    "source_operator": "sumcheck_arithmetization"
+   }
+  },
+  {
+   "primitive_id": "sharp_p_counting_class",
+   "name": "#P is the counting class: f is in #P when f(x) counts the certificates accepted by a polynomial-time verifier, equivalently the accepting paths of a polynomial-time nondeterministic machine",
+   "verbatim_quote": "#P consists of all functions f such that f (x) is equal to the number of paths from the initial configuration to an accepting configuration in the configuration graph GM,x of a polynomial-time NDTM M .",
+   "page": "Ch 9, §9.1, Definition 9.2 and Remark 9.3",
+   "latex": "f(x) = \\#\\{y \\in \\{0,1\\}^{p(|x|)} : M(x, y) = 1\\}",
+   "symbol_and_unit_ledger": {
+    "f": "the counting function, from strings to natural numbers",
+    "y": "certificate string counted when M accepts",
+    "p": "polynomial bounding certificate length",
+    "M": "polynomial-time verifier (or NDTM whose accepting paths are counted)"
+   },
+   "assumptions": [
+    "Counting is over exactly the NP certificate space of Definition 2.1.",
+    "The output is a full integer, so #P functions are functions, not languages."
+   ],
+   "breakdown_regime": "Counting is strictly more expressive than deciding: even when the decision problem is easy (perfect matchings), the counting version can be #P-complete.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine distinguishes deciding from counting everywhere: whether a lineup can reach a threshold is a decision, how many lineups do is a count, and counts are the inputs to probability estimates. Pipelines are labeled by which of the two they compute, because counting carries strictly harder complexity and different error behavior.",
+    "telemetry": "per-pipeline decide versus count labels, count magnitudes feeding probability estimates, sampling error on counts",
+    "source_operator": "sharp_p_counting_class"
+   }
+  },
+  {
+   "primitive_id": "valiant_permanent_theorem",
+   "name": "Valiant theorem: the permanent of 0-1 matrices is #P-complete, although the nearly identical determinant is computable in polynomial time; one sign change separates an easy problem from a counting-complete one",
+   "verbatim_quote": "The next theorem came as a surprise to researchers in the 1970s, since it implies that if perm ∈ FP then P = NP. Thus, unless P = NP, computing the permanent is much more difficult then computing the determinant. Theorem 9.8 (Valiant’s Theorem) perm for 0, 1 matrices is #P-complete.",
+   "page": "Ch 9, §9.2.1, Theorem 9.8",
+   "latex": "\\mathrm{perm}(A) = \\sum_{\\sigma \\in S_n} \\prod_{i=1}^{n} A_{i, \\sigma(i)}",
+   "symbol_and_unit_ledger": {
+    "A": "an n by n matrix (0-1 entries for the completeness statement)",
+    "sigma": "a permutation of {1..n}",
+    "S_n": "the symmetric group of all n! permutations",
+    "perm(A)": "sum over permutations of the product of selected entries"
+   },
+   "assumptions": [
+    "The reduction is from #3SAT and preserves counts through parsimonious-style gadgets.",
+    "Entries are 0 or 1 in the stated version; the result extends to matrices over the integers."
+   ],
+   "breakdown_regime": "Approximation rescues practice: the permanent of nonnegative matrices has a fully polynomial randomized approximation scheme, so completeness bars exact counting, not estimation.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A warning encoded as an isomorphism: two engine quantities that look algebraically identical (an unsigned assignment sum versus a signed one) can sit in different complexity universes. Every sum-over-assignments in the engine (lineup counts, rotation counts) is checked for which side of this line it falls on before an exact algorithm is promised.",
+    "telemetry": "inventory of assignment-sum computations with exact versus sampled method labels",
+    "source_operator": "valiant_permanent_theorem"
+   }
+  },
+  {
+   "primitive_id": "toda_theorem",
+   "name": "Toda theorem: the entire polynomial hierarchy is contained in P with a #SAT oracle, PH inside P^#P; counting power dominates alternation power",
+   "verbatim_quote": "Thus it came as big surprise when in 1989 Toda showed: Theorem 9.11 (Toda’s theorem [Tod91]) PH ⊆ P#SAT .",
+   "page": "Ch 9, §9.3, Theorem 9.11 (txt line 9449)",
+   "latex": "\\mathrm{PH} \\subseteq \\mathrm{P}^{\\#\\mathrm{SAT}}",
+   "symbol_and_unit_ledger": {
+    "PH": "the polynomial hierarchy (all bounded-alternation classes)",
+    "#SAT": "the #P-complete counting function for satisfiable assignments",
+    "P^#SAT": "polynomial time with oracle access to #SAT"
+   },
+   "assumptions": [
+    "The proof routes PH through the parity class via a randomized reduction and then derandomizes it using counting.",
+    "An oracle call returns the exact count in one step."
+   ],
+   "breakdown_regime": "The containment is oracle-relative: it compares power under free counting access and does not say counting is easy or that PH collapses.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for engine architecture priority: an exact counting substrate is worth more than extra layers of adversarial alternation, because counting access subsumes them. Investment order follows Toda: build the counting and enumeration core first; alternation-depth reasoning layers plug into it second.",
+    "telemetry": "coverage of reasoning features by the counting core, features re-implemented on the core versus standalone",
+    "source_operator": "toda_theorem"
+   }
+  },
+  {
+   "primitive_id": "one_way_function",
+   "name": "A one-way function is easy to compute but hard to invert on average: a function family is epsilon(n) one-way with security s(n) if it is polynomial-time computable and every s(n)-time algorithm inverts a random image with probability at most epsilon(n)",
+   "verbatim_quote": "A basic cryptographic primitive is a one-way function. Roughly speaking, this is a function f that is easy to compute but hard to invert.",
+   "page": "Ch 10, §10.1, Definition 10.1 (txt line 9930)",
+   "latex": "\\Pr_{x \\in \\{0,1\\}^n}\\left[A \\text{ inverts } f_n(x)\\right] \\leq \\epsilon(n)",
+   "symbol_and_unit_ledger": {
+    "f_n": "the n-bit member of the function family",
+    "A": "any inverter algorithm running in time s(n)",
+    "epsilon(n)": "inversion success bound, required negligible for cryptography",
+    "s(n)": "security parameter: adversary time budget"
+   },
+   "assumptions": [
+    "Hardness is average-case over uniformly random inputs, not worst-case; this is what separates one-wayness from mere NP-hardness.",
+    "The function family is uniformly polynomial-time computable."
+   ],
+   "breakdown_regime": "Existence is unproved: one-way functions imply P different from NP but are strictly stronger, and specific candidates (factoring-based) rest on unproved hardness of specific distributions.",
+   "domain": "cs-crypto",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Forward simulation versus inverse inference in the engine has the same asymmetry: simulating a game state forward from a lineup is cheap; inverting an observed outcome back to the latent causes is the hard direction. Problem statements are classified by which direction they demand, and inverse problems get sampling and search budgets instead of exact solvers.",
+    "telemetry": "forward versus inverse task inventory, inverse-solver success rates against time budgets",
+    "source_operator": "one_way_function"
+   }
+  },
+  {
+   "primitive_id": "goldreich_levin_hardcore_bit",
+   "name": "Goldreich-Levin theorem: every one-way permutation has a hardcore bit, the inner product of the input with a random string r; given (f(x), r), no efficient algorithm predicts the bit <x, r> mod 2 with probability meaningfully above 1/2",
+   "verbatim_quote": "Goldreich and Levin showed that given (f (x), r), it is difficult for a polynomial-time algorithm to predict x r, the scalar product of x and r (mod 2).",
+   "page": "Ch 10, §10.3.1, Theorem 10.14 (txt line 10359)",
+   "latex": "\\Pr_{x, r}\\left[A(f_n(x), r) = \\langle x, r \\rangle\\right] \\leq \\tfrac{1}{2} + O\\left(\\tfrac{1}{S(n)}\\right)",
+   "symbol_and_unit_ledger": {
+    "x": "secret input string",
+    "r": "public random string of the same length",
+    "<x, r>": "inner product of x and r mod 2, the hardcore bit",
+    "f_n": "the one-way permutation",
+    "S(n)": "security function of the permutation"
+   },
+   "assumptions": [
+    "f is a permutation (the theorem as stated); extensions give hardcore bits for general one-way functions.",
+    "r is uniform and independent of x, and is given to the predictor."
+   ],
+   "breakdown_regime": "The guarantee is about one bit and inverse-polynomial advantage; turning a weak predictor into an inverter costs polynomial factors that matter for concrete security parameters.",
+   "domain": "cs-crypto",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for feature design: from any representation that is hard to invert, a random projection bit is provably unpredictable, which is the template for constructing leakage-resistant summary features. Engine features published or shared externally are screened as hardcore-style projections: useful for the task, useless for reconstructing the protected inputs.",
+    "telemetry": "reconstruction attacks run against published features, advantage over chance measured per feature",
+    "source_operator": "goldreich_levin_hardcore_bit"
+   }
+  },
+  {
+   "primitive_id": "pseudorandom_generator_indistinguishability",
+   "name": "A pseudorandom generator stretches a short random seed into a long output that no bounded-size circuit can distinguish from uniform: for every circuit C of size at most S, the acceptance probabilities on the generator output and on uniform differ by less than epsilon",
+   "verbatim_quote": "For every z ∈ {0, 1}` , |G(z)| = S(`) and G(z) can be computed in time 2c` for some constant c. We call the input z the seed of the pseudorandom generator.",
+   "page": "Ch 16, §16.1, Definition 16.2 (txt line 14112); Blum-Micali and Yao definitions in Ch 10, §10.2",
+   "latex": "\\left|\\Pr[C(R) = 1] - \\Pr[C(U_m) = 1]\\right| < \\epsilon",
+   "symbol_and_unit_ledger": {
+    "G": "the generator function",
+    "z": "the seed, length l [bits]",
+    "S(l)": "output length as a function of seed length",
+    "C": "a distinguisher circuit of bounded size",
+    "U_m": "uniform distribution on m-bit strings",
+    "epsilon": "distinguishing advantage bound"
+   },
+   "assumptions": [
+    "Security is relative to a bounded distinguisher class (circuits of size S), not to arbitrary tests.",
+    "Yao next-bit and Blum-Micali indistinguishability definitions are equivalent (hybrid argument)."
+   ],
+   "breakdown_regime": "Indistinguishability is only as strong as the test class: a distinguisher outside the class (more time, side information, quantum) voids the guarantee.",
+   "domain": "cs-crypto",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Synthetic data in the engine is specified the PRG way: a generator is acceptable for a stated evaluation suite when no test in that suite distinguishes its output from real data beyond a stated epsilon. The suite and epsilon are part of the artifact, because indistinguishability without a named test class is meaningless.",
+    "telemetry": "distinguisher test suites per synthetic dataset, measured advantages, seed and generator provenance",
+    "source_operator": "pseudorandom_generator_indistinguishability"
+   }
+  },
+  {
+   "primitive_id": "nisan_wigderson_hardness_vs_randomness",
+   "name": "Hardness versus randomness (Nisan-Wigderson): sufficiently hard functions yield pseudorandom generators, so under plausible hardness assumptions every randomized algorithm can be derandomized with polynomial slowdown and BPP = P; conversely derandomization implies circuit lower bounds",
+   "verbatim_quote": "In other words, randomized algorithms can be derandomized and BPP = P. Nisan and Wigderson [NW94] named this research area Hardness versus Randomness since the existence of hard problems is shown to imply derandomization.",
+   "page": "Ch 16, §16.1 and §16.1.1, Theorem 16.10 (txt line 14318)",
+   "latex": "\\mathrm{BPP} = \\mathrm{P}",
+   "symbol_and_unit_ledger": {
+    "BPP = P": "the corollary conclusion under the hardness hypothesis of Theorem 16.10",
+    "Havg(f)": "average-case hardness of f: largest circuit size that computes f on all but a small fraction of inputs",
+    "E": "DTIME(2^O(n)), exponential time with linear exponent"
+   },
+   "assumptions": [
+    "Requires a function in E whose average-case hardness is at least 2^(epsilon n) against circuits.",
+    "The generator evaluates the hard function on overlapping subsets of the seed given by a combinatorial design."
+   ],
+   "breakdown_regime": "Everything is conditional on unproved hardness; the win-win structure means a failed derandomization is itself an algorithmic discovery, so the program is productive on both branches.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps a hardness-versus-randomness ledger for its own simulations: the quality of randomness a simulation needs is budgeted against the hardest subproblems it contains, and deterministic replay seeds are derived from hard instances so that simulations are reproducible without losing statistical quality.",
+    "telemetry": "simulation seed provenance, replay determinism checks, statistical quality tests per seed family",
+    "source_operator": "nisan_wigderson_hardness_vs_randomness"
+   }
+  },
+  {
+   "primitive_id": "extractors_statistical_distance",
+   "name": "Statistical distance delta(X, Y) = max over events S of |Pr[X in S] - Pr[Y in S]| measures closeness of distributions; a (k, epsilon) extractor is a deterministic function that, using a short uniform seed, turns any source with min-entropy k into an output epsilon-close to uniform",
+   "verbatim_quote": "For two random variables X and Y with range {0, 1}m , their statistical distance (also known as variation distance) is defined as δ(X, Y ) = maxS⊆{0,1}m {|Pr[X ∈ S] − Pr[Y ∈ S]|}.",
+   "page": "Ch 16, §16.6.2, Definitions 16.38 and 16.40",
+   "latex": "\\delta(X, Y) = \\max_{S \\subseteq \\{0,1\\}^m} \\left|\\Pr[X \\in S] - \\Pr[Y \\in S]\\right|",
+   "symbol_and_unit_ledger": {
+    "X, Y": "distributions over m-bit strings",
+    "S": "an arbitrary event (subset of outcomes)",
+    "delta": "statistical (variation) distance in [0, 1]",
+    "k": "min-entropy of the weak source [bits]",
+    "epsilon": "closeness of extractor output to uniform"
+   },
+   "assumptions": [
+    "Min-entropy H_inf(X) = min over outcomes of log(1/Pr[X = x]) is the right weakness measure: no single outcome is too likely.",
+    "A short truly random seed is available; the extractor itself is deterministic."
+   ],
+   "breakdown_regime": "Extraction is impossible for a single deterministic function without a seed, and output length is capped by the min-entropy plus seed length; adversarially chosen sources outside the min-entropy model break the guarantee.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weak real-world feeds (injury reports, beat-writer signals, partial tracking) are weak random sources in this sense: individually biased and low-entropy, but combinable through an explicit extractor step into near-uniform evidence weights. The engine logs the min-entropy estimate of each feed and the extractor applied, instead of pretending raw feeds are clean samples.",
+    "telemetry": "per-feed entropy estimates, extractor configurations, uniformity tests on extracted evidence streams",
+    "source_operator": "extractors_statistical_distance"
+   }
+  },
+  {
+   "primitive_id": "yao_xor_lemma_hardness_amplification",
+   "name": "Yao XOR lemma: hardness amplifies under parity; if computing f is hard on a 1 - delta fraction of inputs for circuits of size S, then computing the XOR of k independent copies of f is hard to even weakly predict, with advantage decaying like (1 - delta/2)^k up to the stated size loss",
+   "verbatim_quote": "The intuition behind Theorem 17.2 derives from the following fact. Suppose we have a biased coin that, whenever it is tossed, comes up heads with probability 1 − δ and tails with probability δ.",
+   "page": "Ch 17, §17.2, Theorem 17.2 (txt line 16143); Impagliazzo hardcore lemma, Lemma 17.5",
+   "latex": "f^{\\oplus k}(x_1, \\ldots, x_k) = \\bigoplus_{i=1}^{k} f(x_i) \\pmod 2",
+   "symbol_and_unit_ledger": {
+    "f": "the base Boolean function",
+    "f^{xor k}": "parity of f on k independent inputs",
+    "delta": "fraction of inputs on which small circuits fail for f",
+    "S": "circuit size bound for the base hardness",
+    "k": "number of independent copies composed"
+   },
+   "assumptions": [
+    "The k inputs are independent and uniform, so errors compose multiplicatively.",
+    "Impagliazzo hardcore lemma supplies a dense subset of inputs on which f is strongly unpredictable, bridging mild and strong hardness."
+   ],
+   "breakdown_regime": "Amplification pays a size loss exponential in the advantage parameters (the 100 log(1/(delta epsilon)) factor), and parity is special: arbitrary compositions do not amplify this cleanly.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weak per-game edges compose the same way: a signal that is right slightly more often than chance on independent games becomes a strong aggregate discriminator when many independent instances are combined, and the parity intuition tells us the aggregate advantage decays toward one half per instance in a controlled, computable way. Position sizing over many independent spots is set by this amplification arithmetic, not by the single-spot edge.",
+    "telemetry": "per-signal base accuracy on held-out games, observed aggregate advantage versus amplification prediction",
+    "source_operator": "yao_xor_lemma_hardness_amplification"
+   }
+  },
+  {
+   "primitive_id": "yao_minimax_principle",
+   "name": "Yao minimax principle: the randomized complexity of a problem equals its distributional complexity, min over randomized algorithms of max over inputs cost equals max over input distributions of min over deterministic algorithms cost, so a hard input distribution lower-bounds all randomized algorithms",
+   "verbatim_quote": "lemma is typically used to lowerbound randomized complexity. To do so, one defines (using some insight and some luck) a suitable distribution D on the inputs.",
+   "page": "Ch 11, §11.6, equations (10) and (11) (txt line 11184)",
+   "latex": "\\min_{R} \\max_{x \\in X} \\mathrm{cost}(R, x) = \\max_{D} \\min_{A \\in \\mathcal{A}} \\mathrm{cost}(A, D)",
+   "symbol_and_unit_ledger": {
+    "R": "a randomized algorithm (distribution over deterministic algorithms)",
+    "D": "a distribution over inputs",
+    "A": "a deterministic algorithm",
+    "cost": "the resource cost (here decision-tree depth) of the algorithm on the input or distribution"
+   },
+   "assumptions": [
+    "Finite input and algorithm sets, so von Neumann minimax (equivalently LP duality) applies.",
+    "Cost is linear in the mixing distribution, which is what makes the swap of min and max valid."
+   ],
+   "breakdown_regime": "The equality needs the finite, linear setting; for infinite strategy spaces or non-linear objectives the gap between the two sides can be positive and the lower-bound recipe fails.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the formal license for the engine adversarial evaluation protocol: to bound how well any randomized selection policy can do, it suffices to exhibit one hard distribution over game contexts on which every deterministic policy pays high cost. Red-team work therefore builds hard context distributions, not just hard individual games.",
+    "telemetry": "hard-distribution suites per policy, deterministic-policy cost profiles on those distributions",
+    "source_operator": "yao_minimax_principle"
+   }
+  },
+  {
+   "primitive_id": "ac0_parity_switching_lemma",
+   "name": "PARITY is not in AC0: constant-depth polynomial-size circuits with unbounded fan-in cannot compute parity, proved by Håstad switching lemma, random restrictions simplify small DNFs to small decision trees while parity stays complex under every restriction",
+   "verbatim_quote": "The main tool in the proof of Theorem 13.1 is the concept of random restrictions.",
+   "page": "Ch 13, §13.1, Theorem 13.1 and Lemma 13.2",
+   "latex": "\\mathrm{PARITY} \\notin \\mathrm{AC}^0",
+   "symbol_and_unit_ledger": {
+    "PARITY": "the mod-2 sum of the input bits",
+    "AC0": "constant-depth, polynomial-size circuits with AND/OR/NOT gates of unbounded fan-in",
+    "random restriction": "random assignment to most input variables, leaving few free"
+   },
+   "assumptions": [
+    "Depth is constant and size polynomial; the lower bound is exponential size for depth d as a function of d.",
+    "The switching lemma bounds the probability that a k-DNF fails to collapse to a depth-s decision tree under a random restriction."
+   ],
+   "breakdown_regime": "The method is specific to weak gate sets: adding MOD gates (ACC0) defeats the argument, and the frontier of the technique is a standing barrier for stronger classes.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shallow aggregation has a provable blind spot: a fixed-depth combination of local features cannot compute parity-like global interactions of its inputs, no matter how many features it has. Engine architectures are therefore depth-audited: when a target quantity is an interaction of many roughly symmetric inputs, a shallow feature stack is rejected on principle and a deeper or explicitly symmetric computation is required.",
+    "telemetry": "architecture depth audits, parity-style synthetic benchmarks run against candidate feature stacks",
+    "source_operator": "ac0_parity_switching_lemma"
+   }
+  },
+  {
+   "primitive_id": "natural_proofs_barrier",
+   "name": "Razborov-Rudich natural proofs barrier: any circuit lower-bound proof that is constructive and large (applies to a noticeable fraction of all functions) would break strong pseudorandom generators, so if factoring is hard, all current natural techniques cannot prove strong lower bounds for general circuits",
+   "verbatim_quote": "In 1994 Razborov and Rudich formalized the notion of a “natural mathematical proof,” for a circuit lowerbound.",
+   "page": "Ch 22, §22.2 and §22.3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A natural property is decidable in time polynomial in the truth-table size and holds for at least a 2^(-O(n)) fraction of functions.",
+    "The barrier is conditional on the existence of strong pseudorandom function generators (supported by the factoring hardness assumption stated in the chapter)."
+   ],
+   "breakdown_regime": "The barrier is conditional and definition-sensitive: non-natural proofs are not ruled out, and the result explains the stagnation of a technique family rather than proving lower bounds impossible.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for engine methodology audits: a validation technique that is both broadly applicable and efficiently checkable can be turned against the system it validates (it becomes a distinguisher). When an evaluation method looks universally powerful, the audit asks what it would distinguish if pointed at the engine own generators, and treats unexplained universal power as a red flag.",
+    "telemetry": "methodology audit notes per evaluation technique, distinguisher-style stress tests of internal generators",
+    "source_operator": "natural_proofs_barrier"
+   }
+  },
+  {
+   "primitive_id": "pcp_theorem",
+   "name": "PCP theorem: NP = PCP(log n, 1); every NP statement has a proof that a randomized verifier can check by reading only a constant number of proof bits after tossing logarithmically many coins, with perfect completeness and soundness at most 1/2, which also yields hardness of approximation for optimization problems",
+   "verbatim_quote": "Theorem 18.2 (PCP Theorem [AS98, ALM+ 98]) NP = PCP(log n, 1).",
+   "page": "Ch 18, §18.1, Definition of PCP(r(n), q(n)) verifier and Theorem 18.2 (txt line 17752)",
+   "latex": "\\mathrm{NP} = \\mathrm{PCP}(\\log n, 1)",
+   "symbol_and_unit_ledger": {
+    "PCP(r, q)": "languages with verifiers using at most r(n) random coins and q(n) proof queries",
+    "log n": "logarithmically many random coins in the input length",
+    "1": "constantly many (one, up to constant factors) proof bits read"
+   },
+   "assumptions": [
+    "Proofs may be long (polynomial), but the verifier queries are non-adaptive and few.",
+    "Soundness 1/2 can be amplified by repetition; completeness is perfect (correct proofs always accepted)."
+   ],
+   "breakdown_regime": "The constant query bound hides large constants in the original proofs, and the theorem characterizes verifiability, not the cost of finding proofs.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Locally testable proofs are the design pattern for engine auditability at scale: a projection bundle is formatted so that a checker can validate it by sampling a constant number of entries chosen at random, with a bounded false-accept probability. Full re-derivation is reserved for disputes; routine validation is PCP-style spot verification.",
+    "telemetry": "spot-check audit rates per bundle type, false-accept estimates from seeded corruptions",
+    "source_operator": "pcp_theorem"
+   }
+  },
+  {
+   "primitive_id": "quantum_computation_bqp",
+   "name": "Quantum computation applies a sequence of elementary unitary operations to a qubit register and measures: the outcome y appears with probability |v_y|^2 of the final state amplitudes; BQP is the polynomial-time quantum class, it contains factoring (Shor) and sits inside PSPACE",
+   "verbatim_quote": "We define quantum computation as consisting of a sequence of elementary operations in an analogous way to our previous definition of probabilistic computation (Definition 20.6)",
+   "page": "Ch 20, §20.3, Definition 20.13; §20.7 Shor algorithm; Theorem 20.25 BQP inside PSPACE",
+   "latex": "\\Pr[Y = y] = |v_y|^2",
+   "symbol_and_unit_ledger": {
+    "v": "final state vector of the quantum register",
+    "v_y": "amplitude of basis state y in the final state",
+    "Y": "the measured outcome string",
+    "BQP": "bounded-error quantum polynomial time"
+   },
+   "assumptions": [
+    "Operations are drawn from a fixed universal gate set and are specified by a polynomial-time classical machine (uniformity).",
+    "Error 1/3 is amplifiable as in BPP; the model idealizes away noise and decoherence."
+   ],
+   "breakdown_regime": "No exponential speedup is known for NP-complete problems, and BQP is not known to contain NP; the model physical realizability at scale remains an engineering question the chapter flags explicitly.",
+   "domain": "cs-quantum",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The isomorphism is about representation: a quantum state carries exponentially many amplitudes that only become data through measurement statistics. The engine analog is distributional state: internal representations keep full distributions over outcomes rather than point estimates, and only the final decision step samples or collapses them, because collapsing early destroys exactly the information the computation needs.",
+    "telemetry": "stages at which distributions are collapsed to point values in each pipeline, information-loss audits on early-collapse points",
+    "source_operator": "quantum_computation_bqp"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "a465f45c94709a31-t1",
+   "think": "This book is the reference map of what computation can and cannot do, organized as a single question asked at finer and finer resolution: given a precisely defined machine, which functions can it compute, at what cost in time, space, randomness, interaction, and advice, and how do we know when a cost is intrinsic rather than an artifact of our current algorithms. The first move is discipline about the model. A Turing machine computes a function when it halts with the right output inside a stated time bound, and the universal machine shows that programs are data: one fixed machine executes any other with only a logarithmic overhead. From that single fact the whole field unfolds. Diagonalization against the universal machine gives uncomputability of the halting problem and, with clocks attached, the time and space hierarchy theorems: more resources provably buy more power, at least at coarse scales. Then the book pivots to the classes that organize practice. P is polynomial time, defended as the robust formalization of feasible. NP is defined not by guessing but by verification, a polynomial-length certificate checked by a polynomial-time machine, and this choice of definition is load-bearing for everything after: Karp reductions compare problems by answer-preserving maps, the Cook-Levin theorem shows SAT is complete for NP because a computation tableau is local and therefore encodable as a formula, and self-reducibility shows decision and search are the same problem for SAT-like relations. Space gets its own geometry through configuration graphs: reachability is the canonical complete problem pattern, Savitch theorem trades exponential time for quadratic space, and the Immerman-Szelepcsenyi theorem shows nondeterministic space is closed under complement by an inductive counting argument that surprised the field. Quantifier alternation builds the polynomial hierarchy, advice builds the non-uniform world of circuits and P/poly, and Karp-Lipton ties them together: small circuits for SAT would collapse the hierarchy, so circuit lower bounds and class separations are the same struggle viewed from two sides. The modern half of the book then changes the resources. Randomness gives BPP, whose error is an engineering parameter because majority-vote amplification with Chernoff bounds crushes it exponentially, and the derandomization program, culminating in Nisan-Wigderson, says randomness is probably an illusion created by hardness: hard functions are pseudorandom generators. Interaction gives IP, and arithmetization, encoding logical statements as low-degree polynomials and checking them with the sumcheck protocol, proves IP equals PSPACE, a result that also broke the intuition that relativizing techniques map the territory, since Baker-Gill-Solovay had shown oracle worlds disagree about P versus NP and Razborov-Rudich later showed natural proofs would break the cryptography the field itself built. Counting gives #P, where Valiant permanent shows a single sign separates easy determinant from counting-complete permanent, and Toda theorem shows counting dominates alternation: the whole polynomial hierarchy sits inside polynomial time with a counting oracle. Cryptography is rebuilt on average-case hardness: one-way functions, hardcore bits from Goldreich-Levin, and pseudorandom generators defined by indistinguishability against bounded circuits. The advanced chapters close the loop: Levin distributional problems formalize average-case complexity, Impagliazzo hardcore lemma and Yao XOR lemma amplify mild hardness into strong hardness, extractors purify weak randomness with statistical distance as the metric, Håstad switching lemma proves the first real circuit lower bound for parity in AC0, Yao minimax principle turns randomized lower bounds into distributional ones, the PCP theorem redefines NP proofs as locally testable objects and exports hardness into approximation, and quantum computation replays the entire definitional program for a physics-based model, landing factoring in BQP and BQP inside PSPACE. For a reasoning engine, the transferable core is not any single theorem but the operating system underneath: define the machine and the resource before arguing, treat every claim as a certificate with a checker and a cost, know which transformations preserve answers, know which barriers say a technique family cannot work, and keep average-case and worst-case accounting in separate ledgers. The middle part of the book, on lower bounds for concrete models, is the counterweight to the class theory: where the first part shows what resources can do, this part shows what restricted resources provably cannot. Decision trees price queries, and Yao minimax principle converts randomized lower bounds into distributional ones, so a single hard distribution of inputs certifies that every randomized strategy pays. Communication complexity prices information transfer between two parties and exports lower bounds back into circuits, streaming, and data structures through fooling sets, rank arguments, and discrepancy. Monotone circuit lower bounds and the switching lemma show that even severely restricted models require real combinatorial work, and that work clarifies why the general problem is hard: the techniques that succeed against weak models fail against slightly stronger ones for identifiable reasons, which is exactly the kind of negative knowledge that keeps a research program honest. The advanced chapters then fold the themes into each other until the distinctions blur productively. Hardness amplification turns any mildly hard function into a strongly hard one, first by direct product and XOR composition, then through error-correcting codes, whose local decodability is the same property the PCP verifier exploits. Extractors and expanders turn weak randomness into near-uniform randomness with graph theory, and the same expander walks derandomize space-bounded computation. Average-case complexity, built by Levin, supplies the distributional language in which cryptographic hardness and real-world difficulty are both stated, and the quantum chapter re-runs the founding questions (what is a machine, what is a step, what does error mean) against physics, producing a class, BQP, whose relation to the classical classes is still only partially mapped. Read as one argument, the book says: power comes from how resources compose, hardness comes from composition too, and the mature skill is accounting, knowing for any claimed result exactly which resources were spent, which were assumed free, and which barrier stands between the current proof and the stronger one.",
+   "retrocausal_genealogy": "The lineage runs from Turing 1936 machine and the halting argument, through Hartmanis and Stearns resource-bounded complexity in the 1960s, Cobham and Edmonds identification of polynomial time with feasibility, and Cook 1971 with Levin independent discovery of NP-completeness. Karp 1972 web of reductions made completeness a practical classification tool. The 1970s added space theory (Savitch 1970), the relativization barrier (Baker, Gill, Solovay 1975), and Valiant counting class (1979). The 1980s brought randomized algorithms, interactive proofs (Goldwasser, Micali, Rackoff; Babai), Toda theorem at the decade end, and the first circuit lower bounds via random restrictions (Furst, Saxe, Sipser; Ajtai; Håstad). The 1990s detonated the modern era: IP equals PSPACE (Lund, Fortnow, Karloff, Nisan; Shamir), the PCP theorem (Arora, Safra; Arora, Lund, Motwani, Sudan, Szegedy), Shor factoring algorithm (1994), hardness versus randomness (Nisan, Wigderson), natural proofs (Razborov, Rudich), and Immerman-Szelepcsenyi closure of NL under complement (1987, announced just before this period). The book, drafted through the 2000s and published in 2009, is the consolidation of that arc into one curriculum.",
+   "theory_of_mind": "The authors model the reader as a mathematically mature skeptic who must be convinced that definitions are natural rather than rigged. Every class is introduced twice: once formally and once as the answer to a motivating question, and definitions are stress-tested immediately (why 2/3, why polynomial certificates, why private coins) because the authors believe a definition is a claim about the world that must survive robustness checks. Their model of the domain is that computation is a physical and mathematical phenomenon at once: the strong Church-Turing thesis is treated as an empirical claim that quantum computing pressures, and barriers (relativization, natural proofs) are presented not as excuses but as data about method. The pedagogy assumes the reader will verify: exercises carry real theorems, and proofs are given in enough detail to be checked line by line.",
+   "cross_layer_veto": "This work vetoes several tempting moves in any reasoning system built on top of it. First, it vetoes technique-free optimism: relativization and natural proofs show that whole families of plausible arguments provably cannot settle the central separations, so method choice is itself a correctness issue. Second, it vetoes conflating worst-case with average-case hardness: one-way functions and Levin theory show the gap is where cryptography and practice live. Third, it vetoes treating verification as free: NP, IP, and PCP all price the checker explicitly, and a claim without a priced checker is unfinished. Fourth, it vetoes assuming closure properties: nondeterministic time is not known to be closed under complement even though nondeterministic space is, so symmetry must be proved per resource, never assumed."
+  }
+ ],
+ "universal_lens": "The book is a general template for studying any resource-bounded process: fix a machine model, price every resource (time, memory, randomness, interaction, advice, queries), define classes by what is achievable within budgets, compare tasks by answer-preserving reductions, and catalog the barriers that prove whole families of arguments insufficient. Any domain with agents, budgets, and claims, from logistics to laboratory protocols, can be mapped onto this skeleton: what is the universal simulator, what are the certificates, what does verification cost, and which separations between easy and hard are theorems rather than folklore.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the definitional discipline: every research claim is stated with its machine (the exact procedure), its resource budget, and its verifier. The barrier results (relativization, natural proofs) become required reading in method design, because they teach that a validation method can be structurally incapable of distinguishing the hypotheses it is applied to. The counting and average-case chapters ground the Institute treatment of enumeration problems and distributional hardness, and the interactive-proof material supplies the template for adversarial peer review: claims earn belief by surviving randomized challenges from a weaker but independent checker, with completeness and soundness stated numerically.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the certificate architecture: every projection ships with a polynomial-size, cheaply checkable evidence bundle (NP pattern), witnesses are extracted by self-reduction rather than asserted, aggregates are audited by sumcheck-style decomposition with random spot checks (PCP pattern), and randomized components carry BPP-style contracts with measured independence before majority amplification is trusted. Karp-Lipton collapse tests audit layer consistency when new fast solvers land, advice tables are treated as auditable data, and problem triage follows the hierarchy: tractable core, intermediate tier with structure-specific methods, complete tier where approximation and counting replace exact search."
+}

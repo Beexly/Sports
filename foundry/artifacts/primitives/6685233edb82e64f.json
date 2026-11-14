@@ -1,0 +1,893 @@
+{
+ "book_id": "6685233edb82e64f",
+ "source_status": "COMPLETE",
+ "source_note": "Robert H. Shumway and David S. Stoffer, Time Series Analysis and Its Applications: With R Examples, Fourth Edition, Springer, Springer Texts in Statistics, 2017. Local file: the publisher PDF ShumwayStoffer-2017-TimeSeriesAnalysisAndItsApplications4.pdf, 5,993,380 bytes; scan digest sha256 over str(size) plus file bytes is 6685233edb82e64f1d47fbec13355d43edef12411cae034cceca456898f7ef95, whose first 16 hex characters are the book_id. Extraction was performed on the complete extracted text derived from this PDF (36,330 lines, about 2.06 million characters). Text quality is high; displayed equations carry occasional layout artifacts, so every verbatim quote was taken from clean prose passages and verified programmatically as a contiguous substring of the text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "white_noise_process",
+   "name": "White noise: an uncorrelated zero-mean finite-variance sequence is the null building block of every time series model",
+   "verbatim_quote": "A simple kind of generated series might be a collection of uncorrelated random\n variables, wt , with mean 0 and finite variance σw2 .",
+   "page": "Section 1.2, Example 1.8 (book p. 9); text lines 741-745",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The wt are uncorrelated (independence and Gaussianity are stronger variants the book distinguishes explicitly)",
+    "Variance σw2 is finite and constant over time"
+   ],
+   "breakdown_regime": "Real series are almost never white noise; the process is a benchmark and an input, not a fitted end state. Any residual autocorrelation in a fitted model means the model, not the data, has failed.",
+   "domain": "time series foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "White noise is the engine's null hypothesis made concrete: any extracted signal is defined as structure left over after this baseline, and every model in the book is judged by whether its residuals collapse back to this process.",
+    "source_operator": "white_noise_process",
+    "telemetry": "Residual sequences from fitted models; their sample ACF at all lags"
+   }
+  },
+  {
+   "primitive_id": "autocovariance_function_acf",
+   "name": "Autocovariance and autocorrelation: dependence between two points of one series is measured by γ(s,t) and its scale-free ratio ρ",
+   "verbatim_quote": "The autocovariance measures the linear dependence between two points on the\nsame series observed at different times.",
+   "page": "Section 1.3, Definition 1.2 (book p. 16); text lines 1111-1119",
+   "latex": "\\gamma(s,t) = \\mathrm{cov}(x_s, x_t) = E[(x_s - \\mu_s)(x_t - \\mu_t)], \\qquad \\rho(h) = \\gamma(h)/\\gamma(0)",
+   "symbol_and_unit_ledger": {
+    "γ(s,t)": "autocovariance between the series at times s and t; squared units of x",
+    "μ_s, μ_t": "mean function values at s and t; units of x",
+    "ρ(h)": "autocorrelation at lag h; dimensionless, in [-1, 1]",
+    "h": "lag, in sampling intervals"
+   },
+   "assumptions": [
+    "Variances are finite so covariances exist",
+    "The measure captures linear dependence only"
+   ],
+   "breakdown_regime": "Zero autocovariance does not imply independence outside the Gaussian case; nonlinear dependence (for example in squares, as ARCH shows) is invisible to γ and ρ.",
+   "domain": "time series foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The autocovariance function is the engine's basic dependence sensor: every later object in the book, spectra, filters, forecasts, state space covariances, is a transform of γ, so logging γ faithfully is logging the raw material of all downstream reasoning.",
+    "source_operator": "autocovariance_function_acf",
+    "telemetry": "Any equally spaced observation sequence; pairs of values at each lag"
+   }
+  },
+  {
+   "primitive_id": "weak_stationarity",
+   "name": "Weak stationarity: constant mean and lag-only autocovariance license estimating population structure from a single realization",
+   "verbatim_quote": "Definition 1.7 A weakly stationary time series, xt , is a finite variance process such\nthat\n  (i) the mean value function, µt , defined in (1.9) is constant and does not depend on\n      time t, and\n (ii) the autocovariance function, γ(s, t), defined in (1.10) depends on s and t only\n      through their difference |s − t|.",
+   "page": "Section 1.4, Definition 1.7 (book p. 20); text lines 1326-1332",
+   "latex": "\\gamma(h) = \\mathrm{cov}(x_{t+h}, x_t) = E[(x_{t+h} - \\mu)(x_t - \\mu)]",
+   "symbol_and_unit_ledger": {
+    "γ(h)": "autocovariance at lag h for a stationary series; squared units of x",
+    "µ": "constant mean of the series; units of x",
+    "h": "lag, in sampling intervals"
+   },
+   "assumptions": [
+    "Finite variance",
+    "Only first two moments are constrained; the full distribution may still change over time unless the process is Gaussian or strictly stationary"
+   ],
+   "breakdown_regime": "Trends, unit roots, level shifts, and time-varying variance all violate it; applying stationary machinery to a nonstationary series produces spurious persistence and invalid standard errors.",
+   "domain": "time series foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stationarity is the engine's admissibility test for pooling observations across time: only when it holds (possibly after transformation) may evidence from different epochs be averaged into one dependence estimate.",
+    "source_operator": "weak_stationarity",
+    "telemetry": "Rolling means and rolling autocovariances of the input series; drift in either flags a violation"
+   }
+  },
+  {
+   "primitive_id": "random_walk_with_drift",
+   "name": "Random walk with drift: cumulated white noise plus a constant produces a stochastic trend that is not stationary",
+   "verbatim_quote": "with initial condition x0 = 0, and where wt is white noise. The\n constant δ is called the drift, and when δ = 0, (1.3) is called simply a random walk.",
+   "page": "Section 1.2, Example 1.11 (book p. 11); text lines 856-862",
+   "latex": "x_t = \\delta + x_{t-1} + w_t",
+   "symbol_and_unit_ledger": {
+    "x_t": "series value at time t; units of the observed quantity",
+    "δ": "drift, mean increment per period; units of x per period",
+    "w_t": "white noise innovation; units of x"
+   },
+   "assumptions": [
+    "Innovations are white noise with constant variance",
+    "The increment distribution does not change over time"
+   ],
+   "breakdown_regime": "Its autocovariance γ(s,t) = min(s,t)σw2 grows without bound, forecast intervals widen like the square root of horizon, and regressions between independent random walks are spuriously significant.",
+   "domain": "time series foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The random walk is the engine's model of a wandering level with no anchor: a series that behaves this way carries information only in its increments, and any level-based pattern read off it is an artifact.",
+    "source_operator": "random_walk_with_drift",
+    "telemetry": "The increment sequence of the input; variance of the level growing linearly in time"
+   }
+  },
+  {
+   "primitive_id": "sample_autocovariance_and_acf",
+   "name": "Sample autocovariance and ACF: the 1/n divisor form is non-negative definite, and the sample ACF carries a sampling distribution for significance judgments",
+   "verbatim_quote": "The sample autocorrelation function has a sampling distribution that allows us to\nassess whether the data comes from a completely random or white series or whether\ncorrelations are statistically significant at some lags.",
+   "page": "Section 1.5, Definitions 1.14 and 1.15 (book pp. 27-28); text lines 1715-1747",
+   "latex": "\\hat{\\gamma}(h) = \\frac{1}{n}\\sum_{t=1}^{n-h} (x_{t+h} - \\bar{x})(x_t - \\bar{x}), \\qquad \\hat{\\rho}(h) = \\hat{\\gamma}(h)/\\hat{\\gamma}(0)",
+   "symbol_and_unit_ledger": {
+    "γ̂(h)": "sample autocovariance at lag h; squared units of x",
+    "ρ̂(h)": "sample autocorrelation at lag h; dimensionless",
+    "n": "sample size; count of observations",
+    "x̄": "sample mean; units of x"
+   },
+   "assumptions": [
+    "The underlying process is stationary (or has been made so)",
+    "Bartlett-type standard errors (about 1/√n under white noise) are large-sample approximations"
+   ],
+   "breakdown_regime": "At lags near n the estimate rests on a handful of pairs and is unreliable; a slowly decaying sample ACF usually signals nonstationarity rather than genuine long memory.",
+   "domain": "estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The sample ACF is the engine's first diagnostic readout on any new series, and its error bands are the discipline that separates a measured dependence from a plausible-looking wiggle.",
+    "source_operator": "sample_autocovariance_and_acf",
+    "telemetry": "The observed series itself; lag-by-lag sample correlations with their standard errors"
+   }
+  },
+  {
+   "primitive_id": "prewhitening_for_cross_correlation",
+   "name": "Prewhitening: at least one series must be reduced to white noise before cross-correlations can be judged significant",
+   "verbatim_quote": "The basic idea is\n simple; in order to use Property 1.3, at least one of the series must be white noise.",
+   "page": "Section 1.5, Example 1.29 (book p. 31); text lines 2203-2207",
+   "latex": "\\rho_{xy}(h) = \\gamma_{xy}(h)/\\sqrt{\\gamma_x(0)\\gamma_y(0)}",
+   "symbol_and_unit_ledger": {
+    "ρ_xy(h)": "cross-correlation between x at lead h and y; dimensionless",
+    "γ_xy(h)": "cross-covariance at lag h; product of the units of x and y",
+    "γ_x(0), γ_y(0)": "variances of the two series"
+   },
+   "assumptions": [
+    "A model (for example an ARMA fit) can whiten the input series, and the same filter is applied to the output series",
+    "The two series are jointly stationary after treatment"
+   ],
+   "breakdown_regime": "Two independent but individually autocorrelated series show large spurious sample cross-correlations; skipping prewhitening manufactures lead-lag relationships that do not exist.",
+   "domain": "multivariate series",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Prewhitening is the veto the engine applies before believing any lead-lag claim between two series: shared internal persistence must be stripped first, or the cross-correlation measures the two memories, not a connection.",
+    "source_operator": "prewhitening_for_cross_correlation",
+    "telemetry": "Paired observation sequences with a candidate lead-lag relation; the whitening filter's residuals"
+   }
+  },
+  {
+   "primitive_id": "kernel_and_moving_average_smoothing",
+   "name": "Smoothing: a symmetric moving average, generalized by kernel (Nadaraya-Watson) weights, extracts trend by local averaging with a bandwidth tradeoff",
+   "verbatim_quote": "Kernel smoothing is a moving average smoother that uses a weight function, or\n kernel, to average the observations.",
+   "page": "Section 2.3, Example 2.12 (book p. 68); text lines 6658-6670",
+   "latex": "m_t = \\sum_{i=1}^{n} w_i(t)\\, x_i, \\qquad w_i(t) = \\frac{K((t-i)/b)}{\\sum_j K((t-j)/b)}",
+   "symbol_and_unit_ledger": {
+    "m_t": "smoothed trend estimate at time t; units of x",
+    "w_i(t)": "weight given to observation i at time t; dimensionless, sums to 1",
+    "K": "kernel function, typically the normal density",
+    "b": "bandwidth; units of time, wider means smoother"
+   },
+   "assumptions": [
+    "The trend varies slowly relative to the bandwidth",
+    "Weights are symmetric and sum to one so a constant series is reproduced exactly"
+   ],
+   "breakdown_regime": "Too wide a bandwidth erases genuine cycles (the book shows annual peaks flattened); too narrow leaves noise in the trend. Endpoints are biased because the window is one-sided there.",
+   "domain": "exploratory analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Smoothing is the engine's trend extraction primitive: it declares which timescale counts as signal, and the bandwidth is an explicit, auditable choice rather than an eyeball judgment.",
+    "source_operator": "kernel_and_moving_average_smoothing",
+    "telemetry": "The raw series at its native sampling rate; candidate bandwidths scored by residual whiteness"
+   }
+  },
+  {
+   "primitive_id": "differencing_and_backshift",
+   "name": "Differencing: the operator ∇ = (1 - B) removes stochastic or polynomial trend and is the gateway to ARIMA modeling",
+   "verbatim_quote": "Because differencing plays a central role in time series analysis, it receives its\nown notation. The first difference is denoted as",
+   "page": "Section 2.2 (book p. 58); text lines 4218-4224",
+   "latex": "\\nabla x_t = x_t - x_{t-1} = (1 - B)x_t",
+   "symbol_and_unit_ledger": {
+    "∇": "difference operator; dimensionless",
+    "B": "backshift operator, Bx_t = x_{t-1}; dimensionless",
+    "x_t": "series value at time t; units of the observed quantity"
+   },
+   "assumptions": [
+    "One difference removes a linear trend or one unit root; higher orders ∇^d handle degree-d polynomial trends or d unit roots"
+   ],
+   "breakdown_regime": "Overdifferencing a stationary series induces a non-invertible moving average unit root and inflates variance; differencing also discards the level, so no estimate of the stationary component itself is recovered.",
+   "domain": "time series foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Differencing is the engine's standard repair when the stationarity gate fails: model the changes, not the levels, whenever the level has no anchor.",
+    "source_operator": "differencing_and_backshift",
+    "telemetry": "The level series and its increments; stationarity diagnostics before and after differencing"
+   }
+  },
+  {
+   "primitive_id": "autoregressive_model",
+   "name": "AR(p): the current value is a linear regression on the p most recent values of the series itself, plus white noise",
+   "verbatim_quote": "where xt is stationary, wt ∼ wn(0, σw2 ), and φ1, φ2, . . . , φ p are constants (φ p , 0).",
+   "page": "Section 3.1, Definition 3.1 (book p. 78); text lines 7198-7201",
+   "latex": "x_t = \\phi_1 x_{t-1} + \\phi_2 x_{t-2} + \\cdots + \\phi_p x_{t-p} + w_t",
+   "symbol_and_unit_ledger": {
+    "φ_1..φ_p": "autoregressive coefficients; dimensionless",
+    "p": "model order; count of lags",
+    "w_t": "white noise innovation with variance σw2; units of x"
+   },
+   "assumptions": [
+    "The process is stationary (zero mean form; a mean µ is handled by centering)",
+    "Regressors are the series' own past, so classical fixed-regressor regression theory does not apply directly"
+   ],
+   "breakdown_regime": "Stationarity fails when the AR polynomial has roots on or inside the unit circle; the process then explodes or behaves like a random walk and the regression interpretation collapses.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The AR model is the engine's persistence primitive: it quantifies how much of the present is mechanically carried from the recent past, which is the baseline any richer explanation must beat.",
+    "source_operator": "autoregressive_model",
+    "telemetry": "A series' own lagged values; fitted coefficients and their decay pattern"
+   }
+  },
+  {
+   "primitive_id": "moving_average_model",
+   "name": "MA(q): the current value is a finite weighted sum of current and past white noise shocks, stationary for all parameter values",
+   "verbatim_quote": "Unlike the autoregressive process, the moving average process is stationary for any\nvalues of the parameters θ 1, . . . , θ q ; details of this result are provided in Section 3.3.",
+   "page": "Section 3.1, Definition 3.3 (book pp. 83-84); text lines 7476-7496",
+   "latex": "x_t = w_t + \\theta_1 w_{t-1} + \\theta_2 w_{t-2} + \\cdots + \\theta_q w_{t-q}",
+   "symbol_and_unit_ledger": {
+    "θ_1..θ_q": "moving average coefficients; dimensionless",
+    "q": "model order; count of shock lags",
+    "w_t": "white noise shock; units of x"
+   },
+   "assumptions": [
+    "Shocks are white noise; the model is a finite linear filter of them",
+    "The ACF cuts off exactly after lag q"
+   ],
+   "breakdown_regime": "Memory is hard-limited to q periods, so MA alone cannot represent lingering dependence; without invertibility the shocks cannot be recovered from the observations and forecasting degenerates.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The MA model is the engine's shock-propagation primitive: it describes how a one-time disturbance echoes for exactly q periods and then vanishes, the signature of transitory rather than persistent forces.",
+    "source_operator": "moving_average_model",
+    "telemetry": "Impulse responses estimated from data; the lag at which the sample ACF cuts off"
+   }
+  },
+  {
+   "primitive_id": "arma_model",
+   "name": "ARMA(p,q): a stationary series driven by white noise through rational AR and MA polynomials, φ(B)x_t = θ(B)w_t",
+   "verbatim_quote": "with φ p , 0, θ q , 0, and σw2 > 0. The parameters p and q are called the autoregres-\nsive and the moving average orders, respectively.",
+   "page": "Section 3.1, Definition 3.5 (book pp. 85-86); text lines 7615-7621",
+   "latex": "\\phi(B)x_t = \\theta(B)w_t, \\qquad \\phi(B) = 1 - \\phi_1 B - \\cdots - \\phi_p B^p, \\quad \\theta(B) = 1 + \\theta_1 B + \\cdots + \\theta_q B^q",
+   "symbol_and_unit_ledger": {
+    "φ(B), θ(B)": "AR and MA operator polynomials in the backshift operator B; dimensionless",
+    "p, q": "AR and MA orders; counts",
+    "σw2": "innovation variance; squared units of x"
+   },
+   "assumptions": [
+    "Stationarity of x_t",
+    "φ(z) and θ(z) share no common factors (simplest form, see parameter redundancy)",
+    "Innovations are white noise; Gaussianity is needed only for exact likelihood and prediction intervals"
+   ],
+   "breakdown_regime": "The class is linear with constant coefficients: it cannot represent regime change, time-varying variance, or threshold behavior, and it fails outright on nonstationary data without differencing.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "ARMA is the engine's default grammar for a stationary series: two small polynomials summarize the entire autocovariance structure, and every richer model in the book is an extension or a repair of this grammar.",
+    "source_operator": "arma_model",
+    "telemetry": "The series' sample ACF and PACF shapes; fitted residuals"
+   }
+  },
+  {
+   "primitive_id": "parameter_redundancy_common_factors",
+   "name": "Parameter redundancy: common factors in φ(z) and θ(z) cancel, so an over-built ARMA can dress white noise in significant-looking parameters",
+   "verbatim_quote": "which looks like an ARMA(1, 1) model. Of course, xt is still white noise; nothing\n has changed in this regard [i.e., xt = wt is the solution to (3.22)], but we have\n hidden the fact that xt is white noise because of the parameter redundancy or\n over-parameterization.",
+   "page": "Section 3.1, Example 3.7 (book pp. 86-87); text lines 7640-7652",
+   "latex": "x_t = 0.5\\,x_{t-1} + w_t - 0.5\\,w_{t-1} \\quad \\text{is white noise, because } (1 - 0.5B) \\text{ cancels}",
+   "symbol_and_unit_ledger": {
+    "B": "backshift operator; dimensionless",
+    "w_t": "white noise; units of x",
+    "x_t": "the observed series, here exactly white noise despite appearances"
+   },
+   "assumptions": [
+    "The cancellation is exact only when the AR and MA factors are identical",
+    "Near-cancellation produces the same pathology approximately: huge, unstable, individually significant estimates"
+   ],
+   "breakdown_regime": "This is a failure of identification, not of fit: likelihood surfaces develop ridges, standard errors explode, and model selection that ignores it reports structure in pure noise.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Redundancy is the engine's anti-overfitting veto at the algebraic level: before any fitted dynamic is believed, its AR and MA roots are checked for near-cancellation that would mean the dynamics are an artifact of parameterization.",
+    "source_operator": "parameter_redundancy_common_factors",
+    "telemetry": "Estimated AR and MA root locations; their pairwise distances"
+   }
+  },
+  {
+   "primitive_id": "arma_causality",
+   "name": "Causality: an ARMA is causal exactly when the roots of φ(z) lie outside the unit circle, giving a one-sided representation in past shocks",
+   "verbatim_quote": "Another way to phrase Property 3.1 is that an ARMA process is causal only when\nthe roots of φ(z) lie outside the unit circle; that is, φ(z) = 0 only when |z| > 1.",
+   "page": "Section 3.1, Property 3.1 (book pp. 87-88); text lines 7711-7722",
+   "latex": "\\psi(z) = \\frac{\\theta(z)}{\\phi(z)}, \\qquad x_t = \\sum_{j=0}^{\\infty} \\psi_j w_{t-j}, \\quad |z| \\le 1",
+   "symbol_and_unit_ledger": {
+    "ψ_j": "linear process (impulse response) weights; dimensionless, absolutely summable",
+    "z": "complex argument of the polynomials; dimensionless",
+    "φ(z), θ(z)": "AR and MA polynomials"
+   },
+   "assumptions": [
+    "The representation is in terms of present and past innovations only",
+    "Absolute summability of the ψ weights is required"
+   ],
+   "breakdown_regime": "A root on the unit circle is a unit root (nonstationary); a root inside gives a stationary but future-dependent representation whose forecasts secretly use information that does not yet exist.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Causality is the engine's temporal legality check: a representation that reaches into future shocks is disqualified no matter how well it fits, because a forecasting system may only spend information it already has.",
+    "source_operator": "arma_causality",
+    "telemetry": "Estimated AR roots relative to the unit circle"
+   }
+  },
+  {
+   "primitive_id": "arma_invertibility",
+   "name": "Invertibility: an ARMA is invertible exactly when the roots of θ(z) lie outside the unit circle, giving an AR(∞) form that recovers innovations from observations",
+   "verbatim_quote": "Another way to phrase Property 3.2 is that an ARMA process is invertible only\nwhen the roots of θ(z) lie outside the unit circle; that is, θ(z) = 0 only when |z| > 1.",
+   "page": "Section 3.1, Property 3.2 (book p. 88); text lines 7741-7750",
+   "latex": "\\pi(z) = \\frac{\\phi(z)}{\\theta(z)}, \\qquad \\pi(B)x_t = w_t, \\quad |z| \\le 1",
+   "symbol_and_unit_ledger": {
+    "π_j": "autoregressive representation weights; dimensionless, absolutely summable",
+    "θ(z)": "MA polynomial",
+    "w_t": "innovation recovered as the residual of the AR(∞) filter; units of x"
+   },
+   "assumptions": [
+    "The AR(∞) weights are absolutely summable",
+    "Among observationally equivalent MA parameterizations, the invertible one is chosen for uniqueness"
+   ],
+   "breakdown_regime": "Without invertibility, residuals computed from data are not the model's innovations, likelihoods built on them are wrong, and overdifferencing is the most common way practitioners manufacture this failure.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Invertibility is what lets the engine audit a model from data alone: it guarantees the one-step prediction errors the model claims are the same errors the engine can compute from the observed history.",
+    "source_operator": "arma_invertibility",
+    "telemetry": "Residuals from the fitted AR(∞) approximation; estimated MA roots relative to the unit circle"
+   }
+  },
+  {
+   "primitive_id": "partial_autocorrelation_function",
+   "name": "PACF: φ_hh is the correlation between x_{t+h} and x_t with the linear influence of the intervening values removed; it cuts off after lag p for an AR(p)",
+   "verbatim_quote": "The PACF, φhh , is the correlation between xt+h and xt with the linear dependence\nof {xt+1, . . . , xt+h−1 } on each, removed.",
+   "page": "Section 3.3, Definition 3.9 (book p. 99); text lines 8324-8340",
+   "latex": "\\phi_{hh} = \\mathrm{corr}(x_{t+h} - \\hat{x}_{t+h},\\, x_t - \\hat{x}_t)",
+   "symbol_and_unit_ledger": {
+    "φ_hh": "partial autocorrelation at lag h; dimensionless, in [-1, 1]",
+    "x̂": "best linear predictor from the intervening values; units of x",
+    "h": "lag; count of periods"
+   },
+   "assumptions": [
+    "Correlations are linear (population regression) partial correlations",
+    "For Gaussian processes this equals the conditional correlation given the intervening values"
+   ],
+   "breakdown_regime": "Sample PACF values beyond the true AR order are noise with standard error about 1/√n; reading structure into them overfits, and the cutoff signature blurs for ARMA mixtures.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The PACF is the engine's order-detection lens for direct dependence: it separates a genuine direct link across h periods from correlation merely inherited through the chain of intermediate values.",
+    "source_operator": "partial_autocorrelation_function",
+    "telemetry": "Sample partial autocorrelations by lag, computed by the Durbin-Levinson recursion"
+   }
+  },
+  {
+   "primitive_id": "best_linear_predictor",
+   "name": "Best linear prediction: the MMSE linear forecast makes the error orthogonal to every observation, giving the prediction equations Γφ = γ",
+   "verbatim_quote": "Linear predictors of the form (3.59) that minimize the mean square prediction\nerror (3.58) are called best linear predictors (BLPs).",
+   "page": "Section 3.4, Property 3.3 (book pp. 102-103); text lines 8540-8550",
+   "latex": "\\Gamma_n \\phi_n = \\gamma_n, \\qquad \\Gamma_n = \\{\\gamma(k - j)\\}_{j,k=1}^{n}",
+   "symbol_and_unit_ledger": {
+    "Γ_n": "n by n autocovariance matrix of the observations; squared units of x",
+    "φ_n": "vector of prediction coefficients; dimensionless",
+    "γ_n": "vector (γ(1), ..., γ(n)); squared units of x"
+   },
+   "assumptions": [
+    "Only second-order moments are needed; the process need not be Gaussian",
+    "For Gaussian processes the BLP coincides with the conditional expectation, the overall MMSE predictor"
+   ],
+   "breakdown_regime": "The predictor is the best linear one only: nonlinear structure (thresholds, variance dynamics) is invisible to it, and plugging in a misestimated γ yields forecasts that are optimal for the wrong process.",
+   "domain": "forecasting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The projection principle is the engine's forecasting constitution: a forecast is a projection of the future onto the span of the observed past, and its error must be orthogonal to everything already known, or information was left unused.",
+    "source_operator": "best_linear_predictor",
+    "telemetry": "The autocovariance sequence of the target series; realized forecast errors checked for correlation with past data"
+   }
+  },
+  {
+   "primitive_id": "innovations_algorithm",
+   "name": "Innovations algorithm: one-step predictors and their mean squared errors are computed recursively from the autocovariance function alone",
+   "verbatim_quote": "Given data x1, . . . , xn , the innovations algorithm can be calculated successively\nfor t = 1, then t = 2 and so on",
+   "page": "Section 3.4, Property 3.6 (book pp. 107-108); text lines 8822-8860",
+   "latex": "\\hat{x}_{t+1}^{t} = \\sum_{j=1}^{t} \\theta_{tj}\\,(x_{t+1-j} - \\hat{x}_{t+1-j}^{\\,t-j})",
+   "symbol_and_unit_ledger": {
+    "θ_tj": "innovation coefficients from the recursion (3.79); dimensionless",
+    "x̂": "one-step-ahead predictor; units of x",
+    "P_t": "one-step mean squared prediction error at time t; squared units of x"
+   },
+   "assumptions": [
+    "The autocovariance function (or a model implying it) is known",
+    "The process is purely nondeterministic so predictors are well defined"
+   ],
+   "breakdown_regime": "Cost grows quadratically in n if run naively, and the recursion inherits any error in γ; for ARMA and state space models the Kalman form supersedes it computationally.",
+   "domain": "forecasting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The innovations recursion is the engine's streaming forecast pattern: each new observation is first scored as a surprise against the standing prediction, and only the surprise is allowed to update the state of belief.",
+    "source_operator": "innovations_algorithm",
+    "telemetry": "The live sequence of one-step prediction errors and their running variances"
+   }
+  },
+  {
+   "primitive_id": "yule_walker_equations",
+   "name": "Yule-Walker equations: matching model and sample autocovariances at lags 1..p identifies AR coefficients by linear algebra",
+   "verbatim_quote": "Definition 3.10 The Yule–Walker equations are given by",
+   "page": "Section 3.5, Definition 3.10 (book p. 115); text lines 9313-9330",
+   "latex": "\\gamma(h) = \\phi_1 \\gamma(h-1) + \\cdots + \\phi_p \\gamma(h-p), \\qquad h = 1, \\dots, p",
+   "symbol_and_unit_ledger": {
+    "γ(h)": "autocovariance at lag h; squared units of x",
+    "φ_1..φ_p": "AR coefficients; dimensionless",
+    "σw2 = γ(0) - φ′γ_p": "innovation variance from equation (3.99); squared units of x"
+   },
+   "assumptions": [
+    "The model is a causal AR(p)",
+    "Method of moments: sample autocovariances replace population ones, giving φ̂ = Γ̂_p^{-1} γ̂_p"
+   ],
+   "breakdown_regime": "Yule-Walker is efficient for pure AR models but not for MA or ARMA parts; in small samples it is biased toward zero, and it always returns a causal fit even when the data generating process is not AR.",
+   "domain": "estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Yule-Walker is the engine's moment-matching estimator: it treats the measured dependence profile as a set of equations the model must satisfy exactly, the simplest instance of calibrating parameters to observable statistics.",
+    "source_operator": "yule_walker_equations",
+    "telemetry": "Sample autocovariances at the first p lags"
+   }
+  },
+  {
+   "primitive_id": "information_criteria_aic_bic",
+   "name": "AIC, AICc, BIC: model choice must penalize fit by parameter count, estimating out-of-sample (Kullback-Leibler) discrepancy rather than rewarding residual variance reduction",
+   "verbatim_quote": "AIC is an estimate of the Kullback-Leibler discrepency between a true model and a candidate\n   model; see Problem 2.4 and Problem 2.5 for further details.",
+   "page": "Section 2.1, Definitions 2.1 to 2.3 (book pp. 51-52); text lines 3201-3223",
+   "latex": "\\mathrm{AIC} = \\log \\hat{\\sigma}_k^2 + \\frac{n + 2k}{n}, \\qquad \\mathrm{BIC} = \\log \\hat{\\sigma}_k^2 + \\frac{k \\log n}{n}",
+   "symbol_and_unit_ledger": {
+    "σ̂_k2": "residual variance estimate under the model with k parameters; squared units of the response",
+    "k": "number of estimated parameters; count",
+    "n": "sample size; count"
+   },
+   "assumptions": [
+    "Candidates are fit by maximum likelihood to the same data",
+    "AIC targets prediction accuracy; BIC's heavier penalty targets the true order and is consistent for it in large samples"
+   ],
+   "breakdown_regime": "Criteria compare only the candidates offered and say nothing about absolute adequacy; with dependent data and misspecified likelihoods the penalty calibration is approximate, and AIC notoriously overfits order in large samples.",
+   "domain": "estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Information criteria are the engine's complexity tax: every added parameter must purchase a sufficient drop in estimated prediction discrepancy, which is the formal version of demanding that structure pay rent.",
+    "source_operator": "information_criteria_aic_bic",
+    "telemetry": "Maximized likelihoods and parameter counts across candidate models fit to identical data"
+   }
+  },
+  {
+   "primitive_id": "arima_model",
+   "name": "ARIMA(p,d,q): d differences reduce a nonstationary series to an ARMA, φ(B)(1-B)^d x_t = θ(B)w_t",
+   "verbatim_quote": "The integrated ARMA, or ARIMA, model is a broadening of the class of ARMA\nmodels to include differencing.",
+   "page": "Section 3.6, Definition 3.11 (book pp. 133-134); text lines 10482-10495",
+   "latex": "\\phi(B)(1 - B)^d x_t = \\theta(B) w_t",
+   "symbol_and_unit_ledger": {
+    "d": "number of differences; nonnegative integer count",
+    "(1 - B)^d": "differencing operator of order d; dimensionless",
+    "φ(B), θ(B)": "AR and MA polynomials of the differenced series"
+   },
+   "assumptions": [
+    "The differenced series is a stationary, invertible ARMA",
+    "Forecasts of the differences are cumulated back to levels, with prediction error growing over the horizon (the book stresses the state space treatment as the sound route)"
+   ],
+   "breakdown_regime": "Wrong d is the classic failure: too small leaves a unit root and spurious dynamics, too large induces non-invertibility. The special case ARIMA(0,1,1) is exactly exponentially weighted moving average forecasting, with all its known abuses.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "ARIMA is the engine's license to model anchored-less series honestly: integrate the shocks, model the stationary increments with ARMA structure, and let forecast uncertainty grow with horizon instead of pretending the level is mean-reverting.",
+    "source_operator": "arima_model",
+    "telemetry": "The series and its differences; unit root diagnostics guiding d"
+   }
+  },
+  {
+   "primitive_id": "seasonal_arima_model",
+   "name": "SARIMA: multiplicative seasonal polynomials at lag s multiply the regular ARMA structure, so cross-season interactions are products of parameters, not new free parameters",
+   "verbatim_quote": "Note that the multiplicative nature of the model implies that the coefficient of wt−13\n is the product of the coefficients of wt−1 and wt−12 rather than a free parameter.",
+   "page": "Section 3.9, Definition 3.12 (book pp. 148-153); text lines 11694-11705",
+   "latex": "\\Phi_P(B^s)\\,\\phi(B)\\,\\nabla_s^{D}\\,\\nabla^{d} x_t = \\delta + \\Theta_Q(B^s)\\,\\theta(B)\\, w_t",
+   "symbol_and_unit_ledger": {
+    "s": "seasonal period; count of observations per cycle",
+    "P, D, Q": "seasonal AR order, seasonal differences, seasonal MA order; counts",
+    "Φ_P, Θ_Q": "seasonal AR and MA polynomials in B^s; dimensionless",
+    "∇_s = 1 - B^s": "seasonal difference operator"
+   },
+   "assumptions": [
+    "Seasonality has a fixed period s and stable form across years",
+    "The multiplicative interaction structure is adequate; a general lag-s polynomial would cost many more parameters"
+   ],
+   "breakdown_regime": "Evolving seasonality, calendar effects, and moving holidays violate the fixed-s structure; the product form can also hide misfit that a free coefficient at the cross lag would have exposed.",
+   "domain": "ARMA modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SARIMA is the engine's template for periodic worlds: regular dynamics and seasonal dynamics are modeled as interacting factors, and the parsimony of the product form is itself a testable claim about how the cycle modulates the short-run structure.",
+    "source_operator": "seasonal_arima_model",
+    "telemetry": "Seasonally sampled series; sample ACF at seasonal lags s, 2s, 3s"
+   }
+  },
+  {
+   "primitive_id": "regression_with_autocorrelated_errors",
+   "name": "Regression with ARMA errors: OLS is replaced by GLS whitening, transforming y and Z by the filter that turns the error process into white noise, with β unchanged",
+   "verbatim_quote": "φ(B) = 1 − φ1 B − · · · − φ p B p is the linear transformation that, when applied to\nthe error process, produces the white noise wt .",
+   "page": "Section 3.8 (book pp. 145-146); text lines 11265-11330",
+   "latex": "\\hat{\\beta}_w = (Z^{\\top} \\Gamma^{-1} Z)^{-1} Z^{\\top} \\Gamma^{-1} y",
+   "symbol_and_unit_ledger": {
+    "Γ": "covariance matrix of the error process; squared units of the error",
+    "β": "regression coefficients; units of y per unit of each regressor",
+    "Z": "design matrix of regressors",
+    "y": "response vector; units of the observed quantity"
+   },
+   "assumptions": [
+    "The error process has a stationary ARMA representation that can be estimated (the book's Cochrane-Orcutt style iteration)",
+    "Regressors are exogenous with respect to the errors"
+   ],
+   "breakdown_regime": "Ignoring error autocorrelation leaves OLS unbiased but with badly understated standard errors, the standard route to phantom significance; a wrong error model reintroduces the problem in subtler form.",
+   "domain": "regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's defense against the most common false discovery in sequential data: an effect is credited only after the dependence inside the errors has been modeled and whitened away, because autocorrelated noise impersonates signal.",
+    "source_operator": "regression_with_autocorrelated_errors",
+    "telemetry": "Regression residuals examined for autocorrelation; the estimated error ARMA used as the whitening filter"
+   }
+  },
+  {
+   "primitive_id": "ljung_box_portmanteau_diagnostic",
+   "name": "Ljung-Box diagnostic: the first H residual autocorrelations, taken as a group, follow a chi-square law under model adequacy, with p + q degrees of freedom spent",
+   "verbatim_quote": "can be used to perform such a test. The value H in (3.155) is chosen somewhat\narbitrarily, typically, H = 20.",
+   "page": "Section 3.7 (book p. 144); text lines 10865-10885",
+   "latex": "Q = n(n + 2)\\sum_{h=1}^{H} \\frac{\\hat{\\rho}_e(h)^2}{n - h} \\;\\sim\\; \\chi^2_{H - p - q}",
+   "symbol_and_unit_ledger": {
+    "Q": "portmanteau test statistic; dimensionless",
+    "ρ̂_e(h)": "sample autocorrelation of residuals at lag h; dimensionless",
+    "H": "number of lags tested; count",
+    "p + q": "fitted ARMA parameters consuming degrees of freedom; count"
+   },
+   "assumptions": [
+    "Under the null the residuals are white noise and n is large enough for the chi-square approximation",
+    "Individual residual autocorrelations have variance smaller than 1/n after fitting, which the statistic's form accommodates"
+   ],
+   "breakdown_regime": "The test has weak power against specific alternatives (a single missed lag, variance dynamics), depends on the arbitrary H, and passes models whose residuals are uncorrelated but strongly dependent in squares.",
+   "domain": "diagnostics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ljung-Box is the engine's adequacy gate for any fitted dynamic model: the model's own prediction errors must be indistinguishable from white noise as a group, or the model is leaving usable structure, and therefore error, on the table.",
+    "source_operator": "ljung_box_portmanteau_diagnostic",
+    "telemetry": "Residual autocorrelations from every fitted model, with fitted parameter counts"
+   }
+  },
+  {
+   "primitive_id": "spectral_density",
+   "name": "Spectral density: the Fourier transform of the autocovariance function distributes total variance across frequencies, and the pair is information-equivalent",
+   "verbatim_quote": "We note that the autocovariance function, γ(h), in (4.16) and the spectral density,\n f (ω), in (4.17) are Fourier transform pairs.",
+   "page": "Section 4.2, Property 4.2 (book pp. 175-176); text lines 13105-13135",
+   "latex": "f(\\omega) = \\sum_{h=-\\infty}^{\\infty} \\gamma(h)\\, e^{-2\\pi i \\omega h}, \\qquad \\gamma(0) = \\int_{-1/2}^{1/2} f(\\omega)\\, d\\omega",
+   "symbol_and_unit_ledger": {
+    "f(ω)": "spectral density at frequency ω; squared units of x per unit frequency",
+    "ω": "frequency; cycles per sampling interval, in [-1/2, 1/2]",
+    "γ(h)": "autocovariance at lag h; squared units of x"
+   },
+   "assumptions": [
+    "Absolute summability of γ(h) so the density exists as an ordinary function",
+    "Stationarity of the process"
+   ],
+   "breakdown_regime": "Processes with unit roots or deterministic periodic components have spectral distribution functions with jumps (line spectra) rather than densities, and the formula must be read in the Stieltjes sense.",
+   "domain": "spectral analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The spectrum is the engine's second coordinate system for dependence: the same evidence, sorted by timescale instead of by lag, which exposes cycles and slow drifts that the lag view smears together.",
+    "source_operator": "spectral_density",
+    "telemetry": "Estimated spectra of input series; variance shares by frequency band"
+   }
+  },
+  {
+   "primitive_id": "linear_filter_frequency_response",
+   "name": "Filtering in the frequency domain: a linear filter multiplies the input spectrum by the squared modulus of its frequency response, f_y(ω) = |A(ω)|^2 f_x(ω)",
+   "verbatim_quote": "For the process in (4.20), if xt has spectrum fx (ω), then the spectrum of the\nfiltered output, yt , say fy (ω), is related to the spectrum of the input xt by",
+   "page": "Section 4.2, Property 4.3 (book pp. 177-178); text lines 13195-13215",
+   "latex": "f_y(\\omega) = |A(\\omega)|^2 f_x(\\omega), \\qquad A(\\omega) = \\sum_{j=-\\infty}^{\\infty} a_j e^{-2\\pi i \\omega j}",
+   "symbol_and_unit_ledger": {
+    "A(ω)": "frequency response of the filter; complex, dimensionless",
+    "a_j": "impulse response coefficients; dimensionless, absolutely summable",
+    "f_x, f_y": "input and output spectral densities; squared units per unit frequency"
+   },
+   "assumptions": [
+    "The filter coefficients are absolutely summable and fixed",
+    "The input is stationary"
+   ],
+   "breakdown_regime": "Time-varying or data-adaptive filters have no single A(ω); the result also says nothing about phase unless A is examined in full complex form. As a corollary the ARMA spectrum is the rational function σw2 |θ(e^{-2πiω})|^2 / |φ(e^{-2πiω})|^2 of Property 4.4.",
+   "domain": "spectral analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's accounting rule for every transformation it applies to a series: smoothing, differencing, and model fitting are filters, and the squared gain states exactly which timescales each one amplifies, passes, or destroys.",
+    "source_operator": "linear_filter_frequency_response",
+    "telemetry": "The coefficient sequence of any applied transformation; spectra before and after"
+   }
+  },
+  {
+   "primitive_id": "periodogram_dft_and_smoothing",
+   "name": "Periodogram: the squared modulus of the DFT is the sample spectral density, but it is inconsistent, so usable spectra average or smooth it across neighboring frequencies",
+   "verbatim_quote": "the periodogram, I(ω j ), is the sample version of f (ω j ) given in (4.17). That\nis, we may think of the periodogram as the sample spectral density of xt .",
+   "page": "Section 4.3, Definition 4.2 (book pp. 182-183); text lines 13514-13557",
+   "latex": "I(\\omega_j) = |d(\\omega_j)|^2 = \\sum_{h=-(n-1)}^{n-1} \\hat{\\gamma}(h)\\, e^{-2\\pi i \\omega_j h}, \\qquad \\omega_j = j/n",
+   "symbol_and_unit_ledger": {
+    "I(ω_j)": "periodogram ordinate at Fourier frequency j; squared units of x",
+    "d(ω_j)": "discrete Fourier transform, scaled by n^{-1/2}; units of x times root-time",
+    "γ̂(h)": "sample autocovariance; squared units of x"
+   },
+   "assumptions": [
+    "Evaluation at Fourier frequencies ω_j = j/n makes the DFT ordinates asymptotically independent",
+    "Smoothing assumes the true spectrum is locally nearly constant across the averaged band"
+   ],
+   "breakdown_regime": "The raw periodogram's variance does not shrink with n (it is inconsistent), and its extreme-lag autocovariances rest on almost no data; smoothing repairs variance at the price of flattening genuine narrow peaks, the bias the book's SOI example displays.",
+   "domain": "spectral analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The periodogram is the engine's raw cycle detector, and its known inconsistency is the standing lesson that a dramatic spectral spike from raw data is a hypothesis, not a measurement, until smoothing or tapering shows it survives.",
+    "source_operator": "periodogram_dft_and_smoothing",
+    "telemetry": "DFT ordinates of the observed series; smoothed spectra at several bandwidths for stability checks"
+   }
+  },
+  {
+   "primitive_id": "squared_coherence",
+   "name": "Squared coherence: the frequency-by-frequency squared correlation between two series, |f_yx(ω)|^2 / (f_xx(ω) f_yy(ω))",
+   "verbatim_quote": "A measure of the\nstrength of such a relation is the squared coherence function, defined as",
+   "page": "Section 4.6 (book p. 211); text lines 15048-15058",
+   "latex": "\\rho^2_{y \\cdot x}(\\omega) = \\frac{|f_{yx}(\\omega)|^2}{f_{xx}(\\omega)\\, f_{yy}(\\omega)}",
+   "symbol_and_unit_ledger": {
+    "f_yx(ω)": "cross-spectral density; product of the units of y and x per unit frequency",
+    "f_xx, f_yy": "the two series' spectral densities",
+    "ρ^2": "squared coherence; dimensionless, in [0, 1]"
+   },
+   "assumptions": [
+    "Joint stationarity of the pair",
+    "Coherence is estimated from smoothed spectra; the raw periodogram coherence is identically one and meaningless"
+   ],
+   "breakdown_regime": "Coherence measures linear association at each frequency only; it can be high because both series share a third driver, and it is badly biased in small samples without enough smoothing.",
+   "domain": "spectral analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coherence lets the engine assert a relationship at one timescale and deny it at another, replacing a single global correlation with a frequency-resolved verdict on where two series actually move together.",
+    "source_operator": "squared_coherence",
+    "telemetry": "Smoothed auto- and cross-spectra of paired series"
+   }
+  },
+  {
+   "primitive_id": "long_memory_fractional_differencing",
+   "name": "Long memory and ARFIMA: fractional differencing (1 - B)^d with 0 < d < 1/2 gives hyperbolically decaying autocorrelations that are not summable",
+   "verbatim_quote": "Long memory (or persistent) time series\nwere considered in Hosking (1981) and Granger and Joyeux (1980) as intermediate\ncompromises between the short memory ARMA type models and the fully integrated\nnonstationary processes in the Box–Jenkins class.",
+   "page": "Section 5.1 (book pp. 242-243); text lines 16858-16930",
+   "latex": "(1 - B)^d x_t = w_t, \\qquad \\rho(h) \\sim h^{2d - 1} \\ \\text{as } h \\to \\infty",
+   "symbol_and_unit_ledger": {
+    "d": "fractional differencing (memory) parameter; dimensionless, stationarity for |d| < 1/2",
+    "ρ(h)": "autocorrelation at lag h; dimensionless",
+    "Γ(·)": "gamma function, entering the exact ACF (5.6) and the filter weights (5.3), (5.5)"
+   },
+   "assumptions": [
+    "The binomial expansion of (1 - B)^d supplies infinite filter weights decaying like j^{-d-1}",
+    "For |d| < 1/2 the resulting process is stationary but its autocorrelations are not absolutely summable"
+   ],
+   "breakdown_regime": "Level shifts and occasional breaks masquerade as long memory; estimates of d are fragile, and confusing d near 1/2 with a unit root reverses the stationarity verdict.",
+   "domain": "long memory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fractional memory gives the engine a middle gear between 'shocks die geometrically' and 'shocks never die': influence that fades polynomially, which changes both forecast paths and the honest width of long-horizon intervals.",
+    "source_operator": "long_memory_fractional_differencing",
+    "telemetry": "Very long series whose sample ACF decays slowly; frequency-domain estimates of d from the spectrum near zero"
+   }
+  },
+  {
+   "primitive_id": "unit_root_dickey_fuller_tests",
+   "name": "Unit root testing: the Dickey-Fuller and augmented Dickey-Fuller tests regress ∇x_t on x_{t-1} and judge γ = 0 against a nonstandard, simulated null distribution",
+   "verbatim_quote": "This test leads to the so-called augmented Dickey-Fuller test (ADF).",
+   "page": "Section 5.2 (book pp. 250-253); text lines 17395-17440",
+   "latex": "\\nabla x_t = \\gamma x_{t-1} + \\sum_{j=1}^{p-1} \\psi_j \\nabla x_{t-j} + w_t, \\qquad H_0: \\gamma = 0",
+   "symbol_and_unit_ledger": {
+    "γ = Σφ_j - 1": "coefficient whose zero value is the unit root null; dimensionless",
+    "ψ_j": "short-run dynamics coefficients absorbing serial correlation; dimensionless",
+    "t_γ = γ̂/se(γ̂)": "the DF statistic; its null distribution is a Brownian motion functional, not Student t"
+   },
+   "assumptions": [
+    "The augmentation order p is large enough to whiten the errors",
+    "The deterministic part (none, drift, or trend) is specified correctly, since each case has different critical values and a different alternative (for example trend stationarity)"
+   ],
+   "breakdown_regime": "Low power against near-unit-root alternatives and against trend-stationary processes with breaks; the test cannot prove a unit root, it can only fail to reject one, and size distorts badly under MA errors with roots near minus one.",
+   "domain": "diagnostics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unit root testing is the engine's tribunal for the trend question: it forces the detrend-versus-difference decision into a stated hypothesis with known error behavior, instead of letting the analyst's eye decide whether a level is anchored.",
+    "source_operator": "unit_root_dickey_fuller_tests",
+    "telemetry": "The series in levels and differences; ADF statistics under drift and trend specifications"
+   }
+  },
+  {
+   "primitive_id": "arch_garch_conditional_variance",
+   "name": "ARCH and GARCH: returns are uncorrelated but their conditional variance is a recursion on past squared shocks and past variances, producing volatility clustering and fat tails",
+   "verbatim_quote": "Models such as the autoregressive conditionally heteroscedastic or ARCH\nmodel, first introduced by Engle (1982), were developed to model changes in volatility.",
+   "page": "Section 5.3 (book pp. 253-258); text lines 17471-17482 and 17740-17750",
+   "latex": "r_t = \\sigma_t \\epsilon_t, \\qquad \\sigma_t^2 = \\alpha_0 + \\sum_{j=1}^{p} \\alpha_j r_{t-j}^2 + \\sum_{j=1}^{q} \\beta_j \\sigma_{t-j}^2",
+   "symbol_and_unit_ledger": {
+    "σ_t2": "conditional variance of the return at t; squared units of r",
+    "α_j, β_j": "ARCH and GARCH coefficients; dimensionless, nonnegative, with Σα + Σβ < 1 for covariance stationarity",
+    "ϵ_t": "standardized innovation, typically iid N(0, 1)",
+    "r_t": "return or demeaned series; units of the observed quantity"
+   },
+   "assumptions": [
+    "The conditional mean is (near) zero or separately modeled; the action is in the variance",
+    "In the ARCH(1) case the unconditional variance is α0/(1 - α1) and finite kurtosis requires 3α12 < 1"
+   ],
+   "breakdown_regime": "GARCH imposes symmetric response to positive and negative shocks and a rigid persistence profile; variance breaks and leverage effects break it, which is one motivation for the stochastic volatility alternative in Section 6.11.",
+   "domain": "volatility",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GARCH teaches the engine to model the variance as a state with its own dynamics: a series can be unforecastable in level and strongly forecastable in risk, and confusing those two statements is a category error.",
+    "source_operator": "arch_garch_conditional_variance",
+    "telemetry": "Squared and absolute residuals from mean models; clustering diagnostics on them"
+   }
+  },
+  {
+   "primitive_id": "threshold_setar_models",
+   "name": "Threshold (SETAR/SETARMA) models: the governing ARMA regime switches according to a lagged value of the series itself crossing estimated thresholds",
+   "verbatim_quote": "The basic idea of these models is that of fitting local linear\nARMA models, and their appeal is that we can use the intuition from fitting global\nlinear ARMA models.",
+   "page": "Section 5.4 (book pp. 261-263); text lines 18005-18015",
+   "latex": "x_t = \\phi_0^{(j)} + \\sum_{i=1}^{p_j} \\phi_i^{(j)} x_{t-i} + w_t^{(j)} \\quad \\text{when } r_{j-1} < x_{t-d} \\le r_j",
+   "symbol_and_unit_ledger": {
+    "j": "regime index, 1..k",
+    "r_j": "threshold values; units of x",
+    "d": "delay lag selecting the regime; count of periods",
+    "φ^(j)": "regime-specific AR coefficients; dimensionless"
+   },
+   "assumptions": [
+    "Within each regime the dynamics are linear ARMA",
+    "The threshold variable is an observed lag of the series (self-exciting), and thresholds and delay are estimated by search"
+   ],
+   "breakdown_regime": "Threshold estimates are imprecise and the model can manufacture regimes from outliers; linear Gaussian processes are time-reversible, and the asymmetric rise-and-fall behavior that motivates TAR models (the book's pneumonia and influenza example) is exactly what symmetric models cannot reproduce.",
+   "domain": "nonlinear models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold models give the engine piecewise-linear dynamics with an observable switch: the same machinery as ARMA, but the coefficients are allowed to change when the system's own recent state crosses a line, capturing asymmetry without abandoning interpretability.",
+    "source_operator": "threshold_setar_models",
+    "telemetry": "The series and its lagged values as candidate threshold variables; fit comparisons by delay and threshold"
+   }
+  },
+  {
+   "primitive_id": "linear_gaussian_state_space_model",
+   "name": "State space model: an unobserved Markov state evolves by x_t = Φx_{t-1} + w_t and is read through a noisy linear observation y_t = A_t x_t + v_t",
+   "verbatim_quote": "We do not observe the state vector xt directly, but only a linear transformed\nversion of it with noise added, say",
+   "page": "Section 6.1 (book pp. 288-289); text lines 19599-19620",
+   "latex": "x_t = \\Phi x_{t-1} + w_t, \\qquad y_t = A_t x_t + v_t, \\qquad w_t \\sim N(0, Q), \\ v_t \\sim N(0, R)",
+   "symbol_and_unit_ledger": {
+    "x_t": "p-dimensional latent state vector",
+    "Φ": "state transition matrix; dimensionless",
+    "A_t": "q by p observation matrix, possibly time-varying",
+    "Q, R": "state and observation noise covariance matrices; squared units of state and observation respectively"
+   },
+   "assumptions": [
+    "Linearity and Gaussianity of both equations (the linear Gaussian or dynamic linear model)",
+    "State and observation noises are (initially) mutually uncorrelated; Section 6.6 relaxes this"
+   ],
+   "breakdown_regime": "Nonlinear dynamics or non-Gaussian noise (counts, heavy tails) break the closed-form recursions and force approximations or simulation methods; an unobservable or poorly identified state parameterization makes the latent story unfalsifiable.",
+   "domain": "state space models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The state space form is the engine's universal chassis for latent drivers: ARMA models, trend plus cycle decompositions, and regression with autocorrelated errors are all special cases, so one inference engine (the Kalman recursions) serves every one of those stories.",
+    "source_operator": "linear_gaussian_state_space_model",
+    "telemetry": "Multivariate or univariate observation streams with a hypothesized latent driver; missing observations are handled natively"
+   }
+  },
+  {
+   "primitive_id": "kalman_filter",
+   "name": "Kalman filter: predict then update; the state estimate is corrected by the Kalman gain times the innovation, recursively and without reprocessing history",
+   "verbatim_quote": "Property 6.1 The Kalman Filter\n    For the state-space model specified in (6.3) and (6.4), with initial conditions",
+   "page": "Section 6.2, Property 6.1 (book pp. 293-294); text lines 19942-19965",
+   "latex": "K_t = P_t^{t-1} A_t^{\\top}\\,[A_t P_t^{t-1} A_t^{\\top} + R]^{-1}, \\qquad x_t^{t} = x_t^{t-1} + K_t\\,(y_t - A_t x_t^{t-1} - \\Gamma u_t)",
+   "symbol_and_unit_ledger": {
+    "K_t": "Kalman gain matrix; weights the innovation by relative state versus observation uncertainty",
+    "P_t^{t-1}, P_t^t": "one-step prediction and filtering error covariance matrices",
+    "x_t^{t-1}, x_t^t": "predicted and filtered state estimates",
+    "ϵ_t = y_t - A_t x_t^{t-1} - Γu_t": "innovation (prediction error) at t"
+   },
+   "assumptions": [
+    "The model matrices and noise covariances are known (or estimated and plugged in)",
+    "Gaussianity makes the recursions exact conditional means; without it they remain best linear recursions"
+   ],
+   "breakdown_regime": "Wrong Q or R silently misweights every update; the filter trusts its model completely, so structural breaks are absorbed slowly as if they were noise. Missing observations are handled by skipping the update, but long gaps let P grow without bound.",
+   "domain": "state space models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Kalman filter is the engine's online belief updater: prior state, predicted forward, corrected in proportion to how surprising the new observation is and how much the observation channel can be trusted, with the gain making that tradeoff explicit and computable.",
+    "source_operator": "kalman_filter",
+    "telemetry": "Streaming observations with timestamps; the innovation sequence and its covariance as a live model-health feed"
+   }
+  },
+  {
+   "primitive_id": "innovations_form_likelihood",
+   "name": "Innovations-form likelihood: the Gaussian likelihood of a state space (or ARMA) model factors into one-step prediction errors with their filter covariances, enabling maximum likelihood and EM estimation",
+   "verbatim_quote": "The innovations form of the likelihood of the data y1:n , which was first given by\nSchweppe (1965), is obtained using an argument similar to the one leading to (3.117)",
+   "page": "Section 6.3 (book pp. 302-307); text lines 20605-20630",
+   "latex": "- \\ln L_Y(\\Theta) = \\frac{1}{2}\\sum_{t=1}^{n} \\ln |\\Sigma_t(\\Theta)| + \\frac{1}{2}\\sum_{t=1}^{n} \\epsilon_t(\\Theta)^{\\top} \\Sigma_t(\\Theta)^{-1} \\epsilon_t(\\Theta)",
+   "symbol_and_unit_ledger": {
+    "ϵ_t(Θ)": "innovation at t under parameters Θ",
+    "Σ_t(Θ)": "innovation covariance, A_t P_t^{t-1} A_t' + R",
+    "Θ": "parameter vector collecting µ0, Σ0, Φ, Q, R and input matrices",
+    "L_Y": "likelihood of the observed data"
+   },
+   "assumptions": [
+    "Gaussian innovations, so the prediction error decomposition is exact",
+    "The EM variant treats the states as missing data and iterates between smoother-based expectations (6.63) and closed-form maximizations"
+   ],
+   "breakdown_regime": "The criterion is highly nonlinear in Θ with local optima; identification failures (redundant states, offsetting Q and R) flatten it, and the book's Newton-Raphson route needs good starting values.",
+   "domain": "state space models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The innovations likelihood is the engine's scoring rule for latent-state models: a model earns likelihood exactly by predicting each next observation well with honestly stated uncertainty, so estimation and forecast evaluation become the same act.",
+    "source_operator": "innovations_form_likelihood",
+    "telemetry": "One-step innovations and their covariances from the Kalman filter at each candidate parameter value"
+   }
+  },
+  {
+   "primitive_id": "hidden_markov_models",
+   "name": "Hidden Markov models and switching autoregression: a discrete Markov chain selects among regimes, and observations are conditionally independent given the regime",
+   "verbatim_quote": "In the Markov chain approach, we declare the dynamics of the system at time t\nare generated by one of m possible regimes evolving according to a Markov chain\nover time.",
+   "page": "Section 6.9 (book pp. 334-335); text lines 22540-22555",
+   "latex": "\\pi_{ij} = \\Pr(x_{t+1} = j \\mid x_t = i), \\qquad p_j(y_t) = p(y_t \\mid x_t = j)",
+   "symbol_and_unit_ledger": {
+    "π_ij": "regime transition probability; dimensionless, rows sum to 1",
+    "π_j": "stationary probability of regime j; dimensionless",
+    "p_j(y_t)": "regime-conditional observation density",
+    "m": "number of regimes; count"
+   },
+   "assumptions": [
+    "The hidden chain is time-homogeneous Markov and the regimes are discrete",
+    "Within a regime the observation model (often an autoregression with its own parameters) is correctly specified"
+   ],
+   "breakdown_regime": "The number of regimes is not identified by the likelihood alone, label switching plagues estimation, and filtered regime probabilities can swing sharply on single observations; a continuous state (state space model) may be the truer structure.",
+   "domain": "state space models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The HMM is the engine's discrete-regime counterpart to the Kalman filter: when a system plausibly operates in a few distinct modes with abrupt switches, the engine tracks a probability distribution over modes instead of pretending one linear law governs all periods.",
+    "source_operator": "hidden_markov_models",
+    "telemetry": "Observation streams suspected of regime change; filtered and smoothed regime probabilities as outputs"
+   }
+  },
+  {
+   "primitive_id": "stochastic_volatility",
+   "name": "Stochastic volatility: volatility is a latent autoregressive process in log variance, observed only through the returns it scales, unlike GARCH where variance is a deterministic recursion",
+   "verbatim_quote": "In SV models, the volatility is a nonlinear transform of a hidden linear autore-\ngressive process where the hidden volatility process, xt = log σt2 , follows a first order\nautoregression,",
+   "page": "Section 6.11 (book pp. 357-358); text lines 24016-24035",
+   "latex": "x_t = \\phi x_{t-1} + w_t, \\qquad r_t = \\beta \\exp(x_t/2)\\,\\epsilon_t, \\qquad x_t = \\log \\sigma_t^2",
+   "symbol_and_unit_ledger": {
+    "x_t": "log variance state; log of squared return units",
+    "φ": "volatility persistence; dimensionless, |φ| < 1",
+    "β": "scale parameter",
+    "ϵ_t": "return innovation, independent of the volatility shock w_t"
+   },
+   "assumptions": [
+    "The two shocks w_t and ϵ_t are mutually independent",
+    "The log-squared transformation yields a linear state space form with log chi-square observation noise, which is non-Gaussian and skewed"
+   ],
+   "breakdown_regime": "The observation noise in the linearized model is log chi-squared, not Gaussian, so plain Kalman filtering is only approximate and proper fitting needs simulation methods (the book uses MCMC and quasi-likelihood routes); kurtosis is generated only up to the factor exp(σ_x2) over the innovation kurtosis.",
+   "domain": "volatility",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stochastic volatility gives the engine a probabilistic volatility state rather than a deterministic variance formula: uncertainty about current risk is itself quantified, which changes how aggressively new observations are allowed to move the risk estimate.",
+    "source_operator": "stochastic_volatility",
+    "telemetry": "Return series whose squared and absolute values show persistent clustering; options are the log-squared series for the linearized fit"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "6685233edb82e64f-t1",
+   "think": "This book is the fleet standard graduate treatment of time series, and its architecture matters as much as any single result in it. Shumway and Stoffer build the subject as two parallel descriptions of the same object. In the time domain a series is characterized by its mean function and its autocovariance function, and everything else, estimation, prediction, model building, is organized around measuring dependence as a function of lag. In the frequency domain the same second order information is re-expressed as a spectral density, a distribution of variance across cycles, and the two descriptions are exact Fourier transform pairs. A reasoning engine that ingests only one of the two views is missing information that is cheap in the other view: a slow decay in the autocovariance is a concentration of spectral mass near zero frequency, and a narrow spectral peak is a long quasi-periodic memory in the lag domain.\n\nThe first discipline the book imposes is definitional honesty about stationarity. Weak stationarity, constant mean and lag-only autocovariance, is the license that makes a single observed series informative about a population: time averages can stand in for ensemble averages only under that license. The book is equally clear about the ways real series violate the license and about the graded responses available. Detrending assumes the nonstationarity is a fixed mean function. Differencing assumes it is a stochastic trend carried by a unit root. Trend stationarity and difference stationarity are different hypotheses with different forecast behavior, and the Dickey-Fuller machinery exists precisely because eyeballing cannot separate them. Fractional differencing then refines the binary choice into a continuum, with the memory parameter d interpolating between short memory ARMA behavior and full integration, and with autocorrelations that decay hyperbolically rather than exponentially.\n\nThe ARMA family is presented not as a curve fitting kit but as an algebra. The backshift operator turns models into polynomials, and the polynomials carry the theory: common factors mean parameter redundancy and non-identifiability, roots of the AR polynomial inside or on the unit circle destroy causality, roots of the MA polynomial destroy invertibility and with it the ability to recover innovations from observations. Causality and invertibility are the two gates that make the rest of the machinery legal, because the innovations representation is what connects the model to data. The innovations algorithm is the hinge of the whole book. It recursively produces one step predictors and their mean squared errors for any stationary process from its autocovariance alone, it yields the likelihood as a product of Gaussian innovation densities, and it is the scalar ancestor of the Kalman filter. Forecasting, estimation, and diagnostics are not three subjects in this book; they are three readings of the innovation sequence. A model is adequate exactly when its innovations are indistinguishable from white noise, which is what the residual ACF and the Ljung-Box statistic test.\n\nEstimation is treated with the same unity. Yule-Walker equates population and sample moments and is efficient for pure AR models. Maximum likelihood via the innovations or via the Kalman filter handles the general case and missing data. Information criteria, AIC, AICc, and BIC, are presented as estimates of prediction discrepancy with explicit penalties, a standing warning that fit alone cannot select order because residual variance decreases monotonically with parameters. The seasonal ARIMA material shows the cost of the alternative: multiplicative structure buys parsimony, a thirteen lag interaction fixed as a product of two parameters, at the price of a strong structural assumption. Spectral estimation adds a second bias and variance discipline on top: the raw periodogram never improves with sample size, so every spectral claim must state its smoothing, exactly as every time domain claim must state its order selection rule.\n\nThe state space chapters generalize everything before them. The linear Gaussian model, a Markov state observed through noise, contains ARMA, regression with autocorrelated errors, structural trend plus cycle decompositions, and the local level model as special cases. The Kalman filter is the innovations algorithm lifted to vectors, and its byproducts, the innovations and their covariance matrices, again deliver the likelihood, the treatment of missing observations, and forecasts in one pass. When the state is discrete the same two principles, a Markov hidden process and observations independent given the state, produce hidden Markov models and regime switching, the book's answer when a single linear regime cannot hold. When the conditional variance rather than the conditional mean carries the dynamics, the ARCH and GARCH family and then stochastic volatility models apply the same recursive thinking to squares and to log variances.\n\nThe multivariate chapters extend every one of these ideas rather than replacing them: cross-spectra and coherence resolve association by frequency, transfer function models let one series drive another through a rational lag filter, and principal components in the frequency domain, culminating in the spectral envelope, find the linear combinations of many series whose cyclical structure is strongest. The lesson is that adding series multiplies parameters faster than it multiplies information, so dimension reduction and frequency localization are necessities, not refinements.\n\nFor a reasoning engine the transferable payload is a set of vetoes and decompositions. Any claimed signal must survive being expressed as a filter acting on inputs, with a frequency response that says which cycles it amplifies and which it kills. Any claimed forecast must come with its innovation variance, growing with horizon in a model specific way. Any estimated relationship between two series must survive prewhitening before its cross-correlations are read as lead and lag structure, and coherence localizes that relationship by frequency instead of asserting it globally. And any latent driver story maps onto a state space form, where the driver is a state, its persistence is a transition matrix, and the observations are noisy linear readings, which makes the story estimable and falsifiable rather than rhetorical.",
+   "retrocausal_genealogy": "The lineage runs from Yule's 1927 autoregressive schemes and Walker's work on serial correlation, through the prediction theory of Kolmogorov (1941) and Wiener (1949), who first framed forecasting as projection in a Hilbert space of random variables. Box and Jenkins (1970) industrialized ARIMA modeling and the identify, estimate, diagnose cycle. Akaike's information criterion in the 1970s replaced significance testing with estimated prediction discrepancy for order choice. Kalman (1960) built his filter for aerospace guidance, and Schweppe (1965) supplied the innovations form of the likelihood. Dickey and Fuller (1979) gave unit roots a testable distribution theory. Engle (1982) and Bollerslev (1986) moved the recursion from the mean to the variance, Hosking (1981) and Granger and Joyeux (1980) fractionalized the difference operator, and Hamilton (1989) made Markov regime switching a mainstream econometric tool. Shumway and Stoffer's contribution is consolidation: one notation, one innovations thread, running from the first ACF plot to Bayesian state space sampling.",
+   "theory_of_mind": "The authors model their reader as a working scientist with regression and mathematical statistics already in hand, who will actually compute: nearly every example carries R code and a named data set from seismology, medicine, economics, or environmental science. Their model of the domain is that dependence is the phenomenon and independence the special case; classical i.i.d. statistics is presented as the degenerate limit, not the foundation. They believe a model is an approximation to be interrogated through its innovations, never a truth to be confirmed, so diagnostics and residual analysis get the same page weight as estimation. They also believe theory and practice must stay in lockstep: results are stated as properties with conditions, then immediately exercised on data, and the conditions, causality, invertibility, summability, are treated as part of the method rather than fine print.",
+   "cross_layer_veto": "Several results in this book veto moves that other layers of an engine might want to make. Nonstationarity vetoes any direct reading of a sample ACF or a levels regression: until the unit root question is settled, persistence estimates are uninterpretable. Parameter redundancy vetoes trusting significant ARMA coefficients, because a canceled factor pair manufactures them from pure noise. The inconsistency of the periodogram vetoes raw spectral peaks as evidence. Autocorrelated errors veto classical regression standard errors, and hence most naive claims of a significant driver in sequential data. Conditional heteroskedasticity vetoes constant-width forecast intervals. Finally, coherence near zero at a frequency vetoes any lead-lag story at that timescale, no matter how strong the aggregate correlation looks."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says: any phenomenon observed in sequence should be decomposed into a level, a dependence structure over lags, and an innovation stream that is what remains genuinely new at each step. Keep two dual descriptions, one indexed by lag and one by timescale, because each makes different structure visible. Treat latent drivers as states that evolve by simple laws and are seen only through noisy measurements. Judge every model by the whiteness of its own one-step errors and by penalized prediction discrepancy, never by fit. That template transfers intact to any streaming measurement problem, from sensors to markets to physiology.",
+ "gsi_mapping": "For the Galaxy Sports Institute, this book is the reference grammar for teaching and auditing time series claims: precise definitions of stationarity, dependence, and innovation; a worked example base across seismology, medicine, economics, and environmental data that shows the same machinery earning its keep in unrelated fields; and a standard of evidence, residual diagnostics, information criteria, unit root tests, that any curriculum module or research review can cite when a claimed pattern in sequential data is presented. It also supplies the Institute's bridge from classical statistics to latent state modeling, since the state space chapters grow directly out of the ARMA chapters in one notation.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, this book supplies the sequential inference chassis. Team and player performance series are handled as time series first: stationarity checked, unit roots tested, persistence estimated by ARMA structure rather than assumed. Latent form is a state space state, updated by Kalman recursions from noisy game observations, with the innovations stream monitored as the engine's surprise signal. Volatility of performance gets GARCH or stochastic volatility treatment instead of a fixed variance. Any two metrics claimed to lead or lag each other must pass prewhitening and show coherence at the claimed timescale. And the engine's own model choices are taxed by information criteria and audited by Ljung-Box tests on residuals, so structure is only kept when it pays for its parameters."
+}

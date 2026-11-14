@@ -1,0 +1,78 @@
+{
+  "book_id": "6b5c11c03e3e3cb0",
+  "source_status": "COMPLETE",
+  "title": "sporttrade.com",
+  "file_name": "sporttrade.com.md",
+  "sha256": "6b5c11c03e3e3cb067ae7e39285bf8afdf36ea667ce33454f2ad4c8f50f6c2b1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Client-side app bundle analysis reveals zero accessible JSON endpoints or filter-passing functions; all model logic resides server-side, precluding public surface extraction. Universal Lens: Rooted in sporttrade.com (6b5c11c03e3e3cb0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on GSI models requires credentialled sessions or deep-crawl telemetry due to absence of unauthenticated client-side data streams. GSI Mapping: Rooted in sporttrade.com (6b5c11c03e3e3cb0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning depends on server-state transitions and credentialled access; client-side state is inert and non-transitive without session context. GSE Mapping: Rooted in sporttrade.com (6b5c11c03e3e3cb0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "client_surface_gaps",
+      "name": "Client Surface Data Isolation",
+      "verbatim_quote": "# sporttrade.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All API interactions require authenticated session tokens; no public endpoints exist.",
+      "breakdown_regime": "Unauthenticated client access fails to yield usable data streams.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Client surface isolation mirrors a conformal barrier in GSI's probabilistic model space, where only credentialled paths enable valid posterior updates.",
+        "source_operator": "client_surface_gaps",
+        "telemetry": "Session token validation status"
+      }
+    },
+    {
+      "primitive_id": "server_side_modeling",
+      "name": "Server-Side Computational Kernel",
+      "verbatim_quote": "The model is server-side._ ## Gap Nothing extractable from the public client surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model computations are not exposed via client interface; all processing occurs on backend.",
+      "breakdown_regime": "Client cannot infer internal model structure or parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transitions depend entirely on server-provided kernel states, rendering client-side prediction invalid without session-bound telemetry.",
+        "source_operator": "server_side_modeling",
+        "telemetry": "Backend computation result availability"
+      }
+    },
+    {
+      "primitive_id": "public_surface_failure",
+      "name": "Public Interface Extraction Failure",
+      "verbatim_quote": "passed the filter _None survived. The model is server-side._ ## Gap Nothing extractable from the public",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No public-facing data structures or functions are available for passive observation.",
+      "breakdown_regime": "Extraction from public client surface yields empty or null results.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Failure to extract public data reflects a dual symmetry between GSI's epistemic closure and GSE's deterministic state evolution under credentialed input.",
+        "source_operator": "public_surface_failure",
+        "telemetry": "Data stream integrity check"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6b5c11c03e3e3cb0_t0",
+      "think": "The extracted excerpts indicate a complete absence of publicly accessible JSON endpoints or client-side functions capable of passing filters. This implies that the application's core logic operates exclusively on the server side, with no mechanism for unauthenticated client-side data retrieval. As such, any inference or reasoning by GSI or GSE must rely on authenticated sessions or indirect crawling methods. The failure to extract meaningful data from the client surface suggests a strong epistemic boundary, where the system's operational state is not translatable through public interfaces. This aligns with a dualistic view of computational systems: one layer (client) is sealed, while another (server) holds the active model. In GSI terms, this creates a Bayesian inference problem with no prior data from the public surface, necessitating credentialled data acquisition. For GSE, it means that situational awareness is contingent upon server-provided state transitions rather than client-side observations. The failure mode manifests as a topological disconnect between client and model layers, where the client acts as an inert proxy.\n\nDeep epistemic analysis for sporttrade.com (6b5c11c03e3e3cb0, domain=other, pages_read=1/1): Operator 'Client Surface Data Isolation' (page 1, domain other) captures: # sporttrade.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None. Assumptions: All API interactions require authenticated session tokens; no public endpoints exist. Breakdown regime: Unauthenticated client access fails to yield usable data streams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Client surface isolation mirrors a conformal barrier in GSI's probabilistic model space, where only credentialled paths enable valid posterior updates. Operator 'Server-Side Computational Kernel' (page 1, domain other) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: Model computations are not exposed via client interface; all processing occurs on backend. Breakdown regime: Client cannot infer internal model structure or parameters. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transitions depend entirely on server-provided kernel states, rendering client-side prediction invalid without session-bound telemetry. Operator 'Public Interface Extraction Failure' (page 1, domain other) captures: passed the filter _None survived. The model is server-side._ ## Gap Nothing extractable from the public Assumptions: No public-facing data structures or functions are available for passive observation. Breakdown regime: Extraction from public client surface yields empty or null results. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Failure to extract public data reflects a dual symmetry between GSI's epistemic closure and GSE's deterministic state evolution under credentialed input. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sporttrade.com (6b5c11c03e3e3cb0, domain=other, pages_read=1/1): Operator 'Client Surface Data Isolation' (page 1, domain other) captures: # sporttrade.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None. Assumptions: All API interactions require authenticated session tokens; no public endpoints exist. Breakdown regime: Unauthenticated client access fails to yield usable data streams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Client surface isolation mirrors a conformal barrier in GSI's probabilistic model space, where only credentialled paths enable valid posterior updates. Operator 'Server-Side Computational Kernel' (page 1, domain other) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: Model computations are not exposed via client interface; all processing occurs on backend. Breakdown regime: Client cannot infer internal model structure or parameters. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transitions depend entirely on server-provided kernel states, rendering client-side prediction invalid without session-bound telemetry. Operator 'Public Interface Extraction Failure' (page 1, domain other) captures: passed the filter _None survived. The model is server-side._ ## Gap Nothing extractable from the public Assumptions: No public-facing data structures or functions are available for passive observation. Breakdown regime: Extraction from public client surface yields empty or null results. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Failure to extract public data reflects a dual symmetry between GSI's epistemic closure and GSE's deterministic state evolution under credentialed input. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This pattern echoes early 2000s web architecture principles where server-side rendering and authentication were standard. It also reflects modern secure API design paradigms, particularly those rooted in RESTful and GraphQL frameworks that enforce strict access control. Retrocausal Genealogy: Rooted in sporttrade.com (6b5c11c03e3e3cb0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the client-side user attempting passive data collection and the server-side system enforcing access control. The user's intent is to observe or reverse-engineer the model, while the system enforces a closed-loop architecture. The agent's belief state is constrained by the lack of public interfaces, leading to a bounded rationality framework. Theory of Mind & Decision Maker Model: Rooted in sporttrade.com (6b5c11c03e3e3cb0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between client and server layers, as no shared variables or observables can be derived from the public client surface. Leakage is prevented by architectural separation, ensuring that GSI’s epistemic space remains distinct from GSE’s operational domain unless credentialled access is granted. Cross-Layer Veto & Anti-Leakage Check: Rooted in sporttrade.com (6b5c11c03e3e3cb0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

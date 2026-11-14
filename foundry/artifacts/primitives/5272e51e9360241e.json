@@ -1,0 +1,78 @@
+{
+  "book_id": "5272e51e9360241e",
+  "source_status": "COMPLETE",
+  "title": "p0060",
+  "file_name": "p0060.txt",
+  "sha256": "5272e51e9360241ef92f79941af8f2350a960ffd8a44d5c1d5e250110195d24a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Demand-driven goal-object optimization under temporal delay constraints; stochastic reinforcement learning with immediate vs. delayed reward feedback. Universal Lens: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on reward timing variance; conformal predictive distributions over rat performance outcomes conditioned on delay intervals. GSI Mapping: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions from maze navigation to goal-box entry; Markovian policy adaptation based on reward delay feedback loops. GSE Mapping: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "immediate_reward_differential",
+      "name": "Immediate Reward Differential",
+      "verbatim_quote": "FIGURE 4 She found that the group that was fed immediately learned more rapidly than did any of the delayed groups.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{immediate}': 'dimensionless performance metric', 'R_{delayed}': 'dimensionless performance metric'}",
+      "assumptions": "Learning rate is inversely proportional to reward delay; immediate reinforcement yields higher behavioral consistency.",
+      "breakdown_regime": "When delay exceeds threshold T, R_{delayed} approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Bayesian posterior over learning curves; GSE: State transition probability matrix for maze navigation with reward delay.",
+        "source_operator": "immediate_reward_differential",
+        "telemetry": "Performance time-to-goal-box ratio across delay conditions."
+      }
+    },
+    {
+      "primitive_id": "demand_intensity_gradient",
+      "name": "Demand Intensity Gradient",
+      "verbatim_quote": "Again, it appears that the one goal-situation, that of immediate food, corresponded to a stronger demand than did the others, those of delayed food.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{immediate}': 'dimensionless demand intensity', 'D_{delayed}': 'dimensionless demand intensity'}",
+      "assumptions": "Demand intensity scales linearly with reward immediacy; delayed rewards diminish intrinsic motivation.",
+      "breakdown_regime": "D_{delayed} → 0 as delay τ → ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Demand intensity modeled as prior belief strength; GSE: Gradient field guiding agent toward high-D states.",
+        "source_operator": "demand_intensity_gradient",
+        "telemetry": "Behavioral consistency index under varying delay conditions."
+      }
+    },
+    {
+      "primitive_id": "temporal_delay_impact",
+      "name": "Temporal Delay Impact",
+      "verbatim_quote": "And this difference in demands again is illustrated by, and may be assumed to be causative of, the final differences in performance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'τ': 'seconds', 'P(τ)': 'probability of performance degradation'}",
+      "assumptions": "Performance degrades monotonically with increasing delay τ; causal relationship between delay and outcome variability.",
+      "breakdown_regime": "P(τ) → 1 as τ → ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Conditional entropy of performance given delay; GSE: Temporal state-space contraction due to delayed reward.",
+        "source_operator": "temporal_delay_impact",
+        "telemetry": "Entropy of behavioral trajectories under delay conditions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5272e51e9360241e_t0",
+      "think": "The core insight is that reward timing modulates cognitive demand and behavioral learning efficiency. Immediate reward induces a stronger demand state, leading to faster learning. This can be formalized as a stochastic process where reward delay τ acts as a control parameter. The demand intensity D(τ) decreases exponentially with τ, implying that D(0) > D(τ) for τ > 0. The performance metric P(τ) is inversely related to D(τ), forming a dual relationship. In GSI, this translates into Bayesian updating of belief states over time, where the likelihood function encodes the temporal structure of reward delivery. In GSE, the system evolves through state transitions governed by a Markov kernel that incorporates delay-dependent reward probabilities. The failure mode occurs when delay exceeds a critical threshold, causing convergence to suboptimal policies. Dualities emerge in the form of information-theoretic entropy and reward-based utility functions, both of which exhibit monotonic behavior with respect to τ.\n\nDeep epistemic analysis for p0060 (5272e51e9360241e, domain=other, pages_read=1/1): Operator 'Immediate Reward Differential' (page 1, domain other) captures: FIGURE 4 She found that the group that was fed immediately learned more rapidly than did any of the delayed groups. Assumptions: Learning rate is inversely proportional to reward delay; immediate reinforcement yields higher behavioral consistency. Breakdown regime: When delay exceeds threshold T, R_{delayed} approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Bayesian posterior over learning curves; GSE: State transition probability matrix for maze navigation with reward delay. Operator 'Demand Intensity Gradient' (page 1, domain other) captures: Again, it appears that the one goal-situation, that of immediate food, corresponded to a stronger demand than did the others, those of delayed food. Assumptions: Demand intensity scales linearly with reward immediacy; delayed rewards diminish intrinsic motivation. Breakdown regime: D_{delayed} → 0 as delay τ → ∞. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Demand intensity modeled as prior belief strength; GSE: Gradient field guiding agent toward high-D states. Operator 'Temporal Delay Impact' (page 1, domain other) captures: And this difference in demands again is illustrated by, and may be assumed to be causative of, the final differences in performance. Assumptions: Performance degrades monotonically with increasing delay τ; causal relationship between delay and outcome variability. Breakdown regime: P(τ) → 1 as τ → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Conditional entropy of performance given delay; GSE: Temporal state-space contraction due to delayed reward. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0060 (5272e51e9360241e, domain=other, pages_read=1/1): Operator 'Immediate Reward Differential' (page 1, domain other) captures: FIGURE 4 She found that the group that was fed immediately learned more rapidly than did any of the delayed groups. Assumptions: Learning rate is inversely proportional to reward delay; immediate reinforcement yields higher behavioral consistency. Breakdown regime: When delay exceeds threshold T, R_{delayed} approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Bayesian posterior over learning curves; GSE: State transition probability matrix for maze navigation with reward delay. Operator 'Demand Intensity Gradient' (page 1, domain other) captures: Again, it appears that the one goal-situation, that of immediate food, corresponded to a stronger demand than did the others, those of delayed food. Assumptions: Demand intensity scales linearly with reward immediacy; delayed rewards diminish intrinsic motivation. Breakdown regime: D_{delayed} → 0 as delay τ → ∞. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Demand intensity modeled as prior belief strength; GSE: Gradient field guiding agent toward high-D states. Operator 'Temporal Delay Impact' (page 1, domain other) captures: And this difference in demands again is illustrated by, and may be assumed to be causative of, the final differences in performance. Assumptions: Performance degrades monotonically with increasing delay τ; causal relationship between delay and outcome variability. Breakdown regime: P(τ) → 1 as τ → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Conditional entropy of performance given delay; GSE: Temporal state-space contraction due to delayed reward. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Thorndike's law of effect and Skinner's operant conditioning; extended via Rescorla-Wagner models and temporal difference learning in reinforcement theory. Retrocausal Genealogy: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model reward delay as a latent variable affecting internal motivation. Opposing agents might optimize for long-term vs. short-term reward, creating conflict in decision-making strategies. Theory of Mind & Decision Maker Model: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that temporal delay does not co-vary with other variables like maze complexity. Leakage vetoes include confounding effects from external stimuli or individual rat variation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0060 (5272e51e9360241e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

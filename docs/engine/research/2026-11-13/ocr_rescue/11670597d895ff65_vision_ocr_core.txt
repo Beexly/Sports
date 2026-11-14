@@ -1,0 +1,2107 @@
+========== PAGE 1 ==========
+US011049031B2
+(12) United States Patent
+Chattopadhyay et al.
+(54) METHODS AND APPARATUS TO PREDICT
+SPORTS INJURIES
+(71) Applicant: Intel Corporation, Santa Clara, CA
+(US)
+(72) Inventors: Rita Chattopadhyay, Chandler, AZ
+(US); Kalpana A. Algotar, Chandler,
+AZ (US); Ali Ashrafi, Chapel Hill, NC
+(US); John Pilkin, Cary, NC (US)
+(73) Assignee: Intel Corporation, Santa Clara, CA
+(US)
+( * ) Notice:
+Subject to any disclaimer, the term of this
+patent is extended or adjusted under 35
+U.S.C. 154(b) by 995 days.
+(21) Appl. No.: 15/476,487
+(56)
+(10) Patent No.: US 11,049,031 B2
+(45) Date of Patent:
+Jun. 29, 2021
+References Cited
+U.S. PATENT DOCUMENTS
+8,352,488 B2 1/2013 Fleming et al.
+8,447,420 B2 5/2013 Bloodworth
+(Continued)
+FOREIGN PATENT DOCUMENTS
+WO
+2015/021349
+2/2015
+OTHER PUBLICATIONS
+Brockett, Camilla L., David L. Morgan, and U. W. E. Proske.
+"Predicting hamstring strain injury in elite athletes." Medicine &
+Science in Sports & Exercise 36.3 (2004): 379-387. (Year: 2004).*
+(Continued)
+(22) Filed:
+(65)
+Mar. 31, 2017
+Prior Publication Data
+US 2018/0107936 A1 Apr. 19, 2018
+Related U.S. Application Data
+(60) Provisional application No. 62/409,707, filed on Oct.
+18, 2016.
+(51) Int. Cl.
+G06N 7/00
+G16H 50/30
+(52) U.S. Cl.
+CPC
+(2006.01)
+(2018.01)
+(Continued)
+G06N 7/005 (2013.01); A63B 24/0062
+(2013.01); G16H 20/30 (2018.01); G16H
+50/20 (2018.01); G16H 50/30 (2018.01)
+(58) Field of Classification Search
+CPC
+A63B 24/00; A63B 24/0062; A63B 69/00;
+A63B 57/00; G06N 7/00; G06N 7/005;
+(Continued)
+Primary Examiner
+Assistant Examiner
+Kamran Afshar
+Randall K. Baldwin
+Hanley, Flight &
+(74) Attorney, Agent, or Firm
+Zimmerman, LLC
+(57)
+ABSTRACT
+A disclosed example method to predict an injury for a target
+player on a target date includes determining a first probabil-
+ity of injury of the target player based on probabilities of
+injuries of second players having similarities with the target
+player; determining a second probability of injury of the
+target player based on injuries of the target player; deter-
+mining a third probability of injury of the target player based
+on the first probability of injury of the target player and the
+second probability of injury of the target player; and gen-
+erating, by executing an instruction with the processor, a
+report of a predicted probability of injury of the target player
+(Continued)
+PREDICTION
+PHASE
+700
+START
+7021
+RECEIVE TARGET PLAYER NAME, TARGET DATE, AND
+PREDICTION WINDOW
+E
+704
+OBTAIN TOP N PLAYERS SIMILAR TO TARGET PLAYER FROM
+ASSOCIATIVE MEMORY BASE
+706 !
+QUERY ASSOCIATIVE MEMORY BASE FOR NUMBER OF
+INJURIES OF SIMILAR PLAYERS AND NUMBER OF GAMES
+PLAYED BY SIMILAR PLAYERS FROM START OF SEASON TO
+TARGET DATE
+E
+E
+708
+QUERY ASSOCIATIVE MEMORY BASE FOR NUMBER OF
+INJURIES OF TARGET PLAYER AND GAMES PLAYED BY
+TARGET PLAYER FROM START OF SEASON TO TARGET DATE
+1
+PERFORM PREDICTIVE ANALYTICS TO PREDICT INJURY
+712
+GENERATE REPORT OF PREDICTED PROBABILITY OF INJURY
+779
+710
+i
+714
+NO
+DETERMINE ACCURACY OF PREDICTED PROBABILITY OF
+INJURY?
+YES
+716
+701
+VALIDATION
+PHASE
+QUERY ASSOCIATIVE MEMORY BASE FOR NUMBER OF DAYS
+BETWEEN TARGET DATE AND FIRST SUBSEQUENT INJURY OF
+TARGET PLAYER AFTER TARGET DATE
+}
+E
+718
+DETERMINE ACCURACY OF INJURY PREDICTION
+1
+7201
+i
+GENERATE REPORT ON ACCURACY OF INJURY PREDICTION
+END
+1
+1
+1
+
+========== PAGE 2 ==========
+US 11,049,031 B2
+Page 2
+for the target date based on the third probability of injury of
+the target player.
+(51) Int. Cl.
+22 Claims, 8 Drawing Sheets
+G16H 50/20
+G16H 20/30
+A63B 24/00
+(2018.01)
+(2018.01)
+(2006.01)
+(58) Field of Classification Search
+(56)
+CPC
+..... G06N 99/00; G06F 19/00; G06F 19/24;
+G06F 19/28; G06F 17/00; G06Q 10/06;
+G09B 9/00; A61B 8/00; A61B 5/00
+See application file for complete search history.
+References Cited
+U.S. PATENT DOCUMENTS
+9,269,278 B1 * 2/2016 Turner
+2002/0082806 A1 * 6/2002 Kaub
+2004/0241629 A1 12/2004 Ondrusz et al.
+2006/0206027 A1* 9/2006 Malone
+Miura et al.
+McKown et al.
+2/2015 Nicholson
+2012/0230555 Al 9/2012
+2013/0331055 A1 12/2013
+2015/0040685 A1*
+2016/0189007 A1 6/2016 Wellington et al.
+2016/0262694 A1 9/2016 Calcano et al.
+2016/0267663 Al 9/2016 Sicking et al.
+2016/0300347 A1* 10/2016 Dunn
+G06F 19/3481
+... G08G 1/164
+702/182
+G06Q 50/22
+600/437
+A61B 5/4064
+73/862.51
+G06T 7/60
+2017/0161614 A1 6/2017 Mehta et al.
+2017/0220620 A1
+8/2017 Alzahrani
+2017/0272842 A1* 9/2017 Touma
+H04Q 9/00
+2017/0281020 A1 10/2017 Mulligan et al.
+OTHER PUBLICATIONS
+Leetun, Darin T., et al. "Core stability measures as risk factors for
+lower extremity injury in athletes." Medicine & Science in Sports
+& Exercise 36.6 (2004): 926-934. (Year: 2004).*
+Brown, Matthew. The ability of the functional movement screen in
+predicting injury rates in division I female athletes. Diss. University
+of Toledo, 2011 (Year: 2011).*
+Kampakis, Stylianos. "Predictive modelling of football injuries."
+arXiv preprint arXiv:1609.07480 (2016). (Year: 2016).*
+International Searching Authority "International Search Report"
+issued in connection with PCT patent application No. PCT/US2017/
+044925 dated Nov. 9, 2017, 3 pages.
+International Searching Authority “Written Opinion” issued in con-
+nection with PCT patent application No. PCT/US2017/044925,
+dated Nov. 9, 2017, 8 pages.
+Loshin, "Spreading the Nexus of Intelligence: Blending Massive
+Connectivity with Cognitive Computing to Enable the Insightful
+Fog," Gigaom Research, Saffron Technology, Aug. 25, 2014, 17
+pages.
+Saffron Technology, "Natural Intelligence Platform: Fusing the
+Genius of the Brain with the Power of Computing,” Oct. 2014, 10
+pages.
+Saffron Technology, “Your Brain is Cognitive, Not a Database: A
+Distributed Associative Memory Base for Natural Intelligence,"
+Jun. 2014, 22 pages.
+United States Patent and Trademark Office, "Non-Final Office
+Action," dated Feb. 5, 2020 in connection with U.S. Appl. No.
+15/717,227, 12 pages.
+United States Patent and Trademark Office, "Final Office Action,"
+issued in connection with U.S. Appl. No. 15/717,227, dated Aug. 4,
+2020, 18 pages.
+United States Patent and Trademark Office, "Non-Final Office,"
+issued in connection with U.S. Appl. No. 15/717,227, dated Nov. 19,
+2020, 18 pages.
+* cited by examiner
+
+========== PAGE 3 ==========
+ASSOCIATIVE
+102
+100.
+MEMORY
+BASE
+104
+108
+DATA
+INTERFACE
+REPORT
+GENERATOR
+PREDICTION
+REPORT(S)
+112
+114
+ACCURACY
+106
+110
+REPORT(S)
+PREDICTOR
+VALIDATOR
+FIG. 1
+U.S. Patent
+Jun. 29, 2021
+Sheet 1 of 8
+US 11,049,031 B2
+
+========== PAGE 4 ==========
+U.S. Patent
+Jun. 29, 2021
+Sheet 2 of 8
+US 11,049,031 B2
+202
+204
+206
+208
+210
+212
+214
+Sr
+Target Date Target Day]
+ID
+Name
+961
+2013-12-19 Thursday
+10211
+Taj Gibson
+962
+2013-10-31 Thursday
+10211
+Taj Gibson
+963 2013-11-21 Thursday
+10211
+Taj Gibson
+IDs
+10533.1.
+10446.1.
+10318.1
+Names
+Iman Shu..
+Joakim No.
+Matrix
+0.7222.0..
+Target Player Target Player] Similar Player Similar Player Similarity
+218
+# Of Games Played
+(Similar Players)
+30,33,30...
+# Injuries
+(Similar Players)
+220
+222
+Probability of Injury } # Gal
+(Target Player)
+(Tar
+216
+0.0.0.0.0.
+0.0000
+0.8901.0...
+2,2,2,2,2.
+0.0.0.0.0.
+0.0000
+Wesley Jo.
+0.8444.0.
+17,17,17..
+0.0.0.0.0.
+0.0000
+964 2013-12-05 Thursday
+10211
+Taj Gibson
+10533.1.
+Iman Shu.
+0.7222.0...
+30,33,30...
+0.0.0.0.0.
+0.0000
+965
+2013-10-29 Tuesday
+10211
+Taj Gibson
+10446.1
+Joakim No. 0.8901.0.
+2,2,2,2,2.
+0.0.0.0.0.
+0.0000
+966
+2014-03-13 Thursday
+10211
+Taj Gibson
+10265.1
+J.J. Hickso..
+0.7222.0..
+56,58,48.
+1.0.1.1.0.
+0.0081
+967 2014-02-04 Tuesday
+10211
+Taj Gibson
+10123.1.
+Darren Col...
+0.7857.0.
+60,58,57.
+0.0.0.0.0.
+0.0000
+968 2013-12-02 Monday
+10211
+Taj Gibson
+10533.1.
+Iman Shu..
+0.7222.0..
+30,33,30.
+0.0.0.0.0.
+0.0000
+969
+2013-12-05 Thursday
+10595
+970
+2014-01-05 Sunday
+10595
+Beno Udrih
+Beno Udrih
+971
+2013-11-10 Sunday
+10595
+Beno Udrih
+972 2014-01-03 Friday
+10595
+Beno Udrih
+10364.1.
+10123.1...
+10069.1.
+10123.1...
+Shaun Livi..
+0.8984.0..
+31,25,30.
+0.0.0.3.0.
+0.0246
+Darren Col.
+0.8175.0.
+49,46,44..
+0.0.0.0.3.
+0.0274
+Andrew B.
+0.9887.0.
+16,12,15.
+0.0.0.0.2.
+0.0000
+973
+2013-11-19 Tuesday
+10595
+Beno Udrih
+10069.1...
+Darren Col..
+Andrew B...
+0.8175.0.
+49,46,44...
+0.0.0.0.3.
+0.0274
+0.9887.0..
+16,12,15...
+0.0.0.0.2.
+0.0000
+974
+2013-12-08 Sunday
+10595
+Beno Udrih
+10364.1
+Shaun Livi.
+0.8984.0.
+31,25,30...
+0.0.0.3.0.
+0.0246
+975 2014-03-15 Saturday
+10595
+Beno Udrih
+10005.1
+Alexis Ajin.
+0.7222.0.
+49,64,70.
+0.0.0.1.2.
+0.0176
+976
+2014-03-08 Saturday
+10595
+Beno Udrih
+10005.1
+Alexis Ajin.
+0.7222.0.
+49,64,70...
+0.0.0.1.2.
+0.0176
+977
+2014-01-02 Thursday
+10595
+Beno Udrih
+10123.1.
+Darren Col...
+0.8175.0...
+49,46,44.
+0.0.0.0.3.
+0.0274
+978
+2014-04-13 Sunday
+10595
+Beno Udrih
+10205.1
+Diante Gar..
+0.7222.0...
+71,54,79.
+0.1.0.1.2.
+0.0201
+979 2013-12-22 Sunday
+10477
+Nikola Pek.
+10368.1
+Kevin Love..
+0.7577.0...
+30,22,32.
+0.0.0.0.6
+0.0548
+980 2013-11-04 Monday
+981 2013-11-10 Sunday
+982 2013-11-19 Tuesday
+983 2014-01-21 Tuesday
+10477
+Nikola Pek.
+10280.1.
+Dwight Ho.
+0.9010.0...
+18,16,10.
+0.0.2.0.0.
+0.0387
+10477
+Nikola Pek.
+10280.1
+Dwight Ho.
+0.9010.0...
+18,16,10...
+0.0.2.0.0.
+0.0387
+10477
+Nikola Pek...
+10280.1
+Dwight Ho.
+0.9010.0..
+18,16,10.
+0.0.2.0.0.
+0.0387
+10477
+Nikola Pek.
+10303.1
+Al Jefferso..
+0.7788.0.
+27,28,20.
+2.1.8.0.0.
+0.0563
+984 2014-01-27 Monday
+10477
+Nikola Pek.
+10303.1.
+Al Jefferso..
+0.7788.0..
+27,28,20...
+2.1.8.0.0.
+0.0563
+985 2013-12-15 Sunday
+10477
+Nikola Pek...
+10368.1.
+Kevin Love.
+0.7577.0.
+30.22,32
+0.0.0.0.6.
+0.0548
+986 2013-11-03 Sunday
+10477
+Nikola Pek.
+10280.1.
+Dwight Ho.
+0.9010.0.
+18,16,10..
+0.0.2.0.0.
+0.0387
+987
+2013-11-30 Saturday
+10477
+Nikola Pek..
+988
+2014-03-11 Tuesday
+10477
+Nikola Pek.
+10280.1
+10362.1.
+Dwight Ho.
+Damian Lill. 0.8280.0.
+0.9010.0.
+18,16,10..
+0.0.2.0.0.
+0.0387
+75,75,45.
+0.0.1.0.0.
+0.0000
+112
+INJURY PREDICTION REPORT
+FIG. 2A
+FIG. 2A | FIG. 2B
+
+========== PAGE 5 ==========
+U.S. Patent
+Jun. 29, 2021
+Sheet 3 of 8
+US 11,049,031 B2
+220
+222
+224
+226
+Probability of Injury # Games Played # Injuries
+228
+230
+232
+234
+236
+238
+- 240
+242
+Probability Total Probability
+(Target Player)
+(Target Player) | (Target Player)
+of Injury
+of Injury
+Nearest
+Injury
+# Days
+Free
+Day of
+# Games
+Target
+Nearest Injury
+Played
+Target Pediction
+Injury injury Accuracy
+10.
+0.0000
+30
+0
+0.0000
+0.0000
+2014-11-01 317
+Saturday
+64
+0
+0
+0
+.0.
+0.0000
+2
+0
+0.0000
+0.0000
+2014-11-01 366
+Saturday
+82
+0
+0
+0
+.0.
+0.0000
+15
+0
+0.0000
+0.0000
+2014-11-01 345
+Saturday
+69
+0
+0
+0
+0.0.
+0.0000
+30
+0
+0.0000
+0.0000
+2014-11-01
+331
+Saturday
+54
+0
+0
+0
+0.0.
+0.0000
+2
+0
+0.0000
+0.0000
+2014-11-01
+368
+Saturday
+82
+0
+0
+0
+1.0.
+0.0081
+74
+0
+0.0000
+0.0040
+2014-11-01
+233
+Saturday
+10
+0
+0
+10.0.
+0.0000
+58
+0
+0.0000
+0.0000
+2014-11-01
+270
+Saturday
+26
+U
+0
+0
+10.0.
+0.0000
+30
+0
+0.0000
+0.0000
+.3.0.
+0.0246
+13
+0
+0.0000
+0.0123
+.0.3.
+0.0274
+17
+2
+0.0588
+0.0431
+8.0.2.
+0.0000
+10
+0
+0.0000
+0.0000
+0.0.3.
+0.0274
+17
+2
+0.0588
+0.0431
+2014-11-01 334
+2014-01-11 37
+2014-04-25 475
+2014-01-11 62
+2015-04-25 477
+Saturday
+54
+0
+0
+0
+Saturday
+4
+0
+0
+0
+Saturday
+53
+0
+0
+0
+Saturday
+7
+0
+D
+0
+Saturday
+53
+0
+0
+0
+0.0.2.
+0.0000
+10
+0
+0.0000
+0.0000
+2014-01-11
+53
+Saturday
+7
+0
+0
+0
+1.3.0.
+0.0246
+13
+0
+1.1.2.
+0.0176
+24
+2
+.1.2.
+0.0176
+24
+2
+.0.3.
+0.0274
+17
+1.2.
+0.0201
+27
+2
+OlNINININ
+0.0000
+0.0123
+2014-01-11
+34
+Saturday
+4
+0
+0
+0
+0.0417
+0.0297
+2015-04-25 406
+Saturday
+46
+0
+0
+0
+0.0417
+0.0297
+2015-04-25 413
+Saturday
+46
+0
+0
+0
+0.0588
+0.0431
+2015-04-25 478
+Saturday
+53
+0
+0
+0
+0.0370
+0.0286
+2015-04-25 377
+Saturday
+43
+0
+0
+10.6
+0.0548
+30
+0
+0.0000
+0.0274
+2014-01-28
+37
+Tuesday
+4
+0
+$
+0
+0.0.
+0.0387
+18
+0
+0.0000
+0.0193
+2014-01-28
+85
+Tuesday
+16
+0
+0
+0
+0.0.
+0.0387
+18
+0
+0.0000
+0.0193
+2014-01-28
+79
+Tuesday
+16
+0
+0
+0
+0.0.
+0.0387
+18
+0
+0.0000
+0.0193
+2014-01-28
+70
+Tuesday
+16
+0
+0
+0
+0.0.
+0.0563
+34
+1
+0.0294
+0.0429
+2014-03-16
+54
+Sunday
+3
+0
+0
+0
+.0.
+0.0563
+34
+0.0294
+0.0429
+2014-03-16
+48
+Sunday
+3
+0
+0
+0
+.6.
+0.0548
+30
+0
+0.0000
+0.0274
+2014-01-28
+44
+Tuesday
+4
+0
+0
+0
+.0.
+0.0387
+18
+0
+0.
+0.0387
+18
+0
+0.0000
+37
+2
+olola
+0.0000
+0.0193
+2014-01-28
+86
+Tuesday
+16
+0
+0
+0
+0.0000
+0.0193
+0.0541
+0.0271
+2014-01-28 59
+2014-11-19 253
+Tuesday
+Wendesday
+16
+0
+0
+0
+2
+0
+{ }
+0
+112
+INJURY PREDICTION REPORT
+FIG. 2B
+FIG. 2A | FIG. 2B
+
+========== PAGE 6 ==========
+300
+SI NO.
+302
+304
+306
+308
+3102
+312
+314
+OPTIMAL
+PW
+FPR
+TPR
+FNR
+TNR
+ACCURACY
+HI
+0.05
+0.171
+0.7
+0.3
+0.829
+0.83
+2
+WIN
+2
+3
+WIN
+0.171
+0.58
+0.42
+0.829
+0.83
+0.17
+0.53
+0.47
+0.83
+0.83
+4
+4
+0.17
+0.46
+0.54
+0.83
+0.83
+5
+5
+0.169
+0.49
+0.51
+0.831
+0.83
+6
+6
+0.168
+0.49
+0.51
+0.832
+0.83
+7
+7
+0.167
+0.45
+0.55
+0.833
+0.83
+9
+10
+800
+8
+00
+0.167
+0.45
+0.55
+0.833
+0.83
+10
+0.168
+0.44
+0.56
+0.832
+0.83
+12
+0.168
+0.42
+0.58
+0.832
+0.83
+11
+14
+0.167
+0.4
+0.6
+0.833
+0.82
+PREDICTION PERFORMANCE TABLE
+FIG. 3
+U.S. Patent
+Jun. 29, 2021
+Sheet 4 of 8
+US 11,049,031 B2
+
+========== PAGE 7 ==========
+<MMM
+илия
+TRUE-POSITIVE RATE (TPR)
+0.8
+0.7
+0.6
+0.5
+0.4
+00 0.3
+0.2
+0.1
+wwws
+0
+0
+400
+TPR
+EXERS
+44.44-444
+****
+www.w
+wwwww
+wwww
+XARX
+}
+****
+www.w
+T
+****
+1
+1
+ch.tn
+*RARE
+www
+wwwwww
+wwwww
+PLEVELS
+1
+* 0.7
+FALSE-NEGATIVE RATE (FNR)
+0.75
+0.6
+0.5
+0.3+
+1
+0.25
+wwww
+L
+FNR
+www.
++--
+wwwwww
+wwwwww
+мачили
+www
+мачальна
+www
+wwwwww
+-
+2
+4
+9
+B
+10
+12
+14
+PREDICTION WINDOW (PW)
+FIG. 4
+16
+500
+FPR
++
+wwwww..
+ЧАЧЫНЫ
+600
+FALSE-POSITIVE RATE (FPR)
+0.1715,
+0.171-
+0.1705
+0.17
+0.1695
+0.169|-
+0.1685
+0.168
+0.1675-
+0.167
+0.1665
+H
+0
+THE JIH
+Wwwwwww
+Hwwwwwwww
+www.w
+2
+THESTHET
+0
+2
+++
+w
+аланчыча
+L
+L
++
+TITULLIT
+T
+1
+wwww
+чаплачени
+2
+4
+6
+8
+10
+12
+PREDICTION WINDOW (PW)
+FIG. 5
+T
+началачи
+عيدا عهد هر مرزا
+J
+แนมม
+wwwww
+www
+PUPPL
+www.nh.
+L
+L
+F
+4
+10
+12
+14
+16
+PREDICTION WINDOW (PW)
+chstabent
+14
+16
+U.S. Patent
+Jun. 29, 2021
+Sheet 5 of 8
+US 11,049,031 B2
+FIG. 6
+
+========== PAGE 8 ==========
+U.S. Patent
+Jun. 29, 2021
+Sheet 6 of 8
+US 11,049,031 B2
+PREDICTION
+PHASE
+700
+701
+NO
+www
+START
+XXXX
+XXXX
+XXXX
+D
+RECEIVE TARGET PLAYER NAME, TARGET DATE, AND
+PREDICTION WINDOW
+XK
+702 1
+OBTAIN TOP N PLAYERS SIMILAR TO TARGET PLAYER FROM
+ASSOCIATIVE MEMORY BASE
+I
+QUERY ASSOCIATIVE MEMORY BASE FOR NUMBER OF
+INJURIES OF SIMILAR PLAYERS AND NUMBER OF GAMES
+PLAYED BY SIMILAR PLAYERS FROM START OF SEASON TO
+TARGET DATE
+704
+1
+}
+706 1
+708
+1
+1
+1
+1
+QUERY ASSOCIATIVE MEMORY BASE FOR NUMBER OF
+INJURIES OF TARGET PLAYER AND GAMES PLAYED BY
+TARGET PLAYER FROM START OF SEASON TO TARGET DATE
+710
+1
+1
+☐ PERFORM PREDICTIVE ANALYTICS TO PREDICT INJURY
+712
+GENERATE REPORT OF PREDICTED PROBABILITY OF INJURY
+}
+1
+L
+CODO
+LAMAN ARKA
+VALIDATION
+PHASE
+A
+SINAIAK Londo
+KAA
+KAKA
+LAND
+SNIMAK
+KAAK
+LAMO
+SAXA
+44
+DETERMINE ACCURACY OF PREDICTED PROBABILITY OF
+INJURY?
+YES
+TAAN
+QUERY ASSOCIATIVE MEMORY BASE FOR NUMBER OF DAYS
+BETWEEN TARGET DATE AND FIRST SUBSEQUENT INJURY OF
+TARGET PLAYER AFTER TARGET DATE
+GOO.
+XXAK
+www
+714 1
+716 1
+}
+718 1
+DETERMINE ACCURACY OF INJURY PREDICTION
+I
+GENERATE REPORT ON ACCURACY OF INJURY PREDICTION
+720 1
+44
+XED
+CLA
+G
+4
+END
+444
+CALL
+QXF
+KED
+-
+FIG. 7
+GLKED
+
+========== PAGE 9 ==========
+U.S. Patent
+Jun. 29, 2021
+Sheet 7 of 8
+US 11,049,031 B2
+START
+ACCESS INJURY AND GAME DATA OF SIMILAR PLAYERS AND
+TARGET PLAYER
+ACCESS SIMILARITY FACTORS RELATIVE TO TARGET PLAYER
+RANGING BETWEEN START OF SEASON AND TARGET DATE
+802
+804
+806
+COMPUTE PROBABILITIES OF INJURIES OF SIMILAR PLAYERS
+COMPUTE SUM OF WEIGHTED PROBABILITIES OF INJURIES OF
+SIMILAR PLAYERS
+808
+810
+COMPUTE SUM OF SIMILARITY FACTORS OF SIMILAR
+PLAYERS
+812
+COMPUTE SIMILAR PLAYER-BASED PROBABILITY OF INJURY
+OF TARGET PLAYER (P(I/S))
+814
+COMPUTE TARGET PLAYER-BASED PROBABILITY OF INJURY
+OF TARGET PLAYER (P(I/T))
+816
+COMPUTE TOTAL PROBABILITY OF INJURY OF TARGET PLAYER
+(P(I))
+PROVIDE TOTAL PROBABILITY OF INJURY OF TARGET PLAYER
+(P(I)) AS PREDICTED PROBABILITY OF INJURY OF TARGET
+PLAYER TO REPORT GENERATOR
+END
+FIG. 8
+818
+
+========== PAGE 10 ==========
+U.S. Patent
+L
+KKKKKKKK
+nnnnnnn
+(KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+(KKKKKKKK
+KKKKKKKK
+nnnnnnnn
+10000000
+Jun. 29, 2021
+Sheet 8 of 8
+wwwwwwwwwww
+wwwwwww
+wwwwww
+www
+L
+wwwwwww
+NON-
+VOLATILE
+MEMORY
+932
+916
+wwwww
+wwwwww
+wwwwwww
+wwwwwwwwwwwwww
+MASS
+STORAGE
+102
+928
+900
+932
+922
+914
+INPUT
+DEVICE(S)
+VOLATILE
+MEMORY
+سم
+920
+112
+114
+INTERFACE
+932
+912
+L
+924
+PROCESSOR
+OUTPUT
+DEVICE(S)
+104
+108
+106
+110
+LOCAL
+MEMORY
+www
+913
+932
+www
+wwwwwww
+wwwwww
+www
+wwwwww
+918
+www
+wwwwwww
+www
+wwwwwww
+FIG. 9
+L
+US 11,049,031 B2
+ради
+932
+CODED
+INSTRUCTIONS
+nnnnnnn
+1000000
+1000000
+wwwwwww
+10x0000000
+1000000
+926
+NETWORK
+
+========== PAGE 11 ==========
+1
+US 11,049,031 B2
+METHODS AND APPARATUS TO PREDICT
+SPORTS INJURIES
+RELATED APPLICATIONS
+This patent claims the benefit of U.S. Provisional Patent
+Application No. 62/409,707, filed on Oct. 18, 2016, and
+entitled, "Methods and Apparatus to Predict Sports Injuries,"
+which is hereby incorporated herein by reference in its
+entirety.
+FIELD OF THE DISCLOSURE
+The present disclosure relates generally to machine-based
+data processing and, more particularly, to methods and
+apparatus to predict sports injuries.
+BACKGROUND
+5
+10
+15
+20
+Sports are played on many levels ranging from youth
+sports to national and international professional-level sports.
+In many levels of competition, player and team statistics are
+often collected to memorialize past player and team perfor-
+mances. Many fans use such statistics data to follow the 25
+progress of players and teams during a sports season. Such
+statistics can also be used by teams and/or the players to
+generate play/competition strategies, build teams, negotiate
+contracts, etc. In addition, such statistics can also be used by
+business organizations to make decisions on athlete spon-
+sorships, team sponsorships, how to spend advertising dol-
+lars related to sporting events, etc.
+BRIEF DESCRIPTION OF THE DRAWINGS
+FIG. 1 depicts an example apparatus to predict sports
+injuries in accordance with the teachings of this disclosure.
+FIGS. 2A and 2B illustrate an example injury prediction
+report showing predictions of injuries for target participants.
+FIG. 3 illustrates an example prediction performance
+table showing accuracies of injury predictions generated by
+the example apparatus of FIG. 1.
+30
+35
+40
+FIG. 4 illustrates an example graph showing true-positive
+rates (TPRS) relative to corresponding injury predictions 45
+determined by the example apparatus of FIG. 1.
+FIG. 5 illustrates an example graph showing false-nega-
+tive rates (FNRs) relative to corresponding injury predic-
+tions determined by the example apparatus of FIG. 1.
+FIG. 6 illustrates an example graph showing false-posi- 50
+tive rates (FPRs) relative to corresponding injury predictions
+determined by the example apparatus of FIG. 1.
+FIG. 7 is a flow diagram representative of example
+machine readable instructions that may be executed by a
+processor to predict and/or validate probabilities of sports 55
+injuries in accordance with the teachings of this disclosure.
+FIG. 8 is a flow diagram representative of example
+machine readable instructions that may be executed by a
+processor to perform a predictive analytics process to predict
+probabilities of sports injuries in accordance with the teach-
+ings of this disclosure.
+60
+FIG. 9 is an example processor platform capable of
+executing the example computer readable instructions rep-
+resented by FIGS. 7 and 8 to implement the example
+apparatus of FIG. 1 in accordance with teachings of this 65
+disclosure to predict and/or validate probabilities of sports
+injuries.
+2
+The figures are not to scale. Wherever possible, the same
+reference numbers will be used throughout the drawing(s)
+and accompanying written description to refer to the same or
+like parts.
+DETAILED DESCRIPTION
+Injuries of athletes (e.g., in-game/in-competition injuries)
+are quite common. Such injuries range from minor bruises
+to fatal injuries. Injuries affect the morale of the players and
+the team. Such injuries can also cause significant financial
+losses to the sports organizations by way of salary losses,
+medical expenses, losses due to reduced fan attendance, etc.
+Examples disclosed herein may be used to decrease the
+likelihood of injuries and/or the impact of such injuries on
+athletes, teams, and/or sports organizations by predicting
+probabilities of injuries of athletes based on analyses of
+athletic/sports records of other similar players identified by
+a cognitive framework.
+Examples disclosed herein may be used to predict occur-
+rences of sports injuries. Examples disclosed herein may be
+used for a number of different sports (e.g., basketball,
+baseball, American football, soccer/(international futbol),
+lacrosse, rugby, cricket, boxing, volleyball, swimming, ten-
+nis, track and field, etc. For example, techniques disclosed
+herein may be used to predict in-game injuries in a partici-
+pant (e.g., an athlete, a player, a participant, etc.) before a
+particular game or competition. Disclosed examples include
+a predictive framework that uses cognitive technologies and
+methods to identify similar participants based on the similar
+participants' performance data such as competition achieve-
+ments (e.g., number of points scored (goals, baskets, field
+goals, touchdowns, home runs, etc.), number of games
+played, etc.), fitness level (e.g., mechanical and physiologi-
+cal loads measured using accelerometers during a game/
+competition, an average run time, etc.), and/or injury records
+(e.g., number of past injuries).
+Examples disclosed herein include a cognitive framework
+that uses an associative memory base (AMB) (e.g., an
+associative database that may be based on Saffron's asso-
+ciative memory base technology developed and provided by
+Saffron Technology of Los Altos, Calif., an Intel Company),
+which identifies similar participants based on associations of
+different attributes, measured using a Kolmogorov Com-
+plexity distance measure.
+Disclosed examples predict the probability of injury of a
+target participant, based on the injury data distribution of a
+top number of N (e.g., five, or any other number) most
+similar athletes and similarity factors of those similar par-
+ticipants. The similarity factors of the similar athletes rep-
+resent degrees of similarity between the similar athletes and
+the target participant. Example trials of the disclosed cog-
+nitive framework have been successfully conducted to pre-
+dict injuries for National Basketball Association (NBA)
+players based on data from the 2013, 2014, and 2015
+basketball seasons. However, examples disclosed herein
+may additionally or alternatively be used in connection with
+other sports.
+Disclosed examples may be used to prevent player inju-
+ries, thus, enabling better team health and game schedule
+management. Disclosed examples may also be used to
+improve revenue generated by advertising, fan attendance
+and merchandising.
+Disclosed examples leverage empirical evidence that in-
+game injuries in athletes are a byproduct of the athletes'
+physiological load and mechanical load. In examples dis-
+closed herein, physiological load is an accumulative value
+
+========== PAGE 12 ==========
+3
+US 11,049,031 B2
+representing physiological load on an athlete, involving
+distance traveled, average speed and the athlete's weight. In
+examples disclosed herein, mechanical load is an accumu-
+lative value representing mechanical load on an athlete's
+body and accelerations and decelerations. These factors are
+in-turn dependent upon a player's fitness level, which has a
+significant impact on the chances of the athlete sustaining an
+injury. Examples disclosed herein use athletes' histories of
+previous injuries as a predictor of future injuries.
+5
+10
+Examples disclosed herein identify similar athletes to a
+target participant (e.g., a participant for whom an injury is
+being predicted), based upon a number of different perfor-
+mance data (e.g., competition achievements and/or fitness
+characteristics) over a prediction window (e.g., a previous
+number of day-range intervals such as the last 7, 14 and 30 15
+days) leading up to a target game/competition date (e.g.,
+target date of a game/competition for which an injury of the
+target participant is being predicted). Example performance
+data can include the cumulative physiological and mechani-
+cal loads, number of games played, points scored (e.g.,
+goals, baskets, field goals, touchdowns, home runs, etc.),
+average run time in seconds, and/or any other performance
+data that can be collected/tracked for different players.
+20
+30
+35
+In examples disclosed herein, injury histories of the
+similar athletes, their similarity factors as measured using 25
+data in an associative memory base (AMB) platform, and the
+injury history of the target participant are used to predict the
+probability of injury of the target participant in a next
+prediction window (e.g., 7 days, 14 days, 21 days, etc.)
+leading up to a target game/competition date (e.g., a target
+date). In examples disclosed herein, a similarity factor is a
+percentage (e.g., a percent value) representative of how
+similar performance data parameters of a similar player are
+to corresponding performance data of a target player based
+on a Kolmogorov Complexity analysis (e.g., distances
+between player attributes). For example, the Kolmogorov
+Complexity analysis determines distances or differences
+between first player performance data parameters of the
+similar players and second player performance data param-
+eters of the target players. In some examples, a similarity 40
+factor may additionally or alternatively represent a degree of
+similarity between performance data parameters of a similar
+player and corresponding performance data of a target
+player based on cosine similarity between attribute vectors
+(e.g., performance data) and/or based on frequencies or 45
+counts of co-occurrences of different attributes (e.g., the
+frequency or count of performance data being the same
+between the two players).
+Examples disclosed herein are useful over prior solutions
+in a number of ways. For example, disclosed examples 50
+employ predictive analytics that are based on performance
+and fitness records of similar athletes relative to the target
+participant. As such, the predictive analytics are adaptive
+and useful for real-time analysis while new performance
+data is being annotated, updated, and/or added because there 55
+is no requirement for offline, or prior, training on annotated
+data, updated data, and/or new data. Examples disclosed
+herein offer improvements in accuracy and computation
+efficiency over prior methods based on traditional machine
+learning techniques that do require such offline, or prior,
+training on annotated data, updated data, and/or new data.
+In addition, since the disclosed examples do not rely on a
+pre-learned model, the disclosed examples are highly flex-
+ible with respect to, among other aspects, adding or remov-
+ing attributes or changing similarity measuring parameters. 65
+Also, since examples disclosed herein are not based on
+traditional classification methods, the disclosed examples
+60
+provide comparatively much better performance under
+unbalanced or sparse data. For example, results generated by
+examples disclosed herein provide a 70% true-positive rate
+with just 1.6% positive samples in data.
+Unlike prior model-based methods, examples disclosed
+herein are not only based on injury data distribution of
+similar athletes, but also take into consideration injury
+history of target participants. As such, accuracies of injury
+predictions are increased using examples disclosed herein.
+In test cases using examples disclosed herein, 80% predic-
+tion accuracy was achieved in predicting injuries for NBA
+players based on sports data provided by Kinduct Technolo-
+gies of Halifax, Nova Scotia, Canada.
+In addition, examples disclosed herein employ a rich
+sports database and provide improved injury predictions
+over time as more records of athletes' data are added. Such
+improvements in injury prediction accuracy based on added
+data records are achieved without any additional effort or
+human intervention, as the cognitive framework of the
+disclosed examples need not be re-trained or updated.
+FIG. 1 depicts an example apparatus 100 to predict sports
+injuries in accordance with the teachings of this disclosure.
+The example apparatus 100 includes an example data inter-
+face 104, an example predictor 106, an example report
+generator 108, and an example validator 110. In the illus-
+trated example, the data interface 104 is in communication
+with an associative memory base (AMB) 102 and may query
+the AMB 102 using, for example, JavaScript, python, etc.
+The example AMB 102 is an associative database or data
+structure that stores player performance data parameters in
+an associative manner on a large number of players that
+participate in a sports league. Example player performance
+data parameters include physiological load (physio_load),
+mechanical load (mechanical_load), mechanical intensity
+(mechanical_intensity), physical intensity (physical_inten-
+sity), number of games played (games_played), average
+running seconds (avg_seconds), average field goals
+(avg_field_goals), previous injuries (prev_injuries), position
+played, seconds played, average/moving average of seconds
+played, seconds played from a previous season, venue
+played, venue floor type, specific competitive division,
+venue temperature, player temperature, perspiration amount,
+type of shoes worn, types of protective gear worn, injuries
+incurred against particular opponents, opponent's playing
+style (e.g., offensive alignment, defensive alignment), player
+age, player's physical attributes (e.g., height, weight, arm
+reach, finger length, body mass index (BMI), electrocardio-
+gram (ECG) measures, diastolic blood pressure, systolic
+blood pressure, etc.), all-star status, most valuable player
+(MVP) status, playing style (e.g., offensive, defensive,
+aggressive, high-contact play, low-contact play, shot block-
+ing, etc.). In other examples, fewer, more, and/or different
+performance data parameters may be stored by the AMB 102
+for use in accordance with the teachings of this disclosure.
+In some examples, performance data parameters can be
+selected for use with techniques disclosed herein based on
+empirical analysis of what types of performance data pro-
+duce high prediction accuracies for sports injuries. In some
+examples, some performance data parameters may be
+selected based on whether they contribute to a player's level
+of muscle fatigue. In some examples, performance data
+parameters may be selected based on secondary effects that
+may create higher probabilities of injury. For example,
+venue temperature, player temperature, and/or perspiration
+amount may be indicative of excessive player perspiration
+that creates slippery floors, which could lead to higher
+probabilities of slip and fall injuries. In some examples,
+
+========== PAGE 13 ==========
+5
+US 11,049,031 B2
+10
+performance data parameters may include the ability of
+venue staff to address venue conditions (e.g., slippery floors,
+humidity, temperature, etc.) in an effective manner to lessen
+the likelihood of sports injuries arising from such venue
+conditions. Examples disclosed herein use relationship 5
+strengths (e.g., similarities) between the player performance
+data parameters of different players represented in the AMB
+102 to predict probabilities of sports injuries of target
+players. The AMB 102 may be implemented using Saffron's
+associative memory base technology developed and pro-
+vided by Saffron Technology. In some examples, the AMB
+102 is part of the apparatus 100, while in other examples the
+AMB 102 is implemented separate from the apparatus 100.
+The data interface 104 of the illustrated example obtains
+a number of player performance data parameter values for
+target participants and similar athletes from the AMB 102. In
+the illustrated example, the data interface 104 obtains data
+from the AMB 102 for a specified number (e.g., five) of most
+similar athletes (e.g., athletes most similar in performance 20
+data to the target participant). The AMB 102 of the illus-
+trated example measures similarities between the target
+participant's records and records of other players repre-
+sented in the database based on associations measured using
+Kolmogorov Complexity and returns identifiers (IDs) of the 25
+specified number of most similar athletes along with their
+similarity factors.
+The example predictor 106 performs predictive analytics,
+which computes the probability of in-game injury of the
+target participant based on the performance data parameters
+of the target participant and similar athletes (e.g., past
+injuries, game records, etc. of the target participant and the
+similar athletes) obtained by the data interface 104 from the
+AMB 102, and based on the similarity factors between the
+target participant and the similar athletes.
+15
+30
+35
+The example report generator 108 generates example
+injury prediction reports 112 providing probabilities of inju-
+ries of target participants predicted by the predictor 106 for
+target game/competition dates. An example injury prediction
+report 112 is shown in FIGS. 2A and 2B. Turning briefly to 40
+FIGS. 2A and 2B, fields in the example injury prediction
+report 112 include target date 202, weekday of target date
+204, target player ID 206, target player name 208, similar
+players ID 210, similar players names 212, similarity matrix
+214, # of games played by similar players 216, # of injuries 45
+of similar players 218, probability of injury based on similar
+players 220, # games played by target player until target date
+222, # of injuries of target player until target date 224,
+probability of injury based on target player's history 226,
+total probability of injury based on similar and target player 50
+228, date of first injury 230, # of days from target date to first
+injury date 232, week day first injury reported 234, # of
+games played by target player before first injury and after
+target date 236, target injury prediction 238, target injury
+status with 7-day prediction window 240, and prediction
+accuracy 242. In other examples, the injury prediction report
+112 may have fewer, more, and/or different data fields.
+55
+Returning to FIG. 1, the example report generator 108
+also generates example accuracy reports 114 on the accura-
+cies of past predictions. For example, after a target game/ 60
+competition date, the validator 110 assesses the accuracies
+of injury predictions determined by the predictor 106 for
+target participants on the target game/competition date. After
+determining accuracies, the report generator 108 can gen-
+erate the accuracy reports 114 showing percentages or 65
+degrees of accuracy between the injury predictions and
+actual injuries of target participants. Example data that may
+6
+be generated by the validator 110 for such accuracy reports
+114 is shown in the example prediction performance table
+300 of FIG. 3.
+While an example manner of implementing the apparatus
+100 is illustrated in FIG. 1, one or more of the elements,
+processes and/or devices illustrated in FIG. 1 may be com-
+bined, divided, re-arranged, omitted, eliminated and/or
+implemented in any other way. Further, the example AMB
+102, the example data interface 104, the example predictor
+106, the example report generator 108, the example valida-
+tor 110 and/or, more generally, the example apparatus 100 of
+FIG. 1 may be implemented by hardware, software, firm-
+ware and/or any combination of hardware, software and/or
+firmware. Thus, for example, any of the example AMB 102,
+the example data interface 104, the example predictor 106,
+the example report generator 108, the example validator 110
+and/or, more generally, the example apparatus 100 could be
+implemented by one or more analog or digital circuit(s),
+logic circuits, programmable processor(s), application spe-
+cific integrated circuit(s) (ASIC(s)), programmable logic
+device(s) (PLD(s)) and/or field programmable logic
+device(s) (FPLD(s)). When reading any of the apparatus or
+system claims of this patent to cover a purely software
+and/or firmware implementation, at least one of the example
+AMB 102, the example data interface 104, the example
+predictor 106, the example report generator 108, and/or the
+example validator 110 is/are hereby expressly defined to
+include a tangible computer readable storage device or
+storage disk such as a memory, a digital versatile disk
+(DVD), a compact disk (CD), a Blu-ray disk, etc. storing the
+software and/or firmware. Further still, the example appa-
+ratus 100 may include one or more elements, processes
+and/or devices in addition to, or instead of, those illustrated
+in FIG. 1, and/or may include more than one of any or all the
+illustrated elements, processes and devices.
+FIGS. 3-6 show results of predictive analytics performed
+by the example apparatus 100 of FIG. 1 for different
+prediction windows. In the illustrated examples, a true-
+positive rate (TPR) of 70% was achieved using highly
+unbalanced data (e.g., 1.6% positive cases). FIG. 3 illus-
+trates an example prediction performance table 300 showing
+accuracies of injury predictions generated by the example
+apparatus 100. In table 300, different sports injury prediction
+accuracies are shown in a number of rows for different
+prediction IDs (e.g., prediction IDs labeled as SI No. in FIG.
+3). The example table 300 includes an example optimal
+threshold (TH) column 302, an example prediction window
+(PW) column 304, an example false-positive rate (FPR)
+column 306, an example true-positive rate (TPR) column
+308, an example false-negative rate (FNR) column 310, an
+example true-negative rate (TNR) column 312, and an
+example accuracy column 314. The example optimal thresh-
+old column 302 includes thresholds that are used to desig-
+nate the absence or presence of the future injury. For
+example, an optimal threshold of 0.05 indicates that a
+probability of injury less than 0.05 is indicative of no future
+injury, whereas a probability of injury equal to or greater
+than 0.05 is indicative of the occurrence of a future injury.
+The example PW column 304 includes prediction windows,
+which are day-range windows extending between the date a
+prediction is made and a target date of a game/competition.
+Different prediction windows may be based on the number
+of days (e.g., a days-range) before a target game/competition
+date that results in the most accurate predictions.
+The example FPR column 306 includes numbers that
+represent false indicators of positive rates for propensities of
+injury. The example TPR column 308 includes numbers that
+
+========== PAGE 14 ==========
+7
+US 11,049,031 B2
+represent true indicators of positive rates for propensities of
+injury. The example FNR column 310 includes numbers that
+represent false indicators of negative rates for propensities
+of injury. The example TNR column 312 includes numbers
+that represent true indicators of negative rates for propen- 5
+sities of injury. The example accuracy column 314 includes
+percentages of accuracies between predicted injuries and
+confirmed occurrences of injuries.
+10
+The example rates (FPR, TPR, FNR, TNR) shown in the
+table 300 of FIG. 3 are representative of ratios of cases when
+injuries were or were not predicted divided by cases when
+such predicted injuries did or did not occur. For example, an
+FPR is representative of a ratio of injuries that were pre-
+dicted relative to actual non-occurrences of one or more of
+those injuries in a game/competition. A TPR is representa- 15
+tive of a ratio of injuries that were predicted relative to actual
+occurrences of one or more of those injuries. An FNR is
+representative of a ratio of injuries not predicted relative to
+actual occurrences of one or more of those injuries. A TNR
+is representative of a ratio of injuries not predicted relative 20
+to actual non-occurrences of one or more of those injuries.
+In the illustrated example of FIG. 3, TPR is very high
+(70%) with one day as a prediction window. In the example
+associative memory base 102 of FIG. 1, player injuries are
+not linked to corresponding games. As such, injuries 25
+reported within one day after a game date are considered to
+have occurred on that game date. In addition, validations of
+injury predictions show that injury predictions generated
+using a one day prediction window have a high level of
+accuracy. Also, FNR is lowest when the prediction window 30
+is between 1-3 days (30%-47%) before a target game/
+competition date. In addition, FPR is very good for all
+prediction windows (~17%). The difference is not significant
+(e.g., the variation in FPR among different prediction win-
+dows shows a decrease from -19% (with all injuries) 35
+to -17%). In the illustrated example, the removal of contact
+injuries removed noise from data by increasing credibility of
+injury cases, hence increasing TPR and reducing FPR.
+FIG. 4 illustrates an example TPR graph 400 showing
+TPRs relative to corresponding injury predictions deter- 40
+mined by the example apparatus 100 of FIG. 1. In the
+example TPR graph 400, higher TPRs (circled) show better
+predictions. In the illustrated example of FIG. 4, the TPR
+was the highest with one day as a prediction window
+spanning the date on which the prediction was determined 45
+and the target game/competition date for which the in-game
+injury was predicted. FIG. 5 illustrates an example FNR
+graph 500 showing FNRs relative to corresponding injury
+predictions determined by the example apparatus 100 of
+FIG. 1. In the example FNR graph 500, lower TPRs (circled) 50
+show better predictions. FIG. 6 illustrates an example FPR
+graph 600 showing FPRs relative to corresponding injury
+predictions determined by the example apparatus 100 of
+FIG. 1. In the example FPR graph 600, lower FPRs (circled)
+show better predictions.
+55
+Examples disclosed herein were tested and proven on
+around 8000 game date and player combinations from an
+NBA sports database (e.g., the AMB 102 of FIG. 1). The
+disclosed example predictive framework predicted injuries
+in players based on top most similar players obtained 60
+following an all-but-one selection methodology. The dis-
+closed examples predicted injuries of players with 83%
+accuracy in a wide range of prediction windows spanning
+1-14 days.
+Examples disclosed herein can be extended to include any
+number of similar athletes and different parameters from the
+AMB 102 for identifying similar athletes such as from
+65
+8
+opponent teams, etc. In addition, probability of injury cal-
+culations can be modulated to account for different time
+periods in a sport season. For example, injuries can be more
+likely during the latter part of a season.
+FIG. 7 is a flow diagram representative of example
+machine readable instructions that may be executed by a
+processor (e.g., the example processor 912 of FIG. 9) to
+predict and/or validate probabilities of sports injuries in
+accordance with the teachings of this disclosure. The
+example process of FIG. 7 is separated into two phases,
+namely a prediction phase 700 and a validation phase 701.
+In the prediction phase 700, the example predictor 106 of
+FIG. 1 predicts injuries of target participants for target dates
+(e.g., target game dates, target competition dates, etc.) based
+on predictive analytics of performance data collected for a
+current sport's season (e.g., from a start of the sport's season
+to a target date). In the validation phase 701, the validator
+110 determines accuracies of the injury predictions after the
+target dates have passed.
+Turning in detail to FIG. 7, initially, during the prediction
+phase 700, the example predictor 106 (FIG. 1) receives a
+target player name, a target date, and a prediction window
+(block 702). The example data interface 104 obtains the top
+N players similar to the target player from the AMB 102
+(block 704). For example, the data interface 104 may query
+the AMB 102 (e.g., using JavaScript, python, etc.) to find the
+top N players that are most similar to the target player. In the
+illustrated example, the AMB 102 can use a priority ranking
+of the similar players using a Kolmogorov complexity
+metric based on similarities in cumulative values of perfor-
+mance data parameters over the last 7, 14, and 21 days
+within a sport's season before a target date. In this manner,
+at block 704, the data interface 104 can receive from the
+AMB 102 the player IDs of the selected top N players
+having more similarities with the target player based on the
+performance data parameters than other players in the AMB
+102. The periodic intervals of 7, 14, and 21 days for which
+to access performance data are examples that may be
+selected to increase the accuracies of injury predictions for
+subsequent games. Any other suitable intervals may be used
+based on desired levels of accuracy and available data to suit
+the needs of particular implementations. In the illustrated
+example, the selecting of the top N similar players is based
+on a priority ranking of performance data parameters. An
+example two-level priority ranking of performance data
+parameters that may be employed for selecting the top N
+similar players at block 704 is provided as follows in
+association with performance data parameters (a)-(g), is: (a)
+physiological load (physio_load) (priority level 1), (b)
+mechanical load (mechanical_load) (priority level 1), (c)
+mechanical intensity (mechanical_intensity) (priority level
+2), (d) physical intensity (physical_intensity) (priority level
+1), (e) number of games played (games_played) (priority
+level 1), (f) average running seconds (avg_seconds) (priority
+level 1), and (g) average field goals (avg_field_goals) (pri-
+ority level 1). In some examples, fewer, more, and/or other
+performance data parameters may be employed. In addition,
+any number of priority levels may be employed, and the
+priority order of the performance data parameters may be
+changed.
+The example data interface 104 queries the AMB 102 for
+the number of injuries of the similar players and the number
+of games played by the similar players from the start of a
+season to the target date (block 706). The example data
+interface 104 queries the AMB 102 for the number of
+injuries of the target player and the number of games played
+by the target player from the start of the season to the target
+
+========== PAGE 15 ==========
+9
+US 11,049,031 B2
+date (block 708). The example predictor 106 (FIG. 1)
+performs predictive analytics on the obtained data to predict
+an injury of the target player (block 710). An example
+process that may be used to implement the predictive
+analytics of block 710 is described below in connection with 5
+the flow diagram of FIG. 8. The example report generator
+108 (FIG. 1) generates a report of the predicted probability
+of injury of the target player on the target date (block 712).
+For example, the report generator 108 can generate the
+injury prediction report 112 of FIGS. 1, 2A, and 2B.
+10
+15
+During a validation phase 701 after the target date (e.g.,
+the game/competition has been played), the example vali-
+dator 110 (FIG. 1) determines whether to determine an
+accuracy of a predicted probability of injury (block 714). If
+the validator 110 determines that it should determine the
+accuracy of a predicted probability of injury (block 714), the
+example data interface 104 queries the AMB 102 for the
+number of days between the target date and a first subse-
+quent injury of the target player after the target date (block 20
+716). The validator 110 determines the accuracy of the
+injury prediction (block 716). For example, the validator 110
+determines the accuracy of the injury prediction based on the
+number of days before the most recent injury of the target
+player after the target date accessed at block 716. The 25
+example report generator 108 generates an accuracy report
+114 (FIG. 1) on the accuracy of the injury prediction (block
+720). For example, the accuracy report 114 can include data
+shown in the prediction performance table 300 FIG. 3. After
+generating the accuracy report 114 or if the validator 110
+determines a block 714 to not determine the accuracy of a
+predicted probability of injury, the example process of FIG.
+7 ends.
+30
+35
+FIG. 8 is a flow diagram representative of example
+machine readable instructions that may be executed by a
+processor (e.g., the example processor 912 of FIG. 9) to
+perform a predictive analytics process to predict probabili-
+ties of sports injuries in accordance with the teachings of this
+disclosure. The example process of FIG. 8 may be used to
+perform the predictive analytics of block 710 of FIG. 7. The 40
+predictive analysis of FIG. 8 computes the probability of
+injury of similar players (P(S)) weighted with similarity
+factors (M) with respect to the target player. The sum of
+these weighted probabilities normalized with the sum of the
+similarity factors (M) provides a similar player-based prob-
+ability of injury of the target player (e.g., a probability of
+injury for the target player based on performance data of the
+similar players which represented by the notation P(I/S)).
+For example, if the probability of injury of all similar players
+is one, then the similar player-based probability of injury of 50
+the target player (P(I/S)) would be one, and if the probability
+of injury of all similar players is zero, the similar player-
+based probability of injury of the target player (P(I/S))
+would also be zero. For all other values, the similar player-
+based probability of injury of the target player (P(I/S))
+would be between 0 and 1.
+45
+55
+Research conducted in the development of techniques
+disclosed herein shows that a previous injury is a good
+predictor of injury. Hence, the predictive analysis disclosed
+herein also computes the injury trend of the target player and 60
+computes the total probability of injury of the target player
+(P(I)) (i.e., the predicted probability of injury of the target
+player) based on a combination of the similar player-based
+probability of injury of the target player (P(I/S)) (e.g., a
+probability of injury of the target player based on perfor- 65
+mance data of the similar players) and a target player-based
+probability of injury of the target player (P(I/T)) (e.g., a
+10
+probability of injury of the target player based on perfor-
+mance data of the target player).
+Initially in FIG. 8, the example predictor 106 accesses
+injury and game data of similar players and the target player
+(block 802). For example, the predictor 106 accesses injury
+and game data of similar players and the target player from
+a start of a current season to a target date. The example
+predictor 106 also accesses similarity factors (M) relative to
+the target player ranging between the start of the season and
+the target date (block 804). The example predictor 106
+computes the probabilities of injuries of the similar players
+(block 806). In the illustrated example, the predictor 106
+determines a probability of injury for each similar player
+(P(S)) based on the number of games played and the number
+of injuries of that corresponding similar player between the
+start of the sport's season and the target date. For example,
+the predictor 106 determines the probability of injury of a
+similar player (P(S)) by dividing a number of injuries of the
+similar player by the number of games played by the similar
+player (e.g., P(S)=number of injuries of similar player/
+number of games played by the similar player). In this
+manner, for each similar player, the example predictor 106
+determines an average number of injuries per game that can
+be used as the probability of that similar player getting
+injured (P(S)) in a next game.
+The example predictor 106 computes the sum of weighted
+probabilities of injuries of the similar players (P(S)M)
+(block 808). For example, the predictor 106 computes the
+sum of weighted probabilities of injuries of the similar
+players (P(S)M) by multiplying each probability of injury of
+each similar player (P(S)) determined at block 806 by a
+corresponding similarity factor (M) of that similar player,
+and summing the weighted probabilities of injuries of the
+similar players (P(S)M). In the illustrated example, the
+predictor 106 uses Equation 1 below to compute the sum of
+weighted probabilities of injuries of the similar players
+(P(S)M) of block 808.
+P(S)M=Σ(;=1:N)(P(S(i))*M(i)
+Equation 1
+In example Equation 1 above, the sum of weighted
+probabilities of injuries of the similar players (P(S)M) is
+determined based on the probability of injury of each similar
+player (P(S(i))) and the similarity factor (M(i)) for that
+similar player for a number of i=N similar players. That is,
+the sum of weighted probabilities of injuries of the similar
+players (P(S)M) is determined as a sum of the products of:
+(1) the probability of injury of each similar player (P(S)) and
+(2) the similarity factor (M) of that similar player. The
+probability of injury of each similar player (P(S(i))) used in
+example Equation 1 above is determined at block 806 for the
+current sport's season. By using example Equation 1, the
+probability of injury of each similar player (P(S)) is
+weighted by the corresponding similarity factor (M) for that
+similar player so that each probability of injury of a similar
+player (P(S)) can be used as a component in determining the
+probability of injury of a target player based on the similarity
+(e.g., the weighting by the similarity factor (M)) between
+that similar player and the target player.
+The example predictor 106 computes the sum of the
+similarity factors of the similar players (block 810). In the
+illustrated example, the predictor 106 determines the sum of
+the similarity factors (M) of the similar players using
+Equation 2 below.
+Sum of the similarity factors(M)-Σ(i=1:N)M(i)
+Equation 2
+In Equation 2 above, the sum of the similarity factors (M)
+of the similar players is a summation of the similarity factors

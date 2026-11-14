@@ -1,0 +1,78 @@
+{
+  "book_id": "303cceef109599e2",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2510.15616v1",
+  "file_name": "arxiv_2510.15616v1.pdf",
+  "sha256": "303cceef109599e2cadb119f45deb36b86240187b10b8f264ea12c775e35c321",
+  "primary_domain": "other",
+  "pages_total": 69,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Martingale-based characterization of saddle points in asymmetric information Dynkin games via equilibrium payoff super/submartingales. Universal Lens: Rooted in arxiv_2510.15616v1 (303cceef109599e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on asymmetric information structures using Doob-Meyer decompositions of equilibrium payoffs for probabilistic strategy calibration. GSI Mapping: Rooted in arxiv_2510.15616v1 (303cceef109599e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in stochastic games resolved through dynamic programming of payoff martingales under partial observability. GSE Mapping: Rooted in arxiv_2510.15616v1 (303cceef109599e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "saddle_point_characterization",
+      "name": "Saddle Point Characterization",
+      "verbatim_quote": "This paper provides necessary and sufficient conditions for a pair of randomised stopping times to form a saddle point of a zero-sum Dynkin game with partial and/or asymmetric information across players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_1, T_2': 'randomized stopping times', 'V': 'equilibrium payoff process'}",
+      "assumptions": "Players have asymmetric information; payoff processes are c\\'adl\\'ag and bounded in expectation.",
+      "breakdown_regime": "When players' filtrations are not nested or adapted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equilibrium payoff martingales in Dynkin games map to Bayesian posterior updates under asymmetric information.",
+        "source_operator": "saddle_point_characterization",
+        "telemetry": "Convergence of empirical payoff distributions to theoretical saddle point."
+      }
+    },
+    {
+      "primitive_id": "martingale_decomposition",
+      "name": "Doob-Meyer Decomposition",
+      "verbatim_quote": "Saddle point strategies are characterised in terms of the dynamics of those equilibrium payoffs and are related to their Doob-Meyer decompositions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_t': 'martingale component of payoff process', 'A_t': 'predictable increasing process'}",
+      "assumptions": "Payoff processes admit Doob-Meyer decomposition under given filtrations.",
+      "breakdown_regime": "Non-Markovian or non-adapted payoff processes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Decomposition enables dynamic strategy synthesis from payoff evolution.",
+        "source_operator": "martingale_decomposition",
+        "telemetry": "Deviation of observed payoff paths from expected martingale drift."
+      }
+    },
+    {
+      "primitive_id": "asymmetric_information_framework",
+      "name": "Asymmetric Information Framework",
+      "verbatim_quote": "The framework is non-Markovian and covers essentially any information structure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}_t^1, \\\\mathcal{F}_t^2': 'filtrations of Player 1 and Player 2', '\\\\Omega': 'sample space'}",
+      "assumptions": "Players observe distinct information sets; filtrations satisfy usual conditions.",
+      "breakdown_regime": "When filtration inclusion fails or information is fully shared.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Asymmetric information filtrations correspond to belief states in GSI's Bayesian update engine.",
+        "source_operator": "asymmetric_information_framework",
+        "telemetry": "Entropy of belief distributions across players' information sets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "303cceef109599e2_t0",
+      "think": "The core contribution lies in identifying necessary and sufficient conditions for saddle points in Dynkin games with asymmetric information. These conditions are derived via the interplay between equilibrium payoff processes and their Doob-Meyer decompositions into predictable and martingale components. The key insight is that the saddle point property hinges on the structure of these components under distinct information filtrations. The methodology avoids reliance on Markovian assumptions, enabling application to a broad class of stochastic games. This leads to a dual characterization: one in terms of stopping time strategies and another in terms of martingale dynamics. The failure mode arises when payoff processes lack integrability or when information structures are incompatible with Doob-Meyer decomposition. The result implies that optimal strategies can be constructed dynamically from the evolution of equilibrium payoffs, rather than being static or precomputed. This is essential for practical implementation in GSE's state-transition logic.\n\nDeep epistemic analysis for arxiv_2510.15616v1 (303cceef109599e2, domain=other, pages_read=32/69): Operator 'Saddle Point Characterization' (page 1, domain other) captures: This paper provides necessary and sufficient conditions for a pair of randomised stopping times to form a saddle point of a zero-sum Dynkin game with partial and/or asymmetric information across players. Assumptions: Players have asymmetric information; payoff processes are c\\'adl\\'ag and bounded in expectation. Breakdown regime: When players' filtrations are not nested or adapted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equilibrium payoff martingales in Dynkin games map to Bayesian posterior updates under asymmetric information. Operator 'Doob-Meyer Decomposition' (page 1, domain other) captures: Saddle point strategies are characterised in terms of the dynamics of those equilibrium payoffs and are related to their Doob-Meyer decompositions. Assumptions: Payoff processes admit Doob-Meyer decomposition under given filtrations. Breakdown regime: Non-Markovian or non-adapted payoff processes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Decomposition enables dynamic strategy synthesis from payoff evolution. Operator 'Asymmetric Information Framework' (page 1, domain other) captures: The framework is non-Markovian and covers essentially any information structure. Assumptions: Players observe distinct information sets; filtrations satisfy usual conditions. Breakdown regime: When filtration inclusion fails or information is fully shared. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Asymmetric information filtrations correspond to belief states in GSI's Bayesian update engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2510.15616v1 (303cceef109599e2, domain=other, pages_read=32/69): Operator 'Saddle Point Characterization' (page 1, domain other) captures: This paper provides necessary and sufficient conditions for a pair of randomised stopping times to form a saddle point of a zero-sum Dynkin game with partial and/or asymmetric information across players. Assumptions: Players have asymmetric information; payoff processes are c\\'adl\\'ag and bounded in expectation. Breakdown regime: When players' filtrations are not nested or adapted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equilibrium payoff martingales in Dynkin games map to Bayesian posterior updates under asymmetric information. Operator 'Doob-Meyer Decomposition' (page 1, domain other) captures: Saddle point strategies are characterised in terms of the dynamics of those equilibrium payoffs and are related to their Doob-Meyer decompositions. Assumptions: Payoff processes admit Doob-Meyer decomposition under given filtrations. Breakdown regime: Non-Markovian or non-adapted payoff processes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Decomposition enables dynamic strategy synthesis from payoff evolution. Operator 'Asymmetric Information Framework' (page 1, domain other) captures: The framework is non-Markovian and covers essentially any information structure. Assumptions: Players observe distinct information sets; filtrations satisfy usual conditions. Breakdown regime: When filtration inclusion fails or information is fully shared. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Asymmetric information filtrations correspond to belief states in GSI's Bayesian update engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical stochastic game theory and Dynkin's optimal stopping theory, with extensions to asymmetric information by Grün (2013), Gensbittel & Grün (2019), and DAMP22. Builds upon martingale theory and Doob-Meyer decomposition from probability theory. Retrocausal Genealogy: Rooted in arxiv_2510.15616v1 (303cceef109599e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents operate under distinct information sets, leading to heterogeneous beliefs and strategic behavior. Each player optimizes over their own filtration, resulting in a non-cooperative equilibrium. The model assumes rationality and full knowledge of game rules, yet imperfect information creates strategic complexity. Theory of Mind & Decision Maker Model: Rooted in arxiv_2510.15616v1 (303cceef109599e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when players' information sets are perfectly aligned, eliminating the need for randomization. Leakage occurs if payoff processes are not adapted to either player’s filtration, invalidating Doob-Meyer decomposition. Veto conditions ensure that the game remains well-defined under asymmetric information. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2510.15616v1 (303cceef109599e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

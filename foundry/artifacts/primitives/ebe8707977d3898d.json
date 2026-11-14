@@ -1,0 +1,869 @@
+{
+ "book_id": "ebe8707977d3898d",
+ "source_status": "COMPLETE",
+ "source_note": "Philipp Hennig, Michael A. Osborne and Hans P. Kersting, Probabilistic Numerics: Computation as Machine Learning, Cambridge University Press, 2022. Provenance detail: the local PDF is the authors' pre-publication draft copy (its copyright page states this explicitly and gives the copyright line as Philipp Hennig, M A Osborne, and Hans P Kersting, 2022; the draft title page renders the second author as MAIKE OSBORNE, a draft typo for Michael A. Osborne). PDF file: 4,629,365 bytes, full sha256 ebe8707977d3898dcc25d8d0726cda7d464663562240833f6b0cff16d60ef6e2 (scan digest over str(size) followed by full file bytes); book_id is its first 16 hex characters. Extracted text: 1,321,149 bytes, 19,855 lines, from the same PDF. Text quality: clean digital text in a two-column margin-note layout; margin notes and page furniture interleave mid-sentence in the text layer, so every verbatim quote in this artifact was machine-verified to appear as one contiguous string in the extracted text under fleet normalization, and a few quotes are therefore the longest contiguous span of their sentence. Page anchors cite the printed book pagination visible in the text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "numerical_uncertainty_foundational",
+   "name": "A numerical solver is uncertain about the accuracy of its own output, and this uncertainty is a quantity to compute with, not a defect to ignore",
+   "verbatim_quote": "Accordingly, any numerical solver will be uncertain about the accuracy of its output - and, in some cases, also about its intermediate steps.",
+   "page": "Introduction, 'The Uncertain Nature of Computation' (book pp. 1-2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Numerical answers have no exact closed form in general, so the true error of an approximation is itself unknown",
+    "Uncertainty about outputs and intermediate steps can be represented by probability measures rather than scalar worst-case bounds"
+   ],
+   "breakdown_regime": "If the uncertainty is miscalibrated, downstream consumers of the output inherit a false sense of precision; the framework gives no protection against a badly wrong prior",
+   "domain": "foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine output is a distribution, not a point: projections, ratings and expectations carry their own posterior spread into the next computation, so the reasoning layer can weigh a confident signal against a vague one instead of treating all inputs as equally certain",
+    "source_operator": "numerical_uncertainty_foundational",
+    "telemetry": "posterior variances attached to engine intermediate quantities and final projections"
+   }
+  },
+  {
+   "primitive_id": "algorithm_as_agent",
+   "name": "A numerical algorithm is an agent: it receives evaluations, maintains beliefs, and decides which computations to perform next",
+   "verbatim_quote": "The second of the central insights of pn is that a numerical algorithm can be treated as an agent.",
+   "page": "Introduction (book p. 3)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The algorithm can choose its own evaluations adaptively rather than following a fixed script",
+    "A loss or utility can be attached to the algorithm's decisions, so decision theory applies to computation itself"
+   ],
+   "breakdown_regime": "The agent view pays off only when evaluations are expensive or informative in different degrees; for cheap, uniform computations the decision layer is overhead",
+   "domain": "foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine is architected as an agent loop rather than a batch script: belief state first, then a decision about what to compute next, then the evaluation, then a belief update; this is the same loop the book draws between world, agent and numerics",
+    "source_operator": "algorithm_as_agent",
+    "telemetry": "evaluation logs showing which quantities the engine chose to compute and in what order"
+   }
+  },
+  {
+   "primitive_id": "principled_early_stopping",
+   "name": "Well-quantified uncertainty licenses early stopping: once the posterior is tight enough for the decision at hand, further iterations buy nothing",
+   "verbatim_quote": "pn hence provides a principled means of stopping early, enabling fewer iterations, enabling a reduction in computation.",
+   "page": "Introduction (book p. 4)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The posterior spread is a trustworthy proxy for the remaining error",
+    "The cost of an iteration is real and comparable against the value of the precision it adds"
+   ],
+   "breakdown_regime": "Stopping early on an overconfident posterior locks in error; the rule is only as good as the calibration of the uncertainty that drives it",
+   "domain": "foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compute budgets inside the engine are allocated by posterior width: a solver, sampler or search stops when its remaining uncertainty falls below the threshold that could change the downstream decision, and the saved budget moves to the least certain open quantity",
+    "source_operator": "principled_early_stopping",
+    "telemetry": "iteration counts versus posterior width traces for engine solvers"
+   }
+  },
+  {
+   "primitive_id": "iteration_value_and_exploration",
+   "name": "Iterations differ in value: choosing where to evaluate is an exploration decision that trades information gained against computation spent",
+   "verbatim_quote": "There are almost always choices for the character of an iteration, such as where to evaluate an integrand or an objective function to be optimised. Not all iterations are equal, and it takes an intelligent agent to optimise the cost-benefit trade-off.",
+   "page": "Introduction (book p. 4)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Predictive uncertainty identifies where an evaluation would be most informative",
+    "The agent can act on that ranking instead of evaluating on a fixed grid"
+   ],
+   "breakdown_regime": "Greedy information seeking can strand the search in a local region if the model's uncertainty is wrong about unexplored areas",
+   "domain": "foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Evaluation placement inside the engine follows predicted information value: candidate computations are ranked by expected uncertainty reduction per unit cost before any of them run",
+    "source_operator": "iteration_value_and_exploration",
+    "telemetry": "per-candidate predicted variance reduction recorded at each engine decision point"
+   }
+  },
+  {
+   "primitive_id": "bayes_posterior_framework",
+   "name": "Bayes' rule is the engine of the whole programme: the posterior over the unknown quantity follows from prior times likelihood, normalised by the evidence",
+   "verbatim_quote": "Although not without competition, probability theory is widely accepted as the formal framework for reasoning with imperfect knowledge (uncertainty) in the natural sciences",
+   "page": "Ch. 2, Probabilistic Inference (book pp. 21-22)",
+   "latex": "p(x \\mid y) = \\frac{p(y \\mid x)\\, p(x)}{\\int p(y \\mid x)\\, p(x)\\, dx}",
+   "symbol_and_unit_ledger": {
+    "x": "unknown quantity of interest (dimensionless latent variable)",
+    "y": "observed data or evaluations",
+    "p(x)": "prior density over x",
+    "p(y | x)": "likelihood of the observations given x",
+    "p(x | y)": "posterior density over x",
+    "denominator": "evidence (marginal likelihood), a normalising constant"
+   },
+   "assumptions": [
+    "A prior over the unknown can be stated before seeing the evaluations",
+    "The likelihood correctly describes how evaluations arise from the unknown"
+   ],
+   "breakdown_regime": "Posterior conclusions inherit prior misspecification; with a wrong likelihood the posterior concentrates confidently on the wrong answer",
+   "domain": "bayesian inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All engine inference is posterior computation: scouting grades, tracking aggregates and situational priors enter as p(x), fresh observations enter through the likelihood, and only the normalised posterior is allowed to move a projection",
+    "source_operator": "bayes_posterior_framework",
+    "telemetry": "prior and likelihood components logged separately for every engine posterior"
+   }
+  },
+  {
+   "primitive_id": "gaussian_closure_linear_operations",
+   "name": "Gaussians are closed under every linear operation: affine maps, marginalisation and conditioning of a joint Gaussian are again Gaussian, in closed form",
+   "verbatim_quote": "distributions that are preserved under all linear operations.",
+   "page": "Ch. 3, Gaussian Algebra (book p. 23)",
+   "latex": "\\text{if } p(x) = \\mathcal{N}(x; \\mu, \\Sigma) \\text{ and } y := Ax + b, \\text{ then } p(y) = \\mathcal{N}(y; A\\mu + b, A\\Sigma A^\\top)",
+   "symbol_and_unit_ledger": {
+    "x": "Gaussian random vector in R^D",
+    "mu, Sigma": "mean vector and covariance matrix of x",
+    "A, b": "matrix in R^{M x D} and vector in R^M defining the affine map",
+    "y": "transformed Gaussian random vector in R^M"
+   },
+   "assumptions": [
+    "The unknown is jointly Gaussian, so all its structure is carried by mean and covariance",
+    "All operations applied to it are linear (or affine)"
+   ],
+   "breakdown_regime": "Closure fails for nonlinear maps: the inverse of a Gaussian variable is not Gaussian, and strongly nonlinear dynamics force approximations or sampling",
+   "domain": "gaussian inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine quantities that are linear combinations of Gaussian beliefs (projections built from sums and differences of player and team effects) stay exactly Gaussian, so uncertainty propagates through the projection arithmetic with no sampling and no approximation error",
+    "source_operator": "gaussian_closure_linear_operations",
+    "telemetry": "covariance matrices carried alongside every engine mean vector"
+   }
+  },
+  {
+   "primitive_id": "gaussian_algebra_maps_to_linear_algebra",
+   "name": "For Gaussians, the two elementary operations of probability theory, marginalisation and conditioning, are exactly matrix multiplication and matrix inversion",
+   "verbatim_quote": "Since marginalisation (sum rule) and conditioning (product rule) are the two elementary operations of probability theory,",
+   "page": "Ch. 3, Gaussian Algebra (book p. 25)",
+   "latex": "p(a \\mid b) = \\mathcal{N}\\left(a;\\ \\mu_a + \\Sigma_{ab} \\Sigma_{bb}^{-1} b,\\ \\Sigma_{aa} - \\Sigma_{ab} \\Sigma_{bb}^{-1} \\Sigma_{ba}\\right)",
+   "symbol_and_unit_ledger": {
+    "a, b": "two blocks of a jointly Gaussian vector x = (a, b)",
+    "mu_a": "prior mean of block a",
+    "Sigma_ab, Sigma_bb, Sigma_ba, Sigma_aa": "blocks of the joint covariance matrix",
+    "p(a | b)": "Gaussian conditional of a given the observed block b (Eq. 3.13, as printed)"
+   },
+   "assumptions": [
+    "The joint distribution of the blocks is Gaussian",
+    "Sigma_bb is invertible (or handled with a pseudo-inverse in degenerate cases)"
+   ],
+   "breakdown_regime": "Conditioning is only as stable as the inversion of Sigma_bb; ill-conditioned covariances make the closed form numerically fragile",
+   "domain": "gaussian inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conditioning a team or player belief on fresh observations is implemented as the Schur-complement update of Eq. (3.13): the engine's belief revision is literally this matrix formula, so partial observations update exactly the correlated components and nothing else",
+    "source_operator": "gaussian_algebra_maps_to_linear_algebra",
+    "telemetry": "conditioning updates logged as covariance block operations in the inference layer"
+   }
+  },
+  {
+   "primitive_id": "linear_regression_model",
+   "name": "Parametric Gaussian regression: model the function as a linear combination of fixed features with Gaussian weights, and the weight posterior is Gaussian in closed form",
+   "verbatim_quote": "The crucial algebraic property of Eq. (4.1) is that it models f",
+   "page": "Ch. 4, sec. 4.1 Parametric Gaussian Regression (book p. 27)",
+   "latex": "f(x) = \\sum_{i=1}^{F} \\phi_i(x)\\, w_i = \\Phi_x^\\top w, \\qquad \\tilde{\\Sigma} = \\left(\\Sigma^{-1} + \\Phi_X \\Lambda^{-1} \\Phi_X^\\top\\right)^{-1}, \\qquad \\tilde{\\mu} = \\tilde{\\Sigma}\\left(\\Sigma^{-1} \\mu + \\Phi_X \\Lambda^{-1} y\\right)",
+   "symbol_and_unit_ledger": {
+    "phi_i(x)": "i-th fixed feature function evaluated at input x",
+    "w": "weight vector in R^F with Gaussian prior N(w; mu, Sigma)",
+    "Phi_X": "feature matrix over the observation locations X",
+    "y": "noisy observations with noise covariance Lambda",
+    "tilde mu, tilde Sigma": "posterior mean and covariance of the weights"
+   },
+   "assumptions": [
+    "The function is (approximately) a linear combination of the chosen features",
+    "Observation noise is Gaussian with known covariance Lambda",
+    "The number of features F is finite and fixed in advance"
+   ],
+   "breakdown_regime": "Misspecified features cap accuracy no matter how much data arrives; cost grows as O(F^3) in the number of features, which motivates the kernel reformulation",
+   "domain": "regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feature-based ratings in the engine (linear models over engineered team and player features) use exactly this posterior: the weight covariance, not just the point weights, is retained so feature uncertainty reaches the projection",
+    "source_operator": "linear_regression_model",
+    "telemetry": "feature matrices and posterior weight covariances in the ratings layer"
+   }
+  },
+  {
+   "primitive_id": "kernels_nonparametric_regression",
+   "name": "Kernels remove the explicit weights: a positive definite kernel is a covariance function, and regression with it is nonparametric because the weights never appear in the computation",
+   "verbatim_quote": "This is called a nonparametric formulation of regression, since",
+   "page": "Ch. 4, sec. 4.2.1 (book p. 32)",
+   "latex": "k(a, b) = \\theta^2 \\exp\\left(-\\frac{(a - b)^2}{2\\lambda^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "k(a, b)": "Gaussian (squared exponential) kernel between inputs a and b (Eq. 4.4)",
+    "theta^2": "output scale (signal variance)",
+    "lambda": "length scale of the kernel, in input units",
+    "Definition 4.2": "a kernel is a bivariate function whose Gram matrix over any finite set is positive (semi-)definite"
+   },
+   "assumptions": [
+    "The kernel is positive (semi-)definite for every finite set of inputs (Definition 4.2)",
+    "Similarity in input space, as measured by the kernel, tracks similarity of function values"
+   ],
+   "breakdown_regime": "A kernel that does not match the function's actual smoothness or length scale yields confident nonsense; kernel choice is prior choice and cannot be dodged",
+   "domain": "regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Similarity between game states, matchups and player profiles in the engine is encoded as kernels rather than hand-built feature lists: the Gram matrix over historical states is the object the regression actually consumes",
+    "source_operator": "kernels_nonparametric_regression",
+    "telemetry": "Gram matrices over historical game and player states in the similarity layer"
+   }
+  },
+  {
+   "primitive_id": "gp_posterior_mean_is_kernel_ridge",
+   "name": "The GP posterior mean is the kernel ridge regression estimate: Bayesian function-space inference and regularised least squares in the reproducing kernel Hilbert space give the same point estimate",
+   "verbatim_quote": "Using the rkhs notion the GP posterior mean estimate m x of Eq. (4.6) can equivalently be derived as a nonparametric least-squares estimate, also known as the kernel ridge regression estimate:",
+   "page": "Ch. 4, sec. 4.3 (book p. 37)",
+   "latex": "m_x = k_{xX} \\left(k_{XX} + \\sigma^2 I\\right)^{-1} y",
+   "symbol_and_unit_ledger": {
+    "m_x": "GP posterior mean at input x, equal to the kernel ridge regression estimate (Eq. 4.8)",
+    "k_{xX}": "row vector of kernel evaluations between x and the training inputs X",
+    "k_{XX}": "Gram matrix over training inputs",
+    "sigma^2": "observation noise variance, acting as the ridge regulariser",
+    "y": "training targets"
+   },
+   "assumptions": [
+    "Noise-free or Gaussian-noise observations of a function in (or near) the RKHS of k",
+    "The same kernel defines both the GP prior and the RKHS norm"
+   ],
+   "breakdown_regime": "The equivalence is about the mean only: the ridge estimate alone carries no uncertainty, and outside the RKHS the error bound behind it lapses",
+   "domain": "regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine can fit its nonparametric regressors by whichever route is cheaper, penalised least squares or GP inference, and then attach the GP posterior variance to the shared point estimate; the two literatures' diagnostics become interchangeable",
+    "source_operator": "gp_posterior_mean_is_kernel_ridge",
+    "telemetry": "ridge fits and GP fits cross-checked on the same historical datasets"
+   }
+  },
+  {
+   "primitive_id": "gp_variance_equals_worst_case_error",
+   "name": "Theorem 4.8: for noise-free evaluations, the GP posterior variance equals the worst-case approximation error over the unit ball of the RKHS, so Bayesian uncertainty and deterministic error bounds coincide",
+   "verbatim_quote": "This statement shows that in the case of error-free evaluations of f , the posterior variance of Gaussian process regression",
+   "page": "Ch. 4, sec. 4.3, Theorem 4.8 (book p. 37)",
+   "latex": "\\sup_{f \\in \\mathcal{H},\\ \\|f\\| \\le 1} \\left(m_x - f_x\\right)^2 = k_{xx} - k_{xX} K_{XX}^{-1} k_{Xx}",
+   "symbol_and_unit_ledger": {
+    "H": "reproducing kernel Hilbert space associated with kernel k",
+    "m_x": "GP posterior mean at x",
+    "f_x": "true function value at x",
+    "K_{XX}": "Gram matrix in the noise-free case",
+    "right-hand side": "the GP posterior marginal variance at x (Eq. 4.9 context)"
+   },
+   "assumptions": [
+    "Evaluations are error-free",
+    "The true function is an element of the RKHS with norm at most 1 (the bound scales linearly with the true norm)"
+   ],
+   "breakdown_regime": "If the true function lies outside the RKHS, or observations are noisy, the equality breaks and the posterior variance can understate the real error",
+   "domain": "regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine uncertainty reports can be audited against a deterministic standard: where the modelling assumptions hold, a stated posterior spread is simultaneously a worst-case error bound, which gives the reasoning layer a defensible way to compare confidence across unlike signals",
+    "source_operator": "gp_variance_equals_worst_case_error",
+    "telemetry": "posterior variances compared against realised errors on held-out historical data"
+   }
+  },
+  {
+   "primitive_id": "markov_prediction_update_recursion",
+   "name": "Markov structure turns global inference into a local recursion: a prediction step through the transition and an update step through the likelihood, repeated",
+   "verbatim_quote": "In other words, it is possible to iteratively compute a posterior over xt given all previous observations, by an alternating sequence of prediction-update steps that only involve local quantities:",
+   "page": "Ch. 5, sec. 5.1-5.2 (book pp. 43-47)",
+   "latex": "p(x_t \\mid x_0, \\ldots, x_{t-1}) = p(x_t \\mid x_{t-1}), \\qquad p(x_t \\mid y_{1:t-1}) = \\int p(x_t \\mid x_{t-1})\\, p(x_{t-1} \\mid y_{1:t-1})\\, dx_{t-1}",
+   "symbol_and_unit_ledger": {
+    "x_t": "latent state at time t",
+    "y_{1:t-1}": "all observations before time t",
+    "first equation": "the Markov property, Definition 5.1 / Eq. (5.1): the state depends on history only through its direct precursor",
+    "second equation": "Chapman-Kolmogorov prediction, Eq. (5.2); the Bayes update Eq. (5.3) then folds in the new observation"
+   },
+   "assumptions": [
+    "The latent process is Markov: the direct precursor screens off the deeper past",
+    "Transition and observation models are known"
+   ],
+   "breakdown_regime": "Long-range dependence that the state does not capture silently corrupts every step; the recursion never revisits a wrong early belief unless a smoother pass is run",
+   "domain": "filtering",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequential engine state (team form, player health and workload trajectories) is maintained by this predict-update recursion rather than refit from scratch: each new observation moves the state once, in O(1) structural steps",
+    "source_operator": "markov_prediction_update_recursion",
+    "telemetry": "state trajectories updated observation by observation in the tracking layer"
+   }
+  },
+  {
+   "primitive_id": "kalman_filter_and_rts_smoother",
+   "name": "For linear Gaussian state-space models the recursion is the Kalman filter, with gain K_t = P_t^- H_t^T S_t^{-1}, and the Rauch-Tung-Striebel smoother recovers full posterior marginals by a backward pass",
+   "verbatim_quote": "The whole prediction update scheme above is thus widely known as the Kálmán filter, and the quantity Kt is called the Kálmán gain in his honour.",
+   "page": "Ch. 5, sec. 5.2 (book p. 47)",
+   "latex": "S_t = H_t P_t^- H_t^\\top + R_t, \\qquad K_t = P_t^- H_t^\\top S_t^{-1}, \\qquad m_t = m_t^- + K_t z_t, \\qquad P_t = (I - K_t H_t) P_t^-",
+   "symbol_and_unit_ledger": {
+    "m_t^-, P_t^-": "predicted state mean and covariance at time t",
+    "H_t": "observation matrix mapping state to observation space",
+    "R_t": "observation noise covariance",
+    "S_t": "innovation covariance (Eq. 5.12)",
+    "K_t": "Kalman gain (Eq. 5.13): the optimal sensitivity of the updated belief to the innovation z_t",
+    "smoother": "RTS backward recursion with gain G_t = P_t A_t^T (P_{t+1}^-)^{-1}, Eq. (5.15)"
+   },
+   "assumptions": [
+    "Linear transition and observation models with Gaussian noise",
+    "The initial state is Gaussian"
+   ],
+   "breakdown_regime": "Nonlinear dynamics or non-Gaussian noise break exactness; the filter is then an approximation whose error is uncontrolled without further analysis",
+   "domain": "filtering",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Kalman gain is the engine's principled answer to how much a new observation should move a rating: high innovation covariance relative to state covariance means trust the prior, low means trust the new data, with no hand-set learning rate",
+    "source_operator": "kalman_filter_and_rts_smoother",
+    "telemetry": "innovation sequences and gain magnitudes logged for engine state updates"
+   }
+  },
+  {
+   "primitive_id": "filtering_is_linear_time_gp_regression",
+   "name": "Kalman filtering and smoothing on a Gauss-Markov prior are exactly GP regression with a Markov prior, computed in linear time instead of cubic time",
+   "verbatim_quote": "Since these marginals (that is, their means and variances) are exactly equal to those of GP regression (§4.2.2), algorithm Infer (Algorithm 5.4) is nothing but a linear-time implementation of GP regression with Markov priors.",
+   "page": "Ch. 5, sec. 5.2 (book p. 47)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The GP prior is a Gauss-Markov process, equivalently the solution of a linear SDE",
+    "Observations arrive in time order"
+   ],
+   "breakdown_regime": "Priors without Markov structure (long-range kernels) cannot use the linear-time route and fall back to O(N^3) Gram matrix algebra",
+   "domain": "filtering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long sequential datasets in the engine (play-by-play and game-by-game trajectories) are regressed through the state-space form: identical posterior marginals to the batch GP at a fraction of the cost, which decides which datasets are feasible to model at all",
+    "source_operator": "filtering_is_linear_time_gp_regression",
+    "telemetry": "wall-clock and memory profiles of batch versus state-space fits on engine trajectories"
+   }
+  },
+  {
+   "primitive_id": "linear_sde_discretisation",
+   "name": "A linear time-invariant SDE has a Gaussian process solution whose exact discretisation is a Gaussian transition with A = exp(F dt) and Q the integrated diffusion covariance",
+   "verbatim_quote": "This process is known as the solution of the SDE.",
+   "page": "Ch. 5, sec. 5.3, Definition 5.4 (book pp. 49-50)",
+   "latex": "dx(t) = F x(t)\\, dt + L\\, d\\omega_t, \\qquad p(x_{t_{i+1}} \\mid x_{t_i}) = \\mathcal{N}\\left(x_{t_{i+1}};\\ A_{t_i} x_{t_i},\\ Q_{t_i}\\right), \\qquad A_{t_i} = \\exp\\left(F (t_{i+1} - t_i)\\right)",
+   "symbol_and_unit_ledger": {
+    "F": "drift matrix of the linear SDE",
+    "L": "diffusion coefficient vector or matrix",
+    "omega_t": "standard Wiener process; d omega_t is its increment (Gaussian white noise, informally)",
+    "Q_{t_i}": "integrated covariance, Q = integral of exp(F tau) L L^T exp(F^T tau) d tau over the step (Eq. 5.21)",
+    "spline link": "with F the integrator chain of Eq. (5.22), the solution is the integrated Wiener process whose posterior interpolants are polynomial splines (sec. 5.4)"
+   },
+   "assumptions": [
+    "Drift and diffusion are constant (time-invariant) over each step",
+    "The driving noise is a Wiener process"
+   ],
+   "breakdown_regime": "Time-varying or nonlinear dynamics need local linearisation; the exact Gaussian transition is then only an approximation per step",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Continuous-time engine models (form evolving between games, fatigue accumulating within a game) are specified as SDEs and compiled into exact discrete transitions for the filter, so the modelling language and the computation stay consistent",
+    "source_operator": "linear_sde_discretisation",
+    "telemetry": "discretised transition matrices generated from fitted drift and diffusion parameters"
+   }
+  },
+  {
+   "primitive_id": "ou_process_and_matern_family",
+   "name": "The Ornstein-Uhlenbeck process, a mean-reverting linear SDE, has the exponential covariance; its integrals generate the Matern kernel family, whose half-integer members have closed forms",
+   "verbatim_quote": "in a linear (harmonic) potential well of force constant 1/λ, and its solution is known as the Ornstein-Uhlenbeck (OU) process.",
+   "page": "Ch. 5, sec. 5.5 The Matern Family (book pp. 52-53)",
+   "latex": "dx = -\\frac{x}{\\lambda}\\, dt + \\sqrt{\\frac{2\\theta}{\\lambda}}\\, d\\omega_t, \\qquad k(t, t') = \\theta^2 e^{-\\lvert t - t' \\rvert / \\lambda}, \\qquad k_{3/2}(r) = \\theta^2 \\left(1 + \\frac{\\sqrt{3}\\, r}{\\lambda}\\right) e^{-\\sqrt{3}\\, r / \\lambda}",
+   "symbol_and_unit_ledger": {
+    "lambda": "length scale / mean-reversion time, in time units",
+    "theta": "process scale (stationary standard deviation)",
+    "r": "distance |t - t'| between time points",
+    "k_{3/2}": "Matern covariance with smoothness nu = 3/2, one of the closed half-integer forms (nu = 1/2, 3/2, 5/2) printed in sec. 5.5",
+    "family link": "general integrals of the OU process form the Matern class (Bessel-function form), and half-integer Matern GPs are solutions of finite-dimensional state-space models, Eq. (5.28)"
+   },
+   "assumptions": [
+    "Stationarity: the process is considered in its stationary limit (t_0 to minus infinity)",
+    "Smoothness nu is chosen to match the differentiability of the modelled quantity"
+   ],
+   "breakdown_regime": "Matern smoothness is a strong prior commitment: too smooth a kernel hides real jumps, too rough a kernel wastes data; nonstationary series violate the premise",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mean-reverting engine quantities (shooting percentages, form indicators) get OU or Matern priors whose length scale is the estimated reversion time, and the state-space form keeps their filtering linear-time",
+    "source_operator": "ou_process_and_matern_family",
+    "telemetry": "fitted length scales and smoothness for engine time-series priors"
+   }
+  },
+  {
+   "primitive_id": "conjugate_priors_analytic_inference",
+   "name": "A conjugate prior has the same functional form as the posterior, so hyperparameter inference stays analytic: the Gauss-inverse-Wishart prior is the standard conjugate choice for a Gaussian with unknown mean and covariance",
+   "verbatim_quote": "But in the special case of scale and mean of a Gaussian model, conjugate priors allow for analytic inference.",
+   "page": "Ch. 6, Hierarchical Inference in Gaussian Models (book pp. 58-62)",
+   "latex": "p(\\alpha, B) = \\mathcal{N}\\left(\\alpha;\\ \\mu_0,\\ \\frac{1}{\\lambda_0} B\\right) \\mathcal{W}\\left(B^{-1};\\ W_0,\\ \\nu_0\\right)",
+   "symbol_and_unit_ledger": {
+    "alpha, B": "unknown mean vector and covariance matrix of the Gaussian likelihood",
+    "mu_0, lambda_0": "prior mean and pseudo-count scaling for alpha",
+    "W_0, nu_0": "scale matrix and degrees of freedom of the Wishart factor over B^{-1}",
+    "Eq. (6.11)": "the Gauss-inverse-Wishart conjugate prior, as printed"
+   },
+   "assumptions": [
+    "The likelihood is Gaussian with unknown mean and covariance",
+    "Prior knowledge can be encoded as pseudo-observations (counts) added to the data"
+   ],
+   "breakdown_regime": "Conjugacy is a small club: most likelihood-prior pairs have no closed form, and forcing a conjugate family can distort the prior beliefs it was meant to express",
+   "domain": "hierarchical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine hyperpriors over group means and variances (position groups, team effects) use conjugate updates where the model allows, so hierarchical shrinkage is computed exactly and cheaply at every refit",
+    "source_operator": "conjugate_priors_analytic_inference",
+    "telemetry": "posterior hyperparameters (pseudo-counts) tracked per group in the ratings hierarchy"
+   }
+  },
+  {
+   "primitive_id": "hierarchical_scale_inference_student_t",
+   "name": "Putting a Gamma prior on the inverse kernel scale and marginalising it out turns the Gaussian posterior into a Student-t posterior whose scale is estimated from the data at runtime",
+   "verbatim_quote": "This posterior on θ is associated with a corresponding Student-t posterior marginal on the integrand F (see Eq. (6.9)),",
+   "page": "Ch. 6, sec. 6.3, applied in Ch. 11, sec. 11.1.4 (book p. 93)",
+   "latex": "p\\left(\\theta^{-2} \\mid [Y]_{1:N}\\right) = \\mathcal{G}\\left(\\theta^{-2};\\ \\alpha_0 + \\frac{N}{2},\\ \\beta_0 + \\frac{1}{2} \\sum_{i=1}^{N} \\frac{(y_i - H m_i^-)^2}{H \\tilde{P}_i^- H^\\top}\\right)",
+   "symbol_and_unit_ledger": {
+    "theta^{-2}": "inverse scale (precision-like parameter) of the kernel",
+    "G": "Gamma distribution over theta^{-2}",
+    "alpha_0, beta_0": "Gamma prior hyperparameters",
+    "y_i - H m_i^-": "filter innovations; their accumulated squares drive the posterior scale (Eq. 11.10)",
+    "consequence": "the marginal posterior over the quantity of interest is Student-t with 2 alpha_N degrees of freedom (Eq. 6.9 / sec. 11.1.4)"
+   },
+   "assumptions": [
+    "A Gamma prior on the inverse scale is acceptable",
+    "The Gaussian part of the model is held fixed while the scale is marginalised"
+   ],
+   "breakdown_regime": "The Student-t marginal has heavier tails but the same mean structure; if the scale itself drifts over time, a single global estimate lags behind",
+   "domain": "hierarchical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Error bars in the engine are not fixed constants: the scale of each solver's uncertainty is re-estimated from its own recent innovations, so a model that starts missing gets wider intervals automatically instead of staying falsely precise",
+    "source_operator": "hierarchical_scale_inference_student_t",
+    "telemetry": "innovation-based scale estimates per engine model, refreshed on each refit"
+   }
+  },
+  {
+   "primitive_id": "bayesian_quadrature_posterior",
+   "name": "Bayesian quadrature: place a GP prior over the integrand and the integral becomes a Gaussian posterior whose mean is an affine weighted sum of the evaluations, with tractability decided by kernel mean embeddings",
+   "verbatim_quote": "Embedding the single integrand in a hypothesis class of many possible true functions (the support of the prior) in this way thus turns the intractable problem of exact integration into tractable, uncertain inference.",
+   "page": "Ch. 10, sec. 10.1-10.2 Bayesian Quadrature (book pp. 76-79)",
+   "latex": "\\mu_F = m_0 + k_X^\\top \\left(k_{XX} + \\Lambda\\right)^{-1} \\left(Y - m_X\\right), \\qquad v = K - k_X^\\top \\left(k_{XX} + \\Lambda\\right)^{-1} k_X",
+   "symbol_and_unit_ledger": {
+    "F": "the integral, treated as a latent random variable",
+    "m_0": "prior mean of the integral, the integral of the prior mean function (Eq. 10.5)",
+    "k_X": "vector of kernel mean embeddings, [k]_i = integral of k(x, x_i) against the integration measure (Eq. 10.7)",
+    "K": "double integral of the kernel against the measure (Eq. 10.6)",
+    "Y, m_X": "integrand evaluations at nodes X and prior mean at those nodes",
+    "Lambda": "evaluation noise covariance",
+    "design rule": "nodes are chosen to minimise the posterior variance v; adaptively, uncertainty sampling evaluates where the posterior variance V(x, x) is largest (sec. 10.2.1)"
+   },
+   "assumptions": [
+    "The integrand is modelled by a GP prior whose kernel integrals against the integration measure are tractable",
+    "Evaluations are exact or Gaussian-noisy"
+   ],
+   "breakdown_regime": "The authors state plainly that Bayesian quadrature is rarely used above roughly 20 dimensions; intractable kernel means or a mismatched prior make the posterior meaningless",
+   "domain": "integration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Expectations the engine needs (over player availability, weather scenarios, or simulation ensembles) are computed as quadrature with an error bar: the weighted-sum form means each scenario evaluation enters with a stated weight and the result carries the posterior variance v",
+    "source_operator": "bayesian_quadrature_posterior",
+    "telemetry": "kernel mean embeddings and posterior variances for engine expectation computations"
+   }
+  },
+  {
+   "primitive_id": "wsabi_square_root_warping",
+   "name": "WSABI: model the square root of a non-negative integrand with a GP so the warped integrand is Gaussian-tractable, then linearise or moment-match the induced posterior on the integral",
+   "verbatim_quote": "An integrand modelled as the square of a gp will have a smaller dynamic range than one modelled as an exponentiated gp.",
+   "page": "Ch. 10, sec. 10.2.2 (book pp. 82-85)",
+   "latex": "f(x) = \\alpha + \\frac{1}{2}\\, \\tilde{f}(x)^2",
+   "symbol_and_unit_ledger": {
+    "f(x)": "non-negative integrand",
+    "tilde f": "GP modelled by the algorithm; the square root warping of the integrand",
+    "alpha": "constant offset in R subtracted before the square root is modelled",
+    "posterior": "the induced distribution of the integral is intractable and is approximated by linearisation (WSABI-L) or moment matching (WSABI-M), Eqs. (10.12)-(10.13)"
+   },
+   "assumptions": [
+    "The integrand is non-negative (after the offset alpha)",
+    "The square root of the integrand is smoother, in GP terms, than the integrand itself"
+   ],
+   "breakdown_regime": "The warping makes the posterior non-Gaussian, so the method's uncertainty is itself an approximation; weak adaptivity (the method must not adapt too aggressively relative to non-adaptive BQ) is required for the consistency result the authors cite",
+   "domain": "integration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Non-negative engine quantities with wide dynamic range (counts, rates, volumes) are modelled on a warped scale where Gaussian machinery behaves, then mapped back, instead of forcing a Gaussian model onto a quantity it fits badly",
+    "source_operator": "wsabi_square_root_warping",
+    "telemetry": "warped-scale fits for non-negative engine statistics"
+   }
+  },
+  {
+   "primitive_id": "trapezoidal_rule_is_bayesian_quadrature",
+   "name": "Theorem 11.1: the trapezoidal rule is exactly Bayesian quadrature under a centred Wiener process prior; classical rules are posterior means under specific priors",
+   "verbatim_quote": "the trapezoidal rule is identical to that of a particular Bayesian quadrature algorithm.",
+   "page": "Ch. 11, sec. 11.1, Theorem 11.1 (book pp. 88-89)",
+   "latex": "\\mathbb{E}[F] = \\sum_{i=1}^{N-1} \\frac{\\delta_i}{2} \\left(f(x_{i+1}) + f(x_i)\\right)",
+   "symbol_and_unit_ledger": {
+    "F": "the integral of f over [a, b]",
+    "delta_i": "step size x_{i+1} - x_i between consecutive nodes",
+    "prior": "centred Wiener process, k(x, x') = theta^2 (min(x, x') - chi) for arbitrary theta in R+ and chi < a",
+    "design corollary": "minimising the posterior variance under this prior puts the nodes on an equidistant grid (sec. 11.1.3)"
+   },
+   "assumptions": [
+    "The integrand is continuous (the Wiener prior charges only continuous paths)",
+    "The first and last nodes sit on the domain boundaries for the clean form"
+   ],
+   "breakdown_regime": "The Wiener prior is too rough for smooth integrands, so both the rule and its error estimate are conservative; the authors use this mismatch to argue for smoother priors and better rules",
+   "domain": "integration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every classical estimator the engine uses can be interrogated for the prior it secretly assumes; where that prior mismatches the quantity being estimated, the book's move is to change the prior, not to patch the estimator",
+    "source_operator": "trapezoidal_rule_is_bayesian_quadrature",
+    "telemetry": "prior assumptions documented next to each classical estimator used in the engine"
+   }
+  },
+  {
+   "primitive_id": "adaptive_error_estimation_student_t",
+   "name": "Error estimation splits into rate and scale: the kernel fixes the contraction rate of the posterior error, while the scale is a runtime quantity, estimated by hierarchical inference into a Student-t error bar",
+   "verbatim_quote": "From Eq. (11.10) we see that, in contrast to Eq. (11.8), this estimated variance now actually depends on the function-values collected in Y.",
+   "page": "Ch. 11, sec. 11.1.4 Adaptive Error Estimation (book pp. 92-93)",
+   "latex": "\\operatorname{var}(F) = \\frac{\\beta_N}{\\alpha_N - 1}\\, \\sigma_F^2",
+   "symbol_and_unit_ledger": {
+    "var(F)": "variance of the Student-t posterior marginal for the integral (Eq. 11.11)",
+    "beta_N, alpha_N": "posterior Gamma parameters for the inverse scale, accumulated from filter innovations (Eq. 11.10)",
+    "sigma_F^2": "standardised posterior variance of F under the unit kernel, var(F) / theta^2",
+    "rate fact": "under the Wiener prior the non-adaptive posterior standard deviation contracts as O(N^{-1}), faster than Monte Carlo's O(N^{-1/2}), and the rate is set by the kernel while theta sets the constant"
+   },
+   "assumptions": [
+    "The hierarchical Gamma model for the inverse scale is adequate",
+    "Innovations collected during the run are informative about the true error scale"
+   ],
+   "breakdown_regime": "A non-adaptive error bar (fixed theta) does not depend on the observed values at all and is systematically conservative under the rough Wiener prior; the adaptive version inherits the filter's model assumptions",
+   "domain": "integration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine error reporting separates the two questions: the convergence rate is a design property of the chosen model class, and the scale is re-estimated from the model's own residuals on recent data, so reported intervals widen or narrow with observed difficulty",
+    "source_operator": "adaptive_error_estimation_student_t",
+    "telemetry": "per-model error scale estimates and contraction behaviour on validation data"
+   }
+  },
+  {
+   "primitive_id": "randomness_in_computation_critique",
+   "name": "Random numbers in a deterministic computation are decisions with no decision-theoretic justification: a pseudo-random choice is suboptimal with probability one whenever a loss with a unique minimum exists",
+   "verbatim_quote": "From these observations, we draw the contentious conclusion that it is generally a bad idea to introduce random numbers into an otherwise deterministic computation.",
+   "page": "Ch. 12, sec. 12.3 A Meditation on Randomness (book pp. 111-112)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The computed quantity is deterministic, so all randomness is epistemic, not physical",
+    "A model of the problem exists that could guide the choice deterministically"
+   ],
+   "breakdown_regime": "The authors concede the non-random alternatives to most stochastic algorithms are not yet practical; Monte Carlo remains a formidable competitor for integration, and environmental randomness is a different matter from imposed pseudo-randomness",
+   "domain": "foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where the engine faces a choice that a default implementation would randomise (node placement, sampling, tie-breaking inside solvers), the default is a model-guided deterministic choice; randomness is kept only where its role is explicit and priced",
+    "source_operator": "randomness_in_computation_critique",
+    "telemetry": "audit list of randomised steps inside engine solvers and their deterministic replacements"
+   }
+  },
+  {
+   "primitive_id": "matrix_gaussian_distribution",
+   "name": "A Gaussian distribution over the elements of a matrix is defined by vectorising the matrix: the general prior for probabilistic linear solvers",
+   "verbatim_quote": "measure over the elements of any real matrix, even a rectangular",
+   "page": "Ch. 19, sec. 19.1 Gaussian Distributions over Matrices (book p. 149)",
+   "latex": "\\mathcal{N}\\left(X;\\ X_0,\\ \\Sigma_0\\right) := \\frac{\\exp\\left(-\\frac{1}{2} \\left(\\vec{X} - \\vec{X}_0\\right)^\\top \\Sigma_0^{-1} \\left(\\vec{X} - \\vec{X}_0\\right)\\right)}{(2\\pi)^{NK/2}\\, \\lvert \\Sigma_0 \\rvert^{1/2}}",
+   "symbol_and_unit_ledger": {
+    "X": "matrix in R^{N x K}, treated as a random variable",
+    "vec(X)": "vectorisation of X into R^{NK} (the arrow in the source)",
+    "X_0": "prior mean matrix",
+    "Sigma_0": "covariance over the vectorised elements, in R^{NK x NK}; if full rank it charges every matrix, symmetric or not, definite or not (Eq. 19.3)"
+   },
+   "assumptions": [
+    "Matrix uncertainty can be expressed as a joint Gaussian over elements",
+    "Observations are linear projections Y = A S of the unknown matrix"
+   ],
+   "breakdown_regime": "The Wishart family, the obvious alternative for symmetric positive definite matrices, is not closed under conditioning on linear projections, which is why the book resorts to Gaussians; structure like definiteness must be re-imposed through the covariance (secs. 19.5-19.6)",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Large structured objects in the engine (effect matrices, matchup adjustment tables) can carry Gaussian uncertainty elementwise, with observations arriving as projections, exactly the solver's data model",
+    "source_operator": "matrix_gaussian_distribution",
+    "telemetry": "projection observations (partial sums, margins) of engine matrices"
+   }
+  },
+  {
+   "primitive_id": "inference_on_inverse_matrix",
+   "name": "Put the prior on the inverse H = A^{-1}, not on A: since the solution x = H b is linear in H, tractable posteriors on H give tractable posteriors on solutions, while a Gaussian on A induces an intractable law on its inverse",
+   "verbatim_quote": "The advantage of this formulation is that, since x is a linear function of H, simple tractable posteriors on H translate into tractable posteriors on x.",
+   "page": "Ch. 19, sec. 19.2 A Prior over A, H, or x? (book pp. 150-151)",
+   "latex": "Z = AD \\iff D = HZ",
+   "symbol_and_unit_ledger": {
+    "A": "symmetric positive definite system matrix",
+    "H": "its inverse, A^{-1}, the latent object of the inference-on-H formulation",
+    "Z = AD": "noise-free observations: products of A with search directions D",
+    "D = HZ": "the same observations rewritten as linear maps of H, which is what makes Gaussian inference on H tractable"
+   },
+   "assumptions": [
+    "A is symmetric positive definite, so H exists",
+    "Observations are exact matrix products (the noise-free setting of the chapter)"
+   ],
+   "breakdown_regime": "If products are computed only approximately, the likelihood for H becomes hard to write down; and the posterior mean of H is not the inverse of the posterior mean of A, so the two formulations answer different questions",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine places uncertainty on the quantity it actually consumes (the solution operator, the projection map), not on an upstream object whose induced distribution would be intractable; parameterisation follows the consumer",
+    "source_operator": "inference_on_inverse_matrix",
+    "telemetry": "which engine objects are consumed downstream, audited per inference module"
+   }
+  },
+  {
+   "primitive_id": "kronecker_covariance_structure",
+   "name": "Kronecker covariance Sigma_0 = V_0 (x) W_0 factorises element covariance into a row factor and a column factor, collapsing the posterior update to one small M x M inverse and O(N M^2) storage",
+   "verbatim_quote": "What Kronecker structure on the covariance does achieve is a drastic reduction of computational complexity.",
+   "page": "Ch. 19, sec. 19.4 Kronecker Covariances for Efficient Computation (book pp. 152-155)",
+   "latex": "\\Sigma_0 = V_0 \\otimes W_0, \\qquad A_M = A_0 + \\left(Y - A_0 S\\right) \\left(S^\\top W_0 S\\right)^{-1} S^\\top W_0",
+   "symbol_and_unit_ledger": {
+    "V_0, W_0": "symmetric positive definite row and column covariance factors; cov(A_{ij}, A_{kl}) = [V_0]_{ik} [W_0]_{jl} (Eq. 19.9)",
+    "A_M": "posterior mean of A (Eq. 19.10): prior mean plus a rank-at-most-M correction",
+    "S, Y": "search directions and their observed products Y = A S",
+    "warning": "the inverse of the posterior mean is not the posterior mean of the inverse (sec. 19.4); Eq. (19.12) gives the inverse of the mean as an estimator, with existence guaranteed by Lemma 19.3 for spd A_0, W_0 and independent directions"
+   },
+   "assumptions": [
+    "Element covariance factorises across rows and columns",
+    "Search directions are linearly independent"
+   ],
+   "breakdown_regime": "Kronecker structure is a rank-one subspace of all covariances: real element covariance that does not factorise is misrepresented, and the restriction later forces the calibration trade-off of Ch. 21",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two-factor covariance (a row factor for one entity axis, a column factor for the other) is how the engine keeps uncertainty over large effect tables computable: storage and update cost scale with the factors, not with the full table",
+    "source_operator": "kronecker_covariance_structure",
+    "telemetry": "factorised covariance parameters for engine effect tables"
+   }
+  },
+  {
+   "primitive_id": "solver_uncertainty_calibration",
+   "name": "A solver's covariance must be calibrated, not just consistent: with W_0 built from observed directions plus a scaled complement, the scalar omega prices the uncertainty over the unexplored null space of the search directions",
+   "verbatim_quote": "The scale ω can then be interpreted as scaling the remaining",
+   "page": "Ch. 21, Uncertainty Calibration (book pp. 175-176)",
+   "latex": "W_M = \\omega \\left(I - S \\left(S^\\top S\\right)^{-1} S^\\top\\right)",
+   "symbol_and_unit_ledger": {
+    "W_M": "posterior column-covariance factor of the solver (Eq. 21.1 simplified by Omega = omega I, Eq. 21.2)",
+    "omega": "scalar scale of the remaining uncertainty over the whole null space of S, the space not yet explored by the iterations",
+    "S": "matrix of search directions already taken",
+    "trade-off": "the Kronecker structure forces a balance: calibrated uncertainty on diagonal elements implies under-confidence off the diagonal, and conversely (Ch. 21)"
+   },
+   "assumptions": [
+    "Directions not yet explored are exchangeable, justifying a scalar omega times the complement projector",
+    "The mean estimate A_M from the iterations is held fixed while the covariance is calibrated"
+   ],
+   "breakdown_regime": "One scalar cannot price direction-specific ignorance; if the unexplored space is anisotropic, omega is a compromise, and the diagonal/off-diagonal trade-off cannot be escaped within this covariance family",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine solvers report a calibrated remainder term: uncertainty about the part of a problem the iterations have not touched is priced explicitly and separately from the part they have, so downstream reasoning can discount partially-solved quantities",
+    "source_operator": "solver_uncertainty_calibration",
+    "telemetry": "calibration curves of solver intervals against realised solution errors"
+   }
+  },
+  {
+   "primitive_id": "wolfe_conditions_sufficient_decrease",
+   "name": "Line searches should not minimise exactly: a step is acceptable when it satisfies the Wolfe conditions, sufficient decrease plus a curvature condition on the gradient",
+   "verbatim_quote": "Instead, the line search should look for a point that is \"good enough\".",
+   "page": "Ch. 26, sec. 26.3 The Wolfe Termination Conditions (book pp. 206-207)",
+   "latex": "f(\\alpha) \\le f(0) + c_1 \\alpha f'(0), \\qquad f'(\\alpha) \\ge c_2 f'(0), \\qquad 0 \\le c_1 < c_2 \\le 1",
+   "symbol_and_unit_ledger": {
+    "alpha": "step length along the search direction",
+    "f(alpha)": "univariate objective along the direction; f'(alpha) is the projected gradient d^T grad f",
+    "c_1": "sufficient decrease constant (Armijo condition, Eq. 26.5); practical line searches often use c_1 = 10^{-4}",
+    "c_2": "curvature constant (Eq. 26.6); the strong form bounds |f'(alpha)| <= c_2 |f'(0)|, Eq. (26.8); c_2 = 0.9 is a common lenient choice"
+   },
+   "assumptions": [
+    "f is continuously differentiable and bounded below along the direction, so acceptable step lengths exist",
+    "Function and gradient evaluations are exact in the classical version"
+   ],
+   "breakdown_regime": "The conditions do not guarantee the true optimum lies in the accepted bracket, even for convex objectives; with noisy evaluations they cannot even be checked, which is what sec. 26.5 repairs",
+   "domain": "optimisation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Inner loops in engine fitting use acceptance tests instead of exact subproblem solutions: a step, a hyperparameter move or a coordinate update is taken when it is provably good enough, and the saved evaluations fund the outer problem",
+    "source_operator": "wolfe_conditions_sufficient_decrease",
+    "telemetry": "acceptance-test outcomes and evaluation counts in engine fitting loops"
+   }
+  },
+  {
+   "primitive_id": "probabilistic_line_search",
+   "name": "The probabilistic line search replaces spline interpolation with GP regression and the Boolean Wolfe test with the posterior probability that the Wolfe conditions hold, so step-size selection works under noisy evaluations",
+   "verbatim_quote": "If the optimiser has no access to exact function values and gradients, then it is impossible to ever know for sure that these conditions are fulfilled at any particular point, and we can only hope to compute a probability for them to hold.",
+   "page": "Ch. 26, sec. 26.5 Probabilistic Line Searches (book pp. 211-217)",
+   "latex": "p(Y \\mid f) = \\mathcal{N}\\left(Y;\\ \\left[f(\\alpha_1), \\ldots, f(\\alpha_K), f'(\\alpha_1), \\ldots, f'(\\alpha_K)\\right]^\\top,\\ \\Lambda\\right)",
+   "symbol_and_unit_ledger": {
+    "Y": "stacked noisy observations of function values and gradients at the evaluation nodes alpha_1..alpha_K (Model 26.3, Eq. 26.12)",
+    "Lambda": "noise covariance, allowing value and gradient noise at one location to correlate",
+    "prior": "integrated Wiener process prior on f, whose noise-free posterior mean is the cubic spline, so the method is the classic spline line search generalised (sec. 26.5.1)",
+    "decision": "the Wolfe conditions are linear projections of (f, f'), hence jointly Gaussian under the posterior, and a point is accepted when the probability that they hold crosses a threshold (sec. 26.5.3)"
+   },
+   "assumptions": [
+    "Function and gradient evaluations are noisy with roughly Gaussian noise",
+    "The univariate objective along the direction is GP-modelled adequately by the integrated Wiener prior"
+   ],
+   "breakdown_regime": "The authors report the method is still outperformed by standard methods and hand-tuned parameters on some large networks and datasets; its cost is justified where evaluation noise is the binding problem",
+   "domain": "optimisation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine subroutine that consumes noisy evaluations inherits the pattern: keep a belief over the objective, and turn pass/fail acceptance rules into posterior probabilities with a threshold, instead of pretending the evaluations are exact",
+    "source_operator": "probabilistic_line_search",
+    "telemetry": "acceptance probabilities logged for noisy inner-loop decisions in engine fitting"
+   }
+  },
+  {
+   "primitive_id": "bayesian_optimisation_loss_first",
+   "name": "Bayesian optimisation is decision theory before it is a heuristic: a faithful loss function must be chosen first, and the value loss (the lowest function value found) is the canonical choice from which acquisition functions derive",
+   "verbatim_quote": "First, our loss might be the lowest function value evaluated, such that our goal is to uncover as low a function value as possible: we will call this the value loss (vl).",
+   "page": "Ch. 31, sec. 31.2 Loss Function (book pp. 252-253)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A GP (or other probabilistic) surrogate over the objective is available",
+    "The end of the procedure is well defined: what is returned after the budget is spent is part of the loss"
+   ],
+   "breakdown_regime": "Rival losses (location-information, value-information) formalise different goals; an acquisition function derived from the wrong loss optimises the wrong thing no matter how well it is implemented",
+   "domain": "global optimisation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine tuning tasks state their loss before their search rule: what a tuning run must return when the budget ends decides the acquisition function, not the other way round",
+    "source_operator": "bayesian_optimisation_loss_first",
+    "telemetry": "loss statements attached to engine hyperparameter searches"
+   }
+  },
+  {
+   "primitive_id": "expected_improvement_acquisition",
+   "name": "Expected improvement is the myopic approximation to the value loss: a closed-form acquisition balancing a low posterior mean (exploitation) against a large posterior variance (exploration)",
+   "verbatim_quote": "Just as promised by its name, this expected loss does indeed consider the expected improvement over the current best point, η.",
+   "page": "Ch. 32, sec. 32.1 Expected Improvement (book pp. 259-261)",
+   "latex": "\\alpha^{ei}(x_n) = -\\sqrt{V(x_n)}\\; \\mathcal{N}\\left(\\eta;\\ m(x_n), V(x_n)\\right) + \\left(m(x_n) - \\eta\\right) \\Phi\\left(\\eta;\\ m(x_n), V(x_n)\\right)",
+   "symbol_and_unit_ledger": {
+    "eta": "lowest function value observed so far, min over previous evaluations",
+    "m(x_n), V(x_n)": "GP posterior mean and variance at the candidate point x_n",
+    "N(. ; a, b)": "Gaussian density; Phi(. ; a, b) the Gaussian cumulative distribution function, as defined before Eq. (32.2)",
+    "alpha^{ei}": "acquisition value whose minimiser is the next evaluation point (minimisation convention of the book); Eq. (32.1) defines it as an integral, Eq. (32.2) is the closed form"
+   },
+   "assumptions": [
+    "The GP posterior at the candidate is Gaussian",
+    "Only the next evaluation matters (the myopic approximation): future evaluations after this one are disregarded"
+   ],
+   "breakdown_regime": "Myopia makes EI under-exploratory, weighting evaluations too heavily towards exploitation, as the authors note from empirical studies; with many evaluations remaining, a one-step lookahead is the wrong horizon",
+   "domain": "global optimisation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's experiment selection (which configuration, dataset slice or model variant to evaluate next) uses the EI balance explicitly: candidates score on predicted improvement and on uncertainty, with the myopia caveat recorded when the remaining budget is large",
+    "source_operator": "expected_improvement_acquisition",
+    "telemetry": "acquisition scores and realised improvements for engine tuning evaluations"
+   }
+  },
+  {
+   "primitive_id": "probability_of_improvement_and_ucb",
+   "name": "Probability of improvement values any improvement equally regardless of size, while the upper confidence bound criterion prices optimism directly as mean minus beta times standard deviation",
+   "verbatim_quote": "Notably, this acquisition function does not distinguish between improvements of different magnitudes: any improvement (above the threshold), however small, is equally valued.",
+   "page": "Ch. 33, sec. 33.1-33.2 (book pp. 267-270)",
+   "latex": "\\alpha^{ucb}(x_n) := m(x_n) - \\beta_n \\sqrt{V(x_n)}",
+   "symbol_and_unit_ledger": {
+    "alpha^{ucb}": "confidence-bound acquisition (Eq. 33.3); in the book's minimisation convention it is a lower confidence bound",
+    "beta_n": "schedule parameter in R+ that explicitly sets the exploration-exploitation trade-off at step n",
+    "PI form": "alpha^{pi}_n(x_n) = P(f(x_n) >= eta_n - epsilon_n | D_n) as an expected loss, with target eta_n the best value so far and slack epsilon_n >= 0 controlling exploration (sec. 33.1)"
+   },
+   "assumptions": [
+    "A GP surrogate posterior is available at candidate points",
+    "For UCB, a defensible schedule for beta_n exists (regret theory provides one)"
+   ],
+   "breakdown_regime": "PI is aggressively exploitative at epsilon_n = 0 and cannot reward a large improvement over a small one; UCB's optimism, the authors note, has no known sensible derivation from a loss function, so its justification is regret bounds rather than decision theory",
+   "domain": "global optimisation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps both cheap criteria as baselines next to loss-derived acquisitions: PI as an exploitiveness meter for completed searches, UCB when an explicit, tunable exploration price is wanted",
+    "source_operator": "probability_of_improvement_and_ucb",
+    "telemetry": "beta schedules and PI scores recorded for engine search runs"
+   }
+  },
+  {
+   "primitive_id": "gaussian_ode_filters_ekf0",
+   "name": "Gaussian ODE filters run the Kalman machinery on the ODE state-space model: an exact Gaussian prediction step and a Taylor-linearised update on the ODE residual, with EKF0 using a zeroth-order and EKF1 a first-order approximation",
+   "verbatim_quote": "Thus, these filters never leave the Gaussian exponential family, which is why they are instances of Gaussian ODE filters.",
+   "page": "Ch. 38, sec. 38.3 Gaussian ODE Filters and Smoothers (book pp. 301-304)",
+   "latex": "\\hat{z}_{n+1} := f\\left(H_0 m_{n+1}^-\\right) - H m_{n+1}^-, \\qquad K_{n+1} := P_{n+1}^- \\tilde{H}^\\top S_{n+1}^{-1}, \\qquad m_{n+1} := m_{n+1}^- + K_{n+1} \\hat{z}_{n+1}, \\qquad P_{n+1} := \\left(I - K_{n+1} \\tilde{H}\\right) P_{n+1}^-",
+   "symbol_and_unit_ledger": {
+    "m^-, P^-": "predictive state mean and covariance at the next grid point, from the linear-Gaussian dynamic model",
+    "hat z": "innovation residual: the mismatch between the ODE right-hand side at the predicted state and the predicted derivative (Eq. 38.18)",
+    "tilde H": "H for EKF0 (f replaced by its value at the predictive mean); H - J_f(H_0 m^-) H_0 for EKF1, with J_f the Jacobian of f",
+    "S_{n+1}": "innovation covariance, Eq. (38.19)",
+    "data": "the observations are the zeros z_{n+1} = 0 of the state misalignment, Eq. (38.13)"
+   },
+   "assumptions": [
+    "The prior over the solution is a Gauss-Markov process (integrated Wiener or integrated OU in practice)",
+    "A Taylor approximation of f around the predictive mean is adequate per step"
+   ],
+   "breakdown_regime": "True ODE posteriors are non-Gaussian and often chaotic; Gaussian filters are the fast standard choice, but where nonparametric uncertainty quantification matters the book points to particle and perturbative solvers (secs. 38.3.1, 40.3)",
+   "domain": "differential equations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dynamical engine models (within-game state evolution, player workload accumulation) are integrated with an ODE filter rather than a point solver, so the trajectory the reasoning layer consumes carries a covariance, and stiff or uncertain stretches of the dynamics are visible as widened intervals",
+    "source_operator": "gaussian_ode_filters_ekf0",
+    "telemetry": "filter covariances along engine dynamical trajectories"
+   }
+  },
+  {
+   "primitive_id": "odes_as_filtering_regression",
+   "name": "An initial value problem is a regression problem: evaluations of the right-hand side are data on the derivative, and solving the ODE is Bayesian filtering and smoothing in a state-space model built from an SDE prior",
+   "verbatim_quote": "we will once again take a Bayesian view and use linear-time Gauss-Markov regression by Bayesian filtering and smoothing (as introduced in §5)",
+   "page": "Ch. 38, sec. 38.1 State Space Models for ODEs (book pp. 295-297)",
+   "latex": "dX(t) = F X(t)\\, dt + L\\, d\\omega_t, \\qquad X(0) \\sim \\mathcal{N}(m_0, P_0)",
+   "symbol_and_unit_ledger": {
+    "X(t)": "state process jointly modelling the solution x(t) and its derivatives; x(t) = H_0 X(t) and x'(t) = H X(t) extract them (Eqs. 38.1-38.3)",
+    "F, L": "drift and diffusion of the prior SDE (Eq. 38.4)",
+    "m_0, P_0": "Gaussian initial condition (Eq. 38.5); a known initial value makes P_0 = 0, a Dirac distribution",
+    "measurement model": "the state misalignment z(t) = H X(t) - f(H_0 X(t)) is identically zero for the true solution, and conditioning on z = 0 is the likelihood (Eq. 38.7)"
+   },
+   "assumptions": [
+    "Only Markovian state-space priors are used, matching the O(N) cost of classical solvers",
+    "The ODE is an initial value problem with a known (or Gaussian) initial state"
+   ],
+   "breakdown_regime": "Boundary value problems and PDEs need the extensions of Ch. 41; the filtering formulation also inherits every calibration caveat of the chosen prior",
+   "domain": "differential equations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats trajectory inference and ODE solving as one problem class: a dynamical model plus derivative information enters the same filtering stack whether the derivative comes from a physics-style right-hand side or from observed rates of change",
+    "source_operator": "odes_as_filtering_regression",
+    "telemetry": "state-space model definitions shared between engine trajectory and dynamics modules"
+   }
+  },
+  {
+   "primitive_id": "tailored_numerics_and_open_frontier",
+   "name": "Structure is the performance lever: numerical algorithms tailored to a problem's known structure beat generic ones, and encoding human knowledge as priors is how the tailoring is done",
+   "verbatim_quote": "Numerical algorithms that are tailored to the needs of a problem will perform much better than generic algorithms.",
+   "page": "Ch. 42, sec. 42.4 How Can Numerics be Tailored? (book p. 352)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Problem structure exists and can be articulated as a prior or an architectural constraint",
+    "A user with problem experience can distil that experience into the model"
+   ],
+   "breakdown_regime": "Humans cannot hand-tailor every nested numerical problem inside a large system, so the book leaves automated tailoring, including inferring structure from source code, as an open problem; it also records that, to date, the field's one substantive application success is global optimisation for hyperparameter tuning (sec. 42.1)",
+   "domain": "meta",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's standing design rule follows the book's closing argument: before reaching for a generic solver or a generic model, name the structure of this specific problem and build it into the prior; generic methods are the fallback, not the default",
+    "source_operator": "tailored_numerics_and_open_frontier",
+    "telemetry": "per-module structure notes recorded at engine design time"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ebe8707977d3898d-t1",
+   "think": "This book builds one argument in seven storeys, and every storey is the same move applied to a new numerical task. The move is: treat the unknown quantity of a computation as a random variable, state what you believe about it before computing (the prior), state how evaluations relate to it (the likelihood), and let Bayes' rule produce not a number but a posterior distribution. The output of a computation is therefore a belief, with a mean to act on and a spread that prices the remaining ignorance. Chapter 2 sets up the inference grammar, Chapter 3 shows that Gaussians make that grammar computable because marginalisation and conditioning collapse into matrix multiplication and inversion, and Chapter 4 turns those two facts into regression: first parametric, with Gaussian weights, then nonparametric, where a kernel replaces the feature list and the weights disappear from the computation altogether. Two equivalences in Chapter 4 do heavy lifting for everything after. The GP posterior mean is the kernel ridge regression estimate, so Bayesian and penalised-least-squares views can be used interchangeably, and the GP posterior variance equals the worst-case RKHS approximation error, so the book's uncertainty is not a metaphor: under stated assumptions it is a deterministic error bound wearing probabilistic clothes.\n\nChapter 5 adds time. Markov structure converts regression into a recursion: predict through the transition, update with the likelihood, repeat. For linear Gaussian models this recursion is the Kalman filter and smoother, and the chapter's neatest result is that this filter is literally GP regression with a Markov prior, executed in linear time. The bridge is the linear SDE: its solution is a Gaussian process, its exact discretisation is the filter's transition, and particular choices of drift matrix recover the Wiener process, its integrals (whose posterior interpolants are polynomial splines), and the Ornstein-Uhlenbeck process whose integrals generate the Matern kernel family. Chapter 6 then goes one level up: hyperparameters such as the kernel scale are themselves inferred, with conjugate priors where the Gaussian family permits, producing heavier-tailed Student-t posteriors whose scale is estimated from the solver's own innovations. This hierarchical layer is what later lets an error bar adapt to observed data instead of being fixed by a prior constant.\n\nPart II applies the machinery to integration and quietly proves the book's rhetorical thesis. Bayesian quadrature is GP regression read as integration: the integral is a linear functional of the integrand, so its posterior is Gaussian, its mean an affine weighted sum of the evaluations, and its tractability is decided by whether kernel means can be computed in closed form. Design becomes inference too: nodes are placed to minimise posterior variance, adaptively by uncertainty sampling, and non-negative integrands are handled by warping in WSABI. Then Chapter 11 lands the punch: the trapezoidal rule, the oldest quadrature rule in the canon, is exactly Bayesian quadrature under a Wiener process prior. A classical method is thereby exposed as a posterior mean under a specific, and in this case rather poor, prior; its equidistant grid is the variance-minimising design under that prior, and its error estimate separates into a rate fixed by the kernel and a scale that hierarchical inference can estimate at runtime. Chapter 12 draws the philosophical consequence the authors care about: randomness injected into a deterministic computation is a decision with no loss function behind it, and a model-guided deterministic choice dominates it whenever a model exists.\n\nParts III to VI repeat the pattern across the rest of numerics. Linear algebra gets a Gaussian distribution over matrix elements, a choice between inferring the matrix or its inverse (only the inverse gives tractable solution posteriors), and Kronecker covariance structure to keep the algebra affordable, followed by a chapter on the uncomfortable fact that a consistent covariance can still be badly calibrated, with a scalar pricing the unexplored null space. Optimisation gets the same treatment twice: the classical line search is rebuilt with GP interpolation and probabilistic Wolfe conditions so it survives noisy evaluations, and global optimisation is rebuilt decision-theoretically, with the loss function chosen first and expected improvement, probability of improvement and confidence bounds compared as approximations to it, myopia named as EI's known defect. Differential equations become filtering problems: an SDE prior over the solution, the ODE itself as a zero-valued observation, and extended Kalman filters as the resulting solvers. The closing chapter is honest about the frontier: structure and priors are the performance lever, tailoring is still manual, and the field's one decisive application success so far is global optimisation. Read as a whole, the book is less a catalogue of algorithms than a compiler: feed it a numerical task and a prior, and it emits an algorithm with an uncertainty statement attached. The recurring failure mode is equally consistent: every guarantee is conditional on the prior, and the machinery has no internal alarm for a prior that is confidently wrong.\n\nTwo cross-cutting threads deserve emphasis because they decide whether the machinery is usable rather than merely elegant. The first is calibration as an audit discipline: the book repeatedly tests its own uncertainty statements against realised errors, in the trapezoidal experiments of Chapter 11, in the solver calibration study of Chapter 21 with its Rayleigh regression example, and in the line search benchmarks, and it reports the mismatches it finds, including conservative Wiener-prior error bars and EI's observed under-exploration. Uncertainty in this book is a falsifiable claim, not a rhetorical one. The second thread is cost accounting: the probabilistic reformulation is repeatedly shown to be free or nearly free relative to its classical counterpart, the trapezoidal filter costs O(N) like the rule it replaces, the probabilistic line search adds negligible overhead, and the state-space form of GP regression turns a cubic problem into a linear one. The authors' claim is never that probability is a luxury layer on top of numerics; it is that, chosen well, the probabilistic form is the cheapest correct implementation of the classical idea, with the error bar thrown in.",
+   "retrocausal_genealogy": "The lineage runs through numerical analysis's own dissidents. Kimeldorf and Wahba connected splines to stochastic processes in the 1970s, Larkin proposed Bayesian numerical analysis in 1972, Diaconis wrote on Bayesian numerical analysis in 1988, and O'Hagan's 1992 paper on Bayes-Hermite quadrature plus Skilling's 1991 work are the direct ancestors the introduction names. Behind the filtering chapters stands Kalman (1960) and Rauch, Tung and Striebel (1965); behind the kernel family, Matern (1960) and Uhlenbeck and Ornstein (1930). The optimisation chapters descend from Wolfe (1969) and Armijo (1966) on the classical side, and from Kushner (1964) and Mockus and co-authors (1978) on acquisition functions, with Srinivas and co-authors (2010) supplying regret theory. The authors' own generation, including Mahsereci and Hennig on the probabilistic line search and Kersting, Sullivan and Hennig on ODE state-space models, turned these scattered precursors into one framework.",
+   "theory_of_mind": "The authors believe the reader is a builder of algorithms who has been trained to hide uncertainty rather than compute with it. Their model of the domain is that computation is epistemic action: a numerical method is an agent spending a budget of evaluations to reduce its own ignorance about a deterministic quantity, and the honest output of spending that budget is a belief, not a point. They assume the reader accepts that priors are not subjective decoration but the place where everything known about a problem's structure must be written down, and they write pedagogically, re-deriving classical methods first so the reader can watch a familiar rule turn into a posterior mean. They also model the sceptic fairly: chapters repeatedly concede where classical or stochastic methods still win.",
+   "cross_layer_veto": "Several results in the book veto moves that other layers of a system might want to make. The closure results veto model families that cannot survive conditioning: if a belief cannot be marginalised and conditioned in closed form, it cannot serve as the currency between pipeline stages. The trapezoidal analysis vetoes naive trust in classical error estimates, because the non-adaptive bar does not depend on the observed values at all. The warning that the inverse of a posterior mean is not the posterior mean of the inverse vetoes plug-in reasoning about derived quantities. The calibration trade-off vetoes claiming simultaneous confidence on diagonal and off-diagonal quantities from one Kronecker covariance. And the randomness meditation vetoes Monte Carlo as a default where exploitable structure exists, because a randomised decision is dominated whenever a loss with a unique minimum can be written down."
+  }
+ ],
+ "universal_lens": "Beyond numerics, the work is a template for any system that computes under a budget: state beliefs as distributions, spend evaluations where predicted information value is highest, stop when the remaining uncertainty cannot change the decision, and price the unexplored remainder explicitly instead of ignoring it. Its deeper lesson is diagnostic. When a trusted classical procedure underperforms, the productive question is not how to patch it but what prior it secretly assumes, because the procedure is usually a posterior mean under some prior that can be named, criticised and replaced. That move, interrogating a method by the beliefs it encodes, transfers to any field where heuristics have hardened into defaults.",
+ "gsi_mapping": "For a research institute, the book supplies both curriculum and research programme. As curriculum, it is a single spine from Bayes' rule through Gaussian algebra, filtering, quadrature, linear solvers, optimisation and ODE solvers, with each classical method re-derived rather than merely cited. As a programme, its closing chapter lists open problems worth assigning: scaling Bayesian quadrature beyond low dimension, automating the tailoring of algorithms to problem structure, identifying probabilistic numerical models at runtime, and harmonising pipelines so uncertainty propagates across stages. The institute takes the book's standard of evidence as well: claims about uncertainty are themselves testable, through calibration against realised errors.",
+ "gse_mapping": "For the prediction engine, the book is a parts catalogue with assembly rules. GP regression with auditable error bars covers nonparametric ratings work; the Kalman recursion, with its gain as a principled learning rate, covers sequential state such as form and workload; Bayesian quadrature prices expectations over scenarios; the loss-first treatment of Bayesian optimisation governs how tuning budgets are spent; ODE filters integrate dynamical models while carrying covariance; and the calibration chapters set the standard that every interval the engine emits must be checked against realised errors. The binding constraint the book imposes is honesty about priors: each engine model must be able to say what it assumed, because every guarantee in the book is conditional on exactly that."
+}

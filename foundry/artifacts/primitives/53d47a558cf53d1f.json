@@ -1,0 +1,853 @@
+{
+ "book_id": "53d47a558cf53d1f",
+ "source_status": "COMPLETE",
+ "source_note": "A. N. Kolmogorov, Foundations of the Theory of Probability. English translation edited by Nathan Morrison, Chelsea Publishing Company, New York, 1950, of the German monograph Grundbegriffe der Wahrscheinlichkeitsrechnung (Ergebnisse der Mathematik, 1933); a 1936 Russian translation was also used by the editor. The local file is that Chelsea 1950 edition as a PDF (books-must-have bucket), 1,256,646 bytes; scan digest sha256(str(size) + bytes) = 53d47a558cf53d1f98562de9438cd29486f72de16c48a0a8a0ab1135310f7434, book_id = first 16 hex = 53d47a558cf53d1f. Text quality: complete machine-extracted text (2,954 lines, all six chapters plus appendix and bibliography), prose clean and fully legible; mathematical glyphs are OCR-corrupted in the extraction (xi rendered as a pound sign, fraktur field symbol rendered as ft, 55, or $), so verbatim quotes were chosen from clean prose passages and proved contiguous in the text file. Cataloging as Kolmogorov 1933 is correct for the original work; the physical edition read is the 1950 Chelsea translation. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "axiomatic_field_of_probability",
+   "name": "Probability is an axiomatic theory: a field of sets plus a normalized additive set function P satisfying Axioms I-V",
+   "verbatim_quote": "The theory of probability, as a mathematical discipline, can and should be developed from axioms in exactly the same way as Geometry and Algebra.",
+   "page": "Chapter I, introduction and §1 (printed pp. 1-2)",
+   "latex": "P(A + B) = P(A) + P(B) \\quad \\text{when } AB = 0, \\qquad P(E) = 1",
+   "symbol_and_unit_ledger": {
+    "A, B": "random events (subsets of the basic set E)",
+    "P(A)": "probability of event A, a non-negative real number",
+    "E": "the basic set of all elementary events",
+    "AB = 0": "A and B have no element in common (incompatible events)"
+   },
+   "assumptions": [
+    "The system of events forms a field of sets (closed under sum, product, difference)",
+    "P is non-negative and normalized on the whole space",
+    "The axioms are consistent but not complete: different problems use different fields of probability"
+   ],
+   "breakdown_regime": "The finite axioms say nothing about infinite collections of events; without the continuity axiom of Chapter II, countable additivity and all limit theorems fail.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's constitutional layer: every signal, feature, and matchup claim must be representable as an event in one declared field with a normalized measure before it can enter any projection. Scores that cannot be stated as sets with probabilities are not yet engine inputs.",
+    "source_operator": "axiomatic_field_of_probability",
+    "telemetry": "The registry of declared event spaces per sport and market, with their normalization checks."
+   }
+  },
+  {
+   "primitive_id": "cournot_principle",
+   "name": "Cournot's principle: a single event of very small probability can be treated as practically impossible on one realization",
+   "verbatim_quote": "If P(A) is very small, one can be practically certain that when conditions S are realized only once, the event A would not occur at all.",
+   "page": "Chapter I, §2 (printed p. 4)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A complex of conditions that can be repeated under essentially identical circumstances",
+    "Practical certainty is a working rule for single realizations, not a theorem inside the axiomatic system"
+   ],
+   "breakdown_regime": "The principle is empirical, not mathematical: a practically impossible event can still occur, and the principle gives no threshold value of 'very small' that works universally.",
+   "domain": "probability foundations / empirical interpretation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's single-case decision rule: when a projected scenario's probability is below the working floor, the engine treats that branch as not happening for this one game, while keeping it in the aggregate model. It separates one-off calls from long-run frequency statements.",
+    "source_operator": "cournot_principle",
+    "telemetry": "Per-projection probability floors and the count of suppressed low-probability branches."
+   }
+  },
+  {
+   "primitive_id": "zero_probability_not_impossibility",
+   "name": "P(A) = 0 does not imply A is impossible: null events can occur in a long series of trials",
+   "verbatim_quote": "It does not at all assert, however, that in a sufficiently long series of tests the event A will not occur.",
+   "page": "Chapter I, §2, Remark 2 (printed p. 5)",
+   "latex": "P(0) = 0",
+   "symbol_and_unit_ledger": {
+    "0": "the null set, the impossible event",
+    "P(0)": "probability of the impossible event, forced to zero by the axioms"
+   },
+   "assumptions": [
+    "The remark is made relative to the frequency interpretation of §2",
+    "The event has probability exactly zero, not merely a small probability"
+   ],
+   "breakdown_regime": "Treating measure-zero as logically impossible breaks continuous models, where every single point outcome has probability zero yet one of them occurs.",
+   "domain": "probability foundations / measure theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a hard modeling rule: the engine never converts a zero or near-zero modeled probability into a logical exclusion. Tail scenarios stay in the state space with zero weight, so a realized tail outcome is a model event, not a paradox.",
+    "source_operator": "zero_probability_not_impossibility",
+    "telemetry": "Zero-weight scenarios that were later realized, logged as calibration evidence."
+   }
+  },
+  {
+   "primitive_id": "addition_theorem",
+   "name": "Addition theorem: the probability of a union of incompatible events is the sum of their probabilities",
+   "verbatim_quote": "If A, B, . . . , N are incompatible, then from Axiom V follows the formula (the Addition Theorem)",
+   "page": "Chapter I, §4 (printed p. 6)",
+   "latex": "P(A + B + \\cdots + N) = P(A) + P(B) + \\cdots + P(N)",
+   "symbol_and_unit_ledger": {
+    "A, B, ..., N": "pairwise incompatible events",
+    "P": "probability function on the field",
+    "A + B + ... + N": "the event that at least one of them occurs"
+   },
+   "assumptions": [
+    "The events are pairwise incompatible (no two share an elementary event)",
+    "Only finitely many events in the elementary theory of Chapter I"
+   ],
+   "breakdown_regime": "Fails for overlapping events, where the union probability needs inclusion-exclusion corrections; fails for infinite unions until complete additivity is postulated in Chapter II.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the aggregation rule the engine uses whenever mutually exclusive scenario branches are combined into a single probability: branch probabilities add, and any overlap between branches must be removed before adding.",
+    "source_operator": "addition_theorem",
+    "telemetry": "Branch overlap audits on scenario trees before aggregation."
+   }
+  },
+  {
+   "primitive_id": "conditional_probability",
+   "name": "Conditional probability P_A(B) = P(AB)/P(A), and for fixed A the conditional probabilities themselves form a field of probability",
+   "verbatim_quote": "all the above general theorems concerning P (B) hold true for the conditional probability PA(B) (provided the event A is fixed).",
+   "page": "Chapter I, §4 (printed p. 7)",
+   "latex": "P_A(B) = \\frac{P(AB)}{P(A)}, \\qquad P(A) > 0",
+   "symbol_and_unit_ledger": {
+    "P_A(B)": "conditional probability of B under the hypothesis A",
+    "AB": "the simultaneous occurrence of A and B",
+    "P(A)": "probability of the conditioning event, required positive"
+   },
+   "assumptions": [
+    "P(A) > 0",
+    "A is held fixed while B varies over the field"
+   ],
+   "breakdown_regime": "Undefined at P(A) = 0 in the elementary form; conditioning on null events needs the Chapter V construction, and naive division there produces the Borel paradox.",
+   "domain": "probability foundations / conditioning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine update is this operation: fix the known context (injuries, venue, rest) as the conditioning event and renormalize the remaining uncertainty. Because the conditioned system is again a full probability field, all downstream machinery stays valid after each update.",
+    "source_operator": "conditional_probability",
+    "telemetry": "The conditioning context attached to every projection, with the pre-update and post-update measures."
+   }
+  },
+  {
+   "primitive_id": "total_probability_theorem",
+   "name": "Theorem of total probability: P(X) decomposes over a partition of hypotheses into prior times conditional terms",
+   "verbatim_quote": "To obtain the formula (14) it only remains to substitute for the probability P(X) its value derived from (13) by applying the theorem on total probability.",
+   "page": "Chapter I, §4 (printed p. 8)",
+   "latex": "P(X) = \\sum_{i=1}^{n} P(A_i) P_{A_i}(X)",
+   "symbol_and_unit_ledger": {
+    "X": "an arbitrary event",
+    "A_1, ..., A_n": "mutually exclusive events whose sum is the whole space E (the hypotheses)",
+    "P_{A_i}(X)": "conditional probability of X under hypothesis A_i"
+   },
+   "assumptions": [
+    "The hypotheses are mutually exclusive and exhaust the basic set",
+    "Each conditional probability is taken with its hypothesis fixed"
+   ],
+   "breakdown_regime": "Requires a genuine partition: if the hypotheses overlap or fail to cover the space, the decomposition double counts or omits mass.",
+   "domain": "probability foundations / conditioning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's mixture rule: a projection is a weighted sum over mutually exclusive game scripts or states, each term a script probability times the outcome probability inside that script. It forces the script set to be exhaustive before any number is published.",
+    "source_operator": "total_probability_theorem",
+    "telemetry": "Script inventories per matchup with coverage checks that the weights sum to one."
+   }
+  },
+  {
+   "primitive_id": "bayes_theorem",
+   "name": "Theorem of Bayes: posterior probability of a hypothesis after observing X is prior times likelihood, normalized by total probability",
+   "verbatim_quote": "are often called \"hypotheses\" and formula (14) is considered as the probability P*(Aj) of the hypothesis Ai after the occurrence of event X.",
+   "page": "Chapter I, §4 (printed p. 8)",
+   "latex": "P_X(A_i) = \\frac{P(A_i) P_{A_i}(X)}{\\sum_{j=1}^{n} P(A_j) P_{A_j}(X)}",
+   "symbol_and_unit_ledger": {
+    "P_X(A_i)": "probability of hypothesis A_i after event X has occurred",
+    "P(A_i)": "a priori probability of the hypothesis",
+    "P_{A_i}(X)": "probability of the observed event under hypothesis A_i",
+    "denominator": "total probability of X over all hypotheses"
+   },
+   "assumptions": [
+    "The hypotheses form a partition of the basic set",
+    "P(X) > 0 so the posterior is defined"
+   ],
+   "breakdown_regime": "Garbage priors give garbage posteriors: the theorem redistributes belief but cannot create evidence, and it is undefined when the observed event has probability zero.",
+   "domain": "probability foundations / inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's belief-revision operator: priors over team strength or game script are updated by observed evidence through likelihoods, with the denominator forcing all competing explanations to be priced before any one is believed.",
+    "source_operator": "bayes_theorem",
+    "telemetry": "Prior and posterior distributions per hypothesis, with likelihoods logged per evidence item."
+   }
+  },
+  {
+   "primitive_id": "mutual_independence",
+   "name": "Mutual independence of events and experiments by full factorization of all joint probabilities; the concept that gives probability its peculiar stamp",
+   "verbatim_quote": "Historically, the independence of experiments and random variables represents the very mathematical concept that has given the theory of probability its peculiar stamp.",
+   "page": "Chapter I, §5 (printed pp. 8-9)",
+   "latex": "P(A_{i_1} A_{i_2} \\cdots A_{i_m}) = P(A_{i_1}) P(A_{i_2}) \\cdots P(A_{i_m})",
+   "symbol_and_unit_ledger": {
+    "A_{i_1}, ..., A_{i_m}": "any subcollection of the events, all indices distinct",
+    "P of the product": "probability of simultaneous occurrence",
+    "right side": "product of the separate probabilities"
+   },
+   "assumptions": [
+    "Factorization must hold for every subcollection, not only for the full set",
+    "Pairwise factorization alone is weaker and does not suffice for n > 2"
+   ],
+   "breakdown_regime": "Pairwise independence without mutual independence is the standing counterexample (Bernstein's example in this section); real signals that share a hidden common cause violate factorization silently.",
+   "domain": "probability foundations / independence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Independence is the engine's license to multiply. The primitive sets the bar: a joint probability may be factored only when the factorization has been earned for every subcollection, and pairwise checks are explicitly not enough.",
+    "source_operator": "mutual_independence",
+    "telemetry": "Dependence diagnostics between signal families before any joint probability is computed by multiplication."
+   }
+  },
+  {
+   "primitive_id": "markov_chain_chapman_kolmogorov",
+   "name": "Markov chains: the future depends on the past only through the present state, with transition matrices obeying p(k,n) = p(k,m) p(m,n)",
+   "verbatim_quote": "then the basic formula of the theory of Markov chains will assume the form:",
+   "page": "Chapter I, §6 (printed p. 13)",
+   "latex": "p(k,n) = p(k,m)\\, p(m,n), \\qquad k < m < n",
+   "symbol_and_unit_ledger": {
+    "p(m,n)": "matrix of transition probabilities from time m to time n",
+    "k, m, n": "time indices in increasing order",
+    "matrix product": "composition of transitions over the two legs"
+   },
+   "assumptions": [
+    "The conditional probability of the next result given the whole history equals the conditional probability given only the last result",
+    "Transition probabilities are defined for every pair of times"
+   ],
+   "breakdown_regime": "Breaks when the state description omits a relevant variable: the process then carries memory the state does not record, and the composition formula fails.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to any staged projection pipeline: if the engine's state summary is sufficient, multi-step projections compose from one-step transitions; if a hidden driver is missing from the state, composition errors compound exactly as they do here.",
+    "source_operator": "markov_chain_chapman_kolmogorov",
+    "telemetry": "State-sufficiency tests: whether adding history features changes the one-step transition estimates."
+   }
+  },
+  {
+   "primitive_id": "axiom_of_continuity",
+   "name": "Axiom VI (continuity): for a decreasing sequence of events with empty product, the probabilities tend to zero; equivalent to complete additivity",
+   "verbatim_quote": "For infinite fields, on the other hand, the Axiom of Continuity, VI, proved to be independent of Axioms I - V.",
+   "page": "Chapter II, §1 (printed p. 15)",
+   "latex": "\\lim_{n \\to \\infty} P(A_n) = 0 \\quad \\text{for } A_1 \\supseteq A_2 \\supseteq \\cdots \\text{ with } \\bigcap_n A_n = 0",
+   "symbol_and_unit_ledger": {
+    "A_n": "a decreasing sequence of events",
+    "intersection = 0": "no elementary event belongs to all of them",
+    "P(A_n)": "probability of the n-th event"
+   },
+   "assumptions": [
+    "Axioms I-V already hold",
+    "The field is infinite (for finite fields the axiom follows from I-V)"
+   ],
+   "breakdown_regime": "The axiom is a deliberate restriction to idealized models: Kolmogorov notes that observable processes give only finite fields, so continuity is an expediency, not an empirical fact.",
+   "domain": "probability foundations / measure theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This axiom is what lets the engine pass from finite scenario lists to continuous and infinite models: tail probabilities of shrinking event sequences vanish, so infinite-horizon and continuous-space projections are limits of finite ones, not new objects.",
+    "source_operator": "axiom_of_continuity",
+    "telemetry": "Tail-mass checks when finite models are refined toward continuous ones."
+   }
+  },
+  {
+   "primitive_id": "borel_fields",
+   "name": "Borel fields of probability: fields closed under countable sums, the setting where every constructible event has a probability",
+   "verbatim_quote": "Only in the case of Borel fields of probability do we obtain full freedom of action, without danger of the occurrence of events having no probability.",
+   "page": "Chapter II, §2 (printed p. 16)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The field is closed under countable sums (and hence countable products) of its sets",
+    "All later chapters work in Borel fields only"
+   ],
+   "breakdown_regime": "Even Borel closure does not reach every subset: non-measurable sets exist outside the field, and events built from uncountably many coordinates can fall outside it (Chapter III, §4).",
+   "domain": "measure theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to the engine's event-construction discipline: any event the reasoning layer names must be built from declared events by countable operations, or it has no probability and cannot be priced. Unnameable events are a modeling error, not a number.",
+    "source_operator": "borel_fields",
+    "telemetry": "A construction audit trail for every derived event used in a projection."
+   }
+  },
+  {
+   "primitive_id": "extension_theorem",
+   "name": "Extension theorem: a completely additive probability on a field extends uniquely to the smallest Borel field containing it, via the outer measure P*",
+   "verbatim_quote": "It is always possible to extend a non negative completely additive set function P(A), defined in ft, to all sets of lift without losing either of its properties (nonnegativeness and complete additivity) and this can be done in only one way.",
+   "page": "Chapter II, §2 (printed p. 17)",
+   "latex": "P^*(A) = \\inf_{A \\subseteq \\bigcup_n A_n} \\sum_n P(A_n)",
+   "symbol_and_unit_ledger": {
+    "P*(A)": "outer measure of an arbitrary set A",
+    "A_n": "sets of the original field covering A",
+    "inf": "lower limit of the covering sums over all finite or countable coverings"
+   },
+   "assumptions": [
+    "P is non-negative and completely additive on the original field",
+    "The extension target is the smallest Borel field containing the field"
+   ],
+   "breakdown_regime": "The extended sets are ideal events: Kolmogorov warns they need not correspond to anything observable, even when the original field models real events.",
+   "domain": "measure theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's guarantee that probabilities assigned on a small, auditable event algebra extend consistently to the rich event space the reasoning layer actually queries, with no freedom to re-price extended events afterward.",
+    "source_operator": "extension_theorem",
+    "telemetry": "Consistency checks between base-algebra probabilities and extended-event probabilities."
+   }
+  },
+  {
+   "primitive_id": "random_variable_definition",
+   "name": "A random variable is a real function on the basic set whose sublevel sets {x < a} all belong to the field (measurability)",
+   "verbatim_quote": "A real function x (£) is a random variable if and only if ft(x> contains every interval of the form (-oo; a).",
+   "page": "Chapter III, §2 (printed p. 22)",
+   "latex": "\\{\\xi : x(\\xi) < a\\} \\in \\mathfrak{F} \\quad \\text{for every real } a",
+   "symbol_and_unit_ledger": {
+    "x": "real single-valued function on the basic set E",
+    "xi (the Greek letter)": "an elementary event",
+    "a": "an arbitrary real threshold",
+    "F (fraktur)": "the field of events"
+   },
+   "assumptions": [
+    "The field of probability is fixed before the function is tested",
+    "The condition must hold for every real a"
+   ],
+   "breakdown_regime": "A function that fails measurability has no distribution and no expectation: nothing downstream exists. The definition also ties the variable to one field; change the field and the same function may stop being a random variable.",
+   "domain": "probability foundations / random variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the admission test for every engine input: a quantity becomes a random variable only when all its threshold events are in the declared field, which is exactly the requirement that the data pipeline can answer every 'is it below a' question about it.",
+    "source_operator": "random_variable_definition",
+    "telemetry": "Measurability checks per feature: availability of all threshold events in the data."
+   }
+  },
+  {
+   "primitive_id": "pushforward_probability_function",
+   "name": "Probability function of a function: P^(u)(A') = P(u^-1(A')), the distribution induced by mapping the basic set",
+   "verbatim_quote": "The event u ^ (A ') consists of the fact that u(£) belongs to A'.",
+   "page": "Chapter III, §1 (printed p. 21)",
+   "latex": "P^{(u)}(A') = P(u^{-1}(A'))",
+   "symbol_and_unit_ledger": {
+    "u": "single-valued function from the basic set E into a set E'",
+    "u^-1(A')": "pre-image: all elementary events mapped into A'",
+    "P^(u)": "the probability function of u on the image side"
+   },
+   "assumptions": [
+    "u is defined on the whole basic set",
+    "Only sets A' whose pre-images lie in the field receive a probability"
+   ],
+   "breakdown_regime": "If the pre-image of a set is outside the field, that set has no probability: derived quantities inherit exactly the measurability of the original field, nothing more.",
+   "domain": "random variables / distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every derived engine quantity (a projection, an index, a matchup score) gets its distribution this way: probability of a value region equals probability of the pre-image region in the base space. It is the formal basis of all simulation and transformation in the engine.",
+    "source_operator": "pushforward_probability_function",
+    "telemetry": "Pre-image coverage: which value regions of each derived quantity are actually priced."
+   }
+  },
+  {
+   "primitive_id": "distribution_function",
+   "name": "Distribution function F^(x)(a) = P{x < a}: non-decreasing, continuous on the left, limits 0 and 1, and it determines the whole distribution",
+   "verbatim_quote": "Since our main interest lies in these values of P(x)( A ) , the distribution function plays a most significant role in all our future work.",
+   "page": "Chapter III, §2 (printed pp. 23-24)",
+   "latex": "F^{(x)}(a) = P^{(x)}(-\\infty, a) = P\\{x < a\\}",
+   "symbol_and_unit_ledger": {
+    "F^(x)(a)": "distribution function of the random variable x at the point a",
+    "P{x < a}": "probability that x takes a value below a",
+    "a": "real argument, with -infinity and +infinity allowed as limiting values"
+   },
+   "assumptions": [
+    "The underlying field is a Borel field, so the distribution function determines P^(x) on all Borel sets",
+    "F is non-decreasing and continuous on the left"
+   ],
+   "breakdown_regime": "The distribution function says nothing about dependence: joint behavior needs the multi-dimensional theory, and marginals alone never reconstruct a joint law.",
+   "domain": "random variables / distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The distribution function is the engine's canonical one-number-at-a-time summary of any projected quantity: full uncertainty in one monotone curve, from which every interval probability is a difference of two values.",
+    "source_operator": "distribution_function",
+    "telemetry": "Empirical distribution functions of projected quantities versus realized outcomes (calibration curves)."
+   }
+  },
+  {
+   "primitive_id": "borel_closure_of_random_variables",
+   "name": "Closure theorem: every Borel function of finitely many random variables is again a random variable; in particular all finite sums and products are",
+   "verbatim_quote": "In particular, all finite sums and products of random variables are also random variables.",
+   "page": "Chapter III, §3 (printed p. 25)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The field of probability is a Borel field",
+    "The function is a Borel function of the variables"
+   ],
+   "breakdown_regime": "Closure is for finite collections and Borel functions only; arbitrary limit operations need the convergence theory of Chapter III, §5 and can leave the class if limits are not handled through the field.",
+   "domain": "random variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This licenses the engine's algebra: projections can be combined, transformed, and fed into further formulas with a guarantee that the results are still random variables with distributions, provided each combination is a Borel function of declared variables.",
+    "source_operator": "borel_closure_of_random_variables",
+    "telemetry": "Type checks in the projection pipeline: every composite quantity traces to declared base variables."
+   }
+  },
+  {
+   "primitive_id": "kolmogorov_consistency_theorem",
+   "name": "Fundamental theorem of infinite-dimensional spaces: a system of finite-dimensional distribution functions satisfying symmetry and marginal consistency defines a probability on cylinder sets satisfying Axioms I-VI",
+   "verbatim_quote": "set of all finite-dimensional distribution functions uniquely determines the probability function P(A) for all sets in $M",
+   "page": "Chapter III, §4 (printed pp. 29-30)",
+   "latex": "F_{\\mu_1 \\ldots \\mu_k}(a_1, \\ldots, a_k) = F_{\\mu_1 \\ldots \\mu_n}(a_1, \\ldots, a_k, +\\infty, \\ldots, +\\infty), \\qquad k < n",
+   "symbol_and_unit_ledger": {
+    "F with index list": "finite-dimensional distribution function of the listed coordinates",
+    "mu_i": "coordinate indices from the indexing set M",
+    "+infinity entries": "marginalizing out the remaining coordinates"
+   },
+   "assumptions": [
+    "Each finite-dimensional function is itself a genuine distribution function",
+    "Permutation symmetry and the marginal consistency conditions hold for all finite subsystems"
+   ],
+   "breakdown_regime": "For non-denumerable coordinate sets, many natural events (such as uniform boundedness over all coordinates) fall outside the extended field; Kolmogorov advises reformulating problems with denumerably many coordinates.",
+   "domain": "stochastic processes / infinite-dimensional probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the existence theorem behind every multi-output engine model: specify consistent finite-dimensional projections for any subset of variables, and a single joint law over all of them exists. Inconsistent marginals are not an approximation issue; no joint model exists at all.",
+    "source_operator": "kolmogorov_consistency_theorem",
+    "telemetry": "Marginal consistency tests across the engine's projection families (per player, per team, per game)."
+   }
+  },
+  {
+   "primitive_id": "equivalent_random_variables",
+   "name": "Equivalent random variables (equal except on a null set) have the same probability function and the same distribution function",
+   "verbatim_quote": "It is obvious that two equivalent random variables have the same probability",
+   "page": "Chapter III, §5 (printed p. 33)",
+   "latex": "P\\{x \\neq y\\} = 0",
+   "symbol_and_unit_ledger": {
+    "x, y": "two random variables on the same field",
+    "P{x not equal y}": "probability of the set where they differ"
+   },
+   "assumptions": [
+    "Both variables live on the same field of probability",
+    "Equality is required only almost surely, not pointwise"
+   ],
+   "breakdown_regime": "Equivalence preserves distributions but not joint behavior with third variables: substituting an equivalent variable inside a joint model can change conditional structure.",
+   "domain": "random variables",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to representation invariance in the engine: two feature constructions that agree almost surely are interchangeable for distribution purposes, and the engine may swap implementations without changing any published probability.",
+    "source_operator": "equivalent_random_variables",
+    "telemetry": "Almost-sure agreement rates between duplicate feature implementations."
+   }
+  },
+  {
+   "primitive_id": "almost_sure_convergence",
+   "name": "Almost sure convergence: a sequence converges with probability one to a limit that is itself a random variable, unique up to equivalence",
+   "verbatim_quote": "If the probability of convergence of the sequence (1) to x equals one, then we say that the sequence (1) converges almost surely to x.",
+   "page": "Chapter III, §5 (printed p. 34)",
+   "latex": "P(A) = 1, \\qquad x = \\lim_{n \\to \\infty} x_n \\ \\text{ on } A",
+   "symbol_and_unit_ledger": {
+    "A": "the set of elementary events where the sequence converges",
+    "x_n": "the sequence of random variables",
+    "x": "the limiting random variable, zero off A by convention"
+   },
+   "assumptions": [
+    "The convergence set belongs to the field, which the section proves from the field structure",
+    "The limit is determined only up to equivalence"
+   ],
+   "breakdown_regime": "Almost sure convergence is the strongest mode here and the hardest to verify; it implies convergence in probability but is not implied by it.",
+   "domain": "convergence of random variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's long-run consistency standard: an estimator or a simulation average that converges almost surely settles to the true quantity on every realized path except a null set, which is the guarantee behind Monte Carlo projection averages.",
+    "source_operator": "almost_sure_convergence",
+    "telemetry": "Pathwise stabilization diagnostics of simulation averages as sample counts grow."
+   }
+  },
+  {
+   "primitive_id": "weak_convergence_of_distribution_functions",
+   "name": "Convergence in probability forces the distribution functions to converge at every continuity point of the limiting distribution function",
+   "verbatim_quote": "Fn(a) converges at each point of continuity of F (a) to the distribution function F (a) of x",
+   "page": "Chapter III, §5 (printed pp. 35-36)",
+   "latex": "\\lim_{n \\to \\infty} F_n(a) = F(a) \\quad \\text{at every continuity point } a \\text{ of } F",
+   "symbol_and_unit_ledger": {
+    "F_n": "distribution function of x_n",
+    "F": "distribution function of the limit x",
+    "a": "a point where F is continuous"
+   },
+   "assumptions": [
+    "The sequence converges in probability to x",
+    "Convergence of F_n is asserted only at continuity points of F"
+   ],
+   "breakdown_regime": "At discontinuity points of F the values of F_n(a) need not converge to F(a); distribution convergence is a statement about the continuous skeleton of F, extended by left-continuity.",
+   "domain": "convergence of random variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the bridge the engine uses to validate distributional forecasts: if projected quantities converge in probability, their whole forecast distributions converge, so calibration can be checked on distribution functions rather than on single point estimates.",
+    "source_operator": "weak_convergence_of_distribution_functions",
+    "telemetry": "Supremum gaps between forecast and realized distribution functions over rolling windows."
+   }
+  },
+  {
+   "primitive_id": "mathematical_expectation",
+   "name": "Mathematical expectation as abstract Lebesgue integral over the basic set, equivalently the Stieltjes integral against the distribution function",
+   "verbatim_quote": "is called in the theory of probability the mathematical expectation of the variable x.",
+   "page": "Chapter IV, §2 (printed p. 39)",
+   "latex": "E(x) = \\int_E x \\, P(dE) = \\int_{-\\infty}^{+\\infty} a \\, dF^{(x)}(a)",
+   "symbol_and_unit_ledger": {
+    "E(x)": "mathematical expectation of x",
+    "integral over E": "abstract Lebesgue integral with respect to the probability function",
+    "dF^(x)(a)": "Stieltjes measure induced by the distribution function"
+   },
+   "assumptions": [
+    "Existence requires the integral of |x| to be finite",
+    "Bounded random variables always have an expectation"
+   ],
+   "breakdown_regime": "The Stieltjes integral of x(a) can exist in the improper symmetric sense while E(x) does not; Kolmogorov's §4 of Chapter VI shows the naive generalization loses linearity unless a tail condition holds.",
+   "domain": "mathematical expectation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Expectation is the engine's averaging operator, and this primitive fixes its two faces: average over scenarios in the base space, or average against the forecast distribution. Every projected mean the engine publishes is one of these two integrals and must agree both ways.",
+    "source_operator": "mathematical_expectation",
+    "telemetry": "Cross-checks between scenario-averaged means and distribution-integrated means."
+   }
+  },
+  {
+   "primitive_id": "tchebycheff_inequality_and_variance",
+   "name": "Tchebycheff inequality in general form: tail probabilities are bounded by moment ratios; the variance sigma^2(x) = E{x - E(x)}^2 is the canonical case",
+   "verbatim_quote": "Let f i x ) be a non-negative function of a real argument x, which for x ^ a never becomes smaller than b > 0.",
+   "page": "Chapter IV, §3 (printed p. 42)",
+   "latex": "P(x \\ge a) \\le \\frac{E(f(x))}{b}, \\qquad \\sigma^2(x) = E\\{x - E(x)\\}^2 = E(x^2) - \\{E(x)\\}^2",
+   "symbol_and_unit_ledger": {
+    "f(x)": "non-negative function, at least b > 0 wherever x reaches a",
+    "a, b": "threshold and lower bound constants",
+    "sigma^2(x)": "variance of x"
+   },
+   "assumptions": [
+    "E(f(x)) exists",
+    "f is non-negative and bounded below by b on the tail region"
+   ],
+   "breakdown_regime": "The bound is distribution-free and therefore loose: it uses one moment only and can be far from sharp; bounded variables admit the reverse-style bounds of formulas (7)-(9) in the same section.",
+   "domain": "inequalities / dispersion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's assumption-light risk bound: with only a mean and a variance, tail risk of a projection is already bounded. It disciplines any claim that a projected outcome is 'safe' when dispersion is large.",
+    "source_operator": "tchebycheff_inequality_and_variance",
+    "telemetry": "Variance estimates attached to every projection, with Chebyshev tail bounds reported beside point estimates."
+   }
+  },
+  {
+   "primitive_id": "expectation_parameter_interchange",
+   "name": "Differentiation and integration of expectations with respect to a parameter: under boundedness conditions the expectation sign commutes with both operations",
+   "verbatim_quote": "x( t ) always remains less, in absolute value, than some constant K and is integrable in the Riemann sense, then",
+   "page": "Chapter IV, §5 (printed p. 44)",
+   "latex": "\\int_a^b E(x(t)) \\, dt = E\\left( \\int_a^b x(t) \\, dt \\right), \\qquad \\frac{d}{dt} E(x(t)) = E(x'(t))",
+   "symbol_and_unit_ledger": {
+    "x(t)": "random function: a random variable for each fixed t",
+    "t": "real parameter",
+    "K, M": "uniform bounds on |x(t)| and |x'(t)| respectively",
+    "E": "mathematical expectation"
+   },
+   "assumptions": [
+    "For differentiation: E(x(t)) finite for all t, x(t) always differentiable, derivative uniformly bounded",
+    "For integration: x(t) uniformly bounded and Riemann integrable in t"
+   ],
+   "breakdown_regime": "Without the uniform bounds the interchange can fail: mass escaping to infinity as the parameter moves breaks both formulas, which is why the theorems are stated with domination hypotheses.",
+   "domain": "mathematical expectation / random functions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to sensitivity analysis in the engine: the derivative of an expected projection with respect to a continuous input (a pace parameter, a usage rate) equals the expected derivative, so gradient information can be computed inside the simulation rather than by re-running it.",
+    "source_operator": "expectation_parameter_interchange",
+    "telemetry": "Finite-difference checks of projection sensitivity against pathwise derivative estimates."
+   }
+  },
+  {
+   "primitive_id": "conditional_probability_radon_nikodym",
+   "name": "Conditional probability with respect to a function u exists and is unique up to equivalence, constructed through the Nikodym theorem (the Radon-Nikodym derivative)",
+   "verbatim_quote": "we shall prove that there always exists one and only one random variable",
+   "page": "Chapter V, §1 (printed pp. 47-48)",
+   "latex": "P(B u^{-1}(A)) = \\int_A P_u(B) \\, P^{(u)}(dE^{(u)})",
+   "symbol_and_unit_ledger": {
+    "P_u(B)": "conditional probability of B given u, a random variable that is a function of u",
+    "u^-1(A)": "the event that u falls in A",
+    "P^(u)": "probability function of u",
+    "A": "any set in the field of u with positive probability"
+   },
+   "assumptions": [
+    "P is completely additive on a Borel field",
+    "The set function A -> P(B u^-1(A)) is absolutely continuous with respect to P^(u)"
+   ],
+   "breakdown_regime": "Uniqueness is only up to equivalence: the value at a single point u = a is not determined by the definition, which is the root of the Borel paradox in §2.",
+   "domain": "conditional probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's conditional-density existence theorem: given any observed signal u, a conditional probability of every event given u exists as a function of the signal. It justifies conditioning projections on continuous signals where the conditioning event itself has probability zero.",
+    "source_operator": "conditional_probability_radon_nikodym",
+    "telemetry": "Coverage of the signal space: conditional projections defined across the observed range of each signal."
+   }
+  },
+  {
+   "primitive_id": "borel_paradox",
+   "name": "Borel paradox: conditioning on an isolated hypothesis of probability zero is inadmissible; the answer depends on the partition (coordinate system) that generates the null set",
+   "verbatim_quote": "This shows that the concept of a conditional probability with regard to an isolated given hypothesis whose probability equals 0 is inadmissible.",
+   "page": "Chapter V, §2 (printed pp. 50-51)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The example conditions on a meridian circle of the sphere, a set of surface measure zero",
+    "Different generating partitions (different poles) give different conditional distributions on the same circle"
+   ],
+   "breakdown_regime": "The paradox does not block conditioning on null events; it blocks conditioning on them in isolation. A regular conditional distribution tied to a declared partition remains well defined.",
+   "domain": "conditional probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a standing warning for the engine: conditioning on an exact continuous value (an exact pace, an exact efficiency) is meaningless until the limiting procedure is declared. Two analysts conditioning on 'the same' exact value through different statistics can legitimately get different answers.",
+    "source_operator": "borel_paradox",
+    "telemetry": "Declared limiting procedures for every continuous conditioning variable in the model registry."
+   }
+  },
+  {
+   "primitive_id": "bayes_theorem_continuous",
+   "name": "Bayes theorem for continuous distributions: the conditional density of x given B is the conditional probability of B at x times the prior density, normalized",
+   "verbatim_quote": "from formula (3) it follows that the existence of a limit in (3) and of a probability density f (x)(a) results in the existence of",
+   "page": "Chapter V, §3 (printed p. 52)",
+   "latex": "f_B^{(x)}(a) = \\frac{P_x(a; B) f^{(x)}(a)}{\\int_{-\\infty}^{+\\infty} P_x(a; B) f^{(x)}(a) \\, da}",
+   "symbol_and_unit_ledger": {
+    "f_B^(x)(a)": "conditional probability density of x at a under hypothesis B",
+    "P_x(a; B)": "conditional probability of B given x = a, defined by the limit in formula (3)",
+    "f^(x)(a)": "unconditional probability density of x at a"
+   },
+   "assumptions": [
+    "P_x(B) is measurable in the Borel sense as a function of x",
+    "The distribution of x is continuous with a density at a",
+    "P(B) > 0 for the ratio form in formula (6)"
+   ],
+   "breakdown_regime": "The formula holds only where the defining limit exists (almost everywhere with respect to P^(x)); at exceptional points the conditional density is a convention, not a computed value.",
+   "domain": "conditional probability / inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is Bayes for the engine's continuous quantities: the posterior density of a latent quantity after an observed event is the prior density reweighted by the event's conditional probability at each point. It is the exact update rule behind continuous player and team strength posteriors.",
+    "source_operator": "bayes_theorem_continuous",
+    "telemetry": "Posterior density evaluations with normalization integrals checked numerically."
+   }
+  },
+  {
+   "primitive_id": "conditional_expectation_definition",
+   "name": "Conditional mathematical expectation E_u(y): the function of u whose integrals over every {u in A} reproduce the integrals of y; E(y) = E(E_u(y))",
+   "verbatim_quote": "is called (if it exists) the conditional mathematical expectation of the variable y for known value of u.",
+   "page": "Chapter V, §4 (printed pp. 52-53)",
+   "latex": "\\int_{\\{u \\in A\\}} y \\, P(dE) = \\int_A E_u(y) \\, P^{(u)}(dE^{(u)}), \\qquad E(y) = E(E_u(y))",
+   "symbol_and_unit_ledger": {
+    "E_u(y)": "conditional mathematical expectation of y given u",
+    "u": "an arbitrary function of the elementary event",
+    "A": "any set in the field of u with positive probability",
+    "P^(u)": "probability function of u"
+   },
+   "assumptions": [
+    "E(y) exists, which is also sufficient for E_u(y) to exist via the Nikodym theorem",
+    "E_u(y) is determined only up to equivalence"
+   ],
+   "breakdown_regime": "Defined only up to equivalence, so point values at single u values are conventions; the symbolic integral form (formula (12) of the section) is explicitly not an integral in the Chapter IV sense.",
+   "domain": "conditional expectation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Conditional expectation is the engine's core prediction object: the best summary of an outcome given everything currently observed, characterized entirely by the averaging property. Any candidate predictor can be audited against that property on held-out partitions of the signal space.",
+    "source_operator": "conditional_expectation_definition",
+    "telemetry": "Calibration audits: realized averages of y inside bins of u against the predicted E_u(y) values."
+   }
+  },
+  {
+   "primitive_id": "tower_property",
+   "name": "Tower property of conditional expectation: conditioning in stages collapses, E_u E_(u,v)(y) = E_u(y)",
+   "verbatim_quote": "If u and v are two functions of the elementary event £, then the couple (u, v) can always be regarded as a function of £. The following important equation then holds:",
+   "page": "Chapter V, §4 (printed p. 54)",
+   "latex": "E_u E_{(u,v)}(y) = E_u(y)",
+   "symbol_and_unit_ledger": {
+    "u, v": "two functions of the elementary event",
+    "(u, v)": "the pair regarded as a single function",
+    "E_(u,v)(y)": "conditional expectation given both u and v",
+    "E_u": "conditional expectation given u alone"
+   },
+   "assumptions": [
+    "All conditional expectations involved exist",
+    "The pair (u, v) is treated as one conditioning variable"
+   ],
+   "breakdown_regime": "The collapse is one-directional in information: finer conditioning then averaging returns the coarser conditional expectation, but no operation recovers the finer one from the coarser.",
+   "domain": "conditional expectation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the consistency law for layered projections: a projection built from a fine information set, when averaged over the extra detail, must reproduce the projection built from the coarse set. Violations mean the two model layers disagree and one of them is mis-specified.",
+    "source_operator": "tower_property",
+    "telemetry": "Layer-consistency checks between detailed and summary projection models."
+   }
+  },
+  {
+   "primitive_id": "independence_conditional_characterization",
+   "name": "Independence of two functions is equivalent to the conditional probability of each one's events given the other being almost surely constant",
+   "verbatim_quote": "For the independence of u and v, the following condition is necessary and sufficient. For any choice of set A in ft(M) the following equation holds almost certainly:",
+   "page": "Chapter VI, §1 (printed p. 57)",
+   "latex": "P_v(u \\in A) = P(u \\in A) \\quad \\text{almost surely}",
+   "symbol_and_unit_ledger": {
+    "P_v(u in A)": "conditional probability of the event {u in A} given v",
+    "P(u in A)": "unconditional probability of the same event",
+    "A": "any set in the field generated by u"
+   },
+   "assumptions": [
+    "The conditional probability is understood in the Chapter V sense",
+    "The equality must hold for every choice of A"
+   ],
+   "breakdown_regime": "The characterization is almost-sure, so it can fail on null sets of the conditioning variable without violating independence; testing it empirically requires care about which values of v carry mass.",
+   "domain": "independence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This gives the engine a testable form of independence: a signal is independent of an outcome exactly when conditioning on the signal does not move the outcome's probability. Dependence hunts become searches for conditioning values that move probabilities.",
+    "source_operator": "independence_conditional_characterization",
+    "telemetry": "Conditional-versus-marginal probability comparisons across signal bins."
+   }
+  },
+  {
+   "primitive_id": "uncorrelatedness_and_variance_additivity",
+   "name": "Uncorrelatedness via E(xy) = E(x)E(y), and additivity of variance: the variance of a sum of pairwise uncorrelated variables is the sum of the variances",
+   "verbatim_quote": "If two random variables x and y satisfy equation (6), then they are called uncorrelated.",
+   "page": "Chapter VI, §2 (printed p. 60)",
+   "latex": "\\sigma^2(x_1 + x_2 + \\cdots + x_n) = \\sigma^2(x_1) + \\sigma^2(x_2) + \\cdots + \\sigma^2(x_n)",
+   "symbol_and_unit_ledger": {
+    "sigma^2": "variance",
+    "x_1, ..., x_n": "pairwise uncorrelated random variables",
+    "E(xy) = E(x)E(y)": "the defining equation (6) of uncorrelatedness in the text"
+   },
+   "assumptions": [
+    "The variables are uncorrelated in pairs",
+    "All expectations involved are finite"
+   ],
+   "breakdown_regime": "Uncorrelatedness is strictly weaker than independence: zero correlation kills the variance cross terms but leaves all higher-order dependence intact, so tail co-movement can survive.",
+   "domain": "independence / dispersion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's diversification arithmetic: aggregate uncertainty of a combined projection is the sum of component variances only to the extent the components are uncorrelated. Every correlation present adds cross terms the naive sum hides.",
+    "source_operator": "uncorrelatedness_and_variance_additivity",
+    "telemetry": "Pairwise correlation estimates among projection components before aggregation."
+   }
+  },
+  {
+   "primitive_id": "law_of_large_numbers_tchebycheff",
+   "name": "Law of large numbers, Tchebycheff form: arithmetic means are stable when the summed variances grow slower than n^2 (Markov condition in the bounded case)",
+   "verbatim_quote": "Therefore, in this case, the following condition is sufficient for the normal stability of the arithmetical means",
+   "page": "Chapter VI, §3 (printed p. 62)",
+   "latex": "\\sigma^2(x_1) + \\sigma^2(x_2) + \\cdots + \\sigma^2(x_n) = o(n^2)",
+   "symbol_and_unit_ledger": {
+    "x_k": "pairwise uncorrelated summands",
+    "sigma^2(x_k)": "variance of the k-th summand",
+    "o(n^2)": "grows strictly slower than n^2",
+    "s_n": "the arithmetic mean of the first n variables"
+   },
+   "assumptions": [
+    "Stability is convergence in probability of the means to their expectations (normal stability)",
+    "The displayed condition is Tchebycheff's sufficient condition for pairwise uncorrelated summands"
+   ],
+   "breakdown_regime": "Stability is weak convergence of the mean, not pathwise settling: individual realizations can still wander, and heavy tails can violate the variance condition entirely.",
+   "domain": "law of large numbers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's sample-size law: averaged ratings stabilize only as fast as accumulated variance allows. It converts directly into how many games of evidence a projection needs before its mean can be trusted to a stated tolerance.",
+    "source_operator": "law_of_large_numbers_tchebycheff",
+    "telemetry": "Variance accumulation curves per rating: games observed versus the stability bound."
+   }
+  },
+  {
+   "primitive_id": "strong_law_of_large_numbers",
+   "name": "Strong law: for independent summands, convergence of the series of sigma^2(x_n)/n^2 gives normal strong stability of the means, and the condition is best possible",
+   "verbatim_quote": "condition for the normal strong stability of the arithmetic means sn is the convergence of the series",
+   "page": "Chapter VI, §5 (printed p. 67)",
+   "latex": "\\sum_{n=1}^{\\infty} \\frac{\\sigma^2(x_n)}{n^2} < \\infty",
+   "symbol_and_unit_ledger": {
+    "x_n": "mutually independent random variables",
+    "sigma^2(x_n)": "variance of the n-th variable",
+    "s_n": "arithmetic mean of the first n variables"
+   },
+   "assumptions": [
+    "The summands are mutually independent",
+    "Strong stability means the centered means tend to zero almost surely"
+   ],
+   "breakdown_regime": "Kolmogorov stresses the condition is best possible in general: for any slower-decaying variance series one can construct independent variables whose means are not strongly stable. For identically distributed summands the sharp condition is existence of E(x).",
+   "domain": "law of large numbers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the pathwise version of the engine's sample-size law: with independent evidence arriving at controlled variance, running averages settle almost surely, not just in probability. It is the guarantee behind season-long running ratings.",
+    "source_operator": "strong_law_of_large_numbers",
+    "telemetry": "Variance series of incoming evidence streams, checked for summability."
+   }
+  },
+  {
+   "primitive_id": "three_series_theorem",
+   "name": "Three-series theorem: a series of independent random variables converges almost surely if and only if the tail, expectation, and variance series of the truncated variables all converge",
+   "verbatim_quote": "Then in order that series (1) converge with the probability one, it is necessary and sufficient10 that the following series converge simultaneously:",
+   "page": "Chapter VI, §5 (printed p. 68)",
+   "latex": "\\sum_n P(|x_n| > 1) < \\infty, \\qquad \\sum_n E(y_n) \\ \\text{converges}, \\qquad \\sum_n \\sigma^2(y_n) < \\infty",
+   "symbol_and_unit_ledger": {
+    "x_n": "mutually independent random variables",
+    "y_n": "x_n truncated at absolute value 1 (y_n = x_n if |x_n| <= 1, else 0)",
+    "the three series": "tail probabilities, expectations, and variances of the truncated variables"
+   },
+   "assumptions": [
+    "The summands are mutually independent",
+    "Truncation level 1 is conventional; any fixed level gives an equivalent statement"
+   ],
+   "breakdown_regime": "All three conditions are needed: a series can fail through rare huge jumps (first series), drift (second), or accumulated fluctuation (third), and each failure mode is independent of the others.",
+   "domain": "series of random variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This decomposes any accumulating engine quantity into its three failure channels: jumps, drift, and fluctuation. A cumulative metric that will not settle can be diagnosed by which of the three series diverges, instead of being treated as generically noisy.",
+    "source_operator": "three_series_theorem",
+    "telemetry": "Jump frequency, drift, and fluctuation variance of cumulative engine metrics, tracked as three separate series."
+   }
+  },
+  {
+   "primitive_id": "zero_or_one_law",
+   "name": "Zero-or-one law: a tail-type event whose conditional probability given any finite history equals its absolute probability has probability zero or one",
+   "verbatim_quote": "In particular, the assumptions of this theorem are fulfilled if the variables x n are mutually independent and if the value of the function f i x ) remains unchanged when only a finite number of variables are changed.",
+   "page": "Appendix (printed p. 69)",
+   "latex": "P\\{f(x_1, x_2, \\ldots) = 0\\} \\in \\{0, 1\\}",
+   "symbol_and_unit_ledger": {
+    "f": "a Baire function of the whole sequence of random variables",
+    "x_n": "the random variables, mutually independent in the stated sufficient case",
+    "the event": "the relation f = 0, unchanged by altering finitely many variables"
+   },
+   "assumptions": [
+    "Changing finitely many variables does not change the value of f",
+    "The conditional probability given the first n variables equals the absolute probability for every n"
+   ],
+   "breakdown_regime": "The law applies only to tail events: anything a finite amount of evidence can influence escapes the dichotomy, and intermediate probabilities return.",
+   "domain": "independence / tail events",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's treatment of asymptotic questions: whether a process eventually settles, diverges, or recurs is a tail property and is typically all-or-nothing under independence, so the engine should not assign it a moderate probability without identifying the dependence that breaks the law.",
+    "source_operator": "zero_or_one_law",
+    "telemetry": "Flags on long-run questions whose assigned probabilities sit strictly between zero and one."
+   }
+  },
+  {
+   "primitive_id": "generalized_expectation",
+   "name": "Generalized expectation E*(x) by symmetric truncation: it exists exactly under the tail condition P(|x| > n) = o(1/n), and strictly extends E(x)",
+   "verbatim_quote": "the condition (3) actually does define a generalization of the concept of mathematical expectation",
+   "page": "Chapter VI, §4 (printed pp. 65-66)",
+   "latex": "E^*(x) = \\lim_{b \\to +\\infty} \\int_{-b}^{+b} a \\, dF^{(x)}(a), \\qquad P(|x| > n) = o\\left(\\frac{1}{n}\\right)",
+   "symbol_and_unit_ledger": {
+    "E*(x)": "generalized mathematical expectation",
+    "b": "symmetric truncation limit",
+    "F^(x)": "distribution function of x",
+    "tail condition": "necessary and sufficient for the arithmetic means to stabilize at E*(x)"
+   },
+   "assumptions": [
+    "The variables in the stability question are independent with the same distribution as x",
+    "The symmetric limit of the truncated integrals exists"
+   ],
+   "breakdown_regime": "The generalization costs structure: E*(x + y) = E*(x) + E*(y) can fail, and E*|x| need not exist when E*(x) does. Kolmogorov's example density makes E*(x) = 0 while E|x| diverges.",
+   "domain": "mathematical expectation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to heavy-tail discipline in the engine: a symmetric-truncation average can look stable for distributions with no true mean. Before trusting any averaged quantity, the tail condition must be checked; otherwise the engine is reporting an E* as if it were an E.",
+    "source_operator": "generalized_expectation",
+    "telemetry": "Tail decay rates of averaged quantities, tested against the 1/n benchmark."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "53d47a558cf53d1f-t1",
+   "think": "This book is the founding document of modern probability, and reading it whole shows a deliberate architecture in which each chapter removes one finiteness restriction. Chapter I builds the elementary theory on five axioms: events form a field of sets, the field contains the whole space, each event receives a non-negative number, the whole space receives one, and disjoint events add. Everything in the chapter is finite: the addition theorem, conditional probability as a ratio, the multiplication theorem, the theorem on total probability, and Bayes' theorem all follow in a few lines once the field and the measure are in place. Independence is defined through decompositions of the space, and Kolmogorov pauses to say explicitly that independence, not additivity, is what gives probability its peculiar stamp; measure theory alone would not have produced a science. The chapter closes by turning conditional probability into a random variable and defining Markov chains, whose transition matrices compose by multiplication. Chapter II adds the one genuinely new axiom, continuity, and shows it is equivalent to complete additivity. With it come Borel fields, closed under countable operations, and the extension theorem: a completely additive probability on a small field extends uniquely to the Borel field it generates, constructed through the outer measure defined by coverings. Kolmogorov is candid that the extended sets are ideal events and that infinite fields are idealized models of real processes, a modeling honesty the rest of the book never abandons. Chapter III constructs random variables as measurable functions, their distributions as pushforward measures, and distribution functions as the working summary. Its center is the fundamental theorem on infinite-dimensional spaces: consistent finite-dimensional distribution functions determine a probability on cylinder sets, and the consistency conditions, permutation symmetry and marginal agreement, are also sufficient. That theorem is what makes stochastic processes possible, because it licenses defining a process by all its finite snapshots. The chapter ends with equivalence of random variables and the modes of convergence, proving that convergence in probability pins down the limiting distribution function at its continuity points. Chapter IV defines expectation as the abstract Lebesgue integral and re-derives the Stieltjes form, then proves the Tchebycheff inequality in a general moment form and the criteria for convergence in probability, and closes with conditions under which expectation commutes with differentiation and integration in a parameter. Chapter V is the book's deepest contribution. Conditional probability given a general function is not defined by a ratio but characterized by an integral equation, and its existence and uniqueness up to equivalence are proved through the Nikodym theorem, which is the Radon-Nikodym theorem in probability language. The Borel paradox then shows why the characterization had to be this way: conditioning on an isolated null hypothesis is meaningless, and only conditioning relative to a partition is well defined. Conditional expectation is built the same way, with the tower property for nested conditioning proved as a theorem rather than assumed. Chapter VI returns to independence in full generality, gives the conditional characterization of independence, develops stability of arithmetic means into the laws of large numbers, separates the weak law's variance conditions from the strong law's summability condition, states the three-series criterion for convergence of random series, and warns through the generalized expectation E* that symmetric truncation can manufacture a stable center for distributions that have no mean at all. The appendix distills the zero-or-one law for tail events. Taken together, the machinery says: fix a field and a measure, and every concept the working scientist uses, conditioning, expectation, independence, stability, is a theorem-shaped consequence, valid exactly where its stated hypotheses reach and silent or false beyond them. Two structural decisions deserve separate emphasis because they decide what the theory can and cannot say. The first is that conditional probability is introduced twice, at two levels of generality, and the second introduction quietly replaces the first. In Chapter I it is an elementary ratio for hypotheses of positive probability, and Kolmogorov proves that for fixed A the conditional probabilities themselves satisfy the axioms, so conditioning is a change of probability space rather than a new kind of object. In Chapter V the ratio is gone: P_u(B) is any measurable function of u satisfying one integral identity for every set A in the field of u, and the Nikodym theorem supplies existence and uniqueness up to equivalence. The gain is that conditioning on continuous information, where every exact value has probability zero, becomes legitimate; the cost, exposed by the Borel paradox on the sphere, is that the value at an isolated point is not intrinsic, so the theory forces the user to declare the partition that generates the conditioning sigma-field. The second decision is that existence is always proved by consistency rather than by construction from below. The extension theorem builds the Borel field probability from covering sums and shows the result is unique; the fundamental theorem of Chapter III builds infinite-dimensional probability from finite-dimensional marginals and shows that symmetry plus marginal agreement are exactly the conditions needed; the same pattern produces conditional expectation from its integral identity. In each case the message is that a probabilistic object is its system of finite, checkable relations, and the infinite object is the unique completion of that system. The convergence chapter makes the same point for limits: almost sure convergence, convergence in probability, and convergence of distribution functions are three distinct claims with a proved implication order, and Kolmogorov's Slutsky-type closure results show that the class of random variables is stable under exactly the operations a working analyst performs. The laws of large numbers then read as stability theorems with visible hypotheses: Tchebycheff's condition on summed variances for stability in probability, the stronger summability condition for almost sure stability, Kolmogorov's demonstration that his strong-law condition cannot be weakened in general, and finally the three-series theorem, which gives a necessary and sufficient criterion by splitting convergence into a tail condition, a centering condition, and a fluctuation condition. Where the book is silent is as instructive as where it speaks. There is no decision theory, no estimation theory, no statistics: the parameters of a distribution are given, never inferred, and Bayes' theorem appears as a formula about hypotheses inside the model, not as a method for learning from data. There is no ergodic theorem and no central limit theorem beyond a footnote pointing to the literature. The theory is deliberately a foundation, and its author says in the preface that applications are assumed known. Read as a foundation it is complete in a specific sense: every concept used later in probability, from filtrations to regular conditional distributions to tail triviality, is already here in embryo, stated with its hypotheses attached.",
+   "retrocausal_genealogy": "The lineage is explicit in the preface and footnotes. Lebesgue's measure and integral supplied the analogy between probability and measure and between expectation and integral; Frechet freed integration from geometry and gave the abstract integral used in Chapter IV. Von Mises supplied the empirical frequency interpretation that Chapter I, §2 converts into axioms, while Bernstein's axiomatics and his pairwise-independence counterexample stand behind §5. Cantelli and Slutsky shaped the convergence concepts, Khintchine collaborated on the laws of large numbers surveyed in Chapter VI, and Nikodym's theorem carries the existence proof for conditional probability in Chapter V.",
+   "theory_of_mind": "Kolmogorov writes for a reader who is already a mathematician and who is expected to check every claim against the axioms. His model of the domain is dual: probability is simultaneously a pure mathematical structure, developed without any appeal to what events mean, and an empirical discipline whose contact with reality is quarantined into one section, §2 of Chapter I, governed by the frequency principle and Cournot's principle. He distrusts intuition precisely where it is most confident, above all around conditioning and infinity, and he repeatedly marks the boundary between what is observable (finite fields) and what is an idealized model (infinite fields).",
+   "cross_layer_veto": "Several results in this book veto habits that other layers of reasoning encourage. The Borel paradox vetoes conditioning on an isolated exact value of a continuous quantity: without a declared partition or limiting procedure, the conditional answer is not wrong but undefined. The extension theorem vetoes re-pricing: once base probabilities are fixed, extended events have forced values. The generalized expectation vetoes trusting a stable-looking average, because E* can exist where E does not. The strong law's optimality statement vetoes hoping for weaker variance conditions in general, and the zero-or-one law vetoes moderate probabilities for tail events under independence."
+  }
+ ],
+ "universal_lens": "The universal template is axiomatize, then extend by consistency. Kolmogorov fixes a minimal structure (a field of sets and a normalized additive function), proves the working theorems inside it, and then enlarges the world only through theorems that guarantee the enlargement is forced: the extension theorem for sets, the consistency theorem for finite-dimensional distributions, the Nikodym theorem for conditioning. Any domain that manipulates uncertainty, belief, risk, evidence, or long-run frequencies can be rebuilt on this template: declare the event structure, declare the measure, and let every derived concept earn its existence from an integral equation or a consistency condition rather than from intuition.",
+ "gsi_mapping": "For the Galaxy Sports Institute this book is the methodological floor: research claims about sport are probability statements and inherit the book's discipline. Studies must declare their event fields, conditioning partitions, and independence assumptions; null results and zero-probability events must be distinguished; averages must pass the tail checks behind the laws of large numbers before they are cited as stable effects. The Borel paradox and the generalized expectation are standing review items for any institute paper that conditions on exact continuous values or averages heavy-tailed performance metrics.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine this book supplies the operating system rather than a single model: projections live on declared probability fields; updates are conditional probability and conditional expectation with their averaging property as the audit test; multi-variable projections must satisfy the consistency conditions or no joint law exists; aggregation uses variance additivity only where uncorrelatedness is earned; sample sizes are set by the laws of large numbers. Nothing in this mapping concerns wagering mechanics; it is the prediction and reasoning substrate every other model runs on."
+}

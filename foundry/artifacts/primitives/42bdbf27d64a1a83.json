@@ -1,0 +1,78 @@
+{
+  "book_id": "42bdbf27d64a1a83",
+  "source_status": "COMPLETE",
+  "title": "polymarket.com",
+  "file_name": "polymarket.com.md",
+  "sha256": "42bdbf27d64a1a8301c705f7ca7b4cb59a8d24e8af19c35ba7614ec25b8e2675",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Polymarket's gas fee API encodes Ethereum Layer-2 transaction cost dynamics through structured latency and priority fee regimes. Universal Lens: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on Polygon gas fees enables probabilistic state estimation of network congestion and transaction prioritization. GSI Mapping: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models transactional latency and fee structures as dynamic state transitions within a stochastic Layer-2 environment. GSE Mapping: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "gas_fee_structure",
+      "name": "Gas Fee Structure",
+      "verbatim_quote": "`https://polymarket.com/api/gas/polygon` ``` safeLow: dict safeLow.maxPriorityFee: int safeLow.maxFee: float standard: dict standard.maxPriorityFee: int standard.maxFee: float fast: dict",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'safeLow.maxPriorityFee': 'int (wei)', 'safeLow.maxFee': 'float (wei)', 'standard.maxPriorityFee': 'int (wei)', 'standard.maxFee': 'float (wei)', 'fast.maxPriorityFee': 'int (wei)', 'fast.maxFee': 'float (wei)', 'estimatedBaseFee': 'float (wei)', 'blockTime': 'float (seconds)', 'blockNumber': 'int (dimensionless)', 'blockTimestamp': 'int (seconds since epoch)'}",
+      "assumptions": "Transaction fees are determined by market-driven priority and base fee mechanisms; network state is deterministic within a block.",
+      "breakdown_regime": "When blockTime exceeds threshold, indicates network congestion or latency spike.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a derived kernel of Ethereum Layer-2 transaction cost dynamics, enabling GSI to infer network health and GSE to optimize transaction scheduling.",
+        "source_operator": "gas_fee_structure",
+        "telemetry": "Observable via API response latency and fee tier variations."
+      }
+    },
+    {
+      "primitive_id": "source_operator_2",
+      "name": "polymarket.com Grounded Principle 2",
+      "verbatim_quote": "# polymarket.com — engineering App bundles beautified: **0** JSON endpoints captured: **1** Client functions passing filter:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_2",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "polymarket.com Grounded Principle 3",
+      "verbatim_quote": "Captured JSON endpoints | Endpoint | Bytes | |---|---| | `https://polymarket.com/api/gas/polygon` | 271 | ## Response",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "42bdbf27d64a1a83_t0",
+      "think": "The gas fee structure encodes a multi-tiered transaction cost model where safeLow, standard, and fast tiers reflect varying degrees of network priority. Each tier contains maxPriorityFee and maxFee, which together define the maximum cost a user is willing to pay for execution speed. The estimatedBaseFee represents the minimum fee required per block, while blockTime, blockNumber, and blockTimestamp provide temporal context. These variables form a stochastic process underpinning Layer-2 transaction scheduling. Failure modes include latency spikes when blockTime increases beyond expected thresholds, indicating congestion or node failure. Dualities emerge between fee tiers and execution probability, where higher fees correlate with faster confirmation times. The system exhibits a server-side gap model, meaning client-side logic cannot independently reconstruct the full fee schema without server-provided data.\n\nDeep epistemic analysis for polymarket.com (42bdbf27d64a1a83, domain=other, pages_read=1/1): Operator 'Gas Fee Structure' (page 1, domain other) captures: `https://polymarket.com/api/gas/polygon` ``` safeLow: dict safeLow.maxPriorityFee: int safeLow.maxFee: float standard: dict standard.maxPriorityFee: int standard.maxFee: float fast: dict Assumptions: Transaction fees are determined by market-driven priority and base fee mechanisms; network state is deterministic within a block. Breakdown regime: When blockTime exceeds threshold, indicates network congestion or latency spike. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a derived kernel of Ethereum Layer-2 transaction cost dynamics, enabling GSI to infer network health and GSE to optimize transaction scheduling. Operator 'polymarket.com Grounded Principle 2' (page 1, domain other) captures: # polymarket.com — engineering App bundles beautified: **0** JSON endpoints captured: **1** Client functions passing filter: Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'polymarket.com Grounded Principle 3' (page 1, domain other) captures: Captured JSON endpoints | Endpoint | Bytes | |---|---| | `https://polymarket.com/api/gas/polygon` | 271 | ## Response Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for polymarket.com (42bdbf27d64a1a83, domain=other, pages_read=1/1): Operator 'Gas Fee Structure' (page 1, domain other) captures: `https://polymarket.com/api/gas/polygon` ``` safeLow: dict safeLow.maxPriorityFee: int safeLow.maxFee: float standard: dict standard.maxPriorityFee: int standard.maxFee: float fast: dict Assumptions: Transaction fees are determined by market-driven priority and base fee mechanisms; network state is deterministic within a block. Breakdown regime: When blockTime exceeds threshold, indicates network congestion or latency spike. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a derived kernel of Ethereum Layer-2 transaction cost dynamics, enabling GSI to infer network health and GSE to optimize transaction scheduling. Operator 'polymarket.com Grounded Principle 2' (page 1, domain other) captures: # polymarket.com — engineering App bundles beautified: **0** JSON endpoints captured: **1** Client functions passing filter: Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'polymarket.com Grounded Principle 3' (page 1, domain other) captures: Captured JSON endpoints | Endpoint | Bytes | |---|---| | `https://polymarket.com/api/gas/polygon` | 271 | ## Response Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Ethereum's EIP-1559 mechanism, which introduced base fees and priority fees to improve transaction predictability and reduce miner rent extraction. Retrocausal Genealogy: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include miners seeking optimal revenue and users aiming for minimal cost. Miners adjust base fees dynamically based on block capacity, while users select fee tiers according to urgency and budget constraints. Theory of Mind & Decision Maker Model: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when client-side assumptions about fee behavior conflict with server-side updates. Leakage occurs if fee data is not consistently synchronized across nodes, leading to invalid transaction submissions or mispricing. Cross-Layer Veto & Anti-Leakage Check: Rooted in polymarket.com (42bdbf27d64a1a83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

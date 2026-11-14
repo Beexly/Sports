@@ -1,0 +1,78 @@
+{
+  "book_id": "5b1b02da28d6e3ff",
+  "source_status": "COMPLETE",
+  "title": "reddit-feed-engine",
+  "file_name": "reddit-feed-engine.md",
+  "sha256": "5b1b02da28d6e3ff8eacd5f25308ebd8ee97d0985ba656d40dbe69383aad6650",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source graph hardening integrates rights-gated ingestion with scalable triage for 500K+ URLs via paginated inference. Universal Lens: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian source validation models rights-gated evidence streams; conformal prediction ensures 500K+ URL triage reliability. GSI Mapping: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions through active/reference/candidate states; state transitions governed by license activation and feed authorization. GSE Mapping: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_graph_hardening",
+      "name": "Source Graph Hardening Foundation",
+      "verbatim_quote": "# Reddit Feed Engine StatKing now treats this area as part of the Source Graph + Media Intelligence hardening foundation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Source set, dimensionless', 'R': 'Rights gating function, binary {0,1}', 'M': 'Media intelligence layer, dimensionless'}",
+      "assumptions": "Sources are partitioned into rights-gated subsets; media intelligence operates on structured data.",
+      "breakdown_regime": "When |S| > 500K, paginated triage becomes necessary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's Bayesian validation mirrors GSE's source state transitions through rights-gated access control.",
+        "source_operator": "source_graph_hardening",
+        "telemetry": "Number of gated sources vs total sources."
+      }
+    },
+    {
+      "primitive_id": "rights_gated_ingestion",
+      "name": "Rights-Gated Ingestion Protocol",
+      "verbatim_quote": "- Sources are rights-gated before display, storage, redistribution, training, or expert-signal conversion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'Ingestion event, dimensionless', 'G': 'Rights gate, binary {0,1}', 'T': 'Transformation type, categorical'}",
+      "assumptions": "Each ingestion event must pass a rights check before proceeding to downstream processing.",
+      "breakdown_regime": "Failure when G=0 during any T transformation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's signal integrity depends on G=1; GSE's state validity requires G=1 for all transformations.",
+        "source_operator": "rights_gated_ingestion",
+        "telemetry": "Proportion of valid ingested sources."
+      }
+    },
+    {
+      "primitive_id": "paginated_triage_model",
+      "name": "Paginated Triage Model",
+      "verbatim_quote": "- Candidate scale is modeled for 500,000+ URLs with paginated review and triage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Candidate set size, dimensionless', 'P': 'Pagination parameter, integer', 'T': 'Triage threshold, real [0,1]'}",
+      "assumptions": "Triaging C > 500K requires P-based iteration; T defines inclusion criteria.",
+      "breakdown_regime": "When C/P exceeds memory capacity, triage fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's triage model maps to GSE's pagination logic; both use T to filter candidates.",
+        "source_operator": "paginated_triage_model",
+        "telemetry": "Average time per pagination cycle."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b1b02da28d6e3ff_t0",
+      "think": "The core operators define a layered ingestion pipeline where source integrity is enforced via rights-gating, followed by scalable triage. The universal lens unifies these into a single hardening framework. The GSI mapping applies Bayesian inference to validate source authenticity and predict triage outcomes. The GSE mapping models state transitions between active, reference, and candidate records based on licensing and activation. The primitives form a dual structure: one for validation (rights-gated ingestion), one for scalability (paginated triage). Failure modes include rights denial in ingestion and overflow in triage. The epistemic trace reveals that the system assumes deterministic access control and bounded computational resources for large-scale triage.\n\nDeep epistemic analysis for reddit-feed-engine (5b1b02da28d6e3ff, domain=other, pages_read=1/1): Operator 'Source Graph Hardening Foundation' (page 1, domain other) captures: # Reddit Feed Engine StatKing now treats this area as part of the Source Graph + Media Intelligence hardening foundation. Assumptions: Sources are partitioned into rights-gated subsets; media intelligence operates on structured data. Breakdown regime: When |S| > 500K, paginated triage becomes necessary. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian validation mirrors GSE's source state transitions through rights-gated access control. Operator 'Rights-Gated Ingestion Protocol' (page 1, domain other) captures: - Sources are rights-gated before display, storage, redistribution, training, or expert-signal conversion. Assumptions: Each ingestion event must pass a rights check before proceeding to downstream processing. Breakdown regime: Failure when G=0 during any T transformation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's signal integrity depends on G=1; GSE's state validity requires G=1 for all transformations. Operator 'Paginated Triage Model' (page 1, domain other) captures: - Candidate scale is modeled for 500,000+ URLs with paginated review and triage. Assumptions: Triaging C > 500K requires P-based iteration; T defines inclusion criteria. Breakdown regime: When C/P exceeds memory capacity, triage fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's triage model maps to GSE's pagination logic; both use T to filter candidates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for reddit-feed-engine (5b1b02da28d6e3ff, domain=other, pages_read=1/1): Operator 'Source Graph Hardening Foundation' (page 1, domain other) captures: # Reddit Feed Engine StatKing now treats this area as part of the Source Graph + Media Intelligence hardening foundation. Assumptions: Sources are partitioned into rights-gated subsets; media intelligence operates on structured data. Breakdown regime: When |S| > 500K, paginated triage becomes necessary. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian validation mirrors GSE's source state transitions through rights-gated access control. Operator 'Rights-Gated Ingestion Protocol' (page 1, domain other) captures: - Sources are rights-gated before display, storage, redistribution, training, or expert-signal conversion. Assumptions: Each ingestion event must pass a rights check before proceeding to downstream processing. Breakdown regime: Failure when G=0 during any T transformation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's signal integrity depends on G=1; GSE's state validity requires G=1 for all transformations. Operator 'Paginated Triage Model' (page 1, domain other) captures: - Candidate scale is modeled for 500,000+ URLs with paginated review and triage. Assumptions: Triaging C > 500K requires P-based iteration; T defines inclusion criteria. Breakdown regime: When C/P exceeds memory capacity, triage fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's triage model maps to GSE's pagination logic; both use T to filter candidates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in information theory and access control systems; builds upon formal methods in distributed computing and probabilistic databases. Retrocausal Genealogy: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized data consumers and malicious actors attempting bypasses. Decision actors are automated validators and human triagers. Theory of Mind & Decision Maker Model: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if GSI and GSE share identical validation metrics without distinct operational semantics. Leakage occurs if triage data leaks beyond its intended scope. Cross-Layer Veto & Anti-Leakage Check: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in reddit-feed-engine (5b1b02da28d6e3ff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

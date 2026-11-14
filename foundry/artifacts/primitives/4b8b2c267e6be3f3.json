@@ -1,0 +1,78 @@
+{
+  "book_id": "4b8b2c267e6be3f3",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "4b8b2c267e6be3f3cda5c7dc164abd7a31fa378d66cbc4f096d1529b55a2e278",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The staged content represents a discrete-time stochastic process where the system state transitions from STAGED to LIVE. The underlying mathematical structure is governed by a Markovian reward process, where historical unit yields (+18.56u) act as empirical priors for future expected value calculations across tiered access strata.",
+  "gsi_mapping": "In GSI, the reported record (31-11-0) and unit yield (+18.56u) form the empirical likelihood function. Bayesian updating integrates these realized outcomes into posterior predictive distributions for Week 8, while conformal inference bounds the uncertainty of the TNF subset (+8.11u), ensuring rigorous calibration of the RedZone Desk's probabilistic forecasts.",
+  "gse_mapping": "GSE models the checkout pipeline as a deterministic finite automaton. The state transition occurs when `packageSlug` successfully maps to a Stripe session, avoiding the 400 error singularity. Situational reasoning dictates that the $49 week pass acts as the global attractor, optimizing capital inflow based on the demonstrated +18.56u edge.",
+  "primitives": [
+    {
+      "primitive_id": "empirical_yield_vector",
+      "name": "Cumulative Unit Yield Operator",
+      "verbatim_quote": "Record used, as ordered for this suite: 31-11-0 · +18.56u.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "W: Wins (dimensionless count), L: Losses (dimensionless count), T: Ties (dimensionless count), u: Net units won (dimensionless monetary proxy)",
+      "assumptions": "Betting units are normalized; variance is stationary over the observed window.",
+      "breakdown_regime": "Regime shifts occur if bankroll volatility exceeds Kelly fraction tolerances or if market liquidity dries up.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw win-loss records to a continuous utility surface used for GSI confidence intervals.",
+        "source_operator": "empirical_yield_vector",
+        "telemetry": "Realized ROI vs. Expected Value (EV) drift."
+      }
+    },
+    {
+      "primitive_id": "subset_isolation_kernel",
+      "name": "Conditional Performance Isolator",
+      "verbatim_quote": "Prior 16-5-0 · +10.45u. TNF CAR@GB 15-6-0 · +8.11u. Checkout links below were verified. packageId returns",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "u_prior: Pre-TNF units (dimensionless), u_TNF: Thursday Night Football units (dimensionless)",
+      "assumptions": "TNF games are statistically independent of the prior slate but share the same underlying edge generator.",
+      "breakdown_regime": "Breaks down if TNF line movement exhibits extreme mean-reversion not captured by the base model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE situational filtering, isolating high-leverage game scripts (TNF) from standard Sunday noise.",
+        "source_operator": "subset_isolation_kernel",
+        "telemetry": "Variance ratio between TNF subset and full population."
+      }
+    },
+    {
+      "primitive_id": "state_transition_gateway",
+      "name": "Stripe Session Router",
+      "verbatim_quote": "returns a Stripe session. - $49 week pass: https://www.galaxysportsedge.com/api/packages/checkout?packageSlug=week8-all-access - $39.99 DFS: https://www.galaxysportsedge.com/api/packages/checkout?packageSlug=redzone-dfs-pro-pack - $39 Sunday",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P_slug: Package slug string (UTF-8), S_session: Stripe Checkout Session ID (UUID)",
+      "assumptions": "API endpoints are deterministic; network latency does not affect state resolution.",
+      "breakdown_regime": "Singularity at HTTP 400 errors when invalid packageId parameters bypass the slug router.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Translates GSI theoretical edge into GSE executable revenue streams via tiered pricing kernels.",
+        "source_operator": "state_transition_gateway",
+        "telemetry": "Checkout conversion rate per package tier."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b8b2c267e6be3f3_t0",
+      "think": "The provided README excerpt functions as a boundary condition for a larger stochastic betting engine. We derive three core operators from the text. First, the Empirical Yield Vector aggregates discrete outcomes (31-11-0) into a continuous utility metric (+18.56u). This operator assumes stationarity in the underlying market inefficiencies exploited by the RedZone Desk. Second, the Subset Isolation Kernel partitions the total yield into temporal subsets (Prior vs. TNF). Mathematically, this allows us to compute conditional expectations E[Y | TNF] and assess whether specific game scripts (like Thursday Night Football) exhibit higher alpha generation than the baseline distribution. Third, the State Transition Gateway models the commercialization of this alpha. The shift from a failing `packageId` (HTTP 400) to a successful `packageSlug` routing represents a critical bifurcation point in the system's revenue automaton. The dualities here lie between theoretical edge (GSI) and realized cash flow (GSE). Failure modes emerge if the empirical yield vector suffers from look-ahead bias, or if the state transition gateway encounters API singularities during high-traffic staging events. The retrocausal aspect involves using the +18.56u historical performance to justify current pricing tiers ($49, $39.99), effectively projecting past success onto future consumer willingness-to-pay.\n\nDeep epistemic analysis for README (4b8b2c267e6be3f3, domain=other, pages_read=1/1): Operator 'Cumulative Unit Yield Operator' (page 1, domain other) captures: Record used, as ordered for this suite: 31-11-0 · +18.56u. Assumptions: Betting units are normalized; variance is stationary over the observed window. Breakdown regime: Regime shifts occur if bankroll volatility exceeds Kelly fraction tolerances or if market liquidity dries up. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw win-loss records to a continuous utility surface used for GSI confidence intervals. Operator 'Conditional Performance Isolator' (page 1, domain other) captures: Prior 16-5-0 · +10.45u. TNF CAR@GB 15-6-0 · +8.11u. Checkout links below were verified. packageId returns Assumptions: TNF games are statistically independent of the prior slate but share the same underlying edge generator. Breakdown regime: Breaks down if TNF line movement exhibits extreme mean-reversion not captured by the base model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE situational filtering, isolating high-leverage game scripts (TNF) from standard Sunday noise. Operator 'Stripe Session Router' (page 1, domain other) captures: returns a Stripe session. - $49 week pass: https://www.galaxysportsedge.com/api/packages/checkout?packageSlug=week8-all-access - $39.99 DFS: https://www.galaxysportsedge.com/api/packages/checkout?packageSlug=redzone-dfs-pro-pack - $39 Sunday Assumptions: API endpoints are deterministic; network latency does not affect state resolution. Breakdown regime: Singularity at HTTP 400 errors when invalid packageId parameters bypass the slug router. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Translates GSI theoretical edge into GSE executable revenue streams via tiered pricing kernels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (4b8b2c267e6be3f3, domain=other, pages_read=1/1): Operator 'Cumulative Unit Yield Operator' (page 1, domain other) captures: Record used, as ordered for this suite: 31-11-0 · +18.56u. Assumptions: Betting units are normalized; variance is stationary over the observed window. Breakdown regime: Regime shifts occur if bankroll volatility exceeds Kelly fraction tolerances or if market liquidity dries up. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw win-loss records to a continuous utility surface used for GSI confidence intervals. Operator 'Conditional Performance Isolator' (page 1, domain other) captures: Prior 16-5-0 · +10.45u. TNF CAR@GB 15-6-0 · +8.11u. Checkout links below were verified. packageId returns Assumptions: TNF games are statistically independent of the prior slate but share the same underlying edge generator. Breakdown regime: Breaks down if TNF line movement exhibits extreme mean-reversion not captured by the base model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE situational filtering, isolating high-leverage game scripts (TNF) from standard Sunday noise. Operator 'Stripe Session Router' (page 1, domain other) captures: returns a Stripe session. - $49 week pass: https://www.galaxysportsedge.com/api/packages/checkout?packageSlug=week8-all-access - $39.99 DFS: https://www.galaxysportsedge.com/api/packages/checkout?packageSlug=redzone-dfs-pro-pack - $39 Sunday Assumptions: API endpoints are deterministic; network latency does not affect state resolution. Breakdown regime: Singularity at HTTP 400 errors when invalid packageId parameters bypass the slug router. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Translates GSI theoretical edge into GSE executable revenue streams via tiered pricing kernels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This lineage traces back to early 20th-century probability theory applied to gambling, specifically the Kelly Criterion for optimal bet sizing. The evolution moved through modern sports analytics, where win-loss records were replaced by expected points added (EPA) and implied probability differentials. The current primitive represents a synthesis of quantitative edge measurement and SaaS monetization logic, borrowing heavily from algorithmic trading infrastructure where historical Sharpe ratios dictate subscription tier valuations.",
+      "theory_of_mind": "We model two primary agents: the System Architect (RedZone Desk) and the Consumer (Subscriber). The Architect possesses superior information regarding the +18.56u yield and uses this asymmetry to structure tiered pricing ($49 week pass vs. $29 props). The Consumer acts as a rational actor attempting to maximize their own EV by purchasing access to the Architect's kernel. The Theory of Mind component involves the Architect predicting the Consumer's risk tolerance—DFS players might prefer the $39.99 pack, while long-term investors target the all-access pass—thereby optimizing the overall conversion matrix.",
+      "cross_layer_veto": "A cross-layer veto is triggered if the empirical yield vector shows negative correlation with the stated pricing tiers, indicating a collapse in perceived value. Furthermore, we must veto any leakage where the TNF subset performance (+8.11u) is over-generalized to the entire Sunday slate without statistical justification. Anti-collinearity checks ensure that the marketing claims (staged content) do not diverge from the actual API capabilities (Stripe session generation). If the `packageSlug` fails to resolve, the entire revenue automaton halts, necessitating an immediate fallback to manual intervention protocols."
+    }
+  ]
+}

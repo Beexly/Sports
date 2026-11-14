@@ -1,0 +1,78 @@
+{
+  "book_id": "5e72f538cb7e11b7",
+  "source_status": "COMPLETE",
+  "title": "source-risk-register",
+  "file_name": "source-risk-register.md",
+  "sha256": "5e72f538cb7e11b70dc08989b85019812feb4d9fe3fb56b6648c84f1af0ba77f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source risk register encodes stochastic decision manifolds with severity-likelihood vectors, enabling Bayesian risk propagation across data, legal, and product layers. Universal Lens: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models risk as conformal predictive distributions over source confidence intervals, using reconciliation operators to update posterior beliefs on roster and TOS exposures. GSI Mapping: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE employs state-transition graphs to model risk mitigation paths, where each decision node triggers conditional updates in data integrity and legal compliance states. GSE Mapping: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "transaction_roster_reconciliation",
+      "name": "Transaction-Roster Reconciliation Operator",
+      "verbatim_quote": "| data engineering | GO with tests | | Official roster lags transaction | HIGH | HIGH | Transaction-to-roster reconciler creates NEEDS_REVIEW rather than silent overwrite.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'transaction timestamp (dimensionless)', 'R': 'roster entry timestamp (dimensionless)', 'ΔT': 'time difference T - R (dimensionless)'}",
+      "assumptions": "Reconciliation process is deterministic under stable source states; overwrite behavior is non-atomic.",
+      "breakdown_regime": "When ΔT < 0, system enters NEEDS_REVIEW state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps temporal misalignment between transaction and roster data to a probabilistic conflict resolution kernel in GSE's state space.",
+        "source_operator": "transaction_roster_reconciliation",
+        "telemetry": "Conflict flag frequency and resolution latency"
+      }
+    },
+    {
+      "primitive_id": "tos_compliance_gate",
+      "name": "TOS Compliance Gate",
+      "verbatim_quote": "| data quality | GO | | Media/fantasy TOS risk | HIGH | MEDIUM | Legal/robots review before automated fetch; use as manual fallback until approved.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'compliance score (0 to 1)', 'F': 'fetch automation flag (boolean)', 'M': 'manual fallback trigger (boolean)'}",
+      "assumptions": "Automated fetch is only permissible when C > threshold; fallback is deterministic upon failure.",
+      "breakdown_regime": "When F=1 and C<threshold, M becomes active.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a Bayesian classifier that evaluates TOS risk against legal approval thresholds in GSI's inference engine.",
+        "source_operator": "tos_compliance_gate",
+        "telemetry": "Automated fetch success rate and manual override frequency"
+      }
+    },
+    {
+      "primitive_id": "privacy_data_filter",
+      "name": "Privacy Data Filter",
+      "verbatim_quote": "| legal | APPROVAL_REQUIRED | | Staff privacy overcollection | HIGH | MEDIUM | Only public professional role data from official/professional sources.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'data vector (dimensionless)', 'P': 'privacy filter (boolean)', 'A': 'approval flag (boolean)'}",
+      "assumptions": "Only D ⊆ P when A=true; otherwise D is filtered to public subset.",
+      "breakdown_regime": "When A=false, P filters out private components of D.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a kernel-based projection operator in GSI’s legal data filtering layer, mapping raw data to compliant subsets.",
+        "source_operator": "privacy_data_filter",
+        "telemetry": "Filtered data volume and approval rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e72f538cb7e11b7_t0",
+      "think": "The risk register encodes a layered stochastic system where each primitive represents a decision manifold with probabilistic outcomes. The reconciliation operator introduces a temporal conflict kernel, while the TOS gate enforces Bayesian compliance thresholds. Privacy filtering acts as a kernel projection onto legal compliance subspaces. These primitives form a dual structure: one for data integrity (reconciliation), one for legal adherence (TOS, privacy). Failure modes arise from misalignment of these manifolds—e.g., when a high-severity, high-likelihood risk bypasses its mitigation path due to insufficient oversight. The system's robustness depends on the closure of these manifolds under sequential risk propagation.\n\nDeep epistemic analysis for source-risk-register (5e72f538cb7e11b7, domain=other, pages_read=1/1): Operator 'Transaction-Roster Reconciliation Operator' (page 1, domain other) captures: | data engineering | GO with tests | | Official roster lags transaction | HIGH | HIGH | Transaction-to-roster reconciler creates NEEDS_REVIEW rather than silent overwrite. Assumptions: Reconciliation process is deterministic under stable source states; overwrite behavior is non-atomic. Breakdown regime: When ΔT < 0, system enters NEEDS_REVIEW state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps temporal misalignment between transaction and roster data to a probabilistic conflict resolution kernel in GSE's state space. Operator 'TOS Compliance Gate' (page 1, domain other) captures: | data quality | GO | | Media/fantasy TOS risk | HIGH | MEDIUM | Legal/robots review before automated fetch; use as manual fallback until approved. Assumptions: Automated fetch is only permissible when C > threshold; fallback is deterministic upon failure. Breakdown regime: When F=1 and C<threshold, M becomes active. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian classifier that evaluates TOS risk against legal approval thresholds in GSI's inference engine. Operator 'Privacy Data Filter' (page 1, domain other) captures: | legal | APPROVAL_REQUIRED | | Staff privacy overcollection | HIGH | MEDIUM | Only public professional role data from official/professional sources. Assumptions: Only D ⊆ P when A=true; otherwise D is filtered to public subset. Breakdown regime: When A=false, P filters out private components of D. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a kernel-based projection operator in GSI’s legal data filtering layer, mapping raw data to compliant subsets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-risk-register (5e72f538cb7e11b7, domain=other, pages_read=1/1): Operator 'Transaction-Roster Reconciliation Operator' (page 1, domain other) captures: | data engineering | GO with tests | | Official roster lags transaction | HIGH | HIGH | Transaction-to-roster reconciler creates NEEDS_REVIEW rather than silent overwrite. Assumptions: Reconciliation process is deterministic under stable source states; overwrite behavior is non-atomic. Breakdown regime: When ΔT < 0, system enters NEEDS_REVIEW state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps temporal misalignment between transaction and roster data to a probabilistic conflict resolution kernel in GSE's state space. Operator 'TOS Compliance Gate' (page 1, domain other) captures: | data quality | GO | | Media/fantasy TOS risk | HIGH | MEDIUM | Legal/robots review before automated fetch; use as manual fallback until approved. Assumptions: Automated fetch is only permissible when C > threshold; fallback is deterministic upon failure. Breakdown regime: When F=1 and C<threshold, M becomes active. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian classifier that evaluates TOS risk against legal approval thresholds in GSI's inference engine. Operator 'Privacy Data Filter' (page 1, domain other) captures: | legal | APPROVAL_REQUIRED | | Staff privacy overcollection | HIGH | MEDIUM | Only public professional role data from official/professional sources. Assumptions: Only D ⊆ P when A=true; otherwise D is filtered to public subset. Breakdown regime: When A=false, P filters out private components of D. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a kernel-based projection operator in GSI’s legal data filtering layer, mapping raw data to compliant subsets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal risk theory from 20th-century decision science, extended through Bayesian belief networks and modern adversarial learning frameworks in data governance. Retrocausal Genealogy: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include automated data fetchers, legal reviewers, and system reconcilers. Each agent operates under bounded rationality, with incentives aligned to minimize risk exposure while maximizing operational throughput. Theory of Mind & Decision Maker Model: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that data integrity (reconciliation) does not directly influence legal compliance (TOS), and vice versa. Leakage vetoes prevent unauthorized access to internal cockpit logic via public interfaces. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-risk-register (5e72f538cb7e11b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

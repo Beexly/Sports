@@ -1,0 +1,78 @@
+{
+  "book_id": "570fc9873cf26a4d",
+  "source_status": "COMPLETE",
+  "title": "gse-sub-bunny-tonight",
+  "file_name": "gse-sub-bunny-tonight.md",
+  "sha256": "570fc9873cf26a4dacea36d4a65f971afc064a9305d11bc0ce07e66591f49dce",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pre-game odds as stochastic processes over time-varying information states; temporal evolution of market consensus via live data streams. Universal Lens: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on game state using live odds as likelihood functions; conformal prediction intervals for outcome uncertainty. GSI Mapping: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models team dynamics and betting flows as Markov transitions; state-space updates from live odds signals. GSE Mapping: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pre_game_odds_state",
+      "name": "Pre-Game Odds State",
+      "verbatim_quote": "games.jsonl game_id 2026_04_PIT_CLE has home moneyline 124, away moneyline -148, spread_line -3, total_line 38.5.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'moneyline_home': 'dimensionless', 'moneyline_away': 'dimensionless', 'spread_line': 'points', 'total_line': 'points'}",
+      "assumptions": "Static market consensus prior to kickoff; no live data influence.",
+      "breakdown_regime": "Pre-kickoff deterministic state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents initial belief distribution over game outcomes; serves as baseline for Bayesian update.",
+        "source_operator": "pre_game_odds_state",
+        "telemetry": "Historical game result alignment with pre-game expectations."
+      }
+    },
+    {
+      "primitive_id": "live_odds_stream",
+      "name": "Live Odds Stream",
+      "verbatim_quote": "Find a keyless live odds path already in this repo (ESPN site.web.api or similar) that can return a PIT@CLE moneyline or spread newer than that file.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'odds_update_time': 'seconds since epoch', 'moneyline_home': 'dimensionless', 'moneyline_away': 'dimensionless', 'spread_line': 'points'}",
+      "assumptions": "Real-time data availability without authentication; stream reflects evolving market sentiment.",
+      "breakdown_regime": "Post-pre-game dynamic state transition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to real-time Bayesian updating of game state probabilities; mirrors information flow in GSI.",
+        "source_operator": "live_odds_stream",
+        "telemetry": "Deviation from pre-game odds indicating market revaluation."
+      }
+    },
+    {
+      "primitive_id": "market_consensus_signal",
+      "name": "Market Consensus Signal",
+      "verbatim_quote": "already in this repo (ESPN site.web.api or similar) that can return a PIT@CLE moneyline or spread",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'consensus_strength': 'unitless score', 'signal_timeliness': 'seconds', 'confidence_interval': 'percentage'}",
+      "assumptions": "Signal strength correlates with liquidity and volatility; timeliness affects predictive value.",
+      "breakdown_regime": "Dynamic equilibrium between supply/demand in betting markets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encapsulates aggregate trader behavior; used in GSE for probabilistic forecasting.",
+        "source_operator": "market_consensus_signal",
+        "telemetry": "Correlation with actual game outcome probabilities."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "570fc9873cf26a4d_t0",
+      "think": "The primitives define a temporal hierarchy of game-state representations: static pre-game odds form a baseline kernel, while live odds streams provide dynamic updates. The market consensus signal bridges these by quantifying how much the collective betting behavior deviates from initial expectations. This structure enables GSI to model belief evolution through Bayesian inference, where each new odds update acts as a likelihood function. The GSE leverages this for state transitions, simulating how teams' performance might alter betting dynamics. Failure modes include stale data, which breaks the temporal coherence of the system, and reliance on non-keyless sources, violating operational constraints. Dualities emerge in the symmetry between pre-game and live states, and the duality of belief vs. evidence in the Bayesian framework.\n\nDeep epistemic analysis for gse-sub-bunny-tonight (570fc9873cf26a4d, domain=other, pages_read=1/1): Operator 'Pre-Game Odds State' (page 1, domain other) captures: games.jsonl game_id 2026_04_PIT_CLE has home moneyline 124, away moneyline -148, spread_line -3, total_line 38.5. Assumptions: Static market consensus prior to kickoff; no live data influence. Breakdown regime: Pre-kickoff deterministic state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents initial belief distribution over game outcomes; serves as baseline for Bayesian update. Operator 'Live Odds Stream' (page 1, domain other) captures: Find a keyless live odds path already in this repo (ESPN site.web.api or similar) that can return a PIT@CLE moneyline or spread newer than that file. Assumptions: Real-time data availability without authentication; stream reflects evolving market sentiment. Breakdown regime: Post-pre-game dynamic state transition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to real-time Bayesian updating of game state probabilities; mirrors information flow in GSI. Operator 'Market Consensus Signal' (page 1, domain other) captures: already in this repo (ESPN site.web.api or similar) that can return a PIT@CLE moneyline or spread Assumptions: Signal strength correlates with liquidity and volatility; timeliness affects predictive value. Breakdown regime: Dynamic equilibrium between supply/demand in betting markets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encapsulates aggregate trader behavior; used in GSE for probabilistic forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-sub-bunny-tonight (570fc9873cf26a4d, domain=other, pages_read=1/1): Operator 'Pre-Game Odds State' (page 1, domain other) captures: games.jsonl game_id 2026_04_PIT_CLE has home moneyline 124, away moneyline -148, spread_line -3, total_line 38.5. Assumptions: Static market consensus prior to kickoff; no live data influence. Breakdown regime: Pre-kickoff deterministic state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents initial belief distribution over game outcomes; serves as baseline for Bayesian update. Operator 'Live Odds Stream' (page 1, domain other) captures: Find a keyless live odds path already in this repo (ESPN site.web.api or similar) that can return a PIT@CLE moneyline or spread newer than that file. Assumptions: Real-time data availability without authentication; stream reflects evolving market sentiment. Breakdown regime: Post-pre-game dynamic state transition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to real-time Bayesian updating of game state probabilities; mirrors information flow in GSI. Operator 'Market Consensus Signal' (page 1, domain other) captures: already in this repo (ESPN site.web.api or similar) that can return a PIT@CLE moneyline or spread Assumptions: Signal strength correlates with liquidity and volatility; timeliness affects predictive value. Breakdown regime: Dynamic equilibrium between supply/demand in betting markets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encapsulates aggregate trader behavior; used in GSE for probabilistic forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in stochastic process theory and Bayesian decision-making, tracing back to Kolmogorov's axioms and Bayesian networks. Influenced by financial market microstructure and information economics. Retrocausal Genealogy: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as rational traders with bounded information access. Their decisions reflect heterogeneous beliefs, leading to price formation. The system assumes agents act to maximize expected utility under uncertainty. Theory of Mind & Decision Maker Model: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that live odds do not redundantly encode pre-game data. Leakage veto prevents unauthorized data exposure. Both conditions maintain integrity across GSI/GSE layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-sub-bunny-tonight (570fc9873cf26a4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "39de781bb1544bd0",
+  "source_status": "COMPLETE",
+  "title": "2025 - A predictive metamodel for college football - Coleman",
+  "file_name": "2025 - A predictive metamodel for college football - Coleman.md",
+  "sha256": "39de781bb1544bd0659d5c1364fd6236a355686e168786e44b3f6bf9708b8e3b",
+  "primary_domain": "football",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "predictive_metamodel",
+      "name": "Predictive Metamodel",
+      "verbatim_quote": "Using 29 college football rating systems, data for 5925 games during 2016–24, and a _k_-fold cross-validation process focused on model predictiveness, a five-system metamodel is developed to predict the victory margin for games in the ensuing week.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The model assumes that linear combinations of existing rating systems can capture predictive power beyond individual models.",
+      "breakdown_regime": "Fails when new rule changes introduce unprecedented variables not covered by the 29 base models.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Predictive posterior distribution of game outcomes given covariates. GSE: State-transition kernel for game evolution based on metamodel predictions.",
+        "source_operator": "predictive_metamodel",
+        "telemetry": "Out-of-sample prediction accuracy on holdout weeks"
+      }
+    },
+    {
+      "primitive_id": "k_fold_cross_validation",
+      "name": "_k_-fold Cross-Validation",
+      "verbatim_quote": "Using 29 college football rating systems, data for 5925 games during 2016–24, and a _k_-fold cross-validation process focused on model predictiveness, a five-system metamodel is developed to predict the victory margin for games in the ensuing week.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data points are independent and identically distributed, and the cross-validation error estimates generalization error.",
+      "breakdown_regime": "Breaks down when temporal autocorrelation violates i.i.d. assumption.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Holdout set validation for posterior predictive checks. GSE: Training/validation splits for policy evaluation in sequential decision processes.",
+        "source_operator": "k_fold_cross_validation",
+        "telemetry": "Cross-validated mean squared error on holdout sets"
+      }
+    },
+    {
+      "primitive_id": "betting_line_adjustment",
+      "name": "Betting Line Adjustment",
+      "verbatim_quote": "The model achieves strong results vis-à-vis the opening, midweek, and closing betting lines, and is statistically significant in the presence of the opening line in validation and test samples.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The betting line is an unbiased estimate of true probability, and the adjustment captures residual systematic bias.",
+      "breakdown_regime": "Breaks down during sharp market movements or information asymmetry.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Posterior mean adjusted for bookmaker bias as optimal prediction. GSE: State-action value function conditioned on market signals.",
+        "source_operator": "betting_line_adjustment",
+        "telemetry": "Residual standard deviation after accounting for betting line"
+      }
+    },
+    {
+      "primitive_id": "benchmark_model",
+      "name": "Benchmark Model",
+      "verbatim_quote": "The model is potentially useful for the College Football Playoff committee, media, fans, the betting market, and oddsmakers, and provides a benchmark against which future rating systems can be assessed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The metamodel represents a reasonable baseline performance achievable by any new system.",
+      "breakdown_regime": "Regime where new systems must outperform the ensemble to justify development effort.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Prior distribution for evaluating new predictive models. GSE: Performance ceiling for reinforcement learning policies.",
+        "source_operator": "benchmark_model",
+        "telemetry": "Average rank among competing rating systems"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "39de781bb1544bd0_t0",
+      "think": "The core challenge is combining heterogeneous predictive signals (rating systems) into a coherent forecast. The metamodel treats each base model as a noisy measurement of true team strength. By optimizing linear coefficients via cross-validation, the approach mitigates overfitting while leveraging diverse algorithmic perspectives. Key failure modes include distribution shift (e.g., rule changes) and multicollinearity among highly correlated inputs. The statistical significance test ensures the added value is not spurious noise.\n\nDeep epistemic analysis for 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0, domain=football, pages_read=10/10): Operator 'Predictive Metamodel' (page 1, domain football) captures: Using 29 college football rating systems, data for 5925 games during 2016–24, and a _k_-fold cross-validation process focused on model predictiveness, a five-system metamodel is developed to predict the victory margin for games in the ensuing week. Assumptions: The model assumes that linear combinations of existing rating systems can capture predictive power beyond individual models. Breakdown regime: Fails when new rule changes introduce unprecedented variables not covered by the 29 base models. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Predictive posterior distribution of game outcomes given covariates. GSE: State-transition kernel for game evolution based on metamodel predictions. Operator '_k_-fold Cross-Validation' (page 1, domain football) captures: Using 29 college football rating systems, data for 5925 games during 2016–24, and a _k_-fold cross-validation process focused on model predictiveness, a five-system metamodel is developed to predict the victory margin for games in the ensuing week. Assumptions: Data points are independent and identically distributed, and the cross-validation error estimates generalization error. Breakdown regime: Breaks down when temporal autocorrelation violates i.i.d. assumption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Holdout set validation for posterior predictive checks. GSE: Training/validation splits for policy evaluation in sequential decision processes. Operator 'Betting Line Adjustment' (page 1, domain football) captures: The model achieves strong results vis-à-vis the opening, midweek, and closing betting lines, and is statistically significant in the presence of the opening line in validation and test samples. Assumptions: The betting line is an unbiased estimate of true probability, and the adjustment captures residual systematic bias. Breakdown regime: Breaks down during sharp market movements or information asymmetry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior mean adjusted for bookmaker bias as optimal prediction. GSE: State-action value function conditioned on market signals. Operator 'Benchmark Model' (page 1, domain football) captures: The model is potentially useful for the College Football Playoff committee, media, fans, the betting market, and oddsmakers, and provides a benchmark against which future rating systems can be assessed. Assumptions: The metamodel represents a reasonable baseline performance achievable by any new system. Breakdown regime: Regime where new systems must outperform the ensemble to justify development effort. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Prior distribution for evaluating new predictive models. GSE: Performance ceiling for reinforcement learning policies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0, domain=football, pages_read=10/10): Operator 'Predictive Metamodel' (page 1, domain football) captures: Using 29 college football rating systems, data for 5925 games during 2016–24, and a _k_-fold cross-validation process focused on model predictiveness, a five-system metamodel is developed to predict the victory margin for games in the ensuing week. Assumptions: The model assumes that linear combinations of existing rating systems can capture predictive power beyond individual models. Breakdown regime: Fails when new rule changes introduce unprecedented variables not covered by the 29 base models. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Predictive posterior distribution of game outcomes given covariates. GSE: State-transition kernel for game evolution based on metamodel predictions. Operator '_k_-fold Cross-Validation' (page 1, domain football) captures: Using 29 college football rating systems, data for 5925 games during 2016–24, and a _k_-fold cross-validation process focused on model predictiveness, a five-system metamodel is developed to predict the victory margin for games in the ensuing week. Assumptions: Data points are independent and identically distributed, and the cross-validation error estimates generalization error. Breakdown regime: Breaks down when temporal autocorrelation violates i.i.d. assumption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Holdout set validation for posterior predictive checks. GSE: Training/validation splits for policy evaluation in sequential decision processes. Operator 'Betting Line Adjustment' (page 1, domain football) captures: The model achieves strong results vis-à-vis the opening, midweek, and closing betting lines, and is statistically significant in the presence of the opening line in validation and test samples. Assumptions: The betting line is an unbiased estimate of true probability, and the adjustment captures residual systematic bias. Breakdown regime: Breaks down during sharp market movements or information asymmetry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior mean adjusted for bookmaker bias as optimal prediction. GSE: State-action value function conditioned on market signals. Operator 'Benchmark Model' (page 1, domain football) captures: The model is potentially useful for the College Football Playoff committee, media, fans, the betting market, and oddsmakers, and provides a benchmark against which future rating systems can be assessed. Assumptions: The metamodel represents a reasonable baseline performance achievable by any new system. Breakdown regime: Regime where new systems must outperform the ensemble to justify development effort. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Prior distribution for evaluating new predictive models. GSE: Performance ceiling for reinforcement learning policies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in linear model averaging (Hoerl and Kennard, 1970) and ensemble learning (Breiman, 1996), adapted to sports forecasting with temporal validation. Retrocausal Genealogy: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The College Football Playoff committee seeks objective metrics to reduce subjective bias. Bookmakers aim to balance their books efficiently. Fans demand transparent explanations for predictions. Theory of Mind & Decision Maker Model: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid leakage from future outcomes into training data. Anti-collinearity constraints ensure each base model contributes unique information. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2025 - A predictive metamodel for college football - Coleman (39de781bb1544bd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

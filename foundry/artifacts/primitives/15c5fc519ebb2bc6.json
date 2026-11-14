@@ -1,0 +1,78 @@
+{
+  "book_id": "15c5fc519ebb2bc6",
+  "source_status": "COMPLETE",
+  "title": "LAUNCH_DECISION_2026-09-04",
+  "file_name": "LAUNCH_DECISION_2026-09-04.md",
+  "sha256": "15c5fc519ebb2bc682f252dd86e854e98e6de6a18f1908ba8cbfc295cd6b08ab",
+  "primary_domain": "psych",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal predictive system where model confidence and market efficiency jointly define a posterior risk surface, with CLV as the canonical validation metric. Universal Lens: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on replayed market data using a calibrated ROI likelihood function, with confidence tiers as latent variables in a hierarchical probabilistic model. GSI Mapping: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions driven by market-efficiency constraints, where each pick's outcome is evaluated against a synthetic closing line to maintain temporal consistency. GSE Mapping: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "corpus_poisoning_bug",
+      "name": "Corpus Poisoning Bug",
+      "verbatim_quote": "What we now know that we did not know yesterday **A corpus-poisoning bug, found and fixed.** nflverse `spread_line` is *positive = home favored*; this repo is *negative = home favored*.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'spread_line': 'dimensionless, signed margin', 'home_favored': 'boolean'}",
+      "assumptions": "The sign convention for spread_line differs between datasets, causing misalignment in historical predictions.",
+      "breakdown_regime": "All backfilled spread picks prior to fix #695 were inverted due to incorrect sign interpretation.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sign convention mismatch maps to a global phase shift in the prediction space, equivalent to a coordinate transformation in a Bayesian likelihood landscape.",
+        "source_operator": "corpus_poisoning_bug",
+        "telemetry": "Replay accuracy on 2007 Patriots game shows reversal of predicted team."
+      }
+    },
+    {
+      "primitive_id": "market_efficiency_result",
+      "name": "Market Efficiency Result",
+      "verbatim_quote": "That is the textbook market-efficiency result, now measured in-house rather than assumed.",
+      "page": 1,
+      "latex": "\\mathbb{E}[\\text{ROI}] = -5.48\\% \\quad \\forall \\text{segments}",
+      "symbol_and_unit_ledger": "{'ROI': 'percentage', 'market_segment': 'discrete variable'}",
+      "assumptions": "All market segments exhibit identical negative expected returns under current model.",
+      "breakdown_regime": "No distinguishable performance across 11 market shapes tested.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The observed ROI kernel reflects a fundamental inefficiency in the model's ability to extract value from price signals.",
+        "source_operator": "market_efficiency_result",
+        "telemetry": "Consistent negative ROI across all 11 market shape categories."
+      }
+    },
+    {
+      "primitive_id": "confidence_paywall",
+      "name": "Confidence Paywall",
+      "verbatim_quote": "The decision Confidence **is** the paywall: `tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ?",
+      "page": 2,
+      "latex": "z = -1.19, \\quad p = 0.235",
+      "symbol_and_unit_ledger": "{'z_score': 'dimensionless', 'p_value': 'dimensionless'}",
+      "assumptions": "Premium tier picks do not statistically outperform free-tier picks based on current dataset.",
+      "breakdown_regime": "Statistical insignificance of premium vs. free tier performance (z = -1.19, p = 0.235).",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The confidence-based tiering mechanism fails to isolate superior predictive capacity, indicating a lack of discriminative power in the underlying model.",
+        "source_operator": "confidence_paywall",
+        "telemetry": "AUC comparison between premium and free picks shows no significant difference."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "15c5fc519ebb2bc6_t0",
+      "think": "The core insight is that the model's predictive utility is bounded by market efficiency, which manifests as a consistent negative ROI across all tested market segments. This implies that the model's internal logic—its confidence scoring and edge calculation—is not extracting exploitable information from the market. The corpus poisoning bug introduces a systematic error that invalidates prior predictions, necessitating a clean slate. The confidence paywall fails to demonstrate statistical superiority, suggesting that the model lacks a robust discriminant. The CLV metric serves as the only valid benchmark, but even it does not support claims of model efficacy. The failure mode lies in the assumption that market inefficiencies can be captured through static models without dynamic calibration.\n\nDeep epistemic analysis for LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6, domain=psych, pages_read=3/3): Operator 'Corpus Poisoning Bug' (page 1, domain psych) captures: What we now know that we did not know yesterday **A corpus-poisoning bug, found and fixed.** nflverse `spread_line` is *positive = home favored*; this repo is *negative = home favored*. Assumptions: The sign convention for spread_line differs between datasets, causing misalignment in historical predictions. Breakdown regime: All backfilled spread picks prior to fix #695 were inverted due to incorrect sign interpretation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sign convention mismatch maps to a global phase shift in the prediction space, equivalent to a coordinate transformation in a Bayesian likelihood landscape. Operator 'Market Efficiency Result' (page 1, domain psych) captures: That is the textbook market-efficiency result, now measured in-house rather than assumed. Assumptions: All market segments exhibit identical negative expected returns under current model. Breakdown regime: No distinguishable performance across 11 market shapes tested. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The observed ROI kernel reflects a fundamental inefficiency in the model's ability to extract value from price signals. Operator 'Confidence Paywall' (page 2, domain psych) captures: The decision Confidence **is** the paywall: `tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? Assumptions: Premium tier picks do not statistically outperform free-tier picks based on current dataset. Breakdown regime: Statistical insignificance of premium vs. free tier performance (z = -1.19, p = 0.235). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The confidence-based tiering mechanism fails to isolate superior predictive capacity, indicating a lack of discriminative power in the underlying model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6, domain=psych, pages_read=3/3): Operator 'Corpus Poisoning Bug' (page 1, domain psych) captures: What we now know that we did not know yesterday **A corpus-poisoning bug, found and fixed.** nflverse `spread_line` is *positive = home favored*; this repo is *negative = home favored*. Assumptions: The sign convention for spread_line differs between datasets, causing misalignment in historical predictions. Breakdown regime: All backfilled spread picks prior to fix #695 were inverted due to incorrect sign interpretation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sign convention mismatch maps to a global phase shift in the prediction space, equivalent to a coordinate transformation in a Bayesian likelihood landscape. Operator 'Market Efficiency Result' (page 1, domain psych) captures: That is the textbook market-efficiency result, now measured in-house rather than assumed. Assumptions: All market segments exhibit identical negative expected returns under current model. Breakdown regime: No distinguishable performance across 11 market shapes tested. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The observed ROI kernel reflects a fundamental inefficiency in the model's ability to extract value from price signals. Operator 'Confidence Paywall' (page 2, domain psych) captures: The decision Confidence **is** the paywall: `tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? Assumptions: Premium tier picks do not statistically outperform free-tier picks based on current dataset. Breakdown regime: Statistical insignificance of premium vs. free tier performance (z = -1.19, p = 0.235). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The confidence-based tiering mechanism fails to isolate superior predictive capacity, indicating a lack of discriminative power in the underlying model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the efficient-market hypothesis and Bayesian model calibration, tracing back to early 20th-century work on stochastic processes and modern reinforcement learning frameworks. Retrocausal Genealogy: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market itself, which efficiently prices in all public information, and the model, which attempts to predict outcomes based on incomplete or misaligned priors. Theory of Mind & Decision Maker Model: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated when confidence scores fail to differentiate between premium and free picks, and leakage occurs when historical bugs corrupt the training data, undermining any potential edge. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_DECISION_2026-09-04 (15c5fc519ebb2bc6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "5d6a3035823e5dbc",
+  "source_status": "COMPLETE",
+  "title": "sportsdataio.com",
+  "file_name": "sportsdataio.com.md",
+  "sha256": "5d6a3035823e5dbcefed7a73dc845e75fff8a097babdd8be120a786b7d0caf08",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap discovery and path taxonomy yield structured data access patterns for advanced sports analytics. Universal Lens: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on sitemap availability maps data accessibility likelihood across domains. GSI Mapping: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in web crawling reflect dynamic data ingestion protocols for real-time sports intelligence. GSE Mapping: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_availability_index",
+      "name": "Sitemap Availability Index",
+      "verbatim_quote": "# sportsdataio.com Category: **advanced-data** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SAI': 'dimensionless index measuring sitemap accessibility'}",
+      "assumptions": "All sitemaps are indexed via XML; 404 status implies nonexistence.",
+      "breakdown_regime": "SAI = 0 when all sitemaps return 404; SAI > 0 indicates presence of valid paths.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic data coverage model where SAI reflects conditional probability of data retrieval.",
+        "source_operator": "sitemap_availability_index",
+        "telemetry": "Number of accessible sitemaps vs total attempted."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_classifier",
+      "name": "Path Taxonomy Classifier",
+      "verbatim_quote": "0 | no | ## Path taxonomy | First segment | URLs | |---|---| ## Sample",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PTC': 'categorical label for URL path segments'}",
+      "assumptions": "URLs follow hierarchical segmentation logic.",
+      "breakdown_regime": "PTC = {category, resource_type, identifier} for structured navigation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's navigational kernel by classifying URL structures into semantic categories.",
+        "source_operator": "path_taxonomy_classifier",
+        "telemetry": "Frequency distribution of first-segment URL components."
+      }
+    },
+    {
+      "primitive_id": "web_crawl_failure_metric",
+      "name": "Web Crawl Failure Metric",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://sportsdataio.com/sitemap.xml` | 404 | 0 | no | | `https://sportsdataio.com/sitemap_index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'WCFM': 'dimensionless failure rate of crawl attempts'}",
+      "assumptions": "Failure is defined as HTTP 404 response.",
+      "breakdown_regime": "WCFM = 1 when sitemap returns 404; WCFM = 0 otherwise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's error propagation model where WCFM quantifies information loss during data harvesting.",
+        "source_operator": "web_crawl_failure_metric",
+        "telemetry": "Proportion of failed sitemap crawls out of total attempts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5d6a3035823e5dbc_t0",
+      "think": "The sitemap discovery process reveals a structured yet fragmented data landscape. Each sitemap entry is evaluated for existence through HTTP status codes—specifically 404 indicating absence. The Sitemap Availability Index (SAI) aggregates these failures into a scalar measure of data accessibility. This index directly informs GSI’s Bayesian models by providing prior probabilities for successful data retrieval. Simultaneously, the Path Taxonomy Classifier (PTC) categorizes URL segments, enabling GSE to construct navigational graphs that map semantic relationships between data resources. The Web Crawl Failure Metric (WCFM) acts as a feedback loop, refining both GSI’s uncertainty estimates and GSE’s adaptive crawling strategies. Dualities emerge in how failure signals encode information: a 404 is not just an error but a constraint on the domain’s structure. These primitives collectively define a failure-aware data ecosystem where each crawl outcome contributes to a dynamic understanding of data availability and access patterns.\n\nDeep epistemic analysis for sportsdataio.com (5d6a3035823e5dbc, domain=other, pages_read=1/1): Operator 'Sitemap Availability Index' (page 1, domain other) captures: # sportsdataio.com Category: **advanced-data** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are indexed via XML; 404 status implies nonexistence. Breakdown regime: SAI = 0 when all sitemaps return 404; SAI > 0 indicates presence of valid paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic data coverage model where SAI reflects conditional probability of data retrieval. Operator 'Path Taxonomy Classifier' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| ## Sample Assumptions: URLs follow hierarchical segmentation logic. Breakdown regime: PTC = {category, resource_type, identifier} for structured navigation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's navigational kernel by classifying URL structures into semantic categories. Operator 'Web Crawl Failure Metric' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://sportsdataio.com/sitemap.xml` | 404 | 0 | no | | `https://sportsdataio.com/sitemap_index.xml` | Assumptions: Failure is defined as HTTP 404 response. Breakdown regime: WCFM = 1 when sitemap returns 404; WCFM = 0 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's error propagation model where WCFM quantifies information loss during data harvesting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sportsdataio.com (5d6a3035823e5dbc, domain=other, pages_read=1/1): Operator 'Sitemap Availability Index' (page 1, domain other) captures: # sportsdataio.com Category: **advanced-data** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are indexed via XML; 404 status implies nonexistence. Breakdown regime: SAI = 0 when all sitemaps return 404; SAI > 0 indicates presence of valid paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic data coverage model where SAI reflects conditional probability of data retrieval. Operator 'Path Taxonomy Classifier' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| ## Sample Assumptions: URLs follow hierarchical segmentation logic. Breakdown regime: PTC = {category, resource_type, identifier} for structured navigation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's navigational kernel by classifying URL structures into semantic categories. Operator 'Web Crawl Failure Metric' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://sportsdataio.com/sitemap.xml` | 404 | 0 | no | | `https://sportsdataio.com/sitemap_index.xml` | Assumptions: Failure is defined as HTTP 404 response. Breakdown regime: WCFM = 1 when sitemap returns 404; WCFM = 0 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's error propagation model where WCFM quantifies information loss during data harvesting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web architecture principles and formalized in XML sitemap standards, this framework builds upon foundational work in information theory and graph traversal algorithms. Retrocausal Genealogy: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers seeking data and servers denying access. Decision actors must balance exploration against resource constraints, optimizing for coverage while minimizing redundancy. Theory of Mind & Decision Maker Model: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that failure metrics do not redundantly signal the same data gaps. Leakage vetos prevent overfitting to observed 404s, maintaining robustness in probabilistic inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in sportsdataio.com (5d6a3035823e5dbc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

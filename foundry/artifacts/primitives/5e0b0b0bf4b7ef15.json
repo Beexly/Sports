@@ -1,0 +1,78 @@
+{
+  "book_id": "5e0b0b0bf4b7ef15",
+  "source_status": "COMPLETE",
+  "title": "p0274",
+  "file_name": "p0274.txt",
+  "sha256": "5e0b0b0bf4b7ef1534f8c29d161a5975b338bbcbbf3809feec1c7f9312853952",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "high_fly_ball_handling",
+      "name": "High Fly Ball Catchability",
+      "verbatim_quote": "foul fly, and the catcher should be mindful of this. One very difficult ball for most",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Pitcher throws a high, fast rising ball that crosses the batter's line of sight.",
+      "breakdown_regime": "Catch failure occurs when catcher cannot secure the ball before it drops below optimal height.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Probability of successful reception given flight dynamics",
+        "source_operator": "high_fly_ball_handling",
+        "telemetry": "Catch success rate vs. ball trajectory steepness"
+      }
+    },
+    {
+      "primitive_id": "pitcher_throw_avoidance",
+      "name": "Pitcher Delivery Inhibition",
+      "verbatim_quote": "sometimes go a little higher than the pitcher intends, and, unless the catcher gives him good",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Catcher provides insufficient backstop support for high pitch trajectories.",
+      "breakdown_regime": "Pitcher avoids using high pitches due to lack of reliable catcher coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Bayes factor quantifying pitcher risk aversion to catcher reliability",
+        "source_operator": "pitcher_throw_avoidance",
+        "telemetry": "Pitch frequency reduction for high trajectories when catcher error rate increases"
+      }
+    },
+    {
+      "primitive_id": "catcher_throw_frequency",
+      "name": "Catcher Throw Caution",
+      "verbatim_quote": "though he be an excellent thrower, should not fall into the error of throwing too frequently",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Catcher possesses superior arm strength but overuses long throws to bases.",
+      "breakdown_regime": "Excessive throws create predictable patterns and disrupt infield positioning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - Optimal throw scheduling to minimize opposing team exploitation",
+        "source_operator": "catcher_throw_frequency",
+        "telemetry": "Runners caught stealing vs. total attempted steals during high-frequency throw scenarios"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e0b0b0bf4b7ef15_t0",
+      "think": "The three primitives form a coupled system where catcher performance directly influences pitcher strategy and fielding efficiency. High fly balls require precise timing and spatial coordination between pitcher and catcher; if the catcher fumbles these, the pitcher's confidence erodes, leading to a narrower pitch repertoire. Meanwhile, excessive throwing by the catcher introduces temporal predictability, allowing base runners to time their advances. This creates a triadic feedback loop: poor catch handling leads to conservative pitching, which reduces scoring opportunities, while over-aggressive throwing invites stolen bases. Mathematically, each primitive can be modeled as a conditional probability governed by player-specific skill parameters and situational context. For instance, the high fly ball primitive maps to a Bayesian updating framework where the catcher's posterior belief about ball trajectory depends on prior experience and real-time sensory input. The pitcher avoidance primitive represents a utility maximization problem under uncertainty, while the throw caution primitive involves Markov decision processes evaluating the cost-benefit of each defensive action. Together, they constitute a minimal set of sovereign axioms describing fundamental interactions in baseball defense.\n\nDeep epistemic analysis for p0274 (5e0b0b0bf4b7ef15, domain=other, pages_read=1/1): Operator 'High Fly Ball Catchability' (page 1, domain other) captures: foul fly, and the catcher should be mindful of this. One very difficult ball for most Assumptions: Pitcher throws a high, fast rising ball that crosses the batter's line of sight. Breakdown regime: Catch failure occurs when catcher cannot secure the ball before it drops below optimal height. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Probability of successful reception given flight dynamics Operator 'Pitcher Delivery Inhibition' (page 1, domain other) captures: sometimes go a little higher than the pitcher intends, and, unless the catcher gives him good Assumptions: Catcher provides insufficient backstop support for high pitch trajectories. Breakdown regime: Pitcher avoids using high pitches due to lack of reliable catcher coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Bayes factor quantifying pitcher risk aversion to catcher reliability Operator 'Catcher Throw Caution' (page 1, domain other) captures: though he be an excellent thrower, should not fall into the error of throwing too frequently Assumptions: Catcher possesses superior arm strength but overuses long throws to bases. Breakdown regime: Excessive throws create predictable patterns and disrupt infield positioning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Optimal throw scheduling to minimize opposing team exploitation Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0274 (5e0b0b0bf4b7ef15, domain=other, pages_read=1/1): Operator 'High Fly Ball Catchability' (page 1, domain other) captures: foul fly, and the catcher should be mindful of this. One very difficult ball for most Assumptions: Pitcher throws a high, fast rising ball that crosses the batter's line of sight. Breakdown regime: Catch failure occurs when catcher cannot secure the ball before it drops below optimal height. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Probability of successful reception given flight dynamics Operator 'Pitcher Delivery Inhibition' (page 1, domain other) captures: sometimes go a little higher than the pitcher intends, and, unless the catcher gives him good Assumptions: Catcher provides insufficient backstop support for high pitch trajectories. Breakdown regime: Pitcher avoids using high pitches due to lack of reliable catcher coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Bayes factor quantifying pitcher risk aversion to catcher reliability Operator 'Catcher Throw Caution' (page 1, domain other) captures: though he be an excellent thrower, should not fall into the error of throwing too frequently Assumptions: Catcher possesses superior arm strength but overuses long throws to bases. Breakdown regime: Excessive throws create predictable patterns and disrupt infield positioning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Optimal throw scheduling to minimize opposing team exploitation Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0274 (5e0b0b0bf4b7ef15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing batters and base runners model the catcher's behavior to predict pitcher tendencies. If a catcher is known to struggle with high flies, batters adjust their swing decisions, increasing foul-out rates. Conversely, if a catcher throws too often, runners learn to exploit the predictable window between throws to advance. The pitcher must also anticipate these models, creating a nested hierarchy of strategic reasoning.",
+      "cross_layer_veto": "To avoid collinearity, each primitive must be calibrated against independent data streams. For example, the high fly ball primitive requires tracking only successful catches, not overall fly ball attempts, to isolate catcher skill. The throw caution primitive must exclude situations where the catcher throws to prevent a hit, focusing instead on discretionary throws. Anti-leakage conditions ensure that pitcher avoidance is attributed solely to catcher performance, controlling for factors like pitch count or score differential."
+    }
+  ]
+}

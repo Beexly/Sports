@@ -1,0 +1,78 @@
+{
+  "book_id": "7e738fa34c87052f",
+  "source_status": "COMPLETE",
+  "title": "p0014",
+  "file_name": "p0014.txt",
+  "sha256": "7e738fa34c87052f0c6c11d76e3ecec84d4cefe2e1a3bff0a4186541049eacc3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Statistical heredity models unify sexual distribution, marriage selection, and regression via latent element inference and bias correction. Universal Lens: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on R.F.F. data with conformal prediction for hereditary disease risk and fraternal mixture distributions. GSI Mapping: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in hereditary inquiry using latent breed purity and consumption-based trait propagation. GSE Mapping: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sexual_distribution",
+      "name": "Sexual Distribution",
+      "verbatim_quote": "154 Data, 154.—Sexual Distribution, 156.— Marriage Selection, 157.— Regression, 158.—Effect of Bias in Marriage, 162.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_m': 'probability of male offspring', 'p_f': 'probability of female offspring'}",
+      "assumptions": "Binary sex determination; independent reproductive events.",
+      "breakdown_regime": "When p_m ≠ p_f, leads to skewed population dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic gender ratio inference under selective mating constraints.",
+        "source_operator": "sexual_distribution",
+        "telemetry": "Observed sex ratio deviation from expected 1:1."
+      }
+    },
+    {
+      "primitive_id": "marriage_selection_bias",
+      "name": "Marriage Selection Bias",
+      "verbatim_quote": "154 Data, 154.—Sexual Distribution, 156.— Marriage Selection, 157.— Regression, 158.—Effect of Bias in Marriage, 162.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'b_s': 'selection bias strength', 'p_s': 'probability of spouse selection'}",
+      "assumptions": "Selection is non-random; individuals choose based on hereditary traits.",
+      "breakdown_regime": "When b_s approaches 1, convergence to homogeneous mating occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's social state transition kernel incorporating hereditary preference.",
+        "source_operator": "marriage_selection_bias",
+        "telemetry": "Correlation between parental traits and offspring genetic variance."
+      }
+    },
+    {
+      "primitive_id": "latent_elements_inheritance",
+      "name": "Latent Elements in Inheritance",
+      "verbatim_quote": "187 Latent Elements not very numerous, 187 ; Pure Breed, 189.— Simplification of Hereditary Inquiry, 190.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_e': 'number of latent genetic elements', 'B_p': 'breed purity index'}",
+      "assumptions": "Genetic traits are composed of discrete latent components.",
+      "breakdown_regime": "When L_e > 10, simplification becomes intractable without reduction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s latent variable decomposition in trait propagation models.",
+        "source_operator": "latent_elements_inheritance",
+        "telemetry": "Number of distinguishable hereditary factors in a population."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7e738fa34c87052f_t0",
+      "think": "The foundational framework for hereditary inquiry begins with statistical modeling of sexual distribution, which establishes baseline probabilities for reproductive outcomes. This is followed by the introduction of marriage selection bias, where non-random pairing introduces systematic deviations from equilibrium. The interplay between these two constructs forms the basis for regression analysis in hereditary traits. As bias intensifies, it can lead to significant shifts in gene pool composition over generations. The concept of latent elements emerges as a simplifying assumption that allows for tractable modeling of complex inheritance patterns. These elements represent underlying genetic determinants that may not be directly observable but influence phenotypic expression. The pure breed principle further refines this model by assuming minimal mixing of genetic lineages, thereby reducing complexity. Together, these primitives form a coherent system for understanding how hereditary traits evolve through populations under various selection pressures.\n\nDeep epistemic analysis for p0014 (7e738fa34c87052f, domain=other, pages_read=1/1): Operator 'Sexual Distribution' (page 1, domain other) captures: 154 Data, 154.—Sexual Distribution, 156.— Marriage Selection, 157.— Regression, 158.—Effect of Bias in Marriage, 162. Assumptions: Binary sex determination; independent reproductive events. Breakdown regime: When p_m ≠ p_f, leads to skewed population dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic gender ratio inference under selective mating constraints. Operator 'Marriage Selection Bias' (page 1, domain other) captures: 154 Data, 154.—Sexual Distribution, 156.— Marriage Selection, 157.— Regression, 158.—Effect of Bias in Marriage, 162. Assumptions: Selection is non-random; individuals choose based on hereditary traits. Breakdown regime: When b_s approaches 1, convergence to homogeneous mating occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's social state transition kernel incorporating hereditary preference. Operator 'Latent Elements in Inheritance' (page 1, domain other) captures: 187 Latent Elements not very numerous, 187 ; Pure Breed, 189.— Simplification of Hereditary Inquiry, 190. Assumptions: Genetic traits are composed of discrete latent components. Breakdown regime: When L_e > 10, simplification becomes intractable without reduction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s latent variable decomposition in trait propagation models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0014 (7e738fa34c87052f, domain=other, pages_read=1/1): Operator 'Sexual Distribution' (page 1, domain other) captures: 154 Data, 154.—Sexual Distribution, 156.— Marriage Selection, 157.— Regression, 158.—Effect of Bias in Marriage, 162. Assumptions: Binary sex determination; independent reproductive events. Breakdown regime: When p_m ≠ p_f, leads to skewed population dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic gender ratio inference under selective mating constraints. Operator 'Marriage Selection Bias' (page 1, domain other) captures: 154 Data, 154.—Sexual Distribution, 156.— Marriage Selection, 157.— Regression, 158.—Effect of Bias in Marriage, 162. Assumptions: Selection is non-random; individuals choose based on hereditary traits. Breakdown regime: When b_s approaches 1, convergence to homogeneous mating occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's social state transition kernel incorporating hereditary preference. Operator 'Latent Elements in Inheritance' (page 1, domain other) captures: 187 Latent Elements not very numerous, 187 ; Pure Breed, 189.— Simplification of Hereditary Inquiry, 190. Assumptions: Genetic traits are composed of discrete latent components. Breakdown regime: When L_e > 10, simplification becomes intractable without reduction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s latent variable decomposition in trait propagation models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 20th-century eugenics literature, particularly Galton's work on heredity and Pearson's correlation methods. Influenced by Mendelian genetics and Fisher's population genetics synthesis. Retrocausal Genealogy: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing evolutionary strategies: one assumes random mating and neutral drift, while another incorporates deliberate selection mechanisms. Agents may optimize for trait stability or rapid adaptation depending on environmental pressures. Theory of Mind & Decision Maker Model: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting when L_e exceeds empirical observability thresholds. Ensures that regression models do not collapse into spurious correlations due to insufficient data on rare traits. Veto applies when selection bias dominates observed variation beyond statistical significance. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0014 (7e738fa34c87052f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

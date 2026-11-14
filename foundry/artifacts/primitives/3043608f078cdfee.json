@@ -1,0 +1,78 @@
+{
+  "book_id": "3043608f078cdfee",
+  "source_status": "COMPLETE",
+  "title": "arxiv_1609.02606v2",
+  "file_name": "arxiv_1609.02606v2.pdf",
+  "sha256": "3043608f078cdfee5b4b932fe93cfb89fd2763cfea06763df1130d39f6cd921e",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sequential elimination algorithms unify best-arm identification in stochastic multi-armed bandits via iterative arm dismissal under fixed budget constraints. Universal Lens: Rooted in arxiv_1609.02606v2 (3043608f078cdfee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior updating on arm means enables conformal confidence intervals for optimal arm selection in pure exploration settings. GSI Mapping: Rooted in arxiv_1609.02606v2 (3043608f078cdfee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions track arm elimination sets; action selection uses nonlinear budget allocation to optimize misidentification probability. GSE Mapping: Rooted in arxiv_1609.02606v2 (3043608f078cdfee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sequential_elimination_framework",
+      "name": "Sequential Elimination Framework",
+      "verbatim_quote": "We propose a general framework to unify sequential elimination algorithms, where the arms are dismissed iteratively until a unique arm is left.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'number of arms (dimensionless)', 'T': 'total budget of arm pulls (dimensionless)', 'Gr': 'set of remaining arms at round r (dimensionless set)', 'br': 'number of arms eliminated at round r (dimensionless)'}",
+      "assumptions": "Arms yield independent, identically distributed rewards; fixed budget; pure exploration focus.",
+      "breakdown_regime": "When T < K, no valid elimination path exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian belief update over arm means and GSE's state transition on Gr.",
+        "source_operator": "sequential_elimination_framework",
+        "telemetry": "Misidentification probability decay rate"
+      }
+    },
+    {
+      "primitive_id": "nonlinear_budget_allocation",
+      "name": "Nonlinear Budget Allocation",
+      "verbatim_quote": "Based on this result, we develop an algorithm that divides the budget according to a nonlinear function of remaining arms at each round.",
+      "page": 1,
+      "latex": "\\text{For } r \\in [K-1],\\quad n_r = \\left\\lfloor \\frac{T - K}{C_p (K - r + 1)^p} \\right\\rfloor",
+      "symbol_and_unit_ledger": "{'n_r': 'number of samples at round r (dimensionless)', 'C_p': 'normalization constant depending on p (dimensionless)', 'p': 'exponent parameter (dimensionless)', 'K': 'total number of arms (dimensionless)'}",
+      "assumptions": "Budget is divisible into discrete rounds; nonlinear dependence on remaining arms.",
+      "breakdown_regime": "As p → 0, allocation becomes uniform; as p → ∞, early rounds dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's dynamic resource scheduling using nonlinear cost functions.",
+        "source_operator": "nonlinear_budget_allocation",
+        "telemetry": "Empirical convergence to optimal arm identification"
+      }
+    },
+    {
+      "primitive_id": "performance_measure",
+      "name": "Performance Measure",
+      "verbatim_quote": "Our analysis reveals a novel performance measure expressed in terms of the sampling mechanism and number of eliminated arms at each round.",
+      "page": 1,
+      "latex": "P_{\\text{misid}} \\leq \\beta \\exp\\left(-\\frac{T}{\\alpha}\\right)",
+      "symbol_and_unit_ledger": "{'P_{\\\\text{misid}}': 'probability of misidentifying best arm (dimensionless)', 'T': 'total arm pulls (dimensionless)', 'α, β': 'problem-dependent constants (dimensionless)'}",
+      "assumptions": "Sampling mechanism is consistent; elimination process is deterministic per round.",
+      "breakdown_regime": "When T → ∞, P_{\\text{misid}} → 0; when T → 0, P_{\\text{misid}} → 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to GSI's confidence interval width and GSE's policy entropy.",
+        "source_operator": "performance_measure",
+        "telemetry": "Misidentification probability bound"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3043608f078cdfee_t0",
+      "think": "The core insight of sequential elimination lies in iteratively narrowing down the set of plausible best arms through repeated sampling. Each round eliminates a subset of arms based on empirical mean estimates, guided by a sampling strategy. The framework unifies disparate algorithms like Succ-Rej and Seq-Halv by abstracting their common structure: initial set G1 = [K], iterative elimination Gr → Gr+1, and final output GR+1. The key innovation is the performance measure linking sampling design to misidentification probability. This allows derivation of optimal strategies such as nonlinear budget allocation, where more resources are allocated to earlier rounds when uncertainty is highest. The mathematical duality emerges between the exploration phase (sampling) and the elimination phase (confidence pruning). Failure modes include insufficient budget for convergence or poor sampling design leading to high misidentification risk. The framework also admits extensions to side-observation models, where pulling one arm reveals others' rewards, improving efficiency.\n\nDeep epistemic analysis for arxiv_1609.02606v2 (3043608f078cdfee, domain=other, pages_read=12/12): Operator 'Sequential Elimination Framework' (page 1, domain other) captures: We propose a general framework to unify sequential elimination algorithms, where the arms are dismissed iteratively until a unique arm is left. Assumptions: Arms yield independent, identically distributed rewards; fixed budget; pure exploration focus. Breakdown regime: When T < K, no valid elimination path exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian belief update over arm means and GSE's state transition on Gr. Operator 'Nonlinear Budget Allocation' (page 1, domain other) captures: Based on this result, we develop an algorithm that divides the budget according to a nonlinear function of remaining arms at each round. Assumptions: Budget is divisible into discrete rounds; nonlinear dependence on remaining arms. Breakdown regime: As p → 0, allocation becomes uniform; as p → ∞, early rounds dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's dynamic resource scheduling using nonlinear cost functions. Operator 'Performance Measure' (page 1, domain other) captures: Our analysis reveals a novel performance measure expressed in terms of the sampling mechanism and number of eliminated arms at each round. Assumptions: Sampling mechanism is consistent; elimination process is deterministic per round. Breakdown regime: When T → ∞, P_{\\text{misid}} → 0; when T → 0, P_{\\text{misid}} → 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to GSI's confidence interval width and GSE's policy entropy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_1609.02606v2 (3043608f078cdfee, domain=other, pages_read=12/12): Operator 'Sequential Elimination Framework' (page 1, domain other) captures: We propose a general framework to unify sequential elimination algorithms, where the arms are dismissed iteratively until a unique arm is left. Assumptions: Arms yield independent, identically distributed rewards; fixed budget; pure exploration focus. Breakdown regime: When T < K, no valid elimination path exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian belief update over arm means and GSE's state transition on Gr. Operator 'Nonlinear Budget Allocation' (page 1, domain other) captures: Based on this result, we develop an algorithm that divides the budget according to a nonlinear function of remaining arms at each round. Assumptions: Budget is divisible into discrete rounds; nonlinear dependence on remaining arms. Breakdown regime: As p → 0, allocation becomes uniform; as p → ∞, early rounds dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's dynamic resource scheduling using nonlinear cost functions. Operator 'Performance Measure' (page 1, domain other) captures: Our analysis reveals a novel performance measure expressed in terms of the sampling mechanism and number of eliminated arms at each round. Assumptions: Sampling mechanism is consistent; elimination process is deterministic per round. Breakdown regime: When T → ∞, P_{\\text{misid}} → 0; when T → 0, P_{\\text{misid}} → 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to GSI's confidence interval width and GSE's policy entropy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical multi-armed bandit theory initiated by Thompson (1933) and Robbins (1952), extended by Lai & Robbins (1985) for regret minimization. The best-arm identification problem was formalized by Audibert et al. (2009) and further developed by Bubeck et al. (2013) who distinguished it from regret-based approaches. Retrocausal Genealogy: Rooted in arxiv_1609.02606v2 (3043608f078cdfee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may be modeled as explorers seeking to minimize misidentification vs. exploiters optimizing immediate reward. The agent must balance exploration (sample diverse arms) against exploitation (focus on promising arms). In adversarial settings, the agent might face stochastic or even malicious reward generation, requiring robustness in the elimination strategy. Theory of Mind & Decision Maker Model: Rooted in arxiv_1609.02606v2 (3043608f078cdfee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when sampling strategies fail to distinguish between arms due to insufficient variance or correlation. Leakage occurs if the budget allocation does not scale appropriately with the number of arms, causing early rounds to consume too much or too little. Veto conditions include: (1) T < K implies no valid elimination path; (2) p < 0 invalidates nonlinear allocation; (3) uniform sampling without elimination fails to converge."
+    }
+  ]
+}

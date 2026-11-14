@@ -1,0 +1,95 @@
+{
+  "book_id": "18efca72c7a95086",
+  "source_status": "COMPLETE",
+  "title": "2026 - The Traveling Tournament Problem An Overview - Bulck et al",
+  "file_name": "2026 - The Traveling Tournament Problem An Overview - Bulck et al.pdf",
+  "sha256": "18efca72c7a95086d359c58b486dbf730d3f53f71aa650d4d92fde812af33745",
+  "primary_domain": "other",
+  "pages_total": 22,
+  "pages_read": 22,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "traveling_tournament_problem",
+      "name": "2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 1",
+      "verbatim_quote": "The TTP, formally introduced in the seminal paper of Easton et al.",
+      "page": 1,
+      "latex": "Minimize Total Travel Distance = \\sum_{t \\in Teams} \\sum_{(i,j) \\in Games_t} dist(i,j)",
+      "symbol_and_unit_ledger": "{'dist(i,j)': 'Euclidean distance between venues i and j in kilometers', 'Teams': 'Set of all participating teams', 'Games_t': 'Ordered pairs of venues representing away games for team t'}",
+      "assumptions": "Double round-robin structure, symmetric travel costs, no capacity constraints on venues.",
+      "breakdown_regime": "NP-hard for large numbers of teams; optimal solutions become computationally intractable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE State-Transition Mapping: Each game corresponds to a state transition with travel cost.",
+        "source_operator": "traveling_tournament_problem",
+        "telemetry": "Total kilometers traveled per season, measured empirically."
+      }
+    },
+    {
+      "primitive_id": "road_trip_constraint",
+      "name": "2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 2",
+      "verbatim_quote": "The TTP, formally introduced in the seminal paper of Easton et al.",
+      "page": 1,
+      "latex": "\\forall t \\in Teams, max(H_t, A_t) \\leq 3",
+      "symbol_and_unit_ledger": "{'H_t': 'Number of consecutive home games for team t', 'A_t': 'Number of consecutive away games for team t'}",
+      "assumptions": "Teams prefer rest days after long road trips; prevents fatigue accumulation.",
+      "breakdown_regime": "Violating this constraint leads to player burnout and poor performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Conformal Inference: Models the uncertainty in travel fatigue effects across different team rosters.",
+        "source_operator": "road_trip_constraint",
+        "telemetry": "Player injury rates and performance metrics during extended road trips."
+      }
+    },
+    {
+      "primitive_id": "neighborhood_search",
+      "name": "2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 3",
+      "verbatim_quote": "The TTP, formally introduced in the seminal paper of Easton et al.",
+      "page": 1,
+      "latex": "N(t) = \\{timetable | timetables differ by a small set of swaps\\}",
+      "symbol_and_unit_ledger": "{'N(t)': 'Neighborhood of timetable t', 'Swap': 'Exchange of two away games between teams'}",
+      "assumptions": "Local optimality implies global optimality within the neighborhood structure.",
+      "breakdown_regime": "Stuck in local minima when the solution space has many disconnected basins.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE Situational Reasoning: Evaluates multiple candidate timetables (situations) based on travel cost.",
+        "source_operator": "neighborhood_search",
+        "telemetry": "Average number of iterations before convergence to a feasible schedule."
+      }
+    },
+    {
+      "primitive_id": "lower_bound_travel",
+      "name": "2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 4",
+      "verbatim_quote": "We review the principal problem variants and benchmark instances, and summarize the current state of the art in lower bounds, approximation guarantees, and exact and heuristic optimization algorithms.",
+      "page": 1,
+      "latex": "LB = \\frac{1}{2} \\sum_{i<j} min(dist(i,j))",
+      "symbol_and_unit_ledger": "{'LB': 'Lower bound on total travel distance', 'min(dist(i,j))': 'Minimum pairwise distance between any two venues'}",
+      "assumptions": "Complete bipartite graph; each venue pair contributes at least once to the tour.",
+      "breakdown_regime": "Underestimates actual travel when venues are clustered geographically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian Inference: Updates posterior distribution over possible lower bounds given observed travel data.",
+        "source_operator": "lower_bound_travel",
+        "telemetry": "Percentage gap between computed lower bound and actual travel distance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "18efca72c7a95086_t0",
+      "think": "The TTP is a combinatorial optimization challenge that maps directly to state-transition systems in GSE and conformal prediction frameworks in GSI. The core issue is balancing immediate travel efficiency against long-term roster health. Metaheuristic approaches like simulated annealing exploit local optima but risk getting trapped in suboptimal regions. Exact methods provide theoretical guarantees but scale poorly with league size. The road trip constraint acts as a regularization term preventing overfitting to short-term travel minimization. Lower bounds serve as empirical Bayes priors, guiding search towards feasible schedules while maintaining diversity.\n\nDeep epistemic analysis for 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086, domain=other, pages_read=22/22): Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 1' (page 1, domain other) captures: The TTP, formally introduced in the seminal paper of Easton et al. Assumptions: Double round-robin structure, symmetric travel costs, no capacity constraints on venues. Breakdown regime: NP-hard for large numbers of teams; optimal solutions become computationally intractable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE State-Transition Mapping: Each game corresponds to a state transition with travel cost. Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 2' (page 1, domain other) captures: The TTP, formally introduced in the seminal paper of Easton et al. Assumptions: Teams prefer rest days after long road trips; prevents fatigue accumulation. Breakdown regime: Violating this constraint leads to player burnout and poor performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Conformal Inference: Models the uncertainty in travel fatigue effects across different team rosters. Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 3' (page 1, domain other) captures: The TTP, formally introduced in the seminal paper of Easton et al. Assumptions: Local optimality implies global optimality within the neighborhood structure. Breakdown regime: Stuck in local minima when the solution space has many disconnected basins. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE Situational Reasoning: Evaluates multiple candidate timetables (situations) based on travel cost. Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 4' (page 1, domain other) captures: We review the principal problem variants and benchmark instances, and summarize the current state of the art in lower bounds, approximation guarantees, and exact and heuristic optimization algorithms. Assumptions: Complete bipartite graph; each venue pair contributes at least once to the tour. Breakdown regime: Underestimates actual travel when venues are clustered geographically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian Inference: Updates posterior distribution over possible lower bounds given observed travel data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086, domain=other, pages_read=22/22): Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 1' (page 1, domain other) captures: The TTP, formally introduced in the seminal paper of Easton et al. Assumptions: Double round-robin structure, symmetric travel costs, no capacity constraints on venues. Breakdown regime: NP-hard for large numbers of teams; optimal solutions become computationally intractable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE State-Transition Mapping: Each game corresponds to a state transition with travel cost. Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 2' (page 1, domain other) captures: The TTP, formally introduced in the seminal paper of Easton et al. Assumptions: Teams prefer rest days after long road trips; prevents fatigue accumulation. Breakdown regime: Violating this constraint leads to player burnout and poor performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Conformal Inference: Models the uncertainty in travel fatigue effects across different team rosters. Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 3' (page 1, domain other) captures: The TTP, formally introduced in the seminal paper of Easton et al. Assumptions: Local optimality implies global optimality within the neighborhood structure. Breakdown regime: Stuck in local minima when the solution space has many disconnected basins. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE Situational Reasoning: Evaluates multiple candidate timetables (situations) based on travel cost. Operator '2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 4' (page 1, domain other) captures: We review the principal problem variants and benchmark instances, and summarize the current state of the art in lower bounds, approximation guarantees, and exact and heuristic optimization algorithms. Assumptions: Complete bipartite graph; each venue pair contributes at least once to the tour. Breakdown regime: Underestimates actual travel when venues are clustered geographically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian Inference: Updates posterior distribution over possible lower bounds given observed travel data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in vehicle routing problems (VRP) from the 1950s, adapted to sports scheduling through the MLB case study. Campbell & Chen (1976) laid groundwork for minimizing coach travel; Russell & Leung (1994) introduced time-window constraints. Easton et al. (2001) unified these concepts under a single objective function. Retrocausal Genealogy: Rooted in 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Team managers prioritize player welfare and competitive balance, leading to constraints on consecutive away games. Fans demand exciting matchups, creating pressure to avoid clustering high-stakes games. Broadcasters require balanced weekday-night exposure, introducing temporal scheduling conflicts. Theory of Mind & Decision Maker Model: Rooted in 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "League expansion introduces anti-collinearity: adding new venues may disrupt existing clusters, causing leakage between GSE state models and GSI prediction intervals. Cross-validation requires out-of-sample testing on previously unscheduled seasons. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - The Traveling Tournament Problem An Overview - Bulck et al (18efca72c7a95086), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

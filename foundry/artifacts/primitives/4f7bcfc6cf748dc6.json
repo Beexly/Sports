@@ -1,0 +1,888 @@
+{
+ "book_id": "4f7bcfc6cf748dc6",
+ "source_status": "COMPLETE",
+ "source_note": "Christopher M. Bishop, Pattern Recognition and Machine Learning, Springer (Information Science and Statistics series), 2006. Local file: publisher PDF of the first edition, 18090775 bytes, sha256 4f7bcfc6cf748dc6db15283188192c9a3198aa7035dc7f1776b3b2cd9455e799 (book_id is the first 16 hex chars of the scan digest over str(size) plus the full file bytes). Extracted text (2,637,555 bytes) is clean for most chapters; equation glyphs frequently render as control characters in the text layer and the opening pages of Chapter 12 carry OCR garbling, so quotes were taken from clean prose passages and verified as contiguous normalized substrings of the text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "polynomial_curve_fitting_overfitting",
+   "name": "Curve fitting by least squares, and over-fitting as the failure of training fit to imply generalization",
+   "verbatim_quote": "However, the fitted curve oscillates wildly and gives a very poor representation of the function sin(2πx). This latter behaviour is known as over-fitting. As we have noted earlier, the goal is to achieve good generalization by making accurate predictions for new data.",
+   "page": "Section 1.1, Example: Polynomial Curve Fitting (text lines 795-822)",
+   "latex": "E(\\mathbf{w}) = \\frac{1}{2}\\sum_{n=1}^{N}\\left\\{y(x_n, \\mathbf{w}) - t_n\\right\\}^2",
+   "symbol_and_unit_ledger": {
+    "E(w)": "sum-of-squares error, in squared target units",
+    "y(x_n, w)": "model prediction at input x_n, target units",
+    "t_n": "observed target, target units",
+    "w": "polynomial coefficient vector, dimensionless",
+    "N": "number of training points, count"
+   },
+   "assumptions": [
+    "Training data are drawn from the same process as future data",
+    "A fixed polynomial order M is chosen before seeing test data",
+    "Errors are treated as symmetric in the squared loss"
+   ],
+   "breakdown_regime": "Fails when model order grows with fixed data: the fit interpolates noise, training error reaches zero while test error explodes. Also fails under distribution shift, where no order choice repairs the mismatch.",
+   "domain": "supervised learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every fitted relationship (a player projection curve, a matchup response surface) as a polynomial-style fit whose complexity must be justified by out-of-sample behaviour, not by fit to the games already seen. Complexity selection is a first-class step before any signal is trusted.",
+    "source_operator": "polynomial_curve_fitting_overfitting",
+    "telemetry": "Held-out game logs: predictions made before each game versus realized outcomes, split by model complexity setting"
+   }
+  },
+  {
+   "primitive_id": "sum_product_rules",
+   "name": "The sum rule and product rule of probability are the two operations from which all inference is built",
+   "verbatim_quote": "With this more compact notation, we can write the two fundamental rules of probability theory in the following form.",
+   "page": "Section 1.2, Probability Theory (text lines 1219-1233)",
+   "latex": "p(X) = \\sum_Y p(X, Y) \\qquad p(X, Y) = p(Y|X)\\,p(X)",
+   "symbol_and_unit_ledger": {
+    "p(X)": "marginal probability of X, dimensionless in [0,1]",
+    "p(X, Y)": "joint probability of X and Y",
+    "p(Y|X)": "conditional probability of Y given X",
+    "sum over Y": "marginalization over all values of Y"
+   },
+   "assumptions": [
+    "Variables have well-defined joint distributions",
+    "Conditioning events have nonzero probability"
+   ],
+   "breakdown_regime": "The rules are exact and never fail as mathematics; they break down computationally when the sum over Y ranges over exponentially many configurations, which is what the rest of the book's approximation machinery exists to handle.",
+   "domain": "probability theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine computation is one of these two operations: multiplying conditionals along a causal chain (product rule) or summing out variables that are not needed for a decision (sum rule). Any proposed signal that cannot be written as factors in a joint distribution cannot be fused consistently.",
+    "source_operator": "sum_product_rules",
+    "telemetry": "The joint event log itself: play outcomes, game states, and context variables recorded so joints and marginals can be estimated"
+   }
+  },
+  {
+   "primitive_id": "bayes_theorem",
+   "name": "Bayes' theorem: posterior is proportional to likelihood times prior, with the evidence as normalizer",
+   "verbatim_quote": "which is called Bayes' theorem and which plays a central role in pattern recognition and machine learning. Using the sum rule, the denominator in Bayes' theorem can be expressed in terms of the quantities appearing in the numerator",
+   "page": "Section 1.2, Probability Theory (text lines 1240-1252)",
+   "latex": "p(Y|X) = \\frac{p(X|Y)\\,p(Y)}{p(X)}",
+   "symbol_and_unit_ledger": {
+    "p(Y|X)": "posterior probability of Y after observing X",
+    "p(X|Y)": "likelihood of the observation X under Y",
+    "p(Y)": "prior probability of Y before observing X",
+    "p(X)": "evidence, the marginal probability of X, a normalizing constant"
+   },
+   "assumptions": [
+    "The prior p(Y) is specified before the observation is used",
+    "The likelihood model p(X|Y) is the actual generating mechanism or a deliberate approximation of it"
+   ],
+   "breakdown_regime": "Fails in practice when the prior is chosen from the same data used in the likelihood (double use of data), or when the likelihood is misspecified so the posterior concentrates on a wrong value with growing confidence.",
+   "domain": "probability theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's update cycle is exactly this: a prior belief about a team or player, a likelihood for the newest evidence (a game, an injury report, a matchup observation), and a posterior that becomes the next prior. The evidence term is what makes competing explanations comparable.",
+    "source_operator": "bayes_theorem",
+    "telemetry": "Time-stamped observations per entity: game results, participation reports, and context notes, each logged before the update it feeds"
+   }
+  },
+  {
+   "primitive_id": "maximum_likelihood",
+   "name": "Maximum likelihood: set parameters to the value that maximizes the probability of the observed data",
+   "verbatim_quote": "A widely used frequentist estimator is maximum likelihood, in which w is set to the value that maximizes the likelihood function p(D|w).",
+   "page": "Section 1.2.5, Bayesian Probabilities (text lines 1635-1640)",
+   "latex": "\\mathbf{w}_{ML} = \\arg\\max_{\\mathbf{w}}\\; p(\\mathcal{D}|\\mathbf{w})",
+   "symbol_and_unit_ledger": {
+    "w_ML": "maximum likelihood parameter estimate",
+    "p(D|w)": "likelihood: probability of the observed data set D given parameters w",
+    "D": "the observed data set"
+   },
+   "assumptions": [
+    "Data points are independent given the parameters, so the likelihood factorizes",
+    "The model family contains a good approximation to the generating process"
+   ],
+   "breakdown_regime": "Overfits small samples and gives extreme estimates at boundaries (a coin landing heads three times gives probability 1). It carries no Occam penalty and no uncertainty, so it cannot by itself say how much to trust the estimate.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maximum likelihood is the engine's fitting workhorse for rating parameters from game history, but the book's own coin example is the standing warning: raw ML estimates on small samples (a three-game stretch) are read as noisy draws, never as true levels, until a prior regularizes them.",
+    "source_operator": "maximum_likelihood",
+    "telemetry": "Complete game-by-game outcome histories per team and player, large enough that likelihood peaks are meaningful"
+   }
+  },
+  {
+   "primitive_id": "gaussian_distribution",
+   "name": "The Gaussian distribution: the default continuous model, fixed by mean and variance",
+   "verbatim_quote": "The Gaussian, also known as the normal distribution, is a widely used model for the distribution of continuous variables. In the case of a single variable x, the Gaussian distribution can be written in the form",
+   "page": "Section 2.3, The Gaussian Distribution (text lines 4442-4446)",
+   "latex": "\\mathcal{N}(x|\\mu, \\sigma^2) = \\frac{1}{(2\\pi\\sigma^2)^{1/2}} \\exp\\left\\{-\\frac{1}{2\\sigma^2}(x - \\mu)^2\\right\\}",
+   "symbol_and_unit_ledger": {
+    "N(x|mu, sigma^2)": "Gaussian density at x, units of 1/x",
+    "mu": "mean, same units as x",
+    "sigma^2": "variance, squared units of x",
+    "x": "continuous variable"
+   },
+   "assumptions": [
+    "A single mode and symmetric tails describe the quantity",
+    "Mean and variance exist and are finite"
+   ],
+   "breakdown_regime": "Fails for heavy-tailed or skewed quantities and for outliers: the Gaussian assigns vanishing probability to extremes, so one extreme observation can drag the mean arbitrarily far. Mixtures and the t-distribution are the book's repairs.",
+   "domain": "probability distributions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Margins, totals, and player counting stats are carried in the engine as Gaussian-style beliefs with explicit mean and spread, so every projection is a distribution rather than a point. Where realized data shows fat tails, this primitive is the baseline that the t and mixture primitives override.",
+    "source_operator": "gaussian_distribution",
+    "telemetry": "Historical distributions of margins, totals, and player stat lines, from which means and variances are estimated per context"
+   }
+  },
+  {
+   "primitive_id": "conjugate_priors",
+   "name": "Conjugate priors: a prior family closed under the likelihood, so the posterior has the same functional form as the prior",
+   "verbatim_quote": "We shall see that an important role is played by conjugate priors, that lead to posterior distributions having the same functional form as the prior",
+   "page": "Chapter 2 introduction, Probability Distributions (text lines 3901-3906)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The likelihood belongs to the exponential family matched to the prior",
+    "Prior hyperparameters encode genuine prior information or a deliberate weak default"
+   ],
+   "breakdown_regime": "Conjugacy is a property of the chosen families, not of the world: forcing a conjugate form for convenience can distort the prior, and the closure fails as soon as the likelihood is a mixture or a nonlinear function of the parameter.",
+   "domain": "bayesian inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Where the engine needs fast sequential updates (a player's rate stat updated game by game), conjugate pairs give closed-form posterior updates with no sampling: the posterior after each game is the prior for the next. This is the cheap update kernel underneath slower full inference.",
+    "source_operator": "conjugate_priors",
+    "telemetry": "Streaming per-game rate observations (per-play success rates, per-game percentages) that arrive in sequence"
+   }
+  },
+  {
+   "primitive_id": "curse_of_dimensionality",
+   "name": "The curse of dimensionality: geometry and volume concentration defeat intuition and local methods in high dimensions",
+   "verbatim_quote": "The severe difficulty that can arise in spaces of many dimensions is sometimes called the curse of dimensionality (Bellman, 1961).",
+   "page": "Section 1.4, The Curse of Dimensionality (text lines 2355-2362)",
+   "latex": "V_D(r) = K_D\\, r^{D}",
+   "symbol_and_unit_ledger": {
+    "V_D(r)": "volume of a sphere of radius r in D dimensions",
+    "K_D": "constant depending only on D",
+    "r": "radius, same units as the coordinates",
+    "D": "dimensionality, count"
+   },
+   "assumptions": [
+    "Reasoning is being done in a space whose dimension is large relative to the data volume",
+    "Volume and distance are measured with the ordinary Euclidean geometry"
+   ],
+   "breakdown_regime": "It is a warning, not a theorem with exceptions: structured data lying near a low-dimensional manifold escapes the worst of it, which is why latent variable models and factorization are the standard countermeasures.",
+   "domain": "high-dimensional geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never reasons by raw similarity in the full feature space of a game (dozens of context variables): in that space every historical game is far from every other and nearest-neighbour logic collapses. Structure, factorization, and latent variables are mandatory, not optional refinements.",
+    "source_operator": "curse_of_dimensionality",
+    "telemetry": "Feature-space diagnostics: pairwise distance distributions of game vectors as features are added"
+   }
+  },
+  {
+   "primitive_id": "expected_loss_minimization",
+   "name": "Decision theory: choose the action that minimizes expected loss under the posterior, not the most likely outcome",
+   "verbatim_quote": "We can formalize such issues through the introduction of a loss function, also called a cost function, which is a single, overall measure of loss incurred in taking any of the available decisions or actions.",
+   "page": "Section 1.5.2, Minimizing the Expected Loss (text lines 2604-2612)",
+   "latex": "\\mathbb{E}[L] = \\sum_k \\sum_j \\int_{\\mathcal{R}_j} L_{kj}\\, p(\\mathbf{x}, \\mathcal{C}_k)\\, d\\mathbf{x}",
+   "symbol_and_unit_ledger": {
+    "E[L]": "expected loss of a decision rule, in loss units",
+    "L_kj": "loss incurred when the true class is C_k and class C_j is assigned",
+    "p(x, C_k)": "joint probability of input x and true class C_k",
+    "R_j": "decision region assigned to class C_j"
+   },
+   "assumptions": [
+    "Losses for each (truth, action) pair can be stated explicitly, including asymmetric costs",
+    "A posterior or joint distribution over the unknowns is available"
+   ],
+   "breakdown_regime": "Fails when the loss function is left implicit, which silently substitutes accuracy for the real objective, and when the distribution is overconfident, which makes the expected-loss calculation inherit the overconfidence.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Inference and action are separate layers in the engine: projections stay pure probability statements, and a distinct decision layer applies an explicit loss matrix (the cost of a false lean versus a missed one, the cost of acting on stale information) before anything is emitted. This is the formal basis for pass discipline.",
+    "source_operator": "expected_loss_minimization",
+    "telemetry": "Outcome logs scored against past decisions, so realized losses per decision type can be measured and the loss matrix audited"
+   }
+  },
+  {
+   "primitive_id": "entropy",
+   "name": "Entropy: the expected information content of a distribution, maximal for the uniform distribution and zero for a certainty",
+   "verbatim_quote": "Distributions p(xi ) that are sharply peaked around a few values will have a relatively low entropy, whereas those that are spread more evenly across many values will have higher entropy, as illustrated in Figure 1.30.",
+   "page": "Section 1.6, Information Theory (text lines 3120-3128)",
+   "latex": "H[p] = -\\sum_i p(x_i) \\ln p(x_i)",
+   "symbol_and_unit_ledger": {
+    "H[p]": "entropy of the distribution, in nats (dimensionless)",
+    "p(x_i)": "probability of state x_i",
+    "ln": "natural logarithm, fixing the unit as nats"
+   },
+   "assumptions": [
+    "The state space and its probabilities are specified",
+    "States are the finest partition relevant to the question"
+   ],
+   "breakdown_regime": "Entropy measures spread, not correctness: a confident wrong distribution has low entropy and high error. For continuous variables the differential entropy can be negative and changes under reparametrization.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropy is the engine's uncertainty gauge per prediction: a slate of games is ranked by how much uncertainty remains after all signals are fused, and high-entropy spots are where additional information (a late injury report, a lineup confirmation) has the most value.",
+    "source_operator": "entropy",
+    "telemetry": "Posterior distributions per game and per player market, from which entropies are computed each cycle"
+   }
+  },
+  {
+   "primitive_id": "kl_divergence",
+   "name": "Kullback-Leibler divergence: the extra information cost of using an approximating distribution in place of the true one",
+   "verbatim_quote": "the Kullback-Leibler divergence as a measure of the dissimilarity of the two distributions p(x) and q(x).",
+   "page": "Section 1.6.1, Relative Entropy and Mutual Information (text lines 3391-3394)",
+   "latex": "\\mathrm{KL}(p\\|q) = -\\int p(x) \\ln \\frac{q(x)}{p(x)}\\, dx",
+   "symbol_and_unit_ledger": {
+    "KL(p||q)": "Kullback-Leibler divergence from p to q, in nats, always >= 0",
+    "p(x)": "the true or target distribution",
+    "q(x)": "the approximating distribution"
+   },
+   "assumptions": [
+    "q(x) is nonzero wherever p(x) is nonzero, or the divergence is infinite",
+    "Both distributions are over the same space"
+   ],
+   "breakdown_regime": "It is asymmetric and not a metric, so swapping the arguments changes the answer; variational inference uses one direction (mode-seeking) and importance weighting the other (mass-covering), with visibly different failure modes.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "KL is the engine's distance between belief states: how far today's posterior on a team has moved from last week's, and how far a fitted approximation sits from the full posterior it replaces. Drift alarms and approximation budgets are both stated in KL.",
+    "source_operator": "kl_divergence",
+    "telemetry": "Stored posterior snapshots per entity across time, so divergences between successive belief states can be computed"
+   }
+  },
+  {
+   "primitive_id": "students_t_distribution",
+   "name": "Student's t-distribution: an infinite mixture of Gaussians over unknown precision, giving heavy tails and robustness to outliers",
+   "verbatim_quote": "This gives the t distribution an important property called robustness, which means that it is much less sensitive than the Gaussian to the presence of a few data points which are outliers.",
+   "page": "Section 2.3.7, Student's t-distribution (text lines 5882-5888)",
+   "latex": "p(x|\\mu, a, b) = \\int_0^{\\infty} \\mathcal{N}(x|\\mu, \\tau^{-1})\\, \\mathrm{Gam}(\\tau|a, b)\\, d\\tau",
+   "symbol_and_unit_ledger": {
+    "p(x|mu, a, b)": "Student t density at x after integrating out precision",
+    "N(x|mu, tau^-1)": "Gaussian with mean mu and precision tau",
+    "Gam(tau|a, b)": "gamma prior over the precision tau",
+    "tau": "precision, units of 1/x^2"
+   },
+   "assumptions": [
+    "Observations are Gaussian given an unknown precision",
+    "The gamma prior on precision is an adequate description of scale uncertainty"
+   ],
+   "breakdown_regime": "Still symmetric and unimodal, so it cannot represent skew or multiple modes; with very small samples the tail index is driven mostly by the prior hyperparameters a and b.",
+   "domain": "probability distributions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Wherever the engine averages a volatile quantity (a player's per-game output, a team's margin), the t model is the default error law: a single blowout or a garbage-time stat line is absorbed by the heavy tails instead of dragging the estimate, which is exactly the robustness property the quote names.",
+    "source_operator": "students_t_distribution",
+    "telemetry": "Per-game stat lines with their extremes flagged, so Gaussian and t fits can be compared on realized outliers"
+   }
+  },
+  {
+   "primitive_id": "exponential_family",
+   "name": "The exponential family: one canonical form unifying Bernoulli, Gaussian, multinomial and most tractable distributions",
+   "verbatim_quote": "The exponential family of distributions over x, given parameters η, is defined to be the set of distributions of the form",
+   "page": "Section 2.4, The Exponential Family (text lines 6375-6380)",
+   "latex": "p(\\mathbf{x}|\\boldsymbol{\\eta}) = h(\\mathbf{x})\\, g(\\boldsymbol{\\eta}) \\exp\\left\\{\\boldsymbol{\\eta}^{\\mathrm{T}} \\mathbf{u}(\\mathbf{x})\\right\\}",
+   "symbol_and_unit_ledger": {
+    "eta": "natural (canonical) parameters, dimensionless",
+    "u(x)": "sufficient statistics of x",
+    "h(x)": "base measure scaling function",
+    "g(eta)": "normalization coefficient ensuring the density integrates to one"
+   },
+   "assumptions": [
+    "The distribution can be written with a fixed finite set of sufficient statistics",
+    "The natural parameter space is open so derivatives of the log normalizer give moments"
+   ],
+   "breakdown_regime": "Mixtures and distributions with parameter-dependent support fall outside the family; inside it, everything is tractable precisely because the sufficient statistics summarize the data completely, which real messy data rarely permits.",
+   "domain": "probability distributions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine stores evidence as sufficient statistics wherever a signal family permits it: counts and sums that fully summarize a history for the model in use. This is what makes incremental updates, conjugacy, and the GLM machinery cheap across thousands of entities.",
+    "source_operator": "exponential_family",
+    "telemetry": "Aggregated count and sum tables per entity (attempts, successes, yards, snaps) maintained as running sufficient statistics"
+   }
+  },
+  {
+   "primitive_id": "nonparametric_density_estimation",
+   "name": "Nonparametric density estimation: kernel and K-nearest-neighbour estimators that let the data define the density",
+   "verbatim_quote": "It can be shown that both the K-nearest-neighbour density estimator and the kernel density estimator converge to the true probability density in the limit N → ∞ provided V shrinks suitably with N , and K grows with N (Duda and Hart, 1973).",
+   "page": "Section 2.5, Nonparametric Methods (text lines 6878-6884)",
+   "latex": "p(\\mathbf{x}) = \\frac{K}{N V}",
+   "symbol_and_unit_ledger": {
+    "p(x)": "estimated density at x",
+    "K": "number of data points falling in the region around x, count",
+    "N": "total number of data points, count",
+    "V": "volume of the region around x, in input-space units"
+   },
+   "assumptions": [
+    "The density is approximately constant over the region counted",
+    "The region shrinks and the count grows at suitable rates as N increases"
+   ],
+   "breakdown_regime": "Collapses under the curse of dimensionality: in high dimensions the volume needed to capture K points is enormous, so estimates are either hopelessly biased or hopelessly noisy. Bandwidth and K choices dominate the result.",
+   "domain": "density estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Used in the engine only in low-dimensional slices (for example the empirical distribution of a single player's output, or margin distributions for one matchup class), where it provides assumption-light reference distributions that parametric fits are checked against.",
+    "source_operator": "nonparametric_density_estimation",
+    "telemetry": "Raw historical samples per low-dimensional quantity, retained rather than summarized, so empirical densities can be rebuilt"
+   }
+  },
+  {
+   "primitive_id": "least_squares_normal_equations",
+   "name": "Least squares for linear models: the normal equations give the closed-form maximum likelihood weights",
+   "verbatim_quote": "which are known as the normal equations for the least squares problem. Here Φ is an N ×M matrix, called the design matrix",
+   "page": "Section 3.1.1, Least Squares (text lines 7813-7817)",
+   "latex": "\\mathbf{w}_{ML} = \\left(\\boldsymbol{\\Phi}^{\\mathrm{T}} \\boldsymbol{\\Phi}\\right)^{-1} \\boldsymbol{\\Phi}^{\\mathrm{T}} \\mathbf{t}",
+   "symbol_and_unit_ledger": {
+    "w_ML": "maximum likelihood weight vector",
+    "Phi": "N by M design matrix of basis function values phi_j(x_n)",
+    "t": "vector of observed targets",
+    "N, M": "counts of data points and basis functions"
+   },
+   "assumptions": [
+    "The model is linear in the parameters (basis functions may be nonlinear in x)",
+    "Noise is Gaussian with constant variance, which is what makes least squares the ML solution"
+   ],
+   "breakdown_regime": "The inverse fails or becomes unstable when basis functions are collinear or M approaches N; squared loss makes the solution chase outliers. Regularization and the Bayesian treatment are the book's successive repairs.",
+   "domain": "linear regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The baseline rating fit in the engine is a regularized descendant of this closed form: team and player effects as linear combinations of features, solved exactly, so that any fancier model must beat a solution that is already optimal for its assumptions.",
+    "source_operator": "least_squares_normal_equations",
+    "telemetry": "Design matrices built from game features (opponent, venue, rest, personnel) joined to realized outcomes"
+   }
+  },
+  {
+   "primitive_id": "bias_variance_decomposition",
+   "name": "Bias-variance decomposition: expected squared loss splits into squared bias, variance, and irreducible noise",
+   "verbatim_quote": "Our goal is to minimize the expected loss, which we have decomposed into the sum of a (squared) bias, a variance, and a constant noise term. As we shall see, there is a trade-off between bias and variance, with very flexible models having low bias and high variance, and relatively rigid models having high bias and low variance.",
+   "page": "Section 3.2, The Bias-Variance Decomposition (text lines 8228-8236)",
+   "latex": "\\mathrm{expected\\ loss} = (\\mathrm{bias})^2 + \\mathrm{variance} + \\mathrm{noise}",
+   "symbol_and_unit_ledger": {
+    "(bias)^2": "squared gap between the average prediction over data sets and the true regression function",
+    "variance": "expected squared deviation of individual fits from their average",
+    "noise": "irreducible variance of the target given the input"
+   },
+   "assumptions": [
+    "Loss is squared error",
+    "Averages are taken over the distribution of possible training data sets of the same size"
+   ],
+   "breakdown_regime": "The decomposition is exact only for squared loss; for classification and 0-1 loss the trade-off intuition survives but the clean additive split does not. It also describes average behaviour, not the behaviour on one realized data set.",
+   "domain": "model complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine model choice is interrogated in these terms: is this signal's error mostly bias (a systematically missing factor, fix by adding structure) or variance (an unstable fit, fix by shrinking or averaging)? The decomposition decides which repair is even possible.",
+    "source_operator": "bias_variance_decomposition",
+    "telemetry": "Repeated-fit experiments: the same model refit on resampled game histories, logging the spread of its predictions"
+   }
+  },
+  {
+   "primitive_id": "bayesian_linear_regression_predictive",
+   "name": "Bayesian linear regression predictive distribution: prediction variance splits into data noise plus parameter uncertainty",
+   "verbatim_quote": "The first term in (3.59) represents the noise on the data whereas the second term reflects the uncertainty associated with the parameters w. Because the noise process and the distribution of w are independent Gaussians, their variances are additive.",
+   "page": "Section 3.3.2, Predictive Distribution (text lines 8548-8552)",
+   "latex": "p(t|x, \\mathbf{t}, \\alpha, \\beta) = \\mathcal{N}\\!\\left(t\\,|\\,\\mathbf{m}_N^{\\mathrm{T}} \\boldsymbol{\\phi}(\\mathbf{x}),\\, \\sigma_N^2(\\mathbf{x})\\right), \\qquad \\sigma_N^2(\\mathbf{x}) = \\frac{1}{\\beta} + \\boldsymbol{\\phi}(\\mathbf{x})^{\\mathrm{T}} \\mathbf{S}_N\\, \\boldsymbol{\\phi}(\\mathbf{x})",
+   "symbol_and_unit_ledger": {
+    "p(t|x, t, alpha, beta)": "predictive density for a new target t",
+    "m_N": "posterior mean of the weights after N points",
+    "S_N": "posterior covariance of the weights",
+    "1/beta": "observation noise variance",
+    "phi(x)": "basis function vector at the new input"
+   },
+   "assumptions": [
+    "Gaussian prior on weights and Gaussian noise, giving a Gaussian posterior in closed form",
+    "Hyperparameters alpha and beta are fixed or set by evidence maximization"
+   ],
+   "breakdown_regime": "The parameter-uncertainty term vanishes as N grows regardless of whether the model class is right, so with big data the predictive interval reflects only noise and can be confidently wrong under misspecification.",
+   "domain": "bayesian regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This variance split is reported for engine projections: the noise term is the game's intrinsic randomness, the second term is our ignorance, and it shrinks as relevant games accumulate. A projection whose width is mostly ignorance is a research target; one dominated by noise is a pass candidate.",
+    "source_operator": "bayesian_linear_regression_predictive",
+    "telemetry": "Per-projection bookkeeping: number of relevant observations behind each estimate and the resulting posterior covariance"
+   }
+  },
+  {
+   "primitive_id": "logistic_regression",
+   "name": "Logistic regression: the class posterior is a logistic sigmoid of a linear function, fit directly by maximum likelihood",
+   "verbatim_quote": "In our discussion of generative approaches in Section 4.2, we saw that under rather general assumptions, the posterior probability of class C1 can be written as a logistic sigmoid acting on a linear function of the feature vector φ",
+   "page": "Section 4.3.2, Logistic Regression (text lines 10978-10984)",
+   "latex": "p(\\mathcal{C}_1|\\boldsymbol{\\phi}) = \\sigma\\!\\left(\\mathbf{w}^{\\mathrm{T}} \\boldsymbol{\\phi}\\right), \\qquad \\sigma(a) = \\frac{1}{1 + e^{-a}}",
+   "symbol_and_unit_ledger": {
+    "p(C_1|phi)": "posterior probability of class 1 given features phi",
+    "sigma(a)": "logistic sigmoid, squashing a real number into (0,1)",
+    "w": "weight vector, one parameter per feature",
+    "phi": "feature vector, possibly a nonlinear basis expansion of x"
+   },
+   "assumptions": [
+    "The log-odds of class membership are linear in the features",
+    "Training labels are correct and examples independent given w"
+   ],
+   "breakdown_regime": "Linear log-odds cannot represent interactions or non-monotone effects unless the basis supplies them; separable data drives weights to infinity, so unregularized fits can be arbitrarily overconfident.",
+   "domain": "classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's binary heads (win or loss, player available or not, a threshold crossed or not) are logistic in form: a linear score over auditable features squashed to a calibrated probability, with the feature weights inspectable one by one.",
+    "source_operator": "logistic_regression",
+    "telemetry": "Labeled binary outcomes per game joined to the pre-game feature vectors that were available at decision time"
+   }
+  },
+  {
+   "primitive_id": "feedforward_neural_network",
+   "name": "Feed-forward neural network: basis functions that are themselves learned linear-nonlinear compositions",
+   "verbatim_quote": "Neural networks use basis functions that follow the same form as (5.1), so that each basis function is itself a nonlinear function of a linear combination of the inputs, where the coefficients in the linear combination are adaptive parameters.",
+   "page": "Section 5.1, Feed-forward Network Functions (text lines 12020-12026)",
+   "latex": "y_k(\\mathbf{x}, \\mathbf{w}) = f\\!\\left(\\sum_{j=1}^{M} w_{kj}^{(2)}\\, h\\!\\left(\\sum_{i=1}^{D} w_{ji}^{(1)} x_i + w_{j0}^{(1)}\\right) + w_{k0}^{(2)}\\right)",
+   "symbol_and_unit_ledger": {
+    "y_k": "k-th network output",
+    "h(.)": "nonlinear hidden activation, e.g. logistic sigmoid or tanh",
+    "f(.)": "output activation, identity for regression",
+    "w_ji^(1), w_kj^(2)": "first and second layer weights",
+    "w_j0, w_k0": "bias parameters",
+    "D, M": "counts of inputs and hidden units"
+   },
+   "assumptions": [
+    "The target function is smooth enough for a two-layer sigmoidal network to approximate",
+    "Enough data exists to fit the adaptive basis without the variance term dominating"
+   ],
+   "breakdown_regime": "The error surface is non-convex with many equivalent and inequivalent minima; without regularization or a Bayesian treatment the network interpolates noise exactly as the order-9 polynomial did, only less transparently.",
+   "domain": "neural networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where interactions are too rich for hand-built features (player combinations, scheme matchups), the engine's learned components follow this template: fixed reasoning outside, adaptive basis inside, with the number of hidden units treated as a complexity dial under bias-variance discipline.",
+    "source_operator": "feedforward_neural_network",
+    "telemetry": "Training corpora of game states and outcomes sized to the parameter count, plus held-out tracking of fit by capacity"
+   }
+  },
+  {
+   "primitive_id": "error_backpropagation",
+   "name": "Backpropagation: gradients of a network error by local message passing, forward activations then backward error signals",
+   "verbatim_quote": "We shall see that this can be achieved using a local message passing scheme in which information is sent alternately forwards and backwards through the network and is known as error backpropagation, or sometimes simply as backprop.",
+   "page": "Section 5.3, Error Backpropagation (text lines 12768-12772)",
+   "latex": "\\delta_j = h'(a_j) \\sum_k w_{kj}\\, \\delta_k, \\qquad \\frac{\\partial E_n}{\\partial w_{ji}} = \\delta_j\\, z_i",
+   "symbol_and_unit_ledger": {
+    "delta_j": "error signal at unit j, in error-per-activation units",
+    "h'(a_j)": "derivative of the activation at unit j",
+    "w_kj": "weight from unit j to unit k",
+    "z_i": "activation feeding weight w_ji",
+    "E_n": "error contribution of data point n"
+   },
+   "assumptions": [
+    "Every activation function is differentiable",
+    "The network is feed-forward so a topological order exists for the two sweeps"
+   ],
+   "breakdown_regime": "Gradients vanish or explode through deep chains of saturating units, and the algorithm computes derivatives, not decisions: it must be paired with an optimizer and a stopping or regularization rule to produce a model.",
+   "domain": "neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Backpropagation is the engine's credit-assignment template beyond neural nets: when a prediction misses, blame is propagated backwards through the chain of contributing factors in proportion to local sensitivity, rather than being assigned wholesale to the final output.",
+    "source_operator": "error_backpropagation",
+    "telemetry": "Per-prediction factor contributions logged at inference time, so post-game reviews can replay which factors carried the error"
+   }
+  },
+  {
+   "primitive_id": "gaussian_process",
+   "name": "Gaussian process: a distribution over functions defined by a mean and a kernel covariance, giving exact Bayesian regression over function space",
+   "verbatim_quote": "a Gaussian process is defined as a probability distribution over functions y(x) such that the set of values of y(x) evaluated at an arbitrary set of points x1 , . . . , xN jointly have a Gaussian distribution.",
+   "page": "Section 6.4, Gaussian Process Regression (text lines 15941-15945)",
+   "latex": "\\mathbb{E}\\left[y(\\mathbf{x}_n)\\, y(\\mathbf{x}_m)\\right] = k(\\mathbf{x}_n, \\mathbf{x}_m)",
+   "symbol_and_unit_ledger": {
+    "y(x)": "latent function value at input x",
+    "k(x_n, x_m)": "kernel (covariance) function between two inputs",
+    "E[.]": "expectation under the Gaussian process prior"
+   },
+   "assumptions": [
+    "Function values at any finite set of inputs are jointly Gaussian",
+    "The kernel encodes the true smoothness and similarity structure of the function"
+   ],
+   "breakdown_regime": "Exact inference costs cubic time in the number of points, and a badly chosen kernel imposes the wrong similarity geometry with full Bayesian confidence. Sparse and inducing-point approximations trade exactness for scale.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Form curves in the engine (a team or player trajectory over a season) are modelled as draws from a Gaussian process: similarity between situations is stated explicitly as a kernel, and predictions at a new situation come with honest widening uncertainty away from observed ones.",
+    "source_operator": "gaussian_process",
+    "telemetry": "Longitudinal per-entity time series (weekly performance and context), the raw material for kernel-defined similarity"
+   }
+  },
+  {
+   "primitive_id": "svm_maximum_margin",
+   "name": "Support vector machine: choose the decision boundary that maximizes the margin to the closest training points",
+   "verbatim_quote": "The support vector machine approaches this problem through the concept of the margin, which is defined to be the smallest distance between the decision boundary and any of the samples, as illustrated in Figure 7.1. In support vector machines the decision boundary is chosen to be the one for which the margin is maximized.",
+   "page": "Section 7.1, Maximum Margin Classifiers (text lines 16928-16936)",
+   "latex": "\\arg\\max_{\\mathbf{w}, b}\\; \\frac{1}{\\|\\mathbf{w}\\|} \\min_n \\left[ t_n \\left(\\mathbf{w}^{\\mathrm{T}} \\boldsymbol{\\phi}(\\mathbf{x}_n) + b\\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "w, b": "hyperplane weights and bias defining the decision boundary",
+    "t_n": "class label in {-1, +1}",
+    "phi(x_n)": "feature-space image of input n",
+    "margin": "smallest perpendicular distance from the boundary to any sample, in feature-space units"
+   },
+   "assumptions": [
+    "Classes are separable in feature space, or slack variables are added for the soft-margin case",
+    "The closest points (support vectors) are representative, not label errors"
+   ],
+   "breakdown_regime": "A single mislabeled point near the boundary can dominate the solution; the raw output is a distance, not a probability, so a separate calibration step is required before the result can enter expected-loss decisions.",
+   "domain": "kernel classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Margin thinking sets the engine's confidence geometry: a lean is only as strong as the distance to the nearest historical case that went the other way. Cases near the boundary are flagged as fragile regardless of which side the score lands on.",
+    "source_operator": "svm_maximum_margin",
+    "telemetry": "Nearest-counterexample lookup per prediction: the closest historical situations with opposite outcomes, with their distances"
+   }
+  },
+  {
+   "primitive_id": "relevance_vector_machine",
+   "name": "Relevance vector machine: Bayesian sparsity through automatic relevance determination, where most weights are pruned to zero",
+   "verbatim_quote": "In the case of models of the form (7.78), the inputs xn corresponding to the remaining nonzero weights are called relevance vectors",
+   "page": "Section 7.2, Relevance Vector Machines (text lines 18105-18108)",
+   "latex": "p(\\mathbf{w}|\\mathbf{t}, \\mathbf{X}, \\boldsymbol{\\alpha}, \\beta) = \\mathcal{N}(\\mathbf{w}|\\mathbf{m}, \\boldsymbol{\\Sigma}), \\qquad \\boldsymbol{\\Sigma} = \\left(\\mathbf{A} + \\beta\\, \\boldsymbol{\\Phi}^{\\mathrm{T}} \\boldsymbol{\\Phi}\\right)^{-1}, \\quad \\mathbf{m} = \\beta\\, \\boldsymbol{\\Sigma}\\, \\boldsymbol{\\Phi}^{\\mathrm{T}} \\mathbf{t}",
+   "symbol_and_unit_ledger": {
+    "alpha_i": "per-weight prior precision hyperparameter; infinity prunes weight i",
+    "A": "diagonal matrix of the alpha_i",
+    "Sigma, m": "posterior covariance and mean of the weights",
+    "beta": "noise precision",
+    "Phi": "design or kernel matrix"
+   },
+   "assumptions": [
+    "A separate Gaussian prior per weight with its own precision, optimized by marginal likelihood (evidence)",
+    "The Gaussian posterior approximation is adequate"
+   ],
+   "breakdown_regime": "Evidence maximization can prune aggressively and discard genuinely useful weak signals; the sparsity is a property of the prior geometry, so a signal that only matters in rare regimes may be removed before those regimes are observed.",
+   "domain": "sparse kernel machines",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's signal pruning follows ARD logic: each candidate signal carries its own relevance parameter, and signals whose relevance collapses are removed from the active model but kept in the record with their refusal status, available for re-entry when regimes change.",
+    "source_operator": "relevance_vector_machine",
+    "telemetry": "Per-signal relevance traces across refits, so pruned and surviving signals can be audited over time"
+   }
+  },
+  {
+   "primitive_id": "bayesian_network_factorization",
+   "name": "Bayesian network: a directed acyclic graph factorizes the joint distribution into one conditional per node given its parents",
+   "verbatim_quote": "By repeated application of the product rule of probability, this joint distribution can be written as a product of conditional distributions, one for each of the variables",
+   "page": "Section 8.1, Bayesian Networks (text lines 18740-18744)",
+   "latex": "p(\\mathbf{x}) = \\prod_{k=1}^{K} p\\left(x_k \\,|\\, \\mathrm{pa}_k\\right)",
+   "symbol_and_unit_ledger": {
+    "p(x)": "joint distribution over all K variables",
+    "x_k": "the variable at node k",
+    "pa_k": "the set of parent nodes of node k in the graph",
+    "p(x_k|pa_k)": "conditional distribution of node k given its parents"
+   },
+   "assumptions": [
+    "The graph is acyclic",
+    "Each variable is conditionally independent of its non-descendants given its parents (the Markov condition for directed graphs)"
+   ],
+   "breakdown_regime": "The factorization is only as good as the graph: a missing link asserts an independence that may be false, and an ordering chosen for convenience can hide the causal direction that interventions would need.",
+   "domain": "graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's master data structure: game state, personnel, scheme, and context are nodes; edges are stated dependencies; the joint over a matchup factorizes into auditable conditionals. Any two signals interact only through paths in this graph, never by ad hoc combination.",
+    "source_operator": "bayesian_network_factorization",
+    "telemetry": "The structured pre-game record itself: personnel, injuries, scheme indicators, venue and rest, stored as node values per game"
+   }
+  },
+  {
+   "primitive_id": "d_separation",
+   "name": "d-separation: the graphical criterion that reads conditional independence statements off a directed graph by path blocking",
+   "verbatim_quote": "Any such path is said to be blocked if it includes a node such that either (a) the arrows on the path meet either head-to-tail or tail-to-tail at the node, and the node is in the set C, or (b) the arrows meet head-to-head at the node, and neither the node, nor any of its descendants, is in the set C.",
+   "page": "Section 8.2, Conditional Independence (text lines 19622-19633)",
+   "latex": "A \\perp\\!\\!\\!\\perp B \\;|\\; C",
+   "symbol_and_unit_ledger": {
+    "A, B, C": "disjoint sets of nodes in the graph",
+    "independence symbol": "A is conditionally independent of B given C",
+    "blocked path": "a path interrupted by an observed chain or fork node, or by an unobserved collider with no observed descendants"
+   },
+   "assumptions": [
+    "The distribution is faithful to the graph, so graphical separation and probabilistic independence coincide",
+    "Conditioning sets are exactly the variables listed"
+   ],
+   "breakdown_regime": "Conditioning on a collider (or its descendant) opens a path and creates spurious dependence: the classic way an analyst manufactures a relationship by selecting on a common effect, such as studying only games that were televised or only players who were traded.",
+   "domain": "graphical models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Before two engine signals are fused, d-separation is the audit: if the graph says they are independent given what is already known, combining them as fresh evidence double-counts. Conditioning choices (only close games, only nationally televised games) are checked for collider bias before any subset analysis is believed.",
+    "source_operator": "d_separation",
+    "telemetry": "The engine's dependency graph plus the conditioning set used in each analysis, logged so independence claims can be rechecked"
+   }
+  },
+  {
+   "primitive_id": "markov_random_field",
+   "name": "Markov random field: an undirected graph factorizes the joint into potential functions over maximal cliques, with a global partition function",
+   "verbatim_quote": "This leads us to consider a graphical concept called a clique, which is defined as a subset of the nodes in a graph such that there exists a link between all pairs of nodes in the subset. In other words, the set of nodes in a clique is fully connected.",
+   "page": "Section 8.3, Markov Random Fields (text lines 19958-19962)",
+   "latex": "p(\\mathbf{x}) = \\frac{1}{Z} \\prod_C \\psi_C(\\mathbf{x}_C), \\qquad Z = \\sum_{\\mathbf{x}} \\prod_C \\psi_C(\\mathbf{x}_C)",
+   "symbol_and_unit_ledger": {
+    "psi_C(x_C)": "nonnegative potential function over clique C, not itself a probability",
+    "Z": "partition function, the normalizing sum over all configurations",
+    "C": "a maximal clique of the undirected graph",
+    "x_C": "the variables in clique C"
+   },
+   "assumptions": [
+    "Interactions are symmetric (undirected), so no causal ordering is implied",
+    "All potentials are nonnegative and Z is finite and computable or approximable"
+   ],
+   "breakdown_regime": "The partition function is intractable for large graphs, which forces approximate inference; and because potentials are unnormalized, their individual magnitudes carry no probabilistic meaning on their own.",
+   "domain": "graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mutual, symmetric influences in a game (lineup units that raise or lower each other, scheme pieces that only make sense together) are modelled as clique potentials rather than one-way arrows, with the partition function handled by the inference layer, not ignored.",
+    "source_operator": "markov_random_field",
+    "telemetry": "Co-occurrence data for unit combinations: snaps and outcomes for specific personnel groupings on the field together"
+   }
+  },
+  {
+   "primitive_id": "sum_product_algorithm",
+   "name": "Sum-product algorithm: exact marginals on tree-structured factor graphs by passing local messages in two sweeps",
+   "verbatim_quote": "We shall now make use of the factor graph framework to derive a powerful class of efficient, exact inference algorithms that are applicable to tree-structured graphs. Here we shall focus on the problem of evaluating local marginals over nodes or subsets of nodes, which will lead us to the sum-product algorithm.",
+   "page": "Section 8.4.4, The Sum-product Algorithm (text lines 20746-20752)",
+   "latex": "\\mu_{f \\to x}(x) = \\sum_{\\mathbf{x}_f \\setminus x} f(\\mathbf{x}_f) \\prod_{x' \\in \\mathrm{ne}(f) \\setminus x} \\mu_{x' \\to f}(x')",
+   "symbol_and_unit_ledger": {
+    "mu_{f to x}(x)": "message from factor f to variable x, a function of x",
+    "f(x_f)": "factor function over its variable set x_f",
+    "ne(f)": "neighbour variables of factor f",
+    "sum over x_f minus x": "marginalization over all factor variables except x"
+   },
+   "assumptions": [
+    "The factor graph is a tree (or is made one by restructuring), so messages are exact",
+    "Factors are local: each depends on a small subset of variables"
+   ],
+   "breakdown_regime": "On graphs with cycles the algorithm becomes loopy belief propagation: often accurate, no longer exact, and convergence is not guaranteed. Message schedules and damping become empirical choices.",
+   "domain": "graphical model inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's fusion kernel: each signal family is a factor, each game quantity a variable, and beliefs propagate by local messages rather than by one monolithic model. Adding a new signal means adding a factor and its messages, with the rest of the graph untouched.",
+    "source_operator": "sum_product_algorithm",
+    "telemetry": "Message logs per inference run: which factors moved which beliefs, retained for post-game attribution"
+   }
+  },
+  {
+   "primitive_id": "kmeans_clustering",
+   "name": "K-means clustering: partition data by alternating assignment to the nearest prototype and prototype re-estimation, minimizing total squared distance",
+   "verbatim_quote": "Our goal is then to find an assignment of data points to clusters, as well as a set of vectors {µk }, such that the sum of the squares of the distances of each data point to its closest vector µk , is a minimum.",
+   "page": "Section 9.1, K-means Clustering (text lines 21790-21796)",
+   "latex": "J = \\sum_{n=1}^{N} \\sum_{k=1}^{K} r_{nk}\\, \\|\\mathbf{x}_n - \\boldsymbol{\\mu}_k\\|^2",
+   "symbol_and_unit_ledger": {
+    "J": "distortion measure, total squared distance, in squared data units",
+    "r_nk": "binary assignment indicator, 1 if point n is in cluster k",
+    "mu_k": "prototype (centre) of cluster k",
+    "K": "number of clusters, fixed in advance"
+   },
+   "assumptions": [
+    "Clusters are roughly spherical and comparable in scale under Euclidean distance",
+    "K is given; the algorithm itself does not choose it"
+   ],
+   "breakdown_regime": "Converges to local minima that depend on initialization, and hard assignments hide boundary cases. Squared distances make centres chase outliers, and elongated or nested clusters are split wrongly.",
+   "domain": "clustering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Game and team typologies in the engine (styles of offense, families of game script) are formed by prototype clustering in this spirit, but assignments are kept soft downstream: a game near a boundary is evidence about two prototypes, not a forced member of one.",
+    "source_operator": "kmeans_clustering",
+    "telemetry": "Game feature vectors per team-game, clustered offline, with distances to all prototypes retained rather than only the winner"
+   }
+  },
+  {
+   "primitive_id": "gaussian_mixture_latent",
+   "name": "Gaussian mixture model: a density written as a weighted sum of Gaussian components, equivalently a model with a discrete latent component indicator",
+   "verbatim_quote": "Recall from (2.188) that the Gaussian mixture distribution can be written as a linear superposition of Gaussians in the form",
+   "page": "Section 9.2, Mixtures of Gaussians (text lines 22068-22072)",
+   "latex": "p(\\mathbf{x}) = \\sum_{k=1}^{K} \\pi_k\\, \\mathcal{N}(\\mathbf{x}|\\boldsymbol{\\mu}_k, \\boldsymbol{\\Sigma}_k)",
+   "symbol_and_unit_ledger": {
+    "pi_k": "mixing coefficient of component k, in [0,1], summing to one",
+    "N(x|mu_k, Sigma_k)": "k-th Gaussian component with its own mean and covariance",
+    "K": "number of components"
+   },
+   "assumptions": [
+    "A finite set of Gaussian regimes generates the data",
+    "Each observation comes from exactly one component, indicated by a latent 1-of-K variable"
+   ],
+   "breakdown_regime": "The likelihood is unbounded (a component can collapse onto a single point) and invariant to label permutation; without priors or constraints, maximum likelihood needs care. Too many components re-create over-fitting in density form.",
+   "domain": "latent variable models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Regime structure in the engine is mixture structure: a team is not one distribution but a weighted set of versions (with and without a key player, home and road identities), and the mixing weights are themselves tracked quantities that shift with news.",
+    "source_operator": "gaussian_mixture_latent",
+    "telemetry": "Per-game component responsibility estimates: which regime best explains each observed game, accumulated over a season"
+   }
+  },
+  {
+   "primitive_id": "em_algorithm",
+   "name": "EM algorithm: maximize a likelihood with latent variables by alternating posterior inference over the latents (E step) and parameter maximization (M step)",
+   "verbatim_quote": "In the E step, we use the current parameter values θ old to find the posterior distribution of the latent variables given by p(Z|X, θ old ). We then use this posterior distribution to find the expectation of the complete-data log likelihood evaluated for some general parameter value θ.",
+   "page": "Section 9.3, EM for Gaussian Mixtures (text lines 22585-22592)",
+   "latex": "Q(\\theta, \\theta^{\\mathrm{old}}) = \\sum_{\\mathbf{Z}} p(\\mathbf{Z}|\\mathbf{X}, \\theta^{\\mathrm{old}}) \\ln p(\\mathbf{X}, \\mathbf{Z}|\\theta)",
+   "symbol_and_unit_ledger": {
+    "Q(theta, theta_old)": "expected complete-data log likelihood",
+    "p(Z|X, theta_old)": "posterior over latent variables under current parameters",
+    "p(X, Z|theta)": "complete-data likelihood",
+    "theta_new": "the maximizer of Q, the next parameter value"
+   },
+   "assumptions": [
+    "The posterior over latents is computable in the E step",
+    "The expected complete-data log likelihood is maximizable in closed form or by a tractable optimization in the M step"
+   ],
+   "breakdown_regime": "EM climbs to local optima and its result depends on initialization; it gives point estimates, so parameter uncertainty is invisible unless the algorithm is extended. Missing-data patterns that depend on the missing values themselves break its assumptions.",
+   "domain": "latent variable inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Unobserved engine quantities (true team strength behind noisy results, a player's real role behind box-score usage) are fit by this alternation: infer the hidden state given current parameters, refit parameters given the inferred state, and repeat until the pair is self-consistent.",
+    "source_operator": "em_algorithm",
+    "telemetry": "Iteration logs: likelihood and latent posterior summaries per round, so convergence and local-optimum sensitivity can be audited"
+   }
+  },
+  {
+   "primitive_id": "variational_inference",
+   "name": "Variational inference: replace an intractable posterior with the closest member of a restricted tractable family, maximizing a lower bound on the evidence",
+   "verbatim_quote": "We therefore consider instead a restricted family of distributions q(Z) and then seek the member of this family for which the KL divergence is minimized.",
+   "page": "Section 10.1, Variational Inference (text lines 23708-23712)",
+   "latex": "\\ln p(\\mathbf{X}) = \\mathcal{L}(q) + \\mathrm{KL}(q \\| p)",
+   "symbol_and_unit_ledger": {
+    "ln p(X)": "log evidence (marginal likelihood) of the observed data",
+    "L(q)": "variational lower bound (ELBO), maximized over q",
+    "KL(q||p)": "divergence from the approximating q to the true posterior p(Z|X), zero only if q equals the posterior"
+   },
+   "assumptions": [
+    "A restricted family exists that is both tractable and close to the posterior",
+    "The bound gap KL(q||p) is acceptable for the decision at hand"
+   ],
+   "breakdown_regime": "The approximation error is invisible from inside the method: the bound can be tight while the posterior shape is wrong in the tails, and factorized families systematically underestimate posterior variance.",
+   "domain": "approximate inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine's full posterior over many interacting quantities is intractable at game-week speed, variational approximation is the sanctioned shortcut, used with its known bias stated: intervals will be too narrow, so decision thresholds are widened to compensate rather than pretending the bound is exact.",
+    "source_operator": "variational_inference",
+    "telemetry": "Bound values per fit, tracked across model variants so approximation quality is compared, not assumed"
+   }
+  },
+  {
+   "primitive_id": "mean_field_update",
+   "name": "Mean field variational update: each factor of an approximate posterior is set by exponentiating the expected log joint under all other factors",
+   "verbatim_quote": "Our approach to variational inference is based on a factorized approximation to the true posterior distribution.",
+   "page": "Sections 10.1.1-10.1.2, Factorized Approximations (text lines 23828-23830)",
+   "latex": "\\ln q_j^{\\star}(Z_j) = \\mathbb{E}_{i \\neq j}\\left[\\ln p(\\mathbf{X}, \\mathbf{Z})\\right] + \\mathrm{const}",
+   "symbol_and_unit_ledger": {
+    "q_j*(Z_j)": "optimal variational factor for variable group j",
+    "E_{i != j}[.]": "expectation under all factors except j",
+    "ln p(X, Z)": "log joint distribution of observations and all latent variables",
+    "const": "terms independent of Z_j, absorbed into normalization"
+   },
+   "assumptions": [
+    "The approximating distribution factorizes over disjoint groups of variables",
+    "Each conditional expectation is computable in closed form or by quadrature"
+   ],
+   "breakdown_regime": "Factorization severs posterior correlations by construction: two quantities that truly move together are reported as independent, and their joint extremes are understated. Coordinate ascent also inherits local optima.",
+   "domain": "approximate inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's large fusion problems are updated factor by factor in this pattern: hold every other belief fixed, update one signal family's posterior from the expected log joint, and cycle. The known cost, severed correlations between (for example) a quarterback and his receivers, is logged as a modelling debt.",
+    "source_operator": "mean_field_update",
+    "telemetry": "Per-factor update logs: order of updates, bound improvement per sweep, and correlation checks against sampled references"
+   }
+  },
+  {
+   "primitive_id": "metropolis_mcmc",
+   "name": "Metropolis algorithm and MCMC: sample from an unnormalized distribution by a Markov chain that accepts proposals by a probability ratio test",
+   "verbatim_quote": "In the basic Metropolis algorithm (Metropolis et al., 1953), we assume that the proposal distribution is symmetric, that is q(zA |zB ) = q(zB |zA ) for all values of zA and zB . The candidate sample is then accepted with probability",
+   "page": "Section 11.2, Markov Chain Monte Carlo (text lines 27540-27548)",
+   "latex": "A(\\mathbf{z}^{\\star}, \\mathbf{z}^{(\\tau)}) = \\min\\left(1, \\frac{\\tilde{p}(\\mathbf{z}^{\\star})}{\\tilde{p}(\\mathbf{z}^{(\\tau)})}\\right)",
+   "symbol_and_unit_ledger": {
+    "A": "acceptance probability for a proposed move",
+    "z*": "candidate state drawn from the proposal",
+    "z^(tau)": "current state of the chain",
+    "p-tilde(z)": "unnormalized target density, evaluable up to a constant"
+   },
+   "assumptions": [
+    "The proposal can reach the whole support of the target (irreducibility)",
+    "The chain is run long enough that initial transient samples can be discarded"
+   ],
+   "breakdown_regime": "Successive samples are correlated, so effective sample size is far below the raw count; multimodal targets can trap a chain in one mode for the whole run, silently reporting a local answer as global.",
+   "domain": "sampling methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sampling is the engine's court of appeal: when a variational or closed-form answer is doubted, a chain is run on the same joint distribution and the two are compared. Disagreement is treated as a defect in the approximation, never averaged away.",
+    "source_operator": "metropolis_mcmc",
+    "telemetry": "Chain diagnostics per run: acceptance rates, trace summaries, and effective sample sizes stored with the results they support"
+   }
+  },
+  {
+   "primitive_id": "pca_eigendecomposition",
+   "name": "Principal component analysis: the directions of maximum variance, equivalently minimum reconstruction error, are the eigenvectors of the covariance matrix",
+   "verbatim_quote": "Thus we should choose the principal subspace to be aligned with the eigenvector having the larger eigenvalue. This result accords with our intuition that, in order to minimize the average squared projection distance, we should choose the principal component subspace to pass through the mean of the data points and to be aligned with the directions of maximum variance.",
+   "page": "Section 12.1, Principal Component Analysis (text lines 28790-28802; printed p. 565)",
+   "latex": "\\mathbf{S}\\, \\mathbf{u}_i = \\lambda_i\\, \\mathbf{u}_i",
+   "symbol_and_unit_ledger": {
+    "S": "data covariance matrix",
+    "u_i": "i-th principal direction, a unit eigenvector",
+    "lambda_i": "corresponding eigenvalue, the variance along u_i"
+   },
+   "assumptions": [
+    "Variance is the right notion of information content for the data at hand",
+    "A linear projection is an adequate summary; the data are centred"
+   ],
+   "breakdown_regime": "Variance is not relevance: a low-variance direction can carry the decisive signal, and PCA discards it without protest. Outliers inflate covariance and can rotate the leading components toward themselves.",
+   "domain": "dimensionality reduction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Large correlated stat blocks in the engine (a dozen overlapping efficiency metrics) are compressed to their principal directions before reasoning, so the same underlying factor is not counted twelve times. The discarded low-variance directions are listed, not silently dropped, because decisive signals can hide there.",
+    "source_operator": "pca_eigendecomposition",
+    "telemetry": "Covariance spectra of feature blocks per season: eigenvalues and loadings, archived so compression choices stay auditable"
+   }
+  },
+  {
+   "primitive_id": "hidden_markov_model",
+   "name": "Hidden Markov model: a Markov chain of discrete latent states generates the observations, so sequence behaviour is a mixture whose component choice depends on the previous state",
+   "verbatim_quote": "We now allow the probability distribution of zn to depend on the state of the previous latent variable zn−1 through a conditional distribution p(zn |zn−1 ). Because the latent variables are K-dimensional binary variables, this conditional distribution corresponds to a table of numbers that we denote by A, the elements of which are known as transition probabilities.",
+   "page": "Section 13.2, Hidden Markov Models (text lines 30847-30853)",
+   "latex": "p(\\mathbf{X}, \\mathbf{Z}) = p(\\mathbf{z}_1) \\left[\\prod_{n=2}^{N} p(\\mathbf{z}_n|\\mathbf{z}_{n-1})\\right] \\left[\\prod_{n=1}^{N} p(\\mathbf{x}_n|\\mathbf{z}_n)\\right]",
+   "symbol_and_unit_ledger": {
+    "z_n": "discrete latent state at time n, 1-of-K coded",
+    "x_n": "observation at time n",
+    "p(z_n|z_{n-1})": "transition distribution, elements A_jk of the transition matrix",
+    "p(x_n|z_n)": "emission distribution of state z_n"
+   },
+   "assumptions": [
+    "The latent process is first-order Markov and homogeneous (one transition matrix for all times)",
+    "Observations are independent given their states"
+   ],
+   "breakdown_regime": "Real regimes have duration structure a first-order chain cannot express (geometric dwell times are forced), and state identities are only defined up to permutation, so naive averaging across runs or seasons mixes different states.",
+   "domain": "sequential models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Team and player form is carried in the engine as a hidden state sequence: the observed game is an emission, the underlying state (healthy, limited, scheme-shifted) transitions week to week, and inference over the state path, not the raw last game, is what feeds projections.",
+    "source_operator": "hidden_markov_model",
+    "telemetry": "Week-by-week observation sequences per team and player, with the inferred state paths and transition counts retained"
+   }
+  },
+  {
+   "primitive_id": "boosting_adaboost",
+   "name": "Boosting and AdaBoost: train base classifiers in sequence on reweighted data, upweighting the examples the current committee gets wrong, and combine by weighted vote",
+   "verbatim_quote": "Boosting is a powerful technique for combining multiple 'base' classifiers to produce a form of committee whose performance can be significantly better than that of any of the base classifiers.",
+   "page": "Section 14.3, Boosting (text lines 33188-33192)",
+   "latex": "\\alpha_m = \\ln\\left\\{\\frac{1 - \\mathrm{err}_m}{\\mathrm{err}_m}\\right\\}, \\qquad Y_M(\\mathbf{x}) = \\mathrm{sign}\\!\\left(\\sum_{m=1}^{M} \\alpha_m\\, y_m(\\mathbf{x})\\right)",
+   "symbol_and_unit_ledger": {
+    "alpha_m": "weight of base classifier m in the final vote",
+    "err_m": "weighted training error of classifier m",
+    "y_m(x)": "prediction of base classifier m in {-1, +1}",
+    "Y_M(x)": "final committee prediction"
+   },
+   "assumptions": [
+    "Base learners are weak but better than chance on the reweighted distributions",
+    "Training labels are mostly correct, since boosting concentrates on the hardest examples"
+   ],
+   "breakdown_regime": "Because it chases the hardest examples, AdaBoost is sensitive to label noise and outliers: persistently mislabeled cases accumulate weight and can bend the committee. It also optimizes an exponential surrogate, not the decision loss itself.",
+   "domain": "ensemble methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's model combination borrows the discipline, not the raw algorithm: components are added in sequence, each new signal family is trained or weighted against the residual failures of the current ensemble, and combination weights are earned from measured error rather than assigned by reputation.",
+    "source_operator": "boosting_adaboost",
+    "telemetry": "Residual failure logs: the specific games and situations the current ensemble gets wrong, reviewed before any new component is admitted"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "4f7bcfc6cf748dc6-t1",
+   "think": "This book is the single coherent statement of the Bayesian probabilistic programme for pattern recognition, and its architecture is itself an argument. It begins with a polynomial fitted to ten points and shows, in miniature, every problem the remaining seven hundred pages solve: model complexity must be chosen, training fit is not generalization, and uncertainty about parameters is the quantity that actually controls prediction. Chapter 1 then builds the entire foundation from two rules of probability. The sum rule and product rule generate Bayes' theorem; Bayes' theorem generates posterior inference; decision theory converts posteriors into actions by expected loss; information theory prices distributions against each other through entropy and the Kullback-Leibler divergence. Nothing later in the book is a new kind of object. Everything is these operations applied to larger structures.\n\nChapter 2 assembles the distribution zoo, but the point is the exponential family: once a distribution is written in canonical form, its sufficient statistics, conjugate prior, and moment relations come for free. The Gaussian receives extended care because it is the atom of the whole construction: conditionals and marginals of Gaussians are Gaussian, mixtures of Gaussians give universal density approximation, and integrating a Gaussian against a gamma-distributed precision gives the robust t. Chapters 3 and 4 run the same programme on linear models twice, once frequentist and once Bayesian, so the reader can watch maximum likelihood, regularization, and posterior prediction differ only in how parameter uncertainty is handled. The bias-variance decomposition explains what the difference costs. Logistic regression shows the discriminative shortcut: model the posterior directly and the generative machinery becomes unnecessary, at the price of losing the ability to handle missing inputs or reject unfamiliar ones naturally.\n\nChapter 5 reframes neural networks as linear models whose basis functions learned to adapt, and backpropagation as nothing more than the chain rule organized as message passing, an idea Chapter 8 generalizes into the sum-product algorithm. Chapters 6 and 7 dualize everything: solutions written as combinations of training points, kernels replacing explicit features, Gaussian processes placing the prior over functions themselves, and the margin and automatic relevance determination giving two different theories of which training points and basis functions deserve to survive. Chapter 8 is the structural heart. A graph factorizes a joint distribution; d-separation reads independence off the factorization; factor graphs turn inference into local computation. Chapters 9 and 10 then handle the two consequences: latent variables make likelihoods into sums that EM navigates by alternation, and intractable posteriors force approximation, with variational inference turning integration into optimization and the lower bound decomposition stating exactly what the approximation costs. Chapter 11 keeps sampling as the asymptotically exact fallback. Chapters 12 to 14 extend the frame to continuous latents, sequences, and committees, each time by the same move: write the joint, factorize it, infer, decide.\n\nModel comparison runs through the book as a quiet second theme. The evidence, the marginal likelihood obtained by integrating out the parameters, automatically implements Occam's razor: a flexible model spreads its probability mass over more possible data sets and is penalized unless the data land where its mass concentrates. This is why the relevance vector machine can prune most of its basis functions and why the sinusoidal example prefers the third order polynomial to the ninth without any test set being consulted. An engine that absorbs this lesson does not ask which of its signals is true; it asks which factorization of the world the evidence supports, and it expects the answer to change as data accumulate, with complexity earned rather than assumed.\n\nThe workflow the book implies is strict about ordering. First specify the joint model, including what is latent and what is observed. Then choose the inference algorithm whose approximations the decision can tolerate: sampling when exactness matters, variational methods when speed matters, closed forms when conjugacy allows. Then calibrate, because a posterior that is wrong about its own width is worse than a wider honest one. Only at the end does decision theory convert belief into action, with losses stated in the open. Reversing this order, choosing the action rule first and shopping for a model that justifies it, is the failure the whole text is organized against.\n\nFor a reasoning engine the book's central lesson is that there is only one object, the joint distribution over everything unknown, and only a handful of sanctioned operations on it. Signals are factors. Fusion is multiplication and marginalization. A new data source is admissible exactly when someone can state its conditional distribution given the variables already in the graph. Approximation is allowed, but the book insists the price be named: a KL gap, a severed correlation, a variance that will be underestimated. Decisions are a separate layer with their own loss function, so a probability can be well calibrated and still correctly lead to no action. The engine that follows this book therefore keeps posteriors rather than point estimates, propagates uncertainty into the decision layer, audits conditional independence before combining evidence, and treats every model as a hypothesis about factorization whose failures are diagnosable in the graph.\n\nWhere it breaks is equally instructive. The tractable core leans on Gaussianity, conjugacy, and conditional independence assumptions that real competitive data violates daily: heavy tails, regime switches, feedback between the prediction and the predicted. Mean field approximations understate variance exactly where decisions are most sensitive. Markov chains of first order cannot remember long enough. The book knows this and says so, which is why its methods arrive with their failure regimes attached rather than as universal machinery.",
+   "retrocausal_genealogy": "The lineage is three centuries deep. Bayes and Laplace supply the inverse probability at the core; Gauss and Legendre supply least squares; Pearson invents principal component analysis in 1901 and Fisher systematizes likelihood and discriminant analysis between the wars. Shannon's 1948 information theory contributes entropy and the coding interpretation of divergence. Metropolis and co-workers publish the chain Monte Carlo acceptance rule in 1953 out of statistical physics, and Kalman filtering arrives from control engineering in 1960. Dempster, Laird and Rubin name the EM algorithm in 1977; Pearl's 1988 work makes graphical models a language; the 1990s Bayesian neural network school of MacKay and Neal, Tipping's relevance vector machine, and Freund and Schapire's boosting complete the toolkit that this book unifies under one notation.",
+   "theory_of_mind": "Bishop writes as if the fragmentation of his field were a historical accident rather than a real division. His model of the reader is a competent mathematician who has met the pieces separately, in statistics lectures, in neural network practice, in signal processing, and has never been shown they are one subject. His model of the domain is stronger still: he believes any pattern recognition problem, stated honestly, is a problem about a joint probability distribution, and that algorithms are merely inference strategies for that distribution under different budgets. Uncertainty is not a defect in his worldview; it is the quantity the whole apparatus exists to carry faithfully from data to decision.",
+   "cross_layer_veto": "Several results in the book act as vetoes on other layers. Decision theory vetoes any pipeline that converts a probability directly into an action without a stated loss function. The bias-variance decomposition vetoes adding model capacity when the measured error is variance-dominated, and vetoes shrinkage when it is bias-dominated. d-separation vetoes fusing two signals as independent evidence when the graph shows a path between them, and vetoes conditioning on colliders. The variational bound vetoes calling an approximation exact: the KL term is either computed, bounded, or confessed. The curse of dimensionality vetoes neighbourhood reasoning in the full feature space, and the robustness of the t-distribution vetoes Gaussian error models wherever outliers carry real information."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for reasoning about anything under uncertainty. Write down everything unknown as one joint distribution. Factorize it along the dependencies you actually believe. Infer what you need by the cheapest approximation whose error you can state. Decide by expected loss, with the losses written down. The same skeleton organizes medical diagnosis, engineering reliability, intelligence analysis, and experimental design: the domains differ in their variables and losses, not in the logic. Its deepest habit is accounting: every simplification is booked as a named cost, so a conclusion always carries the list of assumptions it was purchased with.",
+ "gsi_mapping": "For the Galaxy Sports Institute this book is the curriculum backbone for teaching probabilistic reasoning as a craft rather than a bag of models. Its chapter order is a syllabus: foundations, distributions, linear models, then graphs, latent variables, approximation, sequences, and ensembles, with each chapter's exercises functioning as graded competence checks. The Institute takes from it a shared notation and a shared standard of proof: a student or an agent has learned a method when they can state its factorization, its inference cost, and its failure regime, in that order, without notes.",
+ "gse_mapping": "For the Galaxy Sports Edge engine this book supplies the operating system. The pre-game state of a matchup is a joint distribution over personnel, scheme, and context variables, factorized as a graphical model. Signals enter as factors with stated conditionals; fusion is message passing; projections are posterior predictive distributions that report noise and ignorance separately; the decision layer applies an explicit loss matrix and passes when expected loss says so. Latent form states run on EM and hidden Markov machinery, heavy-tailed errors default to the t, pruned signals are governed by relevance logic, and every approximation in the chain carries its KL or variance caveat into the final number."
+}

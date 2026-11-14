@@ -1,0 +1,78 @@
+{
+  "book_id": "336cf16135e359b9",
+  "source_status": "COMPLETE",
+  "title": "2303.06021v4",
+  "file_name": "2303.06021v4.pdf",
+  "sha256": "336cf16135e359b96cdaaa370cdb35d31f75b2401648523e4f3c852a04f01d8c",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kelly_criterion",
+      "name": "Kelly Criterion",
+      "verbatim_quote": "Conor Walsh, Alok Joshi • Model calibration is more important than accuracy for sports betting • Sports bettors can increase their wealth by a third over a single season • Kelly betting only works with a well-calibrated model",
+      "page": 2,
+      "latex": "f^* = \\frac{bp - q}{b} = \\frac{p(O)(O-1)}{O-1} = p(O) - \\frac{1-p(O)}{O-1}",
+      "symbol_and_unit_ledger": "{'f^*': 'dimensionless optimal fraction of bankroll', 'b': 'decimal odds - 1', 'p(O)': 'true probability of outcome O', 'q': '1 - p(O)', 'O': 'decimal odds'}",
+      "assumptions": "Logarithmic utility, infinite betting horizon, known true probabilities, fixed odds",
+      "breakdown_regime": "Overbetting causes exponential wealth decay; underbetting wastes growth potential",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Posterior Probability → GSE: State-Action Value Q(s,a)",
+        "source_operator": "kelly_criterion",
+        "telemetry": "Model calibration error vs betting performance"
+      }
+    },
+    {
+      "primitive_id": "calibration_error",
+      "name": "Calibration Error",
+      "verbatim_quote": "We hypothesise that for the sports betting problem, model calibration is more important than accuracy.",
+      "page": 3,
+      "latex": "CE(p,\\hat{p}) = \\mathbb{E}_{\\hat{p}}[|p - \\hat{p}|]",
+      "symbol_and_unit_ledger": "{'CE': 'Expected absolute difference between true and predicted probability', 'p': 'True outcome probability', '\\\\hat{p)': 'Predicted outcome probability', '\\\\mathbb{E}_{\\\\hat{p}}': 'Expectation over predicted distribution'}",
+      "assumptions": "IID data, large sample limit, proper scoring rules converge to minimizing CE",
+      "breakdown_regime": "Perfect calibration (CE=0) ensures optimal Kelly betting; miscalibration introduces systematic bias",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Probabilistic Forecast Evaluation → GSE: Policy Gradient Baseline",
+        "source_operator": "calibration_error",
+        "telemetry": "Brier score / log-loss as proxy for CE"
+      }
+    },
+    {
+      "primitive_id": "value_bet",
+      "name": "Value Bet Condition",
+      "verbatim_quote": "We show that using calibration, rather than accuracy, as the basis for model selection leads to greater returns, on average (return on investment of +34.69% versus -35.17%) and in the best case (+36.93% versus +5.56%).",
+      "page": 3,
+      "latex": "p(O) > \\frac{1}{O}",
+      "symbol_and_unit_ledger": "{'p(O)': 'True probability of outcome O', 'O': 'Decimal odds'}",
+      "assumptions": "Risk-neutral bettor, no transaction costs, unlimited betting limits",
+      "breakdown_regime": "Negative expected value bets lead to inevitable wealth erosion",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Arbitrage-Free Pricing → GSE: Advantage Actor-Action Pairs",
+        "source_operator": "value_bet",
+        "telemetry": "Implied probability from odds vs model predicted probability"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "336cf16135e359b9_t0",
+      "think": "The core challenge is converting predictive uncertainty into actionable financial decisions. Standard accuracy metrics (e.g., classification rate) optimize for point predictions but ignore the magnitude of probability estimates. In contrast, calibration measures how well predicted probabilities reflect true frequencies across bins of predictions. For Kelly betting, which maximizes geometric mean wealth growth, only calibrated probabilities guarantee optimal bet sizing. Miscalibrated models lead to either over-betting (risk of ruin) or under-betting (wasting growth potential). Our experiments demonstrate that selecting models based on calibration metrics yields significantly higher ROI than accuracy-based selection, especially in high-volume betting scenarios where small improvements compound.\n\nDeep epistemic analysis for 2303.06021v4 (336cf16135e359b9, domain=other, pages_read=17/17): Operator 'Kelly Criterion' (page 2, domain other) captures: Conor Walsh, Alok Joshi • Model calibration is more important than accuracy for sports betting • Sports bettors can increase their wealth by a third over a single season • Kelly betting only works with a well-calibrated model Assumptions: Logarithmic utility, infinite betting horizon, known true probabilities, fixed odds Breakdown regime: Overbetting causes exponential wealth decay; underbetting wastes growth potential Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior Probability → GSE: State-Action Value Q(s,a) Operator 'Calibration Error' (page 3, domain other) captures: We hypothesise that for the sports betting problem, model calibration is more important than accuracy. Assumptions: IID data, large sample limit, proper scoring rules converge to minimizing CE Breakdown regime: Perfect calibration (CE=0) ensures optimal Kelly betting; miscalibration introduces systematic bias Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Probabilistic Forecast Evaluation → GSE: Policy Gradient Baseline Operator 'Value Bet Condition' (page 3, domain other) captures: We show that using calibration, rather than accuracy, as the basis for model selection leads to greater returns, on average (return on investment of +34.69% versus -35.17%) and in the best case (+36.93% versus +5.56%). Assumptions: Risk-neutral bettor, no transaction costs, unlimited betting limits Breakdown regime: Negative expected value bets lead to inevitable wealth erosion Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Arbitrage-Free Pricing → GSE: Advantage Actor-Action Pairs Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2303.06021v4 (336cf16135e359b9, domain=other, pages_read=17/17): Operator 'Kelly Criterion' (page 2, domain other) captures: Conor Walsh, Alok Joshi • Model calibration is more important than accuracy for sports betting • Sports bettors can increase their wealth by a third over a single season • Kelly betting only works with a well-calibrated model Assumptions: Logarithmic utility, infinite betting horizon, known true probabilities, fixed odds Breakdown regime: Overbetting causes exponential wealth decay; underbetting wastes growth potential Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior Probability → GSE: State-Action Value Q(s,a) Operator 'Calibration Error' (page 3, domain other) captures: We hypothesise that for the sports betting problem, model calibration is more important than accuracy. Assumptions: IID data, large sample limit, proper scoring rules converge to minimizing CE Breakdown regime: Perfect calibration (CE=0) ensures optimal Kelly betting; miscalibration introduces systematic bias Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Probabilistic Forecast Evaluation → GSE: Policy Gradient Baseline Operator 'Value Bet Condition' (page 3, domain other) captures: We show that using calibration, rather than accuracy, as the basis for model selection leads to greater returns, on average (return on investment of +34.69% versus -35.17%) and in the best case (+36.93% versus +5.56%). Assumptions: Risk-neutral bettor, no transaction costs, unlimited betting limits Breakdown regime: Negative expected value bets lead to inevitable wealth erosion Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Arbitrage-Free Pricing → GSE: Advantage Actor-Action Pairs Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers aim to balance their books (risk-free profit) while bettors seek mispriced probabilities. Bookmakers use market forces to set fair odds, whereas successful bettors exploit systematic biases in those prices. The key博弈 is between a risk-minimizing institution and an optimizing individual. Theory of Mind & Decision Maker Model: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid overfitting to training data (cross-validation), ensure sufficient historical data (ergodicity), and prevent feedback loops where betting activity influences future odds (liquidity constraints). Additionally, calibration must be assessed out-of-sample to prevent double-dipping. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2303.06021v4 (336cf16135e359b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

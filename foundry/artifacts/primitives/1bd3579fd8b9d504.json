@@ -1,0 +1,78 @@
+{
+  "book_id": "1bd3579fd8b9d504",
+  "source_status": "COMPLETE",
+  "title": "openalex_W3119175810",
+  "file_name": "openalex_W3119175810.pdf",
+  "sha256": "1bd3579fd8b9d50436f969c9de6f39e51415220fc84ef839095d8816f1058195",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Homography-based camera calibration using flexible intersection selection and refinement for sports scene reconstruction. Universal Lens: Rooted in openalex_W3119175810 (1bd3579fd8b9d504), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of spatial coordinates via homography matrices; conformal uncertainty quantification of player positions from video frames. GSI Mapping: Rooted in openalex_W3119175810 (1bd3579fd8b9d504), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine infers player states through dynamic homography updates; state transitions driven by refined intersection geometry. GSE Mapping: Rooted in openalex_W3119175810 (1bd3579fd8b9d504), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "flexible_intersection_selection",
+      "name": "Flexible Intersection Selection",
+      "verbatim_quote": "Our contributions are 1) flexible intersection selection and 2) intersection refinement to improve accuracy in calibration.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Field lines are detectable and their intersections form a structured grid; intersections are not solely constrained to horizontal/vertical line combinations.",
+      "breakdown_regime": "When field line detection fails or when intersections are ambiguous due to occlusion or low contrast.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps detected line intersections to a canonical field template space via point matching; enables robust spatial correspondence estimation.",
+        "source_operator": "flexible_intersection_selection",
+        "telemetry": "Intersection count and geometric consistency score between detected and expected field layout."
+      }
+    },
+    {
+      "primitive_id": "intersection_refinement",
+      "name": "Intersection Refinement",
+      "verbatim_quote": "Our proposed method can solve these problems by flexible intersection selection and refinement.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Detected intersections deviate from true positions due to noise or misalignment; local field line re-detection improves accuracy.",
+      "breakdown_regime": "When initial intersection estimates are inaccurate due to sensor or environmental distortion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Iteratively adjusts intersection coordinates based on neighboring line segments; reduces displacement error in image-space coordinates.",
+        "source_operator": "intersection_refinement",
+        "telemetry": "Mean squared deviation of refined intersections from ground truth or prior estimates."
+      }
+    },
+    {
+      "primitive_id": "homography_matrix_estimation",
+      "name": "Homography Matrix Estimation",
+      "verbatim_quote": "A homography matrix is used to convert world coordinates to image coordinates for the calibration.",
+      "page": 1,
+      "latex": "\\mathbf{H} \\in \\mathbb{R}^{3\\times3}",
+      "symbol_and_unit_ledger": "{'H': 'Homography matrix'}",
+      "assumptions": "Planar field surface exists; known correspondences between world and image points exist.",
+      "breakdown_regime": "When field is non-planar or when insufficient point correspondences are available for stable estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes projective transformation between 2D image plane and 2D world plane; enables back-projection of player positions.",
+        "source_operator": "homography_matrix_estimation",
+        "telemetry": "Reprojection error of matched points after applying estimated homography."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1bd3579fd8b9d504_t0",
+      "think": "The core innovation lies in improving camera calibration accuracy for sports scenes by addressing two key limitations of conventional approaches: fixed intersection selection and lack of refinement. The flexible intersection selection allows for more robust identification of intersections beyond simple horizontal-vertical grids, enhancing generalization across different sports fields. Intersection refinement mitigates positional errors caused by detection inaccuracies or environmental distortions. These primitives are composed into a pipeline where field lines are first detected, then intersections are computed and refined before generating point matches against a known field template. From these matches, a homography matrix is estimated that maps image coordinates to world coordinates. This process enables precise tracking of players' movements in real-world space from video input. Failure modes include poor line detection under low-light conditions or misalignment of the field template, leading to incorrect point correspondences and thus inaccurate homography estimation.\n\nDeep epistemic analysis for openalex_W3119175810 (1bd3579fd8b9d504, domain=other, pages_read=10/10): Operator 'Flexible Intersection Selection' (page 1, domain other) captures: Our contributions are 1) flexible intersection selection and 2) intersection refinement to improve accuracy in calibration. Assumptions: Field lines are detectable and their intersections form a structured grid; intersections are not solely constrained to horizontal/vertical line combinations. Breakdown regime: When field line detection fails or when intersections are ambiguous due to occlusion or low contrast. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps detected line intersections to a canonical field template space via point matching; enables robust spatial correspondence estimation. Operator 'Intersection Refinement' (page 1, domain other) captures: Our proposed method can solve these problems by flexible intersection selection and refinement. Assumptions: Detected intersections deviate from true positions due to noise or misalignment; local field line re-detection improves accuracy. Breakdown regime: When initial intersection estimates are inaccurate due to sensor or environmental distortion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Iteratively adjusts intersection coordinates based on neighboring line segments; reduces displacement error in image-space coordinates. Operator 'Homography Matrix Estimation' (page 1, domain other) captures: A homography matrix is used to convert world coordinates to image coordinates for the calibration. Assumptions: Planar field surface exists; known correspondences between world and image points exist. Breakdown regime: When field is non-planar or when insufficient point correspondences are available for stable estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Establishes projective transformation between 2D image plane and 2D world plane; enables back-projection of player positions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W3119175810 (1bd3579fd8b9d504, domain=other, pages_read=10/10): Operator 'Flexible Intersection Selection' (page 1, domain other) captures: Our contributions are 1) flexible intersection selection and 2) intersection refinement to improve accuracy in calibration. Assumptions: Field lines are detectable and their intersections form a structured grid; intersections are not solely constrained to horizontal/vertical line combinations. Breakdown regime: When field line detection fails or when intersections are ambiguous due to occlusion or low contrast. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps detected line intersections to a canonical field template space via point matching; enables robust spatial correspondence estimation. Operator 'Intersection Refinement' (page 1, domain other) captures: Our proposed method can solve these problems by flexible intersection selection and refinement. Assumptions: Detected intersections deviate from true positions due to noise or misalignment; local field line re-detection improves accuracy. Breakdown regime: When initial intersection estimates are inaccurate due to sensor or environmental distortion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Iteratively adjusts intersection coordinates based on neighboring line segments; reduces displacement error in image-space coordinates. Operator 'Homography Matrix Estimation' (page 1, domain other) captures: A homography matrix is used to convert world coordinates to image coordinates for the calibration. Assumptions: Planar field surface exists; known correspondences between world and image points exist. Breakdown regime: When field is non-planar or when insufficient point correspondences are available for stable estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Establishes projective transformation between 2D image plane and 2D world plane; enables back-projection of player positions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision techniques involving planar homographies and geometric constraints. Builds upon earlier work in a priori information-based calibration methods using field lines and intersections, extending them with adaptive selection and iterative refinement strategies. Retrocausal Genealogy: Rooted in openalex_W3119175810 (1bd3579fd8b9d504), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include noisy sensors or varying lighting conditions that degrade line detection quality. Decision actors are the calibration algorithm components themselves—selecting optimal intersections and refining them iteratively to maximize fidelity to real-world geometry. Theory of Mind & Decision Maker Model: Rooted in openalex_W3119175810 (1bd3579fd8b9d504), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that selected intersections are not aligned along the same line, preventing degenerate solutions. Leakage veto prevents overfitting to spurious intersections or outliers in the field template matching step. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3119175810 (1bd3579fd8b9d504), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

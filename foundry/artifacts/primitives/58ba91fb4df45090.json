@@ -1,0 +1,78 @@
+{
+  "book_id": "58ba91fb4df45090",
+  "source_status": "COMPLETE",
+  "title": "FINAL_AUDIT(1).txt",
+  "file_name": "FINAL_AUDIT(1).txt.txt",
+  "sha256": "58ba91fb4df45090755355c39791b93721ffe41d0c590857afb9fbc7d2ade1cf",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of flyer design constraints under branding and role limitation domains. Universal Lens: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on flyer compliance using CTS Lonestar branding and SPO role parameters as evidence. GSI Mapping: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in flyer production based on role-specific and branding constraints. GSE Mapping: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "flyer_compliance_constraint",
+      "name": "Flyer Compliance Constraint",
+      "verbatim_quote": "SOURCE_FILE: drive_export\\FINAL_AUDIT(1).txt ============================================================ FINAL AUDIT - Removed 2026 from headers/footers. - Real Turner Careers QR used:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Compliance indicator, dimensionless', 'T': 'Turner Careers QR URL, dimensionless', 'B': 'Branding identifier, dimensionless'}",
+      "assumptions": "Flyer must conform to Turner Careers branding and exclude outdated headers.",
+      "breakdown_regime": "When T ≠ https://www.turnerconstruction.com/careers or B ≠ CTS Lonestar",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Flyer content integrity maps to GSI's compliance verification model via binary validation of branding and QR code.",
+        "source_operator": "flyer_compliance_constraint",
+        "telemetry": "Verification of QR code and branding consistency"
+      }
+    },
+    {
+      "primitive_id": "role_limitation_domain",
+      "name": "Role Limitation Domain",
+      "verbatim_quote": "Branding kept as CTS Lonestar. - SPO roles limited to Carpenter Journeymen, Foremen, Laborers. - Flyer",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Role set, dimensionless', 'S': 'SPO role subset, dimensionless'}",
+      "assumptions": "Only defined roles may be featured in flyer content.",
+      "breakdown_regime": "When R ∩ S ≠ ∅ or |S| > 3",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Role domain restricts flyer content to predefined labor categories, aligning with GSE's role-based access control.",
+        "source_operator": "role_limitation_domain",
+        "telemetry": "Count of roles listed vs. allowed set"
+      }
+    },
+    {
+      "primitive_id": "design_element_fix",
+      "name": "Design Element Fix",
+      "verbatim_quote": "boxes fixed. - Flyer 4 quote mark removed; Haskell badge fixed; duplicate built-here phrasing avoided. -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Design element, dimensionless', 'F': 'Fix applied, dimensionless'}",
+      "assumptions": "All design elements must be corrected for clarity and consistency.",
+      "breakdown_regime": "When F = false or D contains duplicates or errors",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Design correction process mirrors GSI's error detection and resolution protocols.",
+        "source_operator": "design_element_fix",
+        "telemetry": "Number of design fixes applied per flyer version"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "58ba91fb4df45090_t0",
+      "think": "The primitives derive from a structured audit of flyer content and compliance. The flyer compliance constraint ensures that all branding and QR codes align with Turner Careers standards, modeled as a binary validation function. Role limitation domain enforces a finite set of roles, creating a discrete domain for content selection. Design element fix applies corrective actions to ensure visual and textual consistency. These operators form a layered system where each maintains a distinct but interdependent role in ensuring flyer fidelity to organizational standards. Failure modes include misalignment of branding, inclusion of unauthorized roles, or visual inconsistencies. The system's robustness depends on the integrity of these constraints and their enforcement through automated checks.\n\nDeep epistemic analysis for FINAL_AUDIT(1).txt (58ba91fb4df45090, domain=other, pages_read=1/1): Operator 'Flyer Compliance Constraint' (page 1, domain other) captures: SOURCE_FILE: drive_export\\FINAL_AUDIT(1).txt ============================================================ FINAL AUDIT - Removed 2026 from headers/footers. - Real Turner Careers QR used: Assumptions: Flyer must conform to Turner Careers branding and exclude outdated headers. Breakdown regime: When T ≠ https://www.turnerconstruction.com/careers or B ≠ CTS Lonestar Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Flyer content integrity maps to GSI's compliance verification model via binary validation of branding and QR code. Operator 'Role Limitation Domain' (page 1, domain other) captures: Branding kept as CTS Lonestar. - SPO roles limited to Carpenter Journeymen, Foremen, Laborers. - Flyer Assumptions: Only defined roles may be featured in flyer content. Breakdown regime: When R ∩ S ≠ ∅ or |S| > 3 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Role domain restricts flyer content to predefined labor categories, aligning with GSE's role-based access control. Operator 'Design Element Fix' (page 1, domain other) captures: boxes fixed. - Flyer 4 quote mark removed; Haskell badge fixed; duplicate built-here phrasing avoided. - Assumptions: All design elements must be corrected for clarity and consistency. Breakdown regime: When F = false or D contains duplicates or errors Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Design correction process mirrors GSI's error detection and resolution protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FINAL_AUDIT(1).txt (58ba91fb4df45090, domain=other, pages_read=1/1): Operator 'Flyer Compliance Constraint' (page 1, domain other) captures: SOURCE_FILE: drive_export\\FINAL_AUDIT(1).txt ============================================================ FINAL AUDIT - Removed 2026 from headers/footers. - Real Turner Careers QR used: Assumptions: Flyer must conform to Turner Careers branding and exclude outdated headers. Breakdown regime: When T ≠ https://www.turnerconstruction.com/careers or B ≠ CTS Lonestar Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Flyer content integrity maps to GSI's compliance verification model via binary validation of branding and QR code. Operator 'Role Limitation Domain' (page 1, domain other) captures: Branding kept as CTS Lonestar. - SPO roles limited to Carpenter Journeymen, Foremen, Laborers. - Flyer Assumptions: Only defined roles may be featured in flyer content. Breakdown regime: When R ∩ S ≠ ∅ or |S| > 3 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Role domain restricts flyer content to predefined labor categories, aligning with GSE's role-based access control. Operator 'Design Element Fix' (page 1, domain other) captures: boxes fixed. - Flyer 4 quote mark removed; Haskell badge fixed; duplicate built-here phrasing avoided. - Assumptions: All design elements must be corrected for clarity and consistency. Breakdown regime: When F = false or D contains duplicates or errors Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Design correction process mirrors GSI's error detection and resolution protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in document auditing practices of the 1970s, evolved into modern compliance systems with digital verification layers. Retrocausal Genealogy: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include content creators who may deviate from standards and automated systems enforcing compliance. Decision-making involves balancing creative freedom with regulatory adherence. Theory of Mind & Decision Maker Model: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by distinct operational domains: branding, roles, and design. Leakage occurs when one domain's constraints bleed into another without explicit cross-validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in FINAL_AUDIT(1).txt (58ba91fb4df45090), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

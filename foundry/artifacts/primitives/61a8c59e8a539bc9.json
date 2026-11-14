@@ -1,0 +1,95 @@
+{
+  "book_id": "61a8c59e8a539bc9",
+  "source_status": "COMPLETE",
+  "title": "HISTORICAL_INTELLIGENCE_SUMMARY",
+  "file_name": "HISTORICAL_INTELLIGENCE_SUMMARY.md",
+  "sha256": "61a8c59e8a539bc9a9cc647693a2e88f476e9a4d6d58df759ed091f5ee824f5a",
+  "primary_domain": "history",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "game_identity_resolver",
+      "name": "Game Identity Resolver",
+      "verbatim_quote": "- Game identity resolver requiring season, week, and teams; commence-time-only joins are unsafe.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Requires complete game metadata (season, week, home/away teams) for deterministic mapping; incomplete temporal joins introduce ambiguity.",
+      "breakdown_regime": "Temporal mismatch between query time and data availability creates singular lookup failures.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's spatiotemporal indexing via GSIS player keys, enabling conformal prediction intervals for historical matchups.",
+        "source_operator": "game_identity_resolver",
+        "telemetry": "Query success rate vs. temporal lag quantifies resolver robustness."
+      }
+    },
+    {
+      "primitive_id": "settled_season_guard",
+      "name": "Settled Season Guard",
+      "verbatim_quote": "- Settled-season guard: historical seasons must be before current season.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data access strictly follows chronological causality; future data cannot influence past analysis.",
+      "breakdown_regime": "Unsettled-season queries trigger runtime exceptions, preventing lookahead bias.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces GSE's state-transition consistency by blocking transitions into future states, ensuring retroactive calibration.",
+        "source_operator": "settled_season_guard",
+        "telemetry": "Guard violation frequency indicates data pipeline maturity."
+      }
+    },
+    {
+      "primitive_id": "stat_coverage_auditor",
+      "name": "Stat Coverage Auditor",
+      "verbatim_quote": "- Stat coverage auditor that routes gaps to PRISM/ASCEND with Claude review.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Performance metrics are defined on complete feature vectors; missing statistics require manual validation.",
+      "breakdown_regime": "Incomplete feature sets trigger fallback protocols to maintain model integrity.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Generates audit trails for GSI's projection models, flagging distributional shifts for Bayesian re-calibration.",
+        "source_operator": "stat_coverage_auditor",
+        "telemetry": "Auditor pass-rate correlates with downstream model accuracy."
+      }
+    },
+    {
+      "primitive_id": "projection_feature_registry",
+      "name": "Projection Feature Registry",
+      "verbatim_quote": "- Projection feature registry where every feature requires AUDIT review, owner approval for weight changes, and unsettled-season exclusion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model interpretability demands explicit provenance tracking for each input variable.",
+      "breakdown_regime": "Dynamic feature weights must respect temporal causality constraints.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as GSE's feature lifecycle manager, enforcing causal consistency during simulation runs.",
+        "source_operator": "projection_feature_registry",
+        "telemetry": "Registry change frequency tracks model evolution pressure."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "61a8c59e8a539bc9_t0",
+      "think": "These sovereign primitives form a compositional algebra for NFL historical intelligence. The Game Identity Resolver enforces a category-theoretic pullback diagram over temporal product categories, ensuring that all subsequent data flows respect spatiotemporal causality. The Settled Season Guard acts as a temporal filter that pre-composes with any historical transformation, effectively projecting the data domain onto the past light cone. The Stat Coverage Auditor implements a sheaf condition across feature domains, detecting cohomological obstructions to global section existence. Finally, the Projection Feature Registry encodes a monoidal functor from features to model parameters, with AUDIT reviews serving as natural transformations that preserve composition. Together, they guarantee that every derived quantity is well-defined, causally consistent, and auditable, thereby constructing a robust foundation for both GSI's predictive inference and GSE's situational planning.\n\nDeep epistemic analysis for HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9, domain=history, pages_read=1/1): Operator 'Game Identity Resolver' (page 1, domain history) captures: - Game identity resolver requiring season, week, and teams; commence-time-only joins are unsafe. Assumptions: Requires complete game metadata (season, week, home/away teams) for deterministic mapping; incomplete temporal joins introduce ambiguity. Breakdown regime: Temporal mismatch between query time and data availability creates singular lookup failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's spatiotemporal indexing via GSIS player keys, enabling conformal prediction intervals for historical matchups. Operator 'Settled Season Guard' (page 1, domain history) captures: - Settled-season guard: historical seasons must be before current season. Assumptions: Data access strictly follows chronological causality; future data cannot influence past analysis. Breakdown regime: Unsettled-season queries trigger runtime exceptions, preventing lookahead bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces GSE's state-transition consistency by blocking transitions into future states, ensuring retroactive calibration. Operator 'Stat Coverage Auditor' (page 1, domain history) captures: - Stat coverage auditor that routes gaps to PRISM/ASCEND with Claude review. Assumptions: Performance metrics are defined on complete feature vectors; missing statistics require manual validation. Breakdown regime: Incomplete feature sets trigger fallback protocols to maintain model integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Generates audit trails for GSI's projection models, flagging distributional shifts for Bayesian re-calibration. Operator 'Projection Feature Registry' (page 1, domain history) captures: - Projection feature registry where every feature requires AUDIT review, owner approval for weight changes, and unsettled-season exclusion. Assumptions: Model interpretability demands explicit provenance tracking for each input variable. Breakdown regime: Dynamic feature weights must respect temporal causality constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as GSE's feature lifecycle manager, enforcing causal consistency during simulation runs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9, domain=history, pages_read=1/1): Operator 'Game Identity Resolver' (page 1, domain history) captures: - Game identity resolver requiring season, week, and teams; commence-time-only joins are unsafe. Assumptions: Requires complete game metadata (season, week, home/away teams) for deterministic mapping; incomplete temporal joins introduce ambiguity. Breakdown regime: Temporal mismatch between query time and data availability creates singular lookup failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's spatiotemporal indexing via GSIS player keys, enabling conformal prediction intervals for historical matchups. Operator 'Settled Season Guard' (page 1, domain history) captures: - Settled-season guard: historical seasons must be before current season. Assumptions: Data access strictly follows chronological causality; future data cannot influence past analysis. Breakdown regime: Unsettled-season queries trigger runtime exceptions, preventing lookahead bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces GSE's state-transition consistency by blocking transitions into future states, ensuring retroactive calibration. Operator 'Stat Coverage Auditor' (page 1, domain history) captures: - Stat coverage auditor that routes gaps to PRISM/ASCEND with Claude review. Assumptions: Performance metrics are defined on complete feature vectors; missing statistics require manual validation. Breakdown regime: Incomplete feature sets trigger fallback protocols to maintain model integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Generates audit trails for GSI's projection models, flagging distributional shifts for Bayesian re-calibration. Operator 'Projection Feature Registry' (page 1, domain history) captures: - Projection feature registry where every feature requires AUDIT review, owner approval for weight changes, and unsettled-season exclusion. Assumptions: Model interpretability demands explicit provenance tracking for each input variable. Breakdown regime: Dynamic feature weights must respect temporal causality constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as GSE's feature lifecycle manager, enforcing causal consistency during simulation runs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The foundational ideas trace back to Grothendieck's relative point of view in algebraic geometry, combined with Kolmogorov's measure-theoretic probability. The categorical pullback concept originates from Eilenberg and Mac Lane's 1945 work, while the sheaf theory was developed by Leray during World War II for solving partial differential equations. The modern application to time-series data draws on Doob's martingale theory from the 1950s.",
+      "theory_of_mind": "Opposing agents include sportsbooks that exploit temporal inconsistencies to extract arbitrage profits, and data engineers who may inadvertently introduce future leakage through automated feature generation. The primitives act as cognitive offload mechanisms, allowing analysts to reason about NFL history without being distracted by implementation details or adversarial manipulations. Theory of Mind & Decision Maker Model: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring linear independence of primitive outputs across layers. Leakage vetoes occur when a lower-layer primitive (e.g., stat auditor) reveals information that could predict an upper-layer primitive's decision (e.g., feature weight), violating the conditional independence structure assumed by the projection registry. Cross-Layer Veto & Anti-Leakage Check: Rooted in HISTORICAL_INTELLIGENCE_SUMMARY (61a8c59e8a539bc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

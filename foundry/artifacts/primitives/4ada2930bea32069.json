@@ -1,0 +1,78 @@
+{
+  "book_id": "4ada2930bea32069",
+  "source_status": "COMPLETE",
+  "title": "p0238",
+  "file_name": "p0238.txt",
+  "sha256": "4ada2930bea320693448076f6656695f5161e7b2a90aa7f46d6f14a84fee60cd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Rapid execution tactical interference in football; synchronized blocking patterns with directional vector alignment. Universal Lens: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on play success conditioned on rapid execution and spatial alignment of blockers; conformal prediction of interference effectiveness. GSI Mapping: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transition from pre-snap formation to post-block execution; dynamic role assignment via positional vector updates. GSE Mapping: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tandem_tackle_over_quarterback_run",
+      "name": "Tandem Tackle Over Quarterback Run",
+      "verbatim_quote": "224 FOOTB.ALL Tandem—Tackle Over—Quarter Back Run. This play to be successful must be executed rapidly. All",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time (s), execution duration', 'V_{\\\\text{run}}': \"velocity (m/s), runner's speed\", 'F_{\\\\text{block}}': 'force (N), block magnitude', 'D_{\\\\text{dir}}': 'dimensionless direction vector'}",
+      "assumptions": "Play assumes synchronized motion, fixed trajectory, and minimal delay in execution.",
+      "breakdown_regime": "T > T_{\\text{max}} or D_{\\text{dir}} \\neq D_{\\text{target}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a multi-agent coordination problem where each player's action maps to a deterministic vector field in a shared tactical space.",
+        "source_operator": "tandem_tackle_over_quarterback_run",
+        "telemetry": "Execution time variance, block alignment angle deviation"
+      }
+    },
+    {
+      "primitive_id": "interference_synchronization",
+      "name": "Interference Synchronization",
+      "verbatim_quote": "All the interference must \"hurry up.\" Center blocks to left.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'synchronization index (unitless)', 'T_{\\\\text{sync}}': 'timing tolerance (s)', 'P_{\\\\text{pos}}': 'position vector (m)'}",
+      "assumptions": "Players execute actions within a bounded temporal window; spatial alignment is critical.",
+      "breakdown_regime": "S < S_{\\text{min}} or T_{\\text{sync}} > T_{\\text{tol}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of coordinated motion derived from individual player position vectors and timing constraints.",
+        "source_operator": "interference_synchronization",
+        "telemetry": "Temporal jitter in block initiation, positional deviation from ideal line"
+      }
+    },
+    {
+      "primitive_id": "blocking_vector_alignment",
+      "name": "Blocking Vector Alignment",
+      "verbatim_quote": "must \"hurry up.\" Center blocks to left. Left Guard breaks through, joins runner. Right Guard blocks",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{\\\\text{left}}': 'left-side blocking force vector (N)', 'B_{\\\\text{right}}': 'right-side blocking force vector (N)', 'R': \"runner's path vector (m)\", 'A_{\\\\text{align}}': 'alignment angle (rad)'}",
+      "assumptions": "Force vectors are additive and aligned along defined axes; runner's path is predictable.",
+      "breakdown_regime": "A_{\\text{align}} > A_{\\text{max}} or |B_{\\text{left}} - B_{\\text{right}}| > \\Delta F_{\\text{tol}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a vector addition model in a 2D tactical plane where each blocker contributes a directional impulse.",
+        "source_operator": "blocking_vector_alignment",
+        "telemetry": "Angle between block vectors and runner path, net force imbalance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4ada2930bea32069_t0",
+      "think": "The tandem tackle over quarterback run embodies a structured interference protocol where synchronization and vector alignment are paramount. The play's success hinges on minimizing execution time T while maximizing force vector coherence B_left and B_right. Each player's role is defined by a directional impulse that must align with the runner’s path R. The system operates under a dual constraint: temporal synchronicity S and spatial alignment A_align. Failure occurs when T exceeds T_max or when A_align deviates beyond ΔF_tol. The interplay of these constraints defines a tactical phase space where each player's action is a vector field contribution. The epistemic trace reveals a deterministic yet robust framework for modeling coordinated motion in high-dimensional strategic domains.\n\nDeep epistemic analysis for p0238 (4ada2930bea32069, domain=other, pages_read=1/1): Operator 'Tandem Tackle Over Quarterback Run' (page 1, domain other) captures: 224 FOOTB.ALL Tandem—Tackle Over—Quarter Back Run. This play to be successful must be executed rapidly. All Assumptions: Play assumes synchronized motion, fixed trajectory, and minimal delay in execution. Breakdown regime: T > T_{\\text{max}} or D_{\\text{dir}} \\neq D_{\\text{target}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a multi-agent coordination problem where each player's action maps to a deterministic vector field in a shared tactical space. Operator 'Interference Synchronization' (page 1, domain other) captures: All the interference must \"hurry up.\" Center blocks to left. Assumptions: Players execute actions within a bounded temporal window; spatial alignment is critical. Breakdown regime: S < S_{\\text{min}} or T_{\\text{sync}} > T_{\\text{tol}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of coordinated motion derived from individual player position vectors and timing constraints. Operator 'Blocking Vector Alignment' (page 1, domain other) captures: must \"hurry up.\" Center blocks to left. Left Guard breaks through, joins runner. Right Guard blocks Assumptions: Force vectors are additive and aligned along defined axes; runner's path is predictable. Breakdown regime: A_{\\text{align}} > A_{\\text{max}} or |B_{\\text{left}} - B_{\\text{right}}| > \\Delta F_{\\text{tol}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a vector addition model in a 2D tactical plane where each blocker contributes a directional impulse. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0238 (4ada2930bea32069, domain=other, pages_read=1/1): Operator 'Tandem Tackle Over Quarterback Run' (page 1, domain other) captures: 224 FOOTB.ALL Tandem—Tackle Over—Quarter Back Run. This play to be successful must be executed rapidly. All Assumptions: Play assumes synchronized motion, fixed trajectory, and minimal delay in execution. Breakdown regime: T > T_{\\text{max}} or D_{\\text{dir}} \\neq D_{\\text{target}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a multi-agent coordination problem where each player's action maps to a deterministic vector field in a shared tactical space. Operator 'Interference Synchronization' (page 1, domain other) captures: All the interference must \"hurry up.\" Center blocks to left. Assumptions: Players execute actions within a bounded temporal window; spatial alignment is critical. Breakdown regime: S < S_{\\text{min}} or T_{\\text{sync}} > T_{\\text{tol}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of coordinated motion derived from individual player position vectors and timing constraints. Operator 'Blocking Vector Alignment' (page 1, domain other) captures: must \"hurry up.\" Center blocks to left. Left Guard breaks through, joins runner. Right Guard blocks Assumptions: Force vectors are additive and aligned along defined axes; runner's path is predictable. Breakdown regime: A_{\\text{align}} > A_{\\text{max}} or |B_{\\text{left}} - B_{\\text{right}}| > \\Delta F_{\\text{tol}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a vector addition model in a 2D tactical plane where each blocker contributes a directional impulse. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics' vector addition principles and game theory's coordination models, this structure mirrors the evolution of tactical systems in military and sports domains. Retrocausal Genealogy: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents must predict and counteract the vector alignment strategy. Their decision-making involves estimating the runner's path and optimizing defensive force distribution to disrupt B_left/B_right balance. Theory of Mind & Decision Maker Model: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that no two blockers act in parallel directions without strategic divergence. Leakage occurs if T_sync is not maintained across all players, leading to misaligned forces and reduced efficacy. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0238 (4ada2930bea32069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

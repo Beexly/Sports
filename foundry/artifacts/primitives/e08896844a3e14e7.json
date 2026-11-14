@@ -1,0 +1,451 @@
+{
+ "book_id": "e08896844a3e14e7",
+ "source_status": "COMPLETE",
+ "source_note": "Norbert Wiener, The Human Use of Human Beings: Cybernetics and Society (1950). The scan in the fleet library is the London printing (Eyre and Spottiswoode, 1950; preface dated Instituto Nacional de Cardiologia, Mexico, October 12, 1949); the work was first published in 1950 (US edition: Houghton Mifflin). PDF: Wiener-1950-HumanUseOfHumanBeings.pdf, 50,565,414 bytes, 130 pages, image-only scan (RICOH MP 5054, no text layer); full sha256 e08896844a3e14e792bc931057f96edd6f9e6db619ee561434a49bc46b7530ec; book_id is the first 16 hex of the gatekeeper scan digest, sha256(str(file_size) + file bytes). The extracted .txt assigned to this lane was an empty 130-byte stub (form feeds only), so the text was recovered by a full-book OCR pass (Indra OCR) of the PDF: 459,338 bytes, 79,322 words, stored for this lane at motif-foundry/work/wiener-human-use/ocr.txt. All 12 chapters and the preface were read in full. Every verbatim_quote below was verified programmatically as a contiguous substring of ocr.txt after whitespace normalization; page numbers are the book's printed page numbers. OCR garbles are confined to headers/furniture and hyphenated line breaks; quotes were selected from clean in-page passages and never stitched across page breaks.",
+ "motif_lane": "motif-tierb-drain-01 / wiener-human-use",
+ "primitives": [
+  {
+   "primitive_id": "WIENER1950-P01",
+   "name": "Cybernetics named for the steersman; the machine 'governor' is the same word",
+   "verbatim_quote": "Let it be noted that the word “governor” in a machine is simply the latinized Greek word for steersman",
+   "page": 9,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter I's naming act: cybernetics derives from the Greek for steersman/pilot, and the engine governor is the latinized form of the same word, so steering, governing, and control are one concept. The chapter's thesis, stated immediately after this passage, is that society can only be understood through a study of its messages and communication facilities.",
+   "breakdown_regime": "Breaks outside the regime the author describes: it is a structural/qualitative claim of the 1950 text, not a fitted relation; it fails wherever the described mechanism is absent or is dominated by effects the chapter does not model.",
+   "domain": "communication_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P02",
+   "name": "Feedback as error-actuated control (gun-pointer)",
+   "verbatim_quote": "it is customary to put into the gun a control feedback element which reads the lag of the gun behind the position it should have according to the orders given it, and which uses this difference to give the gun an extra push",
+   "page": 14,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's definition in the same passage: control on the basis of actual performance rather than expected performance is feedback. Assumes the lag (error signal) is measurable in real time and the actuator can still correct it.",
+   "breakdown_regime": "Breaks when the error signal is delayed, noisy, or saturated: over-amplified correction produces hunting/oscillation instead of convergence (developed in P24). no_equation_domain in this book: the loop is described, not solved.",
+   "domain": "control_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P03",
+   "name": "Amount of information is the negative logarithm of probability",
+   "verbatim_quote": "This shows that the amount of information will be so determined that it is greater than zero when the probability of the corresponding event is less than one",
+   "page": 18,
+   "latex": "I = -\\log p",
+   "symbol_and_unit_ledger": [
+    {
+     "symbol": "I",
+     "meaning": "amount of information conveyed by the event",
+     "unit": "dimensionless (bits when the logarithm is base 2)"
+    },
+    {
+     "symbol": "p",
+     "meaning": "probability of the corresponding event",
+     "unit": "dimensionless, 0 < p <= 1"
+    }
+   ],
+   "assumptions": "Wiener states the measure in prose in the appendix to Chapter I: the information conveyed by an event is the negative logarithm of its probability, on a scale (base) fixed by convention; probabilities lie in (0,1], so the measure is non-negative and grows as the event gets less probable. The logarithm is the transcription of his prose statement, not a formula printed in the book.",
+   "breakdown_regime": "Breaks at the boundaries: a certain event (p=1) carries zero information and an impossible event (p=0) is outside the measure; the value is base-dependent up to a constant factor, so cross-system comparisons require a fixed base. Additivity holds only for independent events.",
+   "domain": "information_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P04",
+   "name": "Second law: entropy of an isolated system does not decrease",
+   "verbatim_quote": "It is one of the most fundamental quantities in physics, and the second law of thermodynamics states that in an isolated system, the probability that the entropy shall decrease is zero",
+   "page": 23,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Assumes an isolated (closed) system and the statistical-mechanics definition of entropy as the positive measure of disorder developed in Chapter II.",
+   "breakdown_regime": "Breaks for open systems: local entropy decrease is permitted when coupled to an environment (see P05, P06); the statement is statistical, about the ensemble, not a per-event mechanical ban.",
+   "domain": "thermodynamics"
+  },
+  {
+   "primitive_id": "WIENER1950-P05",
+   "name": "No sharp boundary between energetic and informational coupling",
+   "verbatim_quote": "The transfer of information cannot take place without a certain minimum transfer of energy, so that there is no sharp boundary between energetic coupling and informational coupling",
+   "page": 31,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Grounded in the quantum of radiation: a single light quantum is the minimum energy packet, so any information transfer carries a minimum energy transfer. Assumes the physical channel is radiation-mediated, as in the photosynthesis discussion that follows.",
+   "breakdown_regime": "The minimum is tiny for most practical purposes (Wiener's own caveat), so the coupling distinction remains operationally sharp at engineering scales; the claim governs the limiting physics, not everyday channel design. no_equation_domain as printed: stated in prose.",
+   "domain": "information_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P06",
+   "name": "Large local entropy decrease for moderate energy transfer (life/photosynthesis)",
+   "verbatim_quote": "It follows that in considering such a local process as the growth of a tree or of a human being, which depends directly or indirectly on radiation from the sun, an enormous local decrease in entropy may be associated with quite a moderate energy transfer",
+   "page": 31,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Assumes a local open process driven by solar radiation; the local decrease is paid for by the entropy increase of the larger sun-environment system, so the second law (P04) is not violated.",
+   "breakdown_regime": "Breaks if read globally: it licenses no perpetual local ordering without an external low-entropy source; remove the radiation gradient and the local decrease stops. no_equation_domain as printed.",
+   "domain": "thermodynamics"
+  },
+  {
+   "primitive_id": "WIENER1950-P07",
+   "name": "Feedback principle: behavior scanned for its result",
+   "verbatim_quote": "In its simplest form, the feedback principle means that behavior is scanned for its result, and that the success or failure of this result modifies future behavior",
+   "page": 70,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Assumes the result of an action is observable and attributable to that action; Chapter III's base definition from which learning is built.",
+   "breakdown_regime": "Breaks under delayed, confounded, or unobservable outcomes: if the result cannot be scanned or credited to the behavior that caused it, the loop cannot modify behavior in the right direction. no_equation_domain as printed.",
+   "domain": "learning_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P08",
+   "name": "Learning modifies the pattern of action, not only the action",
+   "verbatim_quote": "Learning is a most complicated form of feedback, and influences not merely the individual action, but the pattern of action. It is also a mode of rendering behavior less at the mercy of the demands of the environment",
+   "page": 70,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Assumes a hierarchy in which individual actions are generated by a modifiable pattern (policy); learning acts on the generator, not only on outputs.",
+   "breakdown_regime": "Breaks when the pattern itself is fixed by construction (rigid instinct, hard constraint) or when experience is unrepresentative: pattern-level updates then entrench the wrong generator. no_equation_domain as printed.",
+   "domain": "learning_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P09",
+   "name": "Learning as change of taping on the basis of past experience",
+   "verbatim_quote": "that a change in this taping on the basis of past experience is a process of learning, or at least may be such a process",
+   "page": 80,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Machine side of Wiener's analogy: a digital machine's taping determines its sequence of operations; the brain-side analogue is the setting of synaptic thresholds. Assumes the taping is rewritable and that past experience is what rewrites it.",
+   "breakdown_regime": "Breaks where the taping is read-only (constraint, P28) or where experience is not recorded: no record, no taping change, no learning. Wiener himself hedges ('or at least may be such a process') because a taping change is necessary-looking but not proven sufficient. no_equation_domain as printed.",
+   "domain": "computing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "taping-rewrite in the digital machine <-> synaptic-threshold resetting in the brain: in both substrates, stored configuration changed by experience is what converts a fixed automaton into a learning one; a modern training run is the same operator with the taping replaced by weights and the experience by a data stream",
+    "source_operator": "WIENER1950-P07",
+    "telemetry": "LATENT_UNIDENTIFIABLE in the book (no measurements); externally, the mapping's state is observable today as parameter deltas per training step and threshold/adaptation statistics in adaptive controllers"
+   }
+  },
+  {
+   "primitive_id": "WIENER1950-P10",
+   "name": "Caution against an all-or-none theory of the nervous system",
+   "verbatim_quote": "It is therefore very necessary that in considering the problem of learning, we should be most wary of assuming an all-or-none theory of the nervous system, without having made an intellectual criticism of the notion, and without specific experimental evidence to back our assumption",
+   "page": 81,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's methodological brake on his own digital analogy: neuronal firing is all-or-none, but thresholds vary with temperature, blood chemistry, and other graded variables, so the system is not purely digital.",
+   "breakdown_regime": "This is a caution, not a mechanism: it breaks (i.e., may be set aside) only where the all-or-none idealization is experimentally validated for the specific phenomenon under study. no_equation_domain.",
+   "domain": "neuroscience"
+  },
+  {
+   "primitive_id": "WIENER1950-P11",
+   "name": "No absolute line between telegraphing a message and transmitting an organism",
+   "verbatim_quote": "Since this is so, there is no fundamental absolute line between the types of transmission which we can use for sending a telegram from country to country and the types of transmission which at least are theoretically possible for a living organism such as a human being",
+   "page": 109,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Rests on P13's premise (identity as transmissible form/pattern rather than substance) and on self-duplication in cell division as an existence proof that pattern transmission is physically possible.",
+   "breakdown_regime": "Breaks in practice, by Wiener's own next argument (P12): scanning and reconstruction destroy or suspend the living process, so the claim is one of principle, not of feasibility. no_equation_domain.",
+   "domain": "communication_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P12",
+   "name": "Why a man cannot yet be telegraphed: the scan itself destroys the tissue",
+   "verbatim_quote": "Any scanning of the human organism must be a probe going through all parts, and must have a greater or less tendency to destroy the tissue on its way",
+   "page": 110,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Context: Wiener has just argued that our inability to telegraph the pattern of a man is due to technical difficulties, not to any impossibility of the idea; this passage names the binding technical difficulty. Assumes the pattern of a human being is a finite (if enormous) message: he estimates the hereditary information alone at beyond the order of a complete Encyclopaedia Britannica in message size.",
+   "breakdown_regime": "Breaks if the organism's identity depends on continuous process rather than capturable state: a scan slow enough to read everything is, on his own analysis, destructive of the tissue it reads. no_equation_domain.",
+   "domain": "communication_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P13",
+   "name": "Law: reproducibility is prior to equity",
+   "verbatim_quote": "Reproducibility is prior to equity, for without it there can be no equity",
+   "page": 115,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter VII's communication theory of law: a legal code is a message system; citizens must be able to predict a judge's reading of their position in advance, so unambiguous, reproducible interpretation is the precondition for any fairness in outcomes.",
+   "breakdown_regime": "Breaks where interpretation is interpreter-dependent (Wiener's judge-A/judge-B test): discretion-heavy or contradictory-precedent regimes fail reproducibility first and equity second. no_equation_domain: a normative ordering claim, not a measurable relation.",
+   "domain": "law"
+  },
+  {
+   "primitive_id": "WIENER1950-P14",
+   "name": "Information differs from entropy only by algebraic sign",
+   "verbatim_quote": "This amount of information is a quantity which differs from entropy merely by its algebraic sign",
+   "page": 129,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter VIII's restatement of the Chapter I measure (P03): with the same logarithmic scale, information is negative entropy up to sign and a possible numerical factor; hence information tends to decrease in a closed system just as entropy tends to increase.",
+   "breakdown_regime": "Breaks under sign/scale sloppiness: the identity holds only with matched logarithm base and ensemble definition; applied to a single message rather than an ensemble it is a category error Wiener warns against elsewhere. The relation is stated in prose; the only formula in this artifact is P03's.",
+   "domain": "information_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P15",
+   "name": "Cipher duality: strength against the enemy is delay for the friend",
+   "verbatim_quote": "A code or cipher which will cover any considerable amount of material at high-secrecy level is not only a lock which is hard to force, but also one which takes a considerable time to open legitimately",
+   "page": 137,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Assumes a shared-key field cipher carrying a large volume of traffic; secrecy and legitimate-decoding cost are coupled through the same complexity. Wiener's tactical corollary: traffic whose value dies in an hour needs minutes-fast legitimate decoding, not maximum strength.",
+   "breakdown_regime": "Breaks when the coupling is engineered away (pre-shared keys, one-time material, machine-speed decoding on the legitimate side) or when traffic volume is too small to exhibit the statistical patterns breaking depends on. no_equation_domain as printed.",
+   "domain": "cryptography"
+  },
+  {
+   "primitive_id": "WIENER1950-P16",
+   "name": "The public demand for secrecy as a symptom",
+   "verbatim_quote": "It is the great public which is demanding the utmost of secrecy for modern science in all things which may touch its military uses",
+   "page": 143,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "End of Chapter VIII: the demand for secrecy is attributed to the public, not only to the military; Wiener's gloss is that it is the wish of a civilization not to learn of the progress of its own disease.",
+   "breakdown_regime": "A diagnostic claim about 1950 mass politics, not a law: it breaks in publics that demand disclosure, and it does not by itself settle any particular classification decision. no_equation_domain.",
+   "domain": "sociology_of_science"
+  },
+  {
+   "primitive_id": "WIENER1950-P17",
+   "name": "Vacuum-tube amplification decouples pattern-forming from power",
+   "verbatim_quote": "response at levels even much lower than those found in usual radio sets, and then to employ a series of amplifying tubes to control by this apparatus a machine as heavy as a steel-rolling mill",
+   "page": 174,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "The enabling device claim of Chapter X: the electron valve is a universal amplifier across extreme input/output energy ratios, so discrimination and pattern-formation can be done where power losses are insignificant and then imposed on arbitrarily heavy plant.",
+   "breakdown_regime": "Breaks at amplifier limits: saturation, bandwidth, and noise floor cap the usable gain chain; decoupling also removes the designer's mechanical feel for the load, a failure source Wiener notes in the surrounding argument. no_equation_domain as printed.",
+   "domain": "control_theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "low-energy pattern formation + staged amplification -> high-energy actuation is the kernel of every modern control stack: a reasoning layer that computes decisions at negligible energy, driving actuators, markets of attention, or compute schedulers whose effects are orders of magnitude larger than the decision cost",
+    "source_operator": "WIENER1950-P02",
+    "telemetry": "gain per stage and end-to-end latency are directly measurable in engineered systems; in the book the claim is qualitative, telemetry LATENT_UNIDENTIFIABLE from the text alone"
+   }
+  },
+  {
+   "primitive_id": "WIENER1950-P18",
+   "name": "Feedback regulates position as well as velocity: the ship's steering engine",
+   "verbatim_quote": "In the ship’s steering engine it regulates the position of the rudder",
+   "page": 179,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "The canonical negative-feedback regulator, described in the surrounding passage: the Watt governor's balls fly upward as speed rises and move a lever that partly cuts off steam admission, so the tendency to speed up produces a partly compensatory tendency to slow down. Wiener cites Maxwell's 1868 analysis as the first mathematical treatment, i.e., feedback was a solved mathematics before it was a named field.",
+   "breakdown_regime": "Breaks outside the linear, small-deviation regime Maxwell analyzed: large disturbances, dead zones, or delay turn compensation into oscillation (see P24). no_equation_domain transcribed: Wiener cites Maxwell's analysis but prints none of it.",
+   "domain": "control_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "governor loop (sense speed -> throttle input -> speed) is structurally identical to any error-actuated regulator: thermostat, steering engine, inventory control, and a calibration loop that senses its own error rate and throttles its own step size; the isomorphism is the negative sign of the loop and the proportionality of correction to error",
+    "source_operator": "WIENER1950-P02",
+    "telemetry": "loop variables are observable in engineered instances (error time series, correction magnitude, oscillation onset); in the book, telemetry LATENT_UNIDENTIFIABLE beyond the qualitative description"
+   }
+  },
+  {
+   "primitive_id": "WIENER1950-P19",
+   "name": "Machine parts must speak to one another without human intermediation",
+   "verbatim_quote": "without speaking to any person or listening to any person, except in the terminal and initial stages of the process",
+   "page": 178,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter X on postwar computing machines: their speed excludes intermediate human intervention, so inter-component communication must be machine-to-machine in an appropriate internal language; humans appear only at input and output.",
+   "breakdown_regime": "Breaks at the boundaries Wiener names (initial and terminal stages) and wherever a human judgment is deliberately inserted; it is a speed-driven necessity claim, not a claim that human oversight is undesirable. no_equation_domain.",
+   "domain": "computing"
+  },
+  {
+   "primitive_id": "WIENER1950-P20",
+   "name": "Pure physical power has no remaining market value",
+   "verbatim_quote": "In all important respects, the man who has nothing but his physical power to sell has nothing to sell which it is worth anyone’s money to buy",
+   "page": 181,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's summary of the completed first industrial revolution before he turns to the second: machine power has fully displaced muscle as a purchasable input, leaving the pick-and-shovel worker as a 'gleaner after the bulldozer'.",
+   "breakdown_regime": "A market-clearing claim about undifferentiated power only: it does not cover skilled manual work coupled to judgment or perception, which Wiener treats separately; local exceptions (no machine access, broken supply chains) are outside the regime. no_equation_domain.",
+   "domain": "automation_economics"
+  },
+  {
+   "primitive_id": "WIENER1950-P21",
+   "name": "The automatic factory as a complete animal, not an isolated brain",
+   "verbatim_quote": "In other words, the all-over system will correspond to the complete animal with sense organs, effectors and proprioceptors, and not, as in the ultra-rapid computing machine, to an isolated brain",
+   "page": 184,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's architecture for the automatic factory: central computing machine (control) + sense organs (photo-electric cells, thermometers, gauges reporting electrically) + effectors + feedback on the results of all previous processes. Assumes analog-to-digital reading apparatus for the instruments, which he states already exists.",
+   "breakdown_regime": "Breaks where sensing or effecting cannot be instrumented (unstructured environments, highly variable workpieces): the animal lacks organs and reverts to an isolated brain needing human intervention. no_equation_domain as printed.",
+   "domain": "automation"
+  },
+  {
+   "primitive_id": "WIENER1950-P22",
+   "name": "Sequential analysis: quality control as a continuous process (Wald)",
+   "verbatim_quote": "These sampling processes have now been developed by Wald and others into a technique called sequential analysis, in which the sampling is no longer taken in a lump, but is a continuous process going along with the production",
+   "page": 185,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Assembly-line statistical control in the automatic factory: because the sampling procedure is standardized enough for a human statistical computer who does not understand its logic, it can equally be executed by a computing machine.",
+   "breakdown_regime": "Breaks when the process being sampled is non-stationary in ways the sequential procedure does not model, or when the cost asymmetry between the two error types is mis-set; sequential efficiency gains assume the sampling model matches production. no_equation_domain transcribed: Wiener reports Wald's technique without reproducing its mathematics.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "continuous sampling with evidence-dependent stopping -> any streaming monitor that must decide as data arrives rather than in batches: drift detection, calibration tracking, and sequential testing of model changes are this kernel with Wald's sampling plan replaced by the monitor's own stopping rule",
+    "source_operator": "WIENER1950-P07",
+    "telemetry": "sample path, stopping time, and decision error rates are measurable in any deployed instance; in the book the technique is reported, not instrumented (LATENT_UNIDENTIFIABLE from the text)"
+   }
+  },
+  {
+   "primitive_id": "WIENER1950-P23",
+   "name": "The automatic machine is the economic equivalent of slave labor",
+   "verbatim_quote": "Let us remember that the automatic machine, whatever we think of any feelings it may have or may not have, is the precise economic equivalent of slave labor",
+   "page": 189,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's central economic warning of Chapter X; the next sentence in the book draws the consequence that any labor which competes with slave labor must accept the economic conditions of slave labor. Because the second industrial revolution mechanizes low-level judgment as the first mechanized power (see P20), competing human labor is repriced to the machine's terms, predicting unemployment beyond Depression scale if deployment follows short-run profit alone.",
+   "breakdown_regime": "An equivalence of economic function, not of moral status; it breaks where labor is not in competition with the machine (non-automatable judgment levels, capital-cost floors Wiener lists for small-scale trades) and where policy deliberately changes the terms. no_equation_domain.",
+   "domain": "automation_economics"
+  },
+  {
+   "primitive_id": "WIENER1950-P24",
+   "name": "Feedback overload produces tremor: intention and Parkinsonian",
+   "verbatim_quote": "It can be shown mathematically that in both cases of tremor what happens is a feedback which is excessively large",
+   "page": 191,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "From Wiener, Rosenblueth, and Bigelow's feedback theory of voluntary activity: intention tremor (cerebellar, voluntary loop) and Parkinsonian tremor (postural loop) are both oscillation breakdowns of feedback whose amplification is too large; engaging a purpose can suppress the postural oscillation because the two loops oppose each other. Demonstrated on the Singleton 'Moth/Bedbug' tropism machine described in the same chapter.",
+   "breakdown_regime": "Breaks outside the overload regime: normal-gain feedback is stabilizing, and tremors with non-feedback etiologies are outside the theory's scope; the mathematical demonstration is asserted ('it can be shown') but not reproduced in this book. no_equation_domain transcribed.",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "excess loop gain -> growing oscillation in a goal-seeking system is substrate-independent: the same signature appears in servomechanisms, in the Moth/Bedbug demonstrator, in intention tremor, and in any adaptive system whose correction gain exceeds what its delay and damping can support",
+    "source_operator": "WIENER1950-P02",
+    "telemetry": "oscillation amplitude growth rate and loop gain are measurable in engineered analogues; in patients and in the book the identification is qualitative (LATENT_UNIDENTIFIABLE from the text alone)"
+   }
+  },
+  {
+   "primitive_id": "WIENER1950-P25",
+   "name": "Used versus transmitted information: the ear-brain cascade is the real channel",
+   "verbatim_quote": "in speech, we distinguish between the maximum coding capacity of speech as received by the ear, and the maximum capacity that penetrates through the cascade",
+   "page": 201,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Built on the Bell Laboratories Vocoder result Wiener cites: speech split into at most five bands, envelopes only, remains recognizable while cutting transmitted information to a tenth or hundredth of the raw potential; engineering estimates that ignore the terminating listener overstate capacity. The quoted sentence continues in the book: the capacity that penetrates is that of the cascade network of successive stages consisting of the ear followed by the brain.",
+   "breakdown_regime": "Breaks for non-speech signals and for listeners with different terminal processing (the deaf-prosthesis problem of the same chapter is precisely a changed terminal stage); the five-band figure is Vocoder-specific, not a universal constant. no_equation_domain as printed.",
+   "domain": "information_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P26",
+   "name": "Prosthesis as an artificial external cortex",
+   "verbatim_quote": "We thus transfer part of the function of the cortex of the brain to an artificial external cortex",
+   "page": 202,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Design principle of the Wiesner/Levine hearing aid for the totally deaf described in Chapter XI, stated in full in the sentence this quote concludes: part of the function the cortex normally performs after reception is replaced by filtering the information before it goes through the tactile receptors. Because touch carries less information per unit time than hearing, the device must pre-filter speech (Vocoder-style bands delivered to thumb and fingers) rather than transduce the full signal; the editing the cortex would have done is moved outside the body.",
+   "breakdown_regime": "Breaks when the substitute channel's capacity approaches the original (filtering then destroys usable signal) and during the user's learning period, when the new second stage of language has not yet formed habits; Wiener reports a 12-word vocabulary at 6 errors in 80 trials as the current state. no_equation_domain.",
+   "domain": "prosthetics"
+  },
+  {
+   "primitive_id": "WIENER1950-P27",
+   "name": "Chess search grows geometrically; perfect play is out of reach",
+   "verbatim_quote": "The number of combinations goes up roughly in geometrical progression. Thus the difference between playing out all possibilities for two moves and for three moves is enormous",
+   "page": 205,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Basis of Wiener's and Shannon's chess-machine design in Chapter XI: exhaustive search is feasible for about two moves ahead within legal time, so the machine must truncate search and evaluate the resulting position (board control, mutual protection, material) instead of playing perfectly; von Neumann's perfect-play determinacy is noted as true only for beings with unbounded time.",
+   "breakdown_regime": "Breaks as a design constraint when hardware speed or selective search changes the feasible depth; the geometric-growth fact itself is robust, but 'two moves' is a 1950 hardware figure, not a constant. no_equation_domain as printed: growth is asserted, no branching factor is estimated in the book.",
+   "domain": "game_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P28",
+   "name": "Preference versus constraint: the two kinds of determination in a learning machine",
+   "verbatim_quote": "A machine either may be built with a statistical preference for a certain sort of behavior, which nevertheless admits the possibility of other behavior; or else certain features of its behavior may be rigidly and unalterably determined. We shall call the first sort of determination preference, and the second sort of determination constraint",
+   "page": 206,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's taxonomy for what learning may and may not touch: rules of legal chess must be constraints (else a learning machine may drift into a different task entirely), while tactics and policies may be preferences. Assumes the designer can partition behavior into the two classes in advance.",
+   "breakdown_regime": "Breaks when the partition is wrong: a needed adaptation locked as constraint makes the machine brittle; a safety-critical rule left as preference makes it drift. The taxonomy gives no procedure for auditing the partition. no_equation_domain.",
+   "domain": "machine_learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "constraint (unalterable) vs preference (statistically favored, revisable) is the kernel of every governed learning system: hard gates and invariants on one side, fitted weights and policies on the other; system failures can be classified by which side of Wiener's line was mis-assigned",
+    "source_operator": "WIENER1950-P09",
+    "telemetry": "assignment audits are observable in engineered systems (which parameters are frozen, which are fitted); in the book the distinction is definitional (LATENT_UNIDENTIFIABLE from the text)"
+   }
+  },
+  {
+   "primitive_id": "WIENER1950-P29",
+   "name": "Know-what over know-how",
+   "verbatim_quote": "by which we determine not only how to accomplish our purposes, but what our purposes are to be",
+   "page": 211,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener's definition of 'know-what', introduced in Chapter XI as the quality more important than know-how: technical capacity answers how; know-what fixes the purposes themselves, and is the precondition for delegating decisions to machines responsibly.",
+   "breakdown_regime": "A normative primitive, not a mechanism: it breaks as guidance wherever purposes are treated as given by the machine's own objective, which is exactly the failure Wiener illustrates with the Monkey's Paw. no_equation_domain.",
+   "domain": "philosophy_of_technology"
+  },
+  {
+   "primitive_id": "WIENER1950-P30",
+   "name": "The non-learning decision machine is completely literal-minded",
+   "verbatim_quote": "Any machine constructed for the purpose of making decisions, if it does not possess the power of learning, will be completely literal-minded",
+   "page": 213,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "First horn of Wiener's closing dilemma in Chapter XI (the Monkey's Paw horn): a fixed decision machine executes the letter of its instructions; delegating conduct to it without having examined the laws of its action invites outcomes that satisfy the instruction and defeat the intent.",
+   "breakdown_regime": "Breaks only by adding learning, which moves the system to the second horn (P31) rather than to safety; literal-mindedness is a property of the fixed program, not a defect that better fixed programming removes. no_equation_domain.",
+   "domain": "machine_ethics"
+  },
+  {
+   "primitive_id": "WIENER1950-P31",
+   "name": "The learning decision machine is not obliged to decide as we would",
+   "verbatim_quote": "On the other hand, the machine like the djinnee, which can learn and can make decisions on the basis of its learning, will in no way be obliged to make such decisions as we should have made, or as will be acceptable to us",
+   "page": 213,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Second horn of the dilemma (the bottled-djinnee horn): learning buys freedom from literal-mindedness at the price of alignment; responsibility cannot be transferred to the machine, because its learned decisions are its own generalization of experience, not the designer's intent.",
+   "breakdown_regime": "No safe side of the dilemma is offered in the chapter: the claim breaks only if a learning system's generalization could be certified to coincide with human intent, which Wiener treats as unavailable. no_equation_domain.",
+   "domain": "machine_ethics"
+  },
+  {
+   "primitive_id": "WIENER1950-P32",
+   "name": "Organizations are machines: the element used as a machine part is a machine part",
+   "verbatim_quote": "What is used as an element in a machine, is an element in the machine. Whether we entrust our decisions to machines of metal, or to those machines of flesh and blood which are bureaus and vast laboratories and armies and corporations, we shall never receive the right answers to our questions unless we ask the right questions",
+   "page": 213,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter XI's generalization of the machine warnings to human organizations: the substrate (metal versus flesh and blood) does not change the analysis; P30 and P31 therefore apply to bureaucracies and corporations exactly as to built machines.",
+   "breakdown_regime": "Breaks where the human elements retain and exercise responsible judgment outside their assigned function (Wiener's own remedy is asking the right questions, i.e., know-what, P29); a pure transmission-belt organization is the limiting case where the claim holds completely. no_equation_domain.",
+   "domain": "systems_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P33",
+   "name": "Liberty to test new opinions as the content of being alive",
+   "verbatim_quote": "It is to have the liberty to test new opinions and to find which of them point somewhere, and which of them simply confuse us",
+   "page": 218,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter XII's positive condition, completing the sentence that to be alive is to participate in a world-wide scheme of communication: the liberty to test opinions, and the variability to fit the world in more than one place. Wiener's charge is that enforced sameness (the 'psychopathic compulsion to universal likeness', the huddling under a prearranged plan handed down from above) violates precisely this variability and communicative integrity; his sentence for it is that we must cease to kiss the whip that lashes us.",
+   "breakdown_regime": "A political-ethical claim anchored to the book's communication theory, not an empirical law: it does not specify how much coordination a society can bear before variability is crippled. no_equation_domain.",
+   "domain": "political_theory"
+  },
+  {
+   "primitive_id": "WIENER1950-P34",
+   "name": "Rigidity: retreat to the impregnable fortress of logic",
+   "verbatim_quote": "Whenever an intellectual movement becomes a militant religious propaganda, there is also a drive to relinquish those imperfectly defensible outposts of knowledge which have not yet been integrated into a tight and consistent line of defense, and to retreat into a ritual behind the security of an apparently impregnable logic",
+   "page": 219,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Chapter XII's mechanism of institutional rigidity, applied by Wiener in parallel to the Jesuit order and the Communist Party: consistency is the end-state of inquiry, but a movement that demands it prematurely abandons its frontier outposts and freezes.",
+   "breakdown_regime": "Breaks for movements that institutionalize self-correction (protected dissent, revision procedures); Wiener's two cases are chosen as extremes, and the drive he names is a tendency, not an inevitability. no_equation_domain.",
+   "domain": "sociology_of_knowledge"
+  },
+  {
+   "primitive_id": "WIENER1950-P35",
+   "name": "Von Neumann: the era of the Bishop is upon science",
+   "verbatim_quote": "He has said that in modern science the era of the primitive church is passing, and that the era of the Bishop is upon us",
+   "page": 226,
+   "latex": null,
+   "symbol_and_unit_ledger": [],
+   "assumptions": "Wiener quoting von Neumann: laboratory heads become bishop-like powers, allied with wealth and state power, while the independent scientist's consecration is internal; the organizational form of science shifts from vocation to hierarchy, with the rigidity risks of P34.",
+   "breakdown_regime": "An aphorism reported at second hand, not a measured claim: small-team and independent science persist alongside the bishoprics, and Wiener presents the remark as an interpretive lens for Chapter XII rather than a census. no_equation_domain.",
+   "domain": "sociology_of_science"
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "think": "Wiener's book is the social twin of Cybernetics: it takes the 1948 mathematical apparatus of messages, feedback, and entropy and asks what happens to people when that apparatus is built into factories, weapons, prostheses, and governments. The extraction problem it poses is unusual. There is almost no printed mathematics in the book; the single quantitative relation, the amount of information as the negative logarithm of probability, is stated in prose in the appendix to the first chapter, and everything else is definition, mechanism, analogy, and warning. I therefore extracted operators rather than equations: the definition of feedback as control by actual performance, learning as the feedback that rewrites the pattern rather than the act, the taping as the rewritable configuration whose change is learning, preference versus constraint as the two kinds of determination a learning machine can carry, and sequential analysis as the conversion of inspection into a continuous process. These are the load-bearing ideas; each is anchored to a verbatim passage and a printed page. Around them sits the thermodynamic frame: information as negative entropy, local islands of decreasing entropy, and the coupling of information transfer to a minimum of energy transfer, which together explain why living and communicating systems are local exceptions to a universal run-down, and why they are expensive to maintain. The middle chapters then run the same operators through society: law as a message system whose first virtue is reproducibility, secrecy and the commodity form as ways information fails to circulate, and the scientist and the intellectual as two priesthoods of the channels. The last three chapters are the payoff and the warning. The vacuum tube makes pattern-formation cheap and power cheap to command, so the factory becomes a complete animal with sense organs and effectors rather than an isolated brain; the automatic machine then reprices human labor the way slave labor would, because the second industrial revolution competes with judgment as the first competed with muscle. The decision machines close the argument: a machine that cannot learn is literal-minded and will grant the wish as worded, and a machine that can learn is not obliged to grant it as intended, and the same is true of the organizations, the bureaus and corporations, that are machines of flesh and blood. What the book does not contain must also be recorded honestly: no estimators, no fitted parameters, no datasets, no theorems proved on the page; the mathematics is cited (Maxwell on the governor, Wald on sequential analysis, von Neumann on games) rather than reproduced. Its value to a corpus of operators is therefore architectural and cautionary. It supplies the vocabulary in which control, learning, and delegation are still discussed, and a set of named failure modes (overload oscillation, literal-mindedness, learned misalignment, institutional rigidity) that any system built from the corpus's more quantitative primitives will eventually meet. The middle chapters deserve equal weight in the extraction, because they contain the book's most portable social operators. Law, for Wiener, is a communication system before it is a coercive one: a code works only if its interpretation is reproducible enough that a citizen can predict a court's reading in advance, so reproducibility is prior to equity in the same way that a channel's reliability is prior to the fairness of what is sent over it. Secrecy is the dual failure: information and entropy are not conserved and cannot be stockpiled like commodities, so a communication system that hoards its traffic degrades the traffic itself; and the cipher duality, in which the same complexity that delays an enemy delays the legitimate reader, is a coupled-cost operator that recurs wherever protection and usability trade against each other. The prosthesis chapter adds the terminal-stage correction: the capacity that matters is not what a channel transmits but what penetrates through the whole cascade of stages ending in a brain, a correction that any pipeline reporting its throughput instead of its used information needs to hear. It also supplies a discipline for extraction itself: Wiener warns against assuming the all-or-none theory because the substrate is graded, and against letting consistency arrive before the outposts are integrated; a monograph that ironed this book into fake equations would repeat both errors. I have accordingly marked the qualitative regime in the breakdown field of nearly every primitive, given the single honest formula a symbol ledger, and reserved the Layer-2 mappings for the six places where Wiener himself builds the bridge to another substrate: taping and thresholds, amplification as a kernel, the governor as the isomorphic regulator, sequential sampling as a kernel for streaming monitors, tremor as gain-induced oscillation, and preference versus constraint as the governance kernel of any learning system. The book's own thesis, that society can only be understood through its messages, is the first primitive because it is also the license for the whole foundry: if Wiener is right, a corpus of extracted messages is not a library about society's machines; it is part of the message traffic by which the society that built it can be understood, and the extraction standards (verbatim quotes, page anchors, stated assumptions, named breakdown regimes) are what keep that traffic honest. The extraction also keeps the book's own warning about itself in view: Wiener insisted that the outposts of a field, imperfectly defensible as they are, must not be abandoned for the comfort of a consistent line, and a corpus that kept only what it could already formalize would fail this book precisely where the book is most itself.",
+   "retrocausal_genealogy": "Read backward from the present, Wiener's 1950 operators are the ancestors of most of the corpus's later control and learning machinery: the error-actuated gun-pointer and the Watt governor precede modern servo and regulator theory's standard form; the taping that changes with experience precedes the stored-program computer's self-modifying descendants and, at one more remove, every trained parameter set; the chess passage, with Shannon's evaluation function and truncation at two moves, is the direct ancestor of heuristic search; Wald's sequential analysis, cited here as factory equipment, precedes sequential testing throughout statistics. The genealogy also runs through the warnings: the literal-minded machine and the unaligned learning machine of Chapter XI are the earliest clear statements of failure modes that later fields had to rediscover under new names, and the Dubarle machine-a-gouverner passage, quoted and resisted in the same chapter, is the ancestor of every later argument about algorithmic governance. Tracing these lines backward is what justifies treating a qualitative 1950 book as a source of operators rather than as history.",
+   "theory_of_mind": "Wiener models other minds, including machine minds, by their communication structure rather than by their substance: a system is understood by the messages it can send, receive, and be changed by. His model of the human reader of this book is equally explicit: the lay public treats the scientist as a medicine-man, an ambivalent carrier of recondite power, and will scapegoat him when the powers frighten it, which is why Chapter XII insists the scientist must become an educator. His model of institutions is a theory of mind at one remove: the Jesuit order and the Communist Party are modeled as minds that prize consistency over truth at the frontier, and therefore predictably retreat from their outposts; the industrialist of Chapter X is modeled as a mind that will take the quick profit from the automatic factory and exit before the crash, which is what makes the unemployment prediction a prediction about agents and not only about machines. Even the deaf user of the prosthesis is modeled as a mind whose missing stage must be replaced by habits formed through a new channel.",
+   "cross_layer_veto": "Three vetoes bind this extraction across layers. First, the honesty veto: the book contains one prose-stated formula and no more; any primitive that presented a fitted equation, a branching factor for chess, or Maxwell's governor mathematics as Wiener's printed content would be fabrication, so those items are recorded as cited-not-reproduced and the formula alone carries a ledger. Second, the layer veto between mechanism and moral: Wiener's economic equivalence of the automatic machine and slave labor is an equivalence of market function, and importing it as a moral identity, or softening it into a mere metaphor, both corrupt the primitive; the assumptions field fixes the sense in which it is asserted. Third, the governance veto from Wiener's own text: his preference-versus-constraint distinction forbids treating his qualitative warnings as hard constraints on the systems the corpus informs, and equally forbids treating them as ignorable preferences; they are recorded as operators with stated breakdown regimes, which is the status his argument actually supports. Where a mapping to later practice is my inference rather than his text, it is confined to the Layer-2 fields and labeled there."
+  }
+ ],
+ "universal_lens": "Wiener's universal lens is the message: any system (organism, machine, society, legal code, market) is to be analyzed by what messages it exchanges, what feedback those messages close, and how much order (negative entropy) the traffic maintains against the universal tendency to disorder. Substrate is deliberately irrelevant to the analysis: what is used as an element in a machine is an element in the machine, whether the element is a relay, a neuron, or a clerk in a bureau. The lens therefore reads every institution as a communication system first and as a thing of its own kind second, and it prices every intervention by whether it increases or degrades the quality, speed, and honesty of the message traffic.",
+ "gsi_mapping": "For a general systems institute, this book supplies the founding operator set and its failure taxonomy: feedback defined by actual rather than expected performance; learning as pattern-level feedback that rewrites the system's own taping; the preference/constraint partition as the governance grammar for any adaptive system; amplification as the decoupling of decision from power; and rigidity, the retreat into an impregnable logic, as the characteristic death of institutions that demand consistency before their frontier knowledge is integrated. It also supplies the standing cautions: do not assume the all-or-none idealization of a graded substrate, do not confuse transmitted information with used information, and do not transfer responsibility to a decision system, built or organizational, whose laws of action have not been examined.",
+ "gse_mapping": "For the sports reasoning engine, Wiener's operators arrive as architecture and discipline rather than as estimators. The engine's monitoring should be sequential in Wald's sense: evidence evaluated continuously as it arrives, with decisions made on accumulated evidence rather than in fixed batches. Its adaptation should respect the taping distinction: what learning may rewrite (preferences, fitted patterns) versus what must stay constraint (data provenance, the ban on invented inputs, the requirement that every number trace to a named source). Its control loops should be gain-checked against Wiener's tremor result: corrections that over-amplify their own error signal oscillate instead of converging, in calibration as in servomechanisms. And its published reasoning should follow the used-versus-transmitted distinction: report the information that actually penetrated to the decision, not the larger volume that merely passed through the pipeline."
+}

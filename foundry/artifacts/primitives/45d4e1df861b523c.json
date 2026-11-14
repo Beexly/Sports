@@ -1,0 +1,852 @@
+{
+ "book_id": "45d4e1df861b523c",
+ "source_status": "COMPLETE",
+ "source_note": "Martin J. Wainwright and Michael I. Jordan, Graphical Models, Exponential Families, and Variational Inference, Foundations and Trends in Machine Learning, Vol. 1, Nos. 1-2 (2008), pp. 1-305, DOI 10.1561/2200000001, now publishers. Local file: the publisher PDF of the monograph held in the Motif library at library/books-must-have/WainwrightJordan-2008-GraphicalModelsExponentialFamiliesVariationalInference.pdf, 3005872 bytes, full sha256 over (str(size) + file bytes) = 45d4e1df861b523c946d1c862a0b246943cefce39b3de053ead3cb1081872227, book_id 45d4e1df861b523c. Extraction worked from the publisher-extracted text file (691231 bytes, 12222 lines), which is clean and complete including appendices and references; math is rendered in a linearized notation and a few words carry line-break hyphenation, so quotes were chosen inside single pages and verified as contiguous substrings of the text file after normalization. No catalog corrections needed: authors, title, year, and venue all match the file front matter. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "directed_factorization_dag",
+   "name": "Directed graphical model: the joint distribution factorizes into one conditional factor per vertex, given its parents",
+   "verbatim_quote": "a directed graphical model consists of a collection of probability distributions (densities or mass functions) that factorize in the following way:",
+   "page": "Section 2.1.1, p. 9",
+   "latex": "p(x_1, x_2, \\ldots, x_m) = \\prod_{s \\in V} p_s(x_s \\mid x_{\\pi(s)})",
+   "symbol_and_unit_ledger": {
+    "p(x_1,...,x_m)": "joint probability mass function or density over all m variables",
+    "s": "vertex index in V",
+    "pi(s)": "parent set of vertex s in the DAG",
+    "p_s(x_s | x_{pi(s)})": "conditional distribution of variable s given its parents"
+   },
+   "assumptions": [
+    "The graph is a directed acyclic graph (DAG), so an ancestral partial order exists",
+    "Each local factor p_s is normalized as a conditional distribution"
+   ],
+   "breakdown_regime": "Fails for directed graphs with cycles, which admit no such normalized factorization; parent sets that are large make the conditional factors high-dimensional and data-hungry",
+   "domain": "graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A game state model in the engine can be written as a DAG of conditional factors: situation variables (down, distance, field position, personnel) are parents of play-level outcomes, so the joint over a drive factorizes into local conditionals that can be estimated and audited one factor at a time.",
+    "source_operator": "directed_factorization_dag",
+    "telemetry": "Play-by-play records with parent variables (down, distance, yard line, personnel grouping) and child outcomes (play type, yards gained)"
+   }
+  },
+  {
+   "primitive_id": "undirected_mrf_factorization",
+   "name": "Undirected graphical model (Markov random field, Gibbs distribution): the joint factorizes into compatibility functions over cliques, divided by a normalizing constant Z",
+   "verbatim_quote": "With this notation, an undirected graphical model — also known as a Markov random field (MRF), or a Gibbs distribution — is a collection of distributions that factorize as",
+   "page": "Section 2.1.2, p. 9",
+   "latex": "p(x_1, x_2, \\ldots, x_m) = \\frac{1}{Z} \\prod_{C \\in \\mathcal{C}} \\psi_C(x_C)",
+   "symbol_and_unit_ledger": {
+    "psi_C(x_C)": "nonnegative compatibility function on clique C",
+    "C": "set of cliques of the graph",
+    "Z": "normalizing constant (partition function)",
+    "x_C": "subvector of variables in clique C"
+   },
+   "assumptions": [
+    "Compatibility functions are nonnegative but need not be marginals or conditionals",
+    "The clique set can be taken as all cliques, or only maximal cliques without loss of generality"
+   ],
+   "breakdown_regime": "The normalizer Z is generally intractable to compute, and clique potentials have no direct probabilistic interpretation, unlike directed factors",
+   "domain": "graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interacting football units (offensive line, secondary, pass rush) behave like cliques with compatibility potentials rather than independent conditionals; an MRF layer lets the engine score joint configurations of coupled units, with Z handled by the variational machinery developed later in the monograph.",
+    "source_operator": "undirected_mrf_factorization",
+    "telemetry": "Unit-level grades and tracking features for coupled position groups on the same play"
+   }
+  },
+  {
+   "primitive_id": "conditional_independence_separation",
+   "name": "For undirected models, conditional independence is graph separation: X_A is independent of X_B given X_C exactly when removing C disconnects A from B",
+   "verbatim_quote": "Let us stipulate that XA be independent of XB given XC if there is no path from a vertex in A to a vertex in B when we remove the vertices C from the graph.",
+   "page": "Section 2.2, p. 11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A, B, C are mutually disjoint subsets of vertices",
+    "The equivalence between factorization and the full set of such separation statements is the Hammersley-Clifford type result cited to Lauritzen"
+   ],
+   "breakdown_regime": "The characterization is stated for undirected graphs; directed models need a different reachability notion (d-separation), and separation in an estimated graph does not prove independence in the true distribution",
+   "domain": "graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Separation gives the engine a testable rule for when two signal families can be treated as conditionally independent given a context set: if the context nodes separate them in the dependency graph, their evidence combines multiplicatively instead of being double counted.",
+    "source_operator": "conditional_independence_separation",
+    "telemetry": "Estimated dependency graph over signal families plus context variables such as opponent, venue, and game script"
+   }
+  },
+  {
+   "primitive_id": "inference_intractability_brute_force",
+   "name": "Exact marginal computation by brute force is exponential: a single-node marginal sums over r^(m-1) configurations, already infeasible at m near 100 binary variables",
+   "verbatim_quote": "Even with binary variables (r = 2) and a graph with m ≈ 100 nodes (a small size for many applications), this summation is beyond the reach of brute-force computation.",
+   "page": "Section 2.3, p. 13",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each variable takes one of r states, so the configuration space has r^m elements",
+    "No factorization structure is exploited by the brute force sum"
+   ],
+   "breakdown_regime": "The counting argument applies to naive enumeration; structured models (trees, low treewidth, Gaussian) escape it, which is the subject of the rest of the monograph",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine that scores full game configurations faces the same wall: the configuration space of players, plays, and situations is astronomically larger than 2^100, so exact enumeration is never an option and all inference must exploit factorization or variational approximation.",
+    "source_operator": "inference_intractability_brute_force",
+    "telemetry": "Counts of model variables and state-space sizes logged per inference task"
+   }
+  },
+  {
+   "primitive_id": "sum_product_update_trees",
+   "name": "Sum-product algorithm: on a tree, all marginals are computed exactly by recursive message passing, a form of nonserial dynamic programming with a unique fixed point reached in finitely many steps",
+   "verbatim_quote": "The sum-product algorithm is a form of nonserial dynamic programming [19], which generalizes the usual serial form of deterministic dynamic programming [20] to arbitrary tree-structured graphs.",
+   "page": "Section 2.5.1, pp. 27-28",
+   "latex": "M_{ts}(x_s) \\leftarrow \\kappa \\sum_{x'_t} \\psi_{st}(x_s, x'_t)\\, \\psi_t(x'_t) \\prod_{u \\in N(t) \\setminus s} M_{ut}(x'_t)",
+   "symbol_and_unit_ledger": {
+    "M_{ts}(x_s)": "message from node t to node s, a vector over states of x_s",
+    "psi_{st}": "edge compatibility function",
+    "psi_t": "node compatibility function",
+    "N(t)": "neighbor set of t",
+    "kappa": "positive normalization constant"
+   },
+   "assumptions": [
+    "The graph is a tree, so removing any node splits it into independent subtrees",
+    "Variables are discrete (sums become integrals in the continuous case)"
+   ],
+   "breakdown_regime": "Exactness holds only on trees; on graphs with cycles the same update is the loopy heuristic with no general convergence or correctness guarantee",
+   "domain": "exact inference algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tree-structured subproblems inside the engine (a single drive as a chain, a decision tree over downs) can be solved exactly by message passing instead of sampling, giving exact marginals for sequence models such as drive outcome chains.",
+    "source_operator": "sum_product_update_trees",
+    "telemetry": "Sequence data with chain or tree structure: drives, possessions, pitch sequences"
+   }
+  },
+  {
+   "primitive_id": "max_product_max_marginals",
+   "name": "Max-product algorithm: replacing summation by maximization in the sum-product update computes max-marginals and a mode (MAP configuration) of a tree-structured distribution; it generalizes the Viterbi algorithm from chains to trees",
+   "verbatim_quote": "In this sense, it represents a generalization of the Viterbi algorithm [82] from chains to arbitrary tree-structured graphs.",
+   "page": "Section 2.5.1, pp. 28-29",
+   "latex": "\\nu_s(x_s) := \\max_{\\{x' \\mid x'_s = x_s\\}} p(x'_1, x'_2, \\ldots, x'_m)",
+   "symbol_and_unit_ledger": {
+    "nu_s(x_s)": "max-marginal at node s: the largest joint probability over all configurations consistent with X_s = x_s",
+    "p": "joint distribution of the tree-structured model"
+   },
+   "assumptions": [
+    "The graph is a tree",
+    "A back-tracking procedure after the max-marginals recovers an actual maximizing configuration"
+   ],
+   "breakdown_regime": "On loopy graphs max-product is only approximate and can fail to converge or to return the true mode; ties in the max can make the recovered configuration ambiguous",
+   "domain": "exact inference algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Most likely sequence questions in the engine (most likely drive outcome path, most likely game script) are mode computations; on tree-structured submodels max-product returns the exact mode, and its max-marginals expose how close the runner-up configurations are.",
+    "source_operator": "max_product_max_marginals",
+    "telemetry": "Candidate configuration scores from tree-structured sequence models"
+   }
+  },
+  {
+   "primitive_id": "junction_tree_triangulation",
+   "name": "Junction tree theorem: a graph has a junction tree (a clique tree with the running intersection property) if and only if it is triangulated, which reduces exact inference on any graph to inference on a tree of cliques",
+   "verbatim_quote": "A key theorem is that a graph G has a junction tree if and only if it is triangulated",
+   "page": "Section 2.5.2, p. 30",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Any graph can be triangulated by adding edges, at the cost of larger cliques",
+    "Clique potentials are initialized by assigning each original compatibility function to exactly one clique"
+   ],
+   "breakdown_regime": "Triangulation can create very large cliques; the method is only as good as the best triangulation, and finding the optimal one is itself hard",
+   "domain": "exact inference algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine needs exact inference on a loopy dependency graph, clustering variables into cliques and passing messages between cliques is the systematic route; the running intersection property is the consistency condition that makes locally computed clique marginals agree.",
+    "source_operator": "junction_tree_triangulation",
+    "telemetry": "Clique structure of the engine dependency graph and separator sizes per model"
+   }
+  },
+  {
+   "primitive_id": "local_consistency_implies_global",
+   "name": "Proposition 2.1: on a junction tree, locally consistent candidate marginals (normalized, and agreeing on all separator marginalizations) are exactly the marginals of a genuine joint distribution, which factorizes as a product of clique marginals divided by separator marginals",
+   "verbatim_quote": "Moreover, any such locally consistent quantities are the marginals of the probability distribution defined by Equation (2.12).",
+   "page": "Section 2.5.2, p. 33",
+   "latex": "p(x_1, \\ldots, x_m) = \\frac{\\prod_{C \\in \\mathcal{C}} \\mu_C(x_C)}{\\prod_{S \\in \\mathcal{S}} [\\mu_S(x_S)]^{d(S)-1}}",
+   "symbol_and_unit_ledger": {
+    "mu_C": "marginal distribution over clique C",
+    "mu_S": "marginal distribution over separator set S",
+    "d(S)": "number of maximal cliques adjacent to separator S",
+    "C, S": "sets of maximal cliques and separator sets of the junction tree"
+   },
+   "assumptions": [
+    "The clique tree satisfies the running intersection property",
+    "Candidate marginals satisfy the normalization condition (2.13a) and the marginalization condition (2.13b)"
+   ],
+   "breakdown_regime": "The equivalence is special to junction trees (triangulated graphs); on general loopy graphs local consistency is necessary but not sufficient, which is exactly the gap the Bethe and LP relaxations exploit",
+   "domain": "exact inference algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the consistency contract the engine should enforce on any set of locally estimated marginals: local agreement on overlaps is sufficient for a global joint to exist only when the overlap structure is a junction tree, otherwise locally consistent numbers can still be globally impossible.",
+    "source_operator": "local_consistency_implies_global",
+    "telemetry": "Pairwise and clique marginal estimates with their overlap (separator) structure"
+   }
+  },
+  {
+   "primitive_id": "treewidth_exponential_complexity",
+   "name": "The cost of junction tree inference grows exponentially in the size of the largest clique, hence in the treewidth of the graph; chains and trees have small treewidth, dense graphs are infeasible",
+   "verbatim_quote": "Thus, the complexity of the junction tree algorithm is exponential in the treewidth.",
+   "page": "Section 2.5.2, p. 34",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Treewidth is one less than the size of the largest clique over the best triangulation",
+    "State-space size per variable multiplies the clique cost"
+   ],
+   "breakdown_regime": "Treewidth is a worst-case structural bound; specific models (Gaussian, deterministic structure) can be tractable at large treewidth, and approximate methods bypass the bound entirely",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Treewidth is the budgeting rule for engine model design: before adding an interaction to a model, estimate the induced clique size, because exact inference cost is exponential in it; this caps how many interacting factors a real-time model may carry.",
+    "source_operator": "treewidth_exponential_complexity",
+    "telemetry": "Induced clique sizes and state counts for candidate model graphs"
+   }
+  },
+  {
+   "primitive_id": "loopy_belief_propagation",
+   "name": "Loopy sum-product (belief propagation): running the tree updates on a graph with cycles, pretending each node sits in a tree, gives an approximate inference method that works well on sparse, locally tree-like graphs such as error-correcting codes",
+   "verbatim_quote": "the message updates (2.9) can be applied at a given node while ignoring the presence of cycles — essentially pretending that any given node is embedded in a tree.",
+   "page": "Section 2.6, p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The graph is sparse enough that messages traveling around cycles are damped or weakly correlated",
+    "Updates are iterated to a fixed point that may not exist or may not be unique"
+   ],
+   "breakdown_regime": "No general convergence or correctness guarantees with cycles; strong potentials and short cycles are the known failure regime, analyzed variationally in Section 4 of the monograph",
+   "domain": "approximate inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Most engine dependency graphs have cycles (team strength feeds opponent adjustments which feed back), so loopy propagation over the factor graph is the practical default inference loop, with damping and fixed-point diagnostics borrowed from the coding applications where it succeeds.",
+    "source_operator": "loopy_belief_propagation",
+    "telemetry": "Message norms and fixed-point residuals per iteration on the engine factor graph"
+   }
+  },
+  {
+   "primitive_id": "maximum_entropy_exponential_form",
+   "name": "Maximum entropy principle: among all distributions matching given empirical moments, the maximum entropy distribution has exponential family form, with canonical parameters equal to the Lagrange multipliers of the moment constraints",
+   "verbatim_quote": "One interpretation of this principle is as choosing the distribution with maximal uncertainty, as measured by the entropy functional (3.2), while remaining faithful to the data.",
+   "page": "Section 3.1, pp. 38-39",
+   "latex": "p_\\theta(x) \\propto \\exp\\left\\{ \\sum_{\\alpha \\in I} \\theta_\\alpha \\varphi_\\alpha(x) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "theta_alpha": "canonical parameter, equal to the Lagrange multiplier of the alpha moment constraint",
+    "phi_alpha(x)": "sufficient statistic (feature function) alpha",
+    "I": "index set of constrained features"
+   },
+   "assumptions": [
+    "The moment constraints are feasible (the empirical moments lie in the realizable set)",
+    "A base measure nu is fixed, with entropy measured relative to it"
+   ],
+   "breakdown_regime": "If the target moments lie outside the marginal polytope the problem is infeasible; maxent says nothing about which features to constrain, and wrong feature choices give a confidently wrong least-committal distribution",
+   "domain": "exponential families",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maxent is the honest way to build engine distributions from partial statistics: constrain only the moments the data actually supports (usage rates, success rates by situation) and let entropy fill the rest, instead of inventing a full joint distribution the data never measured.",
+    "source_operator": "maximum_entropy_exponential_form",
+    "telemetry": "Empirical moment vectors per situation bucket, with sample counts"
+   }
+  },
+  {
+   "primitive_id": "exponential_family_canonical_form",
+   "name": "Exponential family in canonical form: density exp of inner product of canonical parameters and sufficient statistics minus the log partition (cumulant) function A, which normalizes the family",
+   "verbatim_quote": "The quantity A, known as the log partition function or cumulant function, is defined by the integral",
+   "page": "Section 3.2, pp. 39-40",
+   "latex": "p_\\theta(x) = \\exp\\{ \\langle \\theta, \\varphi(x) \\rangle - A(\\theta) \\}, \\qquad A(\\theta) = \\log \\int_{\\mathcal{X}^m} \\exp\\langle \\theta, \\varphi(x) \\rangle \\, \\nu(dx)",
+   "symbol_and_unit_ledger": {
+    "theta": "canonical (natural) parameter vector in R^d",
+    "phi(x)": "vector of sufficient statistics",
+    "A(theta)": "log partition / cumulant function",
+    "nu": "base measure (counting or Lebesgue)",
+    "Omega": "set of theta with A(theta) finite, a convex set"
+   },
+   "assumptions": [
+    "The integral defining A(theta) is finite for theta in Omega",
+    "The monograph restricts attention to regular families, where Omega is open"
+   ],
+   "breakdown_regime": "Families with closed natural parameter space (non-regular) and curved families with nonlinear parameter constraints fall outside the clean theory developed here",
+   "domain": "exponential families",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Writing each engine submodel in canonical exponential form puts every component on the same footing: features are sufficient statistics, weights are canonical parameters, and A(theta) is the normalizer whose derivatives produce the predicted moments the engine actually outputs.",
+    "source_operator": "exponential_family_canonical_form",
+    "telemetry": "Feature vectors and fitted canonical parameters per submodel"
+   }
+  },
+  {
+   "primitive_id": "minimal_vs_overcomplete",
+   "name": "Minimal versus overcomplete representations: a representation is minimal when no nonzero linear combination of the sufficient statistics is constant, giving a unique parameter per distribution; overcomplete representations lose identifiability but make mean parameters interpretable as marginals",
+   "verbatim_quote": "This condition gives rise to a so-called minimal representation, in which there is a unique parameter vector θ associated with each distribution.",
+   "page": "Section 3.2, p. 40",
+   "latex": "\\langle a, \\varphi(x) \\rangle = \\sum_{\\alpha \\in I} a_\\alpha \\varphi_\\alpha(x)",
+   "symbol_and_unit_ledger": {
+    "a": "coefficient vector in R^d; minimality requires no nonzero a makes this constant nu-almost everywhere",
+    "phi_alpha": "sufficient statistics"
+   },
+   "assumptions": [
+    "Constancy is judged nu-almost everywhere with respect to the base measure",
+    "Overcompleteness means an entire affine set of parameter vectors induces the same distribution"
+   ],
+   "breakdown_regime": "In overcomplete form, parameter estimates are not identifiable and naive parameter averaging or comparison across fits is meaningless; only the induced distribution and its mean parameters are well defined",
+   "domain": "exponential families",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine deliberately uses the overcomplete indicator parameterization (one feature per player-state and pair-state) because its mean parameters are directly the marginal probabilities the product displays, accepting non-identifiable weights as the price.",
+    "source_operator": "minimal_vs_overcomplete",
+    "telemetry": "Indicator feature dictionaries per model, with linear-dependence checks"
+   }
+  },
+  {
+   "primitive_id": "ising_model_exponential_form",
+   "name": "Ising model as an exponential family: binary spins interact only along graph edges, with node fields theta_s and pairwise couplings theta_st; dimension d = m + |E| and the family is regular and minimal",
+   "verbatim_quote": "Components Xs and Xt of the full random vector X are allowed to interact directly only if s and t are joined by an edge in the graph.",
+   "page": "Example 3.1, pp. 41-42",
+   "latex": "p_\\theta(x) = \\exp\\left\\{ \\sum_{s \\in V} \\theta_s x_s + \\sum_{(s,t) \\in E} \\theta_{st} x_s x_t - A(\\theta) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "x_s": "binary spin at node s, in {-1,+1} in the classical form (the monograph also uses {0,1})",
+    "theta_s": "node potential (external field / observation weight)",
+    "theta_st": "pairwise coupling strength on edge (s,t)",
+    "A(theta)": "log partition function, finite for all theta so Omega = R^d"
+   },
+   "assumptions": [
+    "Spins are binary and interactions are at most pairwise in the basic model",
+    "Higher-order couplings (k-spin terms) can be added monomial by monomial"
+   ],
+   "breakdown_regime": "Strong couplings at low temperature produce phase transitions and multimodal distributions where local algorithms mix slowly and mean field fails qualitatively",
+   "domain": "statistical physics models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binary on/off states with pairwise agreement couplings are the template for engine submodels such as player availability interactions and coverage shell configurations: node terms carry base rates, edge terms carry interaction effects, and the partition function is handled variationally.",
+    "source_operator": "ising_model_exponential_form",
+    "telemetry": "Binary state indicators and pairwise co-occurrence counts"
+   }
+  },
+  {
+   "primitive_id": "gaussian_mrf_precision_sparsity",
+   "name": "Gaussian Markov random field: a multivariate Gaussian whose precision (inverse covariance) matrix respects the graph, with zeros exactly at non-edges by Hammersley-Clifford; zeros in the precision encode conditional independence",
+   "verbatim_quote": "For a Gaussian Markov random field, the zero pattern of the inverse covariance or precision matrix respects the graph structure",
+   "page": "Example 3.3, p. 45",
+   "latex": "p_\\theta(x) = \\exp\\left\\{ \\langle \\theta, x \\rangle + \\tfrac{1}{2} \\langle\\langle \\Theta, x x^\\top \\rangle\\rangle - A(\\theta, \\Theta) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "Theta": "negative precision matrix, symmetric, required negative definite for a normalizable density",
+    "theta": "linear (mean-related) parameter vector",
+    "xx^T": "outer product giving the quadratic sufficient statistics",
+    "A(theta, Theta)": "log partition function"
+   },
+   "assumptions": [
+    "The distribution is jointly Gaussian, so second moments are sufficient",
+    "Theta must be negative definite (Theta prec 0) for the density to integrate"
+   ],
+   "breakdown_regime": "Gaussianity is a strong assumption: heavy tails, discreteness, and multimodality in real data break it, and an indefinite estimated Theta gives an improper density",
+   "domain": "continuous graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For continuous engine quantities (ratings, expected yards, win probability inputs), the Gaussian MRF says conditional independence is read off the precision matrix, not the covariance matrix: estimating a sparse precision is the correct way to learn which continuous signals directly interact.",
+    "source_operator": "gaussian_mrf_precision_sparsity",
+    "telemetry": "Sample covariance matrices of continuous features and sparse precision estimates"
+   }
+  },
+  {
+   "primitive_id": "marginal_polytope",
+   "name": "Marginal polytope: the set M of all realizable mean parameters; for finite state spaces it is the convex hull of the sufficient statistic vectors over all configurations, hence a convex polytope whose facets are linear constraints",
+   "verbatim_quote": "Consequently, when |X m | is finite, the set M is — by definition — a convex polytope.",
+   "page": "Section 3.4.1, pp. 52-55",
+   "latex": "\\mathcal{M} = \\mathrm{conv}\\{ \\varphi(x) : x \\in \\mathcal{X}^m \\}",
+   "symbol_and_unit_ledger": {
+    "M": "marginal polytope: set of mean parameter vectors realized by some distribution",
+    "conv": "convex hull operation",
+    "phi(x)": "sufficient statistic vector of configuration x",
+    "X^m": "finite configuration space"
+   },
+   "assumptions": [
+    "State space is finite for the polytope conclusion; in general M is convex but not polyhedral",
+    "Mean parameters are expectations of the sufficient statistics under some distribution over configurations"
+   ],
+   "breakdown_regime": "For general graphs the number of facets grows astonishingly fast and they are nonlocal; a compact exact description exists only for trees and similarly simple structures",
+   "domain": "convex geometry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The marginal polytope is the engine's feasibility region for predicted probabilities: any vector of singleton and pairwise marginals the engine publishes must lie inside it, and checking candidate outputs against tractable outer or inner approximations of it catches incoherent probability sets before they ship.",
+    "source_operator": "marginal_polytope",
+    "telemetry": "Published marginal vectors checked against polytope relaxations"
+   }
+  },
+  {
+   "primitive_id": "ml_moment_matching",
+   "name": "Maximum likelihood in exponential families: the log likelihood is the inner product of canonical parameters with empirical mean parameters minus A(theta), and the MLE is characterized by moment matching, model moments equal empirical moments",
+   "verbatim_quote": "the maximum likelihood estimate is unique, and specified by the stationarity condition Eθ#[φ(X)] = µ #.",
+   "page": "Section 3.4.2, pp. 60-61",
+   "latex": "\\ell(\\theta; X_1^n) = \\langle \\theta, \\hat{\\mu} \\rangle - A(\\theta)",
+   "symbol_and_unit_ledger": {
+    "ell": "rescaled log likelihood",
+    "mu-hat": "empirical mean parameters, the sample average of phi over the data",
+    "theta-hat": "maximum likelihood estimate, the canonical parameter whose model moments equal mu-hat"
+   },
+   "assumptions": [
+    "Data are i.i.d. from a family member",
+    "Uniqueness holds under minimality and interior empirical moments; boundary empirical moments give suprema attained only in the limit"
+   ],
+   "breakdown_regime": "If the empirical moments lie on the boundary of M, no finite MLE exists; with latent variables the likelihood is no longer concave and moment matching characterizes only stationary points (the EM setting of Section 6)",
+   "domain": "statistical estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Moment matching is the calibration contract for engine fitting: a fitted model must reproduce the empirical moments it was fit on, and calibration checks reduce to comparing model moments against held-out empirical moments situation by situation.",
+    "source_operator": "ml_moment_matching",
+    "telemetry": "Empirical versus model moment tables per situation bucket"
+   }
+  },
+  {
+   "primitive_id": "cumulant_derivatives_convexity",
+   "name": "Proposition 3.1: A is infinitely differentiable on its domain, its gradient gives the mean parameters, its Hessian is the covariance matrix of the sufficient statistics, hence A is convex, and strictly convex for minimal representations",
+   "verbatim_quote": "Therefore, the full Hessian ∇2 A(θ) is the covariance matrix of the random vector φ(X), and so is positive semidefinite on the open set Ω, which ensures convexity",
+   "page": "Section 3.5.1, pp. 62-63",
+   "latex": "\\frac{\\partial A}{\\partial \\theta_\\alpha}(\\theta) = E_\\theta[\\varphi_\\alpha(X)], \\qquad \\frac{\\partial^2 A}{\\partial \\theta_\\alpha \\, \\partial \\theta_\\beta}(\\theta) = \\mathrm{cov}_\\theta\\big(\\varphi_\\alpha(X), \\varphi_\\beta(X)\\big)",
+   "symbol_and_unit_ledger": {
+    "A(theta)": "cumulant / log partition function",
+    "grad A(theta)": "vector of mean parameters mu",
+    "Hessian of A": "covariance matrix of phi(X) under p_theta, positive semidefinite"
+   },
+   "assumptions": [
+    "Differentiation under the integral sign is justified (dominated convergence)",
+    "Strict convexity requires minimality so the covariance is strictly positive definite"
+   ],
+   "breakdown_regime": "For overcomplete representations the Hessian is singular along the non-identifiable directions, so A is convex but not strict and the theta-to-mu map is many-to-one",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This identity is the engine's differentiation rule: predicted moments are gradients of the log normalizer and prediction uncertainty is its Hessian, so gradient-based fitting and local uncertainty estimates come from the same object.",
+    "source_operator": "cumulant_derivatives_convexity",
+    "telemetry": "Gradient and Hessian evaluations of fitted model normalizers"
+   }
+  },
+  {
+   "primitive_id": "conjugate_dual_negative_entropy",
+   "name": "Theorem 3.4(a): the conjugate dual A* of the cumulant function equals negative entropy on the interior of M and is plus infinity outside the closure of M, so dual optimization automatically restricts to realizable mean parameters",
+   "verbatim_quote": "it turns out that whenever µ ∈ / M, then A∗ (µ) = +∞. This fact is essential in the use of variational methods: it guarantees that any optimization problem involving the dual function can be reduced to an optimization problem over M.",
+   "page": "Section 3.6.1, pp. 66-67",
+   "latex": "A^*(\\mu) := \\sup_{\\theta \\in \\Omega} \\{ \\langle \\mu, \\theta \\rangle - A(\\theta) \\}",
+   "symbol_and_unit_ledger": {
+    "A*(mu)": "conjugate dual (Legendre-Fenchel transform) of A; equals negative entropy of the matching family member for mu in the interior of M",
+    "mu": "dual variable, interpreted as a mean parameter vector",
+    "M": "set of realizable mean parameters"
+   },
+   "assumptions": [
+    "The family is regular and minimal for the clean bijection statements",
+    "Boundary points of M are handled by limits from the interior"
+   ],
+   "breakdown_regime": "A* usually has no closed form; it is defined only implicitly through the inverse gradient map and an entropy evaluation, which is the computational bottleneck all later approximations attack",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The dual view converts engine probability questions into entropy questions: a candidate marginal vector with A* equal to infinity is not a possible state of belief at all, so feasibility screening of model outputs is a dual-function evaluation.",
+    "source_operator": "conjugate_dual_negative_entropy",
+    "telemetry": "Entropy and dual-value estimates for candidate marginal vectors"
+   }
+  },
+  {
+   "primitive_id": "variational_representation_log_partition",
+   "name": "Variational representation (Theorem 3.4(b)): the log partition function is a concave maximization over the marginal polytope, attained uniquely at the true mean parameters; inference is thereby reduced to convex optimization",
+   "verbatim_quote": "in principle, we can compute both of these quantities by solving the variational problem (3.45).",
+   "page": "Sections 3.6.1 and 3.7, pp. 67 and 73",
+   "latex": "A(\\theta) = \\sup_{\\mu \\in \\mathcal{M}} \\{ \\langle \\theta, \\mu \\rangle - A^*(\\mu) \\}",
+   "symbol_and_unit_ledger": {
+    "A(theta)": "log partition function being computed",
+    "mu": "candidate mean parameter vector ranging over the marginal polytope M",
+    "A*(mu)": "negative entropy of the candidate",
+    "theta": "given canonical parameters"
+   },
+   "assumptions": [
+    "M and A* are the exact objects; the difficulty is that neither has an explicit tractable form for general graphs",
+    "The supremum is attained uniquely at mu = E_theta[phi(X)]"
+   ],
+   "breakdown_regime": "Exactness is bought with intractability: characterizing M and evaluating A* are both hard in general, so every practical algorithm approximates one or both, which is the program of Sections 4, 5, and 7",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the master template for the engine's inference layer: computing a normalizer or a set of marginals is posed as one concave maximization, and each algorithm choice corresponds to choosing a tractable stand-in for the polytope and the entropy term.",
+    "source_operator": "variational_representation_log_partition",
+    "telemetry": "Variational objective values and attained mean parameters per inference run"
+   }
+  },
+  {
+   "primitive_id": "gradient_bijection_canonical_mean",
+   "name": "For a minimal regular family, the gradient maps grad A and grad A* are inverse bijections between the canonical parameter set Omega and the interior of M: canonical and mean parameterizations carry identical information",
+   "verbatim_quote": "the gradient mapping ∇A maps Ω in a one-to-one manner onto M◦ , whereas the inverse mapping from M◦ to Ω is given by the gradient ∇A∗ of the dual function",
+   "page": "Section 3.6.1, p. 68",
+   "latex": "\\mu = E_\\theta[\\varphi(X)] = \\nabla A(\\theta)",
+   "symbol_and_unit_ledger": {
+    "grad A": "forward map from canonical parameters to mean parameters",
+    "grad A*": "inverse map from mean parameters back to canonical parameters",
+    "M interior": "relative interior of the realizable mean parameter set"
+   },
+   "assumptions": [
+    "Minimality and regularity of the family",
+    "mu must lie in the interior of M; boundary points correspond to degenerate distributions and infinite or limiting parameters"
+   ],
+   "breakdown_regime": "The bijection breaks for overcomplete representations and at the boundary of M, where canonical parameters diverge; numerically the inverse map is ill-conditioned near the boundary",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine fitting can move freely between weights and predicted moments: fitting in theta space and reporting in mu space (marginals) are the same computation viewed through inverse gradient maps, which is what makes calibration directly against observed moments possible.",
+    "source_operator": "gradient_bijection_canonical_mean",
+    "telemetry": "Paired theta and mu snapshots from model fits"
+   }
+  },
+  {
+   "primitive_id": "local_polytope_pseudomarginals",
+   "name": "Local polytope L(G): normalization plus pairwise marginalization constraints define a simple outer bound on M(G) with only O(|V|+|E|) constraints; it equals M(G) for trees (Proposition 4.1) but strictly contains it for graphs with cycles, whose extra members are pseudomarginals",
+   "verbatim_quote": "For a graph G with cycles, in sharp contrast to the tree case, the set L(G) is a strict outer bound on M(G), in that there exist vectors τ ∈ L(G) that do not belong to M(G), for which reason we refer to members τ of L(G) as pseudomarginals.",
+   "page": "Section 4.1.1, pp. 78-79",
+   "latex": "\\mathcal{L}(G) := \\{ \\tau \\ge 0 \\mid \\text{normalization (4.5) holds for } s \\in V, \\text{ marginalization (4.6) holds for } (s,t) \\in E \\}",
+   "symbol_and_unit_ledger": {
+    "L(G)": "local polytope of locally consistent pseudomarginals",
+    "tau": "candidate singleton and pairwise marginals",
+    "M(G)": "true marginal polytope"
+   },
+   "assumptions": [
+    "Constraints are only nonnegativity, per-node normalization, and per-edge marginalization",
+    "Equality L(T) = M(T) holds for trees by the junction tree theorem"
+   ],
+   "breakdown_regime": "On loopy graphs L(G) admits pseudomarginals no distribution realizes (the monograph exhibits one on the 3-cycle violating the cycle inequalities), so optimizing over L(G) can return impossible marginals",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "L(G) is the engine's cheap coherence screen: published node and pairwise marginals must at least be locally consistent, and the known gap to M(G) on cyclic dependency graphs warns that passing the screen does not prove a joint distribution exists.",
+    "source_operator": "local_polytope_pseudomarginals",
+    "telemetry": "Local consistency residuals for published marginal sets"
+   }
+  },
+  {
+   "primitive_id": "bethe_entropy_approximation",
+   "name": "Bethe entropy approximation: for a tree the entropy decomposes exactly as a sum of node entropies minus edge mutual informations; the Bethe approximation assumes the same decomposition on graphs with cycles, evaluated at pseudomarginals",
+   "verbatim_quote": "the Bethe approximation to the entropy of an MRF with cycles is easily described: it simply assumes that decomposition (4.11) is approximately valid for a graph with cycles.",
+   "page": "Section 4.1.2, p. 82",
+   "latex": "H_{\\mathrm{Bethe}}(\\tau) := \\sum_{s \\in V} H_s(\\tau_s) - \\sum_{(s,t) \\in E} I_{st}(\\tau_{st})",
+   "symbol_and_unit_ledger": {
+    "H_s(tau_s)": "entropy of the singleton pseudomarginal at node s",
+    "I_st(tau_st)": "mutual information of the pairwise pseudomarginal on edge (s,t)",
+    "tau": "pseudomarginals in L(G)",
+    "-A*(tau) approximated by H_Bethe(tau)": "Bethe estimate of the negative dual function"
+   },
+   "assumptions": [
+    "Exact on trees, where it reproduces the true entropy of the distribution built from the marginals",
+    "Evaluable for any pseudomarginals in L(G), which is what makes the Bethe variational problem tractable"
+   ],
+   "breakdown_regime": "Not a true entropy on loopy graphs: it can go negative (the monograph computes -2 log 2 on K4 for perfectly correlated marginals whose true entropy is log 2), and it is generally nonconcave",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Bethe entropy is the engine's fast entropy estimate for cyclic factor graphs: node entropies minus edge mutual informations, computable from the same local marginals the message passing produces, with known sign errors on strongly correlated clusters.",
+    "source_operator": "bethe_entropy_approximation",
+    "telemetry": "Node entropies and edge mutual informations from message-passing marginals"
+   }
+  },
+  {
+   "primitive_id": "sum_product_bethe_lagrangian",
+   "name": "Theorem 4.2 (Yedidia et al.): sum-product fixed points are exactly the stationary points of the Bethe variational problem, a Lagrangian method for it; on trees the solution is unique and the Bethe optimum equals the true log partition function",
+   "verbatim_quote": "it provides a principled basis for applying the sum-product algorithm for graphs with cycles, namely as a particular type of iterative method for attempting to satisfy Lagrangian conditions.",
+   "page": "Theorem 4.2, Section 4.1.3, p. 84",
+   "latex": "\\max_{\\tau \\in \\mathcal{L}(G)} \\left\\{ \\langle \\theta, \\tau \\rangle + \\sum_{s \\in V} H_s(\\tau_s) - \\sum_{(s,t) \\in E} I_{st}(\\tau_{st}) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "the objective": "Bethe variational problem (4.16): linear energy term plus Bethe entropy over the local polytope",
+    "messages M_ts(x_s) = exp(lambda_ts(x_s))": "exponentiated Lagrange multipliers of the marginalization constraints",
+    "A_Bethe(theta)": "optimal value of the problem, equal to A(theta) on trees"
+   },
+   "assumptions": [
+    "Interior (strictly positive) optima for the clean Lagrangian statement",
+    "On trees the Lagrangian system has a unique solution giving exact marginals"
+   ],
+   "breakdown_regime": "On loopy graphs the theorem characterizes fixed points but gives no convergence guarantee and no global optimality, because the Bethe problem is nonconvex there",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This theorem is the license for running belief propagation in the engine at all: its fixed points are not arbitrary, they are stationary points of an explicit objective, so convergence diagnostics and objective tracking can certify what a propagation run actually computed.",
+    "source_operator": "sum_product_bethe_lagrangian",
+    "telemetry": "Bethe objective value traced across message-passing iterations"
+   }
+  },
+  {
+   "primitive_id": "bethe_failure_modes",
+   "name": "Bethe inexactness has two independent sources, the outer bound L(G) replacing M(G) and the Bethe entropy replacing the true entropy; consequently the Bethe value is generally neither an upper nor a lower bound on A(theta), and the problem is nonconvex with multiple local optima",
+   "verbatim_quote": "However, with the exception of trees and other special cases [110, 167, 188], the Bethe variational problem is usually a nonconvex problem, in that HBethe fails to be concave.",
+   "page": "Sections 4.1.3-4.1.4, pp. 87-89",
+   "latex": "H_{\\mathrm{Bethe}}(\\mu) = 4 \\log 2 - 6 \\log 2 = -2 \\log 2 < 0",
+   "symbol_and_unit_ledger": {
+    "the displayed computation": "Bethe entropy of the globally valid, perfectly correlated marginals on the complete graph K4 in Example 4.2",
+    "true value": "the actual entropy of those marginals is log 2 > 0, so the Bethe estimate has the wrong sign"
+   },
+   "assumptions": [
+    "The counterexample uses valid global marginals, so the error is in the entropy approximation itself, not the constraint relaxation",
+    "For certain attractive models the Bethe value is provably a lower bound; that is a special case, not the rule"
+   ],
+   "breakdown_regime": "This is the breakdown statement itself: strong correlations on dense clusters make Bethe entropy unreliable, and nonconvexity means different initializations can land on different local optima",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine rule drawn from this failure analysis: Bethe or loopy outputs on densely interacting clusters carry no bound guarantee in either direction, so they are reported as approximations with diagnostics, never as certified bounds, and strongly coupled clusters get routed to convexified or exact methods.",
+    "source_operator": "bethe_failure_modes",
+    "telemetry": "Cluster density and correlation strength metrics attached to approximation outputs"
+   }
+  },
+  {
+   "primitive_id": "kikuchi_cluster_variational",
+   "name": "Kikuchi (cluster variational) method: generalize Bethe from trees to hypertrees by choosing clusters of variables, with entropy approximated as a sum of cluster entropies weighted by Moebius overcounting numbers, over a hypertree local polytope",
+   "verbatim_quote": "The Kikuchi method and related approximations extend these tree-based approximations to ones based on more general hypertrees, as we now describe.",
+   "page": "Section 4.2.3, pp. 103-105",
+   "latex": "H_{\\mathrm{app}}(\\tau) = \\sum_{g \\in \\mathcal{E}} c(g) H_g(\\tau_g)",
+   "symbol_and_unit_ledger": {
+    "c(g)": "overcounting number of cluster g, from Moebius inversion over the cluster inclusion poset",
+    "H_g(tau_g)": "entropy of the pseudomarginal on cluster g",
+    "the variational problem (4.53)": "maximize <theta, tau> + H_app(tau) over the hypertree local polytope L_t(G)"
+   },
+   "assumptions": [
+    "Clusters form a hypergraph whose intersections are also included as clusters",
+    "Larger clusters tighten both the entropy approximation and the polytope outer bound simultaneously"
+   ],
+   "breakdown_regime": "Cost grows exponentially in the largest cluster size, and the Kikuchi free energy remains nonconvex in general, so local optima persist",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Kikuchi is the dial between Bethe and exact inference for the engine: known trouble clusters (a secondary versus a receiver group, a front seven) are promoted to explicit clusters so their joint marginals are modeled instead of factorized away.",
+    "source_operator": "kikuchi_cluster_variational",
+    "telemetry": "Cluster marginal estimates for designated high-interaction groups"
+   }
+  },
+  {
+   "primitive_id": "expectation_propagation",
+   "name": "Expectation propagation: approximate intractable factors one at a time by tractable ones chosen by moment matching (KL projection), and its updates are a Lagrangian method for a Bethe-like variational problem with decoupled entropy approximations",
+   "verbatim_quote": "we recover the moment-matching updates of expectation-propagation as one particular type of Lagrangian method for solving the resulting optimization problem, thereby showing that expectation-propagation algorithms belong to the same class of variational methods as belief propagation.",
+   "page": "Section 4.3, pp. 109-110",
+   "latex": "p(x; \\theta, \\tilde{\\theta}) \\propto f_0(x) \\exp\\langle \\theta, \\varphi(x) \\rangle \\prod_{i=1}^{d_I} \\exp\\langle \\tilde{\\theta}_i, \\Phi_i(x) \\rangle",
+   "symbol_and_unit_ledger": {
+    "phi": "tractable sufficient statistics, exact inference feasible",
+    "Phi_i": "intractable sufficient statistics handled one at a time",
+    "f_0(x)": "base density factor",
+    "the (phi, Phi_i)-augmented family": "base family plus a single intractable term, still exactly tractable"
+   },
+   "assumptions": [
+    "Exact inference is polynomial in the base family and in each singly augmented family, but intractable with all intractable terms together",
+    "Closeness of message approximations is measured by Kullback-Leibler divergence, giving moment matching"
+   ],
+   "breakdown_regime": "EP has no general convergence guarantee and its fixed points need not optimize a single global objective in all formulations; Gaussian approximations can badly miss multimodal posteriors",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "EP is the engine pattern for folding in one hard factor at a time (a weather effect, a specific matchup interaction): keep the tractable backbone exact, project each hard factor to a tractable surrogate by matching moments, and iterate.",
+    "source_operator": "expectation_propagation",
+    "telemetry": "Moment discrepancies between true factors and their tractable projections"
+   }
+  },
+  {
+   "primitive_id": "mean_field_inner_approximation",
+   "name": "Mean field sets: restricting to distributions Markov with respect to a tractable subgraph F gives an inner approximation M_F of the marginal polytope, the mirror image of the Bethe outer bound; on M_F the dual function has an explicit form",
+   "verbatim_quote": "For this reason, we say that MF is an inner approximation to the set M of realizable mean parameters.",
+   "page": "Section 5.1, p. 129",
+   "latex": "\\mathcal{M}_F(G) := \\{ \\mu \\in \\mathbb{R}^d \\mid \\mu = E_\\theta[\\varphi(x)] \\text{ for some } \\theta \\in \\Omega(F) \\}",
+   "symbol_and_unit_ledger": {
+    "Omega(F)": "subspace of canonical parameters vanishing off the cliques of subgraph F",
+    "M_F(G)": "mean parameters realizable within the tractable sub-family",
+    "F_0 = (V, empty)": "the fully disconnected subgraph, giving product distributions (naive mean field)"
+   },
+   "assumptions": [
+    "F is a subgraph over which exact computation is feasible",
+    "The restricted dual A*_F is the negative entropy within the sub-family and is computable in closed form"
+   ],
+   "breakdown_regime": "Inner approximation is conservative: the best point in M_F can be far from the true mean parameters when the dropped edges carry strong dependence, and product approximations erase correlation entirely",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mean field is the engine's conservative lane: because M_F sits inside the true polytope, everything it reports corresponds to a real distribution, making it the right tool when outputs must be coherent even at the cost of ignoring correlations.",
+    "source_operator": "mean_field_inner_approximation",
+    "telemetry": "Tractable subgraph definitions and restricted dual values per model"
+   }
+  },
+  {
+   "primitive_id": "mean_field_fenchel_lower_bound",
+   "name": "Proposition 5.1 (mean field lower bound): every valid mean parameter gives a lower bound A(theta) >= <theta, mu> - A*(mu), with equality exactly at dual coupling; maximizing it over a tractable inner set is equivalent to minimizing the KL divergence to the target distribution",
+   "verbatim_quote": "The key property of any mean field method is the following fact: any valid mean parameter specifies a lower bound on the log partition function.",
+   "page": "Section 5.2.1, pp. 130-133",
+   "latex": "A(\\theta) \\ge \\langle \\theta, \\mu \\rangle - A^*(\\mu)",
+   "symbol_and_unit_ledger": {
+    "the inequality": "Fenchel's inequality applied to the conjugate pair (A, A*)",
+    "equality condition": "theta and mu dually coupled, mu = E_theta[phi(X)]",
+    "the gap": "equals the KL divergence D(mu || theta) in mixed form (5.11)"
+   },
+   "assumptions": [
+    "mu must be a genuinely realizable mean parameter (in M, or in M_F for the computable version)",
+    "The bound is the foundation of variational lower bounds on likelihoods (the ELBO in later terminology)"
+   ],
+   "breakdown_regime": "The bound is typically loose when the tractable family is much smaller than the target family; maximizing it is a nonconvex problem for naive mean field, with initialization-dependent local optima",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Certified lower bounds are what let the engine compare models honestly: a mean field run returns not just an approximation but a one-sided guarantee on the log likelihood, and the bound gap doubles as a KL divergence diagnostic between the tractable surrogate and the target model.",
+    "source_operator": "mean_field_fenchel_lower_bound",
+    "telemetry": "Lower bound values and bound gaps logged per model fit"
+   }
+  },
+  {
+   "primitive_id": "variational_em_coordinate_ascent",
+   "name": "EM as variational coordinate ascent: the EM algorithm is coordinate ascent on the lower bound L(mu_y, theta) for the incomplete log likelihood, the E step computing expected sufficient statistics and the M step doing maximum likelihood on them; mean field E steps keep the ascent property on the bound but not on the likelihood itself",
+   "verbatim_quote": "With this set-up, the EM algorithm is coordinate ascent on this function L defining the lower bound (6.13):",
+   "page": "Section 6.2.1, pp. 155-156",
+   "latex": "\\ell(\\theta; y) \\ge \\langle \\mu_y, \\theta \\rangle - A_y^*(\\mu_y) - A(\\theta) =: \\mathcal{L}(\\mu_y, \\theta)",
+   "symbol_and_unit_ledger": {
+    "ell(theta; y)": "incomplete log likelihood of the observed data y",
+    "mu_y": "mean parameters of the conditional family given y",
+    "A_y": "log partition function of the conditional distribution p_theta(x | y)",
+    "E step / M step": "the two coordinate maximizations (6.14a) and (6.14b)"
+   },
+   "assumptions": [
+    "Complete-data model is a joint exponential family in (X, Y)",
+    "Exact E step requires computing E_theta[phi(X, y)], an inference problem in the conditional family"
+   ],
+   "breakdown_regime": "With approximate (non mean field) E steps based on Bethe or EP, the algorithm is not guaranteed to maximize any lower bound on the incomplete log likelihood, a caveat the monograph states explicitly",
+   "domain": "statistical estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent structure in the engine (unobserved game states, true player health states) is fit by EM, and the variational reading tells us exactly which approximate E steps preserve the guarantee of improving a likelihood bound and which silently lose it.",
+    "source_operator": "variational_em_coordinate_ascent",
+    "telemetry": "Bound value L per EM iteration and E-step approximation type"
+   }
+  },
+  {
+   "primitive_id": "convex_surrogate_entropy_bound",
+   "name": "Convex surrogates from subgraph combinations (Proposition 7.1 and Equation 7.7): projecting mean parameters onto any subgraph can only increase entropy, so any convex combination of tractable subgraph entropies upper bounds the true entropy, yielding a concave variational upper bound on A over a convex outer set",
+   "verbatim_quote": "Overall, then, the function BD is a new convex function that approximates the original cumulant function A. We refer to such a function as a convex surrogate to A.",
+   "page": "Section 7.1, pp. 168-169",
+   "latex": "\\mathcal{B}_{\\mathcal{D}}(\\theta; \\rho) := \\sup_{\\tau \\in \\mathcal{L}(G; \\mathcal{D})} \\left\\{ \\langle \\tau, \\theta \\rangle + \\sum_{F \\in \\mathcal{D}} \\rho(F) H(\\tau^{(F)}) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "D": "class of tractable subgraphs",
+    "rho": "probability distribution over D",
+    "H(tau^(F))": "entropy of the projection of tau onto subgraph F",
+    "L(G; D)": "outer bound requiring every projection of tau to be realizable on its subgraph"
+   },
+   "assumptions": [
+    "Each subgraph entropy is well defined on the outer set",
+    "Convexity of the surrogate requires rho to be a genuine distribution over subgraphs"
+   ],
+   "breakdown_regime": "The surrogate upper bounds A but can be loose; its tightness depends on the subgraph class, and optimizing it is a convex program whose size grows with the number of subgraphs used",
+   "domain": "convex relaxations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Convex surrogates give the engine certified upper bounds to pair with the mean field lower bounds: running both brackets the true log partition value, and the bracket width is an honest, computable measure of approximation error for a model.",
+    "source_operator": "convex_surrogate_entropy_bound",
+    "telemetry": "Upper and lower bound pairs per inference task"
+   }
+  },
+  {
+   "primitive_id": "tree_reweighted_bethe",
+   "name": "Theorem 7.2 (tree-reweighted Bethe): averaging tree entropies with edge appearance probabilities from the spanning tree polytope convexifies the Bethe problem; its optimum upper bounds A(theta), is strictly convex with a unique optimum when all edge weights are positive, and is solved by tree-reweighted sum-product",
+   "verbatim_quote": "Wainwright et al. [246] derived “convexified” forms of the Bethe variational principle that are guaranteed to yield upper bounds on the cumulant function for any graphical model.",
+   "page": "Theorem 7.2, Section 7.2.1, p. 172",
+   "latex": "\\mathcal{B}_{\\mathcal{T}}(\\theta; \\rho^e) := \\max_{\\tau \\in \\mathcal{L}(G)} \\left\\{ \\langle \\tau, \\theta \\rangle + \\sum_{s \\in V} H_s(\\tau_s) - \\sum_{(s,t) \\in E} \\rho_{st} I_{st}(\\tau_{st}) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "rho_st": "edge appearance probability: probability edge (s,t) appears in a random spanning tree drawn from rho",
+    "spanning tree polytope": "convex hull of spanning tree incidence vectors, the valid set for rho^e",
+    "setting all rho_st = 1": "recovers the ordinary, nonconvex Bethe problem"
+   },
+   "assumptions": [
+    "rho must lie in the spanning tree polytope for the upper bound and convexity guarantees",
+    "Strict convexity and uniqueness need rho_st > 0 on every edge"
+   ],
+   "breakdown_regime": "Arbitrary reweightings outside the spanning tree polytope (fractional belief propagation) lose the upper bound guarantee and possibly convexity; damped updates are used in practice for convergence",
+   "domain": "convex relaxations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tree-reweighting is the engine's certified version of belief propagation: the same message passing form, but with edge weights drawn from a distribution over spanning trees of the matchup graph, trading a small amount of tightness for a unique optimum and an upper bound certificate.",
+    "source_operator": "tree_reweighted_bethe",
+    "telemetry": "Edge appearance probabilities per graph and TRW bound values"
+   }
+  },
+  {
+   "primitive_id": "map_zero_temperature_lp",
+   "name": "Theorem 8.1 (zero-temperature limit): mode computation is linear optimization over the marginal polytope, equivalently the beta to infinity limit of A(beta theta) / beta; hence MAP for discrete models is an integer program equal to an LP over M",
+   "verbatim_quote": "An implication of Theorem 8.1, when specialized to this setting, is that this IP is equivalent to a linear program over the marginal polytope.",
+   "page": "Theorem 8.1, Section 8.1, pp. 196-197",
+   "latex": "\\max_{x \\in \\mathcal{X}^m} \\langle \\theta, \\varphi(x) \\rangle = \\max_{\\mu \\in \\bar{\\mathcal{M}}} \\langle \\theta, \\mu \\rangle, \\qquad \\max_{x \\in \\mathcal{X}^m} \\langle \\theta, \\varphi(x) \\rangle = \\lim_{\\beta \\to +\\infty} \\frac{A(\\beta \\theta)}{\\beta}",
+   "symbol_and_unit_ledger": {
+    "beta": "inverse temperature scaling of the canonical parameters",
+    "bar M": "closure of the marginal polytope",
+    "the equivalence": "exchanging the limit and the supremum is justified by convexity of A*"
+   },
+   "assumptions": [
+    "At least one mode exists",
+    "beta theta remains in Omega for all beta > 0 in the scaling argument"
+   ],
+   "breakdown_regime": "The LP over M is exact but M is intractable to describe, so the theorem relocates rather than removes the difficulty; NP-hardness of integer programming reappears as facet complexity of M",
+   "domain": "combinatorial optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Most likely game script questions in the engine are MAP problems; this theorem says they are linear programs over the same marginal polytope used for probabilities, so one polytope machinery serves both the marginal and the mode products.",
+    "source_operator": "map_zero_temperature_lp",
+    "telemetry": "MAP objective values and optimizing configurations per query"
+   }
+  },
+  {
+   "primitive_id": "lp_relaxation_tightness",
+   "name": "First-order LP relaxation: maximizing a linear objective over L(G) instead of M(G) is a polynomial-time LP giving an upper bound on the MAP value; it is tight exactly when the optimum is attained at an integral extreme point, and every loopy graph has fractional extreme points that can make it loose (Proposition 8.3)",
+   "verbatim_quote": "The distinction between fractional and integral extreme points is crucial, because it determines whether or not the LP relaxation (8.17) specified by L(G) is tight.",
+   "page": "Proposition 8.3, Section 8.4.1, pp. 206-207",
+   "latex": "\\max_{x \\in \\mathcal{X}^m} \\langle \\theta, \\varphi(x) \\rangle = \\max_{\\mu \\in \\mathcal{M}(G)} \\langle \\theta, \\mu \\rangle \\le \\max_{\\tau \\in \\mathcal{L}(G)} \\langle \\theta, \\tau \\rangle",
+   "symbol_and_unit_ledger": {
+    "the relaxation": "first-order LP relaxation (8.17), first in a hierarchy indexed by relaxation order",
+    "integral extreme point": "extreme point with all components 0 or 1, corresponding to a true configuration",
+    "fractional extreme point": "extreme point of L(G) outside M(G), witness of looseness"
+   },
+   "assumptions": [
+    "The number of constraints defining L(G) grows only linearly in graph size, so the LP is polynomial-time solvable",
+    "For attractive (Potts-type, beta_st > 0) models the relaxation is provably tight; repulsive interactions admit fractional counterexamples on a triangle"
+   ],
+   "breakdown_regime": "This is the breakdown boundary: with repulsive or frustrated interactions the LP optimum can be attained only fractionally, the bound is loose, and rounding is required to extract a configuration",
+   "domain": "combinatorial optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine uses this LP as its fast MAP solver with a built-in certificate: if the solution comes back integral it is provably the true most likely configuration; if fractional, the engine knows the answer is only a bound and flags the query instead of presenting a guess as exact.",
+    "source_operator": "lp_relaxation_tightness",
+    "telemetry": "Integrality flags and LP bound values per MAP query"
+   }
+  },
+  {
+   "primitive_id": "lasserre_sdp_hierarchy",
+   "name": "Lasserre semidefinite hierarchy: moment matrices of any valid distribution are positive semidefinite (Lemma 9.1), so imposing PSD moment matrix constraints at increasing orders gives a nested sequence of semidefinite outer bounds S_1 superset S_2 superset ... that reaches the marginal polytope exactly at order m (Proposition 9.3)",
+   "verbatim_quote": "As a consequence of Lemma 9.1, each set St (G) is an outer bound on the marginal polytope M(G), and by definition of the matrices Nt [µ], these outer bounds form a nested sequence",
+   "page": "Sections 9.1-9.2, pp. 235-242",
+   "latex": "S_1(G) \\supseteq S_2(G) \\supseteq S_3(G) \\supseteq \\cdots \\supseteq \\mathcal{M}(G)",
+   "symbol_and_unit_ledger": {
+    "N_t[mu]": "moment matrix at order t, entries mu_{alpha+beta} = E[X^alpha X^beta] over multi-indices in I_t",
+    "S_t(G)": "projection of the PSD moment constraint set onto the coordinates of M(G)",
+    "exactness": "S_m(G) equals M(G) for a hypergraph on m vertices (Proposition 9.3)"
+   },
+   "assumptions": [
+    "Moment matrix PSD-ness is necessary for any realizable moment vector, and sufficient in the classical scalar and Gaussian cases",
+    "Finite termination at order m is guaranteed but the matrices grow combinatorially in t"
+   ],
+   "breakdown_regime": "Cost explodes with order: the order-t matrix is indexed by all multi-indices of support up to t, so only low orders are practical; first-order SDP already cuts some pseudomarginals that survive L(G), as the monograph shows on the 3-cycle example",
+   "domain": "conic relaxations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Lasserre ladder is the engine's appeals court for disputed marginals: when the cheap local polytope admits a suspicious pseudomarginal, a low-order moment matrix PSD test can refute it with a certificate, at a cost that scales with how much certainty is demanded.",
+    "source_operator": "lasserre_sdp_hierarchy",
+    "telemetry": "Smallest eigenvalue of moment matrices built from candidate marginal vectors"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "45d4e1df861b523c-t1",
+   "think": "This monograph is the theoretical spine of variational inference for graphical models, and its argument is a single chain that a reasoning engine can reuse end to end. It begins with factorization: a joint distribution over many variables is written as a product of local factors on a graph, directed conditionals in the DAG case and clique compatibilities in the undirected case. Conditional independence then becomes a graph property, separation, so qualitative structure and quantitative model are the same object. The computational problem is stated plainly: marginals, conditionals, likelihoods, and modes all require sums or maxima over an exponential configuration space, and brute force dies at about one hundred binary variables. On trees the problem collapses to dynamic programming, the sum-product and max-product recursions, and the junction tree construction extends exactness to any graph at a cost exponential in treewidth, which immediately tells the practitioner which models are exactly solvable and which are not. The second act rewrites everything in exponential family language. Maximum entropy shows the exponential form is not an arbitrary choice but the unique least-committal distribution matching given moments. In canonical form, the log partition function A collects the whole theory: its gradient is the mean parameter vector, its Hessian is the covariance of the sufficient statistics, and its convexity is therefore a theorem rather than an assumption. Maximum likelihood becomes moment matching, and the marginal polytope M, the convex hull of all sufficient statistic vectors, becomes the geometric object that separates realizable beliefs from impossible ones. The third act is conjugate duality. The Legendre transform A* of the cumulant function is negative entropy on the interior of M and infinity outside it, so the variational representation A(theta) = sup over M of <theta, mu> - A*(mu) turns inference into a single concave maximization whose optimizer is exactly the mean parameters sought. Every algorithm in the rest of the book is a strategy for approximating this one problem, because both M and A* are intractable in general. Approximate the constraint set from outside and the entropy by its tree decomposition and you get the Bethe problem, whose Lagrangian stationary points are exactly the sum-product fixed points; approximate the set from inside with a tractable sub-family and you get mean field, which pays for its conservatism with a certified Fenchel lower bound and a KL divergence interpretation. Cluster the variables and you get Kikuchi; decouple intractable factors and match moments and you get expectation propagation; view EM itself as coordinate ascent on the same variational bound and the E step is revealed as an inference problem, which is why variational E steps slot in so naturally. The fourth act restores guarantees. Because subgraph entropies upper bound the true entropy, convex combinations of tree entropies produce convex surrogates and, in the tree-reweighted case, a strictly convex upper bound on A solvable by reweighted message passing with a unique fixed point. Finally, the zero-temperature limit turns the same machinery onto modes: MAP estimation is linear programming over the marginal polytope, the local polytope gives the polynomial-time first-order LP relaxation whose tightness is decided by integrality of its extreme points, and the Lasserre hierarchy of semidefinite moment constraints tightens the outer bound order by order until it coincides with M. For a reasoning engine the lesson is architectural. There is one exact variational problem; every inference method is a declared approximation to its two ingredients, the feasible set of marginals and the entropy; and each method should be labeled by which side it bounds, where it is exact, and how it fails. An engine built on this spine can mix exact tree computations, certified convex bounds, and fast loopy heuristics inside one model, and can say, for every number it emits, which guarantee stands behind it. The middle chapters fill in the working level between the exact principle and the certified relaxations. Structured mean field shows the inner approximation need not be a product distribution: any tractable subgraph, a spanning tree for instance, defines a richer inner set whose dual is still explicit, and coordinate ascent on it still climbs the same Fenchel bound. Variational Bayes applies the identical mean field restriction to the joint distribution over data, latent variables, and parameters, which is why the monograph treats Bayesian computation as one more instance of the same optimization rather than a separate subject. On the mode side, the first-order LP relaxation is only the bottom of a hierarchy: higher-order relaxations enforce consistency on triples and larger clusters, trading polynomial growth in constraints for tighter bounds, exactly paralleling the Kikuchi ladder on the marginal side. For Gaussian and other convex-cost models, max-product itself becomes exact convex optimization, a reminder that the boundary between inference and optimization is a matter of temperature and semiring, not of kind. The conic chapter generalizes both ladders: linear constraints give LP relaxations, positive semidefinite moment constraints give the Lasserre ladder, and second-order cone constraints sit between them, so bound quality becomes a menu of computational prices. The discussion chapter is candid about the open edges: curved exponential families with nonlinear parameter constraints, genuinely non-exponential models such as Dirichlet process mixtures, and mixed problems that marginalize some variables while maximizing over others all lack the clean theory, and variational methods there remain case by case. It also insists the variational and Monte Carlo camps are complements, with correlation decay conditions governing sum-product convergence reappearing as mixing conditions for samplers, so the same correlation structure that breaks one method tends to break the other. That candor is itself a primitive: the theory marks its own boundary, and an engine built on it inherits a map of where its guarantees end.",
+   "retrocausal_genealogy": "The lineage runs from statistical physics into statistics and computer science. Gibbs distributions and the Ising model supplied the objects; Hammersley and Clifford connected factorization to Markov properties; Pearl and Lauritzen built the graphical model formalism and the junction tree algorithm; the coding community rediscovered sum-product as belief propagation for turbo and LDPC decoding. Bethe's 1935 free energy approximation from physics was tied to message passing by Yedidia, Freeman, and Weiss, whose Lagrangian analysis this monograph systematizes. Kikuchi's cluster method, Minka's expectation propagation, and the convex analysis of conjugate duality from Rockafellar's tradition complete the ancestry: the monograph's contribution is to show these are one theory, conjugate duality over the marginal polytope, viewed from different sides.",
+   "theory_of_mind": "The authors write as mathematical statisticians who believe a method is not understood until its objective function is named. Their model of the reader is someone willing to trade algorithmic folklore for variational characterizations: every heuristic in the book is either derived from, or indicted by, the exact variational principle of Theorem 3.4. They assume the reader's real problem is high-dimensional and loopy, that exactness is the exception, and that the honest response is not a bag of tricks but a taxonomy of approximations organized by which ingredient of the exact problem each one relaxes and what guarantee survives the relaxation.",
+   "cross_layer_veto": "Several results veto common engine shortcuts. The strict inclusion of M(G) inside L(G) on cyclic graphs vetoes treating locally consistent marginals as jointly realizable. The K4 computation, where the Bethe entropy of valid marginals equals negative two log two, vetoes reporting Bethe free energies as entropies or bounds. The nonconvexity of the Bethe and naive mean field problems vetoes trusting a single run: fixed points can be local optima selected by initialization. Proposition 8.3 vetoes presenting LP relaxation outputs as configurations when the optimum is fractional, and the caveat in Section 6.2.2 vetoes claiming EM-style likelihood improvement for E steps built on non-bounding approximations such as plain Bethe or EP."
+  }
+ ],
+ "universal_lens": "Read abstractly, the monograph is a template for any system that must reason with many interacting uncertain quantities: write the joint as local factors on a graph, identify the convex set of realizable summary statistics, pose every query as optimization over that set against an entropy-like dual function, and then choose approximations by declaring which side of the set you will err on. The pattern transfers to sensor fusion, logistics, epidemiology, and finance unchanged, because the hard core is never the domain; it is the geometry of realizable marginals and the duality between parameters and moments.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the research program: a library of inference methods indexed by guarantee type, with the marginal polytope as the canonical feasibility object for probabilistic claims. Its teaching value is the discipline of Theorem 3.4: every approximate method must state its constraint set approximation, its entropy approximation, its bound direction, and its known failure regime, exactly as this monograph does for Bethe, mean field, Kikuchi, EP, tree-reweighting, LP, and SDP methods in turn.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the operating architecture: factor graph models of games with exact message passing on tree-structured submodels, loopy propagation labeled as a Bethe stationary point computation, mean field lower bounds and tree-reweighted upper bounds bracketing reported log likelihoods, LP-based MAP for most likely game scripts with integrality certificates, and moment matrix tests as an appeals layer for suspicious marginals. Every published probability set passes the local consistency screen, and every approximation carries its bound direction in its metadata."
+}

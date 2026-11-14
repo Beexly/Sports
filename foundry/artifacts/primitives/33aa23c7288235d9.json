@@ -1,0 +1,78 @@
+{
+  "book_id": "33aa23c7288235d9",
+  "source_status": "COMPLETE",
+  "title": "Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07",
+  "file_name": "Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07.pdf",
+  "sha256": "33aa23c7288235d98f3f64d04053c81b3b9b49ddc77e137df08c9bfb44483c50",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Chronological fact-control lens mapping documented events to employer-held records via source-strength labels. Universal Lens: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update over documented vs. employer-held facts using [D]/[EH] labels for probabilistic inference. GSI Mapping: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state-transition model from onboarding to escalation, with distress signals as state variables. GSE Mapping: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "chronological_fact_control",
+      "name": "Chronological Fact Control Operator",
+      "verbatim_quote": "The purpose is to give counsel a readable, chronological account of what happened, who was involved, which facts are documented, which facts are Garrett Baxley's personal account, and which records are likely employer-held or need discovery.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in days since onboarding', 'F_d': 'documented facts in primary artifacts', 'F_c': 'corroborated facts via metadata/third-party', 'F_g': \"Garrett's current account\", 'F_eh': 'employer-held records requiring discovery'}",
+      "assumptions": "All facts are categorized into one of four classes: [D], [C], [GA], [EH].",
+      "breakdown_regime": "When [F_d] ∩ [F_eh] ≠ ∅, a conflict arises between documented and employer-held records.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each fact category maps to a conditional probability P(fact|source_type), enabling Bayesian updating.",
+        "source_operator": "chronological_fact_control",
+        "telemetry": "Source-strength label consistency across narrative anchors."
+      }
+    },
+    {
+      "primitive_id": "disability_disclosure_protocol",
+      "name": "Disability Disclosure Protocol",
+      "verbatim_quote": "Garrett sent Corina the Owner's Manual, which disclosed that he is on the autism spectrum and explained",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_s': 'disability status disclosed', 'T_h': 'HR communication channel', 'T_c': 'corroborating communication trace', 'A_d': 'awareness of disability-related distress'}",
+      "assumptions": "Disclosure occurs through employer-invited HR channels and is subject to internal tracking.",
+      "breakdown_regime": "If A_d = 0, then the employer failed to act on known disability-related distress.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Protocol defines a kernel for evaluating employer responsiveness to disability disclosures.",
+        "source_operator": "disability_disclosure_protocol",
+        "telemetry": "Presence of [CN] or [D] entries indicating disclosure and follow-up."
+      }
+    },
+    {
+      "primitive_id": "escalation_signal_model",
+      "name": "Escalation Signal Model",
+      "verbatim_quote": "[D] The third anchor is the February 23, 2026 Jeff Dolan welfare/support text.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_e': 'escalation signal strength', 'T_w': 'welfare/textual support trigger', 'T_d': 'distress indicator', 'R_a': 'response action taken'}",
+      "assumptions": "Supportive messaging indicates awareness of distress and potential intervention.",
+      "breakdown_regime": "If T_w > threshold and R_a = 0, then employer response failure is indicated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signal strength maps to a temporal decay function of distress and employer engagement.",
+        "source_operator": "escalation_signal_model",
+        "telemetry": "Temporal proximity of [CN] and [D] entries to termination event."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "33aa23c7288235d9_t0",
+      "think": "The core operators define a structured narrative control system where each event is tagged with source reliability. The chronological fact control operator ensures that all claims are categorized by evidence type, enabling a Bayesian framework for truth estimation. The disability disclosure protocol introduces a kernel for evaluating employer compliance with ADA obligations, while the escalation signal model provides a temporal lens for detecting employer awareness and response to distress. These primitives form a dual structure: one for fact validation and another for behavioral inference. Failure modes include mislabeling of facts, omission of employer-held records, and misinterpretation of support signals. The interplay between these operators reveals whether termination was based on isolated performance issues or systemic patterns of ambiguity and lack of support.\n\nDeep epistemic analysis for Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9, domain=other, pages_read=18/18): Operator 'Chronological Fact Control Operator' (page 2, domain other) captures: The purpose is to give counsel a readable, chronological account of what happened, who was involved, which facts are documented, which facts are Garrett Baxley's personal account, and which records are likely employer-held or need discovery. Assumptions: All facts are categorized into one of four classes: [D], [C], [GA], [EH]. Breakdown regime: When [F_d] ∩ [F_eh] ≠ ∅, a conflict arises between documented and employer-held records. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each fact category maps to a conditional probability P(fact|source_type), enabling Bayesian updating. Operator 'Disability Disclosure Protocol' (page 2, domain other) captures: Garrett sent Corina the Owner's Manual, which disclosed that he is on the autism spectrum and explained Assumptions: Disclosure occurs through employer-invited HR channels and is subject to internal tracking. Breakdown regime: If A_d = 0, then the employer failed to act on known disability-related distress. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Protocol defines a kernel for evaluating employer responsiveness to disability disclosures. Operator 'Escalation Signal Model' (page 3, domain other) captures: [D] The third anchor is the February 23, 2026 Jeff Dolan welfare/support text. Assumptions: Supportive messaging indicates awareness of distress and potential intervention. Breakdown regime: If T_w > threshold and R_a = 0, then employer response failure is indicated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Signal strength maps to a temporal decay function of distress and employer engagement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9, domain=other, pages_read=18/18): Operator 'Chronological Fact Control Operator' (page 2, domain other) captures: The purpose is to give counsel a readable, chronological account of what happened, who was involved, which facts are documented, which facts are Garrett Baxley's personal account, and which records are likely employer-held or need discovery. Assumptions: All facts are categorized into one of four classes: [D], [C], [GA], [EH]. Breakdown regime: When [F_d] ∩ [F_eh] ≠ ∅, a conflict arises between documented and employer-held records. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each fact category maps to a conditional probability P(fact|source_type), enabling Bayesian updating. Operator 'Disability Disclosure Protocol' (page 2, domain other) captures: Garrett sent Corina the Owner's Manual, which disclosed that he is on the autism spectrum and explained Assumptions: Disclosure occurs through employer-invited HR channels and is subject to internal tracking. Breakdown regime: If A_d = 0, then the employer failed to act on known disability-related distress. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Protocol defines a kernel for evaluating employer responsiveness to disability disclosures. Operator 'Escalation Signal Model' (page 3, domain other) captures: [D] The third anchor is the February 23, 2026 Jeff Dolan welfare/support text. Assumptions: Supportive messaging indicates awareness of distress and potential intervention. Breakdown regime: If T_w > threshold and R_a = 0, then employer response failure is indicated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Signal strength maps to a temporal decay function of distress and employer engagement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in legal fact-finding protocols and organizational behavior models, tracing back to early 20th-century labor law and modern HR analytics frameworks. Retrocausal Genealogy: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the employer's intent to terminate for performance reasons versus the employee’s experience of systemic stress and disability-related challenges. The model assumes employer unawareness or deliberate non-response to distress signals. Theory of Mind & Decision Maker Model: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that [D] and [EH] categories do not overlap without explicit justification. Leakage veto applies when [GA] accounts contradict [D] or [C] entries without clear attribution. These conditions prevent narrative bias and ensure logical separation of fact types. Cross-Layer Veto & Anti-Leakage Check: Rooted in Baxley_Turner_Full_Narrative_Chronology_for_Counsel_2026-06-07 (33aa23c7288235d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

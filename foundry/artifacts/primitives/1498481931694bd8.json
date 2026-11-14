@@ -1,0 +1,870 @@
+{
+ "book_id": "1498481931694bd8",
+ "source_status": "COMPLETE",
+ "source_note": "True source: Csaba Szepesvari, Algorithms for Reinforcement Learning, Synthesis Lectures on Artificial Intelligence and Machine Learning, Morgan and Claypool Publishers, 2010; the local file is the author draft of that lecture (title page dated June 9, 2009, last update March 12, 2019). Local files: identical PDF copies at library/books-d-models/Szepesvari-2010-AlgorithmsForReinforcementLearning.pdf and library/books-must-have/Szepesvari-2010-AlgorithmsForReinforcementLearning.pdf, 1,623,436 bytes each, full sha256 1498481931694bd8f442d4f2437427f806979f20b89934e6c24138cb93a26ad4, book_id 1498481931694bd8 computed over the PDF bytes only by the scan digest sha256(str(size) + bytes). Extracted text at text/books-d-models/Szepesvari-2010-AlgorithmsForReinforcementLearning.pdf.txt, 264,885 bytes, 4,426 lines; text quality is high for prose, with the usual extraction artifacts in displayed equations, accented names, and mathematical symbols. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "rl_paradigm_discounted_control",
+   "name": "Reinforcement learning is sequential control under partial feedback, scored by a numerical long term objective",
+   "verbatim_quote": "Reinforcement learning is a learning paradigm concerned with learning to control a system so as to maximize a numerical performance measure that expresses a long-term objective.",
+   "page": "Abstract; Sec. 1",
+   "latex": "R = \\sum_{t=0}^{\\infty} \\gamma^t R_{t+1}",
+   "symbol_and_unit_ledger": {
+    "R": "total discounted return, reward units",
+    "gamma": "discount factor in [0,1], dimensionless",
+    "R_{t+1}": "reward received after the transition at time t, reward units"
+   },
+   "assumptions": [
+    "The controlled system is stochastic and its state is measured in enough detail that the controller need not reason about information gathering.",
+    "A single scalar reward signal carries the whole performance objective."
+   ],
+   "breakdown_regime": "With gamma equal to 1 in a non episodic problem the return can diverge, and a scalar reward cannot express multi objective tradeoffs, risk preferences, or constraints that are not folded into the reward.",
+   "domain": "reinforcement_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every forecasting task as control of a belief state over time: each new observation is an action consequence, and the score is a discounted sum of future correctness rather than a one step grade. This forces horizon aware evaluation of any signal.",
+    "source_operator": "rl_paradigm_discounted_control",
+    "telemetry": "Timestamped state snapshots, issued predictions, realized outcomes, and per step reward components by horizon."
+   }
+  },
+  {
+   "primitive_id": "two_key_ideas_samples_and_function_approximation",
+   "name": "Intractable dynamic programming becomes practical through sampled dynamics plus compact function approximation of values",
+   "verbatim_quote": "There are two key ideas that allow RL algorithms to achieve this goal. The first idea is to use samples to compactly represent the dynamics of the control problem.",
+   "page": "Sec. 1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Samples can be focused on the small subset of state and action space that is actually visited.",
+    "The function approximator can exploit structure shared across visited and unvisited states."
+   ],
+   "breakdown_regime": "If visited samples cover none of the states that matter under a better policy, the compact representation is compact around the wrong region and generalization invents values elsewhere.",
+   "domain": "reinforcement_learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine never tries to enumerate a full state space. It stores sampled trajectories as the dynamics record and fits compact value models over features, so coverage of the sample, not size of the nominal space, is the audited quantity.",
+    "source_operator": "two_key_ideas_samples_and_function_approximation",
+    "telemetry": "Sample coverage counts per state region, feature dictionary version, and value model residuals on held out trajectories."
+   }
+  },
+  {
+   "primitive_id": "mdp_triplet_kernel",
+   "name": "A countable MDP is a triplet of states, actions, and a transition kernel over next state and reward",
+   "verbatim_quote": "A countable MDP is defined as a triplet M = (X , A, P0 ), where X is the countable nonempty set of states, A is the countable non-empty set of actions.",
+   "page": "Sec. 2.2",
+   "latex": "P(x, a, y) = P_0(\\{y\\} \\times \\mathbb{R} \\mid x, a)",
+   "symbol_and_unit_ledger": {
+    "P(x,a,y)": "probability of moving from state x to state y under action a, dimensionless",
+    "P_0": "transition probability kernel over next state and reward pairs",
+    "X": "state set",
+    "A": "action set",
+    "R": "real reward axis"
+   },
+   "assumptions": [
+    "Rewards are bounded by some R greater than 0 almost surely.",
+    "The next state and reward depend on history only through the current state and action (the Markov property)."
+   ],
+   "breakdown_regime": "The triplet fails when the observable state omits variables that drive transitions, when rewards are unbounded, or when the kernel drifts over time so a single P0 no longer describes the system.",
+   "domain": "markov_decision_processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine problem is first cast as states, candidate actions, and an estimated transition kernel, with the immediate payoff function kept separate from the dynamics. Problems that cannot name these three objects are flagged as not yet formalized.",
+    "source_operator": "mdp_triplet_kernel",
+    "telemetry": "State definitions, action catalogs, empirical transition counts, and reward function specifications per problem."
+   }
+  },
+  {
+   "primitive_id": "interaction_protocol_and_return",
+   "name": "Interaction is a repeated state, action, next state, reward loop whose discounted sum is the return",
+   "verbatim_quote": "The goal of the decision maker is to come up with a way of choosing the actions so as to maximize the expected total discounted reward.",
+   "page": "Sec. 2.2",
+   "latex": "(X_{t+1}, R_{t+1}) \\sim P_0(\\,\\cdot \\mid X_t, A_t)",
+   "symbol_and_unit_ledger": {
+    "X_t": "state at time t",
+    "A_t": "action chosen at time t",
+    "R_{t+1}": "reward from the transition, reward units",
+    "P_0": "transition kernel of the MDP"
+   },
+   "assumptions": [
+    "The decision maker observes the next state and reward before choosing the next action.",
+    "Expectations are taken under the behavior actually followed, including its history dependence."
+   ],
+   "breakdown_regime": "If the observation channel delays or censors rewards, the loop timing assumed by the update rules breaks and credit is assigned to the wrong transition.",
+   "domain": "markov_decision_processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine logs decisions as closed loop transitions rather than isolated predictions, so each forecast carries the state it was made in, the action taken, and the realized successor and payoff. Audits replay the loop, not just final scores.",
+    "source_operator": "interaction_protocol_and_return",
+    "telemetry": "Ordered transition logs with state, action, successor state, and realized reward for every decision cycle."
+   }
+  },
+  {
+   "primitive_id": "bellman_operator_contraction",
+   "name": "A policy value function is the unique fixed point of its affine Bellman operator, a maximum norm contraction when gamma is below 1",
+   "verbatim_quote": "If 0 < γ < 1 then T π is a maximum-norm contraction and the fixed-point equation T π V = V has a unique solution.",
+   "page": "Sec. 2.3, Fact 1",
+   "latex": "V^\\pi(x) = r(x, \\pi(x)) + \\gamma \\sum_{y \\in X} P(x, \\pi(x), y) V^\\pi(y)",
+   "symbol_and_unit_ledger": {
+    "V^pi": "value function of policy pi, reward units",
+    "r(x,pi(x))": "expected immediate reward in state x under pi, reward units",
+    "gamma": "discount factor in (0,1)",
+    "P": "state transition kernel, dimensionless probabilities"
+   },
+   "assumptions": [
+    "The policy is stationary and deterministic in the stated form.",
+    "Rewards are bounded so the value function is bounded and lives in the Banach space of bounded functions."
+   ],
+   "breakdown_regime": "At gamma equal to 1 the operator is only a non-expansion, the fixed point need not be unique, and the episodic or average reward formulation must replace the discounted one.",
+   "domain": "dynamic_programming",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Policy evaluation inside the engine is iterative fixed point solving: candidate value estimates are repeatedly passed through a one step lookahead operator and convergence is judged by the contraction residual, not by agreement with a single realized outcome.",
+    "source_operator": "bellman_operator_contraction",
+    "telemetry": "Bellman residuals per iteration, discount factor, and value estimates by state or feature region."
+   }
+  },
+  {
+   "primitive_id": "greedy_optimality_from_qstar",
+   "name": "A policy greedy with respect to the optimal action values is optimal, so knowing Q star alone suffices to act optimally",
+   "verbatim_quote": "Thus, a greedy policy with respect to Q∗ is optimal, i.e., the knowledge of Q∗ alone is sufficient for finding an optimal policy.",
+   "page": "Sec. 2.3",
+   "latex": "V^*(x) = \\sup_{a \\in A} Q^*(x, a), \\qquad Q^*(x, a) = r(x, a) + \\gamma \\sum_{y \\in X} P(x, a, y) V^*(y)",
+   "symbol_and_unit_ledger": {
+    "V^*": "optimal value function, reward units",
+    "Q^*": "optimal action value function, reward units",
+    "r(x,a)": "expected immediate reward, reward units",
+    "gamma": "discount factor",
+    "P": "transition kernel"
+   },
+   "assumptions": [
+    "An optimal stationary policy exists in the class of MDPs considered.",
+    "The supremum over actions is attained or approachable in each state."
+   ],
+   "breakdown_regime": "Greedy action selection with respect to an approximate Q can be far from optimal when approximation errors are uneven across actions; the book bounds the loss by a term proportional to the sup norm error divided by 1 minus gamma.",
+   "domain": "dynamic_programming",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Decision rules in the engine are derived, never hand tuned per case: a policy is the greedy readout of an action value surface, so improving decisions means improving the action value estimates and their error profile across actions.",
+    "source_operator": "greedy_optimality_from_qstar",
+    "telemetry": "Action value estimates per state, greedy action margins, and sup norm error estimates on validation trajectories."
+   }
+  },
+  {
+   "primitive_id": "value_iteration_geometric_convergence",
+   "name": "Value iteration applies the Bellman optimality operator repeatedly and converges to the optimal value at a geometric rate",
+   "verbatim_quote": "Thanks to Banach’s fixed-point theorem, (Vk ; k ≥ 0) converges to V ∗ at a geometric rate.",
+   "page": "Sec. 2.4",
+   "latex": "V_{k+1} = T^* V_k, \\qquad k \\ge 0",
+   "symbol_and_unit_ledger": {
+    "V_k": "value iterate after k sweeps, reward units",
+    "T^*": "Bellman optimality operator",
+    "V^*": "optimal value function, reward units"
+   },
+   "assumptions": [
+    "The initial value function V0 is arbitrary but bounded.",
+    "The discount factor is strictly below 1 so the optimality operator contracts."
+   ],
+   "breakdown_regime": "Each sweep costs a full pass over all state action pairs, so geometric convergence in iterations can still be infeasible in wall clock time for large spaces; that gap is exactly what sampling methods exist to close.",
+   "domain": "dynamic_programming",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Batch re estimation in the engine is run as value iteration over the logged transition model, with iteration counts and contraction factors reported, so a value surface is never presented as converged without a residual and a rate.",
+    "source_operator": "value_iteration_geometric_convergence",
+    "telemetry": "Sweep counts, per sweep maximum value change, and estimated contraction factor per model rebuild."
+   }
+  },
+  {
+   "primitive_id": "banach_fixed_point_foundation",
+   "name": "Banach fixed point theorem: a contraction on a complete normed space has one fixed point and iteration reaches it geometrically",
+   "verbatim_quote": "Theorem 1 (Banach’s fixed-point theorem). Let V be a Banach space and T : V → V be a contraction mapping. Then T has a unique fixed point.",
+   "page": "Appendix A.1, Theorem 1",
+   "latex": "\\|v_n - v\\| \\le \\gamma^n \\|v_0 - v\\|",
+   "symbol_and_unit_ledger": {
+    "v_n": "nth iterate of the contraction, same units as the space",
+    "v": "unique fixed point",
+    "gamma": "contraction factor, strictly below 1, dimensionless",
+    "norm": "norm of the Banach space"
+   },
+   "assumptions": [
+    "The space is complete, so every Cauchy sequence converges inside the space.",
+    "The mapping is a contraction with one global factor below 1."
+   ],
+   "breakdown_regime": "Without completeness the iterates can converge to a point outside the space, and with factor equal to 1 uniqueness and the geometric rate both disappear.",
+   "domain": "functional_analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The theorem is the engine license for iterative estimation: any estimator built as a contraction inherits existence, uniqueness, and a computable error bound from its factor, and any estimator that is not a contraction must carry its own separate convergence evidence.",
+    "source_operator": "banach_fixed_point_foundation",
+    "telemetry": "Contraction factor estimates, residual sequences, and completeness checks for each iterative solver in the stack."
+   }
+  },
+  {
+   "primitive_id": "td0_bootstrapping",
+   "name": "TD(0) updates a value estimate toward a target built from the next estimate itself, which is bootstrapping",
+   "verbatim_quote": "The unique feature of TD learning is that it uses bootstrapping: predictions are used as targets during the course of learning.",
+   "page": "Sec. 3.1",
+   "latex": "\\delta_{t+1} = R_{t+1} + \\gamma \\hat{V}_t(X_{t+1}) - \\hat{V}_t(X_t), \\qquad \\hat{V}_{t+1}(x) = \\hat{V}_t(x) + \\alpha_t \\delta_{t+1} \\mathbb{I}\\{X_t = x\\}",
+   "symbol_and_unit_ledger": {
+    "delta_{t+1}": "temporal difference error, reward units",
+    "R_{t+1}": "observed reward, reward units",
+    "gamma": "discount factor",
+    "V hat": "current value estimate, reward units",
+    "alpha_t": "step size at time t, dimensionless",
+    "I": "indicator of the visited state"
+   },
+   "assumptions": [
+    "Only the visited state is updated on each transition in the tabular form.",
+    "Step sizes are nonnegative and chosen by the user."
+   ],
+   "breakdown_regime": "Bootstrapping propagates value along chains slowly: with reward only at the end of a long chain, Monte Carlo can converge faster because TD must wait for successor estimates to become accurate first.",
+   "domain": "temporal_difference_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Streaming updates in the engine use the same one step bootstrap: a fresh outcome revises the estimate of the state that produced it through the successor estimate, which is what makes online correction possible before an episode closes.",
+    "source_operator": "td0_bootstrapping",
+    "telemetry": "Per transition TD errors, step size schedule, and value estimate versions before and after each update."
+   }
+  },
+  {
+   "primitive_id": "monte_carlo_variance_limit",
+   "name": "Every visit Monte Carlo averages realized returns, which is unbiased but suffers when return variance is high",
+   "verbatim_quote": "Unfortunately, the variance of the returns can be high, which means that the quality of the estimates will be poor.",
+   "page": "Sec. 3",
+   "latex": "R_t = \\sum_{s=t}^{T_{k(t)+1}-1} \\gamma^{s-t} R_{s+1}",
+   "symbol_and_unit_ledger": {
+    "R_t": "realized discounted return from time t to episode end, reward units",
+    "gamma": "discount factor",
+    "T_k": "start time of episode k",
+    "R_{s+1}": "reward at step s, reward units"
+   },
+   "assumptions": [
+    "The problem is episodic so returns are finitely computable.",
+    "Episodes restart from a fixed initial distribution under continual sampling."
+   ],
+   "breakdown_regime": "In closed loop interaction the system often cannot be reset to a chosen state, and in non episodic problems returns are infinite, so plain Monte Carlo cannot be applied without added bias.",
+   "domain": "monte_carlo_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps Monte Carlo return averages as the unbiased reference estimator and reports their variance explicitly; any lower variance estimator is judged against this reference rather than against point outcomes.",
+    "source_operator": "monte_carlo_variance_limit",
+    "telemetry": "Realized returns per episode, return variance per state, and episode counts behind each average."
+   }
+  },
+  {
+   "primitive_id": "robbins_monro_stochastic_approximation",
+   "name": "TD convergence rests on stochastic approximation: step sizes must satisfy the Robbins Monro conditions and the iterates track a stable ODE",
+   "verbatim_quote": "Then, assuming that the step-size sequence satisfies the Robbins-Monro (RM) conditions,",
+   "page": "Sec. 3.1.1",
+   "latex": "\\sum_{t=0}^{\\infty} \\alpha_t = \\infty, \\qquad \\sum_{t=0}^{\\infty} \\alpha_t^2 < +\\infty",
+   "symbol_and_unit_ledger": {
+    "alpha_t": "step size at time t, dimensionless",
+    "t": "time index, steps"
+   },
+   "assumptions": [
+    "The visited state process is a stationary ergodic Markov chain in the tabular analysis.",
+    "The limiting ODE, v dot equals r plus (gamma P minus I) v, is globally asymptotically stable because the eigenvalues of gamma P minus I lie in the open left half plane."
+   ],
+   "breakdown_regime": "Constant step sizes violate the conditions; parameters then converge only in distribution with limiting variance proportional to the step size, which is accepted in practice for non stationary problems but forfeits almost sure convergence.",
+   "domain": "stochastic_approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Learning rate schedules in the engine are specified as stochastic approximation schedules with their sums checked, and constant step size deployments are labeled as tracking mode with a stated limiting variance, never as converged solutions.",
+    "source_operator": "robbins_monro_stochastic_approximation",
+    "telemetry": "Step size sequences, their partial sums, and residual variance of parameters in tracking mode."
+   }
+  },
+  {
+   "primitive_id": "off_policy_learning",
+   "name": "Off policy learning evaluates one policy while data is generated by another, by relabeling which transitions count",
+   "verbatim_quote": "When learning about one policy, while following another is called off-policy learning.",
+   "page": "Sec. 3.1.1",
+   "latex": "\\delta_{t+1} = R_{t+1} + \\gamma \\hat{V}(Y_{t+1}) - \\hat{V}(X_t)",
+   "symbol_and_unit_ledger": {
+    "delta": "temporal difference error, reward units",
+    "Y_{t+1}": "successor state drawn from the target transition kernel, not necessarily the realized next state",
+    "X_t": "state visited under the behavior policy",
+    "gamma": "discount factor"
+   },
+   "assumptions": [
+    "Triplets of state, reward, and a target kernel successor can be constructed from behavior data, for example by keeping only transitions whose action matches the target policy.",
+    "Every state action pair relevant to the target is visited infinitely often under the behavior."
+   ],
+   "breakdown_regime": "With function approximation, off policy sampling breaks the contraction behind TD and the parameters may diverge; that failure is the subject of the gradient TD and least squares sections.",
+   "domain": "temporal_difference_learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine separates the behavior that generated data from the target being evaluated in every dataset record, so counterfactual evaluation of a new decision rule on logged behavior is a first class operation with its coverage assumptions stated.",
+    "source_operator": "off_policy_learning",
+    "telemetry": "Behavior policy identifiers, target policy identifiers, and matched transition counts per state action pair."
+   }
+  },
+  {
+   "primitive_id": "td_lambda_eligibility_traces",
+   "name": "TD(lambda) interpolates between TD(0) and Monte Carlo, implemented incrementally with eligibility traces",
+   "verbatim_quote": "Here, λ ∈ [0, 1] is a parameter that allows one to interpolate between the Monte-Carlo and TD(0) updates: λ = 0 gives TD(0) (hence the name of TD(0)), while λ = 1, i.e., TD(1) is equivalent to a Monte-Carlo method.",
+   "page": "Sec. 3.1.3",
+   "latex": "z_{t+1}(x) = \\mathbb{I}\\{x = X_t\\} + \\gamma \\lambda z_t(x), \\qquad \\hat{V}_{t+1}(x) = \\hat{V}_t(x) + \\alpha_t \\delta_{t+1} z_{t+1}(x)",
+   "symbol_and_unit_ledger": {
+    "z_t(x)": "eligibility trace of state x, dimensionless",
+    "lambda": "trace decay parameter in [0,1]",
+    "gamma": "discount factor",
+    "delta": "one step TD error, reward units",
+    "alpha_t": "step size"
+   },
+   "assumptions": [
+    "Accumulating traces are used in the stated update; replacing traces are the named variant.",
+    "The best lambda is chosen by trial and error in practice and may change during learning without breaking convergence."
+   ],
+   "breakdown_regime": "Lambda equal to 1 with accumulating traces matches every visit Monte Carlo only when updates are accumulated to episode end; the discounted sum of TD errors telescopes only along complete trajectories.",
+   "domain": "temporal_difference_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Credit assignment in the engine carries a lambda dial: recent states in a trajectory receive exponentially decayed shares of each new error signal, which is the mechanism that lets one outcome revise a whole chain of earlier assessments at a controlled rate.",
+    "source_operator": "td_lambda_eligibility_traces",
+    "telemetry": "Trace decay parameter per estimator, per state trace values at update time, and error signals distributed per update."
+   }
+  },
+  {
+   "primitive_id": "linear_function_approximation",
+   "name": "Large state spaces replace the value table with a parametric form, linear in parameters over state features in the core case",
+   "verbatim_quote": "In such cases, we often seek an estimate of the values in the form",
+   "page": "Sec. 3.2",
+   "latex": "V_\\theta(x) = \\theta^\\top \\phi(x), \\qquad x \\in X",
+   "symbol_and_unit_ledger": {
+    "V_theta": "approximate value function, reward units",
+    "theta": "parameter vector in R^d",
+    "phi(x)": "feature vector of state x in R^d",
+    "d": "number of features, count"
+   },
+   "assumptions": [
+    "Features are fixed by a chosen extraction method such as polynomial, Fourier, wavelet, radial basis, or tile coding bases.",
+    "The same features serve every state, so generalization across states is entirely a property of the basis."
+   ],
+   "breakdown_regime": "Tensor product and tiling constructions explode combinatorially: a tiling of the unit cube with side epsilon gives dimension epsilon to the power minus D, already about 10 to the 30 for epsilon one half and D equal to 100.",
+   "domain": "function_approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "All large scale value models in the engine are feature models: the feature dictionary is versioned as part of the model, and a value is meaningless for audit unless the exact phi that produced it is recorded beside it.",
+    "source_operator": "linear_function_approximation",
+    "telemetry": "Feature dictionary versions, feature vectors per evaluated state, and parameter vectors per model release."
+   }
+  },
+  {
+   "primitive_id": "curse_of_dimensionality_intrinsic_dimension",
+   "name": "Nominal state dimension overstates problem difficulty when visited states lie near a low dimensional structure",
+   "verbatim_quote": "The issue with tensor product constructions, state aggregation and straightforward tile coding is that when the state space is high dimensional they quickly become intractable:",
+   "page": "Sec. 3.2",
+   "latex": "d = \\varepsilon^{-D}",
+   "symbol_and_unit_ledger": {
+    "d": "feature and parameter dimension, count",
+    "varepsilon": "tile side length, state units",
+    "D": "state dimension, count"
+   },
+   "assumptions": [
+    "The count assumes a uniform grid tiling of a D dimensional unit cube.",
+    "User chosen representations are often conservative and include irrelevant variables, so intrinsic dimension can be far below nominal dimension."
+   ],
+   "breakdown_regime": "There is no guarantee that a given problem has low intrinsic complexity; when visited states genuinely fill the high dimensional space, no representation trick restores tractability.",
+   "domain": "function_approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity decisions in the engine are driven by measured intrinsic dimensionality of visited state samples, not by raw input width: representations are audited for irrelevant coordinates and near manifold structure before model size is increased.",
+    "source_operator": "curse_of_dimensionality_intrinsic_dimension",
+    "telemetry": "Visited state samples, intrinsic dimension estimates, and per coordinate relevance statistics."
+   }
+  },
+  {
+   "primitive_id": "averager_nonexpansion_stability",
+   "name": "Averagers, whose weights are nonnegative and sum to one, are non-expansions in the maximum norm and therefore well behaved with approximate dynamic programming",
+   "verbatim_quote": "Averagers are important in reinforcement learning because the mapping θ 7→ Vθ is a non-expansion in the maxnorm, which makes them “well-behaved” when used together with approximate dynamic programming.",
+   "page": "Sec. 3.2",
+   "latex": "V_\\theta(x) = \\frac{\\sum_{i=1}^{d} \\theta_i G(\\|x - x^{(i)}\\|)}{\\sum_{j=1}^{d} G(\\|x - x^{(j)}\\|)}",
+   "symbol_and_unit_ledger": {
+    "V_theta": "kernel smoothed value estimate, reward units",
+    "theta_i": "value stored at prototype point i, reward units",
+    "G": "kernel function, dimensionless weights",
+    "x^{(i)}": "prototype state i",
+    "norm": "distance in state space"
+   },
+   "assumptions": [
+    "Kernel weights are nonnegative and normalized to sum to one at every state.",
+    "State aggregation is the special case where the kernels are indicators of a partition."
+   ],
+   "breakdown_regime": "Averagers cannot represent sharp value discontinuities across partition boundaries and smooth away genuine local structure when prototypes are sparse.",
+   "domain": "function_approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where stability matters more than sharpness, the engine prefers averaging architectures: kernel and aggregation readouts are used for value surfaces that feed iterative improvement, because their non-expansion keeps the outer iteration from amplifying readout error.",
+    "source_operator": "averager_nonexpansion_stability",
+    "telemetry": "Kernel bandwidths, prototype sets, and weight normalization checks per value model."
+   }
+  },
+  {
+   "primitive_id": "td_function_approximation_divergence",
+   "name": "TD with function approximation can diverge under off policy sampling or nonlinear approximation, unlike the tabular case",
+   "verbatim_quote": "Unlike the tabular case, under off-policy sampling, convergence is no longer guaranteed, but, in fact, the parameters may diverge",
+   "page": "Sec. 3.2.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The counterexample regime combines bootstrapping, function approximation, and a sampling distribution that differs from the stationary distribution of the target MRP.",
+    "Linear approximation with on policy ergodic sampling matching the MRP stationary distribution is the convergent case."
+   ],
+   "breakdown_regime": "This is the failure the rest of the chapter works around: gradient TD restores convergence at roughly twice the cost, and least squares methods avoid step size dynamics entirely.",
+   "domain": "temporal_difference_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Divergence is treated as an architectural property, not bad luck: the engine classifies every value learner by the deadly combination of bootstrapping, approximation, and off policy data, and any learner with all three must use a stabilized variant.",
+    "source_operator": "td_function_approximation_divergence",
+    "telemetry": "Sampling distribution versus target stationary distribution divergence measures, parameter norm trajectories, and learner class labels."
+   }
+  },
+  {
+   "primitive_id": "projected_fixed_point_td_limit",
+   "name": "Convergent linear TD(lambda) solves a projected fixed point equation, with error bounded by the best approximation error in the feature span divided by a contraction term",
+   "verbatim_quote": "The limit θ(λ) is known to satisfy the so-called projected fixed-point equation",
+   "page": "Sec. 3.2.1",
+   "latex": "V_{\\theta(\\lambda)} = \\Pi_{F,\\mu} T^{(\\lambda)} V_{\\theta(\\lambda)}, \\qquad \\|V_{\\theta(\\lambda)} - V\\|_\\mu \\le \\frac{1}{\\sqrt{1-\\gamma_\\lambda}} \\|\\Pi_{F,\\mu} V - V\\|_\\mu",
+   "symbol_and_unit_ledger": {
+    "theta(lambda)": "limiting TD parameter vector",
+    "Pi_{F,mu}": "projection onto feature span F under the mu weighted norm",
+    "T^{(lambda)}": "exponentially weighted average of multi step Bellman operators",
+    "gamma_lambda": "contraction modulus gamma(1-lambda)/(1-lambda gamma)",
+    "mu": "stationary state distribution"
+   },
+   "assumptions": [
+    "Sampling is on policy with stationary distribution mu equal to that of the MRP.",
+    "Feature components are linearly independent for a unique parameter limit; with redundant features the limiting value function is still unique."
+   ],
+   "breakdown_regime": "For lambda below 1 the bound degrades and real examples show the TD(0) fixed point can be a very poor approximation even when the span contains a good one; small projected error in the mu norm also says nothing about states mu rarely visits.",
+   "domain": "temporal_difference_learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Acceptance tests for engine value models are stated in the projected fixed point language: report the approximation floor of the feature span and the achieved distance to it, weighted by the deployment visitation distribution, instead of a single raw error number.",
+    "source_operator": "projected_fixed_point_td_limit",
+    "telemetry": "Visitation weighted value errors, feature span approximation floors, and lambda values per deployed model."
+   }
+  },
+  {
+   "primitive_id": "gradient_td_gtd2_tdc",
+   "name": "GTD2 and TDC minimize the projected Bellman objective by pseudo gradient updates and converge regardless of the sampling distribution",
+   "verbatim_quote": "Notice that all solutions to (22) are minimizers of J, and there are no other minimizers of J when (22) has solutions.",
+   "page": "Sec. 3.2.2",
+   "latex": "J(\\theta) = \\|V_\\theta - \\Pi_{F,\\nu} T V_\\theta\\|_\\nu^2",
+   "symbol_and_unit_ledger": {
+    "J(theta)": "projected Bellman error objective, squared reward units",
+    "V_theta": "linear value approximation, reward units",
+    "Pi_{F,nu}": "projection onto feature span under sampling distribution nu",
+    "T": "Bellman operator",
+    "nu": "arbitrary sampling distribution over states"
+   },
+   "assumptions": [
+    "Features are linearly independent so the minimizer is unique.",
+    "TDC needs two timescales: the auxiliary weights must move faster than the main parameters, alpha_t little o of beta_t."
+   ],
+   "breakdown_regime": "The methods are pseudo gradient, not true stochastic gradient: the expected update direction can differ from the negative gradient of J, and gradient Q extensions can still stall in local minima because their objective is non convex.",
+   "domain": "gradient_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When engine training data comes from a logging policy that cannot be changed, gradient TD variants are the default value learners: they keep the TD fixed point as the target while removing the sampling distribution from the convergence conditions.",
+    "source_operator": "gradient_td_gtd2_tdc",
+    "telemetry": "Sampling distribution descriptors, auxiliary weight norms, and objective values per training run."
+   }
+  },
+  {
+   "primitive_id": "lstd_closed_form",
+   "name": "LSTD solves the empirical TD fixed point equations directly as a linear system instead of iterating toward them",
+   "verbatim_quote": "who call the resulting algorithm least-squares temporal difference learning or LSTD.",
+   "page": "Sec. 3.2.3",
+   "latex": "\\theta_n = \\hat{A}_n^{-1} \\hat{b}_n, \\qquad \\hat{A}_n = \\frac{1}{n}\\sum_{t=0}^{n-1} \\phi_t(\\phi_t - \\gamma \\phi'_{t+1})^\\top, \\qquad \\hat{b}_n = \\frac{1}{n}\\sum_{t=0}^{n-1} R_{t+1}\\phi_t",
+   "symbol_and_unit_ledger": {
+    "theta_n": "LSTD parameter estimate after n samples",
+    "A hat": "empirical system matrix, d by d",
+    "b hat": "empirical reward vector in R^d",
+    "phi_t": "feature vector of the visited state",
+    "phi'_{t+1}": "feature vector of the successor state",
+    "gamma": "discount factor",
+    "n": "sample count"
+   },
+   "assumptions": [
+    "The empirical matrix A hat must be non singular for the closed form to exist; a small positive diagonal initialization is the standard recursive safeguard.",
+    "Samples are drawn on policy in the convergence results, with off policy validity holding when the limiting solution exists."
+   ],
+   "breakdown_regime": "Direct inversion costs order d cubed and recursive updates order d squared per step, so the method becomes infeasible when feature counts reach the hundreds of thousands or millions.",
+   "domain": "least_squares_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For moderate feature counts the engine solves value estimation as a linear system over accumulated statistics, which removes step size tuning from the audit surface: the deliverables are the accumulated matrix, its conditioning, and the solved parameters.",
+    "source_operator": "lstd_closed_form",
+    "telemetry": "Accumulated system matrices or their hashes, condition numbers, sample counts, and solved parameter vectors."
+   }
+  },
+  {
+   "primitive_id": "least_squares_vs_incremental_cost",
+   "name": "Least squares buys stability and accuracy with quadratic or cubic compute, while incremental TD is linear per sample and can reuse data through experience replay",
+   "verbatim_quote": "The price of the increased stability and accuracy of least-squares techniques is their increased computational complexity.",
+   "page": "Sec. 3.2.3",
+   "latex": "\\frac{\\|\\theta'_{n'} - \\theta^*\\|}{\\|\\theta_n - \\theta^*\\|} \\approx \\frac{C_2}{C_1} d^{-1/2}",
+   "symbol_and_unit_ledger": {
+    "theta_n": "least squares estimate from n samples",
+    "theta'_n'": "incremental TD estimate from n' samples in the same time budget",
+    "C_1, C_2": "method dependent accuracy constants",
+    "d": "feature dimension, count"
+   },
+   "assumptions": [
+    "The comparison fixes a computation budget T, under which least squares processes about T over d squared samples and incremental methods about d times more.",
+    "Both methods are assumed to converge at the usual one over square root of sample size rate."
+   ],
+   "breakdown_regime": "The rule of thumb, small d favors least squares and large d favors incremental methods, can flip when data arrival cost, storage, or access time dominates, or when features are sparse enough for iLSTD style updates.",
+   "domain": "least_squares_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Solver choice in the engine is a budgeted decision with the dimension term explicit: the same fixed compute envelope is translated into expected parameter error for each candidate solver before one is assigned to a problem.",
+    "source_operator": "least_squares_vs_incremental_cost",
+    "telemetry": "Feature dimensions, compute budgets, measured per sample costs, and achieved parameter errors per solver."
+   }
+  },
+  {
+   "primitive_id": "overfitting_approximation_estimation_bound",
+   "name": "Function space choice trades approximation error against estimation error, with an explicit bound whose estimation term grows with dimension over sample size",
+   "verbatim_quote": "The phenomenon of fitting to the “noise” is called overfitting.",
+   "page": "Sec. 3.2.4",
+   "latex": "\\mathbb{E}\\|\\theta_n^\\top \\phi - V\\|^2 \\le C_1 \\frac{d(1 + \\log n)}{n} + C_2 \\|\\theta^{*\\top} \\phi - V\\|_\\mu^2",
+   "symbol_and_unit_ledger": {
+    "theta_n": "empirical loss minimizer",
+    "theta^*": "population loss minimizer, the projection of V onto the span",
+    "d": "feature dimension, count",
+    "n": "sample count",
+    "C_1": "constant scaling with reward variance and range",
+    "C_2": "universal constant"
+   },
+   "assumptions": [
+    "Rewards are bounded and predicted values are truncated back to the reward range at prediction time in the stated bound.",
+    "The simplified derivation sets gamma to zero so LSTD reduces to empirical loss minimization."
+   ],
+   "breakdown_regime": "Uniform closeness of empirical to population loss is what must be bought with samples; pointwise convergence at each parameter value does not control the minimizer, and dependent or poorly mixing samples weaken the bound.",
+   "domain": "statistical_learning_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model size decisions in the engine cite this decomposition directly: every capacity increase must name the approximation gain it buys and the estimation cost it charges at the current sample count, in the form of the two bound terms.",
+    "source_operator": "overfitting_approximation_estimation_bound",
+    "telemetry": "Feature dimensions, sample counts, held out estimation errors, and span approximation errors per model."
+   }
+  },
+  {
+   "primitive_id": "exploration_greedy_failure",
+   "name": "Pure greedy action selection can lock onto a suboptimal action forever, so learning must sometimes take actions that look suboptimal",
+   "verbatim_quote": "A basic observation then is that a bandit learner who always chooses the action with the best estimated payoff (i.e., who always makes the greedy choice) can fail to find the best action with positive probability, which in turn leads to a large loss.",
+   "page": "Sec. 4.2.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reward observations are noisy enough that early samples can rank the best action below another.",
+    "The learner never revisits an action it currently ranks low when acting purely greedily."
+   ],
+   "breakdown_regime": "Epsilon greedy and Boltzmann exploration fix the lock in only heuristically: their tuning is problem dependent and no automated choice is known, which is why confidence bound methods are preferred where available.",
+   "domain": "exploration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exploration is a budgeted line item in engine data collection: a stated fraction of decisions is reserved for information gathering actions, and any data collected purely greedily is labeled as lock in risk for downstream evaluation.",
+    "source_operator": "exploration_greedy_failure",
+    "telemetry": "Exploration rates per decision stream, action visit counts, and estimate histories for never retried actions."
+   }
+  },
+  {
+   "primitive_id": "optimism_ucb1",
+   "name": "Optimism in the face of uncertainty selects the action with the highest upper confidence bound, as in UCB1",
+   "verbatim_quote": "A better approach might be to implement the so-called optimism in the face of uncertainty (OFU) principle due to Lai and Robbins (1985), according to which the learner should choose",
+   "page": "Sec. 4.2.1",
+   "latex": "U_t(a) = \\bar{r}_t(a) + R \\sqrt{\\frac{2 \\log t}{n_t(a)}}",
+   "symbol_and_unit_ledger": {
+    "U_t(a)": "upper confidence bound for action a at time t, reward units",
+    "r bar_t(a)": "sample mean reward of action a, reward units",
+    "R": "half range of rewards, reward units",
+    "n_t(a)": "number of times action a was tried up to t, count",
+    "t": "total time steps, count"
+   },
+   "assumptions": [
+    "Rewards for each action are independent across time and bounded in an interval of half range R.",
+    "The failure probability of the stated bound is t to the power minus 4."
+   ],
+   "breakdown_regime": "Using the range R wastes information when reward variances are small; variance aware variants such as the Audibert et al. algorithm replace R with estimated variances and are essentially unimprovable.",
+   "domain": "exploration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate signals in the engine are ranked for further testing by an optimism score, sample mean plus an uncertainty bonus that grows for under sampled candidates and shrinks with evidence, so neglected candidates automatically resurface.",
+    "source_operator": "optimism_ucb1",
+    "telemetry": "Per candidate sample means, trial counts, confidence bonuses, and selection histories."
+   }
+  },
+  {
+   "primitive_id": "active_bandit_elimination",
+   "name": "Active bandit identification eliminates an action once its upper bound falls below another action lower bound, at a stated confidence",
+   "verbatim_quote": "and eliminate an action a if Ut (a) < maxa0 ∈A Lt (a0 ).",
+   "page": "Sec. 4.2.2",
+   "latex": "U_t(a) = Q_t(a) + R \\sqrt{\\frac{\\log(2|A|T/\\delta)}{2t}}, \\qquad L_t(a) = Q_t(a) - R \\sqrt{\\frac{\\log(2|A|T/\\delta)}{2t}}",
+   "symbol_and_unit_ledger": {
+    "U_t, L_t": "upper and lower confidence bounds, reward units",
+    "Q_t(a)": "estimated mean reward of action a",
+    "R": "reward half range",
+    "A": "action set",
+    "T": "interaction budget, count",
+    "delta": "allowed failure probability, dimensionless",
+    "t": "trials per action in the stated schedule"
+   },
+   "assumptions": [
+    "Rewards collected during identification do not count toward the objective; only the final identified action matters.",
+    "The user sets delta, the confidence with which the method may fail to return the best action."
+   ],
+   "breakdown_regime": "Apart from constant factors and variance estimation refinements the procedure is unimprovable, so remaining gains must come from better bounds, not better elimination logic.",
+   "domain": "active_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Screening pipelines in the engine eliminate candidate approaches by bound crossing rather than by point estimate ranking: a candidate is dropped only when its optimistic bound is beaten by a rival pessimistic bound at a declared confidence.",
+    "source_operator": "active_bandit_elimination",
+    "telemetry": "Per candidate confidence bounds, elimination times, confidence parameters, and surviving candidate sets."
+   }
+  },
+  {
+   "primitive_id": "ucrl2_optimistic_mdp_planning",
+   "name": "UCRL2 extends optimism to MDPs by planning in the best plausible model inside confidence sets, updating the policy only when some state action count doubles",
+   "verbatim_quote": "The UCRL2 algorithm (Algorithm 10) implements the optimism in the face of uncertainty principle: It constructs confidence intervals around the estimates of the transition probabilities and the immediate reward function.",
+   "page": "Sec. 4.2.4",
+   "latex": "\\mathbb{E}\\left[R_T^{\\mathrm{UCRL2}(1/(3T))}\\right] = O\\left(D\\,|X|\\,\\sqrt{|A|\\,T \\log T}\\right)",
+   "symbol_and_unit_ledger": {
+    "R_T": "regret over T steps, reward units",
+    "D": "diameter of the MDP, steps",
+    "X": "state set",
+    "A": "action set",
+    "T": "time horizon, steps"
+   },
+   "assumptions": [
+    "The MDP is finite and unichain: every stationary policy eventually visits all states, giving a unique stationary distribution and a well defined average reward.",
+    "Immediate rewards lie in the unit interval."
+   ],
+   "breakdown_regime": "The bounds are vacuous when the diameter is infinite, as with transient states that some policies never reach; distinguishing transient from merely hard to reach states is intrinsically expensive.",
+   "domain": "online_learning_mdps",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exploration in sequential engine tasks plans against the most favorable model still consistent with logged transitions at a stated confidence, and policy revisions are triggered by information doublings on some state action pair rather than by calendar or by single outcomes.",
+    "source_operator": "ucrl2_optimistic_mdp_planning",
+    "telemetry": "Transition confidence sets, visit counts per state action pair, diameter estimates, and policy revision triggers."
+   }
+  },
+  {
+   "primitive_id": "pac_mdp_criterion",
+   "name": "PAC-MDP algorithms bound the number of time steps whose future expected return is more than epsilon below optimal, polynomially in the problem parameters",
+   "verbatim_quote": "An online learning algorithm is called PAC-MDP if this measure can be bounded with high probability as a polynomial function of the natural parameters of the MDP and if in each time step polynomially many computational steps are performed.",
+   "page": "Sec. 4.2.4",
+   "latex": "T_\\varepsilon = \\tilde{O}\\left(|X|\\,|A|\\,\\left(\\frac{V_{\\max}}{\\varepsilon(1-\\gamma)^2}\\right)^2 \\log \\frac{1}{\\delta}\\right)",
+   "symbol_and_unit_ledger": {
+    "T_epsilon": "number of epsilon suboptimal steps, count",
+    "V_max": "upper bound on the optimal value, at most reward sup norm over 1 minus gamma",
+    "epsilon": "suboptimality margin, reward units",
+    "gamma": "discount factor",
+    "delta": "failure probability"
+   },
+   "assumptions": [
+    "The stated bound is the MorMax bound, the best among the listed PAC-MDP algorithms on this measure.",
+    "All listed algorithms, R-max, MBIE, Delayed Q-learning, optimistic initialization, and MorMax, implement optimism in some form."
+   ],
+   "breakdown_regime": "The guarantees are limited to small finite spaces in the basic forms; extensions to large spaces need restricted MDP classes and black box solvers whose membership conditions may be hard to verify for a concrete problem.",
+   "domain": "online_learning_mdps",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deployment gates in the engine use the PAC style measure: instead of average performance alone, the count of decisions whose estimated future return falls more than a set margin below the best known alternative is bounded and reported per release.",
+    "source_operator": "pac_mdp_criterion",
+    "telemetry": "Per decision suboptimality estimates, counts of margin violations, and confidence parameters per evaluation window."
+   }
+  },
+  {
+   "primitive_id": "q_learning_offpolicy_optimal_values",
+   "name": "Q-learning estimates optimal action values directly from sampled transitions, because optimal action values are expectations under the Bellman optimality operator",
+   "verbatim_quote": "The key observation that lead to the discovery of Q-learning is that unlike the optimal state values, the optimal action-values can be expressed as expectations",
+   "page": "Sec. 4.3.1",
+   "latex": "\\delta_{t+1}(Q) = R_{t+1} + \\gamma \\max_{a' \\in A} Q(Y_{t+1}, a') - Q(X_t, A_t), \\qquad Q_{t+1}(x,a) = Q_t(x,a) + \\alpha_t \\delta_{t+1}(Q_t) \\mathbb{I}\\{x = X_t, a = A_t\\}",
+   "symbol_and_unit_ledger": {
+    "delta(Q)": "Q learning temporal difference error, reward units",
+    "Q": "action value estimate, reward units",
+    "Y_{t+1}": "sampled successor state",
+    "max": "greedy successor action value",
+    "gamma": "discount factor",
+    "alpha_t": "local step size"
+   },
+   "assumptions": [
+    "Every state action pair is visited infinitely often and local learning rates are chosen appropriately.",
+    "In stochastic equilibrium the expected TD error vanishes exactly at the fixed point of the optimality operator."
+   ],
+   "breakdown_regime": "Multi step versions lose the clean telescoping of TD(lambda) because Q-learning is inherently off policy; with function approximation or off policy sampling the same divergence hazards as TD return, and only restrictive conditions or greedy gradient variants restore guarantees.",
+   "domain": "control_algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Direct action value estimation is the engine default for control style problems: logged transitions update the value of the taken action toward the best successor value, so the decision surface improves from data generated by any behavior that covers the action space.",
+    "source_operator": "q_learning_offpolicy_optimal_values",
+    "telemetry": "Transition logs, per pair update counts, TD error distributions, and greedy policy changes per model version."
+   }
+  },
+  {
+   "primitive_id": "post_decision_states",
+   "name": "Post decision states factor a transition into a known deterministic action effect and a stochastic remainder, shrinking what must be learned",
+   "verbatim_quote": "If a problem admits post-decision states, learning the immediate reward function (if it is not known) and the so-called post-decision state optimal value function,",
+   "page": "Sec. 4.3.1",
+   "latex": "P(x, a, y) = P_A(f(x, a), y), \\qquad Q^*(x, a) = r(x, a) + \\gamma V^{A*}(f(x, a))",
+   "symbol_and_unit_ledger": {
+    "P_A": "stochastic kernel from post decision state to next state",
+    "f(x,a)": "known deterministic post decision state in Z",
+    "V^{A*}": "optimal post decision value function, reward units",
+    "Q^*": "optimal action value, reward units",
+    "gamma": "discount factor"
+   },
+   "assumptions": [
+    "A set Z smaller than the state action product can be identified with the stated factorization.",
+    "The deterministic effect function f is known; only the stochastic kernel and the reward need learning."
+   ],
+   "breakdown_regime": "Many problems admit no useful factorization, and when the greedy action must be computed from a plain state value instead, a stochastic optimization over successor expectations is required, which post decision values exist to avoid.",
+   "domain": "control_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Problem formulations in the engine are required to expose any known deterministic consequence of an action as a post decision state: known effects are computed exactly and only the genuinely stochastic remainder is modeled and learned.",
+    "source_operator": "post_decision_states",
+    "telemetry": "Post decision state definitions, deterministic effect functions, and learned remainder kernels per problem."
+   }
+  },
+  {
+   "primitive_id": "fitted_q_iteration_regression",
+   "name": "Fitted Q-iteration turns value iteration into repeated regression on Bellman targets, and its stability depends on the regressor being an averager",
+   "verbatim_quote": "It is known that fitted Q-iteration might diverge unless a special regressor is used",
+   "page": "Sec. 4.3.2",
+   "latex": "e^*_1(F) = \\sup_{Q \\in F} \\inf_{Q' \\in F} \\|Q' - T^* Q\\|_\\mu",
+   "symbol_and_unit_ledger": {
+    "e^*_1(F)": "worst case one step Bellman approximation error of the function class, reward units",
+    "F": "candidate action value function class",
+    "T^*": "Bellman optimality operator",
+    "mu": "distribution of state action pairs in the training sample"
+   },
+   "assumptions": [
+    "Targets are Monte Carlo evaluations of the Bellman operator at selected state action pairs, regressed with the chosen method.",
+    "Kernel averaging and tree based regressors are the named stable choices because they implement local averaging."
+   ],
+   "breakdown_regime": "In the known divergence counterexamples the class error e star 1 of F is infinite, which the book reads as the function class lacking the flexibility to represent its own Bellman image.",
+   "domain": "control_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Batch value refits in the engine are fitted iteration with the regressor class treated as part of the algorithm contract: the one step class error is estimated and reported, and non averaging regressors need explicit stability evidence before use.",
+    "source_operator": "fitted_q_iteration_regression",
+    "telemetry": "Regressor class identifiers, per iteration target sets, class error estimates, and refit residuals."
+   }
+  },
+  {
+   "primitive_id": "actor_critic_gpi",
+   "name": "Actor critic methods run generalized policy iteration: a critic evaluates the current policy while an actor improves it before evaluation completes",
+   "verbatim_quote": "Note that unlike perfect policy iteration, a GPI method may generate a policy that is substantially worse than the previous one.",
+   "page": "Sec. 4.4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The behavior policy can differ from the target policy, and the target is usually stochastic so the critic receives information about actions the target rarely prefers.",
+    "Policy quality is therefore monitored across the generated sequence, with the empirically best stored policy selected at the end in common practice."
+   ],
+   "breakdown_regime": "With incomplete evaluation the policy sequence can oscillate or diverge regardless of whether improvement is exact or approximate; early improvement followed by later oscillation is the typical empirical pattern.",
+   "domain": "actor_critic_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine policy updates are two process by construction: an evaluation process that owns value accuracy and an improvement process that may only move as far as the current evaluation supports, with every intermediate policy versioned and scored so regressions are detected rather than inherited.",
+    "source_operator": "actor_critic_gpi",
+    "telemetry": "Policy version histories, critic accuracy per version, and independent performance scores per stored policy."
+   }
+  },
+  {
+   "primitive_id": "sarsa_onpolicy_action_values",
+   "name": "SARSA is TD applied to state action pairs, evaluating the policy actually followed, including its next action",
+   "verbatim_quote": "The algorithm got its name from its use of the current State, current Action, next Reward, next State, and next Action.",
+   "page": "Sec. 4.4.1",
+   "latex": "\\delta_{t+1}(Q) = R_{t+1} + \\gamma Q(Y_{t+1}, A'_{t+1}) - Q(X_t, A_t)",
+   "symbol_and_unit_ledger": {
+    "delta(Q)": "SARSA temporal difference error, reward units",
+    "A'_{t+1}": "next action drawn from the evaluated policy at the successor state",
+    "Q": "action value estimate, reward units",
+    "gamma": "discount factor"
+   },
+   "assumptions": [
+    "The policy is fixed during pure evaluation; when it changes with the estimates, GLIE style conditions give asymptotic consistency in the tabular case.",
+    "The successor action is sampled from the policy, not maximized, which is the whole difference from Q-learning."
+   ],
+   "breakdown_regime": "As a TD method with function approximation it inherits the off policy divergence hazard; gradient corrections extended from GTD2 and TDC are the named remedy.",
+   "domain": "actor_critic_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine evaluates the decision rule that actually generated the data, SARSA style updates are used so exploration actions are charged to the policy that took them; Q style maximization is reserved for estimating the best achievable rule instead.",
+    "source_operator": "sarsa_onpolicy_action_values",
+    "telemetry": "Behavior action logs including exploratory actions, successor action records, and per policy value estimates."
+   }
+  },
+  {
+   "primitive_id": "policy_gradient_theorem",
+   "name": "The policy gradient theorem gives an unbiased gradient estimate of expected return from action values times the score function, with any state only baseline allowed",
+   "verbatim_quote": "According to the policy gradient theorem (see, e.g., Bhatnagar et al., 2009 and the references therein), G(ω) is an unbiased estimate of the gradient:",
+   "page": "Sec. 4.4.2",
+   "latex": "\\nabla_\\omega \\rho_\\omega = \\mathbb{E}[G(\\omega)], \\qquad G(\\omega) = \\left(Q^{\\pi_\\omega}(X, A) - h(X)\\right) \\psi_\\omega(X, A), \\qquad \\psi_\\omega(x, a) = \\frac{\\partial}{\\partial \\omega} \\log \\pi_\\omega(a \\mid x)",
+   "symbol_and_unit_ledger": {
+    "rho_omega": "expected return of the parameterized policy, reward units",
+    "omega": "policy parameter vector",
+    "Q^{pi_omega}": "action value of the current policy, reward units",
+    "h(X)": "arbitrary bounded baseline function of state",
+    "psi_omega": "score function, gradient of log policy",
+    "(X,A)": "sample from the stationary state action distribution of the policy"
+   },
+   "assumptions": [
+    "The Markov chain induced by every policy in the class is ergodic, so a stationary state action distribution exists.",
+    "Step sizes satisfy the Robbins Monro conditions and the problem is regular enough for convergence to a stationary point."
+   ],
+   "breakdown_regime": "Only convergence to a local optimum or stationary point is guaranteed; in non episodic problems the samples must come from the current policy stationary distribution, which forces two timescale implementations with a critic on the fast scale.",
+   "domain": "policy_gradient",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Parametric decision rules in the engine are improved by score weighted action values with a state value baseline: the baseline is not cosmetic, it is the variance control that decides whether the gradient signal is usable at practical sample sizes.",
+    "source_operator": "policy_gradient_theorem",
+    "telemetry": "Policy parameters, score vectors per decision, baseline values, and gradient estimate variances per update."
+   }
+  },
+  {
+   "primitive_id": "compatible_fa_natural_actor_critic",
+   "name": "Compatible function approximation uses the policy score as the critic features, and the resulting critic weights are the natural gradient of performance",
+   "verbatim_quote": "This choice of the function approximation method is called compatible with the policy parameterization.",
+   "page": "Sec. 4.4.2",
+   "latex": "Q_\\theta(x, a) = \\theta^\\top \\psi_\\omega(x, a), \\qquad \\omega_{t+1} = \\omega_t + \\beta_t \\theta_t",
+   "symbol_and_unit_ledger": {
+    "Q_theta": "compatible action value approximation, reward units",
+    "psi_omega": "score function features of the policy class",
+    "theta": "critic weights solving F_omega theta equals g_omega",
+    "omega": "policy parameters",
+    "beta_t": "slow timescale step size"
+   },
+   "assumptions": [
+    "The Fisher style matrix F omega, the expected outer product of scores, is positive definite.",
+    "Only lambda equal to 1 in the critic gives an unbiased gradient estimate in the LSTD-Q based variant described."
+   ],
+   "breakdown_regime": "Natural gradient updates are invariant to smooth reparameterizations of the policy class, while plain gradients can be near zero across large parameter regions; the cost is estimating and inverting or applying the Fisher matrix through the critic solution.",
+   "domain": "policy_gradient",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Policy improvement steps in the engine are preconditioned by the geometry of the policy class itself: critic weights double as the update direction, so a unit of improvement means the same thing after any smooth relabeling of the parameters.",
+    "source_operator": "compatible_fa_natural_actor_critic",
+    "telemetry": "Score feature matrices, critic weights per policy version, and update directions before and after preconditioning."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "1498481931694bd8-t1",
+   "think": "This book is a compact map of reinforcement learning drawn by an author whose central loyalty is to convergence statements. Its argument starts from a control loop: a controller sees a state and a reward, emits an action, and the system moves. Everything else is machinery for turning that loop into computation. The dynamic programming solution would be exact if the model were known and small: define the value of a policy as expected discounted return, write the Bellman equation it must satisfy, note that the Bellman operator contracts in the maximum norm when the discount factor is below one, and iterate. Banach fixed point theorem then supplies existence, uniqueness, and a geometric rate in one stroke, and greedy readout of the optimal action values supplies the optimal policy. The book is honest that this solution is a reference point rather than a method, because dynamic programming is infeasible once states and actions are more than few. The whole field, on this telling, is what happens when two compressions are applied to the infeasible exact method. Samples replace the model, so expectations become averages over visited transitions. Function approximation replaces the table, so values become parameters over features. Every algorithm in the book is a combination of those two compressions with a stated price.\n\nThe prediction half of the book prices the compressions for evaluation. Tabular TD(0) is stochastic approximation driven by a bootstrapped error signal: the successor estimate stands in for the unknown tail value, and the Robbins Monro step size conditions plus the stability of a linear ODE deliver almost sure convergence at the usual root t rate. Monte Carlo removes the bootstrap and pays with variance. TD(lambda) is presented not as a new idea but as a dial between them, with eligibility traces as the bookkeeping that makes the dial incremental, and with clean special cases at both ends. Once features replace the table, the same algorithms change character. On policy linear TD still converges, but to a projected fixed point whose quality is capped by how well the feature span can represent the true value, inflated by a factor that worsens as lambda falls. Off policy sampling or nonlinear approximation can destroy convergence entirely, and the book treats that divergence as a structural fact to be engineered around: gradient TD methods rebuild the update from the gradient of a projected Bellman objective at twice the cost and with a two timescale condition, while least squares methods accumulate the empirical system and solve it directly, trading step size fragility for quadratic or cubic compute. The function space discussion then closes the loop statistically: capacity buys approximation and charges estimation, with an explicit bound, an overfitting regime when dimension exceeds sample size, and practical pressure toward regularization and automatic feature construction.\n\nThe control half repeats the pattern for improvement. Exploration comes first because it is the genuinely new problem that interaction creates: greedy behavior can lock in a wrong action forever, epsilon greedy and Boltzmann rules patch the symptom without principled tuning, and optimism in the face of uncertainty replaces patches with confidence bounds, from UCB1 in bandits through elimination procedures for pure identification to UCRL2, which plans inside a set of plausible MDPs and achieves square root regret scaling in the gap free bound. The PAC-MDP criterion reframes the same ambition as a bound on the number of seriously suboptimal steps. Direct methods then mirror value iteration with samples: Q-learning works because optimal action values are expectations, post decision states shrink what must be learned when part of the transition is known deterministically, and fitted Q-iteration exposes how the choice of regressor decides stability. Actor critic methods mirror policy iteration with incomplete evaluation, and the book is blunt that generalized policy iteration can oscillate or produce a worse policy, which is why its practical advice is to store and test the policy sequence. Policy gradient closes the arc by differentiating performance itself: the gradient theorem expresses the derivative as an expectation of action values times score functions, compatible approximation makes the critic solve for exactly the weights the gradient needs, and the natural actor critic shows those weights are a natural gradient, invariant to reparameterization.\n\nFor a reasoning engine the transferable content is the discipline, not any single algorithm. First, every estimator in the book is specified by its fixed point, its sampling distribution, and its failure mode, and an engine should refuse to deploy an estimator that cannot state all three. Second, bootstrapping, approximation, and off policy data are individually manageable and jointly dangerous, so architectures should be classified by which of the three they combine. Third, confidence is a computational object: upper bounds drive exploration, elimination, and optimistic planning, and they shrink at stated rates with counts, which gives an engine a principled way to decide what to test next. Fourth, evaluation and improvement are separate processes with separate accuracy budgets, and improvement must be throttled by evaluation quality, exactly the actor critic lesson. Fifth, capacity decisions belong in the approximation versus estimation ledger with sample counts attached, not in intuition. Read this way, the book is a catalog of contracts between data, representation, and guarantees, and its algorithms are the worked examples of honoring those contracts at different prices.\n\n A final transferable point is the treatment of time. Discounting is not a cosmetic preference in this book: it is what makes the operators contract, the returns finite, and the error bounds degrade gracefully as the horizon lengthens, and every bound quoted carries its discount factor in the denominator where a reader can see the price of patience. Systems that evaluate long horizon consequences should expect the same structure, with accuracy requirements tightening exactly as the effective horizon grows.",
+   "retrocausal_genealogy": "The lineage runs from Bellman dynamic programming and Howard policy iteration in the late 1950s, through Robbins and Monro stochastic approximation, into Sutton temporal difference learning in the 1980s and Watkins Q-learning at the end of that decade. Least squares temporal difference arrived with Bradtke and Barto in 1996, the same year Bertsekas and Tsitsiklis gave the field its neuro dynamic programming synthesis. Bandit optimism descends from Lai and Robbins in 1985, was made finite time by Auer and coauthors in UCB1 in 2002, and was lifted to MDPs by UCRL and the PAC-MDP line from Kakade thesis work, R-max, and MBIE. Policy gradient descends from Williams REINFORCE through Sutton and Konda and Tsitsiklis actor critic work around 1999 to 2003, with Kakade natural gradient in 2001. Szepesvari writes as the consolidator of this lineage, repeatedly crediting Sutton and Barto as the fathers of the field while re deriving their algorithms inside one contraction and stochastic approximation frame.",
+   "theory_of_mind": "The author models the reader as someone who will implement these algorithms and who therefore deserves the conditions, not just the updates. Pseudocode is given for almost twenty algorithms, step size behavior is discussed as a practical choice with named failure modes, and personal bias is admitted up front while impartiality is attempted. The underlying model of the domain is that reinforcement learning problems are contracts: a criterion, a sampling regime, and a representation, and that most confusion in the field comes from applying an algorithm outside the regime its proof assumes. The author also believes brevity is a service: results are restricted to the discounted criterion and countable spaces precisely so the core ideas stay visible, with pointers outward for everything omitted.",
+   "cross_layer_veto": "This work vetoes several tempting shortcuts in any larger reasoning stack. It vetoes greedy deployment of value estimates, because greedy action selection can lock in error permanently and because greedy readout of an approximate action value carries a loss term that grows as the discount factor approaches one. It vetoes off policy bootstrapped approximation without stabilization, because divergence there is proven behavior, not an anecdote. It vetoes capacity growth justified only by training fit, because the estimation term in its bound grows with dimension over samples. And it vetoes reporting a learned policy without its evaluation regime, since the same update is a convergent estimator under one sampling distribution and a divergent one under another."
+  }
+ ],
+ "universal_lens": "Any system that must act, observe consequences, and improve can be described as a loop of state, action, successor, and scalar feedback, and its learning methods are fully characterized by three choices: what expectation is sampled instead of computed, what compact representation replaces the full table of possibilities, and what guarantee survives those two compressions. The template travels intact to operations, experimentation, and organizational decision making: name the fixed point you want, name the distribution your data actually comes from, name the representation error you are accepting, and most design disputes become arithmetic.",
+ "gsi_mapping": "The Institute takes the book as a curriculum spine for sequential reasoning under feedback: contraction and fixed points first, then bootstrapped estimation with its step size discipline, then the approximation versus estimation ledger, then optimism as the principled form of exploration. Its research program inherits the open edges the book names honestly, including scalable systematic exploration, verified membership in restricted problem classes, and statistical guarantees for feature construction, each framed as a contract to be stated before an algorithm is trusted.",
+ "gse_mapping": "The engine takes four operating rules. Evaluation is fixed point solving with residuals reported, never single outcome grading. Data provenance separates behavior from target in every record, so counterfactual evaluation is routine and its coverage assumptions are explicit. Exploration and candidate testing are allocated by confidence bounds that shrink with counts, so neglected candidates resurface automatically. Policy improvement is throttled by critic accuracy, with every intermediate policy versioned and independently scored, and capacity changes must cite the approximation gain and estimation cost at the current sample count."
+}

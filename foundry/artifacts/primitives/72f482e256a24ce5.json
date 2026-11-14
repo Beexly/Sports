@@ -1,0 +1,792 @@
+{
+ "book_id": "72f482e256a24ce5",
+ "source_status": "COMPLETE",
+ "source_note": "Raymond W. Yeung, Information Theory and Network Coding, Springer, 2008. Local file is the publisher's pre-publication draft dated November 15, 2007 (title page), whose contents run to 21 chapters: the draft adds chapters on differential entropy, continuous-valued channels, Markov structures, and five network coding chapters (17-21) beyond the 16 chapters described in its own preface. PDF size 4210787 bytes; sha256 over (str(size) + bytes) = 72f482e256a24ce5d0a8ca0fb4faa2f5588f5e1693e411f54fce031d37d94e26; book_id = first 16 hex chars. Extracted text (1,434,329 bytes, 27,463 lines) is clean born-digital text with standard extraction artifacts: page headers and page numbers interleave mid-sentence, a few words are hyphenated across line breaks, and mathematical glyphs are imperfectly rendered; all verbatim quotes were chosen from clean prose passages inside single pages and machine-verified as contiguous substrings of the text file after whitespace normalization and dehyphenation. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "entropy_definition",
+   "name": "Entropy H(X) = -sum p(x) log p(x): expected uncertainty of a discrete random variable",
+   "verbatim_quote": "The entropy H(X) of a random variable X is a functional of the probability distribution p(x) which measures the average amount of information contained in X, or equivalently, the average amount of uncertainty removed upon revealing the outcome of X.",
+   "page": "Ch. 2, Sec. 2.2, Def. 2.13, eq. (2.35); text lines 854-893",
+   "latex": "H(X) = -\\sum_x p(x) \\log p(x)",
+   "symbol_and_unit_ledger": {
+    "H(X)": "entropy of X, in bits for log base 2 (nats for base e)",
+    "p(x)": "probability mass of outcome x, dimensionless",
+    "log": "logarithm, base sets the unit"
+   },
+   "assumptions": [
+    "X is a discrete random variable with a probability distribution p(x)",
+    "Summation is over the support of p, with the convention 0 log 0 = 0"
+   ],
+   "breakdown_regime": "For countably infinite alphabets H(X) can be infinite; entropy ignores the actual outcome values and sees only the distribution",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropy is the engine's unit of unresolved uncertainty for any discrete signal: a player prop distribution, an injury status, or a play-call tendency each carries an H value that prices how much one observation is worth before it is made.",
+    "source_operator": "entropy_definition",
+    "telemetry": "Empirical outcome frequencies for the signal in question, from play-by-play logs, injury reports, or tracking data"
+   }
+  },
+  {
+   "primitive_id": "binary_entropy_function",
+   "name": "Binary entropy function hb(gamma) for a two-outcome distribution, maximal at gamma = 1/2",
+   "verbatim_quote": "with the convention 0 log 0 = 0, so that hb (0) = hb (1) = 0. With this convention, hb (γ) is continuous at γ = 0 and γ = 1.",
+   "page": "Ch. 2, Sec. 2.2, eq. (2.38); text lines 895-901",
+   "latex": "h_b(\\gamma) = -\\gamma \\log \\gamma - (1-\\gamma) \\log (1-\\gamma)",
+   "symbol_and_unit_ledger": {
+    "h_b": "binary entropy function, bits when log base 2",
+    "gamma": "probability of one of the two outcomes, in [0,1]"
+   },
+   "assumptions": [
+    "The random variable is binary with distribution {gamma, 1-gamma}",
+    "Convention 0 log 0 = 0"
+   ],
+   "breakdown_regime": "Only describes two-outcome uncertainty; multi-outcome uncertainty needs the full entropy sum",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every binary engine question (cover or not, over or not, starter plays or not) has uncertainty hb(p); hb near 1 bit flags a coin-flip signal that should never anchor a projection, hb near 0 flags a near-certain input.",
+    "source_operator": "entropy_definition",
+    "telemetry": "Calibrated probability p for the binary event from the model's own forecast log"
+   }
+  },
+  {
+   "primitive_id": "chain_rule_entropy",
+   "name": "Chain rule for joint entropy: H(X, Y) = H(X) + H(Y|X)",
+   "verbatim_quote": "Then the proposition says that the total amount of uncertainty removed upon revealing both X and Y is equal to the sum of the uncertainty removed upon revealing X (uncertainty removed in the first step) and the uncertainty removed upon revealing Y once X is known (uncertainty removed in the second step).",
+   "page": "Ch. 2, Sec. 2.2, Prop. 2.16, eq. (2.47); text lines 985-991",
+   "latex": "H(X, Y) = H(X) + H(Y|X)",
+   "symbol_and_unit_ledger": {
+    "H(X, Y)": "joint entropy of the pair, bits",
+    "H(Y|X)": "conditional entropy of Y given X, bits"
+   },
+   "assumptions": [
+    "X and Y are discrete random variables with a joint distribution"
+   ],
+   "breakdown_regime": "The decomposition is order dependent in its terms even though the total is not; with infinite entropies the algebra can fail",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The chain rule is the engine's bookkeeping identity for staged reasoning: total game uncertainty decomposes into pregame uncertainty plus the residual uncertainty after each revealed layer (usage, health, matchup) is conditioned on.",
+    "source_operator": "chain_rule_entropy",
+    "telemetry": "Joint and conditional distributions over staged signal layers in the pregame pipeline"
+   }
+  },
+  {
+   "primitive_id": "mutual_information_definition",
+   "name": "Mutual information I(X; Y): reduction in uncertainty about X given Y, symmetric in its arguments",
+   "verbatim_quote": "From (2.57), we can interpret I(X; Y ) as the reduction in uncertainty about X when Y is given, or equivalently, the amount of information about X provided by Y .",
+   "page": "Ch. 2, Sec. 2.2, Def. 2.17, eq. (2.53), Prop. 2.19; text lines 1032-1036",
+   "latex": "I(X; Y) = \\sum_{x,y} p(x, y) \\log \\frac{p(x, y)}{p(x) p(y)}",
+   "symbol_and_unit_ledger": {
+    "I(X; Y)": "mutual information, bits",
+    "p(x, y)": "joint probability mass",
+    "p(x), p(y)": "marginal probability masses"
+   },
+   "assumptions": [
+    "X and Y discrete with joint distribution p(x, y)",
+    "Identity forms I = H(X) - H(X|Y) require the entropies to be finite"
+   ],
+   "breakdown_regime": "Mutual information detects dependence of any form but says nothing about its direction, sign, or functional shape",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mutual information is the engine's dependence meter between any two signals (a blitz rate and a quarterback'sEPA split, a referee crew and penalty counts): it scores shared information without assuming a linear or monotone form.",
+    "source_operator": "mutual_information_definition",
+    "telemetry": "Paired samples of the two signals over historical games"
+   }
+  },
+  {
+   "primitive_id": "conditional_mutual_information_unifies_measures",
+   "name": "Conditional mutual information I(X; Y|Z) is the master measure: entropy, conditional entropy, and mutual information are its special cases",
+   "verbatim_quote": "To conclude this section, we show that all Shannon's information measures are special cases of conditional mutual information.",
+   "page": "Ch. 2, Sec. 2.2, Def. 2.20, eq. (2.60); text lines 1118-1119",
+   "latex": "I(X; Y|Z) = \\sum_{x,y,z} p(x, y, z) \\log \\frac{p(x, y|z)}{p(x|z) p(y|z)}",
+   "symbol_and_unit_ledger": {
+    "I(X; Y|Z)": "conditional mutual information, bits",
+    "Z": "conditioning random variable",
+    "p(x, y|z)": "conditional joint mass given Z = z"
+   },
+   "assumptions": [
+    "A degenerate conditioning variable recovers I(X; Y); setting X = Y recovers H(X|Z) and H(X)"
+   ],
+   "breakdown_regime": "Conditioning can increase mutual information, unlike entropy, so CMI must never be read as a residual-uncertainty measure",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "One operator serves the whole engine: every signal-value question is I(target; signal | context already consumed), which keeps usage, health, and matchup layers commensurable in a single currency of bits.",
+    "source_operator": "conditional_mutual_information_unifies_measures",
+    "telemetry": "Joint distributions over target, candidate signal, and the context variables already in the model"
+   }
+  },
+  {
+   "primitive_id": "continuity_variational_distance",
+   "name": "For fixed finite alphabets all Shannon measures are continuous in the joint distribution under variational distance",
+   "verbatim_quote": "In this section, we prove that for fixed finite alphabets, all Shannon's information measures are continuous functionals of the joint distribution of the random variables involved.",
+   "page": "Ch. 2, Sec. 2.3, Def. 2.23, eq. (2.68); text lines 1130-1133",
+   "latex": "V(p, q) = \\sum_{x \\in \\mathcal{X}} |p(x) - q(x)|",
+   "symbol_and_unit_ledger": {
+    "V(p, q)": "variational (L1) distance between distributions p and q, dimensionless in [0, 2]",
+    "p, q": "probability distributions on a common finite alphabet"
+   },
+   "assumptions": [
+    "Alphabets are fixed and finite",
+    "Convergence is in variational distance"
+   ],
+   "breakdown_regime": "Continuity fails when the alphabet is allowed to grow or is countably infinite; small samples on huge alphabets can still swing entropy estimates",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Continuity licenses plug-in estimation inside the engine: if the estimated distribution is close in L1 to the truth, every entropy and mutual information computed from it is close too, so sampling error bounds translate directly into information error bounds.",
+    "source_operator": "continuity_variational_distance",
+    "telemetry": "L1 distance between estimated and held-out empirical distributions for engine inputs"
+   }
+  },
+  {
+   "primitive_id": "informational_divergence",
+   "name": "Informational divergence D(p||q): asymmetric measure of how different distribution p is from q",
+   "verbatim_quote": "We very often want to measure how much p is different from q, and vice versa. In order to be useful, this measure must satisfy the requirements that it is always nonnegative and it takes the zero value if and only if p = q.",
+   "page": "Ch. 2, Sec. 2.5, Def. 2.28, eq. (2.100); text lines 1336-1342",
+   "latex": "D(p \\| q) = \\sum_x p(x) \\log \\frac{p(x)}{q(x)}",
+   "symbol_and_unit_ledger": {
+    "D(p||q)": "informational divergence (relative entropy), bits or nats",
+    "p, q": "probability distributions on a common alphabet",
+    "Ep": "expectation under p"
+   },
+   "assumptions": [
+    "Summation over the support of p",
+    "Convention c log (c/0) = infinity for c > 0, so finiteness forces support(p) inside support(q)"
+   ],
+   "breakdown_regime": "Not symmetric and violates the triangle inequality, so it is not a metric; it is infinite whenever q rules out an outcome p allows",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Divergence is the engine's model-versus-market and model-versus-reality distance: D(actual || model) prices in bits how surprised the model should be, and it is the loss that calibration routines minimize.",
+    "source_operator": "informational_divergence",
+    "telemetry": "Realized outcome distributions versus model predictive distributions, logged per market and per signal family"
+   }
+  },
+  {
+   "primitive_id": "fundamental_inequality",
+   "name": "Fundamental inequality ln a <= a - 1, equality iff a = 1, from convexity of the logarithm",
+   "verbatim_quote": "We can see from Figure 2.3 that the fundamental inequality results from the convexity of the logarithmic function.",
+   "page": "Ch. 2, Sec. 2.5, Lemma 2.29, eq. (2.101); text lines 1414-1415",
+   "latex": "\\ln a \\le a - 1",
+   "symbol_and_unit_ledger": {
+    "a": "positive real number, dimensionless",
+    "ln": "natural logarithm"
+   },
+   "assumptions": [
+    "a > 0"
+   ],
+   "breakdown_regime": "A pointwise bound only; it gives no rate information and is loose away from a = 1",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This one convexity fact is the proof engine behind the divergence inequality, the entropy bound, and Gibbs-type results the reasoning layer relies on; any new inequality the engine adopts should first be tested against log convexity.",
+    "source_operator": "fundamental_inequality",
+    "telemetry": "Not telemetry fed; it is a proof primitive invoked when validating new information inequalities"
+   }
+  },
+  {
+   "primitive_id": "divergence_inequality",
+   "name": "Divergence inequality: D(p||q) >= 0 with equality iff p = q",
+   "verbatim_quote": "Before we prove that divergence is always nonnegative, we first establish the following simple but important inequality called the fundamental inequality in information theory.",
+   "page": "Ch. 2, Sec. 2.5, Theorem 2.31, eq. (2.103); text lines 1382-1384",
+   "latex": "D(p \\| q) \\ge 0",
+   "symbol_and_unit_ledger": {
+    "D(p||q)": "informational divergence, bits or nats",
+    "p, q": "probability distributions on a common alphabet"
+   },
+   "assumptions": [
+    "If q(x) = 0 for some x in the support of p, then D(p||q) = infinity and the claim is trivial"
+   ],
+   "breakdown_regime": "Gives no quantitative gap: two very different distributions can both merely satisfy the inequality, so it certifies difference without measuring it tightly",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The inequality is the engine's sanity gate for any claimed distribution shift: a computed negative divergence exposes a bug or a support error immediately, and equality is the exact test for two signal distributions being identical.",
+    "source_operator": "informational_divergence",
+    "telemetry": "Computed divergence values across model versions and data refreshes, checked for sign violations"
+   }
+  },
+  {
+   "primitive_id": "basic_inequalities",
+   "name": "Basic inequalities: all Shannon measures are nonnegative because each is a conditional mutual information",
+   "verbatim_quote": "As we have seen in Section 2.2 that all Shannon's information measures are special cases of conditional mutual information, we already have proved that all Shannon's information measures are always nonnegative.",
+   "page": "Ch. 2, Sec. 2.6, Theorem 2.34 context; text lines 1591-1594",
+   "latex": "I(X; Y|Z) \\ge 0",
+   "symbol_and_unit_ledger": {
+    "I(X; Y|Z)": "conditional mutual information, bits",
+    "H, I": "generic Shannon measures, bits"
+   },
+   "assumptions": [
+    "All Shannon measures are special cases of conditional mutual information",
+    "I(X; Y|Z) = 0 iff X and Y are conditionally independent given Z"
+   ],
+   "breakdown_regime": "Nonnegativity is the whole content; the basic inequalities alone cannot prove any non-Shannon-type law",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Nonnegativity is the floor constraint set for the engine's entropy bookkeeping: any feature pipeline that produces a negative entropy or mutual information has a data or estimation defect, by theorem, not by opinion.",
+    "source_operator": "basic_inequalities",
+    "telemetry": "Sign audits on every entropy and mutual information quantity emitted by feature pipelines"
+   }
+  },
+  {
+   "primitive_id": "conditioning_reduces_entropy",
+   "name": "Conditioning does not increase entropy: H(Y|X) <= H(Y), equality iff X and Y are independent",
+   "verbatim_quote": "Then our uncertainty about Y cannot be increased on the average upon receiving side-information X.",
+   "page": "Ch. 2, Sec. 2.7, Theorem 2.38, eq. (2.127); text lines 1664-1666",
+   "latex": "H(Y|X) \\le H(Y)",
+   "symbol_and_unit_ledger": {
+    "H(Y|X)": "conditional entropy of Y given side information X, bits",
+    "H(Y)": "unconditional entropy of Y, bits"
+   },
+   "assumptions": [
+    "Holds on average over X; for a specific value X = x the conditional entropy can exceed H(Y)"
+   ],
+   "breakdown_regime": "Average-only guarantee: a particular piece of side information can locally raise uncertainty, and the result says nothing about mutual information, which conditioning can increase",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's license to layer context: adding a verified signal layer (weather, rest, referee) can never hurt the average uncertainty of a projection, which justifies the fixed weekly layer order of the reasoning cycle.",
+    "source_operator": "conditioning_reduces_entropy",
+    "telemetry": "Conditional versus unconditional entropy of projection targets before and after each context layer is added"
+   }
+  },
+  {
+   "primitive_id": "independence_bound_entropy",
+   "name": "Independence bound: joint entropy is at most the sum of marginal entropies, equality iff mutual independence",
+   "verbatim_quote": "When the (conditional) mutual information is exactly equal to 0, the two random variables are (conditionally) independent.",
+   "page": "Ch. 2, Sec. 2.7, Theorem 2.39, eq. (2.129); text lines 1618-1620",
+   "latex": "H(X_1, X_2, \\cdots, X_n) \\le \\sum_{i=1}^{n} H(X_i)",
+   "symbol_and_unit_ledger": {
+    "H(X_1,...,X_n)": "joint entropy, bits",
+    "H(X_i)": "marginal entropies, bits"
+   },
+   "assumptions": [
+    "Equality holds iff the variables are mutually independent",
+    "Proved via the chain rule plus conditioning does not increase entropy, or via divergence of the joint from the product of marginals"
+   ],
+   "breakdown_regime": "The gap (total correlation) aggregates all dependence orders at once and cannot attribute dependence to a specific pair or subset",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The independence bound prices correlation risk in the engine: the gap between summed marginal entropies and true joint entropy is exactly the uncertainty double-counted when correlated props or signals are treated as independent.",
+    "source_operator": "independence_bound_entropy",
+    "telemetry": "Joint and marginal entropy estimates for correlated signal groups, especially same-game prop families"
+   }
+  },
+  {
+   "primitive_id": "data_processing_inequality",
+   "name": "Data processing inequality: for a Markov chain X -> Y -> Z, I(X; Z) <= I(X; Y)",
+   "verbatim_quote": "i.e., further processing of Y can only increase our uncertainty about X on the average.",
+   "page": "Ch. 2, Sec. 2.7, Lemma 2.41, eqs. (2.144)-(2.145); text lines 1757-1758",
+   "latex": "I(X; Z) \\le I(X; Y)",
+   "symbol_and_unit_ledger": {
+    "X": "target variable",
+    "Y": "observation of X",
+    "Z": "any processing of Y, deterministic or probabilistic",
+    "I": "mutual information, bits"
+   },
+   "assumptions": [
+    "X, Y, Z form a Markov chain, i.e., X and Z are conditionally independent given Y"
+   ],
+   "breakdown_regime": "Fails the moment the processing uses anything beyond Y (side channels break the Markov condition); it bounds information, not estimation accuracy of a specific statistic",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Data processing is a hard veto inside the engine: no downstream transformation of a signal (binning, ranking, model stacking on the same inputs) can contain more information about the target than the raw signal did, so claimed gains from reprocessing alone are impossible.",
+    "source_operator": "data_processing_inequality",
+    "telemetry": "Mutual information of raw signals versus their processed derivatives with the projection target"
+   }
+  },
+  {
+   "primitive_id": "fano_inequality",
+   "name": "Fano's inequality: residual uncertainty about X given an estimate is bounded by the error probability",
+   "verbatim_quote": "Fano's inequality has the following implication. If the alphabet X is finite, as Pe → 0, the upper bound in (2.171) tends to 0, which implies H(X|X̂) also tends to 0.",
+   "page": "Ch. 2, Sec. 2.8, Theorem 2.47, eq. (2.171); text lines 1969-1971",
+   "latex": "H(X|\\hat{X}) \\le h_b(P_e) + P_e \\log(|\\mathcal{X}| - 1)",
+   "symbol_and_unit_ledger": {
+    "H(X|X-hat)": "conditional entropy of truth given estimate, bits",
+    "Pe": "probability of error Pr{X != X-hat}, dimensionless",
+    "h_b": "binary entropy function, bits",
+    "|X|": "alphabet size"
+   },
+   "assumptions": [
+    "X and its estimate take values in the same alphabet",
+    "The clean vanishing conclusion needs a finite alphabet"
+   ],
+   "breakdown_regime": "For countably infinite alphabets the bound can fail to force H(X|X-hat) to 0 as Pe goes to 0; the book's Example 2.49 gives H = infinity for any Pe > 0",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fano converts the engine's error rates into information terms: a classifier's miss rate on discrete outcomes (win-loss, prop hit-miss) upper-bounds how much uncertainty can remain, which disciplines any claim that a low-accuracy signal is secretly informative.",
+    "source_operator": "fano_inequality",
+    "telemetry": "Empirical error probabilities of discrete classifiers alongside their conditional entropy estimates"
+   }
+  },
+  {
+   "primitive_id": "maximum_entropy_exponential_family",
+   "name": "Maximum entropy under linear constraints is attained by an exponential-family distribution p*(x) = exp(-lambda0 - sum lambda_i r_i(x))",
+   "verbatim_quote": "Then p∗ maximizes H(p) over all probability distribution p on S, subject to the constraints in (2.193).",
+   "page": "Ch. 2, Sec. 2.9, Theorem 2.50, eq. (2.194); text lines 2011-2013",
+   "latex": "p^{*}(x) = e^{-\\lambda_0 - \\sum_{i=1}^{m} \\lambda_i r_i(x)}",
+   "symbol_and_unit_ledger": {
+    "p*(x)": "maximum entropy distribution",
+    "lambda_i": "Lagrange multipliers chosen to meet the constraints",
+    "r_i(x)": "constraint functions with prescribed means a_i",
+    "S": "countable support set"
+   },
+   "assumptions": [
+    "Constraints are prescribed expectations of given functions r_i",
+    "Logarithms in base e in this section",
+    "p*(x) > 0 on all of S"
+   ],
+   "breakdown_regime": "If the constraint set is infeasible or the normalizing sum diverges, no maximizer exists; with no constraints the maximizer is uniform, with a mean constraint on nonnegative integers it is geometric",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maximum entropy is the engine's honest prior builder: given only verified moment constraints (a player's mean usage, a team's mean pace), the exponential-family form is the unique distribution that adds no invented structure beyond those facts.",
+    "source_operator": "maximum_entropy_exponential_family",
+    "telemetry": "Verified sample moments of engine variables used as constraints, with fitted multipliers audited per refresh"
+   }
+  },
+  {
+   "primitive_id": "entropy_rate_stationary_source",
+   "name": "Entropy rate of a stationary source exists and equals the limiting per-letter conditional entropy",
+   "verbatim_quote": "In the rest of the section, we will show that stationarity is a sufficient condition for the existence of the entropy rate of an information source.",
+   "page": "Ch. 2, Sec. 2.10, Def. 2.54, eq. (2.213), Lemma 2.58; text lines 2183-2185",
+   "latex": "H_{\\mathcal{X}} = \\lim_{n \\to \\infty} \\frac{1}{n} H(X_1, X_2, \\cdots, X_n)",
+   "symbol_and_unit_ledger": {
+    "H_X (script)": "entropy rate, bits per letter",
+    "X_k": "letters of a discrete-time source",
+    "n": "block length"
+   },
+   "assumptions": [
+    "Stationarity: every block and its shift have the same joint distribution",
+    "Each letter has finite entropy"
+   ],
+   "breakdown_regime": "Without stationarity the entropy rate may not exist at all; the book's Example 2.56 has per-letter entropies growing linearly so the rate diverges",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Entropy rate is the engine's long-run information budget for a sequential signal (drive outcomes, pitch sequences): under stationarity the per-step uncertainty settles, so sustainable edge must come from the conditional term, not the raw stream.",
+    "source_operator": "entropy_rate_stationary_source",
+    "telemetry": "Block entropy estimates at increasing lengths for sequential game signals, checked for convergence"
+   }
+  },
+  {
+   "primitive_id": "i_measure_correspondence",
+   "name": "The I-Measure: a signed measure mu* on the set field generated by variable sets, with H and I read off by the substitution H/I <-> mu*, comma <-> union, semicolon <-> intersection, bar <-> difference",
+   "verbatim_quote": "In this chapter, we develop a theory which establishes a one-to-one correspondence between Shannon's information measures and set theory in full generality.",
+   "page": "Ch. 3, Secs. 3.2-3.3, eqs. (3.10)-(3.19); text lines 2641-2644",
+   "latex": "\\mu^{*}(\\tilde{X}_1 \\cap \\tilde{X}_2) = I(X_1; X_2), \\quad \\mu^{*}(\\tilde{X}_1 \\cup \\tilde{X}_2) = H(X_1, X_2)",
+   "symbol_and_unit_ledger": {
+    "mu*": "the I-Measure, a signed measure in bits",
+    "X-tilde_i": "set corresponding to random variable X_i",
+    "F_n": "field generated by the n sets"
+   },
+   "assumptions": [
+    "Universal set is the union of the variable sets, so the all-complement atom degenerates to empty",
+    "mu* is determined by the underlying probability measure"
+   ],
+   "breakdown_regime": "Visualization is practical only up to four variables; beyond that the field has 2^(2^n) sets and diagrams stop helping",
+   "domain": "i-measure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The I-Measure gives the engine a visual algebra for signal relationships: overlaps on an information diagram are shared information, so redundant signals and synergy terms can be read off geometrically before any number is computed.",
+    "source_operator": "i_measure_correspondence",
+    "telemetry": "Atom values of mu* computed from joint distributions of up to four engine signals at a time"
+   }
+  },
+  {
+   "primitive_id": "i_measure_signed_negative_atoms",
+   "name": "For n >= 3 the I-Measure can take negative values on atoms: it is a signed measure, and the negative atom is the interaction information",
+   "verbatim_quote": "It happens that µ∗ defined here for n = 2 assumes only nonnegative values, but we will see in Section 3.4 that µ∗ can assume negative values for n ≥ 3.",
+   "page": "Ch. 3, Sec. 3.4; text lines 2796-2797",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "n >= 3 random variables",
+    "For n = 2 all nonempty atoms are nonnegative"
+   ],
+   "breakdown_regime": "Negativity destroys the naive area intuition of Venn diagrams; a negative atom signals redundancy-dominated interaction, not an error",
+   "domain": "i-measure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Negative atoms are the engine's synergy detector: when three signals interact with a negative I-Measure atom, the trio carries less joint information than its overlaps suggest, flagging redundancy that pairwise analysis cannot see.",
+    "source_operator": "i_measure_signed_negative_atoms",
+    "telemetry": "Triple-wise joint distributions for candidate signal trios in feature selection"
+   }
+  },
+  {
+   "primitive_id": "kraft_inequality",
+   "name": "Kraft inequality: codeword lengths of any uniquely decodable D-ary code satisfy sum D^(-l_k) <= 1",
+   "verbatim_quote": "In the next theorem, we prove that for any uniquely decodable code, the lengths of the codewords have to satisfy an inequality called the Kraft inequality.",
+   "page": "Ch. 4, Sec. 4.1, Theorem 4.4, eq. (4.2); text lines 4035-4038",
+   "latex": "\\sum_{k=1}^{m} D^{-l_k} \\le 1",
+   "symbol_and_unit_ledger": {
+    "D": "code alphabet size",
+    "l_k": "length of the k-th codeword, in D-ary symbols",
+    "m": "number of codewords"
+   },
+   "assumptions": [
+    "The code is uniquely decodable",
+    "Lengths are nonnegative integers"
+   ],
+   "breakdown_regime": "Kraft is necessary for unique decodability and sufficient for prefix codes, but a length vector satisfying Kraft does not by itself give an optimal code",
+   "domain": "source coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Kraft is a budget identity the engine reuses for any allocation of discrete description resources: assigning shorter descriptions to more likely states is constrained by exactly this sum, whether the resource is bits, slate slots, or attention.",
+    "source_operator": "kraft_inequality",
+    "telemetry": "Length or slot allocations versus outcome probabilities in slate and report construction"
+   }
+  },
+  {
+   "primitive_id": "entropy_bound_source_coding",
+   "name": "Entropy bound: expected length of any uniquely decodable code is at least the entropy, tight iff l_i = -log_D p_i",
+   "verbatim_quote": "In other words, the expected length of a uniquely decodable code is at least the entropy of the source.",
+   "page": "Ch. 4, Sec. 4.1, Theorem 4.5, eq. (4.11); text lines 4124-4126",
+   "latex": "L \\ge H_D(X)",
+   "symbol_and_unit_ledger": {
+    "L": "expected codeword length, D-ary symbols",
+    "H_D(X)": "entropy of X in base D, D-its"
+   },
+   "assumptions": [
+    "Code is uniquely decodable and D-ary",
+    "Tightness requires every p_i to be a power of 1/D (dyadic-type distributions)"
+   ],
+   "breakdown_regime": "For non-dyadic distributions the bound is not achievable symbol by symbol; the gap is the redundancy that block coding or Huffman analysis must quantify",
+   "domain": "source coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The entropy bound is the engine's impossibility floor for compression of any kind: no representation of a signal source, however clever, beats its entropy on average, which caps expectations for feature compression and slate summaries alike.",
+    "source_operator": "entropy_bound_source_coding",
+    "telemetry": "Achieved average description lengths versus source entropy in engine logging and compression"
+   }
+  },
+  {
+   "primitive_id": "huffman_procedure",
+   "name": "Huffman procedure: repeatedly merge the two smallest probability masses to build an optimal prefix code",
+   "verbatim_quote": "In the Huffman procedure, sometimes there is more than one choice of merging the two smallest probability masses.",
+   "page": "Ch. 4, Sec. 4.2.2; text lines 4373-4374",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Source distribution is fully known",
+    "Binary case merges two masses per step, m - 1 steps for m symbols; D-ary merges D masses per step"
+   ],
+   "breakdown_regime": "Optimal codes are not unique and some optimal codes are not Huffman codes; ties in merging can be broken arbitrarily without losing optimality",
+   "domain": "source coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Huffman is the engine's greedy-merge template: bottom-up merging of the two least costly items is provably optimal for prefix-structured allocation, a pattern reused when combining weak signals into a slate under a hard slot budget.",
+    "source_operator": "huffman_procedure",
+    "telemetry": "Merge traces from allocation routines, audited against the two-smallest rule"
+   }
+  },
+  {
+   "primitive_id": "weak_aep",
+   "name": "Weak AEP: -(1/n) log p(X) converges in probability to H(X) for i.i.d. sequences",
+   "verbatim_quote": "The weak AEP is nothing more than a straightforward application of the weak law of large numbers.",
+   "page": "Ch. 5, Sec. 5.1, Theorem 5.1, eq. (5.2); text lines 4905-4907",
+   "latex": "-\\frac{1}{n} \\log p(X) \\to H(X) \\quad \\text{in probability}",
+   "symbol_and_unit_ledger": {
+    "p(X)": "probability of the random length-n sequence",
+    "H(X)": "entropy of the generic letter, bits",
+    "n": "sequence length"
+   },
+   "assumptions": [
+    "Letters are i.i.d. with finite entropy",
+    "All logarithms base 2 in Chapters 5 and 6"
+   ],
+   "breakdown_regime": "Convergence is in probability only, not almost sure; the strong AEP needs the Shannon-McMillan-Breiman theorem and ergodicity",
+   "domain": "typicality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The weak AEP is why the engine can trust long-run frequencies: per-symbol log-loss of a stationary signal stream concentrates at its entropy, so season-length samples pin down information content with vanishing relative error.",
+    "source_operator": "weak_aep",
+    "telemetry": "Per-game empirical entropy of signal streams tracked as sample size grows"
+   }
+  },
+  {
+   "primitive_id": "source_coding_theorem",
+   "name": "Source coding theorem: block coding at any rate above H(X) is asymptotically lossless, and below H(X) the error probability tends to 1",
+   "verbatim_quote": "However, if we allow Pe to be any small quantity, Shannon [291] showed that there exists a block code whose coding rate is arbitrarily close to H(X) when n is sufficiently large.",
+   "page": "Ch. 5, Sec. 5.2, eqs. (5.21)-(5.27); text lines 5053-5056",
+   "latex": "(1 - \\epsilon) 2^{n(H(X) - \\epsilon)} \\le M \\le 2^{n(H(X) + \\epsilon)}",
+   "symbol_and_unit_ledger": {
+    "M": "size of the codebook (the weakly typical set)",
+    "H(X)": "source entropy, bits per symbol",
+    "Pe": "block error probability",
+    "n": "block length"
+   },
+   "assumptions": [
+    "Source letters are i.i.d.",
+    "A vanishing error probability is allowed; zero-error coding is a different, stricter problem"
+   ],
+   "breakdown_regime": "Finite block lengths carry a rate penalty of order epsilon plus (1/n) log(1-epsilon); the theorem is asymptotic and silent about small n",
+   "domain": "source coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The theorem fixes the engine's compression frontier for historical data: a signal archive can be stored at its entropy rate and no lower, which sets honest storage and transmission budgets for play-by-play corpora.",
+    "source_operator": "source_coding_theorem",
+    "telemetry": "Sizes of compressed signal archives versus entropy-rate estimates of the same streams"
+   }
+  },
+  {
+   "primitive_id": "channel_coding_theorem",
+   "name": "Channel coding theorem: reliable communication over a DMC is possible iff R < C = max I(X; Y)",
+   "verbatim_quote": "In the last two sections, we have proved the channel coding theorem which asserts that reliable communication through a DMC at rate R is possible if and only if R < C, the channel capacity.",
+   "page": "Ch. 7, Sec. 7.5 discussion of Secs. 7.3-7.4; text lines 8030-8032",
+   "latex": "C = \\max_{p(x)} I(X; Y)",
+   "symbol_and_unit_ledger": {
+    "C": "channel capacity, bits per channel use",
+    "I(X; Y)": "mutual information between channel input and output, bits",
+    "p(x)": "input distribution being optimized"
+   },
+   "assumptions": [
+    "Channel is discrete and memoryless",
+    "Block length n grows without bound; the direct proof is an existence proof via random coding, not a construction"
+   ],
+   "breakdown_regime": "At any fixed finite block length, error is nonzero near capacity; feedback does not raise the capacity of a DMC, and the theorem characterizes one channel, not a network",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity is the engine's model of any noisy observation channel: a data feed, a beat report, or a tracking vendor has a max I(input; output) that caps how much truth about the underlying state can ever reach the model, regardless of downstream cleverness.",
+    "source_operator": "channel_coding_theorem",
+    "telemetry": "Estimated mutual information between ground-truth states and each incoming feed's reports"
+   }
+  },
+  {
+   "primitive_id": "rate_distortion_theorem",
+   "name": "Rate-distortion theorem: R(D) = RI(D) = min I(X; X-hat) over reproductions with expected distortion at most D",
+   "verbatim_quote": "The rate-distortion theorem, which is the main result in rate-distortion theory, says that the minimum coding rate for achieving a distortion D is RI (D).",
+   "page": "Ch. 8, Sec. 8.3, Def. 8.16, eq. (8.59), Theorem 8.17; text lines 9373-9375",
+   "latex": "R_I(D) = \\min_{\\hat{X}: E d(X, \\hat{X}) \\le D} I(X; \\hat{X})",
+   "symbol_and_unit_ledger": {
+    "R_I(D)": "information rate-distortion function, bits per symbol",
+    "d(x, x-hat)": "single-letter distortion measure",
+    "D": "allowed average distortion",
+    "X-hat": "reproduction variable jointly distributed with X"
+   },
+   "assumptions": [
+    "Source distribution p(x) is given and fixed",
+    "The constraint set for p(x-hat|x) is compact and I is continuous in it, so the minimum is attained",
+    "RI(D) is non-increasing and convex in D, and 0 for D >= Dmax"
+   ],
+   "breakdown_regime": "Single-letter characterization assumes i.i.d. sources and the given distortion measure; a mismatched distortion measure yields the right answer to the wrong problem",
+   "domain": "rate distortion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rate-distortion is the engine's lossy-summary calculus: any compressed representation of a player or team (a rating, a grade, a tier) has a minimum information cost for a tolerated distortion, and RI(D) prices that tradeoff exactly.",
+    "source_operator": "rate_distortion_theorem",
+    "telemetry": "Distortion of compressed player representations versus their information content, swept over compression levels"
+   }
+  },
+  {
+   "primitive_id": "blahut_arimoto_alternating_optimization",
+   "name": "Blahut-Arimoto: channel capacity and R(D) are computed by alternating optimization of a double supremum, each step having a unique closed-form maximizer",
+   "verbatim_quote": "In this section, we describe an alternating optimization algorithm. This algorithm will be specialized in the next section for computing the channel capacity and the rate-distortion function.",
+   "page": "Ch. 9, Sec. 9.1, eqs. (9.3)-(9.6); text lines 10255-10257",
+   "latex": "f^{*} = \\sup_{u_1 \\in A_1} \\sup_{u_2 \\in A_2} f(u_1, u_2)",
+   "symbol_and_unit_ledger": {
+    "f": "objective function on the product of two convex sets A_1, A_2",
+    "u_1, u_2": "the two blocks of variables optimized alternately",
+    "c_1(u_2), c_2(u_1)": "unique conditional maximizers"
+   },
+   "assumptions": [
+    "f is bounded above, continuous, with continuous partial derivatives",
+    "Each conditional maximization has a unique maximizer"
+   ],
+   "breakdown_regime": "Alternating optimization can stall at local optima when the joint problem is not concave; the capacity and rate-distortion objectives are the favorable cases with convergence guarantees",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Alternating optimization is the engine's workhorse pattern for coupled estimation problems: fix the reproduction distribution, optimize the input; fix the input, optimize the reproduction; repeat to a certified fixed point.",
+    "source_operator": "blahut_arimoto_alternating_optimization",
+    "telemetry": "Objective traces across alternation sweeps in capacity and distortion computations, checked for monotone convergence"
+   }
+  },
+  {
+   "primitive_id": "entropy_region_gamma_star",
+   "name": "The entropy region Gamma_n* : the set of all entropic vectors in the 2^n - 1 dimensional entropy space; its closure is a convex cone characterizing all information inequalities",
+   "verbatim_quote": "For convenience, the vectors in Γn∗ will also be referred to as entropy functions.",
+   "page": "Ch. 13, Sec. 13.1, eq. (13.24); text line 15683",
+   "latex": "\\Gamma_n^{*} = \\{h \\in \\mathcal{H}_n : h \\text{ is entropic}\\}",
+   "symbol_and_unit_ledger": {
+    "Gamma_n*": "entropy region for n variables",
+    "H_n": "entropy space of dimension 2^n - 1",
+    "h": "vector of all joint entropies of subsets of the n variables"
+   },
+   "assumptions": [
+    "Coordinates of h are the joint entropies of all nonempty subsets",
+    "The closure of Gamma_n* is convex, hence a convex cone"
+   ],
+   "breakdown_regime": "Gamma_n* itself is not closed and, for n >= 4, not polyhedral; only its closure supports a complete inequality characterization",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The entropy region is the engine's feasibility geometry for signal combinations: any proposed vector of joint entropies across a signal family must lie in the closure of Gamma_n*, so impossible information claims are rejected geometrically before modeling begins.",
+    "source_operator": "entropy_region_gamma_star",
+    "telemetry": "Joint entropy vectors of engine signal families, tested for membership against known outer bounds"
+   }
+  },
+  {
+   "primitive_id": "elemental_inequalities_and_lp",
+   "name": "Elemental inequalities: every Shannon measure expands into elemental forms H(X_i|rest) and I(X_i; X_j|K), whose nonnegativity makes proving Shannon-type inequalities a linear program (Gamma_n = {h : Gh >= 0}, ITIP)",
+   "verbatim_quote": "We call the m inequalities in this smaller set the elemental inequalities.",
+   "page": "Ch. 14, Secs. 14.1-14.2, eqs. (14.12), (14.23); text lines 16291-16293",
+   "latex": "\\Gamma_n = \\{h : Gh \\ge 0\\}, \\quad m = n + \\binom{n}{2} 2^{n-2}",
+   "symbol_and_unit_ledger": {
+    "G": "m by k matrix of elemental inequalities in canonical form, k = 2^n - 1",
+    "m": "number of elemental forms",
+    "h": "entropy vector in canonical coordinates"
+   },
+   "assumptions": [
+    "Canonical form expresses every information expression uniquely as a linear combination of joint entropies",
+    "The elemental set is minimal: no elemental inequality is implied by the others"
+   ],
+   "breakdown_regime": "The LP decides only Shannon-type inequalities; a 'not provable' verdict from ITIP leaves the inequality open, never refuted",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This turns inequality checking into machinery the engine can run: any candidate constraint among signal entropies is either certified by the LP from elemental inequalities or flagged as beyond Shannon type, which routes it to the non-Shannon shelf instead of being silently assumed.",
+    "source_operator": "elemental_inequalities_and_lp",
+    "telemetry": "LP verdicts on candidate entropy constraints generated during model audits"
+   }
+  },
+  {
+   "primitive_id": "itip_machine_proving",
+   "name": "ITIP: machine proving of Shannon-type inequalities as linear programs, returning True or 'Not provable by ITIP'",
+   "verbatim_quote": "Theorems 14.3 and 14.4 transform the problem of verifying a Shannon-type inequality into a linear programming problem. This enables machine-proving of all Shannon-type inequalities.",
+   "page": "Ch. 14, Sec. 14.4; text lines 16559-16561",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Target inequality is Shannon-type, i.e., implied by the basic inequalities",
+    "Constrained problems are specified by setting chosen measures to zero"
+   ],
+   "breakdown_regime": "A 'Not provable by ITIP' answer is not a disproof: the third worked example in the book is exactly such a case and is a true non-Shannon-type inequality",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "ITIP is the template for the engine's automated audit lane: routine inequality claims get machine-checked in bulk, and only the unprovable residue earns human or deeper mathematical attention.",
+    "source_operator": "itip_machine_proving",
+    "telemetry": "Batch audit logs of inequality claims with provable versus unprovable splits"
+   }
+  },
+  {
+   "primitive_id": "zhang_yeung_non_shannon_inequality",
+   "name": "Zhang-Yeung inequality (15.62): the first unconstrained non-Shannon-type inequality, proving Gamma_4 closure != Gamma_4 and that laws exist beyond Shannon's basic inequalities",
+   "verbatim_quote": "The existence of these inequalities implies that there are laws in information theory beyond those laid down by Shannon [291].",
+   "page": "Ch. 15, Sec. 15.2, Theorem 15.7, eq. (15.62), and Historical Notes; text lines 18361-18368",
+   "latex": "2I(X_3; X_4) \\le I(X_1; X_2) + I(X_1; X_3, X_4) + 3I(X_3; X_4|X_1) + I(X_3; X_4|X_2)",
+   "symbol_and_unit_ledger": {
+    "X_1..X_4": "any four random variables",
+    "I terms": "mutual and conditional mutual informations, bits"
+   },
+   "assumptions": [
+    "Holds for the entropy function of any four random variables",
+    "Proof uses basic inequalities for six variables including two copy auxiliaries, not four"
+   ],
+   "breakdown_regime": "Not implied by the basic inequalities for four variables; for n = 3 no unconstrained non-Shannon inequality exists since Gamma_3 closure = Gamma_3",
+   "domain": "information inequalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Zhang-Yeung is the engine's standing warning that pairwise and triple-wise Shannon reasoning is incomplete for four or more interacting signals: genuinely new constraints appear at four-way interaction, so four-signal subsystems deserve their own audits.",
+    "source_operator": "zhang_yeung_non_shannon_inequality",
+    "telemetry": "Four-variable entropy vectors from engine signal families, tested against (15.62) and its 12 permutations"
+   }
+  },
+  {
+   "primitive_id": "entropy_group_correspondence",
+   "name": "Entropy-group correspondence: every unconstrained information inequality has a corresponding group inequality for finite groups and subgroups, and vice versa",
+   "verbatim_quote": "Specifically, for every unconstrained information inequality, there is a corresponding group inequality, and vice versa.",
+   "page": "Ch. 16, Sec. 16.4, eqs. (16.1)-(16.5); text lines 18451-18452",
+   "latex": "|G|\\,|G_1 \\cap G_2| \\ge |G_1|\\,|G_2|",
+   "symbol_and_unit_ledger": {
+    "G": "a finite group",
+    "G_1, G_2": "subgroups of G",
+    "|G|": "order (element count) of G",
+    "log |G|/|G_i|": "group quantity corresponding to entropy terms"
+   },
+   "assumptions": [
+    "G is finite; variables correspond to subgroups and joint variables to intersections",
+    "The correspondence is proved via group-characterizable entropy functions"
+   ],
+   "breakdown_regime": "The group image of the Zhang-Yeung inequality (16.5) is stated in the book as not yet understood, so the correspondence can outrun interpretation in both directions",
+   "domain": "entropy and groups",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The correspondence gives the engine a second proof system: a stubborn entropy constraint among signals can be attacked with finite-group constructions, and group-theoretic counterexamples can kill false information claims.",
+    "source_operator": "entropy_group_correspondence",
+    "telemetry": "Subgroup lattice computations used as counterexample generators for candidate entropy inequalities"
+   }
+  },
+  {
+   "primitive_id": "network_coding_max_flow_bound",
+   "name": "Max-flow bound: a multicast rate omega is achievable only if omega <= min over receivers of maxflow(receiver)",
+   "verbatim_quote": "Therefore, the set of all achievable information rates is closed and fully characterized by the maximum value in the set.",
+   "page": "Ch. 18, Theorem 18.3, eq. (18.30); text lines 20328-20331",
+   "latex": "\\omega \\le \\min_{l} \\mathrm{maxflow}(t_l)",
+   "symbol_and_unit_ledger": {
+    "omega": "achievable information rate, bits per unit time",
+    "maxflow(t_l)": "max-flow value from source s to receiver t_l under rate constraints R",
+    "G": "network graph with rate-constrained channels"
+   },
+   "assumptions": [
+    "Single information source multicast to receivers t_1..t_L",
+    "Proof routes entropy across any cut: H(X) is bounded by the summed channel capacities across the cut"
+   ],
+   "breakdown_regime": "The bound is necessary for general network codes; sufficiency is a separate matter settled for linear codes on acyclic networks, and multi-source network coding has no such clean bound",
+   "domain": "network coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The max-flow bound is the engine's distribution ceiling: however signals are combined or coded along the way, the information deliverable to any consumer is capped by the narrowest cut between source and consumer, a direct audit tool for data pipeline design.",
+    "source_operator": "network_coding_max_flow_bound",
+    "telemetry": "Cut capacities of the engine's data pipeline graph versus delivered information rates per consumer"
+   }
+  },
+  {
+   "primitive_id": "linear_network_coding_dimension_bound",
+   "name": "For linear network codes the dimension received at any node set T obeys dim(V_T) <= min{omega, maxflow(T)}, and linear multicast achieving the bound exists on acyclic networks",
+   "verbatim_quote": "Whether the max-flow bound in Theorem 19.10 or Corollary 19.11 is achievable depends on the network topology, the dimension ω, and the coding scheme.",
+   "page": "Ch. 19, Theorem 19.10, eq. (19.34); text lines 21013-21015",
+   "latex": "\\dim(V_T) \\le \\min\\{\\omega, \\mathrm{maxflow}(T)\\}",
+   "symbol_and_unit_ledger": {
+    "V_T": "span of global encoding kernels received at the nodes in T",
+    "omega": "dimension of the linear network code (message length over the base field)",
+    "maxflow(T)": "max-flow from source to the set T"
+   },
+   "assumptions": [
+    "Network is acyclic and the code is linear over a finite field",
+    "V_T is a linear transformation of the kernels across any source-T cut"
+   ],
+   "breakdown_regime": "Cyclic networks need convolutional or time-expanded treatments; field size must be large enough for the generic construction, and the bound alone does not hand over the coefficients",
+   "domain": "network coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The dimension form of the bound tells the engine that linear mixing of signals is enough to hit pipeline ceilings: no exotic nonlinear combination of feeds can beat the rank that linear combinations already achieve on acyclic distribution paths.",
+    "source_operator": "linear_network_coding_dimension_bound",
+    "telemetry": "Ranks of received signal mixtures at each pipeline consumer versus cut capacities"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "72f482e256a24ce5-t1",
+   "think": "This book is Raymond Yeung's attempt to rebuild information theory for discrete random variables from first principles, and its center of gravity is not the coding theorems but the entropy function itself. The classical results are all present: entropy, conditional entropy, mutual information, the chain rules, divergence, Fano's inequality, the entropy bound, Huffman codes, the weak AEP, the source and channel coding theorems, rate-distortion theory, and the Blahut-Arimoto algorithms. But Yeung treats these as corollaries of a single structure. Once it is shown that every Shannon measure is a special case of conditional mutual information, and that conditional mutual information is a divergence, the nonnegativity of everything follows in one stroke, and the basic inequalities become a small generating set from which the rest of the theory is algebra. The I-Measure then makes that algebra visible: information measures are a signed measure on a set field, so identities can be read off Venn-like diagrams and, crucially, the measure can go negative for three or more variables, which is the first hint that interaction information is a real signed quantity rather than a defect. The second half of the book turns the entropy function into geometry. All joint entropies of n variables form a vector in a space of dimension 2^n minus 1; the entropic vectors form the region Gamma_n star, whose closure is a convex cone. An information inequality holds universally if and only if the corresponding halfspace contains that cone. The elemental inequalities generate the larger polyhedral cone Gamma_n of all Shannon-type inequalities, and the question of whether a proposed inequality is Shannon-type becomes a linear program, mechanized by the ITIP software. For two and three variables the two cones coincide, so Shannon's laws are complete there. For four variables they do not: the Zhang-Yeung inequality is satisfied by every entropy function but is not implied by the basic inequalities, which means there are laws of information theory beyond the ones Shannon laid down, and later work showed the true region is not even polyhedral, so no finite list of linear laws can exhaust it. The same machinery then pays off twice more. The entropy region characterizes achievable rates in network coding, where the max-flow bound is proved by pushing entropy across cuts, and linear codes are shown to achieve the bound on acyclic networks through a dimension argument that mirrors the entropy argument exactly. And the entropy function turns out to be group-characterizable: every unconstrained information inequality has a mirror image as an inequality on the orders of subgroups of a finite group, so information theory and group theory can prove each other's theorems. Between the foundations and the geometry sits the working machinery, and it is more unified than it looks. The chain rules are an accounting system: any joint uncertainty can be decomposed in any order, and every decomposition must reconcile to the same total, so an inconsistency in bookkeeping is a detectable error rather than a modeling choice. Typicality converts that accounting into asymptotics, showing that long i.i.d. sequences concentrate on a set of size about 2 to the nH, which is why entropy, a purely distributional quantity, ends up governing the operational quantities of compression and transmission. Rate-distortion theory then prices deliberate information loss, and the Blahut-Arimoto algorithms show that the two great optimizations of the field, capacity and the rate-distortion function, are the same alternating-optimization pattern applied to a double supremum, each half-step having a unique closed-form answer. Fano's inequality and the maximum entropy principle play complementary disciplinary roles: Fano bounds how good any estimator can be in information terms, while maximum entropy specifies the only honest distribution consistent with a set of verified moment constraints, namely the exponential-family form. The conditional independence material is easy to underrate and should not be. Because conditional mutual information is the master measure, a conditional independence statement is exactly the vanishing of one of these quantities, so the implication problem for conditional independence becomes a question about the entropy region under equality constraints, which is why the same linear programming machinery that proves inequalities also settles independence implications. The chapters on Markov structures show the I-Measure collapsing to a simple form on Markov random fields and chains, which is the rigorous version of the intuition that a good graphical model makes information flow legible. Taken together, the book argues that there is one object, the entropy function, one generating set of laws, the basic inequalities, one geometric home for those laws, the entropy region, and a short list of operational theorems that are all, in the end, statements about that object. For a reasoning engine, the operational content is a discipline of accounting. Entropy is the price of uncertainty, mutual information is the value of a signal given a context, divergence is the cost of a wrong model, and data processing is an absolute veto on manufacturing information by transformation. The geometric chapters add a feasibility test: any claimed joint information structure across a family of signals must lie inside the entropy region, and the non-Shannon results warn that pairwise and triple-wise checks are not sufficient once four signals interact. The book's limits matter as much as its results. Everything is discrete and mostly asymptotic; finite-sample behavior, estimation error, and computation enter only through continuity in variational distance and the Blahut-Arimoto iterations. Used inside those limits, this is the most complete single account of what information measures are, what they forbid, and how to check a claim about them mechanically.",
+   "retrocausal_genealogy": "The lineage runs from Shannon's 1948 paper, which created entropy, capacity, and the two coding theorems, through the textbook consolidation of Cover and Thomas that Yeung explicitly positions his book against. The I-Measure descends from Yeung's own 1991 work on a new outlook for Shannon's system, the entropy-region framework from Yeung and Zhang in the late 1990s, and the non-Shannon breakthrough from Zhang and Yeung's 1997-1998 papers, the first crack in the assumption that Shannon's basic inequalities were the whole law. Network coding enters from Ahlswede, Cai, Li, and Yeung in 2000, and the group characterization is Chan and Yeung's later unification.",
+   "theory_of_mind": "Yeung writes as a self-described slow thinker who distrusts any derivation not done from first principles, and the book's model of the reader is someone who must be shown every subtlety, especially the zero-probability-mass cases most texts gloss over. His model of the domain is that information theory is fundamentally about the entropy function: coding theorems are important, but the laws governing what entropy vectors can exist are deeper, more portable across fields, and still incompletely known. Examples are treated as essential load-bearing content rather than illustration, which is why so many results are first made intuitive and only then proved.",
+   "cross_layer_veto": "Several results in this book veto moves that other layers of a reasoning system might attempt. Data processing vetoes any claim that a transformation of existing signals created new information about a target. The entropy bound vetoes any compression or summarization claim below the entropy of the source. Fano's inequality vetoes pairing a high error rate with a claim of low residual uncertainty. The entropy region vetoes proposed joint information structures that no distribution realizes, and the Zhang-Yeung result vetoes the assumption that Shannon-type checks exhaust the constraints once four or more signals interact."
+  }
+ ],
+ "universal_lens": "Any domain that tracks uncertainty about discrete states inherits this entire structure: uncertainty has a price measured in bits, signals have value only relative to a context, models pay divergence for being wrong, processing cannot manufacture information, and the set of jointly realizable uncertainty profiles is a geometric region with laws that are still being discovered. The book is a template for turning a loose collection of measures into an audited algebra with impossibility results.",
+ "gsi_mapping": "The Institute takes the research program: the entropy region, the elemental-inequality linear program, and the non-Shannon frontier define a concrete agenda for studying information structures in sports data, and the entropy-group correspondence opens a second proof system for the same questions. Yeung's treatment of Markov structures and full conditional independence also gives the Institute its reference formalism for stating and testing independence claims about game variables.",
+ "gse_mapping": "The Edge engine takes the accounting discipline: entropy budgets for every signal family, conditional mutual information as the single currency for signal value, divergence as the calibration loss, data processing and the entropy region as hard vetoes on impossible claims, Fano's inequality to discipline classifier claims, maximum entropy as the honest prior under verified constraints, and the max-flow bound as the ceiling audit for its data pipelines. No mapping here touches wagering mechanics; all value is in prediction quality and reasoning hygiene."
+}

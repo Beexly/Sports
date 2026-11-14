@@ -1,78 +1,879 @@
 {
-  "book_id": "46e377123f662ec5",
-  "source_status": "COMPLETE",
-  "title": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book",
-  "file_name": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book.pdf",
-  "sha256": "46e377123f662ec5d6ce7b91d54f7d4bc7b9c0a7a8a8451e7760d055dc200baf",
-  "primary_domain": "cs",
-  "pages_total": 209,
-  "pages_read": 32,
-  "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
-  "ocr_rescued": false,
-  "universal_lens": "Optimal transport as a computational framework unifying probability measures through cost-minimized coupling, enabling geometric and statistical inference across domains. Universal Lens: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian inference via Wasserstein metrics enables robust probabilistic forecasting by embedding prior/posterior distributions into geodesic spaces for conformal prediction. GSI Mapping: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning in GSE leverages transport maps for dynamic state transitions, modeling agent behavior through optimal couplings of belief states over time. GSE Mapping: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "kantorovich_linear_program",
-      "name": "Kantorovich Linear Program",
-      "verbatim_quote": "Contents 1 Introduction 3 2 Theoretical Foundations 7 2.1 Histograms and Measures .",
-      "page": 3,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Probability measures on compact metric spaces; finite cost function c(x,y).",
-      "breakdown_regime": "When cost function becomes unbounded or supports are singular.",
-      "domain": "cs",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "The Kantorovich relaxation provides a convex optimization formulation that is isomorphic to the original Monge problem under regularity conditions, enabling efficient numerical solutions in GSI's probabilistic inference pipelines.",
-        "source_operator": "kantorovich_linear_program",
-        "telemetry": "Wasserstein distance convergence rate and duality gap."
-      }
-    },
-    {
-      "primitive_id": "entropic_regularization",
-      "name": "Entropic Regularization",
-      "verbatim_quote": "52 4 Entropic Regularization of Optimal Transport 57 4.1 Entropic Regularization .",
-      "page": 3,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Strong convexity of cost function; log-concave marginals.",
-      "breakdown_regime": "When entropy regularization parameter approaches zero, leading to degenerate transport plans.",
-      "domain": "cs",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Entropic regularization transforms the discrete optimal transport problem into a smooth, differentiable form suitable for stochastic gradient descent in GSE's reinforcement learning architectures.",
-        "source_operator": "entropic_regularization",
-        "telemetry": "KL divergence between regularized and true transport plans."
-      }
-    },
-    {
-      "primitive_id": "wasserstein_metric",
-      "name": "Wasserstein Metric",
-      "verbatim_quote": "92 6 W1 Optimal Transport 96 6.1 W1 on Metric Spaces .",
-      "page": 4,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Complete separable metric space; finite first moment of measures.",
-      "breakdown_regime": "In high dimensions where curse of dimensionality causes exponential growth in computation.",
-      "domain": "cs",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "The W1 metric endows probability distributions with a Riemannian structure, allowing GSI to perform variational inference and define uncertainty quantification in terms of geodesic paths in distribution space.",
-        "source_operator": "wasserstein_metric",
-        "telemetry": "Geodesic path length and curvature in Wasserstein manifold."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "46e377123f662ec5_t0",
-      "think": "The Kantorovich linear program reformulates the Monge assignment problem into a convex optimization task by relaxing the point-to-point constraint to a joint distribution over product spaces. This duality allows for tractable numerical solutions using linear programming techniques. The entropic regularization introduces an information-theoretic penalty term that makes the problem differentiable and amenable to modern machine learning algorithms such as Sinkhorn iterations. The resulting regularized transport plan approximates the true optimal transport map while maintaining computational efficiency. The Wasserstein metric then defines a notion of distance between probability distributions based on this transport cost, forming a complete metric space. These primitives collectively enable GSI to model complex probabilistic dependencies and perform robust inference under uncertainty, while GSE uses these structures to encode dynamic decision-making processes involving evolving belief states.\n\nDeep epistemic analysis for arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5, domain=cs, pages_read=32/209): Operator 'Kantorovich Linear Program' (page 3, domain cs) captures: Contents 1 Introduction 3 2 Theoretical Foundations 7 2.1 Histograms and Measures . Assumptions: Probability measures on compact metric spaces; finite cost function c(x,y). Breakdown regime: When cost function becomes unbounded or supports are singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Kantorovich relaxation provides a convex optimization formulation that is isomorphic to the original Monge problem under regularity conditions, enabling efficient numerical solutions in GSI's probabilistic inference pipelines. Operator 'Entropic Regularization' (page 3, domain cs) captures: 52 4 Entropic Regularization of Optimal Transport 57 4.1 Entropic Regularization . Assumptions: Strong convexity of cost function; log-concave marginals. Breakdown regime: When entropy regularization parameter approaches zero, leading to degenerate transport plans. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entropic regularization transforms the discrete optimal transport problem into a smooth, differentiable form suitable for stochastic gradient descent in GSE's reinforcement learning architectures. Operator 'Wasserstein Metric' (page 4, domain cs) captures: 92 6 W1 Optimal Transport 96 6.1 W1 on Metric Spaces . Assumptions: Complete separable metric space; finite first moment of measures. Breakdown regime: In high dimensions where curse of dimensionality causes exponential growth in computation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The W1 metric endows probability distributions with a Riemannian structure, allowing GSI to perform variational inference and define uncertainty quantification in terms of geodesic paths in distribution space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5, domain=cs, pages_read=32/209): Operator 'Kantorovich Linear Program' (page 3, domain cs) captures: Contents 1 Introduction 3 2 Theoretical Foundations 7 2.1 Histograms and Measures . Assumptions: Probability measures on compact metric spaces; finite cost function c(x,y). Breakdown regime: When cost function becomes unbounded or supports are singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Kantorovich relaxation provides a convex optimization formulation that is isomorphic to the original Monge problem under regularity conditions, enabling efficient numerical solutions in GSI's probabilistic inference pipelines. Operator 'Entropic Regularization' (page 3, domain cs) captures: 52 4 Entropic Regularization of Optimal Transport 57 4.1 Entropic Regularization . Assumptions: Strong convexity of cost function; log-concave marginals. Breakdown regime: When entropy regularization parameter approaches zero, leading to degenerate transport plans. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entropic regularization transforms the discrete optimal transport problem into a smooth, differentiable form suitable for stochastic gradient descent in GSE's reinforcement learning architectures. Operator 'Wasserstein Metric' (page 4, domain cs) captures: 92 6 W1 Optimal Transport 96 6.1 W1 on Metric Spaces . Assumptions: Complete separable metric space; finite first moment of measures. Breakdown regime: In high dimensions where curse of dimensionality causes exponential growth in computation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The W1 metric endows probability distributions with a Riemannian structure, allowing GSI to perform variational inference and define uncertainty quantification in terms of geodesic paths in distribution space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in Monge’s 1781 work on optimal allocation, extended by Kantorovich in 1942 to introduce linear programming formulations, later generalized by Brenier and Villani in the context of fluid dynamics and PDEs, culminating in modern computational frameworks. Retrocausal Genealogy: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents may have distinct cost functions or marginal distributions, leading to divergent transport plans. Modeling such heterogeneity requires adversarial or multi-agent extensions of standard OT, where each agent optimizes its own transport strategy within shared constraints. Theory of Mind & Decision Maker Model: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "If the transport cost is not strictly convex or if marginal distributions are highly concentrated, the solution may fail to converge or become non-unique. Additionally, when the underlying geometry lacks sufficient regularity, the Wasserstein metric loses its topological properties, invalidating downstream inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+ "book_id": "46e377123f662ec5",
+ "source_status": "COMPLETE",
+ "source_note": "Gabriel Peyré (CNRS and DMA, ENS) and Marco Cuturi (Google and CREST, ENSAE), Computational Optimal Transport, Foundations and Trends in Machine Learning, vol. 11, no. 5-6, pp. 355-607, 2019, per the bibliographic block printed in the file. Local file: the arXiv version of the monograph, arXiv:1803.00567v4 [stat.ML], 18 Mar 2020, PDF of 42429657 bytes, sha256 46e377123f662ec5d6ce7b91d54f7d4bc7b9c0a7a8a8451e7760d055dc200baf (book_id is its first 16 hex chars, gatekeeper scan convention: sha256 of str(size) followed by the file bytes). The file's imprint line carries a conflicting placeholder citation (Foundations and Trends in Computer Graphics and Vision, vol. XX, pp. 1-205, 2020); the embedded @article block governs. Text: born-digital extraction, clean prose; mathematical notation is flattened by the extractor (norm bars render as k, arrows as 7, stacked expressions linearize), and the text layer of Sec. 10.5 is corrupted by overlapping columns in this arXiv file, so no primitive was drawn from Sec. 10.5. Every verbatim quote was verified as an exact whitespace-normalized substring of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "monge_problem_pushforward",
+   "name": "Monge problem: move a measure by a deterministic map that pushes the source mass exactly onto the target",
+   "verbatim_quote": "the Monge problem [1781] seeks a map that associates to each point xi a single point yj and which must push the mass of α toward the mass of β",
+   "page": "Sec. 2.2, Remark 2.4, Eq. (2.5), printed p. 9-11, text line ~451",
+   "latex": "\\min_{T} \\sum_{i} c(x_i, T(x_i)) \\quad \\text{s.t. } T_\\sharp \\alpha = \\beta",
+   "symbol_and_unit_ledger": {
+    "c(x_i, T(x_i))": "ground cost of moving the mass at source point x_i to its image T(x_i) [cost units]",
+    "T": "transport map from source support points to target support points [dimensionless assignment]",
+    "alpha, beta": "source and target discrete measures; T_sharp alpha = beta is exact mass conservation under the map"
+   },
+   "assumptions": [
+    "A map must exist: the target weights must be exactly representable as sums of source weights, which fails whenever the target support is larger than the source support.",
+    "Each source point sends all of its mass to a single target point; no mass splitting is allowed.",
+    "The feasible set of push-forward maps is nonconvex, so the problem is hard to solve in this form."
+   ],
+   "breakdown_regime": "Infeasible for generic discrete measures (no map exists when weights are incompatible, e.g. more target points than source points); nonconvex and combinatorial in the assignment special case with n! permutations.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Monge form is the engine's deterministic reassignment operator: a rule that moves an entire probability distribution of outcomes from one state to another while conserving total probability mass exactly. It is the formal skeleton behind any counterfactual of the form: take the observed distribution of a unit's plays and push it through a known transformation, such as a scheme change or a personnel swap, to obtain the distribution that unit would produce under the new condition.",
+    "source_operator": "monge_problem_pushforward",
+    "telemetry": "Empirical distributions over plays, drives, or possessions with their support points (field position, down, distance, formation) and weights (observed frequencies)."
+   }
+  },
+  {
+   "primitive_id": "kantorovich_coupling_relaxation",
+   "name": "Kantorovich relaxation: replace the deterministic map with a coupling matrix that may split mass, giving a linear program over the transportation polytope",
+   "verbatim_quote": "Kantorovich proposes instead that the mass at any point xi be potentially dispatched across several locations",
+   "page": "Sec. 2.3, Eqs. (2.10)-(2.11), printed p. 13-14, text line ~630",
+   "latex": "L_C(a,b) = \\min_{P \\in U(a,b)} \\langle C, P \\rangle, \\quad U(a,b) = \\{P \\in \\mathbb{R}_+^{n \\times m} : P\\mathbf{1}_m = a,\\ P^{\\top}\\mathbf{1}_n = b\\}",
+   "symbol_and_unit_ledger": {
+    "P_{i,j}": "amount of mass transported from source bin i to target bin j [probability mass]",
+    "C_{i,j}": "unit cost of moving mass from bin i to bin j [cost units]",
+    "a, b": "source and target histograms in the probability simplices [probability mass]",
+    "U(a,b)": "transportation polytope: all nonnegative matrices with row sums a and column sums b"
+   },
+   "assumptions": [
+    "Both histograms have the same total mass (both lie in probability simplices).",
+    "Cost is linear in the amount of mass moved: shipping a units from i to j costs a times C_{i,j}.",
+    "Mass is infinitely divisible, so fractional plans are admissible."
+   ],
+   "breakdown_regime": "Requires equal total mass on both sides; the linear cost ignores congestion or interaction effects; the optimum need not be unique; a dense coupling is harder to interpret as an actual reassignment than a map.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The coupling is the engine's soft matching object: instead of forcing a one-to-one assignment between two distributions (for example this week's play distribution and a historical baseline), the engine keeps the full matrix of how much mass moves from each source state to each target state. Row and column sums are hard conservation constraints, so any downstream quantity computed from the coupling automatically respects the observed totals on both sides.",
+    "source_operator": "kantorovich_coupling_relaxation",
+    "telemetry": "Two histograms on a shared state space: play-type frequencies, target-share distributions, snap distributions by personnel grouping, with a cost matrix between states."
+   }
+  },
+  {
+   "primitive_id": "birkhoff_relaxation_tightness",
+   "name": "For uniform histograms of equal size the Kantorovich relaxation is tight: some optimal coupling is a permutation matrix (Birkhoff's theorem)",
+   "verbatim_quote": "Birkhoff’s theorem [1946] states that the set of extremal points of U(1n /n, 1n /n) is equal to the set of permutation matrices",
+   "page": "Sec. 2.3, Proposition 2.1, printed p. 15, text line ~731",
+   "latex": "(P_\\sigma)_{i,j} = \\frac{1}{n} \\text{ if } j = \\sigma(i), \\quad 0 \\text{ otherwise}",
+   "symbol_and_unit_ledger": {
+    "sigma": "permutation of the n bins [dimensionless]",
+    "P_sigma": "permutation coupling matrix scaled by 1/n [probability mass]",
+    "n": "number of bins, equal on both sides"
+   },
+   "assumptions": [
+    "Both histograms are uniform (every weight equals 1/n) and have the same number of bins n = m.",
+    "The linear program attains its minimum at an extremal point of the polytope."
+   ],
+   "breakdown_regime": "Tightness fails as a guarantee for nonuniform weights: with general histograms an optimal coupling may genuinely need to split mass, and no permutation need be optimal.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the certificate the engine uses when it solves a relaxed matching but reports a hard assignment: when the two sides are uniform empirical samples of the same size, the relaxation loses nothing, so an optimal one-to-one pairing (player to player, play to play, drive to drive) always exists among the optimal soft plans and can be extracted without changing the optimal cost.",
+    "source_operator": "birkhoff_relaxation_tightness",
+    "telemetry": "Equal-size empirical samples: two sets of n plays, n drives, or n player-game lines to be paired one-to-one."
+   }
+  },
+  {
+   "primitive_id": "wasserstein_metric_lifting",
+   "name": "With a power of a ground distance as cost, the optimal transport value is a true metric on histograms and measures: the p-Wasserstein distance lifts the ground geometry",
+   "verbatim_quote": "OT can be understood as a canonical way to lift a ground distance between points to a distance between histogram or measures",
+   "page": "Sec. 2.4, Propositions 2.2-2.3, Eqs. (2.17)-(2.18), printed p. 19-21, text line ~883",
+   "latex": "W_p(a,b) = L_{D^p}(a,b)^{1/p}",
+   "symbol_and_unit_ledger": {
+    "D": "ground distance matrix between bins [distance units]",
+    "p": "exponent, p >= 1 [dimensionless]",
+    "L_{D^p}": "optimal transport value with cost matrix D raised elementwise to the power p",
+    "W_p": "p-Wasserstein distance between the histograms [distance units]"
+   },
+   "assumptions": [
+    "The cost matrix is the p-th power of a genuine distance: symmetric, zero diagonal, triangle inequality.",
+    "The triangle inequality for W_p is proved by gluing two optimal couplings through their shared marginal."
+   ],
+   "breakdown_regime": "If the cost is not a power of a metric (arbitrary substitution costs), the value is a transport cost but not a distance: symmetry, definiteness, or the triangle inequality can fail. For 0 < p <= 1 it is W_p^p, not W_p, that is a distance.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The lifting property is what licenses the engine to turn any pointwise dissimilarity it trusts (distance between two plays, two routes, two field positions) into a principled distance between whole distributions of those objects, with metric guarantees: identical distributions score zero, the score is symmetric, and chained comparisons obey the triangle inequality, so distribution distances can be composed and audited like ordinary distances.",
+    "source_operator": "wasserstein_metric_lifting",
+    "telemetry": "A ground distance on the state space (play embeddings, field coordinates, route shapes) plus empirical histograms over that space for each team, unit, or player."
+   }
+  },
+  {
+   "primitive_id": "wasserstein_weak_convergence_geometry",
+   "name": "Wasserstein distance metrizes weak convergence: it compares even singular, non-overlapping distributions and reduces to the ground distance between two point masses",
+   "verbatim_quote": "it allows one to compare singular distributions (for instance, discrete ones) whose supports do not overlap and to quantify the spatial shift between the supports of two distributions",
+   "page": "Sec. 2.4, Remark 2.18 and Definition 2.2, printed p. 21-22, text line ~1018",
+   "latex": "W_p(\\delta_x, \\delta_y) = d(x, y)",
+   "symbol_and_unit_ledger": {
+    "delta_x": "Dirac mass concentrated at point x [probability measure]",
+    "d(x, y)": "ground distance between the two support points [distance units]",
+    "W_p": "p-Wasserstein distance [distance units]"
+   },
+   "assumptions": [
+    "Convergence in W_p is equivalent to weak convergence plus convergence of moments of order p on unbounded spaces.",
+    "The ground space carries a genuine distance d."
+   ],
+   "breakdown_regime": "Divergences such as Kullback-Leibler or total variation cannot do this: they are infinite or maximal between disjoint supports. W_infinity is a nonconvex exception in the family and is hard to compute.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the property that makes Wasserstein the engine's default discrepancy for sparse empirical data: two players or teams whose observed plays never land in exactly the same states still get a finite, graded distance that grows smoothly as their distributions shift apart in space, instead of the all-or-nothing verdict a density-ratio divergence would give. Single observations also embed exactly, since the distance between two point masses is just their ground distance.",
+    "source_operator": "wasserstein_weak_convergence_geometry",
+    "telemetry": "Empirical play or tracking distributions with disjoint or barely overlapping supports; sequences of weekly distributions whose convergence or drift is being monitored."
+   }
+  },
+  {
+   "primitive_id": "kantorovich_duality_potentials",
+   "name": "Kantorovich duality: the transport cost equals a maximization over price potentials f and g constrained by f_i + g_j <= C_{i,j} on every pair",
+   "verbatim_quote": "The Kantorovich problem (2.11) is a constrained convex minimization problem, and as such, it can be naturally paired with a so-called dual problem, which is a constrained concave maximization problem",
+   "page": "Sec. 2.5, Proposition 2.4, Eqs. (2.20)-(2.21), printed p. 23, text line ~1073",
+   "latex": "L_C(a,b) = \\max_{(f,g) \\in R(C)} \\langle f, a \\rangle + \\langle g, b \\rangle, \\quad R(C) = \\{(f,g) \\in \\mathbb{R}^n \\times \\mathbb{R}^m : f \\oplus g \\le C\\}",
+   "symbol_and_unit_ledger": {
+    "f_i": "dual potential (collection price) at source bin i [cost units]",
+    "g_j": "dual potential (delivery price) at target bin j [cost units]",
+    "f oplus g": "matrix with entries f_i + g_j [cost units]",
+    "R(C)": "set of admissible potential pairs, one inequality per source-target pair"
+   },
+   "assumptions": [
+    "Strong duality holds because the primal is a finite-dimensional linear program.",
+    "Potentials are defined only up to an additive constant shift (f + t, g - t) that leaves the objective unchanged."
+   ],
+   "breakdown_regime": "For arbitrary measures, existence of optimal potentials is nontrivial because the constraint set is not compact; for the entropic problem the potentials lose their automatic Lipschitz regularity.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Duality gives the engine an attribution layer for free: the optimal potentials price every source state and every target state, so a distribution comparison decomposes into which states are expensive to empty and which are expensive to fill. A feasible potential pair also certifies a lower bound on the true distance without solving the full transport problem, which is a cheap audit the engine can run before trusting any approximate solver output.",
+    "source_operator": "kantorovich_duality_potentials",
+    "telemetry": "The cost matrix and histograms of the comparison being priced; the resulting potential vectors per state (formation, field zone, route concept)."
+   }
+  },
+  {
+   "primitive_id": "complementary_slackness_support",
+   "name": "Complementary slackness: mass only flows on pairs where the potentials saturate the cost, f_i + g_j = C_{i,j}; the optimal plan's support is located by the dual solution",
+   "verbatim_quote": "The primal-dual optimality relation for the Lagrangian (2.22) allows us to locate the support of the optimal transport plan",
+   "page": "Sec. 2.5 Eq. (2.23) and Sec. 3.3 Propositions 3.2-3.3, printed p. 23 and p. 41, text line ~1109",
+   "latex": "\\{(i,j) : P_{i,j} > 0\\} \\subseteq \\{(i,j) : f_i + g_j = C_{i,j}\\}",
+   "symbol_and_unit_ledger": {
+    "P_{i,j}": "optimal coupling entry [probability mass]",
+    "f_i + g_j": "combined dual price of the pair [cost units]",
+    "C_{i,j}": "unit transport cost of the pair [cost units]"
+   },
+   "assumptions": [
+    "The primal and dual solutions are both optimal (strong duality holds).",
+    "Feasibility plus complementarity is also sufficient: any feasible primal-dual pair satisfying the condition is optimal."
+   ],
+   "breakdown_regime": "The condition characterizes optimal pairs but does not by itself construct them; degenerate problems can have many optimal plans sharing the same saturated set.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Complementary slackness is the engine's consistency check between a proposed matching and its price explanation: any pair carrying flow must be exactly priced, and any underpriced pair must carry none. In reasoning terms it separates the active correspondences (the pairs the optimal plan actually uses, which are exactly the tight constraints) from the inactive background, so explanations can cite only the binding pairs.",
+    "source_operator": "complementary_slackness_support",
+    "telemetry": "A candidate coupling and candidate potentials from any solver; the set of tight pairs is the auditable explanation of the plan."
+   }
+  },
+  {
+   "primitive_id": "brenier_theorem_gradient_of_convex",
+   "name": "Brenier theorem: for the squared Euclidean cost with a density on the source, the optimal coupling is unique, is a Monge map, and that map is the gradient of a convex function",
+   "verbatim_quote": "Furthermore, this map T is uniquely defined as the gradient of a convex function ϕ, T (x) = ∇ϕ(x), where ϕ is the unique (up to an additive constant) convex function",
+   "page": "Sec. 2.5, Remark 2.24, Theorem 2.1, printed p. 27-28, text line ~1285",
+   "latex": "T(x) = \\nabla \\varphi(x), \\quad \\varphi(x) = \\frac{\\|x\\|^2}{2} - f(x)",
+   "symbol_and_unit_ledger": {
+    "T": "optimal Monge map [point in R^d]",
+    "varphi": "Brenier potential, a convex function [cost units]",
+    "f": "Kantorovich dual potential for the squared cost [cost units]",
+    "nabla varphi": "gradient map, monotone by convexity of varphi"
+   },
+   "assumptions": [
+    "Ground space is R^d and the cost is the squared Euclidean distance.",
+    "At least one of the two measures has a density with respect to Lebesgue measure; both have finite second moments."
+   ],
+   "breakdown_regime": "Fails without a density: purely discrete sources can require mass splitting, and for p = 1 or metric costs the optimal coupling is generally not unique and no such map need exist. Regularity of the map can break down for irregular target supports.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Brenier's theorem is the structural license for treating an optimal distributional shift as a single well-defined transformation: when the source distribution is continuous, there is exactly one optimal way to morph it into the target, and that morph is monotone in the strong sense of being a convex gradient. For the engine this justifies interpolating distributions along the optimal path and reading the map itself, not just its cost, as the explanation of how one state of a unit becomes another.",
+    "source_operator": "brenier_theorem_gradient_of_convex",
+    "telemetry": "Continuous or finely discretized distributions over tracking space or play embeddings, where a density approximation of the source is defensible."
+   }
+  },
+  {
+   "primitive_id": "monge_ampere_equation",
+   "name": "The Brenier potential solves a Monge-Ampère equation: the Jacobian determinant of the map, weighted by the target density at the image, reproduces the source density",
+   "verbatim_quote": "one obtains that ϕ is the unique (up to the addition of a constant) convex function which solves the following Monge–Ampère-type equation",
+   "page": "Sec. 2.5, Remark 2.25, Eq. (2.32), printed p. 29, text line ~1360",
+   "latex": "\\det(\\partial^2 \\varphi(x))\\, \\rho_\\beta(\\nabla \\varphi(x)) = \\rho_\\alpha(x)",
+   "symbol_and_unit_ledger": {
+    "partial^2 varphi(x)": "Hessian matrix of the Brenier potential at x [dimensionless curvature]",
+    "rho_alpha, rho_beta": "source and target densities [probability per unit volume]",
+    "det": "Jacobian determinant of the map, the local volume change factor"
+   },
+   "assumptions": [
+    "Both measures have densities and the optimal map is smooth and bijective.",
+    "Convexity of the potential enforces a nonnegative determinant, which is necessary for a solution to exist."
+   ],
+   "breakdown_regime": "In full generality solutions need not be smooth (Alexandrov weak solutions are required), the equation is a nonlinear degenerate elliptic PDE, and its discretization with the density depending on the map's own gradient is numerically delicate.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Monge-Ampère form turns distribution matching into a local conservation law the engine can check pointwise: wherever the map compresses volume, the target density must be proportionally higher. It is the differential version of mass conservation, useful as a diagnostic residual: regions where the equation is violated are regions where a proposed transformation of one distribution into another is not mass-consistent.",
+    "source_operator": "monge_ampere_equation",
+    "telemetry": "Density estimates of source and target over a continuous state space, plus the Jacobian of a candidate transformation between them."
+   }
+  },
+  {
+   "primitive_id": "one_dimensional_quantile_formulas",
+   "name": "In one dimension everything is closed form: W_p is the L^p distance between quantile functions, W_1 is the L^1 distance between CDFs, and the optimal map composes one CDF with the other's quantile function",
+   "verbatim_quote": "This means that through the map α 7→ Cα−1 , the Wasserstein distance is isometric to a linear space equipped with the Lp norm",
+   "page": "Sec. 2.6, Remarks 2.28-2.30, Eqs. (2.33)-(2.39), printed p. 30-32, text line ~1493",
+   "latex": "W_p(\\alpha, \\beta)^p = \\int_0^1 |C_\\alpha^{-1}(r) - C_\\beta^{-1}(r)|^p \\, dr, \\quad T = C_\\beta^{-1} \\circ C_\\alpha",
+   "symbol_and_unit_ledger": {
+    "C_alpha": "cumulative distribution function of alpha [probability]",
+    "C_alpha^{-1}": "generalized inverse CDF (quantile function) [units of the variable]",
+    "r": "probability level in [0, 1] [dimensionless]",
+    "T": "monotone optimal transport map on the real line"
+   },
+   "assumptions": [
+    "The ground space is the real line and the cost is a power of the absolute distance.",
+    "Atoms are matched in sorted order (monotone rearrangement); distinctness of points is assumed for the local formula."
+   ],
+   "breakdown_regime": "The isometry is special to dimension one; in higher dimensions the Wasserstein space is not Hilbertian (Sec. 8.3). Concave costs (p < 1) change the structure of optimal plans.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 1-D formulas are the engine's fast lane for scalar distributions: yards gained, air yards, time to pressure, EPA per play. Any such distribution is summarized exactly by its quantile curve, distances become plain L^p distances between curves, and the optimal map is a monotone recalibration, so a player's distribution can be warped onto a baseline by composing CDFs with no optimization solver at all.",
+    "source_operator": "one_dimensional_quantile_formulas",
+    "telemetry": "Scalar per-play or per-game measurements with their empirical CDFs and quantile functions at a grid of probability levels."
+   }
+  },
+  {
+   "primitive_id": "gaussian_w2_bures_metric",
+   "name": "Between Gaussians, W_2 has a closed form: squared mean gap plus the Bures metric between covariances, with an explicit linear optimal map",
+   "verbatim_quote": "where B is the so-called Bures metric [1969] between positive definite matrices",
+   "page": "Sec. 2.6, Remark 2.31, Eqs. (2.40)-(2.42), printed p. 33-34, text line ~1594",
+   "latex": "W_2(\\alpha, \\beta)^2 = \\|m_\\alpha - m_\\beta\\|^2 + \\mathrm{tr}\\left(\\Sigma_\\alpha + \\Sigma_\\beta - 2(\\Sigma_\\alpha^{1/2} \\Sigma_\\beta \\Sigma_\\alpha^{1/2})^{1/2}\\right)",
+   "symbol_and_unit_ledger": {
+    "m_alpha, m_beta": "mean vectors of the two Gaussians [units of the variable]",
+    "Sigma_alpha, Sigma_beta": "covariance matrices [units squared]",
+    "Sigma^{1/2}": "symmetric matrix square root",
+    "tr": "trace of a matrix [units squared]"
+   },
+   "assumptions": [
+    "Both measures are Gaussian (the formula extends to elliptically contoured families with the same generator, up to a scaling of the Bures term).",
+    "The optimal map is affine: x maps to m_beta + A(x - m_alpha) with A symmetric positive definite."
+   ],
+   "breakdown_regime": "For non-Gaussian measures the Gaussian-to-Gaussian distance is only a lower bound on the true distance (Gelbrich bound); using it as the distance itself understates discrepancy whenever shape beyond second moments matters.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Bures closed form lets the engine compare summarized units exactly when a Gaussian summary is honest: a team's per-play outcome distribution compressed to a mean vector and covariance gets an exact W_2, decomposed additively into a location part (mean gap) and a shape part (covariance mismatch), and the same formula supplies the exact average (barycenter) of several such summaries through its fixed point.",
+    "source_operator": "gaussian_w2_bures_metric",
+    "telemetry": "Mean vectors and covariance matrices of multivariate per-play features (yards, EPA, field position) per team, unit, or player."
+   }
+  },
+  {
+   "primitive_id": "c_transform_dual_collapse",
+   "name": "The c-transform collapses the dual problem to a single potential: given f, the best partner is g = f^C, and applying the transform pair twice is idempotent, so alternation plateaus",
+   "verbatim_quote": "there is no better vector solution for g than the C-transform vector of f, denoted f C ∈ Rm",
+   "page": "Sec. 3.2, Eq. (3.5) and Proposition 3.1, printed p. 40-41, text line ~1842",
+   "latex": "(f^C)_j = \\min_{i} C_{i,j} - f_i, \\quad f^{C\\bar{C}C} = f^C",
+   "symbol_and_unit_ledger": {
+    "f^C": "C-transform of the source potentials, the largest feasible partner vector [cost units]",
+    "C_{i,j} - f_i": "slack-adjusted cost of pairing source i with target j [cost units]",
+    "f^{C bar-C}": "double transform, the c-concave envelope of f"
+   },
+   "assumptions": [
+    "The dual constraints are exactly f_i + g_j <= C_{i,j} for all pairs.",
+    "Idempotence f^{CCbarC} = f^C is a property of the exact (hard-min) transform; the entropic soft-min version is not idempotent, which is precisely why Sinkhorn alternation keeps moving."
+   ],
+   "breakdown_regime": "Alternating exact transforms cannot be used as a solver: after one round trip the potentials stop improving even though they may not yet be optimal. The transform is also nonsmooth, which blocks direct gradient methods in the unregularized problem.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The c-transform is the engine's best-response operator for prices: given valuations on one side of a comparison, it computes the most aggressive feasible valuations on the other side in one min-plus pass. Its idempotence is a warning the engine encodes as doctrine: a single best-response round is not convergence, so any iterative pricing scheme must add smoothing (the entropic soft-min) or another mechanism to keep improving.",
+    "source_operator": "c_transform_dual_collapse",
+    "telemetry": "Potential vectors on states and the pairwise cost matrix; min-plus (tropical) matrix-vector products over the state space."
+   }
+  },
+  {
+   "primitive_id": "vertex_sparsity_tree_structure",
+   "name": "Extremal optimal plans are sparse and acyclic: a vertex of the transportation polytope has at most n + m - 1 nonzero entries and its support graph is a forest",
+   "verbatim_quote": "All NW corner solutions have by construction up to n + m − 1 nonzero elements",
+   "page": "Sec. 3.4, Proposition 3.4 and Sec. 3.4.2, printed p. 42-45, text line ~2104",
+   "latex": "\\#\\{(i,j) : P_{i,j} > 0\\} \\le n + m - 1",
+   "symbol_and_unit_ledger": {
+    "n, m": "numbers of source and target bins [count]",
+    "P_{i,j} > 0": "pairs carrying positive flow in the plan [probability mass]",
+    "support graph": "bipartite graph on n + m nodes whose edges are the positive entries"
+   },
+   "assumptions": [
+    "An optimal vertex exists because the feasible polytope is bounded and the objective is linear.",
+    "A support containing a cycle can always be perturbed in both directions along the cycle, so it cannot be extremal."
+   ],
+   "breakdown_regime": "Sparsity is a property of vertices, not of every optimal plan: entropic regularization deliberately returns dense plans, and degenerate problems admit dense optimal plans too. The north-west corner rule reaches only a subset of vertices.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Vertex sparsity bounds how complicated an exact explanation can be: an optimal hard matching between two histograms never needs more than n + m - 1 active links, and those links form a forest, so the engine can present an exact optimal reassignment as a small set of trees rather than a dense matrix. It also gives a compression target: any plan with a cycle in its support can be simplified without changing its marginals.",
+    "source_operator": "vertex_sparsity_tree_structure",
+    "telemetry": "Support size and cycle structure of computed couplings between histograms on n source and m target states."
+   }
+  },
+  {
+   "primitive_id": "network_simplex_algorithm",
+   "name": "Network simplex: maintain a spanning-tree plan and its complementary potentials, add the most violated dual constraint as an edge, pivot flow around the created cycle until no violation remains",
+   "verbatim_quote": "The network simplex algorithm can therefore be summarized as follows: Initialize the algorithm with an extremal solution P, given for instance by the NW corner rule",
+   "page": "Sec. 3.5, printed p. 45-48, text line ~2271",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Starts from a feasible vertex (for instance from the north-west corner rule) whose support graph is a forest.",
+    "Potentials complementary to the current tree are recovered by rooting each tree and traversing it, fixing one free potential per component.",
+    "Each pivot either strictly decreases the transport cost or is degenerate (changes only the tree, not the plan)."
+   ],
+   "breakdown_regime": "Worst-case behavior depends on the pivot rule; polynomiality was only proved with specific pivot strategies (Orlin), and degenerate pivots can stall progress on the plan itself. Exact LP solvers are outclassed by Sinkhorn-type iterations when only an approximate distance is needed.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The network simplex is the engine's exact solver of record for small and medium matchings where a certificate matters: it returns not just a plan but complementary potentials proving optimality, and its tree representation keeps the active correspondence human-auditable. The engine reserves it for cases where an approximate entropic answer would not be defensible, and uses its potentials as ground truth to validate faster approximate solvers.",
+    "source_operator": "network_simplex_algorithm",
+    "telemetry": "Cost matrices of moderate size (hundreds to thousands of states per side) where exactness is required, plus the tree and potentials the solver maintains."
+   }
+  },
+  {
+   "primitive_id": "auction_algorithm_epsilon_scaling",
+   "name": "Auction algorithm: unassigned sources bid for targets by raising the winner's price by the gap between best and second-best adjusted costs plus epsilon, guaranteeing an assignment within n*epsilon of optimal",
+   "verbatim_quote": "The number of steps of the auction algorithm is at most N = nkCk∞ /ε",
+   "page": "Sec. 3.7, Eqs. (3.8)-(3.9) and Propositions 3.7-3.9, printed p. 53-56, text line ~2614",
+   "latex": "g_{j_i^1} \\leftarrow C_{i, j_i^1} - (C_{i, j_i^2} - g_{j_i^2}) - \\varepsilon",
+   "symbol_and_unit_ledger": {
+    "j_i^1, j_i^2": "targets with the smallest and second-smallest adjusted costs C_{i,j} - g_j for bidder i",
+    "g_j": "current price (dual variable) of target j [cost units]",
+    "epsilon": "minimum bid increment [cost units]; final assignment is at most n*epsilon suboptimal",
+    "||C||_infty": "largest absolute entry of the cost matrix [cost units]"
+   },
+   "assumptions": [
+    "Solves the assignment problem: uniform histograms with n = m.",
+    "Maintains epsilon-complementary slackness throughout; prices only ever move in one direction, which bounds the iteration count.",
+    "Epsilon-scaling (restarting with decreasing epsilon) reduces the naive complexity to near O(n^3 log ||C||_infty)."
+   ],
+   "breakdown_regime": "Native form handles only the balanced assignment case; a fixed epsilon trades accuracy for speed, and a poor epsilon schedule wastes iterations. Extension to general histograms requires reformulation.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The auction is the engine's market mechanism for one-to-one matching under contention: when several source items want the same target (the same defender, the same coverage shell, the same role), prices adjust until contention resolves, and the n*epsilon bound states exactly how far the resulting assignment can be from optimal. It is the formal version of letting contested assignments settle by bidding rather than by central fiat.",
+    "source_operator": "auction_algorithm_epsilon_scaling",
+    "telemetry": "Assignment problems between equal-size sets with a cost matrix and observed contention (multiple sources preferring the same target)."
+   }
+  },
+  {
+   "primitive_id": "entropic_regularization_gibbs_projection",
+   "name": "Entropic regularization: subtracting epsilon times the entropy makes the transport problem strongly convex with a unique solution, which is the Kullback-Leibler projection of the Gibbs kernel exp(-C/epsilon) onto the coupling polytope",
+   "verbatim_quote": "Since the objective is an ε-strongly convex function, Problem (4.2) has a unique optimal solution",
+   "page": "Sec. 4.1, Eqs. (4.1)-(4.7) and Proposition 4.1, printed p. 57-60, text line ~2692",
+   "latex": "L_C^\\varepsilon(a,b) = \\min_{P \\in U(a,b)} \\langle P, C \\rangle - \\varepsilon H(P), \\quad K = e^{-C/\\varepsilon}, \\quad P^\\varepsilon = \\mathrm{Proj}^{KL}_{U(a,b)}(K)",
+   "symbol_and_unit_ledger": {
+    "epsilon": "regularization strength [cost units]; controls the blur of the plan",
+    "H(P)": "discrete entropy of the coupling, -sum P_{i,j} (log P_{i,j} - 1) [nats]",
+    "K_{i,j} = exp(-C_{i,j}/epsilon)": "Gibbs kernel entry [dimensionless]",
+    "Proj^KL": "projection in Kullback-Leibler divergence onto the marginal constraints"
+   },
+   "assumptions": [
+    "Entropy is 1-strongly concave, so the regularized objective is epsilon-strongly convex and the optimizer is unique.",
+    "As epsilon tends to 0 the solution converges to the maximum-entropy optimal plan of the original problem; as epsilon tends to infinity it converges to the independence coupling a b^T."
+   ],
+   "breakdown_regime": "The regularized value is a biased estimate of the true transport cost and the plan is dense rather than sparse; small epsilon restores accuracy but destroys numerical stability and convergence speed.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropic regularization is the engine's master dial between a sharp explanation and a smooth statistic: positive epsilon turns a brittle combinatorial matching into a differentiable, uniquely defined comparison that can sit inside a larger optimization (fitting a model by minimizing transport loss), at the documented price of bias that Sec. 8.5 later corrects. Every use must report its epsilon, because the number is meaningless without it.",
+    "source_operator": "entropic_regularization_gibbs_projection",
+    "telemetry": "Cost matrices and histograms; the entropy of computed couplings as a diagnostic of how diffuse the plan is at the chosen epsilon."
+   }
+  },
+  {
+   "primitive_id": "sinkhorn_matrix_scaling",
+   "name": "Sinkhorn's algorithm: the regularized optimum factors as diag(u) K diag(v), and alternating row and column rescalings u = a/(Kv), v = b/(K^T u) solve it with only matrix-vector products",
+   "verbatim_quote": "That problem is known in the numerical analysis community as the matrix scaling problem",
+   "page": "Sec. 4.2, Proposition 4.3 and Eqs. (4.12)-(4.15), printed p. 63-64, text line ~3050",
+   "latex": "P = \\mathrm{diag}(u) K \\mathrm{diag}(v), \\quad u \\leftarrow \\frac{a}{Kv}, \\quad v \\leftarrow \\frac{b}{K^\\top u}",
+   "symbol_and_unit_ledger": {
+    "u, v": "positive scaling vectors [dimensionless], defined up to a reciprocal multiplicative constant",
+    "K": "Gibbs kernel exp(-C/epsilon) [dimensionless]",
+    "a/(Kv)": "entrywise division of the target row sums by the current row sums [dimensionless]"
+   },
+   "assumptions": [
+    "First-order optimality of the entropic problem forces the factored form of the solution.",
+    "Each half-iteration enforces one marginal exactly; convergence to the joint solution is proved via the Hilbert metric contraction (Theorem 4.2).",
+    "Iterations for many histogram pairs batch into matrix-matrix products, which is the GPU-friendly form."
+   ],
+   "breakdown_regime": "For small epsilon the kernel entries underflow to zero in floating point and the divisions break down; the raw iterations must then be replaced by the log-domain form. Each iteration costs O(nm) unless the kernel has exploitable structure (separability, convolution, heat kernel).",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sinkhorn is the engine's workhorse comparator: it prices the discrepancy between two distributions using nothing but repeated rescalings, runs identically on one comparison or a batch of thousands, and its intermediate scalings double as potentials. Because the updates are matrix products against a kernel, the kernel itself becomes the modeling choice: encode the ground geometry once, and every comparison inherits it.",
+    "source_operator": "sinkhorn_matrix_scaling",
+    "telemetry": "Gibbs kernel evaluations from the ground cost, batches of histogram pairs (team-week distributions, player distributions), GPU matrix products."
+   }
+  },
+  {
+   "primitive_id": "sinkhorn_convergence_hilbert_contraction",
+   "name": "Sinkhorn converges linearly because a positive matrix is a strict contraction in the Hilbert projective metric, with rate lambda(K) = (sqrt(eta)-1)/(sqrt(eta)+1) that degrades like exp(-1/epsilon) as epsilon shrinks",
+   "verbatim_quote": "They proved the following fundamental theorem, which shows that a positive matrix is a strict contraction on the cone of positive vectors",
+   "page": "Sec. 4.2, Theorem 4.1, Theorem 4.2 and Remark 4.15, printed p. 70-73, text line ~3277",
+   "latex": "d_H(Kv, Kv') \\le \\lambda(K) d_H(v, v'), \\quad \\lambda(K) = \\frac{\\sqrt{\\eta(K)} - 1}{\\sqrt{\\eta(K)} + 1} < 1",
+   "symbol_and_unit_ledger": {
+    "d_H": "Hilbert projective metric on positive vectors, a distance on rays (scale-invariant) [dimensionless]",
+    "eta(K)": "maximal cross-ratio of kernel entries, max K_{i,k} K_{j,l} / (K_{j,k} K_{i,l}) [dimensionless]",
+    "lambda(K)": "contraction factor per kernel application [dimensionless]"
+   },
+   "assumptions": [
+    "All kernel entries are strictly positive, which holds for the Gibbs kernel at any epsilon > 0.",
+    "The metric is projective: scalings are only identified up to a positive multiplicative constant, matching the non-uniqueness of (u, v)."
+   ],
+   "breakdown_regime": "The global rate is often pessimistic, but in hard cases it is sharp: as epsilon tends to 0 the factor approaches 1 like exp(-1/epsilon), so certified high accuracy at tiny epsilon is exponentially expensive; local rates governed by the second eigenvalue of the linearized map are finer but only asymptotic.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The contraction theorem gives the engine a computable stopping theory rather than a heuristic: marginal violation bounds the distance to the fixed point through (4.23), so a Sinkhorn run can report a certified accuracy instead of a fixed iteration count. The exp(-1/epsilon) degradation is encoded as a hard warning: demanding near-exact transport through tiny epsilon is exponentially wasteful, and the correct response is a debiased divergence or an exact solver, not more iterations.",
+    "source_operator": "sinkhorn_convergence_hilbert_contraction",
+    "telemetry": "Marginal constraint violations per iteration, kernel cross-ratio statistics, and the epsilon schedule of each comparison run."
+   }
+  },
+  {
+   "primitive_id": "log_domain_sinkhorn_stabilization",
+   "name": "Log-domain Sinkhorn: rewriting the updates with the soft-minimum operator and a log-sum-exp shift makes the iterations stable for arbitrarily small epsilon, at the cost of elementwise exponentials",
+   "verbatim_quote": "In contrast to the original iterations (4.15), these log-domain iterations (4.43) and (4.44) are stable for arbitrary ε > 0, because the quantity S(f, g) stays bounded during the iterations",
+   "page": "Sec. 4.4, Remark 4.23, Eqs. (4.37)-(4.44), printed p. 77-79, text line ~3762",
+   "latex": "\\min\\nolimits_\\varepsilon z = -\\varepsilon \\log \\sum_i e^{-z_i/\\varepsilon}, \\quad \\min\\nolimits_\\varepsilon z = z_* - \\varepsilon \\log \\sum_i e^{-(z_i - z_*)/\\varepsilon}",
+   "symbol_and_unit_ledger": {
+    "min_epsilon": "soft-minimum, a differentiable approximation of the minimum [same units as z]",
+    "z_*": "the exact minimum of z, used as the stabilizing shift [same units as z]",
+    "S(f, g)_{i,j} = C_{i,j} - f_i - g_j": "reduced cost matrix, stays bounded during iterations [cost units]"
+   },
+   "assumptions": [
+    "The log-domain updates are mathematically equivalent to the scaling updates through (f, g) = epsilon (log u, log v).",
+    "Stability comes from exponentiating only bounded reduced costs rather than raw kernel entries."
+   ],
+   "breakdown_regime": "Soft-min evaluations cost nm exponentials per sweep and resist the matrix-matrix batching that makes primal Sinkhorn fast on GPUs, so stabilization trades throughput for robustness; multiscale epsilon-decay schemes are the usual compromise.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Log-domain stabilization is the engine's numerical safety rule for sharp comparisons: whenever a small epsilon is scientifically required (near-exact matching, weak blur), the computation moves to potentials and soft-minima so the answer is not corrupted by underflow. The documented tradeoff is logged with the result: log-domain runs are slower and less parallel, which is the price of trusting small-epsilon numbers.",
+    "source_operator": "log_domain_sinkhorn_stabilization",
+    "telemetry": "Reduced-cost matrices and potential vectors during small-epsilon runs; underflow diagnostics (zero kernel rows) from primal runs that trigger the switch."
+   }
+  },
+  {
+   "primitive_id": "sinkhorn_divergence_debiasing",
+   "name": "Debiased Sinkhorn divergence: subtracting the self-transport terms, 2W(a,b) - W(a,a) - W(b,b), removes the entropic bias, restores W(a,a) = 0, and interpolates between the Wasserstein distance (epsilon to 0) and the energy distance (epsilon to infinity)",
+   "verbatim_quote": "In order to cancel the bias introduced by the regularization (in particular, W p,ε (α, α) 6= 0), we introduce a corrected regularized divergence",
+   "page": "Sec. 8.5, Proposition 8.3, printed p. 131-132, text line ~6172",
+   "latex": "\\tilde{W}_{p,\\varepsilon}(\\alpha, \\beta)^p = 2 W_{p,\\varepsilon}(\\alpha, \\beta)^p - W_{p,\\varepsilon}(\\alpha, \\alpha)^p - W_{p,\\varepsilon}(\\beta, \\beta)^p",
+   "symbol_and_unit_ledger": {
+    "W_{p,epsilon}(alpha, beta)": "entropic regularized transport cost between the two measures [distance units]",
+    "W_{p,epsilon}(alpha, alpha)": "self-transport term, the entropic bias at alpha [distance units]",
+    "energy distance": "the kernel (MMD-type) distance recovered in the large-epsilon limit"
+   },
+   "assumptions": [
+    "Positivity of the corrected divergence is proved when exp(-c/epsilon) is a positive definite kernel.",
+    "Sample complexity of the debiased divergence interpolates between the OT rate and the dimension-free MMD rate as epsilon grows."
+   ],
+   "breakdown_regime": "Costs three transport solves per comparison instead of one; at very small epsilon it inherits the instability of the underlying solver, and the interpolation limit at large epsilon is a different geometry (energy distance), so epsilon still parametrizes a family, not a single canonical distance.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's default reporting form for regularized comparisons: raw Sinkhorn values cannot be compared across different distributions because each carries its own self-bias, while the debiased divergence is zero exactly when the distributions agree and stays positive otherwise. The interpolation property is used deliberately: large epsilon behaves like a robust kernel statistic with fast sample convergence, small epsilon behaves like true geometry, and the engine picks the point on that dial per question.",
+    "source_operator": "sinkhorn_divergence_debiasing",
+    "telemetry": "Triples of Sinkhorn solves (cross term and two self terms) per comparison; epsilon sensitivity sweeps to confirm the reported value is stable."
+   }
+  },
+  {
+   "primitive_id": "semidiscrete_ot_laguerre_cells",
+   "name": "Semidiscrete OT: transporting a continuous measure onto a discrete one reduces to a finite-dimensional concave maximization over the target weights, whose geometry is a Laguerre (power) tessellation and whose map is piecewise constant",
+   "verbatim_quote": "one can show that the optimal transport from a continuous density toward a discrete one is a piecewise constant map, where the preimage of each point in the support of the discrete measure is a union of disjoint cells",
+   "page": "Ch. 5 introduction and Sec. 5.2, Eqs. (5.6)-(5.8), printed p. 85-88, text line ~4018",
+   "latex": "L_c(\\alpha, \\beta) = \\max_{g \\in \\mathbb{R}^m} \\int_X g^{\\bar{c}}(x) \\, d\\alpha(x) + \\langle g, b \\rangle, \\quad \\nabla E(g)_j = b_j - \\alpha(L_j(g))",
+   "symbol_and_unit_ledger": {
+    "g": "dual weights on the m discrete target points [cost units]",
+    "g^{bar c}": "c-transform of g, the lower envelope of cost cones [cost units]",
+    "L_j(g)": "Laguerre cell of target j: points whose adjusted cost c(x, y_j) - g_j is minimal [region of X]",
+    "alpha(L_j(g))": "source mass falling in cell j [probability mass]"
+   },
+   "assumptions": [
+    "One measure is continuous (or sampled) and the other is discrete with m support points.",
+    "For the squared Euclidean cost the cells are polyhedral power-diagram cells, computable by computational geometry; the gradient of the objective is the vector of cell-mass errors."
+   ],
+   "breakdown_regime": "Restricted to low ambient dimension for exact cell computation; in high dimensions only the stochastic formulation survives. The entropic smoothing of the cells (soft assignments) biases the tessellation, and Newton methods need cells of nonvanishing volume.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Semidiscrete OT is the engine's assignment of a continuous space to a finite menu: the whole state space partitions into cells, each cell owned by exactly one target (one coverage, one route concept, one archetype), and the cell weights adjust until each target receives exactly its prescribed share. The gradient being just the vector of share errors makes the fit auditable cell by cell, and the tessellation itself is an explanation: it shows which region of the space each target serves.",
+    "source_operator": "semidiscrete_ot_laguerre_cells",
+    "telemetry": "Continuous or densely sampled source distributions (tracking point clouds), a finite target set with prescribed masses, and the resulting cell partition and mass errors."
+   }
+  },
+  {
+   "primitive_id": "w1_kantorovich_rubinstein_duality",
+   "name": "Kantorovich-Rubinstein duality: W_1 is the supremum of the mean difference over all 1-Lipschitz test functions, equivalently the minimum-cost Beckmann flow whose divergence equals the difference of the measures",
+   "verbatim_quote": "This norm is often called the Kantorovich and Rubinstein norm [1958]",
+   "page": "Sec. 6.1, Proposition 6.1 and Eq. (6.1); Sec. 6.2 Eq. (6.4), printed p. 97-99, text line ~4588",
+   "latex": "W_1(\\alpha, \\beta) = \\max_{f : \\mathrm{Lip}(f) \\le 1} \\int_X f \\, d(\\alpha - \\beta)",
+   "symbol_and_unit_ledger": {
+    "f": "1-Lipschitz witness potential: |f(x) - f(y)| <= d(x, y) [cost units]",
+    "d(alpha - beta)": "signed difference of the two measures [probability mass]",
+    "Lip(f)": "Lipschitz constant of f [dimensionless]",
+    "Beckmann flow form": "min over vector fields s of the integral of ||s|| subject to div(s) = alpha - beta"
+   },
+   "assumptions": [
+    "The ground cost is a distance (c = d), and the c-transform of a 1-Lipschitz function is its own negative, collapsing the dual pair to a single potential.",
+    "The formula remains valid for signed measures of equal total mass, where it defines a genuine norm."
+   ],
+   "breakdown_regime": "W_1 optimal couplings are generally nonunique and no canonical Monge map exists for metric costs, so W_1 gives a distance and a witness but not a preferred morph; the Lipschitz constraint is global and its discretized versions need care (gradient bounds, wavelet or network parameterizations).",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Rubinstein dual is the engine's interpretable discrepancy: the maximizing witness function is a critic that points at exactly where the two distributions differ, with slope bounded by 1 so it cannot exaggerate local gaps. A W_1 report therefore ships with its own explanation (the witness landscape), and the Beckmann flow form gives the complementary physical picture of the cheapest way to move the surplus mass onto the deficit.",
+    "source_operator": "w1_kantorovich_rubinstein_duality",
+    "telemetry": "Two distributions on a metric state space; the witness function values over states and the optimal flow field between surplus and deficit regions."
+   }
+  },
+  {
+   "primitive_id": "benamou_brenier_dynamic_formulation",
+   "name": "Benamou-Brenier: W_2 is the least kinetic energy of a mass flow satisfying the continuity equation; the change of variable to momentum J = alpha*v makes the problem convex, and its geodesics are displacement interpolations",
+   "verbatim_quote": "The formulation (7.2) is a nonconvex formulation in the variables (αt , vt )t because of the constraint (7.1) involving the product αt vt",
+   "page": "Sec. 7.1, Eqs. (7.1)-(7.6), printed p. 102-104, text line ~4806",
+   "latex": "W_2(\\alpha_0, \\alpha_1)^2 = \\min_{(\\alpha_t, J_t)} \\int_0^1 \\int \\theta(\\alpha_t(x), J_t(x)) \\, dx \\, dt, \\quad \\theta(a, b) = \\frac{\\|b\\|^2}{a}, \\quad \\partial_t \\alpha_t + \\mathrm{div}(J_t) = 0",
+   "symbol_and_unit_ledger": {
+    "alpha_t": "measure at time t along the interpolating path [probability density]",
+    "J_t = alpha_t v_t": "momentum field [mass times velocity]",
+    "theta(a, b)": "kinetic energy density, infinite unless b vanishes where a does [energy units]",
+    "div(J_t)": "spatial divergence enforcing conservation of mass"
+   },
+   "assumptions": [
+    "Ground cost is the squared geodesic (here Euclidean) distance; endpoints are fixed at t = 0 and t = 1.",
+    "When a Monge map T exists, the geodesic is McCann's interpolation alpha_t = ((1 - t) Id + tT)_sharp alpha_0."
+   ],
+   "breakdown_regime": "Only practical in low dimensions on regular grids (the space must be discretized), and unusable for large sparse discrete measures; the squared-cost restriction is intrinsic to the kinetic energy form.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The dynamic form is the engine's way of comparing distributions through their evolution rather than their endpoints: two distributions are close if one can be flowed into the other with little kinetic energy, and the minimizing flow is a physically meaningful interpolation the engine can animate frame by frame (a unit morphing from one tendency profile to another across a season). The convexity in momentum is what makes this computable rather than merely poetic.",
+    "source_operator": "benamou_brenier_dynamic_formulation",
+    "telemetry": "Time-indexed distributions (weekly tendency profiles), grid-discretized density fields, and the velocity or momentum fields of the optimal flow."
+   }
+  },
+  {
+   "primitive_id": "phi_divergences_pointwise_comparison",
+   "name": "Phi-divergences compare measures pointwise through the convex function phi applied to the density ratio, with a singular-part penalty; they see overlap, never geometry",
+   "verbatim_quote": "Such divergences compare two input measures by comparing their mass pointwise, without introducing any notion of mass transportation",
+   "page": "Sec. 8.1, Definitions 8.1-8.2, Eq. (8.1), printed p. 115-116, text line ~5300",
+   "latex": "D_\\phi(\\alpha | \\beta) = \\int_X \\phi\\left(\\frac{d\\alpha}{d\\beta}\\right) d\\beta + \\phi'_\\infty \\, \\alpha^{\\perp}(X)",
+   "symbol_and_unit_ledger": {
+    "phi": "convex entropy function generating the divergence (KL, total variation, Hellinger, chi-square are instances)",
+    "d alpha / d beta": "density ratio (Radon-Nikodym derivative) [dimensionless]",
+    "phi'_infty": "recession slope of phi at infinity, pricing the singular part [dimensionless]",
+    "alpha^perp": "part of alpha singular with respect to beta [probability mass]"
+   },
+   "assumptions": [
+    "Both measures live on the same space and are compared through a common dominating decomposition.",
+    "If phi grows superlinearly, the divergence is infinite unless alpha is absolutely continuous with respect to beta."
+   ],
+   "breakdown_regime": "Blind to the ground geometry: moving mass a short distance or a long distance costs the same once supports separate, and empirical plug-in estimates fail (two empirical measures give divergence infinity or a constant). They are the wrong tool for sparse, shifted, or support-mismatched data.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Phi-divergences are kept in the engine as the contrast case and as likelihood-side tools: they are the right discrepancy when the question is purely about reweighting on a fixed shared support (importance weighting, density-ratio estimation), and their failure modes on disjoint supports are exactly the diagnostic that tells the engine to switch to a transport-based discrepancy instead.",
+    "source_operator": "phi_divergences_pointwise_comparison",
+    "telemetry": "Density ratios on a shared discrete support (play outcome categories, coverage categories), where support mismatch is measured and reported before the divergence is trusted."
+   }
+  },
+  {
+   "primitive_id": "integral_probability_metrics_mmd",
+   "name": "Integral probability metrics and MMD: discrepancies defined as suprema over a test-function class; with an RKHS unit ball the discrepancy is a closed-form kernel quadratic form in the two samples",
+   "verbatim_quote": "One can show that k·k2k is the dual norm in the sense of (8.10) associated to the unit ball B of the RKHS associated to k",
+   "page": "Sec. 8.2, Eq. (8.10) and Sec. 8.2.2 Eq. (8.14), printed p. 120-123, text line ~5702",
+   "latex": "\\|\\alpha - \\beta\\|_k^2 = \\sum_{i,i'} a_i a_{i'} k(x_i, x_{i'}) + \\sum_{j,j'} b_j b_{j'} k(y_j, y_{j'}) - 2 \\sum_{i,j} a_i b_j k(x_i, y_j)",
+   "symbol_and_unit_ledger": {
+    "k(x, y)": "positive definite kernel between states [similarity units]",
+    "a_i, b_j": "weights of the two discrete measures [probability mass]",
+    "||alpha - beta||_k": "maximum mean discrepancy [kernel units]"
+   },
+   "assumptions": [
+    "The kernel is positive (or conditionally positive) definite; universal kernels (dense span) make the MMD metrize weak convergence.",
+    "Closed form needs only kernel evaluations between sample points, never densities."
+   ],
+   "breakdown_regime": "The kernel and its bandwidth are modeling choices that can dominate the answer: a Gaussian kernel at the wrong scale misses multiscale structure, and MMD ignores the metric geometry that transport exploits. Degenerate (semidefinite) kernels make the discrepancy only a seminorm.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "MMD is the engine's cheap two-sample statistic: a closed-form, differentiable discrepancy with dimension-free sample complexity, used for screening (did this distribution change?) before spending computation on full transport geometry (how did it change?). The division of labor is explicit in the book: MMD and energy distances answer detection questions at O(n^{-1/2}) statistical cost, Wasserstein answers structural questions at a dimension-cursed rate.",
+    "source_operator": "integral_probability_metrics_mmd",
+    "telemetry": "Kernel matrices between samples of two distributions (play embeddings, tracking summaries); bandwidth selection diagnostics."
+   }
+  },
+  {
+   "primitive_id": "wasserstein_not_hilbertian",
+   "name": "In dimension two and higher the Wasserstein distance is not Hilbertian: no feature map into a Hilbert space represents it exactly, which blocks exact kernelization of OT geometry",
+   "verbatim_quote": "If X = Rd with d ≥ 2 and the ground cost is set to d(x, y) = kx − yk2 , then the p-Wasserstein distance is not Hilbertian for p = 1, 2",
+   "page": "Sec. 8.3, Propositions 8.1-8.2, printed p. 125-127, text line ~5898",
+   "latex": "\\sum_{i,j} r_i r_j \\, d(z_i, z_j)^2 \\le 0 \\quad \\text{whenever } \\sum_i r_i = 0 \\quad \\text{(necessary and sufficient for } d \\text{ Hilbertian; violated by } W_p, d \\ge 2)",
+   "symbol_and_unit_ledger": {
+    "d(z_i, z_j)": "candidate distance between embedded objects [distance units]",
+    "r_i": "real coefficients summing to zero [dimensionless]",
+    "negative definite": "the squared distance must satisfy the displayed inequality for all finite point sets"
+   },
+   "assumptions": [
+    "The counterexample uses measures supported on the four corners of a square in R^2 and checks the spectrum of the centered squared-distance matrix.",
+    "One-dimensional Wasserstein and the Gaussian case are exceptions: there the distance is Hilbertian (quantile and Bures representations)."
+   ],
+   "breakdown_regime": "This kills exact kernel embeddings, exact multidimensional scaling, and Gaussian or Laplace kernels built directly on W_p as positive definite objects in dimension >= 2; embeddings into l_2 incur unavoidable distortion, and sliced or entropic surrogates are needed to recover positive definite kernels.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This negative result is a guardrail the engine encodes before anyone builds on sand: in the multivariate settings that matter (tracking space, play embeddings), Wasserstein distances cannot be fed into kernel machines or embedding pipelines as if they were Euclidean. The sanctioned routes around it are exactly the ones the book develops: slice to one dimension (where it is Hilbertian), use entropic soft-min kernels, or keep the distance as a distance and use methods that only need distances.",
+    "source_operator": "wasserstein_not_hilbertian",
+    "telemetry": "Pairwise Wasserstein distance matrices between distributions, with the centered-matrix spectrum as the audit for any claimed embedding."
+   }
+  },
+  {
+   "primitive_id": "empirical_wasserstein_sample_complexity",
+   "name": "Empirical Wasserstein distances converge at the dimension-cursed rate O(n^{-1/d}), while MMD-type weak norms converge at O(n^{-1/2}) regardless of dimension",
+   "verbatim_quote": "This rate is tight in Rd if one of the two measures has a density with respect to the Lebesgue measure",
+   "page": "Sec. 8.4.1, printed p. 128-130, text line ~6050",
+   "latex": "\\mathbb{E} \\, |W_p(\\hat{\\alpha}_n, \\hat{\\beta}_n) - W_p(\\alpha, \\beta)| = O(n^{-1/d})",
+   "symbol_and_unit_ledger": {
+    "hat alpha_n, hat beta_n": "empirical measures from n i.i.d. samples [probability measures]",
+    "d": "ambient (or intrinsic) dimension of the support [count]",
+    "n": "sample size [count]",
+    "expectation": "over the random sampling of both empirical measures"
+   },
+   "assumptions": [
+    "The ground space is bounded (or moment conditions hold); the O(n^{-1/d}) rate is stated for d > 2 and 1 <= p < infinity.",
+    "The rate improves to depend on intrinsic rather than ambient dimension when the measures live on low-dimensional structure (Weed and Bach)."
+   ],
+   "breakdown_regime": "In high dimension the plug-in Wasserstein estimate is dominated by sampling noise unless n is enormous; total variation and other phi-divergences are not even consistent from empirical measures. Entropic regularization improves the effective rate, interpolating toward the MMD rate as epsilon grows.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sample complexity is the engine's honesty budget for distributional claims: with a few dozen observed plays in a high-dimensional state space, an empirical Wasserstein number is mostly noise, and the engine must either reduce dimension (project, slice, summarize), regularize (accept the entropic interpolation toward kernel rates), or widen its uncertainty statement. The rate formula turns 'how many plays do we need?' into a computable quantity instead of a vibe.",
+    "source_operator": "empirical_wasserstein_sample_complexity",
+    "telemetry": "Sample counts per distribution, ambient and intrinsic dimension estimates of the state space, and the resulting error scale attached to every reported distance."
+   }
+  },
+  {
+   "primitive_id": "wasserstein_loss_gradients",
+   "name": "The entropic transport loss is differentiable in both arguments: its gradient in the histograms is the pair of optimal potentials, and its gradient in the cost matrix is the optimal coupling itself",
+   "verbatim_quote": "All of these problems have in common that they require access to the gradients of Wasserstein distances, or approximations thereof",
+   "page": "Sec. 9.1, Propositions 9.1-9.2, Eqs. (9.2)-(9.7), printed p. 134-137, text line ~6250",
+   "latex": "\\nabla_{(a,b)} L_C^\\varepsilon(a, b) = (f^*, g^*), \\quad \\nabla_C L_C^\\varepsilon(a, b) = P^*",
+   "symbol_and_unit_ledger": {
+    "f^*, g^*": "optimal entropic dual potentials, centered to sum zero [cost units]",
+    "P^*": "optimal entropic coupling [probability mass]",
+    "L_C^epsilon": "entropic transport loss [cost units]"
+   },
+   "assumptions": [
+    "Positive epsilon: the unregularized loss is only subdifferentiable and differentiable only when the optimal potentials are unique.",
+    "Eulerian form: support points fixed, weights vary, gradient is the source potential f. Lagrangian form: weights fixed, support points move, gradient pushes each point against its barycentric image under the coupling."
+   ],
+   "breakdown_regime": "Exact gradients require converged potentials or couplings; with truncated Sinkhorn iterations one must differentiate the algorithm's output itself (the finite-iteration Sinkhorn divergence), whose nonconvexity in the inputs is documented. Parameterizations through the support make the overall fitting problem nonconvex.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "These gradient identities are what let transport losses train models inside the engine: fitting a parameterized distribution to an observed one by gradient descent needs exactly two objects the solver already computes, the potentials (sensitivity to reweighting states) and the coupling (sensitivity to moving states). The Lagrangian gradient has a direct reading: each support point is pulled toward the barycenter of where its mass is sent, so gradient steps literally drag a model's distribution onto the data distribution along the optimal plan.",
+    "source_operator": "wasserstein_loss_gradients",
+    "telemetry": "Converged potentials and couplings from Sinkhorn runs feeding gradient-based fitting of parameterized distributions (mixture weights, embedding positions)."
+   }
+  },
+  {
+   "primitive_id": "wasserstein_barycenter_frechet_mean",
+   "name": "The Wasserstein barycenter is the Frechet mean of distributions: it minimizes the weighted sum of transport costs, specializes to k-means for a single discrete target, and its entropic form is solved by Sinkhorn-like iterations with a geometric-mean update",
+   "verbatim_quote": "one can easily show that the centroids output by the k-means problem correspond to the support of the solution α",
+   "page": "Sec. 9.2, Eqs. (9.10)-(9.12) and (9.15)-(9.20), printed p. 139-145, text line ~6550",
+   "latex": "\\min_{a \\in \\Sigma_n} \\sum_{s=1}^{S} \\lambda_s L_{C_s}(a, b_s), \\quad a \\leftarrow \\prod_{s=1}^{S} (K_s v_s)^{\\lambda_s}",
+   "symbol_and_unit_ledger": {
+    "b_s": "input histograms to be averaged [probability mass]",
+    "lambda_s": "barycenter weights in the simplex [dimensionless]",
+    "K_s, v_s": "Gibbs kernel and target scaling for input s",
+    "geometric mean update": "the shared row marginal is the weighted geometric mean of the per-input predictions"
+   },
+   "assumptions": [
+    "Costs are typically powers of a shared ground distance; for squared Euclidean cost and one input with a density, the barycenter is unique.",
+    "The barycenter's mean is the weighted mean of the input means, and its support lies in the convex hull of the input supports."
+   ],
+   "breakdown_regime": "The unregularized problem is a large linear program; fixed-support parameterizations can miss mass-splitting optima; for S = 2 the barycenter is the displacement interpolant, which can create ghost mass between separated modes (unbalanced variants exist partly to fix this).",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The barycenter is the engine's consensus distribution: the average game script of a set of opponents, the typical drive profile of a class of teams, computed so that geometry is respected (mass moves, it does not blur in place the way an arithmetic average of densities does). The k-means specialization matters because it certifies that ordinary clustering is the degenerate case of distributional averaging, so cluster centroids inherit a transport interpretation.",
+    "source_operator": "wasserstein_barycenter_frechet_mean",
+    "telemetry": "Collections of histograms to average (per-week tendency profiles, opponent distributions), weights per input, and the shared-support grid of the barycenter."
+   }
+  },
+  {
+   "primitive_id": "jko_wasserstein_gradient_flow",
+   "name": "JKO gradient flow: minimizing a functional over measures by implicit steps that trade functional decrease against squared Wasserstein distance to the previous iterate; the neg-entropy flow is the heat equation",
+   "verbatim_quote": "then (9.28) shows that the gradient flow of this neg-entropy is the linear heat diffusion",
+   "page": "Sec. 9.3, Remark 9.10, Eqs. (9.26)-(9.30), printed p. 149-150, text line ~7002",
+   "latex": "\\alpha^{(\\ell+1)} = \\arg\\min_{\\alpha} W_2(\\alpha, \\alpha^{(\\ell)})^2 + \\tau F(\\alpha), \\quad \\partial_t \\alpha_t = \\mathrm{div}(\\alpha_t \\nabla F'(\\alpha_t))",
+   "symbol_and_unit_ledger": {
+    "F": "functional on probability measures (energy, entropy, interaction) [energy units]",
+    "tau": "time step [time units]",
+    "F'(alpha)": "first variation of F at alpha, a function on the ground space",
+    "W_2^2": "squared Wasserstein distance penalizing movement per step [distance squared]"
+   },
+   "assumptions": [
+    "The limiting PDE is obtained formally as the step tau tends to 0 with t = tau * iteration.",
+    "Geodesic (displacement) convexity of F in the Wasserstein geometry gives existence, uniqueness, and convergence of the flow to a stationary distribution."
+   ],
+   "breakdown_regime": "Too-small time steps cause locking (the polyhedral distance makes the iterate refuse to move); functionals finite only for densities need density estimators under particle discretizations; convergence of fully discrete schemes is delicate and functional-specific.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The JKO scheme is the engine's template for evolving a distribution under a pressure: each step asks for the distribution that improves the objective while paying quadratically for how far its mass travels, which produces physically plausible gradual drift rather than teleporting mass. Season-long tendency evolution, aging curves, and scheme diffusion can all be cast this way, with the functional F stating the pressure and the Wasserstein penalty stating the inertia.",
+    "source_operator": "jko_wasserstein_gradient_flow",
+    "telemetry": "A sequence of distributions over time, a candidate driving functional (entropy, potential, interaction), and step-size diagnostics for locking."
+   }
+  },
+  {
+   "primitive_id": "minimum_kantorovich_estimators",
+   "name": "Minimum Kantorovich estimators: fit a parametric model to samples by minimizing a transport loss instead of a likelihood, which stays finite and meaningful for singular generative models whose density is intractable or nonexistent",
+   "verbatim_quote": "However, it fails to work when estimating singular distributions, typically when the αθ does not have a density",
+   "page": "Sec. 9.4, Eqs. (9.34)-(9.38), printed p. 155-157, text line ~7281",
+   "latex": "\\min_{\\theta \\in \\Theta} L_c(\\alpha_\\theta, \\beta), \\quad \\alpha_\\theta = h_{\\theta \\sharp} \\zeta, \\quad \\beta = \\frac{1}{n} \\sum_i \\delta_{x_i}",
+   "symbol_and_unit_ledger": {
+    "theta": "model parameters [model units]",
+    "h_theta": "generator map pushing a fixed reference measure zeta to the model measure [point in X]",
+    "zeta": "reference (latent) measure on a usually low-dimensional space Z",
+    "L_c": "transport loss between model and empirical measure [cost units]"
+   },
+   "assumptions": [
+    "Samples from the model are cheap (push reference samples through h_theta) even though its density is unavailable.",
+    "For fixed theta, evaluating the loss is a semidiscrete transport problem; gradients flow either through the dual potentials or through the primal coupling, avoiding gradients of potentials in the latter form."
+   ],
+   "breakdown_regime": "The joint problem in theta is highly nonconvex, dual potentials are unstable to differentiate, and parametric restrictions of the potential (networks, RKHS) introduce approximation errors not yet theoretically controlled. This is precisely the WGAN-style tradeoff the book flags.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Minimum Kantorovich estimation is the engine's fitting doctrine for simulators: a generative model of plays or drives can be sampled but has no tractable likelihood, so it is fitted by transport distance to the observed empirical distribution. The book's warnings are adopted as engine rules: prefer primal-coupling gradients, treat dual-critic parameterizations as approximations with unquantified error, and never report the fitted loss as if it were a likelihood.",
+    "source_operator": "minimum_kantorovich_estimators",
+    "telemetry": "Samples from a parameterized simulator, the observed empirical distribution, and the semidiscrete transport loss with its coupling-based gradient."
+   }
+  },
+  {
+   "primitive_id": "multimarginal_ot_tensor_coupling",
+   "name": "Multimarginal OT couples S histograms at once with a tensor coupling; its entropic form keeps the scaling structure, factorizing the tensor through one scaling vector per marginal, and barycenters are a special case",
+   "verbatim_quote": "Instead of coupling two input histograms using the Kantorovich formulation (2.11), one can couple S histograms (as )Ss=1 , where as ∈ Σns",
+   "page": "Sec. 10.1, Eqs. (10.1)-(10.5), printed p. 159-161, text line ~7406",
+   "latex": "\\min_{P \\in U((a_s)_s)} \\langle C, P \\rangle, \\quad P_{i_1, \\dots, i_S} = K_{i_1, \\dots, i_S} \\prod_{s=1}^{S} u_{s, i_s}",
+   "symbol_and_unit_ledger": {
+    "P": "coupling tensor over the product of the S supports [probability mass]",
+    "C": "S-way cost tensor [cost units]",
+    "u_{s, i_s}": "scaling variable for bin i_s of marginal s [dimensionless]",
+    "U((a_s)_s)": "tensors whose one-dimensional marginals are the given histograms"
+   },
+   "assumptions": [
+    "The cost can depend jointly on all S arguments (for barycenters it is built from pairwise costs through the barycentric map).",
+    "An optimal tensor exists with at most (sum of support sizes) - S + 1 nonzero entries."
+   ],
+   "breakdown_regime": "The tensor has a number of entries equal to the product of the support sizes, so naive computation is exponential in S; only costs with decomposable structure (sums of pairwise terms) admit the fast successive matrix-vector evaluation the book describes.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multimarginal coupling is the engine's joint-alignment object: instead of aligning distributions pairwise and hoping the alignments agree, one coupling ties all S distributions together (all weeks of a season, all opponents in a class), so a single state tuple means the same thing across every member. The barycenter falls out of the same object by reading off the induced average marginal, which is why consensus profiles and joint alignment are one computation in the engine, not two.",
+    "source_operator": "multimarginal_ot_tensor_coupling",
+    "telemetry": "Sets of S histograms with a joint cost (alignment across weeks, teams, or players), exploiting pairwise-decomposable costs for tractability."
+   }
+  },
+  {
+   "primitive_id": "unbalanced_ot_marginal_relaxation",
+   "name": "Unbalanced OT replaces hard marginal constraints with phi-divergence penalties, letting mass be created or destroyed at a price; it interpolates between transport (tau infinite) and Hellinger-type comparison (tau to 0), and the Wasserstein-Fisher-Rao distance is its KL instance",
+   "verbatim_quote": "A major bottleneck of optimal transport in its usual form is that it requires the two input measures (α, β) to have the same total mass",
+   "page": "Sec. 10.2, Eqs. (10.7)-(10.9) and Remark 10.5, printed p. 162-164, text line ~7576",
+   "latex": "L_\\tau^C(a, b) = \\min_{P \\ge 0} \\langle C, P \\rangle + \\tau_1 D_\\phi(P \\mathbf{1}_m | a) + \\tau_2 D_\\phi(P^\\top \\mathbf{1}_n | b)",
+   "symbol_and_unit_ledger": {
+    "tau_1, tau_2": "prices of marginal deviation [cost units]; infinity recovers balanced OT",
+    "D_phi(.|a)": "phi-divergence between the plan's actual row marginal and the prescribed a [dimensionless]",
+    "P 1_m, P^T 1_n": "the plan's realized marginals, no longer forced to equal (a, b) [probability mass]"
+   },
+   "assumptions": [
+    "Solved by the generalized Sinkhorn iterations with damping exponents tau/(tau + epsilon) on the usual updates (Eq. 10.9).",
+    "With KL penalties and the logarithmic cost of Remark 10.5, the square root of the value is a genuine distance on positive measures (Wasserstein-Fisher-Rao / Hellinger-Kantorovich)."
+   ],
+   "breakdown_regime": "Choosing tau is choosing how much of the discrepancy is explained by moving mass versus creating or destroying it; too small a tau lets the plan ignore geometry and just delete hard-to-move mass. Renormalizing inputs to fake balance is the common wrong shortcut the formalism exists to replace.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unbalanced OT is the engine's comparison for objects whose totals legitimately differ: rosters change, snap counts change, a unit plays more or fewer plays, mass appears and disappears. Instead of normalizing those facts away, the engine prices them: tau states the exchange rate between transporting mass and writing it off, and the Wasserstein-Fisher-Rao instance gives a true metric on unnormalized measures for cases where the total itself is signal.",
+    "source_operator": "unbalanced_ot_marginal_relaxation",
+    "telemetry": "Histograms with unequal totals (snap shares across weeks with different play counts, roster distributions across seasons), plus a documented tau per comparison."
+   }
+  },
+  {
+   "primitive_id": "sliced_wasserstein_distance",
+   "name": "Sliced Wasserstein: average the closed-form 1-D Wasserstein distances of all one-dimensional projections; computable by sorting, negative definite, and the basis of positive definite transport kernels",
+   "verbatim_quote": "One can define a distance between two measures (α, β) defined on Rd by aggregating 1-D Wasserstein distances between their projections onto all directions of the sphere",
+   "page": "Sec. 10.4, Eq. (10.13), printed p. 166-168, text line ~7743",
+   "latex": "SW(\\alpha, \\beta)^2 = \\int_{S^d} W_2(P_{\\theta \\sharp} \\alpha, P_{\\theta \\sharp} \\beta)^2 \\, d\\theta",
+   "symbol_and_unit_ledger": {
+    "theta": "unit direction on the sphere S^d [dimensionless]",
+    "P_{theta sharp} alpha": "push-forward of alpha under projection onto direction theta, a 1-D measure",
+    "W_2 in 1-D": "computed by sorting and the quantile formula of Sec. 2.6 [distance units]",
+    "d theta": "uniform measure over directions"
+   },
+   "assumptions": [
+    "Each projected problem is one-dimensional, so each term is exact and cheap; in practice the integral is Monte Carlo over random directions.",
+    "As a sum of negative definite functions, the sliced distance is negative definite, enabling positive definite kernels of the form exp(-SW^p / t)."
+   ],
+   "breakdown_regime": "Slicing loses information: distinct multivariate distributions can share many projections, the Monte Carlo estimate adds variance that shrinks only with the number of directions, and the sliced value is a lower bound style surrogate, not the true Wasserstein distance, with no coupling or map between the original measures.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sliced Wasserstein is the engine's scalable screening distance for high-dimensional distributions: project play or tracking embeddings onto random directions, sort, and accumulate exact 1-D costs. It trades the full coupling for speed and kernel validity, and the engine uses it where a ranking of discrepancies or a positive definite kernel is needed, reserving full transport for the finalists that need a map and an explanation.",
+    "source_operator": "sliced_wasserstein_distance",
+    "telemetry": "High-dimensional empirical distributions, a direction budget (number of random projections), and sorted projected samples per direction."
+   }
+  },
+  {
+   "primitive_id": "gromov_wasserstein_distance",
+   "name": "Gromov-Wasserstein compares metric measure spaces intrinsically: minimize the distortion of pairwise distances under a coupling, with no shared ground space; the problem is a nonconvex quadratic assignment, attacked by entropic mirror descent with Sinkhorn inner loops",
+   "verbatim_quote": "Optimal transport needs a ground cost C to compare histograms (a, b) and thus cannot be used if the bins of those histograms are not defined on the same underlying space",
+   "page": "Sec. 10.6.3, Eqs. (10.25)-(10.28), printed p. 174-176, text line ~8527",
+   "latex": "GW((a, D), (b, D'))^2 = \\min_{P \\in U(a, b)} \\sum_{i, j, i', j'} |D_{i, i'} - D'_{j, j'}|^2 P_{i, j} P_{i', j'}",
+   "symbol_and_unit_ledger": {
+    "D, D'": "intra-space distance (or similarity) matrices of the two objects [distance units]",
+    "P_{i,j} P_{i',j'}": "joint probability that i maps to j and i' maps to j' [probability mass squared]",
+    "distortion": "squared mismatch between the two internal distances of a matched pair of pairs"
+   },
+   "assumptions": [
+    "Each object is described only by its internal pairwise distances and a probability distribution over its points (a metric measure space).",
+    "GW is a distance between such spaces up to measure-preserving isometry: it vanishes exactly for intrinsically identical structures."
+   ],
+   "breakdown_regime": "Nonconvex and NP-hard in general (equivalent to quadratic assignment and graph matching); entropic mirror descent finds only stationary points whose quality depends on initialization, and the objective costs O(n^2 m^2) naively. It answers structural similarity, not a transport plan between shared states.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gromov-Wasserstein is the engine's cross-domain comparator: when two objects live in different spaces with no honest pointwise cost (two teams' play graphs, a college and a pro player's route tree, formations across eras), it compares their internal geometries and returns the soft correspondence that least distorts pairwise relationships. The returned correspondence is used as a hypothesis generator for structural analogies, never as evidence that the spaces are the same.",
+    "source_operator": "gromov_wasserstein_distance",
+    "telemetry": "Internal distance matrices of two structures (play-type similarity graphs, route networks, formation graphs) with node weights, plus multi-start entropic GW runs to probe stationary-point stability."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "46e377123f662ec5-t1",
+   "think": "This monograph is the computational turn of a two-hundred-year-old idea. Monge asked how to move a pile of earth onto a target shape with the least work when each grain must travel whole; Kantorovich relaxed the question by letting mass split, and that single relaxation converts a nonconvex, often infeasible problem into a linear program whose geometry, duality, and algorithms the rest of the book unfolds. The architecture is deliberate. First the objects: histograms, discrete measures, arbitrary measures, couplings as joint distributions with prescribed marginals. Then the value: with a power of a ground distance as cost, the optimal value is the Wasserstein distance, a true metric that lifts the geometry of the ground space to the space of distributions and metrizes weak convergence, so even disjoint empirical samples sit at a finite, graded distance. Then duality: every transport problem has a shadow price system, the Kantorovich potentials, and complementary slackness ties the plan to the prices so tightly that each explains the other. Brenier's theorem closes the theoretical arc for the squared Euclidean cost: with a density present, relaxation loses nothing, the optimal plan is a single map, and that map is the gradient of a convex function solving a Monge-Ampère equation, which is why optimal transport doubles as a theory of multivariate quantiles. The second half of the book is about what to do when the exact machinery is too slow or too brittle. Classical solvers (network simplex, dual ascent, auction) exploit the polytope's sparse tree-structured vertices. Entropic regularization then trades a controlled amount of bias for a strongly convex problem whose solution factors through a Gibbs kernel and is computable by Sinkhorn's rescaling iterations, analyzable exactly through the Hilbert projective contraction, stabilizable in the log domain, and differentiable, which is what admits transport into variational problems: barycenters as Frechet means of distributions, gradient flows whose implicit steps are Wasserstein proximal steps, and minimum Kantorovich estimators that fit generative models likelihood methods cannot touch. The statistical chapters supply the discipline: phi-divergences see only overlap, MMD sees only kernel geometry, empirical Wasserstein converges at a dimension-cursed rate, and the debiased Sinkhorn divergence interpolates deliberately between transport geometry and kernel statistics as epsilon varies. The extensions relax the founding assumptions one at a time: unequal mass (unbalanced OT and the Wasserstein-Fisher-Rao metric), many marginals (tensor couplings, with barycenters as a corollary), cheap high-dimensional surrogates (sliced Wasserstein built from the closed-form one-dimensional theory), and incomparable spaces (Gromov-Wasserstein, which compares internal distance structures and pays for it with nonconvexity). For a reasoning engine, the book's real export is a complete, auditable stack for the operation 'compare two distributions honestly.' Every level carries its own certificate and its own warning. Duality certifies bounds and attributes cost to states through potentials. Complementary slackness certifies that a plan and its price explanation agree. The contraction theory certifies Sinkhorn accuracy from marginal violations instead of iteration counts. The sample complexity results veto overconfident readings of small samples in high dimensions. The non-Hilbertian result vetoes a whole family of plausible kernel constructions. The epsilon parameter is never a nuisance to hide: it is a declared modeling choice that moves the answer between geometry and statistics, and the book insists on correcting its bias when reporting distances. Where the machinery breaks is equally explicit: mass conservation is a real constraint that reality often violates, which is why the unbalanced theory exists; one-dimensional and Gaussian closed forms are seductive exceptions that do not survive contact with general multivariate data; small epsilon is exponentially expensive; and Gromov-Wasserstein buys cross-domain comparison at the price of NP-hard nonconvexity, so its outputs are hypotheses, not measurements. A system that internalizes both halves, the operators and their failure envelopes, can compare distributions as a routine, explainable operation rather than as a leap of faith. The middle chapters deserve attention as a study in how structure becomes computation. The transportation polytope's vertices are forests with at most n + m - 1 edges, so exact optimal plans are sparse enough to draw, and the network simplex is nothing but disciplined walking on those trees, guided by potentials that must agree with the plan on every used edge. The c-transform shows the dual problem secretly has half its apparent degrees of freedom, and its idempotence explains why naive alternation stalls, a small theorem with large consequences because the entropic smoothing of exactly that transform is what makes Sinkhorn alternation converge instead. The semidiscrete chapter turns duality into geometry: one continuous measure against finitely many targets is a tessellation problem, the Laguerre cells are the regions each target serves, and the gradient of the whole problem is just the vector of cell-mass errors, which is as interpretable as an optimization signal ever gets. The dynamic chapter changes the question from where mass goes to how it flows, and the momentum change of variables that convexifies Benamou-Brenier is a reminder that the right coordinates can matter more than the right solver. Even the one-dimensional and Gaussian closed forms pull weight far beyond their special cases: they anchor intuition, they supply the sliced distances used at scale, and the Bures geometry reappears inside barycenters of Gaussians and inside the fixed points used to average covariance structure. Read as a whole, the book argues that a distance between distributions is not a number but a small theory: a ground cost that states what movement means, a conservation law that states what must be accounted for, a dual price system that states who pays, a plan that states what actually moves, and a set of theorems stating when each of those objects exists, is unique, is computable, and is statistically meaningful. Systems that adopt only the number inherit the failure modes the book documents: bias mistaken for signal, sparsity demanded where the geometry forbids it, kernel methods applied where no embedding exists, certainty claimed where the sampling rate forbids it. Systems that adopt the whole stack gain something rarer than a metric, namely a disciplined way to disagree with their own computations, because every transport answer arrives with the potentials, residuals, and rates needed to cross-examine it.",
+   "retrocausal_genealogy": "The lineage runs Monge's 1781 earth-moving memoir through Tolstoi's railway planning in the 1920s and the wartime logistics work of Hitchcock, Kantorovich, and Koopmans in the 1940s, which made it a linear program; Dantzig's simplex gave it an algorithm in 1949. Analysts revived it in the 1990s, Brenier's theorem above all, while computer vision renamed it the earth mover's distance. In parallel, transportation science had already invented entropic regularization as Wilson's 1969 gravity model, and the rescaling iterations reach back through Sinkhorn 1964 to Kruithof 1937 and Yule 1912. Benamou and Brenier's fluid formulation (2000), the Jordan-Kinderlehrer-Otto flow (1998), and Cuturi's 2013 Sinkhorn revival for machine learning complete the genealogy this book consolidates.",
+   "theory_of_mind": "The authors model the reader as a data scientist who meets distributions as data and needs geometry that computes. Their conviction is that theory earns its place only when it guides the design of an algorithm: duality is taught because it yields solvers and certificates, Brenier because it yields maps and interpolations, contraction theory because it yields stopping rules. The three-layer exposition, histograms first, then discrete measures, then arbitrary measures in gray boxes, assumes the reader will implement the finite version and consult the general one. Every figure is reproducible from companion code, which states their epistemic standard plainly: a claim about transport should ship with the computation that exhibits it.",
+   "cross_layer_veto": "Several results in this book veto moves other layers of a system might want to make. Mass conservation vetoes any comparison that quietly renormalizes unequal totals away; the unbalanced theory must be invoked explicitly, with its exchange rate tau declared. The sample complexity results veto high-dimensional plug-in Wasserstein estimates from small samples: the noise floor is computable and binding. The non-Hilbertian theorem vetoes feeding Wasserstein distance matrices to kernel machines as if they were Euclidean. Complementary slackness vetoes explanations whose prices disagree with the plan they explain. And the epsilon analysis vetoes reporting a regularized transport value without its epsilon and its debiasing, because the raw number mixes geometry with self-transport bias."
+  }
+ ],
+ "universal_lens": "Optimal transport is the general template for comparing any two structured piles of stuff when rearrangement has a price: define the ground cost of moving one unit, impose conservation, and the least-cost rearrangement becomes a distance with a dual price system attached. The same schema audits supply chains against demand, morphs one shape into another, aligns vocabularies across languages, and interpolates between physical states. Its companion lesson is symmetric: whenever a comparison ignores the cost of rearrangement and only checks overlap, it will call near things far and far things identical. Conservation plus ground geometry plus duality is a reusable grammar for honest comparison in any domain where mass, count, or probability must be accounted for.",
+ "gsi_mapping": "The Institute takes the monograph as core methods curriculum for reasoning about distributions. Its durable exports are habits of proof and audit: dual certificates before trusting a computed distance, contraction-based stopping rules instead of iteration folklore, explicit epsilon and tau declarations on every regularized quantity, and sample-complexity budgets attached to every empirical claim. The Laguerre tessellation and the Kantorovich-Rubinstein witness supply its model of an explanation: a partition of the space into owned regions, or a bounded-slope critic function that shows where two distributions differ. The negative results are curriculum too, since knowing that a geometry cannot be kernelized, or that a rate is dimension-cursed, is what separates a research institute's claims from numerology.",
+ "gse_mapping": "The engine takes a layered comparison stack. Screening questions (did this unit's distribution change?) run on MMD or sliced Wasserstein for their dimension-free or sorting-based cost. Measurement questions (how far, and where?) run on debiased Sinkhorn divergences with declared epsilon, exact network simplex certificates for small cases, and Kantorovich potentials as the per-state attribution of every reported distance. Consensus objects (a class of opponents, a typical week) are Wasserstein barycenters; roster churn and unequal play counts route to unbalanced transport with a declared tau; cross-space structural analogy routes to Gromov-Wasserstein, labeled as hypothesis. Simulator fitting uses minimum Kantorovich estimation with coupling gradients, and every distance ships with its sample-complexity noise floor."
 }

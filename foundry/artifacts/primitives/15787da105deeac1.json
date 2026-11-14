@@ -1,0 +1,78 @@
+{
+  "book_id": "15787da105deeac1",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2109.04720v1",
+  "file_name": "arxiv_2109.04720v1.pdf",
+  "sha256": "15787da105deeac111395bf112975db9632dfbcde8faa3f6648bf27b663cc14c",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Spatiotemporal player style representation via triplet network learning from GPS tracking data. Universal Lens: Rooted in arxiv_2109.04720v1 (15787da105deeac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian style similarity inference from player-phase heatmaps using triplet loss optimization. GSI Mapping: Rooted in arxiv_2109.04720v1 (15787da105deeac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situation-aware role-based state transitions from player movement trajectories in match phases. GSE Mapping: Rooted in arxiv_2109.04720v1 (15787da105deeac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "triplet_network_player_representation",
+      "name": "Triplet Network Player Representation",
+      "verbatim_quote": "In this paper, we build a triplet network named 6MapNet that can effectively capture the movement styles of players using in-game GPS data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x(t), y(t)': 'position coordinates in meters', 'v_x(t), v_y(t)': 'velocity components in m/s', 'H_{loc}(t), H_{dir}(t)': 'location and direction heatmaps'}",
+      "assumptions": "Player movement data is temporally aligned and spatially consistent; heatmaps are generated from GPS traces.",
+      "breakdown_regime": "When GPS signal is lost or data is insufficient for heatmap generation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each player-phase entity maps to a feature vector in latent space where triplet loss ensures semantic similarity.",
+        "source_operator": "triplet_network_player_representation",
+        "telemetry": "Accuracy of style classification across player-phase pairs."
+      }
+    },
+    {
+      "primitive_id": "heatmap_based_style_encoding",
+      "name": "Heatmap-Based Style Encoding",
+      "verbatim_quote": "Without any annotation of soccer-specific actions, we use players' locations and velocities to generate two types of heatmaps.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_{loc}(x,y,t)': 'location heatmap at position (x,y) and time t', 'H_{dir}(x,y,t)': 'direction heatmap at position (x,y) and time t'}",
+      "assumptions": "Heatmaps are computed from continuous GPS data; spatial resolution is fixed.",
+      "breakdown_regime": "When data is too sparse to form meaningful heatmap distributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Heatmaps serve as kernel representations for capturing positional and directional movement patterns.",
+        "source_operator": "heatmap_based_style_encoding",
+        "telemetry": "Spatial entropy of generated heatmaps per player-phase."
+      }
+    },
+    {
+      "primitive_id": "siamese_triplet_learning_framework",
+      "name": "Siamese Triplet Learning Framework",
+      "verbatim_quote": "Recently, there have been attempts to quantitatively grasp players' styles using video-based event stream data [5,6,9], but they have some limitations due to the properties of the data.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{triplet} = \\max(\\|f(a) - f(p)\\|^2 - \\|f(a) - f(n)\\|^2 + \\alpha, 0)",
+      "symbol_and_unit_ledger": "{'f(a), f(p), f(n)': 'feature embeddings for anchor, positive, negative samples', '\\\\alpha': 'margin hyperparameter (dimensionless)'}",
+      "assumptions": "Positive pairs share same player/role; negative pairs differ in role or player identity.",
+      "breakdown_regime": "When triplet triplets cannot be formed due to lack of labeled role data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Triplet loss enforces embedding proximity for similar roles and separation for different roles.",
+        "source_operator": "siamese_triplet_learning_framework",
+        "telemetry": "Mean squared distance difference between positive and negative pairs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "15787da105deeac1_t0",
+      "think": "The core innovation lies in representing soccer player styles through a triplet network trained on GPS tracking data without manual annotations. The method leverages spatiotemporal movement data to produce location and direction heatmaps, which are then encoded into feature vectors using shared subnetworks. These features are optimized via triplet loss such that similar players (same role) have close embeddings while dissimilar ones are separated. This approach circumvents the need for expensive video annotation and addresses scalability issues inherent in event-stream data. The model's strength resides in its ability to generalize from limited match data, making it suitable for scouting applications. Failure modes include poor GPS signal quality or misclassification of player roles during phase segmentation, leading to incorrect triplet formation.\n\nDeep epistemic analysis for arxiv_2109.04720v1 (15787da105deeac1, domain=other, pages_read=12/12): Operator 'Triplet Network Player Representation' (page 1, domain other) captures: In this paper, we build a triplet network named 6MapNet that can effectively capture the movement styles of players using in-game GPS data. Assumptions: Player movement data is temporally aligned and spatially consistent; heatmaps are generated from GPS traces. Breakdown regime: When GPS signal is lost or data is insufficient for heatmap generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each player-phase entity maps to a feature vector in latent space where triplet loss ensures semantic similarity. Operator 'Heatmap-Based Style Encoding' (page 1, domain other) captures: Without any annotation of soccer-specific actions, we use players' locations and velocities to generate two types of heatmaps. Assumptions: Heatmaps are computed from continuous GPS data; spatial resolution is fixed. Breakdown regime: When data is too sparse to form meaningful heatmap distributions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Heatmaps serve as kernel representations for capturing positional and directional movement patterns. Operator 'Siamese Triplet Learning Framework' (page 1, domain other) captures: Recently, there have been attempts to quantitatively grasp players' styles using video-based event stream data [5,6,9], but they have some limitations due to the properties of the data. Assumptions: Positive pairs share same player/role; negative pairs differ in role or player identity. Breakdown regime: When triplet triplets cannot be formed due to lack of labeled role data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Triplet loss enforces embedding proximity for similar roles and separation for different roles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2109.04720v1 (15787da105deeac1, domain=other, pages_read=12/12): Operator 'Triplet Network Player Representation' (page 1, domain other) captures: In this paper, we build a triplet network named 6MapNet that can effectively capture the movement styles of players using in-game GPS data. Assumptions: Player movement data is temporally aligned and spatially consistent; heatmaps are generated from GPS traces. Breakdown regime: When GPS signal is lost or data is insufficient for heatmap generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each player-phase entity maps to a feature vector in latent space where triplet loss ensures semantic similarity. Operator 'Heatmap-Based Style Encoding' (page 1, domain other) captures: Without any annotation of soccer-specific actions, we use players' locations and velocities to generate two types of heatmaps. Assumptions: Heatmaps are computed from continuous GPS data; spatial resolution is fixed. Breakdown regime: When data is too sparse to form meaningful heatmap distributions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Heatmaps serve as kernel representations for capturing positional and directional movement patterns. Operator 'Siamese Triplet Learning Framework' (page 1, domain other) captures: Recently, there have been attempts to quantitatively grasp players' styles using video-based event stream data [5,6,9], but they have some limitations due to the properties of the data. Assumptions: Positive pairs share same player/role; negative pairs differ in role or player identity. Breakdown regime: When triplet triplets cannot be formed due to lack of labeled role data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Triplet loss enforces embedding proximity for similar roles and separation for different roles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in siamese networks introduced by Bromley et al., extended by Chopra et al. and Schroff et al. with triplet loss formulation by Koch et al., adapted here for player style representation. Retrocausal Genealogy: Rooted in arxiv_2109.04720v1 (15787da105deeac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional scouts relying on subjective judgment and automated systems prone to overfitting on noisy GPS data. The system models player behavior as a latent variable governed by tactical roles and movement dynamics. Theory of Mind & Decision Maker Model: Rooted in arxiv_2109.04720v1 (15787da105deeac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing distinct feature spaces for location and direction heatmaps. Leakage is mitigated by strict phase-wise role assignment and triplet construction based on unique player-phase entities. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2109.04720v1 (15787da105deeac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

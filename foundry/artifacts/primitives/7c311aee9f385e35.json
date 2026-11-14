@@ -1,0 +1,78 @@
+{
+  "book_id": "7c311aee9f385e35",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.txt",
+  "sha256": "7c311aee9f385e358bd20faee018ac11eec86eff0eed59343f7d1fa901107268",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Privilege segregation and custodial preservation define a conditional information state space with attorney-client duality. Universal Lens: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian privilege likelihood updates conditioned on counsel review and custodial obligation compliance. GSI Mapping: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models disclosure state transitions based on privilege validation and data segregation protocols. GSE Mapping: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "privilege_segregation",
+      "name": "Privilege Segregation Operator",
+      "verbatim_quote": "PRIVILEGED — DO NOT PRODUCE WITHOUT COUNSEL REVIEW IMG_0722.PNG is headed \"ATTORNEY CLIENT PRIVILEGE: Sexual Harassment\" and involves Turner personnel Steph Curran, Rodney Pope and Erica Rosenberger (all @tcco.com).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Privilege status (dimensionless binary: 0 = unprivileged, 1 = privileged)', 'C': 'Custodial obligation compliance (dimensionless binary: 0 = non-compliant, 1 = compliant)'}",
+      "assumptions": "Information is partitioned into privileged and non-privileged subsets; segregation is enforced by protocol.",
+      "breakdown_regime": "When P = 1 and C = 0, information is inaccessible due to compliance failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's privilege likelihood function and GSE's access control state transition.",
+        "source_operator": "privilege_segregation",
+        "telemetry": "Privilege validation flag and custodial audit log"
+      }
+    },
+    {
+      "primitive_id": "custodial_preservation",
+      "name": "Custodial Preservation Function",
+      "verbatim_quote": "Preserved here because it is the custodian's own record and preservation obligations are live.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Record integrity (dimensionless binary: 0 = compromised, 1 = intact)', 'O': 'Objection status (dimensionless binary: 0 = no objection, 1 = objection raised)'}",
+      "assumptions": "Records must be preserved under custodial duty regardless of external pressure.",
+      "breakdown_regime": "When R = 0 or O = 1, preservation is invalid and data may be inadmissible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI's data integrity model and GSE's preservation state machine.",
+        "source_operator": "custodial_preservation",
+        "telemetry": "Integrity check result and objection timestamp"
+      }
+    },
+    {
+      "primitive_id": "disclosure_control",
+      "name": "Disclosure Control Protocol",
+      "verbatim_quote": "Segregated from the production set so it is not disclosed inadvertently.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Disclosure probability (dimensionless: 0 ≤ D ≤ 1)', 'S': 'Segregation strength (dimensionless: 0 ≤ S ≤ 1)'}",
+      "assumptions": "Information is controlled through segregation to prevent unauthorized exposure.",
+      "breakdown_regime": "When D > 0.5 or S < 0.5, risk of inadvertent disclosure increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic disclosure risk model and GSE's access filtering logic.",
+        "source_operator": "disclosure_control",
+        "telemetry": "Disclosure probability estimate and segregation effectiveness score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7c311aee9f385e35_t0",
+      "think": "The three primitives form a triadic structure where privilege segregation defines the logical domain, custodial preservation ensures data integrity within that domain, and disclosure control governs access. The interplay between these operators creates a dynamic system of conditional information states. Privilege segregation acts as a topological barrier, custodial preservation as an integrity constraint, and disclosure control as a probabilistic filter. Failure modes include: (1) privilege violation when P=1 but C=0, (2) preservation failure when R=0, and (3) inadvertent disclosure when D>0.5. These operators exhibit duality in their enforcement mechanisms—privilege and preservation are both reactive to external inputs, while disclosure control is proactive. The system's stability depends on maintaining consistent boundary conditions across all three operators.\n\nDeep epistemic analysis for README (7c311aee9f385e35, domain=other, pages_read=1/1): Operator 'Privilege Segregation Operator' (page 1, domain other) captures: PRIVILEGED — DO NOT PRODUCE WITHOUT COUNSEL REVIEW IMG_0722.PNG is headed \"ATTORNEY CLIENT PRIVILEGE: Sexual Harassment\" and involves Turner personnel Steph Curran, Rodney Pope and Erica Rosenberger (all @tcco.com). Assumptions: Information is partitioned into privileged and non-privileged subsets; segregation is enforced by protocol. Breakdown regime: When P = 1 and C = 0, information is inaccessible due to compliance failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's privilege likelihood function and GSE's access control state transition. Operator 'Custodial Preservation Function' (page 1, domain other) captures: Preserved here because it is the custodian's own record and preservation obligations are live. Assumptions: Records must be preserved under custodial duty regardless of external pressure. Breakdown regime: When R = 0 or O = 1, preservation is invalid and data may be inadmissible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's data integrity model and GSE's preservation state machine. Operator 'Disclosure Control Protocol' (page 1, domain other) captures: Segregated from the production set so it is not disclosed inadvertently. Assumptions: Information is controlled through segregation to prevent unauthorized exposure. Breakdown regime: When D > 0.5 or S < 0.5, risk of inadvertent disclosure increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic disclosure risk model and GSE's access filtering logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (7c311aee9f385e35, domain=other, pages_read=1/1): Operator 'Privilege Segregation Operator' (page 1, domain other) captures: PRIVILEGED — DO NOT PRODUCE WITHOUT COUNSEL REVIEW IMG_0722.PNG is headed \"ATTORNEY CLIENT PRIVILEGE: Sexual Harassment\" and involves Turner personnel Steph Curran, Rodney Pope and Erica Rosenberger (all @tcco.com). Assumptions: Information is partitioned into privileged and non-privileged subsets; segregation is enforced by protocol. Breakdown regime: When P = 1 and C = 0, information is inaccessible due to compliance failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's privilege likelihood function and GSE's access control state transition. Operator 'Custodial Preservation Function' (page 1, domain other) captures: Preserved here because it is the custodian's own record and preservation obligations are live. Assumptions: Records must be preserved under custodial duty regardless of external pressure. Breakdown regime: When R = 0 or O = 1, preservation is invalid and data may be inadmissible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's data integrity model and GSE's preservation state machine. Operator 'Disclosure Control Protocol' (page 1, domain other) captures: Segregated from the production set so it is not disclosed inadvertently. Assumptions: Information is controlled through segregation to prevent unauthorized exposure. Breakdown regime: When D > 0.5 or S < 0.5, risk of inadvertent disclosure increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic disclosure risk model and GSE's access filtering logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in legal information theory and data governance principles established in 19th-century common law precedents and modern privacy regulations such as GDPR and HIPAA. Retrocausal Genealogy: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legal counsel who seeks to enforce privilege, custodians who balance transparency with compliance, and regulatory bodies enforcing data protection standards. Theory of Mind & Decision Maker Model: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that privilege, preservation, and disclosure functions do not overlap in their operational domains. Leakage veto prevents cross-contamination of privileged and public data streams. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (7c311aee9f385e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

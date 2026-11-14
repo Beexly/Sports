@@ -1,0 +1,78 @@
+{
+  "book_id": "185e295b164c2544",
+  "source_status": "COMPLETE",
+  "title": "2512.21877v3",
+  "file_name": "2512.21877v3.pdf",
+  "sha256": "185e295b164c25448a0b1907a2400afaad71c059e01762a8f79f40693ef28f14",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "CricBench unifies multilingual sports analytics via domain-specific Text-to-SQL evaluation, bridging semantic gaps between natural language and structured query logic. Universal Lens: Rooted in 2512.21877v3 (185e295b164c2544), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate LLM-generated SQL against expert-defined metrics, leveraging conformal prediction for uncertainty quantification in cricket analytics. GSI Mapping: Rooted in 2512.21877v3 (185e295b164c2544), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes situational reasoning to transition states between query interpretations and schema mappings, dynamically adapting to linguistic and temporal complexities in cricket data. GSE Mapping: Rooted in 2512.21877v3 (185e295b164c2544), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "text_to_sql_domain_gap",
+      "name": "Text-to-SQL Domain Gap",
+      "verbatim_quote": "However, while general-purpose models excel at standard business queries, the extent to which these capabilities transfer to highly specialized domains remains an open research question (Zhang et al., 2024).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "General-purpose LLMs fail to generalize to domain-specific schemas without explicit training or fine-tuning.",
+      "breakdown_regime": "When semantic intent diverges from syntactic structure in specialized domains.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The isomorphism maps natural language queries to SQL structures through domain-specific schema interpretation, where semantic correctness is not guaranteed by syntactic validity alone.",
+        "source_operator": "text_to_sql_domain_gap",
+        "telemetry": "DMA (Domain Match Accuracy) vs. execution accuracy"
+      }
+    },
+    {
+      "primitive_id": "multilingual_cricket_benchmark",
+      "name": "Multilingual Cricket Benchmark",
+      "verbatim_quote": "We curate a GoldStandard dataset comprising 2,654 evaluation instances across four languages (English, Hindi, Punjabi, and Telugu) through collaboration with domain experts in cricket and SQL.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Language diversity in sports analytics requires cross-lingual semantic alignment for accurate SQL generation.",
+      "breakdown_regime": "Failure to translate intent across linguistic boundaries in sports data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives kernel space of linguistic variation in cricket queries, enabling robustness across language variants.",
+        "source_operator": "multilingual_cricket_benchmark",
+        "telemetry": "Cross-language query execution success rate"
+      }
+    },
+    {
+      "primitive_id": "schema_linking_complexity",
+      "name": "Schema Linking Complexity",
+      "verbatim_quote": "Sports analytics, particularly cricket, represents a unique testbed for investigating this domain gap.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Complex schema variations in sports databases require deep contextual reasoning beyond basic schema linking.",
+      "breakdown_regime": "When schema elements must be inferred from ambiguous or multi-layered natural language.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps natural language semantics to relational schema elements using temporal and logical constraints.",
+        "source_operator": "schema_linking_complexity",
+        "telemetry": "Schema linking precision and recall in multi-table queries"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "185e295b164c2544_t0",
+      "think": "The core challenge lies in the disjunction between syntactic validity and semantic correctness in LLM-generated SQL. Even when an LLM produces syntactically correct queries, its inability to interpret domain-specific logic—such as player performance over time or team dynamics—results in semantically incorrect outputs. This discrepancy manifests in low DMA scores despite high execution accuracy. CricBench addresses this by introducing a benchmark that evaluates both syntactic and semantic fidelity within a specialized domain. The inclusion of multilingual support further complicates the task, as it demands consistent interpretation across linguistic boundaries. The failure mode arises when models rely solely on surface-level pattern matching instead of internalizing domain rules. This leads to a fundamental mismatch between user intent and system output, undermining trust in automated analytics systems.\n\nDeep epistemic analysis for 2512.21877v3 (185e295b164c2544, domain=other, pages_read=15/15): Operator 'Text-to-SQL Domain Gap' (page 1, domain other) captures: However, while general-purpose models excel at standard business queries, the extent to which these capabilities transfer to highly specialized domains remains an open research question (Zhang et al., 2024). Assumptions: General-purpose LLMs fail to generalize to domain-specific schemas without explicit training or fine-tuning. Breakdown regime: When semantic intent diverges from syntactic structure in specialized domains. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The isomorphism maps natural language queries to SQL structures through domain-specific schema interpretation, where semantic correctness is not guaranteed by syntactic validity alone. Operator 'Multilingual Cricket Benchmark' (page 1, domain other) captures: We curate a GoldStandard dataset comprising 2,654 evaluation instances across four languages (English, Hindi, Punjabi, and Telugu) through collaboration with domain experts in cricket and SQL. Assumptions: Language diversity in sports analytics requires cross-lingual semantic alignment for accurate SQL generation. Breakdown regime: Failure to translate intent across linguistic boundaries in sports data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives kernel space of linguistic variation in cricket queries, enabling robustness across language variants. Operator 'Schema Linking Complexity' (page 1, domain other) captures: Sports analytics, particularly cricket, represents a unique testbed for investigating this domain gap. Assumptions: Complex schema variations in sports databases require deep contextual reasoning beyond basic schema linking. Breakdown regime: When schema elements must be inferred from ambiguous or multi-layered natural language. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps natural language semantics to relational schema elements using temporal and logical constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2512.21877v3 (185e295b164c2544, domain=other, pages_read=15/15): Operator 'Text-to-SQL Domain Gap' (page 1, domain other) captures: However, while general-purpose models excel at standard business queries, the extent to which these capabilities transfer to highly specialized domains remains an open research question (Zhang et al., 2024). Assumptions: General-purpose LLMs fail to generalize to domain-specific schemas without explicit training or fine-tuning. Breakdown regime: When semantic intent diverges from syntactic structure in specialized domains. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The isomorphism maps natural language queries to SQL structures through domain-specific schema interpretation, where semantic correctness is not guaranteed by syntactic validity alone. Operator 'Multilingual Cricket Benchmark' (page 1, domain other) captures: We curate a GoldStandard dataset comprising 2,654 evaluation instances across four languages (English, Hindi, Punjabi, and Telugu) through collaboration with domain experts in cricket and SQL. Assumptions: Language diversity in sports analytics requires cross-lingual semantic alignment for accurate SQL generation. Breakdown regime: Failure to translate intent across linguistic boundaries in sports data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives kernel space of linguistic variation in cricket queries, enabling robustness across language variants. Operator 'Schema Linking Complexity' (page 1, domain other) captures: Sports analytics, particularly cricket, represents a unique testbed for investigating this domain gap. Assumptions: Complex schema variations in sports databases require deep contextual reasoning beyond basic schema linking. Breakdown regime: When schema elements must be inferred from ambiguous or multi-layered natural language. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps natural language semantics to relational schema elements using temporal and logical constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early Text-to-SQL benchmarks like WikiSQL and Spider, which focused on syntactic correctness. Subsequent work with BIRD introduced external knowledge reasoning, but still lacked domain-specific rigor. CricBench builds upon these foundations by emphasizing domain reasoning and multilingual robustness. Retrocausal Genealogy: Rooted in 2512.21877v3 (185e295b164c2544), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the LLM, which may prioritize syntactic fluency over semantic accuracy, and the domain expert, who expects precise analytical outcomes. The system must balance interpretability with generality, ensuring that even imperfect models can be trusted within bounded contexts. Theory of Mind & Decision Maker Model: Rooted in 2512.21877v3 (185e295b164c2544), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct evaluation criteria for syntax and semantics. Leakage occurs if linguistic variation is not properly encoded into the model’s reasoning framework. Veto conditions ensure that only models capable of handling both schema and domain logic pass validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2512.21877v3 (185e295b164c2544), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

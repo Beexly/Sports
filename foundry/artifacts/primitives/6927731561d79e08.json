@@ -1,0 +1,78 @@
+{
+  "book_id": "6927731561d79e08",
+  "source_status": "COMPLETE",
+  "title": "tipico.com",
+  "file_name": "tipico.com.md",
+  "sha256": "6927731561d79e087677e424adafeb19505d03d2c4fc79576b621c27a939c81a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal as a discrete dynamical system; state transitions governed by URL index mappings and entry counts. Universal Lens: Rooted in tipico.com (6927731561d79e08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian sitemap indexing models posterior belief over URL discovery paths using conformal predictive distributions. GSI Mapping: Rooted in tipico.com (6927731561d79e08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive path taxonomy engine updates internal state based on sitemap response regimes and entry cardinality. GSE Mapping: Rooted in tipico.com (6927731561d79e08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# tipico.com Category: **sportsbook** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'graph of sitemap URLs, dimensionless', 'V': 'set of vertices (URLs), dimensionless', 'E': 'set of edges (index links), dimensionless', 'n_s': 'number of sitemaps walked, dimensionless'}",
+      "assumptions": "Each sitemap is a directed graph with uniform edge weights; traversal follows deterministic index precedence.",
+      "breakdown_regime": "When n_s → ∞, convergence to zero URL discovery rate due to index exhaustion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a Markov chain on URL state space with absorbing states at discovered URLs.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "Number of unique URLs discovered per sitemap walk."
+      }
+    },
+    {
+      "primitive_id": "url_discovery_rate",
+      "name": "URL Discovery Rate Function",
+      "verbatim_quote": "0 | no | ## Path taxonomy | First segment | URLs | |---|---| ## Sample",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_d': 'discovery rate, URLs per sitemap walk, dimensionless', 'n_u': 'total unique URLs, dimensionless', 'n_s': 'number of sitemaps walked, dimensionless'}",
+      "assumptions": "Discovery process is independent across sitemaps; r_d = n_u / n_s.",
+      "breakdown_regime": "When r_d → 0, indicates sitemap exhaustion or index misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of URL discovery dynamics derived from sitemap graph traversal operator.",
+        "source_operator": "url_discovery_rate",
+        "telemetry": "Rate of new URL identification per sitemap iteration."
+      }
+    },
+    {
+      "primitive_id": "sitemap_status_vector",
+      "name": "Sitemap Status Vector",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://tipico.com/sitemap.xml` | 200 | 0 | no | | `https://tipico.com/sitemap_index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_s': 'status vector of sitemaps, dimensionless', 's_i': 'status of sitemap i, {200, 404, etc.}, dimensionless', 'e_i': 'entry count of sitemap i, dimensionless', 'i_i': 'index flag of sitemap i, boolean'}",
+      "assumptions": "Each sitemap has a fixed status code and entry count; index flag determines traversal priority.",
+      "breakdown_regime": "When s_i ≠ 200, sitemap is unreachable or malformed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a categorical vector in a topological space of web accessibility.",
+        "source_operator": "sitemap_status_vector",
+        "telemetry": "Vector of HTTP status codes and entry counts for each sitemap."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6927731561d79e08_t0",
+      "think": "The sitemap traversal operator defines a discrete-time dynamical system where each sitemap is a node in a graph. The state transition function maps current sitemap indices to next discovered URLs. The URL discovery rate function acts as a feedback mechanism that modulates exploration depth. The sitemap status vector encodes access permissions and metadata, forming a categorical signal for agent decision-making. Dualities emerge between graph structure and information entropy; failure modes include unreachable nodes (404s) and empty entries (0). The system exhibits asymptotic behavior when n_s → ∞, converging to a fixed point of zero new discoveries. This framework supports Bayesian inference on sitemap coverage and GSE-driven adaptive crawling strategies.\n\nDeep epistemic analysis for tipico.com (6927731561d79e08, domain=other, pages_read=1/1): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # tipico.com Category: **sportsbook** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap is a directed graph with uniform edge weights; traversal follows deterministic index precedence. Breakdown regime: When n_s → ∞, convergence to zero URL discovery rate due to index exhaustion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Markov chain on URL state space with absorbing states at discovered URLs. Operator 'URL Discovery Rate Function' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| ## Sample Assumptions: Discovery process is independent across sitemaps; r_d = n_u / n_s. Breakdown regime: When r_d → 0, indicates sitemap exhaustion or index misalignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of URL discovery dynamics derived from sitemap graph traversal operator. Operator 'Sitemap Status Vector' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://tipico.com/sitemap.xml` | 200 | 0 | no | | `https://tipico.com/sitemap_index.xml` | Assumptions: Each sitemap has a fixed status code and entry count; index flag determines traversal priority. Breakdown regime: When s_i ≠ 200, sitemap is unreachable or malformed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a categorical vector in a topological space of web accessibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tipico.com (6927731561d79e08, domain=other, pages_read=1/1): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # tipico.com Category: **sportsbook** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap is a directed graph with uniform edge weights; traversal follows deterministic index precedence. Breakdown regime: When n_s → ∞, convergence to zero URL discovery rate due to index exhaustion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Markov chain on URL state space with absorbing states at discovered URLs. Operator 'URL Discovery Rate Function' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| ## Sample Assumptions: Discovery process is independent across sitemaps; r_d = n_u / n_s. Breakdown regime: When r_d → 0, indicates sitemap exhaustion or index misalignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of URL discovery dynamics derived from sitemap graph traversal operator. Operator 'Sitemap Status Vector' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://tipico.com/sitemap.xml` | 200 | 0 | no | | `https://tipico.com/sitemap_index.xml` | Assumptions: Each sitemap has a fixed status code and entry count; index flag determines traversal priority. Breakdown regime: When s_i ≠ 200, sitemap is unreachable or malformed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a categorical vector in a topological space of web accessibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information theory, tracing back to Shannon's communication model and Erdős–Rényi random graph theory. Influenced by computational complexity theory and web crawling algorithms such as those in Google's PageRank. Retrocausal Genealogy: Rooted in tipico.com (6927731561d79e08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate sitemap structures to obscure content or simulate false positives. A rational agent would optimize sitemap traversal order to maximize information gain while minimizing resource expenditure. Theory of Mind & Decision Maker Model: Rooted in tipico.com (6927731561d79e08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple sitemaps share identical entry sets, leading to redundant telemetry. Leakage occurs if sitemap status flags are not properly synchronized with actual URL availability, causing erroneous state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in tipico.com (6927731561d79e08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

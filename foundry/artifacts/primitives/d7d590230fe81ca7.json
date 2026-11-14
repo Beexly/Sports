@@ -1,0 +1,764 @@
+{
+ "book_id": "d7d590230fe81ca7",
+ "source_status": "COMPLETE",
+ "source_note": "Peter Morters and Yuval Peres, Brownian Motion, Cambridge University Press, 2010 (Cambridge Series in Statistical and Probabilistic Mathematics), with appendix chapter 11 by Oded Schramm and Wendelin Werner. Local source PDF: full-library-2026-11-12/library/books-must-have/MortersPeres-2010-BrownianMotion.pdf, 7,573,033 bytes. Scan digest sha256(str(size) + PDF bytes) = d7d590230fe81ca7c493c4b45b2c744d051ab33647162791485ea6a676c15d93; book_id is the first 16 hex digits. Extraction read from the publisher text layer at full-library-2026-11-12/text/books-must-have/MortersPeres-2010-BrownianMotion.pdf.txt (1,220,714 characters, 22,650 lines); every verbatim_quote was verified as a contiguous substring of that text file under the foundry normalisation (hyphen-newline joins, ligature and quote repair, whitespace collapse). Display formulas set across lines in the text layer are carried in the latex field; quotes are drawn from passages lying inside a single page. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "brownian_motion_definition",
+   "name": "Definition of (linear) Brownian motion: independent increments, Gaussian increments with variance equal to the time step, almost sure path continuity (Definition 1.1)",
+   "verbatim_quote": "Definition 1.1. A real-valued stochastic process {B(t) : t ⩾ 0} is called a (linear) Brownian motion with start in x ∈ R if the following holds:",
+   "page": "p. 7, Definition 1.1 (Section 1.1.1; text line ~623)",
+   "latex": "B(t+h) - B(t) \\sim N(0, h)",
+   "symbol_and_unit_ledger": {
+    "B(t)": "position of the motion at time t, real-valued",
+    "t, h": "time and time increment, abstract model time units",
+    "N(0, h)": "centred normal law with variance h, so the spatial scale grows like the square root of time"
+   },
+   "assumptions": [
+    "Start B(0) = x is fixed, not random.",
+    "Increments over disjoint intervals are independent random variables.",
+    "Almost sure continuity of t -> B(t) is imposed as part of the definition, not derived from the finite-dimensional distributions."
+   ],
+   "breakdown_regime": "Breaks if continuity is dropped: Example 1.2 exhibits a process with identical finite-dimensional distributions that is discontinuous with probability one, so the distributional axioms alone do not define the path object.",
+   "domain": "stochastic processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "levy_construction_existence",
+   "name": "Existence of Brownian motion by Levy's dyadic construction: uniform limit of continuous piecewise linear interpolations on dyadic rationals (Theorem 1.3, Wiener 1923)",
+   "verbatim_quote": "Theorem 1.3 (Wiener 1923) Standard Brownian motion exists. We construct Brownian motion as a uniform limit of continuous functions, to ensure that it automatically has continuous paths.",
+   "page": "p. 9, Theorem 1.3 (Section 1.1.2; text line ~710)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only a standard Brownian motion (start x = 0) needs to be constructed; a general start follows by translation X(t) = x + B(t).",
+    "Values on each dyadic grid are prescribed as a Gaussian random vector with the covariance the definition demands."
+   ],
+   "breakdown_regime": "The construction is specific to the Gaussian increment law; it gives no existence route for processes with non-Gaussian or dependent increments.",
+   "domain": "stochastic processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "nowhere_differentiability_pwz",
+   "name": "Paley-Wiener-Zygmund theorem: Brownian paths are almost surely nowhere differentiable (Theorem 1.30)",
+   "verbatim_quote": "Theorem 1.30 (Paley, Wiener and Zygmund 1933) Almost surely, Brownian motion is nowhere differentiable.",
+   "page": "p. 21, Theorem 1.30 (Section 1.3; text line ~1900)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The null set is uniform over all times at once: the statement is for all t simultaneously, not for a fixed t.",
+    "Complements the fixed-time result Theorem 1.27 and the absence of monotone intervals, Theorem 1.22."
+   ],
+   "breakdown_regime": "A statement about the canonical process only; it says nothing about smoothed, discretised or interpolated versions of the path, which are differentiable by construction.",
+   "domain": "stochastic processes / fractal path geometry",
+   "layer2": null
+  },
+  {
+   "primitive_id": "quadratic_variation",
+   "name": "Quadratic variation along nested partitions with mesh tending to zero equals t, and the paths are therefore of unbounded variation (Theorem 1.35)",
+   "verbatim_quote": "The fact that Brownian motion has finite quadratic variation will be of crucial importance in Chapter 7",
+   "page": "pp. 22-23, Remark 1.36 on Theorem 1.35 (Section 1.3)",
+   "latex": "\\sum_{j=1}^{k(n)} \\left( B(t_j^{(n)}) - B(t_{j-1}^{(n)}) \\right)^2 \\longrightarrow t",
+   "symbol_and_unit_ledger": {
+    "B(t_j) - B(t_{j-1})": "path increment over one partition interval",
+    "t": "total elapsed time; the limit is exactly t, so squared increments accumulate linearly in time",
+    "k(n)": "number of intervals in the nth nested partition"
+   },
+   "assumptions": [
+    "Partitions must be nested (points only added) with mesh converging to zero.",
+    "Convergence is almost sure along such partition sequences."
+   ],
+   "breakdown_regime": "The nestedness condition cannot be dropped entirely: Remark 1.36 and Exercise 1.15 give non-nested partition sequences whose quadratic variation sums have limsup infinity almost surely.",
+   "domain": "stochastic processes / stochastic calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Quadratic variation equal to t is the derived kernel on which the whole of Chapter 7 is built: it fixes the correction term in Ito's formula and the isometry that defines the stochastic integral, turning a path property into a calculus.",
+    "source_operator": "quadratic_variation",
+    "telemetry": "Chapter 7 check in the book itself: the integral construction of Section 7.1 and Ito's formula (Theorem 7.15) both consume exactly this limit."
+   }
+  },
+  {
+   "primitive_id": "markov_property",
+   "name": "Markov property: after any deterministic time s the restarted process B(t+s) - B(s) is a fresh Brownian motion independent of the past (Theorem 2.3)",
+   "verbatim_quote": "Theorem 2.3 (Markov property) Suppose that {B(t) : t ⩾ 0} is a Brownian motion started in x ∈ Rd . Let s > 0, then the process {B(t + s) − B(s) : t ⩾ 0} is again a Brownian motion started in the origin and it is independent of the process {B(t) : 0 ⩽ t ⩽ s}.",
+   "page": "p. 37, Theorem 2.3 (Section 2.1; text line ~2292)",
+   "latex": "B(t+s) - B(s) \\;\\stackrel{d}{=}\\; B(t), \\quad \\text{independent of } \\{B(u) : 0 \\le u \\le s\\}",
+   "symbol_and_unit_ledger": {
+    "B(t + s) - B(s)": "post-s increment process",
+    "s": "fixed deterministic restart time",
+    "d": "ambient dimension for the d-dimensional statement"
+   },
+   "assumptions": [
+    "Restart time s is deterministic and strictly positive.",
+    "The restarted process starts at the origin regardless of the original start x."
+   ],
+   "breakdown_regime": "Fails for random restart times unless the strong Markov property (Theorem 2.16) applies; arbitrary path-dependent times are not covered.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The restart isomorphism: any sequential process whose increments forget the past can be re-based at its current state, so state summarises history. The book uses this single move to generate the strong Markov property, Dynkin's martingale and all hitting-time factorisations.",
+    "source_operator": "markov_property",
+    "telemetry": "Book-internal usage: restated as independence from the augmented filtration F+(s) in Section 2.1 and applied at hitting times throughout Chapters 3, 8 and 9."
+   }
+  },
+  {
+   "primitive_id": "blumenthal_zero_one_law",
+   "name": "Blumenthal's 0-1 law: every event in the germ sigma-algebra F+(0) has probability 0 or 1 under any starting point (Theorem 2.7)",
+   "verbatim_quote": "Theorem 2.7 (Blumenthal's 0-1 law) Let x ∈ Rd and A ∈ F + (0). Then Px (A) ∈ {0, 1}.",
+   "page": "Section 2.1, Theorem 2.7 (text line ~2430)",
+   "latex": "P_x(A) \\in \\{0, 1\\} \\quad \\text{for } A \\in \\mathcal{F}^+(0)",
+   "symbol_and_unit_ledger": {
+    "F+(0)": "germ sigma-algebra of events determined by the path in arbitrarily small initial time intervals",
+    "Px": "law of Brownian motion started at x",
+    "A": "an infinitesimal-time event such as immediate recurrence or immediate increase"
+   },
+   "assumptions": [
+    "The event must be measurable with respect to the germ sigma-algebra at time zero.",
+    "Holds for every starting point x in R^d."
+   ],
+   "breakdown_regime": "Gives no quantitative rate: it decides that small-time behaviour is degenerate (probability one or zero) but cannot say how fast the path leaves or returns.",
+   "domain": "stochastic processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "strong_markov_property",
+   "name": "Strong Markov property: the restart is valid at any almost surely finite stopping time T, with independence from F+(T) (Theorem 2.16)",
+   "verbatim_quote": "Theorem 2.16 (Strong Markov property) For every almost surely finite stopping time T , the process {B(T + t) − B(T ) : t ⩾ 0} is a standard Brownian motion independent of F + (T ).",
+   "page": "Section 2.2, Theorem 2.16 (text line ~2590)",
+   "latex": "\\{B(T + t) - B(T) : t \\ge 0\\} \\text{ is a standard Brownian motion, independent of } \\mathcal{F}^+(T)",
+   "symbol_and_unit_ledger": {
+    "T": "stopping time, almost surely finite",
+    "F+(T)": "sigma-algebra of information available up to the random time T",
+    "B(T + t) - B(T)": "post-T increment process, again a standard Brownian motion"
+   },
+   "assumptions": [
+    "T must be a stopping time with respect to the augmented filtration and finite almost surely.",
+    "Proved by approximating T from above by discrete stopping times."
+   ],
+   "breakdown_regime": "Breaks for non-stopping random times (for example the last exit time from a set, which is not a stopping time and needs the separate last-exit machinery of Chapter 8).",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Random-time restart isomorphism: conditioning a path at a hitting time splits every path question into a before part and a fresh after part. The reflection principle, Wald's lemmas, the Dirichlet representation and the Ray-Knight proof are all this isomorphism instantiated.",
+    "source_operator": "strong_markov_property",
+    "telemetry": "Consumed at first hitting times in Theorems 2.19-2.21 (reflection), 2.49 (exit laws), 3.12 (Dirichlet) and 6.30-6.31 (Ray-Knight one- and two-point versions)."
+   }
+  },
+  {
+   "primitive_id": "reflection_principle_max_law",
+   "name": "Reflection principle and the law of the running maximum: P0{M(t) > a} = 2 P0{B(t) > a} = P0{|B(t)| > a} for a > 0 (Theorem 2.21)",
+   "verbatim_quote": "Theorem 2.21 If a > 0 then P0 {M (t) > a} = 2P0 {B(t) > a} = P0 {|B(t)| > a}.",
+   "page": "Section 2.2.3, Theorem 2.21 (text line ~2860)",
+   "latex": "P_0\\{M(t) > a\\} = 2 P_0\\{B(t) > a\\} = P_0\\{|B(t)| > a\\}, \\qquad a > 0",
+   "symbol_and_unit_ledger": {
+    "M(t)": "running maximum max over s <= t of B(s)",
+    "a": "positive barrier level",
+    "P0": "probability for Brownian motion started at 0"
+   },
+   "assumptions": [
+    "One-dimensional (linear) Brownian motion.",
+    "Barrier a is strictly positive and t is fixed in advance.",
+    "Derived from the strong Markov property applied at the first hitting time of a, plus path reflection."
+   ],
+   "breakdown_regime": "The identity is exact only for the flat barrier and continuous paths; it does not extend to curved boundaries or to processes with jumps.",
+   "domain": "stochastic processes / barrier problems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Barrier kernel: the maximum's law is read off the endpoint's law, so first-passage questions reduce to Gaussian tail computations. Levy's identity M - B as reflected motion (Theorem 2.34) and the arcsine calculations both run on this kernel.",
+    "source_operator": "reflection_principle_max_law",
+    "telemetry": "Used inside the book for the law of M(t) (Theorem 2.21), Levy's theorem 2.34, and the first arcsine law proof via M* in Theorem 5.26."
+   }
+  },
+  {
+   "primitive_id": "gaussian_transition_kernel",
+   "name": "Gaussian transition kernel (heat kernel): p(t, x, y) = (2 pi t)^(-d/2) exp(-|x-y|^2 / (2t)) (Notation 2.32)",
+   "verbatim_quote": "Note that property (3) in the definition of the Markov transition kernel is just the fact that the sum of two independent Gaussian random vectors is a Gaussian random vector with the sum of the covariance matrices.",
+   "page": "p. 49, Notation 2.32 (Section 2.3; text line ~2925)",
+   "latex": "p(t, x, y) = (2\\pi t)^{-d/2} \\exp\\left( -\\frac{|x - y|^2}{2t} \\right)",
+   "symbol_and_unit_ledger": {
+    "p(t, x, y)": "transition density from x to y over time t",
+    "t": "elapsed time; density spreads with standard deviation sqrt(t)",
+    "|x - y|": "Euclidean distance in R^d",
+    "d": "ambient dimension"
+   },
+   "assumptions": [
+    "Kernel of free (unkilled, unrestricted) Brownian motion on all of R^d.",
+    "Chapman-Kolmogorov consistency rests on sums of independent Gaussians adding covariances."
+   ],
+   "breakdown_regime": "On domains with killing or boundary conditions the kernel changes (the book's p* of Chapter 3 and the Martin kernel of Chapter 8); the free Gaussian form is then only a local approximation.",
+   "domain": "stochastic processes / partial differential equations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Propagator isomorphism: the same Gaussian kernel is the fundamental solution of the heat equation, so probabilistic transition and PDE evolution are two readings of one operator; Dynkin's proof (Theorem 2.51) explicitly trades on (1/2) Delta p = partial_t p.",
+    "source_operator": "gaussian_transition_kernel",
+    "telemetry": "Explicitly invoked in the proof of Theorem 2.51 and in the Green function calculation of Theorem 3.33, where integrating this kernel over time yields c(d) |x-y|^(2-d)."
+   }
+  },
+  {
+   "primitive_id": "dynkin_martingale",
+   "name": "Dynkin's martingale: for twice continuously differentiable f, f(B(t)) minus half the time-integral of the Laplacian of f along the path is a martingale (Theorem 2.51; B(t) and B(t)^2 - t are the f(x) = x and f(x) = x^2 cases)",
+   "verbatim_quote": "Theorem 2.51 Let f : Rd → R be twice continuously differentiable, and {B(t) : t ⩾ 0} be a d-dimensional Brownian motion.",
+   "page": "p. 58, Theorem 2.51 (Section 2.4; text line ~3422)",
+   "latex": "X(t) = f(B(t)) - \\frac{1}{2} \\int_0^t \\Delta f(B(s)) \\, ds \\quad \\text{is a martingale}",
+   "symbol_and_unit_ledger": {
+    "f": "twice continuously differentiable test function on R^d",
+    "Delta f": "Laplacian of f, sum of second spatial derivatives",
+    "X(t)": "compensated process; the integral term is the compensator that removes the drift of f(B(t))"
+   },
+   "assumptions": [
+    "Integrability side conditions: Ex|f(B(t))| < infinity and Ex integral of |Delta f(B(s))| finite for all t and x.",
+    "With f(x) = x^2 in one dimension this yields Lemma 2.47: {B(t)^2 - t} is a martingale (Example 2.52)."
+   ],
+   "breakdown_regime": "Without the integrability side conditions the expectations can fail and optional stopping conclusions collapse; merely continuous f is outside the theorem (Tanaka's formula, Theorem 7.33, is the repair for f(x) = |x - a|).",
+   "domain": "stochastic processes / martingale theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compensator kernel: any smooth observable of the path splits into a fair-game part plus a computable drift part. This is the engine behind Wald's lemmas, the exit-time calculations of Theorem 2.49 and, later, Ito's formula in Chapter 7.",
+    "source_operator": "dynkin_martingale",
+    "telemetry": "Book-internal chain: Lemma 2.47 feeds Theorem 2.48 (Wald), Theorem 2.49 (exits), and the Feynman-Kac proof of Theorem 7.44 runs Ito's formula on the same split."
+   }
+  },
+  {
+   "primitive_id": "wald_exit_probabilities",
+   "name": "Exit probabilities and mean exit time from an interval: P{B(T) = a} = b/(|a| + b), P{B(T) = b} = |a|/(|a| + b), E[T] = |a| b, via Wald's lemmas (Theorems 2.48 and 2.49)",
+   "verbatim_quote": "Together with the easy equation P{B(T ) = a} + P{B(T ) = b} = 1 one can solve this, and obtain P{B(T ) = a} = b/(|a| + b), and P{B(T ) = b} = |a|/(|a| + b).",
+   "page": "p. 57, proof of Theorem 2.49 (Section 2.4; text line ~3330)",
+   "latex": "E[B(T)^2] = E[T], \\qquad E[T] = |a| \\, b \\quad \\text{for } T = \\min\\{t \\ge 0 : B(t) \\in \\{a, b\\}\\}, \\ a < 0 < b",
+   "symbol_and_unit_ledger": {
+    "a, b": "lower and upper barrier levels with a < 0 < b",
+    "T": "first exit time from the interval (a, b)",
+    "E[T] = |a| b": "mean exit time is the product of the distances to the two barriers"
+   },
+   "assumptions": [
+    "Standard linear Brownian motion started at 0 inside the interval.",
+    "Optional stopping applied to B(t) and to B(t)^2 - t; E[T] < infinity is proved from exponential decay of the survival probability."
+   ],
+   "breakdown_regime": "Formulas are one-dimensional and two-barrier specific; in higher dimensions exit distributions become harmonic measure (Chapter 3) and no closed form exists in general.",
+   "domain": "stochastic processes / first passage",
+   "layer2": null
+  },
+  {
+   "primitive_id": "dirichlet_problem_exit_expectation",
+   "name": "Stochastic solution of the Dirichlet problem: u(x) = Ex[phi(B(tau))] is the unique harmonic function with boundary values phi, under the Poincare cone condition (Theorem 3.12, Remark 3.13)",
+   "verbatim_quote": "Remark 3.13 If the Poincaré cone condition holds at every boundary point, one can simulate the solution of the Dirichlet problem by running many independent Brownian motions, starting in x ∈ U until they hit the boundary of U and letting u(x) be the average of the values of ϕ on the hitting points.",
+   "page": "p. 69, Theorem 3.12 and Remark 3.13 (Section 3.1; text line ~4270)",
+   "latex": "u(x) = E_x\\left[ \\varphi(B(\\tau_{\\partial U})) \\right], \\qquad \\Delta u = 0 \\text{ in } U, \\ u = \\varphi \\text{ on } \\partial U",
+   "symbol_and_unit_ledger": {
+    "u(x)": "candidate harmonic function at interior point x",
+    "phi": "prescribed continuous boundary values",
+    "tau_{partial U}": "first hitting time of the boundary",
+    "Ex": "expectation for Brownian motion started at x"
+   },
+   "assumptions": [
+    "U is a bounded domain and phi is continuous on the boundary.",
+    "Every boundary point satisfies the Poincare cone condition, which forces continuity of u at the boundary.",
+    "tau is almost surely finite."
+   ],
+   "breakdown_regime": "Fails without boundary regularity: Example 3.15 (punctured disc) shows u(x) = Ex[phi(B(tau))] need not attain the prescribed value at an irregular boundary point; Chapter 8 replaces the cone condition by the sharp Wiener test.",
+   "domain": "potential theory / partial differential equations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "PDE-path isomorphism: solving Laplace's equation is the same computation as averaging boundary values over random exits. This is the book's central bridge, reused by the Feynman-Kac formulas and by the equilibrium-measure potential theory of Chapter 8.",
+    "source_operator": "dirichlet_problem_exit_expectation",
+    "telemetry": "Monte Carlo reading is stated by the authors themselves in Remark 3.13; sharpened in Chapter 8 (Theorems 8.5, 8.24, 8.37)."
+   }
+  },
+  {
+   "primitive_id": "recurrence_transience_by_dimension",
+   "name": "Recurrence and transience by dimension: point recurrent in d = 1, neighbourhood recurrent but not point recurrent in d = 2, transient in d >= 3 (Theorem 3.20)",
+   "verbatim_quote": "Theorem 3.20 Brownian motion is • point recurrent in dimension d = 1, • neighbourhood recurrent, but not point recurrent, in d = 2, • transient in dimension d ⩾ 3.",
+   "page": "p. 72, Theorem 3.20 (Section 3.2; text line ~4450)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Infinite time horizon: the classification concerns the path as t tends to infinity.",
+    "Point recurrence means hitting every point infinitely often; neighbourhood recurrence means entering every ball infinitely often.",
+    "Planar Brownian motion does not hit points (Corollary 2.26), which is exactly why d = 2 splits the two notions."
+   ],
+   "breakdown_regime": "Dimension two is the critical case throughout the book: Green functions diverge logarithmically, capacities need the Martin kernel, and points are polar while neighbourhoods are not.",
+   "domain": "stochastic processes / potential theory",
+   "layer2": null
+  },
+  {
+   "primitive_id": "occupation_measure_green_function",
+   "name": "Occupation measure and Green function: G(x, y) is the density of the expected occupation measure, G(x, y) = integral of p*(t, x, y) dt, explicitly c(d) |x-y|^(2-d) for transient motion in d >= 3 (Theorems 3.26-3.33)",
+   "verbatim_quote": "In probabilistic terms G is the density of the expected occupation measure for the transient Brownian motion started in x.",
+   "page": "p. 80, Definition 3.31 and Theorem 3.33 (Section 3.3; text line ~4847)",
+   "latex": "G(x, y) = \\int_0^{\\infty} p^*(t, x, y) \\, dt = c(d) \\, |x - y|^{2-d}, \\qquad c(d) = \\frac{\\Gamma(d/2 - 1)}{2 \\pi^{d/2}}, \\ d \\ge 3",
+   "symbol_and_unit_ledger": {
+    "G(x, y)": "Green function: expected occupation density at y for motion started at x",
+    "p*(t, x, y)": "possibly killed transition density of the transient motion",
+    "mu_t(A)": "occupation measure, the time the path spends in the set A up to t",
+    "c(d)": "dimension constant built from the Gamma function"
+   },
+   "assumptions": [
+    "G is defined for transient Brownian motion (killed or in dimension d >= 3), where the time integral converges for x != y.",
+    "Theorem 3.26: for finite horizons the occupation measure of linear Brownian motion is almost surely absolutely continuous with respect to Lebesgue measure."
+   ],
+   "breakdown_regime": "In recurrent dimensions (d = 1, 2) the unkilled Green integral diverges; the book's repairs are killing, restriction to domains, and the Martin kernel of Chapter 8.",
+   "domain": "potential theory / stochastic processes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Time-accounting kernel: expected time spent converts directly into potentials, hitting bounds and energies. The equilibrium measure (Theorem 8.8) and the capacity estimates (Theorem 8.24) are this kernel read backwards, from occupation to hitting.",
+    "source_operator": "occupation_measure_green_function",
+    "telemetry": "Consumed in Theorem 3.32 (Ex integral of f(B(t)) dt = integral of f(y) G(x, y) dy) and throughout the potential theory of Chapter 8."
+   }
+  },
+  {
+   "primitive_id": "hausdorff_dimension_definition",
+   "name": "Hausdorff dimension: dim E = inf{alpha >= 0 : H-alpha-content(E) = 0} = sup{alpha >= 0 : H-alpha-content(E) > 0} (Definition 4.5)",
+   "verbatim_quote": "dim E = inf α ⩾ 0 : H∞ (E) = 0 = sup α ⩾ 0 : H∞ (E) > 0 , the Hausdorff dimension of the set E.",
+   "page": "Section 4.1, Definition 4.5 (text line ~5897)",
+   "latex": "\\dim E = \\inf\\{\\alpha \\ge 0 : \\mathcal{H}^\\alpha_\\infty(E) = 0\\} = \\sup\\{\\alpha \\ge 0 : \\mathcal{H}^\\alpha_\\infty(E) > 0\\}",
+   "symbol_and_unit_ledger": {
+    "H-alpha content": "infimum over all coverings of E of the sum of |Ei|^alpha, the alpha-value of the most efficient covering",
+    "|Ei|": "diameter of a covering set",
+    "dim E": "the critical exponent at which the content jumps from infinity to zero"
+   },
+   "assumptions": [
+    "E is a subset of a metric space; no regularity of E is assumed.",
+    "The definition is through coverings of arbitrarily small diameter, which is what makes it sensitive to fine structure at different scales in different places."
+   ],
+   "breakdown_regime": "Hausdorff dimension is countably stable but hard to compute directly from the definition; the chapter exists because lower bounds need the mass distribution and energy methods instead of covers.",
+   "domain": "fractal geometry / geometric measure theory",
+   "layer2": null
+  },
+  {
+   "primitive_id": "mass_distribution_principle",
+   "name": "Mass distribution principle: a measure with mu(V) <= C |V|^alpha on all small sets forces H-alpha(E) >= mu(E)/C > 0, hence dim E >= alpha (Theorem 4.19)",
+   "verbatim_quote": "The mass distribution principle is a way around this problem, which is based on the existence of a nonzero measure on the set. The basic idea is that, if this measure distributes a positive amount of mass on a set E in such a manner that its local concentration is bounded from above, then the set must be large in a suitable sense.",
+   "page": "p. 105, Theorem 4.19 (Section 4.2; text line ~6430)",
+   "latex": "\\mu(V) \\le C |V|^\\alpha \\ \\text{for all closed } V \\text{with } |V| \\le \\delta \\;\\Longrightarrow\\; \\mathcal{H}^\\alpha(E) \\ge \\frac{\\mu(E)}{C} > 0",
+   "symbol_and_unit_ledger": {
+    "mu": "mass distribution: a Borel measure with 0 < mu(E) < infinity",
+    "C, delta": "concentration bound constant and the scale below which it must hold",
+    "H-alpha(E)": "alpha-dimensional Hausdorff measure of E"
+   },
+   "assumptions": [
+    "The measure must live on E itself (or be supported there) with finite positive total mass.",
+    "Only upper bounds on local concentration are needed; no lower bound on mu(V) is assumed."
+   ],
+   "breakdown_regime": "One-sided: it certifies lower bounds on dimension only. Upper bounds still require explicit efficient coverings, and Frostman's lemma (Theorem 4.30) is the converse direction.",
+   "domain": "fractal geometry",
+   "layer2": null
+  },
+  {
+   "primitive_id": "zero_set_dimension_one_half",
+   "name": "Hausdorff dimension of the zero set (and of the record set) of linear Brownian motion equals 1/2 almost surely (Theorem 4.24)",
+   "verbatim_quote": "Zeros is a fractal set and we show in Theorem 4.24 that its Hausdorff dimension is 1/2.",
+   "page": "Motivation, Chapter 4 introduction (text line ~490); proved as Theorem 4.24, p. 108",
+   "latex": "\\dim(\\mathrm{Zeros} \\cap [0, 1]) = \\dim(\\mathrm{Rec} \\cap [0, 1]) = \\frac{1}{2} \\quad \\text{almost surely}",
+   "symbol_and_unit_ledger": {
+    "Zeros": "the zero set {t : B(t) = 0} of a linear Brownian motion",
+    "Rec": "the set of record times where B attains a new maximum",
+    "1/2": "dimension strictly between a discrete set (0) and an interval (1), although the zero set is uncountable with no isolated points (Theorem 2.28)"
+   },
+   "assumptions": [
+    "Linear (one-dimensional) Brownian motion on a finite time interval.",
+    "Lower bound uses Levy's identity (Theorem 2.34) to move the problem to record times, whose natural measure is the maximum process M itself.",
+    "Upper bound uses the hitting estimate of Lemma 4.22 for small intervals."
+   ],
+   "breakdown_regime": "The critical Hausdorff measure itself vanishes: the 1/2-dimensional Hausdorff measure of the zero set is zero (Exercise 4.14), so dimension alone does not produce a natural measure on Zeros; that gap is what local time fills in Chapter 6.",
+   "domain": "fractal geometry / stochastic processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "taylor_graph_range_dimensions",
+   "name": "Taylor's theorem: the graph of linear Brownian motion has dimension 3/2; in d >= 2 the range and the graph both have dimension 2 almost surely (Theorem 4.29)",
+   "verbatim_quote": "Theorem 4.29 (Taylor 1953) Let {B(t) : 0 ⩽ t ⩽ 1} be d-dimensional Brownian motion. (a) If d = 1, then dim Graph[0, 1] = 3/2 almost surely. (b) If d ⩾ 2, then dim Range[0, 1] = dim Graph[0, 1] = 2 almost surely.",
+   "page": "p. 110, Theorem 4.29 (Section 4.3; text line ~6672)",
+   "latex": "\\dim \\mathrm{Graph}[0,1] = \\frac{3}{2} \\ (d = 1); \\qquad \\dim \\mathrm{Range}[0,1] = \\dim \\mathrm{Graph}[0,1] = 2 \\ (d \\ge 2)",
+   "symbol_and_unit_ledger": {
+    "Graph[0, 1]": "the space-time curve {(t, B(t)) : 0 <= t <= 1}",
+    "Range[0, 1]": "the visited set {B(t) : 0 <= t <= 1} in R^d",
+    "3/2": "one time dimension plus the 1/2 of spatial fluctuation, saturated in d = 1"
+   },
+   "assumptions": [
+    "Time interval fixed to [0, 1]; scaling extends the conclusion to any finite interval.",
+    "Lower bounds are proved by the energy method applied to the occupation measure (range) and to time measure lifted to the graph."
+   ],
+   "breakdown_regime": "Dimension 2 is a hard ceiling for the range in every dimension d >= 2, a first sign that Brownian motion is a two-dimensional object living in higher-dimensional spaces; intersections in Chapter 9 exploit exactly this.",
+   "domain": "fractal geometry / stochastic processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "law_of_iterated_logarithm",
+   "name": "Law of the iterated logarithm: limsup B(t) / sqrt(2 t log log t) = 1 almost surely (Theorem 5.1)",
+   "verbatim_quote": "The law of the iterated logarithm (whose name comes from the answer to this question but is by now firmly established for this type of upper-envelope results) provides such a 'gauge' function, which determines the almost-sure asymptotic growth of a Brownian motion.",
+   "page": "p. 119, Theorem 5.1 (Section 5.1; text line ~7135)",
+   "latex": "\\limsup_{t \\to \\infty} \\frac{B(t)}{\\sqrt{2 t \\log \\log t}} = 1 \\quad \\text{almost surely}",
+   "symbol_and_unit_ledger": {
+    "sqrt(2 t log log t)": "the exact almost-sure upper envelope (gauge) of the path",
+    "limsup": "the envelope is attained along arbitrarily large times, not eventually as a bound with constant 1",
+    "B(t)": "standard linear Brownian motion"
+   },
+   "assumptions": [
+    "Standard linear Brownian motion; by symmetry the liminf equals -1 (Remark 5.2).",
+    "For any epsilon > 0 the path eventually stays below (1 + epsilon) times the gauge, and exceeds (1 - epsilon) times the gauge at arbitrarily large times."
+   ],
+   "breakdown_regime": "The gauge is a long-time statement; it does not control the path on finite horizons, where the relevant modulus is instead the local Holder and LIL behaviour at 0 obtained by time inversion.",
+   "domain": "stochastic processes / limit theorems",
+   "layer2": null
+  },
+  {
+   "primitive_id": "skorokhod_embedding",
+   "name": "Skorokhod embedding theorem: every centred random variable X with finite second moment is B(T) for a stopping time T with E[T] = E[X^2] (Theorem 5.15)",
+   "verbatim_quote": "Theorem 5.15 (Skorokhod embedding theorem) Suppose that {B(t) : t ⩾ 0} is a standard Brownian motion and that X is a real valued random variable with E[X] = 0 and E[X 2 ] < ∞. Then there exists a stopping time T , with respect to the natural filtration (F(t) : t ⩾ 0) of the Brownian motion, such that B(T ) has the law of X and E[T ] = E[X 2 ].",
+   "page": "p. 127, Theorem 5.15 (Section 5.3; text line ~7592)",
+   "latex": "B(T) \\stackrel{d}{=} X, \\qquad E[T] = E[X^2]",
+   "symbol_and_unit_ledger": {
+    "X": "target law, required to have mean zero and finite variance",
+    "T": "stopping time with respect to the natural filtration of B",
+    "E[T] = E[X^2]": "the embedding clock runs, on average, exactly the variance of the target"
+   },
+   "assumptions": [
+    "Mean zero and finite second moment are necessary as well as sufficient, by Wald's lemmas (Theorems 2.44 and 2.48).",
+    "Two constructions are given: Dubins' binary splitting and the Azema-Yor embedding (Theorem 5.19)."
+   ],
+   "breakdown_regime": "Fails for infinite-variance targets: no integrable stopping time can embed them, which is why heavy-tailed walks need stable-process limits rather than Brownian ones.",
+   "domain": "stochastic processes / limit theorems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coupling isomorphism: any discrete centred step law is literally a stopped Brownian path, so results proved for the continuum (LIL, arcsine laws) transfer to random walks and back. The book's proof of Donsker's principle is this isomorphism iterated.",
+    "source_operator": "skorokhod_embedding",
+    "telemetry": "Used in Section 5.3 to lift Theorem 5.1 to the Hartman-Wintner LIL (Theorem 5.17) and to construct the approximating walk inside the proof of Theorem 5.22."
+   }
+  },
+  {
+   "primitive_id": "donsker_invariance_principle",
+   "name": "Donsker's invariance principle (functional central limit theorem): rescaled interpolated random walks S*_n(t) = S(nt)/sqrt(n) converge in distribution on C[0, 1] to Brownian motion (Theorem 5.22)",
+   "verbatim_quote": "Theorem 5.22 (Donsker's invariance principle) On the space C[0, 1] of continuous functions on the unit interval with the metric induced by the sup-norm, the sequence {Sn∗ : n ⩾ 1} converges in distribution to a standard Brownian motion {B(t) : t ∈ [0, 1]}.",
+   "page": "p. 131, Theorem 5.22 (Section 5.3.3; text line ~7866)",
+   "latex": "S_n^*(t) = \\frac{S(\\lfloor nt \\rfloor) + (nt - \\lfloor nt \\rfloor)(S(\\lfloor nt \\rfloor + 1) - S(\\lfloor nt \\rfloor))}{\\sqrt{n}} \\;\\xrightarrow{d}\\; B(t)",
+   "symbol_and_unit_ledger": {
+    "S_n^*": "linearly interpolated, diffusively rescaled random walk as a random element of C[0, 1]",
+    "C[0, 1]": "continuous functions on [0, 1] with the sup-norm metric",
+    "increments": "independent, identically distributed, normalised to mean 0 and variance 1"
+   },
+   "assumptions": [
+    "Increments have finite variance; the normalisation E[Xn] = 0, Var(Xn) = 1 is without loss of generality.",
+    "Convergence is in distribution on path space, so it covers path functionals, not only one-time marginals."
+   ],
+   "breakdown_regime": "The limit is universal only within the finite-variance class; infinite-variance walks converge (after different scaling) to stable processes, and the functional statement needs tightness, supplied here through the Skorokhod embedding proof.",
+   "domain": "limit theorems / stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scaling-limit isomorphism: discrete simulation and continuum model are the same object at large scales, with Brownian motion as the unique limit. Every transfer of a Brownian theorem to walks in Chapter 5 (LIL, arcsine laws, Pitman's theorem) is routed through this isomorphism.",
+    "source_operator": "donsker_invariance_principle",
+    "telemetry": "Proof in the book is via Lemma 5.24 (Skorokhod embedding plus strong Markov), and the principle is then applied in Proposition 5.27 and in the discrete-to-continuum step of Pitman's theorem."
+   }
+  },
+  {
+   "primitive_id": "arcsine_laws",
+   "name": "First arcsine law: the last zero L in [0, 1] and the maximiser time M* are arcsine distributed, with density 1/(pi sqrt(s(1-s))) on (0, 1) (Theorem 5.26)",
+   "verbatim_quote": "Observe that the following result is surprising: the rightmost zero of Brownian motion in the interval (0, 1) is most likely to be near zero or one, see Figure 5.6.",
+   "page": "p. 136, Theorem 5.26 (Section 5.4; text line ~8096)",
+   "latex": "f_{M^*}(s) = \\frac{1}{\\pi \\sqrt{s(1 - s)}}, \\qquad s \\in (0, 1), \\qquad P\\{M^* < s\\} = \\frac{2}{\\pi} \\arcsin\\sqrt{s}",
+   "symbol_and_unit_ledger": {
+    "L": "last zero of B in [0, 1], sup{t in [0, 1] : B(t) = 0}",
+    "M*": "the almost surely unique time at which B attains its maximum on [0, 1]",
+    "arcsine density": "U-shaped: mass piles up near 0 and 1, the opposite of concentration around 1/2"
+   },
+   "assumptions": [
+    "Standard linear Brownian motion on the fixed interval [0, 1].",
+    "Uniqueness of the maximum on [0, 1] is Theorem 2.11; the equality of the laws of L and M* uses Levy's identity, Theorem 2.34."
+   ],
+   "breakdown_regime": "Counter-intuitive regime: long excursions dominate, so last sign changes and maxima are typically near the endpoints. The second arcsine law (Theorem 5.28) gives the same law for the occupation time of the positive half-line.",
+   "domain": "stochastic processes / limit theorems",
+   "layer2": null
+  },
+  {
+   "primitive_id": "pitman_2m_minus_b",
+   "name": "Pitman's 2M - B theorem: 2M(t) - B(t) is a three-dimensional Bessel process, jointly with M(t) as its future infimum (Theorem 5.34)",
+   "verbatim_quote": "In particular, {2M (t) − B(t) : t ⩾ 0} is a three-dimensional Bessel process.",
+   "page": "p. 143, Theorem 5.34 (Section 5.5; text line ~8491)",
+   "latex": "(2M(t) - B(t), \\ M(t)) \\;\\stackrel{d}{=}\\; (\\rho(t), \\ I(t)), \\qquad I(t) = \\inf_{s \\ge t} \\rho(s)",
+   "symbol_and_unit_ledger": {
+    "M(t)": "running maximum of the linear Brownian motion B",
+    "2M(t) - B(t)": "the path reflected at its maximum and lifted by M; a nonnegative process that never returns to 0 after leaving",
+    "rho(t)": "three-dimensional Bessel process, the radial part of three-dimensional Brownian motion",
+    "I(t)": "future infimum of rho from time t on"
+   },
+   "assumptions": [
+    "Linear Brownian motion; the Bessel process is in dimension three specifically.",
+    "Proved in the discrete setting for simple random walk and transferred by Donsker's principle (Proposition 5.33)."
+   ],
+   "breakdown_regime": "Dimension-specific: the reflected process M - B alone is a reflected (one-dimensional) Brownian motion, and only the lift by an extra M produces the Bessel-3 law; there is no analogous identity in general dimension.",
+   "domain": "stochastic processes / Bessel processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "local_time_downcrossing",
+   "name": "Local time at zero via downcrossings: L(t) = lim 2(b_n - a_n) D(a_n, b_n, t) as a_n up 0 and b_n down 0, locally gamma-Holder for every gamma < 1/2 (Theorem 6.1)",
+   "verbatim_quote": "Theorem 6.1 (Downcrossing representation of the local time at zero) There exists a stochastic process {L(t) : t ⩾ 0} called the local time at zero such that for all sequences an ↑ 0 and bn ↓ 0 with an < bn , almost surely,",
+   "page": "p. 154, Theorem 6.1 (Section 6.1; text line ~9050)",
+   "latex": "L(t) = \\lim_{n \\to \\infty} 2 (b_n - a_n) \\, D(a_n, b_n, t) \\quad \\text{for every } t > 0, \\text{ almost surely}",
+   "symbol_and_unit_ledger": {
+    "D(a, b, t)": "number of completed downcrossings of the interval [a, b] before time t",
+    "L(t)": "local time at zero: the density at 0 of the occupation measure (Remark 6.2)",
+    "2(b_n - a_n)": "normalisation: mean time of one downcrossing excursion is of order (b_n - a_n)^2, balanced against occupation time of order (b_n - a_n)"
+   },
+   "assumptions": [
+    "Works level by level; the same construction gives local time L^x at any level x.",
+    "Almost sure convergence holds simultaneously for every t > 0."
+   ],
+   "breakdown_regime": "The naive occupation density does not exist pathwise at a point (the path spends zero Lebesgue time exactly at 0); local time is the renormalised limit, and it is singular with respect to Lebesgue measure in t, growing only on the zero set.",
+   "domain": "stochastic processes / local time",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Renormalisation kernel: a divergent counting statistic (downcrossings of shrinking intervals) is rescaled into a finite, continuous, additive path functional. The same kernel reappears as Tanaka's formula (Theorem 7.33) and as the gauge Hausdorff measure identification (Theorem 6.43).",
+    "source_operator": "local_time_downcrossing",
+    "telemetry": "The downcrossing representation is the working definition used to prove the Ray-Knight theorem in Section 6.3 (Lemma 6.30 starts from it)."
+   }
+  },
+  {
+   "primitive_id": "ray_knight_theorem",
+   "name": "Ray-Knight theorem: local times at the first hitting time of 0, as a process in the spatial level x, are distributed as the squared norm of a planar Brownian motion (Theorem 6.28)",
+   "verbatim_quote": "Theorem 6.28 (Ray–Knight theorem) Suppose a > 0 and {B(t) : 0 ⩽ t ⩽ T } is a linear Brownian motion started at a and stopped at time T = inf{t ⩾ 0 : B(t) = 0}, when it reaches level zero for the first time.",
+   "page": "p. 170, Theorem 6.28 (Section 6.3; text line ~10020)",
+   "latex": "\\{L^x(T) : 0 \\le x \\le a\\} \\;\\stackrel{d}{=}\\; \\{|W(x)|^2 : 0 \\le x \\le a\\}",
+   "symbol_and_unit_ledger": {
+    "L^x(T)": "local time at level x accumulated up to the first hitting time T of 0",
+    "W(x)": "standard planar Brownian motion, with x now playing the role of time",
+    "|W(x)|^2": "squared two-dimensional Bessel process; at fixed x it is exponentially distributed with mean 2x (Remark 6.29)"
+   },
+   "assumptions": [
+    "Brownian motion started at a > 0 and stopped at its first hit of level 0.",
+    "The identity is in distribution as processes in the level variable x, proved via the one-point and two-point downcrossing limits (Lemmas 6.30 and 6.31)."
+   ],
+   "breakdown_regime": "Swaps the roles of time and space: statements about local time profiles become statements about Bessel processes, and the identity is distributional, not pathwise, so it does not hold for a fixed realisation.",
+   "domain": "stochastic processes / local time",
+   "layer2": null
+  },
+  {
+   "primitive_id": "local_time_hausdorff_gauge",
+   "name": "Local time as an exact Hausdorff gauge measure of the zero set: L^0(t) = H^phi(Zeros cap [0, t]) with gauge phi(r) = c sqrt(r log log(1/r)) (Theorem 6.43)",
+   "verbatim_quote": "In this section we show that the local time L0 (t) can be obtained as an intrinsically defined measure of the random set Zeros ∩ [0, t].",
+   "page": "p. 179, Theorem 6.43 (Section 6.4; text line ~10490)",
+   "latex": "L^0(t) = \\mathcal{H}^{\\phi}\\big( \\mathrm{Zeros} \\cap [0, t] \\big), \\qquad \\phi(r) = c \\sqrt{r \\log \\log (1/r)}",
+   "symbol_and_unit_ledger": {
+    "phi": "Hausdorff gauge function refining the power gauge r^alpha",
+    "H^phi": "generalised Hausdorff measure built from gauge phi",
+    "c": "a positive constant whose exact value the theorem does not identify",
+    "Zeros cap [0, t]": "the zero set restricted to the time interval [0, t]"
+   },
+   "assumptions": [
+    "The power gauges fail here: the alpha-Hausdorff measure of the zero set is 0 for alpha >= 1/2 and infinity for alpha < 1/2, so the exact gauge needs the log log correction.",
+    "Proof runs through the Rogers-Taylor theorem (Proposition 6.44) comparing measure density ratios to gauge ratios."
+   ],
+   "breakdown_regime": "The measure is exact but the constant c is not explicit, and the material is flagged by the authors as not used in the remainder of the book; it closes the zero-set story rather than opening a new tool.",
+   "domain": "fractal geometry / local time",
+   "layer2": null
+  },
+  {
+   "primitive_id": "ito_integral_isometry",
+   "name": "Ito integral: L2 limit of step-process integrals, with the isometry E[(integral of H dB)^2] = E[integral of H^2 ds] (Theorem 7.6, equation 7.2)",
+   "verbatim_quote": "There is however an escape from this dilemma, if one is willing to take advantage of the fact that Brownian motions are random functions and therefore one can make use of weaker forms of limits. This is the idea of stochastic integration.",
+   "page": "pp. 190-193, Section 7.1 and Theorem 7.6 (text line ~11260)",
+   "latex": "E\\left[ \\left( \\int_0^{\\infty} H(s) \\, dB(s) \\right)^2 \\right] = E\\left[ \\int_0^{\\infty} H(s)^2 \\, ds \\right]",
+   "symbol_and_unit_ledger": {
+    "H(s)": "progressively measurable integrand with E integral of H^2 finite",
+    "integral H dB": "L2 limit of integrals of approximating step processes; independent of the approximating sequence",
+    "isometry": "the L2 norm of the integral equals the L2 norm of the integrand, which is what makes the extension from step processes possible"
+   },
+   "assumptions": [
+    "Lebesgue-Stieltjes integration is unavailable because the paths are almost surely of unbounded variation (Theorem 1.35).",
+    "The filtration is completed and the strong Markov property is assumed to hold for it.",
+    "Definition 7.8 and Theorem 7.11 give the integral as a process in t with an almost surely continuous modification."
+   ],
+   "breakdown_regime": "Only square-integrable progressively measurable integrands are covered by the basic construction; local martingale extensions are needed beyond that class, and pathwise (Stieltjes) readings of the integral are invalid.",
+   "domain": "stochastic calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Integration kernel for irregular paths: quadratic variation equal to t converts path roughness into an exact L2 isometry. Everything in Chapter 7 (Ito's formula, Tanaka, conformal invariance via time change, Feynman-Kac) is this kernel applied.",
+    "source_operator": "ito_integral_isometry",
+    "telemetry": "Direct consumers in the book: Theorem 7.15 (Ito's formula), Theorem 7.20 (conformal invariance), Theorem 7.33 (Tanaka), Theorem 7.38 (Levy's characterisation)."
+   }
+  },
+  {
+   "primitive_id": "conformal_invariance",
+   "name": "Conformal invariance: for analytic f, f(B(t)) is a time-changed planar Brownian motion with clock zeta(t) = integral of |f'(B(s))|^2 ds (Theorem 7.20)",
+   "verbatim_quote": "To turn this heuristic into a powerful theorem we allow the function to be an analytic map f : U → V between domains in the plane. Recall that such a map is called conformal if it is a bijection.",
+   "page": "p. 202, Theorem 7.20 (Section 7.2; text line ~11824)",
+   "latex": "f(B(t)) = \\tilde{B}(\\zeta(t)), \\qquad \\zeta(t) = \\int_0^t |f'(B(s))|^2 \\, ds",
+   "symbol_and_unit_ledger": {
+    "f": "analytic map between plane domains U and V",
+    "B(t)": "planar Brownian motion started in x in U, run up to its exit time from U",
+    "zeta(t)": "the time change: local clock speed is the squared derivative |f'|^2",
+    "tilde B": "a planar Brownian motion in V"
+   },
+   "assumptions": [
+    "f is analytic on the domain U; if additionally f is conformal, zeta of the exit time is the exit time from V.",
+    "Zeros of f' form an at most countable set with no limit point in U and are almost surely not hit, so they can be removed from U."
+   ],
+   "breakdown_regime": "Two-dimensional only: conformal maps are a one-complex-variable tool, and in dimensions d >= 3 Liouville's theorem leaves only Mobius transformations, so no comparable invariance exists.",
+   "domain": "stochastic calculus / complex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Geometry-transport isomorphism: planar path questions can be moved across conformal maps at the price of a computable time change. This is the bridge the appendix (Chapter 11) crosses to SLE, where Loewner evolution is built entirely from conformal maps.",
+    "source_operator": "conformal_invariance",
+    "telemetry": "Used in the book for winding numbers and Spitzer's law (Section 7.2), and recalled as the organising fact of Chapter 11, Section 11.1.2."
+   }
+  },
+  {
+   "primitive_id": "tanaka_formula",
+   "name": "Tanaka's formula: |B(t) - a| - |B(0) - a| = integral of sign(B(s) - a) dB(s) + L^a(t), identifying local time as the correction term for the non-smooth absolute value (Theorem 7.33)",
+   "verbatim_quote": "The last integral can be interpreted as the time spent by Brownian motion at level a and hence it is natural to expect that it is the local time La (t). Tanaka's formula confirms this intuition.",
+   "page": "p. 210, Theorem 7.33 (Section 7.3; text line ~12260)",
+   "latex": "|B(t) - a| - |B(0) - a| = \\int_0^t \\mathrm{sign}(B(s) - a) \\, dB(s) + L^a(t)",
+   "symbol_and_unit_ledger": {
+    "sign x": "1{x > 0} - 1{x < 0}, the (sub)derivative of the absolute value",
+    "L^a(t)": "local time at level a up to t, appearing because |x - a| is not twice differentiable at a",
+    "stochastic integral": "Ito integral of the sign integrand, which is progressively measurable but discontinuous"
+   },
+   "assumptions": [
+    "Linear Brownian motion, any fixed level a, identity holds almost surely for all t > 0 simultaneously.",
+    "Corollary 7.35 integrates Tanaka's formula against f'' to extend Ito's formula to functions whose second derivative need not be continuous."
+   ],
+   "breakdown_regime": "The formula is the boundary case of Ito calculus: for C^2 functions the local time term is replaced by the (1/2) integral of f''(B(s)) ds via the occupation density formula (Theorem 6.18).",
+   "domain": "stochastic calculus / local time",
+   "layer2": null
+  },
+  {
+   "primitive_id": "feynman_kac_formula",
+   "name": "Feynman-Kac formulas: expectations of exponential path functionals solve the heat equation with dissipation, and stopped expectations represent solutions with zero dissipation (Theorems 7.43 and 7.44)",
+   "verbatim_quote": "Our main tool is the close relationship between the expectation of certain functionals of the Brownian path and the heat equation with dissipation term. This goes under the name of Feynman–Kac formula, and the theorems that make up this theory establish a strong link between parabolic partial differential equations and Brownian motion.",
+   "page": "pp. 213-216, Theorems 7.43 and 7.44 (Section 7.4; text lines ~12526 and ~12636)",
+   "latex": "u(t, x) = E_x\\left[ \\exp\\left( \\int_0^t V(B(r)) \\, dr \\right) \\right], \\qquad u(t, x) = E_x\\left[ g(B(t)) \\, \\mathbf{1}\\{t < \\tau\\} \\right]",
+   "symbol_and_unit_ledger": {
+    "V": "bounded dissipation (killing or creation) rate in Theorem 7.43",
+    "u": "solution of partial_t u = (1/2) Delta u + V u with initial condition one, resp. the heat equation with initial condition g",
+    "tau": "first exit time from the domain U in Theorem 7.44",
+    "g": "continuous initial condition in Theorem 7.44"
+   },
+   "assumptions": [
+    "Theorem 7.43 takes U = R^d and bounded V; Theorem 7.44 needs u bounded and twice continuously differentiable with zero dissipation rate.",
+    "The proofs run through Ito's formula, so the integrands and solutions must meet the Chapter 7 regularity conditions."
+   ],
+   "breakdown_regime": "Representation is not automatic well-posedness: the formulas exhibit a solution but uniqueness and boundary behaviour need the separate potential-theoretic analysis of Chapters 3 and 8.",
+   "domain": "partial differential equations / stochastic calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Parabolic PDE-path isomorphism, the dissipative extension of the Dirichlet isomorphism: killing rates inside the domain become exponential weights on paths. The book spends it immediately on an analytic proof of the second arcsine law via Laplace transforms.",
+    "source_operator": "feynman_kac_formula",
+    "telemetry": "Application inside the book: Theorem 7.43 with V = lambda 1[0, infinity) reproves the second arcsine law, Theorem 5.28; Theorem 7.46 extends the formula to positive potentials."
+   }
+  },
+  {
+   "primitive_id": "equilibrium_measure_last_exit",
+   "name": "Equilibrium measure and last exit formula: Px{B(gamma) in A, 0 < gamma <= T} = integral over A of G(x, y) d nu(y), where gamma is the last exit time from the compact set Lambda (Theorem 8.8)",
+   "verbatim_quote": "In the case of a transient (or killed) Brownian motion there is a natural counterpart to this by looking at the distribution of the position of the last exit from a closed set. This leads to the notion of the equilibrium measure, which we discuss and apply in this section.",
+   "page": "p. 228, Theorem 8.8 (Section 8.2; text line ~13291)",
+   "latex": "P_x\\{ B(\\gamma) \\in A, \\ 0 < \\gamma \\le T \\} = \\int_A G(x, y) \\, d\\nu(y)",
+   "symbol_and_unit_ledger": {
+    "gamma": "last exit time from Lambda, sup{t in (0, T] : B(t) in Lambda}, with gamma = 0 if Lambda is never hit; not a stopping time",
+    "nu": "equilibrium measure on Lambda, uniquely determined by the formula (Remark 8.9)",
+    "G(x, y)": "Green function of the transient (or killed) motion",
+    "T": "killing time: infinity in d >= 3, an independent exponential time, or exit from a bounded domain"
+   },
+   "assumptions": [
+    "Transient framework of Chapter 3: d >= 3 unkilled, or d >= 2 with exponential killing or killing at a bounded domain's exit.",
+    "Lambda is compact; A is a Borel subset of Lambda."
+   ],
+   "breakdown_regime": "The last exit time is not a stopping time, so the strong Markov property cannot be applied at gamma directly; the equilibrium measure is constructed instead as a weak limit of the approximating measures of the proof.",
+   "domain": "potential theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "First-entry/last-exit duality isomorphism: harmonic measure (first entry) and equilibrium measure (last exit) describe the same hitting probabilities from opposite time directions, and reversing time in the Ray-Knight and capacity arguments depends on having both.",
+    "source_operator": "equilibrium_measure_last_exit",
+    "telemetry": "Theorem 8.10 identifies nu/nu(Lambda) as the last exit distribution for motion started uniformly on a surrounding sphere; Theorem 8.33 builds harmonic measure convergence on it."
+   }
+  },
+  {
+   "primitive_id": "martin_capacity_hitting_bounds",
+   "name": "Martin capacity estimates hitting probability within a factor of two: (1/2) Cap_M(A) <= P0{the path hits A before T} <= Cap_M(A) (Theorem 8.24)",
+   "verbatim_quote": "The following theorem shows that (in all three cases of transient Brownian motions) Martin capacity is indeed a good estimate of the hitting probability.",
+   "page": "p. 236, Theorem 8.24 (Section 8.3; text line ~13737)",
+   "latex": "\\frac{1}{2} \\mathrm{Cap}_M(A) \\le P_0\\{ \\exists \\, 0 < t \\le T \\text{ with } B(t) \\in A \\} \\le \\mathrm{Cap}_M(A)",
+   "symbol_and_unit_ledger": {
+    "Cap_M(A)": "capacity of A with respect to the Martin kernel M(x, y) = G(x, y)/G(0, y)",
+    "P0": "probability for the transient motion started at 0",
+    "A": "closed subset of the domain D",
+    "factor 1/2": "the two-sided estimate is sharp up to this constant, from a second-moment argument in the proof"
+   },
+   "assumptions": [
+    "All three transient regimes of the book (d >= 3, exponential killing, bounded domain).",
+    "For the lower bound A is first reduced to compact subsets away from 0 and the boundary."
+   ],
+   "breakdown_regime": "Capacity zero is exactly polarity (with Kakutani's theorem, Theorem 8.20, in the background): sets of capacity zero are never hit, but near the critical dimension, capacity, not Hausdorff dimension alone, is the deciding quantity.",
+   "domain": "potential theory",
+   "layer2": null
+  },
+  {
+   "primitive_id": "path_intersections_by_dimension",
+   "name": "Intersections of independent Brownian paths: almost surely empty in d >= 4 and nontrivial in d <= 3 (Theorem 9.1)",
+   "verbatim_quote": "(a) For d ⩾ 4, almost surely, two independent Brownian paths in Rd have an empty intersection, except for a possible common starting point.",
+   "page": "p. 255, Theorem 9.1 (Section 9.1.1; text line ~14807)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The two motions are independent, with arbitrary starting points; d >= 2 is assumed in the section since d = 1 is immediate.",
+    "Companion part (b): for d <= 3 the intersection is almost surely nontrivial, proved with the capacity criterion and a 0-1 style argument from the Markov property.",
+    "Triple intersections sharpen the threshold: empty for d >= 3, while in d = 2 any finite number of paths intersect (Theorem 9.3)."
+   ],
+   "breakdown_regime": "Dimension 4 is critical and the simple dimension argument fails: the path has dimension 2 = d - 2, and the proof needs the finite 2-dimensional Hausdorff measure of the range (Theorem 4.18) to force Cap_2 = 0 via the energy method.",
+   "domain": "stochastic processes / fractal geometry",
+   "layer2": null
+  },
+  {
+   "primitive_id": "kaufman_dimension_doubling",
+   "name": "Kaufman's dimension doubling theorem: almost surely, simultaneously for every set A, dim B(A) = 2 dim A in dimensions d >= 2 (Theorem 9.28)",
+   "verbatim_quote": "Theorem 9.28 (Kaufman 1969) Let {B(t) : t ⩾ 0} be Brownian motion in dimension d ⩾ 2. Almost surely, for any set A ⊂ [0, ∞), we have dim B(A) = 2 dim A.",
+   "page": "p. 279, Theorem 9.28 (Section 9.4; text line ~16090)",
+   "latex": "\\dim B(A) = 2 \\dim A \\qquad \\text{for all } A \\subset [0, \\infty), \\text{ almost surely}",
+   "symbol_and_unit_ledger": {
+    "B(A)": "image of the time set A under the Brownian path",
+    "2 dim A": "exact doubling, capped implicitly by the ambient dimension through the range dimension ceiling",
+    "simultaneously": "one null set works for all A at once, unlike McKean's Theorem 4.33 where the null set depends on A"
+   },
+   "assumptions": [
+    "Requires d >= 2; in d = 1 the claim fails, since the zero set has dimension 1/2 but its image is a single point.",
+    "Upper bound for all A comes from Holder continuity with any exponent below 1/2 (Corollary 1.20 and Proposition 4.14); only the lower bound is deep."
+   ],
+   "breakdown_regime": "The uniformity over A is the whole point and the whole difficulty: it licenses plugging in random sets A that depend on the path itself, which McKean's version forbids.",
+   "domain": "fractal geometry / stochastic processes",
+   "layer2": null
+  },
+  {
+   "primitive_id": "sle_planar_brownian_geometry",
+   "name": "Stochastic Loewner evolution (appendix by Schramm and Werner): SLE paths determine the planar Brownian intersection exponent and the dimensions of cut points and the outer boundary that direct Brownian arguments could not reach (Chapter 11)",
+   "verbatim_quote": "This chapter presents an overview over some aspects of the recent development of the stochastic Loewner evolution from the point of view of Brownian motion. Stochastic Loewner evolution allows to address a variety of important questions on the geometry of planar Brownian motion that cannot be answered otherwise.",
+   "page": "pp. 327-328, Chapter 11 introduction and Section 11.1 (text line ~18733)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Survey-level appendix chapter by Oded Schramm and Wendelin Werner, with partial proofs only, referring to the original papers for the full arguments.",
+    "The quantities targeted are the intersection exponent xi (with the value 5/8 derived from SLE(6) computations in Section 11.3), cut points (Question 11.2) and the outer boundary (Question 11.3).",
+    "The bridge is conformal invariance of planar Brownian motion (Theorem 7.20) plus the special properties of SLE(6): conformal invariance and the locality property inherited from critical percolation."
+   ],
+   "breakdown_regime": "The chapter is an invitation, not a self-contained development: exponents are identified through SLE computations whose full proofs live in the cited literature, so the appendix supports orientation and statements, not line-by-line verification.",
+   "domain": "complex analysis / stochastic processes / statistical physics interfaces",
+   "layer2": null
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "d7d590230fe81ca7-t1",
+   "think": "Start from the definition, because everything in this book is the unfolding of four axioms. A Brownian motion is asked to have a fixed start, independent increments, Gaussian increments whose variance equals the elapsed time, and continuous paths. The first three axioms describe finite-dimensional distributions only, and Example 1.2 shows they cannot be the whole story: a process can share every finite-dimensional law with Brownian motion and still be discontinuous with probability one. So existence is a theorem, not a formality, and Levy's dyadic construction earns it by prescribing Gaussian values on dyadic rationals and interpolating, with uniform convergence delivering continuity for free. Once the object exists, the path properties arrive as shocks. The paths are Holder continuous for every exponent below one half and for none above, nowhere differentiable by Paley, Wiener and Zygmund, and of unbounded variation, yet their quadratic variation along nested partitions is exactly t. That single number, quadratic variation equals t, is the pivot of the whole book: it explains why classical integration fails, why a new integral must be built, and why the correction term in Ito's formula has the factor one half. The Markov property then turns the path into a machine that restarts: at deterministic times by definition, and at stopping times by the strong Markov property, which is the workhorse behind the reflection principle, the law of the maximum, Wald's two lemmas, and the exit laws from an interval. Dynkin's observation that f of the path minus half the integrated Laplacian is a martingale converts path questions into expectation algebra, and optional stopping converts expectation algebra into numbers: exit probabilities b over |a| plus b, mean exit time |a| times b. Chapter 3 lifts the same restart idea into potential theory: harmonic functions are exactly the functions whose composition with the path is a martingale, the Dirichlet problem is solved by averaging boundary values over random exits, and recurrence versus transience is decided by dimension alone. Occupation measures and the Green function keep the accounts: expected time in a set is an integral against G, and G itself is the time integral of the Gaussian kernel, explicitly c(d) times |x minus y| to the power 2 minus d in the transient dimensions. Chapter 4 changes the question from where the path goes to how large its traces are. Hausdorff dimension is defined through coverings, lower bounds are bought with measures via the mass distribution principle and the energy method, and the answers are crisp: the zero set and the record set have dimension one half, the graph has dimension three halves, and the range saturates at dimension two in every dimension from two upward. Chapter 5 welds the discrete and the continuous: the law of the iterated logarithm fixes the exact almost sure envelope, Skorokhod embedding represents any centred finite-variance law as a stopped Brownian motion, and Donsker's principle makes the rescaled walk converge to the path itself, so the arcsine laws and Pitman's identity that 2M minus B is a three-dimensional Bessel process can be proved wherever they are easiest. Chapter 6 confronts a failure: the zero set has dimension one half but its one-half Hausdorff measure is zero, so no power gauge measures it; local time is built instead by counting downcrossings with a renormalising factor, and the Ray-Knight theorem then identifies the spatial profile of local time as a squared planar Brownian motion. Chapter 7 builds the calculus the quadratic variation demanded: the Ito integral as an L2 isometry limit, Ito's formula, Tanaka's formula repairing the absolute value with local time, conformal invariance with its explicit time change, and Feynman-Kac turning path expectations into solutions of parabolic equations. Chapter 8 deepens the potential theory with equilibrium measures defined by last exits, capacity as the exact currency of hitting, and Wiener's test deciding boundary regularity. Chapter 9 spends the accumulated machinery on intersections: paths meet in dimensions up to three and not in dimension four and above, and Kaufman's theorem doubles the dimension of every time set simultaneously. The appendix finally imports SLE, whose conformal structure answers the planar questions that resisted direct attack. Read as one argument, the book is a chain of conversions: axioms to paths, paths to restarts, restarts to expectations, expectations to potentials, potentials to dimensions, and dimensions back to geometry.",
+   "retrocausal_genealogy": "Read backwards, the late chapters reassign the meaning of the early ones. Quadratic variation in Chapter 1 looks like a curiosity about partitions until Chapter 7 reveals it as the reason the Ito integral exists and the source of the one-half correction everywhere. Levy's identity that M minus B is a reflected Brownian motion is proved in Chapter 2 as a maximal inequality companion, then becomes the load-bearing step for the zero set's dimension in Chapter 4 and for the arcsine laws in Chapter 5. The Green function of Chapter 3 is introduced as an occupation density and returns in Chapter 8 as the kernel inside the Martin capacity. Local time is constructed in Chapter 6 because Chapter 4 ended with a proved failure, the vanishing of the critical Hausdorff measure on the zero set. The genealogy is therefore not decorative: each concept is introduced at the point where an earlier result creates the need for it.",
+   "theory_of_mind": "The authors write for a reader they expect to be suspicious in specific places. They anticipate the belief that finite-dimensional distributions define a process, and answer it with Example 1.2 before it can harden. They anticipate the intuition that a last zero or a maximum should sit near the middle of an interval, and let the arcsine law's U-shaped density correct it in public. They anticipate the hope that Hausdorff measure at the critical dimension will measure the zero set, prove that it vanishes, and only then introduce local time, so the reader experiences the new object as necessary rather than decorative. The opposing camp in the background is the purely analytic tradition: for that reader, every probabilistic representation, Dirichlet, Feynman-Kac, equilibrium measure, is proved to coincide with the analytic object it imitates, never merely asserted to.",
+   "cross_layer_veto": "Several layers veto naive uses of the others. Quadratic variation vetoes Riemann-Stieltjes intuition: any argument that integrates against the path as if it had bounded variation is void, whatever the finite-dimensional distributions suggest. Polarity vetoes point-based reasoning in dimension two and above: planar Brownian motion returns to every neighbourhood but never to a point, so neighbourhood recurrence cannot be upgraded to point recurrence. Dimension vetoes itself at criticality: in dimension four the path has dimension two equal to d minus 2, and the dimension count alone cannot decide intersections, so the energy method and a finite Hausdorff measure estimate must overrule the quick argument. The cone condition vetoes the casual Dirichlet representation at irregular boundary points, as the punctured disc example shows, and only Wiener's test restores a sharp criterion. Local time vetoes occupation density thinking at a point: the time spent exactly at a level is zero, and only the renormalised downcrossing limit survives."
+  },
+  {
+   "trace_id": "d7d590230fe81ca7-t2",
+   "think": "A second pass asks where each result keeps its hypotheses, because the hypotheses are where the book's methods can be reused or will silently fail. The quadratic variation identity needs nested partitions; drop nestedness and the limsup can be infinite, so the theorem is about a controlled way of refining, not about arbitrary sampling. The Dirichlet representation needs boundary regularity; the cone condition is sufficient, Wiener's test is necessary and sufficient, and the gap between those two statements is exactly Chapter 8's reason to exist. Transience is the licence for the Green function: in recurrent dimensions the occupation integral diverges and the theory has to be rebuilt with killing, bounded domains, or the Martin kernel. The Skorokhod embedding needs finite variance, and that single hypothesis is the border between Brownian limits and stable limits. The intersection theorems turn on dimension thresholds that are sharp and proved by different tools on each side: capacity positivity below, Hausdorff measure finiteness at the critical dimension, and a zero-one upgrade from positive probability to almost sure. The pattern across chapters is that a probabilistic identity is first bought cheaply under strong conditions and then repriced under sharp ones, and the repricing is where the new machinery appears: germ sigma-algebras for Blumenthal, equilibrium measures for last exits, gauge functions for the zero set, SLE for planar exponents. For reuse, the transferable units are the conversions themselves: restart at stopping times to factor a path question, compensate a function of the path to get a martingale, integrate a kernel over time to get a potential, put a measure on a fractal to bound its dimension from below, and embed a discrete law into the continuum to move a theorem across.",
+   "retrocausal_genealogy": "The appendix reverses the book's direction of explanation. Chapters 1 to 10 build Brownian motion from axioms and derive its geometry; Chapter 11 starts from a foreign object, SLE, defined through Loewner evolution and a one-dimensional driving Brownian motion, and derives Brownian geometry from it, including the intersection exponent whose value the direct theory could not produce. The historical line inside the mathematics runs Bachelier and Einstein to Wiener's existence proof, Levy's construction and identities, Ito's calculus, Kakutani's potential theory, Ray and Knight's local time identity, Taylor's and Kaufman's dimension theorems, and finally Schramm's SLE, with each generation's tool answering the previous generation's open computation.",
+   "theory_of_mind": "The book models its subject the way it models its reader: it assumes the Brownian path has no hidden memory and no hidden agenda, and then shows how much apparent design, arcsine clustering at interval ends, Bessel behaviour hidden inside 2M minus B, squared Brownian motion hidden inside local time profiles, emerges from memorylessness plus Gaussian scaling alone. Against the imagined interlocutor who wants each phenomenon to have its own mechanism, the authors keep exhibiting one mechanism, restart and rescale, wearing different clothes. The appendix extends the same courtesy to SLE: the reader is assumed to doubt that a Loewner chain driven by a one-dimensional Brownian motion should know anything about two-dimensional Brownian frontiers, and the chapter answers by listing concrete exponents and dimensions that only this route has computed.",
+   "cross_layer_veto": "The veto structure is asymmetric across dimensions, and the book is careful never to let a lower-dimensional intuition overrule a higher-dimensional fact. Scaling suggests the range should fill more space as dimension grows, but the range dimension is capped at two, and Kaufman's doubling, stated for dimension at least two, is false in dimension one, where the zero set is a counterexample with dimension one half and a one-point image. Conformal invariance, the strongest tool in the plane, is vetoed in dimension three and above by the rigidity of conformal maps there. The strong Markov property is vetoed at last exit times, which are not stopping times, forcing the equilibrium measure construction. Even the mass distribution principle is one-directional: it can certify that a set is large, never that it is small, so coverings retain veto power over any claimed upper bound."
+  }
+ ],
+ "universal_lens": "Brownian motion is the universal scaling-limit object of probability: one process, fixed by four axioms, that is simultaneously a fundamental solution of the heat equation, a generator of fractals with exact dimensions, a factory of martingales, and the continuum limit of every centred finite-variance random walk. The method of this book is to let each of those viewpoints audit the others. Path roughness forces a new calculus; the calculus returns solutions of partial differential equations; potential theory prices which sets the path can reach; dimension theory prices how much of space its traces occupy; and conformal invariance, available only in the plane, opens the door to SLE. Nothing here is a metaphor layered on the process: each identification is a theorem with stated hypotheses, and the hypotheses, dimension thresholds, nested partitions, transience, finite variance, boundary regularity, are where the content lives.",
+ "gsi_mapping": "For the institute corpus this volume is a clean source of canonical theorem statements with exact hypotheses in stochastic processes, potential theory and fractal geometry: the restart factorisations (Markov and strong Markov), the compensator identity behind Dynkin's martingale, capacity as the sharp currency for hitting questions, and the mass distribution and energy methods as reusable lower-bound technology for random fractals. Its statements are trainer-grade because each carries its own failure boundary: polarity in dimension two, criticality in dimension four, the vanishing of critical Hausdorff measure on the zero set, the finite-variance border of the Brownian universality class. The appendix additionally documents how SLE, a conformal Loewner theory, retroactively supplies planar Brownian exponents, a primary example of one field's machinery closing another field's open computations.",
+ "gse_mapping": "For the prediction and reasoning engine the transferable machinery is structural, not topical. The Markov restart discipline says a sequential state can be re-based at its current value whenever increments are history-independent, and the strong Markov version licenses re-basing at event times rather than clock times. The Gaussian transition kernel is the reference propagator for any diffusion-style state evolution, with spread growing like the square root of elapsed time. Dynkin's compensator split separates any observable into a fair component and a computable drift component, which is the bookkeeping pattern behind honest expectation accounting. Occupation measures and local time give a rigorous way to accumulate time-spent-in-state statistics, capacity gives two-sided bounds on reachability of a target set, and Donsker's principle disciplines how far discrete simulations can be trusted as continuum statements."
+}

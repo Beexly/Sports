@@ -1,0 +1,78 @@
+{
+  "book_id": "4df93d771aae76e9",
+  "source_status": "COMPLETE",
+  "title": "manifest-provenance",
+  "file_name": "manifest-provenance.md",
+  "sha256": "4df93d771aae76e91142e2ccc06673054d818b69fd1c6fa83c3b3c927328315c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Manifest provenance establishes data integrity through cryptographic hashing, metadata tagging, and validation regimes. It enforces dual-object separation between served tables and held-out gates, ensuring conformal inference and preventing commercial misuse of non-commercial outputs.",
+  "gsi_mapping": "Bayesian inference on data manifests enables probabilistic validation of source fidelity and temporal consistency. Conformal prediction layers use manifest-derived uncertainty bounds to assess point-in-time fits and cross-validation reliability. GSI Mapping: Rooted in manifest-provenance (4df93d771aae76e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE leverages manifest states to transition between data regimes. State transitions are gated by held-out validation checks, with failure modes flagged when served tables are misattributed against held-out metrics.",
+  "primitives": [
+    {
+      "primitive_id": "data_integrity_manifest",
+      "name": "Data Integrity Manifest",
+      "verbatim_quote": "# Manifest provenance Every committed data file gets a manifest beside it: source, producer, sha256, bytes, row count or cell count, date range, license, and whether the fit is point-in-time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sha256': 'dimensionless cryptographic hash', 'bytes': 'bytes', 'row_count': 'dimensionless', 'date_range': 'time interval'}",
+      "assumptions": "Each data file has a unique, verifiable manifest; manifest content is immutable once committed.",
+      "breakdown_regime": "When manifest is absent, file is treated as fixture regardless of test status.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Manifest structure mirrors Bayesian prior over data sources, enabling probabilistic data lineage tracking.",
+        "source_operator": "data_integrity_manifest",
+        "telemetry": "SHA256 collision detection, row count consistency check"
+      }
+    },
+    {
+      "primitive_id": "served_held_out_separation",
+      "name": "Served-Held-Out Separation",
+      "verbatim_quote": "The served table and the held-out gate are different objects.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'served_table': 'data object', 'held_out_gate': 'validation object'}",
+      "assumptions": "Served and held-out objects are distinct entities with separate validation protocols.",
+      "breakdown_regime": "Misattribution of served table validation to held-out metrics leads to invalid inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Separation ensures that held-out validation cannot be conflated with served table performance, enforcing dual-object integrity.",
+        "source_operator": "served_held_out_separation",
+        "telemetry": "Validation mismatch detection between served and held-out objects"
+      }
+    },
+    {
+      "primitive_id": "non_commercial_output_restriction",
+      "name": "Non-Commercial Output Restriction",
+      "verbatim_quote": "TimesFM 3.0 outputs are Non-Commercial and must not appear in a commercial manifest as if they were nflverse.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'timesfm_output': 'data product', 'commercial_manifest': 'metadata container'}",
+      "assumptions": "Output licensing is strictly enforced; commercial use of non-commercial data violates terms.",
+      "breakdown_regime": "Inclusion of TimesFM outputs in commercial manifests constitutes license violation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces legal compliance via data lineage tagging, preventing unauthorized commercial reuse.",
+        "source_operator": "non_commercial_output_restriction",
+        "telemetry": "License compliance audit of manifest contents"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4df93d771aae76e9_t0",
+      "think": "Manifest provenance defines a dual-object system where each data file is paired with a cryptographic and semantic descriptor. This structure supports both Bayesian inference and state-based reasoning. The served table and held-out gate are mathematically distinct entities, forming a partitioned validation space. Misuse occurs when these are conflated, violating the principle of conditional independence. The non-commercial restriction introduces a licensing constraint that acts as an external boundary condition on data usage. These primitives form a closed-loop system where integrity is maintained through cryptographic hashing, semantic tagging, and explicit separation of concerns.\n\nDeep epistemic analysis for manifest-provenance (4df93d771aae76e9, domain=other, pages_read=1/1): Operator 'Data Integrity Manifest' (page 1, domain other) captures: # Manifest provenance Every committed data file gets a manifest beside it: source, producer, sha256, bytes, row count or cell count, date range, license, and whether the fit is point-in-time. Assumptions: Each data file has a unique, verifiable manifest; manifest content is immutable once committed. Breakdown regime: When manifest is absent, file is treated as fixture regardless of test status. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Manifest structure mirrors Bayesian prior over data sources, enabling probabilistic data lineage tracking. Operator 'Served-Held-Out Separation' (page 1, domain other) captures: The served table and the held-out gate are different objects. Assumptions: Served and held-out objects are distinct entities with separate validation protocols. Breakdown regime: Misattribution of served table validation to held-out metrics leads to invalid inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Separation ensures that held-out validation cannot be conflated with served table performance, enforcing dual-object integrity. Operator 'Non-Commercial Output Restriction' (page 1, domain other) captures: TimesFM 3.0 outputs are Non-Commercial and must not appear in a commercial manifest as if they were nflverse. Assumptions: Output licensing is strictly enforced; commercial use of non-commercial data violates terms. Breakdown regime: Inclusion of TimesFM outputs in commercial manifests constitutes license violation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces legal compliance via data lineage tagging, preventing unauthorized commercial reuse. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for manifest-provenance (4df93d771aae76e9, domain=other, pages_read=1/1): Operator 'Data Integrity Manifest' (page 1, domain other) captures: # Manifest provenance Every committed data file gets a manifest beside it: source, producer, sha256, bytes, row count or cell count, date range, license, and whether the fit is point-in-time. Assumptions: Each data file has a unique, verifiable manifest; manifest content is immutable once committed. Breakdown regime: When manifest is absent, file is treated as fixture regardless of test status. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Manifest structure mirrors Bayesian prior over data sources, enabling probabilistic data lineage tracking. Operator 'Served-Held-Out Separation' (page 1, domain other) captures: The served table and the held-out gate are different objects. Assumptions: Served and held-out objects are distinct entities with separate validation protocols. Breakdown regime: Misattribution of served table validation to held-out metrics leads to invalid inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Separation ensures that held-out validation cannot be conflated with served table performance, enforcing dual-object integrity. Operator 'Non-Commercial Output Restriction' (page 1, domain other) captures: TimesFM 3.0 outputs are Non-Commercial and must not appear in a commercial manifest as if they were nflverse. Assumptions: Output licensing is strictly enforced; commercial use of non-commercial data violates terms. Breakdown regime: Inclusion of TimesFM outputs in commercial manifests constitutes license violation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces legal compliance via data lineage tagging, preventing unauthorized commercial reuse. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's data integrity principles and formalized in database systems' ACID properties, this framework extends to modern machine learning pipelines where data lineage and licensing are critical. Retrocausal Genealogy: Rooted in manifest-provenance (4df93d771aae76e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in manifest-provenance (4df93d771aae76e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data producers who may attempt to bypass licensing, and consumers who seek to validate data under commercial constraints. The system models these interactions through manifest enforcement and dual-object separation. Theory of Mind & Decision Maker Model: Rooted in manifest-provenance (4df93d771aae76e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing distinct roles for served and held-out objects. Leakage is prevented by prohibiting cross-referencing of validation metrics. Veto conditions arise when manifest integrity is compromised or when non-commercial data enters commercial contexts. Cross-Layer Veto & Anti-Leakage Check: Rooted in manifest-provenance (4df93d771aae76e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

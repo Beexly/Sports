@@ -1,0 +1,604 @@
+{
+ "book_id": "89b1d93f1fd37a23",
+ "source_status": "COMPLETE",
+ "source_note": "Motif lane MOTIF-TIERB-DRAIN-01. Exact local file processed: ZhangEtAl-2023-DiveIntoDeepLearning.pdf, 44685994 bytes, in the books-d-models bucket of the local library. Scan digest per the gatekeeper scan formula, sha256 of the size string bytes followed by the full file bytes: 89b1d93f1fd37a23aaf4615d58f0be1ae511969b7c5ffe8c39fb779afe55ff95. Plain sha256 of the file bytes: b3129f44c4a26b534176bb0f83d85e1ed26a6cdf93ebebacb20104eab2d6bc00. book_id is the first 16 hex characters of the scan digest. Canonical identity: Aston Zhang, Zachary C. Lipton, Mu Li, and Alexander J. Smola, Dive Into Deep Learning, Cambridge University Press, 2023. The whole extracted text (54860 lines) was read across all 19 chapters; page citations give the book section and the printed page numbers.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "zhang-d2l-p01",
+   "name": "Closed-form least squares: the normal equations",
+   "verbatim_quote": "In particular, we can find the optimal parameters (as assessed on the training data) analytically by applying a simple formula as follows.",
+   "page": "Section 3.1, Analytic Solution (printed pp. 85-86), eqs. (3.1.8)-(3.1.9)",
+   "latex": "\\mathbf{w}^{*} = (\\mathbf{X}^{\\top}\\mathbf{X})^{-1}\\mathbf{X}^{\\top}\\mathbf{y}, \\quad \\text{from} \\quad \\partial_{\\mathbf{w}}\\|\\mathbf{y} - \\mathbf{X}\\mathbf{w}\\|^2 = 2\\mathbf{X}^{\\top}(\\mathbf{X}\\mathbf{w} - \\mathbf{y}) = 0",
+   "symbol_and_unit_ledger": "X: design matrix, n examples by d features, with a column of ones appended so the bias b is subsumed into w; unit: native units of each feature column. y: target vector, length n; unit: target units. w*: optimal weight vector, length d; unit: target units per feature unit. X^T X: Gram matrix, d by d, must be invertible.",
+   "assumptions": "The design matrix X has full column rank (no feature is a linear combination of others), so X^T X is invertible and the loss surface has exactly one critical point, the global minimum. Loss is the sum of squared residuals.",
+   "breakdown_regime": "Breaks when columns are collinear or nearly so: X^T X becomes singular or ill-conditioned, the inverse explodes, and weights become unstable; also breaks as a practical method when d is huge, since forming and inverting the Gram matrix costs O(d^3). Regularization (weight decay) or iterative solvers take over.",
+   "domain": "supervised learning: linear regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any empirical risk that is quadratic in linear parameters reduces to the same Gram-matrix solve; adding an L2 penalty (Section 3.7) yields the ridge variant with Gram matrix X^T X + lambda I, so the closed form is the kernel from which penalized regression is derived.",
+    "source_operator": "Gram matrix formation followed by a linear solve, (X^T X)^{-1} X^T y",
+    "telemetry": "Condition number of X^T X, held-out residual norm, and weight magnitudes across data refreshes."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p02",
+   "name": "Squared loss is Gaussian maximum likelihood",
+   "verbatim_quote": "It follows that minimizing the mean squared error is equivalent to the maximum likelihood estimation of a linear model under the assumption of additive Gaussian noise.",
+   "page": "Section 3.1.3, The Normal Distribution and Squared Loss (printed p. 90), eq. (3.1.16)",
+   "latex": "-\\log P(\\mathbf{y} \\mid \\mathbf{X}) = \\sum_{i=1}^{n} \\left[ \\tfrac{1}{2}\\log(2\\pi\\sigma^2) + \\frac{(y^{(i)} - \\mathbf{w}^{\\top}\\mathbf{x}^{(i)} - b)^2}{2\\sigma^2} \\right], \\quad \\text{with} \\quad y = \\mathbf{w}^{\\top}\\mathbf{x} + b + \\epsilon, \\; \\epsilon \\sim \\mathcal{N}(0, \\sigma^2)",
+   "symbol_and_unit_ledger": "sigma^2: observation noise variance; unit: squared target units. y^(i): observed target for example i. w^T x^(i) + b: model prediction; unit: target units. P(y|X): likelihood of the dataset under the model; unit: probability density.",
+   "assumptions": "Observations are the linear prediction plus independent additive Gaussian noise with fixed variance sigma^2 that does not depend on x. Examples are drawn independently, so the likelihood factorizes over examples.",
+   "breakdown_regime": "Breaks under heavy-tailed, skewed, or heteroscedastic noise: squared loss then over-weights outliers and the fitted line chases extreme observations; the equivalence also says nothing about whether the true pattern is linear, only about the noise model given the linear form.",
+   "domain": "supervised learning: regression, probabilistic modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A loss function is a noise model in disguise: squared loss corresponds to Gaussian noise, absolute loss to Laplace noise, cross-entropy to a categorical model. The isomorphism transfers to any forecasting domain: choosing a training loss silently chooses the error distribution the model believes in.",
+    "source_operator": "Negative log-likelihood minimization under an explicit observation model",
+    "telemetry": "Residual diagnostics per segment: skew, tail weight, and variance as a function of the prediction level."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p03",
+   "name": "Minibatch stochastic gradient descent update",
+   "verbatim_quote": "The solution to both problems is to pick an intermediate strategy: rather than taking a full batch or only a single sample at a time, we take a minibatch of observations (Li et al., 2014).",
+   "page": "Section 3.1, Minibatch Stochastic Gradient Descent (printed p. 87), eq. (3.1.10)",
+   "latex": "(\\mathbf{w}, b) \\leftarrow (\\mathbf{w}, b) - \\frac{\\eta}{|\\mathcal{B}|} \\sum_{i \\in \\mathcal{B}_t} \\partial_{(\\mathbf{w}, b)} \\, \\ell^{(i)}(\\mathbf{w}, b)",
+   "symbol_and_unit_ledger": "eta: learning rate, positive scalar; unit: parameter units per unit gradient. B_t: minibatch sampled at iteration t, fixed size |B| (book suggests 32 to 256). l^(i): loss on example i. Partial derivative term: gradient of the average minibatch loss with respect to the parameters.",
+   "assumptions": "Minibatches are sampled uniformly at random so the minibatch gradient is an unbiased estimate of the full-data gradient. The learning rate is fixed in advance and small enough for stability. The loss is differentiable almost everywhere.",
+   "breakdown_regime": "Breaks when the minibatch is unrepresentative (ordered or drifting data), when the learning rate is too large (divergence) or decays too fast (stalling), and for layers such as batch normalization that need several observations at once; pure per-example SGD is also hardware-inefficient because processors move data slower than they multiply.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The minibatch update is the universal training kernel of the book: every later model, from CNNs to Transformers, is trained by this same loop with a different loss and architecture substituted in, and Chapter 12 is entirely about improving this one update.",
+    "source_operator": "Stochastic gradient step on a random minibatch",
+    "telemetry": "Loss per iteration, gradient norms, and the ratio of update magnitude to parameter magnitude."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p04",
+   "name": "Softmax regression and the cross-entropy gradient",
+   "verbatim_quote": "In other words, the derivative is the difference between the probability assigned by our model, as expressed by the softmax operation, and what actually happened, as expressed by elements in the one-hot label vector.",
+   "page": "Section 4.1, Softmax Regression (printed pp. 128-131), eqs. (4.1.3), (4.1.8), (4.1.10), (4.1.11)",
+   "latex": "\\hat{y}_j = \\frac{\\exp(o_j)}{\\sum_k \\exp(o_k)}, \\quad \\ell(\\mathbf{y}, \\hat{\\mathbf{y}}) = -\\sum_j y_j \\log \\hat{y}_j, \\quad \\partial_{o_j} \\ell = \\mathrm{softmax}(\\mathbf{o})_j - y_j, \\quad H[P] = -\\sum_j P(j) \\log P(j)",
+   "symbol_and_unit_ledger": "o_j: logit (unnormalized score) for class j; unitless. y_hat_j: predicted probability of class j; unitless, sums to 1. y_j: one-hot label entry, 0 or 1. l: cross-entropy loss; unit: nats. H[P]: entropy of distribution P; unit: nats (log base e) or bits (log base 2).",
+   "assumptions": "Labels are one-hot (exactly one true class per example) and the model output is interpreted as conditional class probabilities. Examples are independent so the likelihood factorizes; maximizing it gives the cross-entropy loss.",
+   "breakdown_regime": "Breaks with label noise, overlapping classes, or miscalibrated confidence: the loss keeps pushing logits apart even when the data are inherently ambiguous. Numerically it breaks if exponentials and logarithms of large logits are computed naively (overflow/underflow), which frameworks guard against.",
+   "domain": "supervised learning: classification, information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The gradient of any exponential-family log-likelihood is predicted expectation minus observation; softmax with cross-entropy is the categorical case of the same structure that made the linear-regression gradient prediction minus target. The isomorphism is why classification and regression training code look identical below the loss.",
+    "source_operator": "Softmax normalization plus negative log-likelihood, whose gradient is prediction minus label",
+    "telemetry": "Calibration curves (predicted probability versus empirical frequency), per-class loss, and logit ranges for numerical safety."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p05",
+   "name": "K-fold cross-validation and the model selection rule",
+   "verbatim_quote": "One popular solution to this problem is to employ 𝐾-fold cross-validation. Here, the original training data is split into 𝐾 non-overlapping subsets. Then model training and validation are executed 𝐾 times, each time training on 𝐾 − 1 subsets and validating on a different subset (the one not used for training in that round).",
+   "page": "Section 3.6, Model Selection, Underfitting, and Overfitting (printed pp. 112-117)",
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Training, validation, and test data are kept disjoint; hyperparameters and model choices are selected on validation performance only, and the test set is touched once at the end. K-fold cross-validation trains K times, each time on K-1 subsets and validating on the held-out subset, then averages.",
+   "breakdown_regime": "Breaks when data leak across the split (duplicated or time-correlated examples in both train and validation), when the validation set is reused so often it is effectively fit, and when the deployment distribution differs from all folds, so no fold estimates the real generalization gap.",
+   "domain": "model evaluation and selection",
+   "layer2": null
+  },
+  {
+   "primitive_id": "zhang-d2l-p06",
+   "name": "Weight decay: L2 penalty as per-step shrinkage",
+   "verbatim_quote": "That is why the method is sometimes called “weight decay”: given the penalty term alone, our optimization algorithm decays the weight at each step of training.",
+   "page": "Section 3.7, Weight Decay (printed p. 120), eq. (3.7.3)",
+   "latex": "\\ell(\\mathbf{w}, b) + \\frac{\\lambda}{2}\\|\\mathbf{w}\\|^2, \\quad \\mathbf{w} \\leftarrow (1 - \\eta\\lambda)\\mathbf{w} - \\frac{\\eta}{|\\mathcal{B}|} \\sum_{i \\in \\mathcal{B}} \\mathbf{x}^{(i)} \\big(\\mathbf{w}^{\\top}\\mathbf{x}^{(i)} + b - y^{(i)}\\big)",
+   "symbol_and_unit_ledger": "lambda: regularization strength, nonnegative; unitless trade-off between fit and weight norm. ||w||^2: squared Euclidean norm of the weights, bias excluded. eta: learning rate. (1 - eta lambda): multiplicative shrink factor applied every step.",
+   "assumptions": "Smaller weights are treated as simpler and preferred a priori; the penalty applies to weights, not the bias. The trade-off lambda is a hyperparameter chosen on validation data.",
+   "breakdown_regime": "Breaks when lambda is so large the model underfits any signal, and it does not produce sparsity (that is the L1 penalty). In adaptive optimizers the penalty interacts with per-coordinate scaling, so the same lambda means different effective shrinkage than under plain SGD.",
+   "domain": "regularization, supervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weight decay is a Gaussian prior over weights read through the maximum likelihood lens of p02: the L2 penalty is exactly the log of a Gaussian prior, so penalized training is maximum a posteriori estimation. The same prior-penalty exchange converts domain knowledge into regularizers in any Bayesian workflow.",
+    "source_operator": "Penalty-augmented gradient step equivalent to multiplicative weight shrinkage",
+    "telemetry": "Weight norms per layer over training and the validation gap as lambda varies."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p07",
+   "name": "Multilayer perceptrons and universal approximation",
+   "verbatim_quote": "These (and related results) suggest that even with a single-hidden-layer network, given enough nodes (possibly absurdly many), and the right set of weights, we can model any function.",
+   "page": "Section 5.1, Multilayer Perceptrons (printed p. 170), eqs. (5.1.1)-(5.1.6)",
+   "latex": "\\mathbf{H} = \\sigma(\\mathbf{X}\\mathbf{W}^{(1)} + \\mathbf{b}^{(1)}), \\quad \\mathbf{O} = \\mathbf{H}\\mathbf{W}^{(2)} + \\mathbf{b}^{(2)}, \\quad \\mathrm{ReLU}(x) = \\max(0, x), \\quad \\mathrm{sigmoid}(x) = \\frac{1}{1 + \\exp(-x)}, \\quad \\tanh(x) = \\frac{\\exp(x) - \\exp(-x)}{\\exp(x) + \\exp(-x)}",
+   "symbol_and_unit_ledger": "X: minibatch of inputs, n by d. W^(1): d by h weight matrix; h: number of hidden units. sigma: elementwise nonlinear activation (ReLU, sigmoid, tanh, or variants such as pReLU). H: hidden activations, n by h. O: outputs, n by q.",
+   "assumptions": "The activation is nonlinear; without it, stacked linear layers collapse to a single linear map. The universal approximation results assume enough hidden units (possibly absurdly many) and the right weights exist; they promise representability, not learnability from finite data.",
+   "breakdown_regime": "Breaks as a practical recipe when width or depth is pushed without regularization and optimization care: representable functions may be unreachable by gradient descent, and a single huge hidden layer is usually far less parameter-efficient than depth or structured architectures (kernels, convolutions) for the same task.",
+   "domain": "neural network architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An MLP is the unstructured baseline every specialized architecture is a constrained version of: a convolution is an MLP with weight sharing and locality imposed, and attention is an MLP whose mixing weights are computed from the data. Measuring a structured model against its MLP relaxation shows what the structure buys.",
+    "source_operator": "Affine transformation followed by an elementwise nonlinearity, stacked",
+    "telemetry": "Parameter count versus validation performance when structure is added or removed, layer by layer."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p08",
+   "name": "Backpropagation: reverse-mode chain rule over the computation graph",
+   "verbatim_quote": "In short, the method traverses the network in reverse order, from the output to the input layer, according to the chain rule from calculus.",
+   "page": "Section 5.3, Forward Propagation, Backward Propagation, and Computational Graphs (printed p. 181), eq. (5.3.7)",
+   "latex": "\\frac{\\partial Z}{\\partial X} = \\mathrm{prod}\\!\\left( \\frac{\\partial Z}{\\partial Y}, \\frac{\\partial Y}{\\partial X} \\right), \\quad \\text{for} \\quad Y = f(X), \\; Z = g(Y)",
+   "symbol_and_unit_ledger": "X, Y, Z: tensors of arbitrary shape (inputs, intermediates, objective). prod: operator that multiplies its arguments after any needed transposition or reshaping; for vectors it is matrix multiplication. Partial derivatives: Jacobians of each graph edge.",
+   "assumptions": "The forward computation is a directed acyclic graph of differentiable operations, and every intermediate needed by the backward pass is stored during the forward pass. Cost of the backward pass is a small constant multiple of the forward pass.",
+   "breakdown_regime": "Breaks in memory before it breaks in math: storing all intermediates costs memory proportional to graph size, which is why gradient checkpointing exists; it also breaks at nondifferentiable points (handled by subgradient conventions) and gives no guarantee the found stationary point is good.",
+   "domain": "optimization, automatic differentiation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reverse-mode differentiation is the engine under every framework in the book (the d2l Trainer calls it for every model), and the same adjoint idea prices sensitivities in physics simulators and financial models: one backward sweep yields the gradient with respect to all inputs at once.",
+    "source_operator": "Adjoint (reverse-mode) sweep over a computation graph, caching forward intermediates",
+    "telemetry": "Memory used by cached intermediates versus recompute cost, and gradient agreement with finite differences on small cases."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p09",
+   "name": "Xavier initialization from variance preservation",
+   "verbatim_quote": "Xavier initialization suggests that, for each layer, variance of any output is not affected by the number of inputs, and variance of any gradient is not affected by the number of outputs.",
+   "page": "Section 5.4, Numerical Stability and Initialization (printed pp. 187-188), summary (5.4.3) on p. 188; eqs. (5.4.5)-(5.4.6)",
+   "latex": "\\mathrm{Var}[o_i] = n_{\\mathrm{in}} \\, \\sigma^2 \\gamma^2, \\quad \\text{compromise:} \\quad \\tfrac{1}{2}(n_{\\mathrm{in}} + n_{\\mathrm{out}})\\sigma^2 = 1, \\quad \\sigma^2 = \\frac{2}{n_{\\mathrm{in}} + n_{\\mathrm{out}}}",
+   "symbol_and_unit_ledger": "n_in, n_out: fan-in and fan-out of a layer; unitless counts. sigma^2: variance of the weight distribution. gamma^2: variance of the layer inputs. o_i: a pre-activation output unit. Weights drawn independently, zero mean.",
+   "assumptions": "Weights and inputs are mutually independent with zero means; the layer is analyzed without its nonlinearity; forward variance preservation wants n_in sigma^2 = 1 and backward wants n_out sigma^2 = 1, which cannot both hold, so Xavier averages the two requirements.",
+   "breakdown_regime": "Breaks for ReLU networks, where half the units are zeroed and the variance halves each layer (the He initialization corrects this with sigma^2 = 2/n_in), and breaks in very deep or recurrent stacks where products of many Jacobians still explode or vanish despite per-layer scaling.",
+   "domain": "neural network training, initialization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Variance bookkeeping through a composed system is a general kernel: the same product-of-variances analysis sizes signal levels in amplifier chains, error budgets in sensor fusion, and gradient scales in any deep composition; the initialization rule is just the design point where the product stays near 1.",
+    "source_operator": "Moment propagation through linear maps under independence",
+    "telemetry": "Activation and gradient variance measured per layer at initialization and during early training."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p10",
+   "name": "Dropout: unbiased noise injection by inverted scaling",
+   "verbatim_quote": "In standard dropout regularization, one zeros out some fraction of the nodes in each layer and then debiases each layer by normalizing by the fraction of nodes that were retained (not dropped out).",
+   "page": "Section 5.6, Dropout (printed pp. 194-195), eq. (5.6.1)",
+   "latex": "h' = \\begin{cases} 0 & \\text{with probability } p \\\\ \\dfrac{h}{1 - p} & \\text{otherwise} \\end{cases}, \\qquad \\mathbb{E}[h'] = h",
+   "symbol_and_unit_ledger": "h: an intermediate activation. p: dropout probability, the fraction of units zeroed each training iteration. h prime: the dropped-out activation actually passed forward. The 1/(1-p) rescaling keeps the expectation equal to h, so no rescaling is needed at prediction time.",
+   "assumptions": "Units are dropped independently at random on each training iteration, and dropout is active only during training. The rescaling makes the noise unbiased: in expectation each layer computes what it would have computed without noise.",
+   "breakdown_regime": "Breaks when left on at prediction time, when p is so high the signal is destroyed, and it interacts awkwardly with batch normalization (variance shift between train and test statistics). It also does not help when overfitting comes from distribution shift rather than co-adaptation.",
+   "domain": "regularization, neural networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dropout trains an implicit ensemble of subnetworks and averages them at test time; the same trick of training with injected noise and testing with the mean is Bishop’s result that input noise equals Tikhonov regularization, and it maps to any pipeline where robustness is bought by corrupting inputs during fitting.",
+    "source_operator": "Bernoulli masking with expectation-preserving rescaling",
+    "telemetry": "Train versus validation gap with dropout on and off, and activation statistics between training and prediction modes."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p11",
+   "name": "Convolution derived from translation invariance and locality",
+   "verbatim_quote": "This is a convolution! We are effectively weighting pixels at (𝑖 + 𝑎, 𝑗 + 𝑏) in the vicinity of location (𝑖, 𝑗) with coefficients [V] 𝑎,𝑏 to obtain the value",
+   "page": "Section 7.1, From Fully Connected Layers to Convolutions (printed pp. 234-237), eqs. (7.1.2), (7.1.7)",
+   "latex": "[\\mathbf{H}]_{i,j} = \\sum_a \\sum_b [\\mathbf{V}]_{a,b} [\\mathbf{X}]_{i+a, j+b}, \\qquad [\\mathbf{H}]_{i,j} = \\sum_a \\sum_b \\sum_c [\\mathbf{V}]_{a,b,c} [\\mathbf{X}]_{i+a, j+b, c} \\quad \\text{(multi-channel)}",
+   "symbol_and_unit_ledger": "X: input image (or feature map), h by w per channel. V: convolution kernel (weight tensor), shared across all positions; indices a, b range over the kernel footprint, c over input channels. H: output feature map. Parameter count is independent of image size because V is reused everywhere.",
+   "assumptions": "Two inductive biases are imposed on a fully connected layer: translation invariance (the same detector weights apply at every location) and locality (an output depends only on a small neighborhood of inputs). Cross-correlation is implemented in place of strict convolution, which differs only by a kernel flip that learning absorbs.",
+   "breakdown_regime": "Breaks when position itself carries the signal (fixed layouts, borders, coordinates), when the needed context is global rather than local, and as a cost matter: a k by k convolution over c_i input and c_o output channels costs O(h w k^2 c_i c_o), which explodes for large images and channel counts.",
+   "domain": "computer vision, neural network architectures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The derivation pattern is the reusable kernel: start from the general linear model, impose the symmetries of the problem as constraints on the weight tensor, and read off the architecture. Attention in Chapter 11 is derived the same way, by relaxing locality and making the mixing weights data-dependent.",
+    "source_operator": "Constraining a dense weight tensor by translation invariance (sharing) and locality (sparsity)",
+    "telemetry": "Parameter count and validation accuracy of the constrained layer versus its dense counterpart on the same task."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p12",
+   "name": "Convolution output shape under padding and stride",
+   "verbatim_quote": "In many cases, we will want to set 𝑝 h = 𝑘 h − 1 and 𝑝 w = 𝑘 w − 1 to give the input and output the same height and width.",
+   "page": "Section 7.3, Padding and Stride (printed pp. 248-251), eq. (7.3.1)",
+   "latex": "(n_h - k_h + p_h + 1) \\times (n_w - k_w + p_w + 1), \\qquad \\text{with stride:} \\quad \\left\\lfloor \\frac{n_h - k_h + p_h}{s_h} + 1 \\right\\rfloor \\times \\left\\lfloor \\frac{n_w - k_w + p_w}{s_w} + 1 \\right\\rfloor",
+   "symbol_and_unit_ledger": "n_h, n_w: input height and width; unit: pixels (or sequence positions). k_h, k_w: kernel height and width. p_h, p_w: total padding added on each axis. s_h, s_w: stride, the step between kernel positions.",
+   "assumptions": "Padding is split roughly evenly on both sides; setting p = k - 1 with odd k preserves spatial size. The floor form assumes the padded input size minus kernel size is handled with the book’s divisibility convention.",
+   "breakdown_regime": "Breaks as bookkeeping, not math: even kernel sizes cannot be padded symmetrically, non-divisible sizes silently drop border pixels under the floor, and shape errors compound through deep stacks, surfacing only as runtime mismatches several layers later.",
+   "domain": "computer vision, neural network architectures",
+   "layer2": null
+  },
+  {
+   "primitive_id": "zhang-d2l-p13",
+   "name": "Pooling: local max or average for translation robustness and downsampling",
+   "verbatim_quote": "Moreover, when detecting lower-level features, such as edges (as discussed in Section 7.2), we often want our representations to be somewhat invariant to translation.",
+   "page": "Section 7.5, Pooling (printed p. 257)",
+   "latex": "y_{i,j} = \\max_{a \\in [0, p_h), \\, b \\in [0, p_w)} x_{i+a, j+b} \\quad \\text{(max pooling)}, \\qquad y_{i,j} = \\frac{1}{p_h p_w} \\sum_{a,b} x_{i+a, j+b} \\quad \\text{(average pooling)}",
+   "symbol_and_unit_ledger": "x: input feature map. p_h by p_w: pooling window. y: pooled output; the window usually strides by its own size, so spatial resolution falls by that factor. Pooling has no learnable parameters and operates per channel.",
+   "assumptions": "The task rewards approximate position: a feature’s presence matters more than its exact pixel. Pooling windows are fixed hyperparameters, and like convolution the operation is applied identically at every location.",
+   "breakdown_regime": "Breaks when exact location is the signal (precise localization, counting, keypoints): max pooling discards where the maximum occurred and average pooling blurs rare strong signals; aggressive early pooling throws away detail no later layer can recover.",
+   "domain": "computer vision, neural network architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pooling is the same aggregation move as summarization anywhere: replace a neighborhood by a robust statistic (max for detection, mean for smoothing) to gain invariance at the cost of resolution. The max-versus-mean choice mirrors worst-case versus average-case aggregation in risk and sensor systems.",
+    "source_operator": "Fixed-window order statistic or mean applied per channel",
+    "telemetry": "Downstream accuracy under small input translations, with and without pooling, and information loss measured by reconstruction or probe tasks."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p14",
+   "name": "Batch normalization: standardize per minibatch, then rescale and shift",
+   "verbatim_quote": "After applying standardization, the resulting minibatch has zero mean and unit variance.",
+   "page": "Section 8.5, Batch Normalization (printed pp. 293-294), eqs. (8.5.1)-(8.5.2)",
+   "latex": "\\mathrm{BN}(\\mathbf{x}) = \\boldsymbol{\\gamma} \\odot \\frac{\\mathbf{x} - \\hat{\\boldsymbol{\\mu}}_{\\mathcal{B}}}{\\hat{\\boldsymbol{\\sigma}}_{\\mathcal{B}}} + \\boldsymbol{\\beta}, \\qquad \\hat{\\boldsymbol{\\mu}}_{\\mathcal{B}} = \\frac{1}{|\\mathcal{B}|} \\sum_{\\mathbf{x} \\in \\mathcal{B}} \\mathbf{x}, \\qquad \\hat{\\boldsymbol{\\sigma}}_{\\mathcal{B}}^2 = \\frac{1}{|\\mathcal{B}|} \\sum_{\\mathbf{x} \\in \\mathcal{B}} (\\mathbf{x} - \\hat{\\boldsymbol{\\mu}}_{\\mathcal{B}})^2 + \\epsilon",
+   "symbol_and_unit_ledger": "B: current minibatch. mu_hat_B, sigma_hat_B: per-feature mean and standard deviation over the minibatch. gamma, beta: learned scale and shift restoring representational freedom. epsilon: small constant preventing division by zero. At prediction time, dataset-wide statistics replace minibatch statistics.",
+   "assumptions": "Minibatches are large enough (book notes roughly 50 to 100 works well) that their statistics are stable but noisy; the noise itself regularizes. Training and prediction use different statistics, a deliberate mode switch like dropout.",
+   "breakdown_regime": "Breaks with minibatch size 1 (every unit normalizes to 0 and nothing can be learned), with tiny or correlated batches whose statistics misrepresent the data, and under distribution shift between training batches and deployment data.",
+   "domain": "neural network training, normalization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The layer is input standardization (Section 3 preprocessing) moved inside the network and made adaptive per layer: wherever a pipeline re-standardizes intermediate quantities against a running reference (control charts, adaptive gain control), it is running the batch normalization kernel.",
+    "source_operator": "Moment matching to zero mean and unit variance followed by a learned affine restore",
+    "telemetry": "Activation means and variances per layer during training, and the gap between batch statistics and population statistics."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p15",
+   "name": "Residual blocks: learn the residual so layers can default to identity",
+   "verbatim_quote": "At the heart of their proposed residual network (ResNet) is the idea that every additional layer should more easily contain the identity function as one of its elements.",
+   "page": "Section 8.6, Residual Networks (ResNet) and ResNeXt (printed pp. 303-304)",
+   "latex": "g(\\mathbf{x}) = f(\\mathbf{x}) - \\mathbf{x}, \\qquad \\text{block output} = \\mathrm{ReLU}\\big(\\mathbf{x} + g(\\mathbf{x})\\big)",
+   "symbol_and_unit_ledger": "x: block input. f(x): the desired underlying mapping. g(x): the residual mapping the parameterized layers actually learn; identity f(x) = x corresponds to g(x) = 0, reached by pushing weights to zero. A 1 by 1 convolution is added when channel counts must change for the addition.",
+   "assumptions": "Function classes should be nested: a bigger network must contain the smaller one’s functions, which holds if each added layer can easily become the identity. The skip connection carries the input forward unchanged alongside the learned correction.",
+   "breakdown_regime": "Breaks nothing in the limit the design targets, but the identity prior is wrong when the optimal block mapping is far from identity and the residual is as hard to represent as the full mapping; dimension-changing shortcuts add parameters, and extremely deep stacks still need normalization to train.",
+   "domain": "neural network architectures, computer vision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Predict the correction, not the quantity: residual learning is the same move as boosting (fit the residual of the current ensemble), Newton refinement, and control systems that command deltas from a baseline. Anywhere a good baseline exists, modeling the delta is easier than modeling the level.",
+    "source_operator": "Additive skip connection reparameterizing the target as baseline plus learned correction",
+    "telemetry": "Training error of deep stacks with and without skip connections, and the norm of learned residuals relative to the identity path."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p16",
+   "name": "Perplexity: exponentiated average negative log-likelihood",
+   "verbatim_quote": "Perplexity can be best understood as the reciprocal of the geometric mean of the number of real choices that we have when deciding which token to pick next.",
+   "page": "Section 9.3.2, Perplexity (printed pp. 345-346), eqs. (9.3.7)-(9.3.8)",
+   "latex": "\\mathrm{PPL} = \\exp\\left( -\\frac{1}{n} \\sum_{t=1}^{n} \\log P(x_t \\mid x_{t-1}, \\ldots, x_1) \\right)",
+   "symbol_and_unit_ledger": "P(x_t | history): model probability of the actual next token. n: sequence length in tokens. PPL: unitless; 1 is perfect prediction, and the vocabulary size is the uniform-baseline value. Averaging over tokens makes scores comparable across document lengths.",
+   "assumptions": "The model defines a proper probability distribution over the next token, and evaluation text is drawn from the same distribution family as training text. Perplexity compares models only on the same tokenization and vocabulary.",
+   "breakdown_regime": "Breaks as a comparison across different vocabularies or tokenizers, and it measures prediction of typical text, not usefulness: a model can lower perplexity by favoring safe frequent continuations while being worse at rare but important tokens.",
+   "domain": "language modeling, evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Perplexity is cross-entropy read as an effective branching factor; any probabilistic forecaster can be scored the same way, as the exponential of its average log loss, giving an interpretable effective number of equally likely outcomes in domains from text to event sequences.",
+    "source_operator": "Exponentiation of the per-token average negative log-likelihood",
+    "telemetry": "Perplexity on held-out text per data segment, tracked alongside downstream task quality to catch divergence between the two."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p17",
+   "name": "Recurrent neural networks: hidden state as learned sequence memory",
+   "verbatim_quote": "even at different time steps, RNNs always use these model parameters. Therefore, the parametrization cost of an RNN does not grow as the number of time steps increases.",
+   "page": "Section 9.4, Recurrent Neural Networks (printed pp. 349-350), eqs. (9.4.5)-(9.4.6)",
+   "latex": "\\mathbf{H}_t = \\phi\\big(\\mathbf{X}_t \\mathbf{W}_{xh} + \\mathbf{H}_{t-1} \\mathbf{W}_{hh} + \\mathbf{b}_h\\big), \\qquad \\mathbf{O}_t = \\mathbf{H}_t \\mathbf{W}_{hq} + \\mathbf{b}_q",
+   "symbol_and_unit_ledger": "X_t: input at time step t, n by d. H_t: hidden state, n by h; it summarizes all inputs up to t. W_xh: input-to-hidden weights, d by h. W_hh: hidden-to-hidden weights, h by h, the same at every step. W_hq: hidden-to-output weights. phi: activation, typically tanh.",
+   "assumptions": "A fixed-size hidden state can summarize an arbitrary-length past (a latent variable model P(x_t | h_{t-1}) replacing n-gram conditioning, whose parameter count would grow like |V|^n). Parameters are shared across time steps.",
+   "breakdown_regime": "Breaks on long sequences: repeated multiplication by W_hh makes gradients vanish or explode (Section 9.5), so distant inputs stop influencing the state in practice; the fixed-size state is also an information bottleneck for very long contexts.",
+   "domain": "sequence modeling, natural language processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The hidden state is a learned state-space model: H_t plays the role of the Kalman filter state, updated from the previous state and the new observation, except the transition is a learned nonlinearity instead of a known linear-Gaussian one. Any streaming estimation problem can be cast in this form.",
+    "source_operator": "Shared-weight state update, state_t = f(input_t, state_{t-1})",
+    "telemetry": "Effective memory horizon measured by probing how far back inputs remain decodable from the hidden state."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p18",
+   "name": "Gradient clipping by global norm",
+   "verbatim_quote": "A popular alternative is to adopt a gradient clipping heuristic projecting the gradients g onto a ball of some given radius 𝜃 as follows:",
+   "page": "Section 9.5.3, Gradient Clipping (printed p. 357), eq. (9.5.3)",
+   "latex": "\\mathbf{g} \\leftarrow \\min\\left(1, \\frac{\\theta}{\\|\\mathbf{g}\\|}\\right) \\mathbf{g}",
+   "symbol_and_unit_ledger": "g: the full gradient, all parameters concatenated into one vector. theta: clipping threshold on the gradient norm. The rescaling preserves the direction of g exactly and caps its length at theta.",
+   "assumptions": "Exploding gradients are rare but catastrophic events, especially in RNNs where backpropagation through time multiplies Jacobians over O(T) steps; the objective is assumed Lipschitz smooth enough that bounding step size bounds objective change (book eqs. 9.5.1-9.5.2).",
+   "breakdown_regime": "It is a hack by the book’s own account: clipped steps no longer follow the true gradient, biasing optimization; it does nothing for vanishing gradients, and a threshold set too low slows all learning to protect against rare spikes.",
+   "domain": "optimization, sequence modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Norm capping is trust-region thinking in cheap form: bound the step, keep the direction. The same operator appears as gradient clipping in federated and differentially private learning, where the cap is also what makes sensitivity finite and noise calibration possible.",
+    "source_operator": "Radial projection of the update vector onto a ball of radius theta",
+    "telemetry": "Frequency and size of clipped steps per epoch; a rising clip rate is an early warning of instability or a bad learning rate."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p19",
+   "name": "LSTM: gated memory cell with an additive state path",
+   "verbatim_quote": "If the forget gate is always 1 and the input gate is always 0, the memory cell internal state C𝑡 −1 will remain constant forever, passing unchanged to each subsequent time step.",
+   "page": "Section 10.1, Long Short-Term Memory (LSTM) (printed pp. 371-373), eqs. (10.1.1), (10.1.3), (10.1.4)",
+   "latex": "\\mathbf{I}_t = \\sigma(\\mathbf{X}_t \\mathbf{W}_{xi} + \\mathbf{H}_{t-1} \\mathbf{W}_{hi} + \\mathbf{b}_i), \\; \\mathbf{F}_t, \\mathbf{O}_t \\text{ analogous}; \\qquad \\mathbf{C}_t = \\mathbf{F}_t \\odot \\mathbf{C}_{t-1} + \\mathbf{I}_t \\odot \\tilde{\\mathbf{C}}_t, \\qquad \\mathbf{H}_t = \\mathbf{O}_t \\odot \\tanh(\\mathbf{C}_t)",
+   "symbol_and_unit_ledger": "I_t, F_t, O_t: input, forget, and output gates, each in (0,1) elementwise via sigmoid. C_t: memory cell internal state; C_tilde: candidate update via tanh. H_t: hidden state exposed to other layers. Odots: Hadamard (elementwise) product. Four weight sets (three gates plus candidate), each with input and recurrent matrices.",
+   "assumptions": "Information worth keeping should travel on an additive path whose default is persistence: with forget gate 1 and input gate 0 the cell state is carried unchanged, giving gradients a near-identity route through time.",
+   "breakdown_regime": "Breaks in cost: four times the parameters and compute of a vanilla RNN per step; gates can saturate and stop learning; and for many tasks the sequential bottleneck remains, which is why attention architectures displaced LSTMs for large-scale sequence modeling.",
+   "domain": "sequence modeling, neural network architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The cell update is a gated leaky integrator, the same form as a Kalman gain blending old state with new measurement and as exponential moving averages with a learned, input-dependent rate; forget and input gates are complementary blend weights chosen per coordinate and per step.",
+    "source_operator": "Multiplicative gating of an additive state recurrence",
+    "telemetry": "Gate activation distributions over time and the decay horizon of cell-state information on long sequences."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p20",
+   "name": "GRU: two gates, convex-combination state update",
+   "verbatim_quote": "Whenever the update gate Z𝑡 is close to 1, we simply retain the old state. In this case the information from X𝑡 is ignored, effectively skipping time step 𝑡 in the dependency chain.",
+   "page": "Section 10.2, Gated Recurrent Units (GRU) (printed pp. 377-379), eqs. (10.2.1)-(10.2.3)",
+   "latex": "\\mathbf{R}_t = \\sigma(\\mathbf{X}_t \\mathbf{W}_{xr} + \\mathbf{H}_{t-1} \\mathbf{W}_{hr} + \\mathbf{b}_r), \\quad \\mathbf{Z}_t = \\sigma(\\mathbf{X}_t \\mathbf{W}_{xz} + \\mathbf{H}_{t-1} \\mathbf{W}_{hz} + \\mathbf{b}_z), \\quad \\tilde{\\mathbf{H}}_t = \\tanh\\big(\\mathbf{X}_t \\mathbf{W}_{xh} + (\\mathbf{R}_t \\odot \\mathbf{H}_{t-1}) \\mathbf{W}_{hh} + \\mathbf{b}_h\\big), \\quad \\mathbf{H}_t = \\mathbf{Z}_t \\odot \\mathbf{H}_{t-1} + (1 - \\mathbf{Z}_t) \\odot \\tilde{\\mathbf{H}}_t",
+   "symbol_and_unit_ledger": "R_t: reset gate, controls how much of the previous state enters the candidate. Z_t: update gate, the interpolation weight between old state and candidate. H_tilde: candidate hidden state. All gates in (0,1) via sigmoid; three weight sets instead of the LSTM’s four, and no separate cell state.",
+   "assumptions": "Reset gates serve short-term dependencies (drop the past when computing the candidate) and update gates serve long-term ones (keep the old state nearly unchanged, effectively skipping a time step). Performance comparable to LSTM is expected at lower compute.",
+   "breakdown_regime": "Breaks where the LSTM’s separate cell state and output gate matter (exposing memory is forced, since H_t is the only state), and it inherits the RNN sequential bottleneck and long-range gradient issues in milder form.",
+   "domain": "sequence modeling, neural network architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The update H = Z H_old + (1 - Z) H_new is an exponential moving average with a learned per-coordinate rate, the same operator as momentum in Chapter 12 and as the leaky integrators used in signal processing; the GRU is that classical filter with its time constant made a function of the input.",
+    "source_operator": "Gated convex interpolation between the previous state and a candidate state",
+    "telemetry": "Mean update-gate values per layer as a readout of learned memory horizons."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p21",
+   "name": "Beam search with length-normalized scoring",
+   "verbatim_quote": "Sequence searching strategies include greedy search, exhaustive search, and beam search. Beam search provides a trade-off between accuracy and computational cost via the flexible choice of the beam size.",
+   "page": "Section 10.8, Beam Search (printed pp. 405-408), summary (10.8.4) on p. 408; eq. (10.8.4)",
+   "latex": "\\frac{1}{L^{\\alpha}} \\sum_{t'=1}^{L} \\log P\\big(y_{t'} \\mid y_1, \\ldots, y_{t'-1}, \\mathbf{c}\\big), \\qquad \\text{cost} \\; \\mathcal{O}\\big(k \\, |\\mathcal{Y}| \\, T'\\big), \\qquad \\alpha = 0.75 \\text{ typically}",
+   "symbol_and_unit_ledger": "k: beam size, the number of candidate partial sequences retained. |Y|: output vocabulary size. T prime: maximum output length. L: length of a finished candidate. alpha: length penalty exponent correcting the bias of raw log-probability toward short sequences. c: encoder context.",
+   "assumptions": "The model’s per-step conditional probabilities are trustworthy enough that keeping the k best partial hypotheses by cumulative score retains the eventual winner; exhaustive search at O(|Y|^T) is infeasible, greedy at O(|Y| T) is myopic.",
+   "breakdown_regime": "Breaks when the true best sequence falls off the beam early (search error), when the model is miscalibrated so high-probability sequences are bland or degenerate, and the length penalty is a heuristic whose best alpha varies by task.",
+   "domain": "sequence generation, natural language processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Beam search is breadth-limited best-first search, the same compromise as keeping the k best partial plans in scheduling, routing, or game trees: a fixed-width frontier trades guaranteed optimality for linear cost in the horizon.",
+    "source_operator": "Top-k frontier expansion scored by cumulative log-probability with length normalization",
+    "telemetry": "Oracle rate: how often the reference or best-known sequence stays inside the beam as k varies."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p22",
+   "name": "Scaled dot-product attention",
+   "verbatim_quote": "In practice, we often think of minibatches for efficiency, such as computing attention for 𝑛 queries and 𝑚 key-value pairs, where queries and keys are of length 𝑑 and values are of length",
+   "page": "Section 11.3.3, Scaled Dot Product Attention (printed p. 424), eq. (11.3.6)",
+   "latex": "\\mathrm{softmax}\\!\\left( \\frac{\\mathbf{Q} \\mathbf{K}^{\\top}}{\\sqrt{d}} \\right) \\mathbf{V}",
+   "symbol_and_unit_ledger": "Q: queries, n by d. K: keys, m by d. V: values, m by v. d: query/key vector length; the 1/sqrt(d) scaling keeps dot products from growing with d, which would saturate the softmax. Output: n by v, each row a weighted average of values. Masking sets scores of invalid positions to negative infinity before the softmax.",
+   "assumptions": "Queries and keys share the same length d and live in a comparable space; relevance is a dot product. Without scaling, large d makes dot products large in magnitude and pushes the softmax into regions of tiny gradient.",
+   "breakdown_regime": "Breaks in cost for long sequences (the n by m score matrix) and when relevance is not a similarity in a shared space, where additive attention or learned bilinear forms fit better; softmax saturation also returns if logits grow during training despite scaling.",
+   "domain": "attention mechanisms, natural language processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Attention is differentiable dictionary lookup: compare a query against keys, normalize to weights, return the weighted values. The kernel recurs as retrieval over memory banks, kernel regression (Nadaraya-Watson with a learned metric), and mixture-of-experts routing throughout the book’s later chapters.",
+    "source_operator": "Similarity scoring, softmax normalization, weighted value aggregation",
+    "telemetry": "Attention weight entropy per head and the fraction of weight on masked or padding positions."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p23",
+   "name": "Multi-head attention: parallel attention in projected subspaces",
+   "verbatim_quote": "Thus, it may be beneficial to allow our attention mechanism to jointly use different representation subspaces of queries, keys, and values.",
+   "page": "Section 11.5, Multi-Head Attention (printed pp. 432-433), eqs. (11.5.1)-(11.5.2)",
+   "latex": "\\mathbf{h}_i = f\\big(\\mathbf{W}_i^{(q)} \\mathbf{q}, \\mathbf{W}_i^{(k)} \\mathbf{k}, \\mathbf{W}_i^{(v)} \\mathbf{v}\\big), \\qquad \\text{output} = \\mathbf{W}_o \\, [\\mathbf{h}_1; \\ldots; \\mathbf{h}_h], \\qquad p_q = p_k = p_v = p_o / h \\text{ in the book implementation}",
+   "symbol_and_unit_ledger": "h: number of heads. W_i^(q), W_i^(k), W_i^(v): per-head learned projections of queries, keys, values. f: attention pooling (additive or scaled dot-product). W_o: output projection over the concatenated heads. p_o: total output width, split evenly across heads to keep cost flat.",
+   "assumptions": "Different relation types deserve different similarity spaces, so one attention distribution is too restrictive; heads run in parallel on disjoint projected subspaces and their outputs are mixed linearly.",
+   "breakdown_regime": "Breaks when heads collapse to redundant copies of one another (wasted capacity), and head count is a hyperparameter: too many tiny heads underfit each relation, too few under-cover the relation types. Interpretability of individual heads is suggestive, not guaranteed.",
+   "domain": "attention mechanisms, neural network architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi-head attention is an ensemble over similarity metrics: the same design as running several kernel widths in parallel and learning how to mix them, or several experts voting on relevance. Diversity of the members, not any single member, is the source of the gain.",
+    "source_operator": "Parallel projected attention with concatenation and a learned output mix",
+    "telemetry": "Pairwise similarity of head attention maps to detect redundant heads, and accuracy under head pruning."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p24",
+   "name": "Sinusoidal positional encoding and the self-attention trade-off",
+   "verbatim_quote": "Unlike RNNs, which recurrently process tokens of a sequence one-by-one, self-attention ditches sequential operations in favor of parallel computation.",
+   "page": "Section 11.6, Self-Attention and Positional Encoding (printed pp. 437-439), eq. (11.6.2)",
+   "latex": "p_{i, 2j} = \\sin\\!\\left( \\frac{i}{10000^{2j/d}} \\right), \\qquad p_{i, 2j+1} = \\cos\\!\\left( \\frac{i}{10000^{2j/d}} \\right)",
+   "symbol_and_unit_ledger": "i: position in the sequence. j: encoding dimension index. d: embedding dimension. p_{i,.}: the positional vector added to the token embedding at position i. Frequencies decrease geometrically across dimensions, like the bits of a binary counter at multiple scales. Complexity context from the same section: self-attention costs O(n^2 d) with O(1) sequential operations and O(1) maximum path length, versus O(n d^2), O(n), O(n) for RNNs.",
+   "assumptions": "Self-attention by itself is permutation-invariant, so order must be injected as an input feature. Sinusoids are fixed (not learned), defined for any position, and a shift by a fixed offset is a linear transformation of the encoding, so relative positions are linearly readable.",
+   "breakdown_regime": "Breaks for sequences longer than those seen in training (extrapolation of positions), and the fixed scheme cannot adapt when the task’s notion of distance is not uniform index distance; the quadratic cost of self-attention itself becomes prohibitive for very long sequences.",
+   "domain": "attention mechanisms, sequence modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The encoding is a Fourier feature map of position: representing a scalar index by sinusoids at geometrically spaced frequencies is the same device as time embeddings in time-series models and positional features in neural radiance fields, anywhere a network must reason about relative offsets of a continuous coordinate.",
+    "source_operator": "Additive multi-frequency sinusoidal features for a discrete coordinate",
+    "telemetry": "Performance degradation as evaluation sequence length exceeds the training length."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p25",
+   "name": "The Transformer: stacked attention blocks with residual connections and layer normalization",
+   "verbatim_quote": "This masked attention preserves the autoregressive property, ensuring that the prediction only depends on those output tokens that have been generated.",
+   "page": "Section 11.7, The Transformer Architecture (printed pp. 441-442)",
+   "latex": "\\mathrm{AddNorm}(\\mathbf{x}) = \\mathrm{LayerNorm}\\big(\\mathbf{x} + \\mathrm{Sublayer}(\\mathbf{x})\\big), \\qquad \\mathrm{FFN}(\\mathbf{x}) = \\text{two-layer MLP applied identically at every position}",
+   "symbol_and_unit_ledger": "x: representation at one position, dimension d; every sublayer must output dimension d so the residual addition is defined. Sublayer: multi-head self-attention or positionwise feed-forward network in the encoder; the decoder adds an encoder-decoder attention sublayer and masks decoder self-attention to positions up to the current one. Embeddings are summed with positional encodings before the first block.",
+   "assumptions": "Sequence transduction needs no recurrence if attention supplies all cross-position mixing, provided residuals keep deep stacks trainable (Section 8.6) and masking enforces the autoregressive constraint in the decoder. Layer normalization stabilizes each block’s inputs.",
+   "breakdown_regime": "Breaks in cost on long sequences (quadratic attention), in data efficiency on small datasets (weak inductive bias compared with convolutions or recurrence), and the fixed positional scheme inherits the extrapolation limits of p24.",
+   "domain": "attention mechanisms, neural network architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The block pattern, attend then transform then add the residual and normalize, is a reusable chassis: the book and the field reuse it for vision, speech, and time series by swapping only the embedding front end. Architecturally it is the residual kernel of p15 with a data-dependent mixing operator inside.",
+    "source_operator": "Stacked residual blocks alternating content-based mixing (attention) and per-position transformation (feed-forward)",
+    "telemetry": "Gradient norms by depth at initialization and per-block ablation effects on validation loss."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p26",
+   "name": "Momentum: leaky averaging of past gradients",
+   "verbatim_quote": "This effectively replaces the instantaneous gradient by one that is been averaged over multiple past gradients.",
+   "page": "Section 12.6, Momentum (printed pp. 510-511), eqs. (12.6.2)-(12.6.3)",
+   "latex": "\\mathbf{v}_t = \\beta \\mathbf{v}_{t-1} + \\mathbf{g}_{t, t-1}, \\qquad \\mathbf{v}_t = \\sum_{\\tau = 0}^{t-1} \\beta^{\\tau} \\mathbf{g}_{t-\\tau, t-\\tau-1}, \\qquad \\mathbf{x} \\leftarrow \\mathbf{x} - \\eta \\mathbf{v}_t",
+   "symbol_and_unit_ledger": "v_t: velocity, the leaky average of past gradients. beta in (0,1): decay of the average; large beta means a long memory. g: minibatch gradient at each step. eta: learning rate. Effective averaging window is about 1/(1-beta) steps.",
+   "assumptions": "Successive minibatch gradients are noisy estimates of a common direction, so averaging them reduces variance like a larger batch without paying for one; in ill-conditioned valleys the consistent direction accumulates while oscillating directions cancel.",
+   "breakdown_regime": "Breaks when the loss surface changes character quickly (stale velocity points the wrong way), and momentum amplifies the effective step size by roughly 1/(1-beta), so a learning rate tuned without momentum diverges with it.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Momentum is exponential smoothing applied to gradients, the same leaky integrator as the GRU update gate of p20 and as classical heavy-ball dynamics in mechanics: a mass integrates past forces, which damps oscillation across a valley and accelerates along its floor.",
+    "source_operator": "Exponentially weighted moving average of the stochastic gradient used as the step direction",
+    "telemetry": "Update-to-gradient alignment over time and loss curves across beta values on ill-conditioned problems."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p27",
+   "name": "Adam: bias-corrected first and second moment estimates with per-coordinate scaling",
+   "verbatim_quote": "Adam (Kingma and Ba, 2014) combines all these techniques into one efficient learning algorithm.",
+   "page": "Section 12.10, Adam (printed pp. 532-533), eqs. (12.10.1)-(12.10.4). Adagrad (Section 12.7, eq. 12.7.5) is treated inside this primitive’s assumptions as the cumulative-sum special case Adam replaces.",
+   "latex": "\\mathbf{v}_t \\leftarrow \\beta_1 \\mathbf{v}_{t-1} + (1 - \\beta_1) \\mathbf{g}_t, \\quad \\mathbf{s}_t \\leftarrow \\beta_2 \\mathbf{s}_{t-1} + (1 - \\beta_2) \\mathbf{g}_t^2, \\quad \\hat{\\mathbf{v}}_t = \\frac{\\mathbf{v}_t}{1 - \\beta_1^t}, \\quad \\hat{\\mathbf{s}}_t = \\frac{\\mathbf{s}_t}{1 - \\beta_2^t}, \\quad \\mathbf{x}_t \\leftarrow \\mathbf{x}_{t-1} - \\frac{\\eta \\, \\hat{\\mathbf{v}}_t}{\\sqrt{\\hat{\\mathbf{s}}_t} + \\epsilon}",
+   "symbol_and_unit_ledger": "v_t: first moment estimate (momentum). s_t: second moment estimate (per-coordinate gradient scale). beta_1 = 0.9, beta_2 = 0.999: standard decays; the variance estimate moves much slower than the mean. Bias corrections divide by 1 - beta^t because both states start at 0. epsilon = 1e-6 typical. All operations are coordinatewise.",
+   "assumptions": "Adam combines the book’s earlier optimizers: minibatch SGD, momentum (p26), per-coordinate scaling from Adagrad, and RMSProp’s decoupling of the scaling from the learning rate, replacing Adagrad’s ever-growing cumulative sum s_t = s_{t-1} + g_t^2 with a decaying average so the learning rate does not die.",
+   "breakdown_regime": "Breaks in known cases: the book cites Reddi et al. showing Adam can diverge from poor variance control (addressed by the Yogi variant), and its implicit per-coordinate steps can generalize worse than tuned SGD with momentum on some vision tasks; epsilon and beta_2 choices materially change behavior on sparse gradients.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Adam is derived by composing the chapter’s kernels: leaky average (momentum) times inverse root-mean-square scaling (Adagrad/RMSProp) plus a debiasing correction; the derivation shows optimizer design as algebra over a few reusable averaging operators rather than a zoo of unrelated methods.",
+    "source_operator": "Bias-corrected exponential moving averages of the gradient and its square, forming a diagonal preconditioner",
+    "telemetry": "Per-coordinate effective step sizes, and comparisons against SGD with momentum at matched compute on each new problem class."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p28",
+   "name": "Fine-tuning: transfer a pretrained model, retrain the head, adapt the body",
+   "verbatim_quote": "The output layer will be trained from scratch, while the parameters of all the other layers are fine-tuned based on the parameters of the source model.",
+   "page": "Section 14.2, Fine-Tuning (printed pp. 600-601)",
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Procedure, in the book’s four steps: pretrain a source model on a large source dataset; copy its architecture and parameters except the output layer into a target model; attach a new randomly initialized output layer sized to the target classes; train on the target dataset, the new layer from scratch and the copied layers fine-tuned (typically at a smaller learning rate). Features learned on the source (edges, textures, shapes, object composition) are assumed to transfer.",
+   "breakdown_regime": "Breaks under strong domain shift, where source features do not match the target (for example natural images to specialized sensor imagery), when the target set is so small that even fine-tuning overfits, and when the target is large enough that training from scratch matches or beats the transferred start.",
+   "domain": "transfer learning, computer vision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fine-tuning is warm-starting from a neighboring problem’s solution, the same economy as initializing an iterative solver from the previous time step or adapting a control policy tuned on a sibling plant: prior computation is reused as an initialization, and only the mismatch is relearned.",
+    "source_operator": "Parameter transfer with a replaced task head and differential learning rates",
+    "telemetry": "Target accuracy versus target dataset size, fine-tuning against training from scratch, to find the crossover."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p29",
+   "name": "Anchor boxes and non-maximum suppression for object detection",
+   "verbatim_quote": "To simplify the output, we can merge similar predicted bounding boxes that belong to the same object by using non-maximum suppression (NMS).",
+   "page": "Section 14.4, Anchor Boxes (printed p. 610), eq. (14.4.1); Section 14.5, Multibox Detection (NMS)",
+   "latex": "N_{\\text{anchors per image}} = w h (n + m - 1), \\qquad \\mathrm{IoU}(A, B) = \\frac{|A \\cap B|}{|A \\cup B|}",
+   "symbol_and_unit_ledger": "w, h: image width and height in pixels. n: number of scales s_1..s_n. m: number of aspect ratios r_1..r_m; only combinations containing s_1 or r_1 are used, giving n + m - 1 anchors per pixel. Anchor width and height at scale s and ratio r: w s sqrt(r) and h s / sqrt(r). IoU: intersection over union of two boxes, unitless in [0,1]. NMS threshold epsilon: boxes whose IoU with a higher-confidence kept box exceeds epsilon are removed.",
+   "assumptions": "Objects appear at unknown positions and sizes, so a dense grid of reference boxes at multiple scales and aspect ratios covers the possibilities; each anchor is classified and its coordinates refined. Duplicate detections of one object are expected and must be merged greedily by confidence.",
+   "breakdown_regime": "Breaks for crowded scenes where distinct objects overlap beyond the NMS threshold (one is suppressed), for extreme aspect ratios outside the anchor set, and the wh(n+m-1) anchor count makes naive evaluation expensive, which later single-shot designs engineer around.",
+   "domain": "computer vision, object detection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "NMS is greedy deduplication by a similarity threshold: keep the best-scoring item, delete its near-duplicates, repeat. The same operator prunes redundant hypotheses in tracking, peak detection in signals, and near-duplicate documents in retrieval.",
+    "source_operator": "Dense multi-scale hypothesis generation plus greedy confidence-ordered suppression by overlap",
+    "telemetry": "Recall as a function of the IoU threshold and the NMS epsilon, especially in crowded scenes."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p30",
+   "name": "Skip-gram word embeddings and negative sampling",
+   "verbatim_quote": "The skip-gram model assumes that a word can be used to generate its surrounding words in a text sequence.",
+   "page": "Section 15.1, Word Embedding (word2vec) (printed pp. 692-693), eq. (15.1.4); Section 15.2.1, Negative Sampling (printed p. 697), eq. (15.2.1)",
+   "latex": "P(w_o \\mid w_c) = \\frac{\\exp(\\mathbf{u}_o^{\\top} \\mathbf{v}_c)}{\\sum_{i \\in \\mathcal{V}} \\exp(\\mathbf{u}_i^{\\top} \\mathbf{v}_c)}, \\qquad \\text{negative sampling:} \\quad P(D = 1 \\mid w_c, w_o) = \\sigma\\big(\\mathbf{u}_o^{\\top} \\mathbf{v}_c\\big)",
+   "symbol_and_unit_ledger": "v_c: center-word vector of word c; u_o: context-word vector of word o; every word has both, each d-dimensional. V: vocabulary index set. sigma: sigmoid function. D = 1: the event that a word pair truly comes from a context window, trained against K sampled negative pairs in the approximate objective.",
+   "assumptions": "Context words are generated independently given the center word. The full softmax over the vocabulary is too expensive, so negative sampling replaces it with binary discrimination between real context pairs and noise pairs drawn from a predefined distribution; supervision is self-supervised, coming from raw text without labels.",
+   "breakdown_regime": "Breaks for rare words (few contexts to learn from), for polysemy (one vector per word form regardless of sense), and the independence assumption ignores word order inside the window; the noise distribution choice materially shapes the learned geometry.",
+   "domain": "natural language processing, representation learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Skip-gram with negative sampling is contrastive learning: pull true pairs together, push sampled negatives apart. The same objective shape trains image-text encoders and recommender embeddings; the book’s two-vector trick (separate center and context roles) is the asymmetric encoder pattern those systems inherit.",
+    "source_operator": "Dot-product scoring of paired embeddings trained by sampled binary discrimination",
+    "telemetry": "Embedding quality on analogy and similarity probes versus window size, dimension, and negative count."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p31",
+   "name": "BERT pretraining: masked language modeling with the 80/10/10 replacement rule",
+   "verbatim_quote": "To encode context bidirectionally for representing each token, BERT randomly masks tokens and uses tokens from the bidirectional context to predict the masked tokens in a self-supervised fashion.",
+   "page": "Section 15.8.5, Pretraining Tasks (printed p. 729). Pretraining is masked language modeling plus next sentence prediction.",
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Two self-supervised tasks: masked language modeling (predict randomly masked tokens from bidirectional context) and next sentence prediction. Of the tokens selected for masking (15 percent), each is replaced by a special mask token 80 percent of the time, a random token 10 percent, and left unchanged 10 percent, so the model cannot learn that a mask token is always the prediction target and the discrepancy between pretraining and fine-tuning (which never sees the mask token) is reduced.",
+   "breakdown_regime": "Breaks through the remaining pretraining-fine-tuning mismatch, through masked positions being predicted independently of one another, and static masking can be memorized across epochs; later variants (dynamic masking, span masking) are responses. Next sentence prediction was also later found weak compared with the masked modeling signal.",
+   "domain": "natural language processing, pretraining",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Masked prediction is denoising: corrupt part of the input and train reconstruction of the missing part from context. The isomorphism runs to inpainting in vision, imputation in tabular data, and masked pretraining for time series; the 80/10/10 rule is the general lesson that the corruption process itself must not become a leak the model can exploit.",
+    "source_operator": "Random corruption plus bidirectional reconstruction as a self-supervised objective",
+    "telemetry": "Downstream fine-tuning accuracy versus masking rate and replacement mix, and representation quality probed without fine-tuning."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p32",
+   "name": "Markov decision processes and the discounted return",
+   "verbatim_quote": "Markov systems are all systems where the next state 𝑠𝑡+1 is only a function of the current state 𝑠𝑡 and the action 𝑎 𝑡 taken at the current state.",
+   "page": "Section 17.1, Markov Decision Process (printed pp. 783-784), eqs. (17.1.1), (17.1.4)",
+   "latex": "\\mathrm{MDP} : (\\mathcal{S}, \\mathcal{A}, T, r), \\qquad R(\\tau) = \\sum_{t=0}^{\\infty} \\gamma^t r_t, \\quad \\gamma < 1",
+   "symbol_and_unit_ledger": "S: state set. A: action set. T: transition function, T(s, a, s prime) = P(s prime | s, a), a distribution over next states. r: reward function, r(s, a) in the reals, designed by the problem setter. tau: a trajectory of states, actions, rewards. gamma: discount factor; small gamma favors short trajectories, gamma = 0.99 keeps far rewards meaningful.",
+   "assumptions": "The Markov assumption: the next state depends only on the current state and action, not on the history. If a raw description violates it (the book’s example: position-only state with acceleration actions), augmenting the state (position plus velocity) restores it.",
+   "breakdown_regime": "Breaks when the state cannot be augmented to capture the hidden variables (partial observability), when the reward is misspecified so the optimal policy games it, and undiscounted infinite-horizon returns diverge, which is exactly why gamma < 1 is imposed.",
+   "domain": "reinforcement learning, decision processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The MDP tuple is the common interface between a simulator and a decision rule: any sequential decision problem that can be given states, actions, transition probabilities, and rewards, from inventory control to treatment planning, inherits the same solution machinery, including value iteration (p33) and the sequence models of Chapters 9 to 11 as policy classes.",
+    "source_operator": "State augmentation to enforce Markovian dynamics, plus geometric discounting of future reward",
+    "telemetry": "Sensitivity of the induced policy to gamma and to reward shaping terms."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p33",
+   "name": "Value iteration: dynamic programming for the optimal value function",
+   "verbatim_quote": "We can turn the principle of dynamic programming into an algorithm for finding the optimal value function called value iteration.",
+   "page": "Section 17.2.6, Value Iteration (printed p. 789), eqs. (17.2.10)-(17.2.12)",
+   "latex": "V_{k+1}(s) = \\max_{a \\in \\mathcal{A}} \\left\\{ r(s, a) + \\gamma \\sum_{s^{\\prime} \\in \\mathcal{S}} P(s^{\\prime} \\mid s, a) V_k(s^{\\prime}) \\right\\}, \\qquad V^{*}(s) = \\lim_{k \\to \\infty} V_k(s), \\qquad Q_{k+1}(s, a) = r(s, a) + \\gamma \\sum_{s^{\\prime}} P(s^{\\prime} \\mid s, a) \\max_{a^{\\prime}} Q_k(s^{\\prime}, a^{\\prime})",
+   "symbol_and_unit_ledger": "V_k(s): value estimate for state s at iteration k. Q(s, a): action-value. r(s, a): immediate reward. P(s prime | s, a): transition probability. gamma: discount factor. The optimal policy is greedy with respect to V* or Q*. Policy evaluation (eq. 17.2.13) replaces the max with an expectation under a fixed policy pi.",
+   "assumptions": "The transition model and reward function are known exactly, the state and action sets are finite and enumerable, and the principle of dynamic programming holds: the remainder of an optimal trajectory is itself optimal.",
+   "breakdown_regime": "Breaks with unknown dynamics (the setting that forces sample-based reinforcement learning), continuous or huge state spaces where sweeping all states is impossible, and model error compounds through the max operator, biasing values upward.",
+   "domain": "reinforcement learning, dynamic programming",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Value iteration is the Bellman backup applied as a fixed-point iteration; the same backup kernel, with the expectation and max rearranged, yields policy evaluation, Q-learning’s target, and the dynamic programming inside sequence decoding and shortest-path algorithms.",
+    "source_operator": "Bellman optimality backup iterated to a fixed point",
+    "telemetry": "Sup-norm change in V between sweeps as the convergence signal, and policy loss when the backup is truncated early."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p34",
+   "name": "Gaussian process regression: closed-form posterior over functions",
+   "verbatim_quote": "A Gaussian process is defined as a collection of random variables, any finite number of which have a joint Gaussian distribution.",
+   "page": "Section 18.2, Gaussian Process Priors (printed p. 809); Section 18.3.1, Posterior Inference for Regression (printed p. 816)",
+   "latex": "\\mathbf{f}_{*} \\mid \\mathbf{y}, X, X_{*} \\sim \\mathcal{N}(\\mathbf{m}_{*}, \\mathbf{S}_{*}), \\quad \\mathbf{m}_{*} = K(X_{*}, X) \\big[K(X, X) + \\sigma^2 I\\big]^{-1} \\mathbf{y}, \\quad \\mathbf{S}_{*} = K(X_{*}, X_{*}) - K(X_{*}, X) \\big[K(X, X) + \\sigma^2 I\\big]^{-1} K(X, X_{*}), \\quad k(x_i, x_j) = a \\exp\\!\\left( -\\frac{\\|x_i - x_j\\|^2}{2 \\ell^2} \\right)",
+   "symbol_and_unit_ledger": "f: latent noise-free function. y = f(x) + noise, noise Gaussian with variance sigma^2. K(A, B): kernel matrix between input sets. a: kernel amplitude (output scale). ell: lengthscale, the input distance over which correlation decays. m_*: posterior mean at test inputs X_*; S_*: posterior covariance, whose diagonal gives per-point predictive uncertainty. Kernel hyperparameters are fit by the marginal likelihood.",
+   "assumptions": "The prior over functions is Gaussian with mean function m(x) (taken as 0 in the derivation) and covariance kernel k; the observation noise is independent Gaussian, which is what makes the conditional distribution closed form via standard Gaussian identities.",
+   "breakdown_regime": "Breaks in scale: exact inference inverts an n by n matrix, O(n^3), infeasible for large n without sparse or variational approximations; it also breaks under non-Gaussian likelihoods (classification, counts), which need approximate inference, and a stationary RBF kernel misfits functions whose smoothness varies over the input space.",
+   "domain": "Bayesian methods, uncertainty quantification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A GP with kernel k is Bayesian linear regression in the feature space of k (Section 18.2 writes f(x) = w^T phi(x) with Gaussian w): kernel ridge regression is its posterior mean. The isomorphism lets any kernel method be read probabilistically, gaining calibrated uncertainty for free, and it is the prior the book’s hyperparameter optimization chapter reaches for.",
+    "source_operator": "Gaussian conditioning: joint Gaussian over train and test function values, conditioned on observations",
+    "telemetry": "Predictive coverage: the fraction of held-out targets inside the posterior credible intervals, per input region."
+   }
+  },
+  {
+   "primitive_id": "zhang-d2l-p35",
+   "name": "Hyperparameter optimization as black-box optimization, and multi-fidelity evaluation",
+   "verbatim_quote": "Methods such as random search allocate the same amount of resources (e.g., number of epochs, training data points) to each hyperparameter evaluation.",
+   "page": "Section 19.1, What Is Hyperparameter Optimization? (printed pp. 828-829); Section 19.4, Multi-Fidelity Hyperparameter Optimization (printed pp. 853-854)",
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Hyperparameters (learning rate, batch size, weight decay, dropout, architecture sizes) cannot be tuned on the training loss, which would drive regularization to zero; they are chosen to maximize held-out validation performance, an expensive black-box objective with no gradients. Random search samples configurations independently and beats grid search because only a few hyperparameters usually matter. Multi-fidelity methods exploit cheap approximations (fewer epochs, less data): learning curves separate good from bad configurations after a few epochs, so poor configurations can be stopped early and budget reallocated.",
+   "breakdown_regime": "Breaks when the cheap fidelity misranks configurations (small-data or few-epoch performance anti-correlates with full performance), when hyperparameters interact so strongly that independent sampling wastes the budget, and comparisons between HPO algorithms themselves need repeated runs across seeds, since both training and the search are random.",
+   "domain": "meta-learning, AutoML",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi-fidelity HPO is successive elimination under a budget, the same allocation problem as multi-armed bandits (pull promising arms longer) and as staged screening in experimental science: spend a little on everything, then concentrate on survivors. The incumbent trajectory, best validation score so far versus time, is its universal report card.",
+    "source_operator": "Black-box search over configurations with early termination of low performers at cheap fidelities",
+    "telemetry": "Incumbent validation error versus wall-clock time, averaged over repeated runs with different seeds."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "think": "The book is built as a genealogy in which each chapter’s operator is the parent of a later one, and reading it backwards shows the descent clearly. The Transformer of Section 11.7 is assembled from parts with traceable ancestors: its residual connections are imported explicitly from ResNet (Section 8.6), its attention is the scaled dot product of Section 11.3 generalized to multiple heads in Section 11.5, and its need for positional encoding exists only because self-attention discarded the recurrence that gave RNNs order for free. The RNN line descends from the n-gram language models of Section 9.3: the hidden state is introduced as the fix for the exponential parameter growth of conditioning on longer histories, and the LSTM and GRU of Chapter 10 are in turn repairs of the RNN’s vanishing gradient, diagnosed in Section 5.4’s analysis of products of Jacobians. Below all of this sits the linear model of Chapter 3: the normal equations, the Gaussian-noise reading of squared loss, and minibatch SGD are the seed crystal, and softmax regression is quite literally linear regression with a categorical likelihood, its gradient again prediction minus observation. Chapter 18 makes the loop explicit by deriving a Gaussian process from a Bayesian linear model f(x) = w^T phi(x), so the most nonparametric object in the book is a direct descendant of its first equation. Even the reinforcement learning chapter’s value iteration is the dynamic-programming ancestor that the sequence chapters quietly reuse whenever a greedy or beam decoder commits to locally optimal steps. Nothing in the later chapters is a fresh invention; each is a repair, a relaxation, or a composition of an operator defined earlier, which is why the book can teach the Transformer in one section: every part has already been paid for. The optimization thread shows the same descent in miniature: Chapter 12 builds Adam by literally composing the leaky average of momentum with the per-coordinate scaling of Adagrad and RMSProp, and the text recaps the family tree before presenting the child. Chapter 13’s systems material and Chapter 19’s hyperparameter optimization are also descendants, one of the Trainer abstraction grown since Section 3.2, the other of the model selection discipline of Section 3.6, now automated. The authors write for a reader they clearly model as intelligent, impatient with mystique, and likely to hold specific misconceptions that the text hunts down one by one. In Section 3.1 they stop the exposition to correct the word inference itself, anticipating a statistician reader’s objection and legislating terminology before it can confuse. In Section 9.4 they pause to separate hidden layers from hidden states, two concepts a learner predictably conflates, and they do the same for the train-versus-prediction behavior of dropout and batch normalization, the two places where a model silently changes its own semantics. The pedagogy is consistently constructive: every abstraction is immediately followed by a from-scratch implementation, because the authors assume understanding that cannot survive contact with code is not understanding. They also model the reader’s skepticism about magic: gradient clipping is called a hack in plain words, perplexity is grounded in three concrete continuations of one sentence, and the dropout section openly admits the Bishop narrative is the authors’ own reconstruction rather than the original paper’s motivation. Exercises are placed as probes of the reader’s state, several asking the reader to break the method just taught (remove the masks, disable the clipping, change the architecture) and explain the damage, which reveals a theory of mind in which errors are the curriculum. The recurring move is anticipatory repair: each section names the misunderstanding its own notation or terminology is most likely to cause, and spends a paragraph dismantling it before moving on. The datasets are chosen with the same intent: Fashion-MNIST instead of MNIST so the reader cannot coast on memorized numbers, the Time Machine corpus so language modeling stays small enough to inspect, and a FrozenLake gridworld so value iteration can be watched state by state. Even the running heads of failure are pedagogical: when a translation example outputs nonsense, the printed BLEU score of 0.000 is left in the text rather than edited away. The chapters repeatedly veto one another’s assumptions, and the book is honest about the collisions. Chapter 12’s Adam inherits Adagrad’s per-coordinate scaling, but Adagrad’s monotonically growing accumulator vetoes long training, so Adam replaces the sum with a decaying average; the veto is recorded in the text itself, including the citation that Adam can still diverge. Xavier initialization in Section 5.4 assumes symmetric activations and independence, assumptions that ReLU vetoes by zeroing half its inputs, forcing the He correction; batch normalization then partially vetoes careful initialization altogether by re-standardizing activations regardless of their incoming scale. Dropout and batch normalization veto each other in practice: one injects noise whose variance vanishes at test time while the other switches statistics at test time, and stacking them naively degrades both. The Gaussian likelihood that justifies squared loss in Chapter 3 is vetoed by any heavy-tailed dataset, and the Markov assumption of Chapter 17 is vetoed by the book’s own accelerating robot until the state is augmented. The Gaussian process chapter’s exact posterior is vetoed by its own O(n^3) cost at scale, which is why the book flags approximate inference in the same breath. Self-attention vetoes the RNN’s sequential bottleneck and is then vetoed in return by its quadratic cost on long sequences, which is the live tension the Transformer chapter hands to the reader unresolved. These are not contradictions to hide: each veto is the mechanism by which the next method in the genealogy earns its place. Two more deserve record: teacher forcing trains the decoder on true previous tokens while beam search decodes from the model’s own outputs, an exposure mismatch the book surfaces only as an exercise, and the length penalty in beam search is an admitted heuristic patch on the probabilistic objective rather than a consequence of it. Likewise the RBF kernel’s stationarity, constant smoothness everywhere, is vetoed by any function whose roughness varies, which is why the GP chapter gestures at richer kernels and approximate inference instead of declaring the closed form sufficient.",
+   "retrocausal_genealogy": "The book is built as a genealogy in which each chapter’s operator is the parent of a later one, and reading it backwards shows the descent clearly. The Transformer of Section 11.7 is assembled from parts with traceable ancestors: its residual connections are imported explicitly from ResNet (Section 8.6), its attention is the scaled dot product of Section 11.3 generalized to multiple heads in Section 11.5, and its need for positional encoding exists only because self-attention discarded the recurrence that gave RNNs order for free. The RNN line descends from the n-gram language models of Section 9.3: the hidden state is introduced as the fix for the exponential parameter growth of conditioning on longer histories, and the LSTM and GRU of Chapter 10 are in turn repairs of the RNN’s vanishing gradient, diagnosed in Section 5.4’s analysis of products of Jacobians. Below all of this sits the linear model of Chapter 3: the normal equations, the Gaussian-noise reading of squared loss, and minibatch SGD are the seed crystal, and softmax regression is quite literally linear regression with a categorical likelihood, its gradient again prediction minus observation. Chapter 18 makes the loop explicit by deriving a Gaussian process from a Bayesian linear model f(x) = w^T phi(x), so the most nonparametric object in the book is a direct descendant of its first equation. Even the reinforcement learning chapter’s value iteration is the dynamic-programming ancestor that the sequence chapters quietly reuse whenever a greedy or beam decoder commits to locally optimal steps. Nothing in the later chapters is a fresh invention; each is a repair, a relaxation, or a composition of an operator defined earlier, which is why the book can teach the Transformer in one section: every part has already been paid for. The optimization thread shows the same descent in miniature: Chapter 12 builds Adam by literally composing the leaky average of momentum with the per-coordinate scaling of Adagrad and RMSProp, and the text recaps the family tree before presenting the child. Chapter 13’s systems material and Chapter 19’s hyperparameter optimization are also descendants, one of the Trainer abstraction grown since Section 3.2, the other of the model selection discipline of Section 3.6, now automated.",
+   "theory_of_mind": "The authors write for a reader they clearly model as intelligent, impatient with mystique, and likely to hold specific misconceptions that the text hunts down one by one. In Section 3.1 they stop the exposition to correct the word inference itself, anticipating a statistician reader’s objection and legislating terminology before it can confuse. In Section 9.4 they pause to separate hidden layers from hidden states, two concepts a learner predictably conflates, and they do the same for the train-versus-prediction behavior of dropout and batch normalization, the two places where a model silently changes its own semantics. The pedagogy is consistently constructive: every abstraction is immediately followed by a from-scratch implementation, because the authors assume understanding that cannot survive contact with code is not understanding. They also model the reader’s skepticism about magic: gradient clipping is called a hack in plain words, perplexity is grounded in three concrete continuations of one sentence, and the dropout section openly admits the Bishop narrative is the authors’ own reconstruction rather than the original paper’s motivation. Exercises are placed as probes of the reader’s state, several asking the reader to break the method just taught (remove the masks, disable the clipping, change the architecture) and explain the damage, which reveals a theory of mind in which errors are the curriculum. The recurring move is anticipatory repair: each section names the misunderstanding its own notation or terminology is most likely to cause, and spends a paragraph dismantling it before moving on. The datasets are chosen with the same intent: Fashion-MNIST instead of MNIST so the reader cannot coast on memorized numbers, the Time Machine corpus so language modeling stays small enough to inspect, and a FrozenLake gridworld so value iteration can be watched state by state. Even the running heads of failure are pedagogical: when a translation example outputs nonsense, the printed BLEU score of 0.000 is left in the text rather than edited away.",
+   "cross_layer_veto": "The chapters repeatedly veto one another’s assumptions, and the book is honest about the collisions. Chapter 12’s Adam inherits Adagrad’s per-coordinate scaling, but Adagrad’s monotonically growing accumulator vetoes long training, so Adam replaces the sum with a decaying average; the veto is recorded in the text itself, including the citation that Adam can still diverge. Xavier initialization in Section 5.4 assumes symmetric activations and independence, assumptions that ReLU vetoes by zeroing half its inputs, forcing the He correction; batch normalization then partially vetoes careful initialization altogether by re-standardizing activations regardless of their incoming scale. Dropout and batch normalization veto each other in practice: one injects noise whose variance vanishes at test time while the other switches statistics at test time, and stacking them naively degrades both. The Gaussian likelihood that justifies squared loss in Chapter 3 is vetoed by any heavy-tailed dataset, and the Markov assumption of Chapter 17 is vetoed by the book’s own accelerating robot until the state is augmented. The Gaussian process chapter’s exact posterior is vetoed by its own O(n^3) cost at scale, which is why the book flags approximate inference in the same breath. Self-attention vetoes the RNN’s sequential bottleneck and is then vetoed in return by its quadratic cost on long sequences, which is the live tension the Transformer chapter hands to the reader unresolved. These are not contradictions to hide: each veto is the mechanism by which the next method in the genealogy earns its place. Two more deserve record: teacher forcing trains the decoder on true previous tokens while beam search decodes from the model’s own outputs, an exposure mismatch the book surfaces only as an exercise, and the length penalty in beam search is an admitted heuristic patch on the probabilistic objective rather than a consequence of it. Likewise the RBF kernel’s stationarity, constant smoothness everywhere, is vetoed by any function whose roughness varies, which is why the GP chapter gestures at richer kernels and approximate inference instead of declaring the closed form sufficient."
+  }
+ ],
+ "universal_lens": "Read as one object, the book is a study of how structure buys generalization: every method is a general-purpose learner with a constraint imposed, weight sharing for images, recurrence for sequences, gating for memory, kernels for function-space priors, discounting for infinite horizons, and in each case the gain comes from the constraint matching the world rather than from raw capacity. The universal lesson is that inductive bias, honestly stated and measurably paid for, is the whole game.",
+ "gsi_mapping": "For a general intelligence research program the transferable assets are the operator-level ideas rather than the sports-adjacent ones: Gaussian process posteriors as the reference implementation of reasoning about functions with calibrated epistemic uncertainty, value iteration as the canonical fixed-point solver for sequential decision problems, hyperparameter optimization framed as budgeted black-box search with multi-fidelity elimination, and the discipline of the symbol ledger itself, in which every quantity carries units and every method carries the regime where it breaks. These compose into a general stack: represent, optimize, decide, and quantify doubt.",
+ "gse_mapping": "For sports modeling the book supplies the working machinery end to end: sequence models and attention for play-by-play and tracking data where order and long-range context matter, convolutional models for chart and formation imagery, calibrated probabilistic outputs through proper losses whose gradients are prediction minus observation, Gaussian processes for smooth player and team strength surfaces with honest uncertainty bands, and value iteration style dynamic programming for in-game decision analysis such as fourth-down and two-point choices. The evaluation discipline matters as much as the models: K-fold validation with untouched test data, perplexity-style log-loss scoring for probabilistic forecasts, and multi-fidelity search so modeling compute is spent on configurations that survive cheap screening."
+}

@@ -1,0 +1,753 @@
+{
+  "book_id": "57781e83055e56f1",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "source_status": "COMPLETE",
+  "source_note": "Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation. True authors: Trevor Hastie, Robert Tibshirani, and Jerome Friedman (Stanford). Title: The Elements of Statistical Learning: Data Mining, Inference, and Prediction, second edition, Springer, Springer Series in Statistics, 2009; the second-edition preface is dated August 2008, and the edition adds Chapters 15 to 18 as new while revising Chapters 3, 5, 7, 10, 12, and 14. Local source: born-digital PDF of 13,399,454 bytes and 764 pages, with extracted text of 3,611,994 bytes and 49,342 lines, held in the 2026-11-12 full-library pull; prose extraction is clean, while displayed equations and some figure regions degrade to spaced glyphs and ASCII art, so each LaTeX field is reconstructed in standard notation from the surrounding unambiguous prose and the book's equation numbering, and every verbatim quote was verified by direct search of the extracted text before writing. Identity: the fleet gatekeeper scan hashed this file on a network drive under its triage rule (file-size prefix plus the first 2 MiB), giving digest 5862404626d4c32a71016150e1ce7264fc5f2b7148e919d6851e515868519979 and book_id 5862404626d4c32a, which is the identity of record in the corpus queue and the swarm status log; a local whole-file size-prefixed sha256 of the same PDF gives 57781e83055e56f1f2a2999b787358f55c05473308ff825fee5242d891ee4d75 and differs only because the scan rule hashes the first 2 MiB for network-drive PDFs. The queue filename metadata (HastieTibshiraniFriedman-2009) is correct. A Hermes-lane extraction of this same work (18 primitives, 900 think words) was completed on 2026-11-13; this Motif-lane artifact is the full-standard reconciliation counterpart with 35 primitives.",
+  "primitives": [
+    {
+      "primitive_id": "5862404626d4c32a-p01",
+      "name": "Statistical decision theory: EPE and the regression function",
+      "verbatim_quote": "Thus the best prediction of Y at any point X = x is the conditional mean, when best is measured by average squared error.",
+      "page": "Ch 2, Sec 2.4, printed pp. 18-19; extracted text line 2620",
+      "latex": "\\mathrm{EPE}(f) = E(Y - f(X))^2, \\qquad f(x) = E(Y \\mid X = x)",
+      "symbol_and_unit_ledger": "EPE(f): expected prediction error of predictor f under squared loss. Y: quantitative response. X: input vector. f(x) = E(Y|X = x): conditional mean (the regression function), the pointwise minimizer of EPE (Eq. 2.9-2.13).",
+      "assumptions": [
+        "Training pairs (x_i, y_i) are drawn from a joint distribution Pr(X, Y); the target of estimation is a functional of that distribution, not of the sample.",
+        "Squared error loss is the operative criterion; under absolute error loss the target becomes the conditional median instead.",
+        "The book distinguishes error conditional on the training set from unconditional error (Sec 7.2-7.3); the EPE target here is the unconditional one."
+      ],
+      "breakdown_regime": "The conditional mean is the right target only for squared loss; for asymmetric or discrete losses the optimal functional changes. When the conditional distribution is heavy tailed or multimodal, the mean can be a poor summary of it even under squared loss.",
+      "domain": "learning-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine signal family must declare the functional it estimates (a conditional mean, a probability, a quantile) and the loss under which it will be judged, because this primitive makes the target a property of the joint distribution rather than of any fitting algorithm. Projection surfaces in the engine inherit the regression-function role: a point estimate of an outcome given game state, with its error booked against the same loss used at fitting time.",
+        "source_operator": "conditional expectation as EPE minimizer (Eq. 2.13)",
+        "telemetry": "per-family declared target functional and loss recorded in the engine audit trail before fitting"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p02",
+      "name": "k-nearest-neighbor averaging and effective parameters",
+      "verbatim_quote": "So, in words, we find the k observations with xi closest to x in input space, and average their responses.",
+      "page": "Ch 2, Sec 2.3.2, printed p. 14; extracted text line 2317",
+      "latex": "\\hat{Y}(x) = \\frac{1}{k} \\sum_{x_i \\in N_k(x)} y_i",
+      "symbol_and_unit_ledger": "N_k(x): the set of the k training inputs nearest to x under the chosen metric (Eq. 2.8). y_i: observed responses. k: neighborhood size; the book notes the effective number of parameters of the k-nearest-neighbor fit is N/k, growing as k shrinks.",
+      "assumptions": [
+        "A metric on input space is meaningful, so closeness in X implies similarity of the conditional distribution.",
+        "The regression function is smooth enough that averaging over a small neighborhood carries tolerable bias.",
+        "Inputs are standardized before distances are computed, so no single coordinate dominates the metric."
+      ],
+      "breakdown_regime": "Breaks under the curse of dimensionality: in high dimensions the neighborhoods are not local at any feasible k. It also degrades at the boundary of the input space, where neighborhoods are one-sided, and when irrelevant inputs corrupt the metric.",
+      "domain": "nonparametrics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analog and comparable-game retrieval in the engine is a nearest-neighbor estimator and inherits its accounting: similarity is defined on standardized state variables, the neighborhood size trades bias against variance, and the effective parameter count N/k caps how much independent evidence a retrieval-based adjustment may claim.",
+        "source_operator": "local averaging over metric neighborhoods (Eq. 2.8)",
+        "telemetry": "retrieval features log neighborhood size, metric definition, and standardization version"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p03",
+      "name": "Bayes classifier and the Bayes rate",
+      "verbatim_quote": "This reasonable solution is known as the Bayes classifier, and says that we classify to the most probable class, using the conditional (discrete) distribution Pr(G|X).",
+      "page": "Ch 2, Sec 2.4, printed p. 21; extracted text line 2840",
+      "latex": "\\hat{G}(x) = G_k \\ \\text{if} \\ \\Pr(G_k \\mid X = x) = \\max_{g \\in \\mathcal{G}} \\Pr(g \\mid X = x)",
+      "symbol_and_unit_ledger": "G: qualitative class label. Pr(G|X = x): conditional class probabilities. The display is the Bayes rule (Eq. 2.23); its error rate is the Bayes rate, the irreducible classification error for the problem.",
+      "assumptions": [
+        "The true conditional class probabilities are the decision input; the rule itself presumes they are known.",
+        "Zero-one loss: all misclassifications cost the same; cost-sensitive problems require weighted versions.",
+        "The label set is exhaustive for the observations being classified."
+      ],
+      "breakdown_regime": "Unattainable in practice because Pr(G|X) must itself be estimated, so plug-in rules inherit estimation error. Under class imbalance or asymmetric costs, the modal class is the wrong decision even with exact probabilities.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Outcome classification inside the engine is benchmarked against the Bayes floor concept: an estimated irreducible error separates what better modeling can still win from what is noise, and probability estimates are judged as estimates of Pr(G|X), the exact object the Bayes rule consumes.",
+        "source_operator": "argmax over conditional class probabilities (Eq. 2.23)",
+        "telemetry": "estimated irreducible error reported alongside classifier accuracy in evaluation runs"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p04",
+      "name": "Curse of dimensionality for local methods",
+      "verbatim_quote": "This approach and our intuition breaks down in high dimensions, and the phenomenon is commonly referred to as the curse of dimensionality (Bellman, 1961).",
+      "page": "Ch 2, Sec 2.5, printed pp. 22-27; extracted text line 2870",
+      "latex": "e_p(r) = r^{1/p}",
+      "symbol_and_unit_ledger": "e_p(r): edge length of the p-dimensional hypercube sub-neighborhood that captures a fraction r of a uniform distribution's volume. p: input dimension. r: target fraction of observations. For p = 10, capturing 1 percent of the data needs edge length 0.63 and capturing 10 percent needs 0.80.",
+      "assumptions": [
+        "The calculation is exhibited for inputs uniform on the unit hypercube; the qualitative effect persists for concentrated distributions.",
+        "Locality is defined by Euclidean neighborhoods in the original coordinates."
+      ],
+      "breakdown_regime": "Data lying near a low-dimensional manifold softens the effect, which is why dimension reduction and sparsity assumptions can rescue local methods. The result is about volume growth, not about any one estimator's constants.",
+      "domain": "learning-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feature-space growth in the engine is taxed by this primitive: each added state variable multiplies the data needed to keep neighborhoods local, so high-dimensional matchup representations must justify themselves against compressed or structured alternatives before they are trusted.",
+        "source_operator": "hypercube volume scaling r^(1/p) (Sec 2.5)",
+        "telemetry": "feature-dimension count logged against sample size for every local or kernel method in the engine"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p05",
+      "name": "Bias-variance decomposition of prediction error",
+      "verbatim_quote": "More generally, as the model complexity of our procedure is increased, the variance tends to increase and the squared bias tends to decrease.",
+      "page": "Ch 2, Sec 2.9, printed pp. 37-39; extracted text line 3859",
+      "latex": "\\mathrm{Err}(x_0) = \\sigma_\\varepsilon^2 + \\mathrm{Bias}^2(\\hat{f}(x_0)) + \\mathrm{Var}(\\hat{f}(x_0))",
+      "symbol_and_unit_ledger": "Err(x_0): expected squared prediction error at input x_0, over training sets and the new observation. sigma_eps^2: irreducible noise variance. Bias^2: squared gap between the average fitted value and the true f(x_0). Var: variance of the fitted value across training sets (Eq. 2.47; generalized in Eq. 7.9).",
+      "assumptions": [
+        "Squared error loss and an additive noise model Y = f(X) + eps with E(eps) = 0.",
+        "Expectations are over random training sets of the same size; the decomposition is pointwise in x_0.",
+        "The true f is fixed, so model misspecification appears inside the bias term."
+      ],
+      "breakdown_regime": "The clean additive form is special to squared loss; for zero-one loss the decomposition is not additive and naive bias-variance intuition can mislead, a caveat the book raises in Sec 7.3. Correlated training data changes the effective variance term.",
+      "domain": "learning-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model promotion decisions in the engine keep a bias-variance ledger: a richer family must show that its bias reduction exceeds its variance payment on held-out data, and the prescription (shrink, average, or simplify) is chosen by which term dominates, not by fashion.",
+        "source_operator": "error decomposition into irreducible, bias squared, and variance terms (Eq. 7.9)",
+        "telemetry": "promotion reviews record estimated bias and variance components per candidate family"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p06",
+      "name": "Maximum likelihood principle and the least squares equivalence",
+      "verbatim_quote": "The principle of maximum likelihood assumes that the most reasonable values for θ are those for which the probability of the observed sample is largest.",
+      "page": "Ch 2, Sec 2.6.3, printed pp. 30-32; extracted text line 3516",
+      "latex": "L(\\theta) = \\sum_{i=1}^{N} \\log \\Pr_\\theta(y_i)",
+      "symbol_and_unit_ledger": "L(theta): log-likelihood of parameter theta under a parametric family (Eq. 2.33). Pr_theta: probability or density the model assigns. N: sample size. Least squares is the special case of Gaussian errors with constant variance; multinomial log-likelihood is the fitting criterion behind logistic regression.",
+      "assumptions": [
+        "Observations are independent draws from the posited family, or conditionally independent given the inputs.",
+        "The family is specified up to theta; when it is wrong, the estimator targets the closest member of the family rather than the truth.",
+        "The same principle covers full joint modeling (generative) and conditional modeling (discriminative), a distinction the book exploits in Ch 4."
+      ],
+      "breakdown_regime": "Misspecification breaks the efficiency story: estimates converge to the Kullback-Leibler projection of the truth. Small samples and separated data can drive logistic maximum likelihood estimates to infinity.",
+      "domain": "inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Where the engine posits explicit outcome distributions (score margins, totals, count processes), likelihood is the fitting contract and deviations from it must be named; where no distribution is posited, the method is treated as algorithmic and judged only by validated error, which is exactly the book's two-track treatment.",
+        "source_operator": "log-likelihood maximization (Eq. 2.33)",
+        "telemetry": "distributional families in the engine carry a likelihood specification or an explicit algorithmic-only label"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p07",
+      "name": "Ordinary least squares and the Gauss-Markov theorem",
+      "verbatim_quote": "One of the most famous results in statistics asserts that the least squares estimates of the parameters β have the smallest variance among all linear unbiased estimates.",
+      "page": "Ch 3, Sec 3.2, printed pp. 43-52; extracted text line 4362",
+      "latex": "\\hat{\\beta} = (X^T X)^{-1} X^T y",
+      "symbol_and_unit_ledger": "X: N by (p+1) input matrix including a constant column. y: response vector. beta_hat: minimizer of the residual sum of squares (Eq. 3.6). Under the linear model Var(beta_hat) = (X^T X)^{-1} sigma^2 (Eq. 3.8); the Gauss-Markov statement is Eq. 3.19's content.",
+      "assumptions": [
+        "Linearity of the conditional mean in the parameters, full column rank of X, errors with mean zero and constant variance.",
+        "Gauss-Markov optimality holds within linear unbiased estimators; biased estimators such as ridge and the lasso may still win on mean squared error, the opening the book develops in Sec 3.4.",
+        "Exact t and F inference adds Gaussian error assumptions on top."
+      ],
+      "breakdown_regime": "Collinearity inflates (X^T X)^{-1} until coefficient variance explodes, and with p near or above N the inverse fails outright, forcing shrinkage or selection. Outliers and heteroscedasticity void the optimality claim.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linear baselines in the engine are the Gauss-Markov reference: interpretable, unbiased, and the variance benchmark against which every shrinkage or nonlinear upgrade must prove a mean-squared-error win on held-out data before it displaces them.",
+        "source_operator": "normal equations solution of the least squares problem (Eq. 3.6)",
+        "telemetry": "baseline registry records design conditioning and coefficient variance for linear reference models"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p08",
+      "name": "Ridge regression: L2 shrinkage and effective degrees of freedom",
+      "verbatim_quote": "Ridge regression shrinks the regression coefficients by imposing a penalty on their size.",
+      "page": "Ch 3, Sec 3.4.1, printed pp. 61-65; extracted text line 4893",
+      "latex": "\\hat{\\beta}^{\\mathrm{ridge}} = (X^T X + \\lambda I)^{-1} X^T y",
+      "symbol_and_unit_ledger": "lambda: nonnegative shrinkage parameter (Eq. 3.44). I: identity matrix; the intercept is left unpenalized. Effective degrees of freedom df(lambda) = tr[X(X^TX + lambda I)^{-1}X^T] = sum_j d_j^2/(d_j^2 + lambda) over the singular values d_j of X (Eq. 3.50). Bayesian reading: Gaussian prior with lambda = sigma^2/tau^2.",
+      "assumptions": [
+        "Inputs are standardized before penalizing, so the penalty treats coefficients commensurably.",
+        "Shrinkage is proportional and smooth: ridge scales coefficients and never sets them exactly to zero.",
+        "The one-standard-error style selection of lambda is by cross-validation or generalized cross-validation."
+      ],
+      "breakdown_regime": "Ridge performs no variable selection, so noise variables remain in the model at small weight. Across groups of correlated inputs it spreads weight over the group, which may or may not match the interpretation wanted.",
+      "domain": "regularization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine rating systems fitting many correlated team and player effects use ridge-type shrinkage as the default stabilizer: effects are pulled toward zero in proportion to their information, and df(lambda) is the complexity number reported whenever a shrinkage level is chosen.",
+        "source_operator": "L2-penalized least squares with closed-form solution (Eq. 3.44)",
+        "telemetry": "shrinkage levels logged with effective degrees of freedom for every penalized fit"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p09",
+      "name": "The lasso: L1 penalty, soft thresholding, exact zeros",
+      "verbatim_quote": "Because of the nature of the constraint, making t sufficiently small will cause some of the coefficients to be exactly zero.",
+      "page": "Ch 3, Sec 3.4.2, printed pp. 68-72; extracted text line 5478",
+      "latex": "\\hat{\\beta}^{\\mathrm{lasso}} = \\arg\\min_\\beta \\left\\{ \\frac{1}{2} \\sum_{i=1}^{N} \\left( y_i - \\beta_0 - \\sum_{j=1}^{p} x_{ij} \\beta_j \\right)^2 + \\lambda \\sum_{j=1}^{p} |\\beta_j| \\right\\}",
+      "symbol_and_unit_ledger": "lambda (equivalently the budget t on the sum of |beta_j|): penalty level controlling how many coefficients are exactly zero (Eq. 3.52). In the orthonormal case the solution soft-thresholds the least squares estimates: the book's own contrast is that ridge shrinks proportionally while the lasso translates each coefficient by a constant factor, truncating at zero.",
+      "assumptions": [
+        "The truth is at least approximately sparse: a subset of inputs carries the signal.",
+        "Inputs are standardized, since the L1 penalty is scale dependent.",
+        "The diamond-shaped L1 constraint region, with corners on the coordinate axes, is the geometric source of the exact zeros."
+      ],
+      "breakdown_regime": "Among strongly correlated relevant inputs the lasso tends to select one and zero the rest, unstably across samples; the elastic net of Sec 3.4.3 is the book's repair. Selection is not inference: surviving variables still need validated effect estimates.",
+      "domain": "regularization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Candidate engine signals pass through L1-style rationing: a signal earns a nonzero weight only if it pays its penalty in validated loss reduction, and zeroed signals stay in the registry with their refusal recorded, so sparsity is an auditable decision rather than a silent omission.",
+        "source_operator": "L1-penalized least squares (Eq. 3.52)",
+        "telemetry": "signal registry records, for each candidate, the penalty level at which its weight becomes zero"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p10",
+      "name": "Least angle regression and full regularization paths",
+      "verbatim_quote": "Least angle regression uses a similar strategy, but only enters “as much” of a predictor as it deserves.",
+      "page": "Ch 3, Sec 3.4.4, printed pp. 73-78; extracted text line 5706",
+      "latex": "\\delta_k = (X_{\\mathcal{A}_k}^T X_{\\mathcal{A}_k})^{-1} X_{\\mathcal{A}_k}^T r_k",
+      "symbol_and_unit_ledger": "A_k: active set at step k. r_k: current residual vector. delta_k: the equiangular direction along which the active coefficients move until a new variable ties in absolute correlation with the residual (Algorithm 3.2 and Eq. 3.55 context). With a sign modification, one LAR pass produces the entire lasso path.",
+      "assumptions": [
+        "The lasso solution path is piecewise linear in the penalty parameter, which is what makes full-path computation cost about one least squares fit.",
+        "Path methods presume the penalized problem is of interest across all penalty levels, not at a single tuned point."
+      ],
+      "breakdown_regime": "Path efficiency is special to L1-type penalties; general penalties need an iterative solve per level. Computing the path does not choose the operating point, which still requires cross-validation or an information criterion.",
+      "domain": "regularization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine audits signal families along their whole shrinkage path rather than at one tuned setting: a family that helps only at a knife-edge penalty level is marked fragile, while families contributing across a wide segment of the path are promoted as robust.",
+        "source_operator": "equiangular path following for L1 problems (Algorithm 3.2)",
+        "telemetry": "path audits store entry and exit penalty levels for each signal family"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p11",
+      "name": "Derived directions: principal components regression and partial least squares",
+      "verbatim_quote": "partial least squares seeks directions that have high variance and have high correlation with the response, in contrast to principal components regression which keys only on high variance",
+      "page": "Ch 3, Sec 3.5, printed pp. 79-83; extracted text line 6143",
+      "latex": "\\hat{\\beta}^{\\mathrm{pcr}}(M) = \\sum_{m=1}^{M} \\hat{\\theta}_m v_m",
+      "symbol_and_unit_ledger": "v_m: m-th principal component direction of the inputs. theta_hat_m: univariate regression coefficient of y on the component score z_m = X v_m. M: number of retained directions (Eq. 3.62). PLS directions instead maximize Corr^2(y, X alpha) Var(X alpha) over unit-norm alpha (Eq. 3.64 context). Ridge regression is the continuous relative: it shrinks each principal direction by d_j^2/(d_j^2 + lambda) instead of deleting the small ones.",
+      "assumptions": [
+        "PCR assumes directions of high input variance are the ones related to the response; the book explicitly warns this need not hold.",
+        "PLS uses the response when forming directions, so those directions are supervised and count as fitted complexity.",
+        "Components are computed on standardized inputs."
+      ],
+      "breakdown_regime": "PCR fails outright when the response depends on low-variance directions, discarding them entirely where ridge would only shrink them. PLS can overfit its directions in small samples because the response guides the rotation.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dimensionality reduction inside the engine distinguishes unsupervised compression (principal components of team state) from supervised compression (partial least squares against outcomes): only the former may be computed outside validation folds, while the latter is fitted complexity and is audited as such.",
+        "source_operator": "regression on derived input directions (Eq. 3.62 and 3.64)",
+        "telemetry": "compression steps labeled supervised or unsupervised in pipeline manifests"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p12",
+      "name": "Linear discriminant analysis from Gaussian class densities",
+      "verbatim_quote": "Linear discriminant analysis (LDA) arises in the special case when we assume that the classes have a common covariance matrix Σk = Σ ∀k.",
+      "page": "Ch 4, Sec 4.3, printed pp. 106-110; extracted text line 7883",
+      "latex": "\\delta_k(x) = x^T \\Sigma^{-1} \\mu_k - \\frac{1}{2} \\mu_k^T \\Sigma^{-1} \\mu_k + \\log \\pi_k",
+      "symbol_and_unit_ledger": "delta_k(x): linear discriminant function for class k; classification assigns the class with the largest value (Eq. 4.10). mu_k: class mean vector. Sigma: covariance matrix shared by all classes. pi_k: class prior probability. Allowing class-specific covariances gives quadratic discriminant analysis.",
+      "assumptions": [
+        "Class-conditional densities are Gaussian; equal covariance across classes is what makes the decision boundaries linear.",
+        "Parameters are estimated by class sample means, the pooled covariance, and class proportions.",
+        "The generative route also models the marginal distribution of X, which is the source of both its efficiency gain when correct and its waste when not (Sec 4.4.5)."
+      ],
+      "breakdown_regime": "Unequal covariances or non-Gaussian classes make the linear boundary the wrong shape. In high dimensions the pooled covariance is singular without regularization, which is why Ch 18 repairs the method with diagonal and shrunken covariance versions.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Outcome-class models in the engine that pool structure across categories inherit the LDA accounting: pooled estimation buys variance reduction at the price of a bias that must be checked per class, and diagonal or shrunken covariance repairs are the sanctioned route when categories are numerous and data thin.",
+        "source_operator": "plug-in Gaussian discriminant with shared covariance (Eq. 4.10)",
+        "telemetry": "class-conditional models log covariance sharing assumptions and per-class boundary checks"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p13",
+      "name": "Logistic regression: linear log-odds fit by maximum likelihood",
+      "verbatim_quote": "The logistic regression model arises from the desire to model the posterior probabilities of the K classes via linear functions in x, while at the same time ensuring that they sum to one and remain in [0, 1].",
+      "page": "Ch 4, Sec 4.4, printed pp. 119-124; extracted text line 8908",
+      "latex": "\\log \\frac{\\Pr(G = 1 \\mid X = x)}{\\Pr(G = K \\mid X = x)} = \\beta_{10} + \\beta_1^T x",
+      "symbol_and_unit_ledger": "The display is the first of the K-1 log-odds equations defining the model (Eq. 4.17), with class K as the denominator reference. Fitting is by maximum likelihood using iteratively reweighted least squares, the Newton updates of Eq. 4.26-4.28.",
+      "assumptions": [
+        "Log-odds are linear in x; the probabilities themselves are modeled directly, with no assumption on the marginal distribution of X.",
+        "The conditional fit ignores information in the marginal distribution, costing roughly thirty percent efficiency against LDA when the Gaussian model is exactly right (Efron 1975, discussed in Sec 4.4.5).",
+        "Coefficients are interpretable as log-odds contributions per unit input, holding the rest fixed."
+      ],
+      "breakdown_regime": "Linear log-odds is a modeling choice, not a fact: interactions and curvature must be added as basis terms. Rare outcomes with many features separate the data, sending maximum likelihood estimates toward infinity unless penalization is added.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary and multiclass probability surfaces in the engine default to the logistic form because it models the decision object directly and calibrates naturally; coefficients are read as log-odds contributions, keeping each signal's directional effect legible to the reasoning layer.",
+        "source_operator": "conditional maximum likelihood for linear log-odds (Eq. 4.17)",
+        "telemetry": "probability models report calibration and separation diagnostics per fit"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p14",
+      "name": "Spline basis expansions and natural cubic splines",
+      "verbatim_quote": "A natural cubic spline adds additional constraints, namely that the function is linear beyond the boundary knots. This frees up four degrees of freedom (two constraints each in both boundary regions), which can be spent more profitably by sprinkling more knots in the interior region. This tradeoff is illustrated in terms of variance in Figure 5.3. There will be a price paid in bias near the boundaries, but assuming the function is linear near the boundaries (where we have less information anyway) is often considered reasonable. A natural cubic spline with K knots is represented by K basis functions.",
+      "page": "Ch 5, Sec 5.2.1, printed p. 145; extracted text line 11203",
+      "latex": "h_1(X) = 1, \\ h_2(X) = X, \\ h_3(X) = X^2, \\ h_4(X) = X^3, \\ h_{4+\\ell}(X) = (X - \\xi_\\ell)^3_+",
+      "symbol_and_unit_ledger": "xi_l: knot locations. (u)_+ = max(u, 0): the truncated power basis for cubic splines (Eq. 5.3). A natural cubic spline additionally constrains the function to be linear beyond the boundary knots, removing four degrees of freedom and stabilizing the tails.",
+      "assumptions": [
+        "The regression function is smooth; continuity of the function and of its first two derivatives at the knots is imposed by the basis construction.",
+        "Knot count and placement set the flexibility budget; natural boundary constraints are imposed because variance explodes in the tails without them.",
+        "Fitting is linear in the basis coefficients, so the whole linear-model apparatus applies unchanged."
+      ],
+      "breakdown_regime": "Too many knots overfit and too few underfit; the truncated power basis is numerically ill conditioned for many knots, with B-splines the stable implementation. Extrapolation beyond the boundary knots remains an assumption even when it is linearized.",
+      "domain": "nonparametrics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Continuous engine quantities with known nonlinear response (rest differentials, pace, altitude, age curves) are represented as spline terms with natural boundary behavior rather than raw linear terms, so curvature is modeled where data exists and tails are not allowed to invent effects.",
+        "source_operator": "piecewise polynomial basis with continuity constraints (Eq. 5.3)",
+        "telemetry": "nonlinear terms logged with knot placement and boundary treatment"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p15",
+      "name": "Smoothing splines: curvature-penalized fit with a natural spline minimizer",
+      "verbatim_quote": "Here we discuss a spline basis method that avoids the knot selection problem completely by using a maximal set of knots.",
+      "page": "Ch 5, Sec 5.4, printed pp. 151-156; extracted text lines 11540-11557",
+      "latex": "\\mathrm{RSS}(f, \\lambda) = \\sum_{i=1}^{N} \\{ y_i - f(x_i) \\}^2 + \\lambda \\int \\{ f''(t) \\}^2 dt",
+      "symbol_and_unit_ledger": "lambda: smoothing parameter trading closeness to data against integrated squared curvature (Eq. 5.9). The criterion is minimized, over all functions with two continuous derivatives, by a natural cubic spline with knots at the unique observed x_i. The fit is linear in y with smoother matrix S_lambda, and effective degrees of freedom df_lambda = tr(S_lambda).",
+      "assumptions": [
+        "The criterion is defined on a Sobolev space of twice-differentiable functions; the finite-dimensional minimizer is a theorem of the setup, not an approximation.",
+        "A single global lambda presumes uniform smoothness of f across the domain.",
+        "Lambda is chosen by generalized cross-validation or cross-validation in practice."
+      ],
+      "breakdown_regime": "Uniform smoothness fails at kinks and regime changes, where the penalty oversmooths exactly the interesting structure. Uneven input density distorts the effective local amount of smoothing.",
+      "domain": "nonparametrics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Time-varying engine quantities (form curves, aging curves, in-season drift) are smoothed under an explicit curvature budget: the penalty level and its effective degrees of freedom are reported with the series, so a smooth narrative is never smuggled in without its complexity cost attached.",
+        "source_operator": "curvature-penalized least squares over a function space (Eq. 5.9)",
+        "telemetry": "smoothed series carry lambda and effective degrees of freedom in their metadata"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p16",
+      "name": "Reproducing kernel Hilbert spaces and the representer solution",
+      "verbatim_quote": "It can be shown (Wahba, 1990, see also Exercise 5.15) that the solution to (5.48) is finite-dimensional, and has the form",
+      "page": "Ch 5, Sec 5.8, printed pp. 167-172; extracted text line 12913",
+      "latex": "f(x) = \\sum_{i=1}^{N} \\alpha_i K(x, x_i), \\qquad \\hat{\\alpha} = (K + \\lambda I)^{-1} y",
+      "symbol_and_unit_ledger": "K(x, x'): symmetric positive semidefinite kernel, an inner product in an implicit feature space. alpha: expansion coefficients. The first display is the representer form of the solution (Eq. 5.50); the second is the closed form under squared loss (Eq. 5.55), formally identical to ridge regression carried out in kernel features.",
+      "assumptions": [
+        "The penalty is a squared RKHS norm, or a seminorm whose finite-dimensional null space is handled as an unpenalized parametric part.",
+        "The kernel must be positive semidefinite for the variational problem to be well posed.",
+        "Under other losses the representer form still holds, with alpha found by a finite-dimensional optimization instead of the closed form."
+      ],
+      "breakdown_regime": "Kernel choice is the model: a mismatched kernel encodes the wrong similarity and no amount of data repairs it. Computation scales with the N by N kernel matrix, so large N needs low-rank or subset approximations.",
+      "domain": "nonparametrics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Similarity-driven engine components (team style similarity, player comparables) are kernel machines under this primitive: the similarity definition is the model, its spectrum is auditable, and every such component must expose its kernel instead of hiding it inside a generic embedding.",
+        "source_operator": "representer theorem reduction of penalized function fitting (Eq. 5.50)",
+        "telemetry": "kernel components register kernel definition and regularization level"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p17",
+      "name": "Kernel smoothing and local polynomial regression",
+      "verbatim_quote": "These memory-based methods require in principle little or no training; all the work gets done at evaluation time.",
+      "page": "Ch 6, Sec 6.1-6.2, printed pp. 191-198; extracted text line 14131",
+      "latex": "\\hat{f}(x_0) = \\frac{\\sum_{i=1}^{N} K_\\lambda(x_0, x_i) y_i}{\\sum_{i=1}^{N} K_\\lambda(x_0, x_i)}",
+      "symbol_and_unit_ledger": "K_lambda: kernel with bandwidth lambda, the book's running example being the Epanechnikov kernel (Eq. 6.3). The display is the Nadaraya-Watson local constant fit (Eq. 6.2). Local linear fitting (Eq. 6.7-6.9) fits a line inside the window and removes the boundary bias of the local constant version.",
+      "assumptions": [
+        "The target function is locally well approximated by a constant, or by a low-order polynomial, within the bandwidth.",
+        "Bandwidth is the bias-variance dial: small lambda gives low bias and high variance.",
+        "Inputs require a meaningful metric and standardization, as with nearest neighbors."
+      ],
+      "breakdown_regime": "Local constant fits are biased at boundaries and wherever the function slopes; local linear fitting is the book's correction. In sparse regions the denominator is small and the estimates are unstable.",
+      "domain": "nonparametrics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Local form estimates in the engine (recent-window performance curves) follow the local-linear discipline: windows are fit with slope terms rather than flat averages, and the edges of a season are flagged as boundary zones where flat averages would systematically lie.",
+        "source_operator": "kernel-weighted local fitting (Eq. 6.2)",
+        "telemetry": "windowed estimates log bandwidth, local polynomial order, and boundary flags"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p18",
+      "name": "Naive Bayes: class-conditional independence factorization",
+      "verbatim_quote": "The naive Bayes model assumes that given a class G = j, the features Xk are independent:",
+      "page": "Ch 6, Sec 6.6.3, printed pp. 210-211; extracted text line 15639",
+      "latex": "f_j(X) = \\prod_{k=1}^{p} f_{jk}(X_k)",
+      "symbol_and_unit_ledger": "f_j: class-conditional density for class j. f_jk: univariate density of feature k within class j (Eq. 6.26). With Gaussian univariate pieces this is diagonal-covariance LDA; the discriminant is the log of the factorized density plus the log prior (Eq. 6.27 context).",
+      "assumptions": [
+        "Features are conditionally independent given the class, an assumption the book calls naive while noting the classifier often performs well in spite of it.",
+        "Each univariate density is estimated separately, so the parameter count grows linearly in p, which is the source of the method's durability in high dimensions.",
+        "Class priors are estimated from class frequencies or set from external knowledge."
+      ],
+      "breakdown_regime": "Correlated features double-count evidence, distorting the probability values even when the winning class stays right. Probability outputs from naive Bayes are not calibrated and need a separate calibration step before probabilistic use.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thin-data classification problems in the engine use independence factorization as the rationing device: each feature contributes evidence separately, correlated feature clusters are flagged because the factorization would double-count them, and outputs are recalibrated before the reasoning layer consumes them.",
+        "source_operator": "factorized class-conditional density estimation (Eq. 6.26)",
+        "telemetry": "independence-based models carry a correlation audit of their input features"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p19",
+      "name": "Optimism of the training error and the covariance penalty",
+      "verbatim_quote": "Thus the amount by which err underestimates the true error depends on how strongly yi affects its own prediction. The harder we fit the data, the greater Cov(ŷi , yi ) will be, thereby increasing the optimism.",
+      "page": "Ch 7, Sec 7.4, printed p. 229; extracted text line 16647",
+      "latex": "\\omega = \\frac{2}{N} \\sum_{i=1}^{N} \\mathrm{Cov}(\\hat{y}_i, y_i)",
+      "symbol_and_unit_ledger": "omega: expected optimism of the training error (Eq. 7.21-7.22). Cov(y_hat_i, y_i): covariance, over training sets, between the fitted value and the response at the same observation. For squared error with homoscedastic noise this yields Mallow's C_p with effective parameter count d = sum_i Cov(y_hat_i, y_i)/sigma^2 (Eq. 7.26 context), and AIC is its likelihood analogue (Eq. 7.29).",
+      "assumptions": [
+        "The identity is exact for squared error loss and holds in expectation over training sets.",
+        "Using it requires either a linear fit with known noise level or a resampling estimate of the covariances.",
+        "For zero-one classification error the covariance form does not transfer directly, one reason the book prefers likelihood-based criteria in that setting."
+      ],
+      "breakdown_regime": "Adaptive procedures that search over models inflate the covariances beyond nominal parameter counts, so using nominal d understates optimism. The identity prices average optimism, not the extra optimism of a selected best model, which needs separate winner's-curse handling.",
+      "domain": "model-assessment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine backtest applies this primitive mechanically: reported in-sample edge is discounted by measured adaptivity, and selecting over many candidate signals is treated as covariance with the data that must be paid for inside the validation design.",
+        "source_operator": "covariance penalty identity for expected optimism (Eq. 7.21)",
+        "telemetry": "evaluation reports pair in-sample and corrected error, with the source of adaptivity named"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p20",
+      "name": "Cross-validation with every adaptive step inside the folds",
+      "verbatim_quote": "Probably the simplest and most widely used method for estimating prediction error is cross-validation.",
+      "page": "Ch 7, Sec 7.10, printed pp. 241-244; extracted text line 17324",
+      "latex": "\\mathrm{CV}(\\hat{f}) = \\frac{1}{N} \\sum_{i=1}^{N} L\\left( y_i, \\hat{f}^{-\\kappa(i)}(x_i) \\right)",
+      "symbol_and_unit_ledger": "kappa(i): the fold containing observation i. f^{-kappa(i)}: the fit trained without that fold (Eq. 7.48). The book recommends five or ten folds as the bias-variance compromise for the estimate itself, and the one-standard-error rule (choose the simplest model within one standard error of the minimum CV error) for model choice.",
+      "assumptions": [
+        "Observations are exchangeable enough that held-out folds represent future data; time-ordered data needs blocked or forward validation instead.",
+        "Every data-driven step, including screening, tuning, and selection, is re-executed inside each training fold; Sec 7.10.2 shows the wrong way reporting about 3 percent cross-validated error against a true error of about 50 percent on the book's own simulation.",
+        "The estimate targets the error of the fitting procedure, not of one particular fitted model."
+      ],
+      "breakdown_regime": "Leakage through any preprocessing done on all of the data invalidates the estimate silently, and nothing in the number itself warns about it. The estimate also carries Monte Carlo variance across fold assignments, so close comparisons need repeated cross-validation.",
+      "domain": "model-assessment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine validation protocol is this primitive stated as law: signal screening, feature construction, and tuning live inside the resampling loop, every evaluation artifact must state its fold design, and artifacts that cannot show the inside-the-loop structure are treated as in-sample claims regardless of their labels.",
+        "source_operator": "K-fold refitting estimate of prediction error (Eq. 7.48)",
+        "telemetry": "validation artifacts record fold design and the list of steps executed inside the folds"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p21",
+      "name": "VC dimension and structural risk minimization",
+      "verbatim_quote": "The VC dimension of the class {f (x, α)} is defined to be the largest number of points (in some configuration) that can be shattered by members of {f (x, α)}.",
+      "page": "Ch 7, Sec 7.9, printed pp. 237-240; extracted text line 17151",
+      "latex": "\\epsilon = a_1 \\sqrt{ \\frac{ h \\left[ \\log(a_2 N / h) + 1 \\right] - \\log(\\eta / 4) }{ N } }",
+      "symbol_and_unit_ledger": "h: VC dimension of the function class. N: sample size. eta: confidence parameter of the distribution-free bound (Eq. 7.46 context): with probability at least 1 - eta the test error is controlled by the training error inflated by a factor involving epsilon. Structural risk minimization selects among nested classes by penalized training error.",
+      "assumptions": [
+        "The bounds are distribution-free and uniform over the class, which is exactly why they are conservative.",
+        "Capacity is a property of the class, not of the fitted member; regularization works by shrinking the effective class actually searched.",
+        "Shattering is a worst-case combinatorial notion over point configurations."
+      ],
+      "breakdown_regime": "In practice the bounds are usually far too loose to choose between models, as the book itself notes; their role is conceptual, establishing that capacity rather than raw parameter count is the currency of generalization. Margin-based refinements are the practical descendants.",
+      "domain": "learning-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats capacity as a budget line: model classes are compared by effective capacity relative to sample size, and any claim that a flexible class generalizes from small data must point to the mechanism (margin, shrinkage, averaging) that reduces its effective capacity.",
+        "source_operator": "capacity-based uniform error bounds (Eq. 7.46)",
+        "telemetry": "model registry records capacity notes beside sample sizes for each class in use"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p22",
+      "name": "The EM algorithm for latent-variable likelihood problems",
+      "verbatim_quote": "The EM algorithm is a popular tool for simplifying difficult maximum likelihood problems.",
+      "page": "Ch 8, Sec 8.5, printed pp. 272-276; extracted text line 19227",
+      "latex": "\\gamma_i(\\theta) = E(\\Delta_i \\mid \\theta, Z) = \\Pr(\\Delta_i = 1 \\mid \\theta, Z)",
+      "symbol_and_unit_ledger": "Delta_i: unobserved component-membership indicator. Z: observed data. gamma_i(theta): posterior responsibility of component 1 for observation i under current parameters (Eq. 8.41). The E-step replaces missing sufficient statistics by their conditional expectations; the M-step maximizes the resulting completed log-likelihood (Eq. 8.40).",
+      "assumptions": [
+        "A latent-variable model with a tractable complete-data likelihood is specified; the book's running case is a two-component Gaussian mixture.",
+        "Each iteration never decreases the observed-data likelihood, but convergence is to a stationary point, not necessarily the global maximum.",
+        "Initialization matters and multiple starts are standard practice."
+      ],
+      "breakdown_regime": "Local optima and label switching are intrinsic to mixture fitting, and an unconstrained mixture likelihood is unbounded when a component collapses onto a single point. Responsibilities are model-based probabilities and inherit any misspecification.",
+      "domain": "inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Unobserved regime structure in the engine (team states, game scripts, latent form) is estimated by EM-type responsibility weighting rather than hard assignment: observations carry soft membership, downstream estimates inherit that uncertainty, and convergence diagnostics ship with the artifact.",
+        "source_operator": "alternating expectation and maximization on the completed likelihood (Eq. 8.41)",
+        "telemetry": "latent-variable fits log initialization scheme, iteration count, and the likelihood trace"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p23",
+      "name": "Bagging: bootstrap averaging of unstable procedures",
+      "verbatim_quote": "Bootstrap aggregation or bagging averages this prediction over a collection of bootstrap samples, thereby reducing its variance.",
+      "page": "Ch 8, Sec 8.7, printed pp. 282-284; extracted text line 19803",
+      "latex": "\\hat{f}^{\\mathrm{bag}}(x) = \\frac{1}{B} \\sum_{b=1}^{B} \\hat{f}^{*b}(x)",
+      "symbol_and_unit_ledger": "f^{*b}: the fit computed on the b-th bootstrap sample, drawn with replacement at size N. B: number of bootstrap replicates (Eq. 8.51). For classification the book also describes majority-vote versions of the same averaging.",
+      "assumptions": [
+        "The base procedure is unstable: small perturbations of the data change it materially, with trees the canonical case; stable procedures gain little.",
+        "Averaging reduces variance while leaving bias roughly intact, so bagging does not repair a biased base learner.",
+        "Bootstrap samples adequately mimic the sampling distribution of the data."
+      ],
+      "breakdown_regime": "For smooth, stable estimators such as linear regression, bagging is approximately a no-op and can be slightly harmful. Bagged fits also sacrifice the interpretability of a single model, and correlated replicate fits cap the achievable variance reduction.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "High-variance engine components are stabilized by averaging over resampled fits as a default, and their reported uncertainty comes from the spread across replicates; a component whose conclusions change under resampling is classified unstable and barred from carrying a decision on its own.",
+        "source_operator": "bootstrap aggregation of refitted procedures (Eq. 8.51)",
+        "telemetry": "ensemble artifacts record replicate count and cross-replicate dispersion"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p24",
+      "name": "Generalized additive models and backfitting",
+      "verbatim_quote": "In the regression setting, a generalized additive model has the form",
+      "page": "Ch 9, Sec 9.1, printed pp. 295-300; extracted text line 20528",
+      "latex": "g(\\mu(X)) = \\alpha + \\sum_{j=1}^{p} f_j(X_j)",
+      "symbol_and_unit_ledger": "mu(X) = E(Y|X). g: link function, identity for regression and logit for classification. f_j: unspecified smooth univariate functions, each fit by a smoother with its own degrees of freedom (Eq. 9.4; the regression case is Eq. 9.1). Fitting proceeds by backfitting, extended to local scoring for non-Gaussian responses (Algorithm 9.2).",
+      "assumptions": [
+        "Additivity: no interactions are present unless explicitly added as low-order terms.",
+        "Each f_j is smooth enough for its smoother; identifiability is fixed by centering constraints on the components.",
+        "The link and variance family are chosen as in generalized linear models."
+      ],
+      "breakdown_regime": "Interactions between inputs are invisible to a purely additive fit; the book's remedy is to add selected interaction surfaces deliberately. Concurvity, the nonlinear analogue of collinearity, destabilizes component estimates when inputs move together.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's interpretable layer follows additive discipline: each situational family contributes a univariate shape (or an explicitly declared low-order term) that the reasoning layer can read and narrate, and interactions enter only as named terms, never as silent model capacity.",
+        "source_operator": "additive decomposition fit by backfitting (Eq. 9.4)",
+        "telemetry": "additive components stored per family with per-term degrees of freedom"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p25",
+      "name": "Trees with cost-complexity pruning",
+      "verbatim_quote": "The preferred strategy is to grow a large tree T0 , stopping the splitting process only when some minimum node size (say 5) is reached. Then this large tree is pruned using cost-complexity pruning, which we now describe.",
+      "page": "Ch 9, Sec 9.2, printed p. 308; extracted text line 21325",
+      "latex": "C_\\alpha(T) = \\sum_{m=1}^{|T|} N_m Q_m(T) + \\alpha |T|",
+      "symbol_and_unit_ledger": "T: a tree with |T| terminal nodes. N_m: number of observations in terminal node m. Q_m(T): node impurity, squared error for regression trees and deviance or misclassification rate for classification. alpha: complexity price per leaf (Eq. 9.16). Weakest-link pruning of the large tree yields the nested sequence of optimally pruned subtrees indexed by alpha.",
+      "assumptions": [
+        "Greedy recursive partitioning: each split maximizes immediate impurity reduction rather than global tree quality.",
+        "Terminal nodes predict a constant, the node mean for regression or class proportions for classification.",
+        "The pruning level alpha is chosen by cross-validation along the pruned sequence."
+      ],
+      "breakdown_regime": "Trees are high-variance objects: small changes in the data restructure the partition, which is precisely why the ensemble chapters build on them. Axis-aligned splits approximate diagonal or smooth structure inefficiently.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rule-like engine components (threshold effects and if-then situational triggers) are grown large and pruned under an explicit complexity price, and their instability is assumed from the start: any single-tree conclusion must be re-expressed through an averaged ensemble before it may move an engine output.",
+        "source_operator": "greedy partitioning plus weakest-link cost-complexity pruning (Eq. 9.16)",
+        "telemetry": "tree artifacts record the pruning path and the cross-validated alpha"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p26",
+      "name": "MARS: adaptive hinge basis search with GCV pruning",
+      "verbatim_quote": "It can be viewed as a generalization of stepwise linear regression or a modification of the CART method to improve the latter’s performance in the regression setting. We introduce MARS from the first point of view, and later make the connection to CART. MARS uses expansions in piecewise linear basis functions of the form (x − t)+ and (t − x)+ .",
+      "page": "Ch 9, Sec 9.4, printed p. 321; extracted text line 22249",
+      "latex": "f(X) = \\beta_0 + \\sum_{m=1}^{M} \\beta_m h_m(X)",
+      "symbol_and_unit_ledger": "h_m: hinge functions (x - t)_+ and (t - x)_+, or products of hinges encoding interactions (Eq. 9.19). M: number of basis functions surviving backward deletion, which is guided by generalized cross-validation with effective parameter count M(lambda) = r + cK, where r is the number of linearly independent basis terms, K the number of knots, and c = 3 the book's default charge per knot (Eq. 9.20 context).",
+      "assumptions": [
+        "The response surface is approximable by piecewise linear hinges and low-order products of them.",
+        "The forward pass deliberately overgenerates basis functions; the backward GCV pass is the regularizer.",
+        "Knot candidates are the observed input values, so the search is data adaptive and counts as fitted complexity."
+      ],
+      "breakdown_regime": "Adaptive knot search can chase noise in small samples, with the per-knot charge as the guard. Extrapolation beyond the data range is linear along the outermost hinges, an assumption that must be owned when it is used.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Threshold and regime-change effects in engine features are modeled as hinge terms under an explicit per-knot price: a claimed breakpoint must pay the search cost in validated error, mirroring the GCV charge, before the reasoning layer may cite it.",
+        "source_operator": "forward hinge search with GCV backward pruning (Eq. 9.19)",
+        "telemetry": "breakpoint features log the knot candidates searched and the complexity charge applied"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p27",
+      "name": "AdaBoost as stagewise fitting of exponential loss",
+      "verbatim_quote": "The principal attraction of exponential loss in the context of additive modeling is computational; it leads to the simple modular reweighting AdaBoost algorithm.",
+      "page": "Ch 10, Sec 10.5, printed p. 345; extracted text line 23426",
+      "latex": "f^*(x) = \\frac{1}{2} \\log \\frac{\\Pr(Y = 1 \\mid x)}{\\Pr(Y = -1 \\mid x)}",
+      "symbol_and_unit_ledger": "f*(x): population minimizer of the exponential loss E[exp(-Y f(X))] (Eq. 10.16). The algorithm's combination weights are alpha_m = log((1 - err_m)/err_m) for weighted error err_m (Algorithm 10.1), and forward stagewise fitting of exponential loss reproduces AdaBoost exactly (Sec 10.4).",
+      "assumptions": [
+        "Labels are coded Y in {-1, 1} and base learners achieve weighted error below one half.",
+        "Exponential loss is the operative criterion; its population target is one half the log-odds, which is what links boosting to additive logistic modeling.",
+        "Observation weights update multiplicatively by correctness, concentrating later learners on hard cases."
+      ],
+      "breakdown_regime": "Exponential loss is sensitive to label noise and outliers, because weights grow without bound on persistently misclassified points; the book points to gentler losses (logistic, Huberized) as the robust descendants. Very long boosting runs overfit noisy data despite slow training-error decay.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sequential refinement procedures in the engine are read through this primitive: iterative reweighting toward hard cases is a loss choice with a known population target, and any boosting-style component must declare its loss and its noise sensitivity rather than presenting iteration count as a virtue.",
+        "source_operator": "forward stagewise additive modeling under exponential loss (Algorithm 10.1 and Eq. 10.16)",
+        "telemetry": "iterative fitting components declare their loss function and per-round error trace"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p28",
+      "name": "Gradient boosting: functional gradient descent with shrinkage",
+      "verbatim_quote": "The components of the negative gradient computed at line 2(a) are referred to as generalized or pseudo residuals, r.",
+      "page": "Ch 10, Sec 10.10, printed pp. 357-365; extracted text lines 24236-24243",
+      "latex": "r_{im} = - \\left[ \\frac{\\partial L(y_i, f(x_i))}{\\partial f(x_i)} \\right]_{f = f_{m-1}}",
+      "symbol_and_unit_ledger": "r_im: pseudo-residual for observation i at iteration m, the negative gradient of the loss evaluated at the current fit (Algorithm 10.3, step 2a). Updates are shrunk by a learning rate nu, with values below 0.1 recommended and the iteration count set by validation (Sec 10.12.1); stochastic subsampling of rows at each round is the Sec 10.12.2 variant.",
+      "assumptions": [
+        "The loss is differentiable in the prediction; each round fits a regression tree to the pseudo-residuals and then shrinks the step.",
+        "Trees are kept small, bounding interaction depth; shrinkage with many small steps generalizes better than few large ones.",
+        "Iteration count is a tuning parameter chosen on validation data, never by training loss."
+      ],
+      "breakdown_regime": "Without shrinkage control and early stopping, gradient boosting interpolates noise. Squared-error loss makes it outlier sensitive; the robust losses tabulated in the book (Table 10.2) are the corrective. Sequential fitting is also hard to interpret directly.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine residual-correction layers, which model systematic projection misses stagewise, declare their loss, shrinkage, and stopping rule, with the iteration budget set by validation curves; a correction layer that improves only training fit is read as gradient descent performed on noise.",
+        "source_operator": "steepest descent in function space with tree steps (Algorithm 10.3)",
+        "telemetry": "stagewise components log loss, shrinkage, tree size, and the validation stopping point"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p29",
+      "name": "Neural networks as penalized nonlinear regression with learned features",
+      "verbatim_quote": "Hence a neural network can be thought of as a nonlinear generalization of the linear model, both for regression and classification.",
+      "page": "Ch 11, Sec 11.3-11.5, printed pp. 392-399; extracted text line 26134",
+      "latex": "f_k(x) = g_k\\left( \\sum_{m=1}^{M} \\beta_{km} \\, \\sigma(\\alpha_{0m} + \\alpha_m^T x) \\right)",
+      "symbol_and_unit_ledger": "sigma: activation function, the sigmoid in the book's development. alpha_m: input-to-hidden weights; the hidden units Z_m = sigma(alpha_0m + alpha_m^T x) are learned features, making the architecture a projection pursuit model (Eq. 11.5 and 11.7). Training is by back-propagation, the chain-rule gradients of Eq. 11.14-11.15, with weight decay penalty J(theta) (Eq. 11.16), which the book identifies with a Gaussian prior on the weights.",
+      "assumptions": [
+        "A single hidden layer with enough units approximates broad function classes; the book's own examples use modest M restrained by decay rather than huge unconstrained networks.",
+        "Optimization is nonconvex, so multiple random starts and averaging over them are part of the method, not an afterthought.",
+        "Inputs are standardized, and outputs are coded for squared error or cross-entropy as the problem requires."
+      ],
+      "breakdown_regime": "Unregularized networks interpolate the training data and extrapolate wildly; weight decay, early stopping, and start averaging are load-bearing. Individual weights are not interpretable: the fitted object is a function, not an explanation.",
+      "domain": "machine-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Learned-representation components in the engine are treated as this primitive prescribes: representations are features fit to a declared loss under explicit decay, their value is judged only by validated error, and the reasoning layer never cites individual units as if they carried meaning.",
+        "source_operator": "back-propagation fitting of a projection-pursuit architecture (Eq. 11.5)",
+        "telemetry": "representation learners log architecture, decay level, start count, and validation curve"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p30",
+      "name": "Support vector machines: margin maximization through kernels",
+      "verbatim_quote": "In fact, we need not specify the transformation h(x) at all, but require only knowledge of the kernel function",
+      "page": "Ch 12, Sec 12.2-12.3, printed pp. 419-430; extracted text line 28004",
+      "latex": "K(x, x') = \\langle h(x), h(x') \\rangle",
+      "symbol_and_unit_ledger": "h: mapping into a feature space that is never computed explicitly. K: kernel function supplying every inner product the dual problem needs (Eq. 12.21). The fitted classifier is f(x) = sum_i alpha_hat_i y_i K(x, x_i) + beta_hat_0 with nonzero coefficients only at support vectors (Eq. 12.24 context); equivalently, penalized hinge loss with lambda = 1/C (Eq. 12.25 context).",
+      "assumptions": [
+        "Classes are separated with a margin in the kernel feature space, with slack variables pricing the violations (Eq. 12.7-12.8).",
+        "The dual solution depends on the data only through inner products, which is the entire basis of the kernel substitution.",
+        "The cost parameter C is tuned externally, and probability outputs are not native to the method."
+      ],
+      "breakdown_regime": "Kernel and input-scale choices dominate performance; unstandardized inputs corrupt the geometry. The hinge objective yields sparse solutions but uncalibrated scores, so probability use requires a separate calibration fit.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Margin-based separation in the engine (for example, distinguishing regimes of game state) follows the kernel discipline: the inner-product definition is the model, only the boundary cases, the support vectors, are stored as the operative summary, and raw scores are recalibrated before any probabilistic use.",
+        "source_operator": "max-margin separation via dual inner products (Eq. 12.21)",
+        "telemetry": "kernel classifiers register kernel, cost level, and support-vector count"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p31",
+      "name": "K-means clustering and prototype representation",
+      "verbatim_quote": "K-means clustering is a method for finding clusters and cluster centers in a set of unlabeled data.",
+      "page": "Ch 13, Sec 13.2.1, printed pp. 460-461; extracted text line 31021",
+      "latex": "\\sum_{k=1}^{K} \\sum_{i \\in C_k} \\| x_i - \\bar{x}_k \\|^2",
+      "symbol_and_unit_ledger": "C_k: cluster k. x_bar_k: the cluster centroid, the coordinatewise mean of its members. The display is the total within-cluster squared Euclidean distance that K-means minimizes by alternating nearest-centroid assignment with centroid recomputation; the centroids are the prototypes that summarize the clusters (Sec 13.2.1, with the dissimilarity formulation in Sec 14.3).",
+      "assumptions": [
+        "Euclidean distance on standardized variables defines similarity, so clusters are implicitly spherical and comparably sized.",
+        "K is chosen externally, and the algorithm descends to a local optimum that depends on initialization.",
+        "Assignment is hard: each point belongs to exactly one cluster, with soft mixture assignments the EM relatives treated in Sec 8.5."
+      ],
+      "breakdown_regime": "Local optima and initialization sensitivity are intrinsic, so multiple starts are required. Non-spherical or chain-like structure is split wrongly, and outliers drag centroids away from the mass they are meant to summarize.",
+      "domain": "unsupervised-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Team and player archetyping in the engine is prototype compression under this primitive: archetypes are centroids with a stated distance and standardization, memberships near boundaries are reported as ambiguous, and the archetype count is treated as chosen structure rather than discovered truth.",
+        "source_operator": "alternating minimization of within-cluster dispersion (Sec 13.2.1)",
+        "telemetry": "clustering artifacts record K, initialization count, and within-cluster dispersion"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p32",
+      "name": "Principal components as best linear approximations",
+      "verbatim_quote": "The principal components of a set of data in IRp provide a sequence of best linear approximations to that data, of all ranks q ≤ p.",
+      "page": "Ch 14, Sec 14.5.1-14.5.2, printed pp. 534-538; extracted text line 36211",
+      "latex": "X = U D V^T",
+      "symbol_and_unit_ledger": "X: centered N by p data matrix. U: orthonormal left singular vectors. D: diagonal singular values d_1 >= ... >= d_p. V: loadings (Eq. 14.54). Scores are Z = X V, and keeping the first q components gives the best rank-q linear approximation of X in Frobenius norm (Eq. 14.50-14.53 context).",
+      "assumptions": [
+        "Data are centered, and standardized when measurement scales differ; linearity of the approximation is both the point and the limit.",
+        "Variance is the ranking measure: directions are ordered by spread, not by relation to any outcome.",
+        "The decomposition itself is distribution-free; interpretation of components is where assumptions enter."
+      ],
+      "breakdown_regime": "High-variance directions may be nuisance variation, and low-variance directions may carry the signal; being unsupervised, PCA cannot tell the difference. Outliers inflate variance and rotate the components.",
+      "domain": "unsupervised-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine state compression uses principal components under the discipline that components are variance summaries, not meanings: retained rank is chosen by reconstruction quality and downstream validation, and any narrative attached to a component must be re-earned against outcomes.",
+        "source_operator": "singular value decomposition with rank-q truncation (Eq. 14.54)",
+        "telemetry": "compression artifacts record retained rank and variance share per component"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p33",
+      "name": "Random forests: decorrelated tree averaging",
+      "verbatim_quote": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them.",
+      "page": "Ch 15, Sec 15.1-15.2, printed pp. 587-592; extracted text line 41122",
+      "latex": "\\rho \\sigma^2 + \\frac{1 - \\rho}{B} \\sigma^2",
+      "symbol_and_unit_ledger": "The display is the variance of the average of B identically distributed trees with individual variance sigma^2 and pairwise correlation rho (Eq. 15.1). Random feature subsets at each split (default m = sqrt(p) for classification and p/3 for regression) are the decorrelation mechanism; out-of-bag observations supply an internal error estimate (Sec 15.3.1).",
+      "assumptions": [
+        "Trees are grown deep and left unpruned; averaging, not pruning, is the variance control.",
+        "Bootstrap resampling and split-level feature randomness are both active as decorrelators.",
+        "Out-of-bag error approximates cross-validation error when the forest is large."
+      ],
+      "breakdown_regime": "The correlation floor rho sigma^2 cannot be averaged away; if trees stay correlated through one dominant input, gains stall. Forests extrapolate as constants outside the data range and can be biased for rare categories.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensemble design in the engine follows the correlation arithmetic: adding members helps only insofar as it lowers average member correlation, so diversity mechanisms (feature subsets, different signal views) are engineered deliberately and member error correlation is measured rather than assumed.",
+        "source_operator": "bagging with split-level feature subsampling (Eq. 15.1)",
+        "telemetry": "ensembles report member count, average pairwise error correlation, and out-of-bag error"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p34",
+      "name": "Undirected graphical models and the Gaussian graphical lasso",
+      "verbatim_quote": "In these graphs, the absence of an edge between two vertices has a special meaning: the corresponding random variables are conditionally independent, given the other variables.",
+      "page": "Ch 17, Sec 17.1-17.3, printed pp. 625-635; extracted text line 43356",
+      "latex": "f(x) = \\frac{1}{Z} \\prod_{C \\in \\mathcal{C}} \\psi_C(x_C)",
+      "symbol_and_unit_ledger": "The display is the Hammersley-Clifford factorization of the joint density over the maximal cliques C of the graph (Eq. 17.3). psi_C: nonnegative clique potentials. Z: normalizing constant. For Gaussian models the graph is read off the precision matrix Theta = Sigma^{-1}: theta_jk = 0 exactly when X_j and X_k are conditionally independent given the rest, and the graphical lasso estimates Theta by maximizing log det Theta - tr(S Theta) - lambda sum_{j != k} |theta_jk| (Eq. 17.21 context).",
+      "assumptions": [
+        "The pairwise Markov property: a missing edge encodes conditional independence given all remaining variables (Eq. 17.1).",
+        "Outside the Gaussian case the book restricts attention to pairwise-interaction exponential families.",
+        "The graph is assumed sparse enough that L1-penalized precision estimation is meaningful at the available sample size."
+      ],
+      "breakdown_regime": "Estimated edges are model-based associations, not causal arrows, and latent common causes manufacture edges that no amount of within-model testing removes. Edge sets need stability checks across resamples before they deserve belief.",
+      "domain": "graphical-models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dependence auditing among engine signals uses the precision-matrix view: two signals that are marginally correlated but conditionally independent given the rest are counted once by the reasoning layer, and the estimated graph is a standing artifact reviewed whenever a new signal family is admitted.",
+        "source_operator": "clique factorization with L1-penalized precision estimation (Eq. 17.3 and 17.21)",
+        "telemetry": "signal audits store the dependence graph version and edge stability across resamples"
+      }
+    },
+    {
+      "primitive_id": "5862404626d4c32a-p35",
+      "name": "False discovery rate and the Benjamini-Hochberg procedure",
+      "verbatim_quote": "Benjamini and Hochberg (1995) first proposed the notion of false discovery rate, and gave a testing procedure (Algorithm 18.2) whose FDR is bounded by a user-defined level α.",
+      "page": "Ch 18, Sec 18.7.1, printed pp. 685-688; extracted text line 46648",
+      "latex": "\\mathrm{FDR} = E\\left( \\frac{V}{R} \\right)",
+      "symbol_and_unit_ledger": "V: number of falsely rejected null hypotheses. R: total number of rejections, with the ratio taken as zero when R = 0 (Eq. 18.43). The Benjamini-Hochberg step-up rule finds the largest i with p_(i) <= (i/m) q* and rejects all hypotheses up to it, bounding FDR at level q* under independence (Eq. 18.44-18.45 and Algorithm 18.2).",
+      "assumptions": [
+        "Many hypotheses are screened simultaneously, the setting where per-test control is meaningless and familywise control is paralyzing.",
+        "The guarantee concerns the expected proportion of false discoveries among discoveries, not the status of any single rejection.",
+        "The classical bound assumes independent, or positively dependent, test statistics."
+      ],
+      "breakdown_regime": "Strong dependence among tests loosens the guarantee and complicates interpretation. FDR control also says nothing about effect sizes: discoveries still need magnitude estimates and replication before they are used.",
+      "domain": "multiple-testing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signal discovery in the engine is a multiple-testing operation and is governed as one: batches of candidate signals are screened under false discovery control at a declared level, so the expected share of promoted noise is a chosen number, and no single dramatic backtest can promote itself outside the batch accounting.",
+        "source_operator": "step-up p-value thresholding with expected false proportion control (Eq. 18.43)",
+        "telemetry": "discovery batches record batch size, control level, and realized rejection count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5862404626d4c32a-t1",
+      "think": "The Elements of Statistical Learning is best read as a single sustained argument: every prediction method, however algorithmic its surface, is an estimator operating inside statistical decision theory, and it can be understood, compared, and repaired only by naming its target functional, its variance behavior, and the price it pays for flexibility. The book opens by fixing the target. Under squared error the optimal predictor is the conditional mean; under zero-one loss it is the modal class delivered by the Bayes rule; and the Bayes rate marks the floor that no method can cross. Everything after Chapter 2 is a study of how finite samples force departures from that ideal, and the bias-variance decomposition is the accounting system in which those departures are booked. Local methods such as nearest neighbors and kernels estimate the target directly in a neighborhood and pay variance for their honesty; global parametric methods pay bias for their stability; and the curse of dimensionality explains why the local payment grows ruinous as dimension rises, pushing the field toward structure: additivity, sparsity, low rank, margins, graphs. The middle of the book is a theory of controlled flexibility. Penalties convert the discrete problem of choosing a model into the continuous problem of choosing a shrinkage level, and ridge, the lasso, and least angle regression show that a whole path of models can be computed for roughly the price of one fit, with effective degrees of freedom summarizing what each point on the path costs. Basis expansions generalize the same move to functions: splines fix knots and penalize curvature, and the smoothing spline, together with the reproducing kernel Hilbert space representer theorem, proves that an apparently infinite-dimensional penalized problem collapses to a finite expansion in kernel evaluations at the data points. That collapse is the book's quiet masterpiece, because it unifies smoothing splines, kernel machines, and later support vector machines under one variational principle: minimize fit plus a roughness or norm penalty, and the solution lives in the span of kernels centered at the observations. Model assessment is treated not as bookkeeping but as epistemology. Training error is systematically optimistic, and the optimism has an exact covariance form: each observation inflates apparent fit in proportion to how strongly its fitted value tracks it. Cross-validation is the operational answer, valid only when every adaptive step, including screening and tuning, is repeated inside each fold; the book's own simulation, where the wrong way reports three percent error against a true fifty percent, is the sharpest warning in the literature against leakage. VC theory offers a different, distribution-free accounting based on capacity, and its practical looseness teaches a second lesson: worst-case guarantees orient thinking but rarely choose models. Generative and discriminative modeling receive the book's most balanced treatment. Linear discriminant analysis and logistic regression fit the same linear log-odds surface by different routes: LDA models the class densities and the marginal distribution of the features, logistic regression models only the conditional law, and the comparison shows the generative route is more efficient when its Gaussian assumptions hold and wasteful when they fail, losing roughly thirty percent efficiency in Efron's calculation when the marginal carries no information. Indicator regression supplies the counterexample that disciplines both: with three or more classes the plain linear fit can mask a class entirely, a failure invisible in the training sums of squares. Naive Bayes pushes the generative route to its diagonal extreme, and its reappearance inside the high-dimensional chapter, where diagonal discriminant analysis with shrunken centroids becomes a leading method, shows the book's recurring pattern: crude independence assumptions, worthless in low dimensions, become competitive exactly when variance dominates and parameters must be rationed. The ensemble chapters reveal the book's second unifying idea: stagewise additive fitting. Bagging averages unstable procedures to cancel variance without touching bias; random forests decorrelate the averaged trees so the variance floor set by correlation falls further; boosting builds the additive expansion greedily, and the population analysis shows AdaBoost is fitting a logistic-shaped target, one half the log-odds, while gradient boosting generalizes the move to any differentiable loss by fitting pseudo-residuals. Stacking completes the picture by learning the combination weights themselves by cross-validation, turning model selection into model averaging with estimated rather than asserted weights. Underneath, the EM algorithm supplies the latent-variable engine for mixtures and missing data, and neural networks appear as projection pursuit with learned ridge functions, trained by the chain rule and restrained by weight decay, which the book notes is exactly a Gaussian prior in Bayesian dress. Support vector machines close the loop between geometry and penalization. The margin criterion depends only on inner products, so the kernel substitution lifts the linear machine into feature spaces that are never constructed, and the hinge-loss form reveals the SVM as another penalized empirical risk problem whose solution is sparse in the observations, the support vectors. Read against the reproducing kernel chapter, the SVM is not an exotic import but the same variational machine with a different loss, and its path algorithm continues the book's path theme: whole solution surfaces over the tuning parameter, computed once and auditable everywhere. The closing chapters extend the same grammar to structure discovery and to the regime where features outnumber observations. Prototypes and principal components compress data into representative points and best linear approximations; graphical models encode conditional independence, and for Gaussians the zeros of the precision matrix are the graph, estimable under sparsity by the graphical lasso. In the p much greater than N regime the book states its governing bet: no method does well on dense problems, so use methods that do well on sparse ones, shrink class centroids coordinatewise until most features drop out, and when thousands of hypotheses are screened at once, control the false discovery rate rather than demanding familywise certainty. Read whole, the book is a compiler: it takes the dialect of machine learning and recompiles every program into estimation, penalization, and honest error accounting, which is precisely the discipline a reasoning engine must internalize before its signals deserve trust.",
+      "retrocausal_genealogy": "The genealogy runs backward from each method to the older problem it secretly solved. Boosting descends from online learning and game theory: Freund and Schapire built AdaBoost to convert a weak learner, an abstraction from PAC learning theory, into a strong one, and the book's population analysis re-derives the result as logistic regression in disguise. The lasso descends from Tibshirani's 1996 paper and, behind it, from wavelet shrinkage and signal processing, where soft thresholding was already the price of sparsity. Splines descend from Schoenberg's piecewise polynomials through Wahba's variational formulation, which produced the reproducing kernel theory that later powered kernel machines. The support vector machine descends from Vapnik's structural risk minimization, itself a reply to the question Fisher's discriminant left open: what if separation, not likelihood, is the objective. Trees descend from Morgan and Sonquist's AID program through Breiman's CART; the EM algorithm from Dempster, Laird and Rubin's 1977 unification of incomplete-data problems; covariance selection from Dempster's 1972 paper, which the graphical lasso finally made computable at scale. Each lineage shows a method surviving because it solved a variance problem that its era could finally compute.",
+      "theory_of_mind": "The authors write as three Stanford statisticians reclaiming machine learning for statistics. Their recurring move is to take a method the engineering community treats as a black box and exhibit the statistical object it estimates: boosting becomes additive logistic regression, neural networks become projection pursuit with priors, support vector machines become penalized hinge loss. The intended reader is a quantitatively serious practitioner who must choose methods under deadline, so the book privileges derivations that end in algorithms, algorithms that end in paths over tuning parameters, and warnings earned from the authors' own simulations. Friedman supplies the algorithmic inventions, Hastie the smoothing and basis-expansion machinery, Tibshirani the penalization and high-dimensional inference. Their shared conviction, visible on every page, is that flexibility without an error accounting system is not intelligence but noise with confidence.",
+      "cross_layer_veto": "The book's layers veto one another, and the vetoes are the content. The decision-theory layer vetoes any method talk that does not name a loss and a target functional. The bias-variance layer vetoes flexibility that has not been paid for in variance, and the optimism identity vetoes the training error as evidence of anything. The cross-validation layer vetoes every evaluation that lets screening, tuning, or feature selection leak outside the folds. The capacity layer, through VC bounds, vetoes the belief that zero training error implies knowledge, while its own looseness is vetoed in turn by empirical assessment. The generative layer is vetoed by the masking counterexample and by Efron's efficiency calculation whenever its assumptions are decorative. The sparsity layer vetoes dense optimism in high dimensions, and the multiple-testing layer vetoes per-hypothesis certainty when thousands of screens run at once. An engine that ingests these primitives must implement the vetoes as checks, not as decoration."
+    }
+  ],
+  "universal_lens": "The reusable lens is penalized empirical risk with honest accounting. Any predictive system, in any domain, can be interrogated with the book's five questions. What functional of the conditional distribution is being estimated, and under what loss. Where does flexibility live: in a basis, a kernel, a path of penalties, an ensemble, a graph. What effective complexity is actually consumed, measured in degrees of freedom or capacity rather than in parameter counts. How was error estimated, and did every adaptive step stay inside the validation loop. What sparsity or independence structure is being assumed, and what breaks when it fails. A method that cannot answer all five is not yet understood, whatever its leaderboard score.",
+  "gsi_mapping": "For the Galaxy Sports Institute research program, this book is the reference grammar for evaluating every external method claim before it enters the corpus as more than inventory. Its primitives supply the audit questions for papers and code: target functional, loss, complexity accounting, validation hygiene, sparsity assumptions. The false discovery rate primitive governs how the institute screens thousands of candidate signals without converting noise into doctrine, and the cross-validation leakage primitive governs how backtests and paper evaluations are read. The genealogy material supports provenance work: each modern method in the corpus can be traced to the older statistical problem it solved, which is how the institute distinguishes a genuine mechanism from a renamed one.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the mappings attach at the level of mechanism, not metaphor. Signal families enter as candidate features whose per-family contribution is estimated with covariance-penalty reasoning and cross-validated combination weights rather than asserted importance. Regime discovery uses prototypes and principal components on team and player state vectors, and dependence structure between signals is screened with graphical-model primitives so that correlated evidence is counted once. Every candidate signal faces the optimism audit: its apparent edge must be re-estimated with all selection steps inside the validation loop, and batches of candidates are promoted under false discovery control. Complexity budgets follow the bias-variance ledger, so a richer matchup model must show its variance payment before it displaces a simpler one."
+}

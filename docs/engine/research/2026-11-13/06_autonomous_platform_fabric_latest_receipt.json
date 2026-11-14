@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-14T14:38:17.387154+00:00",
+  "generated_at_utc": "2026-11-14T16:38:18.143578+00:00",
   "dry_run": false,
   "model_lane": "free",
   "max_cost_usd": 0.5,
@@ -7,7 +7,7 @@
   "week_info": {
     "season": 2026,
     "computed_week": 10,
-    "as_of_utc": "2026-11-14T14:38:17.386775+00:00"
+    "as_of_utc": "2026-11-14T16:38:18.120465+00:00"
   },
   "council_coverage": {
     "agent_council_seats": 23,
@@ -19,30 +19,35 @@
   "hold_gate": {
     "status": "WEEK10_HELD_FOR_CORPUS_COMPLETION",
     "slate_prep_allowed": false,
+    "public_publish_allowed": false,
     "pending_tier_a": 67,
+    "wired_tier_a": 1009,
+    "sovereign_books_loaded": 1064,
+    "oof_n_rows": 4823,
+    "internal_workflow_corpus_ready": true,
     "insufficient_ocr": 7,
-    "calibration_verified": true,
+    "calibration_verified": false,
     "receipt_loaded": true
   },
   "foundry_queue": {
     "exists": true,
     "db_path": "C:\\Users\\Garrett\\Sports\\foundry\\foundry.db",
     "by_status": {
-      "COMPLETE": 162,
+      "COMPLETE": 163,
       "DELEGATED_GCP": 8598,
       "DUPLICATE_WORK": 9,
       "INSUFFICIENT_OCR": 7,
       "INSUFFICIENT_SOURCE_ACCESS": 11,
-      "PENDING": 8338,
+      "PENDING": 8337,
       "QUARANTINED": 132
     },
     "pending_tier_a": 67,
-    "pending_total": 8338,
-    "complete_total": 162,
+    "pending_total": 8337,
+    "complete_total": 163,
     "delegated_gcp": 8598,
     "insufficient_ocr": 7,
-    "primitives_rows": 2693,
-    "reasoning_traces_rows": 235
+    "primitives_rows": 2725,
+    "reasoning_traces_rows": 236
   },
   "jules_audit_summary": {
     "live_api_queried": false,
@@ -117,7 +122,9 @@
         "ascend"
       ],
       "action": "empirical_bayes_oof_corpus_priors_check",
-      "status": "READY",
+      "status": "ACTIVE_INCREMENTAL_OOF_CALIBRATION",
+      "public_publish_allowed": false,
+      "live_calibration_flag_enabled": false,
       "cost_usd": 0.0
     },
     {
