@@ -472,3 +472,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 19:31:38 | COMPLETE | 5862404626d4c32a | primitives=18 think_words=900
 - 2026-11-13 19:53:40 | CLAIMED | 3b7b1ffc7100f779 | worker=hermes-inline file=Bubeck-2015-ConvexOptimizationAlgorithmsAndComplexity.pdf
 - 2026-11-13 20:00:59 | COMPLETE | 3b7b1ffc7100f779 | primitives=19 think_words=874
+- 2026-11-13 20:03:09 | CLAIMED | 60ed04ccc855408c | worker=hermes-inline file=KochenderferWheeler-2026-AlgorithmsForOptimization2.pdf
+- 2026-11-13 20:18:50 | COMPLETE | 60ed04ccc855408c | primitives=18 think_words=864

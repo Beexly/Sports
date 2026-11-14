@@ -1,0 +1,441 @@
+{
+ "book_id": "60ed04ccc855408c",
+ "title": "Kochenderfer & Wheeler 2026 — Algorithms for Optimization (2nd ed)",
+ "source_status": "READABLE",
+ "source_note": "Mykel J. Kochenderfer and Tim A. Wheeler, Algorithms for Optimization, 2nd ed, MIT Press, 2026 (CC-BY-NC-ND, 2026-09-05 printing). 634 PDF pages, 1.09M chars extracted via pymupdf. Core read: line search/trust region ch4, quasi-Newton BFGS/L-BFGS ch6, simulated annealing ch8.4, Gaussian process surrogate ch18, surrogate optimization acquisition functions ch19 (prediction/error/LCB/PI/EI). Printed-page provenance. Not retracted; title matches content. Zero sportsbook odds.",
+ "pages_total": 634,
+ "pages_read": 6,
+ "primitives": [
+  {
+   "primitive_id": "gp_surrogate",
+   "name": "Gaussian process: a probability distribution over functions",
+   "verbatim_quote": "A common probabilistic surrogate model is the Gaussian process, which represents a probability distribution over functions.",
+   "page": 389,
+   "latex": "f(x)\\sim\\mathcal{GP}(m(x),k(x,x')),\\quad p(f(x_*)\\mid D)=\\mathcal{N}(\\hat\\mu(x_*),\\hat\\sigma^2(x_*))",
+   "symbol_and_unit_ledger": {
+    "m(x)": "mean function [objective units]",
+    "k(x,x')": "covariance kernel [objective^2]",
+    "sigma_hat": "predictive std [objective units]"
+   },
+   "assumptions": [
+    "Probabilistic surrogate quantifies confidence",
+    "Posterior mean and variance from evaluated design points"
+   ],
+   "breakdown_regime": "A misspecified kernel gives overconfident predictions; the GP uncertainty is only as good as the kernel.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine models the unknown edge surface over strategy space as a Gaussian process: a distribution over functions giving both a predicted mean edge and an uncertainty at every strategy. This is the probabilistic surrogate that lets the engine reason about where it is confident versus where it must explore.",
+    "source_operator": "gp_surrogate",
+    "telemetry": "GSE telemetry: GP posterior mean and std over strategy space; verify uncertainty is calibrated to held-out evaluations."
+   }
+  },
+  {
+   "primitive_id": "prediction_based_waste",
+   "name": "Pure prediction-based search wastes evaluations on confident regions",
+   "verbatim_quote": "Sampling at locations where we are already confident in the objective value is a waste of function evaluations.",
+   "page": 411,
+   "latex": "x^{(m+1)}=\\arg\\min_{x\\in X}\\hat\\mu(x)\\quad\\text{(ignores uncertainty)}",
+   "symbol_and_unit_ledger": {
+    "mu_hat": "surrogate predicted mean [objective units]",
+    "x^(m+1)": "next design point"
+   },
+   "assumptions": [
+    "Prediction-based optimization selects the surrogate minimizer",
+    "Does not take uncertainty into account"
+   ],
+   "breakdown_regime": "New samples cluster near existing ones; the search never reduces uncertainty in unexplored regions.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine must not greedily exploit its current best strategy forever: sampling only where it is already confident wastes expensive game evaluations and never discovers better strategies. This is the formal warning against pure exploitation, the optimization counterpart of the RL explore/exploit veto.",
+    "source_operator": "prediction_based_waste",
+    "telemetry": "GSE telemetry: evaluation clustering vs uncertainty reduction; verify the search does not waste samples on confident regions."
+   }
+  },
+  {
+   "primitive_id": "error_based_exploration",
+   "name": "Error-based exploration samples where uncertainty is maximal",
+   "verbatim_quote": "A large standard deviation indicates low confidence, so error-based exploration samples at design points with maximum uncertainty.",
+   "page": 412,
+   "latex": "x^{(m+1)}=\\arg\\max_{x\\in X}\\hat\\sigma(x)",
+   "symbol_and_unit_ledger": {
+    "sigma_hat": "surrogate predictive std [objective units]"
+   },
+   "assumptions": [
+    "Sample at maximum uncertainty to increase confidence",
+    "Must be constrained to a closed region (unbounded sets stay uncertain)"
+   ],
+   "breakdown_regime": "Pure error-based exploration samples regions unlikely to contain the optimum; it reduces uncertainty but not the objective.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's pure-exploration mode samples the strategies it is most uncertain about, to learn the edge surface. But like error-based exploration, this must be bounded and balanced: exploring only uncertainty wastes evaluations on strategies unlikely to be profitable.",
+    "source_operator": "error_based_exploration",
+    "telemetry": "GSE telemetry: max-uncertainty sampling within a bounded strategy region; verify exploration is constrained."
+   }
+  },
+  {
+   "primitive_id": "lower_confidence_bound",
+   "name": "Lower confidence bound trades exploration against exploitation",
+   "verbatim_quote": "Lower confidence bound exploration trades off between greedy minimization employed by prediction-based optimization and uncertainty reduction employed by error-based exploration.",
+   "page": 413,
+   "latex": "\\mathrm{LB}(x)=\\hat\\mu(x)-\\alpha\\hat\\sigma(x),\\quad x^{(m+1)}=\\arg\\min_x\\mathrm{LB}(x)",
+   "symbol_and_unit_ledger": {
+    "alpha": "exploration-exploitation tradeoff [dimensionless, >=0]",
+    "alpha=0": "pure exploitation",
+    "alpha->inf": "pure exploration"
+   },
+   "assumptions": [
+    "LCB balances predicted mean against uncertainty",
+    "alpha controls the tradeoff"
+   ],
+   "breakdown_regime": "Wrong alpha over-explores (wastes evaluations) or over-exploits (misses better strategies).",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE strategy-search acquisition function: minimize mu_hat - alpha*sigma_hat, the lower confidence bound on the edge. alpha is the explore/exploit knob, exactly the UCB/OFU principle from the RL layer (here a lower bound for minimization). The engine tunes alpha to balance exploiting known profitable strategies against exploring uncertain ones.",
+    "source_operator": "lower_confidence_bound",
+    "telemetry": "GSE telemetry: LCB acquisition alpha; verify the explore/exploit balance matches the UCB principle."
+   }
+  },
+  {
+   "primitive_id": "exploration_exploitation",
+   "name": "Exploration minimizes uncertainty; exploitation minimizes the predicted mean",
+   "verbatim_quote": "Exploration involves minimizing uncertainty, and exploitation involves minimizing the predicted mean.",
+   "page": 413,
+   "latex": "\\text{exploration}=\\min\\hat\\sigma(x);\\quad \\text{exploitation}=\\min\\hat\\mu(x)",
+   "symbol_and_unit_ledger": {
+    "exploration": "uncertainty reduction",
+    "exploitation": "predicted-mean minimization"
+   },
+   "assumptions": [
+    "The two objectives are distinct and must be balanced",
+    "alpha=0 gives exploitation; alpha->inf gives exploration"
+   ],
+   "breakdown_regime": "Conflating the two leads to either premature convergence or wasted exploration.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine separates two distinct goals: exploration (learn the edge surface, reduce uncertainty) and exploitation (pick the strategy with the best predicted edge). This is the optimization statement of the RL explore/exploit duality, and the engine must balance them rather than collapse one into the other.",
+    "source_operator": "exploration_exploitation",
+    "telemetry": "GSE telemetry: exploration vs exploitation objective split; verify both are tracked and balanced."
+   }
+  },
+  {
+   "primitive_id": "probability_of_improvement",
+   "name": "Probability of improvement: chance of beating the best so far",
+   "verbatim_quote": "We can sometimes obtain faster convergence by selecting the design point that maximizes the chance that the new point will be better than the samples we have seen so far.",
+   "page": 413,
+   "latex": "P(y<y_{\\min})=\\Phi\\!\\left(\\frac{y_{\\min}-\\hat\\mu}{\\hat\\sigma}\\right)",
+   "symbol_and_unit_ledger": {
+    "y_min": "best sampled value [objective units]",
+    "Phi": "standard normal CDF [dimensionless]",
+    "sigma_hat": "predictive std"
+   },
+   "assumptions": [
+    "Improvement I(y)=max(y_min-y,0)",
+    "PI is zero where sigma_hat=0 (noiseless measured points)"
+   ],
+   "breakdown_regime": "PI favors safe small improvements; it can stall near the current best.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's probability-of-improvement acquisition picks the strategy most likely to beat its current best edge. It is a conservative search criterion, useful when evaluations are expensive, but it tends toward small safe gains rather than large discoveries.",
+    "source_operator": "probability_of_improvement",
+    "telemetry": "GSE telemetry: PI acquisition value per strategy; verify it targets beating the current best edge."
+   }
+  },
+  {
+   "primitive_id": "expected_improvement",
+   "name": "Expected improvement: magnitude-weighted chance of beating the best",
+   "verbatim_quote": "We can focus our exploration on points that maximize our expected improvement over the current best function value.",
+   "page": 415,
+   "latex": "\\mathbb{E}[I(y)]=\\hat\\sigma\\int_{-\\infty}^{y'_{\\min}}(y'_{\\min}-z)\\,\\mathcal{N}(z\\mid 0,1)\\,dz",
+   "symbol_and_unit_ledger": {
+    "E[I]": "expected improvement [objective units]",
+    "y'_min": "(y_min-mu_hat)/sigma_hat [dimensionless]"
+   },
+   "assumptions": [
+    "EI weights improvement by its magnitude, not just its probability",
+    "Balances exploration and exploitation implicitly"
+   ],
+   "breakdown_regime": "EI requires the GP predictive distribution; a poor surrogate misleads the acquisition.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's expected-improvement acquisition is the preferred strategy-search criterion: it weights the chance of beating the best edge by how much better, so it pursues large discoveries rather than safe small gains. This is the magnitude-aware explore/exploit balance the engine uses to allocate expensive game evaluations.",
+    "source_operator": "expected_improvement",
+    "telemetry": "GSE telemetry: EI acquisition value per strategy; verify it pursues magnitude-weighted improvement."
+   }
+  },
+  {
+   "primitive_id": "pi_vs_ei",
+   "name": "Probability of improvement stalls; expected improvement makes bigger gains",
+   "verbatim_quote": "While maximizing the probability of improvement will tend to decrease the objective function over time, it does not improve very much with each iteration.",
+   "page": 414,
+   "latex": "\\text{PI: high chance, small gain};\\quad \\text{EI: magnitude-weighted gain}",
+   "symbol_and_unit_ledger": {
+    "PI": "probability of improvement [dimensionless]",
+    "EI": "expected improvement [objective units]"
+   },
+   "assumptions": [
+    "PI maximizes chance but not magnitude",
+    "EI improves more per iteration"
+   ],
+   "breakdown_regime": "PI can converge slowly because it prefers safe near-best points.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine prefers expected improvement over probability of improvement for strategy search: PI stalls because it chases safe small gains, while EI makes bigger per-evaluation progress. This is the formal reason the engine's acquisition function is magnitude-aware, not just probability-aware.",
+    "source_operator": "pi_vs_ei",
+    "telemetry": "GSE telemetry: per-evaluation improvement under EI vs PI; verify EI yields larger gains."
+   }
+  },
+  {
+   "primitive_id": "trust_region",
+   "name": "Trust region: optimize a local model within a trusted radius",
+   "verbatim_quote": "Trust regions need not be circular. In some cases, certain directions may have higher trust than others.",
+   "page": 73,
+   "latex": "\\min_p\\ f(x_0)+\\nabla f(x_0)^\\top p+\\tfrac{1}{2}p^\\top H p\\ \\text{s.t.}\\ \\|p\\|\\le\\delta",
+   "symbol_and_unit_ledger": {
+    "delta": "trust-region radius [length]",
+    "H": "Hessian / model curvature",
+    "E": "ellipse matrix for anisotropic trust"
+   },
+   "assumptions": [
+    "Quadratic model trusted only within radius delta",
+    "Radius grown/shrunk by agreement of model and true function"
+   ],
+   "breakdown_regime": "If the model is poor far from x0, a large radius misleads; the radius must adapt.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine searches strategy space within a trust region: it optimizes a local model of the edge only within a radius it trusts, expanding when the model agrees with reality and contracting when it does not. This is the safe, bounded search that prevents the engine from over-committing to an extrapolated edge far from evaluated strategies.",
+    "source_operator": "trust_region",
+    "telemetry": "GSE telemetry: trust-region radius adaptation; verify the radius shrinks when the model disagrees with evaluated edges."
+   }
+  },
+  {
+   "primitive_id": "bfgs_quasi_newton",
+   "name": "BFGS: quasi-Newton inverse-Hessian update",
+   "verbatim_quote": "BFGS does better than DFP with approximate line search but still uses an",
+   "page": 105,
+   "latex": "Q\\leftarrow Q-\\frac{\\delta\\gamma^\\top Q+Q\\gamma\\delta^\\top}{\\delta^\\top\\gamma}+\\left(1+\\frac{\\gamma^\\top Q\\gamma}{\\delta^\\top\\gamma}\\right)\\frac{\\delta\\delta^\\top}{\\delta^\\top\\gamma}",
+   "symbol_and_unit_ledger": {
+    "Q": "approximate inverse Hessian [length^2/objective]",
+    "delta": "step x'-x [length]",
+    "gamma": "gradient change g'-g"
+   },
+   "assumptions": [
+    "Builds curvature from gradient differences",
+    "Dense n x n matrix; superlinear convergence"
+   ],
+   "breakdown_regime": "The BFGS update fails when delta^T gamma ~ 0 (skip the update); dense storage limits scale.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's curvature-aware descent is BFGS: it builds an approximate inverse Hessian from gradient differences to take Newton-like steps without computing the full Hessian. This is the practical second-order method behind fast calibration convergence, with L-BFGS for the high-dimensional strategy space.",
+    "source_operator": "bfgs_quasi_newton",
+    "telemetry": "GSE telemetry: BFGS inverse-Hessian approximation; verify curvature-aware steps and the delta^T gamma guard."
+   }
+  },
+  {
+   "primitive_id": "lbfgs_limited_memory",
+   "name": "L-BFGS: limited-memory curvature for large problems",
+   "verbatim_quote": "L-BFGS stores the last m values for δ and γ rather than the full inverse",
+   "page": 105,
+   "latex": "\\text{L-BFGS: store }m\\text{ recent }(\\delta,\\gamma)\\text{ pairs},\\quad \\text{two-loop recursion for }d=-Q\\nabla f",
+   "symbol_and_unit_ledger": {
+    "m": "memory length [count, typically 3-20]",
+    "delta,gamma": "step and gradient-change pairs"
+   },
+   "assumptions": [
+    "Approximates BFGS without the dense matrix",
+    "Two-loop recursion computes the descent direction"
+   ],
+   "breakdown_regime": "Small m loses curvature accuracy; the memory/accuracy tradeoff is tuned by m.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine uses L-BFGS for the high-dimensional strategy/calibration space: storing only the last m step/gradient pairs instead of the dense inverse Hessian makes second-order descent tractable at scale. This is the memory-efficient curvature method that lets the engine use Newton-like steps in a huge parameter space.",
+    "source_operator": "lbfgs_limited_memory",
+    "telemetry": "GSE telemetry: L-BFGS memory m and two-loop direction; verify limited-memory curvature at scale."
+   }
+  },
+  {
+   "primitive_id": "simulated_annealing_metropolis",
+   "name": "Simulated annealing: Metropolis criterion escapes local minima",
+   "verbatim_quote": "allows the algorithm to escape from local minima when the temperature is high.",
+   "page": 141,
+   "latex": "P(\\text{accept})=\\begin{cases}1&\\Delta y\\le 0\\\\ e^{-\\Delta y/t}&\\Delta y>0\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "Delta y": "objective change f(x')-f(x) [objective units]",
+    "t": "temperature [objective units]"
+   },
+   "assumptions": [
+    "Metropolis criterion accepts uphill moves with probability exp(-Delta y/t)",
+    "High temperature enables escape from local minima"
+   ],
+   "breakdown_regime": "At low temperature the search freezes into a local minimum; the schedule controls this.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's strategy exploration is simulated annealing: the Metropolis criterion accepts worse strategies with probability exp(-Delta y/t), letting the search escape local optima when the temperature is high. This is the formal license to explore inferior strategies early, the optimization counterpart of the RL exploration and the MH downhill moves.",
+    "source_operator": "simulated_annealing_metropolis",
+    "telemetry": "GSE telemetry: Metropolis acceptance of uphill strategy moves; verify high-temperature escape from local optima."
+   }
+  },
+  {
+   "primitive_id": "annealing_schedule",
+   "name": "Annealing schedule: cool slowly enough to find the global optimum",
+   "verbatim_quote": "The temperature must be brought down to ensure convergence. If it is brought down too quickly, the search method may not cover the portion of the search space containing the global minimum.",
+   "page": 141,
+   "latex": "t^{(k+1)}=\\gamma t^{(k)},\\ \\gamma\\in(0,1);\\quad t^{(k)}=t^{(1)}/k\\ \\text{(fast)}",
+   "symbol_and_unit_ledger": {
+    "gamma": "cooling decay factor [dimensionless]",
+    "t^(k)": "temperature at iteration k [objective units]"
+   },
+   "assumptions": [
+    "Temperature must decrease for convergence",
+    "Too-fast cooling misses the global minimum's region"
+   ],
+   "breakdown_regime": "Exponential cooling is common but can freeze prematurely; logarithmic is safe but slow.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's exploration schedule is an annealing schedule: it must cool the strategy-exploration temperature slowly enough to cover the region containing the best strategy, but fast enough to converge. Cooling too quickly freezes the engine into a suboptimal strategy; this is the formal explore-then-converge discipline.",
+    "source_operator": "annealing_schedule",
+    "telemetry": "GSE telemetry: annealing temperature schedule; verify cooling is slow enough to cover the global-optimum region."
+   }
+  },
+  {
+   "primitive_id": "logarithmic_annealing_guarantee",
+   "name": "Logarithmic annealing guarantees the global optimum (asymptotically)",
+   "verbatim_quote": "is guaranteed to asymptotically reach the global optimum under certain conditions",
+   "page": 141,
+   "latex": "t^{(k)}=\\frac{t^{(1)}\\ln 2}{\\ln(k+1)}\\ \\Rightarrow\\ \\text{asymptotic global optimum (Hajek)}",
+   "symbol_and_unit_ledger": {
+    "t^(k)": "logarithmic cooling schedule [objective units]",
+    "k": "iteration [count]"
+   },
+   "assumptions": [
+    "Hajek's cooling-schedule conditions",
+    "Guaranteed but very slow in practice"
+   ],
+   "breakdown_regime": "The logarithmic schedule is impractically slow; exponential/fast schedules trade the guarantee for speed.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine knows the theoretical ideal: a logarithmic annealing schedule guarantees reaching the global best strategy asymptotically, but it is too slow to use. This is the formal statement of the explore/converge tradeoff: the guaranteed-optimal schedule is impractical, so the engine uses a faster schedule and accepts a bounded risk of a local optimum.",
+    "source_operator": "logarithmic_annealing_guarantee",
+    "telemetry": "GSE telemetry: schedule choice vs global-optimum guarantee; verify the engine acknowledges the speed/guarantee tradeoff."
+   }
+  },
+  {
+   "primitive_id": "line_search",
+   "name": "Line search chooses the step size along a descent direction",
+   "verbatim_quote": "Instead of using a fixed or decaying step factor, we can use line search to directly",
+   "page": 64,
+   "latex": "\\alpha_k=\\arg\\min_{\\alpha>0}f(x_k+\\alpha d_k)",
+   "symbol_and_unit_ledger": {
+    "alpha_k": "step size [length]",
+    "d_k": "descent direction [length]"
+   },
+   "assumptions": [
+    "Line search optimizes the step along the direction",
+    "Backtracking/Armijo and Wolfe conditions make it approximate and cheap"
+   ],
+   "breakdown_regime": "Exact line search is expensive; approximate (Wolfe) conditions suffice for convergence.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's training step size is chosen by line search: rather than a fixed decay, it searches along the descent direction for a step that sufficiently reduces the loss (Armijo/Wolfe conditions). This is the adaptive step-size discipline that makes calibration convergence robust without manual tuning.",
+    "source_operator": "line_search",
+    "telemetry": "GSE telemetry: line-search step size and Wolfe-condition satisfaction; verify adaptive steps along the descent direction."
+   }
+  },
+  {
+   "primitive_id": "surrogate_optimization",
+   "name": "Surrogate optimization: optimize a cheap model of the expensive objective",
+   "verbatim_quote": "the surrogate model instead of the actual objective function to improve the design.",
+   "page": 30,
+   "latex": "\\min_x \\hat f(x)\\ \\text{(surrogate)}\\quad\\text{vs}\\quad \\min_x f(x)\\ \\text{(expensive true objective)}",
+   "symbol_and_unit_ledger": {
+    "f_hat": "surrogate model [objective units]",
+    "f": "true expensive objective [objective units]"
+   },
+   "assumptions": [
+    "The true objective is expensive to evaluate",
+    "The surrogate is cheap and guides where to evaluate next"
+   ],
+   "breakdown_regime": "A poor surrogate misleads the search; it must be refit as new evaluations arrive.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine optimizes a surrogate of the expensive true objective: each full game simulation is costly, so the engine builds a cheap model of the edge surface and uses it to decide which strategies to simulate next. This is the sample-efficient search that makes the crucible budget go further.",
+    "source_operator": "surrogate_optimization",
+    "telemetry": "GSE telemetry: surrogate-guided evaluation selection; verify the surrogate is refit as new game evaluations arrive."
+   }
+  },
+  {
+   "primitive_id": "gp_mean_std",
+   "name": "A Gaussian process gives mean and standard deviation at every point",
+   "verbatim_quote": "A Gaussian process can tell us both the mean and standard deviation at every point.",
+   "page": 412,
+   "latex": "p(f(x)\\mid D)=\\mathcal{N}(\\hat\\mu(x),\\hat\\sigma^2(x))\\ \\forall x",
+   "symbol_and_unit_ledger": {
+    "mu_hat(x)": "predictive mean [objective units]",
+    "sigma_hat(x)": "predictive std [objective units]"
+   },
+   "assumptions": [
+    "The GP posterior is a full distribution, not a point estimate",
+    "Uncertainty grows away from evaluated points"
+   ],
+   "breakdown_regime": "The mean/std are only as reliable as the kernel and the evaluated data.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's edge model reports both a predicted edge and its uncertainty at every strategy, not just a point estimate. This full-distribution output is what lets the acquisition functions balance exploration against exploitation and what lets the engine PASS when the uncertainty is too high.",
+    "source_operator": "gp_mean_std",
+    "telemetry": "GSE telemetry: per-strategy mean and std edge; verify the engine uses the full distribution, not a point estimate."
+   }
+  },
+  {
+   "primitive_id": "sa_temperature_control",
+   "name": "Temperature controls the acceptance probability in annealing",
+   "verbatim_quote": "The temperature parameter t controls the acceptance probability.",
+   "page": 141,
+   "latex": "P(\\text{uphill accept})=e^{-\\Delta y/t},\\quad t\\downarrow\\Rightarrow P\\downarrow",
+   "symbol_and_unit_ledger": {
+    "t": "temperature [objective units]",
+    "Delta y": "uphill objective change [objective units]"
+   },
+   "assumptions": [
+    "Higher temperature accepts more uphill moves",
+    "Annealing schedule reduces temperature over iterations"
+   ],
+   "breakdown_regime": "Temperature too high wastes evaluations on bad moves; too low freezes the search.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's exploration temperature is the knob controlling how readily it accepts inferior strategies: high temperature explores broadly, low temperature exploits narrowly. This is the single parameter that governs the explore/exploit balance in the annealing search, and it must be scheduled, not fixed.",
+    "source_operator": "sa_temperature_control",
+    "telemetry": "GSE telemetry: annealing temperature vs uphill-acceptance rate; verify the temperature is scheduled."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "60ed04ccc855408c-t1",
+   "think": "Retrocausal Genealogy. Kochenderfer and Wheeler's Algorithms for Optimization is the layer that gives the Foundry its practical search machinery, and its lineage runs backward from the GSE strategy search to the surrogate optimization framework. The root is the expensive-objective problem: when each evaluation of the true objective is costly, optimize a cheap surrogate model instead (Chapter 17), and quantify confidence in that surrogate with a probabilistic model, the Gaussian process, which represents a distribution over functions (Chapter 18). From this root grow the acquisition functions of surrogate optimization (Chapter 19): prediction-based exploration minimizes the surrogate mean but wastes evaluations on confident regions; error-based exploration samples maximum uncertainty but ignores the objective; the lower confidence bound LB(x)=mu_hat-alpha*sigma_hat trades the two, with alpha the explore/exploit knob; probability of improvement maximizes the chance of beating the best; and expected improvement weights that chance by magnitude, making bigger per-evaluation gains. The descent-method lineage supplies line search (Armijo/Wolfe step-size selection), trust regions (optimize a local quadratic model within a trusted radius), and quasi-Newton curvature (BFGS and its limited-memory variant L-BFGS). The stochastic-method lineage supplies simulated annealing, whose Metropolis criterion accepts uphill moves with probability exp(-Delta y/t) to escape local minima, governed by an annealing schedule that must cool slowly enough to reach the global optimum. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the edge surface is a GP surrogate, the strategy search is an acquisition function, the explore/exploit knob is alpha, the safe search is a trust region, and the early exploration is simulated annealing.\n\nRecursive Theory of Mind. The engine reasons about its own uncertainty over the edge surface and about the defense's adaptation in a recursive stack that Kochenderfer makes precise. At the base the engine holds a Gaussian process over the unknown edge surface, so it reasons about both its predicted edge and its confidence at every strategy, and it knows that sampling where it is already confident is a waste. One level up, the engine reasons about its own search policy: it chooses an acquisition function (expected improvement) that balances exploiting known profitable strategies against exploring uncertain ones, a recursive awareness that pure exploitation stalls and pure exploration wastes evaluations. The engine also models the defense as an optimizer adapting its own objective: the coverage call is the defense's descent step against the offense's intent, and the engine reasons about the defense's trust region (how far it will deviate from its base scheme) to anticipate adaptation. The annealing schedule adds recursive humility: the engine knows that cooling too quickly freezes it into a local optimum, so it reasons about its own exploration temperature and schedules it to cover the region containing the best strategy before converging.\n\nCross-Layer Veto Adjudication. Kochenderfer's optimization layer supplies the vetoes that bind the stack. First, the waste veto: prediction-based search that samples only confident regions wastes expensive evaluations, so the engine vetoes pure exploitation and requires an uncertainty-aware acquisition function. Second, the explore/exploit veto: the lower confidence bound must balance mu_hat against alpha*sigma_hat, so the engine vetoes both alpha=0 (pure greed) and alpha->infinity (pure exploration) and tunes the tradeoff, the optimization form of the RL UCB gate. Third, the trust-region veto: the local model is trusted only within a radius, so the engine vetoes over-committing to an extrapolated edge far from evaluated strategies and contracts the radius when the model disagrees with reality. Fourth, the annealing veto: cooling too quickly misses the global optimum's region, so the engine vetoes a prematurely frozen search and requires a schedule slow enough to cover the best strategy. Fifth, the surrogate veto: a poor surrogate misleads the search, so the engine refits the GP as new evaluations arrive and vetoes decisions based on a stale or overconfident model. The adjudication order is fixed: avoid wasted evaluations first, then balance explore/exploit, then bound the trust region, then schedule the cooling, then keep the surrogate honest. A candidate failing any veto is PASSed, and the whole search is bound to sample-efficient, uncertainty-aware optimization rather than to greedy or reckless exploration.\n\nThe load-bearing isomorphism is that GSE strategy search IS Bayesian optimization. The unknown edge surface over strategy space is a Gaussian process surrogate giving mean and uncertainty at every point; the search is an acquisition function (expected improvement, the lower confidence bound mu_hat-alpha*sigma_hat) balancing exploration against exploitation, exactly the RL UCB/OFU principle; the safe search is a trust region that contracts when the model disagrees with reality; and the early exploration is simulated annealing whose Metropolis criterion and cooling schedule govern the escape from local optima. Kochenderfer unifies with the other layers: the explore/exploit alpha is the RL UCB coefficient and the MH downhill acceptance, the GP uncertainty is Murphy's posterior variance and the VI overconfidence warning, the trust region is the bounded safe search of the decision layer, and BFGS/L-BFGS are the practical curvature methods behind Bubeck's convergence rates. Kochenderfer does not sit beside the stack; it is the sample-efficient search layer that turns the calibrated posterior and the convergence theory into a practical strategy-discovery engine, and it is what lets the Foundry treat its explore/exploit balance and its evaluation budget as principled acquisition decisions rather than guesses.",
+   "retrocausal_genealogy": "Retrocausal Genealogy. Kochenderfer and Wheeler's Algorithms for Optimization is the layer that gives the Foundry its practical search machinery, and its lineage runs backward from the GSE strategy search to the surrogate optimization framework. The root is the expensive-objective problem: when each evaluation of the true objective is costly, optimize a cheap surrogate model instead (Chapter 17), and quantify confidence in that surrogate with a probabilistic model, the Gaussian process, which represents a distribution over functions (Chapter 18). From this root grow the acquisition functions of surrogate optimization (Chapter 19): prediction-based exploration minimizes the surrogate mean but wastes evaluations on confident regions; error-based exploration samples maximum uncertainty but ignores the objective; the lower confidence bound LB(x)=mu_hat-alpha*sigma_hat trades the two, with alpha the explore/exploit knob; probability of improvement maximizes the chance of beating the best; and expected improvement weights that chance by magnitude, making bigger per-evaluation gains. The descent-method lineage supplies line search (Armijo/Wolfe step-size selection), trust regions (optimize a local quadratic model within a trusted radius), and quasi-Newton curvature (BFGS and its limited-memory variant L-BFGS). The stochastic-method lineage supplies simulated annealing, whose Metropolis criterion accepts uphill moves with probability exp(-Delta y/t) to escape local minima, governed by an annealing schedule that must cool slowly enough to reach the global optimum. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the edge surface is a GP surrogate, the strategy search is an acquisition function, the explore/exploit knob is alpha, the safe search is a trust region, and the early exploration is simulated annealing.",
+   "theory_of_mind": "Recursive Theory of Mind. The engine reasons about its own uncertainty over the edge surface and about the defense's adaptation in a recursive stack that Kochenderfer makes precise. At the base the engine holds a Gaussian process over the unknown edge surface, so it reasons about both its predicted edge and its confidence at every strategy, and it knows that sampling where it is already confident is a waste. One level up, the engine reasons about its own search policy: it chooses an acquisition function (expected improvement) that balances exploiting known profitable strategies against exploring uncertain ones, a recursive awareness that pure exploitation stalls and pure exploration wastes evaluations. The engine also models the defense as an optimizer adapting its own objective: the coverage call is the defense's descent step against the offense's intent, and the engine reasons about the defense's trust region (how far it will deviate from its base scheme) to anticipate adaptation. The annealing schedule adds recursive humility: the engine knows that cooling too quickly freezes it into a local optimum, so it reasons about its own exploration temperature and schedules it to cover the region containing the best strategy before converging.",
+   "cross_layer_veto": "Cross-Layer Veto Adjudication. Kochenderfer's optimization layer supplies the vetoes that bind the stack. First, the waste veto: prediction-based search that samples only confident regions wastes expensive evaluations, so the engine vetoes pure exploitation and requires an uncertainty-aware acquisition function. Second, the explore/exploit veto: the lower confidence bound must balance mu_hat against alpha*sigma_hat, so the engine vetoes both alpha=0 (pure greed) and alpha->infinity (pure exploration) and tunes the tradeoff, the optimization form of the RL UCB gate. Third, the trust-region veto: the local model is trusted only within a radius, so the engine vetoes over-committing to an extrapolated edge far from evaluated strategies and contracts the radius when the model disagrees with reality. Fourth, the annealing veto: cooling too quickly misses the global optimum's region, so the engine vetoes a prematurely frozen search and requires a schedule slow enough to cover the best strategy. Fifth, the surrogate veto: a poor surrogate misleads the search, so the engine refits the GP as new evaluations arrive and vetoes decisions based on a stale or overconfident model. The adjudication order is fixed: avoid wasted evaluations first, then balance explore/exploit, then bound the trust region, then schedule the cooling, then keep the surrogate honest. A candidate failing any veto is PASSed, and the whole search is bound to sample-efficient, uncertainty-aware optimization rather than to greedy or reckless exploration."
+  }
+ ],
+ "universal_lens": "Any system optimizing an expensive objective is governed by surrogate optimization: build a cheap probabilistic model (a Gaussian process, a distribution over functions) that reports mean and uncertainty everywhere, and choose evaluations by an acquisition function balancing exploration (minimize uncertainty) against exploitation (minimize the predicted mean) via a lower confidence bound mu-alpha*sigma. Probability of improvement stalls on safe gains; expected improvement weights magnitude. Bound the search with trust regions, use line search and quasi-Newton curvature (BFGS/L-BFGS) for descent, and escape local optima by simulated annealing with a Metropolis criterion and a cooling schedule slow enough to reach the global optimum.",
+ "gsi_mapping": "For GSI, this is the epistemology of sample-efficient search under uncertainty: why a probabilistic surrogate must report uncertainty as well as a prediction, why pure exploitation wastes evaluations and pure exploration ignores the objective, why an acquisition function must balance the two, why a trust region must contract when the model disagrees with reality, and why an annealing schedule must cool slowly enough to cover the global optimum. It is the search discipline that turns an expensive objective into a principled, uncertainty-aware exploration-exploitation policy and treats the evaluation budget as a resource to be allocated by acquisition, not spent greedily.",
+ "gse_mapping": "For GSE, this is the sample-efficient strategy-search layer: the unknown edge surface over strategy space is a Gaussian process surrogate (mean + uncertainty everywhere); the search is an expected-improvement / lower-confidence-bound acquisition (mu_hat - alpha*sigma_hat) balancing explore/exploit, the RL UCB principle; the safe search is a trust region that contracts when the model disagrees with evaluated edges; early exploration is simulated annealing (Metropolis criterion exp(-Delta y/t), scheduled cooling); and descent uses line search plus BFGS/L-BFGS curvature. Each expensive game simulation is allocated by acquisition, not spent greedily on confident regions.",
+ "layer2_summary": "[ISOMORPHISM] GSE strategy search IS Bayesian optimization: edge surface = GP surrogate (mean+uncertainty); search = expected-improvement / lower-confidence-bound acquisition (mu_hat-alpha*sigma_hat) = RL UCB explore/exploit; safe search = trust region (contracts on model disagreement); early exploration = simulated annealing (Metropolis exp(-Delta y/t), scheduled cooling); descent = line search + BFGS/L-BFGS curvature; expensive game evaluations allocated by acquisition."
+}
