@@ -602,3 +602,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 04:46:32 | COMPLETE | 3789b1db7ff3cab8 | primitives=27 think_words=929
 - 2026-11-14 04:47:53 | CLAIMED | 238bb03f7c401b23 | worker=hermes-inline shard03 file=2025 - Optimizing Lead Distance - Whitney-Epstein et al.pdf
 - 2026-11-14 04:52:01 | COMPLETE | 238bb03f7c401b23 | primitives=12 think_words=872
+- 2026-11-14 04:53:00 | CLAIMED | 1c8f0d087d5d4fed | worker=hermes-inline shard03 file=2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias.pdf
+- 2026-11-14 04:59:33 | COMPLETE | 1c8f0d087d5d4fed | primitives=32 think_words=919
