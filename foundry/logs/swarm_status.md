@@ -518,3 +518,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 23:04:38 | COMPLETE | 64f765ba0a849b1d | primitives=26 think_words=992
 - 2026-11-13 23:09:22 | CLAIMED | 4f750a0c8577fe9a | worker=hermes-inline targeted hand-delivered file=Chapter-1-Mental-Game-of-Football.pdf
 - 2026-11-13 23:10:49 | COMPLETE | 4f750a0c8577fe9a | primitives=18 think_words=872
+- 2026-11-13 23:13:44 | CLAIMED | e2e0f698eee97fdc | worker=hermes-inline targeted hand-delivered file=preview-9781135284923_A25776191.pdf
+- 2026-11-13 23:14:16 | COMPLETE | e2e0f698eee97fdc | primitives=15 think_words=856

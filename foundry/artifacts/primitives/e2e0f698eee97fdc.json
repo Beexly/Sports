@@ -1,0 +1,341 @@
+{
+ "book_id": "e2e0f698eee97fdc",
+ "title": "Psychology in Football: Working with Elite and Professional Players",
+ "author": "Mark Nesti (Reader in Sport Psychology, Liverpool John Moores University)",
+ "year": 2010,
+ "source_pdf": "C:/Users/Garrett/Downloads/preview-9781135284923_A25776191.pdf",
+ "source_note": "PREVIEW / PARTIAL SOURCE: the delivered PDF is a Routledge publisher preview (ISBN 9781135284923) containing only the front matter (blurb, title, copyright, full 8-chapter TOC, foreword by Mike Forde of Chelsea FC, acknowledgements), the full Introduction (pp1-7), and the opening of Chapter 1 'Knowing Professional Football / Understanding the Culture' (p9, partial). Chapters 2-8 (one-to-one counselling, supporting coaching staff, supporting the manager, creating/managing the environment, the liaison officer, trust/values/confidentiality/identity, football lessons) appear ONLY in the TOC and are NOT present in the text — NOT extracted, no fabrication. ASSOCIATION FOOTBALL (SOCCER), not American football: Premiership/Premier League, relegation, starting 11; Nesti consulted Bolton Wanderers, Newcastle United, Hull City (2001-2009), work since 1995; research across 16 professional clubs in 5 European countries. Qualitative existential/humanistic sport psychology, ZERO printed equations -> labeled no_equation_domain. Domain psych (catalog correct). 15 primitives from Introduction + Ch1 opening. Lineage: Giorgi human science (1970), Martens (1987) person-first, Corlett (1996), Ravizza (2002), European existentialism (Sartre/Marcel), Maslow humanistic, Freud anxiety. Key concepts: person first athlete second; mind/body/spirit holistic; phenomenology lived experience; normal anxiety potentially positive (Nesti 2007), confront not manage away; culture understanding required (Relvas 2010); culture = ideals/vision/values beyond explicit processes; organizational stressors (Woodman & Hardy 2001: communication failure, role conflict/ambiguity/overload); positive AND negative experiences benefit growth; counselling over techniques; human science vs reductionism; two cultures research/practice; MST dominance critique; identity/meaning in success/failure; anxiety broader than competitive. Vignettes are anonymized amalgamations, not real cases. No sportsbook lines used as model inputs.",
+ "domain": "psych",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "person_first_athlete_second",
+   "name": "Person first, athlete second (holistic human science)",
+   "verbatim_quote": "This means that focus is on the person first and the athlete second.",
+   "page": 3,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Psychology as a human science (Giorgi 1970) focuses on the person before the athlete",
+    "Supported by Martens (1987), Corlett (1996), Ravizza (2002): the concept of person, not isolated individual"
+   ],
+   "breakdown_regime": "no_equation_domain: a humanistic/existsential stance, not a fitted law; it breaks down if the athlete is reduced to a performance machine ignoring the person.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE person-first holistic model IS this stance: the engine treats the player as a whole person (mind, body, spirit) whose psychological and life context shapes performance, not merely a physical output unit, the holistic-person assumption behind welfare-aware valuation. GSI: model the agent as a whole person whose context shapes output, not a isolated performance unit.",
+    "source_operator": "person_first_athlete_second",
+    "telemetry": "person first athlete second; human science Giorgi; Martens/Corlett/Ravizza; holistic"
+   }
+  },
+  {
+   "primitive_id": "holistic_mind_body_spirit",
+   "name": "A person is mind, body, and spirit — the fully holistic perspective",
+   "verbatim_quote": "A person is considered to be mind, body and spirit and, as such, this and only this can claim to be a fully holistic perspective.",
+   "page": 4,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The holistic perspective requires mind, body, and spirit together",
+    "Psychology must examine people in their broader environment and culture, not the isolated individual"
+   ],
+   "breakdown_regime": "no_equation_domain: a holistic ontological claim, not an equation; it breaks down if any of mind/body/spirit or the environmental context is omitted.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE mind-body-spirit-context model IS this holistic claim: the engine's player model includes psychological, physical, and meaning/spirit dimensions plus the surrounding culture, the multi-dimensional person model that avoids reductionist single-factor valuation. GSI: multi-dimensional agent model (psychological/physical/meaning) embedded in environment.",
+    "source_operator": "holistic_mind_body_spirit",
+    "telemetry": "mind body spirit; holistic; environment and culture; not isolated individual"
+   }
+  },
+  {
+   "primitive_id": "phenomenology_lived_experience",
+   "name": "Phenomenology: start from the lived experience of the subjects",
+   "verbatim_quote": "Phenomenology demands that all research and applied work must start with the 'lived experiences' of the clients or subjects.",
+   "page": 4,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Phenomenology claims to be strictly empirical by starting from lived experience",
+    "Data from those closest to the action (players, support staff, coaches) is the empirical evidence"
+   ],
+   "breakdown_regime": "no_equation_domain: a methodological/epistemological stance, not an equation; it breaks down if abstract theory is imposed without grounding in the subjects' lived experience.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE lived-experience grounding IS this phenomenological method: the engine grounds its player/psychology models in the actual lived experience of players and staff (the empirical base), not abstract theory alone, the experience-first grounding discipline. GSI: ground models in the lived experience of the agents closest to the action.",
+    "source_operator": "phenomenology_lived_experience",
+    "telemetry": "phenomenology; lived experience; strictly empirical; players/staff/coaches as data"
+   }
+  },
+  {
+   "primitive_id": "existential_anxiety_positive",
+   "name": "Normal anxiety is a potentially positive experience",
+   "verbatim_quote": "Again, it is important to note that this approach views normal anxiety as a potentially positive experience (Nesti 2007).",
+   "page": 4,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Existential psychology views normal anxiety as potentially positive, not merely a symptom to suppress",
+    "Premiership football is riddled with anxiety; it extends beyond competitive anxiety to broader existential anxiety"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative reframing of anxiety as signal/energy, not an equation; it breaks down if all anxiety is pathologized or, conversely, if clinical anxiety is dismissed as merely positive.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE anxiety-as-signal IS this existential reframing: the engine treats normal competitive anxiety as potentially useful information/energy (a signal to confront), not purely noise to suppress, the anxiety-as-signal stance that complements the manage-and-refocus mental-game layer. GSI: treat normal stress/anxiety as actionable signal rather than pure noise.",
+    "source_operator": "existential_anxiety_positive",
+    "telemetry": "normal anxiety potentially positive; Nesti 2007; beyond competitive anxiety; signal not symptom"
+   }
+  },
+  {
+   "primitive_id": "anxiety_confront_not_manage",
+   "name": "Confront anxiety constructively rather than manage it away",
+   "verbatim_quote": "more often be confronted and used constructively to aid choices and accepting responsibility, rather than being managed away through mental skills techniques.",
+   "page": 5,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Anxiety should be confronted and used to aid choices and responsibility, not managed away with techniques",
+    "This opposes the mental-skills-training approach of suppressing anxiety"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative therapeutic stance, not an equation; it breaks down if confrontation is applied without support or if technique-based management is the only tool.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE confront-anxiety stance IS this principle: the engine recognizes that anxiety can be confronted and used constructively for choice and responsibility (not only managed away), the meaning-making stance that differs from pure technique-based suppression. GSI: confront-and-use stress for agency rather than only suppress it.",
+    "source_operator": "anxiety_confront_not_manage",
+    "telemetry": "confront anxiety; aid choices/responsibility; not managed away; vs mental skills techniques"
+   }
+  },
+  {
+   "primitive_id": "culture_understanding_required",
+   "name": "Sport psychologists are ineffective without understanding the culture",
+   "verbatim_quote": "sport psychologists will be largely ineffective in delivering their work in sports organizations where they fail to understand the culture they are operating within.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Relvas et al. (2010): psychologists fail where they do not understand the organizational culture",
+    "Culture includes tradition, unwritten rules, precedents, values, and patterns of belief, not just explicit processes"
+   ],
+   "breakdown_regime": "no_equation_domain: an empirical organizational claim (cited research), not a fitted equation; it breaks down if psychological intervention is applied culture-blind.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE culture-context gate IS this organizational finding: the engine recognizes that psychological/performance interventions are ineffective without modeling the team/organizational culture (tradition, unwritten rules, values), the culture-context gate on any player-development intervention. GSI: intervention effectiveness gated on understanding the organizational culture.",
+    "source_operator": "culture_understanding_required",
+    "telemetry": "culture understanding required; Relvas 2010; tradition/unwritten rules/values; culture-blind fails"
+   }
+  },
+  {
+   "primitive_id": "culture_definition",
+   "name": "Culture: more than explicit processes — ideals, vision, values",
+   "verbatim_quote": "Culture refers to much more than explicit processes, operational mechanisms and daily practices.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Culture includes hard-to-identify factors (tradition, unwritten rules, precedents, values, belief patterns)",
+    "An organization's culture is determined by the ideals that govern it, the vision it pursues, the values it adheres to"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative definition of organizational culture, not an equation; it breaks down if culture is reduced to written procedures alone.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE culture-as-ideals model IS this definition: the engine models team culture as the governing ideals, vision, and values (including unwritten rules), not just explicit processes, the deep-culture layer that shapes behavior beyond formal rules. GSI: model organizational culture as governing ideals/values beyond explicit procedures.",
+    "source_operator": "culture_definition",
+    "telemetry": "culture > explicit processes; tradition/unwritten rules; ideals/vision/values; philosophy grounded"
+   }
+  },
+  {
+   "primitive_id": "organizational_stressors",
+   "name": "Organizational stressors: communication failure, role conflict/ambiguity/overload",
+   "verbatim_quote": "These include communication failures, role conflict and role ambiguity, and a lack of clarity about role overload.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Woodman and Hardy (2001) identified organizational stressors sport performers must cope with",
+    "Communication failures, role conflict, role ambiguity, and role overload are key stressors"
+   ],
+   "breakdown_regime": "no_equation_domain: an empirical stressor taxonomy (cited research), not a fitted equation; it breaks down if these organizational stressors are ignored as performance degraders.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE organizational-stressor layer IS this taxonomy: the engine models communication failure, role conflict, role ambiguity, and role overload as organizational stressors that degrade performance, the role-clarity/communication factors informing team-functioning valuation. GSI: organizational stressor taxonomy (role conflict/ambiguity/overload, communication failure) as performance degraders.",
+    "source_operator": "organizational_stressors",
+    "telemetry": "Woodman Hardy 2001; communication failure; role conflict/ambiguity/overload; organizational stressors"
+   }
+  },
+  {
+   "primitive_id": "existential_growth_positive_negative",
+   "name": "Both positive and negative experiences benefit growth (existential vs positive psychology)",
+   "verbatim_quote": "the existential view recognizes that both positive and negative events and experiences can ultimately benefit the growth and development of persons in sport and life in general.",
+   "page": 4,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Unlike humanistic/positive psychology, the existential view sees negative as well as positive events as growth-promoting",
+    "Elite football pairs incredibly positive moments with periods of difficulty requiring sacrifice and difficult choices"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative growth philosophy, not an equation; it breaks down if only positive events are treated as developmental or if adversity is assumed always harmful.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE adversity-as-growth IS this existential view: the engine recognizes that negative as well as positive experiences can drive player growth (adversity is developmental), the both-valences-growth stance that frames failure and difficulty as development inputs, not just setbacks. GSI: both positive and negative experiences as growth inputs.",
+    "source_operator": "existential_growth_positive_negative",
+    "telemetry": "positive AND negative benefit growth; existential vs positive psychology; sacrifice/difficult choices"
+   }
+  },
+  {
+   "primitive_id": "counselling_over_techniques",
+   "name": "Counselling: discuss what matters to the athlete, not just techniques",
+   "verbatim_quote": "Counselling is increasingly being used in sport psychology practice to ensure that athletes are able to discuss things that are most important to them, rather than learning to use psychological techniques that may fail to meet their needs.",
+   "page": 6,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Counselling lets athletes discuss what is most important to them",
+    "Techniques alone may fail to meet the athlete's needs; one-to-one existential counselling provides the underpinning"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative practice orientation, not an equation; it breaks down if technique delivery replaces listening to the athlete's actual concerns.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE listen-first counselling IS this orientation: the engine recognizes that addressing what actually matters to the player (counselling/listening) can be more effective than delivering generic techniques, the needs-first intervention stance. GSI: address the agent's actual concerns before applying generic techniques.",
+    "source_operator": "counselling_over_techniques",
+    "telemetry": "counselling; discuss what matters; techniques may fail needs; one-to-one existential"
+   }
+  },
+  {
+   "primitive_id": "human_science_vs_reductionism",
+   "name": "Psychology as human science, opposed to reductionist natural science",
+   "verbatim_quote": "The work presented here is closest to humanistic and certain existential psychology approaches, and is based on a conceptualization of psychology as a human science (Giorgi 1970).",
+   "page": 3,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The perspective opposes materialist, reductionist, natural-science accounts of psychology",
+    "Humanistic and existential approaches treat psychology as a human science (Giorgi 1970)"
+   ],
+   "breakdown_regime": "no_equation_domain: an epistemological positioning, not an equation; it breaks down if human meaning is reduced to mechanistic natural-science variables alone.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE human-science epistemology IS this positioning: the engine acknowledges that player psychology involves meaning and lived experience that resist pure reductionist natural-science modeling, the epistemic-humility stance about what can be quantified in psychological performance. GSI: acknowledge meaning/lived-experience dimensions that resist pure reductionist quantification.",
+    "source_operator": "human_science_vs_reductionism",
+    "telemetry": "human science Giorgi 1970; vs materialist/reductionist; humanistic/existential; meaning"
+   }
+  },
+  {
+   "primitive_id": "two_cultures_research_practice",
+   "name": "Two cultures: narrowing research vs atheoretical practice",
+   "verbatim_quote": "One is interested in pursuing research in to an ever decreasing number of topics, whilst the other ignores the findings from such work, and frequently operates in an atheoretical and practical way.",
+   "page": 2,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sport psychology has two cultures: research narrowing to fewer topics, and practice ignoring findings",
+    "The academic literature often lacks ecological validity and fails to translate into practice"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative diagnosis of a research-practice gap, not an equation; it breaks down if the gap is ignored and theory/practice are assumed aligned.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE research-practice gap IS this two-cultures diagnosis: the engine recognizes the gap between narrowing academic research and atheoretical practice, motivating grounded translation of evidence into applied models rather than assuming alignment, the research-practice-bridge discipline. GSI: bridge the narrowing-research vs atheoretical-practice gap via grounded translation.",
+    "source_operator": "two_cultures_research_practice",
+    "telemetry": "two cultures; research narrowing; practice atheoretical; ecological validity gap"
+   }
+  },
+  {
+   "primitive_id": "mst_dominance_critique",
+   "name": "Mental skills training has dominated applied practice (the critique)",
+   "verbatim_quote": "mental skills training seems to have dominated approaches to applied practice until very recently",
+   "page": 1,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mental skills training (imagery, self-talk, relaxation, goal-setting) dominated applied sport psychology",
+    "The book deliberately minimizes MST because it is rarely sufficient for professional football's broader demands"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative disciplinary critique, not an equation; it breaks down if MST is treated as the whole of sport psychology rather than one limited tool.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE beyond-MST scope IS this critique: the engine recognizes that mental-skills techniques are only one limited tool and that broader cultural/organizational/existential factors dominate professional performance, the scope-expansion beyond technique-only psychology. GSI: expand beyond technique-only psychology to cultural/organizational/meaning factors.",
+    "source_operator": "mst_dominance_critique",
+    "telemetry": "MST dominance; imagery/self-talk/relaxation/goal-setting; rarely sufficient; broader demands"
+   }
+  },
+  {
+   "primitive_id": "identity_meaning_success_failure",
+   "name": "Identity and personal meaning are crucial to how people deal with success and failure",
+   "verbatim_quote": "identity and personal meaning are crucial elements in understanding how people, or groups, deal with success and failure.",
+   "page": 7,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Existential/humanistic perspectives emphasize identity and personal meaning in handling success/failure",
+    "Values, confidentiality, and identity of the psychologist, team, and staff are central background issues"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative identity/meaning claim, not an equation; it breaks down if success/failure responses are modeled without the agent's identity and meaning.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE identity-meaning layer IS this claim: the engine models player and team identity and personal meaning as crucial to how success and failure are processed, the identity/meaning layer informing resilience and response-to-outcome valuation. GSI: identity and personal meaning as crucial to processing success/failure.",
+    "source_operator": "identity_meaning_success_failure",
+    "telemetry": "identity; personal meaning; success/failure; existential/humanistic; values/confidentiality"
+   }
+  },
+  {
+   "primitive_id": "anxiety_breadth",
+   "name": "Existential anxiety extends beyond competitive anxiety",
+   "verbatim_quote": "Existential ideas are not merely restricted to competitive anxiety, but extend to consider anxiety in much broader terms.",
+   "page": 4,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Existential anxiety is broader than competitive/state anxiety",
+    "Freud's claim that anxiety is the most important psychological factor is adopted in this broader existential sense"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative broadening of the anxiety construct, not an equation; it breaks down if anxiety is reduced to competitive state anxiety alone.",
+   "domain": "psych",
+   "confidence": 0.82,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE broad-anxiety construct IS this breadth: the engine recognizes anxiety extends beyond competitive state anxiety to existential concerns (identity, meaning, career threats), the broader-anxiety construct informing player welfare and performance context. GSI: broaden anxiety beyond competitive state to existential/identity concerns.",
+    "source_operator": "anxiety_breadth",
+    "telemetry": "existential anxiety broader; beyond competitive anxiety; Freud anxiety most important; identity/career"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "nesti2010_psychology_in_football",
+   "think": "This inline cycle extracts Mark Nesti's Psychology in Football: Working with Elite and Professional Players, a 2010 Routledge volume by the Liverpool John Moores Reader who consulted for Premiership clubs including Bolton, Newcastle, and Hull over nine seasons. The provenance requires two honest flags: first, the delivered file is a publisher preview containing only the front matter, the full Introduction, and the opening of Chapter One, twenty-two PDF pages, so chapters two through eight listed in the table of contents are not present and are not extracted; second, this is association football (soccer), not American football, evidenced by the Premiership, relegation, and starting-eleven language, and the catalog domain psych is correct. Fifteen primitives are drawn strictly from the Introduction and the Chapter One opening, each with a verified verbatim quote, a page anchor, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. The book is qualitative existential and humanistic sport psychology with zero printed equations, so its primitives are labeled no_equation_domain, and no sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from Giorgi's psychology-as-human-science and Martens's 1987 demand to put the person before the athlete, through Corlett and Ravizza, into the European existential tradition (Sartre's nihilistic relativism versus Marcel's hopeful spiritual brand, with Maslow's humanistic psychology as the descendant) and Freud's claim that anxiety is the most important psychological factor. The load-bearing objects are the person-first holistic stance (a person is mind, body, and spirit), the phenomenological method that starts from the lived experience of those closest to the action, the existential reframing of normal anxiety as potentially positive and to be confronted rather than managed away, and the organizational finding (Relvas 2010, Woodman and Hardy 2001) that psychologists are ineffective without understanding the culture and that communication failure, role conflict, role ambiguity, and role overload are key organizational stressors.\n\nThe recursive theory of mind models the sport psychologist as a reasoner who must read the club's culture (tradition, unwritten rules, values, patterns of belief) before intervening, and the player as a whole person whose identity and personal meaning shape how success and failure are processed. The book's central critique is that mental skills training (imagery, self-talk, relaxation, goal-setting) has dominated applied practice yet is rarely sufficient for professional football's broader demands, so counselling that lets athletes discuss what actually matters to them is preferred over generic technique delivery. The two-cultures diagnosis (narrowing academic research versus atheoretical practice) motivates grounded translation, and the existential view that both positive and negative experiences benefit growth frames adversity as developmental rather than merely harmful.\n\nThe cross-layer veto adjudication places this organizational-cultural and existential layer beside the rulebook constraint layer, the Cain mental-conditioning layer, and the attribution and expected-points layers. The first veto is the culture-context veto: psychological and performance interventions are ineffective culture-blind, so the engine must model the team's governing ideals, vision, and unwritten rules, not just isolated players. The second veto is the person-first veto: the player is a whole person (mind, body, spirit) embedded in environment, not a physical output unit, so welfare and meaning are part of the valuation. The third veto is the anxiety-as-signal veto: normal anxiety is potentially positive information to confront and use for choice and responsibility, a stance that complements but differs from Cain's manage-and-refocus approach. The fourth veto is the organizational-stressor veto: role conflict, role ambiguity, role overload, and communication failure are performance degraders the team-functioning model must capture. The fifth veto is the epistemic-humility veto: meaning and lived experience resist pure reductionist quantification, and the research-practice gap must be bridged by grounded translation rather than assumed alignment.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The phenomenological method demands that data come from those closest to the action (players, support staff, coaches), making lived experience the empirical base rather than abstract theory imposed from outside. The holistic claim insists that mind, body, and spirit together, and only together, constitute the fully holistic perspective, so any single-factor reduction is incomplete. The existential growth stance distinguishes this approach from positive psychology by recognizing that negative events and periods of difficulty requiring sacrifice and difficult choices can ultimately benefit growth, which suits elite football's pairing of exhilarating moments with great difficulty. The identity-and-meaning claim makes personal meaning crucial to how individuals and groups deal with success and failure, and the anxiety-breadth claim extends the construct beyond competitive state anxiety to existential concerns such as being dropped, transferred, or relegated. The vignettes in the book are explicitly anonymized amalgamations, not real cases, a confidentiality discipline the engine respects when modeling player psychology. The introduction also frames the sport psychologist's role as expanding toward organizational psychologist and human-resource manager, and acknowledges the pastoral dimension carried by the club chaplain and liaison officer, so the psychological support system is broader than one-to-one performance work. These invariants ground the engine's culture-context gate, person-first holistic valuation, anxiety-as-signal stance, organizational-stressor layer, and epistemic humility, completing a sovereign organizational-cultural and existential sport-psychology layer that complements the mental-conditioning layer, all grounded in clean verbatim prose from the pages actually present with the preview boundary and the soccer domain honestly declared.",
+   "retrocausal_genealogy": "The genealogy runs from Giorgi's psychology-as-human-science and Martens's 1987 person-before-athlete demand, through Corlett and Ravizza, into the European existential tradition (Sartre's nihilistic relativism vs Marcel's hopeful spiritual brand, Maslow's humanistic descendant) and Freud's anxiety-as-most-important-factor. Load-bearing objects: person-first holistic stance (mind/body/spirit); phenomenological method starting from lived experience of those closest to the action; existential reframing of normal anxiety as potentially positive, to confront not manage away; organizational finding (Relvas 2010, Woodman & Hardy 2001) that psychologists fail culture-blind and that communication failure/role conflict/ambiguity/overload are key stressors. PARTIAL PREVIEW: front matter + full Introduction + Ch1 opening only (22pp); chapters 2-8 TOC-only, NOT extracted. Association football (SOCCER), not American.",
+   "theory_of_mind": "The sport psychologist must read the club culture (tradition, unwritten rules, values, belief patterns) before intervening; the player is a whole person whose identity and personal meaning shape success/failure processing. Central critique: mental skills training (imagery/self-talk/relaxation/goal-setting) dominated applied practice yet is rarely sufficient for professional football's broader demands, so counselling that lets athletes discuss what matters is preferred over generic techniques. Two-cultures diagnosis (narrowing research vs atheoretical practice) motivates grounded translation; existential view that positive AND negative experiences benefit growth frames adversity as developmental.",
+   "cross_layer_veto": "Five vetoes adjudicate beside the rulebook constraint, Cain mental-conditioning, and attribution/expected-points layers. Culture-context veto: interventions fail culture-blind; model governing ideals/vision/unwritten rules. Person-first veto: player is whole person (mind/body/spirit) in environment, not physical output unit; welfare/meaning in valuation. Anxiety-as-signal veto: normal anxiety potentially positive, confront/use for choice (complements but differs from Cain manage-and-refocus). Organizational-stressor veto: role conflict/ambiguity/overload + communication failure are performance degraders. Epistemic-humility veto: meaning/lived experience resist pure reductionist quantification; bridge research-practice gap via grounded translation."
+  }
+ ],
+ "universal_lens": "Nesti's Psychology in Football (Introduction + Chapter 1 opening, preview partial source; association football) contributes the organizational-cultural and existential sport-psychology layer: person-first holistic stance (mind/body/spirit), phenomenological lived-experience method, normal anxiety as potentially positive and to be confronted, culture-understanding as a gate on intervention effectiveness, organizational stressors (role conflict/ambiguity/overload, communication failure), both-positive-and-negative growth, counselling-over-techniques, human-science epistemology, the research-practice two-cultures gap, and identity/meaning in processing success and failure. It complements the Cain mental-conditioning layer with a confront-and-meaning stance rather than manage-and-refocus.",
+ "gsi_mapping": "For GSI these primitives are the general organizational-cultural and existential layer for any performance organization: model the agent as a whole person (psychological/physical/meaning) embedded in environment; ground models in the lived experience of those closest to the action; treat normal stress/anxiety as actionable signal to confront and use for agency; gate intervention effectiveness on understanding organizational culture (governing ideals/values/unwritten rules); capture organizational stressors (role conflict/ambiguity/overload, communication failure) as performance degraders; recognize both positive and negative experiences as growth inputs; address the agent's actual concerns before generic techniques; acknowledge meaning dimensions that resist pure reductionist quantification; and bridge the research-practice gap via grounded translation.",
+ "gse_mapping": "For GSE this maps onto the engine's team-culture, player-welfare, and organizational-functioning layers: culture-understanding IS the culture-context gate on player-development interventions; person-first/mind-body-spirit IS holistic player valuation including welfare and meaning; anxiety-as-signal IS the existential reframing complementing the Cain manage-and-refocus layer; organizational stressors (role conflict/ambiguity/overload, communication failure) IS the team-functioning degrader layer; identity/meaning IS the response-to-outcome resilience layer; and the MST-dominance critique IS the scope-expansion beyond technique-only psychology. All are qualitative no_equation_domain heuristics from the preview pages actually present; the partial-source boundary and the association-football (soccer) domain are honestly declared; no absent-chapter content is fabricated; no sportsbook line is a model input."
+}
