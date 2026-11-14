@@ -1,0 +1,12 @@
+{
+  "book_id": "1e17e33e9c7dc608",
+  "shard": "1",
+  "source_status": "INSUFFICIENT_OCR",
+  "refusal_reason": "Image-only scanned PDF: 592 pages, 0 extractable text characters via pymupdf (every page returns empty get_text). The file is LS_Advanced_Calculus5.pdf (Loomis & Sternberg, Advanced Calculus) in G:/My Drive/GSE-Ultra-30TB-Vault/downloads-archive-2026-11-03/. No prior OCR extraction exists in gpu-ocr-output/ or gdrive_corpus_extractions/ for calculus / Loomis / Sternberg / LS_Advanced / book_id 1e17e33e9c7dc608. Per the foundry-scholar standing order, an image-only scan without OCR is refused with INSUFFICIENT_OCR and routed to the OCR-rescue lane (ling_ocr_rescue.py / GCP-LEV-02 Vision OCR); contents are never guessed or fabricated from memory of the well-known text. No sovereign primitives can be extracted until a text layer or vision OCR pass is available.",
+  "pages_total": 592,
+  "pages_read": 0,
+  "extraction_mode": "IMAGE_ONLY_SCAN_NO_OCR",
+  "source_note": "Loomis & Sternberg Advanced Calculus (LS_Advanced_Calculus5.pdf), 592-page image-only scan. pymupdf get_text returns 0 chars across all pages (no text layer). No existing OCR output located. Routed to OCR-rescue lane for vision OCR before any extraction. Honest refusal: although this is a well-known freely available mathematics text, no contents are fabricated from memory; verbatim quotes and exact LaTeX require an actual text/OCR source.",
+  "primitives": [],
+  "reasoning_traces": []
+}

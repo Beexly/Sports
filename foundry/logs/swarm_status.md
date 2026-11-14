@@ -632,3 +632,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 06:53:12 | COMPLETE | 3e6cfe96736c9592 | primitives=33 think_words=881
 - 2026-11-14 06:54:32 | CLAIMED | 3fc9cd5fa560cf8a | worker=hermes-inline shard03 file=Intellions-US7330839-DynamicPricing.pdf
 - 2026-11-14 06:58:05 | REFUSAL_ACCEPTED | 3fc9cd5fa560cf8a | INSUFFICIENT_OCR: Image-only scanned PDF: 13 pages, 0 extractable text characters via pymupdf (every page returns empty get_text). The file lives in G:/My Drive/gpu-ocr-input/ (the OCR queue), and no prior OCR extracti
+- 2026-11-14 06:59:02 | CLAIMED | 1e17e33e9c7dc608 | worker=hermes-inline shard03 file=LS_Advanced_Calculus5.pdf
+- 2026-11-14 07:00:19 | REFUSAL_ACCEPTED | 1e17e33e9c7dc608 | INSUFFICIENT_OCR: Image-only scanned PDF: 592 pages, 0 extractable text characters via pymupdf (every page returns empty get_text). The file is LS_Advanced_Calculus5.pdf (Loomis & Sternberg, Advanced Calculus) in G:/My
