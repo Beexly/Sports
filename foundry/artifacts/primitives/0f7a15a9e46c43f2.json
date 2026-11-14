@@ -1,0 +1,656 @@
+{
+  "book_id": "0f7a15a9e46c43f2",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_DECISION_READINESS_FRAMEWORK_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Zhou & Guan, 'From Metrics to Decisions in NBA Analytics: A Critical Integrative Review and Decision-Readiness Framework', arXiv:2609.27245v1 [stat.AP], 23 Sep 2026 (Yang Zhou, TY Sports Analytics Inc.; Tianyu Guan, York University), 26 pages + supplementary evidence appendix. Critical integrative review (not a new estimator) organizing NBA analytics around an observation-state-action-decision-evaluation chain across seven streams (on-court action, player value, role, lineup synergy, availability, draft/development, contracts/roster). Six decision-readiness gates: point-in-time validity, uncertainty, context portability, action feasibility, opportunity-set observability, evaluation — each with diagnostic question + common failure (Table 4). Five claim levels: measurement, prediction, causal/counterfactual, constrained prescription, prospective evaluation. Formal decision object: It/Rt/Mt/A, Yt:t+h(a), V=U(Y), L=-V; Eq1 mean-risk argmax E[V]-lambda*rho(L) (CVaR-95 example); Eq2 coupled non-additive player-state V=f(A,R,S,H,C,Z). Potential-outcome selection inequality Y(a)!=E[Y|Iobs,Dt=a]; legal admissibility necessary not sufficient; retrospective replay != prospective evaluation; scientific credibility != decision readiness; value-of-information (Howard 1966). Versioned snapshots + rolling-origin (Tashman 2000) leakage discipline; regime non-stationarity. Maturity verdict: prediction Developed only on-court action; NO retained study prospectively evaluates an implemented NBA decision rule vs credible comparator. Six-step deployment workflow (freeze/estimate coupled states/construct candidates/stress-test/decision record with veto conditions+change-triggers/evaluate); shadow-mode freeze-and-log; 10-item reporting contract; accountability NOT a seventh gate. Institutional applications: 2023 CBA apron/Frozen Pick rule; 3-2-1 Draft Lottery (approved 28 May 2026 for 2027-29 drafts, 16 teams, bottom-three 2 balls cannot fall below pick 12, incentive kinks). Honest scope: framework NOT validated as numerical scale or shown to improve team outcomes. Evidence cutoff 1 Sep 2026; 58-report NBA corpus; 66-row machine-readable evidence map CSV on GitHub; no private player data used. Extracted faithfully (not a derivative summary). Equations 1-2 and the potential-outcome inequality printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions; remaining primitives are qualitative decision-readiness heuristics (no printed equation). Domain math matches catalog (basketball operations / decision analysis; catalog tagged 'psych' is a tagging error — this is decision-readiness methodology, not psychology). Directly isomorphic to GSE's six-gate veto battery, risk-adjusted mean-risk objective, coupled context-conditioned player-value kernel, endogeneity veto, feasible-vs-available action gate, leakage-free temporal holdout, pick-dossier lifecycle with veto conditions, and sealed-shadow logging. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE (betting explicitly outside the review's scope).",
+  "primitives": [
+    {
+      "primitive_id": "better_predictions_not_decisions",
+      "name": "Better predictions do not necessarily improve decisions",
+      "verbatim_quote": "teams have increasingly detailed metrics, but better predictions do not necessarily improve decisions",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Yang Zhou, TY Sports Analytics; Tianyu Guan, York University; arXiv:2609.27245v1 [stat.AP], 23 Sep 2026) opens from the premise that NBA teams have increasingly detailed metrics but better predictions do not necessarily improve decisions; it is a critical integrative review, not a new estimator."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The prediction-decision gap is literally GSE's calibration-versus-decision-quality distinction.",
+        "source_operator": "better_predictions_not_decisions",
+        "telemetry": "better predictions != better decisions; critical integrative review; Zhou/Guan arXiv 2609.27245"
+      }
+    },
+    {
+      "primitive_id": "seven_research_streams",
+      "name": "Seven research streams synthesized via observation-state-action-decision-evaluation chain",
+      "verbatim_quote": "This critical integrative review draws on prior reviews, citation tracing, and topic searches across seven research streams",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The review draws on prior reviews, citation tracing, and topic searches across seven research streams: on-court action, player value, role, lineup synergy, availability, draft and development, and contracts and roster construction; an observation-state-action-decision-evaluation chain organizes the synthesis; evidence cutoff 1 September 2026, 58-report NBA corpus, 66-row machine-readable evidence map on GitHub."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The seven-stream chain is the same observation-to-decision pipeline GSE organizes its football ontology around.",
+        "source_operator": "seven_research_streams",
+        "telemetry": "7 streams (on-court action/player value/role/synergy/availability/draft-development/contracts-roster); observation-state-action-decision-evaluation chain; cutoff 1 Sep 2026; 58 reports; 66-row CSV"
+      }
+    },
+    {
+      "primitive_id": "six_gates_list",
+      "name": "Six decision-readiness gates matched to each claim",
+      "verbatim_quote": "point-in-time validity, uncertainty, context portability, action feasibility, opportunity-set observability, and evaluation, with requirements matched to each claim",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Six decision-readiness gates guide the assessment: point-in-time validity, uncertainty, context portability, action feasibility, opportunity-set observability, and evaluation, with requirements matched to each claim; the gates identify different ways an otherwise credible estimate can fail to support a choice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The six gates are literally GSE's decision-readiness veto battery (time-validity, uncertainty, transport, feasibility, opportunity-set, evaluation).",
+        "source_operator": "six_gates_list",
+        "telemetry": "6 gates: point-in-time validity / uncertainty / context portability / action feasibility / opportunity-set observability / evaluation; requirements matched to claim"
+      }
+    },
+    {
+      "primitive_id": "strongest_measuring_predicting",
+      "name": "Literature strongest at measuring/predicting individual decision components",
+      "verbatim_quote": "The reviewed literature is strongest in measuring and predicting individual components of a decision",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The reviewed literature is strongest in measuring and predicting individual components of a decision; this is the measurement-and-prediction maturity that GSE inherits as its component-estimation layer."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The component-strength finding is the same mature-estimator base GSE builds its decision layer upon.",
+        "source_operator": "strongest_measuring_predicting",
+        "telemetry": "literature strongest measuring/predicting individual components; component-estimation maturity"
+      }
+    },
+    {
+      "primitive_id": "weak_interfaces",
+      "name": "Evidence weak at interfaces combining, transporting, and comparing feasible actions",
+      "verbatim_quote": "Evidence is less developed at interfaces that combine components, transfer them across settings, and compare feasible actions",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Evidence is less developed at interfaces that combine components, transfer them across settings, and compare feasible actions; the recurring gap is the move to dated, feasible, and prospectively evaluated action."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The weak-interface diagnosis is literally GSE's integration/transport/feasibility gap that its veto layer closes.",
+        "source_operator": "weak_interfaces",
+        "telemetry": "weak at combine-components / transfer-across-settings / compare-feasible-actions interfaces; gap = dated feasible prospectively-evaluated action"
+      }
+    },
+    {
+      "primitive_id": "model_leaves_setting",
+      "name": "Difficulty appears when a model leaves its estimation setting",
+      "verbatim_quote": "The difficulty becomes clear when a model leaves the setting in which it was estimated",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The difficulty becomes clear when a model leaves the setting in which it was estimated: a plus-minus coefficient may summarize contribution alongside observed teammates yet say little about performance in a new role; a lineup forecast may rank five-player units without accounting for fatigue or bench minutes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The out-of-setting failure is the same context-portability veto GSE applies when transporting estimates.",
+        "source_operator": "model_leaves_setting",
+        "telemetry": "model leaves estimation setting; plus-minus new-role gap; lineup forecast ignores fatigue/bench minutes"
+      }
+    },
+    {
+      "primitive_id": "injury_risk_not_rest_effect",
+      "name": "Predicting injury risk != effect of resting; predicting salary != contract worth to a team",
+      "verbatim_quote": "not identify the effect of resting a player, and predicting salary does not establish what a contract is worth to a particular team",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Predicting injury risk does not identify the effect of resting a player, and predicting salary does not establish what a contract is worth to a particular team; these are gaps between the question a model answers and the choice its user faces, and neither more granular data nor a more complex algorithm resolves the mismatch on its own."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The prediction-vs-intervention gap is literally GSE's estimand-mismatch veto (risk forecast != rest effect; price != team value).",
+        "source_operator": "injury_risk_not_rest_effect",
+        "telemetry": "injury-risk prediction != rest effect; salary prediction != team-specific contract worth; question-vs-choice gap; data/complexity alone insufficient"
+      }
+    },
+    {
+      "primitive_id": "analytical_target_action_value",
+      "name": "Analytical target = value of an action under conditions over a horizon",
+      "verbatim_quote": "The analytical target is the value of an action under those conditions, over an appropriate horizon",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Such decisions concern a specific team at a specific time, use incomplete information, and draw on alternatives that may be difficult to observe; the analytical target is the value of an action under those conditions, over an appropriate horizon, alongside the role available, the price of acquiring the contract, and the team's risk tolerance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The action-value target is literally GSE's dated, context-conditioned, horizon-declared valuation objective.",
+        "source_operator": "analytical_target_action_value",
+        "telemetry": "target = value of action under conditions over horizon; specific team/time; incomplete info; role+price+risk tolerance"
+      }
+    },
+    {
+      "primitive_id": "constrained_prescription_def",
+      "name": "Constrained prescription: preferred action under objective, info set, feasible set",
+      "verbatim_quote": "Which action is preferred under an explicit objective, information set, and feasible action set?",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The five claim levels are measurement, prediction, causal or counterfactual estimation, constrained prescription, and prospective evaluation; constrained prescription asks which action is preferred under an explicit objective, information set, and feasible action set."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constrained-prescription claim level is the same objective-plus-feasible-set optimization GSE performs.",
+        "source_operator": "constrained_prescription_def",
+        "telemetry": "5 claim levels (measurement/prediction/causal-counterfactual/constrained-prescription/prospective-evaluation); prescription = preferred action under objective+info+feasible set"
+      }
+    },
+    {
+      "primitive_id": "prospective_evaluation_def",
+      "name": "Prospective evaluation: did an implemented rule improve outcomes vs credible comparator",
+      "verbatim_quote": "Did an implemented decision rule improve outcomes under deployment against a credible comparator?",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prospective evaluation, the highest claim level, asks whether an implemented decision rule improved outcomes under deployment against a credible comparator; this is distinct from retrospective fit or replay."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The prospective-evaluation claim is literally GSE's deployed-rule-versus-comparator settlement standard.",
+        "source_operator": "prospective_evaluation_def",
+        "telemetry": "prospective evaluation = implemented rule improved outcomes under deployment vs credible comparator; highest claim level"
+      }
+    },
+    {
+      "primitive_id": "replay_not_prospective",
+      "name": "Retrospective replay supports a claim under assumptions but is not prospective evaluation",
+      "verbatim_quote": "Retrospective replay can support a decision claim under stated identification and support assumptions, but does not constitute prospective deployment evaluation",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Retrospective replay can support a decision claim under stated identification and support assumptions, but does not constitute prospective deployment evaluation; this separates backtested evidence from deployed-rule evidence."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The replay-vs-deployment distinction is literally GSE's backtest-versus-live-settlement epistemic separation.",
+        "source_operator": "replay_not_prospective",
+        "telemetry": "retrospective replay supports claim under identification+support assumptions; != prospective deployment evaluation"
+      }
+    },
+    {
+      "primitive_id": "credibility_vs_readiness",
+      "name": "Scientific credibility (answers stated question) vs decision readiness (informs a choice)",
+      "verbatim_quote": "Scientific credibility concerns whether a study answers its stated question; decision readiness concerns whether its output can inform a choice",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scientific credibility concerns whether a study answers its stated question; decision readiness concerns whether its output can inform a choice; the review assesses the latter through the six gates, and a descriptive paper has no obligation to enumerate legal trades while a trade recommendation must address legality and counterpart acceptance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The credibility-vs-readiness split is literally GSE's scientific-validity-versus-decision-usability separation.",
+        "source_operator": "credibility_vs_readiness",
+        "telemetry": "scientific credibility = answers stated question; decision readiness = output informs choice; descriptive vs recommendation obligations differ"
+      }
+    },
+    {
+      "primitive_id": "eq1_mean_risk_decision",
+      "name": "Mean-risk decision: argmax E[V] - lambda*rho(L) over admissible actions",
+      "verbatim_quote": "The objective, time weights, and risk preferences are organizational inputs to be declared or elicited",
+      "page": 6,
+      "latex": "a^{*}_t(M_t)=\\arg\\max_{a\\in A(I_t,R_t,M_t)}\\Big\\{\\mathbb{E}[V_{t:t+h}(a)\\mid I_t,R_t,M_t]-\\lambda\\,\\rho\\big(L_{t:t+h}(a)\\mid I_t,R_t,M_t\\big)\\Big\\},\\quad V=U(Y),\\ L=-V",
+      "symbol_and_unit_ledger": {
+        "It": "information available to team at date t",
+        "Rt": "rule and contract state at t",
+        "Mt": "market opportunity-set scenario",
+        "A(It,Rt,Mt)": "admissible action set",
+        "Yt:t+h(a)": "multidimensional consequences of action a over horizon h",
+        "V=U(Y)": "scalar organizational value under declared objective U",
+        "L=-V": "scalar loss",
+        "lambda": "downside-aversion weight (>=0)",
+        "rho": "risk functional on conditional loss distribution (e.g. CVaR)"
+      },
+      "assumptions": [
+        "Let It be the information available at date t, Rt the rule/contract state, Mt a market-opportunity scenario, A(It,Rt,Mt) the admissible actions, Yt:t+h(a) the multidimensional consequences over horizon h, Vt:t+h(a)=U(Yt:t+h(a)) the scalar organizational value, and Lt:t+h(a)=-Vt:t+h(a) the loss; the generic mean-risk decision is a*_t(Mt)=argmax_{a in A} {E[Vt:t+h(a)|It,Rt,Mt] - lambda rho(Lt:t+h(a)|It,Rt,Mt)}; the objective, time weights, and risk preferences are organizational inputs to be declared or elicited, and predictive fit alone does not determine them. Equation 1 is printed math-font and reconstructed here.",
+        "Equation 1 (mean-risk argmax) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "U maps outcomes to scalar but does not specify full risk preference; lambda and rho declared; multi-season U must specify discounting",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mean-risk argmax is literally GSE's risk-adjusted expected-value decision objective with declared organizational risk preference.",
+        "source_operator": "eq1_mean_risk_decision",
+        "telemetry": "It/Rt/Mt/A; Yt:t+h(a) consequences; V=U(Y), L=-V; a*=argmax E[V|It,Rt,Mt]-lambda rho(L|It,Rt,Mt); lambda>=0 downside aversion; rho risk functional; objective/weights/risk declared not fit-determined"
+      }
+    },
+    {
+      "primitive_id": "cvar_95_example",
+      "name": "CVaR-95 summarizes mean loss in worst 5% of joint scenarios",
+      "verbatim_quote": "CVaR at the 95th percentile, for instance, can summarize mean loss in the worst five percent of joint availability, playoff, and asset-value scenarios",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Downside aversion is represented by lambda>=0 and the risk functional rho applied to the conditional loss distribution; examples include expected excess loss above a threshold and conditional value-at-risk under an explicit loss convention; CVaR at the 95th percentile can summarize mean loss in the worst five percent of joint availability, playoff, and asset-value scenarios."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The CVaR-95 tail-loss functional is the same downside-risk measure GSE uses for correlated-scenario risk.",
+        "source_operator": "cvar_95_example",
+        "telemetry": "lambda>=0 + rho on conditional loss; expected excess loss / CVaR; CVaR-95 = mean loss worst 5% joint availability/playoff/asset-value scenarios"
+      }
+    },
+    {
+      "primitive_id": "potential_outcome_selection",
+      "name": "Potential outcome Y(a) not recoverable by averaging observed outcomes among selectors",
+      "verbatim_quote": "It cannot generally be recovered by averaging observed outcomes among cases that selected a",
+      "page": 7,
+      "latex": "\\mathbb{E}[Y\\mid I^{obs}_t,D_t=a]\\ \\neq\\ \\mathbb{E}[Y(a)\\mid I^{obs}_t]\\ \\text{in general}",
+      "symbol_and_unit_ledger": {
+        "Y(a)": "action-specific potential outcome",
+        "Iobs_t": "information observed by researcher at t",
+        "Dt": "realized action",
+        "E[Y|Iobs,Dt=a]": "observed-outcome mean among selectors",
+        "E[Y(a)|Iobs]": "counterfactual potential-outcome mean"
+      },
+      "assumptions": [
+        "For a causal or prescriptive claim, Y(a) denotes an action-specific potential outcome that cannot generally be recovered by averaging observed outcomes among cases that selected a; if Iobs_t is the researcher's observed information and Dt the realized action, then E[Y|Iobs_t,Dt=a] need not equal E[Y(a)|Iobs_t], because unrecorded coaching, player, or organizational information may affect both selection and outcomes. The potential-outcome inequality is printed math-font and reconstructed here.",
+        "Potential-outcome selection inequality printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Selection on unobservables breaks equality; requires identification strategy",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The potential-outcome selection gap is literally GSE's endogeneity/selection-bias veto on naive observed-outcome averaging.",
+        "source_operator": "potential_outcome_selection",
+        "telemetry": "Y(a) potential outcome != E[Y|Iobs,Dt=a]; unrecorded coaching/player/org info affects selection+outcomes; selection bias"
+      }
+    },
+    {
+      "primitive_id": "legal_necessary_not_sufficient",
+      "name": "Legal admissibility necessary but not sufficient for plausible availability",
+      "verbatim_quote": "legal admissibility is therefore necessary but not sufficient for a transaction to be treated as plausibly available",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For transactions, Mt depends jointly on each required party's reservation value, outside option, and latent willingness to transact; legal admissibility is therefore necessary but not sufficient for a transaction to be treated as plausibly available; a permitted trade may have no willing counterparty."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The legality-vs-availability distinction is literally GSE's feasible-versus-plausibly-available action-set gate.",
+        "source_operator": "legal_necessary_not_sufficient",
+        "telemetry": "Mt depends on reservation value/outside option/latent willingness; legal necessary not sufficient; permitted trade may lack willing counterparty"
+      }
+    },
+    {
+      "primitive_id": "eq2_coupled_player_state",
+      "name": "Coupled player-state value V=f(A,R,S,H,C,Z), no additive/linear form imposed",
+      "verbatim_quote": "We impose no additive or linear form on f",
+      "page": 7,
+      "latex": "V_{p,t,d}=f\\big(A_{p,t},\\,R_{p,t,d},\\,S_{p,t,d},\\,H_{p,t},\\,C_{p,t,d},\\,Z_{t,d}\\big)",
+      "symbol_and_unit_ledger": {
+        "A": "ability / expected contribution",
+        "R": "role (capability bundle assigned)",
+        "S": "synergy with teammates and system",
+        "H": "availability / workload capacity",
+        "C": "cost and contractual control",
+        "Z": "team competitive/institutional context (playoff position, depth, timeline, apron/hard-cap, rules)",
+        "f": "non-additive, non-linear value mapping"
+      },
+      "assumptions": [
+        "For player p at time t in decision context d, Vp,t,d=f(Ap,t,Rp,t,d,Sp,t,d,Hp,t,Cp,t,d,Zt,d), where A is ability/expected contribution, R role, S synergy with teammates/system, H availability/workload capacity, C cost/contractual control, and Z the team's competitive/institutional context (playoff position, roster depth, timeline, apron/hard-cap status, rules); no additive or linear form is imposed on f, and institutional thresholds change the value of the same component across teams. Equation 2 is printed math-font and reconstructed here.",
+        "Equation 2 (coupled player-state value) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "No additive/linear form; deep contender absorbs absences vs shallow roster expensive replacement; baseline contribution alone misses difference",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The coupled non-additive player-state value is literally GSE's context-conditioned, non-separable player-value kernel.",
+        "source_operator": "eq2_coupled_player_state",
+        "telemetry": "Vp,t,d=f(A,R,S,H,C,Z); A ability/R role/S synergy/H availability/C cost-rights/Z context; no additive/linear form; institutional thresholds change component value across teams"
+      }
+    },
+    {
+      "primitive_id": "value_of_information",
+      "name": "Value-of-information: better average prediction can have limited operational value",
+      "verbatim_quote": "It helps explain why improvements in average predictive error can have limited operational value",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Two models that rank all realistically available players in the same order: the more accurate model may leave a team's choice unchanged while improving its assessment of uncertainty or downside; an estimate of role portability or joint availability could be more useful if it changes which alternatives the team should consider; value-of-information analysis (Howard 1966) formalizes this link between information, choice, and outcome and helps explain why improvements in average predictive error can have limited operational value."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The value-of-information principle is literally GSE's decision-impact-over-accuracy metric (Win-Flip-style).",
+        "source_operator": "value_of_information",
+        "telemetry": "same ranking -> accurate model may not change choice; portability/availability estimate useful if changes alternatives; VoI (Howard 1966); avg predictive error improvement limited operational value"
+      }
+    },
+    {
+      "primitive_id": "accurate_model_unchanged_choice",
+      "name": "More accurate model may leave choice unchanged while improving uncertainty assessment",
+      "verbatim_quote": "The more accurate model may leave a team's choice unchanged while improving its assessment of uncertainty or downside",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The more accurate model may leave a team's choice unchanged while improving its assessment of uncertainty or downside; accuracy gains are decision-relevant only when they alter the comparison among feasible choices."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The accuracy-without-choice-change point is the same decision-impact gate GSE applies before crediting a model improvement.",
+        "source_operator": "accurate_model_unchanged_choice",
+        "telemetry": "accurate model may leave choice unchanged (improves uncertainty/downside assessment); accuracy decision-relevant only if alters feasible-choice comparison"
+      }
+    },
+    {
+      "primitive_id": "point_in_time_gate",
+      "name": "Point-in-time validity gate: were inputs/definitions available at decision time",
+      "verbatim_quote": "Were inputs and definitions available at the decision time?",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The point-in-time validity gate asks whether inputs and definitions were available at the decision time; its common failure is later injury status, corrected data, or post-draft information leaking into training or replay."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The point-in-time gate is literally GSE's leakage veto (no post-decision information in training/replay).",
+        "source_operator": "point_in_time_gate",
+        "telemetry": "gate: inputs/definitions available at decision time?; failure = later injury status/corrected data/post-draft info leaks into training/replay"
+      }
+    },
+    {
+      "primitive_id": "uncertainty_gate_failure",
+      "name": "Uncertainty gate failure: recommendation on noisy point estimate without propagation",
+      "verbatim_quote": "A recommendation is based on a noisy point estimate without propagating decision-relevant uncertainty",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The uncertainty gate asks whether the decision rule uses calibrated distributions, intervals, or scenarios; its common failure is a recommendation based on a noisy point estimate without propagating decision-relevant uncertainty."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The uncertainty-propagation gate is literally GSE's calibrated-distribution requirement before a recommendation.",
+        "source_operator": "uncertainty_gate_failure",
+        "telemetry": "gate: calibrated distributions/intervals/scenarios?; failure = noisy point estimate without propagating decision-relevant uncertainty"
+      }
+    },
+    {
+      "primitive_id": "portability_gate_failure",
+      "name": "Context-portability failure: observed contribution treated as intrinsic invariant ability",
+      "verbatim_quote": "Observed contribution is treated as intrinsic and invariant ability",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The context-portability gate asks whether transfer to the intended team, role, lineup, opponent, or regime is tested; its common failure is observed contribution being treated as intrinsic and invariant ability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The portability gate is literally GSE's transport-validation veto against treating context-dependent contribution as invariant.",
+        "source_operator": "portability_gate_failure",
+        "telemetry": "gate: transfer to intended team/role/lineup/opponent/regime tested?; failure = observed contribution treated as intrinsic invariant ability"
+      }
+    },
+    {
+      "primitive_id": "feasibility_gate_failure",
+      "name": "Action-feasibility failure: optimizer uses only payroll cap, ignores rotation/rights",
+      "verbatim_quote": "An optimizer uses only a payroll cap or ignores the full rotation and contract rights",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The action-feasibility gate asks whether actions are legal and operationally possible at that date; its common failure is an optimizer using only a payroll cap or ignoring the full rotation and contract rights."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The feasibility gate is literally GSE's full-constraint action-set validation (not just a single cap).",
+        "source_operator": "feasibility_gate_failure",
+        "telemetry": "gate: actions legal+operationally possible at date?; failure = optimizer uses only payroll cap / ignores full rotation+contract rights"
+      }
+    },
+    {
+      "primitive_id": "opportunity_gate_failure",
+      "name": "Opportunity-set failure: untried lineups/undrafted/non-trades treated as ordinary negatives",
+      "verbatim_quote": "Untried lineups, undrafted players, and non-trades are treated as ordinary negatives",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The opportunity-set observability gate asks whether available alternatives are observed, reconstructed, or bounded; its common failure is untried lineups, undrafted players, and non-trades being treated as ordinary negatives; coding every unrealized action as a negative observation obscures the difference between an option rejected and one never available; partial identification and sensitivity bounds (Manski 2003) show how much the conclusion depends on the opportunity set."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The opportunity-set gate is literally GSE's rejected-versus-unavailable distinction and partial-identification bound.",
+        "source_operator": "opportunity_gate_failure",
+        "telemetry": "gate: alternatives observed/reconstructed/bounded?; failure = untried lineups/undrafted/non-trades as ordinary negatives; rejected != never-available; Manski 2003 partial identification/sensitivity bounds"
+      }
+    },
+    {
+      "primitive_id": "evaluation_gate_failure",
+      "name": "Evaluation failure: predictive accuracy/retrospective outcome treated as decision improvement",
+      "verbatim_quote": "Predictive accuracy or a realized retrospective outcome is treated as evidence that the recommended action improved the decision",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The evaluation gate asks whether the selected action is evaluated against credible alternatives under conditions appropriate to the decision claim; its common failure is predictive accuracy or a realized retrospective outcome being treated as evidence that the recommended action improved the decision."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The evaluation gate is literally GSE's credible-comparator requirement (accuracy != decision improvement).",
+        "source_operator": "evaluation_gate_failure",
+        "telemetry": "gate: selected action evaluated vs credible alternatives appropriate to claim?; failure = predictive accuracy/retrospective outcome treated as decision improvement"
+      }
+    },
+    {
+      "primitive_id": "versioned_snapshots",
+      "name": "Versioned snapshots distinguish event/release/retrieval times from model cutoff",
+      "verbatim_quote": "Retrospective analyses therefore need versioned snapshots that distinguish event, release, and retrieval times from the model cutoff",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Information changes between an event and the date a researcher retrieves the data: injury designations may be updated several times before tip-off, contract terms may become public after an agreement, and a consensus draft board may incorporate news released after a selection; replaying a decision with a later file can give the model information the team did not have, so retrospective analyses need versioned snapshots that distinguish event, release, and retrieval times from the model cutoff."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The versioned-snapshot discipline is literally GSE's event/release/retrieval-time provenance for leakage-free replay.",
+        "source_operator": "versioned_snapshots",
+        "telemetry": "info changes event->retrieval; injury updates pre-tipoff; contract terms post-agreement; draft board post-selection news; versioned snapshots distinguish event/release/retrieval from cutoff"
+      }
+    },
+    {
+      "primitive_id": "rolling_origin_evaluation",
+      "name": "Rolling-origin evaluation; random season-spanning folds leak later information",
+      "verbatim_quote": "Rolling-origin evaluation is appropriate for this temporal forecasting task; random folds spanning seasons may allow later information into earlier predictions",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rolling-origin evaluation is appropriate for this temporal forecasting task; random folds spanning seasons may allow later information into earlier predictions (Tashman 2000); changes in tracking definitions, reporting practices, participation policies, the CBA, and lottery rules can alter what the data mean, so a model spanning several regimes must represent those differences and assess transfer rather than treating the sample as stationary."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rolling-origin requirement is literally GSE's temporal-holdout discipline against random-fold leakage and regime non-stationarity.",
+        "source_operator": "rolling_origin_evaluation",
+        "telemetry": "rolling-origin appropriate (Tashman 2000); random season-spanning folds leak later info; regime changes (tracking/reporting/CBA/lottery) -> represent differences, assess transfer, not stationary"
+      }
+    },
+    {
+      "primitive_id": "uncertainty_carried_into_choice",
+      "name": "Reporting uncertainty at estimation insufficient if recommendation treats forecast as certain",
+      "verbatim_quote": "Reporting uncertainty at the estimation stage is insufficient if the recommendation then treats the forecast as certain",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Uncertainty can materially alter an otherwise attractive choice: a low-probability absence may be costly for a shallow roster, a risk of role failure may matter over a long contract, and correlated injuries can undermine apparent depth; reporting uncertainty at the estimation stage is insufficient if the recommendation then treats the forecast as certain; the useful test is whether the analysis identifies conditions that change the preferred action or establishes robustness across plausible conditions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The carry-uncertainty-into-choice requirement is literally GSE's propagation of calibrated uncertainty through the decision rule.",
+        "source_operator": "uncertainty_carried_into_choice",
+        "telemetry": "uncertainty alters choice (low-prob absence/shallow roster; role failure/long contract; correlated injuries/depth); estimation-stage reporting insufficient if recommendation treats forecast certain; test = conditions change preferred action or robustness"
+      }
+    },
+    {
+      "primitive_id": "no_prospective_study",
+      "name": "No retained study prospectively evaluates an implemented NBA decision rule vs comparator",
+      "verbatim_quote": "no retained study prospectively evaluates an implemented NBA organizational decision rule against a credible alternative",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In the maturity map, prediction is rated Developed only for on-court action and Emerging elsewhere; causal and model-based counterfactual work is developing unevenly with substantial identification limits; constrained prescription has a smaller evidence base; and no retained study prospectively evaluates an implemented NBA organizational decision rule against a credible alternative; these findings concern the reviewed evidence and cannot establish the extent of private team practice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The prospective-evaluation void is the same deployment-evidence gap GSE's live settlement ledger fills.",
+        "source_operator": "no_prospective_study",
+        "telemetry": "prediction Developed only on-court action/Emerging elsewhere; causal uneven/identification limits; prescription smaller base; NO retained study prospectively evaluates implemented NBA decision rule vs credible alternative; private practice unknown"
+      }
+    },
+    {
+      "primitive_id": "decision_record_veto_conditions",
+      "name": "Decision record reports action, alternatives, uncertainty, assumptions, veto conditions",
+      "verbatim_quote": "Report the recommended action, credible alternatives, uncertainty, assumptions, veto conditions, and information that would change the recommendation",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The proposed deployment workflow's fifth step issues a decision record reporting the recommended action, credible alternatives, uncertainty, assumptions, veto conditions, and information that would change the recommendation; keeping this record makes it easier to investigate a poor outcome, whose cause might lie in the forecast, an unavailable alternative, a failed transport assumption, an incorrectly encoded rule, or a plausible outcome under a well-calibrated forecast."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decision record with veto conditions is literally GSE's pick-dossier structure (action, alternatives, uncertainty, vetoes, change-triggers).",
+        "source_operator": "decision_record_veto_conditions",
+        "telemetry": "deployment step 5: decision record = recommended action + credible alternatives + uncertainty + assumptions + veto conditions + info that would change recommendation; poor-outcause = forecast/unavailable alt/failed transport/misencoded rule/plausible calibrated outcome"
+      }
+    },
+    {
+      "primitive_id": "shadow_mode_frozen_logged",
+      "name": "Shadow-mode: candidate sets/recommendations frozen and logged before outcomes, not executed",
+      "verbatim_quote": "candidate sets and recommendations are frozen and logged before outcomes, without requiring the recommended action to be executed",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In shadow-mode comparisons, candidate sets and recommendations are frozen and logged before outcomes, without requiring the recommended action to be executed; this permits prospective checks of forecasts and action-set records but does not identify effects of unchosen actions or demonstrate gains from deployment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shadow-mode protocol is literally GSE's sealed-shadow prediction logging (freeze before outcome, no execution).",
+        "source_operator": "shadow_mode_frozen_logged",
+        "telemetry": "shadow-mode: candidate sets+recommendations frozen/logged before outcomes, not executed; prospective forecast/action-set checks; != unchosen-action effects or deployment gains"
+      }
+    },
+    {
+      "primitive_id": "framework_not_validated_scale",
+      "name": "Framework not validated as numerical scale or shown to improve team outcomes",
+      "verbatim_quote": "It has not been validated as a numerical scale or shown to improve team outcomes",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors assess the framework as a claim-matching and diagnostic structure by asking whether its gates follow from a decision made at a specified time, identify distinct failure modes, and yield coherent diagnoses across streams; it has not been validated as a numerical scale or shown to improve team outcomes, and reliability as a scored instrument and prospective effects on decision quality require separate empirical investigation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The unvalidated-scale caveat is the same honest scope-limit GSE attaches to its diagnostic gate battery.",
+        "source_operator": "framework_not_validated_scale",
+        "telemetry": "framework = claim-matching/diagnostic structure (gates follow from dated decision, distinct failure modes, coherent diagnoses); NOT validated numerical scale / NOT shown to improve outcomes; scored-instrument reliability + prospective effects need separate study"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nbadecisionreadiness2026_trace",
+      "think": "The retrocausal genealogy of this paper is the decision-readiness turn in sports analytics. Yang Zhou of TY Sports Analytics and Tianyu Guan of York University, posting to arXiv in September 2026 as 2609.27245, argue that NBA teams have increasingly detailed metrics but better predictions do not necessarily improve decisions, and they organize a critical integrative review around an observation-state-action-decision-evaluation chain spanning seven research streams: on-court action, player value, role, lineup synergy, availability, draft and development, and contracts and roster construction. The work builds on Kubatko's possession accounting, Sarlis and Tjortjis's evaluation survey, Terner and Franks's identification of causal inference as a major need, Huyghe's contextual constraints, Kovalchik's tracking methods, Zhou and Li's dimensional taxonomy, and Chen's data-method alignment audit, while grounding its decision formulation in Berger's decision analysis, Boyd and Vandenberghe's constrained optimization, Howard's value of information, Pearl and Bareinboim's transport, Manski's partial identification, and Swaminathan and Joachims's off-policy evaluation. The recursive theory of mind is the formal decision object and its six readiness gates. The paper specifies the information available to a team at a date, the rule and contract state, a market-opportunity scenario, and the admissible action set, then defines multidimensional consequences over a declared horizon, a scalar organizational value through a declared objective, and a corresponding loss; the generic mean-risk decision maximizes expected value minus a downside-aversion weight times a risk functional applied to the conditional loss distribution, with conditional value-at-risk at the ninety-fifth percentile as an example tail measure. Player value is a coupled state, a non-additive non-linear function of ability, role, synergy, availability, cost and rights, and team context, so institutional thresholds change the value of the same component across teams. Cross-layer veto adjudication is the six-gate battery and its claim-matching discipline. The gates are point-in-time validity, uncertainty, context portability, action feasibility, opportunity-set observability, and evaluation, each with a diagnostic question and a common failure: later information leaking into replay, a recommendation built on a noisy point estimate without propagating uncertainty, observed contribution treated as intrinsic invariant ability, an optimizer using only a payroll cap, untried lineups and non-trades coded as ordinary negatives, and predictive accuracy mistaken for decision improvement. The five claim levels — measurement, prediction, causal or counterfactual estimation, constrained prescription, and prospective evaluation — are matched to these requirements, and the paper insists that scientific credibility, whether a study answers its stated question, is distinct from decision readiness, whether its output can inform a choice. The implementation invariants map directly onto GSE. The six gates are GSE's decision-readiness veto battery; the mean-risk argmax is GSE's risk-adjusted expected-value objective with declared organizational risk preference; the coupled non-additive player-state value is GSE's context-conditioned player-value kernel; the potential-outcome selection inequality is GSE's endogeneity veto; the legal-necessary-not-sufficient distinction is GSE's feasible-versus-plausibly-available action gate; and the versioned-snapshot and rolling-origin requirements are GSE's leakage-free temporal-holdout discipline. The proposed deployment workflow — freeze the decision, estimate coupled states, construct candidate actions, stress-test the ranking, issue a decision record reporting veto conditions and change-triggers, then evaluate without redefining the target — is GSE's pick-dossier lifecycle, and the shadow-mode protocol of freezing and logging candidate sets before outcomes without execution is GSE's sealed-shadow prediction ledger. The empirical maturity verdict and the institutional applications close the account. The review's central finding is that the literature is strongest at measuring and predicting individual components but weak at the interfaces that combine them, transport them across settings, and compare feasible actions; prediction is developed only for on-court action, and no retained study prospectively evaluates an implemented NBA organizational decision rule against a credible alternative, a void that GSE's live settlement ledger is designed to fill. The 2023 collective bargaining agreement's apron and Frozen Pick rules and the 3-2-1 Draft Lottery approved in May 2026 for the 2027 through 2029 drafts illustrate how changing rule states generate research questions and alter the feasible action set and incentives, with the lottery's two-ball allocation for the bottom three teams and pick floors creating incentive kinks that call for difference-in-discontinuities rather than naive local randomization. The honest scope limits bound the framework's authority. The authors are explicit that the framework is a claim-matching and diagnostic structure, not a validated numerical scale, and that it has not been shown to improve team outcomes; reliability as a scored instrument and prospective effects on decision quality require separate empirical investigation. Public reproducibility and organizational auditability are recorded as separate reporting requirements rather than a seventh gate, because they determine whether evidence can be inspected, not whether an action improved a decision; the value-of-information principle explains why a more accurate model that leaves the choice unchanged adds limited operational value, and the review's conclusions concern published work and cannot establish what private teams do. The invariant for GSE is to adopt the six-gate veto battery, the mean-risk objective, the coupled player-state value, the claim-level matching, the versioned-snapshot and rolling-origin leakage discipline, the decision-record-with-veto-conditions lifecycle, and the shadow-mode logging protocol, while carrying the unvalidated-scale caveat and the prediction-versus-decision-quality distinction as honest bounds on what the framework can claim. The ten-item reporting contract reinforces this by requiring the decision owner and action, the timestamp and information set, the target and estimand, the unit and horizon, uncertainty and calibration, context and transport, the feasible action set, opportunity and selection, the evaluation design, and provenance and auditability, so that the observation unit is explicitly aligned with the decision unit and a recommendation cannot be justified by silently moving between observed contribution, future prediction, causal effect, and team-specific decision value.",
+      "retrocausal_genealogy": "Decision-readiness turn in sports analytics. Yang Zhou (TY Sports Analytics), Tianyu Guan (York); arXiv:2609.27245v1 [stat.AP] 23 Sep 2026. Critical integrative review; observation-state-action-decision-evaluation chain; 7 streams (on-court action/player value/role/synergy/availability/draft-development/contracts-roster); cutoff 1 Sep 2026; 58-report corpus; 66-row evidence-map CSV GitHub. Builds on Kubatko 2007 possession accounting, Sarlis-Tjortjis 2020, Terner-Franks 2021 (causal need), Huyghe 2022, Kovalchik 2023, Zhou-Li 2024, Chen 2025 data-method alignment; grounds in Berger 1985 decision analysis, Boyd-Vandenberghe 2004, Howard 1966 VoI, Pearl-Bareinboim 2014 transport, Manski 2003 partial identification, Swaminathan-Joachims 2015 off-policy, Tashman 2000 rolling-origin, Bertsimas 2011 robust opt.",
+      "theory_of_mind": "Decision object: It (info at t), Rt (rule/contract state), Mt (market scenario), A(It,Rt,Mt) admissible actions; Yt:t+h(a) consequences over horizon h; V=U(Y) scalar value; L=-V loss. Eq1 mean-risk a*=argmax_{a in A}{E[V|It,Rt,Mt]-lambda rho(L|It,Rt,Mt)}, lambda>=0, rho risk functional (CVaR-95 = mean loss worst 5% joint availability/playoff/asset scenarios); objective/weights/risk declared not fit-determined. Eq2 coupled player-state Vp,t,d=f(A,R,S,H,C,Z) (ability/role/synergy/availability/cost-rights/context), no additive/linear form; institutional thresholds change component value across teams. Potential outcome Y(a) != E[Y|Iobs,Dt=a] (selection on unobservables). Legal admissibility necessary not sufficient (counterpart willingness). 5 claim levels: measurement/prediction/causal-counterfactual/constrained-prescription/prospective-evaluation. Equations 1-2 math-font reconstructed.",
+      "cross_layer_veto": "6 gates (Table 4): point-in-time validity (failure: later info leaks replay), uncertainty (noisy point estimate no propagation), context portability (observed contribution as intrinsic invariant ability), action feasibility (only payroll cap, ignores rotation/rights), opportunity-set observability (untried lineups/undrafted/non-trades as ordinary negatives; rejected != never-available; Manski bounds), evaluation (accuracy/retrospective outcome != decision improvement). Scientific credibility != decision readiness. VoI (Howard): accurate model may leave choice unchanged. Versioned snapshots (event/release/retrieval vs cutoff); rolling-origin (random season folds leak); regime non-stationarity. Maturity: prediction Developed only on-court; NO retained study prospectively evaluates implemented NBA decision rule vs comparator. Deployment workflow: freeze decision/estimate coupled states/construct candidates/stress-test/issue decision record (action+alternatives+uncertainty+assumptions+veto conditions+change-triggers)/evaluate without redefining target. Shadow-mode: freeze+log candidates before outcomes, not executed. 10-item reporting contract. Accountability (reproducibility+auditability) NOT 7th gate. 2023 CBA apron/Frozen Pick; 3-2-1 Lottery (28 May 2026, 2027-29, 16 teams, bottom-3 2 balls floor pick 12, incentive kinks -> difference-in-discontinuities). Framework NOT validated numerical scale / NOT shown improve outcomes. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A decision-readiness framework for sports analytics argues that better predictions do not necessarily improve decisions, organizing evidence around an observation-state-action-decision-evaluation chain and six gates — point-in-time validity, uncertainty, context portability, action feasibility, opportunity-set observability, and evaluation — matched to five claim levels from measurement to prospective evaluation; it formalizes a mean-risk decision objective and a coupled non-additive player-state value, distinguishes scientific credibility from decision readiness and retrospective replay from prospective deployment, and finds that the literature is strongest at measuring individual components but weakest at the interfaces that combine, transport, and compare feasible actions, with no retained study prospectively evaluating an implemented organizational decision rule.",
+  "gsi_mapping": "GSI treats the observation-state-action-decision-evaluation chain across 7 streams; 6 gates (point-in-time validity/uncertainty/context portability/action feasibility/opportunity-set observability/evaluation) each with diagnostic+common failure; 5 claim levels (measurement/prediction/causal-counterfactual/constrained-prescription/prospective-evaluation); decision object It/Rt/Mt/A, Yt:t+h(a), V=U(Y), L=-V; Eq1 a*=argmax E[V|It,Rt,Mt]-lambda rho(L|It,Rt,Mt) (lambda>=0, CVaR-95 worst-5% joint scenarios); Eq2 Vp,t,d=f(A,R,S,H,C,Z) non-additive (ability/role/synergy/availability/cost-rights/context, institutional thresholds); Y(a)!=E[Y|Iobs,Dt=a] selection; legal necessary not sufficient (counterpart willingness); replay != prospective; credibility != readiness; VoI (Howard 1966) accurate model may not change choice; versioned snapshots (event/release/retrieval vs cutoff) + rolling-origin (Tashman 2000, random folds leak) + regime non-stationarity; maturity prediction Developed only on-court, NO prospective evaluation of implemented rule; deployment workflow freeze/estimate-coupled/construct/stress-test/decision-record(action+alternatives+uncertainty+assumptions+veto-conditions+change-triggers)/evaluate; shadow-mode freeze+log not executed; 10-item reporting contract; accountability NOT 7th gate; 2023 CBA apron/Frozen Pick + 3-2-1 Lottery (28 May 2026, 2027-29, 16 teams, bottom-3 2 balls floor pick 12, incentive kinks -> difference-in-discontinuities); framework NOT validated scale/NOT shown improve outcomes; cutoff 1 Sep 2026, 58 reports, 66-row CSV; Eqs 1-2 + potential-outcome inequality math-font reconstructed.",
+  "gse_mapping": "GSE lifts the six-gate decision-readiness veto battery (time-validity/uncertainty/transport/feasibility/opportunity-set/evaluation), the mean-risk argmax objective with declared organizational risk preference and CVaR tail measure, the coupled non-additive context-conditioned player-state value, the potential-outcome endogeneity veto, the legal-necessary-not-sufficient feasible-versus-plausibly-available action gate, the versioned-snapshot and rolling-origin leakage-free temporal-holdout discipline, the claim-level epistemic separation (measurement through prospective evaluation), the decision-record lifecycle reporting veto conditions and change-triggers, and the shadow-mode freeze-and-log protocol as its sealed-shadow ledger; treats the value-of-information principle (accuracy without choice-change adds limited operational value) as its decision-impact metric, the no-prospective-evaluation void as the gap its live settlement ledger fills, and the unvalidated-numerical-scale caveat plus the scientific-credibility-versus-decision-readiness distinction as honest bounds; all outputs are decision-readiness diagnostics and dated action comparisons, never sportsbook lines (betting explicitly outside the review's scope)."
+}
