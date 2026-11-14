@@ -1,0 +1,671 @@
+{
+  "book_id": "7e5b2d626cb5c46f",
+  "title": "Sports Psychology (Velkumar, Muthuveera, Suresh, Sathish)",
+  "source": "Dr. S. Velkumar, Dr. P. Muthuveera, Dr. J. Suresh, Dr. M. Sathish, Sports Psychology (BGR Publications, Tuticorin, 2025), ISBN 978-81-989720-7-1, Open Access. Garrett-hand-delivered Downloads PDF, ~219 pages. Verified title/authors/ISBN; born-digital clean text; not a retraction; not a derivative AI summary.",
+  "source_note": "Comprehensive sport-psychology textbook. Sovereign core: the arousal-performance theory family (Hull/Spence Drive Theory with the printed equation Performance = Habit Strength x Drive; Yerkes-Dodson Inverted-U; Hardy-Fazey Catastrophe; Hanin IZOF), state vs trait anxiety, limited-capacity attention, motivation (intrinsic/extrinsic, Deci-Ryan SDT, Cognitive Evaluation Theory, McClelland-Atkinson nAch/FoF, task vs ego orientation), Locke-Latham goal setting and SMART, outcome/performance/process goals, Csikszentmihalyi flow, task vs social cohesion, autocratic/democratic/laissez-faire leadership, and PST (self-talk, imagery, goal setting, relaxation, concentration). Only Drive Theory prints an equation; the rest are qualitative frameworks (latex empty, no_equation_domain). Line-break hyphens folded per normalization. Pages are printed book page numbers where shown, else PDF page indices.",
+  "primary_domain": "psych",
+  "extraction_mode": "FULL_BOOK_CLEAN_BORN_DIGITAL",
+  "primitives": [
+    {
+      "primitive_id": "drive_theory",
+      "name": "Drive Theory: linear arousal-performance",
+      "verbatim_quote": "The theory suggests a linear relationship between arousal and performance.",
+      "page": 118,
+      "latex": "P = H \\times D",
+      "symbol_and_unit_ledger": {
+        "P": "performance (output level, dimensionless)",
+        "H": "habit strength (learned stimulus-response association strength)",
+        "D": "drive / arousal (physiological activation level)"
+      },
+      "assumptions": [
+        "Hull 1943, extended by Spence & Spence 1966",
+        "The dominant habit is amplified by drive",
+        "Valid for simple or well-learned tasks"
+      ],
+      "breakdown_regime": "Linear model breaks down under high pressure (choking); fails to account for task complexity or individual stress-response differences.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Drive Theory P=HxD IS a gain model: arousal multiplies the dominant habit, so for a well-learned (high-H) skill more arousal helps, but for a weak or wrong habit it amplifies error. GSE maps this to confidence-gated execution where activation scales the dominant policy, valid only when the policy is well-learned.",
+        "source_operator": "drive_theory",
+        "telemetry": "arousal x habit-strength gain -> activation-scaled dominant policy"
+      }
+    },
+    {
+      "primitive_id": "drive_simple_tasks",
+      "name": "Drive theory suits simple, well-learned tasks",
+      "verbatim_quote": "Simple or well-learned tasks benefit from high arousal levels.",
+      "page": 118,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "domain": "simple / automatic / gross-motor tasks",
+        "effect": "high arousal enhances execution"
+      },
+      "assumptions": [
+        "The task is over-learned so the dominant habit is correct",
+        "Explosive simple tasks (e.g., weightlifting) benefit"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The simple-task domain IS the regime gate on the gain model: GSE should only apply arousal-amplification to automatized sub-skills, never to novel or complex reads where the dominant habit may be wrong.",
+        "source_operator": "drive_simple_tasks",
+        "telemetry": "simple-task regime gate -> apply gain only to automatized skills"
+      }
+    },
+    {
+      "primitive_id": "inverted_u",
+      "name": "Yerkes-Dodson Inverted-U",
+      "verbatim_quote": "As arousal increases, performance improves, but only up to an optimal point.",
+      "page": 92,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "arousal": "physiological/psychological activation (x-axis)",
+        "performance": "output (y-axis)",
+        "shape": "curvilinear inverted-U with an optimal apex"
+      },
+      "assumptions": [
+        "Yerkes & Dodson 1908",
+        "Low arousal underperforms; moderate is optimal; high arousal degrades"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Inverted-U IS the arousal-performance value function with an interior maximum: GSE must estimate the apex and veto execution on either side, because both under- and over-arousal reduce output, unlike the monotone drive model.",
+        "source_operator": "inverted_u",
+        "telemetry": "inverted-U value function -> interior-optimum arousal veto"
+      }
+    },
+    {
+      "primitive_id": "inverted_u_modulators",
+      "name": "Optimal arousal depends on skill, task, personality",
+      "verbatim_quote": "Task complexity (simple tasks may benefit from higher arousal, while complex tasks need lower arousal)",
+      "page": 92,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "modulators": "skill level, task complexity, personality (extrovert/introvert)",
+        "effect": "shift the optimal arousal apex"
+      },
+      "assumptions": [
+        "Experienced athletes tolerate higher arousal",
+        "Complex tasks need lower arousal"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The apex modulators IS the context-conditioning of the arousal optimum: GSE's optimal-arousal estimate must shift with task complexity and player skill, so a complex read demands a calmer state than a simple explosive action.",
+        "source_operator": "inverted_u_modulators",
+        "telemetry": "context-shifted arousal apex -> complexity/skill-conditioned optimum"
+      }
+    },
+    {
+      "primitive_id": "catastrophe_drop",
+      "name": "Catastrophe Theory: sudden performance collapse",
+      "verbatim_quote": "After this, a slight increase in arousal can cause a dramatic and sudden drop in performance.",
+      "page": 93,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "interaction": "physiological arousal x cognitive anxiety",
+        "behavior": "when cognitive anxiety is high, a small arousal increase triggers a discontinuous collapse"
+      },
+      "assumptions": [
+        "Hardy & Fazey 1987",
+        "Low cognitive anxiety -> smooth inverted-U; high cognitive anxiety -> cliff"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The catastrophe cliff IS a discontinuous veto: when cognitive anxiety is high, GSE must treat arousal as a cliff-edge variable where a tiny increment causes collapse, not a smooth degradation, so the safety margin below the edge must be large.",
+        "source_operator": "catastrophe_drop",
+        "telemetry": "arousal x cognitive-anxiety cliff -> discontinuous collapse veto with safety margin"
+      }
+    },
+    {
+      "primitive_id": "catastrophe_hysteresis",
+      "name": "Catastrophe hysteresis: hard to recover",
+      "verbatim_quote": "Once performance drops catastrophically, it is difficult to recover quickly during the same performance episode.",
+      "page": 93,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "hysteresis": "post-collapse recovery is slow within the same episode",
+        "implication": "prevention beats recovery"
+      },
+      "assumptions": [
+        "The collapse is not instantly reversible",
+        "Regulating both arousal and cognitive anxiety is required"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The hysteresis IS the irreversibility penalty: once an athlete collapses, GSE cannot assume quick in-play recovery, so the policy must prevent the cliff rather than plan to recover from it, weighting pre-emptive regulation heavily.",
+        "source_operator": "catastrophe_hysteresis",
+        "telemetry": "post-collapse hysteresis -> prevention-over-recovery weighting"
+      }
+    },
+    {
+      "primitive_id": "izof_zone",
+      "name": "IZOF: individual optimal arousal zone",
+      "verbatim_quote": "Each individual has a unique optimal zone of arousal where they perform best.",
+      "page": 119,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "IZOF": "Individual Zones of Optimal Functioning (Hanin, 1980s)",
+        "zone": "a personal band, not a universal point"
+      },
+      "assumptions": [
+        "Each athlete has a unique optimal arousal band",
+        "Performance is impaired above or below the zone"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "IZOF IS per-player arousal calibration: GSE must learn each player's optimal band rather than a league constant, and flag any state outside the band as a performance risk, individualizing the inverted-U.",
+        "source_operator": "izof_zone",
+        "telemetry": "per-player optimal band -> individualized arousal calibration"
+      }
+    },
+    {
+      "primitive_id": "izof_band",
+      "name": "IZOF is a band, and emotions can be functional or dysfunctional",
+      "verbatim_quote": "The IZOF model is represented as a band or zone, rather than a single point of arousal, allowing flexibility and personalization.",
+      "page": 120,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "band": "a range of functional arousal, not a point",
+        "emotions": "both positive and negative emotions can be functional or dysfunctional per person"
+      },
+      "assumptions": [
+        "The zone has width, allowing flexibility",
+        "Emotional valence is not universally good/bad"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The band-and-valence insight IS the tolerance interval plus idiosyncratic emotion mapping: GSE should use a functional arousal interval and learn which emotions help or hurt each player, not assume anxiety is always bad or excitement always good.",
+        "source_operator": "izof_band",
+        "telemetry": "functional interval + idiosyncratic emotion valence -> tolerance band + per-player emotion map"
+      }
+    },
+    {
+      "primitive_id": "state_anxiety",
+      "name": "State anxiety: temporary, situation-specific",
+      "verbatim_quote": "State anxiety refers to a temporary emotional state or condition of apprehension and heightened nervous system activity that varies in intensity and fluctuates over time.",
+      "page": 89,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "state anxiety": "temporary, situation-specific apprehension",
+        "components": "cognitive (worry) + somatic (heart rate, muscle tension)"
+      },
+      "assumptions": [
+        "Fluctuates moment to moment",
+        "Triggered by external pressure; can facilitate or hinder by intensity"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State anxiety IS the transient mental-state variable: GSE models it as a time-varying input with cognitive and somatic channels that can help or hurt depending on intensity, distinct from a stable trait.",
+        "source_operator": "state_anxiety",
+        "telemetry": "transient cognitive+somatic state -> time-varying mental-state input"
+      }
+    },
+    {
+      "primitive_id": "trait_anxiety",
+      "name": "Trait anxiety: stable personality predisposition",
+      "verbatim_quote": "Trait anxiety is a personality characteristic that reflects a person's general tendency to respond with anxiety across many situations.",
+      "page": 90,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "trait anxiety": "stable cross-situational anxiety predisposition",
+        "effect": "higher baseline stress; perceives competition as threatening"
+      },
+      "assumptions": [
+        "Long-lasting, part of personality",
+        "Not limited to a specific event"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Trait anxiety IS the player-level prior on state anxiety: GSE should treat it as a stable baseline that raises the expected state-anxiety response to any pressure, so high-trait players need a larger regulation buffer.",
+        "source_operator": "trait_anxiety",
+        "telemetry": "stable anxiety prior -> player-level baseline raising state response"
+      }
+    },
+    {
+      "primitive_id": "attention_limited",
+      "name": "Attention is limited-capacity",
+      "verbatim_quote": "Attention is limited in capacity, meaning it must be directed toward relevant cues for efficient functioning.",
+      "page": 107,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "attention": "a limited-capacity cognitive resource",
+        "operations": "focusing, sustaining, shifting, dividing"
+      },
+      "assumptions": [
+        "Capacity is finite",
+        "Must be allocated to relevant cues"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Limited-capacity attention IS the cognitive budget constraint: GSE's decision model must allocate a finite attention budget to the most relevant cues, because overloading it degrades reads, analogous to a working-memory bottleneck.",
+        "source_operator": "attention_limited",
+        "telemetry": "finite attention budget -> cue-allocation bottleneck"
+      }
+    },
+    {
+      "primitive_id": "attention_narrowing",
+      "name": "Stress narrows attention",
+      "verbatim_quote": "Stress leads to attention narrowing or distraction, particularly in performance-critical moments.",
+      "page": 110,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "effect": "stress narrows the attentional field or causes distraction",
+        "risk": "missed peripheral cues at critical moments"
+      },
+      "assumptions": [
+        "High anxiety causes overthinking and mental blocks",
+        "Narrowing loses relevant peripheral information"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stress-induced narrowing IS the attentional failure mode under pressure: GSE must flag that high stress shrinks the cue field, so a player may miss the open receiver or the blitz, connecting the mental layer to the geospatial read layer.",
+        "source_operator": "attention_narrowing",
+        "telemetry": "stress narrows cue field -> pressure-induced missed-read veto"
+      }
+    },
+    {
+      "primitive_id": "intrinsic_motivation",
+      "name": "Intrinsic motivation",
+      "verbatim_quote": "Intrinsic motivation arises from within the individual and is driven by personal satisfaction, enjoyment, and the inherent interest in the activity itself.",
+      "page": 35,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "intrinsic": "internal rewards (joy, pride, curiosity)",
+        "effect": "long-term commitment, creativity, resilience"
+      },
+      "assumptions": [
+        "Driven by the activity itself, not external reward",
+        "Sustains self-improvement"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Intrinsic motivation IS the durable engagement driver: GSE's development model should weight intrinsic engagement as the predictor of long-term improvement and resilience, more than short-term external reward.",
+        "source_operator": "intrinsic_motivation",
+        "telemetry": "internal-reward engagement -> durable development driver"
+      }
+    },
+    {
+      "primitive_id": "extrinsic_motivation",
+      "name": "Extrinsic motivation and the undermining risk",
+      "verbatim_quote": "Extrinsic motivation is driven by external rewards or pressures such as trophies, scholarships, praise, or fear of punishment.",
+      "page": 36,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "extrinsic": "external rewards/pressures",
+        "risk": "over-reliance can reduce intrinsic interest"
+      },
+      "assumptions": [
+        "Effective short-term",
+        "Can undermine intrinsic motivation if overused"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Extrinsic motivation IS the short-term incentive with a crowding-out risk: GSE should model external rewards as a temporary boost that can erode the intrinsic driver if over-applied, a caution for incentive design.",
+        "source_operator": "extrinsic_motivation",
+        "telemetry": "external incentive + crowding-out -> short-term boost with erosion risk"
+      }
+    },
+    {
+      "primitive_id": "sdt_needs",
+      "name": "Self-Determination Theory: autonomy, competence, relatedness",
+      "verbatim_quote": "When these needs are satisfied, athletes are more likely to experience intrinsic motivation.",
+      "page": 37,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "SDT": "Deci & Ryan 1985",
+        "three needs": "autonomy, competence, relatedness"
+      },
+      "assumptions": [
+        "Satisfying the three needs fosters intrinsic motivation",
+        "Motivation lies on a self-determination continuum"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SDT IS the need-satisfaction precondition for intrinsic drive: GSE's environment model should track autonomy, competence, and relatedness satisfaction as the inputs that sustain self-driven engagement.",
+        "source_operator": "sdt_needs",
+        "telemetry": "autonomy/competence/relatedness satisfaction -> intrinsic-drive precondition"
+      }
+    },
+    {
+      "primitive_id": "achievement_goal_orientation",
+      "name": "Task vs ego orientation",
+      "verbatim_quote": "Athletes with task-oriented goals are generally more resilient and consistent.",
+      "page": 38,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "task-oriented": "focus on mastery/self-improvement (intrinsic)",
+        "ego-oriented": "focus on outperforming others (extrinsic)"
+      },
+      "assumptions": [
+        "Achievement Goal Theory categorizes by definition of success",
+        "Task orientation links to resilience"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Task-vs-ego orientation IS the mastery-vs-comparison objective: GSE should favor task-oriented (process/mastery) targets for resilience, since ego-oriented comparison is fragile under failure, echoing process-over-outcome grading.",
+        "source_operator": "achievement_goal_orientation",
+        "telemetry": "mastery vs comparison objective -> resilience-favoring task orientation"
+      }
+    },
+    {
+      "primitive_id": "mcclelland_atkinson",
+      "name": "nAch vs Fear of Failure",
+      "verbatim_quote": "According to this theory, achievement behavior depends on the interaction between two opposing tendencies",
+      "page": 40,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "nAch": "need for achievement (seek success)",
+        "FoF": "fear of failure (avoid failure)",
+        "high nAch": "prefers moderate challenge, seeks feedback"
+      },
+      "assumptions": [
+        "McClelland-Atkinson theory",
+        "High FoF avoids risk and focuses on outcomes, with competition anxiety"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "nAch-vs-FoF IS the approach-avoidance balance: GSE can model a player's achievement behavior as the net of approach (nAch) and avoidance (FoF) tendencies, where high FoF predicts risk-aversion and anxiety, a mental veto on aggressive play.",
+        "source_operator": "mcclelland_atkinson",
+        "telemetry": "approach nAch vs avoidance FoF -> net achievement tendency + risk-aversion flag"
+      }
+    },
+    {
+      "primitive_id": "goal_setting_locke",
+      "name": "Locke-Latham goal-setting theory",
+      "verbatim_quote": "asserts that specific and challenging goals lead to higher performance than vague or easy goals.",
+      "page": 43,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "Locke-Latham": "specific + challenging goals > vague/easy",
+        "mechanisms": "focus attention, mobilize effort, increase persistence, develop strategies"
+      },
+      "assumptions": [
+        "Goal specificity, difficulty, commitment, feedback, task complexity",
+        "Behavior is purposeful and goal-directed"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Locke-Latham IS the objective-design law: GSE's targets should be specific and moderately challenging with feedback, because vague or easy goals under-mobilize effort, the same principle behind SMART well-formedness.",
+        "source_operator": "goal_setting_locke",
+        "telemetry": "specific+challenging goals mobilize effort -> objective-design law"
+      }
+    },
+    {
+      "primitive_id": "smart_goals",
+      "name": "SMART goals",
+      "verbatim_quote": "SMART goals are an acronym for Specific, Measurable, Achievable, Relevant, and Time-bound objectives.",
+      "page": 47,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "SMART": "Specific, Measurable, Achievable, Relevant, Time-bound",
+        "benefit": "focus, accountability, confidence via small wins"
+      },
+      "assumptions": [
+        "Each component serves a distinct purpose",
+        "Goals must be written and reviewed"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SMART IS the goal well-formedness gate: GSE's development objectives must pass specific/measurable/achievable/relevant/time-bound validation, rejecting vague targets that cannot drive tracked improvement.",
+        "source_operator": "smart_goals",
+        "telemetry": "SMART validation -> objective well-formedness gate"
+      }
+    },
+    {
+      "primitive_id": "flow_challenge_skill",
+      "name": "Flow: challenge-skill balance",
+      "verbatim_quote": "It represents the perfect balance between challenge and skill, where the individual is neither bored (low challenge) nor anxious (high challenge without skill).",
+      "page": 125,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "flow": "Csikszentmihalyi's optimal experience",
+        "condition": "challenge matched to skill",
+        "markers": "absorption, action-awareness merge, loss of self-consciousness, time distortion"
+      },
+      "assumptions": [
+        "Too little challenge -> boredom; too much without skill -> anxiety",
+        "Clear goals + immediate feedback facilitate flow"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Flow IS the challenge-skill match state: GSE should recognize that peak execution occurs when task difficulty matches player skill, and that mismatch produces boredom or anxiety, so difficulty scaling is a performance lever.",
+        "source_operator": "flow_challenge_skill",
+        "telemetry": "challenge-skill match -> flow state via difficulty scaling"
+      }
+    },
+    {
+      "primitive_id": "task_cohesion",
+      "name": "Task cohesion",
+      "verbatim_quote": "Task cohesion is the degree to which team members work together to achieve a common goal or objective.",
+      "page": 140,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "task cohesion": "shared commitment to the goal",
+        "impact": "direct performance effect, especially interdependent tasks"
+      },
+      "assumptions": [
+        "Shared responsibility, structured communication",
+        "Can exist without close friendships"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Task cohesion IS the goal-alignment component of team function: GSE's team model should score shared objective commitment separately from social liking, because task cohesion directly drives coordinated execution.",
+        "source_operator": "task_cohesion",
+        "telemetry": "shared goal commitment -> task-alignment team score"
+      }
+    },
+    {
+      "primitive_id": "social_cohesion",
+      "name": "Social cohesion",
+      "verbatim_quote": "Social cohesion refers to the emotional bonds and interpersonal relationships among team members.",
+      "page": 141,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "social cohesion": "interpersonal liking, trust, support",
+        "impact": "indirect via morale and cooperation"
+      },
+      "assumptions": [
+        "Distinct from task cohesion",
+        "Can exist without strong goal alignment"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Social cohesion IS the relational component: GSE should track it separately from task cohesion because it acts indirectly through morale, and a team can be high in one and low in the other, so both need independent measurement.",
+        "source_operator": "social_cohesion",
+        "telemetry": "interpersonal bonds -> indirect morale channel, measured separately"
+      }
+    },
+    {
+      "primitive_id": "leadership_autocratic",
+      "name": "Autocratic leadership",
+      "verbatim_quote": "The leader makes all decisions with little input from others.",
+      "page": 144,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "autocratic": "directive, controlling, quick decisions",
+        "fit": "high-pressure or inexperienced teams"
+      },
+      "assumptions": [
+        "Fast results but may reduce creativity/morale",
+        "Clear instructions, limited flexibility"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Autocratic leadership IS the centralized fast-decision mode: GSE maps it to high-pressure situations needing quick directive control, trading creativity for speed, appropriate for inexperienced units.",
+        "source_operator": "leadership_autocratic",
+        "telemetry": "centralized quick decision -> high-pressure directive mode"
+      }
+    },
+    {
+      "primitive_id": "leadership_democratic",
+      "name": "Democratic leadership",
+      "verbatim_quote": "A coach who discusses strategies with players, encourages feedback, and adapts based on team consensus.",
+      "page": 145,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "democratic": "participative, shared responsibility",
+        "fit": "experienced, mature athletes"
+      },
+      "assumptions": [
+        "Builds trust and morale, encourages creativity",
+        "May slow urgent decisions"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Democratic leadership IS the distributed consensus mode: GSE maps it to experienced units where shared input builds trust and adaptability, at the cost of speed, the counterpart to autocratic under lower time pressure.",
+        "source_operator": "leadership_democratic",
+        "telemetry": "distributed consensus -> experienced-unit participative mode"
+      }
+    },
+    {
+      "primitive_id": "pst",
+      "name": "Psychological Skills Training",
+      "verbatim_quote": "Psychological Skills Training (PST) involves the deliberate and systematic practice of mental strategies to enhance performance, improve focus, build confidence, and manage stress.",
+      "page": 166,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "PST": "systematic mental-skills practice",
+        "components": "self-talk, imagery, goal setting, relaxation, concentration"
+      },
+      "assumptions": [
+        "Mental skills are trainable like physical skills",
+        "Applicable across performance domains"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "PST IS the trainable mental-skills curriculum: GSE should treat mental operators as deliberately practiced skills with a structured program, not innate traits, mirroring the physical-development progression for the mental layer.",
+        "source_operator": "pst",
+        "telemetry": "systematic mental-skills practice -> trainable mental curriculum"
+      }
+    },
+    {
+      "primitive_id": "self_talk",
+      "name": "Self-talk regulation",
+      "verbatim_quote": "Self-talk refers to the internal dialogue individuals use to interpret situations, regulate emotions, and guide behavior.",
+      "page": 166,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "self-talk": "internal dialogue",
+        "types": "positive (motivating), negative (self-defeating), instructional (task-oriented)"
+      },
+      "assumptions": [
+        "Positive/instructional self-talk boosts focus and confidence",
+        "Negative self-talk undermines execution"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Self-talk IS the internal-command channel: GSE can model instructional self-talk as the cue that directs attention and positive self-talk as the confidence regulator, while negative self-talk is a detectable self-sabotage signal.",
+        "source_operator": "self_talk",
+        "telemetry": "internal dialogue channel -> instructional cue + confidence regulator + sabotage signal"
+      }
+    },
+    {
+      "primitive_id": "biofeedback",
+      "name": "Biofeedback for arousal regulation",
+      "verbatim_quote": "Biofeedback is a technique that uses electronic devices to provide real-time information about physiological functions such as heart rate, muscle tension, breathing rate, and skin temperature.",
+      "page": 121,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "biofeedback": "real-time physiological measurement + display",
+        "signals": "heart rate, muscle tension, breathing, skin temperature"
+      },
+      "assumptions": [
+        "Sensors measure; feedback is visual/audible",
+        "The athlete learns conscious regulation via the loop"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Biofeedback IS the closed-loop physiological regulation sensor: GSE's mental layer can use real-time physiological telemetry as the feedback signal that lets an athlete (or the model) learn to hold arousal inside the IZOF band.",
+        "source_operator": "biofeedback",
+        "telemetry": "real-time physiological feedback -> closed-loop arousal regulation"
+      }
+    },
+    {
+      "primitive_id": "mindfulness",
+      "name": "Mindfulness for arousal regulation",
+      "verbatim_quote": "Mindfulness is the practice of maintaining nonjudgmental awareness of the present moment, including thoughts, emotions, bodily sensations, and the surrounding environment.",
+      "page": 122,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "mindfulness": "non-judgmental present-moment awareness",
+        "components": "attention regulation, awareness, acceptance"
+      },
+      "assumptions": [
+        "Reduces anxiety and emotional reactivity",
+        "Enhances self-regulation and attentional control"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mindfulness IS the non-reactive present-focus operator: GSE maps it to the acceptance-based regulation that reduces cognitive anxiety (the catastrophe trigger) and keeps attention on the current snap rather than the outcome, complementing biofeedback.",
+        "source_operator": "mindfulness",
+        "telemetry": "non-reactive present focus -> cognitive-anxiety reduction + present-snap attention"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "sportpsych2025_trace_01",
+      "think": "Sports Psychology is a systematic textbook whose sovereign core is the arousal-performance theory family and the trainable mental-skills curriculum that surrounds it. The retrocausal genealogy of the arousal layer runs from Hull's Drive Theory (1943), extended by Spence and Spence (1966), which posits a linear relationship where performance equals habit strength times drive, through the Yerkes-Dodson Inverted-U (1908) that replaces the line with a curvilinear apex, to Hardy and Fazey's Catastrophe Theory (1987) that adds a discontinuous cliff when cognitive anxiety is high, and finally to Hanin's Individual Zones of Optimal Functioning (1980s) that individualizes the optimum into a personal band. This lineage is a progressive refinement from a one-size-fits-all gain model to a context- and person-specific value function with a collapse edge. Drive Theory is the only printed equation, P = H x D, and its domain is explicitly limited to simple or well-learned tasks; it cannot explain choking, which is precisely why the inverted-U and catastrophe models supersede it for complex, high-pressure performance. The recursive theory of mind centers on anxiety and attention. State anxiety is a temporary situation-specific apprehension with cognitive (worry) and somatic (heart rate, muscle tension) channels, while trait anxiety is a stable personality predisposition that raises the baseline response to any pressure. The catastrophe interaction is the key recursive trap: when cognitive anxiety is high, a slight increase in physiological arousal causes a dramatic sudden drop rather than a smooth decline, and once the collapse happens it is difficult to recover within the same episode, a hysteresis that makes prevention far more valuable than recovery. Attention is limited in capacity and must be directed to relevant cues, and stress narrows the attentional field or causes distraction exactly at performance-critical moments, so the anxious player misses the peripheral cue that the calm player sees. The inner loop is self-talk: negative self-defeating dialogue undermines execution while instructional and positive dialogue regulate focus and confidence, making the internal command channel a detectable and trainable lever. The cross-layer veto adjudication is governed by the arousal value function and its collapse edge. The inverted-U vetoes execution on either side of the optimal apex, and the apex itself shifts with skill level, task complexity, and personality, so a complex read demands a calmer state than a simple explosive action. The catastrophe cliff is a discontinuous veto with a required safety margin, and the hysteresis means the policy must prevent the cliff rather than plan to recover from it. IZOF individualizes the optimum into a per-player band and recognizes that both positive and negative emotions can be functional or dysfunctional depending on the person, so emotional valence cannot be assumed universal. The drive gain model is gated to automatized sub-skills only. Attention narrowing under stress connects the mental layer to the geospatial read layer, because a narrowed cue field misses the open receiver or the blitz. The universal lens is motivation and goal-directed self-regulation. Intrinsic motivation arises from internal satisfaction and sustains long-term commitment, while extrinsic rewards are a short-term boost that can crowd out intrinsic interest if overused. Deci and Ryan's Self-Determination Theory names autonomy, competence, and relatedness as the needs whose satisfaction fosters intrinsic drive, and Cognitive Evaluation Theory warns that rewards affirming competence support it while controlling rewards undermine it. McClelland and Atkinson model achievement behavior as the interaction of need for achievement and fear of failure, where high fear of failure predicts risk-aversion and competition anxiety. Task-oriented mastery goals are more resilient than ego-oriented comparison goals. Locke and Latham show specific and challenging goals outperform vague or easy ones, and SMART (specific, measurable, achievable, relevant, time-bound) is the well-formedness gate, with outcome, performance, and process goals distinguished so the controllable process is the primary target. Flow is the challenge-skill match state where absorption replaces self-monitoring. Connecting this to the engine, the mental layer is a set of first-class state variables and trainable operators: a per-player IZOF arousal band with an inverted-U response and a catastrophe cliff, a trait-anxiety prior on state anxiety, a limited attention budget that stress narrows, an approach-avoidance achievement balance, and a PST curriculum of self-talk, imagery, goal setting, relaxation, and concentration. Team function decomposes into task cohesion (direct goal alignment) and social cohesion (indirect morale), and leadership switches between autocratic fast-decision and democratic consensus modes by pressure and experience. The implementation invariants are that the drive gain applies only to well-learned skills, that the catastrophe safety margin must be large because recovery is slow, that the arousal optimum is player- and task-specific, that biofeedback provides the closed-loop physiological signal and mindfulness reduces the cognitive-anxiety trigger, and that mental skills are deliberately practiced rather than innate. The book prints only the drive equation; the remaining frameworks are qualitative operators to be calibrated, not formulas to be evaluated. The PST curriculum is completed by imagery, which recreates an experience across all the senses and splits into cognitive imagery for rehearsing skill execution and motivational imagery for visualizing success, alongside relaxation and concentration drills. The same mental tools support psychological rehabilitation after injury, where fear of re-injury and return-to-play anxiety must be rebuilt into confidence before full competition, closing the loop between the mental layer and physical availability.",
+      "retrocausal_genealogy": "The arousal layer descends from Hull's Drive Theory (1943, Spence & Spence 1966) with the printed equation Performance = Habit Strength x Drive, through the Yerkes-Dodson Inverted-U (1908) that replaces the linear gain with a curvilinear apex, to Hardy-Fazey Catastrophe Theory (1987) that adds a discontinuous collapse when cognitive anxiety is high, and Hanin's IZOF (1980s) that individualizes the optimum into a personal band. The lineage is a refinement from a universal gain model to a person- and task-specific value function with a collapse edge; drive theory is explicitly limited to simple, well-learned tasks and cannot explain choking, which the later models address.",
+      "theory_of_mind": "State anxiety is a temporary cognitive-plus-somatic apprehension; trait anxiety is a stable predisposition raising the baseline response to pressure. The recursive trap is the catastrophe interaction: high cognitive anxiety turns a small arousal increase into a sudden collapse with slow within-episode recovery (hysteresis), so prevention beats recovery. Attention is limited-capacity and stress narrows it at critical moments, causing missed peripheral cues. Self-talk is the internal command channel: negative dialogue sabotages execution while instructional and positive dialogue regulate focus and confidence.",
+      "cross_layer_veto": "The inverted-U vetoes execution on either side of a skill-, task-, and personality-conditioned apex. The catastrophe cliff is a discontinuous veto requiring a large safety margin because recovery is slow. IZOF individualizes the optimum into a per-player band and treats emotional valence as idiosyncratic. The drive gain is gated to automatized skills. Stress-induced attention narrowing connects the mental layer to the geospatial read layer (missed open receiver or blitz). Trait anxiety priors, the nAch/FoF approach-avoidance balance, and negative self-talk are additional detectable veto signals on execution confidence."
+    }
+  ],
+  "universal_lens": "A trainable mental-skills system: per-player IZOF arousal band with inverted-U response and catastrophe cliff, trait-anxiety prior, limited attention budget narrowed by stress, approach-avoidance achievement balance, SDT need satisfaction, Locke-Latham/SMART goal design, flow via challenge-skill match, task/social cohesion, and a PST curriculum (self-talk, imagery, goals, relaxation, concentration) regulated by biofeedback and mindfulness.",
+  "gsi_mapping": "GSI ingests the mental layer as state variables and trainable operators: arousal vs the individual IZOF band, cognitive and somatic anxiety channels, attention budget, self-talk valence, and achievement orientation. The drive gain P=HxD applies only to well-learned skills; the catastrophe cliff enforces a safety margin; biofeedback supplies closed-loop physiological telemetry and mindfulness reduces the cognitive-anxiety trigger.",
+  "gse_mapping": "GSE vetoes execution outside the per-player arousal band and below the catastrophe safety margin, gates the drive gain to automatized sub-skills, flags stress-narrowed attention as a missed-read risk, and treats trait anxiety and negative self-talk as confidence vetoes. Development uses SMART process goals and a PST curriculum; team function scores task and social cohesion separately and switches leadership mode by pressure and experience."
+}
