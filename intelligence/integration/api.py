@@ -17,8 +17,10 @@ ReasoningTrace with the contract's serialized level views attached.
 """
 from __future__ import annotations
 
+import sys; from pathlib import Path
 from typing import Any, Optional
-
+_INTELLIGENCE_DIR = str(Path(__file__).resolve().parents[1])
+if _INTELLIGENCE_DIR not in sys.path: sys.path.insert(0, _INTELLIGENCE_DIR)
 import reasoning as R
 from reasoning.exceptions import ChecklistInvalid
 from reasoning.interfaces import AnalysisRequest as RAnalysisRequest, DataContext, GameRequest
