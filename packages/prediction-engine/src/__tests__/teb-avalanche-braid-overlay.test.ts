@@ -11,6 +11,16 @@ import {
   PreflightRosterGateError,
 } from "../nfl/master-situational-reasoning-aggregator.js";
 
+/**
+ * The Stage 0 gate is deliberately fail-closed on wall-clock freshness, but this
+ * suite drives it through a committed fixture config whose `as_of` ages out every
+ * `max_age_days`. Pinning the clock to that fixture's date keeps the integration
+ * test honest about NAME blocking instead of turning green or red on the calendar
+ * -- and, before this, red on staleness made all three `toThrow` cases vacuous:
+ * each passed for the freshness error without ever exercising the name gate.
+ */
+const CONFIG_NOW = new Date("2026-11-07T12:00:00Z");
+
 describe("GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay", () => {
   it("verifies anchored NFL pocket (FAILED_AVALANCHE_POCKET_ANCHORED) with Lawrence/JAX profile", () => {
     const anchoredInput: TebAvalancheBraidInput = {
@@ -98,6 +108,7 @@ describe("GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay"
       },
       stage0Check: {
         configPath,
+        now: CONFIG_NOW,
         candidatePlayerNames: ["Trevor Lawrence", "Joe Fagnano", "Derrick Henry"],
       },
     });
@@ -128,10 +139,11 @@ describe("GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay"
         independentEdgeDecision: "SPEAK",
         stage0Check: {
           configPath,
+          now: CONFIG_NOW,
           candidatePlayerNames: ["Lamar Jackson", "Trevor Lawrence"],
         },
       });
-    }).toThrow(PreflightRosterGateError);
+    }).toThrow(/blocked players: Lamar Jackson/);
 
     expect(() => {
       runMasterSituationalReasoningOverlay({
@@ -140,10 +152,11 @@ describe("GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay"
         independentEdgeDecision: "SPEAK",
         stage0Check: {
           configPath,
+          now: CONFIG_NOW,
           candidatePlayerNames: ["Tyler Huntley"],
         },
       });
-    }).toThrow(PreflightRosterGateError);
+    }).toThrow(/blocked players: Tyler Huntley/);
 
     expect(() => {
       runMasterSituationalReasoningOverlay({
@@ -152,9 +165,10 @@ describe("GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay"
         independentEdgeDecision: "SPEAK",
         stage0Check: {
           configPath,
+          now: CONFIG_NOW,
           candidatePlayerNames: ["Travis Etienne Jr."],
         },
       });
-    }).toThrow(PreflightRosterGateError);
+    }).toThrow(/blocked players: Travis Etienne Jr\./);
   });
 });
