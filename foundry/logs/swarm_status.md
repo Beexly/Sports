@@ -582,3 +582,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 03:16:53 | COMPLETE | 3c8b550bc3be4562 | primitives=22 think_words=850
 - 2026-11-14 03:17:46 | CLAIMED | 3ad08dd96b7ba73c | worker=hermes-inline shard03 file=2026 - Characterizing and Controlling the Perceived Competitive Balance in Sports Leagues - Vaz-de-Melo et al.pdf
 - 2026-11-14 03:34:00 | COMPLETE | 3ad08dd96b7ba73c | primitives=26 think_words=907
+- 2026-11-14 03:36:51 | CLAIMED | 0fbcbcb524c750ad | worker=hermes-inline shard03 file=undated - A Machine Learning Approach to Player Value and Decision Making in Professional Ultimate Frisbee - Eberhard et al.pdf
+- 2026-11-14 03:40:50 | COMPLETE | 0fbcbcb524c750ad | primitives=27 think_words=889
