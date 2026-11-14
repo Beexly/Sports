@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Footer } from "@/components/ui/footer";
 import {
   buildIntelligenceGrowthSnapshot,
   type IntelligenceGrowthSnapshot,
@@ -153,6 +154,7 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
     postGameAutopsyStats.weSawCount;
 
   return (
+    <>
     <main id="main-content" className="min-h-screen bg-black text-white px-4 py-8 md:px-12 lg:px-20 font-sans">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
@@ -420,5 +422,7 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
         </section>
       </div>
     </main>
+      <Footer />
+    </>
   );
 }
