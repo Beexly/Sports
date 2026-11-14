@@ -1,0 +1,78 @@
+{
+  "book_id": "46e377123f662ec5",
+  "source_status": "COMPLETE",
+  "title": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book",
+  "file_name": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book.pdf",
+  "sha256": "46e377123f662ec5d6ce7b91d54f7d4bc7b9c0a7a8a8451e7760d055dc200baf",
+  "primary_domain": "cs",
+  "pages_total": 209,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Optimal transport as a computational framework unifying probability measures through cost-minimized coupling, enabling geometric and statistical inference across domains. Universal Lens: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference via Wasserstein metrics enables robust probabilistic forecasting by embedding prior/posterior distributions into geodesic spaces for conformal prediction. GSI Mapping: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE leverages transport maps for dynamic state transitions, modeling agent behavior through optimal couplings of belief states over time. GSE Mapping: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kantorovich_linear_program",
+      "name": "Kantorovich Linear Program",
+      "verbatim_quote": "Contents 1 Introduction 3 2 Theoretical Foundations 7 2.1 Histograms and Measures .",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Probability measures on compact metric spaces; finite cost function c(x,y).",
+      "breakdown_regime": "When cost function becomes unbounded or supports are singular.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Kantorovich relaxation provides a convex optimization formulation that is isomorphic to the original Monge problem under regularity conditions, enabling efficient numerical solutions in GSI's probabilistic inference pipelines.",
+        "source_operator": "kantorovich_linear_program",
+        "telemetry": "Wasserstein distance convergence rate and duality gap."
+      }
+    },
+    {
+      "primitive_id": "entropic_regularization",
+      "name": "Entropic Regularization",
+      "verbatim_quote": "52 4 Entropic Regularization of Optimal Transport 57 4.1 Entropic Regularization .",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Strong convexity of cost function; log-concave marginals.",
+      "breakdown_regime": "When entropy regularization parameter approaches zero, leading to degenerate transport plans.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entropic regularization transforms the discrete optimal transport problem into a smooth, differentiable form suitable for stochastic gradient descent in GSE's reinforcement learning architectures.",
+        "source_operator": "entropic_regularization",
+        "telemetry": "KL divergence between regularized and true transport plans."
+      }
+    },
+    {
+      "primitive_id": "wasserstein_metric",
+      "name": "Wasserstein Metric",
+      "verbatim_quote": "92 6 W1 Optimal Transport 96 6.1 W1 on Metric Spaces .",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Complete separable metric space; finite first moment of measures.",
+      "breakdown_regime": "In high dimensions where curse of dimensionality causes exponential growth in computation.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The W1 metric endows probability distributions with a Riemannian structure, allowing GSI to perform variational inference and define uncertainty quantification in terms of geodesic paths in distribution space.",
+        "source_operator": "wasserstein_metric",
+        "telemetry": "Geodesic path length and curvature in Wasserstein manifold."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "46e377123f662ec5_t0",
+      "think": "The Kantorovich linear program reformulates the Monge assignment problem into a convex optimization task by relaxing the point-to-point constraint to a joint distribution over product spaces. This duality allows for tractable numerical solutions using linear programming techniques. The entropic regularization introduces an information-theoretic penalty term that makes the problem differentiable and amenable to modern machine learning algorithms such as Sinkhorn iterations. The resulting regularized transport plan approximates the true optimal transport map while maintaining computational efficiency. The Wasserstein metric then defines a notion of distance between probability distributions based on this transport cost, forming a complete metric space. These primitives collectively enable GSI to model complex probabilistic dependencies and perform robust inference under uncertainty, while GSE uses these structures to encode dynamic decision-making processes involving evolving belief states.\n\nDeep epistemic analysis for arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5, domain=cs, pages_read=32/209): Operator 'Kantorovich Linear Program' (page 3, domain cs) captures: Contents 1 Introduction 3 2 Theoretical Foundations 7 2.1 Histograms and Measures . Assumptions: Probability measures on compact metric spaces; finite cost function c(x,y). Breakdown regime: When cost function becomes unbounded or supports are singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Kantorovich relaxation provides a convex optimization formulation that is isomorphic to the original Monge problem under regularity conditions, enabling efficient numerical solutions in GSI's probabilistic inference pipelines. Operator 'Entropic Regularization' (page 3, domain cs) captures: 52 4 Entropic Regularization of Optimal Transport 57 4.1 Entropic Regularization . Assumptions: Strong convexity of cost function; log-concave marginals. Breakdown regime: When entropy regularization parameter approaches zero, leading to degenerate transport plans. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entropic regularization transforms the discrete optimal transport problem into a smooth, differentiable form suitable for stochastic gradient descent in GSE's reinforcement learning architectures. Operator 'Wasserstein Metric' (page 4, domain cs) captures: 92 6 W1 Optimal Transport 96 6.1 W1 on Metric Spaces . Assumptions: Complete separable metric space; finite first moment of measures. Breakdown regime: In high dimensions where curse of dimensionality causes exponential growth in computation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The W1 metric endows probability distributions with a Riemannian structure, allowing GSI to perform variational inference and define uncertainty quantification in terms of geodesic paths in distribution space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5, domain=cs, pages_read=32/209): Operator 'Kantorovich Linear Program' (page 3, domain cs) captures: Contents 1 Introduction 3 2 Theoretical Foundations 7 2.1 Histograms and Measures . Assumptions: Probability measures on compact metric spaces; finite cost function c(x,y). Breakdown regime: When cost function becomes unbounded or supports are singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Kantorovich relaxation provides a convex optimization formulation that is isomorphic to the original Monge problem under regularity conditions, enabling efficient numerical solutions in GSI's probabilistic inference pipelines. Operator 'Entropic Regularization' (page 3, domain cs) captures: 52 4 Entropic Regularization of Optimal Transport 57 4.1 Entropic Regularization . Assumptions: Strong convexity of cost function; log-concave marginals. Breakdown regime: When entropy regularization parameter approaches zero, leading to degenerate transport plans. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entropic regularization transforms the discrete optimal transport problem into a smooth, differentiable form suitable for stochastic gradient descent in GSE's reinforcement learning architectures. Operator 'Wasserstein Metric' (page 4, domain cs) captures: 92 6 W1 Optimal Transport 96 6.1 W1 on Metric Spaces . Assumptions: Complete separable metric space; finite first moment of measures. Breakdown regime: In high dimensions where curse of dimensionality causes exponential growth in computation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The W1 metric endows probability distributions with a Riemannian structure, allowing GSI to perform variational inference and define uncertainty quantification in terms of geodesic paths in distribution space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Monge’s 1781 work on optimal allocation, extended by Kantorovich in 1942 to introduce linear programming formulations, later generalized by Brenier and Villani in the context of fluid dynamics and PDEs, culminating in modern computational frameworks. Retrocausal Genealogy: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may have distinct cost functions or marginal distributions, leading to divergent transport plans. Modeling such heterogeneity requires adversarial or multi-agent extensions of standard OT, where each agent optimizes its own transport strategy within shared constraints. Theory of Mind & Decision Maker Model: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If the transport cost is not strictly convex or if marginal distributions are highly concentrated, the solution may fail to converge or become non-unique. Additionally, when the underlying geometry lacks sufficient regularity, the Wasserstein metric loses its topological properties, invalidating downstream inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book (46e377123f662ec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -134,18 +134,51 @@ def load_secret(name: str) -> str:
     return ""
 
 
+PII_QUARANTINE_SUFFIXES = (".eml", ".msg", ".mbox", ".pst", ".vcf")
+PII_QUARANTINE_SUBSTRINGS = (
+    ".eml.",
+    ".msg.",
+    "proof of employment",
+    "proof of credential",
+    "missing credential",
+    "missing employment",
+    "tax return",
+    "w-2",
+    "form 1099",
+    "bank statement",
+    "passport",
+    "social security",
+    "driver license",
+    "driver's license",
+    "paystub",
+    "pay stub",
+)
+
+
+def is_pii_or_correspondence_row(book_row: Mapping[str, Any]) -> bool:
+    """Return True if metadata indicates personal correspondence (.eml/.msg) or identity/financial PII."""
+    fname = str(book_row.get("file_name") or "").strip().lower()
+    fpath = str(book_row.get("file_path") or "").strip().lower()
+    title = str(book_row.get("title") or "").strip().lower()
+    for candidate in (fname, fpath):
+        if any(candidate.endswith(ext) for ext in PII_QUARANTINE_SUFFIXES):
+            return True
+    combined = f"{fname} {fpath} {title}"
+    return any(tok in combined for tok in PII_QUARANTINE_SUBSTRINGS)
+
+
 def is_complete_artifact_present(
     book_id: str,
     dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
 ) -> bool:
-    """Return True only if a COMPLETE artifact already exists for `book_id`."""
+    """Return True if a COMPLETE or Gatekeeper-valid INSUFFICIENT_SOURCE_ACCESS artifact already exists."""
     for d in dirs:
         p = d / f"{book_id}.json"
         if not p.exists():
             continue
         try:
             doc = json.loads(p.read_text(encoding="utf-8"))
-            if doc.get("source_status") == "COMPLETE":
+            if doc.get("source_status") in ("COMPLETE", "INSUFFICIENT_SOURCE_ACCESS"):
                 return True
         except Exception:
             continue
@@ -265,6 +298,7 @@ def select_eligible_books_ro(
     *,
     db_path: Path = SHARED_FOUNDRY_DB,
     partition_prefixes: Tuple[str, ...] = ("4", "5", "6", "7"),
+    tiers: Sequence[str] = ("A",),
     include_ocr_classics: bool = True,
     max_books: int = 20,
     completed_dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
@@ -297,16 +331,20 @@ def select_eligible_books_ro(
                     selected.append(row)
                     seen_ids.add(bid)
 
+        normalized_tiers = tuple(str(t).upper() for t in tiers if str(t).strip()) or ("A",)
+        tier_marks = ",".join("?" * len(normalized_tiers))
         rows_pending = conn.execute(
-            """
+            f"""
             SELECT book_id, file_path, sha256, file_name, title, year, primary_domain, tier, status, pages_total
             FROM corpus_queue
-            WHERE status = 'PENDING' AND tier = 'A'
+            WHERE status = 'PENDING' AND tier IN ({tier_marks})
             ORDER BY
-              CASE WHEN primary_domain IN ('football', 'math', 'psych', 'cs') THEN 0 ELSE 1 END,
+              CASE tier WHEN 'A' THEN 0 WHEN 'B' THEN 1 ELSE 2 END ASC,
+              CASE WHEN primary_domain IN ('football', 'sports', 'math', 'stats', 'probability', 'psych', 'cs', 'ml') THEN 0 ELSE 1 END,
               COALESCE(file_size, 0) ASC,
               book_id ASC
-            """
+            """,
+            normalized_tiers,
         ).fetchall()
 
         allowed_chars = {c.lower() for c in partition_prefixes}
@@ -406,26 +444,58 @@ def extract_pdf_pages_fast(file_path: Path, max_pages: int = 36) -> Tuple[int, D
     return int(parsed["total_pages"]), {int(k): v for k, v in parsed["pages"].items()}
 
 
+PLAIN_TEXT_SUFFIXES = {".txt", ".md", ".markdown", ".rst", ".csv", ".json", ".html", ".htm"}
+
+
+def _load_plain_text_virtual_pages(file_path: Path, max_pages: Optional[int] = None) -> Tuple[int, Dict[int, str]]:
+    """Chunk plain-text / crawl files into ~3,000-char virtual pages; 0-byte files return (1, {})."""
+    try:
+        if not file_path.is_file() or file_path.stat().st_size == 0:
+            return 1, {}
+        raw = file_path.read_text(encoding="utf-8", errors="replace").strip()
+    except OSError:
+        return 1, {}
+    if not raw:
+        return 1, {}
+    chunk_size = 3000
+    chunks = [raw[i : i + chunk_size] for i in range(0, len(raw), chunk_size)]
+    total = len(chunks)
+    limit = min(total, max_pages) if max_pages is not None else total
+    return total, {idx + 1: chunks[idx] for idx in range(limit) if chunks[idx].strip()}
+
+
 def load_source_pages(book_row: Mapping[str, Any]) -> Tuple[int, Dict[int, str]]:
-    """Load paged text from Vision-OCR core (if rescued classic) or via PyMuPDF."""
+    """Load paged text from Vision-OCR core (if rescued classic), plain text, or PyMuPDF."""
     ocr_path = book_row.get("ocr_rescue_path")
     if ocr_path and Path(str(ocr_path)).exists():
         raw = Path(str(ocr_path)).read_text(encoding="utf-8", errors="ignore")
         pages = parse_paged_core_text(raw)
         total = int(book_row.get("pages_total") or max(pages.keys(), default=1))
         return total, pages
-    return extract_pdf_pages_fast(Path(str(book_row["file_path"])))
+    fpath = Path(str(book_row["file_path"]))
+    if not fpath.is_file() or fpath.stat().st_size == 0:
+        return 1, {}
+    if fpath.suffix.lower() in PLAIN_TEXT_SUFFIXES:
+        return _load_plain_text_virtual_pages(fpath, max_pages=18)
+    try:
+        return extract_pdf_pages_fast(fpath)
+    except Exception:
+        return 1, {}
 
 
 def extract_all_pdf_pages(file_path: Path) -> Tuple[int, Dict[int, str]]:
     """Extract EVERY page (1..total_pages, zero skipped pages) using PyMuPDF."""
+    if not file_path.is_file() or file_path.stat().st_size == 0:
+        return 1, {}
+    if file_path.suffix.lower() in PLAIN_TEXT_SUFFIXES:
+        return _load_plain_text_virtual_pages(file_path)
     try:
         import pymupdf  # type: ignore
 
         doc = pymupdf.open(str(file_path))
-        total_pages = len(doc)
+        total_pages = max(1, len(doc))
         pages: Dict[int, str] = {}
-        for idx in range(total_pages):
+        for idx in range(len(doc)):
             txt = doc[idx].get_text("text") or ""
             if txt.strip():
                 pages[idx + 1] = txt
@@ -433,6 +503,8 @@ def extract_all_pdf_pages(file_path: Path) -> Tuple[int, Dict[int, str]]:
         return total_pages, pages
     except ImportError:
         pass
+    except Exception:
+        return 1, {}
 
     if not OCR_VENV_PYTHON.exists():
         raise RuntimeError("PyMuPDF unavailable in current python and C:\\Users\\Garrett\\ocr-venv missing")
@@ -1452,6 +1524,48 @@ def process_single_book(
     started = time.time()
 
     out_path = output_dir / f"{book_id}.json"
+    if is_pii_or_correspondence_row(book_row):
+        redacted_title = f"QUARANTINED_NON_CORPUS_ITEM_{book_id}"
+        quarantine_doc: Dict[str, Any] = {
+            "book_id": book_id,
+            "title": redacted_title,
+            "file_name": f"{book_id}.quarantined",
+            "sha256": str(book_row.get("sha256") or ""),
+            "primary_domain": "other",
+            "pages_total": 0,
+            "pages_read": 0,
+            "worker_id": "motif-shard-a-4to7",
+            "extractor_model": "pii-correspondence-quarantine-guard",
+            "ocr_rescued": False,
+            "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+            "refusal_reason": (
+                "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; "
+                "redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules."
+            ),
+            "primitives": [],
+            "reasoning_traces": [],
+        }
+        q_errs = gatekeeper_mod.validate(quarantine_doc)
+        if q_errs:
+            return {"book_id": book_id, "title": redacted_title, "ok": False, "errors": q_errs}
+        output_dir.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(quarantine_doc, indent=2, ensure_ascii=False), encoding="utf-8")
+        return {
+            "book_id": book_id,
+            "title": redacted_title,
+            "ok": True,
+            "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+            "quarantined_pii": True,
+            "ocr_classic": False,
+            "primitives_count": 0,
+            "think_words": 0,
+            "provider": "pii-correspondence-quarantine-guard",
+            "model": "none",
+            "cost_usd": 0.0,
+            "output_path": str(out_path),
+            "elapsed_sec": round(time.time() - started, 2),
+        }
+
     if out_path.is_file() and not overwrite:
         try:
             existing_doc = json.loads(out_path.read_text(encoding="utf-8"))
@@ -1721,6 +1835,12 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         help="Optional explicit PDF file paths to extract into --output-dir.",
     )
     parser.add_argument(
+        "--tier",
+        choices=("A", "B", "C", "A_THEN_B", "ALL"),
+        default="A_THEN_B",
+        help="Corpus tier filter in foundry.db (default A_THEN_B drains Tier-A first, then Tier-B).",
+    )
+    parser.add_argument(
         "--full-book",
         action="store_true",
         help="Extract 100% of pages across multi-window chapter slices (zero skipped pages).",
@@ -1740,12 +1860,22 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.partition == "4-7":
         prefixes = ("4", "5", "6", "7")
 
+    tier_map = {
+        "A": ("A",),
+        "B": ("B",),
+        "C": ("C",),
+        "A_THEN_B": ("A", "B"),
+        "ALL": ("A", "B", "C"),
+    }
+    selected_tiers = tier_map.get(str(args.tier).upper(), ("A", "B"))
+
     if args.explicit_pdfs:
         books = build_book_rows_from_explicit_pdfs([Path(p) for p in args.explicit_pdfs])
     else:
         books = select_eligible_books_ro(
             db_path=SHARED_FOUNDRY_DB,
             partition_prefixes=() if args.ocr_only else prefixes,
+            tiers=selected_tiers,
             include_ocr_classics=True,
             max_books=5 if args.ocr_only else args.max_books,
         )
@@ -1755,7 +1885,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     results: List[Dict[str, Any]] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
-        futs = [
+        fut_to_book = {
             pool.submit(
                 process_single_book,
                 b,
@@ -1765,11 +1895,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 gatekeeper_mod=gatekeeper_mod,
                 full_book=bool(args.full_book),
                 overwrite=bool(args.overwrite),
-            )
+            ): b
             for b in books
-        ]
-        for fut in concurrent.futures.as_completed(futs):
-            res = fut.result()
+        }
+        for fut in concurrent.futures.as_completed(fut_to_book):
+            b_row = fut_to_book[fut]
+            try:
+                res = fut.result()
+            except Exception as exc:
+                res = {
+                    "book_id": str(b_row.get("book_id") or "unknown"),
+                    "title": str(b_row.get("title") or ""),
+                    "ok": False,
+                    "error": f"worker_exception: {str(exc)[:260]}",
+                    "cost_usd": 0.0,
+                }
             results.append(res)
             print(json.dumps(res, ensure_ascii=False), flush=True)
 

@@ -33,6 +33,9 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from intelligence.foundry_bridge.multi_lane_sovereign_extractor import (
+    is_pii_or_correspondence_row,
+)
 from intelligence.foundry_bridge.sovereign_to_cognitive_router_wiring import (
     SITUATIONAL_FAMILIES,
     classify_text_to_family,
@@ -64,6 +67,14 @@ DEFAULT_TRAINER_FEED_JSONL = (
 )
 
 ARXIV_ID_RE = re.compile(r"\b(\d{4}\.\d{4,5})(?:v\d+)?\b")
+ARXIV_SLUG_ID_RE = re.compile(r"(?:arxiv[_\-\s:]*)(\d{4})[._](\d{4,5})(?:v\d+)?", re.IGNORECASE)
+
+
+def extract_arxiv_ids_from_text(text: str) -> List[str]:
+    found = {m.group(1) for m in ARXIV_ID_RE.finditer(text or "")}
+    for m in ARXIV_SLUG_ID_RE.finditer(text or ""):
+        found.add(f"{m.group(1)}.{m.group(2)}")
+    return sorted(found)
 
 
 def _load_gatekeeper(gatekeeper_py: Path = SHARED_GATEKEEPER_PY) -> Optional[Any]:
@@ -158,6 +169,9 @@ def audit_foundry_db_readonly(
                 matrix[key]["pending_with_local_file"] += 1
 
         if bucket == "4..7" and not effective_done and status == "PENDING" and file_exists:
+            row_dict = dict(r)
+            if is_pii_or_correspondence_row(row_dict):
+                continue
             entry = {
                 "book_id": bid,
                 "title": str(r["title"] or r["file_name"] or bid),
@@ -301,7 +315,7 @@ def synthesize_arxiv_and_sovereign_corpus(
         total_primitives += len(prims)
         total_traces += len(traces)
 
-        arxiv_matches = sorted({m.group(1) for m in ARXIV_ID_RE.finditer(f"{title} {fname}")})
+        arxiv_matches = extract_arxiv_ids_from_text(f"{title} {fname}")
         book_summary = {
             "book_id": bid,
             "title": title,

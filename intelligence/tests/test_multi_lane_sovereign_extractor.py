@@ -279,3 +279,82 @@ def test_full_book_multi_window_extracts_all_pages_and_passes_gatekeeper(monkeyp
     assert saved["pages_total"] == 50
     assert saved["primary_domain"] == "football"
     assert gk.validate(saved) == []
+
+
+def test_zero_byte_crawl_txt_fails_closed_without_pymupdf_crash(tmp_path: Path) -> None:
+    empty_txt = tmp_path / "fantasy.nfl.com.txt"
+    empty_txt.write_bytes(b"")
+    row = {
+        "book_id": "5feceb66ffc86f38",
+        "file_path": str(empty_txt),
+        "sha256": "5feceb66ffc86f38" + "0" * 48,
+        "file_name": empty_txt.name,
+        "title": "fantasy.nfl.com",
+        "primary_domain": "football",
+        "tier": "B",
+        "status": "PENDING",
+    }
+    out_dir = tmp_path / "prims"
+    gk = _fake_gatekeeper()
+    res = process_single_book(
+        row,
+        lane="free",
+        max_cost_usd=0.0,
+        output_dir=out_dir,
+        gatekeeper_mod=gk,
+        full_book=True,
+        overwrite=True,
+    )
+    assert res["ok"] is True
+    assert res["source_status"] == "INSUFFICIENT_SOURCE_ACCESS"
+    saved = json.loads((out_dir / "5feceb66ffc86f38.json").read_text(encoding="utf-8"))
+    assert saved["source_status"] == "INSUFFICIENT_SOURCE_ACCESS"
+    assert gk.validate(saved) == []
+
+
+def test_pii_correspondence_eml_quarantined_before_reading_or_llm(monkeypatch, tmp_path: Path) -> None:
+    eml_txt = tmp_path / "20250923_Proof_of_Credential_Personal_Correspondence.eml.txt"
+    eml_txt.write_text("PRIVATE PERSONAL CORRESPONDENCE SHOULD NEVER BE READ OR QUOTED", encoding="utf-8")
+
+    def _forbid_read(*_a, **_kw):
+        raise AssertionError("PII/correspondence file must be quarantined prior to reading pages")
+
+    def _forbid_llm(*_a, **_kw):
+        raise AssertionError("PII/correspondence file must never call LLM")
+
+    monkeypatch.setattr("intelligence.foundry_bridge.multi_lane_sovereign_extractor.load_all_source_pages", _forbid_read)
+    monkeypatch.setattr("intelligence.foundry_bridge.multi_lane_sovereign_extractor.load_source_pages", _forbid_read)
+    monkeypatch.setattr("intelligence.foundry_bridge.multi_lane_sovereign_extractor.call_llm_json", _forbid_llm)
+
+    row = {
+        "book_id": "5d37c580fba2cfcc",
+        "file_path": str(eml_txt),
+        "sha256": "5d37c580fba2cfcc" + "0" * 48,
+        "file_name": eml_txt.name,
+        "title": "Additional / Missing Credential Information - Personal.eml",
+        "primary_domain": "other",
+        "tier": "B",
+        "status": "PENDING",
+    }
+    out_dir = tmp_path / "prims"
+    gk = _fake_gatekeeper()
+    res = process_single_book(
+        row,
+        lane="free",
+        max_cost_usd=0.0,
+        output_dir=out_dir,
+        gatekeeper_mod=gk,
+        full_book=True,
+        overwrite=False,
+    )
+    assert res["ok"] is True
+    assert res["quarantined_pii"] is True
+    assert res["title"] == "QUARANTINED_NON_CORPUS_ITEM_5d37c580fba2cfcc"
+    raw_saved = (out_dir / "5d37c580fba2cfcc.json").read_text(encoding="utf-8")
+    assert "PRIVATE PERSONAL CORRESPONDENCE" not in raw_saved
+    assert ".eml" not in raw_saved.lower()
+    saved = json.loads(raw_saved)
+    assert saved["source_status"] == "INSUFFICIENT_SOURCE_ACCESS"
+    assert saved["primitives"] == []
+    assert gk.validate(saved) == []
+

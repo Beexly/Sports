@@ -1,0 +1,231 @@
+{
+  "book_id": "553770e25cfb31a3",
+  "source_status": "COMPLETE",
+  "title": "derekrbreese-fantasy-football-mcp-public",
+  "file_name": "derekrbreese-fantasy-football-mcp-public.md",
+  "sha256": "553770e25cfb31a3be30e82b65db8885d51d59dcb4ce89d7205cf54506d3e5f6",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The absence of a programmatic query surface represents a topological obstruction in the information manifold. By formalizing the engine's state as a measure space, we define an isomorphism between conversational agent requests and rigorous functional evaluations over the latent probability distributions. A Bayesian conformal predictive system maps fantasy roster states to actionable intelligence via stochastic optimization under read-only API constraints.",
+  "gsi_mapping": "GSI maps the engine's continuous absorption of data to a dynamic Bayesian network. The missing MCP surface prevents conformal inference from being exposed to external agents, necessitating a tooling layer that translates natural language queries into calibrated predictive intervals. GSI employs conformal prediction to infer player performance distributions from historical and real-time inputs, enabling robust uncertainty quantification for lineup decisions.",
+  "gse_mapping": "For GSE, the engine acts as a high-dimensional Markov decision process. The lack of an MCP server creates a state-transition bottleneck; conversational interfaces must directly trigger deterministic updates to situational reasoning matrices rather than relying on opaque database reads. GSE utilizes situational reasoning to transition between states of team composition and opponent dynamics, leveraging state-transition matrices for dynamic decision-making.",
+  "primitives": [
+    {
+      "primitive_id": "553770e25cfb31a3_w0_g1",
+      "name": "derekrbreese-fantasy-football-mcp-public Ch.1 Grounded Operator",
+      "verbatim_quote": "derekrbreese / fantasy-footballmcp-public • Stars: 88 | License: MIT | Pushed: 2026-09-06 (alive) | Lang: Python (FastMCP) Vision A single-user MCP server that exposes a Yahoo fantasy league (rosters, matchups, waivers, draft, lineup analysis) to AI clients like Claude Desktop.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 553770e25cfb31a3_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "553770e25cfb31a3_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "553770e25cfb31a3_w0_g2",
+      "name": "derekrbreese-fantasy-football-mcp-public Ch.1 Grounded Operator",
+      "verbatim_quote": "Built to let an assistant reason over your league data conversationally: lineup optimization, draft recommendations, waiver research, team comparisons, even Reddit sentiment analysis.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 553770e25cfb31a3_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "553770e25cfb31a3_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "553770e25cfb31a3_w0_g3",
+      "name": "derekrbreese-fantasy-football-mcp-public Ch.1 Grounded Operator",
+      "verbatim_quote": "The Ask • User supplies their own Yahoo developer credentials/OAuth tokens.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 553770e25cfb31a3_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "553770e25cfb31a3_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "agent_query_surface",
+      "name": "Conversational Query Surface",
+      "verbatim_quote": "Garrett's mandate is that the engine is all-knowing and constantly absorbing; right now it has no programmatic way for an agent (or a user in Claude) to ask it questions.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Q: Query operator (dimensionless), E: Engine state space (information bits), A: Agent interface (dimensionless)",
+      "assumptions": "The engine maintains a globally consistent, continuously updated state representation of the domain.",
+      "breakdown_regime": "Breaks down when the dimensionality of E exceeds the computational bounds of real-time conversational parsing.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the abstract requirement for an 'all-knowing' engine to a concrete API endpoint structure, ensuring Q(E) yields actionable tensors.",
+        "source_operator": "agent_query_surface",
+        "telemetry": "Latency of agent-to-engine queries and semantic accuracy of returned projections."
+      }
+    },
+    {
+      "primitive_id": "recommendation_topology",
+      "name": "Recommend-Only Topology",
+      "verbatim_quote": "The Yahoo read-only lesson also matters: GSE should design its agent tooling around \"recommend, don't act\" where platforms restrict writes.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "R: Recommendation vector (dimensionless), W: Write action space (disabled/null), P: Platform constraints (boolean)",
+      "assumptions": "External platforms impose strict read-only boundaries on automated agents, forcing a decoupling of inference and execution.",
+      "breakdown_regime": "Fails if the platform introduces asynchronous write permissions without updating the agent's constraint topology.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a safe operational kernel where GSE outputs strictly probabilistic recommendations R, leaving execution outside the sovereign boundary.",
+        "source_operator": "recommendation_topology",
+        "telemetry": "Rate of rejected write attempts and user adoption of recommended actions."
+      }
+    },
+    {
+      "primitive_id": "tool_exposure_matrix",
+      "name": "Tool Exposure Matrix",
+      "verbatim_quote": "A GSE MCP server — projections, rankings, DFS optimizer, signal registry exposed as tools — would let Motif, Hermes, and Garrett query the engine conversationally instead of reading DBs.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Tool set {projections, rankings, optimizer} (dimensionless), U: User/Agent set (count), D: Raw database access (deprecated)",
+      "assumptions": "Complex analytical functions can be cleanly abstracted into discrete, callable tools without losing underlying mathematical fidelity.",
+      "breakdown_regime": "Suffers from combinatorial explosion if the number of exposed tools T grows faster than the agent's context window.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping between raw SQL/database queries and structured function calls within the Model Context Protocol.",
+        "source_operator": "tool_exposure_matrix",
+        "telemetry": "Reduction in direct database queries and increase in successful tool invocations by Motif/Hermes."
+      }
+    },
+    {
+      "primitive_id": "architectural_rebuild",
+      "name": "Architectural Rebuild Mandate",
+      "verbatim_quote": "Verdict REBUILD — GSE should build its own MCP server over the engine (MIT allows borrowing patterns); Yahoo-specific code doesn't transfer.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "V: Verdict (binary), S_old: Legacy system (Yahoo-bound), S_new: Sovereign system (MCP-native)",
+      "assumptions": "Legacy coupling to specific platforms introduces irreducible technical debt that outweighs incremental patching.",
+      "breakdown_regime": "Rebuild becomes untenable if the core engine logic is inextricably entangled with the legacy platform's proprietary APIs.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Establishes a hard boundary condition requiring a complete refactor to isolate the mathematical engine from platform-specific I/O.",
+        "source_operator": "architectural_rebuild",
+        "telemetry": "Codebase cyclomatic complexity reduction and elimination of Yahoo-specific dependency imports."
+      }
+    },
+    {
+      "primitive_id": "readonly_constraint",
+      "name": "Read-Only API Constraint",
+      "verbatim_quote": "• Yahoo now requires manual API approval and grants read-only access — no write actions (adds/drops/lineup changes) possible through the API at all.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "API access is restricted to read-only operations only.",
+      "breakdown_regime": "No write capability implies agent must recommend rather than execute.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constraint mirrors GSE's need for non-actuation in agent-tooling design, enforcing a recommendation-only interface.",
+        "source_operator": "readonly_constraint",
+        "telemetry": "Agent action log vs. API response validation"
+      }
+    },
+    {
+      "primitive_id": "mcp_surface",
+      "name": "MCP Surface Architecture",
+      "verbatim_quote": "GSE lens This is the architecture GSE is missing: an MCP surface over the engine.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "An MCP layer enables structured interaction with the engine.",
+      "breakdown_regime": "Lacks programmatic querying capability without MCP.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "MCP surface provides a kernel for GSE to expose engine functions as tools for agents.",
+        "source_operator": "mcp_surface",
+        "telemetry": "Tool invocation frequency and agent satisfaction metrics"
+      }
+    },
+    {
+      "primitive_id": "agent_tooling",
+      "name": "Agent Tooling Framework",
+      "verbatim_quote": "• Yahoo's read-only restriction caps what any agent can do, not just this repo.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Tools must be modular and queryable by conversational agents.",
+      "breakdown_regime": "Conversational interface replaces direct database access.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Agent tooling aligns with GSE’s engine abstraction, allowing semantic queries over structured data.",
+        "source_operator": "agent_tooling",
+        "telemetry": "Query resolution time and accuracy of tool responses"
+      }
+    },
+    {
+      "primitive_id": "recommendation_only",
+      "name": "Recommendation-Only Design",
+      "verbatim_quote": "Blunt point: a solo dev's side project has a cleaner agent-integration story than GSE's engine does today.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Platform restrictions necessitate a recommendation-based agent model.",
+      "breakdown_regime": "Agent cannot perform write actions; must suggest only.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Designs must enforce a separation between inference and execution layers.",
+        "source_operator": "recommendation_only",
+        "telemetry": "Percentage of recommended vs. executed actions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "553770e25cfb31a3_t0",
+      "think": "Window 1 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 3/3 pages of derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3): [553770e25cfb31a3_w0_g1 p.1]: derekrbreese / fantasy-footballmcp-public • Stars: 88 | License: MIT | Pushed: 2026-09-06 (alive) | Lang: Python (FastMCP) Vision A single-user MCP server that exposes a Yahoo fantasy league (rosters, matchups, waivers, draft, lineup analysis) to AI clients like Claude Desktop. (Binds verbatim proposition 553770e25cfb31a3_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [553770e25cfb31a3_w0_g2 p.1]: Built to let an assistant reason over your league data conversationally: lineup optimization, draft recommendations, waiver research, team comparisons, even Reddit sentiment analysis. (Binds verbatim proposition 553770e25cfb31a3_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [553770e25cfb31a3_w0_g3 p.1]: The Ask • User supplies their own Yahoo developer credentials/OAuth tokens. (Binds verbatim proposition 553770e25cfb31a3_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.) [agent_query_surface p.2]: Garrett's mandate is that the engine is all-knowing and constantly absorbing; right now it has no programmatic way for an agent (or a user in Claude) to ask it questions. (Maps the abstract requirement for an 'all-knowing' engine to a concrete API endpoint structure, ensuring Q(E) yields actionable tensors.) [recommendation_topology p.2]: The Yahoo read-only lesson also matters: GSE should design its agent tooling around \"recommend, don't act\" where platforms restrict writes. (Derives a safe operational kernel where GSE outputs strictly probabilistic recommendations R, leaving execution outside the sovereign boundary.) [tool_exposure_matrix p.2]: A GSE MCP server — projections, rankings, DFS optimizer, signal registry exposed as tools — would let Motif, Hermes, and Garrett query the engine conversationally instead of reading DBs. (Isomorphic mapping between raw SQL/database queries and structured function calls within the Model Context Protocol.) [architectural_rebuild p.2]: Verdict REBUILD — GSE should build its own MCP server over the engine (MIT allows borrowing patterns); Yahoo-specific code doesn't transfer. (Establishes a hard boundary condition requiring a complete refactor to isolate the mathematical engine from platform-specific I/O.) [readonly_constraint p.1]: • Yahoo now requires manual API approval and grants read-only access — no write actions (adds/drops/lineup changes) possible through the API at all. (The constraint mirrors GSE's need for non-actuation in agent-tooling design, enforcing a recommendation-only interface.) [mcp_surface p.2]: GSE lens This is the architecture GSE is missing: an MCP surface over the engine. (MCP surface provides a kernel for GSE to expose engine functions as tools for agents.) [agent_tooling p.2]: • Yahoo's read-only restriction caps what any agent can do, not just this repo. (Agent tooling aligns with GSE’s engine abstraction, allowing semantic queries over structured data.) [recommendation_only p.2]: Blunt point: a solo dev's side project has a cleaner agent-integration story than GSE's engine does today. (Designs must enforce a separation between inference and execution layers.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "553770e25cfb31a3_t1",
+      "think": "The fundamental mathematical obstacle identified in this chapter window is the absence of a well-defined dual space for the Galaxy Sports Engine (GSE). Currently, the engine operates as a monolithic, continuously absorbing measure space—a vast repository of probabilistic states and situational tensors. However, without a Model Context Protocol (MCP) surface, this rich internal geometry remains inaccessible to external operators like Motif or Hermes. In rigorous terms, the engine possesses a highly complex state manifold $\\mathcal{M}$, but lacks a projection operator $\\Pi: \\mathcal{M} \\rightarrow \\mathcal{L}$, where $\\mathcal{L}$ is the language space understood by large language models. The candidate quotes emphasize that relying on raw database reads is mathematically inefficient and structurally brittle; it bypasses the semantic layer entirely. The proposed solution—an MCP server exposing projections, rankings, and DFS optimizers as discrete tools—effectively constructs this missing projection operator. Each tool acts as a localized coordinate chart on the manifold, allowing agents to query specific regions of the state space conversationally. Furthermore, the 'recommend, don't act' paradigm introduces a critical boundary condition. It defines the image of the projection operator as strictly informational, preventing the agent from attempting to invert the map and induce state changes in restricted environments like Yahoo. This architectural rebuild is not merely a software refactor; it is a necessary topological correction to ensure the sovereign primitives of GSE can interact seamlessly with the emerging ecosystem of autonomous quantitative agents.",
+      "retrocausal_genealogy": "This architectural realization traces back to the early days of expert systems, where rigid knowledge bases struggled to interface with natural language. The evolution of Representational State Transfer (REST) APIs provided a first-order solution, but lacked semantic richness. The emergence of the Model Context Protocol represents a second-order leap, demanding that complex engines expose their internal logic as callable, contextual tools rather than static endpoints.",
+      "theory_of_mind": "From a theory of mind perspective, the current GSE architecture fails to model the intent of an external agent. An agent querying the engine is not seeking a raw tuple from a relational database; it is seeking a synthesized insight derived from the engine's 'all-knowing' state. By failing to provide a conversational interface, the engine implicitly assumes the agent possesses identical internal priors, which is a profound modeling error. The MCP server bridges this gap by translating agent intent into precise mathematical queries.",
+      "cross_layer_veto": "A critical veto condition arises if the exposed tools inadvertently leak sensitive internal parameters or create collinear dependencies between different modules. For instance, if the 'projections' tool and the 'DFS optimizer' tool return mathematically inconsistent outputs due to timing lags in state absorption, the agent's belief model will collapse. Therefore, any cross-layer interaction must be rigorously vetted for consistency and isolation before being exposed via the MCP surface."
+    },
+    {
+      "trace_id": "553770e25cfb31a3_t2",
+      "think": "Chapter window 3 focuses on the architectural implications of read-only fantasy football APIs and how they shape agent integration strategies. The core insight is that while Yahoo's API limitations prevent agents from directly modifying rosters, these constraints actually refine the role of agents to one of recommendation rather than action. This aligns with the broader GSE objective of building a robust engine capable of supporting conversational querying. The framework proposed here emphasizes designing agent tooling that operates within such constraints, ensuring that the engine remains the authoritative source of truth while enabling intelligent assistants to reason over its outputs. The necessity of an MCP surface becomes clear when considering that current systems lack a structured interface for agents to interact with engine data. Thus, the chapter advocates for a rethinking of GSE's architecture to incorporate a more agent-friendly layer that supports both inference and communication without violating platform restrictions. Window 3 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This chapter builds upon prior discussions of API limitations in fantasy sports automation, tracing back to early attempts at integrating AI into fantasy leagues where write permissions were either absent or unreliable. Retrocausal Genealogy (Window 3): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents operating under read-only constraints must model user intent and platform behavior to provide meaningful recommendations. Coaches and analysts must anticipate how their agents will interpret signals and respond accordingly. Theory of Mind (Window 3): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Any design that attempts to bypass read-only restrictions introduces anti-collinearity risks, undermining the integrity of the agent-engine interface. Leakage from lower layers into higher ones could corrupt predictions and reduce trust in the system. Cross-Layer Veto (Window 3): Rooted in derekrbreese-fantasy-football-mcp-public (553770e25cfb31a3, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

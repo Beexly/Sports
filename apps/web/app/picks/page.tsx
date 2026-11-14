@@ -72,10 +72,10 @@ export default async function PicksPage(): Promise<JSX.Element> {
             verification script live at /record.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/record" className="btn btn-ghost">
+            <Link href="/record" className="btn btn-ghost min-h-11">
               Verify the record
             </Link>
-            <Link href="/calibration" className="btn btn-ghost">
+            <Link href="/calibration" className="btn btn-ghost min-h-11">
               Calibration progress
             </Link>
           </div>
@@ -87,13 +87,13 @@ export default async function PicksPage(): Promise<JSX.Element> {
         </div>
 
         <section className="mt-10 flex flex-wrap gap-3">
-          <Link href="/packages" className="btn btn-primary">
+          <Link href="/packages" className="btn btn-primary min-h-11">
             Plans and packs
           </Link>
-          <Link href="/props" className="btn btn-ghost">
+          <Link href="/props" className="btn btn-ghost min-h-11">
             Props and watchlist
           </Link>
-          <Link href="/board" className="btn btn-ghost">
+          <Link href="/board" className="btn btn-ghost min-h-11">
             The full board
           </Link>
         </section>

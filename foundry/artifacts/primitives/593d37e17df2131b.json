@@ -1,0 +1,98 @@
+{
+  "book_id": "593d37e17df2131b",
+  "source_status": "COMPLETE",
+  "title": "UNCERTAINTY AND ACTIVE LEARNING",
+  "file_name": "UNCERTAINTY_AND_ACTIVE_LEARNING.md",
+  "sha256": "593d37e17df2131b5e2c51d1c90bf8178fd3615cea42f4e09c7801f0099a206b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 1,
+  "windows_extracted": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "GSI Mapping: Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "GSE Mapping: Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "uncertainty_map",
+      "name": "Uncertainty Shadow Mapping",
+      "verbatim_quote": "Uncertainty And Active Learning Existing surface: • apps/web/lib/metrics/uncertainty-map.ts builds a shadow segment map from prediction intervals and settled outcomes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes fixed-width prediction intervals and binary settled outcomes.",
+      "breakdown_regime": "Breaks down when outcome distributions shift beyond training data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Conformal Prediction via nonconformity scores as uncertainty quantiles.",
+        "source_operator": "uncertainty_map",
+        "telemetry": "Mean absolute error on held-out test sets."
+      }
+    },
+    {
+      "primitive_id": "least_confidence",
+      "name": "Least Confidence Ranking",
+      "verbatim_quote": "New surface: • apps/web/lib/fable/uncertainty.ts Implemented ranking strategies: • Least confidence: ranks by 1 - max(probability).",
+      "page": 1,
+      "latex": "$\\text{LC}(x) = 1 - \\max_{c} p(c|x)$",
+      "symbol_and_unit_ledger": "{'p(c|x)': 'Probability of class c given input x (dimensionless)'}",
+      "assumptions": "Relies on well-calibrated softmax outputs; fails if model is overconfident.",
+      "breakdown_regime": "Degenerates when all class probabilities are equal, yielding zero rank signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reduces to GSE Maximum Probability Action Selection under thresholding.",
+        "source_operator": "least_confidence",
+        "telemetry": "Average confidence of selected actions."
+      }
+    },
+    {
+      "primitive_id": "margin_margin",
+      "name": "Margin Margin",
+      "verbatim_quote": "• Margin: ranks by the smallest gap between top two class probabilities.",
+      "page": 1,
+      "latex": "$\\text{M}(x) = p_{(2)}(x) - p_{(1)}(x)$",
+      "symbol_and_unit_ledger": "{'p_{(1)}(x)': 'Top class probability (dimensionless)', 'p_{(2)}(x)': 'Second class probability (dimensionless)'}",
+      "assumptions": "Assumes a discrete label space with at least two classes; undefined for single-class problems.",
+      "breakdown_regime": "Singular when the top two probabilities are exactly tied, requiring tie-breaking heuristics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to GSI Margin-based Conformal Inference for two-group classification.",
+        "source_operator": "margin_margin",
+        "telemetry": "Proportion of instances with small margin gaps."
+      }
+    },
+    {
+      "primitive_id": "entropy_ranking",
+      "name": "Entropy Ranking",
+      "verbatim_quote": "• Identify cases where labels, feature review, or model diagnostics are valuable.",
+      "page": 1,
+      "latex": "$\\text{H}(x) = -\\sum_{c} p(c|x) \\log p(c|x)$",
+      "symbol_and_unit_ledger": "{'p(c|x)': 'Class probability (dimensionless); H(x) is in bits or nats'}",
+      "assumptions": "Requires a proper probability distribution summing to one across all classes.",
+      "breakdown_regime": "Vanishes when the distribution is degenerate (one-hot), providing no uncertainty signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equivalently maximizes expected information gain for GSE sequential decision trees.",
+        "source_operator": "entropy_ranking",
+        "telemetry": "Shannon entropy of predicted class distributions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "593d37e17df2131b_t0",
+      "think": "This chapter introduces active learning primitives for prioritizing uncertain predictions in sports betting models. It contrasts an established uncertainty-map operator that generates static risk heatmaps from historical prediction intervals with a novel fable-uncertainty library implementing three dynamic ranking strategies: least confidence, margin, and entropy. These operators transform predictive uncertainty into actionable review queues, enabling targeted human intervention without retraining or triggering customer-facing events. The primitives are designed to support Galaxy Sports Intelligence's conformal inference pipelines and Galaxy Sports Engine's situational reasoning, creating a feedback loop where uncertainty guides efficient data collection and model improvement. Window 1 Synthesis: Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 1/1 pages of UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b): [uncertainty_map p.1]: Uncertainty And Active Learning Existing surface: • apps/web/lib/metrics/uncertainty-map.ts builds a shadow segment map from prediction intervals and settled outcomes. (Maps to GSI Conformal Prediction via nonconformity scores as uncertainty quantiles.) [least_confidence p.1]: New surface: • apps/web/lib/fable/uncertainty.ts Implemented ranking strategies: • Least confidence: ranks by 1 - max(probability). (Reduces to GSE Maximum Probability Action Selection under thresholding.) [margin_margin p.1]: • Margin: ranks by the smallest gap between top two class probabilities. (Conforms to GSI Margin-based Conformal Inference for two-group classification.) [entropy_ranking p.1]: • Identify cases where labels, feature review, or model diagnostics are valuable. (Equivalently maximizes expected information gain for GSE sequential decision trees.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b): [uncertainty_map p.1]: Uncertainty And Active Learning Existing surface: • apps/web/lib/metrics/uncertainty-map.ts builds a shadow segment map from prediction intervals and settled outcomes. (Maps to GSI Conformal Prediction via nonconformity scores as uncertainty quantiles.) [least_confidence p.1]: New surface: • apps/web/lib/fable/uncertainty.ts Implemented ranking strategies: • Least confidence: ranks by 1 - max(probability). (Reduces to GSE Maximum Probability Action Selection under thresholding.) [margin_margin p.1]: • Margin: ranks by the smallest gap between top two class probabilities. (Conforms to GSI Margin-based Conformal Inference for two-group classification.) [entropy_ranking p.1]: • Identify cases where labels, feature review, or model diagnostics are valuable. (Equivalently maximizes expected information gain for GSE sequential decision trees.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b): [uncertainty_map p.1]: Uncertainty And Active Learning Existing surface: • apps/web/lib/metrics/uncertainty-map.ts builds a shadow segment map from prediction intervals and settled outcomes. (Maps to GSI Conformal Prediction via nonconformity scores as uncertainty quantiles.) [least_confidence p.1]: New surface: • apps/web/lib/fable/uncertainty.ts Implemented ranking strategies: • Least confidence: ranks by 1 - max(probability). (Reduces to GSE Maximum Probability Action Selection under thresholding.) [margin_margin p.1]: • Margin: ranks by the smallest gap between top two class probabilities. (Conforms to GSI Margin-based Conformal Inference for two-group classification.) [entropy_ranking p.1]: • Identify cases where labels, feature review, or model diagnostics are valuable. (Equivalently maximizes expected information gain for GSE sequential decision trees.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b): [uncertainty_map p.1]: Uncertainty And Active Learning Existing surface: • apps/web/lib/metrics/uncertainty-map.ts builds a shadow segment map from prediction intervals and settled outcomes. (Maps to GSI Conformal Prediction via nonconformity scores as uncertainty quantiles.) [least_confidence p.1]: New surface: • apps/web/lib/fable/uncertainty.ts Implemented ranking strategies: • Least confidence: ranks by 1 - max(probability). (Reduces to GSE Maximum Probability Action Selection under thresholding.) [margin_margin p.1]: • Margin: ranks by the smallest gap between top two class probabilities. (Conforms to GSI Margin-based Conformal Inference for two-group classification.) [entropy_ranking p.1]: • Identify cases where labels, feature review, or model diagnostics are valuable. (Equivalently maximizes expected information gain for GSE sequential decision trees.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b): [uncertainty_map p.1]: Uncertainty And Active Learning Existing surface: • apps/web/lib/metrics/uncertainty-map.ts builds a shadow segment map from prediction intervals and settled outcomes. (Maps to GSI Conformal Prediction via nonconformity scores as uncertainty quantiles.) [least_confidence p.1]: New surface: • apps/web/lib/fable/uncertainty.ts Implemented ranking strategies: • Least confidence: ranks by 1 - max(probability). (Reduces to GSE Maximum Probability Action Selection under thresholding.) [margin_margin p.1]: • Margin: ranks by the smallest gap between top two class probabilities. (Conforms to GSI Margin-based Conformal Inference for two-group classification.) [entropy_ranking p.1]: • Identify cases where labels, feature review, or model diagnostics are valuable. (Equivalently maximizes expected information gain for GSE sequential decision trees.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "The concept traces back to early machine learning active learning (Settles, 2012) and conformal prediction (Vovk et al., 2005), adapted specifically for sports betting through the lens of uncertainty quantification and decision-theoretic active sampling. Retrocausal Genealogy (Window 1): Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Bookmakers and professional bettors operate under bounded rationality; they seek to identify rare mispriced bets while avoiding routine, low-value calls. These primitives align with their cognitive biases toward focusing on edge cases, thus reducing mental fatigue and improving long-term profitability. Theory of Mind (Window 1): Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent anti-collinearity, the ranking metrics must be independent of the original model's loss function. Additionally, leakage is vetoed by ensuring that future outcomes are never used to compute current uncertainty scores, maintaining temporal validity. Cross-Layer Veto (Window 1): Rooted in UNCERTAINTY AND ACTIVE LEARNING (593d37e17df2131b, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

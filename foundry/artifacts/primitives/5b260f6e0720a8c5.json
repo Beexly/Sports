@@ -1,0 +1,173 @@
+{
+  "book_id": "5b260f6e0720a8c5",
+  "source_status": "COMPLETE",
+  "title": "2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors",
+  "file_name": "2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors.md",
+  "sha256": "5b260f6e0720a8c54c36a4f2a5067a538dfdca09d2b022452578d8dbc613012c",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian hierarchical modeling of home advantage trends across NFL, NCAA, and high school football using time-series data. Home advantage (HA) estimation in football models is attenuated by team strength confounding and scheduling bias, requiring adjusted Bayesian inference for accurate temporal trend detection.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to estimate HA uncertainty bounds, leveraging LOO-CV for model selection and ELPD for out-of-sample validation. GSI employs conformal predictive distributions to adjust HA estimates via posterior inference on team strength and schedule effects, mitigating model attenuation through hierarchical Bayesian modeling.",
+  "gse_mapping": "GSE encodes state transitions of HA as stochastic processes within game dynamics, integrating team-specific adjustments and temporal drifts into situational models. GSE utilizes state-transition graphs encoding team performance and scheduling dynamics to simulate HA evolution, enabling real-time situational reasoning about home-field impact under varying competitive contexts.",
+  "primitives": [
+    {
+      "primitive_id": "home_advantage_trend",
+      "name": "Temporal Home Advantage Decline",
+      "verbatim_quote": "**In particular, we are interested in the question of whether/how much home advantage has changed over time** .",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α₁': 'rate of change in home advantage per year (dimensionless)', 't': 'time variable in years (years)'}",
+      "assumptions": "Linear temporal trend in HA; homogeneity of variance across leagues.",
+      "breakdown_regime": "When α₁ approaches zero or becomes negative, indicating HA stabilization or reversal.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Modeling HA as a function of time using Bayesian regression with league-specific intercepts and slopes.",
+        "source_operator": "home_advantage_trend",
+        "telemetry": "Posterior credible intervals for α₁ across leagues"
+      }
+    },
+    {
+      "primitive_id": "league_heterogeneity",
+      "name": "League-Level Variance in HA",
+      "verbatim_quote": "Interestingly, FBS exhibits the largest estimated decline in HA, with a drop of roughly 0.11 points/year between 2004-2022.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔHA_FBS': 'change in home advantage for FBS (points/year)', 't': 'time period (years)'}",
+      "assumptions": "FBS data is representative of broader NCAA trends; variance in HA is driven by structural differences.",
+      "breakdown_regime": "When ΔHA_FBS < 0, suggesting systemic shifts in competitive balance.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mapping HA decline to league-specific stochastic drifts in team performance models.",
+        "source_operator": "league_heterogeneity",
+        "telemetry": "Estimated annual HA decline rates per league"
+      }
+    },
+    {
+      "primitive_id": "model_selection_criteria",
+      "name": "Model Selection via ELPD",
+      "verbatim_quote": "Similar results are obtained when formally comparing models on the basis of expected log pointwise predictive density (ELPD) estimated via the leave-oneout cross-validation (LOO) approach of Gelman and colleagues [1].",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ELPD': 'expected log pointwise predictive density (log units)', 'LOO': 'leave-one-out cross-validation (dimensionless)'}",
+      "assumptions": "Models are comparable through predictive accuracy; LOO approximates out-of-sample performance.",
+      "breakdown_regime": "When ELPD values diverge significantly, indicating model preference.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Using ELPD and LOO to rank and select best-fitting HA models across datasets.",
+        "source_operator": "model_selection_criteria",
+        "telemetry": "ELPD estimates for competing HA models"
+      }
+    },
+    {
+      "primitive_id": "data_scope_limitation",
+      "name": "Data Scope and Generalizability",
+      "verbatim_quote": "Most research on this topic is restricted to individual leagues in short time frames, which limits a thorough understanding of the drivers of home advantage and prevents extrapolation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'temporal scope of study (years)', 'L': 'number of leagues studied (dimensionless)'}",
+      "assumptions": "Short-term studies lack sufficient variance to infer long-term patterns.",
+      "breakdown_regime": "When T < 10 years or L < 3, reducing statistical power.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linking data scope constraints to Bayesian prior sensitivity and generalization error.",
+        "source_operator": "data_scope_limitation",
+        "telemetry": "Coverage of temporal and spatial dimensions in HA estimation"
+      }
+    },
+    {
+      "primitive_id": "home_advantage_attenuation",
+      "name": "Home Advantage Attenuation Factor",
+      "verbatim_quote": "professional leagues such as the NFL, better teams host playoff games, and so even with more balanced schedules, one would expect model based estimates of HA to be attenuated compared to empirical observations.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α': 'dimensionless scaling factor representing HA attenuation'}",
+      "assumptions": "Model-based HA estimates underestimate true HA due to confounding by team strength and scheduling bias.",
+      "breakdown_regime": "When team strength and scheduling are not controlled for in model specification.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The derived kernel maps observed HA to adjusted HA using posterior distributions of team strength and schedule design, enabling GSE to simulate HA under counterfactual conditions.",
+        "source_operator": "home_advantage_attenuation",
+        "telemetry": "Posterior mean of α across seasons indicates degree of model attenuation."
+      }
+    },
+    {
+      "primitive_id": "confounding_by_team_strength",
+      "name": "Confounding by Team Strength",
+      "verbatim_quote": "As evidenced in Figure 2, failure to properly account for confounding by team strength would lead one to not only produce estimates of HA that are severely biased, but also overstate the extent to which strong temporal HA trends exist (e.g.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'β': 'coefficient capturing strength effect on HA bias', 'T': 'team strength index'}",
+      "assumptions": "Team strength is a confounder that biases HA estimates unless explicitly modeled.",
+      "breakdown_regime": "When regression models do not include team strength as a covariate.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Bayesian adjustment of HA estimates where T is used as a latent variable in probabilistic graphical models.",
+        "source_operator": "confounding_by_team_strength",
+        "telemetry": "Residual variance in HA after controlling for T indicates remaining confounding."
+      }
+    },
+    {
+      "primitive_id": "temporal_ha_trend",
+      "name": "Temporal Trend in Home Advantage",
+      "verbatim_quote": "_Computing_ , 27(6):1413–1432, 1: Posterior distributions for _α_ the of the linear Figure 1, slope trend for HA in Model (2), which denotes the change in home _α_ advantage in points/year.",
+      "page": 2,
+      "latex": "\\alpha = \\frac{d\\text{HA}}{dt}",
+      "symbol_and_unit_ledger": "{'\\\\alpha': 'rate of change in HA per year (points/year)'}",
+      "assumptions": "HA varies linearly over time with a deterministic rate of change.",
+      "breakdown_regime": "When temporal variation in HA exceeds model capacity or is misattributed to other factors.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses \\alpha to project future HA trends; GSI validates these projections via posterior predictive checks against historical data.",
+        "source_operator": "temporal_ha_trend",
+        "telemetry": "Posterior distribution of \\alpha provides uncertainty bounds on HA trend projection."
+      }
+    },
+    {
+      "primitive_id": "model_bias_in_home_games",
+      "name": "Bias in Home Game Estimation",
+      "verbatim_quote": "In lower levels of football, including college and high school, better teams are both more likely to host more home games (perhaps due to better facilities and larger athletic budgets) and win by larger amounts.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_i': 'home game indicator for team i', 'W_i': 'win margin for team i'}",
+      "assumptions": "Home advantage is inflated in lower tiers due to selection bias in hosting.",
+      "breakdown_regime": "When home game allocation correlates with team strength rather than random assignment.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models H_i as a function of W_i to correct for selection bias; GSE simulates balanced tournament structures to isolate pure HA effects.",
+        "source_operator": "model_bias_in_home_games",
+        "telemetry": "Difference in HA estimates before and after correcting for H_i-W_i correlation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b260f6e0720a8c5_t0",
+      "think": "The chapter introduces a comprehensive survey of home advantage (HA) in American football, emphasizing the need for extended temporal and multi-league data to understand HA's evolution. It highlights that most prior studies are limited in scope, restricting their ability to generalize findings. The paper uses nearly two decades of data from NFL, NCAA, and high school levels to propose a robust framework for estimating HA. Key findings include a declining trend in HA over time, particularly in FBS, with an estimated drop of 0.11 points/year. This suggests that the competitive balance may be shifting, possibly due to rule changes, travel fatigue, or other systemic factors. The use of Bayesian hierarchical models allows for nuanced modeling of HA across different contexts while accounting for uncertainty. Model comparison via ELPD and LOO-CV ensures robustness in selecting the best-fitting model. These insights form the foundation for GSI’s probabilistic forecasting and GSE’s dynamic game-state modeling. Window 1 Synthesis: Rooted in 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5): [home_advantage_trend p.1]: **In particular, we are interested in the question of whether/how much home advantage has changed over time** . (Modeling HA as a function of time using Bayesian regression with league-specific intercepts and slopes.) [league_heterogeneity p.1]: Interestingly, FBS exhibits the largest estimated decline in HA, with a drop of roughly 0.11 points/year between 2004-2022. (Mapping HA decline to league-specific stochastic drifts in team performance models.) [model_selection_criteria p.1]: Similar results are obtained when formally comparing models on the basis of expected log pointwise predictive density (ELPD) estimated via the leave-oneout cross-validation (LOO) approach of Gelman and colleagues [1]. (Using ELPD and LOO to rank and select best-fitting HA models across datasets.) [data_scope_limitation p.1]: Most research on this topic is restricted to individual leagues in short time frames, which limits a thorough understanding of the drivers of home advantage and prevents extrapolation. (Linking data scope constraints to Bayesian prior sensitivity and generalization error.) [home_advantage_attenuation p.2]: professional leagues such as the NFL, better teams host playoff games, and so even with more balanced schedules, one would expect model based estimates of HA to be attenuated compared to empirical observations. (The derived kernel maps observed HA to adjusted HA using posterior distributions of team strength and schedule design, enabling GSE to simulate HA under counterfactual conditions.) [confounding_by_team_strength p.2]: As evidenced in Figure 2, failure to properly account for confounding by team strength would lead one to not only produce estimates of HA that are severely biased, but also overstate the extent to which strong temporal HA trends exist (e.g. (Isomorphic to GSI's Bayesian adjustment of HA estimates where T is used as a latent variable in probabilistic graphical models.) [temporal_ha_trend p.2]: _Computing_ , 27(6):1413–1432, 1: Posterior distributions for _α_ the of the linear Figure 1, slope trend for HA in Model (2), which denotes the change in home _α_ advantage in points/year. (GSE uses \\alpha to project future HA trends; GSI validates these projections via posterior predictive checks against historical data.) [model_bias_in_home_games p.2]: In lower levels of football, including college and high school, better teams are both more likely to host more home games (perhaps due to better facilities and larger athletic budgets) and win by larger amounts. (GSI models H_i as a function of W_i to correct for selection bias; GSE simulates balanced tournament structures to isolate pure HA effects.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5): [home_advantage_trend p.1]: **In particular, we are interested in the question of whether/how much home advantage has changed over time** . (Modeling HA as a function of time using Bayesian regression with league-specific intercepts and slopes.) [league_heterogeneity p.1]: Interestingly, FBS exhibits the largest estimated decline in HA, with a drop of roughly 0.11 points/year between 2004-2022. (Mapping HA decline to league-specific stochastic drifts in team performance models.) [model_selection_criteria p.1]: Similar results are obtained when formally comparing models on the basis of expected log pointwise predictive density (ELPD) estimated via the leave-oneout cross-validation (LOO) approach of Gelman and colleagues [1]. (Using ELPD and LOO to rank and select best-fitting HA models across datasets.) [data_scope_limitation p.1]: Most research on this topic is restricted to individual leagues in short time frames, which limits a thorough understanding of the drivers of home advantage and prevents extrapolation. (Linking data scope constraints to Bayesian prior sensitivity and generalization error.) [home_advantage_attenuation p.2]: professional leagues such as the NFL, better teams host playoff games, and so even with more balanced schedules, one would expect model based estimates of HA to be attenuated compared to empirical observations. (The derived kernel maps observed HA to adjusted HA using posterior distributions of team strength and schedule design, enabling GSE to simulate HA under counterfactual conditions.) [confounding_by_team_strength p.2]: As evidenced in Figure 2, failure to properly account for confounding by team strength would lead one to not only produce estimates of HA that are severely biased, but also overstate the extent to which strong temporal HA trends exist (e.g. (Isomorphic to GSI's Bayesian adjustment of HA estimates where T is used as a latent variable in probabilistic graphical models.) [temporal_ha_trend p.2]: _Computing_ , 27(6):1413–1432, 1: Posterior distributions for _α_ the of the linear Figure 1, slope trend for HA in Model (2), which denotes the change in home _α_ advantage in points/year. (GSE uses \\alpha to project future HA trends; GSI validates these projections via posterior predictive checks against historical data.) [model_bias_in_home_games p.2]: In lower levels of football, including college and high school, better teams are both more likely to host more home games (perhaps due to better facilities and larger athletic budgets) and win by larger amounts. (GSI models H_i as a function of W_i to correct for selection bias; GSE simulates balanced tournament structures to isolate pure HA effects.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in early empirical studies of HA in sports, evolving through statistical modeling and Bayesian inference frameworks pioneered by Gelman et al., leading to modern multi-level modeling approaches. Retrocausal Genealogy (Window 1): Rooted in 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents such as teams, coaches, and referees may adapt strategically to changing HA dynamics, potentially influencing outcomes through tactical adjustments or rule interpretations. Theory of Mind (Window 1): Rooted in 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each primitive addresses distinct aspects of HA: temporal trends, league heterogeneity, model selection criteria, and data limitations. Cross-Layer Veto (Window 1): Rooted in 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5b260f6e0720a8c5_t1",
+      "think": "Chapter window 2 explores how model-based estimates of home advantage (HA) in American football are systematically attenuated due to confounding variables such as team strength and scheduling bias. The core issue lies in the fact that better teams often host more games, especially in professional leagues like the NFL, leading to a downward bias in estimated HA when models fail to control for these factors. This is particularly evident in lower-tier competitions such as college and high school football, where stronger teams are more likely to host games and achieve larger win margins. The paper emphasizes that failing to adjust for these confounders results in both biased HA estimates and distorted temporal trends. To address this, Bayesian modeling is recommended to incorporate prior knowledge about team strength and schedule design into the estimation process. The use of posterior distributions allows for robust inference even in the presence of limited data or complex dependencies. Furthermore, the inclusion of temporal components in the model enables tracking changes in HA over time, though such trends must be carefully interpreted to avoid overstatement due to omitted variable bias. These insights form the foundation for constructing GSI’s probabilistic inference framework and GSE’s dynamic simulation engine.",
+      "retrocausal_genealogy": "This analysis builds upon foundational work in sports analytics that emerged in the 1990s, particularly the recognition of selection bias in home advantage studies. Early models treated HA as a fixed effect without accounting for team heterogeneity, leading to systematic errors. Subsequent developments in Bayesian statistics and causal inference have refined these approaches, emphasizing the importance of adjusting for confounding variables.",
+      "theory_of_mind": "Opposing agents—teams, coaches, and analysts—may interpret HA differently based on their strategic goals. Coaches might exploit HA as a tactical advantage, while analysts may seek to quantify it objectively. The paper suggests that models must account for these competing perspectives by incorporating both observed outcomes and latent variables such as team strength and scheduling patterns. Theory of Mind (Window 2): Rooted in 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions require that team strength and scheduling variables are not perfectly correlated within the model. Leakage vetoes ensure that HA estimates do not inadvertently capture spurious correlations with external factors like weather or venue quality. These constraints prevent overfitting and maintain the integrity of HA estimation across different layers of analysis. Cross-Layer Veto (Window 2): Rooted in 2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors (5b260f6e0720a8c5, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -1,64 +1,65 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T06:18:18Z",
+  "generated_at_utc": "2026-11-14T07:08:18Z",
   "counts": {
-    "complete_sovereign_books": 180,
-    "refused_stub_books_fail_closed": 11,
+    "complete_sovereign_books": 223,
+    "refused_stub_books_fail_closed": 19,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 1478,
-    "total_sovereign_reasoning_traces": 342,
-    "total_pages_inspected": 21248,
-    "trainer_feed_records_emitted": 1820,
-    "active_router_mask_bits": 257,
+    "total_sovereign_primitives": 1883,
+    "total_sovereign_reasoning_traces": 449,
+    "total_pages_inspected": 25646,
+    "trainer_feed_records_emitted": 2332,
+    "active_router_mask_bits": 269,
     "arxiv_program_unique_ids_indexed": 6183,
-    "sovereign_books_with_explicit_arxiv_id": 0
+    "sovereign_books_with_explicit_arxiv_id": 1
   },
   "context_mask_uint32_words_9": [
-    4223558607,
-    4294967295,
-    4294967295,
-    4294705151,
+    4290707455,
     4294967295,
     4294967295,
     4294967295,
-    4202682303,
-    983033
+    4294967295,
+    4294967295,
+    4294967295,
+    4211072959,
+    1048573
   ],
   "track_counts": {
+    "arxiv_and_preprints": 1,
     "football_coaching_rules_and_scouting": 8,
-    "graduate_math_stats_physics_textbooks": 161,
-    "nfl_war_and_fourth_down_decision": 3,
-    "sports_psychology_and_cognition": 8
+    "graduate_math_stats_physics_textbooks": 196,
+    "nfl_war_and_fourth_down_decision": 4,
+    "sports_psychology_and_cognition": 14
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 79,
-      "bounded_james_stein_weight": 0.156264,
+      "sovereign_primitives_count": 106,
+      "bounded_james_stein_weight": 0.161695,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 211,
-      "bounded_james_stein_weight": 0.170314,
+      "sovereign_primitives_count": 255,
+      "bounded_james_stein_weight": 0.17191,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 193,
-      "bounded_james_stein_weight": 0.169463,
+      "sovereign_primitives_count": 234,
+      "bounded_james_stein_weight": 0.17122,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 162,
-      "bounded_james_stein_weight": 0.167586,
+      "sovereign_primitives_count": 212,
+      "bounded_james_stein_weight": 0.170357,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 768,
-      "bounded_james_stein_weight": 0.177231,
+      "sovereign_primitives_count": 987,
+      "bounded_james_stein_weight": 0.177838,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 65,
-      "bounded_james_stein_weight": 0.151948,
+      "sovereign_primitives_count": 89,
+      "bounded_james_stein_weight": 0.158614,
       "all_finite_non_nan": true
     }
   },
@@ -124,9 +125,9 @@
     "partition_tier_summary": {
       "0..3|tier_A": {
         "total": 110,
-        "completed_or_extracted": 54,
-        "pending_unextracted": 54,
-        "pending_with_local_file": 54
+        "completed_or_extracted": 59,
+        "pending_unextracted": 48,
+        "pending_with_local_file": 48
       },
       "0..3|tier_B": {
         "total": 835,
@@ -144,9 +145,9 @@
       },
       "4..7|tier_B": {
         "total": 814,
-        "pending_unextracted": 811,
-        "pending_with_local_file": 811,
-        "completed_or_extracted": 3
+        "pending_unextracted": 760,
+        "pending_with_local_file": 760,
+        "completed_or_extracted": 54
       },
       "4..7|tier_C": {
         "total": 3347,
@@ -168,7 +169,7 @@
     },
     "shard_4to7_tier_a_remaining_with_file": 0,
     "shard_4to7_tier_a_remaining_preview": [],
-    "shard_4to7_tier_b_pending_candidates_count": 811,
+    "shard_4to7_tier_b_pending_candidates_count": 760,
     "shard_4to7_tier_b_pending_candidates": [
       {
         "book_id": "4030a352319afc8b",
@@ -514,6 +515,11 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "4c513ec5b5d2e4fc",
+      "title": "pro-football-reference.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "51810ec3502aa6a7",
       "title": "",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
@@ -529,8 +535,43 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "5d37c580fba2cfcc",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_5d37c580fba2cfcc",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5feceb66ffc86f38",
+      "title": "fantasy.nfl.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "63cf635c3d045ed5",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "65b8db79a7baa187",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_65b8db79a7baa187",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6de2b1eb0821e340",
+      "title": "footballoutsiders.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7434a0a6ebd0aec0",
+      "title": "sharpfootballstats.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "78acb15d7a87c4d5",
+      "title": "fantasy.nfl.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7c993999ba28850f",
+      "title": "dynastyleaguefootball.com",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -550,6 +591,21 @@
     }
   ],
   "tracks_sample": {
+    "arxiv_and_preprints": [
+      {
+        "book_id": "46e377123f662ec5",
+        "title": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book",
+        "primary_domain": "cs",
+        "track": "arxiv_and_preprints",
+        "pages_read": 32,
+        "pages_total": 209,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "1803.00567"
+        ]
+      }
+    ],
     "football_coaching_rules_and_scouting": [
       {
         "book_id": "2b993f18a6c6a83d",
@@ -919,6 +975,17 @@
     ],
     "nfl_war_and_fourth_down_decision": [
       {
+        "book_id": "6f28369cb212b547",
+        "title": "2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors",
+        "primary_domain": "football",
+        "track": "nfl_war_and_fourth_down_decision",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 8,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "787e3d7f8fa0e629",
         "title": "2020 - PFF WAR Modeling Player Value in American Football - Unknown Authors",
         "primary_domain": "football",
@@ -976,6 +1043,28 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "402b868507628221",
+        "title": "CFB_MODEL_DECISION",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "43e9e1cbac6b1cfe",
+        "title": "2020 - A Puck Above the Rest Exploring the Effects of New Data on 2020 NHL Draft Decisions - Unknown Authors",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 8,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "4f750a0c8577fe9a",
         "title": "The Mental Game of Football - Brian Cain & Sean McDonnell",
         "primary_domain": "psych",
@@ -987,6 +1076,39 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "5f458169bc4c660a",
+        "title": "06-multi-brain-council-and-758-skills",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "6fe423d566d5a637",
+        "title": "CMD-067-operating-cadence-and-decision-log",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 8,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "73b9caec8284c71d",
+        "title": "09-final-decision-matrix",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "76bce88aa7e7d586",
         "title": "2026 - Movement Regularity and Local Dynamic Stability During Acute and 12-Week Retrained Non-Rearfoot-Strike Running Compared to Habitual Non-Rear - Wu et al",
         "primary_domain": "other",
@@ -995,6 +1117,17 @@
         "pages_total": 16,
         "primitives_count": 16,
         "traces_count": 4,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "775c5e0a62772269",
+        "title": "ISSUE_419_DECISION_PACKET",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 8,
+        "traces_count": 2,
         "arxiv_ids": []
       },
       {

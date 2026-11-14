@@ -11,7 +11,6 @@ const mocks = vi.hoisted(() => ({
   transaction: vi.fn((ops: unknown[]) => Promise.all(ops)),
 }));
 vi.mock("@sports/db", () => ({ db: {
-  $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
   depthChartEntry: { deleteMany: mocks.deleteMany, createMany: mocks.createMany },
   player: { findMany: mocks.playerFindMany },
   $transaction: mocks.transaction,
@@ -35,7 +34,7 @@ beforeEach(() => {
 });
 
 describe("ingestDepthCharts", () => {
-  it("parses legacy + new schemas, resolves playerId, replaces the season", async () => {
+  it("parses legacy + new schemas, resolves playerId, replaces only the ingested weeks", async () => {
     const records: Record<string, string>[] = [
       { full_name: "Alpha Back", gsis_id: "00-1", season: "2024", week: "3", club_code: "kc", position: "RB", depth_team: "1", pos_slot: "RB1" },
       { player_name: "Bravo Wide", season: "2024", week: "3", team: "buf", pos_abb: "wr", pos_rank: "2" },
@@ -45,7 +44,7 @@ describe("ingestDepthCharts", () => {
 
     expect(res.status).toBe("ok");
     expect(res.rowsWritten).toBe(2);
-    expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024 } });
+    expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024, week: { in: [3] } } });
     // Devin Review (PR #734): delete + insert must be one atomic transaction,
     // not two independent statements, so a createMany failure after deleteMany
     // succeeds cannot erase the season's rows with nothing to replace them.

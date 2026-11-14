@@ -28,9 +28,12 @@ describe("picks mobile ergonomics", () => {
 
   it("keeps the sealed-board page's customer links mobile tappable", () => {
     const picksPageSrc = readComponent("app/picks/page.tsx");
+    const linkClassMatches = [...picksPageSrc.matchAll(/<Link[^>]*className="([^"]+)"/g)];
 
-    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center text-[#FF4D2E]");
-    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center text-[#EDE8E0]");
+    expect(linkClassMatches.length).toBeGreaterThanOrEqual(5);
+    for (const m of linkClassMatches) {
+      expect(m[1]).toContain("min-h-11");
+    }
   });
 
   /**
