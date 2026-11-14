@@ -598,3 +598,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 04:27:55 | COMPLETE | 35b2d257cfda1e60 | primitives=20 think_words=850
 - 2026-11-14 04:28:52 | CLAIMED | 332e9b44e34c27f7 | worker=hermes-inline shard03 file=2024 - Exploring the Evolution of the NFL Draft Pick Trade Market Over Time - Nathanson.pdf
 - 2026-11-14 04:33:29 | COMPLETE | 332e9b44e34c27f7 | primitives=24 think_words=856
+- 2026-11-14 04:34:18 | CLAIMED | 3789b1db7ff3cab8 | worker=hermes-inline shard03 file=2024 - Analysis of Success Probabilities in Field Hockey with Machine Learning - Lee.pdf
+- 2026-11-14 04:46:32 | COMPLETE | 3789b1db7ff3cab8 | primitives=27 think_words=929
