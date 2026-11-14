@@ -1,0 +1,850 @@
+{
+ "book_id": "b1b042ba814c801c",
+ "source_status": "COMPLETE",
+ "source_note": "Calvin Luo (Google Research, Brain Team), Understanding Diffusion Models: A Unified Perspective, arXiv:2208.11970v1 [cs.LG], 25 Aug 2022; manuscript dated August 26, 2022. Catalog correction: the assignment named a 2025 work by a differently spelled author; the local file is the 2022 arXiv monograph above, and it is that work which was extracted. Local file: library/books-d-models/Luo-2022-UnderstandingDiffusionModels.pdf, 5,033,664 bytes; scan digest sha256(str(size) + file bytes) = b1b042ba814c801cf143d39c8692815db8c9a62e615385937549b4ee2eb57dc0; plain sha256 of file bytes = 431ebb18fb1d504982b976b700ff09388ab74a5ec759fc8806af6fddac5272bf. Extracted text: 124,762 bytes, 1,501 lines, 23 printed pages; prose extraction is clean, but several display equation glyphs are lost in extraction (epsilon appears as a control character in some equations), so verbatim quotes were drawn from clean prose passages and every quote was substring proven against the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "generative_modeling_goal",
+   "name": "A generative model learns the true data distribution p(x) from observed samples so new samples and likelihoods can be produced",
+   "verbatim_quote": "Given observed samples x from a distribution of interest, the goal of a generative model is to learn to model its true data distribution p(x). Once learned, we can generate new samples from our approximate model at will.",
+   "page": "Introduction: Generative Models; text lines 43-44",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observed samples x are drawn from a fixed distribution of interest",
+    "The learned approximation is close enough to the true distribution to be useful for sampling and likelihood evaluation"
+   ],
+   "breakdown_regime": "If the model class cannot represent the true distribution, samples and likelihoods are both biased; likelihood based training alone does not guarantee perceptually or structurally good samples",
+   "domain": "generative modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any predictive engine faces the same contract: it holds an internal distribution over outcomes, is trained on observed samples, and is judged both by the samples it can generate in simulation and by the likelihood it assigns to what actually happened",
+    "source_operator": "generative_modeling_goal",
+    "telemetry": "Observed outcome frequencies, held out sample likelihoods, and simulation versus reality comparison statistics"
+   }
+  },
+  {
+   "primitive_id": "latent_representation_compression",
+   "name": "Lower dimensional latent representations act as compression and can expose semantically meaningful structure behind observations",
+   "verbatim_quote": "learning lower-dimensional latents can also be seen as a form of compression, and can potentially uncover semantically meaningful structure describing observations.",
+   "page": "Background: ELBO, VAE, and Hierarchical VAE; text lines 82-83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observations are generated from unobserved latent factors",
+    "The latent dimension is lower than the observation dimension, since higher dimensional latents are fruitless without strong priors"
+   ],
+   "breakdown_regime": "If the true generating factors are not lower dimensional or not identifiable, the learned latents become arbitrary rotations of the data and carry no stable meaning across retraining",
+   "domain": "latent variable models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feature construction in a reasoning engine is the same move: raw observations are compressed into a smaller set of latent state variables that are expected to carry the causal structure, and everything downstream reasons over the compressed state rather than the raw feed",
+    "source_operator": "latent_representation_compression",
+    "telemetry": "Reconstruction error of the compression, stability of latent factors across retraining windows, and downstream task lift from latent features versus raw features"
+   }
+  },
+  {
+   "primitive_id": "intractable_marginal_likelihood",
+   "name": "The marginal likelihood p(x) requires integrating out all latents or knowing the true posterior, and both routes are intractable for complex models",
+   "verbatim_quote": "Directly computing and maximizing the likelihood p(x) is difficult because it either involves integrating out all latent variables z in Equation 1, which is intractable for complex models, or it involves having access to a ground truth latent encoder p(z|x) in Equation 2.",
+   "page": "Background: Evidence Lower Bound; text lines 99-101",
+   "latex": "p(x) = \\int p(x, z) dz",
+   "symbol_and_unit_ledger": {
+    "p(x)": "marginal likelihood of observed data, a probability density, dimensionless per unit data volume",
+    "p(x, z)": "joint density of data and latent variable",
+    "z": "unobserved latent variable",
+    "x": "observed data sample"
+   },
+   "assumptions": [
+    "Data and latents are modeled by a joint distribution p(x, z)",
+    "The integral over z has no closed form for complex models",
+    "The ground truth encoder p(z|x) is not available"
+   ],
+   "breakdown_regime": "For small or conjugate models the integral is tractable and the intractability premise fails; the bound machinery is then unnecessary overhead",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exact posterior reasoning over hidden game state is likewise intractable, which is why an engine must maintain tractable approximations to hidden state distributions instead of pretending to compute the exact posterior",
+    "source_operator": "intractable_marginal_likelihood",
+    "telemetry": "Problem size and dimensionality counters, exact versus approximate posterior divergence on small cases where exact computation is possible"
+   }
+  },
+  {
+   "primitive_id": "elbo_definition",
+   "name": "The Evidence Lower Bound lower bounds the log evidence and is the tractable proxy objective for latent variable models",
+   "verbatim_quote": "derive a term called the Evidence Lower Bound (ELBO), which as its name suggests, is a lower bound of the evidence.",
+   "page": "Background: Evidence Lower Bound; text lines 101-102",
+   "latex": "\\log p(x) \\geq \\mathbb{E}_{q_\\phi(z|x)} \\left[ \\log \\frac{p(x, z)}{q_\\phi(z|x)} \\right]",
+   "symbol_and_unit_ledger": {
+    "log p(x)": "log evidence, natural log of the marginal likelihood, in nats",
+    "q_phi(z|x)": "approximate variational posterior with parameters phi",
+    "p(x, z)": "joint density of data and latent",
+    "phi": "variational parameters, dimensionless"
+   },
+   "assumptions": [
+    "A flexible approximate posterior family q_phi(z|x) is available",
+    "Expectations under q_phi can be estimated"
+   ],
+   "breakdown_regime": "The bound is loose when the variational family cannot match the true posterior, and maximizing a loose bound can distort the model toward the family rather than the data",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When an engine cannot score a hypothesis exactly, it should optimize a certified lower bound on the score and track the bound gap as a first class quantity, rather than reporting an unbounded point estimate as if it were exact",
+    "source_operator": "elbo_definition",
+    "telemetry": "Bound value per observation, bound gap estimates where exact scores are computable, and optimization convergence traces"
+   }
+  },
+  {
+   "primitive_id": "elbo_gap_kl_identity",
+   "name": "Evidence decomposes exactly into the ELBO plus the KL divergence between the approximate and true posteriors",
+   "verbatim_quote": "the evidence is equal to the ELBO plus the KL Divergence between the approximate posterior qφ (z|x) and the true posterior p(z|x).",
+   "page": "Background: Evidence Lower Bound; text lines 173-174",
+   "latex": "\\log p(x) = \\mathbb{E}_{q_\\phi(z|x)} \\left[ \\log \\frac{p(x, z)}{q_\\phi(z|x)} \\right] + D_{KL} \\left( q_\\phi(z|x) \\, \\| \\, p(z|x) \\right)",
+   "symbol_and_unit_ledger": {
+    "D_KL": "Kullback Leibler divergence, in nats, always nonnegative",
+    "q_phi(z|x)": "approximate posterior",
+    "p(z|x)": "true posterior over latents",
+    "log p(x)": "log evidence in nats"
+   },
+   "assumptions": [
+    "KL divergence is nonnegative, which is what makes the ELBO a lower bound",
+    "The decomposition is exact for any choice of q_phi"
+   ],
+   "breakdown_regime": "The identity holds exactly, but neither term on the right is directly computable without the true posterior; it explains the bound rather than removing the approximation",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The identity gives an accounting rule for approximate reasoning: total evidence equals the tractable score plus an approximation error term, so an engine can report both its working score and the size of what its approximation is hiding",
+    "source_operator": "elbo_gap_kl_identity",
+    "telemetry": "Posterior approximation error probes, ensemble disagreement used as a KL proxy, and score residuals on verifiable subproblems"
+   }
+  },
+  {
+   "primitive_id": "elbo_maximization_proxy",
+   "name": "Because ELBO and posterior KL sum to the constant evidence, maximizing the ELBO with respect to phi exactly minimizes the posterior KL",
+   "verbatim_quote": "Since the ELBO and KL Divergence terms sum up to a constant, any maximization of the ELBO term with respect to φ necessarily invokes an equal minimization of the KL Divergence term.",
+   "page": "Background: Evidence Lower Bound; text lines 195-196",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The evidence log p(x) is constant with respect to the variational parameters phi",
+    "The KL term cannot be minimized directly because the true posterior is inaccessible"
+   ],
+   "breakdown_regime": "The argument transfers only the phi dependence; model parameters theta still trade reconstruction against prior matching, and a restrictive q family caps how small the KL can become",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the justification pattern for surrogate objectives in an engine: when the quantity you care about is an inaccessible constant plus a tractable term, optimizing the tractable term is exactly optimizing the target, not an approximation of the goal",
+    "source_operator": "elbo_definition",
+    "telemetry": "Surrogate objective values tracked against periodic exact evaluations on small verifiable cases"
+   }
+  },
+  {
+   "primitive_id": "vae_encoder_decoder",
+   "name": "The VAE splits the ELBO into a reconstruction term for the decoder and a prior matching term, with the encoder producing a distribution over latents",
+   "verbatim_quote": "Simultaneously, we learn a deterministic function pθ (x|z) to convert a given latent vector z into an observation x, which can be interpreted as a decoder.",
+   "page": "Background: Variational Autoencoders; text lines 221-222",
+   "latex": "\\mathbb{E}_{q_\\phi(z|x)} \\left[ \\log \\frac{p(x, z)}{q_\\phi(z|x)} \\right] = \\mathbb{E}_{q_\\phi(z|x)} \\left[ \\log p_\\theta(x|z) \\right] - D_{KL} \\left( q_\\phi(z|x) \\, \\| \\, p(z) \\right)",
+   "symbol_and_unit_ledger": {
+    "p_theta(x|z)": "decoder distribution with parameters theta",
+    "p(z)": "prior over latents",
+    "q_phi(z|x)": "encoder distribution over latents",
+    "D_KL": "prior matching penalty in nats"
+   },
+   "assumptions": [
+    "The joint factorizes as p_theta(x|z) p(z)",
+    "The encoder and decoder are trained jointly over phi and theta"
+   ],
+   "breakdown_regime": "A powerful decoder can ignore the latents entirely, collapsing the posterior to the prior and destroying the representation the model was supposed to learn",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine has the same two term structure: a fit term measuring how well hidden state explains observations, and a regularization term measuring how far the inferred state drifts from prior belief; dropping either term produces either overfit narratives or collapsed, content free state estimates",
+    "source_operator": "vae_encoder_decoder",
+    "telemetry": "Reconstruction likelihood per observation, posterior to prior KL per latent dimension, and active unit counts"
+   }
+  },
+  {
+   "primitive_id": "prior_matching_anti_collapse",
+   "name": "The prior matching KL term stops the encoder from collapsing into a Dirac delta and forces it to learn an actual distribution",
+   "verbatim_quote": "Minimizing this term encourages the encoder to actually learn a distribution rather than collapse into a Dirac delta function.",
+   "page": "Background: Variational Autoencoders; text lines 226-227",
+   "latex": "q_\\phi(z|x) = \\mathcal{N} \\left( z; \\mu_\\phi(x), \\sigma_\\phi^2(x) I \\right), \\quad p(z) = \\mathcal{N}(z; 0, I)",
+   "symbol_and_unit_ledger": {
+    "mu_phi(x)": "encoder mean function of the input",
+    "sigma_phi^2(x)": "encoder variance, diagonal covariance scaled identity",
+    "I": "identity matrix in latent space",
+    "N": "multivariate Gaussian distribution"
+   },
+   "assumptions": [
+    "The encoder is a multivariate Gaussian with diagonal covariance",
+    "The prior is a standard multivariate Gaussian",
+    "With these choices the KL term is computable analytically"
+   ],
+   "breakdown_regime": "A standard Gaussian prior is a strong and often wrong shape for real latent structure; forcing agreement can wash out multimodality that the data actually contains",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Regularization toward a prior is the engine level guard against degenerate certainty: any component that reports a point mass instead of a distribution should be penalized by its distance from an honest prior, exactly the anti collapse role this term plays",
+    "source_operator": "prior_matching_anti_collapse",
+    "telemetry": "Posterior variance floors, KL per component, and frequency of near zero variance collapses in reported distributions"
+   }
+  },
+  {
+   "primitive_id": "reparameterization_trick",
+   "name": "Rewriting a random variable as a deterministic function of independent noise makes stochastic sampling differentiable",
+   "verbatim_quote": "The reparameterization trick rewrites a random variable as a deterministic function of a noise variable; this allows for the optimization of the non-stochastic terms through gradient descent.",
+   "page": "Background: Variational Autoencoders; text lines 253-254",
+   "latex": "z = \\mu_\\phi(x) + \\sigma_\\phi(x) \\odot \\epsilon, \\quad \\epsilon \\sim \\mathcal{N}(0, I)",
+   "symbol_and_unit_ledger": {
+    "z": "sampled latent variable",
+    "mu_phi(x)": "location shift from the encoder",
+    "sigma_phi(x)": "scale from the encoder",
+    "epsilon": "standard Gaussian noise, independent of parameters",
+    "odot": "element wise product"
+   },
+   "assumptions": [
+    "The distribution belongs to a location scale family or otherwise admits a differentiable reparameterization",
+    "The noise variable is independent of the parameters being optimized"
+   ],
+   "breakdown_regime": "Discrete variables and distributions without a differentiable sampling path break the trick; gradient estimates then need score function estimators with much higher variance",
+   "domain": "variational inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Simulation inside an engine becomes trainable and auditable when randomness is externalized: fix the noise draws, and the whole pipeline from state to outcome is a deterministic function whose sensitivities can be computed and replayed exactly",
+    "source_operator": "reparameterization_trick",
+    "telemetry": "Fixed noise seeds for replay, gradient norms through stochastic nodes, and outcome variance decomposed into noise draw versus parameter effects"
+   }
+  },
+  {
+   "primitive_id": "hvae_generalization",
+   "name": "A Hierarchical VAE stacks latent levels, and the Markovian special case makes each latent depend only on its neighbor in the chain",
+   "verbatim_quote": "A Hierarchical Variational Autoencoder (HVAE) [2, 3] is a generalization of a VAE that extends to multiple hierarchies over latent variables.",
+   "page": "Background: Hierarchical Variational Autoencoders; text lines 278-279",
+   "latex": "p(x, z_{1:T}) = p(z_T) p_\\theta(x|z_1) \\prod_{t=2}^{T} p_\\theta(z_{t-1}|z_t)",
+   "symbol_and_unit_ledger": {
+    "z_{1:T}": "chain of T hierarchical latent variables",
+    "p(z_T)": "prior at the top of the hierarchy",
+    "p_theta(z_{t-1}|z_t)": "Markovian transition between adjacent levels",
+    "T": "hierarchy depth, a count"
+   },
+   "assumptions": [
+    "Each latent is generated from the next higher latent only, the Markov property",
+    "The posterior factorizes in the opposite direction along the same chain"
+   ],
+   "breakdown_regime": "The Markov restriction forbids direct dependence between distant levels; structure that skips levels must be re-expressed through the chain or is lost",
+   "domain": "latent variable models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Layered state estimation in an engine follows the same chain discipline: each layer of abstraction conditions only on its neighbor, which keeps inference local and composable, at the known cost of losing direct long range links that must then be carried by the chain",
+    "source_operator": "hvae_generalization",
+    "telemetry": "Per level transition statistics, depth ablations, and information retained per level measured by downstream reconstruction or prediction quality"
+   }
+  },
+  {
+   "primitive_id": "vdm_three_restrictions",
+   "name": "A Variational Diffusion Model is a Markovian HVAE with latent dimension equal to data dimension, a fixed linear Gaussian encoder, and a schedule ending at a standard Gaussian",
+   "verbatim_quote": "The easiest way to think of a Variational Diffusion Model (VDM) [4, 5, 6] is simply as a Markovian Hierarchical Variational Autoencoder with three key restrictions:",
+   "page": "Variational Diffusion Models; text lines 335-336",
+   "latex": "p(x_{0:T}) = p(x_T) \\prod_{t=1}^{T} p_\\theta(x_{t-1}|x_t), \\quad p(x_T) = \\mathcal{N}(x_T; 0, I)",
+   "symbol_and_unit_ledger": {
+    "x_0": "true data sample",
+    "x_T": "final latent, pure Gaussian noise",
+    "x_t": "intermediate latent at step t",
+    "p_theta(x_{t-1}|x_t)": "learned denoising transition"
+   },
+   "assumptions": [
+    "Latent dimension equals data dimension",
+    "The encoder structure is predefined rather than learned",
+    "The noise schedule makes the final latent a standard Gaussian"
+   ],
+   "breakdown_regime": "Because the encoder is fixed and latents are same dimensional as data, the model cannot learn compressed interpretable latents; sampling must run all T denoising steps and is expensive",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The design lesson transfers directly: fixing the corruption process by construction and learning only the reversal concentrates all model capacity on the one unknown mapping, a template for engine components where the forward degradation of information is known and only the recovery needs learning",
+    "source_operator": "vdm_three_restrictions",
+    "telemetry": "Schedule parameters per step, final step distribution checks against the standard Gaussian, and per step denoising losses"
+   }
+  },
+  {
+   "primitive_id": "forward_noisification_process",
+   "name": "The forward process progressively corrupts data with Gaussian noise until the result is identical to pure Gaussian noise",
+   "verbatim_quote": "Collectively, what this set of assumptions describes is a steady noisification of an image input over time; we progressively corrupt an image by adding Gaussian noise until eventually it becomes completely identical to pure Gaussian noise.",
+   "page": "Variational Diffusion Models; text lines 381-382",
+   "latex": "q(x_t|x_{t-1}) = \\mathcal{N} \\left( x_t; \\sqrt{\\alpha_t} \\, x_{t-1}, (1 - \\alpha_t) I \\right)",
+   "symbol_and_unit_ledger": {
+    "q(x_t|x_{t-1})": "fixed forward noising transition",
+    "alpha_t": "variance preserving coefficient at step t, between 0 and 1, dimensionless",
+    "x_{t-1}": "latent at the previous step",
+    "I": "identity covariance"
+   },
+   "assumptions": [
+    "Each encoder step is Gaussian with mean a scaled copy of the previous latent",
+    "The scaling keeps latent variance at a similar scale across steps, the variance preserving property",
+    "The schedule of alpha_t values drives the final latent to a standard Gaussian"
+   ],
+   "breakdown_regime": "If the schedule decays signal too fast, mid chain latents carry no information and the reverse model wastes capacity; too slow and the final latent is not Gaussian, breaking the prior matching assumption",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A controlled corruption ladder is a general reasoning instrument: degrade a clean state by known amounts, and the difficulty of recovering the state at each rung measures how much information each observation actually carries",
+    "source_operator": "forward_noisification_process",
+    "telemetry": "Signal retention per rung, measured as mutual information or recovery accuracy versus corruption level, and schedule sensitivity curves"
+   }
+  },
+  {
+   "primitive_id": "consistency_term",
+   "name": "The first VDM ELBO derivation yields a consistency term forcing each backward denoising step to match the corresponding forward noising step at every timestep",
+   "verbatim_quote": "a denoising step from a noisier image should match the corresponding noising step from a cleaner image, for every intermediate timestep; this is reflected mathematically by the KL Divergence.",
+   "page": "Variational Diffusion Models; text lines 461-463",
+   "latex": "\\sum_{t=1}^{T-1} \\mathbb{E}_{q(x_{t-1}, x_{t+1}|x_0)} \\left[ D_{KL} \\left( q(x_t|x_{t-1}) \\, \\| \\, p_\\theta(x_t|x_{t+1}) \\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "q(x_t|x_{t-1})": "forward noising distribution at step t",
+    "p_theta(x_t|x_{t+1})": "reverse denoising distribution at step t",
+    "D_KL": "divergence between the two directions at the same latent, in nats"
+   },
+   "assumptions": [
+    "The ELBO is decomposed using the Markovian HVAE joint and posterior factorizations",
+    "Consistency is enforced independently at every intermediate timestep"
+   ],
+   "breakdown_regime": "Each consistency term is an expectation over two random variables, so Monte Carlo estimates have higher variance than single variable terms, and the summed objective over T steps can be too noisy to optimize well at large T",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Forward backward consistency is a portable audit: any engine that both projects a state forward and reconstructs it backward can measure the KL between the two directions at each step, and the steps where the directions disagree are exactly where the model is lying to itself",
+    "source_operator": "consistency_term",
+    "telemetry": "Per step forward versus backward divergence, disagreement localization by step index, and trend of the divergence over training"
+   }
+  },
+  {
+   "primitive_id": "two_variable_estimate_variance",
+   "name": "Objective terms written as expectations over two random variables per timestep have higher Monte Carlo variance than single variable terms, which motivates rederiving the objective",
+   "verbatim_quote": "because the consistency term is computed as an expectation over two random variables {xt−1 , xt+1 } for every timestep, the variance of its Monte Carlo estimate could potentially be higher than a term that is estimated using only one random variable per timestep.",
+   "page": "Variational Diffusion Models; text lines 477-479",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Terms are approximated by Monte Carlo sampling rather than computed exactly",
+    "The objective sums T minus 1 consistency terms, so per term variance accumulates"
+   ],
+   "breakdown_regime": "When exact or low variance estimators are available the objection disappears; the argument is about estimator design, not about the optimum of the objective itself",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Estimator variance is a design constraint on any engine objective: before adopting a training or scoring term, count the random quantities inside its expectation, because each additional sampled variable multiplies the noise in every gradient and every reported score",
+    "source_operator": "consistency_term",
+    "telemetry": "Monte Carlo standard errors per objective term, gradient variance measurements, and sample counts needed for target precision"
+   }
+  },
+  {
+   "primitive_id": "bayes_conditioning_on_x0",
+   "name": "Conditioning each forward transition on the clean input x0 is free under the Markov property and unlocks a Bayes rewrite of every transition",
+   "verbatim_quote": "The key insight is that we can rewrite encoder transitions as q(xt |xt−1 ) = q(xt |xt−1 , x0 ), where the extra conditioning term is superfluous due to the Markov property.",
+   "page": "Variational Diffusion Models; text lines 482-483",
+   "latex": "q(x_t|x_{t-1}, x_0) = \\frac{q(x_{t-1}|x_t, x_0) \\, q(x_t|x_0)}{q(x_{t-1}|x_0)}",
+   "symbol_and_unit_ledger": {
+    "q(x_t|x_{t-1}, x_0)": "forward transition with redundant conditioning on the clean input",
+    "q(x_{t-1}|x_t, x_0)": "ground truth denoising posterior",
+    "q(x_t|x_0)": "closed form forward marginal at step t"
+   },
+   "assumptions": [
+    "The forward chain is Markov, so conditioning on x0 changes nothing about the transition",
+    "Bayes rule applies to the rewritten transition"
+   ],
+   "breakdown_regime": "The trick depends on access to the clean target x0 during training; at generation time x0 is exactly what is unknown, so the rewritten posterior can only serve as a training target, never as a sampler",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Conditioning on the known endpoint to manufacture supervision is a general training pattern: where the final outcome is known in historical data, every intermediate inference step can be scored against the endpoint conditioned truth rather than against a self consistent guess",
+    "source_operator": "forward_noisification_process",
+    "telemetry": "Availability of endpoint labels per training case, and per step target quality measured against endpoint conditioned references"
+   }
+  },
+  {
+   "primitive_id": "ground_truth_denoising_signal",
+   "name": "The posterior q(x_{t-1}|x_t, x0) is a ground truth training signal because it defines how to denoise a noisy sample given the clean target it must reach",
+   "verbatim_quote": "transition step can act as a ground-truth signal, since it defines how to denoise a noisy image xt with access to what the final, completely denoised image x0 should be.",
+   "page": "Variational Diffusion Models; text lines 581-582",
+   "latex": "\\sum_{t=2}^{T} \\mathbb{E}_{q(x_t|x_0)} \\left[ D_{KL} \\left( q(x_{t-1}|x_t, x_0) \\, \\| \\, p_\\theta(x_{t-1}|x_t) \\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "q(x_{t-1}|x_t, x_0)": "tractable ground truth denoising step",
+    "p_theta(x_{t-1}|x_t)": "learned denoising step without access to x0",
+    "D_KL": "per step matching penalty in nats"
+   },
+   "assumptions": [
+    "The ground truth denoising step is tractable because the forward process is Gaussian and fixed",
+    "Training data supplies the clean x0 for every noisy x_t"
+   ],
+   "breakdown_regime": "The learned step must operate without x0, so its achievable KL is bounded away from zero whenever one noisy sample is compatible with many clean targets",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is supervised learning manufactured from structure: the engine derives its own per step targets from known endpoints and a known corruption process, then trains the endpoint blind component to match them, which is the template for self supervised signal extraction from historical records",
+    "source_operator": "bayes_conditioning_on_x0",
+    "telemetry": "Per step KL between learned and endpoint conditioned steps, and target entropy measuring how many clean states remain compatible with each noisy state"
+   }
+  },
+  {
+   "primitive_id": "closed_form_forward_marginal",
+   "name": "Repeated reparameterization collapses the whole forward chain into a one step Gaussian marginal q(x_t|x0) with cumulative coefficient alpha bar",
+   "verbatim_quote": "We have therefore derived the Gaussian form of q(xt |x0 ).",
+   "page": "Variational Diffusion Models; text lines 669-669",
+   "latex": "q(x_t|x_0) = \\mathcal{N} \\left( x_t; \\sqrt{\\bar{\\alpha}_t} \\, x_0, (1 - \\bar{\\alpha}_t) I \\right), \\quad \\bar{\\alpha}_t = \\prod_{i=1}^{t} \\alpha_i",
+   "symbol_and_unit_ledger": {
+    "bar alpha_t": "cumulative product of the per step coefficients up to t, dimensionless",
+    "x_0": "clean data sample",
+    "x_t": "noised sample at arbitrary step t"
+   },
+   "assumptions": [
+    "Each forward step is a linear Gaussian model",
+    "Sums of independent Gaussian variables remain Gaussian with summed means and variances"
+   ],
+   "breakdown_regime": "The closed form exists only because every step is linear Gaussian; any nonlinear or non Gaussian corruption in the chain destroys the one step marginal and forces sequential sampling",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Chain collapsing is the computational prize for choosing linear Gaussian machinery: an engine that keeps its degradation steps in this family can jump directly to any corruption level in one evaluation instead of simulating the whole chain, which is what makes large scale training over all levels feasible",
+    "source_operator": "forward_noisification_process",
+    "telemetry": "Direct marginal samples versus sequentially simulated samples compared by distribution tests, and wall clock cost per training example"
+   }
+  },
+  {
+   "primitive_id": "match_true_posterior_as_gaussian",
+   "name": "The learned denoising step is also modeled as a Gaussian, with variance copied from the ground truth posterior so only the mean must be learned",
+   "verbatim_quote": "In order to match approximate denoising transition step pθ (xt−1 |xt ) to ground-truth denoising transition step q(xt−1 |xt , x0 ) as closely as possible, we can also model it as a Gaussian.",
+   "page": "Variational Diffusion Models; text lines 759-760",
+   "latex": "q(x_{t-1}|x_t, x_0) = \\mathcal{N} \\left( x_{t-1}; \\mu_q(x_t, x_0), \\sigma_q^2(t) I \\right), \\quad \\sigma_q^2(t) = \\frac{(1 - \\alpha_t)(1 - \\bar{\\alpha}_{t-1})}{1 - \\bar{\\alpha}_t}",
+   "symbol_and_unit_ledger": {
+    "mu_q(x_t, x_0)": "ground truth posterior mean, a weighted combination of x_t and x_0",
+    "sigma_q^2(t)": "ground truth posterior variance, a function of schedule coefficients only",
+    "alpha_t, bar alpha_t": "per step and cumulative schedule coefficients, dimensionless"
+   },
+   "assumptions": [
+    "Bayes rule applied to the Gaussian forward transition and marginals gives a Gaussian posterior",
+    "All schedule coefficients are known and frozen at each timestep"
+   ],
+   "breakdown_regime": "Copying the variance is exact only under the same linear Gaussian assumptions; with learned or misspecified schedules the fixed variance understates or overstates true posterior uncertainty",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Separating the known part of an inference from the unknown part is reusable discipline: where a posterior variance is determined entirely by known process parameters, copy it analytically and spend all learned capacity on the mean, instead of asking a network to rediscover a formula",
+    "source_operator": "closed_form_forward_marginal",
+    "telemetry": "Posterior variance predicted analytically versus empirical residual variance per step, and coverage of posterior intervals"
+   }
+  },
+  {
+   "primitive_id": "gaussian_kl_reduces_to_mean_matching",
+   "name": "When two Gaussians share the same variance, minimizing their KL divergence reduces exactly to minimizing the squared distance between their means",
+   "verbatim_quote": "where we can set the variances of the two Gaussians to match exactly, optimizing the KL Divergence term reduces to minimizing the difference between the means of the two distributions:",
+   "page": "Variational Diffusion Models; text lines 774-775",
+   "latex": "\\arg\\min_\\theta \\frac{1}{2 \\sigma_q^2(t)} \\left\\| \\mu_\\theta - \\mu_q \\right\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "mu_theta": "learned denoising mean as a function of x_t and t",
+    "mu_q": "ground truth denoising mean",
+    "sigma_q^2(t)": "shared posterior variance at step t",
+    "argmin over theta": "optimization over network parameters"
+   },
+   "assumptions": [
+    "Both distributions are Gaussian with identical covariance sigma_q squared times identity",
+    "The log determinant and trace terms of the Gaussian KL cancel under matched variances"
+   ],
+   "breakdown_regime": "If the learned variance is allowed to differ, the reduction fails and the full KL with its log determinant and trace terms must be optimized; mean only matching then underweights uncertainty errors",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Divergence minimization between matched family distributions often collapses to a regression problem; recognizing the collapse turns an abstract distribution matching objective into a plain least squares target that any engine can optimize and audit directly",
+    "source_operator": "match_true_posterior_as_gaussian",
+    "telemetry": "Mean prediction error per step, residual variance versus assumed shared variance, and divergence estimates before and after the reduction"
+   }
+  },
+  {
+   "primitive_id": "x0_prediction_objective",
+   "name": "With the mean parameterized through a network prediction of the clean input, VDM training reduces to predicting the original image from an arbitrarily noised version",
+   "verbatim_quote": "optimizing a VDM boils down to learning a neural network to predict the original ground truth image from an arbitrarily noisified version of it",
+   "page": "Variational Diffusion Models; text lines 841-842",
+   "latex": "\\arg\\min_\\theta \\frac{\\bar{\\alpha}_{t-1} (1 - \\alpha_t)^2}{2 \\sigma_q^2(t) (1 - \\bar{\\alpha}_t)^2} \\left\\| \\hat{x}_\\theta(x_t, t) - x_0 \\right\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "hat x_theta(x_t, t)": "network prediction of the clean input from the noised input and step index",
+    "x_0": "ground truth clean input",
+    "prefactor": "per step weight determined by schedule coefficients and posterior variance, dimensionless"
+   },
+   "assumptions": [
+    "The learned mean is written in the same functional form as the ground truth mean with x0 replaced by its prediction",
+    "The weighting prefactor is a known function of the schedule"
+   ],
+   "breakdown_regime": "The per step weights vary enormously across t, so naive training is dominated by particular noise levels; many implementations drop or clip the weights, changing the objective away from the true ELBO",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The endpoint prediction form is the most direct engine target: given a partially degraded state and a degradation level, predict the original clean state; the schedule dependent weight says how much each difficulty level should count in the total score",
+    "source_operator": "gaussian_kl_reduces_to_mean_matching",
+    "telemetry": "Prediction error stratified by noise level, weight distribution across levels, and aggregate objective with and without the theoretical weights"
+   }
+  },
+  {
+   "primitive_id": "timestep_sampling_estimator",
+   "name": "The full objective over all noise levels is optimized by sampling timesteps uniformly at random and minimizing the per step term stochastically",
+   "verbatim_quote": "minimizing the summation term of our derived ELBO objective (Equation 58) across all noise levels can be approximated by minimizing the expectation over all timesteps:",
+   "page": "Learning Diffusion Noise Parameters and objective estimation; text lines 842-844",
+   "latex": "\\arg\\min_\\theta \\, \\mathbb{E}_{t \\sim U\\{2, T\\}} \\, \\mathbb{E}_{q(x_t|x_0)} \\left[ D_{KL} \\left( q(x_{t-1}|x_t, x_0) \\, \\| \\, p_\\theta(x_{t-1}|x_t) \\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "t ~ U{2, T}": "timestep drawn uniformly from the discrete set 2 through T",
+    "E over q(x_t|x_0)": "expectation under the closed form forward marginal",
+    "D_KL": "per step denoising matching term in nats"
+   },
+   "assumptions": [
+    "The closed form marginal makes sampling any noise level a one step operation",
+    "Uniform timestep sampling gives an unbiased stochastic estimate of the summed objective"
+   ],
+   "breakdown_regime": "Uniform sampling spends equal effort on easy and hard levels; levels with large loss contributions or high gradient variance may need importance weighting to train efficiently",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stochastic level sampling is how an engine trains across a whole difficulty spectrum without enumerating it: draw a level, draw a case at that level, take one exact gradient step, and the average over steps optimizes the full spectrum objective",
+    "source_operator": "ground_truth_denoising_signal",
+    "telemetry": "Sampled level histogram versus target distribution, per level loss running means, and gradient variance of the stochastic estimator"
+   }
+  },
+  {
+   "primitive_id": "snr_ratio_definition",
+   "name": "The signal to noise ratio at step t is alpha bar over one minus alpha bar, and it must decrease monotonically as noise accumulates",
+   "verbatim_quote": "the SNR represents the ratio between the original signal and the amount of noise present; a higher SNR represents more signal and a lower SNR represents more noise.",
+   "page": "Learning Diffusion Noise Parameters; text lines 921-922",
+   "latex": "\\mathrm{SNR}(t) = \\frac{\\bar{\\alpha}_t}{1 - \\bar{\\alpha}_t}",
+   "symbol_and_unit_ledger": {
+    "SNR(t)": "ratio of signal variance to noise variance at step t, dimensionless",
+    "bar alpha_t": "cumulative signal retention coefficient",
+    "1 - bar alpha_t": "accumulated noise variance share"
+   },
+   "assumptions": [
+    "SNR is defined as mean squared over variance for the Gaussian marginal",
+    "The diffusion construction requires SNR to fall monotonically to zero at t equals T"
+   ],
+   "breakdown_regime": "SNR summarizes only second moments; two corruptions with equal SNR can destroy very different structure, so SNR alone cannot certify that a schedule preserves the information a task needs",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every information channel in an engine deserves an SNR style gauge: a single monotone number stating how much of the original signal survives at each processing stage, with a hard requirement that the gauge only moves one way as processing accumulates",
+    "source_operator": "snr_ratio_definition",
+    "telemetry": "Per stage signal retention estimates, monotonicity checks across stages, and task performance plotted against the gauge value"
+   }
+  },
+  {
+   "primitive_id": "learnable_snr_parameterization",
+   "name": "Parameterizing SNR as the exponential of a negative monotone network makes the schedule learnable while guaranteeing monotone decrease and recovering alpha bar through a sigmoid",
+   "verbatim_quote": "we can directly parameterize the SNR at each timestep using a neural network, and learn it jointly along with the diffusion model.",
+   "page": "Learning Diffusion Noise Parameters; text lines 925-926",
+   "latex": "\\mathrm{SNR}(t) = \\exp(-\\omega_\\eta(t)), \\quad \\bar{\\alpha}_t = \\mathrm{sigmoid}(-\\omega_\\eta(t)), \\quad 1 - \\bar{\\alpha}_t = \\mathrm{sigmoid}(\\omega_\\eta(t))",
+   "symbol_and_unit_ledger": {
+    "omega_eta(t)": "monotonically increasing neural network with parameters eta",
+    "exp": "exponential enforcing positivity of SNR",
+    "sigmoid": "logistic function mapping the network output to a coefficient in (0, 1)"
+   },
+   "assumptions": [
+    "Monotonicity of the schedule in t is a hard requirement of the diffusion construction",
+    "omega_eta is built to be monotonically increasing in t"
+   ],
+   "breakdown_regime": "A learned schedule can collapse useful noise levels or race to zero SNR, and joint learning of schedule and denoiser couples their failure modes; the monotone form also forbids schedules that any nonmonotone evidence might favor",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Constraints that must hold by construction should be enforced by parameterization, not by penalties: if an engine quantity must be monotone, positive, or a valid probability, build the function so it cannot be otherwise, and learn only inside that feasible family",
+    "source_operator": "snr_ratio_definition",
+    "telemetry": "Learned schedule curves over training, effective number of distinct noise levels used, and joint stability of schedule and denoiser losses"
+   }
+  },
+  {
+   "primitive_id": "noise_prediction_equivalence",
+   "name": "Predicting the clean input and predicting the source noise are the same objective under reparameterization, with noise prediction often working better in practice",
+   "verbatim_quote": "learning a VDM by predicting the original image x0 is equivalent to learning to predict the noise; empirically, however, some works have found that predicting the noise resulted in better performance",
+   "page": "Three Equivalent Interpretations; text lines 1024-1025",
+   "latex": "\\mu_\\theta(x_t, t) = \\frac{1}{\\sqrt{\\alpha_t}} x_t - \\frac{1 - \\alpha_t}{\\sqrt{1 - \\bar{\\alpha}_t} \\, \\sqrt{\\alpha_t}} \\, \\hat{\\epsilon}_\\theta(x_t, t)",
+   "symbol_and_unit_ledger": {
+    "hat epsilon_theta(x_t, t)": "network prediction of the source noise",
+    "epsilon_0": "standard Gaussian noise that generated x_t from x_0",
+    "mu_theta": "learned denoising mean written in noise prediction form"
+   },
+   "assumptions": [
+    "The reparameterization x_t equals root alpha bar times x_0 plus root one minus alpha bar times noise can be rearranged to express x_0 in terms of the noise",
+    "The two objectives differ only by known per step weights"
+   ],
+   "breakdown_regime": "Equivalence holds for the optimum, not for optimization dynamics; the empirical superiority of noise prediction shows the weighting induced by a parameterization can matter more than the equivalence class it belongs to",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Equivalent target choices are a free design lever: predicting the outcome, the residual, or the disturbance can be mathematically identical while training very differently, so an engine should treat target parameterization as a tunable with measured consequences, not a fixed convention",
+    "source_operator": "x0_prediction_objective",
+    "telemetry": "Training curves and final quality for each target parameterization under identical budgets, and per level error profiles for each variant"
+   }
+  },
+  {
+   "primitive_id": "tweedie_formula",
+   "name": "Tweedie's formula estimates the true mean of an exponential family distribution as the observed sample plus a correction involving the score",
+   "verbatim_quote": "Formula states that the true mean of an exponential family distribution, given samples drawn from it, can be estimated by the maximum likelihood estimate of the samples (aka empirical mean) plus some correction term involving the score of the estimate.",
+   "page": "Three Equivalent Interpretations; text lines 1028-1030",
+   "latex": "\\mathbb{E}[\\mu_z | z] = z + \\Sigma_z \\nabla_z \\log p(z)",
+   "symbol_and_unit_ledger": {
+    "E[mu_z | z]": "posterior expectation of the true mean given the sample",
+    "z": "observed sample",
+    "Sigma_z": "covariance of the sampling distribution",
+    "nabla_z log p(z)": "score of the sample density"
+   },
+   "assumptions": [
+    "The sampling distribution belongs to an exponential family",
+    "The score of the marginal density is available or learnable"
+   ],
+   "breakdown_regime": "The formula corrects toward the mean of the assumed family; under family misspecification the correction itself is biased, and with a learned score the correction inherits every error of the score estimate",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tweedie is a shrinkage rule with a receipt: a naive estimate is adjusted by a term that measures how atypical the observation is, which is exactly how an engine should correct any single noisy observation toward the population mean with an explicit, inspectable correction size",
+    "source_operator": "tweedie_formula",
+    "telemetry": "Correction magnitudes per observation, score values at observations, and mean squared error of corrected versus naive estimates"
+   }
+  },
+  {
+   "primitive_id": "score_as_denoising_direction",
+   "name": "The score is the negative source noise up to a known time dependent scale, so following the score is provably the denoising direction",
+   "verbatim_quote": "The score function measures how to move in data space to maximize the log probability; intuitively, since the source noise is added to a natural image to corrupt it, moving in its opposite direction \"denoises\" the image and would be the best update to increase the subsequent log probability.",
+   "page": "Three Equivalent Interpretations; text lines 1144-1146",
+   "latex": "\\nabla \\log p(x_t) = -\\frac{1}{\\sqrt{1 - \\bar{\\alpha}_t}} \\, \\epsilon_0",
+   "symbol_and_unit_ledger": {
+    "nabla log p(x_t)": "score of the noised data density at step t",
+    "epsilon_0": "source noise added to the clean input",
+    "1 - bar alpha_t": "noise variance share at step t"
+   },
+   "assumptions": [
+    "Derived by combining Tweedie's formula with the forward reparameterization",
+    "The relationship is exact for the true score of the Gaussian noised distribution"
+   ],
+   "breakdown_regime": "The identity ties the score to one particular realized noise draw; the learnable score is an expectation over all compatible draws, so the identity guides the target but cannot be evaluated pointwise from data",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When two views of a quantity differ only by a known scale, an engine can train whichever view is cheaper to supervise and convert at inference; the conversion factor here also warns that raw score magnitudes are not comparable across noise levels without rescaling",
+    "source_operator": "tweedie_formula",
+    "telemetry": "Score predictions rescaled per level versus realized noise on synthetic cases, and cross level magnitude calibration"
+   }
+  },
+  {
+   "primitive_id": "three_equivalent_objectives",
+   "name": "Optimizing a VDM reduces to one of three equivalent network targets: the clean image, the source noise, or the score at an arbitrary noise level",
+   "verbatim_quote": "optimizing a VDM boils down to learning a neural network to predict one of three potential objectives: the original source image from any arbitrary noisification of it, the original source noise from any arbitrarily noisified image, or the score function of a noisified image at any arbitrary noise level.",
+   "page": "Closing; text lines 1402-1405",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Equivalence is proven through the reparameterization trick and Tweedie's formula",
+    "Training stochastically samples timesteps and minimizes the chosen target's prediction error"
+   ],
+   "breakdown_regime": "Equivalence is at the level of objectives; sample quality, training stability, and weighting across noise levels differ between the three forms in practice",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mature engine keeps multiple equivalent formulations of its core objective on record, because the formulation that is provable, the formulation that trains best, and the formulation that is cheapest to evaluate are often three different ones",
+    "source_operator": "three_equivalent_objectives",
+    "telemetry": "Benchmarks of all three target forms on identical data and compute, tracked as a standing comparison rather than a one time choice"
+   }
+  },
+  {
+   "primitive_id": "score_avoids_normalizing_constant",
+   "name": "Learning the score of an energy based model removes the intractable normalizing constant, since the gradient of log Z vanishes",
+   "verbatim_quote": "One way to avoid calculating or modeling the normalization constant is by using a neural network sθ (x) to learn the score function ∇ log p(x) of distribution p(x) instead.",
+   "page": "Score-based Generative Models; text lines 1186-1187",
+   "latex": "p_\\theta(x) = \\frac{1}{Z_\\theta} e^{-f_\\theta(x)}, \\quad \\nabla_x \\log p_\\theta(x) = -\\nabla_x f_\\theta(x)",
+   "symbol_and_unit_ledger": {
+    "f_theta(x)": "energy function, an arbitrary flexible function of the data",
+    "Z_theta": "normalizing constant, the integral of exp of negative energy",
+    "s_theta(x)": "neural network approximating the score"
+   },
+   "assumptions": [
+    "The distribution is written in energy based form",
+    "Only the gradient of the log density is modeled, never the density itself"
+   ],
+   "breakdown_regime": "Score modeling gives up normalized likelihoods entirely; without extra machinery the model cannot say how probable a sample is, only which direction increases probability",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When a normalizing constant blocks an engine, model the gradient of the log score instead: rankings, directions of improvement, and local comparisons all survive the loss of the constant, and often those are the only quantities decisions actually consume",
+    "source_operator": "score_avoids_normalizing_constant",
+    "telemetry": "Energy and score evaluations per candidate, ranking quality of score based comparisons, and any decisions that required absolute likelihoods and had to be rerouted"
+   }
+  },
+  {
+   "primitive_id": "fisher_divergence_objective",
+   "name": "A score model is trained by minimizing the Fisher divergence, the expected squared distance between the learned score and the ground truth score",
+   "verbatim_quote": "The score model can be optimized by minimizing the Fisher Divergence with the ground truth score function:",
+   "page": "Score-based Generative Models; text lines 1198-1199",
+   "latex": "\\mathbb{E}_{p(x)} \\left\\| s_\\theta(x) - \\nabla \\log p(x) \\right\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "s_theta(x)": "learned score network",
+    "nabla log p(x)": "ground truth score of the data distribution",
+    "E over p(x)": "expectation under the true data distribution"
+   },
+   "assumptions": [
+    "The objective is an expectation under the true data distribution",
+    "Score matching techniques exist to minimize it without access to the ground truth score"
+   ],
+   "breakdown_regime": "Because the expectation is under the data distribution, regions the data rarely visits contribute almost no training signal, so the learned score is unreliable exactly where sampling trajectories begin",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Matching a vector field in mean square under the data distribution is the generic template for learning any gradient like signal; the same expectation weighting flaw applies, and low density regions of the state space will carry the worst field estimates unless explicitly oversampled",
+    "source_operator": "fisher_divergence_objective",
+    "telemetry": "Score error stratified by data density, sampling trajectory outcomes versus starting region density, and oversampling rates for rare regions"
+   }
+  },
+  {
+   "primitive_id": "langevin_dynamics_sampling",
+   "name": "Langevin dynamics generates samples by iteratively following the score with an injected noise term that prevents collapse onto a single mode",
+   "verbatim_quote": "by learning the score function of the true data distribution, we can generate samples by starting at any arbitrary point in the same space and iteratively following the score until a mode is reached.",
+   "page": "Score-based Generative Models; text lines 1210-1212",
+   "latex": "x_{i+1} \\leftarrow x_i + c \\, \\nabla \\log p(x_i) + \\sqrt{2c} \\, \\epsilon, \\quad \\epsilon \\sim \\mathcal{N}(0, I)",
+   "symbol_and_unit_ledger": {
+    "x_i": "sample at iteration i",
+    "c": "step size, a positive scalar",
+    "nabla log p(x_i)": "score at the current sample",
+    "sqrt(2c) epsilon": "Gaussian noise injection scaled to the step size"
+   },
+   "assumptions": [
+    "The score function is known or well estimated across the sampling region",
+    "Step size c is small enough for the discretization to track the continuous dynamics"
+   ],
+   "breakdown_regime": "With inaccurate scores or poor mixing, chains settle into wrong modes or fail to cross between modes; the procedure has no internal check that the stationary distribution has been reached",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gradient following plus calibrated noise is a reusable sampler for any engine distribution known only through a score like signal; the noise term is not decoration, it is what converts an optimizer into a sampler and preserves the diversity of the target distribution",
+    "source_operator": "langevin_dynamics_sampling",
+    "telemetry": "Chain trajectories, mode visitation frequencies versus target mixture weights, and step size sensitivity of generated sample statistics"
+   }
+  },
+  {
+   "primitive_id": "noise_levels_fix_score_matching",
+   "name": "Adding multiple levels of Gaussian noise simultaneously repairs the manifold problem, the low density inaccuracy, and the lost mixing coefficients of vanilla score matching",
+   "verbatim_quote": "these three drawbacks can be simultaneously addressed by adding multiple levels of Gaussian noise to the data.",
+   "page": "Score-based Generative Models; text lines 1253-1253",
+   "latex": "p_{\\sigma_t}(x_t) = \\int p(x) \\, \\mathcal{N}(x_t; x, \\sigma_t^2 I) \\, dx",
+   "symbol_and_unit_ledger": {
+    "p_sigma_t(x_t)": "data distribution perturbed at noise level sigma_t",
+    "sigma_t": "noise scale at level t",
+    "N(x_t; x, sigma_t^2 I)": "Gaussian perturbation kernel centered on the clean sample"
+   },
+   "assumptions": [
+    "A positive sequence of noise levels is chosen in advance",
+    "One network is trained to model the score at all noise levels simultaneously with a positive weighting function lambda(t)"
+   ],
+   "breakdown_regime": "Perturbation blurs fine structure; at high noise the perturbed distribution reflects the kernel more than the data, and the number of levels and their spacing become hyperparameters that can silently dominate results",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi scale perturbation is a general repair for learning on thin, unevenly supported data: convolve the empirical distribution with a ladder of kernels so every region receives training signal, then anneal from coarse structure to fine detail",
+    "source_operator": "noise_levels_fix_score_matching",
+    "telemetry": "Noise level ladder and weights, score accuracy per level and per density region, and sample quality under annealed versus single level sampling"
+   }
+  },
+  {
+   "primitive_id": "continuous_time_sde_limit",
+   "name": "Extending the hierarchy to infinitely many timesteps turns the noising process into a stochastic differential equation whose reversal requires the score at every continuous noise level",
+   "verbatim_quote": "under an infinite number of noise scales, the perturbation of an image over continuous time can be represented as a stochastic process, and therefore described by a stochastic differential equation (SDE).",
+   "page": "Score-based Generative Models; text lines 1290-1292",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The number of hierarchies tends to infinity, T to infinity",
+    "Different SDE parameterizations describe different perturbation schemes over time"
+   ],
+   "breakdown_regime": "The continuous formulation inherits every discretization and score estimation error at sampling time, and SDE choice becomes an additional modeling decision that finite step intuition only partially constrains",
+   "domain": "score-based models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Taking a discrete ladder to its continuous limit converts step design into process design; an engine with a discrete schedule should know which continuous process it approximates, because that determines how the schedule can be refined, coarsened, or transferred",
+    "source_operator": "noise_levels_fix_score_matching",
+    "telemetry": "Discretization error versus step count, score evaluations per generated sample, and stability of outputs under schedule refinement"
+   }
+  },
+  {
+   "primitive_id": "classifier_guidance_decomposition",
+   "name": "Classifier guidance writes the conditional score as the unconditional score plus the gradient of a classifier, scaled by a guidance weight gamma",
+   "verbatim_quote": "Our final derived result can be interpreted as learning an unconditional score function combined with the adversarial gradient of a classifier",
+   "page": "Guidance: Classifier Guidance; text lines 1345-1346",
+   "latex": "\\nabla \\log p(x_t|y) = \\nabla \\log p(x_t) + \\gamma \\, \\nabla \\log p(y|x_t)",
+   "symbol_and_unit_ledger": {
+    "nabla log p(x_t|y)": "conditional score, the guided sampling direction",
+    "nabla log p(y|x_t)": "adversarial gradient of a classifier evaluated on noisy inputs",
+    "gamma": "guidance scale, a nonnegative hyperparameter",
+    "y": "conditioning information"
+   },
+   "assumptions": [
+    "Bayes rule decomposes the conditional density into prior and classifier terms",
+    "A classifier can be trained to predict y from arbitrarily noisy inputs"
+   ],
+   "breakdown_regime": "The required classifier must be trained ad hoc on noisy inputs, since ordinary pretrained classifiers are not optimized for them; large gamma trades sample diversity for conditioning adherence",
+   "domain": "guidance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conditioning by adding a scaled gradient is a modular control pattern: keep an unconditional model of the world, and steer generation by adding the gradient of any separately trained relevance classifier, with one scalar deciding how hard to steer",
+    "source_operator": "classifier_guidance_decomposition",
+    "telemetry": "Classifier accuracy versus noise level, guidance scale sweeps against adherence and diversity metrics, and per condition steering magnitudes"
+   }
+  },
+  {
+   "primitive_id": "classifier_free_guidance_elegance",
+   "name": "Classifier free guidance replaces the separate classifier with a difference of conditional and unconditional scores from one model trained with conditioning dropout",
+   "verbatim_quote": "Classifier-Free Guidance is elegant because it enables us greater control over our conditional generation procedure while requiring nothing beyond the training of a singular diffusion model.",
+   "page": "Guidance: Classifier-Free Guidance; text lines 1394-1396",
+   "latex": "\\nabla \\log p(x_t|y) = \\gamma \\, \\nabla \\log p(x_t|y) + (1 - \\gamma) \\, \\nabla \\log p(x_t)",
+   "symbol_and_unit_ledger": {
+    "gamma": "guidance scale; 0 ignores conditioning, 1 is the vanilla conditional, above 1 extrapolates away from the unconditional score",
+    "conditional score": "score of the model with conditioning information y",
+    "unconditional score": "score of the same model with conditioning replaced by fixed constant values"
+   },
+   "assumptions": [
+    "One network can serve as both conditional and unconditional model by replacing conditioning with fixed constants such as zeros",
+    "The classifier gradient identity expresses log p(y|x_t) as the difference of the two scores"
+   ],
+   "breakdown_regime": "Above gamma of 1 the guided score is an extrapolation, not the score of any normalized distribution the model was trained on; diversity falls and artifacts grow as gamma increases",
+   "domain": "guidance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A contrast between a conditioned and an unconditioned evaluation of the same model isolates the pure effect of the conditioning signal; an engine can use the same contrast to measure and dose how much any single input actually moves its output, without training a separate probe model",
+    "source_operator": "classifier_guidance_decomposition",
+    "telemetry": "Conditional versus unconditional output deltas per input, guidance scale sweeps, and diversity metrics as the scale varies"
+   }
+  },
+  {
+   "primitive_id": "vdm_uninterpretable_latents",
+   "name": "The VDM encoder is fixed as a linear Gaussian model, so its latents are only noisy copies of the input and cannot become interpretable structure",
+   "verbatim_quote": "Whereas a VAE would hopefully learn a structured latent space through the optimization of its encoder, in a VDM the encoder at each timestep is already given as a linear Gaussian model and cannot be optimized flexibly.",
+   "page": "Closing; text lines 1414-1416",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The encoder at each timestep is given, not learned",
+    "Latent dimensionality equals input dimensionality by the VDM restrictions"
+   ],
+   "breakdown_regime": "This is a structural limitation, not a tuning problem; no amount of training of the reverse process can make the forward latents carry compressed meaning",
+   "domain": "diffusion models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The limitation names a general tradeoff an engine must price in advance: fixing a component by construction buys tractability and closed forms, and the price is that the fixed component can never adapt or explain; every hard coded stage should be inventoried as a permanent blind spot",
+    "source_operator": "vdm_uninterpretable_latents",
+    "telemetry": "Inventory of fixed versus learned stages, information content of intermediate latents probed by auxiliary predictors, and cost of the fixed stages measured in downstream performance"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "b1b042ba814c801c-t1",
+   "think": "This monograph performs one long reduction, and understanding it means following the reduction rather than collecting its formulas. It begins with the oldest problem in latent variable modeling: the evidence log p(x) cannot be computed, because computing it requires either marginalizing over every latent configuration or already knowing the true posterior. The Evidence Lower Bound is introduced twice, once through Jensen's inequality and once through an exact decomposition, and the second derivation is the one that matters, because it shows the gap between evidence and bound is exactly the KL divergence between the approximate posterior and the true posterior. That identity converts a vague hope, that maximizing a bound is somehow good, into an accounting statement: evidence is constant with respect to the variational parameters, so every nat gained in the bound is a nat removed from posterior error. The Variational Autoencoder then gives the bound a mechanical form, an encoder that produces distributions and a decoder that reconstructs, with the objective split into reconstruction and prior matching, and the reparameterization trick makes the whole apparatus differentiable by pushing randomness into an exogenous noise variable. Stacking VAEs produces the Hierarchical VAE, and imposing the Markov property on the stack produces a chain in which each latent only talks to its neighbors. The decisive move of the paper is to take that Markovian chain and freeze almost everything in it. In a Variational Diffusion Model the latents have the same dimension as the data, the encoder is not learned at all but fixed as a variance preserving linear Gaussian corruption, and the schedule is arranged so the deepest latent is pure standard Gaussian noise. What remains learnable is only the reverse chain. The ELBO of this object is derived twice. The first derivation yields a consistency term matching forward and backward steps pairwise, but each term is an expectation over two random variables, and the paper explicitly rejects this form on estimator variance grounds, a methodological point worth keeping: the right objective written the wrong way can be unusable. The second derivation conditions every transition on the clean input, which the Markov property makes free, applies Bayes rule, and lands on a denoising matching term in which each learned reverse step is pulled toward a ground truth reverse step that is computable in closed form because every forward marginal is Gaussian. Completing the square in the Gaussian KL then shows that distribution matching collapses to mean matching, and parameterizing the learned mean through a prediction of the clean input collapses training further, into regressing the original sample from an arbitrarily corrupted version of it, with timesteps sampled uniformly to keep the estimator stochastic and cheap. The paper then shows the same objective wears two other faces. Rearranging the reparameterization expresses the clean input in terms of the noise, so predicting the input and predicting the noise are one objective with different weights. Applying Tweedie's formula expresses the clean input in terms of the score, so predicting the score is the third face of the same object, and the score turns out to be the negative noise rescaled by a known schedule dependent factor. That third face is the bridge to score based generative modeling, where the score is motivated independently through energy based models: the score of an energy model never involves the intractable normalizing constant, it can be trained by Fisher divergence minimization, and it can be sampled by Langevin dynamics. Vanilla score matching has three named diseases, undefined scores off the data manifold, no training signal in low density regions, and loss of mixture weights, and the paper shows that the diffusion construction, a ladder of Gaussian perturbations with annealed sampling, is precisely the cure for all three, which closes the loop and proves the two literatures were studying one object. The continuous time limit replaces the ladder with a stochastic differential equation. Finally guidance bolts conditioning onto the sampler: Bayes rule splits the conditional score into an unconditional score plus a classifier gradient, and classifier free guidance eliminates the separate classifier by writing that gradient as the difference between conditional and unconditional scores of a single model trained with conditioning dropout, leaving one scalar, gamma, that doses adherence against diversity. For a reasoning engine the transferable content is not image generation. It is the discipline of the whole construction: replace an intractable target with a bound whose gap has an exact identity, freeze every part of a process whose form is known so learning concentrates on the single unknown mapping, manufacture per step supervision by conditioning on known endpoints, choose target parameterizations deliberately because equivalent objectives train differently, keep a signal to noise gauge on every degradation stage, and expose control as a scaled gradient whose dose is explicit. The paper is equally clear about what the construction costs: the latents are uninterpretable noisy copies, sampling is a long sequential procedure, and nothing in the model resembles how a human generates anything. Two further details deserve emphasis because they are easy to miss. First, the stochastic timestep estimator only works because the closed form marginal lets training jump to any noise level in one step; without that Gaussian collapse, the elegant objective would still require simulating the entire chain for every gradient step, and the method would collapse under its own cost. The whole edifice therefore rests on the linear Gaussian choice, and the paper is honest that this choice is also what forbids interpretable latents. Second, the guidance section quietly changes what the model is: once a sampler follows an unconditional score plus a scaled classifier gradient, or an extrapolated difference of two scores, the procedure no longer samples the distribution the network was trained on. The paper treats this as a feature, a dial, but it means every guided output must be described as the product of the model plus the guidance operator, never of the model alone.",
+   "retrocausal_genealogy": "The lineage runs from classical variational inference and the ELBO through Kingma and Welling's Variational Autoencoder of 2013, which added the reparameterization trick and made variational training a neural network exercise. Hierarchical extensions followed in 2016 with inverse autoregressive flow VAEs and ladder VAEs. In parallel, Sohl-Dickstein and collaborators in 2015 framed generation as reversing a gradual thermodynamic noising process, and Ho and collaborators in 2020 turned that into the practical denoising diffusion probabilistic model, while Kingma and collaborators in 2021 recast it explicitly as a variational model with a learnable noise schedule. Score based modeling descends separately from Hyvarinen's score matching of 2005 and the energy based learning tradition, through Song and Ermon's noise conditioned score networks of 2019 and Song and collaborators' stochastic differential equation formulation of 2020. Tweedie's formula comes from Efron's work on selection bias. The 2022 monograph is the confluence document: it derives diffusion from the VAE side and proves the two traditions meet at the score.",
+   "theory_of_mind": "The author writes for a reader who knows probability but has never seen diffusion models, and believes the field's notation fragmentation, not its mathematics, is the real barrier. His model of the reader is someone who will accept a long derivation if every step is shown, so he derives everything twice when the first derivation hides the reason, as with the ELBO, and he flags his own aesthetic judgments openly, calling results elegant and pointing at artistic liberty in his figures. He believes understanding means seeing one object from several equivalent viewpoints, so the paper is organized as a sequence of reparameterizations of a single objective. He also assumes the reader distrusts recipes: every practical trick, from noise prediction to classifier free guidance, is presented only after the identity that justifies it has been proven.",
+   "cross_layer_veto": "Several results in this work veto sloppy practice in adjacent layers. The ELBO gap identity vetoes reporting a bound as if it were the evidence: the gap is a named, nonzero term unless posterior error is proven zero. The estimator variance argument vetoes objectives whose expectations hide two sampled variables per term, no matter how elegant the closed form looks. The matched variance reduction vetoes mean only matching whenever learned variances are allowed to differ, because the reduction the training relies on then no longer exists. The guidance analysis vetoes treating gamma above one as sampling from the conditional distribution, since the guided score is an extrapolation rather than a trained density. And the closing limitations veto any claim that diffusion latents encode meaning: the encoder is fixed, so its outputs can never be cited as learned representation."
+  }
+ ],
+ "universal_lens": "Read generally, this work is a template for attacking any problem whose exact solution is intractable. First replace the target with a tractable bound and derive the exact identity for the gap, so approximation error is a measured quantity rather than a hope. Then freeze every component whose behavior is known by construction, so that all learning capacity concentrates on the single mapping that is genuinely unknown. Manufacture supervision by conditioning on known endpoints, and let the process between endpoints generate its own per step targets. Keep several equivalent parameterizations of the objective in view, because the form that is provable, the form that trains, and the form that is cheap to evaluate are rarely the same form. Finally, expose every control as an explicit scalar with a named cost, so tradeoffs are dosed rather than smuggled.",
+ "gsi_mapping": "For the Galaxy Sports Institute the monograph supplies method, not content: a worked example of how to teach and audit approximate inference. Its ELBO gap identity is a standard for honest reporting of any approximate quantity the Institute publishes, its estimator variance argument is a checklist item for any proposed training objective, and its multi scale perturbation ladder is a concrete design for teaching models on thin, unevenly supported data. The equivalence of the input, noise, and score targets is a case study in how parameterization choice changes optimization behavior even when the optimum is unchanged, which belongs in any curriculum on model design.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine the transferable machinery is specific. The forward backward consistency term is an audit instrument: wherever the engine both projects state forward and reconstructs it backward, the divergence between directions localizes model error step by step. Conditioning on known endpoints manufactures per step supervision from historical records without new labels. The signal to noise gauge gives every information degradation stage a monotone health metric. Parameterization by construction, as in the monotone SNR form, is the pattern for enforcing engine constraints that must hold always. Guidance contributes a dosing pattern: an unconditional world model steered by a scaled, separately measurable relevance signal, with the dose and its diversity cost made explicit in every output."
+}
