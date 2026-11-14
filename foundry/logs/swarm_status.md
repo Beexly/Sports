@@ -596,3 +596,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 04:21:04 | COMPLETE | 37a36b9efcb06f33 | primitives=22 think_words=878
 - 2026-11-14 04:22:56 | CLAIMED | 35b2d257cfda1e60 | worker=hermes-inline shard03 file=2023 - Effect of Increased Three-point Shot Attempts on Probability of Winning in High School Basketball - Kostacos.pdf
 - 2026-11-14 04:27:55 | COMPLETE | 35b2d257cfda1e60 | primitives=20 think_words=850
+- 2026-11-14 04:28:52 | CLAIMED | 332e9b44e34c27f7 | worker=hermes-inline shard03 file=2024 - Exploring the Evolution of the NFL Draft Pick Trade Market Over Time - Nathanson.pdf
+- 2026-11-14 04:33:29 | COMPLETE | 332e9b44e34c27f7 | primitives=24 think_words=856
