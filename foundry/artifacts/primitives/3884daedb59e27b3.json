@@ -1,0 +1,670 @@
+{
+  "book_id": "3884daedb59e27b3",
+  "source_status": "COMPLETE",
+  "source_note": "True source: Filipe Manuel Clemente and Hugo Sarmento (eds.), 'Fitness Assessment, Athlete's Monitoring Cycle and Training Interventions in Team Sports', printed edition of the Special Issue of the International Journal of Environmental Research and Public Health, MDPI, Basel, 2022; ISBN 978-3-0365-3298-1 (PDF), 978-3-0365-3297-4 (hardback). Local catalog and file name use the shortened title 'Fitness Assessment, Monitoring and Training in Team Sports' (task slug clemente-sarmento-fitness); the printed title page gives the full title above. The volume reprints 22 open-access articles (2020-2021) across soccer, handball, basketball, rowing, and ski jumping. Local PDF: 29,071,266 bytes; sha256 over (str(size) + file bytes) = 3884daedb59e27b34012602a6dbd246c4873287b3cf07229ff81e482f7e3609e; book_id = first 16 hex chars. Extraction worked from the local text layer (152,509 words, 15,286 lines), which is clean born-digital text with occasional ligature and spacing artifacts; verbatim quotes were sliced programmatically from the text after Unicode NFKC and whitespace normalization and are exact substrings under that normalization. Primitives are extracted per constituent study where the study carries a definition, equation, estimator, or load-bearing empirical law. No sportsbook content. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "srpe_session_load",
+      "name": "Session load is the product of perceived exertion and session duration (Foster sRPE, arbitrary units)",
+      "verbatim_quote": "The sRPE workload was then calculated by multiplying the individual score of the CR10 scale for the duration (min) of the training/match",
+      "page": "Iannaccone et al., Sec. 2.3 (book pp. 145-156); txt lines 8144-8149",
+      "latex": "\\mathrm{sRPE} = \\mathrm{RPE} \\times t_{\\mathrm{session}}",
+      "symbol_and_unit_ledger": {
+        "RPE": "Foster category-ratio 10 (CR10) rating collected within 30 min post-session [dimensionless, 0-10]",
+        "t_session": "session or match duration [min]",
+        "sRPE": "session training load [arbitrary units, AU]"
+      },
+      "assumptions": [
+        "Athletes are familiarized with the CR10 scale so ratings are comparable across sessions.",
+        "A single global rating collected about 30 min after the session summarizes the whole session."
+      ],
+      "breakdown_regime": "Recall and anchoring bias distort the rating; it carries no information about load distribution inside the session, and it saturates for very long low-intensity sessions.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine needs a cheap, always-available internal-load channel for every athlete-day. sRPE converts a subjective rating into a numeric load by multiplication with exposure time, which is exactly the derived-kernel pattern the engine uses when a latent quantity (true physiological cost) is estimated from a proxy times an exposure measure.",
+        "source_operator": "srpe_session_load",
+        "telemetry": "Daily per-athlete RPE ratings and session durations from training and match logs."
+      }
+    },
+    {
+      "primitive_id": "hooper_index_wellness_composite",
+      "name": "Hooper index: the sum of four 1-7 self-report items (fatigue, stress, muscle soreness, sleep quality) as a pre-session readiness composite",
+      "verbatim_quote": "in which 1 is very, very low and 7 is very, very high (for stress, fatigue and muscle soreness levels) and 1 is very, very bad and 7 is very, very good (for sleep quality). Then, the summation of the four categories provides the total HI",
+      "page": "Oliveira et al., Sec. 2.4 (book pp. 15-30); txt lines 1338-1343",
+      "latex": "\\mathrm{HI} = F + S + D + Q",
+      "symbol_and_unit_ledger": {
+        "F": "perceived fatigue [1-7 Likert]",
+        "S": "perceived stress [1-7 Likert]",
+        "D": "delayed onset muscle soreness, DOMS [1-7 Likert]",
+        "Q": "sleep quality [1-7 Likert, reverse sense: 1 very bad, 7 very good]",
+        "HI": "total Hooper index [4-28]"
+      },
+      "assumptions": [
+        "Items are collected 30 min before training so the index is a pre-exposure state, not a response.",
+        "Equal weighting of the four items is assumed; no item dominates the sum."
+      ],
+      "breakdown_regime": "Self-report honesty and habituation drift break it; the sleep item runs in the opposite direction to the other three, so the sum mixes signs of good and bad states.",
+      "domain": "athlete monitoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A readiness gate for the engine: four weak subjective signals summed into one state variable measured before exposure. It is the same composite-index pattern the engine applies when several noisy pre-event indicators must collapse into a single prior adjustment, with the caveat that item direction must be harmonized before summing.",
+        "source_operator": "hooper_index_wellness_composite",
+        "telemetry": "Morning or pre-session wellness questionnaires: fatigue, stress, soreness, sleep quality scores."
+      }
+    },
+    {
+      "primitive_id": "acwr_coupled_ratio",
+      "name": "Acute:chronic workload ratio (coupled): the current week's load divided by the rolling average of the previous four weeks including the current week",
+      "verbatim_quote": "acute: chronic workload ratio (ACWL: representing the division of the wAL by the rolling average of accumulated training load in the previous four weeks",
+      "page": "Clemente et al., Sec. 2.3 (book pp. 135-144); txt lines 7650-7654",
+      "latex": "\\mathrm{ACWR} = \\frac{\\mathrm{wAL}}{\\overline{\\mathrm{wAL}}_{\\mathrm{4wk\\ rolling}}}",
+      "symbol_and_unit_ledger": {
+        "wAL": "weekly acute load, the sum of daily loads inside one week [AU, m, or counts depending on the base measure]",
+        "ACWR": "dimensionless ratio; the coupled version includes the acute week inside the chronic average"
+      },
+      "assumptions": [
+        "The base load measure (distance, accelerometry counts, sRPE) is consistent across all five weeks.",
+        "Four prior weeks of data exist; the coupled formulation is used, not the uncoupled variant."
+      ],
+      "breakdown_regime": "The coupled version mathematically couples numerator and denominator, which inflates correlation with injury outcomes and compresses the ratio toward 1; short histories and missing days distort the chronic baseline.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A normalization kernel: any raw workload signal becomes interpretable only relative to the athlete's own recent baseline. The engine uses the same structure whenever a current value must be judged against a rolling personal history rather than a population threshold, and it must record which coupling variant produced the number.",
+        "source_operator": "acwr_coupled_ratio",
+        "telemetry": "Daily load time series per athlete over at least five weeks."
+      }
+    },
+    {
+      "primitive_id": "training_monotony_and_strain",
+      "name": "Foster training monotony is weekly mean daily load divided by its standard deviation; training strain is weekly load multiplied by monotony",
+      "verbatim_quote": "(ii) weekly training monotony (wTM), the relation of wAL to SD during 1 week; (iii) weekly training strain (wTS), the multiplication of wAL by wTM",
+      "page": "Nobari et al. (2020, 6547), Sec. 2.3.3 (book pp. 219-232); txt lines 12041-12045",
+      "latex": "\\mathrm{TM} = \\frac{\\bar{L}_{\\mathrm{week}}}{\\mathrm{SD}(L_{\\mathrm{days}})}, \\quad \\mathrm{TS} = \\mathrm{wAL} \\times \\mathrm{TM}",
+      "symbol_and_unit_ledger": {
+        "L_days": "daily load values across the seven days of the week [AU or counts]",
+        "TM": "monotony [dimensionless]; high values mean a flat, unvarying week",
+        "TS": "strain [AU]; total load amplified by lack of variation",
+        "wAL": "weekly acute load [AU]"
+      },
+      "assumptions": [
+        "All seven days are observed, including rest days scored as zero load.",
+        "Variation is captured by the standard deviation of daily loads, so one rest day lowers monotony sharply."
+      ],
+      "breakdown_regime": "With few training days the standard deviation is unstable; monotony computed on accelerometry counts versus sRPE ranks athletes differently, so the base measure must travel with the index.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Monotony is a distribution-shape statistic, not a volume statistic: it detects weeks whose load is high and flat, the pattern associated with maladaptation. The engine analogue is any feature that measures how concentrated or uniform a sequence is, independent of its total, and strain is the interaction term between volume and uniformity.",
+        "source_operator": "training_monotony_and_strain",
+        "telemetry": "Daily load values per athlete per week, with the base measure recorded."
+      }
+    },
+    {
+      "primitive_id": "edwards_shrz_weighted_zones",
+      "name": "Edwards summated heart rate zones (SHRZ): session minutes in five HR zones weighted 1 to 5 by zone and summed into one internal load score",
+      "verbatim_quote": "calculating the product of the accumulated session duration (min) of 5 HR zones by a coefficient relative to each zone (50–59.9% of HRmax = 1, 60–69.9% of HRmax = 2, 70–79.9% of HRmax = 3, 80–89.9% of HRmax = 4, 90–100% of HRmax = 5). Then, the SHRZ workload (in AU) was calculated by summating the results",
+      "page": "Iannaccone et al., Sec. 2.3 (book pp. 145-156); txt lines 8135-8142",
+      "latex": "\\mathrm{SHRZ} = \\sum_{z=1}^{5} t_z \\cdot z",
+      "symbol_and_unit_ledger": {
+        "t_z": "accumulated minutes in HR zone z [min]; zones are 50-59.9, 60-69.9, 70-79.9, 80-89.9, 90-100 percent of HRmax",
+        "z": "zone weight, equal to the zone number [dimensionless]",
+        "SHRZ": "internal load [AU]",
+        "HRmax": "operationalized as HRpeak, the peak HR registered across sessions and matches [bpm]"
+      },
+      "assumptions": [
+        "Zone boundaries are fixed percentages of maximal heart rate for every athlete.",
+        "Linear zone weights approximate the nonlinear rise of physiological cost with intensity."
+      ],
+      "breakdown_regime": "HR lag, cardiac drift, heat, and dehydration move HR independently of mechanical work; using observed HRpeak instead of true HRmax shifts every zone boundary.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A weighted time-in-zone integral: the engine pattern for converting a continuous intensity signal into a scalar dose by binning and weighting. SHRZ and sRPE are two independent sensors of the same latent internal load, which is what makes their agreement or disagreement informative.",
+        "source_operator": "edwards_shrz_weighted_zones",
+        "telemetry": "Second-by-second or epoch heart rate recordings with session durations."
+      }
+    },
+    {
+      "primitive_id": "dose_response_channel_specificity",
+      "name": "Dose-response is channel-specific: changes in 30-15 IFT final velocity track objective internal and external loads, while Vameval changes track sRPE instead",
+      "verbatim_quote": "Objective internal and external loads may be used to track aerobic power related changes from VIFT",
+      "page": "Younesi et al., Abstract (book pp. 49-60); txt lines 2711-2715",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twenty-two professional players were followed over one training period with pre and post fitness tests.",
+        "The two aerobic tests (30-15 IFT and Vameval) are treated as measuring related but distinct capacities."
+      ],
+      "breakdown_regime": "Small single-squad sample; correlations are within-team and period-specific, and Vameval showed lower sensitivity to change (ES -0.45 with wide confidence limits), so null associations may be measurement insensitivity rather than absence of effect.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The isomorphism is sensor-outcome pairing: a monitoring channel only validates against the outcome it actually covaries with. Objective load channels predicted change in one aerobic test and subjective channels predicted change in another, so the engine must not treat load measures as interchangeable inputs to a single fitness latent; each channel gets its own validated target.",
+        "source_operator": "dose_response_channel_specificity",
+        "telemetry": "Accumulated GPS, HR, and sRPE loads paired with pre and post intermittent fitness test results."
+      }
+    },
+    {
+      "primitive_id": "differential_srpe_respiratory_muscular",
+      "name": "Differential sRPE splits perceived exertion into respiratory and leg-musculature components, each multiplied by session duration",
+      "verbatim_quote": "rated their perceived level of exertion separately for respiratory (sRPE[R]) and leg musculature (sRPE[M]) efforts",
+      "page": "Younesi et al., Sec. 2.4.1 (book pp. 49-60); txt lines 2953-2957",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Athletes can introspectively separate breathlessness from local leg effort.",
+        "Both components use the same Foster 10-point scale and the same session duration multiplier."
+      ],
+      "breakdown_regime": "The two ratings are usually highly correlated, so the split adds little when sessions are homogeneous; it earns its keep mainly when session types differ in local versus central demand.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Decomposition of a scalar judgment into mechanism channels. Instead of one internal-load number, the kernel produces a two-vector whose ratio distinguishes centrally limited from peripherally limited work, the same move the engine makes when it splits an aggregate signal into the mechanisms that could have produced it.",
+        "source_operator": "differential_srpe_respiratory_muscular",
+        "telemetry": "Paired respiratory and muscular RPE ratings with session duration after each session."
+      }
+    },
+    {
+      "primitive_id": "magnitude_based_inference_swc",
+      "name": "Magnitude-based inference: effects are judged against the smallest worthwhile change with a probability scale, and an effect with both substantial-positive and substantial-negative probability above 5 percent is declared unclear",
+      "verbatim_quote": "if the probabilities of the effect being substantially positive and negative were both >5%, the effect was reported as unclear",
+      "page": "Younesi et al., Sec. 2.5 (book pp. 49-60); txt lines 2990-2998",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A smallest worthwhile change threshold is defined before interpretation, typically from the between-athlete standard deviation.",
+        "Effect sizes are classed on the Hopkins scale: trivial below 0.2, small 0.2-0.59, moderate 0.60-1.19, large above 1.2 in this article's usage."
+      ],
+      "breakdown_regime": "The framework is contested in statistics and can overstate evidence in small samples; the unclear category can swallow most real effects when samples are as small as one squad.",
+      "domain": "statistics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The inference discipline the engine needs at decision time: state the smallest change worth acting on, report the probability the true effect clears it in each direction, and keep an explicit unclear verdict instead of forcing a binary call. It is a template for acting under uncertainty with an honest abstention state.",
+        "source_operator": "magnitude_based_inference_swc",
+        "telemetry": "Effect estimates with confidence intervals for any monitored outcome, plus a pre-set smallest worthwhile change."
+      }
+    },
+    {
+      "primitive_id": "game_format_area_per_player_tradeoff",
+      "name": "Manipulating player numbers and pitch size (area per player) trades locomotor load against technical involvement in small-sided games",
+      "verbatim_quote": "reducing the number of players and pitch dimensions appears to induce higher technical involvement",
+      "page": "Ermidis et al., Sec. 1 (book pp. 1-14); txt lines 313-318",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Game duration was fixed at 15 min and formats were played in randomized order on one day to remove volume and fatigue effects.",
+        "Findings are from 57 Danish U9 players across five formats from 33 to 80 square meters per player."
+      ],
+      "breakdown_regime": "Children in 15-minute games are a weak model for adult match demands; heart rate stayed high in all formats, so the format lever moves running profile and involvement more than it moves internal load.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Area per player is a geometry variable that sets both the physical ceiling (space to reach high speed) and the interaction density (involvements per player). The isomorphism for the engine is that context geometry constrains which signals can even occur: a feature cannot fire if the environment never permits the action, so environment parameters belong upstream of signal interpretation.",
+        "source_operator": "game_format_area_per_player_tradeoff",
+        "telemetry": "Pitch dimensions, player counts, GPS speed-zone distances, heart rate, and notational counts of shots, goals, and duels."
+      }
+    },
+    {
+      "primitive_id": "match_location_load_curve",
+      "name": "Next-match location reshapes the whole training week: days close to away matches carry greater sRPE, distance volume, and player load than the same days before home matches",
+      "verbatim_quote": "The training days close to away matches (e.g., one day before the match = MD-1) presented greater sRPE, distance-based volume measures, and mechanical work (player load) compared to the training days close to home matches",
+      "page": "Goncalves et al., Abstract (book pp. 257-270); txt lines 13750-13758",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only non-congested weeks and players with at least 60 match minutes were analyzed.",
+        "Oliveira et al. independently found the same direction over 24 weeks in a European competition team, with load tapering from MD-5 to MD-1 and MD+1 spiking on all Hooper items after away matches."
+      ],
+      "breakdown_regime": "Two single-team studies; travel distance, opponent, and coaching habit are confounded with location, so the effect size belongs to these squads' routines, not to location in the abstract.",
+      "domain": "sports context",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A situational covariate that shifts an entire multi-day curve rather than a single event: the engine equivalent is a context feature, like venue, that must modulate the expected trajectory of every surrounding observation, not just the event day itself. Comparing a player to a location-blind weekly template manufactures false anomalies.",
+        "source_operator": "match_location_load_curve",
+        "telemetry": "Match calendar with home and away flags, daily sRPE, GPS distance, and accelerometry player load by match-day-minus index."
+      }
+    },
+    {
+      "primitive_id": "contextual_factors_load_distribution",
+      "name": "Weekly load distribution varies systematically with match location, opponent standard, and match outcome",
+      "verbatim_quote": "In conclusion, the training load distribution throughout the week varied considerably according to match-contextual factors",
+      "page": "Goncalves et al., Abstract (book pp. 257-270); txt lines 13762-13766",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Opponent standard was classed by league ranking groups (bottom versus medium in the reported contrasts).",
+        "Loads were higher at MD-1 before wins and higher midweek (MD-3) before matches against bottom-ranked opponents."
+      ],
+      "breakdown_regime": "Outcome is known only after the match, so outcome-conditioned load patterns are partly reverse-caused: the load may produce the result, the approaching result expectation may shape the load, and this design cannot separate them.",
+      "domain": "sports context",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The general principle behind several specific findings in this volume: expected load is a function of context, so anomaly detection must condition on the context vector first. For the engine, any workload or performance feature without its situational covariates (opponent strength, venue, schedule density) is an unnormalized number.",
+        "source_operator": "contextual_factors_load_distribution",
+        "telemetry": "Opponent ranking, match outcome, venue, and daily internal and external load measures."
+      }
+    },
+    {
+      "primitive_id": "match_result_workload_association",
+      "name": "External workload is higher in matches a team wins than in draws or defeats, and first halves exceed second halves except that losing raises second-half distance, high-speed running, and body load",
+      "verbatim_quote": "In general, there were higher workloads in win matches ijerph18042077 when compared with draw or defeat for all variables",
+      "page": "Nobari et al. (2021, 2077), Abstract (book pp. 111-122); txt lines 6158-6166",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Thirteen outfield players from one Iranian Premier League team were observed across a full season.",
+        "Average speed was actually lower in wins, so the win effect is volume and high-speed distance, not intensity per minute."
+      ],
+      "breakdown_regime": "Score state drives behavior: trailing teams chase, leading teams manage. The association cannot be read as running more causes winning, which is the central interpretive trap of outcome-conditioned workload data.",
+      "domain": "sports context",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A cautionary mapping: when a performance metric is conditioned on the outcome it is supposed to predict, the metric partly records the outcome's own dynamics. The engine must treat outcome-conditioned workload as a description of game state, not as a causal driver, and must check direction of causation before any such feature earns weight.",
+        "source_operator": "match_result_workload_association",
+        "telemetry": "Per-match GPS totals, high-speed running distance, sprint distance, maximal speed, and body load split by half and result."
+      }
+    },
+    {
+      "primitive_id": "max_speed_ranking_null",
+      "name": "A team's maximum running speed is unrelated to its final league ranking, vetoing top speed as a team-quality proxy",
+      "verbatim_quote": "maximum speeds were unrelated to the end of season ranking position obtained",
+      "page": "Del Coso et al., Sec. 3 (book pp. 167-178); txt lines 9560-9566",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All LaLiga teams across the 2017-2018 season; most players (53.5 percent) recorded maximum speeds of 32.0-33.9 km/h.",
+        "The correlation between team maximum speed and ranking was low (r = -0.356, p = 0.135) and team differences were not significant."
+      ],
+      "breakdown_regime": "Maximum speed is a single extreme observation per player and is position-dependent; the null applies to team-aggregate top speed, not to speed in specific match actions.",
+      "domain": "sports analytics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A verified negative result with veto power: a plausible, easily collected proxy (fastest players) does not track the outcome (league position). In the engine this primitive licenses a standing rule that candidate features must survive an outcome-association check at the aggregate they will be used at, and that null results are recorded, not quietly dropped.",
+        "source_operator": "max_speed_ranking_null",
+        "telemetry": "Season maximum running speeds per player and team, final league standings."
+      }
+    },
+    {
+      "primitive_id": "phase_angle_bioimpedance",
+      "name": "Phase angle is the arctangent of reactance over resistance, converted to degrees: a direct, equation-free marker of cell membrane integrity and fluid distribution",
+      "verbatim_quote": "known as the geometrical phase angle, which is calculated as the arctangent of the ratio of Xc to R (converted to degrees)",
+      "page": "Ostachowska-Gasior et al., Sec. 2.2 (book pp. 31-48); txt lines 1994-2000",
+      "latex": "\\mathrm{PhA} = \\arctan\\!\\left(\\frac{X_c}{R}\\right) \\times \\frac{180}{\\pi}",
+      "symbol_and_unit_ledger": {
+        "X_c": "reactance, the capacitive opposition of cell membranes [ohm]",
+        "R": "resistance, the opposition of body fluids [ohm]",
+        "PhA": "phase angle [degrees]; healthy adults 5-7.5 degrees, trained athletes up to about 8.5-9.5 degrees"
+      },
+      "assumptions": [
+        "Measured with segmental multi-frequency BIA (InBody S10) supine after at least 8 h fasting, at standardized frequencies (values at 5, 50, and 250 kHz analyzed).",
+        "Unlike derived body-composition estimates, PhA is computed from raw impedance without a population prediction equation."
+      ],
+      "breakdown_regime": "Hydration shifts move resistance and therefore PhA without any change in cell mass; values are device, frequency, posture, and population dependent, so cross-device comparisons are invalid.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A ratio kernel that turns two raw electrical measurements into an integrity index with no fitted equation, plus a segmental symmetry readout (right versus left legs) usable as a bilateral asymmetry monitor. The engine pattern: prefer direct raw-signal ratios over model-derived estimates when the raw pair already carries the state information.",
+        "source_operator": "phase_angle_bioimpedance",
+        "telemetry": "Raw resistance and reactance at multiple frequencies per body segment, with hydration and measurement conditions."
+      }
+    },
+    {
+      "primitive_id": "fixture_congestion_damage_dose",
+      "name": "Fixture congestion doses muscle damage superlinearly: knee-extensor torque fell 14, 20, and 26 percent after one, three, and six consecutive simulated matches, and many measures had not recovered five days after six matches",
+      "verbatim_quote": "Many of the variables did not recover to the baseline for 5 d after six LISTs. These suggest that fixture University Elite Female Soccer congestion induces greater muscle damage and performance decline than a single match",
+      "page": "Chou et al., Abstract (book pp. 73-92); txt lines 3988-3996",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twelve elite female university players performed the Loughborough Intermittent Shuttle Test as a match simulation, with at least 12 weeks between conditions.",
+        "Damage was tracked by maximal voluntary isometric torque, countermovement jump, Yo-Yo IR1, soreness, and blood markers for five days."
+      ],
+      "breakdown_regime": "A shuttle-test simulation standardizes load but removes real match contact and decision demands; the dose curve is for this protocol and population, not a universal congestion constant.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A state-accumulation mapping: damage is a stock that each exposure increments and time decays, and the decay constant is longer than a typical congested turnaround, so recent exposure history must enter any readiness estimate as a decaying stock rather than as independent daily observations.",
+        "source_operator": "fixture_congestion_damage_dose",
+        "telemetry": "Match and simulated-match exposure counts, strength and jump tests, soreness scales, and recovery-day index since last exposure."
+      }
+    },
+    {
+      "primitive_id": "rsi_readiness_discrimination",
+      "name": "Reactive strength index is jump height divided by ground contact time; match-day-minus-1 post-practice RSI discriminated fast from slow next-day in-game peak speed (p = 0.01, ES = 0.62)",
+      "verbatim_quote": "the reactive strength index (RSI) (i.e., ratio of JH/contact time) has been previously used to measure both performance and fatigue within athletes",
+      "page": "Petway et al., Sec. 1 (book pp. 93-98); txt line 5084",
+      "latex": "\\mathrm{RSI} = \\frac{\\mathrm{JH}}{t_{\\mathrm{contact}}}",
+      "symbol_and_unit_ledger": {
+        "JH": "jump height in repeated-hop test [cm as recorded]",
+        "t_contact": "ground contact time [s]",
+        "RSI": "reactive strength index [height per unit contact time]"
+      },
+      "assumptions": [
+        "Seven NCAA Division I basketball players; fast versus slow was a median split on each athlete's own in-game peak speed.",
+        "RSI rose post-practice before fast games but not before slow ones, so the signal is the potentiation response, not the rested baseline alone."
+      ],
+      "breakdown_regime": "Very small sample and an individual median split; jump height alone did not discriminate (p = 0.07), and court sport hop mechanics transfer imperfectly to field sports.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A leading-indicator pattern with a one-day horizon: a cheap pre-event neuromuscular probe whose within-athlete change forecasts tomorrow's peak output. The engine pattern is to value probes by their demonstrated discrimination of a future outcome state for the same individual, not by their population norms.",
+        "source_operator": "rsi_readiness_discrimination",
+        "telemetry": "Force-plate repeated-hop jump height and contact time on MD-1, plus in-game peak speed from tracking."
+      }
+    },
+    {
+      "primitive_id": "pca_load_variable_selection",
+      "name": "Principal component analysis reduces 49 inertial-sensor variables to 15 relevant load variables: seven components explain 80 percent of variance, the first defined by jumps and take-off at 24.8 percent",
+      "verbatim_quote": "as a data reduction method, PCA allows administrating individualized training loads considering those relevant variables defining team load behavior",
+      "page": "Gamonales et al., Abstract (book pp. 99-110); txt lines 5406-5414",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fifty elite blind 5-a-side soccer players monitored with MARG (magnetic, angular rate, gyroscope) sensors during a congested international tournament.",
+        "Components were interpreted by their highest-loading variables and related to context (match result, BMI, scoring rate, age)."
+      ],
+      "breakdown_regime": "PCA components are variance-maximizing, not outcome-maximizing; a low-variance component can still carry decisive signal, and component meanings shift between squads and devices.",
+      "domain": "statistics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A dimensionality-reduction kernel for sensor-rich environments: when a device emits dozens of correlated load variables, compress them into orthogonal components, keep the variance accounting explicit, and model the components. The engine uses the same discipline to avoid feeding near-duplicate features that double-count one underlying action.",
+        "source_operator": "pca_load_variable_selection",
+        "telemetry": "Full inertial-sensor variable sets per match, with contextual indicators for interpretation."
+      }
+    },
+    {
+      "primitive_id": "linear_mixed_model_individuality",
+      "name": "Linear mixed models with random intercepts and slopes explain the objective-subjective internal load relationship better than pooled correlation, because they model each player's individual response",
+      "verbatim_quote": "To clarify the relationship between the SHRZ and sRPE, Equation (1), combining the fixed and random slopes sRPE, was developed",
+      "page": "Iannaccone et al., Abstract and Sec. 3 (book pp. 145-156); txt lines 8022-8030 and the printed Equation (1) in Results",
+      "latex": "\\mathrm{SHRZ} = 61.19 + (u_{1j} + 0.39)\\,\\mathrm{sRPE}_{ij} + U_{0j} + \\varepsilon_i",
+      "symbol_and_unit_ledger": {
+        "0.39": "fixed-effect slope of SHRZ on sRPE [AU per AU], this study's fit",
+        "u_1j": "random slope deviation for player j [AU per AU]",
+        "U_0j": "random intercept for player j [AU]",
+        "sRPE_ij": "subjective load of session i for player j [AU]",
+        "SHRZ": "objective load [AU]",
+        "epsilon_i": "residual error [AU]; coefficients are this study's fitted values (youth beach handball), the model structure is the primitive"
+      },
+      "assumptions": [
+        "Thirteen male youth beach handball players, 14 training sessions and 7 matches; model comparison by likelihood-ratio test.",
+        "The pooled correlation was already very large (r = 0.74), yet the mixed model still improved explanation significantly (p < 0.001)."
+      ],
+      "breakdown_regime": "Needs repeated observations per athlete; with two or three observations per person the random slopes are unidentified and the simpler correlation is the honest tool.",
+      "domain": "statistics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The core modeling isomorphism for athlete data: observations are nested inside individuals, so relationships must be fit with per-individual intercepts and slopes rather than one pooled line. Any engine that pools repeated measures across players will manufacture confidence and erase exactly the individuality that monitoring exists to capture.",
+        "source_operator": "linear_mixed_model_individuality",
+        "telemetry": "Repeated paired objective (SHRZ) and subjective (sRPE) load observations per athlete."
+      }
+    },
+    {
+      "primitive_id": "flywheel_eccentric_power_specificity",
+      "name": "Equivolumed flywheel training beats traditional weight training for power outputs in junior basketball players: countermovement jump improved 11.7 versus 6.8 percent, with larger 5 m sprint and change-of-direction gains",
+      "verbatim_quote": "performed with maximum concentric intensity produces superior enhancement in vertical jump, 5 m sprint time and change of direction ability to equivolumed traditional strength training 131 Int. J. Environ. Res. Public Health 2021, 18, 1181 in well-trained young basketball players",
+      "page": "Stojanovic et al., Abstract and Discussion (book pp. 123-134); txt lines 6744-6754 and p. 131 discussion",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Thirty-six well-trained juniors randomized to flywheel (inertia 0.075 kg m-2), traditional (80 percent 1RM), or control for eight weeks, 1-2 sessions per week, matched for volume.",
+        "Title-level claim is power, not maximal strength: isometric strength gains versus control were real but the flywheel edge concentrated in jump, sprint, and agility outputs."
+      ],
+      "breakdown_regime": "Eight weeks in adolescents; maturation contributes to all groups' gains, and flywheel technique has a learning curve that can mask early effects.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stimulus specificity: the adaptation follows the mechanical signature of the stimulus (eccentric overload at maximum concentric intent) rather than its volume label. For the engine, the lesson is that two interventions with equal nominal dose are not interchangeable; the mechanism channel of the dose, not just its size, determines which capacity moves.",
+        "source_operator": "flywheel_eccentric_power_specificity",
+        "telemetry": "Pre and post jump height, sprint splits, change-of-direction time, and isometric strength under matched training volumes."
+      }
+    },
+    {
+      "primitive_id": "starter_nonstarter_load_gap",
+      "name": "Starters carry higher training monotony and strain than non-starters all season on acceleration and deceleration counts, so ordinary training underloads non-starters for the match demands they may suddenly face",
+      "verbatim_quote": "In conclusion, the TM and TS values were higher for starters compared to non-starters through the full-season",
+      "page": "Nobari et al. (2020, 6547), Abstract (book pp. 219-232); txt lines 11875-11877",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twenty-one professionals over 48 weeks; monotony and strain computed from acceleration and deceleration counts in three intensity zones.",
+        "The gap held across pre-season and all three in-season periods (all p < 0.05)."
+      ],
+      "breakdown_regime": "Starter status is coach-selected and correlates with ability and durability; the study shows association, and the remedy (compensatory top-up sessions) is the authors' inference, not a tested intervention here.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A selection-driven exposure divergence: the roster splits into two populations with systematically different load histories, so the under-exposed group carries hidden fragility that only appears when rotation forces them into full demand. The engine must track exposure history per individual, because team-average load describes nobody on either side of the split.",
+        "source_operator": "starter_nonstarter_load_gap",
+        "telemetry": "Weekly monotony and strain by acceleration and deceleration zone, split by starter status and minutes played."
+      }
+    },
+    {
+      "primitive_id": "congestion_participation_index_dependence",
+      "name": "Workload indices during congested weeks depend on how many matches the player started: two-match starters showed the greatest strain, three-match starters the greatest monotony, and acute high-metabolic-load distance ran about 42-44 percent above one-match players",
+      "verbatim_quote": "Accelerometry-based measures were dependent on congested fixtures. S2M had the greatest TS values, while S3M had the greatest TM",
+      "page": "Clemente et al., Abstract (book pp. 135-144); txt lines 7474-7480",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nineteen professionals over a 45-week season; seven congested weeks classified, participation coded as starting one, two, or three matches.",
+        "Indices were computed on accelerometry measures (high metabolic load distance, high accelerations, high decelerations) rather than sRPE."
+      ],
+      "breakdown_regime": "Pilot study, one team; participation groups are small and coach-selected, so index differences mix selection with congestion response.",
+      "domain": "load monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Index values are confounded by participation count: monotony and strain do not mean the same thing for a one-match and a three-match player in the same week. The engine rule is that any index must be interpreted conditional on the exposure count that generated it, or cross-player comparisons are category errors.",
+        "source_operator": "congestion_participation_index_dependence",
+        "telemetry": "Per-player match-start counts in congested weeks with weekly acute load, ACWR, monotony, and strain per accelerometry measure."
+      }
+    },
+    {
+      "primitive_id": "hrv_vagal_season_drift",
+      "name": "Weekly vagal HRV indices (SDNN, RMSSD) declined across a 15-week season in female youth rowers (effect sizes -0.34 to -0.8) despite no significant relationship with training load, implicating non-training stressors",
+      "verbatim_quote": "Measures of HRV, but not HR, were found to be reduced over the training season, but were not overtly related to training load or performance",
+      "page": "Edmonds et al., Sec. 5 Conclusions (book pp. 179-190); txt lines 10317-10320",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Seven athletes measured before training each Friday across pre-season into competition; weekly load was RPE multiplied by duration.",
+        "Time-domain indices only: SDNN (standard deviation of normal-to-normal intervals) and RMSSD (root mean square of successive differences) as parasympathetic markers."
+      ],
+      "breakdown_regime": "Seven athletes and weekly sampling cannot separate school stress, growth, and season phase; the absent load correlation may reflect sampling timing rather than a true decoupling.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A monitoring channel with a confounded baseline: the signal drifts for reasons outside the modeled cause, so a naive load-to-HRV coupling would misread season drift as training maladaptation. The engine lesson is to require an association check inside the deployment population before wiring any biomarker as a load gauge, and to carry external-stressor covariates alongside it.",
+        "source_operator": "hrv_vagal_season_drift",
+        "telemetry": "Resting weekly SDNN and RMSSD, weekly training load, and external stressor notes such as school demands."
+      }
+    },
+    {
+      "primitive_id": "rsa_decrement_indices",
+      "name": "Repeated sprint ability is summarized by closed-form decrement indices: work decrement compares total work to five times the best bout, power decrement compares worst to best power",
+      "verbatim_quote": "The fatigue index is measured as the percentage speed decrease in the subsequent part of the running distance and the percentage decrease in power or work in repeated trials performed on a cycle ergometer",
+      "page": "Starczewski et al., Sec. 1 and Sec. 2.3 (book pp. 247-256); txt lines 13265-13272, 13355-13365",
+      "latex": "W_{\\mathrm{dec}} = 100 - \\frac{W_{\\mathrm{tot}}}{W_{\\mathrm{max}} \\cdot 5} \\times 100, \\quad P_{\\mathrm{dec}} = 100 - \\frac{P_{\\mathrm{min}}}{P_{\\mathrm{max}}} \\times 100",
+      "symbol_and_unit_ledger": {
+        "W_tot": "total work across the five 6 s bouts [J or J/kg]",
+        "W_max": "work in the best 6 s bout [J or J/kg]",
+        "P_min, P_max": "lowest and highest 6 s power [W or W/kg]",
+        "W_dec, P_dec": "decrement indices [percent]"
+      },
+      "assumptions": [
+        "Protocol fixed: five 6 s all-out cycle ergometer efforts with 24 s passive rest, friction load 7.5 percent of body mass.",
+        "Normative values are age and position specific: wings outproduced pivots in total work (269 versus 243 J/kg)."
+      ],
+      "breakdown_regime": "Decrement indices inherit the noise of the single best and worst bouts, and ergometer RSA does not reproduce running sprint mechanics.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A fatigue kernel from repeated maximal efforts: compare the sum of outputs to the perfect-repeat benchmark (best bout times number of bouts) and the output collapses into one percentage. The engine can reuse the shape anywhere repeated efforts occur: actual total versus best-case total is a general decay measure.",
+        "source_operator": "rsa_decrement_indices",
+        "telemetry": "Per-bout power and work from a standardized repeated-sprint protocol, with age group and playing position."
+      }
+    },
+    {
+      "primitive_id": "maturity_offset_equation",
+      "name": "Mirwald maturity offset estimates years from peak height velocity from age, leg length, sitting height, weight, and height interactions",
+      "verbatim_quote": "−9.236 + 0.000278 leg length × sitting height −0.001663 age × leg length (1) + 0.007216 age × sitting height + 0.02292 weight × height (years)",
+      "page": "Hammami et al., Sec. 2, eq. (1) (book pp. 191-208); txt lines 10601-10604",
+      "latex": "\\mathrm{Offset} = -9.236 + 0.000278 \\cdot LL \\cdot SH - 0.001663 \\cdot A \\cdot LL + 0.007216 \\cdot A \\cdot SH + 0.02292 \\cdot W \\cdot H",
+      "symbol_and_unit_ledger": {
+        "LL": "leg length [cm]",
+        "SH": "sitting height [cm]",
+        "A": "chronological age [years]",
+        "W": "body weight [kg]",
+        "H": "height [cm]",
+        "Offset": "maturity offset [years from peak height velocity]; interaction terms reproduced as printed in the article"
+      },
+      "assumptions": [
+        "The equation is applied to adolescent boys in this study (U17 players) to group or adjust for biological maturation.",
+        "Anthropometry is measured under standard conditions; the offset is an estimate, not a direct observation of maturation."
+      ],
+      "breakdown_regime": "Prediction error is roughly plus or minus a year and grows at the extremes of early and late maturation; the equation was developed on specific reference populations and transfers imperfectly.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A covariate-adjustment kernel for youth data: raw performance differences between adolescents confound training with growth timing, and this equation supplies the adjustment variable. The engine pattern is to never compare developing athletes on raw outputs when a validated maturity estimate exists; adjust first, then interpret.",
+        "source_operator": "maturity_offset_equation",
+        "telemetry": "Age, leg length, sitting height, weight, and height for each youth athlete."
+      }
+    },
+    {
+      "primitive_id": "loaded_plyometric_advantage",
+      "name": "Ankle-loaded plyometrics (2.5 percent of body mass above the ankle) outperform unloaded plyometrics for sprint and change-of-direction gains over 10 in-season weeks in U17 soccer players",
+      "verbatim_quote": "We conclude that the introduction of 10 weeks of in-season loaded plyometrics into the regimen of U17 male soccer players yields gains in several physical performance scores",
+      "page": "Hammami et al., Abstract (book pp. 191-208); txt lines 10538-10548",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Thirty-eight elite junior males randomized to loaded, unloaded, or control; both plyometric groups improved jump height similarly, so the loading edge is in sprint and change-of-direction, not jump.",
+        "Maturity offset was computed for participants, an attempt to keep growth from masquerading as training effect."
+      ],
+      "breakdown_regime": "One age group, one load increment (2.5 percent), in-season only; heavier or differently placed loads are outside the evidence.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dose detail inside a modality changes the outcome profile: the same exercise family at a slightly different loading parameter develops speed qualities rather than jump qualities. For the engine, interventions and stimuli must be recorded at parameter level, because method labels alone hide the variation that decides the effect.",
+        "source_operator": "loaded_plyometric_advantage",
+        "telemetry": "Sprint times, change-of-direction tests, jump heights, and balance scores before and after a 10-week program with load as percent of body mass."
+      }
+    },
+    {
+      "primitive_id": "meta_analysis_hedges_random_effects",
+      "name": "Evidence synthesis standard used here: Hedges-corrected standardized mean differences pooled by inverse-variance random effects, heterogeneity quantified by I squared, study quality by PEDro; plyometric training beat strength training for vertical jump (ES 0.73 versus 0.24, the latter not significant)",
+      "verbatim_quote": "Effect sizes were adjusted using Hedges’ small sample size bias correction [27]. The inverse-variance random-effects model for meta-analyses was used because it allocates a proportionate weight to trials based on the size of their individual standard errors",
+      "page": "Pardos-Mainer et al., Sec. 2.4 and 3.4.1 (book pp. 271-end); txt lines 14428-14436, 14495-14505",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twelve studies in female soccer players; jump outcome heterogeneity was significant (I squared 69 percent), so the pooled mean hides real between-study spread.",
+        "Control groups were proportionately divided when a study had two intervention arms, to avoid double counting."
+      ],
+      "breakdown_regime": "Few studies per outcome and several low PEDro scores (4-5 of 10) mean the synthesis is fragile; subgroup analyses by dose found no significant differences, so dose prescription is not settled by this review.",
+      "domain": "statistics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The corpus-level reasoning pattern: many small studies, each noisy, are combined with bias correction and precision weighting, and heterogeneity is reported as a finding rather than averaged away. The engine applies the same stance to its own evidence base: weight sources by precision, correct small-sample bias, and keep the disagreement measure visible.",
+        "source_operator": "meta_analysis_hedges_random_effects",
+        "telemetry": "Per-study means, standard deviations, and sample sizes for each outcome, plus methodological quality scores."
+      }
+    },
+    {
+      "primitive_id": "screening_test_interdependence",
+      "name": "Balance, hop, and jump screening tests share substantial variance (single-leg hop correlates 0.51 with Y-balance composite and 0.72 with countermovement jump), so correlated tests must not be counted as independent injury-risk evidence",
+      "verbatim_quote": "There were strong positive correlations between SLHDb and YBT COMb (r = 0.51, p = 0.0037) and moderate correlations between the CMJ and YBT COMb test (r = 0.48, p = 0.006) among adolescent amateur rugby players. A strong relationship also occurred between SLHDb and CMJ (r = 0.72, p < 0.0001)",
+      "page": "Wilczynski et al., Sec. 3.2 (book pp. 157-166); results text and Table 3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Thirty-one adolescent amateur rugby players; tests were Y-balance, countermovement jump, single-leg hop for distance, and the Landing Error Scoring System.",
+        "The Y-balance composite normalizes the sum of three reach directions by leg length."
+      ],
+      "breakdown_regime": "Preliminary, cross-sectional, and in adolescents; correlations show shared capacity, not that any test predicts injury prospectively.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Redundancy accounting for screening batteries: when candidate risk signals correlate at 0.5-0.7, stacking them as independent evidence triple-counts one underlying capacity. The engine rule is to estimate the correlation structure of its signals and discount accordingly, whether the signals are jump tests or statistical features.",
+        "source_operator": "screening_test_interdependence",
+        "telemetry": "Y-balance reaches by direction, hop distance, jump height, and landing error scores per athlete."
+      }
+    },
+    {
+      "primitive_id": "asymmetry_adaptation_with_training",
+      "name": "Dominant versus non-dominant leg performance differences shrink as training duration increases, and muscle mass amount does not determine take-off force or Wingate power specificity",
+      "verbatim_quote": "the performance between the dominant and non-dominant leg decrease with duration of the training",
+      "page": "Bahensky et al., Abstract (book pp. 233-246); txt lines 12619-12620",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sixty-five young soccer players (age 16.0 plus or minus 1.2 years); legs assessed for muscle mass, force-plate jump, and 30 s Wingate power.",
+        "Muscle mass correlated with absolute Wingate power per leg (r = 0.695-0.832) but not with take-off force, and the more specific the movement, the weaker the muscle-mass effect."
+      ],
+      "breakdown_regime": "Cross-sectional age gradient is not longitudinal proof that training closes asymmetry; dominant-leg definitions mix preference and function.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Asymmetry is a moving quantity, not a fixed trait: it decays with accumulated training exposure, so a single asymmetry snapshot overstates risk in novices and understates the training history needed to interpret it. The engine pattern is to read bilateral or side-difference features against exposure duration before assigning them meaning.",
+        "source_operator": "asymmetry_adaptation_with_training",
+        "telemetry": "Per-leg muscle mass, jump force and height, and Wingate power, with years of training."
+      }
+    },
+    {
+      "primitive_id": "anthropometric_throwing_speed_model",
+      "name": "BMI is the one anthropometric variable related to 7 m throwing speed in every male handball age group (r between 0.506 and 0.813); one or two variables (BMI, arm span, height) predict 24-72 percent of throwing speed variance",
+      "verbatim_quote": "Only BMI was related with throwing speed in all age groups (0.506 > r < 0.813, p < 0.05). Throwing speed was predicted (24–72%) with only one or two variables in each model",
+      "page": "Tuquet et al., Abstract (book pp. 209-218); txt lines 11388-11396",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One hundred seventy-six amateur males from U12 to senior; throwing speed measured standing from 7 m.",
+        "Models are age-group specific: arm span enters the U16 model, height the U14 model."
+      ],
+      "breakdown_regime": "In growing athletes BMI partly proxies maturation and overall size; amateur standing throws do not transfer directly to elite jump throws.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Parsimonious physical prediction: a large candidate set of body measurements collapses to one robust correlate plus one age-dependent partner, with explained variance stated honestly (24-72 percent). The engine lesson is to prefer the small model whose variables survive across subgroups, and to report the unexplained share as part of the answer.",
+        "source_operator": "anthropometric_throwing_speed_model",
+        "telemetry": "Height, weight, BMI, arm span, and hand width with measured throwing speed by age group."
+      }
+    },
+    {
+      "primitive_id": "pass_constraint_mental_load",
+      "name": "A pass-participation rule in possession games raises mean speed, effort perception, and mental fatigue without significantly changing external physical load, showing task constraints can load the mind independently of the body",
+      "verbatim_quote": "The main findings of the study suggested that RPE and mental fatigue levels were affected by these constraints because higher values were found in these variables using the limitation, especially during the MBPG score system tasks. However, the external physical load reported by players was not affected or decreased by the use of constraints in pass decisions",
+      "page": "Garcia-Calvo et al., Abstract and Sec. 4 (book pp. 61-72); txt lines 3322-3330 and discussion",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Forty semiprofessional players; the same tasks were played with and without a rule requiring a minimum number of players to touch the ball before scoring, in counterbalanced order.",
+        "Mental load was measured with a validated adaptation of NASA-TLX and fatigue with a visual analogue scale."
+      ],
+      "breakdown_regime": "Pilot study; the speed increase was small and external load broadly unchanged, so the manipulation's physical effect is mostly perceptual and cognitive in this dose.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A dissociation result: one intervention moves internal and mental load while leaving external load flat, which breaks any engine assumption that the channels move together. Constraint design, like rule changes in any competitive environment, is a lever on cognitive demand that must be modeled separately from physical demand.",
+        "source_operator": "pass_constraint_mental_load",
+        "telemetry": "GPS distances and speeds, heart rate, RPE, NASA-TLX mental load, and fatigue ratings under rule variants of the same drill."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3884daedb59e27b3-t1",
+      "think": "This volume is the printed edition of a 2021 special issue of the International Journal of Environmental Research and Public Health, edited by Filipe Manuel Clemente and Hugo Sarmento, and it collects twenty-two empirical articles under three headings that name a cycle: fitness assessment, the athlete monitoring cycle, and training interventions. Read as one work, its real subject is not any single test but the loop itself. A dose is imposed, the dose is measured from outside with GPS, accelerometry, and inertial sensors, the response is measured from inside with heart rate, perceived exertion, wellness questionnaires, blood and saliva markers, and variability indices, and the comparison of dose and response is what licenses the next intervention. Almost every article is one traversal of that loop in one population, and the extraction task is to recover the loop's reusable machinery rather than twenty-two disconnected findings. The machinery has four layers. The first is load quantification, and the volume is unusually complete here because it prints working definitions rather than citing them away. Session RPE multiplies a Foster CR10 rating by duration. The Hooper index sums four 1 to 7 wellness items taken before training. Edwards summated heart rate zones weight minutes in five heart-rate zones by zone number and sum them. Foster monotony divides the weekly mean daily load by its standard deviation, strain multiplies weekly load by monotony, and the coupled acute:chronic workload ratio divides the current week by a four-week rolling average that contains it. These are genuinely different mathematical objects pointed at the same latent thing: monotony is a shape statistic, ACWR is a self-normalization, SHRZ is a weighted intensity integral, and sRPE is a subjective scalar with an exposure multiplier. An engine that ingests this literature has to keep the construction of each index attached to its value, because the same athlete-week yields different rankings under different constructions. The second layer is inference, and here the volume teaches one lesson three ways. Younesi and colleagues show dose-response is channel-specific: objective loads track change in 30-15 intermittent fitness test velocity while sRPE tracks change in Vameval velocity, so a channel validates only against the outcome it covaries with. Iannaccone and colleagues show that pooling repeated measures across athletes misstates even a strong relationship, and that a linear mixed model with random intercepts and slopes beats the pooled correlation for exactly the reason an engine should care about, namely that the individual response is the object of monitoring. Pardos-Mainer and colleagues show the synthesis layer: Hedges-corrected effect sizes, inverse-variance random-effects pooling, I squared heterogeneity reported at 69 percent rather than averaged away. Magnitude-based inference with its smallest worthwhile change and its explicit unclear verdict runs through several articles as the decision grammar on top of these estimates. The third layer is context, and this is where the volume earns its keep for a reasoning engine, because it repeatedly shows that load numbers are uninterpretable without their situational covariates. Next-match location reshapes the entire preceding week in two independent studies, opponent standard and match outcome redistribute load across match-day-minus positions, match result conditions the workload recorded inside the match itself, fixture congestion accumulates muscle damage on a dose curve whose recovery tail exceeds five days, and congested-week indices change meaning with the number of matches a player started. Del Coso and colleagues supply the necessary negative control: team maximum running speed, a plausible and easily harvested proxy, is unrelated to final league ranking, so the volume contains its own veto on naive proxy use. The fourth layer is capacity assessment and intervention: phase angle as an equation-free integrity ratio from raw impedance, reactive strength index as a day-ahead readiness discriminator, repeated-sprint decrement indices in closed form, the Mirwald maturity offset as a growth adjustment for youth comparisons, asymmetry that decays with training duration, screening tests that share half their variance and so cannot be stacked as independent evidence, and intervention trials whose effects are mechanism-specific, flywheel eccentric overload for power outputs, ankle-loaded plyometrics for sprint and change of direction, plyometric over strength training for jump in the female game. Two cross-cutting threads deserve separate weight. The first is selection. Starter status, congested-week participation, and playing position are not neutral labels in this volume; they are exposure assignments that reshape every index computed downstream, which is why Nobari's starters and non-starters diverge for forty-eight consecutive weeks and why Starczewski's repeated-sprint norms split by position and age band. Any engine reading this corpus has to model who was selected for exposure before it models what the exposure did. The second thread is the distinction between a measurement and a decision. The volume's best articles close that gap deliberately: a wellness sum collected thirty minutes before training, a hop test on match-day-minus-one whose post-practice change sorts tomorrow's fast games from slow ones, a monotony value that only matters because a flat week is a prescription error. Where an article stops at correlation, the extraction marks the limit rather than upgrading the claim. That discipline, applied consistently, is what makes the difference between a monitoring system and a data archive: every primitive in this artifact is either a construction that can be implemented, a relationship with a stated direction and population, or a veto with a stated scope. Where the work breaks is mostly at the boundary of its samples. Nearly every study is one squad, often fewer than twenty-five athletes, sometimes seven. Several headline associations are outcome-conditioned and partly reverse-caused. The coupled ACWR carries a known mathematical coupling problem the articles do not confront. Magnitude-based inference is used as settled method although its statistical foundations are contested. None of that invalidates the machinery; it means the machinery must be extracted with its operating limits attached, which is what the breakdown fields in this artifact do. For a reasoning engine, the volume's durable contribution is a complete, internally cross-checked vocabulary for turning raw athlete telemetry into dose, response, context, and decision, with the definitions printed plainly enough to implement and the failure modes visible enough to respect.",
+      "retrocausal_genealogy": "The lineage runs through Foster's session RPE and monotony work of the 1990s and 2001, Edwards' heart-rate zone summation, Banister's training impulse tradition referenced in the dose-response article, and Hopkins' magnitude-based inference and effect-size conventions, all converged into routine team-sport practice during the 2010s as GPS and accelerometry became cheap. The editors' research network across Portugal, Spain, and Iran applied this shared toolkit across soccer, handball, basketball, rowing, and ski jumping, and the special issue format froze that convergence into one citable volume in 2021, with the meta-analysis and mixed-model articles marking the point where the field began auditing its own statistical habits.",
+      "theory_of_mind": "The authors write for practitioners who must decide tomorrow's training with yesterday's numbers, and they model the reader as someone who trusts a number more when its construction is visible. Their shared belief is that the athlete is a system whose state is partly hidden, that external dose and internal response are different measurements of one process, and that honest quantification, including unclear verdicts and null results, beats confident narrative. Several articles explicitly design for the coach's constraint set: cheap tools (RPE, wellness scales) are validated against expensive ones (heart-rate systems, force plates) so the monitoring cycle survives real budgets.",
+      "cross_layer_veto": "Three findings in this volume veto moves other layers would otherwise make. The LaLiga study vetoes roster top-speed aggregates as a team-quality signal, because the association with ranking is absent at exactly the level where the feature would be used. The rowing study vetoes reading HRV drift as training maladaptation without an in-population association check, because the drift occurred with no load relationship. The blind soccer PCA study and the rugby screening study jointly veto counting correlated signals as independent evidence, since components and tests share large variance fractions. Together they constrain any engine built on this corpus: proxies need outcome checks, biomarkers need association checks, and correlated inputs need discounting before any of them may move a decision."
+    }
+  ],
+  "universal_lens": "Any managed system under repeated stress can be run as this volume runs an athlete: define the dose in units you can construct by hand, measure the response through at least two independent channels, normalize each subject against its own rolling history, condition every comparison on context, keep an explicit unclear verdict, and record null results as vetoes. The specific tests are sports tests, but the cycle of dose, response, context, and audited inference is a general template for operating anything whose state is hidden and whose overload is costly, from industrial equipment to software fleets to a person's own working week.",
+  "gsi_mapping": "The Galaxy Sports Institute takes the assessment and monitoring core: the printed definitions of sRPE, Hooper index, SHRZ, monotony, strain, and coupled ACWR as implementable standards; phase angle and segmental symmetry as integrity monitoring; the maturity offset as the adjustment that makes youth comparisons honest; and the mixed-model and magnitude-based frameworks as the house statistics for longitudinal athlete data. It also takes the cautionary structure: channel-specific validity, participation-conditioned indices, and congestion damage curves with recovery tails longer than a congested week, all of which belong in any curriculum that teaches practitioners to monitor rather than merely to measure.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes the reasoning layer. Context-conditioned expectations: load and performance baselines must be functions of venue, opponent strength, schedule density, and participation, because this volume shows each of those moving the numbers on its own. Signal discipline: Del Coso's null result is the standing example that a candidate feature needs an outcome-association check before it earns weight, and the PCA and screening studies set the rule that correlated signals are discounted, not stacked. State modeling: congestion damage behaves as a decaying stock, readiness probes like MD-1 reactive strength index are valued by within-athlete discrimination of a future state, and every estimate keeps an unclear state available instead of forcing a call."
+}
