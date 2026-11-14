@@ -616,3 +616,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 05:44:38 | COMPLETE | 28506884c90c6a09 | primitives=32 think_words=871
 - 2026-11-14 05:45:33 | CLAIMED | 35e71e0c8a612390 | worker=hermes-inline shard03 file=2026 - Comparing wins above replacement across baseball history - Doane.pdf
 - 2026-11-14 05:52:09 | COMPLETE | 35e71e0c8a612390 | primitives=32 think_words=904
+- 2026-11-14 05:52:55 | CLAIMED | 01cc15a66710f19f | worker=hermes-inline shard03 file=2026 - Efficient Frontier Optimization of NBA Shot Selection Using Markov Reward Processes - Duma et al.pdf
+- 2026-11-14 06:04:47 | COMPLETE | 01cc15a66710f19f | primitives=32 think_words=924
