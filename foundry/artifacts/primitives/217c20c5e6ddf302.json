@@ -1,0 +1,577 @@
+{
+ "book_id": "217c20c5e6ddf302",
+ "title": "College deviance and the effects on NFL amateur draft selection: Analyzing the Personal Conduct Policy",
+ "author": "Michael Palmer, Quinlan Duhan, Brian P. Soebbing (Houston / LSU / Temple)",
+ "year": 2015,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2015 College deviance and the effects on NFL amateur draft selection - Analyzing the Personal Conduct Policy - Michael Palmera, Quinlan Duhanb and Brian P. Soebbing.pdf",
+ "source_note": "Journal of Sports Analytics 1 (2015) 121-132, DOI 10.3233/JSA-150016, IOS Press, open access, 12 pages, full read via pymupdf. Identity confirmed (Palmer/Duhan/Soebbing, brian.soebbing@temple.edu). Domain football (catalog correct). Regression spec shifted-font ({31..} beta subscripts); reconstructed as labeled LaTeX from variable descriptions. Data: 4,061 NFL draft selections 1999-2013 (Pro Football Reference); Deviance = Factiva media-count of search-term incidents (arrest/suspension/drugs/violence/off-field/misconduct/cheating/alcohol/scandal/fight/assault/battery) in 365 days pre-draft (max 19). Model: log(OverallPick) ~ team FE + position/awards/AllAmerican/age/NonD1FBS/NonBCSAQ/CombinePart + Deviance + Goodell + Deviance*Goodell; White robust SE; avg VIF 2.68; R2=0.227. Key results: Deviance -0.044 (p=0.053, ~4.4% improvement/incident pre-policy); Deviance*Goodell +0.018 (p=0.597, insignificant); DefSkill interaction +0.106 (p=0.007). Combine model by position (QB dropped, n too small): 40yd positive significant all, bench offensive only, vertical defskill+OL, shuttle insignificant. Limitations: deviance hard to quantify (media only, no severity/type separation); selection bias (only drafted players, undrafted character-risk censored). No sportsbook lines used as model inputs.",
+ "domain": "football",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "research_question",
+   "name": "College misconduct and NFL draft position under two policy regimes",
+   "verbatim_quote": "what is the relationship between an amateur player's misconduct in his final year of college and his overall pick in the NFL Draft.",
+   "page": 1,
+   "latex": "\\text{estimate }\\ \\frac{\\partial\\,\\log(\\text{OverallPick})}{\\partial\\,\\text{Deviance}}\\ \\text{and its change across policy regimes}",
+   "symbol_and_unit_ledger": {
+    "OverallPick": "overall draft selection number [ordinal, lower=better]",
+    "Deviance": "count of media-reported misconduct incidents [count]"
+   },
+   "assumptions": [
+    "The question links final-year college misconduct to overall draft pick",
+    "It asks whether the relationship changes with the Personal Conduct Policy modification"
+   ],
+   "breakdown_regime": "The relationship is observational and confounded by talent; the policy-regime split (Tagliabue vs Goodell) is the identification lever.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE risk-factor valuation under regime change IS this research question: the engine estimates how a risk factor (off-field behavior) affects a valuation (draft position) and whether that effect changes when the governing policy/regime changes, the regime-conditional risk-pricing question. GSI: regime-conditional effect of a risk factor on value.",
+    "source_operator": "research_question",
+    "telemetry": "deviance-draft coefficient; pre/post policy split; regime interaction"
+   }
+  },
+  {
+   "primitive_id": "counterintuitive_finding",
+   "name": "Misconduct improved draft position under the original policy",
+   "verbatim_quote": "misconduct decreased a player's draft position meaning his draft position improved.",
+   "page": 1,
+   "latex": "\\hat\\beta_{\\text{Deviance}}=-0.044\\ (p=0.053)<0\\Rightarrow \\text{better (lower) pick number}",
+   "symbol_and_unit_ledger": {
+    "beta_Deviance": "coefficient on deviance count [log-pick per incident]",
+    "pick number": "overall selection [ordinal, lower=better]"
+   },
+   "assumptions": [
+    "A negative coefficient on log(pick) means a lower (better) draft position",
+    "Pre-policy, more reported misconduct was associated with being drafted higher, not lower"
+   ],
+   "breakdown_regime": "The finding is counterintuitive and only marginally significant (p=0.053); it is an association, not evidence that misconduct causes better draft outcomes.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE counterintuitive-risk-sign IS this finding: the engine recognizes that a risk factor can carry a positive valuation sign in a regime (risky talent rewarded), so it must not assume risk always depresses value, and must interpret the sign within its regime. GSI: regime-dependent sign of a risk factor's value effect.",
+    "source_operator": "counterintuitive_finding",
+    "telemetry": "deviance coefficient sign/magnitude; marginal significance; regime context"
+   }
+  },
+  {
+   "primitive_id": "policy_regime_null",
+   "name": "The Goodell policy modification nullifies the deviance advantage",
+   "verbatim_quote": "the modification of the Personal Conduct Policy leads to an insignificant result suggesting that team executives are beginning to examining an amateur player's misconduct more closely with the new policy.",
+   "page": 1,
+   "latex": "\\hat\\beta_{\\text{Deviance}\\times\\text{Goodell}}=+0.018\\ (p=0.597)\\approx0\\Rightarrow \\text{deviance effect vanishes post-2007}",
+   "symbol_and_unit_ledger": {
+    "beta_interaction": "deviance-by-Goodell interaction coefficient [log-pick per incident]",
+    "Goodell": "post-2007 policy dummy [0/1]"
+   },
+   "assumptions": [
+    "The interaction term is statistically insignificant",
+    "Under Goodell's quicker/harsher policy, deviance no longer improves draft position"
+   ],
+   "breakdown_regime": "The null interaction is the policy-effect evidence: the regime change altered how teams price misconduct, the structural-break detection.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE regime-change detection IS this interaction null: the engine detects a structural break in how a risk factor is priced when policy changes, using an interaction term whose significance marks the regime shift, the policy-break detection discipline. GSI: interaction-based structural-break detection in risk pricing.",
+    "source_operator": "policy_regime_null",
+    "telemetry": "deviance x Goodell interaction; significance; pre/post regime contrast"
+   }
+  },
+  {
+   "primitive_id": "log_dependent_variable",
+   "name": "Log of overall pick as the dependent variable",
+   "verbatim_quote": "Estimating a regression model with the dependent variable being the log of overall draft position",
+   "page": 2,
+   "latex": "y_{ij}=\\log(\\text{OverallPick}_{ij})=\\alpha_i+\\sum_k\\beta_k X_{k,ij}+\\beta_{12}\\text{Deviance}+\\beta_{13}\\text{Goodell}+\\beta_{14}(\\text{Deviance}\\times\\text{Goodell})+\\varepsilon_{ij}",
+   "symbol_and_unit_ledger": {
+    "y_ij": "log overall pick for player i in draft year j [log-ordinal]",
+    "alpha_i": "team fixed effect [log-pick]",
+    "X_k": "position/award/age/school/combine controls [mixed]",
+    "varepsilon": "error term [log-pick]"
+   },
+   "assumptions": [
+    "The dependent variable is log-transformed because pick order is ordinal and skewed",
+    "Team fixed effects absorb drafting-team tendencies"
+   ],
+   "breakdown_regime": "The log transform makes coefficients interpretable as approximate percentage changes; the ordinal nature of pick order is the reason for the transform.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE log-ordinal valuation model IS this specification: the engine models a skewed ordinal valuation (draft slot) in logs with entity fixed effects and a risk-by-regime interaction, the log-linear risk-pricing regression structure. GSI: log-transformed ordinal outcome with fixed effects and regime interaction.",
+    "source_operator": "log_dependent_variable",
+    "telemetry": "log-pick regression; team fixed effects; risk x regime interaction"
+   }
+  },
+  {
+   "primitive_id": "sign_convention",
+   "name": "Lower pick number means better draft position (sign convention)",
+   "verbatim_quote": "Since the lower (higher) the number means the higher (lower) the draft position, the interpretation of a negative (positive) and significant coefficient means that the player's draft position improved (declined).",
+   "page": 7,
+   "latex": "\\text{pick}\\downarrow\\ \\equiv\\ \\text{draft position}\\uparrow;\\quad \\beta<0\\Rightarrow\\text{improved},\\ \\beta>0\\Rightarrow\\text{declined}",
+   "symbol_and_unit_ledger": {
+    "pick": "overall selection number [ordinal]",
+    "beta": "regression coefficient [log-pick per unit]"
+   },
+   "assumptions": [
+    "A lower overall pick number is a better (earlier) draft position",
+    "A negative coefficient improves draft position; a positive coefficient declines it"
+   ],
+   "breakdown_regime": "The inverted ordinal scale is a sign trap: the engine must map coefficient signs to the correct direction of value, or it will invert the risk effect.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE ordinal-sign discipline IS this convention: the engine correctly maps coefficient signs onto an inverted ordinal scale (lower number = better), avoiding the sign-inversion error that would flip a risk effect's direction. GSI: sign-direction discipline on inverted ordinal outcomes.",
+    "source_operator": "sign_convention",
+    "telemetry": "coefficient sign to value direction; ordinal inversion"
+   }
+  },
+  {
+   "primitive_id": "log_level_interpretation",
+   "name": "Log-level coefficient: ~4.4% improvement per additional incident",
+   "verbatim_quote": "the impact of an additional article in the newspaper regarding the misconduct of a player leads to an improvement in overall draft position of 4.4 percent.",
+   "page": 9,
+   "latex": "\\%\\Delta\\text{Pick}\\approx100\\cdot\\hat\\beta_{\\text{Deviance}}=100\\times(-0.044)=-4.4\\%\\ \\text{per incident}",
+   "symbol_and_unit_ledger": {
+    "beta_Deviance": "-0.044 [log-pick per incident]",
+    "percent change": "approximate percentage change in pick [percent]"
+   },
+   "assumptions": [
+    "Because the dependent variable is log and the regressor is level, multiply the coefficient by 100 for a rough percent effect",
+    "One more reported incident improves draft position by about 4.4 percent"
+   ],
+   "breakdown_regime": "The 100x rule is a rough log-level approximation, exact only for small coefficients; it is an interpretation aid, not a precise elasticity.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE log-level effect sizing IS this 100x interpretation: the engine converts a log-level coefficient to an approximate percentage effect (multiply by 100) to size a risk factor's valuation impact, with the small-coefficient caveat. GSI: log-level coefficient to percentage-effect conversion.",
+    "source_operator": "log_level_interpretation",
+    "telemetry": "coefficient x100 percent effect; per-incident valuation change"
+   }
+  },
+  {
+   "primitive_id": "deviance_search_measure",
+   "name": "Deviance measured by media search-term counts",
+   "verbatim_quote": "deviance was classified with the following predetermined search terms: arrest, suspension, drugs, violence, off-field, misconduct, cheating, alcohol, scandal, fight, assault, and battery.",
+   "page": 5,
+   "latex": "\\text{Deviance}_i=\\#\\{\\text{Factiva articles mentioning player }i\\text{ with a deviance search term in prior 365 days}\\}",
+   "symbol_and_unit_ledger": {
+    "Deviance_i": "count of media-reported deviance incidents [count]",
+    "search terms": "arrest/suspension/drugs/violence/off-field/misconduct/cheating/alcohol/scandal/fight/assault/battery [keywords]"
+   },
+   "assumptions": [
+    "Deviance is the count of newspaper articles matching predefined search terms in the 365 days before the draft",
+    "Articles were verified to be about the player committing the deviance; logged via Factiva"
+   ],
+   "breakdown_regime": "The measure captures media exposure, not actual behavior; unreported incidents are missed and incident types/severity are not separated, the measurement-error caveat.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE proxy-risk measurement IS this search-term count: the engine measures a latent risk (off-field behavior) via an observable proxy (media-reported incidents), explicitly recognizing the proxy captures exposure not truth and misses unreported events, the proxy-measurement discipline. GSI: latent-risk measurement via observable proxy with coverage caveat.",
+    "source_operator": "deviance_search_measure",
+    "telemetry": "deviance count distribution (max 19); search-term set; media-coverage proxy"
+   }
+  },
+  {
+   "primitive_id": "robust_standard_errors",
+   "name": "White's robust standard errors for heteroscedasticity",
+   "verbatim_quote": "we use White's robust standard error correction in both equations consistent with previous research",
+   "page": 6,
+   "latex": "\\widehat{\\mathrm{Var}}(\\hat\\beta)=(X'X)^{-1}\\Big(\\sum_i \\hat\\varepsilon_i^2 x_i x_i'\\Big)(X'X)^{-1}\\quad\\text{(White/HC)}",
+   "symbol_and_unit_ledger": {
+    "hat epsilon_i": "residual for observation i [log-pick]",
+    "x_i": "regressor vector [mixed]"
+   },
+   "assumptions": [
+    "Heteroscedasticity of the error term is addressed with White's robust standard errors",
+    "This makes inference valid without assuming constant error variance"
+   ],
+   "breakdown_regime": "Robust SEs fix inference under heteroscedasticity but not bias from omitted variables or measurement error; they are a variance correction, not a causal fix.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE heteroscedasticity-robust inference IS this White correction: the engine uses heteroscedasticity-robust standard errors so significance tests remain valid under non-constant variance, the robust-inference discipline. GSI: heteroscedasticity-consistent covariance for valid inference.",
+    "source_operator": "robust_standard_errors",
+    "telemetry": "robust SE vs OLS SE; heteroscedasticity handling"
+   }
+  },
+  {
+   "primitive_id": "multicollinearity_vif",
+   "name": "Variance inflation factors check multicollinearity",
+   "verbatim_quote": "To address any potential issue with multicollinearity, variance inflation factors (vifs) are calculated.",
+   "page": 6,
+   "latex": "\\mathrm{VIF}_k=\\frac{1}{1-R_k^2};\\quad \\overline{\\mathrm{VIF}}=2.68\\ \\text{(Eq 1, no concern)}",
+   "symbol_and_unit_ledger": {
+    "VIF_k": "variance inflation factor for regressor k [dimensionless]",
+    "R_k^2": "R-squared of regressing x_k on other regressors [fraction]"
+   },
+   "assumptions": [
+    "VIFs diagnose multicollinearity among the controls",
+    "Average VIF 2.68 (Eq 1) and 1.79-2.19 (Eq 2) indicate no problematic multicollinearity"
+   ],
+   "breakdown_regime": "Low VIFs mean the controls are not collinear, so coefficient estimates are stable; this is a diagnostic, not a guarantee against omitted-variable bias.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE collinearity diagnostic IS this VIF check: the engine computes variance inflation factors to confirm regressors are not collinear before trusting coefficient estimates, the multicollinearity-diagnostic discipline (echoing the Sedin-twins case). GSI: VIF-based collinearity screening of a design matrix.",
+    "source_operator": "multicollinearity_vif",
+    "telemetry": "average VIF per model; collinearity threshold"
+   }
+  },
+  {
+   "primitive_id": "policy_failure_interpretation",
+   "name": "Interpretation 1: the original policy failed to change drafting",
+   "verbatim_quote": "the results from Table 2 would suggest the initial policy did not influence a team's drafting decision.",
+   "page": 9,
+   "latex": "\\text{pre-2007 policy ineffective}\\Rightarrow \\text{deviance still rewarded in draft}",
+   "symbol_and_unit_ledger": {
+    "policy effectiveness": "whether the conduct policy altered team drafting behavior [binary]"
+   },
+   "assumptions": [
+    "The original Tagliabue policy required conviction/plea before punishment, so it was slow and rarely invoked",
+    "Its ineffectiveness left teams still rewarding risky talent in the draft"
+   ],
+   "breakdown_regime": "This is one of four competing interpretations of the counterintuitive sign; the engine must hold multiple hypotheses rather than commit to one causal story.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE competing-hypothesis discipline IS this policy-failure interpretation: the engine holds multiple plausible explanations for a counterintuitive effect (policy failure, trait signal, risk premium, talent tolerance) rather than committing to one, the multiple-hypothesis discipline. GSI: rival-hypothesis retention for an anomalous effect.",
+    "source_operator": "policy_failure_interpretation",
+    "telemetry": "policy-effectiveness hypothesis; rival interpretations"
+   }
+  },
+  {
+   "primitive_id": "aggression_signal_interpretation",
+   "name": "Interpretation 2: deviance proxies desired aggression",
+   "verbatim_quote": "it could be the Deviance variable is detecting aggressive behavior that is a desired quality for NFL teams according to previous research",
+   "page": 9,
+   "latex": "\\text{Deviance}\\ \\text{proxy for aggression}\\Rightarrow \\text{valued on-field trait}",
+   "symbol_and_unit_ledger": {
+    "aggression": "competitive aggressive trait [latent]"
+   },
+   "assumptions": [
+    "Reported deviance may proxy an aggressive temperament that NFL teams value on the field",
+    "The risk measure conflates off-field misconduct with a desired competitive trait"
+   ],
+   "breakdown_regime": "The proxy conflation means the deviance coefficient may reflect a valued trait rather than misconduct tolerance; the engine must disentangle what a risk proxy actually measures.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE proxy-conflation warning IS this aggression interpretation: the engine recognizes a risk proxy may conflate an undesirable behavior with a desirable trait (aggression), so it must disentangle what the proxy actually measures before pricing it. GSI: latent-trait conflation in a risk proxy.",
+    "source_operator": "aggression_signal_interpretation",
+    "telemetry": "deviance-as-aggression hypothesis; proxy conflation"
+   }
+  },
+  {
+   "primitive_id": "risky_worker_premium",
+   "name": "Interpretation 3: risky workers earn a premium (Bollinger-Hotchkiss)",
+   "verbatim_quote": "workers whose performance is risky or more uncertain will earn a higher wage.",
+   "page": 9,
+   "latex": "\\mathbb{E}[\\text{wage}\\mid \\text{high variance performance}]>\\mathbb{E}[\\text{wage}\\mid \\text{low variance}]\\quad\\text{(upside potential)}",
+   "symbol_and_unit_ledger": {
+    "wage": "player compensation/draft value [value]",
+    "performance variance": "uncertainty of future output [variance]"
+   },
+   "assumptions": [
+    "Risky/uncertain workers can earn a higher wage because of upside potential (Bollinger & Hotchkiss 2003, MLB)",
+    "Teams may accept off-field risk for the potential of higher future on-field reward"
+   ],
+   "breakdown_regime": "The risky-worker premium is a risk-reward tradeoff: the engine prices the upside of a high-variance asset against its downside risk, not risk as a pure penalty.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE risky-asset upside premium IS this risky-worker result: the engine prices a high-variance player/asset by its upside potential net of risk, recognizing that risk can carry a premium when the upside is valued, the risk-reward (not risk-penalty) valuation. GSI: upside-weighted valuation of high-variance agents.",
+    "source_operator": "risky_worker_premium",
+    "telemetry": "risk-premium hypothesis; variance-upside tradeoff"
+   }
+  },
+  {
+   "primitive_id": "talent_second_chances",
+   "name": "Interpretation 4: talent buys second chances",
+   "verbatim_quote": "teams are willing to overlook off-field behavior due to the talent possessed by these amateur players and the projection of how these amateur players will impact a team's future on-field performance.",
+   "page": 9,
+   "latex": "\\text{draft value}=f(\\text{talent projection})-\\lambda\\cdot\\text{character risk},\\quad \\lambda\\ \\text{small when talent high}",
+   "symbol_and_unit_ledger": {
+    "talent projection": "expected future on-field contribution [value]",
+    "character risk": "off-field risk penalty [value]",
+    "lambda": "weight on character risk [dimensionless]"
+   },
+   "assumptions": [
+    "Teams overlook off-field behavior when the talent and future on-field projection are high",
+    "Talent wins games and buys second chances (Bukowski 2001)"
+   ],
+   "breakdown_regime": "The character-risk weight is talent-dependent: high talent shrinks the risk penalty, so the engine must model risk tolerance as conditional on projected value, not constant.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE value-conditional risk tolerance IS this talent-overlook result: the engine models character/risk tolerance as conditional on projected value (high talent shrinks the risk penalty), so risk pricing is value-conditional rather than a fixed deduction. GSI: value-conditional risk-penalty weighting.",
+    "source_operator": "talent_second_chances",
+    "telemetry": "talent-vs-character weighting; value-conditional risk tolerance"
+   }
+  },
+  {
+   "primitive_id": "goodell_advantage_gone",
+   "name": "Under Goodell the deviance draft advantage disappears",
+   "verbatim_quote": "this advantage has since gone away with the introduction of the modified Personal Conduct Policy under Goodell, which provides quicker and harsher penalties for players whose off-field behavior does not coincide with the values of the league.",
+   "page": 9,
+   "latex": "\\text{post-2007: }\\ \\hat\\beta_{\\text{Deviance}}+\\hat\\beta_{\\text{Deviance}\\times\\text{Goodell}}\\approx0\\ \\text{(no draft reward for deviance)}",
+   "symbol_and_unit_ledger": {
+    "Goodell policy": "quicker/harsher punishment without requiring conviction [regime]"
+   },
+   "assumptions": [
+    "Goodell's 2007 policy punishes even without conviction, quicker and harsher",
+    "The pre-policy draft reward for deviance disappears under the new regime"
+   ],
+   "breakdown_regime": "The regime change altered team evaluation behavior; this is the policy-effect conclusion, grounded in the insignificant interaction plus the significant main effect.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE policy-induced repricing IS this Goodell effect: the engine recognizes that a governance/policy change can reprice a risk factor (here eliminating its draft reward), so valuations must be regime-aware and updated when rules change. GSI: policy-induced repricing of a risk factor.",
+    "source_operator": "goodell_advantage_gone",
+    "telemetry": "pre/post deviance effect; policy regime; repricing"
+   }
+  },
+  {
+   "primitive_id": "defskill_risk_signal",
+   "name": "Defensive skill: deviance signals unwanted risk (7-point exposure)",
+   "verbatim_quote": "this risky action of off-field misconduct may signal behaviors teams do not want to see with defensive skill position players.",
+   "page": 9,
+   "latex": "\\hat\\beta_{\\text{Deviance}\\times\\text{Goodell}}^{\\text{DefSkill}}=+0.106\\ (p=0.007)>0\\Rightarrow \\text{worse pick}",
+   "symbol_and_unit_ledger": {
+    "DefSkill": "defensive backs and linebackers [position group]",
+    "7-point exposure": "touchdown risk from defensive mistakes [points]"
+   },
+   "assumptions": [
+    "For defensive skill players the interaction is positive and significant: deviance lowers draft position",
+    "Teams may not want risk-taking at defensive skill because mistakes can give up 7 points"
+   ],
+   "breakdown_regime": "The position-conditional sign reversal shows risk tolerance is role-dependent: the engine must price risk differently by position/role, not uniformly.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE role-conditional risk pricing IS this defensive-skill reversal: the engine prices risk differently by role (defensive skill mistakes cost touchdowns, so risk is penalized there), making risk tolerance position/role-conditional. GSI: role-conditional risk-penalty sign and magnitude.",
+    "source_operator": "defskill_risk_signal",
+    "telemetry": "defskill interaction sign/significance; role-conditional risk; 7-point exposure"
+   }
+  },
+  {
+   "primitive_id": "allamerican_value",
+   "name": "All-American honors improve draft position across all models",
+   "verbatim_quote": "the more All American awards the player receives leads to an improved overall draft position.",
+   "page": 10,
+   "latex": "\\hat\\beta_{\\text{AllAmerican}}<0\\ \\text{(significant in all models)}\\Rightarrow \\text{better pick}",
+   "symbol_and_unit_ledger": {
+    "AllAmerican": "count of 1st/2nd/3rd team All-American honors [count]"
+   },
+   "assumptions": [
+    "All-American honors signal top-player quality and improve draft position",
+    "The effect is negative and significant across all positional models"
+   ],
+   "breakdown_regime": "Awards are a quality signal but their transferability differs by position (defense awards more transferable than offense), so the signal weight is position-dependent.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE quality-signal valuation IS this All-American effect: the engine uses recognized quality signals (awards/honors) as valuation inputs, with position-dependent transferability of the signal, the quality-signal weighting discipline. GSI: quality-signal input with context-dependent transferability.",
+    "source_operator": "allamerican_value",
+    "telemetry": "All-American coefficient; per-position signal weight"
+   }
+  },
+  {
+   "primitive_id": "age_penalty",
+   "name": "Older draftees are selected later (age as maturity/competency proxy)",
+   "verbatim_quote": "We also find the older the player is, his overall selection is diminished.",
+   "page": 10,
+   "latex": "\\hat\\beta_{\\text{Age}}=+0.164\\ (p<0.001)>0\\Rightarrow \\text{later pick}",
+   "symbol_and_unit_ledger": {
+    "Age": "player age at draft [years]"
+   },
+   "assumptions": [
+    "Older players are drafted later (positive coefficient on log-pick)",
+    "Age proxies competency, maturity, and ability (Rodenberg & Stone 2011)"
+   ],
+   "breakdown_regime": "The age penalty reflects remaining career length and development upside; the engine prices age as a depreciation/upside factor, not a pure quality measure.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE age-depreciation valuation IS this age penalty: the engine prices age as a factor reducing remaining upside/career length, so older assets are valued lower holding quality constant, the age-depreciation discipline. GSI: age as a depreciation/upside factor in valuation.",
+    "source_operator": "age_penalty",
+    "telemetry": "age coefficient; career-length/upside proxy"
+   }
+  },
+  {
+   "primitive_id": "competition_quality_proxy",
+   "name": "Top-school competition improves scout projection (school-quality proxy)",
+   "verbatim_quote": "players who play at the top schools generally face stronger competition over the course of their careers allowing NFL scouts to have a better idea of how the player may project as an NFL player.",
+   "page": 10,
+   "latex": "\\text{NonD1FBS},\\text{NonBCSAQ}>0\\Rightarrow \\text{later pick (weaker competition}\\Rightarrow \\text{noisier projection)}",
+   "symbol_and_unit_ledger": {
+    "NonD1FBS": "not Division I-FBS school [0/1]",
+    "NonBCSAQ": "not BCS automatic-qualifying conference [0/1]"
+   },
+   "assumptions": [
+    "Players from non-top schools are drafted later",
+    "Stronger college competition gives scouts a better projection of NFL performance"
+   ],
+   "breakdown_regime": "School quality is a proxy for competition strength and projection reliability; the engine treats the signal's reliability as context-dependent, not the signal itself as quality.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE signal-reliability weighting IS this competition proxy: the engine weights a quality signal by the reliability of the context that produced it (stronger competition = more reliable projection), so signal credibility is context-conditional. GSI: context-conditional reliability of a quality signal.",
+    "source_operator": "competition_quality_proxy",
+    "telemetry": "school-quality coefficients; competition-strength proxy; projection reliability"
+   }
+  },
+  {
+   "primitive_id": "deviance_quantification_limit",
+   "name": "Limitation: deviance is hard to quantify",
+   "verbatim_quote": "The biggest limitation of the present research is that deviance itself is hard to quantify.",
+   "page": 11,
+   "latex": "\\text{Deviance}_{\\text{measured}}\\ne \\text{Deviance}_{\\text{true}};\\quad \\text{measurement error}",
+   "symbol_and_unit_ledger": {
+    "Deviance_true": "actual off-field misbehavior [latent]",
+    "Deviance_measured": "media-reported count [count]"
+   },
+   "assumptions": [
+    "Off-field misbehavior is difficult to measure accurately",
+    "The media-count measure is a noisy proxy for the true latent behavior"
+   ],
+   "breakdown_regime": "Measurement error in the risk proxy attenuates and biases the coefficient; the engine must treat risk estimates as noisy and avoid overconfident pricing.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE risk-measurement-error discipline IS this quantification limit: the engine treats a risk proxy as a noisy measure of a latent behavior, accounting for measurement error rather than pricing the proxy as ground truth. GSI: measurement-error-aware risk estimation.",
+    "source_operator": "deviance_quantification_limit",
+    "telemetry": "measured vs true deviance; measurement-error caveat"
+   }
+  },
+  {
+   "primitive_id": "media_coverage_limit",
+   "name": "Limitation: only media-reported incidents, no type/severity separation",
+   "verbatim_quote": "The measure used here in the present study is comprised of only incidents and the media attention related to those incidents.",
+   "page": 11,
+   "latex": "\\text{Deviance}_{\\text{measured}}=\\text{incidents}\\cap\\text{media attention};\\quad \\text{unreported missed, types unseparated}",
+   "symbol_and_unit_ledger": {
+    "media attention": "whether an incident was reported [binary]",
+    "incident type": "category/severity of misconduct [categorical]"
+   },
+   "assumptions": [
+    "Incidents without media attention are missed",
+    "The measure does not separate incident types or punishments (suspension vs jail vs plea)"
+   ],
+   "breakdown_regime": "The proxy conflates severity and misses unreported events; the engine must recognize that a media-count risk measure is incomplete and severity-blind.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE severity-blind-proxy warning IS this media limit: the engine recognizes a count-based risk proxy misses unreported events and conflates severity, so it must not treat the count as a complete or severity-weighted risk measure. GSI: completeness and severity limits of a count proxy.",
+    "source_operator": "media_coverage_limit",
+    "telemetry": "media-coverage gap; severity conflation; unreported incidents"
+   }
+  },
+  {
+   "primitive_id": "selection_bias_limit",
+   "name": "Limitation: only drafted players observed (undrafted risk players excluded)",
+   "verbatim_quote": "there could be players with on-field talent to be drafted, however, character and/or legal issues may have prevented NFL teams from drafting the players.",
+   "page": 11,
+   "latex": "\\text{sample}=\\{\\text{drafted players}\\};\\quad \\text{undrafted character-risk players censored}\\Rightarrow \\text{selection bias}",
+   "symbol_and_unit_ledger": {
+    "sample": "observed drafted players [set]",
+    "censoring": "talented but undrafted due to character/legal issues [selection]"
+   },
+   "assumptions": [
+    "The study observes only players who were drafted",
+    "Players whose character issues kept them undrafted are excluded, biasing the deviance-draft relationship"
+   ],
+   "breakdown_regime": "This is a selection/censoring bias: the risk effect on going undrafted is invisible, so the engine must account for the selected sample and not generalize to all talent.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE selection-bias discipline IS this drafted-only limit: the engine recognizes the sample is selected (only those who passed the draft filter), so the risk effect on exclusion is censored and must be accounted for before generalizing, the selection/censoring discipline. GSI: selected-sample censoring and its bias on risk estimation.",
+    "source_operator": "selection_bias_limit",
+    "telemetry": "drafted-only sample; censored undrafted risk; selection bias"
+   }
+  },
+  {
+   "primitive_id": "draft_position_career_link",
+   "name": "Draft position predicts playing time and career length",
+   "verbatim_quote": "prior studies show that draft position is a significant indicator regarding playing time and career length",
+   "page": 2,
+   "latex": "\\text{draft position}\\Rightarrow \\text{playing time, career length}\\quad\\text{(sunk-cost/commitment, Staw \\& Hoang 1995)}",
+   "symbol_and_unit_ledger": {
+    "draft position": "overall selection [ordinal]",
+    "playing time": "on-field opportunity [time]",
+    "career length": "career duration [years]"
+   },
+   "assumptions": [
+    "Earlier draft picks receive more playing time and longer careers",
+    "Draft position acts as a commitment/sunk-cost signal that shapes subsequent opportunity"
+   ],
+   "breakdown_regime": "Draft position is not just a valuation but a self-fulfilling commitment device; the engine recognizes that an initial valuation can causally shape later opportunity (sunk-cost escalation).",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE valuation-as-commitment IS this draft-career link: the engine recognizes that an initial valuation (draft slot) can become a commitment device that shapes later opportunity (playing time, career length), the sunk-cost/escalation feedback between valuation and outcome. GSI: valuation-induced commitment feedback on future opportunity.",
+    "source_operator": "draft_position_career_link",
+    "telemetry": "draft-position to playing-time/career link; sunk-cost commitment"
+   }
+  },
+  {
+   "primitive_id": "goodell_no_conviction",
+   "name": "Goodell policy punishes without conviction (vs Tagliabue conviction requirement)",
+   "verbatim_quote": "Goodell modified the Personal Conduct Policy so that even athletes who were not convicted of a crime could still be punished by the league",
+   "page": 4,
+   "latex": "\\text{Tagliabue: punish iff convicted/plea};\\quad \\text{Goodell: punish on detrimental conduct (no conviction needed)}",
+   "symbol_and_unit_ledger": {
+    "conviction requirement": "legal conviction/plea precondition for punishment [binary]",
+    "detrimental conduct": "conduct harmful to league image [standard]"
+   },
+   "assumptions": [
+    "The original policy required conviction or plea before punishment (slow, rarely invoked)",
+    "Goodell's policy punishes detrimental conduct even without conviction (quicker, harsher)"
+   ],
+   "breakdown_regime": "The policy mechanism change (conviction requirement removed) is what altered team risk pricing; the engine must model the governance rule, not just the outcome.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE governance-rule modeling IS this policy mechanism: the engine models the actual governance rule (conviction requirement vs detrimental-conduct standard) that determines punishment speed/severity, because the rule drives the risk-pricing regime. GSI: governance-rule specification driving a risk regime.",
+    "source_operator": "goodell_no_conviction",
+    "telemetry": "conviction vs detrimental-conduct standard; punishment speed/severity; regime mechanism"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "palmer2015_deviance_draft_policy",
+   "think": "This inline cycle extracts Palmer, Duhan and Soebbing's 2015 Journal of Sports Analytics paper, College deviance and the effects on NFL amateur draft selection: Analyzing the Personal Conduct Policy, a twelve-page sports-economics study that adds a risk-valuation and policy-regime layer to the Foundry's football stack. The provenance is clean: the catalog domain football is correct, the paper is openly accessible with DOI 10.3233/JSA-150016, and the only encoding issue is the shifted-font regression specification, whose beta subscripts render as brace-number placeholders, so the estimating equation is reconstructed as labeled LaTeX from the unambiguous variable descriptions. Twenty-three primitives are extracted, each with a verified verbatim quote, page anchor, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the labor economics of risky workers through the sunk-cost literature on draft order into this policy-regime application. The load-bearing object is a log-linear regression of overall draft pick on a count of media-reported college misconduct, with team fixed effects, position and award and age and school and combine controls, a Goodell-era dummy, and a deviance-by-Goodell interaction, estimated on 4,061 selections from the 1999 through 2013 drafts with White's robust standard errors and variance inflation factors confirming no multicollinearity. The genealogy is precise about the inverted ordinal scale, a lower pick number is a better draft position, so a negative coefficient improves draft position, and the log-level interpretation multiplies the coefficient by 100 to give an approximate percentage effect. The counterintuitive headline is that the deviance coefficient is negative and marginally significant, minus 0.044 at p equals 0.053, meaning more reported misconduct was associated with being drafted higher under the original Tagliabue policy, roughly a 4.4 percent improvement per additional reported incident, while the deviance-by-Goodell interaction is insignificant at p equals 0.597, so the advantage vanishes under the modified policy.\n\nThe recursive theory of mind models the team executive as a reasoner weighing talent projection against character risk, and the analyst as a reasoner who must hold multiple competing explanations for the counterintuitive sign rather than commit to one causal story. The paper offers four interpretations, and the engine inherits all four as a multiple-hypothesis discipline: the original policy failed to change drafting because it required conviction or a plea before punishment and was slow and rarely invoked; the deviance count may proxy an aggressive temperament that teams actually value on the field; risky or uncertain workers earn a premium because of upside potential, the Bollinger and Hotchkiss result from baseball; and teams overlook off-field behavior because talent wins games and buys second chances, so the character-risk weight shrinks when projected talent is high. The analyst must also reason about the measurement, because deviance is a media-count proxy that misses unreported incidents and conflates severity, and about the sample, because only drafted players are observed, so talented players whose character issues kept them undrafted are censored out, a selection bias that hides the risk effect on exclusion.\n\nThe cross-layer veto adjudication is where this paper earns its place beside the accounting, regression, network, deterrence, decision-EV, and EPV layers. The first veto is the regime-conditional risk-pricing requirement: a risk factor's valuation sign and magnitude can change when policy changes, so the engine detects the structural break via the interaction term and reprices accordingly, never assuming risk always depresses value. The second veto is the value-conditional risk tolerance: the character-risk penalty is weighted by projected talent, so high talent shrinks the penalty, and risk tolerance is role-dependent, illustrated by the defensive-skill reversal where the interaction is positive and significant because mistakes there can give up seven points. The third veto is the proxy-measurement discipline: the risk measure is a noisy media-count proxy that misses unreported events and conflates severity, so the engine prices it as a noisy signal, not ground truth. The fourth veto is the selection-bias discipline: the sample is selected on having been drafted, so the risk effect on going undrafted is censored and must be accounted for before generalizing. The fifth veto is the sign-direction and robust-inference discipline: the inverted ordinal scale requires correct sign mapping, White's robust standard errors handle heteroscedasticity, and VIFs confirm the controls are not collinear. The risky-worker premium links to the engine's upside-weighted valuation of high-variance assets, the draft-position-career link to valuation-as-commitment feedback, and the school-quality proxy to context-conditional signal reliability.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The combine model, estimated separately by position because the quarterback group lacked observations, shows the forty-yard dash time is positive and significant for all groups, so slower players are drafted later, the bench press matters for offensive but not defensive players, the vertical jump matters for defensive skill and offensive linemen, and the shuttle run is insignificant everywhere, while height and weight improve draft position with position-dependent strength. The awards results are position-conditional, All-American honors improve draft position across all models but non-All-American awards matter mainly for defense, suggesting defensive awards are more transferable to the NFL, and age carries a positive coefficient of 0.164 so older players are drafted later, reflecting remaining career length and development upside. The school-quality variables, non-Division-I-FBS and non-BCS-automatic-qualifying, carry positive coefficients because weaker college competition gives scouts a noisier projection. The policy mechanism is explicit, Tagliabue required conviction or a plea while Goodell punishes detrimental conduct without conviction, quicker and harsher, and this rule change is what altered team evaluation behavior. These invariants ground the engine's regime-conditional risk pricing, value- and role-conditional risk tolerance, proxy-measurement and selection-bias discipline, upside-weighted risky-asset valuation, and governance-rule modeling, completing a sovereign sports-economics risk layer that sits beside the EPV capstone and connects player character risk to the engine's valuation machinery, all grounded in clean verbatim prose with an honestly labeled regression reconstruction.",
+   "retrocausal_genealogy": "The genealogy runs from labor economics of risky workers through sunk-cost draft-order literature into this policy-regime application. The load-bearing object is a log-linear regression of overall pick on a media-reported misconduct count, with team fixed effects, position/award/age/school/combine controls, a Goodell dummy, and a deviance-by-Goodell interaction, on 4,061 selections 1999-2013 with White's robust SE and VIFs (no multicollinearity). The inverted ordinal scale (lower pick = better) means a negative coefficient improves draft position; log-level interpretation multiplies by 100. The counterintuitive headline: deviance coefficient -0.044 (p=0.053), ~4.4% improvement per incident pre-policy; deviance-by-Goodell interaction insignificant (p=0.597), advantage vanishes post-2007.",
+   "theory_of_mind": "The team executive weighs talent projection against character risk; the analyst holds four competing explanations for the counterintuitive sign (multiple-hypothesis discipline): original policy failed (required conviction/plea, slow); deviance proxies valued aggression; risky workers earn an upside premium (Bollinger-Hotchkiss); talent buys second chances so the risk weight shrinks with talent. The analyst reasons about measurement (media-count proxy misses unreported incidents, conflates severity) and sample (only drafted players observed, so character-risk players kept undrafted are censored, a selection bias hiding the exclusion effect).",
+   "cross_layer_veto": "Five vetoes adjudicate beside the accounting/regression/network/deterrence/decision-EV/EPV layers. Regime-conditional risk pricing: a risk factor's sign/magnitude changes with policy, detect the break via the interaction and reprice, never assume risk always depresses value. Value- and role-conditional risk tolerance: character penalty weighted by projected talent, and role-dependent (defensive-skill reversal, +0.106 p=0.007, because mistakes give up 7 points). Proxy-measurement discipline: media-count risk proxy is noisy, misses unreported events, conflates severity, price as signal not truth. Selection-bias discipline: sample selected on being drafted, censoring the exclusion effect. Sign-direction and robust inference: inverted ordinal sign mapping, White's robust SE, VIF collinearity check. Risky-worker premium links to upside-weighted high-variance valuation, draft-career link to valuation-as-commitment, school proxy to signal reliability."
+  }
+ ],
+ "universal_lens": "Palmer, Duhan & Soebbing 2015 contributes the sports-economics risk-valuation and policy-regime layer to the Foundry football stack: a log-linear draft-position regression on a media-reported misconduct count with team fixed effects and a deviance-by-policy interaction, revealing that risk can carry a positive valuation sign in one regime (risky talent rewarded, ~4.4% per incident) and be repriced to zero when policy changes (Goodell 2007). Its load-bearing invariants are regime-conditional risk pricing, value- and role-conditional risk tolerance, the risky-worker upside premium, proxy-measurement error, selection/censoring bias, inverted-ordinal sign discipline, robust inference, and valuation-as-commitment feedback.",
+ "gsi_mapping": "For GSI these primitives are the general regime-conditional risk-valuation layer: estimate a risk factor's effect on value and detect structural breaks via a policy interaction, recognize risk can carry an upside premium (high-variance agents valued for upside), weight risk penalties by projected value and by role, treat risk proxies as noisy severity-blind measures, account for selected-sample censoring, map signs correctly on inverted ordinal outcomes, use heteroscedasticity-robust inference and collinearity diagnostics, and model the governance rule that drives the risk regime. The multiple-hypothesis discipline keeps anomalous signs from being over-interpreted.",
+ "gse_mapping": "For GSE this is the player character-risk and regime layer: the deviance-draft regression IS risk-factor pricing on player valuation, the deviance-by-Goodell interaction IS regime-change detection and repricing, the risky-worker premium IS upside-weighted valuation of high-variance players, the talent-overlook result IS value-conditional risk tolerance, the defensive-skill reversal IS role-conditional risk pricing (7-point exposure), the media-count proxy IS noisy risk measurement, the drafted-only sample IS selection-bias discipline, the draft-career link IS valuation-as-commitment feedback, and the school proxy IS context-conditional signal reliability. The regression is a labeled reconstruction from clean prose; no sportsbook line is a model input."
+}

@@ -494,3 +494,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 22:06:06 | COMPLETE | 04f950c125db1a46 | primitives=19 think_words=949
 - 2026-11-13 22:09:41 | CLAIMED | 4b1d7c9ef440e2b1 | worker=hermes-inline file=2014 Pointwise Predicting Points and Valuing Decisions.pdf
 - 2026-11-13 22:18:07 | COMPLETE | 4b1d7c9ef440e2b1 | primitives=22 think_words=982
+- 2026-11-13 22:21:34 | CLAIMED | 217c20c5e6ddf302 | worker=hermes-inline file=2015 College deviance and the effects on NFL amateur draft selection - Analyzing the Personal Conduct Policy - Michael Palmera, Quinlan Duhanb and Brian P. Soebbing.pdf
+- 2026-11-13 22:25:57 | COMPLETE | 217c20c5e6ddf302 | primitives=23 think_words=964
