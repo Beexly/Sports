@@ -1,0 +1,676 @@
+{
+  "book_id": "35e71e0c8a612390",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_BASEBALL_WAR_BENCHMARK_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Doane, 'Comparing wins above replacement across baseball history', arXiv 2026 (Michael Doane, Independent Researcher, Cary NC; ORCID 0009-0003-0521-8981), 75 pages (33 text + supplement). Introduces iWAR (WAR from historical Retrosheet play-by-play; runs-allowed RA + fielding-independent FIP versions) and benchmarks against bWAR/fWAR/run-based on identical team-seasons (common 1,471 team-seasons/79 years/1,441 franchise pairs; secondary bWAR 2,554/118 years). iWAR RA reconstruction MAE 3.695 vs bWAR 4.724/fWAR 4.744 (~22% reduction), surviving scalar calibration; PythagenPat beats every WAR (3.263); next-season replay flips RA-fWAR sign after calibration on identical rows; advantage concentrated early history, shrinks with broader coverage; neural ensemble worse than ridge (10.163 vs 9.946). Key concepts: reconstruction-vs-replay (Shmueli description/prediction), run-expectancy batting weights, FIP 13/3/2 numerator, replacement conservation (sum WAR=0.206 sum G), fixed map y-hat=0.294+WAR/G, PythagenPat gamma=[(RS+RA)/G]^0.285, 5000-draw 5-year calendar-block bootstrap (Künsch), MSE accounting identity, conserving pitching-fielding transfer (team-total invariant -> individual credit not identifiable from team reconstruction). Data integrity: discrepancies retained without inferred repair, missing retained as missing, FanGraphs Statcast retroactive revisions; conditional intervals omit method-development/source-revision/coefficient-fitting uncertainty; learned study amended after constant-detector defect. Extracted faithfully (not a derivative summary). Equations (event run value, FIP, replacement conservation, credited fraction/fixed map, Pythagorean/PythagenPat, calibration regression, MSE identity) printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain math matches catalog (baseball sabermetrics / valuation / prediction evaluation; not football). Directly isomorphic to GSE's EP kernel, description-vs-prediction evaluation, calibration-map fix, dependence-aware clustered inference, simple-baseline comparator, and attribution-identifiability limit. Code github MRDOANE/iwar-historical-benchmark, Zenodo 10.5281/zenodo.23455100. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "iwar_retrosheet_system",
+      "name": "iWAR: WAR estimated from historical Retrosheet play-by-play (RA + FIP versions)",
+      "verbatim_quote": "a system for estimating wins above replacement from historical Retrosheet play-by-play records",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Michael Doane, Independent Researcher, Cary NC; ORCID 0009-0003-0521-8981; arXiv 2026) introduces iWAR, estimating wins above replacement from historical Retrosheet play-by-play records, with a runs-allowed (RA) and a fielding-independent pitching (FIP) version, compared against Baseball-Reference WAR (bWAR), FanGraphs WAR (fWAR) and run-based alternatives; code at github MRDOANE/iwar-historical-benchmark, Zenodo 10.5281/zenodo.23455100."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The open play-by-play WAR system is the same transparent event-derived valuation GSE builds.",
+        "source_operator": "iwar_retrosheet_system",
+        "telemetry": "iWAR from Retrosheet PBP; RA + FIP versions; vs bWAR/fWAR/run-based; Doane; github MRDOANE/iwar-historical-benchmark"
+      }
+    },
+    {
+      "primitive_id": "common_sample_1471_79yr",
+      "name": "Matched common sample: 1,471 team-seasons / 79 years / 1,441 franchise pairs",
+      "verbatim_quote": "The common historical sample contains 1,471 team-seasons across 79 years and 1,441 consecutive franchise pairs",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The primary four-method comparison uses identical team-seasons: 1,471 team-seasons across 79 observed years (1908-1967, 1975, 1988-1997, 2017-2019, 2021-2025) and 1,441 consecutive franchise pairs in 78 target years; a secondary bWAR-only comparison spans 2,554 team-seasons / 118 years; gaps remain part of reported coverage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The matched-cohort benchmark is the same identical-rows comparison discipline GSE enforces.",
+        "source_operator": "common_sample_1471_79yr",
+        "telemetry": "common 1471 team-seasons/79 yr/1441 pairs (78 target yr); secondary bWAR 2554/118 yr; observed years 1908-1967/1975/1988-1997/2017-2019/2021-2025"
+      }
+    },
+    {
+      "primitive_id": "ra_mae_3695_22pct",
+      "name": "iWAR RA reconstruction MAE 3.695 vs bWAR 4.724 / fWAR 4.744 (~22% reduction)",
+      "verbatim_quote": "same-season mean absolute error was 3.695 credited wins per 162 games for iWAR RA",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Under the fixed conversion, same-season MAE was 3.695 credited wins per 162 games for iWAR RA versus 4.724 (bWAR) and 4.744 (fWAR), reductions of 21.793% and 22.112%; paired differences -1.030 and -1.049 with conditional 95% calendar-block intervals [-1.367,-0.706] and [-1.398,-0.725]; RMSE also favored RA (4.654 vs 5.864/5.941)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The matched reconstruction-error reduction is the same quantitative benchmark GSE reports.",
+        "source_operator": "ra_mae_3695_22pct",
+        "telemetry": "RA recon MAE 3.695 vs bWAR 4.724/fWAR 4.744 (-21.793%/-22.112%); paired -1.030/-1.049, CI [-1.367,-0.706]/[-1.398,-0.725]; RMSE 4.654 vs 5.864/5.941"
+      }
+    },
+    {
+      "primitive_id": "reconstruction_vs_replay_persistence",
+      "name": "Reconstruction vs replay: a measure fitting a completed season may not persist",
+      "verbatim_quote": "A measure that accounts closely for a completed season can preserve information that is weakly persistent into the following year",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A measure that accounts closely for a completed season can preserve information weakly persistent into the following year; conversely a measure suppressing transient variation may forecast reasonably while explaining less of the variation that occurred; observed scoring, team wins and future performance are all plausible evaluation targets, and a useful comparison must say which is assessed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The description-vs-prediction target distinction is literally GSE's reconstruction-vs-replay evaluation separation.",
+        "source_operator": "reconstruction_vs_replay_persistence",
+        "telemetry": "completed-season fit may preserve weakly-persistent info; transient-suppression forecasts but explains less; scoring/wins/future all plausible targets; name which"
+      }
+    },
+    {
+      "primitive_id": "shmueli_description_prediction",
+      "name": "Shmueli (2010): description vs explanation vs prediction are distinct goals",
+      "verbatim_quote": "describes the broader distinction between statistical description, explanation and prediction",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Shmueli (2010, 'To explain or to predict?', Statistical Science 25:289-310) describes the broader distinction between statistical description, explanation and prediction; in baseball the distinction is especially visible because observed scoring, team wins and future performance are all plausible targets; the paper evaluates reconstruction (description) and replay (prediction) separately."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Shmueli goal taxonomy is the same evaluation-purpose clarity GSE requires.",
+        "source_operator": "shmueli_description_prediction",
+        "telemetry": "Shmueli 2010 Stat Sci 25:289-310; description/explanation/prediction distinct; baseball scoring/wins/future all targets; reconstruction vs replay separate"
+      }
+    },
+    {
+      "primitive_id": "war_collection_of_choices",
+      "name": "Comparing WAR measures evaluates a collection of choices, not one number",
+      "verbatim_quote": "A comparison between WAR measures therefore evaluates a collection of choices",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each WAR implementation must decide how recorded events become run values, how to adjust for context, how to distribute responsibility among players, and how to convert runs into wins; a comparison between WAR measures therefore evaluates a collection of choices; two measures can agree on broad player ranking while differing in total team credit or in aspects of performance preserved."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The WAR-as-choice-collection is the same modeling-decision audit GSE applies to composite ratings.",
+        "source_operator": "war_collection_of_choices",
+        "telemetry": "WAR = choices (event->run values, context adj, responsibility distribution, runs->wins); agree ranking but differ total credit/aspects"
+      }
+    },
+    {
+      "primitive_id": "discrepancies_no_inferred_repair",
+      "name": "Record discrepancies retained without inferred repair (14 team-seasons)",
+      "verbatim_quote": "Those discrepancies are retained without an inferred repair",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Of 2,594 potential AL/NL team-seasons (1908-2025), 2,568 have complete iWAR products (26 incomplete excluded); 14 additional complete-product team-seasons fail the reconciled-record requirement because event and game-log sources agree on game number/identities but differ in credited wins; those discrepancies are retained without an inferred repair."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The no-inferred-repair rule is literally GSE's zero-fabrication data-integrity discipline.",
+        "source_operator": "discrepancies_no_inferred_repair",
+        "telemetry": "2594 potential/2568 complete (26 excluded); 14 fail reconciled-record (event vs game-log credited wins differ); retained without inferred repair"
+      }
+    },
+    {
+      "primitive_id": "missing_retained_no_replacement",
+      "name": "Missing provider values retained as missing, no inferred replacement",
+      "verbatim_quote": "Missing provider values are retained as missing and receive no inferred replacement",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Missing provider values are retained as missing and receive no inferred replacement; the achieved sample's gaps remain part of reported coverage; the 39 fWAR-missing years are not interchangeable random omissions but identifiable stretches of baseball history where methods need not behave identically."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The missing-as-missing policy is the same honest-coverage GSE enforces (no imputation fabrication).",
+        "source_operator": "missing_retained_no_replacement",
+        "telemetry": "missing retained as missing, no inferred replacement; gaps part of coverage; 39 fWAR-missing years = identifiable stretches not random omissions"
+      }
+    },
+    {
+      "primitive_id": "fangraphs_statcast_retroactive",
+      "name": "Provider WAR revisions: FanGraphs 2024 Statcast changes applied retroactively to 2016",
+      "verbatim_quote": "FanGraphs' 2024 update applied Statcast-based fielding and baserunning changes retroactively to 2016",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Historical provider WAR can change: FanGraphs' 2024 update applied Statcast-based fielding and baserunning changes retroactively to 2016 (Appelman 2024); comparisons use values observed when tables were collected, and archived season-end vintages were unavailable, so current-vintage provider WAR may include later revisions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The provider-vintage awareness is the same data-revision caution GSE applies to historical ratings.",
+        "source_operator": "fangraphs_statcast_retroactive",
+        "telemetry": "FanGraphs 2024 Statcast fielding/baserunning retroactive to 2016; use collected-vintage values; archived season-end vintages unavailable"
+      }
+    },
+    {
+      "primitive_id": "batting_weights_run_expectancy",
+      "name": "Batting weights from same-season run expectancy (base-out states)",
+      "verbatim_quote": "Batting weights are derived from recorded same-season events and run expectancy",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Batting weights are derived from recorded same-season events and run expectancy; a base-out state specifies occupied bases and outs; category values are averaged over a common league-season distribution of pre-plate-appearance states, so the same category gets a common batting weight within a league-season while certified running departures enter the running component."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The run-expectancy batting weights are literally GSE's base-out expected-points kernel.",
+        "source_operator": "batting_weights_run_expectancy",
+        "telemetry": "batting weights from same-season run expectancy; base-out state (bases, outs); category averaged over league-season pre-PA state distribution; running departures separate"
+      }
+    },
+    {
+      "primitive_id": "event_run_value_base_out",
+      "name": "Event run value = runs scored + change in expected runs remaining",
+      "verbatim_quote": "its observed run value combines runs scored during the event with the change in expected runs remaining in the half-inning",
+      "page": 7,
+      "latex": "\\text{RunValue}(e)=\\text{runs scored}(e)+\\big[\\mathrm{RE}(\\text{state}_{\\text{after}})-\\mathrm{RE}(\\text{state}_{\\text{before}})\\big]",
+      "symbol_and_unit_ledger": {
+        "e": "completed plate-appearance event",
+        "RE(state)": "expected runs remaining in half-inning from base-out state [runs]",
+        "RunValue(e)": "observed run value of event [runs]"
+      },
+      "assumptions": [
+        "For a completed event, its observed run value combines runs scored during the event with the change in expected runs remaining in the half-inning; the calculation distinguishes the event category from advancement beyond a stated normal transition. The run-value decomposition is printed in prose and reconstructed here as a labeled equation.",
+        "Event run-value decomposition reconstructed in labeled LaTeX from prose."
+      ],
+      "breakdown_regime": "Distinguishes event category from advancement beyond normal transition",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The event run-value decomposition is the same delta-EP credit kernel GSE uses per play.",
+        "source_operator": "event_run_value_base_out",
+        "telemetry": "event run value = runs scored during event + change in expected runs remaining (half-inning); category vs advancement beyond normal transition"
+      }
+    },
+    {
+      "primitive_id": "fip_numerator_13_3_2",
+      "name": "FIP numerator = 13*HR + 3*(BB+HBP) - 2*K (league constant anchored)",
+      "verbatim_quote": "Its numerator is 13 times home runs, plus 3 times walks and hit batters, minus 2 times strikeouts",
+      "page": 8,
+      "latex": "\\mathrm{FIP}=\\frac{13\\,HR+3\\,(BB+HBP)-2\\,K}{IP}+c_{\\text{league}}",
+      "symbol_and_unit_ledger": {
+        "HR": "home runs (incl. inside-park) [count]",
+        "BB": "walks (incl. intentional) [count]",
+        "HBP": "hit batters [count]",
+        "K": "strikeouts [count]",
+        "IP": "innings pitched [innings]",
+        "c_league": "league constant anchored to observed run environment [runs/innings]"
+      },
+      "assumptions": [
+        "The FIP alternative's numerator is 13 times home runs plus 3 times walks and hit batters minus 2 times strikeouts; it includes intentional walks and inside-the-park home runs and uses a league constant anchored to the observed run environment; it does not add infield flies or apply the RA defensive-support subtraction, park factor, or separate leverage adjustment, distinguishing it from FanGraphs' park-adjusted FIP-with-infield-flies pitching WAR. The FIP formula is printed in prose and reconstructed here.",
+        "FIP numerator reconstructed in labeled LaTeX from prose."
+      ],
+      "breakdown_regime": "No infield flies, no RA defensive-support subtraction, no park factor, no leverage",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The FIP linear weights are the same fielding-independent pitching kernel GSE uses.",
+        "source_operator": "fip_numerator_13_3_2",
+        "telemetry": "FIP numerator 13*HR + 3*(BB+HBP) - 2*K; includes IBB + inside-park HR; league constant anchored to run env; no infield flies/RA defense/park/leverage (differs from FanGraphs)"
+      }
+    },
+    {
+      "primitive_id": "ra_pitching_expected_minus_charged",
+      "name": "RA pitching = expected runs over actual outs - charged runs (park + defense adj)",
+      "verbatim_quote": "The RA pitching calculation starts from expected runs over the pitcher's actual recorded outs and subtracts charged runs",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The RA pitching calculation starts from expected runs over the pitcher's actual recorded outs and subtracts charged runs; expected runs depend on the league run environment and a same-season park factor; fielding support is subtracted from pitching credit in the same amount assigned to fielders (a pitcher's own fielding enters once); inherited-run charges follow the officially responsible pitcher while defensive support follows the pitcher active during the event."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The RA expected-minus-charged pitching credit is the same defense-separated pitcher valuation GSE uses.",
+        "source_operator": "ra_pitching_expected_minus_charged",
+        "telemetry": "RA = expected runs over actual outs - charged runs; league run env + same-season park factor; fielding support subtracted (= assigned to fielders); own fielding once; inherited runs -> responsible pitcher"
+      }
+    },
+    {
+      "primitive_id": "replacement_0206_conservation",
+      "name": "Replacement 0.206 wins/team-game (57% batting/43% pitching); sum WAR = 0.206 sum G",
+      "verbatim_quote": "Replacement contributes 0.206 wins per covered team-game, allocated 57% through ordinary batting exposure and 43% through pitching outs",
+      "page": 9,
+      "latex": "\\sum_{\\text{teams}}\\mathrm{WAR}=0.206\\sum_{\\text{teams}}G,\\qquad \\hat y=0.294+\\mathrm{WAR}/G",
+      "symbol_and_unit_ledger": {
+        "0.206": "replacement wins per covered team-game [wins/game]",
+        "0.294": "fixed replacement-win fraction (1-0.206*... baseline) [win fraction]",
+        "G": "covered team-games [games]",
+        "WAR": "centered team wins above replacement [wins]"
+      },
+      "assumptions": [
+        "Replacement contributes 0.206 wins per covered team-game, allocated 57% through ordinary batting exposure and 43% through pitching outs; a complete centered league-season satisfies sum_teams WAR = 0.206 sum_teams G; adding the fixed replacement-win fraction 0.294 makes implied league wins sum to half of both-teams games, explaining small aggregate signed bias but leaving individual-team errors free. The conservation identity is printed math-font and reconstructed here.",
+        "Replacement conservation identity printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Identity fixes total implied wins; individual-team MAE/RMSE still free",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The replacement-credit conservation is the same credit-conservation identity GSE enforces on valuations.",
+        "source_operator": "replacement_0206_conservation",
+        "telemetry": "replacement 0.206 wins/team-game (57% batting/43% pitching outs); sum WAR = 0.206 sum G; +0.294 -> implied wins = half both-teams games; explains small signed bias"
+      }
+    },
+    {
+      "primitive_id": "fixed_war_map_reconstruction",
+      "name": "Fixed WAR map y-hat = 0.294 + WAR/G; credited fraction y = (W+0.5T)/G",
+      "verbatim_quote": "For reconstruction, the predictor and outcome refer to the same completed season",
+      "page": 9,
+      "latex": "y_i=\\frac{W_i+0.5\\,T_i}{G_i},\\qquad \\hat y_i=0.294+\\frac{\\mathrm{WAR}_i}{G_i},\\qquad \\text{error}=162(\\hat y_i-y_i)",
+      "symbol_and_unit_ledger": {
+        "Wi/Li/Ti": "wins/losses/ties [games]",
+        "Gi": "games = Wi+Li+Ti [games]",
+        "yi": "credited winning fraction [dimensionless]",
+        "WARi": "team wins above replacement [wins]",
+        "0.294": "fixed replacement-win fraction",
+        "162": "normalization to wins per 162 games"
+      },
+      "assumptions": [
+        "Credited actual winning fraction is yi = (Wi + 0.5 Ti)/Gi (a tie contributes half a win, Gi = Wi+Li+Ti); the fixed WAR map is y-hat_i = 0.294 + WARi/Gi; for reconstruction predictor and outcome refer to the same completed season, for replay origin-year WAR per origin-year game predicts next season's credited fraction (future games never enter the predictor); primary error is 162(y-hat - y) in credited wins per 162 games. The maps are printed math-font and reconstructed here.",
+        "Credited-fraction and fixed-WAR-map equations printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Per-162 scaling does not fill incomplete WAR or annualize missing contributions",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed runs-to-wins map is the same baseline conversion GSE calibrates against.",
+        "source_operator": "fixed_war_map_reconstruction",
+        "telemetry": "yi=(Wi+0.5Ti)/Gi (tie=half win); y-hat=0.294+WARi/Gi; reconstruction same season, replay origin->next (no future games); error 162(y-hat-y) wins/162"
+      }
+    },
+    {
+      "primitive_id": "run_based_demanding_comparator",
+      "name": "Pythagorean / PythagenPat run-based references are demanding comparators",
+      "verbatim_quote": "Run-based references provide a demanding comparison for team-level reconstruction",
+      "page": 9,
+      "latex": "\\hat y_{\\text{Pyth}}=\\frac{RS^2}{RS^2+RA^2},\\qquad \\hat y_{\\text{PythPat}}=\\frac{RS^{\\gamma}}{RS^{\\gamma}+RA^{\\gamma}},\\ \\gamma=\\big[(RS+RA)/G\\big]^{0.285}",
+      "symbol_and_unit_ledger": {
+        "RS": "runs scored [runs]",
+        "RA": "runs allowed [runs]",
+        "G": "games [games]",
+        "gamma": "PythagenPat exponent (run-environment dependent) [dimensionless]"
+      },
+      "assumptions": [
+        "Run-based references provide a demanding comparison for team-level reconstruction: the exponent-two Pythagorean expectation is RS^2/(RS^2+RA^2), and PythagenPat uses the same form with exponent gamma = [(RS+RA)/G]^0.285 fixed from the published convention (Miller 2007 gives the mathematical foundation); inputs are reconciled unadjusted game-log runs scored/allowed. The Pythagorean forms are printed math-font and reconstructed here.",
+        "Pythagorean/PythagenPat equations printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Exponent 0.285 fixed from published convention; distinct from automatic-runner-adjusted iWAR references",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The run-expectancy win baseline is the same Pythagorean comparator GSE uses against complex ratings.",
+        "source_operator": "run_based_demanding_comparator",
+        "telemetry": "Pythagorean RS^2/(RS^2+RA^2); PythagenPat gamma=[(RS+RA)/G]^0.285 (fixed convention, Miller 2007); reconciled unadjusted game-log RS/RA"
+      }
+    },
+    {
+      "primitive_id": "estimated_intercept_slope",
+      "name": "Estimated conversion: per-predictor intercept + slope (OLS, unclipped)",
+      "verbatim_quote": "We therefore estimate an intercept and slope separately for each nonconstant predictor",
+      "page": 10,
+      "latex": "y_i=\\alpha+\\beta x_i+\\varepsilon_i",
+      "symbol_and_unit_ledger": {
+        "yi": "credited winning fraction [dimensionless]",
+        "xi": "predictor (WAR/game, Pythagorean fraction, run diff/game, prev record)",
+        "alpha": "estimated intercept [win fraction]",
+        "beta": "estimated slope [dimensionless]",
+        "eps_i": "residual"
+      },
+      "assumptions": [
+        "Because a measure's scale or compression could affect error independently of its information, an intercept and slope are estimated separately for each nonconstant predictor: yi = alpha + beta xi + eps_i (OLS, equal training-row weights, unclipped predictions); the WAR predictor is WAR per game, others are Pythagorean/PythagenPat fraction, run differential per game, previous record; the .500 reference stays fixed; every method gets identical training/evaluation rows. The calibration equation is printed math-font and reconstructed here.",
+        "Calibration regression printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Same-season calibration leaves out scored year (later years may train earlier); replay needs >=10 earlier target years + 150 pairs",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The per-method scalar calibration is literally GSE's calibration-map fix for level/scale distortion.",
+        "source_operator": "estimated_intercept_slope",
+        "telemetry": "yi=alpha+beta*xi+eps_i (OLS equal weights, unclipped); WAR predictor=WAR/game; .500 fixed; identical train/eval rows; same-season leave-one-year-out, replay expanding earlier years"
+      }
+    },
+    {
+      "primitive_id": "replay_expanding_window",
+      "name": "Replay calibration: expanding window of strictly earlier target years",
+      "verbatim_quote": "Replay calibration uses an expanding window of strictly earlier completed target years",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Replay calibration uses an expanding window of strictly earlier completed target years; a scored year requires at least ten earlier target years and 150 training pairs (Tashman 2000 multiple chronological test periods); the common evaluation subset is 1,282 pairs in 67 target years, and fixed predictions are rescored on those exact rows so a calibration-attributed change cannot arise from a different team set."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The strictly-earlier expanding window is the same walk-forward leakage prevention GSE enforces.",
+        "source_operator": "replay_expanding_window",
+        "telemetry": "replay expanding window strictly earlier target years; >=10 earlier years + 150 pairs (Tashman 2000); common 1282 pairs/67 target yr; rescore fixed on exact rows"
+      }
+    },
+    {
+      "primitive_id": "calendar_block_5000_draws",
+      "name": "Uncertainty: 5,000 draws of nonoverlapping 5-year calendar blocks (Künsch)",
+      "verbatim_quote": "The primary procedure uses 5,000 draws of nonoverlapping five-year calendar blocks anchored at 1908",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The primary interval procedure uses 5,000 draws of nonoverlapping five-year calendar blocks anchored at 1908; each draw samples the original number of nonempty blocks with replacement and recomputes the paired MAE/RMSE difference; linear 2.5th/97.5th percentiles form the interval; at least ten nonempty blocks required (one-year/ten-year sensitivities retained); block resampling for dependent observations follows Künsch (1989), with sports dependence illustrated by Brill-Yurko-Wyner (2026)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The calendar-block bootstrap is the same dependence-aware inference GSE uses (same as DLS match-bootstrap).",
+        "source_operator": "calendar_block_5000_draws",
+        "telemetry": "5000 draws nonoverlapping 5-yr blocks anchored 1908; sample # nonempty blocks w/ replacement; paired MAE/RMSE diff; 2.5/97.5 percentiles; >=10 blocks; Künsch 1989; Brill-Yurko-Wyner 2026"
+      }
+    },
+    {
+      "primitive_id": "conditional_interval_omissions",
+      "name": "Conditional intervals omit method-development, source-revision, coefficient-fitting uncertainty",
+      "verbatim_quote": "Our intervals condition on the fitted measures, observed inputs and saved calibration coefficients",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The intervals condition on fitted measures, observed inputs and saved calibration coefficients; they omit method-development, source-revision and coefficient-fitting uncertainty, and depend on how well calendar blocks represent historical dependence; 'conditional interval' refers to these fixed-input resampling summaries; provider display precision (one-decimal rounding) is assessed separately via bounded perturbations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The conditional-interval scope honesty is the same uncertainty-scope disclosure GSE requires.",
+        "source_operator": "conditional_interval_omissions",
+        "telemetry": "conditional on fitted measures/inputs/saved coefficients; omit method-development/source-revision/coefficient-fitting uncertainty; block-representation dependent; display precision separate"
+      }
+    },
+    {
+      "primitive_id": "pythagenpat_beats_every_war",
+      "name": "PythagenPat reconstructs records more closely than EVERY WAR measure",
+      "verbatim_quote": "PythagenPat had lower reconstruction error than every WAR measure",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PythagenPat had lower reconstruction error than every WAR measure (MAE 3.263, RMSE 4.122); the exponent-two Pythagorean reference also performed well; observed team runs contain a strong relationship with the completed record, and converting the more elaborate WAR totals does not improve on the best run-based reference in this sample — a clear advantage for iWAR RA within the four-WAR comparison but an even stronger team-record comparator."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The simple-baseline-beats-complex result is literally GSE's Pythagorean-over-WAR lesson.",
+        "source_operator": "pythagenpat_beats_every_war",
+        "telemetry": "PythagenPat recon MAE 3.263/RMSE 4.122 < every WAR; Pythagorean-2 3.381/4.287; elaborate WAR totals don't beat best run-based reference"
+      }
+    },
+    {
+      "primitive_id": "calibration_preserves_reconstruction",
+      "name": "Calibration preserves reconstruction advantage (intercept/slope account for little)",
+      "verbatim_quote": "an intercept and slope account for little of the pooled reconstruction advantage",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "On the original 1,471 reconstruction rows, calibrated MAE was 3.682 (RA), 3.952 (FIP), 4.709 (bWAR), 4.707 (fWAR); RA differences remained -1.027 [-1.336,-0.746] vs bWAR and -1.025 [-1.284,-0.771] vs fWAR; their similarity to the fixed differences indicates an intercept and slope account for little of the pooled reconstruction advantage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The calibration-robust reconstruction advantage is the same level/scale-invariance check GSE runs.",
+        "source_operator": "calibration_preserves_reconstruction",
+        "telemetry": "calibrated recon MAE RA 3.682/FIP 3.952/bWAR 4.709/fWAR 4.707; RA diffs -1.027/-1.025 ~ fixed; intercept/slope account for little"
+      }
+    },
+    {
+      "primitive_id": "replay_sign_flip_identical_rows",
+      "name": "Replay calibration FLIPS RA-fWAR sign on identical rows (conversion effect)",
+      "verbatim_quote": "The change in sign for RA occurs on identical evaluation rows and therefore reflects the estimated conversion",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Replay was more sensitive to conversion: on the 1,282-pair subset the fixed RA-minus-fWAR MAE difference was +0.231 [+0.024,+0.452], but after calibration became -0.148 [-0.295,-0.008]; FIP-minus-fWAR changed from fixed -0.067 to calibrated -0.176 [-0.263,-0.088]; the change in sign for RA occurs on identical evaluation rows and therefore reflects the estimated conversion, not a different team set."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The calibration-induced sign flip is literally GSE's mapping-sensitivity veto (conversion changes the ordering).",
+        "source_operator": "replay_sign_flip_identical_rows",
+        "telemetry": "replay 1282 pairs: RA-fWAR fixed +0.231 [+0.024,+0.452] -> calibrated -0.148 [-0.295,-0.008] (SIGN FLIP); FIP-fWAR -0.067 -> -0.176; identical rows -> conversion effect"
+      }
+    },
+    {
+      "primitive_id": "era_advantage_early_history",
+      "name": "Reconstruction advantage most pronounced in early history (1908-1945 largest)",
+      "verbatim_quote": "The positive reconstruction result is therefore most pronounced in the earlier history represented by this sample",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The pooled reconstruction advantage was uneven across periods: 1908-1945 (563 rows) gave RA-bWAR -1.525 / RA-fWAR -1.632 (largest), while the contemporary common sample (240 rows, eight years) gave much smaller differences (-0.058 / -0.046); the positive reconstruction result is most pronounced in the earlier history; era groups have too few five-year blocks for separate intervals, so they are descriptive."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The era-dependent effect size is the same historical-coverage sensitivity GSE reports.",
+        "source_operator": "era_advantage_early_history",
+        "telemetry": "1908-1945 (563 rows) RA-bWAR -1.525/RA-fWAR -1.632 (largest); 2015-2025 (240 rows) -0.058/-0.046 (smallest); advantage early-history; era groups <10 blocks descriptive"
+      }
+    },
+    {
+      "primitive_id": "broader_bwar_smaller_magnitude",
+      "name": "Broader 118-year bWAR comparison retains advantage at smaller magnitude",
+      "verbatim_quote": "the iWAR advantage over bWAR persisted in the expanded reconstruction, but its magnitude decreased",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The secondary comparison added history the common fWAR requirement excluded (2,554 reconstruction rows = 1,471 original + 1,068 from 39 fWAR-missing years + 15 otherwise eligible); the iWAR advantage over bWAR persisted but its magnitude decreased (RA MAE 3.755 vs bWAR 4.452, difference -0.697 [-0.990,-0.443]); the larger pooled advantage arose mainly from adding different historical observations while preserving the original overlap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The coverage-dependent effect attenuation is the same sample-membership honesty GSE enforces.",
+        "source_operator": "broader_bwar_smaller_magnitude",
+        "telemetry": "secondary 2554 rows (1471+1068 missing-fWAR+15); RA 3.755 vs bWAR 4.452 (-0.697 [-0.990,-0.443]); advantage persists smaller; added history drives pooled gap"
+      }
+    },
+    {
+      "primitive_id": "mse_accounting_identity",
+      "name": "MSE accounting identity: MSE_WAR - MSE_R = mean(d^2) + 2*mean(eR*d)",
+      "verbatim_quote": "The first term measures squared distance between the predictions",
+      "page": 13,
+      "latex": "\\mathrm{MSE}_{\\mathrm{WAR}}-\\mathrm{MSE}_{R}=\\mathrm{mean}(d^2)+2\\,\\mathrm{mean}(e_R\\,d),\\qquad e_{\\mathrm{WAR}}=e_R+d",
+      "symbol_and_unit_ledger": {
+        "eR": "run-based (PythagenPat) prediction error [wins/162]",
+        "d": "WAR prediction minus run-based prediction [wins/162]",
+        "eWAR": "WAR prediction error [wins/162]",
+        "mean(d^2)": "squared prediction distance",
+        "2 mean(eR d)": "error cross-term (offset/reinforce)"
+      },
+      "assumptions": [
+        "Letting eR be the run-based prediction error and d the WAR-minus-run-based prediction (wins per 162), eWAR = eR + d gives MSE_WAR - MSE_R = mean(d^2) + 2 mean(eR d); the first term measures squared distance between predictions, the second whether that distance offsets or reinforces run-based errors; every method had a negative cross-term partly offsetting its distance; a causal allocation to WAR components requires a complete aligned provider component ledger (unavailable). The identity is printed math-font and reconstructed here.",
+        "MSE accounting identity printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Exact identity; causal component allocation needs aligned provider ledger",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The error-decomposition identity is the same bias-distance accounting GSE uses to locate an advantage.",
+        "source_operator": "mse_accounting_identity",
+        "telemetry": "eWAR=eR+d -> MSE_WAR-MSE_R=mean(d^2)+2mean(eR*d); distance + cross-term; all negative cross-term; RA excess 4.664 = distance 7.050 + cross -2.387; no causal component allocation"
+      }
+    },
+    {
+      "primitive_id": "conserving_pitching_fielding_transfer",
+      "name": "Conserving pitching-fielding transfer: team total unchanged by allocation",
+      "verbatim_quote": "an additional run assigned to fielding is subtracted from pitching credit, with corresponding centering",
+      "page": 27,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The distinction is exact for a conserving pitching-fielding transfer: in the RA implementation an additional run assigned to fielding is subtracted from pitching credit with corresponding centering, so the team total is unchanged; any team-win loss therefore gives the same answer for all such allocations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The conserving transfer is the same attribution-identifiability limit GSE recognizes (team total invariant to credit split).",
+        "source_operator": "conserving_pitching_fielding_transfer",
+        "telemetry": "RA: run to fielding subtracted from pitching credit + centering; team total unchanged; team-win loss identical for all such allocations"
+      }
+    },
+    {
+      "primitive_id": "team_reconstruction_attribution_limit",
+      "name": "Improved team reconstruction cannot validate individual credit allocation",
+      "verbatim_quote": "This is a direct limit on what improved team reconstruction can establish",
+      "page": 27,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because conserving transfers leave the team total unchanged, this is a direct limit on what improved team reconstruction can establish about individual attribution; richer defensive observations, carefully chosen reference players, and studies with known simulated responsibility address different parts of the attribution problem; improving outcome prediction can alter the variation assigned to individual responsibility (Judge 2025)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The team-vs-individual attribution limit is literally GSE's credit-identifiability veto.",
+        "source_operator": "team_reconstruction_attribution_limit",
+        "telemetry": "team reconstruction can't establish individual credit (conserving transfers); needs richer defense/reference players/simulated responsibility; Judge 2025 outcome prediction alters responsibility variation"
+      }
+    },
+    {
+      "primitive_id": "neural_worse_than_ridge",
+      "name": "Neural ensemble WORSE than ridge: replay RMSE 10.163 vs 9.946 (+0.217)",
+      "verbatim_quote": "The neural ensemble had larger next-season RMSE than the development-selected Ridge AUGMENTED comparator",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The neural ensemble had larger next-season RMSE than the development-selected Ridge AUGMENTED comparator: 10.163 vs 9.946 credited wins per 162 on 1,552 pairs (difference +0.217, conditional interval [0.015,0.474]); ridge also had smaller reconstruction error (4.282 neural vs 3.848 ridge same-season, +0.434 [0.340,0.533]); the neural-Ridge ordering reversed on a smaller 504-pair provider-matched descriptive subset (no interval transferred)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The neural-loses-to-ridge result is literally GSE's tabular-comparator necessity (Grinsztajn 2022).",
+        "source_operator": "neural_worse_than_ridge",
+        "telemetry": "neural replay RMSE 10.163 vs Ridge AUG 9.946 (+0.217 [0.015,0.474], 1552 pairs); recon 4.282 vs 3.848 (+0.434); 504-pair subset ordering reversed (descriptive); amended after constant-detector defect"
+      }
+    },
+    {
+      "primitive_id": "tabular_comparators_necessary",
+      "name": "Strong tabular comparators necessary when evaluating neural models",
+      "verbatim_quote": "Strong tabular comparators are also necessary when evaluating neural models",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Strong tabular comparators are necessary when evaluating neural models (Grinsztajn, Oyallon and Varoquaux 2022, 'Why do tree-based models still outperform deep learning on typical tabular data?'); the learned study compared a two-hidden-layer neural ensemble against ridge, histogram gradient boosting and saved scalar/run baselines, with pre-1970 development selection and annual fitting on strictly earlier target years."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The tabular-baseline requirement is the same model-complexity discipline GSE enforces.",
+        "source_operator": "tabular_comparators_necessary",
+        "telemetry": "Grinsztajn-Oyallon-Varoquaux 2022 (trees vs deep tabular); neural ensemble vs ridge/hist-GB/scalar baselines; pre-1970 dev selection; annual fit strictly earlier years"
+      }
+    },
+    {
+      "primitive_id": "name_target_report_conversion",
+      "name": "Credible WAR assessment: name the target, report the conversion, show the observations",
+      "verbatim_quote": "A credible assessment of WAR should therefore name the target, report the conversion and show which historical observations support the conclusion",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The conclusion: iWAR RA reconstructs historical team records more closely (~22% MAE reduction), most persisting after separate conversion; broader bWAR retains a smaller magnitude; next-season replay gives a different result (fixed iWAR FIP ~ fWAR, calibration changes rankings); a credible assessment of WAR should therefore name the target, report the conversion and show which historical observations support the conclusion."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The name-target-report-conversion-show-observations doctrine is literally GSE's evaluation-honesty rule.",
+        "source_operator": "name_target_report_conversion",
+        "telemetry": "name the target + report the conversion + show supporting historical observations; reconstruction ~22% persists; replay different ordering; coverage changes effect"
+      }
+    },
+    {
+      "primitive_id": "individual_credit_separate_question",
+      "name": "Individual credit allocation left as a separate empirical question",
+      "verbatim_quote": "They leave the allocation of individual credit as a separate empirical question",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The comparisons establish where iWAR improves team-level accounting and provide a reproducible set of aggregate results, but leave the allocation of individual credit as a separate empirical question; individual performance has no observed ground-truth WAR label, and the bWAR agreement analysis (RA correlation 0.934, MAE 0.406 wins; FIP 0.916, MAE 0.449) documents broad agreement while leaving individual correctness open."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The individual-credit humility is the same no-ground-truth-label honesty GSE attaches to player valuation.",
+        "source_operator": "individual_credit_separate_question",
+        "telemetry": "team accounting improved; individual credit separate empirical question; no ground-truth WAR label; bWAR agreement RA corr 0.934/MAE 0.406, FIP 0.916/0.449"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "iwarhistory2026_trace",
+      "think": "The retrocausal genealogy of this paper is the matched historical benchmark of wins above replacement. Michael Doane, an independent researcher in Cary, North Carolina, posting to arXiv in 2026, introduces iWAR, a system estimating wins above replacement from historical Retrosheet play-by-play records in runs-allowed and fielding-independent pitching versions, and compares it against Baseball-Reference WAR, FanGraphs WAR, and run-based alternatives on identical team-seasons. The work sits in the lineage of Baumer, Jensen, and Matthews's openWAR with its conservation-of-runs framework and resampling uncertainty, Brill and Wyner's Grid WAR for nonlinear starting-pitcher valuation, Jensen, Shirley, and Wyner's Bayesball fielding model, and the broader cross-era Full House Modeling, alongside Shmueli's distinction between description and prediction, Gneiting's forecast-evaluation principles, Künsch's block bootstrap for dependent observations, and Grinsztajn's demonstration that tree-based models still beat deep learning on tabular data. The recursive theory of mind is the WAR accounting pipeline and its two evaluation targets. Batting weights come from same-season run expectancy over base-out states, an event's run value being the runs scored plus the change in expected runs remaining; pitching is either runs-allowed, expected runs over actual outs minus charged runs with park and defense adjustment, or fielding-independent, the numerator thirteen home runs plus three walks and hit batters minus two strikeouts; replacement contributes zero point two zero six wins per team-game so that centered league WAR sums to zero point two zero six times games, and the fixed map converts WAR per game to a winning fraction by adding zero point two nine four. The crucial conceptual move is to separate reconstruction, where predictor and outcome refer to the same completed season, from replay, where origin-year WAR predicts the next season's record, because a measure that fits a completed season closely may preserve information that is weakly persistent into the following year. Cross-layer veto adjudication is the matched results and their sensitivity to conversion and coverage. On the common sample of one thousand four hundred seventy-one team-seasons across seventy-nine years, iWAR RA reconstructs the completed season with mean absolute error three point six nine five credited wins per one hundred sixty-two games versus four point seven two four for bWAR and four point seven four four for fWAR, roughly a twenty-two percent reduction that survives scalar calibration almost unchanged. Yet PythagenPat reconstructs records more closely than every WAR measure, and next-season replay reverses the story: the fixed RA-minus-fWAR difference is positive but flips negative after calibration on identical rows, so the conversion itself changes the ordering. The advantage is concentrated in early history and shrinks when the bWAR comparison expands to one hundred eighteen years, and a bounded learned-model study finds the neural ensemble worse than the development-selected ridge comparator, with the ordering even reversing on a small descriptive subset. The implementation invariants map directly onto GSE. The run-expectancy batting weights and event run-value decomposition are GSE's base-out expected-points kernel; the reconstruction-versus-replay separation is GSE's description-versus-prediction evaluation discipline; the per-method intercept-and-slope calibration is GSE's calibration-map fix; and the five-thousand-draw calendar-block bootstrap is GSE's dependence-aware inference, the same lesson as the DLS match-clustered bootstrap and the field-hockey small-sample shrinkage already in the corpus. The conserving pitching-fielding transfer, which leaves the team total unchanged, is GSE's attribution-identifiability limit: improved team reconstruction cannot validate individual credit, and the paper honestly leaves individual allocation as a separate empirical question with no ground-truth WAR label. The outputs are team win reconstructions from play-by-play data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The accounting and uncertainty results make the benchmark rigorous and bounded. The exact identity decomposing the WAR-versus-run-based mean squared error into a squared prediction distance plus an error cross-term locates iWAR RA's advantage in its closer proximity to the observed-run expectation, with every method's negative cross-term partly offsetting its distance; but a causal allocation among parks, replacement, batting, and defense is impossible without a complete aligned provider component ledger. The conditional intervals deliberately omit method-development, source-revision, and coefficient-fitting uncertainty, provider one-decimal rounding is propagated as a separate bound, and era groups lack enough five-year blocks for resolved intervals, so the pooled interval combines observed history rather than yielding five separate era conclusions. The caveats close the account with the data-integrity and scope limits that define the paper's honesty. Record discrepancies between event files and game logs are retained without inferred repair, missing provider values stay missing with no imputed replacement, and FanGraphs' retroactive Statcast revisions mean current-vintage provider WAR may differ from archived season-end values that were unavailable; the methods were developed before the expanded benchmark so project-wide independence cannot be claimed, and the learned-model study was amended after a constant-detector numerical defect, making it amended historical evidence rather than an untouched holdout. The invariant for GSE is to carry the run-expectancy valuation, the reconstruction-versus-replay target separation, the scalar-calibration sensitivity check, the calendar-block inference, and the conserving-transfer attribution limit while recording the missing-data honesty, the provider-vintage caution, and the doctrine that a credible assessment must name the target, report the conversion, and show which historical observations support the conclusion, treating simple run-based baselines as demanding comparators that elaborate WAR totals do not automatically beat. The replay itself is bounded: roster turnover, aging, injuries and player-level projections are absent, and the chronological scalar fit prevents later outcomes from entering the fit without reconstructing the information actually available to an analyst at each historical date, so a genuine as-of-date forecast study would still require archived inputs and a clearly defined forecast date.",
+      "retrocausal_genealogy": "Matched historical benchmark of WAR. Michael Doane, Independent Researcher Cary NC; ORCID 0009-0003-0521-8981; arXiv 2026. iWAR from Retrosheet play-by-play (RA + FIP versions) vs bWAR/fWAR/run-based on identical team-seasons. Lineage: openWAR (Baumer-Jensen-Matthews 2015 JQAS, conservation-of-runs + resampling), Grid WAR (Brill-Wyner 2024 JQAS, nonlinear pitcher), Bayesball (Jensen-Shirley-Wyner 2009 AOAS), Full House Modeling (Yan 2025 cross-era); Shmueli 2010 (explain/predict), Gneiting 2011 (forecast eval), Künsch 1989 (block bootstrap), Grinsztajn-Oyallon-Varoquaux 2022 (trees vs deep tabular), Miller 2007 (Pythagorean derivation). Code github MRDOANE/iwar-historical-benchmark, Zenodo 10.5281/zenodo.23455100.",
+      "theory_of_mind": "Batting weights from same-season run expectancy (base-out states); event run value = runs scored + change in expected runs remaining. RA pitching = expected runs over actual outs - charged runs (league env + park factor; fielding support subtracted = assigned to fielders). FIP numerator 13*HR+3*(BB+HBP)-2*K (incl IBB/inside-park HR; league constant; no infield flies/park/leverage). Replacement 0.206 wins/team-game (57% batting/43% pitching); sum WAR=0.206 sum G; +0.294 -> implied wins half both-teams games. Credited yi=(Wi+0.5Ti)/Gi; fixed map y-hat=0.294+WARi/Gi; error 162(y-hat-y). Pythagorean RS^2/(RS^2+RA^2); PythagenPat gamma=[(RS+RA)/G]^0.285. Calibration yi=alpha+beta*xi (OLS unclipped); same-season leave-one-year-out, replay expanding strictly-earlier (>=10 years+150 pairs). 5000 draws 5-yr calendar blocks anchored 1908 (>=10 blocks). MSE_WAR-MSE_R=mean(d^2)+2mean(eR*d). Equations math-font reconstructed.",
+      "cross_layer_veto": "Common 1471 team-seasons/79 yr/1441 pairs: RA recon MAE 3.695 vs bWAR 4.724/fWAR 4.744 (-21.8%/-22.1%), paired -1.030/-1.049 CI [-1.367,-0.706]/[-1.398,-0.725]; calibration preserves (RA diffs -1.027/-1.025). PythagenPat beats EVERY WAR (3.263/4.122). Replay sign-flip: RA-fWAR fixed +0.231 -> calibrated -0.148 on identical 1282 rows (conversion effect). Era: 1908-1945 -1.525 largest, 2015-2025 -0.058 smallest; broader 118-yr bWAR smaller (-0.697). Neural WORSE than ridge (replay 10.163 vs 9.946, +0.217 [0.015,0.474]; 504-pair subset reversed). Conserving pitching-fielding transfer -> team total invariant -> team reconstruction can't validate individual credit (no ground-truth WAR label; bWAR agreement RA corr 0.934). Missing retained no repair; FanGraphs Statcast retroactive 2016; conditional intervals omit method-dev/source-revision/coeff-fitting; amended after constant-detector defect. Doctrine: name target, report conversion, show observations. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A matched historical benchmark of wins above replacement introduces iWAR (from Retrosheet play-by-play, in runs-allowed and fielding-independent versions) and shows it reconstructs completed team records ~22% more accurately than bWAR/fWAR on 1,471 common team-seasons, an advantage that survives scalar calibration but is beaten by the simpler PythagenPat run-based reference, reverses under next-season replay calibration on identical rows, concentrates in early history, and shrinks with broader coverage; a bounded learned-model study finds neural ensembles worse than ridge, and the paper's central doctrine is that a credible WAR assessment must name the target (reconstruction vs replay), report the conversion, and show which historical observations support the conclusion, while conserving pitching-fielding transfers leave individual credit allocation a separate empirical question.",
+  "gsi_mapping": "GSI treats iWAR (Retrosheet PBP; RA + FIP) vs bWAR/fWAR/run-based on identical rows (common 1471 team-seasons/79 yr/1441 pairs; secondary 2554/118 yr); batting weights from run expectancy (base-out), event run value = runs scored + change in expected runs remaining; RA = expected runs over outs - charged (park + defense); FIP 13*HR+3*(BB+HBP)-2*K; replacement 0.206 wins/team-game (57/43), sum WAR=0.206 sum G; yi=(W+0.5T)/G, fixed map y-hat=0.294+WAR/G, error 162(y-hat-y); Pythagorean RS^2/(RS^2+RA^2), PythagenPat gamma=[(RS+RA)/G]^0.285; calibration yi=alpha+beta*xi (OLS), same-season leave-one-year-out / replay expanding strictly-earlier (>=10 yr+150 pairs, 1282 pairs); 5000 draws 5-yr calendar blocks anchored 1908 (Künsch, >=10 blocks), conditional intervals omit method-dev/source-revision/coeff-fitting; RA recon MAE 3.695 vs 4.724/4.744 (~22%, paired -1.030/-1.049), calibration preserves; PythagenPat beats every WAR (3.263); replay RA-fWAR sign-flip +0.231->-0.148 identical rows; era 1908-1945 -1.525 / 2015-2025 -0.058; broader bWAR -0.697 smaller; neural worse ridge (10.163 vs 9.946, +0.217 [0.015,0.474]); MSE_WAR-MSE_R=mean(d^2)+2mean(eR*d); conserving pitching-fielding transfer team-total invariant -> individual credit not identifiable (no ground-truth label, bWAR corr 0.934); missing no repair, FanGraphs Statcast retroactive; name target/report conversion/show observations; equations math-font reconstructed.",
+  "gse_mapping": "GSE lifts the run-expectancy base-out EP kernel and event run-value decomposition, the reconstruction-versus-replay (description-vs-prediction) target separation, the per-method scalar calibration as its calibration-map fix with mapping-sensitivity sign-flip awareness, the calendar-block bootstrap as its dependence-aware inference (same as DLS match-bootstrap and field-hockey small-sample), the Pythagorean/PythagenPat simple-baseline comparator that elaborate WAR does not automatically beat, and the conserving-transfer attribution-identifiability limit (team reconstruction cannot validate individual credit); treats the missing-data no-repair policy, provider-vintage caution, conditional-interval scope, and amended-holdout honesty as data-integrity discipline, and the name-the-target/report-the-conversion/show-the-observations doctrine as its evaluation-honesty rule; all outputs are team win reconstructions from play-by-play data, never sportsbook lines, and individual credit remains a separate empirical question with no ground-truth label."
+}

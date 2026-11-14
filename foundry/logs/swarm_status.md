@@ -614,3 +614,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 05:37:03 | COMPLETE | 1b092d89345382c4 | primitives=32 think_words=908
 - 2026-11-14 05:37:51 | CLAIMED | 28506884c90c6a09 | worker=hermes-inline shard03 file=2026 - A Fairness Audit of the Duckworth-Lewis-Stern Method Format-Specific and Gender-Differential Bias, with an Interpretable Calibration Layer f - Roy.pdf
 - 2026-11-14 05:44:38 | COMPLETE | 28506884c90c6a09 | primitives=32 think_words=871
+- 2026-11-14 05:45:33 | CLAIMED | 35e71e0c8a612390 | worker=hermes-inline shard03 file=2026 - Comparing wins above replacement across baseball history - Doane.pdf
+- 2026-11-14 05:52:09 | COMPLETE | 35e71e0c8a612390 | primitives=32 think_words=904
