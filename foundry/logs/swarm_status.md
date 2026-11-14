@@ -528,3 +528,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 23:57:13 | COMPLETE | 7e5b2d626cb5c46f | primitives=28 think_words=862
 - 2026-11-14 00:06:28 | COMPLETE | d38c2cd65c3f310d | primitives=18 think_words=859
 - 2026-11-14 00:12:14 | COMPLETE | 2b993f18a6c6a83d | primitives=15 think_words=850
+- 2026-11-14 00:21:25 | CLAIMED | 353dff3a66c4be81 | worker=hermes-inline shard03 file=2017 - International Journal of Computer Science in Sport A Logistic Regression_Markov Chain Model for American College Football.pdf
+- 2026-11-14 00:30:54 | COMPLETE | 353dff3a66c4be81 | primitives=23 think_words=874
