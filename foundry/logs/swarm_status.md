@@ -502,3 +502,17 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 22:40:30 | COMPLETE | 0cf53b76efe80564 | primitives=22 think_words=1011
 - 2026-11-13 22:44:20 | CLAIMED | 3db272c80f5e185e | worker=hermes-inline file=2017 Position importance in NCAA football - Zachary Knowlton and Gilbert W. Fellingham.pdf
 - 2026-11-13 22:49:20 | COMPLETE | 3db272c80f5e185e | primitives=22 think_words=989
+- 2026-11-13 22:57:40 | SCAN | 64f765ba0a849b1d | hand-delivered Downloads ingest tier=A domain=football stub=False shard=6 file=ops-2026-NFL-Rulebook-FINAL.pdf
+- 2026-11-13 22:57:40 | SCAN | aad3618821cc9e26 | hand-delivered Downloads ingest tier=A domain=psych stub=False shard=a file=mind-gym-pdf-1.pdf
+- 2026-11-13 22:57:40 | SCAN | 7e5b2d626cb5c46f | hand-delivered Downloads ingest tier=A domain=psych stub=False shard=7 file=Dr-BGR-ISBN-53-Sports-Psychology.pdf
+- 2026-11-13 22:57:40 | SCAN | e2e0f698eee97fdc | hand-delivered Downloads ingest tier=A domain=psych stub=False shard=e file=preview-9781135284923_A25776191.pdf
+- 2026-11-13 22:57:40 | SCAN | 4f750a0c8577fe9a | hand-delivered Downloads ingest tier=A domain=psych stub=False shard=4 file=Chapter-1-Mental-Game-of-Football.pdf
+- 2026-11-13 22:57:40 | SCAN | 2b993f18a6c6a83d | hand-delivered Downloads ingest tier=A domain=football stub=False shard=2 file=_OceanofPDF.com_USA_Today_Special_Edition_-_NFL_Draft_Guide_2026_-_USA_Today_Special_Edition.pdf
+- 2026-11-13 22:57:40 | SCAN | c3eb423c8b9f92fc | hand-delivered Downloads ingest tier=C domain=football stub=True shard=c file=(_PDF_EPUB)-&gt;DOWNLOAD Split Field Coverages_ Understanding Split Field Coverages.pdf
+- 2026-11-13 22:57:40 | SCAN | ed664ef4306ddb63 | hand-delivered Downloads ingest tier=A domain=football stub=False shard=e file=Football+Coaching+Guide.pdf
+- 2026-11-13 22:57:40 | SCAN | 527e4d714a574106 | hand-delivered Downloads ingest tier=C domain=football stub=True shard=5 file=(PDF)FULL DOWNLOAD Match Quarters_ A Modern Guidebook to Split-Field Coverages.pdf
+- 2026-11-13 22:58:34 | CLAIMED | d38c2cd65c3f310d | override DELEGATED_GCP->PENDING: hand-delivered, Garrett ordered local extraction
+- 2026-11-13 22:58:35 | REFUSAL_ACCEPTED | c3eb423c8b9f92fc | INSUFFICIENT_SOURCE_ACCESS: INSUFFICIENT_SOURCE_ACCESS: the delivered PDF is a download-page placeholder, not the source book. It is 2 pages / 156 characters containing only the title and the instruction 'COPY LINK IN DESCRIPTIO
+- 2026-11-13 22:58:35 | REFUSAL_ACCEPTED | 527e4d714a574106 | INSUFFICIENT_SOURCE_ACCESS: INSUFFICIENT_SOURCE_ACCESS: the delivered PDF is a download-page placeholder, not the source book. It is 1 page / 60 characters containing only the title 'Match Quarters: A Modern Guidebook to Split-F
+- 2026-11-13 23:04:38 | CLAIMED | 64f765ba0a849b1d | worker=hermes-inline targeted hand-delivered file=ops-2026-NFL-Rulebook-FINAL.pdf
+- 2026-11-13 23:04:38 | COMPLETE | 64f765ba0a849b1d | primitives=26 think_words=992

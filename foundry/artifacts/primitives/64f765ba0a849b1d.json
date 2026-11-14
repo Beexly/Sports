@@ -1,0 +1,642 @@
+{
+ "book_id": "64f765ba0a849b1d",
+ "title": "2026 Official Playing Rules of the National Football League",
+ "author": "National Football League (Roger Goodell, Commissioner)",
+ "year": 2026,
+ "source_pdf": "C:/Users/Garrett/Downloads/ops-2026-NFL-Rulebook-FINAL.pdf",
+ "source_note": "2026 NFL Official Playing Rules, 91 pages, full read via pymupdf. Domain football (catalog correct). The League's constitutional constraint document; opens with 2026 rules changes 6-1-3 (kickoff setup-zone alignment), 6-1-5 (touchback spot when kicking from the 50), 6-1-6 (onside kick declarable at any time), 19-2 (League consult on flagrant disqualification). Rule ontology, not a statistical model: primitives formalized as value functions, predicates, constants, and state-machine transitions; pure definitions use latex=''. 24 clean verbatim quotes verified (curly-quote/ligature folding, line-break de-hyphenation). Key invariants: field 360x160 ft (120 yd, 10-yd end zones, 53.33 yd wide, hash 70'9\"); ball prolate spheroid 12.5-13.5 psi 14-15 oz; scoring TD 6/FG 3/Safety 2/Try 1-2; 4-down series, line-to-gain min(snap+10,goal); possession = control+2 feet+act common to game; impetus decides safety vs touchback (+momentum exception); 60 min=4x15, halftime 13; 40/25 play clock; two-minute warning; 10-sec runoff never vs defense; FG clock cap 5 s; intentional grounding + pocket/LOS exception; 5-yard chuck zone; ineligible downfield 1-yd buffer; 2026 dynamic kickoff landing zone (receiving 20-to-goal), setup zone (35-30), touchback 20 (landed LZ) vs 35 (direct), kickoff-from-50 -> 20; onside anytime; OT both-possess unless opening safety, 10 min regular (can tie) / 15 min postseason (continues). No sportsbook lines used as model inputs.",
+ "domain": "football",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "field_dimensions",
+   "name": "Playing field dimensions and geometry",
+   "verbatim_quote": "The game shall be played upon a rectangular field, 360 feet in length and 160 feet in width.",
+   "page": 1,
+   "latex": "L_{\\text{field}}=360\\ \\text{ft}=120\\ \\text{yd},\\quad W_{\\text{field}}=160\\ \\text{ft}=53\\tfrac{1}{3}\\ \\text{yd};\\quad \\text{goal lines }10\\ \\text{yd from end lines};\\quad \\text{hash }70'9''\\ \\text{inbounds}",
+   "symbol_and_unit_ledger": {
+    "L_field": "field length [ft/yd]",
+    "W_field": "field width [ft/yd]",
+    "hash": "inbounds hash distance from sideline [ft]"
+   },
+   "assumptions": [
+    "The field of play is 100 yd between goal lines plus two 10-yd end zones",
+    "Inbounds hashes are 70 ft 9 in from each sideline (NFL), narrower than college 60 ft"
+   ],
+   "breakdown_regime": "The geometry fixes the state space: 120 yd total length, 53.33 yd width, hash width 70'9\". The narrow NFL hash compresses the boundary-to-hash spacing, changing spacing geometry for every play.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE field-geometry constant layer IS this field spec: the engine's spatial state space is bounded by the 120x53.33-yd field with 70'9\" hashes, the fixed geometry that every formation, route, and Voronoi zone is computed within. GSI: fixed spatial domain constants bounding the state space.",
+    "source_operator": "field_dimensions",
+    "telemetry": "field 360x160 ft; goal lines 10 yd; hash 70'9\"; end zones 10 yd"
+   }
+  },
+  {
+   "primitive_id": "ball_specification",
+   "name": "The ball: prolate spheroid, pressure, mass",
+   "verbatim_quote": "It shall have the form of a prolate spheroid",
+   "page": 2,
+   "latex": "\\text{prolate spheroid};\\quad P\\in[12.5,13.5]\\ \\text{psi};\\quad m\\in[14,15]\\ \\text{oz};\\quad a_{\\text{long}}\\in[11,11.25]\\ \\text{in};\\quad C_{\\text{long}}\\in[28,28.5]\\ \\text{in},\\ C_{\\text{short}}\\in[21,21.25]\\ \\text{in}",
+   "symbol_and_unit_ledger": {
+    "P": "inflation pressure [psi]",
+    "m": "ball mass [oz]",
+    "a_long": "long axis length [in]",
+    "C_long/C_short": "long/short circumference [in]"
+   },
+   "assumptions": [
+    "The ball is a Wilson prolate spheroid, inflated 12.5-13.5 psi, 14-15 oz",
+    "The Referee is sole judge of compliance; a League-approved inflation device is used"
+   ],
+   "breakdown_regime": "The prolate spheroid shape governs aerodynamics (spiral vs wobble) and bounce randomness; pressure within the 12.5-13.5 psi band affects grip and flight. Out-of-spec balls are a measurable equipment edge.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE ball-physics constant layer IS this ball spec: the engine's projectile and fumble-bounce models use the prolate-spheroid geometry, mass, and pressure band as fixed physical parameters governing flight, grip, and irregular bounce. GSI: fixed physical-object parameters for projectile and bounce dynamics.",
+    "source_operator": "ball_specification",
+    "telemetry": "prolate spheroid; 12.5-13.5 psi; 14-15 oz; long axis 11-11.25 in"
+   }
+  },
+  {
+   "primitive_id": "possession_predicate",
+   "name": "Catch/possession: control + two feet + act common to the game",
+   "verbatim_quote": "a player (a) must have complete control of the ball with his hand(s) or arm(s) and (b) have both feet or any other part of his body, other than his hands, completely on the ground inbounds",
+   "page": 3,
+   "latex": "\\text{Possession}=(a)\\ \\text{control}\\ \\land\\ (b)\\ \\text{two feet/body inbounds}\\ \\land\\ (c)\\ \\text{act common to the game (or time to do so)}",
+   "symbol_and_unit_ledger": {
+    "control": "complete control with hands/arms [binary]",
+    "inbounds": "both feet or body part down inbounds [binary]",
+    "act": "football move (extend, step, tuck, ward off) [binary]"
+   },
+   "assumptions": [
+    "All three of (a) control, (b) inbounds, (c) act common to the game must be satisfied",
+    "Movement of the ball does not automatically mean loss of control; the player must survive the ground if (c) not yet done"
+   ],
+   "breakdown_regime": "The conjunction is the legal completion predicate; failing any clause (e.g. ground contact before (c)) negates possession. The engine's catch判定 must enforce all three, not just control+feet.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE completion-predicate gate IS this possession rule: the engine's catch/interception判定 enforces the three-clause conjunction (control AND inbounds AND football move/survive-ground), the legal predicate that decides complete vs incomplete in every pass simulation. GSI: multi-clause conjunction predicate gating a state transition.",
+    "source_operator": "possession_predicate",
+    "telemetry": "control + 2 feet + act common to game; survive-the-ground; heel-toe inbounds"
+   }
+  },
+  {
+   "primitive_id": "series_of_downs",
+   "name": "Series of downs: four downs to the line to gain",
+   "verbatim_quote": "A series of downs is the four consecutive charged scrimmage downs allotted to the offensive team during which it must advance the ball to a yard line called \"the line to gain\" in order to retain possession.",
+   "page": 3,
+   "latex": "\\text{series}=\\{d_1,d_2,d_3,d_4\\};\\quad \\text{retain possession}\\iff \\text{ball reaches }L_{\\text{gain}}\\text{ within 4 charged downs}",
+   "symbol_and_unit_ledger": {
+    "d_i": "charged scrimmage down i [ordinal]",
+    "L_gain": "line to gain [yard line]"
+   },
+   "assumptions": [
+    "A series is four consecutive charged scrimmage downs",
+    "A down nullified by penalty or with a change of possession is not a charged down"
+   ],
+   "breakdown_regime": "The four-down constraint is the core possession-renewal state machine; failure on fourth down transfers possession. The engine's drive model is a four-trial renewal process gated by the line to gain.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE down-and-distance state machine IS this series rule: the engine models a drive as a four-trial possession-renewal process where reaching the line to gain resets the series and failure on fourth down transfers possession, the core drive state machine. GSI: bounded-trial renewal process with success-reset and failure-transfer.",
+    "source_operator": "series_of_downs",
+    "telemetry": "4 charged downs; line to gain; possession renewal; fourth-down transfer"
+   }
+  },
+  {
+   "primitive_id": "line_to_gain",
+   "name": "Line to gain: 10 yards, or goal line if closer",
+   "verbatim_quote": "The line to gain is the spot 10 yards in advance of the spot of the snap that starts a series, except when a goal line is less than 10 yards from this spot.",
+   "page": 3,
+   "latex": "L_{\\text{gain}}=\\min(\\text{snap}+10\\ \\text{yd},\\ \\text{opponent goal line})",
+   "symbol_and_unit_ledger": {
+    "snap": "spot of the snap starting the series [yard line]",
+    "L_gain": "line to gain [yard line]"
+   },
+   "assumptions": [
+    "The line to gain is 10 yards ahead of the series-start snap",
+    "Inside the 10, the goal line becomes the line to gain (goal-to-go)"
+   ],
+   "breakdown_regime": "The min() captures goal-to-go: inside the opponent's 10 the line to gain collapses to the goal line, so 'first down' and 'touchdown' coincide. The engine must handle this red-zone degeneracy.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE line-to-gain computation IS this rule: the engine computes the line to gain as min(snap+10, goal line), handling the goal-to-go degeneracy inside the 10 where first-down and touchdown coincide, the red-zone state collapse. GSI: clipped target distance with terminal-boundary degeneracy.",
+    "source_operator": "line_to_gain",
+    "telemetry": "snap+10 yd; goal-to-go inside 10; min() clip"
+   }
+  },
+  {
+   "primitive_id": "forward_progress",
+   "name": "Forward progress: spot where advance ends",
+   "verbatim_quote": "The forward progress of a runner or airborne receiver is the point at which his advance toward his opponent's goal ends and is the spot at which the ball is declared dead by rule",
+   "page": 3,
+   "latex": "\\text{spot}=\\max_{t}\\ \\text{ball forward position before being driven back};\\quad \\text{dead at forward progress, not where pushed back}",
+   "symbol_and_unit_ledger": {
+    "forward progress": "furthest advance point [yard line]"
+   },
+   "assumptions": [
+    "Forward progress is where the advance ends, irrespective of being pushed/carried backward",
+    "The ball is dead at that spot by rule"
+   ],
+   "breakdown_regime": "Forward progress fixes the dead-ball spot at the furthest advance, not where the runner is driven back; the engine must spot the ball at max advance, a measurement that affects every tackle near the line to gain.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE forward-progress spotting IS this rule: the engine spots the ball at the runner's furthest advance (max forward position) regardless of being driven back, the dead-ball measurement that decides line-to-gain conversions and first downs. GSI: max-advance terminal-state spotting independent of reversal.",
+    "source_operator": "forward_progress",
+    "telemetry": "furthest advance; dead by rule; pushed-back irrelevant"
+   }
+  },
+  {
+   "primitive_id": "impetus",
+   "name": "Impetus: who supplied the force that sent the ball across a goal line",
+   "verbatim_quote": "Impetus is the action of a player who carries the ball or provides the force (i.e., a pass, kick, snap, or fumble) that causes a ball in the field of play to touch or cross a goal line.",
+   "page": 3,
+   "latex": "\\text{impetus}=\\text{team that passed/kicked/snapped/fumbled};\\quad \\text{new impetus only via muff-at-rest, bat, or illegal kick}",
+   "symbol_and_unit_ledger": {
+    "impetus": "attribution of force sending ball across goal line [team]"
+   },
+   "assumptions": [
+    "Impetus is attributed to the team whose player passed/kicked/snapped/fumbled",
+    "A new impetus arises only if an opponent muffs a ball at rest, bats a kicked/fumbled ball, or illegally kicks"
+   ],
+   "breakdown_regime": "Impetus decides safety vs touchback: the same dead ball in the end zone is a safety (own impetus) or touchback (opponent impetus). The engine must track impetus attribution, not just ball location.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE impetus-attribution gate IS this rule: the engine distinguishes safety from touchback by attributing the force that sent the ball across the goal line (own impetus = safety, opponent = touchback), the causal-attribution gate on end-zone outcomes. GSI: causal-force attribution deciding between two terminal states.",
+    "source_operator": "impetus",
+    "telemetry": "impetus = passing/kicking team; new force exceptions; safety vs touchback"
+   }
+  },
+  {
+   "primitive_id": "scoring_value_function",
+   "name": "Scoring values: TD 6, FG 3, Safety 2, Try 1/2",
+   "verbatim_quote": "Points are scored as follows: (a) Touchdown: 6 points (b) Field goal: 3 points (c) Safety: 2 points",
+   "page": 11,
+   "latex": "V(\\text{TD})=6,\\quad V(\\text{FG})=3,\\quad V(\\text{Safety})=2,\\quad V(\\text{Try})\\in\\{1,2\\}",
+   "symbol_and_unit_ledger": {
+    "V": "point value of a scoring play [points]"
+   },
+   "assumptions": [
+    "Touchdown 6, field goal 3, safety 2, Try 1 (kick/safety) or 2 (touchdown)",
+    "The team with the greater total points wins; a forfeit is recorded 2-0"
+   ],
+   "breakdown_regime": "These are the atomic scoring weights the engine's expected-points and win-probability models sum over; the Try's 1-vs-2 choice is a decision-theoretic sub-problem after every touchdown.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE scoring-value function IS this rule: the engine's expected-points and win-probability models use the atomic weights TD=6, FG=3, Safety=2, Try in {1,2} as the terminal reward values summed over scoring events. GSI: discrete terminal-reward value function over scoring states.",
+    "source_operator": "scoring_value_function",
+    "telemetry": "TD 6; FG 3; Safety 2; Try 1/2; forfeit 2-0"
+   }
+  },
+  {
+   "primitive_id": "try_decision",
+   "name": "The Try: one or two points, kick from 15, run/pass from 2",
+   "verbatim_quote": "(b) 15 yards from the defensive team's goal line for a Try kick; or (c) two yards from the defensive team's goal line for a Try by pass or run.",
+   "page": 11,
+   "latex": "\\text{Try kick: snap at }+15\\ \\text{yd}\\Rightarrow 1\\ \\text{pt};\\quad \\text{Try run/pass: snap at }+2\\ \\text{yd}\\Rightarrow 2\\ \\text{pt};\\quad \\text{untimed down}",
+   "symbol_and_unit_ledger": {
+    "Try kick": "1-point attempt from the 15 [points/yard line]",
+    "Try run/pass": "2-point attempt from the 2 [points/yard line]"
+   },
+   "assumptions": [
+    "The Try is one untimed scrimmage down; the game clock does not run",
+    "Kick from the 15 for 1 point; run/pass from the 2 for 2 points; a defensive touchdown also scores 2"
+   ],
+   "breakdown_regime": "The 1-vs-2 Try is an expected-value decision: P(kick)~1 vs 2*P(convert from 2). The engine's go-for-2 logic is a Bernoulli EV comparison conditioned on score differential and time.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE Try EV decision IS this rule: the engine's 1-vs-2 point decision compares P(kick from 15)*1 against 2*P(convert from 2), an expected-value Bernoulli choice conditioned on score differential and clock, the post-touchdown decision sub-problem. GSI: two-option expected-value decision with state-dependent payoffs.",
+    "source_operator": "try_decision",
+    "telemetry": "kick 15-yd 1pt; run/pass 2-yd 2pt; untimed; EV comparison"
+   }
+  },
+  {
+   "primitive_id": "field_goal_geometry",
+   "name": "Field goal: entire ball through the vertical plane of the goal",
+   "verbatim_quote": "The entire ball must pass through the vertical plane of the goal, which is the area above the crossbar and between the uprights",
+   "page": 11,
+   "latex": "\\text{FG good}\\iff \\text{entire ball crosses plane above crossbar (10 ft) and between uprights (18'6'' wide)}",
+   "symbol_and_unit_ledger": {
+    "crossbar height": "10 ft [ft]",
+    "upright width": "18 ft 6 in [ft]"
+   },
+   "assumptions": [
+    "The kick must be a place/drop kick from on/behind the line or a fair catch kick",
+    "The ball must not touch the ground or an offensive player before passing through the goal"
+   ],
+   "breakdown_regime": "The entire-ball-through-plane criterion is a geometric predicate; the 18'6\" width and 10' crossbar define the target. The engine's FG probability is a function of distance and angle to this fixed target.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE field-goal geometric predicate IS this rule: the engine's FG-success model targets the fixed 18'6\"-wide, 10'-high goal plane with the entire-ball-through criterion, computing make probability from distance and angle. GSI: fixed-target geometric success predicate for a projectile.",
+    "source_operator": "field_goal_geometry",
+    "telemetry": "entire ball through plane; crossbar 10 ft; uprights 18'6\"; place/drop kick"
+   }
+  },
+  {
+   "primitive_id": "missed_fg_spot",
+   "name": "Missed field goal: receivers' ball at spot of kick (or 20)",
+   "verbatim_quote": "If the spot of the kick was inside the receivers' 20-yard line, it is the receivers' ball at the 20-yard line",
+   "page": 11,
+   "latex": "\\text{missed FG spot}=\\begin{cases}20\\text{-yd line}&\\text{kick from inside the 20}\\\\\\text{spot of kick}&\\text{kick from the 20 or beyond}\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "spot of kick": "where the FG was attempted [yard line]"
+   },
+   "assumptions": [
+    "Applies when the missed FG crosses the line and is untouched by receivers beyond it",
+    "If receivers touch it, general scrimmage-kick rules apply instead"
+   ],
+   "breakdown_regime": "The missed-FG spot rule means a long miss gives the opponent the ball at the kick spot (often good field position), a field-position cost the engine's FG-vs-punt decision must weigh beyond the 3 points.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE missed-FG field-position cost IS this rule: the engine's FG-vs-punt decision accounts for the missed-FG spot rule (opponent gets ball at kick spot, or the 20), the field-position downside beyond the forgone 3 points. GSI: failure-state field-position cost in a kick decision.",
+    "source_operator": "missed_fg_spot",
+    "telemetry": "missed FG spot = kick spot or 20; untouched condition; field-position cost"
+   }
+  },
+  {
+   "primitive_id": "fg_clock_cap",
+   "name": "Field goal clock cap: maximum five seconds run off",
+   "verbatim_quote": "For a successful field goal, or for an unsuccessful attempt that does not land in the field of play, the maximum amount of time that can run off the game clock is five seconds.",
+   "page": 11,
+   "latex": "\\Delta t_{\\text{game}}^{\\text{FG}}\\le 5\\ \\text{s}",
+   "symbol_and_unit_ledger": {
+    "Delta t_game": "game clock elapsed during a FG [s]"
+   },
+   "assumptions": [
+    "Applies to a successful FG or a miss that does not land in the field of play",
+    "This caps clock consumption for end-of-half FG attempts"
+   ],
+   "breakdown_regime": "The 5-second cap is a clock-management invariant: a late FG cannot bleed more than 5 seconds, so the engine's end-of-half timing must enforce this ceiling rather than a full play-clock runoff.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE FG clock-cap invariant IS this rule: the engine's end-of-half clock model caps FG clock consumption at 5 seconds, a timing invariant that bounds how much time a late field goal can bleed. GSI: upper-bound clock-consumption invariant on a scoring action.",
+    "source_operator": "fg_clock_cap",
+    "telemetry": "max 5 s off game clock; successful FG or non-field-of-play miss"
+   }
+  },
+  {
+   "primitive_id": "safety_momentum_exception",
+   "name": "Momentum exception: interception carried into own end zone is not a safety",
+   "verbatim_quote": "If a defensive player, in the field of play, intercepts a pass or catches or recovers a fumble, backward pass, scrimmage kick, free kick, or fair catch kick, and his original momentum carries him into his end zone where the ball is declared dead in his team's possession.",
+   "page": 11,
+   "latex": "\\text{momentum exception: original momentum carries into end zone}\\Rightarrow \\text{ball at spot of possession (not safety)}",
+   "symbol_and_unit_ledger": {
+    "original momentum": "player's pre-existing motion into end zone [vector]"
+   },
+   "assumptions": [
+    "The exception applies when original momentum (not a new force) carries the player into the end zone",
+    "The ball belongs to the defensive team at the spot where possession was established; if that spot is in the end zone, it is a touchback"
+   ],
+   "breakdown_regime": "The momentum exception prevents penalizing a defender whose natural motion carries him into the end zone; the engine must distinguish original momentum from a new impetus, a causal nuance in end-zone possession outcomes.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE momentum-exception gate IS this rule: the engine distinguishes original momentum (ball spotted at possession spot, no safety) from a new impetus (safety) when a defender ends up in his own end zone, the causal-motion nuance in end-zone outcomes. GSI: original-motion vs new-force distinction in terminal-state attribution.",
+    "source_operator": "safety_momentum_exception",
+    "telemetry": "original momentum; spot of possession; touchback if in end zone; not safety"
+   }
+  },
+  {
+   "primitive_id": "touchback_definition",
+   "name": "Touchback: dead on/behind own goal line, opponent impetus",
+   "verbatim_quote": "It is a touchback if the ball is dead on or behind the goal line a team is defending, provided that the impetus comes from an opponent, and that it is not a touchdown or an incomplete forward pass.",
+   "page": 11,
+   "latex": "\\text{Touchback}\\iff \\text{ball dead on/behind defended goal line}\\ \\land\\ \\text{opponent impetus}\\ \\land\\ \\neg\\text{TD}\\ \\land\\ \\neg\\text{incomplete pass}",
+   "symbol_and_unit_ledger": {
+    "impetus": "opponent-supplied force [team]"
+   },
+   "assumptions": [
+    "A touchback requires opponent impetus and is neither a touchdown nor an incomplete forward pass",
+    "After a touchback the team snaps at its 20 (or 35/20 on free kicks per Rule 6-1-5)"
+   ],
+   "breakdown_regime": "The touchback predicate is the complement of the safety on impetus; the engine uses it to award the receiving team field position (20/35) without a score, a common special-teams terminal state.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE touchback predicate IS this rule: the engine awards a touchback (ball at 20/35, no score) when the ball is dead on/behind the defended goal line with opponent impetus and not a TD/incomplete pass, the special-teams terminal state complementing the safety. GSI: impetus-conditioned terminal-state predicate awarding field position.",
+    "source_operator": "touchback_definition",
+    "telemetry": "dead on/behind goal line; opponent impetus; not TD/incomplete; snap 20/35"
+   }
+  },
+  {
+   "primitive_id": "dynamic_kickoff_landing_zone",
+   "name": "2026 dynamic kickoff: landing zone = receiving team's 20 to goal line",
+   "verbatim_quote": "The \"landing zone\" shall be the area from the receiving team's 20-yard line extending to its goal line.",
+   "page": 6,
+   "latex": "\\text{landing zone}=[\\text{receiving 20-yd line},\\ \\text{goal line}];\\quad \\text{setup zone}=[\\text{receiving 35},\\ \\text{receiving 30}]",
+   "symbol_and_unit_ledger": {
+    "landing zone": "kick must land here to be returnable [yard-line interval]",
+    "setup zone": "5-yd alignment band for receiving team [yard-line interval]"
+   },
+   "assumptions": [
+    "The landing zone runs from the receiving team's 20 to its goal line",
+    "The setup zone is the 5-yd band between the receiving team's 35 and 30; at least nine receivers align there"
+   ],
+   "breakdown_regime": "The 2026 dynamic kickoff reshapes special-teams geometry: the landing zone forces kicks to land between the 20 and goal line, eliminating the touchback-only kickoff and increasing returns. The engine's kickoff model must use this new state space.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE dynamic-kickoff state space IS this 2026 rule: the engine's kickoff model uses the landing zone (receiving 20 to goal line) and setup zone (35 to 30) that force returnable kicks, the redesigned special-teams geometry replacing the old touchback-heavy kickoff. GSI: redesigned spatial constraint zone altering a phase's state space.",
+    "source_operator": "dynamic_kickoff_landing_zone",
+    "telemetry": "landing zone 20-to-goal; setup zone 35-30; >=9 receivers; 2026 change"
+   }
+  },
+  {
+   "primitive_id": "kickoff_touchback_spots",
+   "name": "2026 kickoff touchback spots: 20 if landed in landing zone, 35 if direct to end zone",
+   "verbatim_quote": "It is a touchback, and the dead ball spot is the 35-yard line if, without first touching the ground or a player in the landing zone, a kickoff or safety kick:",
+   "page": 6,
+   "latex": "\\text{touchback spot}=\\begin{cases}20&\\text{landed in landing zone, then downed/OOB in end zone}\\\\35&\\text{direct to end zone without touching landing zone}\\\\20&\\text{kickoff from the 50 (any touchback)}\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "touchback spot": "dead-ball spot after kickoff touchback [yard line]"
+   },
+   "assumptions": [
+    "A kick that lands in the landing zone then is downed in the end zone gives a touchback to the 20",
+    "A kick going directly to the end zone without touching the landing zone gives a touchback to the 35; a kickoff from the 50 gives the 20 on any touchback"
+   ],
+   "breakdown_regime": "The 20/35 touchback split incentivizes kicking into the landing zone (worse field position for the return team if downed) vs the end zone (35). The engine's kickoff placement decision is a field-position EV tradeoff under this rule.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE kickoff-placement EV IS this 2026 touchback rule: the engine's kickoff placement decision weighs the 20-yard touchback (landed in landing zone) against the 35-yard touchback (direct to end zone), a field-position expected-value tradeoff encoded by the new spots. GSI: placement decision with rule-encoded field-position payoffs.",
+    "source_operator": "kickoff_touchback_spots",
+    "telemetry": "touchback 20 (landing zone) vs 35 (direct); kickoff from 50 -> 20"
+   }
+  },
+  {
+   "primitive_id": "onside_kick_anytime",
+   "name": "2026: onside kick may be declared at any time",
+   "verbatim_quote": "At any time during the game, the kicking team may declare an onside kick by notifying the Referee prior to the start of the play clock",
+   "page": 6,
+   "latex": "\\text{onside declaration allowed }\\forall\\ t\\in\\text{game (2026)};\\quad \\text{must notify Referee before play clock starts}",
+   "symbol_and_unit_ledger": {
+    "onside kick": "free kick the kicking team attempts to legally recover [play type]"
+   },
+   "assumptions": [
+    "Previously restricted; the 2026 rule (6-1-6) permits declaring an onside kick at any time",
+    "The kicking team must notify the Referee before the play clock starts; the Referee notifies the receiving team"
+   ],
+   "breakdown_regime": "Allowing onside kicks at any time (not just when trailing late) expands the strategic action space; the engine must model surprise-onside as a legal option at any score/time state, a game-theoretic mixing possibility.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE onside-anytime action space IS this 2026 rule: the engine treats a declared onside kick as a legal action at any score/time state (not just late-when-trailing), expanding the special-teams game-theoretic action space with a surprise-recovery option. GSI: expanded legal-action set enabling surprise mixed strategies.",
+    "source_operator": "onside_kick_anytime",
+    "telemetry": "onside any time; declare before play clock; 2026 6-1-6; surprise option"
+   }
+  },
+  {
+   "primitive_id": "game_timing_structure",
+   "name": "Game timing: 60 minutes, four 15-minute periods, 13-minute halftime",
+   "verbatim_quote": "The length of the game is 60 minutes, divided into four periods of 15 minutes each.",
+   "page": 4,
+   "latex": "T_{\\text{game}}=60\\ \\text{min}=4\\times 15\\ \\text{min};\\quad \\text{halftime}=13\\ \\text{min};\\quad \\text{intermissions}\\ge 2\\ \\text{min}",
+   "symbol_and_unit_ledger": {
+    "T_game": "regulation game length [min]",
+    "period": "quarter length [min]"
+   },
+   "assumptions": [
+    "Regulation is 60 minutes in four 15-minute periods",
+    "Halftime is 13 minutes; at least 2 minutes between periods 1-2 and 3-4; tied games extend to overtime"
+   ],
+   "breakdown_regime": "The 4x15 structure with the two-minute warning in each half defines the clock-state skeleton; the engine's time-dependent decisions (go-for-it, clock management) are conditioned on quarter and the warning boundaries.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE clock-state skeleton IS this timing rule: the engine's time-conditioned decisions operate on the 4x15-minute structure with two-minute warnings and 13-minute halftime, the temporal skeleton gating clock-management and urgency logic. GSI: fixed temporal phase structure conditioning time-dependent decisions.",
+    "source_operator": "game_timing_structure",
+    "telemetry": "60 min; 4x15; halftime 13; intermissions >=2; overtime if tied"
+   }
+  },
+  {
+   "primitive_id": "play_clock_40_25",
+   "name": "Play clock: 40 seconds normally, 25 after administrative stoppages",
+   "verbatim_quote": "It is a delay of the game if the ball is not put in play by a snap within 40 seconds after the start of the play clock.",
+   "page": 4,
+   "latex": "T_{\\text{play}}=\\begin{cases}40\\ \\text{s}&\\text{normal (after a play ends)}\\\\25\\ \\text{s}&\\text{administrative stoppage (possession change, timeout, penalty, etc.)}\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "T_play": "play clock interval [s]"
+   },
+   "assumptions": [
+    "The 40-second clock starts when a play ends",
+    "A 25-second clock applies after change of possession, charged timeout, two-minute warning, period expiration, penalty enforcement, etc."
+   ],
+   "breakdown_regime": "The 40/25 play-clock dichotomy is a tempo constraint: the engine's no-huddle/hurry-up model must respect which interval applies, since administrative stoppages shorten the window to 25 seconds.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE play-clock tempo constraint IS this rule: the engine's tempo/hurry-up model uses the 40-second normal vs 25-second administrative play clock, the timing constraint that bounds how fast the offense can snap after each state. GSI: state-dependent action-deadline constraint on tempo.",
+    "source_operator": "play_clock_40_25",
+    "telemetry": "40 s normal; 25 s administrative; delay of game penalty"
+   }
+  },
+  {
+   "primitive_id": "ten_second_runoff",
+   "name": "10-second runoff: defense may elect to bleed clock after offensive stoppage",
+   "verbatim_quote": "the ball shall not be put in play until the time on the game clock has been reduced by 10 seconds, if the defense so chooses",
+   "page": 4,
+   "latex": "t_{\\text{game}}\\leftarrow t_{\\text{game}}-10\\ \\text{s}\\quad\\text{(defense election, offense-caused stoppage inside 2 min; never vs defense)}",
+   "symbol_and_unit_ledger": {
+    "t_game": "game clock [s]",
+    "runoff": "10-second election [s]"
+   },
+   "assumptions": [
+    "A 10-second runoff applies to certain offense-caused clock stoppages inside the two-minute warning",
+    "There can never be a 10-second runoff against the defensive team; a foul that stopped the clock prevents the runoff"
+   ],
+   "breakdown_regime": "The runoff is a clock-weapon for the defense: an offensive penalty or excess timeout inside two minutes can cost 10 seconds. The engine's late-game penalty and timeout decisions must account for runoff risk, a key end-game constraint.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE 10-second-runoff clock weapon IS this rule: the engine's late-game model applies the defense-elected 10-second runoff to offense-caused stoppages inside two minutes (never against the defense), a clock-bleeding constraint shaping penalty and timeout decisions. GSI: elective clock-penalty constraint in end-game state.",
+    "source_operator": "ten_second_runoff",
+    "telemetry": "10 s runoff; defense elects; offense stoppage inside 2 min; never vs defense"
+   }
+  },
+  {
+   "primitive_id": "two_minute_warning",
+   "name": "Two-minute warning: automatic timeout at 2:00 of each half",
+   "verbatim_quote": "The two-minute warning is an automatic timeout that occurs at the conclusion of the last down for which the ball is legally snapped or kicked prior to two minutes remaining on the game clock in the second and fourth periods.",
+   "page": 3,
+   "latex": "\\text{two-minute warning at }t=2{:}00\\text{ of periods 2 and 4 (after last down snapped before 2:00)}",
+   "symbol_and_unit_ledger": {
+    "two-minute warning": "automatic timeout [event]"
+   },
+   "assumptions": [
+    "The warning occurs at the conclusion of the last down snapped/kicked before 2:00 in each half",
+    "It functions as an extra timeout and changes clock-start rules (e.g. out-of-bounds starts on snap after it)"
+   ],
+   "breakdown_regime": "The two-minute warning is a strategic clock boundary: it grants a free stoppage and flips several clock-start rules. The engine's end-of-half game theory treats it as a known discrete event that resets timeout budgets and clock behavior.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE two-minute-warning boundary IS this rule: the engine treats the 2:00 warning in each half as a known discrete clock event that grants a free stoppage and flips clock-start rules, a strategic boundary in end-of-half game theory. GSI: known discrete temporal boundary altering clock rules and timeout budget.",
+    "source_operator": "two_minute_warning",
+    "telemetry": "2:00 periods 2 & 4; after last down before 2:00; free stoppage; clock-rule flip"
+   }
+  },
+  {
+   "primitive_id": "intentional_grounding",
+   "name": "Intentional grounding: pass not toward an eligible receiver under pressure",
+   "verbatim_quote": "It is a foul for intentional grounding if a passer, facing an imminent loss of yardage because of pressure from the defense, throws a forward pass that is not in the direction and vicinity of an originally eligible offensive receiver.",
+   "page": 8,
+   "latex": "\\text{Grounding}\\iff \\text{imminent loss under pressure}\\ \\land\\ \\text{pass not in direction/vicinity of eligible receiver}",
+   "symbol_and_unit_ledger": {
+    "pressure": "imminent loss of yardage from defense [state]",
+    "vicinity": "direction and vicinity of an eligible receiver [spatial]"
+   },
+   "assumptions": [
+    "The pass does not have to be incomplete for grounding to apply",
+    "Penalty: loss of down and 10 yards from previous spot (or spot of pass if worse), or a safety if in the end zone"
+   ],
+   "breakdown_regime": "Grounding is a pressure-induced illegal action; the engine's QB pressure model must recognize that an imminent sack creates a grounding risk unless the pocket/line exceptions apply, linking pass-rush pressure to a legal-action constraint.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE grounding-under-pressure constraint IS this rule: the engine's QB model flags grounding risk when imminent pressure forces a pass not toward an eligible receiver, linking pass-rush pressure to a loss-of-down legal constraint (with pocket/line exceptions). GSI: pressure-induced illegal-action constraint on a decision agent.",
+    "source_operator": "intentional_grounding",
+    "telemetry": "imminent loss + no eligible receiver nearby; loss of down + 10 yd; safety in end zone"
+   }
+  },
+  {
+   "primitive_id": "grounding_pocket_exception",
+   "name": "Grounding exception: outside pocket and ball reaches line of scrimmage",
+   "verbatim_quote": "Intentional grounding will not be called when a passer, who is outside, or has been outside, the pocket area, throws a forward pass that lands at or beyond the line of scrimmage extended",
+   "page": 8,
+   "latex": "\\neg\\text{Grounding}\\iff (\\text{passer outside pocket})\\ \\land\\ (\\text{ball lands at/beyond line of scrimmage extended})",
+   "symbol_and_unit_ledger": {
+    "pocket area": "area between normal tackle positions extending to end line [spatial]",
+    "line of scrimmage extended": "the LOS extended to sidelines [yard line]"
+   },
+   "assumptions": [
+    "A passer outside (or who has been outside) the pocket may throw it away if the ball reaches the line of scrimmage extended",
+    "No eligible receiver needs a realistic chance once both conditions hold; physical contact also negates grounding"
+   ],
+   "breakdown_regime": "The pocket/line exception is the QB's legal escape valve: outside the pocket with the ball reaching the LOS, a throwaway is legal. The engine's QB scramble/throwaway decision uses this predicate to avoid the grounding penalty.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE throwaway-legality predicate IS this exception: the engine's QB scramble/throwaway decision uses the outside-pocket AND ball-reaches-LOS predicate to legally avoid grounding, the escape-valve constraint on pressure responses. GSI: spatial escape-condition predicate legalizing a pressure-response action.",
+    "source_operator": "grounding_pocket_exception",
+    "telemetry": "outside pocket + ball to LOS extended; no receiver needed; contact negates"
+   }
+  },
+  {
+   "primitive_id": "illegal_contact_five_yards",
+   "name": "Illegal contact: defender may chuck only within five yards",
+   "verbatim_quote": "Within the area five yards beyond the line of scrimmage, a defensive player may chuck an eligible receiver in front of him.",
+   "page": 8,
+   "latex": "\\text{legal chuck zone}=[\\text{LOS},\\ \\text{LOS}+5\\ \\text{yd}];\\quad \\text{beyond 5 yd: no initiation of contact while QB in pocket}",
+   "symbol_and_unit_ledger": {
+    "chuck": "intentional contact on an eligible receiver in front [action]",
+    "five-yard zone": "5 yd beyond LOS [spatial]"
+   },
+   "assumptions": [
+    "Within 5 yards a defender may chuck and maintain continuous unbroken contact",
+    "Beyond 5 yards, while the QB is in the pocket, a defender cannot initiate contact on a receiver attempting to evade; must release as they exit the zone"
+   ],
+   "breakdown_regime": "The 5-yard chuck zone is a spatial constraint on pass defense: the engine's coverage model must enforce that contact beyond 5 yards (QB in pocket) is illegal contact, shaping route timing and the legal window for physical coverage.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE five-yard contact zone IS this rule: the engine's coverage model enforces the 5-yard legal chuck zone and illegal-contact beyond it (QB in pocket), the spatial constraint shaping route timing and physical-coverage legality. GSI: spatial legality zone constraining defender-receiver interaction.",
+    "source_operator": "illegal_contact_five_yards",
+    "telemetry": "chuck within 5 yd; continuous contact; beyond 5 yd no initiation; release at exit"
+   }
+  },
+  {
+   "primitive_id": "overtime_possession_guarantee",
+   "name": "Overtime: both teams must possess (unless opening safety), modified sudden death",
+   "verbatim_quote": "Both teams must have the opportunity to possess the ball once during the extra period, unless the team kicking off to start the overtime period scores a safety on the receiving team's initial possession",
+   "page": 16,
+   "latex": "\\text{OT winner}:\\ \\text{both possess}\\Rightarrow \\text{higher points wins};\\quad \\text{then next score wins};\\quad \\text{opening safety}\\Rightarrow \\text{kicking team wins}",
+   "symbol_and_unit_ledger": {
+    "opportunity to possess": "each team gets at least one possession [event]"
+   },
+   "assumptions": [
+    "Regular season OT is one 10-minute period; postseason is 15-minute periods continuing until a winner",
+    "Both teams must possess unless the opening kickoff results in a safety; after both possess, next score wins; regular season can end in a tie"
+   ],
+   "breakdown_regime": "The OT possession guarantee changes late-game strategy: a first-possession FG no longer wins (opponent gets a reply), so the engine's OT go-for-it/FG decisions differ from regulation, a distinct game-theoretic regime.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE overtime possession-guarantee regime IS this rule: the engine's OT strategy uses the both-teams-possess guarantee (unless opening safety) and next-score-wins thereafter, a distinct game-theoretic regime where a first-possession FG no longer ends the game. GSI: possession-guarantee terminal-game regime altering late-game strategy.",
+    "source_operator": "overtime_possession_guarantee",
+    "telemetry": "both possess; opening safety exception; next score wins; 10 min regular / 15 min postseason"
+   }
+  },
+  {
+   "primitive_id": "ineligible_downfield",
+   "name": "Ineligible receiver downfield: entire body >1 yard beyond LOS before pass",
+   "verbatim_quote": "it is a foul if the entire body of an ineligible offensive player, including a T-Formation Quarterback, is more than one yard beyond the line of scrimmage before the pass has been thrown.",
+   "page": 8,
+   "latex": "\\text{Ineligible downfield}\\iff \\text{entire body}>\\text{LOS}+1\\ \\text{yd before pass thrown (and no legal blocking contact)}",
+   "symbol_and_unit_ledger": {
+    "ineligible player": "offensive lineman / T-formation QB [role]",
+    "one-yard buffer": "1 yd beyond LOS [spatial]"
+   },
+   "assumptions": [
+    "The entire body must be more than one yard beyond the line before the pass is thrown",
+    "An ineligible player legally blocking/being blocked may move beyond the line; the 1-yard buffer and contact exceptions define legality"
+   ],
+   "breakdown_regime": "The ineligible-downfield rule constrains pass-play line movement: the engine's pass-protection and RPO models must keep ineligible bodies within the 1-yard buffer until the pass, a formation-legality constraint on play design.",
+   "domain": "football",
+   "confidence": 0.95,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE ineligible-downfield formation constraint IS this rule: the engine's pass-protection/RPO model keeps ineligible bodies within the 1-yard LOS buffer until the pass is thrown (with blocking-contact exceptions), a formation-legality constraint on play design. GSI: spatial eligibility constraint on agent positioning before an action.",
+    "source_operator": "ineligible_downfield",
+    "telemetry": "entire body >1 yd beyond LOS before pass; blocking-contact exception; 5-yd penalty"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "nfl2026_rulebook_constraint_ontology",
+   "think": "This inline cycle extracts the 2026 Official Playing Rules of the National Football League, the ninety-one-page rulebook that is the constitutional constraint layer of the entire Foundry football stack and the hardest of hard constraints for the GSE engine. The provenance is clean: the catalog domain football is correct, the document is the League's own 2026 edition under Roger Goodell, and it opens with the four 2026 rules changes (6-1-3 kickoff setup-zone alignment, 6-1-5 the touchback spot when kicking from the 50, 6-1-6 permitting a declared onside kick at any time, and 19-2 League consultation on flagrant disqualification). Twenty-four primitives are extracted, each with a verified verbatim quote, a Rule-Section-Article page anchor, a symbol-and-unit ledger where quantitative, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. The rulebook is not a statistical model but a rule ontology, so its primitives are formalized as value functions, predicates, constants, and state-machine transitions rather than fitted equations, and no sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the League's annual rules meetings and the Competition Committee's amendments through the Official Casebook's Approved Rulings into this codified constraint set. The load-bearing objects are the scoring value function (touchdown six, field goal three, safety two, Try one or two), the four-down possession-renewal state machine gated by the line to gain computed as min(snap plus ten, goal line), the possession predicate requiring the conjunction of control, two feet inbounds, and an act common to the game, and the impetus attribution that decides safety versus touchback. The clock skeleton is sixty minutes in four fifteen-minute periods with a thirteen-minute halftime, the forty-second normal and twenty-five-second administrative play clocks, the two-minute warning in each half, and the defense-elected ten-second runoff that can never be applied against the defense. These are the invariant state-transition rules every simulation must obey.\n\nThe recursive theory of mind models the coach and quarterback as reasoners operating inside these constraints, and the engine as a reasoner that must never propose an illegal action. The intentional-grounding rule shows the pressure-to-legality link: a passer facing imminent loss who throws not toward an eligible receiver commits a loss-of-down foul, but the pocket exception legalizes a throwaway when the passer is outside the pocket and the ball reaches the line of scrimmage extended, so the quarterback's escape valve is a spatial predicate. The five-yard chuck zone constrains pass defense, the ineligible-downfield one-yard buffer constrains pass protection and RPO design, and the forward-progress rule spots the ball at max advance regardless of being driven back. The Try is a Bernoulli expected-value decision, kick from the fifteen for one against run or pass from the two for two, and the field-goal decision must weigh the missed-FG spot rule that hands the opponent the ball at the kick spot, a field-position cost beyond the forgone three points.\n\nThe cross-layer veto adjudication is where the rulebook earns its place as the constitutional layer beside the expected-points, attribution, network, decision-EV, EPV, and geospatial layers. The first veto is the scoring-value veto: every expected-points and win-probability computation must sum the atomic weights six, three, two, and the Try's one-or-two, never invented point values. The second veto is the possession-predicate veto: a catch is complete only if control AND two feet inbounds AND an act common to the game all hold, so the engine cannot credit a completion that fails any clause, including the survive-the-ground requirement. The third veto is the impetus veto: the same dead ball in the end zone is a safety with own impetus or a touchback with opponent impetus, and the momentum exception further distinguishes original motion from a new force, so end-zone outcomes require causal attribution not just ball location. The fourth veto is the clock-management veto: the forty/twenty-five play clock, the two-minute warning, the ten-second runoff (never against the defense), and the five-second field-goal clock cap are timing invariants the end-game model must enforce. The fifth veto is the formation-legality veto: the five-yard chuck zone, the one-yard ineligible-downfield buffer, and the grounding pocket exception constrain which actions are legal in which spatial states. The overtime possession guarantee adds a distinct terminal-game regime where a first-possession field goal no longer wins because the opponent gets a reply.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The field geometry is fixed at 360 by 160 feet, 120 yards total length with ten-yard end zones, 53.33 yards wide, and the NFL inbounds hashes at 70 feet 9 inches, narrower than the college 60 feet, which compresses boundary-to-hash spacing and changes every spacing computation. The ball is a prolate spheroid inflated 12.5 to 13.5 psi at 14 to 15 ounces with an 11-to-11.25-inch long axis, parameters that govern spiral aerodynamics, grip, and the irregular bounce that makes fumble recovery partly stochastic. The 2026 dynamic kickoff reshapes the special-teams state space: the landing zone runs from the receiving team's 20 to its goal line, the setup zone is the five-yard band from the 35 to the 30 with at least nine receivers aligned there, a kick that lands in the landing zone and is downed in the end zone gives a touchback to the 20 while a kick going directly to the end zone gives the 35, and a kickoff from the 50 gives the 20 on any touchback, so kickoff placement becomes a field-position expected-value tradeoff. The onside-anytime rule expands the legal action set so a surprise onside is available at any score and time, a game-theoretic mixing option. The regular-season overtime is a single ten-minute period that can end in a tie while postseason overtime continues in fifteen-minute periods until a winner, and in both the both-teams-possess guarantee holds unless the opening kickoff produces a safety. These invariants ground the engine's scoring, possession, clock, formation, special-teams, and terminal-game logic, completing a sovereign constitutional constraint layer that every other football layer must respect, all grounded in clean verbatim rule text with honestly labeled formalizations.",
+   "retrocausal_genealogy": "The genealogy runs from the League's annual rules meetings and Competition Committee amendments through the Official Casebook's Approved Rulings into this codified 2026 constraint set, opening with four 2026 changes (6-1-3 setup-zone alignment, 6-1-5 touchback from the 50, 6-1-6 onside-anytime, 19-2 disqualification consult). Load-bearing objects: scoring value function (TD 6, FG 3, Safety 2, Try 1/2); four-down possession-renewal state machine gated by line-to-gain = min(snap+10, goal line); possession predicate = control AND two-feet-inbounds AND act-common-to-game; impetus attribution deciding safety vs touchback. Clock skeleton: 60 min = 4x15, 13-min halftime, 40/25-second play clocks, two-minute warning each half, defense-elected 10-second runoff (never vs defense). These are invariant state-transition rules every simulation must obey.",
+   "theory_of_mind": "The coach/QB reason inside these constraints; the engine must never propose an illegal action. Intentional grounding links pressure to legality (imminent loss + pass not toward eligible receiver = loss-of-down foul), but the pocket exception legalizes a throwaway when outside the pocket AND ball reaches LOS extended — the QB escape valve is a spatial predicate. The 5-yard chuck zone constrains pass defense; the 1-yard ineligible-downfield buffer constrains pass protection/RPO; forward progress spots at max advance. The Try is a Bernoulli EV decision (kick from 15 for 1 vs run/pass from 2 for 2); the FG decision weighs the missed-FG spot rule handing the opponent the ball at the kick spot, a field-position cost beyond the forgone 3 points.",
+   "cross_layer_veto": "Five vetoes adjudicate the constitutional layer beside the expected-points/attribution/network/decision-EV/EPV/geospatial layers. Scoring-value veto: sum atomic weights 6/3/2/Try{1,2}, never invented values. Possession-predicate veto: catch complete only if control AND 2-feet AND act-common-to-game (incl survive-the-ground). Impetus veto: same dead ball in end zone = safety (own impetus) or touchback (opponent), momentum exception distinguishes original motion from new force. Clock-management veto: 40/25 play clock, two-minute warning, 10-sec runoff (never vs defense), 5-sec FG cap are timing invariants. Formation-legality veto: 5-yard chuck zone, 1-yard ineligible buffer, grounding pocket exception constrain legal actions by spatial state. OT possession guarantee adds a terminal-game regime where a first-possession FG no longer wins."
+  }
+ ],
+ "universal_lens": "The 2026 NFL Rulebook contributes the constitutional hard-constraint layer to the Foundry football stack: the scoring value function (6/3/2/Try{1,2}), the four-down possession-renewal state machine gated by line-to-gain=min(snap+10,goal), the three-clause possession predicate, impetus attribution deciding safety vs touchback, the clock skeleton (4x15, 40/25 play clock, two-minute warning, 10-sec runoff, 5-sec FG cap), formation-legality zones (5-yard chuck, 1-yard ineligible buffer, grounding pocket exception), the 2026 dynamic-kickoff state space, and the overtime possession guarantee. Every other football layer must respect these invariant state-transition rules.",
+ "gsi_mapping": "For GSI these primitives are the general constitutional constraint layer for any rule-governed sequential decision system: a discrete terminal-reward value function over scoring states, a bounded-trial renewal process with success-reset and failure-transfer, a multi-clause conjunction predicate gating state transitions, causal-force attribution deciding between terminal states, state-dependent action-deadline and clock-penalty constraints, spatial legality zones constraining agent interaction, and a possession-guarantee terminal-game regime. The engine enforces these as inviolable legality gates so no proposed action violates the rule ontology, and propagates the 2026 rule changes as updates to the constraint set.",
+ "gse_mapping": "For GSE this maps directly onto the engine's legality and scoring core: the scoring weights ARE the expected-points terminal rewards; the four-down series IS the drive state machine; the possession predicate IS the catch/completion gate; impetus IS the safety-vs-touchback causal gate; the 40/25 play clock, two-minute warning, 10-sec runoff and 5-sec FG cap ARE the clock-management invariants; the 5-yard chuck zone and 1-yard ineligible buffer ARE coverage/RPO legality constraints; the grounding pocket exception IS the QB throwaway-legality predicate; the 2026 dynamic kickoff (landing zone, 20/35 touchback split, onside-anytime) IS the redesigned special-teams state space; and the OT possession guarantee IS the terminal-game regime. Formalizations are labeled from clean rule text; no sportsbook line is a model input."
+}
