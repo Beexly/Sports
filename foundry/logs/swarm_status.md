@@ -576,3 +576,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 03:00:00 | COMPLETE | 0cfba67fa65f80c7 | primitives=28 think_words=858
 - 2026-11-14 03:00:54 | CLAIMED | 2c9d78295a2595e6 | worker=hermes-inline shard03 file=2024 - Noisy Judgments A probability surface-based analysis of umpiring variability - Unknown Authors.pdf
 - 2026-11-14 03:06:01 | COMPLETE | 2c9d78295a2595e6 | primitives=27 think_words=875
+- 2026-11-14 03:08:40 | CLAIMED | 2c8c36af2305e179 | worker=hermes-inline shard03 file=2025 - Transformer-Based Baseball Modeling for Pitch Outcome Prediction and Strategy Optimization - Declan.pdf
+- 2026-11-14 03:12:35 | COMPLETE | 2c8c36af2305e179 | primitives=21 think_words=857
