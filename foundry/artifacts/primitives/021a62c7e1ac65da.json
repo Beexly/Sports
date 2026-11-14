@@ -1,0 +1,333 @@
+{
+  "book_id": "021a62c7e1ac65da",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_POSTER_ABSTRACT_QUALITATIVE",
+  "source_note": "Will Morgan (Head of AMF Data Science, StatsBomb), 'Evaluating the outcomes of passing plays from a QB perspective', NESSIS 2023 one-page poster abstract. Substantive poster with a five-class drop-back outcome model (XGBoost/GNN/CNN), a printed metrics table, and outcome-over-expectation QB analysis; extracted faithfully (not a derivative summary). No equations printed (classification described in prose + metrics table), so primitives are qualitative with the metrics table captured as constants; the outcome-over-expectation and five-class definitions are reconstructed as labeled LaTeX and flagged. fi/fl ligatures and dashes folded; bullet glyphs normalized. Outputs are calibrated outcome probabilities and OOE rates; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "qb_pressure_tradeoff",
+      "name": "QB skill: the throw/scramble/sack trade-off under pressure",
+      "verbatim_quote": "when pressured, judging the fine line between throwing the ball, scrambling or being sacked is a key skill",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "QB decision-making is a trade-off as the play evolves; under pressure the quarterback judges the fine line between throwing, scrambling, and being sacked."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pressure-driven throw/scramble/sack decision is the same sequential choice GSE models in its QB decision kernel.",
+        "source_operator": "qb_pressure_tradeoff",
+        "telemetry": "pressure -> throw / scramble / sack"
+      }
+    },
+    {
+      "primitive_id": "mahomes_cpoe_paradox",
+      "name": "Mahomes paradox: elite outcomes but average CPOE",
+      "verbatim_quote": "one metric where his performance apparently dips is Completion Percentage Over Expected (CPOE)",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Mahomes combines elite passing efficiency, low sack rates, and effective scrambling, yet CPOE places him near or below league average, motivating a unified outcome model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A single skill metric (CPOE) misrating a quarterback who excels at avoiding negative plays is the same fragmentation GSE's unified outcome model fixes.",
+        "source_operator": "mahomes_cpoe_paradox",
+        "telemetry": "Mahomes: elite outcomes, CPOE ~average"
+      }
+    },
+    {
+      "primitive_id": "fragmented_metrics_question",
+      "name": "Do separate models/metrics mis-evaluate QBs?",
+      "verbatim_quote": "Does separating all of these elements across either distinct models or outcome-based metrics present issues with evaluating quarterback performance?",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The motivating question is whether splitting passing, scrambling, and sack avoidance across distinct models or outcome metrics distorts quarterback evaluation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fragmented per-skill metrics can mis-rank a player; GSE asks the same question and answers it with a joint outcome distribution.",
+        "source_operator": "fragmented_metrics_question",
+        "telemetry": "fragmented metrics -> mis-evaluation?"
+      }
+    },
+    {
+      "primitive_id": "five_class_dropback_model",
+      "name": "Classify drop-back outcome into five classes",
+      "verbatim_quote": "we build a classification model to predict the outcome of a drop-back play",
+      "page": 1,
+      "latex": "\\hat{y}\\in\\{\\text{Completion, Incompletion, Interception, Scramble, Sack}\\}",
+      "symbol_and_unit_ledger": {
+        "y": "drop-back outcome class (5 classes)"
+      },
+      "assumptions": [
+        "The model predicts whether a drop-back results in a completion, incompletion, interception, scramble, or sack; a single multi-class model unifies the elements."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A five-class drop-back outcome distribution is the same joint play-outcome model GSE uses to value a QB's decision under pressure.",
+        "source_operator": "five_class_dropback_model",
+        "telemetry": "5 classes: comp/incomp/int/scramble/sack"
+      }
+    },
+    {
+      "primitive_id": "statsbomb_low_freq_tracking",
+      "name": "StatsBomb event + low-frequency tracking (>=2.5 Hz)",
+      "verbatim_quote": "We utilise our own event and low-frequency tracking data that tracks player locations from the start of the play and updates at a minimum of 2.5 times per second",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "StatsBomb's own event and low-frequency tracking data tracks player locations from play start, updating at a minimum of 2.5 times per second."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Low-frequency tracking (>=2.5 Hz) is the same sparse-tracking substrate GSE works with when full optical tracking is unavailable.",
+        "source_operator": "statsbomb_low_freq_tracking",
+        "telemetry": "tracking >= 2.5 updates/sec"
+      }
+    },
+    {
+      "primitive_id": "penultimate_frame_2p5s_window",
+      "name": "Features from penultimate frame, <=2.5s post-snap",
+      "verbatim_quote": "The penultimate frame prior to the pass, sack or exiting the pocket is used to derive features up to a maximum of 2.5 seconds post-snap",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The penultimate frame before the pass, sack, or pocket exit defines the feature window, capped at 2.5 seconds post-snap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A penultimate-frame feature snapshot is the same pre-decision state GSE uses to predict an outcome without peeking at the result.",
+        "source_operator": "penultimate_frame_2p5s_window",
+        "telemetry": "penultimate frame, <=2.5 s post-snap"
+      }
+    },
+    {
+      "primitive_id": "time_limit_prevents_leakage",
+      "name": "Time cap prevents outcome leakage into training",
+      "verbatim_quote": "We use this time-limit to avoid leaking too much information into the model training task",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The 2.5-second cap is explicitly chosen to avoid leaking too much information (the outcome) into the model training task."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A temporal cutoff to prevent label leakage is the same anti-leakage discipline GSE enforces in its predictive features.",
+        "source_operator": "time_limit_prevents_leakage",
+        "telemetry": "time cap -> no outcome leakage"
+      }
+    },
+    {
+      "primitive_id": "pressure_separation_features",
+      "name": "Features: QB pressure + receiver separation/location",
+      "verbatim_quote": "We derive features from the tracking frames to quantify the pressure on the QB, plus representations of receiver separation and location",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Tracking-derived features quantify pressure on the QB and represent receiver separation and location."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pressure plus receiver-separation features are the same pass-rush and coverage inputs GSE feeds its outcome model.",
+        "source_operator": "pressure_separation_features",
+        "telemetry": "features: QB pressure + receiver sep/loc"
+      }
+    },
+    {
+      "primitive_id": "contextual_features",
+      "name": "Contextual features: yardline, down, distance, time-to-throw",
+      "verbatim_quote": "Contextual features were also included (yardline, down, distance, time-to-throw)",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Contextual features include yardline, down, distance, and time-to-throw, situating the decision in game state."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Down/distance/yardline/time-to-throw context is the same game-state conditioning GSE applies to its play-outcome model.",
+        "source_operator": "contextual_features",
+        "telemetry": "context: yardline/down/distance/TTT"
+      }
+    },
+    {
+      "primitive_id": "three_model_approaches",
+      "name": "Three approaches: XGBoost, GNN, CNN",
+      "verbatim_quote": "We developed three approaches for this multi-classification modelling task",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The three approaches are eXtreme Gradient Boosting (XGBoost), a graph convolutional neural network (GNN), and a convolutional neural network (CNN) adapted from prior studies (The Zoo 2020, Baldwin 2021, Song et al. 2023)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A tabular-vs-graph-vs-image model bake-off is the same architecture comparison GSE runs for its tracking models.",
+        "source_operator": "three_model_approaches",
+        "telemetry": "XGBoost / GNN / CNN"
+      }
+    },
+    {
+      "primitive_id": "trained_2022_nfl_ncaa",
+      "name": "Trained on 2022 NFL and NCAA seasons",
+      "verbatim_quote": "We trained the models on data from the 2022 NFL and NCAA seasons",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Models are trained on the 2022 NFL and NCAA seasons, spanning professional and college play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-level training corpus is the same breadth GSE uses to learn transferable play-outcome patterns.",
+        "source_operator": "trained_2022_nfl_ncaa",
+        "telemetry": "train: 2022 NFL + NCAA"
+      }
+    },
+    {
+      "primitive_id": "calibrated_metrics_xgboost_best",
+      "name": "Well-calibrated classes; XGBoost best (logloss 0.997, AUC 0.67)",
+      "verbatim_quote": "Key model performance metrics are outlined below. Individual class labels were found to be well calibrated on test-set data from the model training stage",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "XGBoost": "logloss 0.997 / F1 0.50 / ROC-AUC 0.67",
+        "GNN": "logloss 1.014 / F1 0.43 / ROC-AUC 0.66",
+        "CNN": "logloss 1.010 / F1 0.51 / ROC-AUC 0.64"
+      },
+      "assumptions": [
+        "Individual class labels are well calibrated on test-set data; the metrics table reports XGBoost log loss 0.997 / F1 0.50 / ROC-AUC 0.67, GNN 1.014 / 0.43 / 0.66, CNN 1.010 / 0.51 / 0.64 (log loss lower is better, F1 and ROC-AUC higher is better)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Calibration plus a log-loss/AUC bake-off is the same model-selection discipline GSE applies; XGBoost wins on log loss and AUC.",
+        "source_operator": "calibrated_metrics_xgboost_best",
+        "telemetry": "XGBoost 0.997/0.50/0.67 best"
+      }
+    },
+    {
+      "primitive_id": "xgboost_selected",
+      "name": "XGBoost selected for downstream analysis",
+      "verbatim_quote": "Given the XGBoost model had the best performance, subsequent analysis will focus on predictions from it",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because XGBoost had the best performance, the subsequent QB analysis uses its predictions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Selecting the best-calibrated model for downstream valuation is the same champion-model choice GSE makes.",
+        "source_operator": "xgboost_selected",
+        "telemetry": "champion = XGBoost"
+      }
+    },
+    {
+      "primitive_id": "outcome_rates_over_expectation",
+      "name": "Profile QBs by outcome rates over expectation",
+      "verbatim_quote": "we profile QB performance by deriving outcome rates over expectation for some of the model target variables",
+      "page": 1,
+      "latex": "\\text{OOE}_c=\\text{rate}_c-\\mathbb{E}[\\text{rate}_c]",
+      "symbol_and_unit_ledger": {
+        "OOE_c": "outcome c rate over expectation"
+      },
+      "assumptions": [
+        "QB performance is profiled by outcome rates over expectation for the model target variables, for both NFL and NCAA 2022; this is the outcome-over-expectation analogue of CPOE generalized to all five classes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Outcome-over-expectation per class is the same residual-vs-model grading GSE uses to credit a QB for avoiding negative plays.",
+        "source_operator": "outcome_rates_over_expectation",
+        "telemetry": "OOE = observed rate - expected rate"
+      }
+    },
+    {
+      "primitive_id": "mahomes_avoids_negative_scrambles",
+      "name": "Mahomes avoids negative plays, scrambles above average",
+      "verbatim_quote": "Mahomes stands out in ability to run below expectations on sacks, incompletions & interceptions, while scrambling at above average rates",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Mahomes runs below expectation on sacks, incompletions, and interceptions while scrambling at above-average rates, explaining why a completion-only metric underrates him."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Avoiding negative outcomes while scrambling is the same value-creation GSE captures that a completion-only metric misses.",
+        "source_operator": "mahomes_avoids_negative_scrambles",
+        "telemetry": "Mahomes: low sack/int/incomp, high scramble"
+      }
+    },
+    {
+      "primitive_id": "williams_maye_sack_scramble",
+      "name": "Williams vs Maye: sack/scramble rates over expectation",
+      "verbatim_quote": "The contrast between Caleb Williams & Drake Maye in their sack & scramble rates relative to expectation",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The analysis contrasts 2023 draft prospects Caleb Williams and Drake Maye in their sack and scramble rates relative to expectation, with Justin Fields an outlier and Ashford an unfortunate NFL comparison."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Comparing prospects on negative-play avoidance and scrambling is the same draft-evaluation signal GSE extracts from outcome residuals.",
+        "source_operator": "williams_maye_sack_scramble",
+        "telemetry": "Williams vs Maye: sack/scramble OOE"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "qbpassoutcomes2023_trace",
+      "think": "The retrocausal genealogy of this poster is the fragmentation of quarterback evaluation across separate skill metrics and the paradox that fragmentation creates. Will Morgan, Head of AMF Data Science at StatsBomb, opens with the observation that quarterback decision-making is a trade-off as a play evolves: under pressure, judging the fine line between throwing, scrambling, and being sacked is a key skill. Patrick Mahomes is the motivating example, combining elite passing efficiency, low sack rates, and effective scrambling, yet his Completion Percentage Over Expected sits near or below league average. The poster asks whether separating these elements across distinct models or outcome-based metrics presents issues with evaluating quarterback performance, and answers by building a single classification model of the drop-back outcome. The methodological lineage runs through The Zoo's 2020 Big Data Bowl work on yards after a handoff, Ben Baldwin's 2021 computer vision with NFL player tracking using torch for R, and Song and colleagues' 2023 Sloan explainable defense-coverage classification with deep neural networks. The model predicts which of five outcomes a drop-back play produces: completion, incompletion, interception, scramble, or sack. It uses StatsBomb's own event and low-frequency tracking data, which tracks player locations from the start of the play and updates at a minimum of 2.5 times per second. The penultimate frame prior to the pass, sack, or exiting the pocket is used to derive features up to a maximum of 2.5 seconds post-snap, and this time limit is explicitly chosen to avoid leaking too much information into the training task. Features quantify the pressure on the quarterback and represent receiver separation and location, with contextual features for yardline, down, distance, and time-to-throw. Three approaches are developed for the multi-classification task: eXtreme Gradient Boosting, a graph convolutional neural network, and a convolutional neural network adapted from the prior studies, all trained on the 2022 NFL and NCAA seasons. The recursive theory of mind is modeling the quarterback's decision as a distribution over outcomes rather than a single completion skill. By predicting all five outcomes jointly from the pre-decision frame, the model reasons about what the quarterback is likely to do under pressure given the pass rush and the coverage, and it grades him by how his actual outcome rates compare to that expectation. This is the outcome-over-expectation idea generalized beyond completion: a quarterback who avoids sacks, incompletions, and interceptions while scrambling above average creates value that a completion-only metric cannot see. The model thus reasons about the quarterback as an agent managing negative-play risk, not merely as a passer. Cross-layer veto adjudication is the model bake-off and the rejection of fragmented metrics. Individual class labels are well calibrated on test-set data, and the metrics table shows XGBoost with log loss 0.997, F1 0.50, and ROC-AUC 0.67, against GNN at 1.014, 0.43, 0.66 and CNN at 1.010, 0.51, 0.64; XGBoost has the best performance, so the downstream analysis uses its predictions. The analysis then profiles quarterbacks by outcome rates over expectation for the NFL and NCAA 2022 seasons, flagging Justin Fields as an outlier, noting quarterbacks who maintain strong positive outcomes while avoiding negative plays, and contrasting Caleb Williams and Drake Maye in their sack and scramble rates relative to expectation. The veto on fragmentation is implicit in the Mahomes case: a metric that rates him average while he excels at avoiding negative plays is measuring the wrong thing, and the joint outcome model corrects it. The implementation invariants map directly onto GSE. The five-class drop-back outcome distribution is GSE's joint play-outcome model; the penultimate-frame, 2.5-second-cap feature window is GSE's anti-leakage pre-decision snapshot; pressure plus receiver-separation plus down-distance context are GSE's outcome-model inputs; the XGBoost/GNN/CNN bake-off with calibration and log-loss/AUC selection is GSE's champion-model discipline; and outcome-over-expectation per class is GSE's residual grading that credits negative-play avoidance. The outputs are calibrated outcome probabilities and outcome-over-expectation rates from public-style event and tracking data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The tracking updates at a minimum of 2.5 Hz, the feature window caps at 2.5 seconds post-snap, the five classes are completion, incompletion, interception, scramble, and sack, and the training corpus is the 2022 NFL and NCAA seasons. The champion XGBoost model reports log loss 0.997, F1 0.50, and ROC-AUC 0.67, with the GNN and CNN close behind; the modest F1 and AUC reflect the difficulty of the five-class task and the low-frequency tracking. This is a one-page conference poster, so the full feature engineering and figures live in the authors' broader work, but the method, metrics table, and analysis are printed and extracted faithfully here. The invariant for GSE is to carry the joint five-class outcome model, the leakage-controlled feature window, and the outcome-over-expectation grading, while recording that a single completion metric is a fragmented, misleading proxy for quarterback value. The broader lesson for GSE is that quarterback evaluation must jointly model the full outcome distribution, because the value of avoiding a sack or an interception is real and measurable, and any metric that ignores those classes will systematically mis-rank the quarterbacks who manage risk best on a play-by-play basis.",
+      "retrocausal_genealogy": "The poster originates in fragmented QB evaluation and the Mahomes paradox (elite efficiency, low sacks, effective scrambling, yet CPOE near/below average). Will Morgan (StatsBomb Head of AMF Data Science) asks whether separating elements across distinct models/metrics mis-evaluates QBs, and builds a unified five-class drop-back outcome model. Lineage: The Zoo 2020 BDB (YAC after handoff), Baldwin 2021 (CV with NFL tracking, torch for R), Song et al. 2023 Sloan (explainable coverage DNN).",
+      "theory_of_mind": "The model reasons about the QB as an agent managing negative-play risk, predicting a joint distribution over completion/incompletion/interception/scramble/sack from the pre-decision frame, then grading by outcome rates over expectation. StatsBomb event + low-frequency tracking (>=2.5 Hz); penultimate frame before pass/sack/pocket-exit, features capped at 2.5s post-snap to prevent leakage; pressure + receiver separation/location + yardline/down/distance/time-to-throw context. A completion-only metric misses value from avoiding negative plays while scrambling.",
+      "cross_layer_veto": "Model bake-off: classes well-calibrated; XGBoost logloss 0.997 / F1 0.50 / ROC-AUC 0.67 beats GNN (1.014/0.43/0.66) and CNN (1.010/0.51/0.64); XGBoost selected. Trained 2022 NFL+NCAA. Analysis profiles outcome-over-expectation: Justin Fields outlier, Mahomes below expectation on sacks/incompletions/interceptions while scrambling above average, Williams vs Maye sack/scramble contrast. Fragmentation veto: a completion-only metric misrates Mahomes; the joint outcome model corrects it across all five outcome classes."
+    }
+  ],
+  "universal_lens": "Quarterback value is evaluated by a single calibrated five-class drop-back outcome model (completion, incompletion, interception, scramble, sack) built from leakage-controlled pre-decision tracking features, with quarterbacks graded by outcome rates over expectation, correcting the fragmentation that makes a completion-only metric underrate negative-play avoidance.",
+  "gsi_mapping": "GSI treats the five-class outcome as a multi-class prediction from StatsBomb event + >=2.5 Hz tracking, penultimate-frame features capped at 2.5s post-snap (pressure, receiver separation/location, yardline/down/distance/time-to-throw), an XGBoost/GNN/CNN bake-off (XGBoost logloss 0.997/F1 0.50/AUC 0.67 champion), trained 2022 NFL+NCAA, graded by outcome-over-expectation per class.",
+  "gse_mapping": "GSE lifts the joint five-class drop-back outcome model, the leakage-controlled pre-decision feature window, pressure+separation+context inputs, the calibration/log-loss/AUC champion selection, and outcome-over-expectation residual grading that credits negative-play avoidance; a completion-only metric is a recorded fragmented proxy; all outputs are outcome probabilities, never sportsbook lines."
+}
