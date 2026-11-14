@@ -80,12 +80,17 @@ Local working files: ~/workspace/sweep-ingestion/ (shards, parsers, logs).
 
 ## 2026-11-14 AM X analytics delta
 
-Delta feed: `x-analytics-feed-2026-11-14-am-delta.jsonl`, 7 records converted
-from `x-intel-2026-11-14-09.md` (the ENGINE IDEAS section of the Nov 14 09:08
-CT morning sweep). All 7 records are slug-keyed: the intel file prints no post
-status IDs. One inventoried item was skipped as a duplicate: QB Supporting
-Cast Score (@sfdata9ers), whose slug key `sfdata9ers-qb-supporting-cast-score`
-already exists in `x-analytics-feed.jsonl`. Gaps carried from the run log:
+Delta feed: `x-analytics-feed-2026-11-14-am-delta.jsonl`, 66 records converted
+from `x-intel-2026-11-14-09.md` (the Nov 14 09:08 CT morning sweep: the ENGINE
+IDEAS summary plus the full AGENTS.md section inventory behind it, staged at
+`staging-2026-11-14-09/section-14.md`). The first pass filed 7 grouped records
+from the ENGINE IDEAS bullets; an expansion pass then added 59 records so each
+distinct inventoried item (named metrics, card sets, endpoints, different-angle
+notes, and lane-level items) has its own record. All 66 records are slug-keyed:
+no record uses a post status ID as its key. One inventoried item was skipped
+as a duplicate: QB Supporting Cast Score (@sfdata9ers), whose slug key
+`sfdata9ers-qb-supporting-cast-score` already exists in
+`x-analytics-feed.jsonl`. Gaps carried from the run log:
 FTNData protected (stayed unfollowed and protected); NFLResearcher dark (its
 timeline still does not load); the Dhanani Packers cutup was not retrieved
 (the post exists, Nov 10, out of window; its ID is the only piece still open
