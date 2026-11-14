@@ -1,0 +1,459 @@
+{
+ "book_id": "0096d79a376f6863",
+ "title": "Evaluating Basketball Player Performance via Statistical Network Modeling",
+ "author": "James Piette, Lisa Pham, Sathyanarayan Anand",
+ "year": 2011,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2011 Evaluating-Basketball-Player-Performance-via-Statistical-Network-Modeling.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2011, March 4-5 Boston, 11 pages, full read via pymupdf. Identity confirmed (Piette/Wharton, Pham/Boston University Bioinformatics, Anand/Wharton). Ligatures ffi/ff/fi folded for quote verification. The bipartite projection A=W^T W and the Bayesian normal hierarchical model (y_ij~N(theta_i,sigma^2), theta_i~N(mu,tau^2)) print clean and are used directly; the bootstrap p-value summation and Gibbs posterior use a shifted/custom font and are reconstructed in labeled LaTeX from the unambiguous prose. Network: 590 players, 5961 distinct five-man units, four seasons 2006-07 to 2009-10; three networks (offensive/defensive/total efficiency); BH FDR threshold 10%. No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "interaction_confound",
+   "name": "Teammate interaction is the core valuation confound",
+   "verbatim_quote": "The major difficulty in evaluating individual player performance in basketball is adjusting for interaction effects by teammates.",
+   "page": 1,
+   "latex": "\\text{observed value}_p=\\text{true ability}_p+\\text{teammate interaction}_p",
+   "symbol_and_unit_ledger": {
+    "observed value": "measured player contribution [pts/100 poss]",
+    "true ability": "isolated skill [pts/100 poss]",
+    "teammate interaction": "context effect [pts/100 poss]"
+   },
+   "assumptions": [
+    "A player's measured output depends on who he plays with",
+    "Scoring can rise from a weak supporting cast, not improved ability (e.g. Iverson)"
+   ],
+   "breakdown_regime": "Raw box-score and raw plus/minus conflate ability with context; the confound is not removed without modeling co-active teammates.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE context confound IS this interaction effect: the engine's measured pick/player value is contaminated by the co-active factors (teammates, scheme, opponent), so isolated skill must be separated from context before valuation. GSI: component output confounded by the system it operates in.",
+    "source_operator": "interaction_confound",
+    "telemetry": "observed vs context-adjusted value; teammate-interaction residual"
+   }
+  },
+  {
+   "primitive_id": "two_questions",
+   "name": "Importance and surprise are two distinct questions",
+   "verbatim_quote": "given the five-man units of which a player was a member, how important was that player relative to all other players",
+   "page": 2,
+   "latex": "\\text{centrality}_p=\\text{importance};\\quad \\text{p-value}_p=\\text{over/under-performance vs chance}",
+   "symbol_and_unit_ledger": {
+    "centrality": "network importance score [stationary probability]",
+    "p-value": "significance of performance vs null [probability]"
+   },
+   "assumptions": [
+    "Importance (how central to units) and surprise (over/under-performance) are separate axes",
+    "A player can be central yet unexceptional, or peripheral yet over-performing"
+   ],
+   "breakdown_regime": "Conflating importance with quality mislabels a high-usage average player as valuable; the two measures must be reported jointly.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE importance-vs-edge separation IS this two-axis view: the engine distinguishes how central a factor is to outcomes (volume/usage) from whether it over-performs expectation (edge), because a high-volume factor can carry no edge. GSI: separate structural centrality from anomalous performance.",
+    "source_operator": "two_questions",
+    "telemetry": "centrality rank vs adjusted p-value; the 2x2 importance/surprise grid"
+   }
+  },
+  {
+   "primitive_id": "plusminus_confound",
+   "name": "Co-occurrence biases raw plus/minus",
+   "verbatim_quote": "certain players tend to be on the court at the same time, which could lead to negative (or positive) biases.",
+   "page": 2,
+   "latex": "\\text{bias}_p=\\mathrm{Cov}(\\text{presence}_p,\\text{teammate quality})",
+   "symbol_and_unit_ledger": {
+    "bias": "plus/minus estimation bias [pts/100 poss]",
+    "presence": "on-court indicator [dimensionless]"
+   },
+   "assumptions": [
+    "Players substitute in correlated groups (starters together, bench together)",
+    "Adjusted plus/minus uses a random-effects framework to estimate individual contributions"
+   ],
+   "breakdown_regime": "Correlated minutes make the regression design collinear; adjusted plus/minus corrects some but not all confounders, motivating the network approach.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE collinearity bias IS this co-occurrence problem: factors that always activate together cannot be individually attributed by naive regression, so the engine needs a method that disentangles correlated presence. GSI: identifiability failure under collinear component activation.",
+    "source_operator": "plusminus_confound",
+    "telemetry": "minute-correlation matrix; adjusted plus/minus residual confound"
+   }
+  },
+  {
+   "primitive_id": "hierarchical_unit_model",
+   "name": "Bayesian hierarchical model shrinks unit efficiencies",
+   "verbatim_quote": "We construct a network of individual players, where the nodes are players and two players are connected if they were a member of the same five-man unit at least once.",
+   "page": 2,
+   "latex": "y_{ij}\\sim\\mathcal{N}(\\theta_i,\\sigma^2);\\quad \\theta_i\\sim\\mathcal{N}(\\mu,\\tau^2)",
+   "symbol_and_unit_ledger": {
+    "y_ij": "points scored/allowed by unit i on possession j (home-adjusted) [score]",
+    "theta_i": "unit i mean efficiency [pts/poss]",
+    "mu": "league-mean efficiency [pts/poss]",
+    "sigma^2,tau^2": "observation and unit variance [score^2]"
+   },
+   "assumptions": [
+    "Unit efficiencies are posterior means from a Gibbs sampler",
+    "Normal likelihood justified by CLT given a minimum possessions threshold; home-court effect subtracted"
+   ],
+   "breakdown_regime": "Real observations are discretized not continuous; the normal approximation and the minimum-possession requirement are the breakdown conditions for thin units.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE hierarchical shrinkage IS this model: the engine estimates unit/group efficiency with partial pooling toward a league mean so small-sample units are shrunk rather than trusted at face value, the Bayesian analogue of the small-sample reliability gate. GSI: hierarchical posterior estimation with shared prior.",
+    "source_operator": "hierarchical_unit_model",
+    "telemetry": "posterior unit efficiency theta_i; shrinkage toward mu; Gibbs chain convergence"
+   }
+  },
+  {
+   "primitive_id": "bipartite_projection",
+   "name": "Bipartite incidence projected to player network A=W^T W",
+   "verbatim_quote": "In this final network of just players, the weight of an edge between two player nodes is the sum of the squares of their shared units' efficiency scores.",
+   "page": 4,
+   "latex": "A=W^{\\mathsf T}W;\\quad A_{pq}=\\sum_{k} W_{kp}\\,W_{kq}",
+   "symbol_and_unit_ledger": {
+    "W": "unit-by-player incidence matrix, entries = unit efficiency [pts/poss]",
+    "A": "player-by-player adjacency [efficiency^2]",
+    "A_pq": "edge weight between players p,q [efficiency^2]"
+   },
+   "assumptions": [
+    "W rows are five-man units, columns are players; nonzero iff player in unit",
+    "Edge weight aggregates the squared efficiencies of all shared units"
+   ],
+   "breakdown_regime": "Squaring emphasizes efficient units and makes weights nonnegative; players who never share a unit get zero edge, so the network can be disconnected.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE co-membership projection IS A=W^T W: the engine builds a factor-interaction network by projecting a context-by-factor incidence matrix onto factors, so two factors are linked by the quality of the contexts they share. GSI: bipartite-to-unimodal projection encoding shared-context affinity.",
+    "source_operator": "bipartite_projection",
+    "telemetry": "incidence matrix W; projected adjacency A; shared-unit edge weights"
+   }
+  },
+  {
+   "primitive_id": "edge_weight_meaning",
+   "name": "Edge weights encode joint efficiency",
+   "verbatim_quote": "edge weights in the player network will be large for pairs of players who have played in efficient units as opposed to inefficient units.",
+   "page": 4,
+   "latex": "A_{pq}\\ \\text{large}\\iff p,q\\ \\text{co-occurred in high-efficiency units}",
+   "symbol_and_unit_ledger": {
+    "A_pq": "player-pair edge weight [efficiency^2]"
+   },
+   "assumptions": [
+    "Interdependency is enhanced when players perform efficiently together",
+    "The network biases the walk toward high-performing regions"
+   ],
+   "breakdown_regime": "Edge weight reflects joint unit success, not isolated individual skill; a pair can look strong because of a third teammate in the shared units.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE joint-performance weighting IS this edge semantics: the engine weights factor interactions by the quality of outcomes when they co-activate, so the interaction graph encodes which combinations actually produce value. GSI: affinity weights from shared-context outcome quality.",
+    "source_operator": "edge_weight_meaning",
+    "telemetry": "edge weight distribution; high-efficiency vs low-efficiency pair contrast"
+   }
+  },
+  {
+   "primitive_id": "eigenvector_centrality",
+   "name": "Eigenvector centrality: important if neighbors are important",
+   "verbatim_quote": "a player is deemed important if he has important neighbors (i.e. played in a significant number of efficient units).",
+   "page": 5,
+   "latex": "\\pi_i=\\lim_{t\\to\\infty}\\Pr(\\text{walk at }i);\\quad \\pi=\\pi P,\\quad \\text{random restart}",
+   "symbol_and_unit_ledger": {
+    "pi_i": "stationary visit probability = centrality [probability]",
+    "P": "weight-biased transition matrix [dimensionless]"
+   },
+   "assumptions": [
+    "Centrality is the stationary limiting probability of a random walk",
+    "Random restart ensures a unique stationary distribution on possibly disconnected graphs"
+   ],
+   "breakdown_regime": "Eigenvector centrality is influenced by both edge weights and node degree, so a well-connected average player can score high without skill.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE recursive importance IS eigenvector centrality: a factor's importance is recursive, it matters if it connects to other important factors in valuable contexts, computed as the stationary distribution of a weight-biased walk with restart. GSI: PageRank-style recursive centrality on a weighted interaction graph.",
+    "source_operator": "eigenvector_centrality",
+    "telemetry": "centrality vector pi; stationary convergence; restart probability"
+   }
+  },
+  {
+   "primitive_id": "random_walk_bias",
+   "name": "Walk biased toward heavier edges",
+   "verbatim_quote": "The walk is biased by the edge weights such that the random walker travels on heavier edges with greater probability than lighter edges.",
+   "page": 5,
+   "latex": "P_{ij}=\\frac{A_{ij}}{\\sum_k A_{ik}}\\quad(\\text{weight-proportional transition})",
+   "symbol_and_unit_ledger": {
+    "P_ij": "transition probability i to j [probability]",
+    "A_ij": "edge weight [efficiency^2]"
+   },
+   "assumptions": [
+    "Transition probability is proportional to edge weight",
+    "The walk concentrates on high-efficiency regions of the network"
+   ],
+   "breakdown_regime": "Weight-proportional walking amplifies already-strong connections; without restart it can trap in a dense high-weight clique.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE quality-biased exploration IS this walk: the engine's attribution walk prefers stronger (higher-value) interactions, concentrating importance on the combinations that drive outcomes, with restart to avoid clique trapping. GSI: weight-biased random walk for importance estimation.",
+    "source_operator": "random_walk_bias",
+    "telemetry": "transition matrix P; weight-proportional stepping; restart escape"
+   }
+  },
+  {
+   "primitive_id": "degree_inflation",
+   "name": "Degree inflates centrality; bootstrap corrects it",
+   "verbatim_quote": "it is possible for a player to have his centrality score artificially inflated by having many neighbors.",
+   "page": 5,
+   "latex": "\\text{centrality}_p=f(\\text{edge weights},\\text{degree}_p);\\quad \\text{bootstrap null removes degree effect}",
+   "symbol_and_unit_ledger": {
+    "degree_p": "number of distinct teammates/units [count]",
+    "centrality": "raw importance score [probability]"
+   },
+   "assumptions": [
+    "A player traded often or playing many units accumulates neighbors",
+    "The bootstrap reference distribution accounts for degree-driven inflation"
+   ],
+   "breakdown_regime": "Without the bootstrap correction, high-degree players are mislabeled important; centrality alone is not a skill measure.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE volume-inflation correction IS this degree adjustment: the engine corrects importance scores for how many contexts a factor appears in, so a frequently-used factor is not mistaken for a high-skill one, using a randomized null. GSI: degree-normalized significance against a randomized baseline.",
+    "source_operator": "degree_inflation",
+    "telemetry": "raw centrality vs degree; bootstrap-adjusted significance"
+   }
+  },
+  {
+   "primitive_id": "bootstrap_significance",
+   "name": "Bootstrap reference distribution gives a p-value",
+   "verbatim_quote": "By bootstrapping the unit efficiency scores, we recreate the bipartite network and consequently, the unimodal player network.",
+   "page": 5,
+   "latex": "\\mathrm{pval}(P_i)=\\frac{1}{J}\\sum_{k=1}^{J}\\mathbf{1}\\{\\pi^{*k}_i\\ge \\pi^{0}_i\\}",
+   "symbol_and_unit_ledger": {
+    "pi^0_i": "observed centrality [probability]",
+    "pi^{*k}_i": "bootstrap centrality replicate k [probability]",
+    "J": "number of bootstrap iterations [count]"
+   },
+   "assumptions": [
+    "Bootstrap resamples unit efficiency scores and rebuilds the whole network each iteration",
+    "The p-value is the fraction of replicates at least as extreme as observed"
+   ],
+   "breakdown_regime": "The null preserves network structure (degree) while randomizing performance, so it isolates skill from connectivity; too few J gives noisy p-values.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE structure-preserving null IS this bootstrap: the engine tests whether a factor's importance exceeds chance by resampling performance while holding the interaction structure fixed, producing a calibrated p-value rather than trusting the raw score. GSI: permutation/bootstrap significance preserving topology.",
+    "source_operator": "bootstrap_significance",
+    "telemetry": "bootstrap centrality distribution; p-value; iteration count J"
+   }
+  },
+  {
+   "primitive_id": "pvalue_direction",
+   "name": "Small p = over-performance, large p = under-performance",
+   "verbatim_quote": "Small p-values would indicate over-performance, while large p-values would indicate under-performance.",
+   "page": 5,
+   "latex": "\\text{small p}\\Rightarrow\\text{over-perform};\\quad \\text{large p}\\Rightarrow\\text{under-perform}",
+   "symbol_and_unit_ledger": {
+    "p": "one-sided bootstrap p-value [probability]"
+   },
+   "assumptions": [
+    "The test is directional (over vs under), so two separate one-sided tests are run",
+    "Extreme p-values at either boundary mark exceptional players"
+   ],
+   "breakdown_regime": "A two-sided test would only flag 'exceptional' without direction; the split testing requires separate multiple-testing adjustments per direction.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE directional surprise IS this p-value semantics: the engine flags factors that over-perform expectation (positive edge candidates) and under-perform (fade candidates) as two distinct directional signals, not a single anomaly score. GSI: signed deviation from a null performance model.",
+    "source_operator": "pvalue_direction",
+    "telemetry": "over-performance p-value; under-performance p-value; directional classification"
+   }
+  },
+  {
+   "primitive_id": "multiple_testing",
+   "name": "BH correction controls false discoveries across players",
+   "verbatim_quote": "We then use these adjusted p-values to classify over-performers and under-performers at a threshold of 10%.",
+   "page": 6,
+   "latex": "\\text{BH-adjust }p_{(1)}\\le\\dots\\le p_{(m)};\\quad \\text{flag if }p_{\\text{adj}}<0.10",
+   "symbol_and_unit_ledger": {
+    "p_adj": "Benjamini-Hochberg adjusted p-value [probability]",
+    "m": "number of players tested [count]",
+    "0.10": "FDR threshold [probability]"
+   },
+   "assumptions": [
+    "Testing all 590 players inflates false positives without correction",
+    "BH controls the false discovery rate at 10%"
+   ],
+   "breakdown_regime": "Without multiple-testing correction, ~10% of average players would be falsely flagged exceptional; the threshold is a chosen FDR, not a universal constant.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE false-discovery control IS the BH correction: when the engine scans many candidate factors for edge, it adjusts significance for the number of tests so the reported edges control false discoveries rather than drowning in noise. GSI: FDR control under massive parallel hypothesis testing.",
+    "source_operator": "multiple_testing",
+    "telemetry": "raw vs BH-adjusted p-values; FDR threshold; number of tests m"
+   }
+  },
+  {
+   "primitive_id": "offense_harder",
+   "name": "Over-performing offense is harder than defense",
+   "verbatim_quote": "suggesting that over-performing offensively is harder than over-performing defensively.",
+   "page": 5,
+   "latex": "\\#\\{\\text{offensive over-performers}\\}<\\#\\{\\text{defensive over-performers}\\}",
+   "symbol_and_unit_ledger": {
+    "counts": "number of extreme-p players per direction [count]"
+   },
+   "assumptions": [
+    "Offensive p-value histogram has nearly double the extreme-high vs extreme-low mass; defense is the converse",
+    "Total exceptional players is about even across offense and defense"
+   ],
+   "breakdown_regime": "The asymmetry is an empirical regularity of the era, suggesting offensive efficiency is more constrained/competitive than defensive; not a law.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE asymmetric edge difficulty IS this finding: the engine recognizes that exceeding expectation on one side of the ball (offense/defense, or one market side) is structurally harder than the other, so edge thresholds should be side-aware. GSI: asymmetric difficulty of outperforming a null across subsystems.",
+    "source_operator": "offense_harder",
+    "telemetry": "offense vs defense extreme-p counts; histogram boundary asymmetry"
+   }
+  },
+  {
+   "primitive_id": "prospect_detection",
+   "name": "Low centrality + over-performance = under-utilized prospect",
+   "verbatim_quote": "To find these \"prospects\", we look for players whose centrality score is small, but over-perform statistically in one of the efficiency categories.",
+   "page": 6,
+   "latex": "\\text{prospect}\\iff \\text{centrality}_p\\ \\text{low}\\ \\land\\ p_{\\text{over},p}\\ \\text{small}",
+   "symbol_and_unit_ledger": {
+    "centrality": "importance score [probability]",
+    "p_over": "over-performance p-value [probability]"
+   },
+   "assumptions": [
+    "Under-utilized players have low importance but statistically significant over-performance",
+    "Examples: Scalabrine, Tony Allen, George Hill; Oden qualifies via injury not management"
+   ],
+   "breakdown_regime": "Low centrality can reflect injury or lack of opportunity rather than coaching error; the prospect signal must be checked against the reason for low usage.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE undervalued-edge detection IS this prospect rule: the engine hunts for low-volume factors that statistically over-perform, the under-utilized edges the market has not yet priced, while checking that low volume is not itself a red flag (injury/availability). GSI: anomaly detection in low-traffic components.",
+    "source_operator": "prospect_detection",
+    "telemetry": "low-centrality over-performer list; usage reason (injury vs choice)"
+   }
+  },
+  {
+   "primitive_id": "overuse_detection",
+   "name": "High centrality + under-performance = over-used",
+   "verbatim_quote": "it is possible to find players who are receiving too much playing time i.e., under-performing players with high centrality scores.",
+   "page": 6,
+   "latex": "\\text{over-used}\\iff \\text{centrality}_p\\ \\text{high}\\ \\land\\ p_{\\text{under},p}\\ \\text{large}",
+   "symbol_and_unit_ledger": {
+    "centrality": "importance score [probability]",
+    "p_under": "under-performance p-value [probability]"
+   },
+   "assumptions": [
+    "High-importance players who under-perform are receiving too much opportunity",
+    "Example: Jarret Jack, high centrality but under-performs nearly everywhere"
+   ],
+   "breakdown_regime": "High centrality with average performance is not over-use (it is expected); only the combination of high centrality and significant under-performance flags misuse.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE overallocated-factor detection IS this over-use rule: the engine flags high-volume factors that statistically under-perform, the over-allocated picks consuming bankroll without edge, the mirror of the prospect signal. GSI: detect over-provisioned underperforming components.",
+    "source_operator": "overuse_detection",
+    "telemetry": "high-centrality under-performer list; volume vs performance mismatch"
+   }
+  },
+  {
+   "primitive_id": "external_validation",
+   "name": "Centrality ranking externally validated by MVP",
+   "verbatim_quote": "LeBron James ranks at number one in terms of centrality scores in each case (offense, defense, and total), suggesting he is the most important player in the network.",
+   "page": 6,
+   "latex": "\\text{centrality rank}_{\\text{LeBron}}=1\\ \\text{in offense, defense, total};\\quad \\text{MVP 2009, 2010}",
+   "symbol_and_unit_ledger": {
+    "centrality rank": "ordinal importance [rank]"
+   },
+   "assumptions": [
+    "The top centrality player coincides with the league MVP (external ground truth)",
+    "Over-performance in two of three areas corroborates the importance measure"
+   ],
+   "breakdown_regime": "External validation by MVP is suggestive not definitive; centrality measures importance to units, which is related to but not identical to MVP voting.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE external-ground-truth validation IS this check: the engine validates its internal importance/edge rankings against an independent external outcome (awards, results) so the measure is anchored to reality rather than self-referential. GSI: validate a learned ranking against an external gold standard.",
+    "source_operator": "external_validation",
+    "telemetry": "centrality rank vs external award; over-performance corroboration"
+   }
+  },
+  {
+   "primitive_id": "network_scale",
+   "name": "Network scale: 590 players, 5961 units, 4 seasons",
+   "verbatim_quote": "Each network contains 590 players that were members of 5961 distinct 5-man units over the course of the four seasons.",
+   "page": 5,
+   "latex": "|V|=590\\ \\text{players};\\quad |\\text{units}|=5961;\\quad \\text{seasons}=4",
+   "symbol_and_unit_ledger": {
+    "V": "player node set [count]",
+    "units": "distinct five-man units [count]"
+   },
+   "assumptions": [
+    "Three networks built (offensive, defensive, total efficiency) on the same node set",
+    "Four seasons 2006-07 through 2009-10 of play-by-play data"
+   ],
+   "breakdown_regime": "Pooling four seasons assumes player ability is stable enough across seasons; traded players appear in multiple teams' units (e.g. Mo Williams).",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE pooled-panel network IS this construction: the engine builds the factor-interaction network over a multi-season panel of contexts, accepting a stability assumption and handling factors that appear in multiple groups. GSI: longitudinal interaction-graph construction with entity resolution.",
+    "source_operator": "network_scale",
+    "telemetry": "node/edge counts; season panel; multi-team entity resolution"
+   }
+  },
+  {
+   "primitive_id": "edge_centrality_extension",
+   "name": "Edge centrality evaluates pairs, not just individuals",
+   "verbatim_quote": "These scores correspond to the importance of how two teammates perform together.",
+   "page": 7,
+   "latex": "\\text{centrality}(p,q)=\\text{importance of the pair's joint performance}",
+   "symbol_and_unit_ledger": {
+    "centrality(p,q)": "edge centrality of a player pair [score]"
+   },
+   "assumptions": [
+    "The method extends from node centrality to edge centrality",
+    "Pairs can be valuable even when neither member is individually successful"
+   ],
+   "breakdown_regime": "Edge centrality is proposed as an extension, not computed in the paper; it captures synergy that node-level measures miss.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE interaction-edge valuation IS this extension: the engine can value the interaction itself (a pick combination, a factor pair) rather than only individual factors, capturing synergy where the pair outperforms its parts. GSI: edge-level importance for combinatorial synergy.",
+    "source_operator": "edge_centrality_extension",
+    "telemetry": "edge centrality score; pair-vs-individual performance gap"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "piette2011_network_attribution",
+   "think": "This inline cycle extracts Piette, Pham and Anand's 2011 MIT Sloan Sports Analytics Conference paper, Evaluating Basketball Player Performance via Statistical Network Modeling, an eleven-page treatment of the teammate-interaction confound that sits directly on top of the Kubatko accounting layer. Eighteen primitives are extracted, each with a clean verbatim quote verified as an exact substring of the normalized text (ligatures folded), a page anchor, an equation, a symbol-and-unit ledger, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. The bipartite projection A equals W transpose W and the Bayesian normal hierarchical model print in clean text and are used directly; the bootstrap p-value summation and the Gibbs posterior use a shifted font and are reconstructed in labeled LaTeX from the unambiguous prose. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from hockey's plus-minus through Rosenbaum's adjusted plus-minus and the social-network and biological-pathway literature into this basketball application. The load-bearing problem is that a player's measured output is contaminated by who he plays with, so raw plus-minus and even adjusted plus-minus struggle to separate two distinct questions: how important a player is to his units, and whether his contribution over- or under-performed a statistical model. The paper's novel move is to import Latent Pathway Identification Analysis, a random-walk algorithm designed to find perturbed cellular pathways in a biological network, and repurpose it to find important players in a co-membership network. The genealogy is precise that network ranking is not new to sports, NCAA football computer rankings already use wins and indirect wins as edges, but basketball player valuation had not been cast this way. The unit efficiencies themselves come from a Bayesian normal hierarchical model with a Gibbs sampler, so the network is built on shrunk posterior estimates rather than raw small-sample rates, which is the hierarchical-shrinkage discipline the Foundry's probability books establish.\n\nThe recursive theory of mind models the analyst reasoning about a player whose value is recursively defined by his neighbors. Eigenvector centrality makes importance recursive: a player is important if he has important neighbors, meaning he played in many efficient units, and the stationary probability of a weight-biased random walk with restart computes this fixed point. But the analyst must then see through the degree confound, because a well-connected player who was traded often or played many units accumulates centrality without skill, so the bootstrap rebuilds the network from resampled unit efficiencies to produce a reference distribution that holds structure fixed while randomizing performance. The resulting p-value is directional, small for over-performance and large for under-performance, and because every player is tested the Benjamini-Hochberg procedure controls the false discovery rate at ten percent. The analyst's final reasoning combines the two axes: low centrality with significant over-performance marks an under-utilized prospect, high centrality with significant under-performance marks an over-used player, and high centrality with average performance is simply expected, not exceptional. This is a theory of mind about hidden skill under connectivity noise, and it is validated externally when the top centrality player, LeBron James, coincides with the league MVP.\n\nThe cross-layer veto adjudication is where this book earns its place beside the accounting and attribution layers. The first veto is the context confound: observed value is true ability plus teammate interaction, so the engine must isolate skill from co-active context before valuation, the same discipline as adjusted plus-minus. The second veto is the importance-versus-edge separation: centrality measures volume and connectivity, not edge, so a high-centrality factor can carry no anomalous performance and must not be mistaken for value. The third veto is the degree-inflation correction: raw importance is inflated by how many contexts a factor appears in, so a structure-preserving bootstrap null is required before calling a factor significant. The fourth veto is false-discovery control: scanning many factors for edge demands BH adjustment or the reported edges drown in noise. The fifth veto is the prospect-versus-overuse asymmetry: the engine hunts low-volume over-performers as undervalued edges and flags high-volume under-performers as over-allocated, while checking that low volume is not itself an availability red flag. The hierarchical shrinkage links to the probability layer, the small-sample gate links to Kubatko, and the external MVP validation links to the Foundry's requirement that internal rankings be anchored to independent outcomes. The result is a sovereign network-attribution layer: recursive importance on a co-membership graph, structure-preserving significance, directional surprise, false-discovery control, and the prospect/overuse detection grid, all grounded in clean verbatim prose with honestly labeled equation reconstructions.\n\nSeveral implementation invariants deserve sovereign status because they are the conditions under which the method holds. The home-court effect is removed empirically as the difference between observed home and away efficiency before the hierarchical model is fit, so unit efficiencies are venue-neutral. The normal likelihood is an approximation to discretized point counts, justified by the Central Limit Theorem only when a unit meets a minimum possessions threshold, which is precisely why thin units are unreliable and why shrinkage matters. Random restart is not optional: the co-membership network can be disconnected, and restart guarantees a unique stationary distribution rather than a walk trapped in one component. Entity resolution is required because a traded player such as Mo Williams appears in two teams' units and must be represented as a single node bridging them. Finally, the directional testing is split into two one-sided tests with separate adjustments, because a single two-sided test would flag exceptionality without revealing whether a player over- or under-performed. These invariants ground the engine's venue normalization, minimum-sample shrinkage, graph connectivity handling, and directional significance discipline.",
+   "retrocausal_genealogy": "The genealogy runs from hockey plus-minus through Rosenbaum adjusted plus-minus and the social-network and biological-pathway literature into basketball player valuation. The load-bearing problem is the teammate-interaction confound, and the paper separates two questions, importance to units and over/under-performance versus a model. Its novel move imports Latent Pathway Identification Analysis, a random-walk algorithm for perturbed cellular pathways, repurposed to find important players in a co-membership network. Network ranking is not new to sports (NCAA football win/indirect-win edges) but basketball player valuation had not been cast this way. Unit efficiencies come from a Bayesian normal hierarchical model with a Gibbs sampler, so the network is built on shrunk posteriors not raw small-sample rates, the hierarchical-shrinkage discipline of the probability layer.",
+   "theory_of_mind": "The analyst reasons about a player whose value is recursively defined by neighbors. Eigenvector centrality makes importance recursive, important if important neighbors, computed as the stationary probability of a weight-biased walk with restart. The analyst then sees through the degree confound, a well-connected traded player accumulates centrality without skill, so a bootstrap rebuilds the network from resampled unit efficiencies holding structure fixed while randomizing performance. The p-value is directional (small over, large under) and BH controls false discovery at ten percent across all players. The final reasoning combines axes: low centrality plus over-performance is an under-utilized prospect, high centrality plus under-performance is over-use, high centrality plus average is expected. Hidden skill under connectivity noise, externally validated when top-centrality LeBron James coincides with MVP.",
+   "cross_layer_veto": "Five vetoes adjudicate against the accounting and attribution layers. Context confound: observed value is ability plus teammate interaction, so isolate skill from co-active context. Importance-versus-edge separation: centrality is volume/connectivity not edge, so a high-centrality factor may carry no anomalous performance. Degree-inflation correction: raw importance is inflated by context count, so a structure-preserving bootstrap null is required before significance. False-discovery control: scanning many factors demands BH adjustment or edges drown in noise. Prospect-versus-overuse asymmetry: hunt low-volume over-performers as undervalued edges and flag high-volume under-performers as over-allocated, checking low volume is not an availability red flag. Hierarchical shrinkage links to the probability layer, the small-sample gate to Kubatko, and external MVP validation to the Foundry's anchor-to-outcome requirement."
+  }
+ ],
+ "universal_lens": "Piette et al. 2011 contributes the network-attribution and significance layer to the Foundry stack: player importance as eigenvector centrality (stationary probability of a weight-biased random walk with restart) on a co-membership network built by projecting a unit-by-player incidence matrix A=W^T W, with edge weights the sum of squared shared-unit efficiencies; performance surprise as a directional bootstrap p-value against a structure-preserving null, BH-adjusted for multiple testing; and a prospect/overuse detection grid combining centrality with over/under-performance. Its load-bearing invariants are the context confound, importance-versus-edge separation, degree-inflation correction, false-discovery control, and hierarchical shrinkage of the underlying unit efficiencies.",
+ "gsi_mapping": "For GSI these primitives are the general graph-attribution and anomaly-significance layer: build a component-interaction network by projecting a context-by-component incidence matrix, compute recursive importance as the stationary distribution of a weight-biased walk with restart, test significance against a structure-preserving bootstrap null that holds topology fixed while randomizing performance, control false discovery under massive parallel testing, separate structural centrality from anomalous performance, and detect under-provisioned over-performers versus over-provisioned under-performers. Hierarchical posterior shrinkage stabilizes small-sample context estimates before the network is built.",
+ "gse_mapping": "For GSE this is the confound-adjusted factor-attribution and edge-discovery layer: the teammate-interaction confound IS the co-active-factor context problem, eigenvector centrality IS recursive factor importance, the degree-inflation bootstrap IS the volume-correction before calling a factor significant, the directional p-value IS over/under-performance versus the market's null, BH control IS false-discovery discipline when scanning many candidate edges, the prospect rule IS undervalued-edge detection (low volume + over-performance) and the overuse rule IS over-allocated-factor detection (high volume + under-performance), and external MVP validation IS the anchor-to-independent-outcome requirement. Hierarchical shrinkage links to the probability layer and the small-sample gate to Kubatko. Equation reconstructions are labeled and no sportsbook line is a model input."
+}

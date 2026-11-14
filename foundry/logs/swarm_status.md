@@ -484,3 +484,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 21:31:19 | COMPLETE | 62e572bc9a9bde38 | primitives=19 think_words=881
 - 2026-11-13 21:33:23 | CLAIMED | 4d7b8b264059be1f | worker=hermes-inline file=2007 A starting point for analyzing basketball statistics.pdf
 - 2026-11-13 21:38:52 | COMPLETE | 4d7b8b264059be1f | primitives=22 think_words=921
+- 2026-11-13 21:40:55 | CLAIMED | 0096d79a376f6863 | worker=hermes-inline file=2011 Evaluating-Basketball-Player-Performance-via-Statistical-Network-Modeling.pdf
+- 2026-11-13 21:45:47 | COMPLETE | 0096d79a376f6863 | primitives=18 think_words=915
