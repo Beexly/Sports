@@ -1,0 +1,95 @@
+{
+  "book_id": "4d07d4a4fabdedcd",
+  "source_status": "COMPLETE",
+  "title": "2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna",
+  "file_name": "2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna.pdf",
+  "sha256": "4d07d4a4fabdedcdd6bb48acebc0a71f9b835478fff1e9693b74e9ff0a0fcdc3",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "batting_average",
+      "name": "Batting Average",
+      "verbatim_quote": "Introduction An all-rounder in cricket is a player who is capable of performing well at both batting and bowling.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Runs scored divided by times out, excluding not outs.",
+      "breakdown_regime": "Singularity when batsman is not out; undefined when batsman has zero dismissals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Posterior mean of runs per dismissal",
+        "source_operator": "batting_average",
+        "telemetry": "Runs per dismissal (R/D)"
+      }
+    },
+    {
+      "primitive_id": "bowling_average",
+      "name": "Bowling Average",
+      "verbatim_quote": "These all-rounders still have their dominant role by which one categorizes them as batting all-rounders or bowling all-rounders.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Total runs conceded divided by wickets taken.",
+      "breakdown_regime": "Singularity when bowler has zero wickets; undefined when bowler conceded zero runs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Negative posterior mean of runs per wicket",
+        "source_operator": "bowling_average",
+        "telemetry": "Runs per wicket (R/W)"
+      }
+    },
+    {
+      "primitive_id": "economy_rate",
+      "name": "Economy Rate",
+      "verbatim_quote": "To the knowledge of authors of this paper, currently, there is no precise method for a player to be categorized as a bowling all-rounder or a batting all-rounder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Runs conceded per over bowled.",
+      "breakdown_regime": "Singularity when bowler has bowled zero overs; undefined when bowler conceded zero runs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Posterior mean of runs per over",
+        "source_operator": "economy_rate",
+        "telemetry": "Runs per over (R/O)"
+      }
+    },
+    {
+      "primitive_id": "strike_rate",
+      "name": "Strike Rate",
+      "verbatim_quote": "Therefore, the current practice of accomplishing this tends to be very much subjective.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Balls faced per dismissal for batting; balls bowled per wicket for bowling.",
+      "breakdown_regime": "Singularity when batsman is not out or bowler takes zero wickets; undefined when batsman faced zero balls or bowler bowled zero balls.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Inverse posterior mean of dismissals per ball faced/bowled",
+        "source_operator": "strike_rate",
+        "telemetry": "Dismissals per ball (D/B)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4d07d4a4fabdedcd_t0",
+      "think": "The four descriptive operators—batting average, bowling average, economy rate, and strike rate—are derived statistics that summarize distinct aspects of a cricketer's performance. Batting average and bowling average are ratios of totals to counts, while economy rate and strike rate are ratios of time/effort to outcomes. These metrics are prone to sample size bias and extreme values, making them unreliable for direct comparison across players with different playing styles or match conditions. Machine learning classification aims to combine these features into a robust classifier that reduces subjectivity and improves predictive accuracy for categorizing all-rounders.\n\nDeep epistemic analysis for 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd, domain=other, pages_read=12/12): Operator 'Batting Average' (page 1, domain other) captures: Introduction An all-rounder in cricket is a player who is capable of performing well at both batting and bowling. Assumptions: Runs scored divided by times out, excluding not outs. Breakdown regime: Singularity when batsman is not out; undefined when batsman has zero dismissals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Posterior mean of runs per dismissal Operator 'Bowling Average' (page 1, domain other) captures: These all-rounders still have their dominant role by which one categorizes them as batting all-rounders or bowling all-rounders. Assumptions: Total runs conceded divided by wickets taken. Breakdown regime: Singularity when bowler has zero wickets; undefined when bowler conceded zero runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Negative posterior mean of runs per wicket Operator 'Economy Rate' (page 1, domain other) captures: To the knowledge of authors of this paper, currently, there is no precise method for a player to be categorized as a bowling all-rounder or a batting all-rounder. Assumptions: Runs conceded per over bowled. Breakdown regime: Singularity when bowler has bowled zero overs; undefined when bowler conceded zero runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Posterior mean of runs per over Operator 'Strike Rate' (page 1, domain other) captures: Therefore, the current practice of accomplishing this tends to be very much subjective. Assumptions: Balls faced per dismissal for batting; balls bowled per wicket for bowling. Breakdown regime: Singularity when batsman is not out or bowler takes zero wickets; undefined when batsman faced zero balls or bowler bowled zero balls. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Inverse posterior mean of dismissals per ball faced/bowled Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd, domain=other, pages_read=12/12): Operator 'Batting Average' (page 1, domain other) captures: Introduction An all-rounder in cricket is a player who is capable of performing well at both batting and bowling. Assumptions: Runs scored divided by times out, excluding not outs. Breakdown regime: Singularity when batsman is not out; undefined when batsman has zero dismissals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Posterior mean of runs per dismissal Operator 'Bowling Average' (page 1, domain other) captures: These all-rounders still have their dominant role by which one categorizes them as batting all-rounders or bowling all-rounders. Assumptions: Total runs conceded divided by wickets taken. Breakdown regime: Singularity when bowler has zero wickets; undefined when bowler conceded zero runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Negative posterior mean of runs per wicket Operator 'Economy Rate' (page 1, domain other) captures: To the knowledge of authors of this paper, currently, there is no precise method for a player to be categorized as a bowling all-rounder or a batting all-rounder. Assumptions: Runs conceded per over bowled. Breakdown regime: Singularity when bowler has bowled zero overs; undefined when bowler conceded zero runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Posterior mean of runs per over Operator 'Strike Rate' (page 1, domain other) captures: Therefore, the current practice of accomplishing this tends to be very much subjective. Assumptions: Balls faced per dismissal for batting; balls bowled per wicket for bowling. Breakdown regime: Singularity when batsman is not out or bowler takes zero wickets; undefined when batsman faced zero balls or bowler bowled zero balls. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Inverse posterior mean of dismissals per ball faced/bowled Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Team managers and selectors rely on these summary statistics for player evaluation and selection. Subjective categorization introduces bias and inconsistency, whereas an automated classification rule provides a transparent, repeatable framework that aligns with data-driven decision-making. Theory of Mind & Decision Maker Model: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions include removing redundant features (e.g., highly correlated strike rates and dismissals per ball). Leakage occurs if future information (e.g., match outcomes) influences feature construction, violating the assumption of causality from performance to category. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2021 Classification of all-rounders in limited over cricket - a machine learning approach - Ananda B. W. Manage, Ram C. Kafle and Danush K. Wijekularathna (4d07d4a4fabdedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

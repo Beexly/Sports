@@ -226,6 +226,8 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // recent settled window, persisted to the report store for operator reads.
   // Daily 12:35 UTC, off the settlement (:20) and board (:32/:47) ticks.
   cronEntry("/api/cron/microstructure-report", "35 12 * * *"),
+  // Site-wide autonomous workflow & multi-council fabric (outside 08:30-12:30 UTC Neon quiet window).
+  cronEntry("/api/cron/site-wide-workflows", "12 0,3,6,13,16,19,22 * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */

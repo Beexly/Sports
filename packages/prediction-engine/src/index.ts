@@ -5907,6 +5907,32 @@ export {
   applyCorpusGroundingToFamilyDeltas,
   UNSUPPORTED_FAMILY_FLOOR,
 } from "./literature/corpus-grounding.js";
+
+// Stage-2 Sovereign Foundry + Shard B + Drive Master situational priors (bounded Positive-Part James-Stein).
+export {
+  evaluateFoundryCorpusSituationalPriors,
+  computePositivePartJamesSteinShrinkage,
+  evaluateRulebookAndPsychologyOverlay,
+  evaluateSplitFieldCoverageOverlay,
+  FOUNDRY_CORPUS_BASELINE_SNAPSHOT,
+  CORPUS_SITUATIONAL_FAMILIES,
+  MAX_ABS_CORPUS_LOG_ODDS,
+  MAX_CORPUS_FAMILY_PROB_MODULATION,
+  NFL_2026_PLAYING_RULES_OPERATORS,
+  SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS,
+  SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS,
+  type CorpusSituationalFamily,
+  type CorpusFamilyBaselineEvidence,
+  type FoundryCorpusSituationalInput,
+  type FoundryCorpusSituationalReceipt,
+  type NflRuleOperatorSpec,
+  type RulebookAndPsychologyOverlayInput,
+  type RulebookAndPsychologyOverlayReceipt,
+  type SplitFieldCoverageCheckCode,
+  type SplitFieldCoverageCheckSpec,
+  type SplitFieldCoverageOverlayInput,
+  type SplitFieldCoverageOverlayReceipt,
+} from "./nfl/foundry-corpus-situational-priors.js";
 export type {
   GroundingFacet,
   GroundingEvidence,

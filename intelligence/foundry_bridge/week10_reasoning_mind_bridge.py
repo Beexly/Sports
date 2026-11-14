@@ -51,7 +51,7 @@ AUTHORITATIVE_WEEK10_TRUTH_2026_11_13: Dict[str, Any] = {
         "Greg Dortch": ("ARI", "BUF"),
         "Kendrick Bourne": ("SF", "ARI"),
         "Kyler Murray": ("ARI", "MIN"),
-        "Kirk Cousins": ("ATL", "MIN"),
+        "Kirk Cousins": ("LV", "MIN"),
         "Jacoby Brissett": ("ARI", "BAL"),
         "J.J. McCarthy": ("MIN", "NYG"),
         "Josh Downs": ("IND", "KC"),
@@ -79,6 +79,7 @@ AUTHORITATIVE_WEEK10_TRUTH_2026_11_13: Dict[str, Any] = {
         "Zach Sieler",
         "Gardner Minshew",
         "Sam Darnold",
+        "Jaxson Dart",
     ],
     "practice_watchlist": {
         "Trent Williams": "limited_friday_questionable",
@@ -86,6 +87,9 @@ AUTHORITATIVE_WEEK10_TRUTH_2026_11_13: Dict[str, Any] = {
         "Garrett Wilson": "full_friday_clearance_pending",
         "Trent McDuffie": "questionable",
         "Derrick Brown": "playing_active",
+        "Kirk Cousins": "expected_to_start_not_formally_announced",
+        "Kyle McCord": "first_career_start_mia",
+        "Carson Beck": "first_career_start_ari",
     },
     "venue_truth": {
         "NE@DET": {
@@ -121,9 +125,112 @@ AUTHORITATIVE_WEEK10_TRUTH_2026_11_13: Dict[str, Any] = {
         {"player": "Amani Hooker", "stale_sfdata_team": "TEN", "authoritative_week10_team": "BUF"},
         {"player": "Jessie Bates", "stale_sfdata_team": "ATL", "authoritative_week10_team": "JAX"},
         {"player": "Kyler Murray", "stale_sfdata_team": "ARI", "authoritative_week10_team": "MIN"},
+        {"player": "Kirk Cousins", "stale_sfdata_team": "LV", "authoritative_week10_team": "MIN"},
         {"player": "Jacoby Brissett", "stale_sfdata_team": "ARI", "authoritative_week10_team": "BAL"},
+        {"player": "J.J. McCarthy", "stale_sfdata_team": "MIN", "authoritative_week10_team": "NYG"},
     ],
 }
+
+ABBREVIATED_PLAYER_ALIASES: Dict[str, str] = {
+    "k.murray": "Kyler Murray",
+    "k. murray": "Kyler Murray",
+    "kyler murray": "Kyler Murray",
+    "k.cousins": "Kirk Cousins",
+    "k. cousins": "Kirk Cousins",
+    "kirk cousins": "Kirk Cousins",
+    "j.brissett": "Jacoby Brissett",
+    "j. brissett": "Jacoby Brissett",
+    "jacoby brissett": "Jacoby Brissett",
+    "j.mccarthy": "J.J. McCarthy",
+    "j. mccarthy": "J.J. McCarthy",
+    "j.j. mccarthy": "J.J. McCarthy",
+    "jj mccarthy": "J.J. McCarthy",
+    "j.downs": "Josh Downs",
+    "j. downs": "Josh Downs",
+    "josh downs": "Josh Downs",
+    "k.walker": "Kenneth Walker III",
+    "k. walker": "Kenneth Walker III",
+    "kenneth walker iii": "Kenneth Walker III",
+    "t.allgeier": "Tyler Allgeier",
+    "t. allgeier": "Tyler Allgeier",
+    "tyler allgeier": "Tyler Allgeier",
+    "k.allen": "Keenan Allen",
+    "k. allen": "Keenan Allen",
+    "keenan allen": "Keenan Allen",
+    "g.dortch": "Greg Dortch",
+    "k.bourne": "Kendrick Bourne",
+}
+
+SFDATA_STALE_CSV_FILES: Tuple[str, ...] = (
+    "sfdata-qb-ryoe-2026.csv",
+    "sfdata-throwaway-rate-2026.csv",
+    "sfdata-time-to-scramble-2026.csv",
+    "sfdata-expected-completion-pct-2026.csv",
+    "sfdata-quick-pressure-rate-2026.csv",
+)
+
+QUARANTINED_CSV_ANOMALIES: Dict[Tuple[str, str, str], str] = {
+    ("sfdata-qb-ryoe-2026.csv", "j. daniels", "TB"): "Unverified duplicate J. Daniels TB #20 row (Jayden Daniels WAS #1 is valid)",
+    ("sfdata-qb-ryoe-2026.csv", "j.daniels", "TB"): "Unverified duplicate J. Daniels TB #20 row (Jayden Daniels WAS #1 is valid)",
+}
+
+MULTI_ORIGIN_PRIOR_TEAMS: Dict[str, Tuple[str, ...]] = {
+    "Kirk Cousins": ("LV", "ATL"),
+}
+
+
+def resolve_week10_csv_entity_row(
+    file_name: str,
+    player_name: str,
+    printed_team: str,
+) -> Dict[str, Any]:
+    """Resolve an analytics-sweep CSV player/team row against authoritative Week 10 truth."""
+    fname = Path(str(file_name or "")).name.lower()
+    raw_player = " ".join(str(player_name or "").strip().split())
+    norm_key = raw_player.lower()
+    canonical_player = ABBREVIATED_PLAYER_ALIASES.get(norm_key, raw_player)
+    printed = str(printed_team or "").strip().upper()
+
+    quarantine_reason = QUARANTINED_CSV_ANOMALIES.get((fname, norm_key, printed))
+    if quarantine_reason:
+        return {
+            "file_name": fname,
+            "raw_player": raw_player,
+            "canonical_player": canonical_player,
+            "printed_team": printed,
+            "week10_active_team": None,
+            "season_stat_prior_team_remapped": False,
+            "quarantined_anomaly": True,
+            "quarantine_reason": quarantine_reason,
+            "unavailable": False,
+        }
+
+    active_map = AUTHORITATIVE_WEEK10_TRUTH_2026_11_13["active_player_team"]
+    remaps = AUTHORITATIVE_WEEK10_TRUTH_2026_11_13["earned_to_active_team_remaps"]
+    unavail = set(AUTHORITATIVE_WEEK10_TRUTH_2026_11_13["unavailable_players"])
+
+    active_team = active_map.get(canonical_player, printed or None)
+    prior_candidates = set(MULTI_ORIGIN_PRIOR_TEAMS.get(canonical_player, ()))
+    if canonical_player in remaps:
+        prior_candidates.add(remaps[canonical_player][0])
+
+    remapped = bool(
+        active_team
+        and printed
+        and printed != active_team
+        and (printed in prior_candidates or fname in SFDATA_STALE_CSV_FILES)
+    )
+    return {
+        "file_name": fname,
+        "raw_player": raw_player,
+        "canonical_player": canonical_player,
+        "printed_team": printed,
+        "week10_active_team": active_team,
+        "season_stat_prior_team_remapped": remapped,
+        "quarantined_anomaly": False,
+        "quarantine_reason": None,
+        "unavailable": canonical_player in unavail,
+    }
 
 
 def open_foundry_db_readonly(db_path: Path | str = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")) -> sqlite3.Connection:

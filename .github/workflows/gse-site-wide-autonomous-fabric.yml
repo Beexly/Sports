@@ -1,0 +1,79 @@
+name: GSE Site-Wide Autonomous Fabric
+
+on:
+  schedule:
+    # Runs every 4 hours OUTSIDE the Neon autosuspend quiet window (08:30-12:30 UTC).
+    - cron: "12 0,4,13,17,21 * * *"
+  workflow_dispatch:
+    inputs:
+      model_lane:
+        description: "Pluggable inference lane (free | deepseek_1017 | gcp_credit | jules | hybrid_auto)"
+        required: true
+        default: "hybrid_auto"
+        type: choice
+        options:
+          - hybrid_auto
+          - free
+          - deepseek_1017
+          - gcp_credit
+          - jules
+      suite:
+        description: "Autonomous workflow suite to execute"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - ingestion
+          - calibration
+          - settlement
+          - destroy-audit
+          - jules-sync
+          - corpus-watch
+      week:
+        description: "NFL week selector (always 'auto' on unattended schedule)"
+        required: true
+        default: "auto"
+
+permissions:
+  contents: read
+
+jobs:
+  run-autonomous-fabric:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Python Autonomous Fabric Plan & Gate Check
+        env:
+          MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          python intelligence/ops/gse_autonomous_platform_fabric.py \
+            --model-lane "${{ github.event.inputs.model_lane || 'hybrid_auto' }}" \
+            --suite "${{ github.event.inputs.suite || 'all' }}" \
+            --week "${{ github.event.inputs.week || 'auto' }}" \
+            --dry-run
+
+      - name: Run Guardrails on Autonomous Council & Copy Surfaces
+        run: |
+          node scripts/guardrails/em-dash-scan.mjs
+          node scripts/guardrails/claude-api-usage.mjs
+          python intelligence/tests/test_gse_autonomous_platform_fabric.py || python -m pytest intelligence/tests/test_gse_autonomous_platform_fabric.py -q

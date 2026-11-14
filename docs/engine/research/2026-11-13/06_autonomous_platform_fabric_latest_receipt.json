@@ -1,0 +1,169 @@
+{
+  "generated_at_utc": "2026-11-14T05:26:04.717207+00:00",
+  "dry_run": true,
+  "model_lane": "free",
+  "max_cost_usd": 0.5,
+  "total_estimated_cost_usd": 0.0,
+  "week_info": {
+    "season": 2026,
+    "computed_week": 10,
+    "as_of_utc": "2026-11-14T05:26:04.716875+00:00"
+  },
+  "council_coverage": {
+    "agent_council_seats": 23,
+    "subagent_templates": 21,
+    "ai_council_destroy_seats": 10,
+    "war_room_watchers": 8,
+    "governed_workflows": 14
+  },
+  "hold_gate": {
+    "status": "WEEK10_HELD_FOR_CORPUS_COMPLETION",
+    "slate_prep_allowed": false,
+    "pending_tier_a": 126,
+    "insufficient_ocr": 5,
+    "calibration_verified": true,
+    "receipt_loaded": true
+  },
+  "foundry_queue": {
+    "exists": true,
+    "db_path": "C:\\Users\\Garrett\\Sports\\foundry\\foundry.db",
+    "by_status": {
+      "COMPLETE": 100,
+      "DELEGATED_GCP": 8598,
+      "DUPLICATE_WORK": 8,
+      "INSUFFICIENT_OCR": 5,
+      "INSUFFICIENT_SOURCE_ACCESS": 11,
+      "PENDING": 8403,
+      "QUARANTINED": 132
+    },
+    "pending_tier_a": 126,
+    "pending_total": 8403,
+    "complete_total": 100,
+    "delegated_gcp": 8598,
+    "insufficient_ocr": 5,
+    "primitives_rows": 1047,
+    "reasoning_traces_rows": 173
+  },
+  "jules_audit_summary": {
+    "live_api_queried": false,
+    "sources_count": 28,
+    "total_sessions": 167,
+    "state_counts": {
+      "COMPLETED": 121,
+      "IN_PROGRESS": 41,
+      "FAILED": 4,
+      "AWAITING_USER_FEEDBACK": 1
+    }
+  },
+  "providers": {
+    "default_lane": "hybrid_auto",
+    "free_endpoints_ready": [
+      "DASHSCOPE_API_KEY",
+      "NVIDIA_GSE_API_KEY",
+      "NVIDIA_API_KEY",
+      "MODELSCOPE_API_KEY",
+      "OPENROUTER_API_KEY",
+      "GOOGLE_API_KEY"
+    ],
+    "external_endpoints_ready": [
+      "DEEPINFRA_API_KEY",
+      "APIMART_API_KEY",
+      "QODER_API_KEY",
+      "TREG_AUTH_TOKEN",
+      "JSON2VIDEO_API_KEY",
+      "JSON2VIDEO_API_KEY_SECONDARY"
+    ],
+    "media_endpoints_ready": [
+      "JSON2VIDEO_API_KEY",
+      "JSON2VIDEO_API_KEY_SECONDARY"
+    ],
+    "jules_ready": true,
+    "keys_masked": {
+      "DASHSCOPE_API_KEY": "sk-w...VI2A",
+      "QWEN_GSE_API_KEY": "",
+      "NVIDIA_GSE_API_KEY": "nvap...cV8Y",
+      "NVIDIA_API_KEY": "nvap...7701",
+      "MODELSCOPE_API_KEY": "ms-3...e83e",
+      "DEEPINFRA_API_KEY": "sk-d...YhR6",
+      "APIMART_API_KEY": "sk-u...vMVT",
+      "QODER_API_KEY": "pt-T...3bbc",
+      "TREG_AUTH_TOKEN": "eyJ1...5HXs",
+      "JSON2VIDEO_API_KEY": "yNf9...UjD2",
+      "JSON2VIDEO_API_KEY_SECONDARY": "jbHv...kgIg",
+      "OPENROUTER_API_KEY": "sk-o...0fd9",
+      "GEMINI_API_KEY": "",
+      "GOOGLE_API_KEY": "AQ.A...w2_g",
+      "JULES_API_KEY": "AQ.A...s1Rw"
+    }
+  },
+  "jobs": [
+    {
+      "suite": "ingestion",
+      "owning_seats": [
+        "tal",
+        "delta",
+        "scout"
+      ],
+      "action": "sync_free_feeds_and_check_source_freshness",
+      "slate_prep_held": true,
+      "status": "READY_DATA_ONLY",
+      "cost_usd": 0.0
+    },
+    {
+      "suite": "calibration",
+      "owning_seats": [
+        "audit",
+        "prism",
+        "ascend"
+      ],
+      "action": "empirical_bayes_oof_corpus_priors_check",
+      "status": "READY",
+      "cost_usd": 0.0
+    },
+    {
+      "suite": "settlement",
+      "owning_seats": [
+        "ledger",
+        "audit"
+      ],
+      "action": "free_espn_settlement_reconcile_only",
+      "status": "READY_FREE_PATH",
+      "cost_usd": 0.0
+    },
+    {
+      "suite": "destroy-audit",
+      "owning_seats": [
+        "gauge",
+        "audit",
+        "ai-council-10-seats"
+      ],
+      "action": "run_destroy_pass_and_guardrail_audit",
+      "status": "READY",
+      "cost_usd": 0.0
+    },
+    {
+      "suite": "jules-sync",
+      "owning_seats": [
+        "chain",
+        "jarvis"
+      ],
+      "action": "poll_jules_v1alpha_sources_and_sessions",
+      "sources_count": 28,
+      "total_sessions": 167,
+      "status": "OFFLINE_CACHED",
+      "cost_usd": 0.0
+    },
+    {
+      "suite": "corpus-watch",
+      "owning_seats": [
+        "prism",
+        "ascend",
+        "archive",
+        "jarvis"
+      ],
+      "action": "monitor_shard_a_4_to_7_and_shard_b_sync",
+      "status": "READY",
+      "cost_usd": 0.0
+    }
+  ]
+}

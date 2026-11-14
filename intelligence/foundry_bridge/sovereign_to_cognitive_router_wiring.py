@@ -24,10 +24,15 @@ import hashlib
 import json
 import math
 import re
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from intelligence.foundry_bridge.week10_reasoning_mind_bridge import (
     AUTHORITATIVE_WEEK10_TRUTH_2026_11_13,
@@ -111,6 +116,7 @@ DOMAIN_DEFAULT_FAMILY: Dict[str, str] = {
 }
 
 DEFAULT_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives")
+WORKTREE_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports_prepack_audit_wt\foundry\artifacts\primitives")
 DEFAULT_GCP_SYNC_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\gcp_sync")
 DEFAULT_RLVR_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\rlvr_vetoes")
 DEFAULT_CALL_GRAPH = Path(
@@ -118,6 +124,9 @@ DEFAULT_CALL_GRAPH = Path(
 )
 DEFAULT_LESSONS_PATH = Path(
     r"C:\Users\Garrett\Sports_prepack_audit_wt\data\engine\lessons_learned_permanent_ledger.jsonl"
+)
+DEFAULT_DRIVE_MASTER_INDEX = Path(
+    r"C:\Users\Garrett\Sports_prepack_audit_wt\docs\engine\research\2026-11-13\corpus_compilation\drive_master_equations_and_situational_index.json"
 )
 DEFAULT_AUDIT_OUT_DIR = Path(
     r"C:\Users\Garrett\Sports_prepack_audit_wt\docs\engine\research\2026-11-13\friday_prepack_audit"
@@ -237,14 +246,16 @@ def load_rlvr_scenarios(rlvr_dir: Path = DEFAULT_RLVR_DIR) -> List[Dict[str, Any
 def run_wiring_and_export(
     *,
     primitives_dir: Path = DEFAULT_PRIMITIVES_DIR,
+    extra_primitives_dirs: Optional[Sequence[Path]] = None,
     gcp_sync_dir: Path = DEFAULT_GCP_SYNC_DIR,
     rlvr_dir: Path = DEFAULT_RLVR_DIR,
     call_graph_path: Path = DEFAULT_CALL_GRAPH,
     lessons_path: Path = DEFAULT_LESSONS_PATH,
+    drive_master_index_path: Optional[Path] = DEFAULT_DRIVE_MASTER_INDEX,
     audit_out_dir: Path = DEFAULT_AUDIT_OUT_DIR,
     bq_staging_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
-    """Wire Sovereign Primitives + Shard B + 87 Rules + 213 Equations + RLVR + Lessons into the Cognitive Router."""
+    """Wire Sovereign Primitives + Shard B + Drive Masters + 87 Rules + 213 Equations + RLVR + Lessons into the Cognitive Router."""
     now_iso = datetime.now(timezone.utc).isoformat()
     prim_rows: List[Dict[str, Any]] = []
     trace_rows: List[Dict[str, Any]] = []
@@ -253,11 +264,31 @@ def run_wiring_and_export(
     domain_counts: Counter[str] = Counter()
     all_bits: set[int] = set()
 
-    for fp in sorted(primitives_dir.glob("*.json")):
+    if extra_primitives_dirs is not None:
+        prim_dirs: List[Path] = [*extra_primitives_dirs, primitives_dir]
+    elif primitives_dir == DEFAULT_PRIMITIVES_DIR:
+        prim_dirs = [WORKTREE_PRIMITIVES_DIR, primitives_dir]
+    else:
+        prim_dirs = [primitives_dir]
+
+    seen_book_ids: set[str] = set()
+    prim_files: List[Path] = []
+    for pdir in prim_dirs:
+        if not pdir.is_dir():
+            continue
+        for fp in sorted(pdir.glob("*.json")):
+            if fp.stem not in seen_book_ids:
+                seen_book_ids.add(fp.stem)
+                prim_files.append(fp)
+
+    refusal_receipts_count = 0
+    for fp in prim_files:
         doc = json.loads(fp.read_text(encoding="utf-8", errors="replace"))
         book_id = str(doc.get("book_id") or fp.stem)
         source_status = str(doc.get("source_status") or "COMPLETE")
-        doc_domain = str(doc.get("domain") or "general")
+        if source_status in ("INSUFFICIENT_SOURCE_ACCESS", "INSUFFICIENT_OCR"):
+            refusal_receipts_count += 1
+        doc_domain = str(doc.get("primary_domain") or doc.get("domain") or "general")
 
         for idx, p in enumerate(doc.get("primitives", []) or []):
             pid = str(p.get("primitive_id") or f"{book_id}:p{idx + 1}")
@@ -389,6 +420,75 @@ def run_wiring_and_export(
                 }
             )
 
+    drive_clusters_routed = 0
+    drive_total_records = 0
+    load_drive = (
+        drive_master_index_path is not None
+        and drive_master_index_path.is_file()
+        and (primitives_dir == DEFAULT_PRIMITIVES_DIR or drive_master_index_path != DEFAULT_DRIVE_MASTER_INDEX)
+    )
+    if load_drive and drive_master_index_path is not None:
+        drive_idx = json.loads(drive_master_index_path.read_text(encoding="utf-8", errors="replace"))
+        sources_meta = drive_idx.get("sources") or {}
+        drive_total_records = int(
+            (sources_meta.get("equations_master_gz") or {}).get("rows", 0)
+            + (sources_meta.get("situational_master_gz") or {}).get("rows", 0)
+        )
+        for fam, count in sorted((drive_idx.get("equations_family_counts") or {}).items()):
+            f_norm = fam if fam in SITUATIONAL_FAMILIES else classify_text_to_family(fam)
+            bit = compute_family_bit_index(f_norm, f"drive_eq_fam:{fam}")
+            all_bits.add(bit)
+            fam_bit_sets[f_norm].add(bit)
+            drive_clusters_routed += 1
+            wiring_rows.append(
+                {
+                    "ingested_at_utc": now_iso,
+                    "signal_kind": "DRIVE_MASTER_INDEX",
+                    "signal_id": f"drive_eq_fam:{fam}",
+                    "title": f"Drive Equations Family {fam} ({count} records)"[:200],
+                    "situational_family": f_norm,
+                    "router_bit_index": bit,
+                    "wired_caller": "intelligence/foundry_bridge/shard_b_and_drive_master_compiler.py",
+                    "non_nan": True,
+                }
+            )
+        for tag, count in sorted((drive_idx.get("equations_top_domain_tags") or {}).items()):
+            f_norm = classify_text_to_family(tag)
+            bit = compute_family_bit_index(f_norm, f"drive_eq_tag:{tag}")
+            all_bits.add(bit)
+            fam_bit_sets[f_norm].add(bit)
+            drive_clusters_routed += 1
+            wiring_rows.append(
+                {
+                    "ingested_at_utc": now_iso,
+                    "signal_kind": "DRIVE_MASTER_INDEX",
+                    "signal_id": f"drive_eq_tag:{tag}",
+                    "title": f"Drive Equations Domain Tag {tag} ({count} records)"[:200],
+                    "situational_family": f_norm,
+                    "router_bit_index": bit,
+                    "wired_caller": "intelligence/foundry_bridge/shard_b_and_drive_master_compiler.py",
+                    "non_nan": True,
+                }
+            )
+        for kind, count in sorted((drive_idx.get("situational_kind_counts") or {}).items()):
+            f_norm = classify_text_to_family(kind)
+            bit = compute_family_bit_index(f_norm, f"drive_sit_kind:{kind}")
+            all_bits.add(bit)
+            fam_bit_sets[f_norm].add(bit)
+            drive_clusters_routed += 1
+            wiring_rows.append(
+                {
+                    "ingested_at_utc": now_iso,
+                    "signal_kind": "DRIVE_MASTER_INDEX",
+                    "signal_id": f"drive_sit_kind:{kind}",
+                    "title": f"Drive Situational Kind {kind} ({count} records)"[:200],
+                    "situational_family": f_norm,
+                    "router_bit_index": bit,
+                    "wired_caller": "intelligence/foundry_bridge/shard_b_and_drive_master_compiler.py",
+                    "non_nan": True,
+                }
+            )
+
     entity_rows: List[Dict[str, Any]] = []
     truth = AUTHORITATIVE_WEEK10_TRUTH_2026_11_13
     for player, team in sorted(truth.get("active_player_team", {}).items()):
@@ -465,10 +565,13 @@ def run_wiring_and_export(
         },
         "counts": {
             "sovereign_books_loaded": len({r["book_id"] for r in prim_rows}),
+            "refusal_receipts_fail_closed": refusal_receipts_count,
             "sovereign_primitives_routed": len(prim_rows),
             "sovereign_reasoning_traces_routed": len(trace_rows),
             "gcp_shard_b_docs_routed": len(shard_b_rows),
             "rules_rlvr_lessons_routed": len(wiring_rows),
+            "drive_master_clusters_routed": drive_clusters_routed,
+            "drive_master_total_records_indexed": drive_total_records,
             "week10_entity_truth_rows": len(entity_rows),
             "total_routed_intelligence_units": len(prim_rows) + len(trace_rows) + len(shard_b_rows) + len(wiring_rows),
             "distinct_domains_seen": len(domain_counts),

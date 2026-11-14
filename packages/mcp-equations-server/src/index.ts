@@ -16,6 +16,7 @@ export * from "./quad-engine-crosswalk.js";
 export * from "./foreman-warden-caveman-watcher.js";
 export * from "./gse-content-os-engine.js";
 export * from "./rea-evidence-investigation-tools.js";
+export * from "./foundry-sovereign-corpus-bridge.js";
 
 import {
   inspectEquationSession,

@@ -1,0 +1,78 @@
+{
+  "book_id": "3a88f7ddf53d358c",
+  "source_status": "COMPLETE",
+  "title": "Tolman-1932-PurposiveBehaviorInAnimalsAndMen",
+  "file_name": "Tolman-1932-PurposiveBehaviorInAnimalsAndMen.pdf",
+  "sha256": "3a88f7ddf53d358ca1ca8b1cb781ce4c579d39d5cfffd8b8d52a5de26033b9ab",
+  "primary_domain": "other",
+  "pages_total": 25,
+  "pages_read": 25,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": true,
+  "universal_lens": "Tolman’s purposive behavior formalizes a topological mapping from environmental stimuli to cognitive maps, rejecting molecular simplistics. This establishes a structural isomorphism between latent state-space navigation and hierarchical Bayesian inference, unifying biological agency with geometric control theory through continuous manifold transitions.",
+  "gsi_mapping": "GSI treats Tolman's cognitive map as a high-dimensional conformal prior over latent game states. Bayesian updates occur via situational cues rather than isolated stimulus-response pairs, enabling robust probabilistic forecasting of agent trajectories under non-stationary environmental dynamics and incomplete observational data.",
+  "gse_mapping": "GSE models purposive behavior as a continuous Markov decision process where agents optimize geodesic paths on a learned Riemannian manifold. State transitions are governed by goal-directed potential fields, bypassing local molecular minima to achieve global strategic objectives.",
+  "primitives": [
+    {
+      "primitive_id": "purposive_goal_operator",
+      "name": "Purposive Goal Operator",
+      "verbatim_quote": "PREFACE This book has grown out of an experimental interest in animal learning grafted upon an arm-chair urge towards speculation.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Stimulus space (dimensionless), G: Goal state (dimensionless), T: Learning operator (time^-1)",
+      "assumptions": "Behavior is teleologically directed toward future states rather than purely reactive to past stimuli.",
+      "breakdown_regime": "Fails when the environment lacks stable topological features, rendering cognitive mapping impossible or highly stochastic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's objective function optimization, defining the terminal boundary conditions for dynamic programming.",
+        "source_operator": "purposive_goal_operator",
+        "telemetry": "Latency reduction in reaching target coordinates across varying initial conditions."
+      }
+    },
+    {
+      "primitive_id": "holistic_cognitive_map",
+      "name": "Holistic Cognitive Map",
+      "verbatim_quote": "xvi Introduction to the Second Printing system-even in the nervous system of the fish-they began to throw overboard the simplistics of \"molecular\" theory.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "M: Manifold of cognitive states (dimensionless), H: Holistic embedding (L^2 norm)",
+      "assumptions": "The internal representation preserves global geometric relationships (isometries) of the external environment.",
+      "breakdown_regime": "Breaks down under extreme sensory deprivation or rapid, chaotic environmental restructuring that invalidates existing topological priors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSI's latent variable embeddings, capturing non-linear dependencies across multi-modal feature spaces.",
+        "source_operator": "holistic_cognitive_map",
+        "telemetry": "Generalization accuracy on unseen spatial configurations or novel tactical formations."
+      }
+    },
+    {
+      "primitive_id": "adequate_system_encompassment",
+      "name": "Adequate System Encompassment",
+      "verbatim_quote": "xiv Introduction to the Second Printing lithic system He steadfastly maintained that an adequate system must encompass all psychological data Let me cite one example.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "D: Empirical dataset (count), P: Predictive probability distribution (probability density)",
+      "assumptions": "A valid theoretical framework must maximize the likelihood of the entire observed dataset without ad-hoc exceptions.",
+      "breakdown_regime": "System collapse occurs if the model complexity exceeds computational tractability or if fundamental physical laws shift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to the GSI requirement for comprehensive Bayesian model averaging across all available telemetry streams.",
+        "source_operator": "adequate_system_encompassment",
+        "telemetry": "Residual error minimization across cross-validated historical performance metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3a88f7ddf53d358c_t0",
+      "think": "Tolman’s rejection of 'molecular' theory (quote 8) mathematically translates to abandoning discrete, pairwise transition matrices in favor of continuous, differentiable manifolds representing cognitive space. The 'purposive' nature (quote 9) introduces a non-local boundary condition: the agent's trajectory is determined not just by current gradients but by the global topology of the goal state. In our formalism, we define a state vector $\\mathbf{x} \\in \\mathcal{M}$, where $\\mathcal{M}$ is a Riemannian manifold. The learning operator $T$ does not merely adjust weights $w_{ij}$ between nodes, but deforms the metric tensor $g_{ij}$ of the manifold to minimize the geodesic distance to the goal $G$. This creates a duality: the physical path taken by the animal is the projection of a straight line in the warped cognitive space. Failure modes emerge when the mapping from physical space to cognitive space is singular—e.g., in environments with identical local geometries but distinct global contexts (homology traps). Here, the gradient descent fails because the local curvature provides no information about the global topology. The 'adequate system' (quote 7) requires that the manifold's dimensionality and connectivity be sufficient to embed all possible empirical observations without tearing. If the cognitive map is too low-dimensional, it cannot encompass the data, leading to systematic prediction errors. Thus, Tolman’s primitives provide the foundational geometry for any agent-based simulation that relies on latent state inference rather than reflexive automation.\n\nDeep epistemic analysis for Tolman-1932-PurposiveBehaviorInAnimalsAndMen (3a88f7ddf53d358c, domain=other, pages_read=25/25): Operator 'Purposive Goal Operator' (page 15, domain other) captures: PREFACE This book has grown out of an experimental interest in animal learning grafted upon an arm-chair urge towards speculation. Assumptions: Behavior is teleologically directed toward future states rather than purely reactive to past stimuli. Breakdown regime: Fails when the environment lacks stable topological features, rendering cognitive mapping impossible or highly stochastic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's objective function optimization, defining the terminal boundary conditions for dynamic programming. Operator 'Holistic Cognitive Map' (page 14, domain other) captures: xvi Introduction to the Second Printing system-even in the nervous system of the fish-they began to throw overboard the simplistics of \"molecular\" theory. Assumptions: The internal representation preserves global geometric relationships (isometries) of the external environment. Breakdown regime: Breaks down under extreme sensory deprivation or rapid, chaotic environmental restructuring that invalidates existing topological priors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's latent variable embeddings, capturing non-linear dependencies across multi-modal feature spaces. Operator 'Adequate System Encompassment' (page 12, domain other) captures: xiv Introduction to the Second Printing lithic system He steadfastly maintained that an adequate system must encompass all psychological data Let me cite one example. Assumptions: A valid theoretical framework must maximize the likelihood of the entire observed dataset without ad-hoc exceptions. Breakdown regime: System collapse occurs if the model complexity exceeds computational tractability or if fundamental physical laws shift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to the GSI requirement for comprehensive Bayesian model averaging across all available telemetry streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Tolman-1932-PurposiveBehaviorInAnimalsAndMen (3a88f7ddf53d358c, domain=other, pages_read=25/25): Operator 'Purposive Goal Operator' (page 15, domain other) captures: PREFACE This book has grown out of an experimental interest in animal learning grafted upon an arm-chair urge towards speculation. Assumptions: Behavior is teleologically directed toward future states rather than purely reactive to past stimuli. Breakdown regime: Fails when the environment lacks stable topological features, rendering cognitive mapping impossible or highly stochastic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's objective function optimization, defining the terminal boundary conditions for dynamic programming. Operator 'Holistic Cognitive Map' (page 14, domain other) captures: xvi Introduction to the Second Printing system-even in the nervous system of the fish-they began to throw overboard the simplistics of \"molecular\" theory. Assumptions: The internal representation preserves global geometric relationships (isometries) of the external environment. Breakdown regime: Breaks down under extreme sensory deprivation or rapid, chaotic environmental restructuring that invalidates existing topological priors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's latent variable embeddings, capturing non-linear dependencies across multi-modal feature spaces. Operator 'Adequate System Encompassment' (page 12, domain other) captures: xiv Introduction to the Second Printing lithic system He steadfastly maintained that an adequate system must encompass all psychological data Let me cite one example. Assumptions: A valid theoretical framework must maximize the likelihood of the entire observed dataset without ad-hoc exceptions. Breakdown regime: System collapse occurs if the model complexity exceeds computational tractability or if fundamental physical laws shift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to the GSI requirement for comprehensive Bayesian model averaging across all available telemetry streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Tolman’s work bridges Kantian synthetic a priori structures and modern differential geometry. Historically, he reacted against Watsonian behaviorism’s strict empiricism, introducing latent variables that prefigure hidden Markov models and modern deep belief networks. His insistence on 'cognitive maps' anticipated the development of place cells and grid cells in neuroscience, providing a mathematical lineage from philosophical idealism to computational cognitive science and topological data analysis.",
+      "theory_of_mind": "Modeling opposing agents requires assuming they possess their own distinct, potentially misaligned cognitive manifolds. An agent $A$ attempting to predict agent $B$ must infer $B$'s internal metric tensor $g^B_{ij}$ based on $B$'s observed trajectories. If $A$ assumes $B$ operates on a Euclidean plane while $B$ navigates a hyperbolic cognitive space, $A$'s predictions will systematically fail at scale. This necessitates a recursive theory of mind where each layer attempts to reconstruct the opponent's topological priors and goal potentials, creating a hierarchy of embedded manifolds.",
+      "cross_layer_veto": "Anti-collinearity vetoes are triggered when the gradient of the immediate reward function perfectly aligns with the gradient of the long-term strategic goal, creating a false sense of security. Leakage occurs when noise in the sensory input causes the agent to jump between disconnected components of the cognitive manifold. A veto condition must enforce that the inferred cognitive map remains homeomorphic to the physical constraints; if the estimated curvature diverges beyond physiological limits, the system must revert to a safer, lower-dimensional heuristic to prevent catastrophic policy collapse."
+    }
+  ]
+}
