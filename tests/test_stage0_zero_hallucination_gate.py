@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -30,10 +31,11 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
     assert_zero_roster_contamination,
     load_stage0_game_roster_allowlist,
 )
+from scripts.ops.preflight_live_roster_injury_gate import require_week  # noqa: E402
 
 
 def test_stage0_allowlist_and_confirmed_starters():
-    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9)
+    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9, today=date(2026, 11, 7))
     assert allowlist["confirmed_qb1"] == {
         "JAX": "Trevor Lawrence",
         "BAL": "Joe Fagnano",
@@ -67,7 +69,7 @@ def test_stage0_allowlist_and_confirmed_starters():
 
 
 def test_stage0_contamination_gate_raises_on_hallucinated_or_excluded_players():
-    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9)
+    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9, today=date(2026, 11, 7))
 
     with pytest.raises(Stage0RosterContaminationError):
         assert_zero_roster_contamination(
@@ -168,3 +170,9 @@ def test_connected_workflow_master_bundle_and_all_37_athlete_projections():
     ):
         txt = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
         assert_zero_roster_contamination(txt, allowlist, rel_path)
+
+
+def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
+    cfg = require_week(10, today=date(2026, 11, 14))
+    assert cfg["week"] == 10
+    assert cfg["as_of"] == "2026-11-13"
