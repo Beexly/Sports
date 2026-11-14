@@ -75,17 +75,38 @@ JAMES_STEIN_BASE_N = 12.0
 MAX_ABS_DELTA_LOG_ODDS = 0.35
 
 
-def read_foundry_queue_counts_ro(db_path: Path) -> Dict[str, int]:
-    """Read corpus_queue status counts using SQLite URI mode=ro."""
+def read_foundry_queue_counts_ro(db_path: Path) -> Dict[str, Any]:
+    """Read corpus_queue status counts using SQLite URI mode=ro (fail-closed if missing)."""
     if not db_path.is_file():
-        return {"total": 0, "COMPLETE": 0, "PENDING": 0, "CLAIMED": 0}
-    conn = sqlite3.connect(f"file:{db_path.as_posix()}?mode=ro", uri=True)
+        return {
+            "db_available": False,
+            "total": 0,
+            "COMPLETE": 0,
+            "PENDING": -1,
+            "PENDING_TIER_A": -1,
+            "CLAIMED": 0,
+        }
+    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
     try:
         rows = conn.execute(
             "SELECT status, COUNT(*) FROM corpus_queue GROUP BY status"
         ).fetchall()
-        counts = {str(st): int(cnt) for st, cnt in rows}
-        counts["total"] = sum(counts.values())
+        counts: Dict[str, Any] = {str(st): int(cnt) for st, cnt in rows}
+        counts["total"] = sum(int(cnt) for _, cnt in rows)
+        cols = {
+            str(r[1]).lower()
+            for r in conn.execute("PRAGMA table_info(corpus_queue)").fetchall()
+        }
+        if "tier" in cols:
+            pending_a = int(
+                conn.execute(
+                    "SELECT COUNT(*) FROM corpus_queue WHERE status = 'PENDING' AND UPPER(COALESCE(tier, '')) = 'A'"
+                ).fetchone()[0]
+            )
+        else:
+            pending_a = int(counts.get("PENDING") or 0)
+        counts["PENDING_TIER_A"] = pending_a
+        counts["db_available"] = True
         return counts
     finally:
         conn.close()
@@ -215,11 +236,23 @@ def run_calibration_and_hold_gate(
 
     # Corpus-regularized effective degrees-of-freedom penalty ratio (strictly bounded diagnostics)
     mean_shrinkage = sum(v["shrinkage_factor"] for v in eb_priors.values()) / max(1, len(eb_priors))
-    pending_count = int(queue_counts.get("PENDING") or 0)
+    db_available = bool(queue_counts.get("db_available", False)) and int(queue_counts.get("total") or 0) > 0
+    pending_all_tiers = int(queue_counts["PENDING"]) if (db_available and "PENDING" in queue_counts) else (-1 if not db_available else 0)
+    pending_tier_a = int(queue_counts["PENDING_TIER_A"]) if (db_available and "PENDING_TIER_A" in queue_counts) else (-1 if not db_available else 0)
+    wt_dir_present = worktree_primitives_dir.is_dir()
+    wt_minimum_met = wt_dir_present and wt_summary["count"] >= 21
+    eb_all_finite = all(v["all_finite_non_nan"] for v in eb_priors.values())
+    oof_hard_pass = bool((oof_cal.get("acceptance") or {}).get("hard_pass", False))
+
     hold_status = (
-        "WEEK10_HELD_FOR_CORPUS_COMPLETION"
-        if pending_count > 0
-        else "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE"
+        "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE"
+        if (db_available and pending_all_tiers == 0 and wt_minimum_met)
+        else "WEEK10_HELD_FOR_CORPUS_COMPLETION"
+    )
+    wired_tier_a = int(
+        ((wiring_manifest.get("counts") or {}).get("sovereign_books_extracted"))
+        or wt_summary.get("count")
+        or 0
     )
 
     receipt: Dict[str, Any] = {
@@ -227,6 +260,9 @@ def run_calibration_and_hold_gate(
         "generated_at_utc": now_iso,
         "sequencing_doctrine": "MIND-FIRST + WIRE-FIRST SEQUENCING (generate-signal-slate.ts untouched; CALIBRATION_ADJUSTMENTS_ENABLED fail-closed)",
         "slate_hold_status": hold_status,
+        "pendingTierACount": pending_tier_a,
+        "pendingAllTiersCount": pending_all_tiers,
+        "wiredTierACount": wired_tier_a,
         "public_gates": {
             "LIVE_BOARD": "FAIL_CLOSED_UNCHANGED",
             "PUBLISH_LEDGER": "FAIL_CLOSED_UNCHANGED",
@@ -254,14 +290,17 @@ def run_calibration_and_hold_gate(
             "brier_oof": base_brier_oof,
             "ece_oof": base_ece_oof,
             "mean_corpus_shrinkage_factor": round(mean_shrinkage, 6),
-            "oof_hard_pass_preserved": bool((oof_cal.get("acceptance") or {}).get("hard_pass", False)),
+            "oof_hard_pass_preserved": oof_hard_pass,
         },
         "empirical_bayes_six_family_priors": eb_priors,
-        "calibrationVerified": all(v["all_finite_non_nan"] for v in eb_priors.values())
-        and (wt_summary["count"] >= 21 or not worktree_primitives_dir.exists())
-        and bool((oof_cal.get("acceptance") or {}).get("hard_pass", False)),
-        "all_invariants_satisfied": all(v["all_finite_non_nan"] for v in eb_priors.values())
-        and (wt_summary["count"] >= 21 or not worktree_primitives_dir.exists()),
+        "calibrationVerified": bool(
+            hold_status == "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE"
+            and db_available
+            and eb_all_finite
+            and wt_minimum_met
+            and oof_hard_pass
+        ),
+        "all_invariants_satisfied": bool(db_available and eb_all_finite and wt_minimum_met),
     }
 
     out_path.parent.mkdir(parents=True, exist_ok=True)

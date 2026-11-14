@@ -44,6 +44,7 @@ DEFAULT_RECEIPT_PATH = (
 ALWAYS_FREE_VIDEO_MINUTES_PER_MONTH = 1000.0
 SAFETY_CEILING_MINUTES_PER_MONTH = 750.0
 HARD_MAX_MINUTES_PER_RUN = 60.0
+RETRACTED_SOCIAL_ASSET_MARKERS: Tuple[str, ...] = ("31-11", "14-6")
 
 
 def parse_mp4_mvhd_and_tkhd(data: bytes) -> Dict[str, Any]:
@@ -108,6 +109,8 @@ def discover_repo_mp4_assets(repo_root: Path = REPO_ROOT) -> List[Path]:
         for fp in sorted(base.rglob("*.mp4")):
             s = str(fp)
             if "node_modules" in s or ".next" in s or ".git" in s:
+                continue
+            if any(marker in s for marker in RETRACTED_SOCIAL_ASSET_MARKERS):
                 continue
             found.append(fp)
     return sorted(found, key=lambda p: p.relative_to(repo_root).as_posix())
@@ -256,18 +259,29 @@ def build_video_intelligence_manifest(
         )
 
     total_minutes = total_seconds / 60.0
+    prior_monthly = 0.0
+    if output_receipt_path.is_file():
+        try:
+            prior_doc = json.loads(output_receipt_path.read_text(encoding="utf-8", errors="replace"))
+            prior_cb = prior_doc.get("circuit_breaker") or {}
+            prior_probe = prior_doc.get("live_gcp_video_intelligence_verification") or {}
+            if prior_probe.get("live_api_verified"):
+                prior_monthly = float(prior_cb.get("total_monthly_minutes_projected") or 0.0)
+        except Exception:
+            prior_monthly = 0.0
+
     breaker = enforce_video_intelligence_circuit_breaker(
         requested_minutes=total_minutes,
-        prior_monthly_minutes_used=0.07,
+        prior_monthly_minutes_used=prior_monthly,
         max_minutes_per_run=max_minutes_per_run,
     )
 
     live_probe_result: Dict[str, Any] = {
         "verified_via": "videointelligence.googleapis.com/v1/videos:annotate",
         "feature": "SHOT_CHANGE_DETECTION",
-        "sample_asset": "apps/web/public/social/week8-eve-2026-10-31/redzone-31-11.mp4",
-        "live_api_verified": True,
-        "shot_count": 1,
+        "sample_asset": None,
+        "live_api_verified": False,
+        "shot_count": 0,
         "billed_cost_usd": 0.0,
     }
     if live_probe_rel_path:

@@ -1,7 +1,7 @@
 # Daytime Go-Live Readiness and Corpus Gate Checklist (2026-11-14)
 
 - **Generated:** `2026-11-14T11:37Z` (`05:37 CST`) on branch `feat/autonomous-workflows-and-corpus-wiring-2026-11-13`
-- **Last Corpus Matrix Refresh:** `2026-11-14T13:50Z` (`07:50 CST`, Post-Wave-14 / `AUTON-CORPUS-14` closure: `4..7` Tier-A `100%` + `4..7` Tier-B `100%`!)
+- **Last Corpus Matrix Refresh:** `2026-11-14T15:00Z` (`09:00 CST`, Post-Wave-15 / `AUTON-CORPUS-15` closure + Motif `9,944` X/IG sweep ingestion!)
 - **Governing Doctrines:** `MIND-FIRST`, `WIRE-FIRST SEQUENCING` (`research -> wire -> weight -> calibrate -> test -> polish`), and Zero-Paid-OpenRouter-Spend (`$0.00` overnight delta).
 - **Current Go-Live Hold Posture (FAIL-CLOSED):**
   - `LIVE_BOARD`: closed (`FAIL_CLOSED_UNCHANGED`)
@@ -13,28 +13,29 @@
 
 ---
 
-## 1. Post-Wave-14 Corpus Completion Matrix (Observed Read-Only Snapshot)
+## 1. Post-Wave-15 Corpus Completion Matrix (Observed Read-Only Snapshot)
 
 ### Sovereign Partition x Tier Census (`foundry.db` `?mode=ro` + Disk JSON Union)
-- **On-disk Sovereign JSON count:** `899` worktree JSONs (`failures=0` in `foundry/gatekeeper.py`) + `180` shared repo JSONs = **`1,064` unique artifacts**.
-- **Compiler & Router Wiring Counts (Wave 14):**
-  - `981` complete Sovereign books (`22` fail-closed stub refusals, `54,318` pages inspected, `173` explicit arXiv IDs, `6,183` indexed arXiv IDs, `16,072` Sovereign trainer-feed rows)
-  - `1,041` Sovereign books loaded into router manifest (`14,328` primitives, `3,339` reasoning traces)
-  - `14,028` Shard B markdown extractions parsed (`13,889` with XML sections, `48,971` equations, `16,389` Shard B + Drive trainer-feed rows) -> `7,051` deduplicated Shard B docs routed
-  - `201` RLVR rules/lessons + `69` Drive master clusters (`1,042,184` total records indexed) + `518` Week 10 entity/venue rows
-  - **`24,919` total routed intelligence units** across `30` domains with `276/279` context mask bits active
-  - **BigQuery (`galaxysportsedge.gse_data`):** `25,437` verified SQL rows across `5` tables (`14,845,915` bytes loaded, `$0.00`)
+- **On-disk Sovereign JSON count:** `1,009` worktree JSONs (`failures=0` in `foundry/gatekeeper.py`) + `180` shared repo JSONs = **`1,064` unique books loaded into router manifest**.
+- **Compiler & Router Wiring Counts (Wave 15 + Motif `9,944` Sweep):**
+  - `1,003` complete Sovereign books (`112` fail-closed stub refusals in synthesizer / `114` total refusal receipts in router, `54,580` pages inspected, `173` explicit arXiv IDs, `6,183` indexed arXiv IDs, `16,445` Sovereign trainer-feed rows)
+  - `1,064` Sovereign books loaded into router manifest (`14,667` primitives, `3,405` reasoning traces)
+  - `7,846` Shard B markdown extractions parsed (`7,772` with XML sections, `26,723` equations, `10,272` Shard B + Drive trainer-feed rows) -> `8,143` GCP Shard B docs routed
+  - `200` RLVR rules/lessons + `69` Drive master clusters (`1,042,184` total records indexed: `940,102` equations + `102,082` situational rows) + `518` Week 10 entity/venue rows
+  - **`26,415` total routed intelligence units** across `30` domains with `276/279` context mask bits active
+  - **Motif `9,944` Sports Sweep (`origin/motif/sweep-ingestion-2026-11-14` @ `674698f5`, rebucketed per `AGENTS.md` to `docs/data-sources/research/2026-11-14/sweep-ingestion/`):** `2,720` `ig_for_you` + `5,609` `x_for_you` + `1,615` `x_analytics` (`86/86` `x-intel-*.md` files; IG Nov 4 AM ~53 unrecoverable browser-handoff source-loss exception documented) + `9,944` trainer-feed rows at `brain/feeds/2026-11-14/motif_x_ig_sweep_9944_trainer_feed.jsonl` (`brain/mind.jsonl` untouched)
+  - **BigQuery (`galaxysportsedge.gse_data`):** **`36,877` verified SQL rows across `6` tables** (`26,933` across the 5 core tables in `05b_bigquery_gse_data_hydration_receipt.json` + `9,944` in `motif_social_analytics_sweeps`, `$0.00`)
 - **Always-Free Cloud Vision OCR Rescues (`5/5` Tier-B PDFs):** `591d1c3f6efeb8d1` (Perin et al. 2018), `5cb0e87ae9a2517e` (WeatherCompany US12631787), `5d3564fdc4f39d5f` (WeatherCompany US12025768), `6cb818e53ff368b9` (Galton 1889 *Natural Inheritance*), `7a407377b5f10417` (Second Spectrum 2014 *Quantifying Shot Quality in the NBA*, `8/8`p full paper) - `88/1,000` monthly Always-Free Vision pages (`8.8%`, `$0.00`), all `5` now Gatekeeper-validated Sovereign JSONs.
 
 | Partition | Owner | Tier A Status | Tier B Status | Tier C Status |
 |---|---|---|---|---|
-| `0-3` | `hermes` | `0` `PENDING` left (`93` COMPLETE, `5` DUPLICATE_WORK, `6` INSUFFICIENT_OCR, `4` INSUFFICIENT_SOURCE_ACCESS` w/ JSON; `2` DUPLICATE_WORK no-json) | `835` total: **`1` COMPLETE w/ JSON + `1` CLAIMED**, `833` PENDING (`hermes` actively transitioned from `0-3` Tier-A!) | `3,325` PENDING, `24` QUARANTINED |
-| `4-7` | `antigravity` | **`129/129` (`100%`)** have JSON (`0` remaining) | **`814/814` (`100%`)** have JSON (`0` remaining after Wave 14 `63/63` + Vision OCR rescue) | `3,303` PENDING (`Wave 15+` starting immediately), `43` QUARANTINED, `1` INSUFFICIENT_SOURCE_ACCESS (w/ JSON) |
-| `8-f` + Drive | `gse-foundry-gcp-01..04` | `226` total (`8` COMPLETE, `1` DELEGATED_GCP w/ JSON, `1` INSUFFICIENT_SOURCE_ACCESS w/ JSON, `216` DELEGATED_GCP no-json) | `1,606` DELEGATED_GCP | `6,775` DELEGATED_GCP, `1` INSUFFICIENT_SOURCE_ACCESS (w/ JSON), `65` QUARANTINED |
+| `0-3` | `hermes` | `0` `PENDING` left (`93` COMPLETE, `7` DUPLICATE_WORK, `6` INSUFFICIENT_OCR, `4` INSUFFICIENT_SOURCE_ACCESS`) | `835` total: **`5` COMPLETE, `830` PENDING** (`hermes` advancing free Aliyun lane per `e95386bfc`) | `3,325` PENDING, `24` QUARANTINED |
+| `4-7` | `antigravity` | **`129/129` (`100%`)** have JSON (`0` remaining on disk) | **`814/814` (`100%`)** have JSON (`0` remaining on disk) | `3,303` DB `PENDING` (`110` new Wave 15 Tier-C JSONs landed on disk -> `1,009` total worktree JSONs; `Wave 16` launching on `--lane free`), `43` QUARANTINED, `1` INSUFFICIENT_SOURCE_ACCESS |
+| `8-f` + Drive | `gse-foundry-gcp-01..04` | `226` total (`8` COMPLETE, `217` DELEGATED_GCP, `1` INSUFFICIENT_SOURCE_ACCESS) | `1,606` DELEGATED_GCP | `6,775` DELEGATED_GCP, `1` INSUFFICIENT_SOURCE_ACCESS, `65` QUARANTINED |
 
 ### 4-VM GCP Cloud Foundry Fleet (`GCP-LEV-06` Guard Active)
 - **Active Workers:** `gse-foundry-gcp-01` (`us-central1-a`), `gse-foundry-gcp-02` (`us-central1-a`), `gse-foundry-gcp-03` (`us-east1-b`), `gse-foundry-gcp-04` (`us-west1-b`) -- all 4 active on v2 Dual-Cloud (`OpenRouter DISABLED`, 8 threads each across Dual NVIDIA NIM, Alibaba QwenCloud Singapore, BazaarLink, ZeroLimit).
-- **Shard B Mirror Progress (`07:38:41` CST sync cycle):** **`6,985/8,598`** unique artifacts (`7,043` branch blobs: `Node 1=2069`, `Node 2=1984`, `Node 3=1482`, `Node 4=1508`; `gcp_fleet_billing_and_teardown_guard.py`: `81.24%`, `KEEP_RUNNING_ACTIVE_SHARD_B_SWEEP`, `teardown_authorized: false`).
+- **Shard B Mirror Progress (`09:00` CST `GCP-LEV-06` check):** **`8,041/8,598`** unique flat files (`93.52%`, `8,099` branch blobs: `Node 1=2354`, `Node 2=2266`, `Node 3=1725`, `Node 4=1754`; `8,143` deduplicated Shard B docs routed; `gcp_fleet_billing_and_teardown_guard.py`: `KEEP_RUNNING_ACTIVE_SHARD_B_SWEEP`, `teardown_authorized: false`).
 
 ---
 
@@ -75,9 +76,9 @@ Executed read-only against `https://www.galaxysportsedge.com` via `node scripts/
 Do **not** promote public surfaces until every prerequisite below clears in order:
 
 1. **Stage 1 -- Complete Pending Corpus Ingestion & Router Wiring (`MIND-FIRST` + `WIRE-FIRST SEQUENCING`):**
-   - **Completed as of Wave 14:** `4-7` Tier-A (`129/129`, `100%`), `4-7` Tier-B (`814/814`, `100%`), `0-3` Tier-A (`hermes`, `0` `PENDING` remaining), and `5/5` Vision OCR Tier-B PDF rescues (`88/1,000` monthly pages, `$0.00`).
-   - **Remaining active queues:** drain `0-3` Tier-B (`833` `PENDING` via `hermes`), `4-7` Tier-C (`3,303` `PENDING` via `antigravity`), `0-3` Tier-C (`3,325` `PENDING`), and the remaining 4-VM GCP Shard B sweep (`6,985/8,598` at compile, `7,207/8,598` = `83.8%` mirrored at `07:49` CST; execute `GCP-LEV-06` zero-idle teardown once `8,598/8,598` completes).
-   - Re-run compilers (`arxiv_and_tierb_corpus_synthesizer.py`, `shard_b_and_drive_master_compiler.py`, `sovereign_to_cognitive_router_wiring.py`, `corpus_wired_calibration_and_ablation.py`), refresh BigQuery `galaxysportsedge.gse_data` across all 5 tables, and let Windows trainer ingest `brain/feeds/*` into `brain/mind.jsonl`.
+   - **Completed as of Wave 15 (`AUTON-CORPUS-15`):** `4-7` Tier-A (`129/129`, `100%`), `4-7` Tier-B (`814/814`, `100%`), `0-3` Tier-A (`hermes`, `0` `PENDING` remaining), `5/5` Vision OCR Tier-B PDF rescues (`88/1,000` monthly pages, `$0.00`), `110` Wave 15 `4-7` Tier-C Sovereign extractions (`1,009` worktree JSONs, `failures=0`), and **`9,944` Motif X/IG sports sweep records** (`2,720` IG + `5,609` X For You + `1,615` X Analytics across `86/86` intel files, BigQuery `36,877` verified SQL rows across `6` tables at `$0.00`).
+   - **Remaining active queues:** drain `0-3` Tier-B (`830` `PENDING` via `hermes` on free Aliyun lane), `4-7` Tier-C (`Wave 16` launching via `antigravity` on `--lane free`), `0-3` Tier-C (`3,325` `PENDING`), and the final 4-VM GCP Shard B sweep (`8,041/8,598` = `93.52%` mirrored at `09:00` CST; execute `GCP-LEV-06` zero-idle teardown once `8,598/8,598` completes).
+   - Activate wired corpus immediately into internal engine layers (`AUTON-ENGINE-WIRE-16`: 288-bit equation matrix, `@sports/prediction-engine` Stage-2 EB priors + OOF book-path calibration, `site-wide-workflow-fabric.ts` `internalWorkflowCorpusReady: true`, and `gse_coach_mind_simulator.py --with-corpus-priors`) while keeping all public/publish/calibration flags fail-closed and letting Windows trainer ingest `brain/feeds/*` into `brain/mind.jsonl`.
    - Note: `generate-signal-slate.ts` must remain untouched per `WIRE-FIRST SEQUENCING` and `MIND-FIRST` baseline doctrine.
 2. **Stage 2 -- Code, Guardrail & Ledger Verification Before Merging `feat/autonomous-workflows-and-corpus-wiring-2026-11-13`:**
    - Run `C-375` `apps/web` test suite + `npm run guardrails` + `node scripts/guardrails/trust-gate.mjs` + `node apps/mobile/scripts/lint-rules.js` + `python scripts/guardrails/connected-workflow-dossier-guard.py` + `npm run check:ledger` + `npx.cmd tsx scripts/check-nflverse-currency.ts`.

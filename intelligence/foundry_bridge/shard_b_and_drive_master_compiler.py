@@ -164,13 +164,28 @@ LATEX_BLOCK_RE = re.compile(r"\$\$(.+?)\$\$|\\\[(.+?)\\\]", re.S)
 PAGE_REF_RE = re.compile(r"\[PAGE\s+(\d+)\]", re.I)
 
 
+def _compile_family_patterns() -> Dict[str, Tuple[re.Pattern[str], ...]]:
+    """Compile case-insensitive word-boundary patterns for each situational family."""
+    compiled: Dict[str, Tuple[re.Pattern[str], ...]] = {}
+    for fam, kws in SITUATIONAL_FAMILY_KEYWORDS.items():
+        compiled[fam] = tuple(
+            re.compile(r"(?<!\w)" + re.escape(kw.strip()) + r"(?!\w)", re.I)
+            for kw in kws
+            if kw.strip()
+        )
+    return compiled
+
+
+SITUATIONAL_FAMILY_PATTERNS = _compile_family_patterns()
+
+
 def classify_situational_family(text: str) -> str:
     """Assign primary situational/theoretical family based on domain vocabulary."""
-    low = (text or "").lower()
+    src = text or ""
     best_family = "marketMicrostructure"
     best_score = 0
-    for fam, kws in SITUATIONAL_FAMILY_KEYWORDS.items():
-        score = sum(1 for kw in kws if kw in low)
+    for fam, patterns in SITUATIONAL_FAMILY_PATTERNS.items():
+        score = sum(1 for pat in patterns if pat.search(src))
         if score > best_score:
             best_score = score
             best_family = fam
@@ -306,7 +321,13 @@ def compile_shard_b_directory(
             [],
         )
 
-    md_files = sorted(sync_dir.rglob("*.md"))
+    top_level_md = sorted(sync_dir.glob("*.md"))
+    seen_names = {p.name for p in top_level_md}
+    md_files = list(top_level_md)
+    for p in sorted(sync_dir.rglob("*.md")):
+        if p.name not in seen_names:
+            seen_names.add(p.name)
+            md_files.append(p)
     if limit is not None:
         md_files = md_files[:limit]
 

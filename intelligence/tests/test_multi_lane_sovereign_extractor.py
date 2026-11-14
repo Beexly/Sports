@@ -358,3 +358,53 @@ def test_pii_correspondence_eml_quarantined_before_reading_or_llm(monkeypatch, t
     assert saved["primitives"] == []
     assert gk.validate(saved) == []
 
+
+def test_cli_help_partition_parser_and_budget_guardrails(monkeypatch, tmp_path: Path) -> None:
+    import pytest
+    from intelligence.foundry_bridge.multi_lane_sovereign_extractor import (
+        call_llm_json,
+        parse_args,
+        parse_partition_prefixes,
+    )
+
+    # 1. `--help` must not crash on unescaped `%` in argparse help strings
+    with pytest.raises(SystemExit) as help_exc:
+        parse_args(["--help"])
+    assert help_exc.value.code == 0
+
+    # 2. `--partition` parser and `--no-include-ocr-classics` BooleanOptionalAction
+    assert parse_partition_prefixes("0-3") == ("0", "1", "2", "3")
+    assert parse_partition_prefixes("4-7") == ("4", "5", "6", "7")
+    assert parse_partition_prefixes("8-f") == ("8", "9", "a", "b", "c", "d", "e", "f")
+    parsed_cli = parse_args(["--partition", "0-3", "--no-include-ocr-classics"])
+    assert parsed_cli.partition == "0-3"
+    assert parsed_cli.include_ocr_classics is False
+
+    # 3. `max_cost_usd == 0` must fail closed if an endpoint reports non-zero `usage.cost`
+    monkeypatch.setattr(
+        "intelligence.foundry_bridge.multi_lane_sovereign_extractor._build_endpoints_for_lane",
+        lambda **_kw: [("mock-endpoint", "https://example.invalid/v1/chat/completions", "k", "m", 0.0, False)],
+    )
+
+    class _FakeResp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self) -> bytes:
+            return json.dumps(
+                {
+                    "choices": [{"message": {"content": '{"primitives": [], "ok": true}'}}],
+                    "usage": {"prompt_tokens": 100, "completion_tokens": 50, "cost": 0.0125},
+                }
+            ).encode("utf-8")
+
+    monkeypatch.setattr(
+        "intelligence.foundry_bridge.multi_lane_sovereign_extractor.urllib.request.urlopen",
+        lambda *_a, **_kw: _FakeResp(),
+    )
+    with pytest.raises(RuntimeError, match="All inference providers failed|unexpected non-zero"):
+        call_llm_json("sys", "usr", lane="free", max_cost_usd=0.0)
+

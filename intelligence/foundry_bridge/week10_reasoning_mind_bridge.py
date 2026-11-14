@@ -806,31 +806,50 @@ def _parse_iso_dt(ts: Optional[str]) -> Optional[datetime]:
     return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
+def _finite_float(val: Any) -> Optional[float]:
+    if val is None or isinstance(val, bool):
+        return None
+    try:
+        num = float(val)
+    except (TypeError, ValueError):
+        return None
+    return num if math.isfinite(num) else None
+
+
 def evaluate_candidate_ticket_with_rlvr_bridge(ticket: Dict[str, Any]) -> Dict[str, Any]:
     """Run all 6 fail-closed RLVR veto gates against a candidate Week 10 projection/ticket."""
     vetoes: List[str] = []
     reasons: List[str] = []
 
-    # 1. Saturated confidence (rlvr_batch-006 scenario 1: |z| >= 5.0 saturates sigmoid)
+    # 1. Saturated confidence (rlvr_batch-006 scenario 1: |z| >= 5.0 or non-finite fails closed)
     raw_z = ticket.get("raw_logit_z")
-    if raw_z is not None and abs(float(raw_z)) >= 5.0:
-        vetoes.append(RLVR_VETO_SATURATED_CONFIDENCE)
-        reasons.append(f"raw_logit_z={raw_z} sits in saturated tail (|z|>=5.0)")
+    if raw_z is not None:
+        raw_z_f = _finite_float(raw_z)
+        if raw_z_f is None or abs(raw_z_f) >= 5.0:
+            vetoes.append(RLVR_VETO_SATURATED_CONFIDENCE)
+            reasons.append(f"raw_logit_z={raw_z} is non-finite or sits in saturated tail (|z|>=5.0)")
 
-    # 2. Overfit elephant (rlvr_batch-006 scenario 2: large train-val gap > 0.12 or test tuning)
+    # 2. Overfit elephant (rlvr_batch-006 scenario 2: large train-val gap > 0.12, test tuning, or non-finite)
     train_acc = ticket.get("train_acc")
     val_acc = ticket.get("val_acc")
-    if ticket.get("tuned_on_test_data") is True or (
-        train_acc is not None and val_acc is not None and (float(train_acc) - float(val_acc)) > 0.12
+    train_f = _finite_float(train_acc) if train_acc is not None else None
+    val_f = _finite_float(val_acc) if val_acc is not None else None
+    overfit_invalid = (train_acc is not None and train_f is None) or (val_acc is not None and val_f is None)
+    if (
+        ticket.get("tuned_on_test_data") is True
+        or overfit_invalid
+        or (train_f is not None and val_f is not None and (train_f - val_f) > 0.12)
     ):
         vetoes.append(RLVR_VETO_OVERFIT_ELEPHANT)
-        reasons.append("overfit_gap > 0.12 or test-split leakage")
+        reasons.append("overfit_gap > 0.12, test-split leakage, or non-finite split metric")
 
-    # 3. Vanishing credit (rlvr_batch-006 scenario 3: early gradient product < 1e-3 or exploding > 50)
+    # 3. Vanishing credit (rlvr_batch-006 scenario 3: gradient product outside [1e-3, 50.0] or non-finite)
     dgp = ticket.get("depth_gradient_product")
-    if dgp is not None and (float(dgp) < 1e-3 or float(dgp) > 50.0):
-        vetoes.append(RLVR_VETO_VANISHING_CREDIT)
-        reasons.append(f"depth_gradient_product={dgp} outside stable [1e-3, 50.0]")
+    if dgp is not None:
+        dgp_f = _finite_float(dgp)
+        if dgp_f is None or dgp_f < 1e-3 or dgp_f > 50.0:
+            vetoes.append(RLVR_VETO_VANISHING_CREDIT)
+            reasons.append(f"depth_gradient_product={dgp} non-finite or outside stable [1e-3, 50.0]")
 
     # 4. Stage-0 roster contamination (wrong active team or OUT/IR/PUP/EXEMPT unavailable player)
     player = str(ticket.get("player") or "").strip()
@@ -845,17 +864,17 @@ def evaluate_candidate_ticket_with_rlvr_bridge(ticket: Dict[str, Any]) -> Dict[s
             vetoes.append(RLVR_VETO_STAGE0_ROSTER_CONTAMINATION)
             reasons.append(f"{player} active Week 10 team is {active_map[player]}, got {team}")
 
-    # 5. Single-sided market (must evaluate BOTH Over/Under or Away/Home sides for Shin de-vig)
-    if ticket.get("both_sides_evaluated") is False:
+    # 5. Single-sided market (must explicitly evaluate BOTH Over/Under or Away/Home sides)
+    if ticket.get("both_sides_evaluated") is not True:
         vetoes.append(RLVR_VETO_SINGLE_SIDED_MARKET)
-        reasons.append("both_sides_evaluated is False (single-sided de-vig forbidden)")
+        reasons.append("both_sides_evaluated is not True (single-sided or unspecified de-vig forbidden)")
 
-    # 6. Bitemporal leak (feature timestamp strictly after as_of_utc cutoff)
+    # 6. Bitemporal leak (both cutoffs must parse cleanly and feature timestamp <= as_of cutoff)
     as_of_dt = _parse_iso_dt(ticket.get("as_of_utc"))
     feat_dt = _parse_iso_dt(ticket.get("feature_max_timestamp_utc"))
-    if as_of_dt and feat_dt and feat_dt > as_of_dt:
+    if as_of_dt is None or feat_dt is None or feat_dt > as_of_dt:
         vetoes.append(RLVR_VETO_BITEMPORAL_LEAK)
-        reasons.append(f"feature timestamp {feat_dt.isoformat()} > as_of {as_of_dt.isoformat()}")
+        reasons.append("missing/invalid bitemporal timestamp or feature timestamp > as_of cutoff")
 
     return {
         "approved": len(vetoes) == 0,

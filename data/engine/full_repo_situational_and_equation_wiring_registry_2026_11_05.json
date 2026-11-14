@@ -1,10 +1,10 @@
 {
   "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-  "generated_at_utc": "2026-11-14T02:56:31.007952+00:00",
-  "total_ts_modules_cataloged": 1497,
-  "prediction_engine_ts_modules": 1487,
-  "mcp_equations_server_ts_modules": 10,
-  "total_python_intelligence_modules_cataloged": 682,
+  "generated_at_utc": "2026-11-14T14:43:51.716142+00:00",
+  "total_ts_modules_cataloged": 1499,
+  "prediction_engine_ts_modules": 1488,
+  "mcp_equations_server_ts_modules": 11,
+  "total_python_intelligence_modules_cataloged": 696,
   "x_situational_80_rules_count": 87,
   "consolidated_sweep_signals_count": 29,
   "all_in_one_research_signals_count": 17,
@@ -14,7 +14,7 @@
   "equation_families_count": 279,
   "total_equations_routed": 12304,
   "cholesky_families_orthogonalized": 6,
-  "clamped_log_odds_delta": 0.009518,
+  "clamped_log_odds_delta": -0.029703,
   "x_situational_80_rules": {
     "evaluated_count": 80,
     "firewall_rules_evaluated_count": 7,
@@ -27,13 +27,13 @@
     "misleading_stat_firewall_rules_count": 15,
     "theme_deltas": {
       "Game State & Leverage": 0.03,
-      "Game Script": 0.12,
+      "Game Script": -0.33,
       "Situational Splits": 0.066,
       "Coaching Decisions": 0.114,
       "Personnel & Matchup": 0.19,
-      "Availability: QB Change": -0.136,
+      "Availability: QB Change": -0.306,
       "Environment: Weather": -0.012,
-      "Availability: OL Attrition": -0.233,
+      "Availability: OL Attrition": -0.321,
       "Market Context": 0.14
     },
     "situational_catalog_80_rules": [
@@ -143,8 +143,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Pass Rate Over Expected (PROE) Neutral Script Baseline",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -153,8 +153,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Trailing-Script Pass Volume Surge (+8+ Deficit Elasticity)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -163,8 +163,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Leading-Script Clock-Drain Run Clamp (+8+ Lead)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -173,8 +173,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Neutral Situation Pace (Seconds/Snap) Play Volume Multiplier",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -183,8 +183,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "No-Huddle Up-Tempo Defensive Substitution Fatigue",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -193,8 +193,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "First-15 Scripted Opener EPA vs Unscripted Decay",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -203,8 +203,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Second-Half Halftime Coaching Adjustment Delta",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -213,8 +213,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "RB Receiving Checkdown Boost in Negative Game Script",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -223,8 +223,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "RB Goal-Line Carry Boost in Positive Game Script",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -233,8 +233,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Emergency QB White-Flag 2H Run Clamp (Blowout Preservation)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.165,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -243,8 +243,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Drive-Sustaining Penalty First-Down Play-Count Extension",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -253,8 +253,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Time-of-Possession Defensive Snap Cumulative Fatigue (>70 snaps)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -563,7 +563,7 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
-        "value": -0.068,
+        "value": -0.153,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -573,7 +573,7 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
-        "value": -0.068,
+        "value": -0.153,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -613,7 +613,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Left Tackle Absence Blindside Pressure Surge",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -623,7 +623,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Center Absence Protection-Call & Snap-Timing Disruption",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -633,7 +633,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Cluster OL Attrition (>=2 Starters Out) Non-Linear Collapse",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -643,7 +643,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "WR1 Absence Target Dispersion (Measured 1.135x WR2, Not 1.25x)",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1017,8 +1017,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Pass Rate Over Expected (PROE) Neutral Script Baseline",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1027,8 +1027,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Trailing-Script Pass Volume Surge (+8+ Deficit Elasticity)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1037,8 +1037,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Leading-Script Clock-Drain Run Clamp (+8+ Lead)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1047,8 +1047,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Neutral Situation Pace (Seconds/Snap) Play Volume Multiplier",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1057,8 +1057,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "No-Huddle Up-Tempo Defensive Substitution Fatigue",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1067,8 +1067,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "First-15 Scripted Opener EPA vs Unscripted Decay",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1077,8 +1077,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Second-Half Halftime Coaching Adjustment Delta",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1087,8 +1087,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "RB Receiving Checkdown Boost in Negative Game Script",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1097,8 +1097,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "RB Goal-Line Carry Boost in Positive Game Script",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1107,8 +1107,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Emergency QB White-Flag 2H Run Clamp (Blowout Preservation)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.165,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1117,8 +1117,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Drive-Sustaining Penalty First-Down Play-Count Extension",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1127,8 +1127,8 @@
         "theme": "Game Script",
         "evaluator": "script",
         "name": "Time-of-Possession Defensive Snap Cumulative Fatigue (>70 snaps)",
-        "value": 0.01,
-        "sign": 1,
+        "value": -0.015,
+        "sign": -1,
         "gateStatus": "accepted"
       },
       {
@@ -1437,7 +1437,7 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Backup QB2 Dropback EPA Cliff & ADOT Compression",
-        "value": -0.068,
+        "value": -0.153,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1447,7 +1447,7 @@
         "theme": "Availability: QB Change",
         "evaluator": "backup",
         "name": "Emergency QB3 / UDFA Sack-Fumble Surge & Completion Floor",
-        "value": -0.068,
+        "value": -0.153,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1487,7 +1487,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Left Tackle Absence Blindside Pressure Surge",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1497,7 +1497,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Center Absence Protection-Call & Snap-Timing Disruption",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1507,7 +1507,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "Cluster OL Attrition (>=2 Starters Out) Non-Linear Collapse",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1517,7 +1517,7 @@
         "theme": "Availability: OL Attrition",
         "evaluator": "attrition",
         "name": "WR1 Absence Target Dispersion (Measured 1.135x WR2, Not 1.25x)",
-        "value": -0.022,
+        "value": -0.044,
         "sign": -1,
         "gateStatus": "accepted"
       },
@@ -1823,35 +1823,35 @@
   "cognitive_router_288bit_12k": {
     "context_mask_bits": 288,
     "context_mask_words_uint32": [
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      4294967295,
-      2390753279
+      4294443005,
+      4286578655,
+      4160749055,
+      2147475455,
+      4294836223,
+      4292870135,
+      4261412735,
+      3758094335,
+      2357166079
     ],
     "equation_families_count": 279,
-    "active_signal_families_count": 279,
+    "active_signal_families_count": 263,
     "total_equations_routed": 12304,
     "thousand_equation_matrix_count": 1666,
     "stage_a_filtered_count": 2500,
     "stage_b_hnsw_top_k": 250,
     "stage_c_orthogonal_clusters_count": 25,
     "marchenko_pastur_denoise_factor": 0.87817,
-    "stage_d_james_stein_factor": 0.924677,
-    "raw_log_odds_delta": 0.010293,
-    "clamped_log_odds_delta": 0.009518,
+    "stage_d_james_stein_factor": 0.886182,
+    "raw_log_odds_delta": -0.033518,
+    "clamped_log_odds_delta": -0.029703,
     "max_abs_delta_log_odds_cap": 0.35,
     "domain_equation_sums": {
       "pressure": 0.039,
-      "weather": 11.323,
+      "weather": 8.3961,
       "restFatigue": 1.4072,
       "coveragePersonnel": -0.3595,
-      "qbSkillScript": -3.2011,
-      "marketMicrostructure": 0.461
+      "qbSkillScript": -4.1377,
+      "marketMicrostructure": -1.1765
     }
   },
   "master_6family_cholesky_aggregator": {
@@ -1886,5 +1886,5 @@
     "probability_movement_cap": 0.12,
     "post_overlay_prob": 0.5073
   },
-  "receipt_sha256": "0cea29fad589b185b5bb9b8df65eeaed37f93ae4ef9f59648020e2fe85ccc297"
+  "receipt_sha256": "32188be8604e2c14b4da5535b9fe41f782b49536e339820f89a4f95e8a2f732b"
 }

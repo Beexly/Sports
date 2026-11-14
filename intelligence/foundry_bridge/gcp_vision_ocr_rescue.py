@@ -24,6 +24,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
+ALWAYS_FREE_MONTHLY_LIMIT_PAGES = 1000
+MONTHLY_SAFETY_CAP_PAGES = 900
 MAX_VISION_PAGES_PER_RUN = 120
 DEFAULT_DPI = 180
 BATCH_IMAGES_PER_REQUEST = 5
@@ -251,6 +253,38 @@ def format_foundry_core_transcript(pages_text: Mapping[int, str]) -> str:
     return "\n".join(chunks).rstrip() + "\n"
 
 
+def compute_cumulative_monthly_ocr_pages(out_dir: Path = DEFAULT_OUT_DIR) -> int:
+    """Sum deduplicated pages rescued across Tier-A and Tier-B Vision OCR manifests (fail-closed on corrupt JSON)."""
+    pages_by_book: Dict[str, int] = {}
+    fallback_totals = 0
+    for manifest_name in ("ocr_rescue_manifest.json", "ocr_rescue_tierb_manifest.json"):
+        mf = out_dir / manifest_name
+        if not mf.exists():
+            continue
+        try:
+            raw = mf.read_text(encoding="utf-8")
+            doc = json.loads(raw)
+        except (OSError, ValueError) as exc:
+            raise RuntimeError(f"Corrupt Vision OCR manifest: {mf}: {exc}") from exc
+        if not isinstance(doc, dict):
+            raise RuntimeError(f"Corrupt Vision OCR manifest: {mf}: expected JSON object")
+        books_list = doc.get("books_rescued")
+        if books_list is None:
+            raise RuntimeError(f"Corrupt Vision OCR manifest: {mf}: missing 'books_rescued'")
+        if not isinstance(books_list, list):
+            raise RuntimeError(f"Corrupt Vision OCR manifest: {mf}: 'books_rescued' must be a list")
+        if not books_list:
+            fallback_totals += int(doc.get("actual_pages_ocr") or 0)
+            continue
+        for item in books_list:
+            if not isinstance(item, dict) or not item.get("book_id"):
+                raise RuntimeError(f"Corrupt Vision OCR manifest: {mf}: malformed book entry")
+            bid = str(item["book_id"])
+            rescued = int(item.get("pages_rescued") or 0)
+            pages_by_book[bid] = max(pages_by_book.get(bid, 0), rescued)
+    return sum(pages_by_book.values()) + fallback_totals
+
+
 def run_ocr_rescue(
     *,
     db_path: Path = DEFAULT_FOUNDRY_DB,
@@ -261,6 +295,8 @@ def run_ocr_rescue(
 ) -> Dict[str, Any]:
     """Execute end-to-end Cloud Vision DOCUMENT_TEXT_DETECTION rescue within Always-Free limits."""
     import pymupdf
+
+    prior_monthly_pages = compute_cumulative_monthly_ocr_pages(out_dir)
 
     books = (
         load_books_by_ids_readonly(book_ids, db_path)
@@ -278,6 +314,12 @@ def run_ocr_rescue(
     plans, planned_total = plan_page_allocation(
         books, total_pages_by_book, max_pages_total=max_pages_total, per_book_caps=caps
     )
+
+    if not dry_run and (prior_monthly_pages + planned_total > MONTHLY_SAFETY_CAP_PAGES):
+        raise RuntimeError(
+            f"Monthly Vision OCR safety ceiling exceeded: prior={prior_monthly_pages} + "
+            f"planned={planned_total} > {MONTHLY_SAFETY_CAP_PAGES}/{ALWAYS_FREE_MONTHLY_LIMIT_PAGES}"
+        )
 
     out_dir.mkdir(parents=True, exist_ok=True)
     access_token = "" if dry_run else get_adc_access_token()
@@ -330,30 +372,59 @@ def run_ocr_rescue(
     if book_ids and not dry_run and manifest_path.is_file():
         try:
             prior = json.loads(manifest_path.read_text(encoding="utf-8"))
-            by_id: Dict[str, Dict[str, Any]] = {
-                str(item["book_id"]): item
-                for item in prior.get("books_rescued", [])
-                if isinstance(item, dict) and item.get("book_id")
-            }
-            for item in results:
-                by_id[str(item["book_id"])] = item
-            merged_books = [by_id[k] for k in sorted(by_id.keys())]
-        except Exception:
-            merged_books = list(results)
+        except (OSError, ValueError) as exc:
+            raise RuntimeError(f"Corrupt Vision OCR manifest: {manifest_path}: {exc}") from exc
+        by_id: Dict[str, Dict[str, Any]] = {
+            str(item["book_id"]): item
+            for item in prior.get("books_rescued", [])
+            if isinstance(item, dict) and item.get("book_id")
+        }
+        for item in results:
+            by_id[str(item["book_id"])] = item
+        merged_books = [by_id[k] for k in sorted(by_id.keys())]
 
     cumulative_pages_ocr = sum(int(item.get("pages_rescued") or 0) for item in merged_books)
+    all_manifests_pages_ocr = (
+        compute_cumulative_monthly_ocr_pages(out_dir) if dry_run else cumulative_pages_ocr
+    )
+    if not dry_run:
+        other_manifest = out_dir / (
+            "ocr_rescue_manifest.json" if book_ids else "ocr_rescue_tierb_manifest.json"
+        )
+        if other_manifest.is_file():
+            try:
+                other_doc = json.loads(other_manifest.read_text(encoding="utf-8"))
+                other_books = {
+                    str(it["book_id"]): int(it.get("pages_rescued") or 0)
+                    for it in other_doc.get("books_rescued", [])
+                    if isinstance(it, dict) and it.get("book_id")
+                }
+            except (OSError, ValueError) as exc:
+                raise RuntimeError(f"Corrupt Vision OCR manifest: {other_manifest}: {exc}") from exc
+            cur_books = {
+                str(it["book_id"]): int(it.get("pages_rescued") or 0)
+                for it in merged_books
+                if isinstance(it, dict) and it.get("book_id")
+            }
+            for k, v in cur_books.items():
+                other_books[k] = max(other_books.get(k, 0), v)
+            all_manifests_pages_ocr = sum(other_books.values())
+
     manifest = {
         "schema": "gse.gcp_vision_ocr_rescue.v1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "project_id": DEFAULT_PROJECT_ID,
         "vision_feature": "DOCUMENT_TEXT_DETECTION",
-        "always_free_monthly_units": 1000,
+        "always_free_monthly_units": ALWAYS_FREE_MONTHLY_LIMIT_PAGES,
         "circuit_breaker_max_pages": MAX_VISION_PAGES_PER_RUN,
         "dry_run": dry_run,
         "planned_total_pages": planned_total,
         "actual_pages_ocr": total_pages_ocr,
         "cumulative_manifest_pages_ocr": cumulative_pages_ocr,
-        "always_free_pct_used": round(100.0 * cumulative_pages_ocr / 1000.0, 2),
+        "cumulative_monthly_all_manifests_pages_ocr": all_manifests_pages_ocr,
+        "always_free_pct_used": round(
+            100.0 * all_manifests_pages_ocr / float(ALWAYS_FREE_MONTHLY_LIMIT_PAGES), 2
+        ),
         "estimated_cost_usd": 0.0,
         "vision_api_http_batches": total_api_requests,
         "books_rescued": merged_books,

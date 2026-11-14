@@ -1,14 +1,14 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T13:41:36Z",
+  "generated_at_utc": "2026-11-14T14:29:42Z",
   "counts": {
-    "complete_sovereign_books": 981,
-    "refused_stub_books_fail_closed": 22,
+    "complete_sovereign_books": 1003,
+    "refused_stub_books_fail_closed": 112,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 12794,
-    "total_sovereign_reasoning_traces": 3278,
-    "total_pages_inspected": 54318,
-    "trainer_feed_records_emitted": 16072,
+    "total_sovereign_primitives": 13102,
+    "total_sovereign_reasoning_traces": 3343,
+    "total_pages_inspected": 54580,
+    "trainer_feed_records_emitted": 16445,
     "active_router_mask_bits": 276,
     "arxiv_program_unique_ids_indexed": 6183,
     "sovereign_books_with_explicit_arxiv_id": 173
@@ -27,40 +27,40 @@
   "track_counts": {
     "arxiv_and_preprints": 174,
     "football_coaching_rules_and_scouting": 10,
-    "graduate_math_stats_physics_textbooks": 752,
+    "graduate_math_stats_physics_textbooks": 772,
     "mit_sloan_jqas_nessis_conferences": 1,
     "nfl_war_and_fourth_down_decision": 5,
-    "sports_psychology_and_cognition": 39
+    "sports_psychology_and_cognition": 41
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 565,
-      "bounded_james_stein_weight": 0.176256,
+      "sovereign_primitives_count": 443,
+      "bounded_james_stein_weight": 0.175253,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 1711,
-      "bounded_james_stein_weight": 0.178746,
+      "sovereign_primitives_count": 597,
+      "bounded_james_stein_weight": 0.176453,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 1218,
-      "bounded_james_stein_weight": 0.178244,
+      "sovereign_primitives_count": 1146,
+      "bounded_james_stein_weight": 0.178135,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 1179,
-      "bounded_james_stein_weight": 0.178186,
+      "sovereign_primitives_count": 780,
+      "bounded_james_stein_weight": 0.177273,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 7221,
-      "bounded_james_stein_weight": 0.179701,
+      "sovereign_primitives_count": 8914,
+      "bounded_james_stein_weight": 0.179758,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 900,
-      "bounded_james_stein_weight": 0.177632,
+      "sovereign_primitives_count": 1222,
+      "bounded_james_stein_weight": 0.17825,
       "all_finite_non_nan": true
     }
   },
@@ -130,9 +130,9 @@
       },
       "0..3|tier_B": {
         "total": 835,
-        "pending_unextracted": 833,
-        "pending_with_local_file": 833,
-        "completed_or_extracted": 1
+        "pending_unextracted": 831,
+        "pending_with_local_file": 831,
+        "completed_or_extracted": 4
       },
       "0..3|tier_C": {
         "total": 3349,
@@ -149,9 +149,9 @@
       },
       "4..7|tier_C": {
         "total": 3347,
-        "pending_unextracted": 3303,
-        "pending_with_local_file": 3303,
-        "completed_or_extracted": 1
+        "completed_or_extracted": 111,
+        "pending_unextracted": 3193,
+        "pending_with_local_file": 3193
       },
       "8..f|tier_A": {
         "total": 226,
@@ -192,13 +192,133 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "404a05b2610d51d6",
+      "title": "p0104",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "406a254045c91dd6",
+      "title": "p0215",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "40a10ccf7d612688",
+      "title": "p0014",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "40ddee9054e3feea",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "412c73d5582376c2",
+      "title": "init",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "41629ec97bb74878",
+      "title": "p0022",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "41969d43cbc99efb",
+      "title": "p0011",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "426caaf5e4f49120",
+      "title": "p0023",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "428cb0cd404d2375",
+      "title": "p0009",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "42d60d4917bd54d2",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "43c70e297ebb85dc",
+      "title": "p0016",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "445c9cf50d6fc8ea",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "46c5c4e13167435c",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "49f8f0ce412a18be",
+      "title": "p0065",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "4aa0ffb0187cc449",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "4abae19586195077",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "4ade287edebd79e0",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "4c21711018b2dc29",
+      "title": "p0255",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "4c513ec5b5d2e4fc",
       "title": "pro-football-reference.com",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "4e8d8f1438b93fd2",
+      "title": "p0019",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "4f4dffedeb3fb1be",
+      "title": "p0012",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "4fc82b26aecb47d2",
+      "title": "p0273",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "4fd844e5436b9d53",
       "title": "QUARANTINED_NON_CORPUS_ITEM_4fd844e5436b9d53",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "501624de33304884",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "507b209b4708c8f2",
+      "title": "p0222",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "512ae5baa1fba09a",
+      "title": "init",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -217,8 +337,53 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "529879d16d3cf115",
+      "title": "icloud-dupes-summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5320e3475593a77c",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5378796307535df3",
+      "title": "TYPECHECK_AFTER_GENERATE_EXIT_CODE",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "539449bcef410969",
+      "title": "p0002",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "53f4603d3c42e4a4",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "5432be0e4c9c47fe",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "54a4d3e8ab6ba777",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "560b707e61d923c7",
+      "title": "1791493990381",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5659b78a6218de1f",
+      "title": "p0158",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "56846a6449f3685d",
+      "title": "p0072",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -227,8 +392,63 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "570ea968caff514a",
+      "title": "p6_paths_p6b_client-CXVcpnCB.js",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5726361ef269883a",
+      "title": "p0017",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "57505044554629e3",
+      "title": "p0035",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "576605c821285613",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5843ebe01d0eafd2",
+      "title": "p0019",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "591befdfd7948c70",
+      "title": "p0036",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5bb6f6546082f214",
+      "title": "p0001",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5c3cac946ba769ef",
+      "title": "2026-11-11-execution-live",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5cb5dfdcf75e97e2",
+      "title": "p0059",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "5d37c580fba2cfcc",
       "title": "QUARANTINED_NON_CORPUS_ITEM_5d37c580fba2cfcc",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5d8bbd4cddaf7e26",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5fddbca7a819d145",
+      "title": "p0016",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -237,8 +457,43 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "608d96ec6197b120",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "609ae29e67033c30",
+      "title": "p0033",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "61b39a2423316940",
+      "title": "p0397",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "62f80ff6aa2307db",
+      "title": "p0011",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "63a1bf8ddb12ba1c",
+      "title": "p0002",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "63a898723f6574f4",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "63cf635c3d045ed5",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "650fb47548179972",
+      "title": "p0003",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -247,8 +502,143 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "66270189d699a623",
+      "title": "topic-benchmarks-full",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "664484a62282267e",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "667b53dc651284af",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "66933dbb4493c020",
+      "title": "p0047",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "679013bf3b853306",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "67a8acbd746495bf",
+      "title": "p0065",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "68d971d241483ee8",
+      "title": "p0293",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "694ac464367f7bad",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6a1701beb11810e0",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6a6cc25973c51068",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6ab90bceb56e6dfd",
+      "title": "p0020",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6b29fc758389b547",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6b3d61e00af4b2dd",
+      "title": "gse-competitive-intel-main__codex-work__handoff-docs__CALIBRATION_MEASUREMENT_RUNTIME",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6bc4e69d82300869",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6bf58bd09ec92f42",
+      "title": "CLAUDE",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6c82c73ff462c2bd",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6dcf8954ca23a3fe",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_6dcf8954ca23a3fe",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "6de2b1eb0821e340",
       "title": "footballoutsiders.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6e18106da827bd8e",
+      "title": "p0021",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6e1e2533d4290c63",
+      "title": "p0278",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6e7f90f2045c4ff7",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6ef1151e118d5cad",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6ff2a3f7437f6ce9",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_6ff2a3f7437f6ce9",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "72b99b5512f2b9fb",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_72b99b5512f2b9fb",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "732d59be7ca7c963",
+      "title": "p0008",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "739ba04548ddfddf",
+      "title": "space-api-token",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "73e1488391846aad",
+      "title": "init",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "73ef6264f7ebabb3",
+      "title": "p0014",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -257,13 +647,73 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "7459be1913f7ed59",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "780d1bcb34e65671",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7847cc84dbc8e843",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "78acb15d7a87c4d5",
       "title": "fantasy.nfl.com",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "7900555e46c7be6f",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_7900555e46c7be6f",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "795dfb516f602853",
+      "title": "p0304",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "79691ea97c220c2f",
+      "title": "p0421",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "796ec86ad583756d",
+      "title": "p0008",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7b80facd83668e83",
+      "title": "p0025",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "7c993999ba28850f",
       "title": "dynastyleaguefootball.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7ce0d1dc7aeb3cab",
+      "title": "p0043",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7dfeb5dafe68610c",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_7dfeb5dafe68610c",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7ed1926e70639564",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_7ed1926e70639564",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7f6a0545ff5ae4db",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_7f6a0545ff5ae4db",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -878,6 +1328,28 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "1505929a6cf204b1",
+        "title": "1505929a6cf204b1",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 33,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "1898a7adf73deda1",
+        "title": "1898a7adf73deda1",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 28,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "192267e30813837d",
         "title": "192267e30813837d",
         "primary_domain": "other",
@@ -973,28 +1445,6 @@
         "pages_read": 118,
         "pages_total": 118,
         "primitives_count": 5,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "25294936f511d828",
-        "title": "25294936f511d828",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 24,
-        "pages_total": 24,
-        "primitives_count": 6,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "2626db0663ce780e",
-        "title": "X (Twitter) — community, distribution and revenue (GSE internal strategy + build plan)",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 8,
-        "pages_total": 8,
-        "primitives_count": 6,
         "traces_count": 2,
         "arxiv_ids": []
       }
@@ -1112,6 +1562,17 @@
         "pages_total": 2,
         "primitives_count": 8,
         "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "47652b52a7ece538",
+        "title": "GSE_MIND_ARCHITECTURE_SYNTHESIS",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 7,
+        "pages_total": 7,
+        "primitives_count": 16,
+        "traces_count": 4,
         "arxiv_ids": []
       },
       {
@@ -1332,17 +1793,6 @@
         "pages_total": 1,
         "primitives_count": 4,
         "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "758a3caa67e2f97e",
-        "title": "2014 - A Data-driven Method for In-game Decision Making in MLB - Unknown Authors",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 9,
-        "pages_total": 9,
-        "primitives_count": 15,
-        "traces_count": 4,
         "arxiv_ids": []
       }
     ]

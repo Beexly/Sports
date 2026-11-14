@@ -1,0 +1,156 @@
+{
+  "book_id": "4f5c6c99173574d4",
+  "source_status": "COMPLETE",
+  "title": "film-pilot-1-real-footage-measurement",
+  "file_name": "film-pilot-1-real-footage-measurement.md",
+  "sha256": "4f5c6c99173574d48f875cdec449e7e4c232f6de21f689c2c6fefedc250cbf34",
+  "primary_domain": "math",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Real-footage computer vision pipelines must reconcile temporal disparity, spatial distortion, and motion ambiguity in broadcast video to enable accurate kinematic inference. The mapping from broadcast pixels to physical meters is a time-dependent projective transformation. A static affine approximation fails because the camera undergoes continuous pan and zoom, inducing severe anisotropic scaling errors that amplify pixel-level noise into macroscopic spatial deviations.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over tracklet associations to quantify uncertainty in velocity estimates derived from sparse, noisy detection data. GSI treats the per-frame homography as a latent variable in a hierarchical Bayesian model. Pixel coordinates are noisy observations; conformal prediction intervals widen dynamically when camera motion exceeds the stability threshold, ensuring measurement uncertainty strictly reflects the underlying geometric degeneracy of the current frame.",
+  "gse_mapping": "GSE models player state transitions using Bayesian belief updates conditioned on calibrated movement metrics and camera compensation residuals. GSE utilizes these dynamic homographies to maintain a continuously updated state-space representation of the field. As the camera pans, the engine transitions between local coordinate charts, applying motion-aware association to ensure player tracklets remain consistent across non-linear temporal boundaries.",
+  "primitives": [
+    {
+      "primitive_id": "camera_motion_compensation",
+      "name": "Camera Motion Compensation Kernel",
+      "verbatim_quote": "**Pilot harness** (`workspace/_scratch/replay-corpus/pilot1.py`, not production code): mirrors the TS math exactly — `footPoint` (detector-contract), greedy-IoU `buildTracklets` (tracklet-association), median-flow camera compensation + scale/offset `fitHomographyFromYardlines` + `deriveMovementMetrics` (movement-primitive).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'scale factor (dimensionless)', 'σ_S': 'uncertainty in scale factor (±30%)'}",
+      "assumptions": "Uniform scaling applies across frame sequence; perspective distortion is non-uniform and uncorrected.",
+      "breakdown_regime": "When camera pan/zoom exceeds 30% of field width, compensation fails.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw pixel displacements to yardage using estimated homography parameters, subject to ±30% uncertainty.",
+        "source_operator": "camera_motion_compensation",
+        "telemetry": "Median flow vector magnitude relative to expected camera motion."
+      }
+    },
+    {
+      "primitive_id": "greedy_iou_association",
+      "name": "Greedy IoU Tracklet Association",
+      "verbatim_quote": "**Association collapse (primary).** Greedy IoU at 5 fps cannot survive broadcast camera motion: median nearest-neighbor foot displacement between samples is 52.5 px, far beyond the IoU match radius.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d_{nn}': 'median nearest neighbor foot displacement (pixels)', 'r_{IoU}': 'IoU matching radius (pixels)'}",
+      "assumptions": "Footpoint detections are temporally sampled at 5 fps; IoU threshold is fixed.",
+      "breakdown_regime": "When d_nn > r_IoU, tracklet fragmentation occurs.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Associates footpoint detections via greedy IoU maximization, leading to ID switches when motion exceeds 52.5 px.",
+        "source_operator": "greedy_iou_association",
+        "telemetry": "Number of fragmented tracklets per second."
+      }
+    },
+    {
+      "primitive_id": "median_flow_estimation",
+      "name": "Median Flow Estimator",
+      "verbatim_quote": "**Camera compensation inadequate.** Median-flow estimate cannot remove fast pan/tilt/zoom residuals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_{flow}': 'estimated median flow vector (pixels/frame)', 'v_{cam}': 'actual camera motion vector (pixels/frame)'}",
+      "assumptions": "Flow estimation assumes slow camera motion; residual motion is modeled as noise.",
+      "breakdown_regime": "When |v_cam| >> |v_flow|, compensation error accumulates.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Estimates camera motion via median flow; residual error contributes to kinematic misalignment.",
+        "source_operator": "median_flow_estimation",
+        "telemetry": "Residual variance in flow vectors after compensation."
+      }
+    },
+    {
+      "primitive_id": "speed_ceiling_constraint",
+      "name": "Speed Ceiling Constraint",
+      "verbatim_quote": "No CV-measured top speed on Week-3 film should exceed ~24 mph (ceiling + margin).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_{max}': 'maximum allowed speed (mph)', 'v_{meas}': 'measured speed (mph)'}",
+      "assumptions": "CV pipeline is bounded by physical constraints of human motion.",
+      "breakdown_regime": "If v_meas > v_max, measurement is flagged as invalid.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Imposes a hard constraint on inferred speeds, aligning with known athletic performance limits.",
+        "source_operator": "speed_ceiling_constraint",
+        "telemetry": "Proportion of measurements violating the ceiling."
+      }
+    },
+    {
+      "primitive_id": "anisotropic_scaling_amplification",
+      "name": "Anisotropic Scaling Amplification Operator",
+      "verbatim_quote": ".5x compressed (y-scale 0.0635 vs x-scale 0.01407 m/px); every pixel of residual/noise in y becomes 4.5x meters.",
+      "page": 2,
+      "latex": "\\Delta Y_{\\text{phys}} = s_y \\cdot \\delta_y, \\quad \\frac{s_y}{s_x} = \\frac{0.0635}{0.01407} \\approx 4.51",
+      "symbol_and_unit_ledger": "\\Delta Y_{\\text{phys}}: physical displacement in y (m), s_y, s_x: metric scaling factors (m/px), \\delta_y: pixel noise/residual (px)",
+      "assumptions": "Linear local projection holds for infinitesimal displacements; global single-scale assumption is applied incorrectly.",
+      "breakdown_regime": "Breaks down when camera pitch or vertical compression induces extreme aspect ratio distortions, causing sub-pixel tracking noise to manifest as physically impossible velocities.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw detector residuals directly to physical space error bounds, serving as the foundational kernel for GSI's uncertainty quantification.",
+        "source_operator": "anisotropic_scaling_amplification",
+        "telemetry": "Ratio of observed top speeds to NGS-derived weekly ceilings."
+      }
+    },
+    {
+      "primitive_id": "dynamic_homography_requirement",
+      "name": "Dynamic Homography Requirement",
+      "verbatim_quote": "**Single-frame homography invalid across the clip.** The broadcast camera pans and zooms; one scale/offset fit cannot hold.",
+      "page": 2,
+      "latex": "H_t \\neq H_{t+\\Delta t}, \\quad \\mathbf{x}_{\\text{world}} \\sim H_t^{-1} \\mathbf{x}_{\\text{img}}(t)",
+      "symbol_and_unit_ledger": "H_t: time-dependent homography matrix (dimensionless projective transform), \\mathbf{x}_{\\text{world}}: world coordinates (m), \\mathbf{x}_{\\text{img}}(t): image coordinates at time t (px)",
+      "assumptions": "Camera undergoes non-rigid transformations relative to the ground plane over time; planar scene assumption remains valid per frame.",
+      "breakdown_regime": "Singularity occurs if a static homography is enforced over a panning sequence, resulting in catastrophic drift and unphysical player trajectories.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSE requirement for continuous manifold patching; each frame requires a fresh chart transition to maintain metric consistency.",
+        "source_operator": "dynamic_homography_requirement",
+        "telemetry": "Reprojection error of known static field features (e.g., hash marks) across consecutive frames."
+      }
+    },
+    {
+      "primitive_id": "4f5c6c99173574d4_w1_g3",
+      "name": "film-pilot-1-real-footage-measurement Ch.2 Grounded Operator",
+      "verbatim_quote": "This is physical, not a bug — it demands per-frame homography, not a single scale.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4f5c6c99173574d4_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4f5c6c99173574d4_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4f5c6c99173574d4_t0",
+      "think": "Chapter 1 establishes foundational issues in applying computer vision to real-world broadcast footage. The core challenge lies in reconciling motion artifacts introduced by camera dynamics with precise tracking of player kinematics. The pilot test reveals that while detection (Stage 2) functions correctly, downstream stages (3–6) fail due to insufficient handling of temporal and spatial inconsistencies. Specifically, greedy IoU-based association breaks down under high-frequency camera motion, causing tracklet fragmentation and spurious velocity spikes. Camera compensation using median flow is inadequate for fast pan/tilt/zoom operations, introducing systematic errors. These failures highlight the necessity of robust calibration and adaptive compensation strategies. The speed ceiling constraint serves as a pragmatic safeguard against erroneous outputs, but does not address root causes. A deeper mathematical framework must integrate uncertainty quantification, motion-aware tracking kernels, and dynamic calibration to ensure reliable inference. Window 1 Synthesis: Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of film-pilot-1-real-footage-measurement (4f5c6c99173574d4): [camera_motion_compensation p.1]: **Pilot harness** (`workspace/_scratch/replay-corpus/pilot1.py`, not production code): mirrors the TS math exactly — `footPoint` (detector-contract), greedy-IoU `buildTracklets` (tracklet-association), median-flow camera compensation + scale/offset `fitHomographyFromYardlines` + `deriveMovementMetrics` (movement-primitive). (Maps raw pixel displacements to yardage using estimated homography parameters, subject to ±30% uncertainty.) [greedy_iou_association p.1]: **Association collapse (primary).** Greedy IoU at 5 fps cannot survive broadcast camera motion: median nearest-neighbor foot displacement between samples is 52.5 px, far beyond the IoU match radius. (Associates footpoint detections via greedy IoU maximization, leading to ID switches when motion exceeds 52.5 px.) [median_flow_estimation p.1]: **Camera compensation inadequate.** Median-flow estimate cannot remove fast pan/tilt/zoom residuals. (Estimates camera motion via median flow; residual error contributes to kinematic misalignment.) [speed_ceiling_constraint p.1]: No CV-measured top speed on Week-3 film should exceed ~24 mph (ceiling + margin). (Imposes a hard constraint on inferred speeds, aligning with known athletic performance limits.) [anisotropic_scaling_amplification p.2]: .5x compressed (y-scale 0.0635 vs x-scale 0.01407 m/px); every pixel of residual/noise in y becomes 4.5x meters. (Maps raw detector residuals directly to physical space error bounds, serving as the foundational kernel for GSI's uncertainty quantification.) [dynamic_homography_requirement p.2]: **Single-frame homography invalid across the clip.** The broadcast camera pans and zooms; one scale/offset fit cannot hold. (Isomorphic to the GSE requirement for continuous manifold patching; each frame requires a fresh chart transition to maintain metric consistency.) [4f5c6c99173574d4_w1_g3 p.2]: This is physical, not a bug — it demands per-frame homography, not a single scale. (Binds verbatim proposition 4f5c6c99173574d4_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of film-pilot-1-real-footage-measurement (4f5c6c99173574d4): [camera_motion_compensation p.1]: **Pilot harness** (`workspace/_scratch/replay-corpus/pilot1.py`, not production code): mirrors the TS math exactly — `footPoint` (detector-contract), greedy-IoU `buildTracklets` (tracklet-association), median-flow camera compensation + scale/offset `fitHomographyFromYardlines` + `deriveMovementMetrics` (movement-primitive). (Maps raw pixel displacements to yardage using estimated homography parameters, subject to ±30% uncertainty.) [greedy_iou_association p.1]: **Association collapse (primary).** Greedy IoU at 5 fps cannot survive broadcast camera motion: median nearest-neighbor foot displacement between samples is 52.5 px, far beyond the IoU match radius. (Associates footpoint detections via greedy IoU maximization, leading to ID switches when motion exceeds 52.5 px.) [median_flow_estimation p.1]: **Camera compensation inadequate.** Median-flow estimate cannot remove fast pan/tilt/zoom residuals. (Estimates camera motion via median flow; residual error contributes to kinematic misalignment.) [speed_ceiling_constraint p.1]: No CV-measured top speed on Week-3 film should exceed ~24 mph (ceiling + margin). (Imposes a hard constraint on inferred speeds, aligning with known athletic performance limits.) [anisotropic_scaling_amplification p.2]: .5x compressed (y-scale 0.0635 vs x-scale 0.01407 m/px); every pixel of residual/noise in y becomes 4.5x meters. (Maps raw detector residuals directly to physical space error bounds, serving as the foundational kernel for GSI's uncertainty quantification.) [dynamic_homography_requirement p.2]: **Single-frame homography invalid across the clip.** The broadcast camera pans and zooms; one scale/offset fit cannot hold. (Isomorphic to the GSE requirement for continuous manifold patching; each frame requires a fresh chart transition to maintain metric consistency.) [4f5c6c99173574d4_w1_g3 p.2]: This is physical, not a bug — it demands per-frame homography, not a single scale. (Binds verbatim proposition 4f5c6c99173574d4_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "This work builds upon prior research in video analytics and motion tracking, particularly in addressing camera-induced distortions in sports broadcasting. It extends earlier efforts in object detection and trajectory reconstruction by incorporating explicit modeling of camera motion effects. Retrocausal Genealogy (Window 1): Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include the camera system, which introduces motion artifacts, and the CV pipeline, which attempts to extract meaningful kinematic signals. Players like Rashee Rice and Jaylen Warren represent reference points for validating speed estimates, while Mahomes' play provides a complex motion scenario for testing pipeline robustness. Theory of Mind (Window 1): Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent reliance on single-stage solutions; leakage vetoes ensure that errors from one layer do not propagate into downstream processing without explicit correction mechanisms. Cross-Layer Veto (Window 1): Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4f5c6c99173574d4_t1",
+      "think": "The fundamental obstruction to extracting rigorous kinematic data from broadcast footage lies in the conflation of intrinsic camera dynamics with extrinsic player motion. When a broadcast camera pans and zooms, the mapping from the two-dimensional image plane to the three-dimensional physical field is not merely non-linear, but explicitly time-dependent. The provided text highlights a critical failure mode: the application of a static, single-frame homography across an entire video clip. Mathematically, this assumes $H_t \\approx H_0$ for all $t$, which is demonstrably false under active cinematography. The consequence of this incorrect assumption is anisotropic scaling amplification. Because the camera compresses the depth axis (the y-axis on the screen) significantly more than the lateral axis (the x-axis), the metric scaling factors diverge drastically ($s_y \\gg s_x$). In our specific empirical observation, $s_y = 0.0635$ m/px while $s_x = 0.01407$ m/px. This disparity means that any stochastic noise, sensor grain, or sub-pixel localization error inherent to the object detector ($\\delta_y$) is magnified by a factor of roughly 4.5 when projected into physical meters. A mere one-pixel jitter in the vertical direction translates to a 4.5-meter phantom displacement in the real world. This is not a software bug; it is a direct manifestation of projective geometry acting upon noisy data. Therefore, Stages 3 through 6 of the pipeline fail not due to algorithmic incompetence, but because they operate on a fundamentally flawed geometric prior. To rectify this, we must abandon global fits and adopt a per-frame (or per-segment) homography estimation, ideally anchored by detected yard lines or stabilized via feature-based ORB/RANSAC pairs. Until the coordinate system itself is dynamically corrected, any derived velocity or acceleration metrics are mathematically meaningless artifacts of the camera operator's framing choices.",
+      "retrocausal_genealogy": "This derivation traces back to the foundational problems of photogrammetry and computer vision in the late 20th century, specifically the epipolar geometry constraints introduced by Hartley and Zisserman. Early sports analytics attempted simple affine mappings, assuming static cameras. The realization that broadcast cameras actively manipulate the view frustum necessitated the shift toward dynamic bundle adjustment and simultaneous localization and mapping (SLAM) techniques, now repurposed here for field reconstruction.",
+      "theory_of_mind": "From the perspective of the broadcast director, the camera movements are designed to maximize narrative tension and follow the ball, completely indifferent to preserving metric invariance for quantitative analysis. The analyst must therefore model the camera operator as an adversarial agent introducing high-frequency, non-isometric distortions into the observational stream, requiring robust, adaptive filtering to extract the true underlying player states.",
+      "cross_layer_veto": "We must institute a strict veto condition: any trajectory segment exhibiting a speed exceeding the rolling NGS-derived weekly ceiling must be immediately flagged and discarded. This acts as a physical plausibility gate, catching instances where the homography has drifted or the association logic has collapsed due to collinear occlusions, preventing corrupted geometric priors from poisoning downstream tactical inference models. Cross-Layer Veto (Window 2): Rooted in film-pilot-1-real-footage-measurement (4f5c6c99173574d4, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

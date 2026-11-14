@@ -70,6 +70,32 @@ def test_vision_ocr_circuit_breaker_and_allocation() -> None:
     assert load_books_by_ids_readonly([]) == []
 
 
+def test_vision_ocr_tracks_cumulative_monthly_pages_across_manifests(tmp_path: Path) -> None:
+    from intelligence.foundry_bridge.gcp_vision_ocr_rescue import (
+        ALWAYS_FREE_MONTHLY_LIMIT_PAGES,
+        compute_cumulative_monthly_ocr_pages,
+    )
+
+    out_dir = tmp_path / "ocr"
+    out_dir.mkdir()
+    (out_dir / "ocr_rescue_manifest.json").write_text(
+        json.dumps({"books_rescued": [{"book_id": "b1", "pages_rescued": 99}]}),
+        encoding="utf-8",
+    )
+    (out_dir / "ocr_rescue_tierb_manifest.json").write_text(
+        json.dumps({"books_rescued": [{"book_id": "b1", "pages_rescued": 99}, {"book_id": "b2", "pages_rescued": 88}]}),
+        encoding="utf-8",
+    )
+    # Must deduplicate by book_id across both manifests so b1 is counted once (99 + 88 = 187)
+    assert ALWAYS_FREE_MONTHLY_LIMIT_PAGES == 1000
+    assert compute_cumulative_monthly_ocr_pages(out_dir) == 187
+
+    # Corrupt manifest must fail closed rather than silently returning 0
+    (out_dir / "ocr_rescue_tierb_manifest.json").write_text("{corrupt json", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="Corrupt Vision OCR manifest"):
+        compute_cumulative_monthly_ocr_pages(out_dir)
+
+
 def test_router_mask_and_james_stein_shrinkage_bounds() -> None:
     mask = encode_288bit_mask([0, 46, 92, 138, 184, 230, 278])
     assert len(mask) == MASK_WORDS
@@ -79,6 +105,8 @@ def test_router_mask_and_james_stein_shrinkage_bounds() -> None:
     assert abs(positive_part_james_stein_shrink(-10.0, 5000)) == MAX_ABS_DELTA_LOG_ODDS
     assert classify_text_to_family("Allianz Arena wind outdoor rain grass stadium") == "weather"
     assert classify_text_to_family("Blitz pressure pocket disruption pass block OL") == "pressure"
+    assert classify_text_to_family("Pretraining human loss convergence", domain="stats") == "marketMicrostructure"
+    assert classify_text_to_family("Human performance baseline telemetry", domain="math") == "qbSkillScript"
 
 
 def test_live_sovereign_and_shard_b_wiring(tmp_path: Path) -> None:

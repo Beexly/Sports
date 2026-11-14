@@ -17,10 +17,16 @@ def test_gcp_lev03_discovers_all_repo_mp4_assets_with_zero_cost_and_vip_isolatio
     receipt = build_video_intelligence_manifest(output_receipt_path=out)
 
     assert out.exists()
+    raw_text = out.read_text(encoding="utf-8")
+    assert "31-11" not in raw_text
+    probe = receipt["live_gcp_video_intelligence_verification"]
+    assert probe["live_api_verified"] is False
+    assert probe["sample_asset"] is None
+    assert probe["shot_count"] == 0
     counts = receipt["asset_counts"]
-    assert counts["total_mp4_assets"] >= 12
+    assert counts["total_mp4_assets"] >= 11
     assert counts["vip_vault_gated_assets"] >= 1
-    assert counts["public_zero_leakage_assets"] >= 11
+    assert counts["public_zero_leakage_assets"] >= 10
     assert 9.0 <= counts["total_duration_minutes"] <= 60.0
     assert receipt["circuit_breaker"]["circuit_breaker_passed"] is True
     assert receipt["circuit_breaker"]["cost_usd"] == 0.0

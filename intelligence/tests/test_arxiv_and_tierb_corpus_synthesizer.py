@@ -104,9 +104,9 @@ def test_synthesizer_runs_readonly_and_forbids_direct_mind_jsonl(tmp_path: Path)
                     {
                         "primitive_id": "p1",
                         "name": "Product-Key Expert Retrieval",
-                        "canonical_form": "k^* = argmax_{(i,j)} (q_1^T c_i + q_2^T d_j)",
+                        "latex": "k^* = argmax_{(i,j)} (q_1^T c_i + q_2^T d_j)",
                         "verbatim_quote": "Product-key retrieval scales sublinearly with expert count.",
-                        "source_page": 4,
+                        "page": 4,
                         "layer2": {
                             "tag": "[ISOMORPHISM]",
                             "mapping": "Maps next-snap quarterback read progression to sublinear expert routing.",
@@ -126,15 +126,32 @@ def test_synthesizer_runs_readonly_and_forbids_direct_mind_jsonl(tmp_path: Path)
         encoding="utf-8",
     )
 
+    dummy_gatekeeper = tmp_path / "gatekeeper.py"
+    dummy_gatekeeper.write_text(
+        "def validate(doc):\n    return [] if doc.get('book_id') else ['missing book_id']\n",
+        encoding="utf-8",
+    )
+
     out_json = tmp_path / "synthesis.json"
     out_feed = tmp_path / "feed.jsonl"
+
+    with pytest.raises(RuntimeError, match="Gatekeeper"):
+        synthesize_arxiv_and_sovereign_corpus(
+            wt_primitives_dir=wt_prims,
+            shared_primitives_dir=shared_prims,
+            foundry_db_path=db_path,
+            gatekeeper_py=tmp_path / "nonexistent_gatekeeper.py",
+            arxiv_docs_dir=arxiv_dir,
+            synthesis_out_path=out_json,
+            trainer_feed_out_path=out_feed,
+        )
 
     with pytest.raises(ValueError, match="mind.jsonl"):
         synthesize_arxiv_and_sovereign_corpus(
             wt_primitives_dir=wt_prims,
             shared_primitives_dir=shared_prims,
             foundry_db_path=db_path,
-            gatekeeper_py=tmp_path / "nonexistent_gatekeeper.py",
+            gatekeeper_py=dummy_gatekeeper,
             arxiv_docs_dir=arxiv_dir,
             synthesis_out_path=out_json,
             trainer_feed_out_path=tmp_path / "mind.jsonl",
@@ -144,7 +161,7 @@ def test_synthesizer_runs_readonly_and_forbids_direct_mind_jsonl(tmp_path: Path)
         wt_primitives_dir=wt_prims,
         shared_primitives_dir=shared_prims,
         foundry_db_path=db_path,
-        gatekeeper_py=tmp_path / "nonexistent_gatekeeper.py",
+        gatekeeper_py=dummy_gatekeeper,
         arxiv_docs_dir=arxiv_dir,
         synthesis_out_path=out_json,
         trainer_feed_out_path=out_feed,
@@ -157,6 +174,11 @@ def test_synthesizer_runs_readonly_and_forbids_direct_mind_jsonl(tmp_path: Path)
     assert payload["counts"]["arxiv_program_unique_ids_indexed"] == 3
     assert payload["foundry_db_readonly_audit"]["shard_4to7_tier_a_remaining_with_file"] == 0
     assert payload["foundry_db_readonly_audit"]["shard_4to7_tier_b_pending_candidates_count"] == 1
+
+    feed_rows = [json.loads(line) for line in out_feed.read_text(encoding="utf-8").splitlines() if line.strip()]
+    prim_row = next(r for r in feed_rows if r["record_type"] == "sovereign_primitive")
+    assert prim_row["canonical_form"] == "k^* = argmax_{(i,j)} (q_1^T c_i + q_2^T d_j)"
+    assert prim_row["source_page"] == 4
 
     lines = [json.loads(line) for line in out_feed.read_text(encoding="utf-8").splitlines() if line.strip()]
     assert len(lines) == 2

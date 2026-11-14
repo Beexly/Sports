@@ -32,6 +32,7 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import unicodedata
 import urllib.error
@@ -153,6 +154,23 @@ PII_QUARANTINE_SUBSTRINGS = (
     "paystub",
     "pay stub",
 )
+
+
+_SECRET_SNIPPET_PATTERNS = (
+    re.compile(r"\b(?:accessKeyId|accessKeySecret)\s+[^\s'\"]+", re.I),
+    re.compile(r"\bLTAI[A-Za-z0-9]{12,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(r"\bsk[-_](?:live|test|ant|proj)?[-_A-Za-z0-9]{16,}\b"),
+    re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b"),
+)
+
+
+def _scrub_stub_snippet(snippet: str) -> str:
+    """Redact any credential-like token before writing a stub refusal_reason."""
+    out = snippet or ""
+    if any(rx.search(out) for rx in _SECRET_SNIPPET_PATTERNS):
+        return "[REDACTED_CREDENTIAL_STUB]"
+    return out
 
 
 def is_pii_or_correspondence_row(book_row: Mapping[str, Any]) -> bool:
@@ -294,6 +312,60 @@ def build_book_rows_from_explicit_pdfs(
     return rows
 
 
+def parse_partition_prefixes(partition_spec: str) -> Tuple[str, ...]:
+    """Parse hex sha256[0] partition spec such as '4-7', '4..7', or '4,5,6'."""
+    spec = (partition_spec or "").strip().lower()
+    if not spec:
+        raise ValueError("Empty partition specification")
+    hex_digits = "0123456789abcdef"
+    range_match = re.fullmatch(r"([0-9a-f])\s*(?:-|\.\.)\s*([0-9a-f])", spec)
+    if range_match:
+        lo = hex_digits.index(range_match.group(1))
+        hi = hex_digits.index(range_match.group(2))
+        if lo > hi:
+            raise ValueError(f"Inverted hex partition range: {partition_spec!r}")
+        return tuple(hex_digits[i] for i in range(lo, hi + 1))
+
+    parts = [p.strip() for p in spec.split(",") if p.strip()]
+    if parts and all(len(p) == 1 and p in hex_digits for p in parts):
+        seen: List[str] = []
+        for p in parts:
+            if p not in seen:
+                seen.append(p)
+        return tuple(seen)
+
+    if len(parts) == 1 and all(ch in hex_digits for ch in spec):
+        seen_chars: List[str] = []
+        for ch in spec:
+            if ch not in seen_chars:
+                seen_chars.append(ch)
+        return tuple(seen_chars)
+
+    raise ValueError(f"Invalid hex partition specification: {partition_spec!r}")
+
+
+def _write_json_atomic(out_path: Path, payload: Any) -> None:
+    """Write JSON atomically using same-directory temp file + os.replace."""
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(payload, indent=2, ensure_ascii=False)
+    fd, tmp_name = tempfile.mkstemp(
+        dir=str(out_path.parent),
+        prefix=f".{out_path.stem}.",
+        suffix=".tmp",
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(text)
+            fh.flush()
+        os.replace(tmp_name, str(out_path))
+    except Exception:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
+
+
 def select_eligible_books_ro(
     *,
     db_path: Path = SHARED_FOUNDRY_DB,
@@ -304,7 +376,10 @@ def select_eligible_books_ro(
     completed_dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
 ) -> List[Dict[str, Any]]:
     """Query `foundry.db` in strict URI `mode=ro` without overlapping Hermes (`0..3`) or GCP (`8..f`)."""
-    uri = f"file:///{db_path.as_posix()}?mode=ro"
+    resolved_db = Path(db_path).resolve()
+    if not resolved_db.is_file():
+        return []
+    uri = f"file:{resolved_db.as_posix()}?mode=ro"
     conn = sqlite3.connect(uri, uri=True, timeout=5.0)
     conn.row_factory = sqlite3.Row
     try:
@@ -660,20 +735,13 @@ def resolve_grounded_quote(
     return "", 1
 
 
-def call_llm_json(
+def _build_endpoints_for_lane(
     *,
-    system_prompt: str,
+    lane: str,
+    max_cost_usd: float,
     user_prompt: str,
-    lane: str = "hybrid_auto",
-    max_cost_usd: float = 0.50,
-    timeout_sec: int = 65,
-) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    """
-    Invoke Dual-Cloud $0.00 primary pool (Alibaba QwenCloud 1M-token pools + NVIDIA NIM 40 RPM)
-    first, falling back to OpenRouter `:free` ONLY if all Dual-Cloud pools fail.
-    Never invokes paid OpenRouter models unless `lane == 'deepseek_1017'`, `GSE_ENABLE_PAID_DEEPSEEK_1017=true`,
-    and `max_cost_usd > 0`.
-    """
+) -> List[Tuple[str, str, str, str, float, bool]]:
+    """Build ordered (name, url, api_key, model, est_per_m, use_json_mode) tuples for lane."""
     dash_key = (
         load_secret("DASHSCOPE_API_KEY")
         or load_secret("QWEN_GSE_API_KEY")
@@ -762,6 +830,60 @@ def call_llm_json(
                 True,
             )
         )
+    return endpoints
+
+
+class _BudgetExceededError(RuntimeError):
+    """Raised immediately when an endpoint returns cost exceeding max_cost_usd."""
+
+
+_RUN_COST_LOCK = threading.Lock()
+_RUN_CUMULATIVE_COST_USD = 0.0
+
+
+def reset_run_cost_tracker() -> None:
+    """Reset the cumulative run cost counter."""
+    global _RUN_CUMULATIVE_COST_USD
+    with _RUN_COST_LOCK:
+        _RUN_CUMULATIVE_COST_USD = 0.0
+
+
+def _record_and_check_run_cost(cost_usd: float, max_cost_usd: float) -> float:
+    """Accumulate cost under lock and fail closed if exceeding budget."""
+    global _RUN_CUMULATIVE_COST_USD
+    if max_cost_usd <= 0.0 and cost_usd > 0.0:
+        raise _BudgetExceededError(
+            f"unexpected non-zero cost_usd={cost_usd} while max_cost_usd={max_cost_usd}"
+        )
+    with _RUN_COST_LOCK:
+        projected = round(_RUN_CUMULATIVE_COST_USD + float(cost_usd), 6)
+        if projected > float(max_cost_usd) + 1e-9:
+            raise _BudgetExceededError(
+                f"Cumulative cost cap exceeded: projected={projected} > max_cost_usd={max_cost_usd}"
+            )
+        _RUN_CUMULATIVE_COST_USD = projected
+        return projected
+
+
+def call_llm_json(
+    system_prompt: str,
+    user_prompt: str,
+    *,
+    lane: str = "hybrid_auto",
+    max_cost_usd: float = 0.50,
+    timeout_sec: int = 65,
+) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """
+    Invoke Dual-Cloud $0.00 primary pool (Alibaba QwenCloud 1M-token pools + NVIDIA NIM 40 RPM)
+    first, falling back to OpenRouter `:free` ONLY if all Dual-Cloud pools fail.
+    Never invokes paid OpenRouter models unless `lane == 'deepseek_1017'`, `GSE_ENABLE_PAID_DEEPSEEK_1017=true`,
+    and `max_cost_usd > 0`.
+    """
+    endpoints = _build_endpoints_for_lane(
+        lane=lane,
+        max_cost_usd=max_cost_usd,
+        user_prompt=user_prompt,
+    )
 
     errors: List[str] = []
     for attempt_round in range(2):
@@ -814,9 +936,13 @@ def call_llm_json(
                 if parsed is None:
                     raise last_exc or ValueError("No JSON object found in model output")
                 usage = body.get("usage", {}) or {}
-                cost_usd = float(usage.get("cost") or 0.0)
-                if est_per_m == 0.0:
-                    cost_usd = 0.0
+                raw_cost = float(usage.get("cost") or 0.0)
+                if max_cost_usd <= 0.0 and raw_cost > 0.0:
+                    raise _BudgetExceededError(
+                        f"unexpected non-zero cost_usd={raw_cost} on {name}"
+                    )
+                cost_usd = raw_cost
+                _record_and_check_run_cost(cost_usd, max_cost_usd)
                 meta = {
                     "provider": name,
                     "model": model,
@@ -825,6 +951,8 @@ def call_llm_json(
                     "completion_tokens": int(usage.get("completion_tokens") or 0),
                 }
                 return parsed, meta
+            except _BudgetExceededError:
+                raise
             except Exception as exc:
                 errors.append(f"r{attempt_round}:{name}:{exc}")
                 continue
@@ -1553,8 +1681,7 @@ def process_single_book(
         q_errs = gatekeeper_mod.validate(quarantine_doc)
         if q_errs:
             return {"book_id": book_id, "title": redacted_title, "ok": False, "errors": q_errs}
-        output_dir.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json.dumps(quarantine_doc, indent=2, ensure_ascii=False), encoding="utf-8")
+        _write_json_atomic(out_path, quarantine_doc)
         return {
             "book_id": book_id,
             "title": redacted_title,
@@ -1597,7 +1724,7 @@ def process_single_book(
     candidates = build_candidate_quotes_by_page(pages, max_candidates=14) if pages else []
 
     if int(pages_total) <= 3 and (total_chars < 400 or len(candidates) < 3):
-        snippet = " | ".join(norm_text(v)[:140] for _, v in sorted(pages.items()))[:280]
+        snippet = _scrub_stub_snippet(" | ".join(norm_text(v)[:140] for _, v in sorted(pages.items()))[:280])
         raw_domain = str(book_row.get("primary_domain") or "other")
         valid_domains = _valid_domains(gatekeeper_mod)
         domain = raw_domain if raw_domain in valid_domains else "other"
@@ -1624,8 +1751,7 @@ def process_single_book(
         refusal_errs = gatekeeper_mod.validate(refusal_doc)
         if refusal_errs:
             return {"book_id": book_id, "ok": False, "errors": refusal_errs}
-        output_dir.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json.dumps(refusal_doc, indent=2, ensure_ascii=False), encoding="utf-8")
+        _write_json_atomic(out_path, refusal_doc)
         return {
             "book_id": book_id,
             "title": title,
@@ -1683,8 +1809,7 @@ def process_single_book(
         if errs:
             return {"book_id": book_id, "ok": False, "errors": errs}
 
-        output_dir.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False), encoding="utf-8")
+        _write_json_atomic(out_path, doc)
         return {
             "book_id": book_id,
             "title": title,
@@ -1784,9 +1909,7 @@ def process_single_book(
     if errs:
         return {"book_id": book_id, "ok": False, "errors": errs}
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = output_dir / f"{book_id}.json"
-    out_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False), encoding="utf-8")
+    _write_json_atomic(out_path, doc)
 
     return {
         "book_id": book_id,
@@ -1823,9 +1946,9 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument(
         "--include-ocr-classics",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
-        help="Include the 5 Vision-OCR-rescued classics.",
+        help="Include the 5 Vision-OCR-rescued classics (--no-include-ocr-classics to skip).",
     )
     parser.add_argument("--ocr-only", action="store_true")
     parser.add_argument(
@@ -1848,7 +1971,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--full-book",
         action="store_true",
-        help="Extract 100% of pages across multi-window chapter slices (zero skipped pages).",
+        help="Extract 100%% of pages across multi-window chapter slices (zero skipped pages).",
     )
     parser.add_argument(
         "--overwrite",
@@ -1860,10 +1983,9 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
+    reset_run_cost_tracker()
     gatekeeper_mod = load_gatekeeper_module()
-    prefixes = tuple(c.strip().lower() for c in "4,5,6,7".split(","))
-    if args.partition == "4-7":
-        prefixes = ("4", "5", "6", "7")
+    prefixes = parse_partition_prefixes(args.partition)
 
     tier_map = {
         "A": ("A",),
@@ -1881,7 +2003,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             db_path=SHARED_FOUNDRY_DB,
             partition_prefixes=() if args.ocr_only else prefixes,
             tiers=selected_tiers,
-            include_ocr_classics=True,
+            include_ocr_classics=bool(args.include_ocr_classics),
             max_books=5 if args.ocr_only else args.max_books,
         )
     if not books:

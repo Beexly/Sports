@@ -93,3 +93,28 @@ def test_corpus_wired_calibration_enforces_hold_gate_and_bounds(tmp_path: Path) 
         assert fam_info["all_finite_non_nan"] is True
         assert abs(fam_info["bounded_eb_log_odds_prior"]) <= MAX_ABS_DELTA_LOG_ODDS
     assert out_path.is_file()
+    assert res["pendingTierACount"] >= 0
+    assert res["pendingAllTiersCount"] == 1
+    assert res["calibrationVerified"] is False
+
+
+def test_corpus_wired_calibration_fails_closed_when_db_or_prims_missing(tmp_path: Path) -> None:
+    oof_path = tmp_path / "oof.json"
+    oof_path.write_text(
+        json.dumps({"n_rows": 4823, "oof": {"brier_raw": 0.2612, "brier_oof": 0.2480, "ece_oof": 0.0226}, "acceptance": {"hard_pass": True}}),
+        encoding="utf-8",
+    )
+    res = run_calibration_and_hold_gate(
+        db_path=tmp_path / "missing.db",
+        worktree_primitives_dir=tmp_path / "missing_prims",
+        wiring_manifest_path=tmp_path / "missing_wiring.json",
+        shard_b_catalog_path=tmp_path / "missing_sb.json",
+        drive_index_path=tmp_path / "missing_drv.json",
+        oof_cal_path=oof_path,
+        out_path=tmp_path / "out_missing.json",
+    )
+    assert res["slate_hold_status"] == "WEEK10_HELD_FOR_CORPUS_COMPLETION"
+    assert res["calibrationVerified"] is False
+    assert res["all_invariants_satisfied"] is False
+    assert res["pendingTierACount"] == -1
+    assert res["pendingAllTiersCount"] == -1

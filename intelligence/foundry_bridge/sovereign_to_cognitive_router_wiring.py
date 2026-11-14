@@ -139,13 +139,23 @@ DEFAULT_AUDIT_OUT_DIR = Path(
 )
 
 
+FAMILY_KEYWORD_PATTERNS: Dict[str, Tuple[re.Pattern[str], ...]] = {
+    fam: tuple(
+        re.compile(r"(?<!\w)" + re.escape(kw.strip()) + r"(?!\w)", re.I)
+        for kw in kws
+        if kw.strip()
+    )
+    for fam, kws in FAMILY_KEYWORDS.items()
+}
+
+
 def classify_text_to_family(text: str, domain: Optional[str] = None) -> str:
     """Deterministically route arbitrary technical text + domain into one of the 6 situational families."""
-    low = f" {text.lower()} "
+    src = text or ""
     scores: Dict[str, int] = {fam: 0 for fam in SITUATIONAL_FAMILIES}
-    for fam, kws in FAMILY_KEYWORDS.items():
-        for kw in kws:
-            if kw in low:
+    for fam, patterns in FAMILY_KEYWORD_PATTERNS.items():
+        for pat in patterns:
+            if pat.search(src):
                 scores[fam] += 1
     best_fam, best_score = max(scores.items(), key=lambda kv: (kv[1], kv[0]))
     if best_score > 0:

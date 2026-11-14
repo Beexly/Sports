@@ -101,9 +101,9 @@ CREDIT_STACK_LEDGER: Dict[str, Any] = {
 
 
 def query_delegated_gcp_counts_ro(db_path: Path = DEFAULT_FOUNDRY_DB) -> Dict[str, int]:
-    """Query `corpus_queue` strictly read-only (`?mode=ro`) for `DELEGATED_GCP` targets."""
+    """Query `corpus_queue` strictly read-only (`?mode=ro`) for `DELEGATED_GCP` targets (fail-closed)."""
     if not db_path.is_file():
-        return {"tier_a": 217, "tier_b": 1606, "tier_c": 6775, "total_delegated_gcp": 8598}
+        return {"tier_a": 0, "tier_b": 0, "tier_c": 0, "total_delegated_gcp": 0}
     conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True, timeout=5.0)
     try:
         rows = conn.execute(
@@ -204,8 +204,24 @@ def compile_gcp_lev06_billing_and_teardown_receipt(
     missing_count = len(unpack.get("missing_flat_files", []) or [])
     unique_flat = int(unpack.get("unique_filenames_flat", 0))
 
-    # Active sweep wrote 83 files on latest sync -> 0.0 quiet minutes while actively producing
-    quiet_minutes = 0.0 if written_latest > 0 else 5.0
+    now_utc = datetime.now(timezone.utc)
+    if written_latest > 0:
+        quiet_minutes = 0.0
+    else:
+        ts_raw = unpack.get("last_advance_utc") or unpack.get("generated_at_utc") or unpack.get("synced_at_utc")
+        quiet_minutes = None
+        if ts_raw:
+            try:
+                parsed = datetime.fromisoformat(str(ts_raw).replace("Z", "+00:00"))
+                if parsed.tzinfo is None:
+                    parsed = parsed.replace(tzinfo=timezone.utc)
+                quiet_minutes = max(0.0, (now_utc - parsed.astimezone(timezone.utc)).total_seconds() / 60.0)
+            except ValueError:
+                quiet_minutes = None
+        if quiet_minutes is None and unpack_manifest_path.is_file():
+            quiet_minutes = max(0.0, (now_utc.timestamp() - unpack_manifest_path.stat().st_mtime) / 60.0)
+        if quiet_minutes is None:
+            quiet_minutes = 0.0
 
     readiness = evaluate_vm_teardown_readiness(
         delegated_target=delegated["total_delegated_gcp"],

@@ -49,6 +49,27 @@ Reject unshrunk blitz pressure deltas during gale wind > 22 mph [PAGE 9].
     assert len(trainer) == 1
 
 
+def test_compile_shard_b_deduplicates_by_node_mirrors_and_uses_word_boundaries(tmp_path: Path) -> None:
+    from intelligence.foundry_bridge.shard_b_and_drive_master_compiler import classify_situational_family
+
+    # Word-boundary classification must not match "rain" inside "training" or "man" inside "management"
+    assert classify_situational_family("neural network model training convergence") == "marketMicrostructure"
+    assert classify_situational_family("risk management portfolio optimization") == "marketMicrostructure"
+    assert classify_situational_family("heavy rain and crosswind gusts") == "weather"
+
+    # Mirror files under by_node/ must not double-count top-level Shard B files
+    (tmp_path / "abc123_sample.md").write_text("<think>Blitz pressure timing.</think>", encoding="utf-8")
+    node_dir = tmp_path / "by_node" / "node1"
+    node_dir.mkdir(parents=True)
+    (node_dir / "abc123_sample.md").write_text("<think>Duplicate mirror.</think>", encoding="utf-8")
+    (node_dir / "def456_unpacked.md").write_text("<think>Quarterback CPOE curve.</think>", encoding="utf-8")
+
+    summary, trainer = compile_shard_b_directory(sync_dir=tmp_path)
+    assert summary["total_markdown_files"] == 2
+    assert summary["files_with_xml_sections"] == 2
+    assert {r["doc_hash"] for r in trainer} == {"abc123", "def456"}
+
+
 def test_compile_drive_masters_and_run_compile(tmp_path: Path) -> None:
     sync_dir = tmp_path / "gcp_sync"
     sync_dir.mkdir()

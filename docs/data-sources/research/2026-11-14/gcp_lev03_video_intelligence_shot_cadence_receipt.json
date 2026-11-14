@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0.0",
   "task_id": "GCP-LEV-03",
-  "generated_at_utc": "2026-11-14T13:49:28.520525+00:00",
+  "generated_at_utc": "2026-11-14T15:08:35.427704+00:00",
   "project_id": "galaxysportsedge",
   "asset_counts": {
-    "total_mp4_assets": 12,
-    "public_zero_leakage_assets": 11,
+    "total_mp4_assets": 11,
+    "public_zero_leakage_assets": 10,
     "vip_vault_gated_assets": 1,
-    "total_duration_seconds": 609.21,
-    "total_duration_minutes": 10.1535
+    "total_duration_seconds": 605.17,
+    "total_duration_minutes": 10.0861
   },
   "circuit_breaker": {
     "circuit_breaker_passed": true,
-    "requested_minutes": 10.1535,
-    "prior_monthly_minutes_used": 0.07,
-    "projected_monthly_minutes": 10.2235,
+    "requested_minutes": 10.0861,
+    "prior_monthly_minutes_used": 0.0,
+    "projected_monthly_minutes": 10.0861,
     "always_free_limit_minutes": 1000.0,
     "safety_ceiling_minutes": 750.0,
     "cost_usd": 0.0
@@ -22,9 +22,9 @@
   "live_gcp_video_intelligence_verification": {
     "verified_via": "videointelligence.googleapis.com/v1/videos:annotate",
     "feature": "SHOT_CHANGE_DETECTION",
-    "sample_asset": "apps/web/public/social/week8-eve-2026-10-31/redzone-31-11.mp4",
-    "live_api_verified": true,
-    "shot_count": 1,
+    "sample_asset": null,
+    "live_api_verified": false,
+    "shot_count": 0,
     "billed_cost_usd": 0.0
   },
   "assets": [
@@ -187,22 +187,6 @@
       "sync_keyframe_count": 1,
       "estimated_shot_segments": 1,
       "shot_cadence_per_sec": 0.1966
-    },
-    {
-      "asset_id": "vid_8fa272c0bcf07885",
-      "repo_relative_path": "apps/web/public/social/week8-eve-2026-10-31/redzone-31-11.mp4",
-      "size_bytes": 870982,
-      "sha256_16": "8fa272c0bcf07885",
-      "paywall_classification": "PUBLIC_ZERO_LEAKAGE",
-      "public_pick_leakage_allowed": false,
-      "duration_seconds": 4.042,
-      "timescale": 1000,
-      "width_px": 480,
-      "height_px": 854,
-      "aspect_orientation": "9x16_vertical",
-      "sync_keyframe_count": 1,
-      "estimated_shot_segments": 1,
-      "shot_cadence_per_sec": 0.2474
     },
     {
       "asset_id": "vid_de595ba52fe0601f",

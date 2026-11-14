@@ -77,14 +77,16 @@ def extract_arxiv_ids_from_text(text: str) -> List[str]:
     return sorted(found)
 
 
-def _load_gatekeeper(gatekeeper_py: Path = SHARED_GATEKEEPER_PY) -> Optional[Any]:
+def _load_gatekeeper(gatekeeper_py: Path = SHARED_GATEKEEPER_PY) -> Any:
     if not gatekeeper_py.is_file():
-        return None
+        raise RuntimeError(f"Required Gatekeeper module missing: {gatekeeper_py}")
     spec = importlib.util.spec_from_file_location("foundry_gatekeeper_ro", gatekeeper_py)
     if spec is None or spec.loader is None:
-        return None
+        raise RuntimeError(f"Unable to load Gatekeeper module spec from {gatekeeper_py}")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
+    if not hasattr(mod, "validate"):
+        raise RuntimeError(f"Gatekeeper module missing validate(): {gatekeeper_py}")
     return mod
 
 
@@ -131,7 +133,7 @@ def audit_foundry_db_readonly(
         }
 
     done_set = set(completed_book_ids)
-    uri = f"file:///{db_path.as_posix()}?mode=ro"
+    uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
     conn = sqlite3.connect(uri, uri=True, timeout=5.0)
     conn.row_factory = sqlite3.Row
     try:
@@ -248,11 +250,10 @@ def load_merged_sovereign_docs(
 
     for bid in sorted(by_book_id.keys()):
         _, doc = by_book_id[bid]
-        if gatekeeper_mod is not None:
-            errs = gatekeeper_mod.validate(doc)
-            if errs:
-                gatekeeper_failures += 1
-                continue
+        errs = gatekeeper_mod.validate(doc)
+        if errs:
+            gatekeeper_failures += 1
+            continue
         status = str(doc.get("source_status") or "COMPLETE")
         if status == "INSUFFICIENT_SOURCE_ACCESS":
             refused_docs.append(doc)
@@ -260,6 +261,32 @@ def load_merged_sovereign_docs(
             complete_docs.append(doc)
 
     return complete_docs, refused_docs, gatekeeper_failures
+
+
+def _coerce_source_page(prim: Mapping[str, Any]) -> int:
+    """Parse integer page number from numeric or textual page/source_page citations."""
+    for key in ("page", "source_page"):
+        val = prim.get(key)
+        if val is None or isinstance(val, bool):
+            continue
+        if isinstance(val, int):
+            return max(1, val)
+        if isinstance(val, float) and math.isfinite(val):
+            return max(1, int(val))
+        s = str(val).strip()
+        if not s:
+            continue
+        try:
+            return max(1, int(s))
+        except ValueError:
+            pass
+        m = re.search(r"(?:\bprinted\s+p\.?|\bpdf\s+p\.?|\bp\.?)\s*(\d+)", s, re.I)
+        if m:
+            return max(1, int(m.group(1)))
+        m_any = re.search(r"\d+", s)
+        if m_any:
+            return max(1, int(m_any.group(0)))
+    return 1
 
 
 def synthesize_arxiv_and_sovereign_corpus(
@@ -334,7 +361,7 @@ def synthesize_arxiv_and_sovereign_corpus(
         for idx, prim in enumerate(prims):
             pid = str(prim.get("primitive_id") or f"{bid}_p{idx}")
             pname = str(prim.get("name") or pid)
-            form = str(prim.get("canonical_form") or prim.get("latex_equation") or "")
+            form = str(prim.get("latex") or prim.get("canonical_form") or prim.get("latex_equation") or "")
             layer2 = prim.get("layer2") if isinstance(prim.get("layer2"), Mapping) else {}
             mapping_text = str(layer2.get("mapping") or "")
             tag = str(layer2.get("tag") or "[ISOMORPHISM]")
@@ -359,7 +386,7 @@ def synthesize_arxiv_and_sovereign_corpus(
                     "canonical_form": form,
                     "gse_mapping": mapping_text,
                     "verbatim_quote": str(prim.get("verbatim_quote") or ""),
-                    "source_page": int(prim.get("source_page") or 1),
+                    "source_page": _coerce_source_page(prim),
                     "arxiv_ids": arxiv_matches,
                 }
             )
