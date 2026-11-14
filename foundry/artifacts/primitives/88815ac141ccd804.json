@@ -1,0 +1,1021 @@
+{
+ "book_id": "88815ac141ccd804",
+ "source_status": "COMPLETE",
+ "source_note": "Moritz Hardt and Benjamin Recht, 'Patterns, Predictions, and Actions: A Story about Machine Learning.' Local file is the free online manuscript from mlstory.org, licensed CC BY-NC-ND 4.0 (license as printed in the file); the library filename tags it 2022. Cataloging correction: the tasking said 2023; no 2023 edition marker appears in the file. The PDF front matter carries the compile stamp 'Compiled on Mon Jun 8 12:05:20 PDT 2026', a recompilation stamp of the living online manuscript, recorded as printed. PDF size 2002212 bytes; scan digest sha256(str(size)+bytes) = 88815ac141ccd80427327734a9c38a32ff467becabef13fbb4ebc35f584996cf. Extracted text is born-digital and clean (13998 lines) with occasional math-glyph spacing artifacts; every verbatim quote was verified as a contiguous substring of the extracted text after whitespace normalization. Motif-lane extraction under MOTIF-TIERB-DRAIN-01 for sync-cloud reconciliation.",
+ "primitives": [
+  {
+   "primitive_id": "risk_expected_loss",
+   "name": "Risk is the expected loss of a predictor over the population",
+   "verbatim_quote": "An important notion is the expected loss of a predictor taken over a population. This construct is called risk.",
+   "page": "Chapter 2, 'Loss functions and risk', printed p. 16-17 (Definition 1)",
+   "latex": "R[\\hat{Y}] := \\mathbb{E}[\\mathrm{loss}(\\hat{Y}(X), Y)]",
+   "symbol_and_unit_ledger": {
+    "R": "risk, expected loss in loss units",
+    "\\hat{Y}": "predictor function mapping inputs to labels",
+    "X": "input random vector",
+    "Y": "target random variable",
+    "loss": "cost of predicting one label when the target is another, in cost units"
+   },
+   "assumptions": [
+    "X and Y are drawn from a joint probability distribution",
+    "The expectation is taken jointly over X and Y",
+    "The loss function quantifies the cost of each prediction-target pair"
+   ],
+   "breakdown_regime": "Risk is a population quantity: with the distribution unknown it cannot be computed exactly, only estimated. A misspecified loss makes the risk minimizer optimal for the wrong problem.",
+   "domain": "statistical decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine score is an expected-loss statement: a signal is only comparable to another signal once the loss it is charged for being wrong is fixed. The reasoning layer stores the loss next to every predictive claim so confidence is priced, not asserted.",
+    "source_operator": "risk_expected_loss",
+    "telemetry": "Logged predictions with realized outcomes, scored under the declared loss per prediction family."
+   }
+  },
+  {
+   "primitive_id": "optimal_predictor_bayes_threshold",
+   "name": "The risk-minimizing binary predictor thresholds the posterior odds at a loss-determined level",
+   "verbatim_quote": "This rule corresponds to the intuitive rule we derived when thinking about how to make predictions over the population.",
+   "page": "Chapter 2, 'Prediction via optimization', printed p. 17 (Lemma 1)",
+   "latex": "\\hat{Y}(x) = 1\\left\\{ \\frac{P[Y=1 \\mid X=x]}{P[Y=0 \\mid X=x]} \\geq \\frac{\\mathrm{loss}(1,0) - \\mathrm{loss}(0,0)}{\\mathrm{loss}(0,1) - \\mathrm{loss}(1,1)} \\right\\}",
+   "symbol_and_unit_ledger": {
+    "P[Y=y | X=x]": "posterior probability of class y given the observation, dimensionless",
+    "loss(a,b)": "cost of predicting a when the truth is b",
+    "\\hat{Y}(x)": "optimal binary prediction at x, in {0,1}"
+   },
+   "assumptions": [
+    "The joint distribution, hence the posteriors, is known",
+    "The predictor is unconstrained, so the risk can be minimized pointwise for each x via the law of iterated expectation"
+   ],
+   "breakdown_regime": "Requires true posterior probabilities. With estimated posteriors the threshold is only as good as the probability model, and asymmetric real-world costs are often not the costs written into the loss.",
+   "domain": "statistical decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision thresholds in the engine are not fixed cutoffs: the bar for acting on a signal moves with the relative cost of the two error types. A high cost of a false positive raises the posterior odds a signal must clear before it can move a decision.",
+    "source_operator": "optimal_predictor_bayes_threshold",
+    "telemetry": "Calibrated posterior estimates per signal family plus the cost table for false positive versus false negative errors."
+   }
+  },
+  {
+   "primitive_id": "likelihood_ratio_test",
+   "name": "The optimal binary predictor is a likelihood ratio test with threshold set by priors and losses",
+   "verbatim_quote": "A likelihood ratio test (LRT) is a predictor of the form",
+   "page": "Chapter 2, 'Prediction via optimization', printed p. 18 (Definition 2 and Equation 1)",
+   "latex": "L(x) := \\frac{p(x \\mid Y=1)}{p(x \\mid Y=0)}, \\qquad \\hat{Y}(x) = 1\\{L(x) \\geq \\eta\\}, \\qquad \\eta = \\frac{p_0\\,(\\mathrm{loss}(1,0) - \\mathrm{loss}(0,0))}{p_1\\,(\\mathrm{loss}(0,1) - \\mathrm{loss}(1,1))}",
+   "symbol_and_unit_ledger": {
+    "L(x)": "likelihood ratio, dimensionless",
+    "p(x | Y=y)": "conditional density (likelihood) of the observation under class y",
+    "p_0, p_1": "prior class probabilities, dimensionless",
+    "\\eta": "decision threshold on the likelihood ratio, dimensionless"
+   },
+   "assumptions": [
+    "Conditional densities for both classes are known or estimable",
+    "Prior class probabilities are known",
+    "Any monotone transform of L, such as the log-likelihood ratio, gives the same predictor"
+   ],
+   "breakdown_regime": "Maximum a posteriori and maximum likelihood rules are special cases (symmetric costs, uniform priors). With misspecified densities the test inherits the density model's errors; many practical scores only approximate the true ROC traced by the LRT.",
+   "domain": "detection theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Evidence for and against a hypothesis is combined as a ratio, not a vote count. The engine's signal fusion multiplies likelihood-style evidence terms and compares the product to a cost-set threshold, so weak signals cannot outvote one strong discriminating signal.",
+    "source_operator": "likelihood_ratio_test",
+    "telemetry": "Per-signal conditional outcome frequencies under the competing hypotheses, plus base rates for each hypothesis class."
+   }
+  },
+  {
+   "primitive_id": "neyman_pearson_lemma",
+   "name": "Neyman-Pearson: the LRT maximizes true positive rate at any capped false positive rate, tracing the ROC curve",
+   "verbatim_quote": "Lemma 2. Neyman-Pearson Lemma. Suppose the likelihood functions p( x |y) are continuous. Then the optimal probabilistic predictor that maximizes TPR with an upper bound on FPR is a deterministic likelihood ratio test.",
+   "page": "Chapter 2, 'The Neyman-Pearson Lemma', printed p. 23 (Lemma 2)",
+   "latex": "\\max_{Q} \\ \\mathbb{E}[Q(X) \\mid Y=1] \\quad \\mathrm{subject\\ to} \\quad \\mathbb{E}[Q(X) \\mid Y=0] \\leq \\alpha",
+   "symbol_and_unit_ledger": {
+    "Q": "probabilistic predictor, probability of declaring 1 at each x",
+    "TPR": "true positive rate P[declare 1 | Y=1], dimensionless",
+    "FPR": "false positive rate P[declare 1 | Y=0], dimensionless",
+    "\\alpha": "cap on the false positive rate, dimensionless"
+   },
+   "assumptions": [
+    "Likelihood functions are continuous, so an LRT attains FPR exactly alpha",
+    "Randomized predictors are allowed in the competition, and still cannot beat the deterministic LRT"
+   ],
+   "breakdown_regime": "Optimality is relative to the true likelihoods. AUC, a single summary of the ROC, hides the operating region: two curves with equal AUC can differ sharply at low FPR, so the curve's shape governs, not the number.",
+   "domain": "hypothesis testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Signal quality is judged on the whole tradeoff curve between hits and false alarms, never on accuracy at one threshold. When the engine ranks two signals, it compares their achievable hit rates at the false-alarm budget the decision can afford.",
+    "source_operator": "neyman_pearson_lemma",
+    "telemetry": "Historical hit and false-alarm counts per signal across a sweep of thresholds, stored as curves rather than single accuracies."
+   }
+  },
+  {
+   "primitive_id": "fairness_criteria_incompatibility",
+   "name": "Independence, separation, and sufficiency are mutually exclusive fairness criteria outside special cases",
+   "verbatim_quote": "Researchers have shown that any two of the three criteria are mutually exclusive except in special cases.",
+   "page": "Chapter 2, 'Formal non-discrimination criteria', printed p. 29-30",
+   "latex": "R \\perp A, \\qquad R \\perp A \\mid Y, \\qquad Y \\perp A \\mid R",
+   "symbol_and_unit_ledger": {
+    "R": "score assigned by the decision rule",
+    "A": "protected group attribute",
+    "Y": "true outcome",
+    "\\perp": "statistical independence"
+   },
+   "assumptions": [
+    "A protected attribute A is recorded in the same probability space as score and outcome",
+    "Each criterion equalizes one group-dependent statistic: acceptance rate, error rates, or outcome frequency given score"
+   ],
+   "breakdown_regime": "Imposing one criterion forgoes the other two except in special cases such as equal base rates or perfect prediction. All criteria involving Y are meaningless or misleading when the target variable itself is the locus of discrimination.",
+   "domain": "algorithmic fairness",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any consistency demand placed on engine outputs across segments must name which quantity it equalizes, because the demands conflict mathematically. The reasoning layer treats segment-parity checks as a choice among incompatible constraints, not a checklist that can pass on all axes at once.",
+    "source_operator": "fairness_criteria_incompatibility",
+    "telemetry": "Outcome and score distributions segmented by any grouping the engine reports on, with base rates per segment."
+   }
+  },
+  {
+   "primitive_id": "empirical_risk_minimization",
+   "name": "Empirical risk minimization replaces population risk with the sample average loss and optimizes it over a function class",
+   "verbatim_quote": "Empirical risk minimization is the optimization problem of finding a predictor in a given function family that minimizes the empirical risk.",
+   "page": "Chapter 3, 'Supervised learning', printed p. 35-36 (Definitions 3 and 4)",
+   "latex": "R_S[f] = \\frac{1}{n} \\sum_{i=1}^{n} \\mathrm{loss}(f(x_i), y_i), \\qquad \\min_{f \\in \\mathcal{F}} R_S[f]",
+   "symbol_and_unit_ledger": {
+    "R_S[f]": "empirical risk, average loss on the sample, in loss units",
+    "n": "number of labeled examples",
+    "\\mathcal{F}": "function class searched by the learner",
+    "S": "labeled sample ((x_1,y_1),...,(x_n,y_n))"
+   },
+   "assumptions": [
+    "Examples are drawn i.i.d. from the population distribution",
+    "The empirical risk is computable from the sample alone, unlike the risk"
+   ],
+   "breakdown_regime": "Risk decomposes as R[f] = R_S[f] + (R[f] - R_S[f]); the second term, the generalization gap, is uncontrolled by optimization alone. ERM with the zero-one loss is NP-hard even for linear rules, forcing surrogate losses.",
+   "domain": "supervised learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every fitted component of the engine is an empirical risk minimizer over some declared function class, and its training score is recorded separately from its expected population score. The gap term is a first-class field in the engine's model registry, never silently assumed to be zero.",
+    "source_operator": "empirical_risk_minimization",
+    "telemetry": "Training samples with labels, the function class and loss used per fitted component, and held-out scores for the gap estimate."
+   }
+  },
+  {
+   "primitive_id": "perceptron_update_rule",
+   "name": "The perceptron updates w by y_i x_i exactly on margin mistakes and is SGD on the hinge loss",
+   "verbatim_quote": "The algorithm goes about finding a linear separator w incrementally in a sequence of update steps.",
+   "page": "Chapter 3, 'A first learning algorithm: The perceptron', printed p. 38",
+   "latex": "w_{t+1} = w_t + y_i x_i \\quad \\mathrm{if} \\quad y_i \\langle w_t, x_i \\rangle < 1, \\qquad w_{t+1} = w_t \\quad \\mathrm{otherwise}",
+   "symbol_and_unit_ledger": {
+    "w_t": "weight vector at step t",
+    "x_i": "feature vector of example i",
+    "y_i": "label in {-1, 1}",
+    "y_i <w_t, x_i>": "signed margin of example i, dimensionless after normalization"
+   },
+   "assumptions": [
+    "Labels in {-1, 1}",
+    "A margin of at least 1 is demanded, which is only meaningful together with a penalty on the size of w"
+   ],
+   "breakdown_regime": "On nonseparable data the plain perceptron does not converge to a risk minimizer; the margin requirement is inconsequential without regularization, since any separator can be scaled up.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Online updating in the engine changes a model only on examples it currently gets wrong with insufficient confidence, and the size of the update is the example itself. This gives an auditable rule: every model change can be traced to the specific observations that violated the margin.",
+    "source_operator": "perceptron_update_rule",
+    "telemetry": "Streaming labeled outcomes with the model's signed margin at prediction time, logged per update."
+   }
+  },
+  {
+   "primitive_id": "hinge_loss_svm_objective",
+   "name": "The l2-regularized hinge-loss ERM objective is the support vector machine, with the perceptron as its SGD solver",
+   "verbatim_quote": "The perceptron algorithm corresponds to solving this empirical risk objective with the stochastic gradient method.",
+   "page": "Chapter 3, 'Connection to empirical risk minimization', printed p. 40-41",
+   "latex": "\\frac{1}{n} \\sum_{i=1}^{n} \\max\\{1 - y_i \\langle w, x_i \\rangle, 0\\} + \\frac{\\lambda}{2} \\|w\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "max{1 - y_i <w, x_i>, 0}": "hinge loss of example i, dimensionless",
+    "\\lambda": "regularization strength trading fit against weight size",
+    "\\|w\\|_2^2": "squared Euclidean norm of the weights"
+   },
+   "assumptions": [
+    "Hinge loss is used as a convex surrogate for the zero-one loss",
+    "The gradient of the hinge loss is a subgradient at the kink y<w,x> = 1, where 0 is used by convention"
+   ],
+   "breakdown_regime": "Optimizing the surrogate does not automatically optimize the zero-one loss; the link is heuristic in general. The forgetting rate of the perceptron variant equals (1 - eta lambda), tying the algorithm to this exact objective.",
+   "domain": "convex optimization for classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine fits a linear scorer, the objective pairs a margin-violation penalty with a weight-size penalty, so confidence and parsimony are traded in one number. The surrogate's gap to the true error count is monitored rather than assumed away.",
+    "source_operator": "hinge_loss_svm_objective",
+    "telemetry": "Feature vectors, labels, the fitted weight norm, and margin-violation counts on validation data."
+   }
+  },
+  {
+   "primitive_id": "novikoff_mistake_bound",
+   "name": "Novikoff bound: perceptron margin mistakes are at most (2 + D(S)^2) / gamma(S)^2, independent of dimension",
+   "verbatim_quote": "The mistake bound does not depend on the dimension of the data.",
+   "page": "Chapter 3, 'Formal guarantees for the perceptron', printed p. 43-45 (Theorem 1)",
+   "latex": "m_t \\leq \\frac{2 + D(S)^2}{\\gamma(S)^2}",
+   "symbol_and_unit_ledger": {
+    "m_t": "number of margin mistakes up to step t, count",
+    "D(S)": "diameter of the data, max norm of any example, in feature units",
+    "\\gamma(S)": "maximum margin of any unit-norm separator on S, in feature units"
+   },
+   "assumptions": [
+    "The data can be perfectly classified by a linear separator",
+    "A unit vector achieving margin gamma(S) exists"
+   ],
+   "breakdown_regime": "Vacuous when the best margin is tiny relative to the diameter. The companion leave-one-out argument (Theorem 2) turns the same bound into a generalization statement P[Y w(S_n)^T X < 1] at most E[m]/(n+1), which inherits the separability assumption.",
+   "domain": "learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine budgets learning difficulty by margin and data scale, not by feature count. A signal family whose separating margin is wide relative to the spread of its inputs earns fast-trust status; a thin-margin family stays probationary no matter how many features it uses.",
+    "source_operator": "novikoff_mistake_bound",
+    "telemetry": "Per-family margin distributions and input norms on labeled history, recomputed as new outcomes arrive."
+   }
+  },
+  {
+   "primitive_id": "kernel_psd_definition",
+   "name": "A kernel is a symmetric function whose Gram matrices are positive semidefinite, equivalently an inner product of lifted features",
+   "verbatim_quote": "It is clear that positive combinations of kernel functions are kernel functions, since this is also true for positive semidefinite matrices.",
+   "page": "Chapter 4, 'Kernels', printed p. 58-59",
+   "latex": "k(x, z) := \\Phi(x)^{\\top} \\Phi(z), \\qquad K_{ij} = k(x_i, x_j) \\succeq 0",
+   "symbol_and_unit_ledger": {
+    "k(x,z)": "kernel similarity between two inputs, in squared feature units",
+    "\\Phi": "lifting (feature) map into a possibly infinite-dimensional space",
+    "K": "Gram matrix over the sample",
+    "\\succeq 0": "positive semidefiniteness"
+   },
+   "assumptions": [
+    "The kernel is symmetric",
+    "Positive combinations and products of kernels are kernels, which is how polynomial, exponential, and Gaussian kernels are built"
+   ],
+   "breakdown_regime": "Many kernels share one feature space; what distinguishes them is the norm they induce, which governs which interpolating solution is selected. A similarity function that fails positive semidefiniteness is not a kernel and breaks the associated optimization guarantees.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Similarity between situations in the engine is only trusted when it behaves like an inner product, so that nearest-analog reasoning inherits geometry: distances, projections, and least-norm interpolation stay consistent. Case retrieval uses kernel similarity with the induced norm recorded alongside.",
+    "source_operator": "kernel_psd_definition",
+    "telemetry": "Pairwise situation descriptors from historical records, with Gram-matrix eigenvalue checks on retrieval sets."
+   }
+  },
+  {
+   "primitive_id": "random_features_kernel_expectation",
+   "name": "Random feature maps approximate kernels: the expected inner product of random features is a kernel integral (Rahimi and Recht)",
+   "verbatim_quote": "In expectation, the random feature map yields a kernel given by the final integral expressions.",
+   "page": "Chapter 4, 'Random features', printed p. 64",
+   "latex": "\\mathbb{E}\\left[\\frac{1}{D} \\Phi_{\\mathrm{rf}}(x)^{\\top} \\Phi_{\\mathrm{rf}}(z)\\right] = \\int p(\\vartheta) \\, b(x; \\vartheta) \\, b(z; \\vartheta) \\, d\\vartheta",
+   "symbol_and_unit_ledger": {
+    "\\Phi_{rf}": "random feature map stacking basis functions b(x; theta_k)",
+    "\\vartheta": "randomly drawn basis parameter",
+    "p(\\vartheta)": "sampling distribution over basis parameters",
+    "D": "number of random features"
+   },
+   "assumptions": [
+    "Basis parameters are drawn i.i.d. from p",
+    "The target kernel admits the integral representation, as the Gaussian kernel does with Gaussian frequencies and sinusoid bases"
+   ],
+   "breakdown_regime": "Finite D gives only an empirical kernel; in practice random features often need large dimension to match trained networks. The method trades approximation quality for optimization ease, since only the output weights are fit.",
+   "domain": "kernel approximation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine can buy nonlinear similarity cheaply by random projection: randomized embeddings of game or player state approximate a principled similarity kernel, letting retrieval and least-norm fitting run at scale while the approximation error is tracked as a function of the number of random features.",
+    "source_operator": "random_features_kernel_expectation",
+    "telemetry": "Random projection seeds and dimensions per embedding, plus kernel-approximation error measured on held-out pairs."
+   }
+  },
+  {
+   "primitive_id": "convexity_gradient_descent",
+   "name": "For differentiable convex functions, a vanishing gradient is necessary and sufficient for a global minimum, which is why gradient descent is guaranteed there",
+   "verbatim_quote": "We will see shortly that convex functions are the class of functions where gradient descent is guaranteed to find an optimal solution.",
+   "page": "Chapter 5, 'Optimization basics' and 'Gradient descent', printed p. 71-74 (Definitions 6, Propositions 5 and 6)",
+   "latex": "\\Phi(\\alpha w_1 + (1-\\alpha) w_2) \\leq \\alpha \\Phi(w_1) + (1-\\alpha) \\Phi(w_2), \\qquad \\Phi(u) \\geq \\Phi(v) + \\nabla \\Phi(v)^{\\top} (u - v)",
+   "symbol_and_unit_ledger": {
+    "\\Phi": "objective function over parameter vectors",
+    "\\alpha": "convex combination weight in [0,1]",
+    "\\nabla \\Phi": "gradient of the objective",
+    "w_1, w_2, u, v": "parameter vectors"
+   },
+   "assumptions": [
+    "Phi is differentiable and convex on its domain",
+    "Five closure rules generate most convex costs: norms, nonnegative scaling, sums, pointwise maxima, affine composition"
+   ],
+   "breakdown_regime": "Stationary points of nonconvex objectives need not be minimizers (maxima and saddles also have zero gradient). Outside convexity, gradient descent carries no global guarantee and the analysis must shift to predictions rather than parameters.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine separates its fitting problems into those with a certificate (convex objectives, where a zero gradient proves optimality) and those without, and labels model quality accordingly. Uncertified fits are reported with their optimization gap unknown, never as solved problems.",
+    "source_operator": "convexity_gradient_descent",
+    "telemetry": "Gradient norms at termination per fit, and convexity status of each objective in the model registry."
+   }
+  },
+  {
+   "primitive_id": "stochastic_gradient_descent",
+   "name": "Stochastic gradient descent follows the gradient of the loss on a single random example, generalizing the perceptron",
+   "verbatim_quote": "Stochastic gradient descent minimizes empirical risk by following the gradient of the risk evaluated on a single, random example.",
+   "page": "Chapter 5, 'Stochastic gradient descent', printed p. 80",
+   "latex": "w_{t+1} = w_t - \\alpha_t \\nabla_{w_t} \\mathrm{loss}(f(x_i; w_t), y_i)",
+   "symbol_and_unit_ledger": {
+    "\\alpha_t": "step size at iteration t",
+    "i": "randomly drawn example index",
+    "\\nabla_{w_t} loss": "gradient of one example's loss with respect to the current parameters"
+   },
+   "assumptions": [
+    "The gradient of a sum is the sum of gradients, so one summand gives an unbiased descent direction in expectation",
+    "Examples are sampled i.i.d. or shuffled without replacement"
+   ],
+   "breakdown_regime": "The optimum of the sum is not a fixed point of the single-example dynamics, since individual gradients need not vanish there. Statistical fluctuation caps the generic optimality gap decay; in the mean-estimation example the gap after n steps is sigma^2/(2n), the best any estimator achieves.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine models update incrementally from single new observations with a step size that shrinks as evidence accumulates, mirroring Robbins-Monro averaging. The update rule is deliberately the same object as the batch fit, so online and offline versions of a model cannot silently diverge in objective.",
+    "source_operator": "stochastic_gradient_descent",
+    "telemetry": "Per-example losses and gradient magnitudes in arrival order, with the step-size schedule logged."
+   }
+  },
+  {
+   "primitive_id": "sgd_convergence_theorem",
+   "name": "SGD on convex problems converges at the dimension-free rate CD rho / sqrt(T) with an optimally chosen constant step size",
+   "verbatim_quote": "This proposition asserts that we pay linearly for errors in selecting the optimal constant step size.",
+   "page": "Chapter 5, 'Analysis of the stochastic gradient method', printed p. 87-88 (Theorem 3)",
+   "latex": "\\mathbb{E}[R_S[\\bar{w}_T]] \\leq \\frac{C D \\rho}{\\sqrt{T}}",
+   "symbol_and_unit_ledger": {
+    "C": "maximum gradient magnitude of the loss",
+    "D": "largest norm of any example, in feature units",
+    "\\rho": "minimum norm of a zero-empirical-risk solution",
+    "T": "number of SGD steps",
+    "\\bar{w}_T": "step-size-weighted average iterate"
+   },
+   "assumptions": [
+    "Convex loss, linear predictor, existence of a zero-risk model",
+    "Stochastic gradients are unbiased and bounded"
+   ],
+   "breakdown_regime": "The 1/sqrt(T) rate is forced by stochasticity itself, not by dimension. Run one pass over i.i.d. data and the same bound becomes a population-risk generalization bound; run many passes and it is only an optimization statement.",
+   "domain": "stochastic optimization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Convergence expectations in the engine are set by this rate law: doubling data quarters the suboptimality scale of a one-pass fit, and extra passes over the same data buy optimization, not statistical trust. Planning uses the rate to decide when more data beats more compute.",
+    "source_operator": "sgd_convergence_theorem",
+    "telemetry": "Steps taken, gradient bound estimates, and solution norms per fit, compared against the predicted rate."
+   }
+  },
+  {
+   "primitive_id": "implicit_convexity_prediction_dynamics",
+   "name": "Implicit convexity: in overparameterized models the predictions follow strongly convex dynamics even when the parameter objective is nonconvex",
+   "verbatim_quote": "This expression proves that as long as XX T is strictly positive definite and α is small enough, then the predictions converge to the training labels.",
+   "page": "Chapter 5, 'Implicit convexity', printed p. 89-92",
+   "latex": "\\hat{y}_{t+1} - y = (I - \\alpha X X^{\\top})(\\hat{y}_t - y)",
+   "symbol_and_unit_ledger": {
+    "\\hat{y}_t": "vector of model predictions on the training set at step t",
+    "y": "vector of training labels",
+    "X": "data matrix, n by d",
+    "XX^T": "Gram matrix of the training inputs",
+    "\\alpha": "constant step size"
+   },
+   "assumptions": [
+    "Squared loss",
+    "Overparameterization d > n so XX^T can be strictly positive definite",
+    "For nonlinear models, the Jacobian Gram Df Df^T stays full rank and the second-order remainder term stays small"
+   ],
+   "breakdown_regime": "Needs exponentially fast prediction convergence only in the span of positive eigenvalues; null directions of XX^T do not move. If Jacobians lose rank during training, the argument collapses and weights may wander without prediction progress.",
+   "domain": "deep learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine monitors convergence in prediction space, not parameter space: a large model's fit is judged by the contraction of its prediction errors and the conditioning of its Gram-like matrices. Adding features aimed at small singular directions is the prescribed fix when convergence stalls.",
+    "source_operator": "implicit_convexity_prediction_dynamics",
+    "telemetry": "Prediction-error trajectories per training run and singular value spectra of the relevant Gram matrices."
+   }
+  },
+  {
+   "primitive_id": "min_norm_implicit_regularization",
+   "name": "Gradient descent from zero converges to the minimum-norm interpolant, which is also the maximum-margin solution under interpolation",
+   "verbatim_quote": "In other words, out of all the linear prediction functions that interpolate the training data, SGD selects the solution with the minimal Euclidean norm.",
+   "page": "Chapter 5, 'Implicit regularization by optimization', printed p. 93-95",
+   "latex": "w = X^{\\top} (X X^{\\top})^{-1} y, \\qquad \\mathrm{margin}(w) = \\|w\\|^{-1} \\ \\mathrm{under\\ interpolation}",
+   "symbol_and_unit_ledger": {
+    "w": "minimum Euclidean norm solution of Xw = y",
+    "X^T (XX^T)^{-1} y": "closed form of the least-norm interpolant",
+    "margin(w)": "distance from data to the decision boundary, in feature units"
+   },
+   "assumptions": [
+    "Initialization at w_0 = 0, so iterates stay in the span of the data",
+    "Examples are linearly independent",
+    "Under interpolation w^T x_i = y_i, so margin reduces to the inverse norm"
+   ],
+   "breakdown_regime": "The selection is specific to the geometry of the algorithm: different initialization, loss, or geometry (for example mirror descent) selects different interpolants. Zero training error alone says nothing about test performance, as the same weights can be forced to fit random labels on test inputs when d exceeds n plus m.",
+   "domain": "implicit regularization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When many engine models fit history equally well, the tie is broken by norm, and the norm is reported as the model's complexity exposure. Two models with equal training scores are not equal: the smaller-norm one carries the larger implied margin and gets the higher trust weight.",
+    "source_operator": "min_norm_implicit_regularization",
+    "telemetry": "Weight norms and implied margins of all interpolating candidate models, logged at selection time."
+   }
+  },
+  {
+   "primitive_id": "representer_theorem",
+   "name": "Representer theorem: penalized ERM solutions lie in the span of the training data, reducing the problem to kernel coefficients",
+   "verbatim_quote": "The representer theorem (also known as the kernel trick) tells us that most machine learning problems reduce to a search in n dimensional space, even if the feature space has much higher dimension.",
+   "page": "Chapter 5, 'The representer theorem and kernel methods', printed p. 95-96",
+   "latex": "w = X^{\\top} \\beta, \\qquad \\min_{\\beta} \\ \\frac{1}{n} \\sum_{i=1}^{n} \\mathrm{loss}(e_i^{\\top} K \\beta, y_i) + \\lambda \\beta^{\\top} K \\beta",
+   "symbol_and_unit_ledger": {
+    "\\beta": "coefficients of the solution in the data span",
+    "K = XX^T": "kernel (Gram) matrix of the training data",
+    "e_i": "i-th standard basis vector",
+    "\\lambda": "regularization parameter making the penalized minimizer unique"
+   },
+   "assumptions": [
+    "The cost depends on w only through the evaluations w^T x_i and increases with ||w||",
+    "Any w decomposes as X^T beta plus a component orthogonal to all training points, which cannot affect fit and only adds norm"
+   ],
+   "breakdown_regime": "For lambda = 0 the unpenalized problem has infinitely many minimizers; the theorem picks the geometry but a tie-breaking principle (penalty or algorithm) is still required. It covers evaluation-based costs, not arbitrary functionals of w.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine function fitting is parameterized by weights on historical cases rather than by raw parameters whenever the cost has this structure, which caps the effective search dimension at the number of cases and makes every prediction an explicit weighted sum over precedents that auditors can inspect.",
+    "source_operator": "representer_theorem",
+    "telemetry": "Case-weight vectors per fitted function and the kernel matrix version used, stored for audit."
+   }
+  },
+  {
+   "primitive_id": "average_stability_identity",
+   "name": "The expected generalization gap of an algorithm equals its average stability under single-example resampling",
+   "verbatim_quote": "Proposition 7. The expected generalization gap equals average stability:",
+   "page": "Chapter 6, 'Algorithmic stability', printed p. 111-112 (Definition 9, Proposition 7)",
+   "latex": "\\mathbb{E}[\\Delta_{\\mathrm{gen}}(A(S))] = \\Delta(A) = \\mathbb{E}_{S, S'} \\left[ \\frac{1}{n} \\sum_{i=1}^{n} \\left( \\mathrm{loss}(A(S), Z_i') - \\mathrm{loss}(A(S^{(i)}), Z_i') \\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "\\Delta_gen": "generalization gap R[f] - R_S[f], in loss units",
+    "A(S)": "predictor returned by algorithm A on sample S",
+    "S^{(i)}": "hybrid sample with the i-th example replaced by a ghost-sample example",
+    "\\Delta(A)": "average stability of the algorithm, in loss units"
+   },
+   "assumptions": [
+    "Samples S and ghost sample S' are i.i.d. from the same distribution",
+    "The algorithm is a deterministic map from samples to predictors"
+   ],
+   "breakdown_regime": "Average stability is an expectation identity; worst-case (uniform) stability is stronger and can fail where average stability holds. The identity is exact but not directly computable without resampling experiments.",
+   "domain": "generalization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine estimates a model's generalization gap by perturbation: refit with single observations swapped or removed and measure prediction movement. A model whose outputs swing on one observation is charged a large stability gap in its evaluation, regardless of its headline fit.",
+    "source_operator": "average_stability_identity",
+    "telemetry": "Leave-one-out and swap-one refit deltas per production model, refreshed on each data release."
+   }
+  },
+  {
+   "primitive_id": "sgd_uniform_stability",
+   "name": "SGD is uniformly stable with bound 2 L^2 / n times the sum of step sizes (Hardt, Recht, and Singer)",
+   "verbatim_quote": "The stability approach also extends to the non-convex case albeit with a much weaker quantitative bound.",
+   "page": "Chapter 6, 'Uniform stability of stochastic gradient descent', printed p. 122 (Theorem 6)",
+   "latex": "\\Delta_{\\mathrm{sup}}(\\mathrm{SGM}) \\leq \\frac{2 L^2}{n} \\sum_{t=1}^{T} \\eta_t",
+   "symbol_and_unit_ledger": {
+    "\\Delta_sup": "uniform stability: worst-case loss change from altering one training example, in loss units",
+    "L": "Lipschitz constant of the loss",
+    "\\beta": "smoothness constant of the loss (in the theorem's assumptions)",
+    "\\eta_t": "step size at step t",
+    "T": "number of steps",
+    "n": "sample size"
+   },
+   "assumptions": [
+    "Loss is convex, beta-smooth, and L-Lipschitz on every example",
+    "Step sizes satisfy eta_t at most 2/beta",
+    "Companion result: strongly convex ERM has uniform stability at most 4L^2/(mu n) (Theorem 4)"
+   ],
+   "breakdown_regime": "More steps on the same data linearly erode the stability guarantee, so epochs are a generalization cost, not a free resource. For nonconvex losses the quantitative bound degrades sharply, and uniform stability cannot explain deep learning because it is invariant to relabeling the data.",
+   "domain": "generalization theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Training length is budgeted in the engine like a resource: every additional pass over the same data spends stability. Model cards record total step-size mass so a heavily recycled dataset automatically widens the uncertainty attached to the resulting model.",
+    "source_operator": "sgd_uniform_stability",
+    "telemetry": "Step counts, step-size schedules, and dataset reuse counts per training run."
+   }
+  },
+  {
+   "primitive_id": "rademacher_complexity",
+   "name": "Rademacher complexity measures a function class's ability to fit random sign patterns and bounds the generalization gap",
+   "verbatim_quote": "Rademacher complexity measures the ability of a function class to interpolate a random sign pattern assigned to a point set.",
+   "page": "Chapter 6, 'Rademacher complexity', printed p. 118",
+   "latex": "\\hat{\\mathfrak{R}}_n(\\mathcal{L}) = \\mathbb{E}_{\\sigma} \\left[ \\sup_{h \\in \\mathcal{L}} \\frac{1}{n} \\sum_{i=1}^{n} \\sigma_i h(z_i) \\right], \\qquad \\Delta_{\\mathrm{gen}}(f) \\leq 2 L \\mathfrak{R}_n(\\mathcal{F}) + 3 \\sqrt{\\frac{\\log(1/\\delta)}{n}}",
+   "symbol_and_unit_ledger": {
+    "\\sigma_i": "independent random signs in {-1, 1}",
+    "\\mathcal{L}": "loss-composed function class h(z) = loss(f, z)",
+    "\\mathfrak{R}_n": "Rademacher complexity, in loss units",
+    "L": "Lipschitz constant of the loss in the model parameterization"
+   },
+   "assumptions": [
+    "Applied to the loss class rather than the raw model class to exploit the loss's structure",
+    "Data drawn i.i.d.; bound holds uniformly over the class with probability 1 - delta"
+   ],
+   "breakdown_regime": "The sibling VC bound scales with parameter count and becomes vacuous once parameters exceed sample size; margin-based versions rescue it only by using data-dependent quantities (data diameter over margin) instead of dimension. Worst-case uniform bounds can be far looser than observed gaps.",
+   "domain": "generalization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before a model family is trusted, the engine stress-tests its capacity by fitting randomized labels: a family that can memorize noise gets a complexity charge proportional to that ability. This is a direct audit instrument, turning an abstract capacity measure into a routine pre-deployment test.",
+    "source_operator": "rademacher_complexity",
+    "telemetry": "Random-label fit scores per model family alongside real-label scores, on matched sample sizes."
+   }
+  },
+  {
+   "primitive_id": "double_descent",
+   "name": "Double descent: past the interpolation threshold, increasing model complexity keeps decreasing risk instead of raising it",
+   "verbatim_quote": "Increasing model complexity in the overparameterized regime continues to decrease risk indefinitely, albeit at decreasing marginal returns, toward some convergence point.",
+   "page": "Chapter 6, 'Overparameterization: empirical phenomena', printed p. 102-103",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Empirical regularity observed across overparameterized linear models, ensembles, and neural networks, in the absence of strong explicit regularization",
+    "An interpolation threshold exists at which the model class can first fit the training data exactly"
+   ],
+   "breakdown_regime": "Not universal: single descent and multi-bump curves also occur. The randomization test separates fit from meaning: the same algorithms drive training loss to zero on random labels while test accuracy collapses to chance, so interpolation alone never certifies generalization.",
+   "domain": "empirical machine learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model size reviews in the engine use the empirical risk-versus-complexity curve of the actual family rather than the textbook U-curve: capacity increases are evaluated past the interpolation point before being rejected as overfitting, and any capacity claim must be paired with a random-label control run.",
+    "source_operator": "double_descent",
+    "telemetry": "Risk and training error traced across capacity settings per family, plus label-randomization controls."
+   }
+  },
+  {
+   "primitive_id": "backpropagation",
+   "name": "Backpropagation computes all layer Jacobians in one forward and one backward pass by the chain rule, at the cost of one function evaluation per step",
+   "verbatim_quote": "Each operation in our computation only has to implement function evaluation, its first-order derivatives, and store an array of values computed in the forward pass.",
+   "page": "Chapter 7, 'Automatic differentiation', printed p. 132-133 (Proposition 8, Lemma 4)",
+   "latex": "\\Lambda_{i-1} = \\Lambda_i \\, D_{z^{(i-1)}} z^{(i)}(v_{i-1}), \\qquad \\Lambda_0 = D_{z^{(0)}} z^{(L)}(w)",
+   "symbol_and_unit_ledger": {
+    "\\Lambda_i": "Jacobian of the final output with respect to layer i activations",
+    "D_{z^{(i-1)}} z^{(i)}": "local Jacobian of one computation step",
+    "v_i": "stored forward-pass activations",
+    "L": "number of computation steps"
+   },
+   "assumptions": [
+    "The computation is a composition of differentiable steps",
+    "Each step can evaluate itself and its own first derivatives locally, storing forward values"
+   ],
+   "breakdown_regime": "Runs in time O(LC) but stores all intermediate activations, so memory grows with depth. Nondifferentiable points (the ReLU kink at 0) are handled by an arbitrary subgradient convention, silently biasing gradients on a measure-zero but frequently hit set.",
+   "domain": "automatic differentiation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sensitivity analysis in the engine follows the same local-credit structure: the effect of an early input on a final projection is computed by chaining local derivatives through the pipeline stages, so blame for a bad projection is assigned stage by stage instead of globally.",
+    "source_operator": "backpropagation",
+    "telemetry": "Per-stage Jacobians or finite-difference sensitivities logged for the projection pipeline on audit cases."
+   }
+  },
+  {
+   "primitive_id": "residual_connections",
+   "name": "Residual blocks add the identity to each layer's Jacobian, keeping gradients well conditioned at depth",
+   "verbatim_quote": "In other words, the Jacobian of a residual block is the Jacobian of a regular block plus the identity.",
+   "page": "Chapter 7, 'Vanishing gradients' and 'Residual connections', printed p. 136-137",
+   "latex": "h(x) = x + B(\\mathrm{ReLU}(A(x))), \\qquad J' = D_x h(x) = I + J",
+   "symbol_and_unit_ledger": {
+    "h": "residual block map",
+    "J": "Jacobian of the plain block f(x) = B(ReLU(A(x)))",
+    "I": "identity matrix",
+    "J'": "Jacobian of the residual block"
+   },
+   "assumptions": [
+    "Block input and output dimensions match, or padding/truncation reconciles them",
+    "Weights of the plain block are scaled so J is small, putting the singular values of I + J near 1"
+   ],
+   "breakdown_regime": "Plain chains of linear maps grow or shrink gradients like lambda_1(A)^L with depth, the vanishing and exploding gradient failure. In the linear residual case the objective is nonconvex yet has no saddle points when the partial products are nonsingular; this guarantee does not survive arbitrary nonlinear stacks.",
+   "domain": "deep learning architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pipeline stages in the engine are built as corrections to an identity baseline rather than replacements: each stage outputs the incoming estimate plus an adjustment. Gradient and error signals then propagate through stages without exponential amplification or decay, and a stage that learns nothing defaults to passing the estimate through.",
+    "source_operator": "residual_connections",
+    "telemetry": "Per-stage adjustment magnitudes relative to the passed-through estimate, and end-to-end sensitivity growth across stages."
+   }
+  },
+  {
+   "primitive_id": "neural_tangent_kernel",
+   "name": "In the small-step limit, gradient descent on a wide network behaves like kernel regression with the Neural Tangent Kernel at initialization",
+   "verbatim_quote": "The expected value of this random feature embedding is called a Neural Tangent Kernel.",
+   "page": "Chapter 7, 'Implicit regularization by stochastic gradient descent in deep learning', printed p. 142",
+   "latex": "k(x_1, x_2) = \\mathbb{E}_{w_0} \\left[ \\langle \\nabla_w f(x_1; w_0), \\nabla_w f(x_2; w_0) \\rangle \\right]",
+   "symbol_and_unit_ledger": {
+    "k": "Neural Tangent Kernel between two inputs",
+    "w_0": "random initial weights",
+    "\\nabla_w f(x; w_0)": "gradient of the network output with respect to weights at initialization",
+    "f": "network prediction function"
+   },
+   "assumptions": [
+    "Step size tends to zero so the Jacobian at initialization stays effectively constant during training",
+    "Weights move little from initialization, the lazy training regime"
+   ],
+   "breakdown_regime": "The book flags the theory-practice gap directly: models trained with Neural Tangent Kernels do not match the predictive performance of the corresponding trained networks, and simpler kernels inspired by the networks can outperform the NTK. Feature learning, the thing the limit throws away, is doing real work in practice.",
+   "domain": "deep learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For very wide, lightly trained components, the engine approximates training dynamics with the initialization kernel and predicts the minimum-norm solution it will land on. The approximation is labeled a lazy-regime estimate and is vetoed wherever the deployed model demonstrably learns features, since the kernel picture then misprices it.",
+    "source_operator": "neural_tangent_kernel",
+    "telemetry": "Weight displacement from initialization per model, used to test whether the lazy-regime approximation is admissible."
+   }
+  },
+  {
+   "primitive_id": "adaptive_holdout_overfitting",
+   "name": "Adaptive reuse of a holdout destroys its guarantee: k adaptive queries can force a generalization gap of order sqrt(k/n)",
+   "verbatim_quote": "Adaptivity can be interpreted as a form of overparameterization.",
+   "page": "Chapter 8, 'The problem of adaptivity', printed p. 159-161 (Propositions 9 and 10)",
+   "latex": "\\max_{1 \\leq t \\leq k} \\Delta_{\\mathrm{gen}}(f_t) \\leq O\\left( \\sqrt{\\frac{k \\log(n+1)}{n}} \\right)",
+   "symbol_and_unit_ledger": {
+    "k": "number of adaptive evaluation rounds against the same dataset",
+    "n": "holdout sample size",
+    "f_t": "predictor chosen at round t using all previous answers",
+    "\\Delta_gen": "gap between population and empirical risk"
+   },
+   "assumptions": [
+    "The analyst's next query can depend on all previous holdout answers",
+    "Zero-one loss, so each answer takes one of n+1 values and the analyst's behavior forms a data-independent tree of at most (n+1)^k functions"
+   ],
+   "breakdown_regime": "The matching lower bound is achieved by an explicit ensembling attack that selects better-than-chance random predictors and majority-votes them. In practice the damage is damped by model similarity and by the leaderboard principle: the Ladder mechanism, which only releases improvements larger than a threshold, cuts the leaderboard error to order (log(kn))^(1/3) / n^(1/3). Replication studies on CIFAR-10 and ImageNet found real but smaller drops than the worst case.",
+   "domain": "adaptive data analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every evaluation against a reused test set spends from an adaptivity budget denominated in queries, exactly like parameters spend capacity. The engine meters backtest and validation queries per dataset, and releases results through a Ladder-style rule that only surfaces improvements clearing a margin, so silent iteration cannot manufacture significance.",
+    "source_operator": "adaptive_holdout_overfitting",
+    "telemetry": "Query counts per evaluation dataset, the sequence of released scores, and fresh-set replication checks on flagship models."
+   }
+  },
+  {
+   "primitive_id": "structural_causal_model",
+   "name": "A structural causal model generates the joint distribution from independent noise through assignments Xi := f_i(P_i, U_i), and interventions are substitutions in the program",
+   "verbatim_quote": "Formally, a structural causal model is a sequence of assignments for generating a joint distribution starting from independent noise variables.",
+   "page": "Chapter 9, 'Structural causal models, more formally', printed p. 184 (Definition 13)",
+   "latex": "X_i := f_i(P_i, U_i), \\qquad i = 1, \\ldots, d, \\qquad P\\{E \\mid do(X := x)\\} = P^{M[X := x]}(E)",
+   "symbol_and_unit_ledger": {
+    "X_i": "i-th variable of the model",
+    "f_i": "response (assignment) function of variable i",
+    "P_i": "parents of X_i, its direct causes",
+    "U_i": "independent exogenous noise variable",
+    "M[X := x]": "model after substituting the constant assignment X := x, the do-operator"
+   },
+   "assumptions": [
+    "Noise variables are jointly independent",
+    "Assignments are acyclic (feedback is handled by unrolling time-indexed variables)",
+    "Substitution removes all incoming edges to the intervened node"
+   ],
+   "breakdown_regime": "The model is a set of assumptions, not a fact: whether it matches reality is a separate, hard question. Conditioning and intervening coincide only in special structures; in a fork they disagree (confounding), and conditioning on a collider manufactures correlation (explaining away, Berkson's paradox).",
+   "domain": "causality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Causal claims in the engine are stored as explicit assignment graphs over variables, so an intervention question (what changes if this input is forced) is answered by graph surgery on the stored model, never by reading a conditional frequency as if it were an effect. Every causal edge carries the assumption that licenses it.",
+    "source_operator": "structural_causal_model",
+    "telemetry": "The variable graph per causal claim, with observed joint frequencies used to test the graph's implied independencies."
+   }
+  },
+  {
+   "primitive_id": "adjustment_formula_backdoor",
+   "name": "The adjustment formula identifies a causal effect from observational data by conditioning on the treatment's parents; the backdoor criterion generalizes which sets are safe",
+   "verbatim_quote": "This formula is called the adjustment formula. It gives us one way of estimating the effect of a do-intervention in terms of conditional probabilities.",
+   "page": "Chapter 9, 'Confounding' and 'The backdoor criterion', printed p. 190-191",
+   "latex": "P\\{Y = y \\mid do(X := x)\\} = \\sum_z P\\{Y = y \\mid X = x, PA = z\\} \\, P\\{PA = z\\}",
+   "symbol_and_unit_ledger": {
+    "PA": "parent set of X in the causal graph",
+    "z": "a value of the adjustment set",
+    "P{Y=y | do(X:=x)}": "interventional probability of the outcome",
+    "P{Y=y | X=x, PA=z}": "observational conditional probability within one stratum"
+   },
+   "assumptions": [
+    "The causal graph is correct",
+    "All parents of X are observed (for the parent version), or the chosen set blocks every backdoor path without opening collider paths"
+   ],
+   "breakdown_regime": "Controlling is not monotonically good: controlling for a mediator deletes part of the effect, and controlling for a collider (or its descendant) creates spurious correlation. With unobserved confounding some effects are unidentifiable by any adjustment.",
+   "domain": "causal identification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before the engine attributes an outcome difference to a factor, it must name its adjustment set and show the factor's effect survives stratification by that set, with mediator and collider variables explicitly excluded. An effect estimate without a declared adjustment set is stored as a correlation, not an effect.",
+    "source_operator": "adjustment_formula_backdoor",
+    "telemetry": "Stratified outcome tables per claimed factor, over the declared adjustment variables, with stratum sizes for positivity checks."
+   }
+  },
+  {
+   "primitive_id": "potential_outcomes_randomization",
+   "name": "Potential outcomes Y(i) = T(i) Y_1(i) + (1 - T(i)) Y_0(i); randomization makes group averages unbiased estimates of the average treatment effect",
+   "verbatim_quote": "While this potential outcomes formulation is tautological, it lets us apply the same techniques we use for estimating the mean to the problem of estimating treatment effects.",
+   "page": "Chapter 9, 'Experimentation, randomization, potential outcomes', printed p. 192-194",
+   "latex": "Y(i) = T(i) Y_1(i) + (1 - T(i)) Y_0(i), \\qquad \\mathrm{ATE} = \\bar{Y}_1 - \\bar{Y}_0",
+   "symbol_and_unit_ledger": {
+    "Y_1(i), Y_0(i)": "potential outcomes of unit i under treatment and control",
+    "T(i)": "treatment indicator for unit i",
+    "\\bar{Y}_1, \\bar{Y}_0": "population means of the potential outcomes",
+    "ATE": "average treatment effect, in outcome units"
+   },
+   "assumptions": [
+    "Only one potential outcome per unit is ever observed (the fundamental problem of causal inference)",
+    "Random assignment makes T(i) an unbiased coin toss independent of the potential outcomes; stable unit treatment value (no interference between units)"
+   ],
+   "breakdown_regime": "Uniform sampling from the target population is an idealization; temporal and spatial variability in treatment delivery inflates variance and drives replication failures. Interference and spillovers between units break the formulation outright, as in social networks or market-wide interventions.",
+   "domain": "experimental design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine evaluates any intervention-style change by the randomized-assignment standard: if assignment was not random, the estimate is labeled observational and routed through adjustment instead. Where randomization is possible, simple group-mean differences are preferred over modeled estimates because their unbiasedness needs no functional-form faith.",
+    "source_operator": "potential_outcomes_randomization",
+    "telemetry": "Assignment logs proving how units were allocated, and outcome means per arm with sample sizes."
+   }
+  },
+  {
+   "primitive_id": "counterfactual_abduction_action_prediction",
+   "name": "Counterfactuals are computed by abduction (condition the noise on the evidence), action (do-substitution), and prediction in the modified model",
+   "verbatim_quote": "These three steps are typically called abduction, action, and prediction, as can be described as follows.",
+   "page": "Chapter 9, 'Counterfactuals', printed p. 198 (Definition 14)",
+   "latex": "Y_{T := t}(E)",
+   "symbol_and_unit_ledger": {
+    "Y_{T:=t}(E)": "counterfactual outcome: the value Y would have taken under action T := t in the circumstances evidenced by E",
+    "E": "observed event used for abduction",
+    "U'": "noise variables re-weighted by conditioning on E",
+    "M[T := t]": "structural model after the do-substitution"
+   },
+   "assumptions": [
+    "A fully specified structural causal model, including the noise distributions",
+    "The observed event E is informative about the noise, narrowing it toward the realized unit"
+   ],
+   "breakdown_regime": "A plain do-calculation answers a different question: in the book's traffic example it gives 1/4 where the evidence-conditioned counterfactual gives 1/6, because the observation itself is evidence about background conditions. Without a fully specified model, counterfactuals are not defined at all.",
+   "domain": "causality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Post-hoc what-if analysis in the engine follows the three steps literally: first update the latent-state posterior with what actually happened, then force the alternative decision inside that conditioned state, then simulate forward. Skipping the abduction step is a named error class in reviews of counterfactual claims.",
+    "source_operator": "counterfactual_abduction_action_prediction",
+    "telemetry": "Latent-state posteriors before and after conditioning on the realized evidence, per counterfactual analysis."
+   }
+  },
+  {
+   "primitive_id": "propensity_score_ipw",
+   "name": "Inverse propensity weighting identifies the average treatment effect from observational data given an admissible set and positivity",
+   "verbatim_quote": "This formula for the average treatment effect is called inverse propensity score weighting.",
+   "page": "Chapter 10, 'Propensity scores', printed p. 208-209 (Theorem 10)",
+   "latex": "\\mathbb{E}[Y \\mid do(T := 1)] - \\mathbb{E}[Y \\mid do(T := 0)] = \\mathbb{E}\\left[ Y \\left( \\frac{T}{e(X)} - \\frac{1 - T}{1 - e(X)} \\right) \\right], \\qquad e(x) = \\mathbb{E}[T \\mid X = x]",
+   "symbol_and_unit_ledger": {
+    "e(x)": "propensity score, probability of treatment in stratum X = x",
+    "T": "binary treatment",
+    "Y": "outcome",
+    "X": "admissible adjustment variables"
+   },
+   "assumptions": [
+    "X is admissible (satisfies the adjustment formula), equivalently ignorability T independent of (Y_0, Y_1) given X",
+    "Positivity: e(x) is nonzero (and not one) for all x"
+   ],
+   "breakdown_regime": "The estimated propensity sits in a denominator: unbiased propensity estimates do not yield an unbiased effect estimate, and small propensities with modest samples produce large variance. The basic adjustment estimator it replaces needs about O(1/p^2) samples for a stratum of probability p, which is why model fitting for e(x) is unavoidable in high dimensions.",
+   "domain": "causal estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Observational effect estimates in the engine weight each case by the inverse of its modeled assignment probability, rebalancing the sample toward the randomized experiment it wishes it had. Cases with extreme weights are flagged, since a handful of them can dominate the estimate exactly as the variance analysis predicts.",
+    "source_operator": "propensity_score_ipw",
+    "telemetry": "Fitted assignment-probability distributions per observational study, with weight concentration statistics."
+   }
+  },
+  {
+   "primitive_id": "double_machine_learning",
+   "name": "Double machine learning: residualize outcome and treatment on X with two model fits, then regress residuals to get the treatment effect",
+   "verbatim_quote": "The idea now is to solve two regression problems to find good function approximations of the conditional expectations E[Y | X ] and E[ T | X ], respectively.",
+   "page": "Chapter 10, 'Double machine learning', printed p. 209-210",
+   "latex": "Y - \\mathbb{E}[Y \\mid X] = \\tau \\, (T - \\mathbb{E}[T \\mid X]) + U",
+   "symbol_and_unit_ledger": {
+    "\\tau": "average treatment effect in the partially linear model",
+    "g(X)": "outcome's dependence on confounders in Y = tau T + g(X) + U",
+    "f(X)": "treatment's dependence on confounders in T = f(X) + V",
+    "U, V": "independent mean-zero noise terms"
+   },
+   "assumptions": [
+    "Partially linear structure: the treatment enters the outcome equation linearly with constant coefficient tau",
+    "The confounder X is observed and admissible"
+   ],
+   "breakdown_regime": "Finite-sample errors in the two conditional-expectation fits have a benign (second-order) effect on tau, unlike IPW's denominator problem, but the structure assumption does the heavy lifting: if the effect is heterogeneous or the model is not partially linear, tau is an approximation whose target must be restated (the CATE extension replaces tau by tau(X)).",
+   "domain": "causal estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's default observational-effect estimator is the residual-on-residual regression: model the outcome from context, model the factor from context, and let only the unexplained parts speak to each other. This strips out everything predictable from context before any effect is claimed, and the two nuisance fits are versioned as part of the estimate.",
+    "source_operator": "double_machine_learning",
+    "telemetry": "Residual outcome and residual factor series per study, plus the two nuisance models' out-of-sample fit scores."
+   }
+  },
+  {
+   "primitive_id": "instrumental_variables",
+   "name": "Instrumental variables recover a treatment effect under unobserved confounding as beta = Cov(Z, Y) / Cov(Z, T), equivalently two-stage least squares",
+   "verbatim_quote": "We see that again instrumental variables is a clever way of reducing causal inference to prediction.",
+   "page": "Chapter 10, 'Instrumental variables', printed p. 212-214",
+   "latex": "\\beta = \\frac{\\mathrm{Cov}(Z, Y)}{\\mathrm{Cov}(Z, T)}",
+   "symbol_and_unit_ledger": {
+    "\\beta": "treatment effect, equal to E[Y | do(T:=1)] - E[Y | do(T:=0)] in the linear model",
+    "Z": "instrument: affects T, unconfounded with Y, no direct effect on Y",
+    "T": "treatment",
+    "Y": "outcome",
+    "U": "error term absorbing the unobserved confounder"
+   },
+   "assumptions": [
+    "Instrument is unconfounded with the outcome and has no direct effect on the outcome (exclusion)",
+    "E[U] = 0, Cov(Z, U) = 0, and relevance Cov(Z, T) nonzero"
+   ],
+   "breakdown_regime": "Weak instruments make the denominator small and the estimate ill-conditioned. The exclusion assumption is usually the fragile one: an instrument with any direct path to the outcome silently contaminates the ratio, as debated for judge-assignment instruments.",
+   "domain": "quasi-experimental design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When a confounder cannot be measured, the engine looks for a lever that moves the factor and nothing else, and estimates the effect as a ratio of covariations rather than a regression coefficient. Candidate levers are audited on the two assumptions separately: relevance is testable from data, exclusion is argued from structure and recorded as an assumption.",
+    "source_operator": "instrumental_variables",
+    "telemetry": "First-stage strength (covariation of lever and factor) per instrument, with the exclusion argument stored as structured text."
+   }
+  },
+  {
+   "primitive_id": "bellman_equation",
+   "name": "Bellman's equation: the Q-function satisfies a backward recursion, and the optimal policy acts greedily on it from the current state only",
+   "verbatim_quote": "Dynamic programming is built on this principle, allowing us to recursively find an optimal policy by starting at the final time and going backwards in time to solve for the earlier stages.",
+   "page": "Chapter 11, 'Dynamic programming', printed p. 223-224",
+   "latex": "Q_{\\gamma}(x, u) = \\mathbb{E}_W \\left[ R(x, u, W) + \\gamma \\max_{u'} Q_{\\gamma}(f(x, u, W), u') \\right], \\qquad u_t = \\arg\\max_u Q_{\\gamma}(x_t, u)",
+   "symbol_and_unit_ledger": {
+    "Q_gamma(x,u)": "optimal discounted cumulative reward from state x after taking action u",
+    "R": "single-step reward",
+    "f": "state transition function",
+    "W": "exogenous noise",
+    "\\gamma": "discount factor in (0,1)"
+   },
+   "assumptions": [
+    "Principle of optimality: the tail of an optimal plan is optimal for the subproblem it faces",
+    "Policies may depend on the observed state, which is why the maximum can be exchanged with the first-step expectation",
+    "For the discounted stationary form, dynamics and rewards are time invariant"
+   ],
+   "breakdown_regime": "Exact dynamic programming is only efficient in special cases (tabular MDPs at O(S^2 A) per step, LQR). In general the state space explodes, and partial observation destroys the current-state sufficiency that makes the recursion work.",
+   "domain": "sequential decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multi-step planning in the engine is decomposed backward from the horizon: the value of a present decision is defined as immediate payoff plus the discounted value of the best continuation, computed recursively. Any planner that cannot express its value decomposition in this form is treated as a heuristic, not an optimizer.",
+    "source_operator": "bellman_equation",
+    "telemetry": "State, action, and reward logs sufficient to evaluate Q-recursions offline for planner audits."
+   }
+  },
+  {
+   "primitive_id": "lqr_riccati_controller",
+   "name": "For linear dynamics and quadratic costs the optimal controller is static linear feedback U = -KX with K from the discrete algebraic Riccati equation",
+   "verbatim_quote": "Moreover, since the Q-functions are quadratic, the optimal action is a linear function of the state",
+   "page": "Chapter 11, 'Linear quadratic regulator', printed p. 226-227",
+   "latex": "K = (\\Psi + B^{\\top} M B)^{-1} B^{\\top} M A, \\qquad M = \\Phi + A^{\\top} M A - (A^{\\top} M B)(\\Psi + B^{\\top} M B)^{-1} (B^{\\top} M A), \\qquad U_t = -K X_t",
+   "symbol_and_unit_ledger": {
+    "A, B": "state transition and input matrices of X_{t+1} = A X_t + B U_t + W_t",
+    "\\Phi, \\Psi": "state and input cost matrices, positive semidefinite",
+    "M": "quadratic value matrix, the stabilizing solution of the Riccati equation",
+    "K": "optimal feedback gain matrix"
+   },
+   "assumptions": [
+    "Linear dynamics with zero-mean bounded-variance independent noise",
+    "Quadratic costs; M is the unique solution whose closed-loop eigenvalues A - BK all have magnitude below 1"
+   ],
+   "breakdown_regime": "The closed form is exact only inside the linear-quadratic world. Its certainty-equivalent use with estimated (A, B) is analyzed separately in Chapter 12 and can fail catastrophically in fragile instances where the cost drives the closed loop to marginal stability.",
+   "domain": "optimal control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where the engine regulates a quantity toward a target under roughly linear response and quadratic deviation costs, the control law is a fixed proportional feedback whose gain comes from the Riccati equation, not from hand tuning. Deviations of the realized response from the linear model are monitored as the trigger to leave this regime.",
+    "source_operator": "lqr_riccati_controller",
+    "telemetry": "State and input trajectories with fitted transition matrices, and closed-loop eigenvalue estimates."
+   }
+  },
+  {
+   "primitive_id": "kalman_filter_separation",
+   "name": "The Kalman filter is the closed-form optimal state estimator for linear-Gaussian systems, and the separation heuristic pairs any filter with certainty-equivalent control",
+   "verbatim_quote": "This estimator is called a Kalman filter, and is one of the most important tools in signal processing and estimation.",
+   "page": "Chapter 11, 'Partial observation and the separation heuristic' and 'Kalman filtering', printed p. 231-233",
+   "latex": "L = A P C^{\\top} (C P C^{\\top} + \\Sigma_V)^{-1}, \\qquad \\hat{x}_{t+1} = A \\hat{x}_t + B u_t - L (y_t - \\hat{y}_t)",
+   "symbol_and_unit_ledger": {
+    "L": "Kalman gain matrix",
+    "P": "steady-state error covariance, the positive semidefinite Riccati solution",
+    "\\Sigma_W, \\Sigma_V": "process and observation noise covariances",
+    "C": "observation matrix in Y_t = C X_t + V_t",
+    "\\hat{x}_t": "filtered state estimate"
+   },
+   "assumptions": [
+    "Linear dynamics and observations with independent Gaussian noises",
+    "For exact separation optimality: quadratic costs, linear dynamics, Gaussian noise (the LQG setting)"
+   ],
+   "breakdown_regime": "Static output feedback is NP-hard and general POMDP optimization is PSPACE-hard, so the separation heuristic is a heuristic: optimal in the linear-quadratic-Gaussian case, unguaranteed elsewhere. The optimal filter recursion (belief propagation) is intractable outside small or linear-Gaussian models.",
+   "domain": "state estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent-state tracking in the engine (form, health, fatigue-style states that are never directly observed) is run as predict-correct filtering: simulate the state forward, then correct by the observation surprise weighted by the gain. Decisions consume the filtered estimate, and the estimate's error covariance travels with it so downstream stages know how much to trust it.",
+    "source_operator": "kalman_filter_separation",
+    "telemetry": "Observation streams with timestamps, innovation (surprise) magnitudes, and filter error covariances per tracked state."
+   }
+  },
+  {
+   "primitive_id": "bandit_regret_ucb",
+   "name": "Bandit regret formalizes the exploration-exploitation price; the UCB rule acts on the upper confidence bound of each arm's mean",
+   "verbatim_quote": "Another popular strategy is known as optimism in the face of uncertainty.",
+   "page": "Chapter 12, 'Multi-armed bandits', printed p. 238-243 (Theorem 11 for successive elimination)",
+   "latex": "B_i(t) = \\hat{\\mu}_i(t) + \\sqrt{\\frac{2 \\log(1/\\delta)}{T_i(t)}}, \\qquad k = \\arg\\max_i B_i(t-1)",
+   "symbol_and_unit_ledger": {
+    "B_i(t)": "upper confidence bound for arm i at time t, in reward units",
+    "\\hat{\\mu}_i(t)": "empirical mean reward of arm i",
+    "T_i(t)": "number of times arm i has been tried",
+    "R_T": "regret: expected reward gap to the best fixed policy over T rounds"
+   },
+   "assumptions": [
+    "Rewards bounded in [0,1] and i.i.d. per arm (for the Hoeffding-based bound)",
+    "Gaps Delta_i = mu_1 - mu_i between the best and each other arm govern the instance difficulty"
+   ],
+   "breakdown_regime": "Explore-then-commit with gap knowledge achieves logarithmic regret; without gap knowledge the same scheme degrades to T^(2/3), and gap-independent tuning recovers sqrt(T). Worst-case bounds understate average-case behavior, and the greedy contextual variant can incur linear regret on adversarial contexts.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Allocation decisions in the engine (which signal, source, or strategy gets the next trial) are made on optimistic bounds: empirical performance plus an uncertainty bonus that shrinks with trials. This prices exploration explicitly instead of leaving it to habit, and the regret ledger records what exploration cost against the best-known option.",
+    "source_operator": "bandit_regret_ucb",
+    "telemetry": "Per-option trial counts and reward histories, with the confidence bonus shown next to every allocation decision."
+   }
+  },
+  {
+   "primitive_id": "q_learning_update",
+   "name": "Q-learning is stochastic approximation applied to value iteration: a bootstrapped temporal-difference update toward the Bellman target",
+   "verbatim_quote": "Q-learning simply attempts to solve value iteration using stochastic approximation.",
+   "page": "Chapter 12, 'Approximate dynamic programming', printed p. 249",
+   "latex": "Q_{\\gamma}^{(\\mathrm{new})}(x_t, u_t) = (1 - \\eta) Q_{\\gamma}^{(\\mathrm{old})}(x_t, u_t) + \\eta \\left( R(x_t, u_t) + \\gamma \\max_{u'} Q_{\\gamma}^{(\\mathrm{old})}(x_{t+1}, u') \\right)",
+   "symbol_and_unit_ledger": {
+    "\\eta": "learning rate (step size) of the stochastic approximation",
+    "\\gamma": "discount factor",
+    "R(x_t, u_t)": "observed reward at time t",
+    "Q_gamma": "action-value function estimate"
+   },
+   "assumptions": [
+    "Trajectories are generated by some behavior policy visiting the relevant state-action pairs",
+    "The discounted, time-invariant Bellman equation is the right target, itself a modeling assumption"
+   ],
+   "breakdown_regime": "Sample-inefficient relative to model fitting: each transition gives one scalar of information where a dynamics model extracts the full state dimension. With function approximation (SARSA(lambda) and relatives) convergence is not guaranteed, and large discount factors make the method brittle and hyperparameter-sensitive.",
+   "domain": "reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Value estimates in the engine are updated by bootstrapping: new evidence revises a value toward the observed payoff plus the discounted value of the resulting position, with a learning rate that decays as the estimate firms up. The update is logged per value so any estimate can be replayed from its evidence stream.",
+    "source_operator": "q_learning_update",
+    "telemetry": "Transition logs (state, action, reward, next state) with the temporal-difference error recorded per update."
+   }
+  },
+  {
+   "primitive_id": "reinforce_log_likelihood",
+   "name": "The log-likelihood trick gives an unbiased gradient of expected reward from samples alone, powering REINFORCE and policy gradient methods",
+   "verbatim_quote": "Hence, if we sample z from the distribution defined by p(z; ϑ ), we can compute G (z, ϑ ) and will have an unbiased estimate of the gradient of J.",
+   "page": "Chapter 12, 'Direct policy search', printed p. 251",
+   "latex": "\\nabla_{\\vartheta} J(\\vartheta) = \\mathbb{E}_{p(z; \\vartheta)} \\left[ R(z) \\nabla_{\\vartheta} \\log p(z; \\vartheta) \\right], \\qquad \\vartheta_{k+1} = \\vartheta_k + \\alpha_k R(z_k) \\nabla_{\\vartheta} \\log p(z_k; \\vartheta_k)",
+   "symbol_and_unit_ledger": {
+    "J(\\vartheta)": "expected reward under the sampling distribution p(z; theta)",
+    "R(z)": "reward of a sampled decision or trajectory",
+    "\\nabla log p": "score function of the sampling distribution",
+    "\\vartheta": "parameters of the policy or search distribution"
+   },
+   "assumptions": [
+    "Decisions or trajectories can be sampled from p(z; theta) and the score function is computable",
+    "Optimizing over densities is equivalent to optimizing over points when the family can concentrate on the optimum; otherwise it lower-bounds the true optimum"
+   ],
+   "breakdown_regime": "Derivative-free in the reward: the true objective is accessed only through noisy evaluations, so gradient estimates have high variance and need many samples. Random-search variants (finite differences along random directions) share the same tradeoff: trivial to implement, sample-hungry.",
+   "domain": "policy search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine must improve a parameterized decision rule whose payoff surface has no usable derivative, it perturbs the rule stochastically and moves toward perturbations that paid, weighted by their log-probability gradient. Variance of the payoff samples is budgeted explicitly because it, not bias, sets the sample bill for this method.",
+    "source_operator": "reinforce_log_likelihood",
+    "telemetry": "Sampled parameter perturbations with realized payoffs, and gradient-estimate variance per update."
+   }
+  },
+  {
+   "primitive_id": "mdp_model_error_theorem",
+   "name": "Model-error theorem: a policy built from an approximate dynamics model loses at most 2 gamma / (1 - gamma)^2 times the model's value-prediction error",
+   "verbatim_quote": "This is a remarkable result as it shows that we can control our regret by our prediction errors.",
+   "page": "Chapter 12, 'Certainty equivalence for tabular MDPs', printed p. 257 (Theorem 12)",
+   "latex": "V^{\\star}(x) - V^{\\pi_{\\hat{Q}}}(x) \\leq \\frac{2 \\gamma}{(1 - \\gamma)^2} \\sup_{x, u} \\left| \\mathbb{E}_{\\hat{P}(\\cdot \\mid x, u)} [V^{\\star}] - \\mathbb{E}_{P(\\cdot \\mid x, u)} [V^{\\star}] \\right|",
+   "symbol_and_unit_ledger": {
+    "V^star": "optimal value function under the true model P",
+    "V^{pi_Qhat}": "value of the greedy policy from the approximate model's Q-function",
+    "\\hat{P}": "estimated transition model",
+    "\\gamma": "discount factor"
+   },
+   "assumptions": [
+    "Discounted MDP with the same reward function in both models",
+    "The bound needs the model's one-step predictions of the optimal value, not uniform accuracy over all functions"
+   ],
+   "breakdown_regime": "Punishing dependence on the horizon through (1 - gamma)^2: near-undiscounted problems amplify small model errors enormously. The companion certainty-equivalence analysis for LQR shows cost error O(epsilon^2) and regret O(sqrt(T)) when the model error is epsilon, but only once estimates are close enough for the Taylor argument to hold.",
+   "domain": "reinforcement learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model-based planning in the engine carries an explicit error budget: the value loss attributable to model error is bounded by the model's measured one-step prediction error on the value function, scaled by the horizon factor. Long-horizon plans are automatically discounted in trust because the amplification factor is computed, not ignored.",
+    "source_operator": "mdp_model_error_theorem",
+    "telemetry": "One-step transition prediction errors on validation trajectories, reported with the horizon amplification factor per plan."
+   }
+  },
+  {
+   "primitive_id": "lqg_fragility_feedback_limits",
+   "name": "LQG fragility: under partial observation and model mismatch, better sensing can make the closed loop less robust, so certainty-equivalent optimality misleads",
+   "verbatim_quote": "The most striking is that if we build a sensor that gives us a better and better measurement, our system becomes more and more fragile to perturbation and model mismatch.",
+   "page": "Chapter 12, 'The limits of learning in feedback loops', printed p. 261-266",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Linear dynamics with Gaussian noise and indirect measurement Y_t = C X_t + V_t",
+    "Controller and filter are designed on an estimated input matrix B while the true system uses B-star = t B"
+   ],
+   "breakdown_regime": "This is itself the breakdown result: with any gain mismatch t > 1 in the worked example the closed loop is unstable, and shrinking sensor noise sigma makes the optimal filter more aggressive in the disturbance direction and less damped in the error direction. The companion LQR example shows the same fragility with perfect observation when the cost drives the loop to marginal stability. The book's moral: MDP-style perfect state measurement builds misplaced optimism, and improving a prediction component can increase sensitivity to model error elsewhere in the loop.",
+   "domain": "robust control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine component whose outputs feed back into the environment it predicts gets a fragility review: model-error directions are identified, and gains are backed off where the closed loop sits near marginal stability. Prediction improvements inside a loop require a fresh robustness check, because the book's example shows accuracy gains can purchase instability.",
+    "source_operator": "lqg_fragility_feedback_limits",
+    "telemetry": "Closed-loop sensitivity margins: eigenvalue or gain margins of the coupled estimate-decide-act loop under perturbed model parameters."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "trace_hardt_recht_ppa_01",
+   "think": "Hardt and Recht tell the whole discipline as one story with a single protagonist: pattern classification, the problem of mapping an observation to a label under uncertainty, posed first by Duda and Hart in 1973. The book's architecture follows the protagonist through five lives, and each life adds one primitive family to the engine. In the first life, the distribution is known and learning is pure decision theory: risk is the expected loss, the optimal predictor thresholds the posterior odds or equivalently the likelihood ratio at a level set by priors and losses, and the Neyman-Pearson lemma shows that this one family of tests is simultaneously optimal at every false-alarm budget, tracing the entire ROC curve; the same chapter shows that fairness criteria formalized as independence, separation, and sufficiency are mutually exclusive, so any consistency demand must declare which one it means. In the second life, the distribution is replaced by a sample: empirical risk minimization swaps the population expectation for an average, the perceptron becomes stochastic gradient descent on the hinge loss, Novikoff's bound prices mistake counts by margin over diameter rather than by dimension, and the choice of surrogate loss is exposed as a computational necessity because zero-one ERM is NP-hard even for linear rules. The third life is representation: kernels turn similarity into geometry through positive semidefinite Gram matrices, random features buy that geometry back cheaply as an integral approximation, and neural networks enter as one more parameterized basis expansion among others. The fourth life is the theory of optimization and generalization, where the book is most original: convexity certifies global optimality, implicit convexity shows predictions contracting under a Gram-matrix dynamic even when parameters live in a nonconvex landscape, gradient descent's least-norm selection is named as implicit regularization, and generalization is re-founded on algorithmic stability, with the expected gap exactly equal to average stability and SGD's uniform stability degrading linearly in total step size; Rademacher complexity and the randomization test then discipline capacity claims, double descent dissolves the classical U-curve, and adaptive data analysis reveals that reusing a holdout spends a query budget exactly as parameters spend capacity, with the Ladder mechanism as the engineered fix. The fifth life leaves prediction for action: structural causal models make intervention a substitution in a generating program, the adjustment formula and backdoor criterion say which observational quantities may stand in for effects, potential outcomes and randomization define the estimand honestly, abduction-action-prediction separates counterfactuals from interventions, and propensity weighting, double machine learning, and instrumental variables are three different payment plans for the same identification debt. Sequential decision making closes the arc: Bellman recursion, the Riccati equation, and the Kalman filter give exact machinery in the linear-quadratic-Gaussian world, bandit regret prices exploration, Q-learning bootstraps value iteration from samples, the log-likelihood trick extracts gradients from pure reward noise, the model-error theorem bounds the cost of planning with a wrong model, and the final chapter turns on the whole edifice to show that in feedback loops, certainty-equivalent optimality can purchase fragility, with better sensors making a mismatched system worse. Woven through the technical arc are three recurring correctives that keep the story honest. The first is measurement: before any algorithm appears, the book insists that features are measurements with units, operationalizations, and failure modes, that a target variable is a proxy chosen by someone, and that the window-tax parable, in which a rideshare's prediction model quietly dismantles the spare-parts market that made its own predictions true, shows how acting on a predictor can destroy the stability assumption the predictor was trained under; Simpson's paradox is then demystified as ordinary conditional probability misread by causal intuition. The second corrective is that every guarantee is a budget with a currency: Hoeffding's inequality prices one predictor's generalization gap at the square root of log(1/delta) over 2n, uniform convergence pays for searching a whole function class, stability pays in sensitivity to single examples, adaptivity pays in queries against a reused holdout, the spectral margin bound for deep networks pays in products of operator norms and is honestly reported as merely correlational rather than explanatory, and model predictive control pays in computation to replan at every step rather than trusting one open-loop trajectory. The third corrective is an asymmetry between seeing and doing at every scale: ensembles generalize by margin rather than by member count, double machine learning works because nuisance-model errors enter the effect estimate only at second order, instrumental variables convert an untestable exclusion assumption into a ratio of two covariations, certainty equivalence in the linear quadratic regulator is robust because its cost error is quadratic in the model error while the same principle under partial observation can be catastrophically fragile, and the Fundamental Law of Information Recovery caps what any amount of querying can extract from a population without destroying the privacy that makes the data exist at all. The book is equally explicit about what its machinery cannot do. Structural causal models encode assumptions that data alone cannot verify, so identification arguments are only as strong as the graphs they start from; the counterfactual calculus needs the full noise model before it can answer its most human questions; exact dynamic programming drowns in the state space outside structured cases such as tabular models and linear quadratic control; and the neural tangent kernel, the era's most complete theory of deep learning, is presented alongside the admission that kernelized networks underperform the networks they model, because feature learning is exactly what the lazy limit discards. For a reasoning engine the transfer is discipline, not technique: fix the loss before the model, charge every model a stability and adaptivity budget, demand an identification argument before any causal verb, and audit every closed loop for the model-error directions that turn accuracy into instability.",
+   "retrocausal_genealogy": "The lineage is deliberately deep. Risk minimization descends from Wald's 1939 statistical decision theory, itself consumerized by early life-expectancy tables such as Halley's 1693 mortality table, which the book uses to show that actuarial prediction was always pattern classification under a loss. The likelihood ratio test and its optimality descend from Neyman and Pearson's 1928 and 1933 work, carried into signal detection by Peterson, Birdsall, and Fox in 1954, whose ROC formalism the book treats as the same mathematics as modern classifier evaluation. The perceptron chain runs Rosenblatt 1957 to Novikoff's 1962 mistake bound to Highleyman's 1961 empirical risk observation, then forward through Vapnik and Chervonenkis to the margin and stability theories the authors' generation built. SGD descends from Robbins and Monro's 1951 stochastic approximation, kernels from the Mercer tradition, causality from the Fisher and Neyman randomization tradition fused with Pearl's structural models, and the control chapters from Bellman's 1954 dynamic programming and Kalman's 1960 filter. The closing fragility argument retrocausally reframes Lucas's 1976 critique and Stein's 1989 'respect the unstable' warning as statements about learning systems.",
+   "theory_of_mind": "The authors model the reader as mathematically literate but innocent of machine learning's folklore, and they write against two imagined opponents: the practitioner who trusts benchmarks without asking what the benchmark measures, and the theorist who trusts bounds without asking whether they bind in practice. Their own belief system is visible in the structure: they believe mechanisms explain performance, that optimization, stability, and identification are the three load-bearing mechanisms, and that history is evidence because the same ideas recur under new names. They also believe the social consequences of prediction are intrinsic to the subject, not an appendix: fairness criteria, measurement validity, and the window tax appear inside the mathematical narrative, with impossibility results doing the argumentative work. Where their model of the reader shows is in the proofs: they sketch exactly the steps where the insight lives and refer the rest outward, trusting the reader to fill routine gaps but never to guess at a definition.",
+   "cross_layer_veto": "Four vetoes bind every other layer of this book, and any one of them can override a layer-local success. The adaptivity veto: once a dataset has answered k adaptive queries, no validation claim drawn from it may be stated at better than order sqrt(k log n / n) accuracy, so the holdout layer vetoes the generalization layer's certificate. The stability veto: if changing one training example moves the model's predictions materially, the fit layer's score is vetoed as evidence about the population, no matter how low the training loss. The identification veto: a correlation layer may never promote an association to an effect claim unless the causal layer supplies an admissible adjustment set, an instrument, or randomization; absent one of those, the claim is demoted to association regardless of predictive strength. The fragility veto: inside a feedback loop, the control layer's optimality certificate is vetoed by the robustness layer whenever model error in the sensitive directions can destabilize the loop, and this veto strengthens precisely when prediction components improve, because aggressive certainty-equivalent gains exploit the model hardest where it is most likely wrong."
+  }
+ ],
+ "universal_lens": "Read as a general instrument, the book is a discipline for any system that turns records into decisions. First, name the loss before the model: a decision procedure without a declared cost for each error type has no defined optimum. Second, count adaptivity like parameters: every look at the evaluation data spends generalization, so evaluation is a budget, not a ritual. Third, buy trust with stability: a procedure whose output swings on one observation has not earned its confidence interval. Fourth, separate seeing from doing: conditioning is observation, intervention is surgery on the generating process, and confusing them is the root error behind most causal misreadings. Fifth, in any loop where outputs change the world being measured, budget model error before optimizing, because the optimal response to a wrong model can be the most dangerous response available.",
+ "gsi_mapping": "For the Institute, the book is a methods curriculum and an audit standard in one. Detection theory supplies the vocabulary for evaluating any claimed signal: likelihood ratios, operating curves, and cost-set thresholds replace raw accuracy in research reviews. Stability and adaptivity supply governance for empirical claims: Institute benchmarks meter query budgets per dataset, require stability estimates beside headline scores, and treat leaderboard releases as Ladder-style thresholded disclosures. The causal chapters set the evidence bar for research assertions: every effect claim must travel with its identification argument, its adjustment set or instrument, and its stated assumptions, and measurement validity is reviewed before any fairness or accuracy statistic is computed on a target variable. The fragility material anchors the Institute's work on deployed learning systems, where improving a component is treated as a change to a closed loop, not a local upgrade.",
+ "gse_mapping": "For the Edge engine, the book re-founds confidence accounting. Predictions are framed loss-first: each projection family declares what its errors cost, and thresholds for acting on a signal move with the asymmetry of those costs. Generalization claims carry two budgets, a stability budget measured by swap-one refits and an adaptivity budget metered across every backtest and validation pass against the same historical window, so silent iteration cannot manufacture edges. Causal reasoning about matchups is routed through the identification layer: a factor influences a projection as an effect only with a declared adjustment set, otherwise it enters as a correlation with a lower trust weight. Sequential decisions use the control material directly: state estimates come from filtering with error covariances attached, plans carry the model-error amplification factor for their horizon, and any signal whose publication would feed back into the environment it predicts gets a fragility review before release.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01"
+}

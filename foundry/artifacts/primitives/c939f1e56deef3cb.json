@@ -1,0 +1,806 @@
+{
+ "book_id": "c939f1e56deef3cb",
+ "source_status": "COMPLETE",
+ "source_note": "Burr Settles, 'Active Learning Literature Survey,' Computer Sciences Technical Report 1648, University of Wisconsin-Madison, 2009, updated January 26, 2010. Catalog correction: the local file is named Settles-2012-ActiveLearning.pdf (bucket books-d-models) after the author's 2012 Morgan and Claypool Synthesis Lectures book 'Active Learning,' but the file itself is the technical report version: its title page, running citation block, and recommended BibTeX entry all identify Technical Report 1648 (2009, updated 2010), and that is the version extracted here. File size 1939936 bytes; scan digest sha256 over str(size) plus full file bytes = c939f1e56deef3cbfe4d479c67448ad7b6e6e27375d378b423cb5b21167f385a; book_id is the first 16 hex characters. Text quality: clean born-digital extraction, 2630 lines; most prose is intact, some mathematical glyphs are degraded in the extraction (epsilon rendered as a control character, angle brackets flattened), and page numbers interleave at page breaks, so all verbatim quotes were chosen inside single pages and machine-verified as contiguous substrings of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "active_learning_core_hypothesis",
+   "name": "Active learning core hypothesis: a learner allowed to choose its training data reaches greater accuracy with fewer labels than a passive learner",
+   "verbatim_quote": "The key idea behind active learning is that a machine learning algorithm can achieve greater accuracy with fewer training labels if it is allowed to choose the data from which it learns.",
+   "page": "Abstract; extracted text line 10",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Unlabeled instances are abundant or cheap while labels are scarce, slow, or expensive to obtain",
+    "An oracle exists that can label queried instances on request"
+   ],
+   "breakdown_regime": "Collapses when labels are already cheap and plentiful, or when the learner's selection biases the sample so far from the deployment distribution that accuracy on real data falls",
+   "domain": "machine learning: active learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every verification resource (analyst review, fresh data pulls, film checks) as a label with a cost, and spends it only where the expected accuracy gain per label is highest instead of reviewing cases in arrival order",
+    "source_operator": "active_learning_core_hypothesis",
+    "telemetry": "Per-case model confidence and the running cost ledger of past verification effort"
+   }
+  },
+  {
+   "primitive_id": "oracle_query_labeling_bottleneck",
+   "name": "The labeling bottleneck: supervised accuracy is limited by oracle labeling cost, so queries are posed as unlabeled instances for an oracle to label",
+   "verbatim_quote": "Active learning systems attempt to overcome the labeling bottleneck by asking queries in the form of unlabeled instances to be labeled by an oracle (e.g., a human annotator).",
+   "page": "Section 1.1; extracted text line 159",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single oracle (or oracle pool) returns labels for queried instances",
+    "Queried instances are added to the labeled set and training proceeds in the standard supervised way"
+   ],
+   "breakdown_regime": "Breaks when no responsive oracle exists, when oracle latency exceeds the decision deadline, or when the oracle's labels are too noisy to trust",
+   "domain": "machine learning: active learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any human-in-the-loop confirmation inside the engine is modeled as an oracle query with latency and error rate, so the reasoning layer budgets questions to the user instead of asking reflexively",
+    "source_operator": "oracle_query_labeling_bottleneck",
+    "telemetry": "Oracle response times, historical oracle agreement rates, and the queue of pending confirmation requests"
+   }
+  },
+  {
+   "primitive_id": "learning_curve_dominance_criterion",
+   "name": "Evaluation law: an active learner is superior to a baseline only if its learning curve (accuracy versus number of labeled queries) dominates the baseline at most or all points",
+   "verbatim_quote": "We can conclude that an active learning algorithm is superior to some other approach (e.g., a random baseline like traditional passive supervised learning) if it dominates the other for most or all of the points along their learning curves.",
+   "page": "Section 1.2; extracted text line 303",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both strategies are evaluated on the same task, model class, and query budget axis",
+    "Curves are averaged over folds or repetitions to suppress sampling noise"
+   ],
+   "breakdown_regime": "A strategy that wins only at one budget point, or only early before crossing over, does not satisfy dominance; single-point comparisons can reverse as the budget grows",
+   "domain": "machine learning: evaluation methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine acquisition policies are compared by full budget curves (accuracy gained per unit of verification spend across the whole slate), never by a single snapshot, so a policy that front-loads easy wins and then stalls is exposed",
+    "source_operator": "learning_curve_dominance_criterion",
+    "telemetry": "Accuracy and cost recorded after every acquisition round for each candidate policy"
+   }
+  },
+  {
+   "primitive_id": "toy_gaussian_uncertainty_result",
+   "name": "Toy benchmark result: on two Gaussian classes, 30 uncertainty-sampled labels reached 90 percent accuracy where 30 random labels reached 70 percent with the same logistic regression model",
+   "verbatim_quote": "it avoids requesting labels for redundant or irrelevant instances, and achieves 90% accuracy with a mere 30 labeled instances.",
+   "page": "Section 1.2; extracted text line 286",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Two class Gaussians centered at (-2,0) and (2,0) with standard deviation 1, 400 sampled instances",
+    "The decision boundary region is where random sampling under-covers the input space"
+   ],
+   "breakdown_regime": "A constructed best case: classes are well separated, low dimensional, and noise free, so the gap overstates what messy real distributions deliver",
+   "domain": "machine learning: empirical results",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Serves as the sanity floor for the engine's acquisition logic: on clean synthetic cases, boundary-focused selection must beat random selection by a wide margin before the policy is trusted on real slates",
+    "source_operator": "toy_gaussian_uncertainty_result",
+    "telemetry": "Synthetic benchmark accuracy for active versus random selection at matched label budgets"
+   }
+  },
+  {
+   "primitive_id": "membership_query_synthesis",
+   "name": "Membership query synthesis scenario: the learner may request labels for any instance in the input space, including instances it generates de novo rather than samples from the natural distribution",
+   "verbatim_quote": "In this setting, the learner may request labels for any unlabeled instance in the input space, including (and typically assuming) queries that the learner generates de novo, rather than those sampled from some underlying natural distribution.",
+   "page": "Section 2.1; extracted text line 364",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The input space is enumerable or generatable by the learner",
+    "The oracle can assign meaning to arbitrary synthesized instances"
+   ],
+   "breakdown_regime": "Fails with human oracles when synthesized instances are unrecognizable hybrids or gibberish that carry no natural semantics to label",
+   "domain": "machine learning: query scenarios",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine may synthesize hypothetical cases (counterfactual game states, what-if lineup combinations) and ask its simulators to label them, rather than waiting for such cases to occur naturally in historical data",
+    "source_operator": "membership_query_synthesis",
+    "telemetry": "Simulator coverage of the state space and the plausibility score of each synthesized case"
+   }
+  },
+  {
+   "primitive_id": "synthesized_query_semantic_failure",
+   "name": "Semantic failure of synthesis: learners generating their own queries produced hybrid characters with no recognizable meaning, which human oracles could not label",
+   "verbatim_quote": "They encountered an unexpected problem: many of the query images generated by the learner contained no recognizable symbols, only artificial hybrid characters that had no natural semantic meaning.",
+   "page": "Section 2.1; extracted text line 375",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reported from Lang and Baum (1992), membership query learning of handwritten characters with human oracles",
+    "The failure is a property of unconstrained generation, not of query learning itself"
+   ],
+   "breakdown_regime": "Does not apply when labels come from experiments or simulators rather than human judgment, where synthesized queries remain meaningful",
+   "domain": "machine learning: query scenarios, failure modes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Synthetic cases generated by the engine must pass a plausibility screen before any oracle or simulator time is spent on them; unscreened generation wastes budget on cases that cannot occur",
+    "source_operator": "synthesized_query_semantic_failure",
+    "telemetry": "Rate at which generated cases are rejected as implausible, and oracle disagreement rates on generated versus natural cases"
+   }
+  },
+  {
+   "primitive_id": "stream_based_selective_sampling",
+   "name": "Stream-based selective sampling: unlabeled instances are drawn one at a time from the real distribution and the learner decides on the spot whether to query or discard each one",
+   "verbatim_quote": "The key assumption is that obtaining an unlabeled instance is free (or inexpensive), so it can first be sampled from the actual distribution, and then the learner can decide whether or not to request its label.",
+   "page": "Section 2.2; extracted text line 401",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Drawing an unlabeled instance is free or inexpensive compared with labeling it",
+    "The decision is irrevocable: a discarded instance is not revisited"
+   ],
+   "breakdown_regime": "If the stream distribution is uniform it degenerates toward membership query behavior; if the informative region is rare, most of the stream is discarded and wall-clock cost dominates",
+   "domain": "machine learning: query scenarios",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Live data feeds (injury news, lineup announcements, weather updates) are handled as a stream: each incoming item is scored once, in real time, and either escalated for verification or dropped, with no re-scan of the full history",
+    "source_operator": "stream_based_selective_sampling",
+    "telemetry": "Per-item informativeness scores and the accept or discard decision log for the live feed"
+   }
+  },
+  {
+   "primitive_id": "pool_based_sampling",
+   "name": "Pool-based sampling: queries are drawn from a large static pool of unlabeled instances by evaluating and ranking the entire collection before choosing the best query",
+   "verbatim_quote": "The main difference between stream-based and pool-based active learning is that the former scans through the data sequentially and makes query decisions individually, whereas the latter evaluates and ranks the entire collection before selecting the best query.",
+   "page": "Section 2.3; extracted text line 466",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A small labeled set L and a large unlabeled pool U are available at once",
+    "The pool is usually assumed closed, and instances are queried greedily by an informativeness measure"
+   ],
+   "breakdown_regime": "Ranking the whole pool each round is wasteful when memory or compute is limited, and a stale pool drifts away from the live distribution it was drawn from",
+   "domain": "machine learning: query scenarios",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's nightly review is a pool problem: the full slate of upcoming games is ranked by expected information gain before any deep-dive work is assigned, rather than processing games in schedule order",
+    "source_operator": "pool_based_sampling",
+    "telemetry": "Pool size, per-instance informativeness scores, and the rank order actually worked"
+   }
+  },
+  {
+   "primitive_id": "least_confident_uncertainty_sampling",
+   "name": "Least confident sampling: query the instance whose most probable label has the lowest posterior probability under the current model",
+   "verbatim_quote": "For problems with three or more class labels, a more general uncertainty sampling variant might query the instance whose prediction is the least confident:",
+   "page": "Section 3.1; extracted text line 491",
+   "latex": "x^{*}_{LC} = \\operatorname*{argmax}_x \\; 1 - P_\\theta(\\hat{y} \\mid x)",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "P_theta(y|x)": "posterior probability of label y for x under model theta (dimensionless, 0 to 1)",
+    "y-hat": "the most probable label under the model",
+    "x*_LC": "the selected query instance"
+   },
+   "assumptions": [
+    "The model produces calibrated posterior probabilities",
+    "Only the top label's probability matters; the rest of the distribution is ignored"
+   ],
+   "breakdown_regime": "Throws away information about the remaining label distribution, so it mis-ranks instances when several non-top labels are competitive",
+   "domain": "machine learning: query strategies, uncertainty sampling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine flags the projections whose top outcome probability is closest to a coin flip for priority review, the direct analog of querying the least confident instance",
+    "source_operator": "least_confident_uncertainty_sampling",
+    "telemetry": "Top-outcome posterior probability for every projection on the slate"
+   }
+  },
+  {
+   "primitive_id": "margin_sampling",
+   "name": "Margin sampling: query the instance with the smallest gap between the posteriors of its two most probable labels",
+   "verbatim_quote": "Instances with small margins are more ambiguous, thus knowing the true label would help the model discriminate more effectively between them.",
+   "page": "Section 3.1; extracted text line 518",
+   "latex": "x^{*}_{M} = \\operatorname*{argmin}_x \\; P_\\theta(\\hat{y}_1 \\mid x) - P_\\theta(\\hat{y}_2 \\mid x)",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "y-hat_1, y-hat_2": "first and second most probable labels under model theta",
+    "P_theta": "posterior probability under the model (dimensionless)",
+    "x*_M": "the selected query instance"
+   },
+   "assumptions": [
+    "The decision that matters is between the top two labels",
+    "Posteriors for the top two labels are trustworthy"
+   ],
+   "breakdown_regime": "For very large label sets it still ignores most of the output distribution, and it cannot distinguish genuine ambiguity from model misspecification",
+   "domain": "machine learning: query strategies, uncertainty sampling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When two competing reads of a game (for example two scheme interpretations) are nearly tied in the engine's posterior, the case is escalated, because resolving the near-tie is worth more than re-checking a settled case",
+    "source_operator": "margin_sampling",
+    "telemetry": "Posterior gap between the top two competing interpretations per case"
+   }
+  },
+  {
+   "primitive_id": "entropy_uncertainty_sampling",
+   "name": "Entropy sampling: query the instance whose full posterior label distribution has the highest Shannon entropy",
+   "verbatim_quote": "Entropy is an information-theoretic measure that represents the amount of information needed to \"encode\" a distribution.",
+   "page": "Section 3.1; extracted text line 530",
+   "latex": "x^{*}_{H} = \\operatorname*{argmax}_x \\; -\\sum_i P_\\theta(y_i \\mid x) \\log P_\\theta(y_i \\mid x)",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "y_i": "the i-th possible labeling",
+    "P_theta(y_i|x)": "posterior probability of labeling y_i (dimensionless)",
+    "sum_i": "sum over all possible labelings",
+    "x*_H": "the selected query instance"
+   },
+   "assumptions": [
+    "The model yields a full posterior distribution over labels, not just a point prediction",
+    "Entropy is the right impurity measure for the loss being optimized"
+   ],
+   "breakdown_regime": "Entropy treats all label confusion symmetrically, so it can spend queries on instances whose confusion does not affect the decision the model actually has to make",
+   "domain": "machine learning: query strategies, uncertainty sampling, information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cases whose outcome distribution is flattest across all plausible results, not just the top two, are ranked for review by entropy, catching diffuse uncertainty that top-label measures miss",
+    "source_operator": "entropy_uncertainty_sampling",
+    "telemetry": "Full outcome distribution per case and its Shannon entropy in bits"
+   }
+  },
+  {
+   "primitive_id": "uncertainty_measure_objective_alignment",
+   "name": "Measure-objective alignment: entropy sampling fits log-loss minimization, while least confident and margin sampling fit classification error reduction",
+   "verbatim_quote": "Intuitively, though, entropy seems appropriate if the objective function is to minimize log-loss, while the other two (particularly margin) are more appropriate if we aim to reduce classification error, since they prefer instances that would help the model better discriminate among specific classes.",
+   "page": "Section 3.1; extracted text line 566",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The practitioner knows which loss the deployment actually optimizes",
+    "Empirical comparisons of the three measures show mixed, application-dependent results (cited in the survey)"
+   ],
+   "breakdown_regime": "Choosing the uncertainty measure by habit rather than by loss silently optimizes the wrong objective; all three still generally beat passive baselines",
+   "domain": "machine learning: query strategies, loss functions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine selects its review criterion from the scoring rule it is graded on: calibration-sensitive outputs get entropy-style review, hard pick decisions get margin-style review",
+    "source_operator": "uncertainty_measure_objective_alignment",
+    "telemetry": "The active scoring rule per output type and the criterion used to queue its reviews"
+   }
+  },
+  {
+   "primitive_id": "qbc_version_space_minimization",
+   "name": "Query-by-committee premise: maintain a committee of competing hypotheses consistent with the labeled data and query where they disagree, in order to shrink the version space as fast as possible",
+   "verbatim_quote": "The fundamental premise behind the QBC framework is minimizing the version space, which is (as described in Section 2.2) the set of hypotheses that are consistent with the current labeled training data L.",
+   "page": "Section 3.2; extracted text line 605",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Machine learning is framed as search over the version space, the set of hypotheses consistent with the labeled set L",
+    "A committee can be constructed that samples different regions of the version space"
+   ],
+   "breakdown_regime": "The version space can grow exponentially with the labeled set size (Haussler, 1994, cited in the survey), so it can only be approximated by a committee subset, never enumerated",
+   "domain": "machine learning: query strategies, query-by-committee",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's model families act as a committee over the same evidence: cases where the families' projections diverge are the version space frontier and get the deep reasoning traces first",
+    "source_operator": "qbc_version_space_minimization",
+    "telemetry": "Per-case spread of projections across model families trained on the same evidence"
+   }
+  },
+  {
+   "primitive_id": "vote_entropy_disagreement",
+   "name": "Vote entropy: committee disagreement is measured as the entropy of the members' hard label votes",
+   "verbatim_quote": "This can be thought of as a QBC generalization of entropy-based uncertainty sampling.",
+   "page": "Section 3.2; extracted text line 663",
+   "latex": "x^{*}_{VE} = \\operatorname*{argmax}_x \\; -\\sum_i \\frac{V(y_i)}{C} \\log \\frac{V(y_i)}{C}",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "V(y_i)": "number of committee votes for label y_i (count)",
+    "C": "committee size (count)",
+    "x*_VE": "the selected query instance"
+   },
+   "assumptions": [
+    "Committee members cast hard votes for single labels",
+    "All members' votes count equally unless weighted by estimated accuracy"
+   ],
+   "breakdown_regime": "Hard votes discard each member's internal confidence, so a committee of barely-sure members looks identical to a committee of certain members split the same way",
+   "domain": "machine learning: query strategies, query-by-committee",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine's independent model families vote on an outcome, vote entropy ranks the slate: unanimous cases are left alone, split votes consume the review budget",
+    "source_operator": "vote_entropy_disagreement",
+    "telemetry": "Vote counts per outcome across model families for each case"
+   }
+  },
+  {
+   "primitive_id": "kl_divergence_committee_disagreement",
+   "name": "KL disagreement: the most informative query maximizes the average KL divergence between each committee member's label distribution and the committee consensus distribution",
+   "verbatim_quote": "So this disagreement measure considers the most informative query to be the one with the largest average difference between the label distributions of any one committee member and the consensus.",
+   "page": "Section 3.2; extracted text line 683",
+   "latex": "x^{*}_{KL} = \\operatorname*{argmax}_x \\; \\frac{1}{C} \\sum_{c=1}^{C} D\\left( P_{\\theta^{(c)}} \\,\\|\\, P_C \\right), \\quad D\\left( P_{\\theta^{(c)}} \\,\\|\\, P_C \\right) = \\sum_i P_{\\theta^{(c)}}(y_i \\mid x) \\log \\frac{P_{\\theta^{(c)}}(y_i \\mid x)}{P_C(y_i \\mid x)}",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "theta^(c)": "the c-th committee member model",
+    "C": "committee size (count)",
+    "P_C(y_i|x)": "consensus probability, the average of members' posteriors",
+    "D(.||.)": "Kullback-Leibler divergence (nats or bits)"
+   },
+   "assumptions": [
+    "Members provide full posterior distributions (soft votes), not just hard labels",
+    "The consensus is the plain average of member distributions"
+   ],
+   "breakdown_regime": "Sensitive to any member assigning near-zero probability where the consensus is positive; a single overconfident member can dominate the ranking",
+   "domain": "machine learning: query strategies, query-by-committee, information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Beyond vote counts, the engine measures how far each model family's full distribution sits from the ensemble consensus; the case with the largest average divergence is where one family's reasoning is most worth auditing",
+    "source_operator": "kl_divergence_committee_disagreement",
+    "telemetry": "Per-family posterior distributions and their KL divergence to the ensemble consensus per case"
+   }
+  },
+  {
+   "primitive_id": "committee_construction_and_size",
+   "name": "Committee construction: committees are built by sampling models from a posterior over parameters, or by bagging and boosting for non-probabilistic models, and committees of two or three already work well in practice",
+   "verbatim_quote": "even small committee sizes (e.g., two or three) have been shown to work well in practice (Seung et al., 1992; McCallum and Nigam, 1998; Settles and Craven, 2008).",
+   "page": "Section 3.2; extracted text line 648",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Members must represent different regions of the version space, not copies of one hypothesis",
+    "Ensemble diversity methods (bagging, boosting, explicit diversity encouragement) are available for discriminative models"
+   ],
+   "breakdown_regime": "A committee of near-identical members shows no disagreement anywhere and the strategy degenerates to random querying; there is no agreed optimal committee size",
+   "domain": "machine learning: query strategies, ensembles",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps its committee small and genuinely diverse (different signal families, different training windows) because disagreement signal saturates fast; adding near-duplicate models adds cost without information",
+    "source_operator": "committee_construction_and_size",
+    "telemetry": "Pairwise correlation of model family outputs, used to detect redundant committee members"
+   }
+  },
+  {
+   "primitive_id": "expected_gradient_length",
+   "name": "Expected gradient length: query the instance whose labeling would, in expectation over its possible labels, produce the training gradient of largest magnitude, i.e. the greatest model change",
+   "verbatim_quote": "In other words, the learner should query the instance x which, if labeled and added to L, would result in the new training gradient of the largest magnitude.",
+   "page": "Section 3.3; extracted text line 734",
+   "latex": "x^{*}_{EGL} = \\operatorname*{argmax}_x \\; \\sum_i P_\\theta(y_i \\mid x) \\left\\| \\nabla \\ell_\\theta \\left( L \\cup \\langle x, y_i \\rangle \\right) \\right\\|",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "L": "current labeled training set",
+    "<x, y_i>": "the training tuple formed by x with hypothesized label y_i",
+    "nabla l_theta": "gradient of the objective function with respect to model parameters theta",
+    "|| . ||": "Euclidean norm of the gradient vector",
+    "P_theta(y_i|x)": "current posterior for label y_i (dimensionless)"
+   },
+   "assumptions": [
+    "The model is trained by gradient-based optimization of a differentiable objective",
+    "Training instances are independent, so the new gradient is approximated by the gradient of the candidate tuple alone"
+   ],
+   "breakdown_regime": "Feature scaling failures: an instance with one unusually large feature value earns a huge gradient and gets queried for the wrong reason; cost also grows with feature space and label count",
+   "domain": "machine learning: query strategies, expected model change",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A new piece of evidence is valued by how much it would move the engine's current projection if confirmed, weighted by the probability it is true, which ranks corrections by expected impact rather than by surprise alone",
+    "source_operator": "expected_gradient_length",
+    "telemetry": "Sensitivity of each projection to its individual evidence items, recomputed as evidence arrives"
+   }
+  },
+  {
+   "primitive_id": "expected_error_reduction",
+   "name": "Expected error reduction: query the instance whose labeling minimizes the expected future error of the retrained model, estimated over the unlabeled pool treated as a validation set",
+   "verbatim_quote": "The idea it to estimate the expected future error of a model trained using L ∪ hx, yi on the remaining unlabeled instances in U (which is assumed to be representative of the test distribution, and used as a sort of validation set), and query the instance with minimal expected future error (sometimes called risk).",
+   "page": "Section 3.4; extracted text line 767",
+   "latex": "x^{*}_{0/1} = \\operatorname*{argmin}_x \\; \\sum_i P_\\theta(y_i \\mid x) \\sum_{u=1}^{U} \\left( 1 - P_{\\theta^{+\\langle x, y_i \\rangle}}\\left( \\hat{y} \\mid x^{(u)} \\right) \\right)",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "U": "size of the unlabeled pool (count)",
+    "x^(u)": "the u-th unlabeled pool instance",
+    "theta^+<x,y_i>": "the model retrained after adding tuple <x, y_i> to L",
+    "y-hat": "the retrained model's most probable label",
+    "P_theta(y_i|x)": "current posterior for label y_i (dimensionless)"
+   },
+   "assumptions": [
+    "The unlabeled pool is representative of the test distribution",
+    "A model can be retrained (or incrementally updated) for every candidate and every hypothesized label"
+   ],
+   "breakdown_regime": "The most expensive framework in the survey: retraining per candidate per label over the whole pool makes it impractical beyond simple models without Monte Carlo subsampling or approximate training",
+   "domain": "machine learning: query strategies, decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Before acquiring a costly new data source, the engine estimates the reduction in projection error across the whole remaining slate if that source were added, the pool standing in for future cases, rather than judging the source by one showcase example",
+    "source_operator": "expected_error_reduction",
+    "telemetry": "Simulated slate-wide error with and without each candidate data source"
+   }
+  },
+  {
+   "primitive_id": "bias_variance_noise_decomposition",
+   "name": "Error decomposition law: expected squared error splits into irreducible noise, model-class bias, and model variance, and only the variance term is reducible by data selection",
+   "verbatim_quote": "which is the remaining component of the learner's squared-loss with respect to the target function. Minimizing the variance, then, is guaranteed to minimize the future generalization error of the model (since the learner itself can do nothing about the noise or bias components).",
+   "page": "Section 3.5; extracted text line 870",
+   "latex": "E_T\\left[ (\\hat{y} - y)^2 \\mid x \\right] = E\\left[ (y - E[y \\mid x])^2 \\right] + \\left( E_L[\\hat{y}] - E[y \\mid x] \\right)^2 + E_L\\left[ (\\hat{y} - E_L[\\hat{y}])^2 \\right]",
+   "symbol_and_unit_ledger": {
+    "x": "input instance",
+    "y": "true label or output",
+    "y-hat": "the model's predicted output for x",
+    "E_T": "expectation over training sets and the conditional label distribution",
+    "E_L": "expectation over labeled training sets L",
+    "E[y|x]": "conditional mean of the true output given x"
+   },
+   "assumptions": [
+    "Squared-loss (standard error) is the learning objective, following Geman et al. (1992) as cited in the survey",
+    "The model class is held fixed, which makes the bias term invariant"
+   ],
+   "breakdown_regime": "The decomposition is exact for squared loss only; for 0/1 loss and other objectives the noise-bias-variance split is approximate and the guarantee does not transfer directly",
+   "domain": "statistics: bias-variance tradeoff",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine error post-mortem is filed into one of the three terms: irreducible noise (stop spending), model-class bias (change the model family), or variance (acquire more data), which prevents spending data budget on errors data cannot fix",
+    "source_operator": "bias_variance_noise_decomposition",
+    "telemetry": "Post-mortem error attribution per case across the three components"
+   }
+  },
+  {
+   "primitive_id": "variance_reduction_query_rule",
+   "name": "Variance reduction rule: query the instance that minimizes the estimated mean output variance across the input distribution after retraining, computable in closed form without retraining",
+   "verbatim_quote": "Because this equation represents a smooth function that is differentiable with respect to any query instance x in the input space, gradient methods can be used to search for the best possible query that minimizes output variance, and therefore generalization error.",
+   "page": "Section 3.5; extracted text line 906",
+   "latex": "x^{*}_{VR} = \\operatorname*{argmin}_x \\; \\langle \\tilde{\\sigma}_{\\hat{y}}^2 \\rangle_{+x}",
+   "symbol_and_unit_ledger": {
+    "x": "candidate query instance",
+    "sigma-tilde^2_y-hat": "estimated output variance of the model after retraining on x and its label",
+    "< . >_+x": "average over the input distribution, conditional on adding x",
+    "x*_VR": "the selected query instance"
+   },
+   "assumptions": [
+    "The model's prediction at x is already fairly good, the output gradient is locally linear, and variance is Gaussian (assumptions stated in the survey)",
+    "Output variance admits a closed-form approximation, as for neural networks via the inverse Fisher matrix"
+   ],
+   "breakdown_regime": "The closed forms depend on second-order expansions around the current fit; far from the current data the approximation degrades and the ranking can mislead",
+   "domain": "statistics: optimal experimental design, query strategies",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where the engine cannot afford full retraining simulations, it ranks verification targets by estimated projection variance over the whole slate distribution, using curvature information it already has",
+    "source_operator": "variance_reduction_query_rule",
+    "telemetry": "Per-case projection variance estimates and the slate-wide variance map"
+   }
+  },
+  {
+   "primitive_id": "fisher_information_maximization",
+   "name": "Fisher information principle: since the inverse Fisher information bounds the variance of parameter estimates (Cramer-Rao), an active learner should select data that maximizes Fisher information",
+   "verbatim_quote": "to minimize the variance over its parameter estimates, an active learner should select data that maximizes its Fisher information (or minimizes the inverse thereof).",
+   "page": "Section 3.5; extracted text line 928",
+   "latex": "I(\\theta) = N \\int_x \\int_y P(x) \\, P_\\theta(y \\mid x) \\, \\frac{\\partial^2}{\\partial \\theta^2} \\log P_\\theta(y \\mid x)",
+   "symbol_and_unit_ledger": {
+    "theta": "model parameter vector",
+    "N": "number of independent samples from the input distribution (count)",
+    "P(x)": "input distribution density",
+    "P_theta(y|x)": "model likelihood of output y given x",
+    "I(theta)": "Fisher information, variance of the score (units: inverse parameter variance)"
+   },
+   "assumptions": [
+    "Samples are drawn independently from the input distribution",
+    "The log-likelihood is twice differentiable in the parameters so the score and its variance exist"
+   ],
+   "breakdown_regime": "For multi-parameter models Fisher information is a matrix, so 'maximize it' is ambiguous until a scalar design criterion (A, D, or E) is chosen",
+   "domain": "statistics: Fisher information, optimal experimental design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A candidate data feed is scored by the information it adds about the engine's uncertain parameters, not by its volume; a small feed that pins down a high-variance parameter outranks a large redundant one",
+    "source_operator": "fisher_information_maximization",
+    "telemetry": "Parameter variance estimates before and after simulated ingestion of each candidate feed"
+   }
+  },
+  {
+   "primitive_id": "optimal_design_criteria_ade",
+   "name": "Optimal design criteria: A-optimality minimizes the trace of the inverse information matrix, D-optimality its determinant (volume of the version space, tied to posterior entropy), E-optimality its maximum eigenvalue",
+   "verbatim_quote": "A-optimal designs are considerably more popular, and aim to reduce the average variance of parameter estimates by focusing on values along the diagonal of the information matrix.",
+   "page": "Section 3.5; extracted text line 950",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The design problem is stated over the Fisher information matrix of a K-parameter model",
+    "D-optimality's link to minimizing expected posterior entropy follows Chaloner and Verdinelli (1995) as cited in the survey"
+   ],
+   "breakdown_regime": "E-optimality has no obvious utility interpretation and is rarely used in machine learning; the three criteria can rank the same candidate data differently",
+   "domain": "statistics: optimal experimental design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine reduces uncertainty it must say which summary it is shrinking: average parameter variance (A), total uncertainty volume (D), or the single worst parameter (E), because the cheapest acquisition differs by criterion",
+    "source_operator": "optimal_design_criteria_ade",
+    "telemetry": "Trace, determinant, and top eigenvalue of the engine's parameter uncertainty matrix"
+   }
+  },
+  {
+   "primitive_id": "c_optimality_uncertainty_equivalence",
+   "name": "Equivalence result: c-optimal design with the reference vector set to the output gradient reproduces uncertainty sampling, so the statistics and machine learning criteria coincide",
+   "verbatim_quote": "Minimizing this variance measure can be achieved by simply querying on instance x, so the c-optimal criterion can be viewed as a formalism for uncertainty sampling (Section 3.1).",
+   "page": "Section 3.5; extracted text line 961",
+   "latex": "\\mathrm{tr}\\left( A F^{-1} \\right) = c^{T} F^{-1} c, \\quad A = c c^{T}",
+   "symbol_and_unit_ledger": {
+    "A": "square symmetric reference matrix encoding the region of interest",
+    "F": "Fisher information matrix",
+    "c": "reference vector of length K, set to the output gradient nabla_x for the equivalence",
+    "tr(.)": "matrix trace"
+   },
+   "assumptions": [
+    "A is rank one, A = c c^T, the special case analyzed in the survey",
+    "The output variance formula for neural networks (MacKay, 1992) is the quantity being minimized"
+   ],
+   "breakdown_regime": "The equivalence holds for the specific rank-one reference tied to a single instance's gradient; it does not make general A-optimal design identical to uncertainty sampling",
+   "domain": "statistics: optimal experimental design, equivalence results",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats its heuristic confidence checks and its formal information calculations as the same instrument at different resolutions, so a cheap uncertainty screen is a legitimate first pass before any expensive information computation",
+    "source_operator": "c_optimality_uncertainty_equivalence",
+    "telemetry": "Agreement rate between the cheap uncertainty ranking and the full information ranking on past slates"
+   }
+  },
+  {
+   "primitive_id": "fisher_information_ratio",
+   "name": "Fisher information ratio: query the instance minimizing the trace of the pool's information matrix times the inverse of the query's information matrix, approximating future output variance over the whole pool without retraining",
+   "verbatim_quote": "Querying the instance which minimizes this ratio is then analogous to minimizing the future output variance once x has been labeled, thus indirectly reducing generalization error (with respect to U).",
+   "page": "Section 3.5; extracted text line 980",
+   "latex": "x^{*}_{FIR} = \\operatorname*{argmin}_x \\; \\mathrm{tr}\\left( I_U(\\theta) \\, I_x(\\theta)^{-1} \\right)",
+   "symbol_and_unit_ledger": {
+    "x": "candidate query instance",
+    "I_U(theta)": "Fisher information of the unlabeled pool U under parameters theta",
+    "I_x(theta)": "Fisher information of the single query instance x",
+    "tr(.)": "matrix trace",
+    "x*_FIR": "the selected query instance"
+   },
+   "assumptions": [
+    "The pool's information matrix stands in for the whole input distribution (Zhang and Oles, 2000, as cited in the survey)",
+    "Matrix inversion cost O(U K^3) is acceptable, or reduced by PCA or a diagonal approximation"
+   ],
+   "breakdown_regime": "Inverting a K by K matrix per candidate is intractable for large parameter counts, common in language tasks; approximations trade away the exactness that motivated the method",
+   "domain": "statistics: optimal experimental design, query strategies",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single new observation is valued by the fraction of slate-wide unexplained variance it accounts for, so the engine prefers evidence that covers the whole upcoming slate over evidence that perfects one case",
+    "source_operator": "fisher_information_ratio",
+    "telemetry": "Slate-wide unexplained variance share attributed to each candidate observation"
+   }
+  },
+  {
+   "primitive_id": "information_density_framework",
+   "name": "Information density: multiply a base informativeness score by the instance's average similarity to all other pool instances, raised to a power beta, so queries are both uncertain and representative",
+   "verbatim_quote": "informative instances should not only be those which are uncertain, but also those which are \"representative\" of the underlying distribution (i.e., inhabit dense regions of the input space).",
+   "page": "Section 3.6; extracted text line 1024",
+   "latex": "x^{*}_{ID} = \\operatorname*{argmax}_x \\; \\phi_A(x) \\times \\left( \\frac{1}{U} \\sum_{u=1}^{U} \\mathrm{sim}\\left( x, x^{(u)} \\right) \\right)^{\\beta}",
+   "symbol_and_unit_ledger": {
+    "x": "candidate unlabeled instance",
+    "phi_A(x)": "informativeness of x under base query strategy A (dimensionless score)",
+    "sim(x, x^(u))": "similarity between x and the u-th pool instance",
+    "U": "pool size (count)",
+    "beta": "parameter controlling the relative importance of the density term",
+    "x*_ID": "the selected query instance"
+   },
+   "assumptions": [
+    "A similarity measure over instances exists and densities can be precomputed and cached (Settles and Craven, 2008, as cited in the survey)",
+    "The pool approximates the underlying input distribution"
+   ],
+   "breakdown_regime": "With beta too large the density term dominates and the learner queries typical but already-understood instances; with beta zero it reduces to the base strategy and its outlier problem returns",
+   "domain": "machine learning: query strategies, density weighting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine review ranking multiplies uncertainty by representativeness: a strange one-off case must be very uncertain to outrank a moderately uncertain case that resembles many upcoming cases",
+    "source_operator": "information_density_framework",
+    "telemetry": "Per-case uncertainty score, average similarity to the rest of the slate, and the density exponent in use"
+   }
+  },
+  {
+   "primitive_id": "outlier_representativeness_failure",
+   "name": "Outlier failure mode: the least certain instance can sit on the decision boundary yet be unrepresentative of the distribution, so labeling it teaches almost nothing about the data as a whole",
+   "verbatim_quote": "The least certain instance lies on the classification boundary, but is not \"representative\" of other instances in the distribution, so knowing its label is unlikely to improve accuracy on the data as a whole.",
+   "page": "Section 3.6; extracted text line 1013",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Illustrated in the survey's Figure 7 for a binary linear classifier under uncertainty sampling",
+    "QBC and expected model change can exhibit the same behavior, chasing controversial or high-impact outliers"
+   ],
+   "breakdown_regime": "Strategies that score candidates against the whole pool (expected error reduction, variance reduction, density weighting) implicitly avoid this failure",
+   "domain": "machine learning: failure modes, query strategies",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's anomaly queue is capped: a case that is maximally strange but resembles nothing else on the slate cannot consume the whole verification budget, however uncertain it is",
+    "source_operator": "outlier_representativeness_failure",
+    "telemetry": "Representativeness score attached to every anomaly flag before it is scheduled"
+   }
+  },
+  {
+   "primitive_id": "pac_binary_search_label_complexity",
+   "name": "Exponential label savings (toy PAC case): for a one-dimensional threshold concept, binary search over unlabeled points achieves error below the target with logarithmically many labels instead of linearly many random labels",
+   "verbatim_quote": "By conducting a simple binary search through these unlabeled instances, a classifier with error less than \u000f can be achieved with a mere O(log 1/\u000f) queries-since all other labels can be inferred-resulting in an exponential reduction in the number of labeled instances.",
+   "page": "Section 4.2; extracted text line 1150",
+   "latex": "O\\left( \\log \\frac{1}{\\epsilon} \\right) \\text{ queries} \\quad \\text{versus} \\quad O\\left( \\frac{1}{\\epsilon} \\right) \\text{ passive labels}",
+   "symbol_and_unit_ledger": {
+    "epsilon": "maximum desired error rate (dimensionless, 0 to 1)",
+    "O(.)": "asymptotic order of the label count",
+    "threshold concept": "a single cut point on the real line separating zeros from ones"
+   },
+   "assumptions": [
+    "Noiseless labels, a one-dimensional input, and a concept class containing the true threshold",
+    "Unlabeled instances are free and can be ordered along the line"
+   ],
+   "breakdown_regime": "The survey stresses this is a toy: generalizing the exponential gap to realistic, noisy, high-dimensional settings is exactly what the theory literature had not settled",
+   "domain": "machine learning theory: PAC learning, label complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine faces a one-dimensional unknown (a threshold, a cut point, a break-even parameter), it bisects the plausible range with targeted checks instead of sampling uniformly, earning logarithmic instead of linear verification cost",
+    "source_operator": "pac_binary_search_label_complexity",
+    "telemetry": "Width of the plausible interval for each threshold parameter before and after each check"
+   }
+  },
+  {
+   "primitive_id": "active_training_set_distribution_bias",
+   "name": "Active sample bias: a training set built by an active learner is a biased, non-i.i.d. sample tied to the model class that selected it, and may lose value if the model class changes",
+   "verbatim_quote": "Therefore, the labeled instances are a biased distribution, not drawn i.i.d. from the underlying natural density.",
+   "page": "Section 4.1; extracted text line 1094",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Selection depends on the current model's uncertainty, so the labeled distribution differs from the natural density by construction",
+    "Model classes in practice do change as the state of the art advances"
+   ],
+   "breakdown_regime": "The bias is not always harmful: the survey cites cases where data selected by one model class still trained another effectively, so the size of the effect is task dependent",
+   "domain": "machine learning: distribution shift, empirical analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any dataset the engine collects through its own selection policy is tagged with the policy and model version that collected it, and is re-weighted or re-validated before a different model generation trains on it",
+    "source_operator": "active_training_set_distribution_bias",
+    "telemetry": "Provenance tag (selecting policy and model version) on every collected dataset"
+   }
+  },
+  {
+   "primitive_id": "batch_mode_query_diversity",
+   "name": "Batch-mode law: picking the Q individually best queries myopically fails because the top instances overlap in information content; batches must be jointly diverse and informative",
+   "verbatim_quote": "Myopically querying the \"Q-best\" queries according to some instance-level query strategy often does not work well, since it fails to consider the overlap in information content among the \"best\" instances.",
+   "page": "Section 6.1; extracted text line 1425",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Queries are selected in groups for parallel labeling or slow-to-train models, so later picks cannot adapt to earlier labels in the same batch",
+    "An instance-level informativeness measure exists to be corrected for redundancy"
+   ],
+   "breakdown_regime": "Diversity heuristics (clustering, explicit diversity terms, submodular greedy) repair most of the loss, but off-the-shelf strategies used myopically in batch mode can fall below random sampling (Guo and Schuurmans, 2008, cited in the survey)",
+   "domain": "machine learning: batch-mode active learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine assigns its parallel research capacity in batches chosen for coverage, not by taking the top Q uncertain cases, which would send every worker onto near-duplicate questions",
+    "source_operator": "batch_mode_query_diversity",
+    "telemetry": "Pairwise overlap of assigned research questions within each batch"
+   }
+  },
+  {
+   "primitive_id": "submodular_diminishing_returns_greedy",
+   "name": "Submodularity and the greedy guarantee: for a monotone submodular set function, greedy selection guarantees at least (1 - 1/e), about 63 percent, of the optimal set value, and about 90 percent in practice",
+   "verbatim_quote": "using a greedy algorithm to optimize a submodular function gives us a lower-bound performance guarantee of around 63% of optimal; in practice these greedy solutions are often within 90% of optimal (Krause, 2008).",
+   "page": "Section 7.3; extracted text line 1871",
+   "latex": "F(A \\cup \\{x\\}) - F(A) \\geq F(A' \\cup \\{x\\}) - F(A'), \\quad A \\subseteq A'",
+   "symbol_and_unit_ledger": {
+    "F": "set function scoring a selected set (the acquisition objective)",
+    "A, A'": "candidate sets with A a subset of A'",
+    "x": "the instance being added",
+    "1 - 1/e": "the greedy approximation factor, about 0.63"
+   },
+   "assumptions": [
+    "F is monotonically non-decreasing with F(empty set) = 0, the conditions for the guarantee stated in the survey",
+    "The acquisition objective can be formulated or approximated as submodular, as shown for mutual information and the Fisher information ratio in cited work"
+   ],
+   "breakdown_regime": "Most active learning objectives are not exactly submodular, so the guarantee holds only for the approximated objective, not the true utility",
+   "domain": "optimization: submodular functions, greedy algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Slate-level acquisition planning assumes diminishing returns by construction: the tenth similar check on one game is worth less than the first check on another, and greedy batch building carries a worst-case floor instead of an unexamined hope",
+    "source_operator": "submodular_diminishing_returns_greedy",
+    "telemetry": "Marginal gain recorded for each successive acquisition within a planning round"
+   }
+  },
+  {
+   "primitive_id": "noisy_oracle_relabeling_tradeoff",
+   "name": "Noisy oracle tradeoff: with imperfect oracles the learner must choose between labeling a new instance and repeatedly labeling an existing one to de-noise it, and can estimate per-oracle reliability to query only reliable annotators",
+   "verbatim_quote": "In particular, when should the learner decide to query for the (potentially noisy) label of a new unlabeled instance, versus querying for repeated labels to de-noise an existing training instance that seems a bit off?",
+   "page": "Section 6.2; extracted text line 1463",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Oracle noise may come from instrumentation, instance difficulty, or annotator distraction and fatigue",
+    "Selective repeated labeling can improve data quality when oracle and model uncertainty estimates are available (Sheng et al., 2008, cited in the survey)"
+   ],
+   "breakdown_regime": "Open problems remain when oracle quality drifts over time, when payment changes effort, or when some instances are inherently noisy no matter who labels them",
+   "domain": "machine learning: noisy oracles, crowdsourcing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When two sources disagree on a fact the engine already holds, re-verification of the held fact competes with checking a new fact under the same budget, and sources carry tracked reliability scores that gate who gets asked again",
+    "source_operator": "noisy_oracle_relabeling_tradeoff",
+    "telemetry": "Per-source historical accuracy and the re-verification versus new-check decision log"
+   }
+  },
+  {
+   "primitive_id": "learned_annotation_cost_model",
+   "name": "Learned cost model: when annotation costs vary and are unknown, a regression cost model trained alongside the task model can predict real labeling cost from simple meta features of the instances",
+   "verbatim_quote": "They learn a regression cost-model (alongside the active task-model) which tries to predict the real, unknown annotation cost based on a few simple \"meta features\" on the instances.",
+   "page": "Section 6.3; extracted text line 1533",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Costs vary considerably across instances and across annotators, and are not intrinsic to the instance alone (findings of Settles et al., 2008a, as reported in the survey)",
+    "Measured cost contains jitter and pause noise components"
+   ],
+   "breakdown_regime": "Dividing informativeness by predicted cost (a return-on-investment heuristic) was not reliably effective on the survey's language tasks even with true costs known, so prediction alone does not settle how costs should enter selection",
+   "domain": "machine learning: cost-sensitive active learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine predicts the verification cost of a case from its surface features (data availability, source latency, number of sub-questions) with a small cost model, and plans the review queue against predicted cost rather than discovered cost",
+    "source_operator": "learned_annotation_cost_model",
+    "telemetry": "Predicted versus actual verification time per case, fed back to retrain the cost model"
+   }
+  },
+  {
+   "primitive_id": "economic_stopping_criterion",
+   "name": "Stopping rule: in practice the real stopping criterion for active learning is economic or external, and usually arrives well before any intrinsic learner-decided stability threshold",
+   "verbatim_quote": "the real stopping criterion for practical applications is based on economic or other external factors, which likely come well before an intrinsic learner-decided threshold.",
+   "page": "Section 6.7; extracted text line 1783",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acquisition has a real cost and model errors have a real cost, so a rational stop exists where the two cross",
+    "Published intrinsic criteria rely on learner stability or self-confidence leveling off (Vlachos, 2008; Bloodgood and Shanker, 2009; Olsson and Tomanek, 2009, as cited in the survey)"
+   ],
+   "breakdown_regime": "An intrinsic criterion can keep spending past the economic optimum or stop before it; neither threshold is observable without tracking costs explicitly",
+   "domain": "machine learning: stopping criteria, economics of learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine research rounds stop on a budget rule set in advance (spend per slate, value of the errors still being made) rather than on a feeling that the model has plateaued, and the rule is recorded before the round starts",
+    "source_operator": "economic_stopping_criterion",
+    "telemetry": "Pre-registered stopping budget per round and the spend at which rounds actually stopped"
+   }
+  },
+  {
+   "primitive_id": "multiple_instance_bag_semantics",
+   "name": "Multiple-instance semantics: a bag is negative if and only if all its instances are negative, and positive if at least one instance is positive, which lets learners train from cheap bag-level labels and query at finer granularity",
+   "verbatim_quote": "A bag is labeled negative if and only if all of its instances are negative. A bag is labeled positive, however, if at least one of its instances is positive (note that positive bags may also contain negative instances).",
+   "page": "Section 6.4; extracted text line 1601",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Instances group naturally into bags (documents into passages, images into segments) and bag labels are cheap or free while instance labels are expensive",
+    "The standard MI assumption holds: one positive instance makes the bag positive"
+   ],
+   "breakdown_regime": "Treating MI data as ordinary supervised data imports one-sided noise, since positive bags contain negative instances that get mislabeled as positive",
+   "domain": "machine learning: multiple-instance learning, alternative query types",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregate signals in the engine (a game-level outcome, a team-level rating) are treated as bag labels over their component events: one decisive component can carry the aggregate, so the engine queries at the component level where the aggregate is ambiguous",
+    "source_operator": "multiple_instance_bag_semantics",
+    "telemetry": "Component-level labels beneath each aggregate signal and the share of aggregates resolved by a single component"
+   }
+  },
+  {
+   "primitive_id": "model_class_mismatch_fallback",
+   "name": "Model-class fallback rule: if the right model class or feature set is not yet known, random sampling for pilot studies is safer than active learning steered by an inappropriate model, with heterogeneous ensembles as the viable active alternative",
+   "verbatim_quote": "random sampling (at least for pilot studies, until the task can be better understood) may be more advisable than taking one's chances on active learning with an inappropriate learning model.",
+   "page": "Section 6.6; extracted text line 1758",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Actively collected data inherits the selecting model's biases (Section 4.1 of the survey)",
+    "Evidence is mixed: some cross-model reuse preserved the savings, other cases (Baldridge and Osborne, 2004, cited in the survey) lost them"
+   ],
+   "breakdown_regime": "Once the model class stabilizes, the fallback wastes the label savings active learning offers; the rule governs the unsettled phase, not steady state",
+   "domain": "machine learning: model selection, practical guidance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "While the engine's architecture for a new signal family is unsettled, its data collection stays random and unbiased; active selection switches on only after the model class is fixed, so early data remains reusable",
+    "source_operator": "model_class_mismatch_fallback",
+    "telemetry": "Architecture stability flag per signal family and the sampling mode in force for its collection"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c939f1e56deef3cb-t1",
+   "think": "This survey is the reference map of active learning as the field stood at the end of the 2000s, and its organizing move is to split the subject into two independent choices: the scenario in which queries are posed, and the strategy that scores candidate queries. The scenario axis runs from membership query synthesis, where the learner invents instances de novo, through stream-based selective sampling, where instances arrive one at a time and are queried or discarded on the spot, to pool-based sampling, where a fixed pool of unlabeled instances is ranked as a whole. The strategy axis is a stack of increasingly expensive answers to a single question: which label, if obtained, would teach the model the most. Uncertainty sampling answers with the current model's own doubt, using least confidence, margin, or entropy of the posterior. Query-by-committee answers with disagreement among a committee of hypotheses sampled from the version space, measured by vote entropy or by average KL divergence to the consensus. Expected model change answers with the size of the update the label would induce, operationalized as expected gradient length. Expected error reduction answers with the quantity the others only approximate, the expected future loss over the unlabeled pool after retraining, and pays for that fidelity with the highest computation in the survey. Variance reduction answers indirectly: decompose expected squared error into noise, bias, and variance, note that only the variance term is controllable, and select queries that shrink output variance, which for parametric models becomes a Fisher information calculation with closed forms inherited from optimal experimental design. Density weighting then corrects a failure shared by the cheap strategies, because a maximally uncertain instance can be an outlier whose label teaches nothing about the distribution, so informativeness is multiplied by representativeness. Three cross-cutting results hold the stack together. First, the measures are not interchangeable heuristics; they are matched to objectives, entropy to log-loss and margin to classification error, and c-optimal design turns out to be uncertainty sampling in disguise, which means parts of the statistics literature and the machine learning literature were optimizing the same criterion under different names. Second, information about the whole input distribution is what separates the robust strategies from the fragile ones: expected error reduction, variance reduction, and information density all score a candidate by its effect on the pool, not by its local properties alone. Third, the gains are real but conditional. The evidence section reports settings where active learning needs more labels than passive learning, where batch-mode myopia destroys the advantage, where the actively collected training set is a biased sample tied to the model class that collected it, and where annotation cost variance makes label-count savings meaningless. The theoretical picture matches: exponential label savings are provable for threshold problems and for query-by-committee under Bayesian assumptions, yet worst-case pool-based bounds for linear classifiers collapse to the passive rate, and the agnostic results that relax the assumptions rest on algorithms too heavy to run. The practical chapters are not an appendix to the theory; they are where the theory meets its constraints. Batch queries need diversity because information overlaps. Oracles are noisy and unequally reliable, so repeated labeling competes with new queries on the same budget. Costs vary per instance and per annotator and can be learned with a regression model alongside the task model, although dividing informativeness by cost is a weaker heuristic than it looks. Alternative query types widen the unit of questioning itself: bags instead of instances, features instead of labels, classes instead of instances, and constraints instead of labels, each with its own cost structure. Stopping is an economic decision, not a property of the learner, and the survey is candid that practitioners stop for budget reasons long before intrinsic stability criteria fire. The related-areas chapter quietly supplies the deepest structural fact: when the acquisition objective is submodular, greedy selection carries a (1 - 1/e) guarantee, which converts query selection from a heuristic art into an approximation algorithm with a floor. For a reasoning engine, the transferable core is a discipline for spending a scarce verification budget. Any system that must decide what to check next, under a cost per check, faces exactly this optimization, and the survey supplies the ladder of approximations ordered by price, the conditions under which each rung fails, and the correction terms (density, diversity, cost models, stopping rules) that keep the cheap rungs honest. Read this way, the work is less a catalog of algorithms than a cost accounting system for curiosity: it prices information, names the ways a naive buyer overpays, and shows which corrections restore value. A system that internalizes only the query strategies and not the constraints will reproduce, one by one, the failure modes the survey documents. The scenario axis deserves equal weight with the strategy axis, because the two interact. Membership synthesis pairs naturally with variance reduction, whose differentiable objective can be optimized over the input space itself, while pool-based sampling pairs with every strategy but pays a full ranking cost each round, and stream-based sampling forces irrevocable decisions that only threshold-style rules can make cheaply. The survey also keeps widening the definition of a query until the framework's generality is visible: a query can ask for a feature value instead of a label, a class exemplar instead of an instance, a constraint instead of a classification, or a repeated label instead of a new one. Each widening changes the cost model and the oracle model together, which is why the practical chapters treat them as one problem. Finally, the survey is candid about its own shelf life: it maps a field whose theory lagged its practice, written at the moment the central question shifted from whether machines can learn by asking to whether they can learn economically by asking, and its structure is built to survive the arrival of strategies it does not yet contain.",
+   "retrocausal_genealogy": "The lineage runs through three parent fields. From statistics comes optimal experimental design (Federov, 1972), where Fisher information and the A, D, and E criteria were already mature before machine learning borrowed them. From computational learning theory comes Angluin's membership query model (1988) and the PAC framing that made label complexity a provable quantity. From early neural network practice come Seung, Opper, and Sompolinsky's query-by-committee (1992), Lewis and Gale's pool-based uncertainty sampling for text (1994), and Cohn's variance reduction for robot arm kinematics, after which the field spent fifteen years connecting, correcting, and costing these ancestors, with Settles' own sequence-model work (2008) supplying the density and Fisher-ratio generalizations this survey canonizes.",
+   "theory_of_mind": "Settles writes as a practitioner who has run annotation projects and been billed for them. His model of the reader is someone whose binding constraint is not compute or data volume but the price and patience of whoever supplies labels. He assumes labels are a purchased commodity with variable quality, that oracles are people who tire and drift, and that a method earns its place only by surviving contact with those facts. Hence the survey's recurring structure: every strategy is presented with its cost model, its known failure, and the empirical settings where the failure actually appeared, rather than as a leaderboard entry.",
+   "cross_layer_veto": "This work vetoes several defaults that other layers of a system might assume. It vetoes uncertainty-only acquisition wherever the input distribution is skewed, because the most uncertain point may be an outlier. It vetoes label count as a success metric whenever annotation costs vary, because fewer labels can cost more. It vetoes silent reuse of actively collected data across model classes, because the collection policy is baked into the sample. And it vetoes myopic batch construction, because individually optimal queries overlap. Any layer proposing one of these defaults must answer the survey's counterexamples first."
+  }
+ ],
+ "universal_lens": "Beyond machine learning, this work is a general template for any agent that learns from a world where information is available but priced. It separates the channel through which questions are asked from the criterion that ranks them, orders the criteria by computational price, and insists that the value of a question is a property of the whole distribution of future cases, not of the case in front of you. The same structure governs experimental science, diagnostic medicine, auditing, and intelligence collection: decide what to measure next by expected reduction in future error, correct for representativeness, model the cost of asking, and stop when the economics say stop.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the survey is a curriculum and a research agenda at once. It defines the canonical vocabulary of data acquisition (scenarios, query strategies, version space, Fisher information, submodularity) that any student of model building should command, and it maps the open problems worth studying: agnostic guarantees for practical algorithms, cost models that actually change selection for the better, and stopping rules grounded in economics. Its bibliography functions as a reading list, and its failure-mode catalog functions as a checklist for evaluating any proposed data collection program before resources are committed to it.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the survey supplies the operating policy for every scarce resource the engine consumes: analyst attention, data acquisition, and verification effort. Uncertainty and disagreement rank what to examine next; density weighting stops odd cases from eating the budget; batch diversity rules govern parallel work assignment; learned cost models price each check before it is run; provenance tags keep self-collected data honest when models change; and economic stopping rules end research rounds on budget rather than on feel. The result is an engine that treats its own curiosity as a managed portfolio with measured returns."
+}

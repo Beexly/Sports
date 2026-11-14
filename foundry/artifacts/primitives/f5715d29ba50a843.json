@@ -1,0 +1,789 @@
+{
+ "book_id": "f5715d29ba50a843",
+ "source_status": "COMPLETE",
+ "source_note": "Steven M. LaValle, Planning Algorithms, Cambridge University Press, 2006 (copyright Steven M. LaValle 2006; the printed book notes it is available for downloading at http://planning.cs.uiuc.edu/). Local file: LaValle-2006-PlanningAlgorithms.pdf in the books-d-models bucket, 13,021,753 bytes, gatekeeper scan digest sha256(str(size) + bytes) = f5715d29ba50a843fd712f98c03eeb9e2910ab6180012c89912ac3703c3ab406, book_id = first 16 hex chars. A second copy of the same work sits in books-must-have (13,370,045 bytes, scan digest 03b0428ec0d05158...); this extraction is keyed to the books-d-models copy and its extracted text file. Text quality: the extracted text is a two-page-spread dump in which facing pages interleave line by line in many regions, so every verbatim quote below was selected from a run proven contiguous in the extracted text file under fleet normalization (whitespace collapse, dehyphenation, ligature expansion); several quotes are therefore the longest contiguous fragments of their sentences rather than the full printed sentences. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "discrete_feasible_planning_formulation",
+   "name": "Discrete feasible planning: a nonempty state space X, per-state action spaces U(x), a transition function f, an initial state xI, and a goal set XG",
+   "verbatim_quote": "A nonempty state space X, which is a finite or countably infinite set of states.",
+   "page": "Section 2.1, Formulation 2.1, pp. 29-30 (text lines 938-945)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "X is finite or countably infinite",
+    "The model components are fully specified before search begins"
+   ],
+   "breakdown_regime": "Breaks when the state space cannot be enumerated or compactly encoded; the formulation says nothing about how large X may be in practice.",
+   "domain": "discrete planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine frames every prediction problem the same way: a state (the current game situation), legal actions (candidate plays or scenarios), a transition model, and a goal set (the outcomes being forecast). Scoping a problem means writing down these five components before any search or scoring happens.",
+    "source_operator": "discrete_feasible_planning_formulation",
+    "telemetry": "Situation state vectors from play-by-play, the candidate play or scenario set per state, and observed transition outcomes."
+   }
+  },
+  {
+   "primitive_id": "state_transition_function",
+   "name": "State transition function f produces the successor state f(x, u) in X for every state and action; the state transition equation is x' = f(x, u)",
+   "verbatim_quote": "A state transition function f that produces a state f (x, u) ∈ X for every x ∈ X and u ∈ U (x).",
+   "page": "Section 2.1, Formulation 2.1 item 3, pp. 29-30 (text lines 938-950)",
+   "latex": "x' = f(x, u)",
+   "symbol_and_unit_ledger": {
+    "x": "current state",
+    "x'": "successor state after the action",
+    "u": "action applied from x, u in U(x)",
+    "f": "state transition function"
+   },
+   "assumptions": [
+    "The transition is deterministic: one action from one state yields exactly one successor",
+    "f is defined for every x in X and u in U(x)"
+   ],
+   "breakdown_regime": "Deterministic f fails under uncertainty; Chapters 10-12 replace it with nature actions, transition probabilities, and information states.",
+   "domain": "discrete planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's transition kernel is this equation: given a situation and a candidate development (a play call, an injury return, a weather shift), produce the successor situation. Every rollout, simulation, and what-if branch in the engine is an application of f.",
+    "source_operator": "state_transition_function",
+    "telemetry": "Logged transitions from historical games: situation before, event applied, situation after."
+   }
+  },
+  {
+   "primitive_id": "state_transition_graph",
+   "name": "Any discrete planning problem can be drawn as a directed state transition graph whose vertices are the states and whose edges are the action-induced transitions",
+   "verbatim_quote": "It is often convenient to express Formulation 2.1 as a directed state transition graph. The set of vertices is the state space X.",
+   "page": "Section 2.1, pp. 29-30 (text lines 946-950)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An edge from x to x' exists exactly when some action u in U(x) has f(x, u) = x'"
+   ],
+   "breakdown_regime": "The graph is usually implicit and possibly infinite; it is revealed incrementally during search rather than given as input.",
+   "domain": "discrete planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reasoning in the engine is graph traversal over situations: nodes are game states, edges are events that move the game. Win probability, leverage, and path dependence are all properties of this graph, not of isolated snapshots.",
+    "source_operator": "state_transition_graph",
+    "telemetry": "The realized game graph reconstructed from play-by-play sequences, with edge counts per transition type."
+   }
+  },
+  {
+   "primitive_id": "dijkstra_cost_to_come_priority",
+   "name": "Dijkstra's algorithm orders the search frontier by the cost-to-come function C : X -> [0, inf], the least accumulated cost known from the initial state",
+   "verbatim_quote": "The priority queue, Q, will be sorted according to a function C : X → [0, ∞],",
+   "page": "Section 2.2.2, pp. 37-38 (text lines 1094-1110)",
+   "latex": "C : X \\to [0, \\infty)",
+   "symbol_and_unit_ledger": {
+    "C": "cost-to-come function, least known accumulated cost from the initial state",
+    "X": "state space",
+    "[0, inf)": "nonnegative cost range"
+   },
+   "assumptions": [
+    "Every edge cost l(x, u) is nonnegative",
+    "Costs accumulate additively along a path"
+   ],
+   "breakdown_regime": "Negative costs destroy the optimality argument; the first time a state leaves the priority queue its cost is final, so a wrong cost model is locked in early.",
+   "domain": "graph search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine ranks lines of reasoning by accumulated cost to reach them: evidence gathered, assumptions stacked, and computation spent. Cheapest sufficient explanations are settled first, exactly the discipline that keeps a reasoning queue from wandering.",
+    "source_operator": "dijkstra_cost_to_come_priority",
+    "telemetry": "Per-hypothesis accumulated evidence cost and assumption count, logged as hypotheses are expanded."
+   }
+  },
+  {
+   "primitive_id": "astar_search",
+   "name": "A-star search is Dijkstra's algorithm with the priority queue sorted by cost-to-come plus a heuristic estimate of the optimal cost-to-go",
+   "verbatim_quote": "The A∗ search algorithm works in exactly the same way as Dijkstra's algorithm.",
+   "page": "Section 2.2.2, pp. 39-40 (text lines 1150-1173)",
+   "latex": "C^*(x') + \\hat{G}^*(x')",
+   "symbol_and_unit_ledger": {
+    "C^*(x')": "optimal cost-to-come to the generated state x'",
+    "\\hat{G}^*(x')": "heuristic estimate of the optimal cost-to-go from x' to the goal set"
+   },
+   "assumptions": [
+    "A heuristic estimate of the cost-to-go can be computed cheaply for each generated state"
+   ],
+   "breakdown_regime": "A poor heuristic degenerates the search to Dijkstra's algorithm or worse; best-first variants that drop the cost-to-come term lose optimality entirely.",
+   "domain": "graph search",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine search over scenario trees is A-star shaped: partial lines are scored by cost already sunk plus an estimate of what remains to resolve them. The estimate guides attention without being mistaken for the answer.",
+    "source_operator": "astar_search",
+    "telemetry": "Heuristic remaining-uncertainty scores per open scenario branch, calibrated against realized resolution costs."
+   }
+  },
+  {
+   "primitive_id": "astar_admissible_optimality",
+   "name": "If the heuristic never overestimates the true optimal cost-to-go, A-star is guaranteed to find optimal plans",
+   "verbatim_quote": "cost-to-go for all x ∈ X, the A∗ algorithm is guaranteed to find optimal plans",
+   "page": "Section 2.2.2, pp. 39-40 (text lines 1169-1178)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The heuristic G-hat is an underestimate of the true optimal cost-to-go G* for every state",
+    "Edge costs are nonnegative"
+   ],
+   "breakdown_regime": "Overestimating heuristics void the optimality guarantee; a heuristic that is admissible but loose explores nearly as many states as Dijkstra's algorithm.",
+   "domain": "graph search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's plausibility bounds follow the admissibility rule: a bound used to prune or certify a conclusion must never overstate confidence. Underestimates keep the search honest; the moment an estimate can exceed the truth, guarantees are gone and the output must be labeled as such.",
+    "source_operator": "astar_admissible_optimality",
+    "telemetry": "Calibration records comparing heuristic estimates against realized values, per signal family."
+   }
+  },
+  {
+   "primitive_id": "backward_value_iteration",
+   "name": "Backward value iteration builds optimal cost-to-go functions stage by stage from the goal; the inner minimization over the next action is exactly the optimal cost-to-go recursion (2.11)",
+   "verbatim_quote": "The inner min is exactly the definition of the optimal cost-to-go function G∗k+1 .",
+   "page": "Section 2.3.1.1, pp. 47-48 (text lines 1364-1381)",
+   "latex": "G^*_k(x_k) = \\min_{u_k} \\left[ l(x_k, u_k) + G^*_{k+1}(x_{k+1}) \\right]",
+   "symbol_and_unit_ledger": {
+    "G^*_k(x_k)": "optimal cost-to-go from state x_k at stage k",
+    "l(x_k, u_k)": "stage cost of applying u_k at x_k",
+    "x_{k+1}": "successor state f(x_k, u_k)",
+    "u_k": "action chosen at stage k"
+   },
+   "assumptions": [
+    "Plans have a fixed number of stages K",
+    "The optimal cost-to-go at the final stage is the terminal cost lF",
+    "Stage costs are additive"
+   ],
+   "breakdown_regime": "States that cannot reach the goal within the remaining stages receive infinite cost-to-go; fixed-horizon recursion must be reworked (via the termination action) for variable-length plans.",
+   "domain": "dynamic programming",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This recursion is the engine's value backbone: the worth of a situation is the best achievable sum of immediate cost plus the worth of the successor situation. Backward induction from final outcomes is how game states, drive states, and endgame scenarios get consistent values.",
+    "source_operator": "backward_value_iteration",
+    "telemetry": "Terminal outcomes per game, stage costs per play, and successor-state frequencies from historical play-by-play."
+   }
+  },
+  {
+   "primitive_id": "forward_value_iteration",
+   "name": "Forward value iteration is the symmetric method: it computes optimal cost-to-come functions forward from the initial state, whereas the backward version solves for all initial states simultaneously",
+   "verbatim_quote": "Whereas backward value iterations were able to find optimal plans from all initial states simultaneously, forward value iterations can be used to find optimal plans",
+   "page": "Section 2.3.1.2, p. 48 (text lines 1424-1430)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single initial state (or fixed start distribution) is given",
+    "Stage costs are additive"
+   ],
+   "breakdown_regime": "Forward iteration answers only the asked question; changing the initial state restarts the computation, unlike the backward pass.",
+   "domain": "dynamic programming",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine runs both directions: forward cost-to-come grades how a team arrived at its current state (form, fatigue, path difficulty), backward cost-to-go grades what the state is worth from here. Disagreement between the two directions is itself a signal.",
+    "source_operator": "forward_value_iteration",
+    "telemetry": "Path summaries per team (schedule path, rest path, injury path) paired with forward-looking state values."
+   }
+  },
+  {
+   "primitive_id": "termination_action",
+   "name": "A special termination action uT, available in every state, leaves the state unchanged and accumulates no cost; it is the key device that lets fixed-stage machinery express plans of different lengths",
+   "verbatim_quote": "The termination action is the key to allowing plans of diﬀerent lengths.",
+   "page": "Section 2.3, Formulation 2.3, pp. 51-52 (text lines 1493-1505)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Applying uT keeps the state fixed forever with zero additional cost",
+    "Costs are nonnegative so optimal plans never loop profitably"
+   ],
+   "breakdown_regime": "If negative-cost cycles existed, plans would loop forever and optimal cost would dive to negative infinity; the model assumes such cycles away.",
+   "domain": "dynamic programming",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine needs the same device: a pass. A no-bet, no-action, or hold state that costs nothing and changes nothing lets variable-length reasoning (wait for more information, skip a game, defer a conclusion) live inside fixed evaluation machinery without distortion.",
+    "source_operator": "termination_action",
+    "telemetry": "Decision logs marking explicit passes and holds, with the information state at the moment of the pass."
+   }
+  },
+  {
+   "primitive_id": "strips_predicate_representation",
+   "name": "STRIPS-like planning represents a huge state transition graph implicitly with finite sets of instances, binary-valued predicates, and operators given by preconditions and effects",
+   "verbatim_quote": "A finite, nonempty set P of predicates, which are binary-valued (partial)",
+   "page": "Section 2.4, Formulation 2.4 (text lines 1660-1690)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "States are sets of literals over predicate instances",
+    "Operators apply exactly when their precondition literals hold, and toggle their effect literals"
+   ],
+   "breakdown_regime": "The implicit graph can be exponentially larger than the representation, and planning in this formulation is NP-hard in general; compactness is bought with search difficulty.",
+   "domain": "logic representations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine knowledge is stored the same way: predicates over entities (player available, surface is turf, wind above threshold) and operators (lineup change, weather front) that flip them. The full situation graph is never materialized; rules generate only the states a query touches.",
+    "source_operator": "strips_predicate_representation",
+    "telemetry": "Predicate evaluations per game situation from roster, weather, and matchup feeds."
+   }
+  },
+  {
+   "primitive_id": "configuration_space_rigid_body",
+   "name": "The configuration space of a rigid body that rotates and translates in R3 is C = R3 x RP3, a six-dimensional manifold whose dimension equals the body's degrees of freedom",
+   "verbatim_quote": "which is a six-dimensional manifold. As expected, the dimension of C is exactly",
+   "page": "Section 4.2.2, pp. 153-154 (text lines 4130-4200)",
+   "latex": "C = \\mathbb{R}^3 \\times \\mathbb{RP}^3",
+   "symbol_and_unit_ledger": {
+    "C": "configuration space of the rigid body",
+    "\\mathbb{R}^3": "translation component (position in the world)",
+    "\\mathbb{RP}^3": "rotation component, the projective space parameterizing SO(3)"
+   },
+   "assumptions": [
+    "The body is rigid and free-floating: no joints or contacts restrict it",
+    "Rotations are taken modulo the antipodal identification on S3"
+   ],
+   "breakdown_regime": "Joint limits, contacts, and closed chains carve the true C-space down to subsets with no comparably clean global parameterization.",
+   "domain": "configuration space",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's situation space follows the same construction: a product of independent factor spaces (score, clock, personnel, field position, weather), whose total dimension is the sum of the factor dimensions. Knowing the true dimension of the space is what keeps coverage claims honest.",
+    "source_operator": "configuration_space_rigid_body",
+    "telemetry": "Factor-space inventories per sport: the named axes of the situation vector and their ranges."
+   }
+  },
+  {
+   "primitive_id": "cspace_obstacle_region",
+   "name": "The C-space obstacle region Cobs collects every configuration at which the robot body intersects an obstacle or two links intersect each other; planning happens in its complement, Cfree",
+   "verbatim_quote": "Thus, a configuration q ∈ C is in Cobs if at least one link collides with O or a pair",
+   "page": "Section 4.3.1, pp. 157-158 (text lines 4238-4265)",
+   "latex": "C_{obs} = \\{ q \\in C \\mid A(q) \\cap O \\neq \\emptyset \\}",
+   "symbol_and_unit_ledger": {
+    "C_{obs}": "configuration space obstacle region",
+    "q": "a configuration in C",
+    "A(q)": "the set of points occupied by the robot at configuration q",
+    "O": "obstacle region in the world"
+   },
+   "assumptions": [
+    "Robot and obstacle geometry are modeled exactly enough to test intersection",
+    "Collision is a binary predicate on configurations"
+   ],
+   "breakdown_regime": "Explicitly computing Cobs is intractable beyond low dimensions and simple geometry; sampling-based methods exist precisely because this set usually cannot be written down.",
+   "domain": "configuration space",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every constraint in the engine defines a forbidden region of situation space (ineligible player on the field, impossible score-clock combination, ruled-out scenario). Validity checking is membership testing against the union of those regions before any reasoning proceeds.",
+    "source_operator": "cspace_obstacle_region",
+    "telemetry": "Constraint registry per league: eligibility, rules, and feasibility predicates evaluated per situation."
+   }
+  },
+  {
+   "primitive_id": "piano_movers_problem",
+   "name": "The Piano Mover's Problem: a complete algorithm must compute a continuous path tau : [0, 1] -> Cfree from qI to qG, or correctly report that no such path exists; Reif showed the problem is PSPACE-hard",
+   "verbatim_quote": "A complete algorithm must compute a (continuous) path, τ : [0, 1] → Cf ree , such that τ (0) = qI and τ (1) = qG",
+   "page": "Section 4.3.1, Formulation 4.1 item 7 (text lines 4247-4274)",
+   "latex": "\\tau : [0, 1] \\to C_{free}, \\quad \\tau(0) = q_I, \\ \\tau(1) = q_G",
+   "symbol_and_unit_ledger": {
+    "\\tau": "continuous path in the free configuration space",
+    "q_I": "initial configuration",
+    "q_G": "goal configuration",
+    "C_{free}": "C minus Cobs, the collision-free configurations"
+   },
+   "assumptions": [
+    "Robot and obstacles are semi-algebraic sets in R2 or R3",
+    "The dimension of C is unbounded across problem instances"
+   ],
+   "breakdown_regime": "PSPACE-hard in general (Reif 1979), so complete algorithms are exponential in the worst case; practical systems retreat to sampling-based or resolution-complete methods.",
+   "domain": "motion planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's completeness ideal stated plainly: for a forecast query, either produce a justified path from evidence to conclusion or report that none exists. A system that sometimes silently fails to find an existing justification is not complete, and the distinction must be visible in outputs.",
+    "source_operator": "piano_movers_problem",
+    "telemetry": "Query logs distinguishing answered, answered-with-caveats, and no-justification-found outcomes."
+   }
+  },
+  {
+   "primitive_id": "minkowski_difference_cobs",
+   "name": "For a translating rigid robot, the C-space obstacle is a Minkowski difference: Cobs = O minus A(0), the obstacle region convolved against the negated robot shape",
+   "verbatim_quote": "In terms of the Minkowski diﬀerence, Cobs = O ⊖ A(0).",
+   "page": "Section 4.3.2, pp. 159-160 (text lines 4261-4280)",
+   "latex": "C_{obs} = O \\ominus A(0)",
+   "symbol_and_unit_ledger": {
+    "C_{obs}": "configuration space obstacle region",
+    "O": "obstacle region in the world",
+    "A(0)": "robot shape placed at the origin configuration",
+    "\\ominus": "Minkowski difference"
+   },
+   "assumptions": [
+    "The robot translates only; its orientation is fixed",
+    "Robot and obstacle are rigid sets in the same world"
+   ],
+   "breakdown_regime": "Rotation breaks the pure convolution form; articulated bodies need per-link obstacle regions unioned together, and the computation grows quickly.",
+   "domain": "configuration space",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Growing an obstacle by the shape of the moving body is the engine's margin operation: a scenario is not merely checked against a threshold, it is checked against the threshold inflated by the size of the uncertainty attached to it. Clearance is computed, not assumed.",
+    "source_operator": "minkowski_difference_cobs",
+    "telemetry": "Per-scenario uncertainty radii (projection error bars) used to inflate decision thresholds before a conclusion is certified."
+   }
+  },
+  {
+   "primitive_id": "dense_random_sampling",
+   "name": "An infinite sequence of independently, randomly chosen samples is dense with probability one, but density with probability one is not the same as a guarantee for any finite prefix",
+   "verbatim_quote": "The infinite sequence of independently, randomly chosen points is only dense with probability one, which is not the same as being guaranteed.",
+   "page": "Section 5.2, Sampling Theory (text lines 5435-5461)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Samples are drawn independently from a distribution with support over the whole space"
+   ],
+   "breakdown_regime": "Any finite sample set can still miss a narrow but critical region; the density statement is asymptotic and probabilistic, never a finite-sample certificate.",
+   "domain": "sampling theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's data coverage inherits this warning: a large historical sample is dense in the limit, but any finite window can miss a rare regime entirely. Coverage claims must name the regimes the sample cannot see, not just its size.",
+    "source_operator": "dense_random_sampling",
+    "telemetry": "Regime census of the training corpus: counts per era, weather class, and game script, with empty cells listed."
+   }
+  },
+  {
+   "primitive_id": "probabilistic_completeness",
+   "name": "Random sampling that is dense with probability one yields probabilistically complete algorithms: with enough samples, the probability of finding an existing solution converges to one",
+   "verbatim_quote": "This leads to algorithms that are probabilistically complete, which means that with enough points, the probability that it finds an existing solution converges to one.",
+   "page": "Chapter 5 introduction, p. 185 (text line 5029)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The sampling sequence is dense with probability one",
+    "A solution exists and has some clearance, so samples can fall near it"
+   ],
+   "breakdown_regime": "The convergence rate is usually very difficult to establish; probabilistic completeness promises eventual success, never success by a deadline.",
+   "domain": "sampling theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Simulation-based reasoning in the engine carries this exact grade of guarantee: run long enough and the Monte Carlo will find the scenario that matters, with probability approaching one. Reports must label conclusions with this grade instead of dressing them as proofs.",
+    "source_operator": "probabilistic_completeness",
+    "telemetry": "Simulation run lengths and scenario discovery curves per model, showing which outcomes appeared only after long runs."
+   }
+  },
+  {
+   "primitive_id": "dispersion",
+   "name": "The dispersion of a finite sample set P in a metric space (X, rho) is the radius of the largest empty ball: delta(P) = sup over x of the distance from x to its nearest sample",
+   "verbatim_quote": "An alternative way to consider dispersion is as the radius of the largest empty ball (for the L∞ metric, the balls are actually cubes).",
+   "page": "Section 5.2 (text lines 5446-5458)",
+   "latex": "\\delta(P) = \\sup_{x \\in X} \\min_{p \\in P} \\rho(x, p)",
+   "symbol_and_unit_ledger": {
+    "\\delta(P)": "dispersion of the sample set P",
+    "X": "metric space being sampled",
+    "\\rho(x, p)": "distance from point x to sample p",
+    "sup / min": "the farthest any point of X sits from its nearest sample"
+   },
+   "assumptions": [
+    "A metric rho on X is fixed in advance",
+    "P is a finite set of samples"
+   ],
+   "breakdown_regime": "Dispersion is defined with respect to one chosen metric; a set can have low dispersion under a metric that ignores the dimensions that matter, and computing it exactly is itself hard in high dimensions.",
+   "domain": "sampling theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dispersion is the engine's coverage metric: not how many historical games were ingested, but the largest gap between a situation that can occur and the nearest situation the corpus actually contains. Model risk concentrates exactly in the largest empty ball.",
+    "source_operator": "dispersion",
+    "telemetry": "Nearest-neighbor distances from live game situations to the historical corpus, reported as a worst-gap figure per week."
+   }
+  },
+  {
+   "primitive_id": "resolution_completeness",
+   "name": "A grid-based planner that can increase its resolution arbitrarily is resolution complete: refinement, not luck, is what closes the gap to a complete algorithm",
+   "verbatim_quote": "If a grid-based motion planning algorithm can increase the resolution arbitrarily, it becomes resolution complete.",
+   "page": "Section 5.2 (text lines 5435-5443)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The underlying space admits arbitrarily fine grids",
+    "A solution, if one exists, survives at some finite resolution"
+   ],
+   "breakdown_regime": "Resolution completeness still gives no fixed budget: a solution hidden below the current grid scale is reported as absent until refinement reaches it.",
+   "domain": "sampling theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's discretization choices (binning continuous factors like wind, rest days, or line movement) inherit this standard: any binned analysis must be refinable, and conclusions that flip under refinement were resolution artifacts, not findings.",
+    "source_operator": "resolution_completeness",
+    "telemetry": "Sensitivity runs repeating key analyses at two or three bin resolutions, with flips flagged."
+   }
+  },
+  {
+   "primitive_id": "rrt_density",
+   "name": "The rapidly-exploring random tree (RRT) is dense in the limit with probability one, so its tree gets arbitrarily close to any point in the space",
+   "verbatim_quote": "However, the RRT is dense in the limit (with probability one), which means that",
+   "page": "Section 5.4 (text lines 6124-6174)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Samples guiding the tree are random and dense in the limit",
+    "Local extension from the nearest tree vertex is always attempted"
+   ],
+   "breakdown_regime": "Density is asymptotic; finite trees have Voronoi bias toward unexplored regions but no coverage certificate, and narrow passages are reached slowly.",
+   "domain": "sampling-based planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exploration in the engine borrows the RRT bias: grow the reasoning tree toward the largest unexplored region of scenario space rather than re-sampling the crowded center. Novel situations get attention proportional to their emptiness, not their familiarity.",
+    "source_operator": "rrt_density",
+    "telemetry": "Scenario-tree growth logs: which regions of factor space each analysis pass expanded into."
+   }
+  },
+  {
+   "primitive_id": "sampling_based_roadmap_prm",
+   "name": "The framework introduced in [516] as probabilistic roadmaps (PRMs) samples configurations and incrementally connects each new sample to nearby vertices, building a reusable roadmap graph",
+   "verbatim_quote": "presented here was mainly introduced in [516] under the name probabilistic roadmaps (PRMs).",
+   "page": "Section 5.6 (text lines 6388-6410)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A distance metric and a local planner decide which nearby vertices a new sample connects to",
+    "The roadmap is built once and reused across many queries"
+   ],
+   "breakdown_regime": "Roadmap quality depends on the metric and local planner; queries whose endpoints land in poorly connected components fail even when paths exist.",
+   "domain": "sampling-based planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's knowledge graph is a roadmap in this sense: situations are vertices, validated transitions are edges, and a forecast query is answered by connecting the current situation into the graph and searching it, rather than reasoning from scratch every time.",
+    "source_operator": "sampling_based_roadmap_prm",
+    "telemetry": "Graph statistics per sport: vertex count, edge count, and the size of the largest connected component covering live queries."
+   }
+  },
+  {
+   "primitive_id": "combinatorial_exact_algorithms",
+   "name": "Combinatorial motion planning methods are called exact algorithms: they construct roadmaps and decompositions without approximation, in contrast to sampling-based methods",
+   "verbatim_quote": "they are alternatively referred to as exact algorithms. This is in contrast to the sampling-based motion planning",
+   "page": "Section 6.1 (text lines 6688-6760)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Robot and obstacle geometry admit exact combinatorial representation (for example, semi-algebraic or polygonal models)"
+   ],
+   "breakdown_regime": "Exactness is paid for in complexity: several classical complete algorithms are so intricate they are effectively unimplementable, and running times explode with dimension and input size.",
+   "domain": "combinatorial planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps the same two shelves: exact methods where the domain permits them (closed-form combinatorics, exact enumeration of small state spaces) and sampling methods where it does not. Labeling which shelf a number came off is part of the number.",
+    "source_operator": "combinatorial_exact_algorithms",
+    "telemetry": "Method registry per engine output: exact, resolution-based, or sampling-based, with the approximation grade recorded."
+   }
+  },
+  {
+   "primitive_id": "combinatorial_completeness",
+   "name": "A complete algorithm will either find a solution or correctly report that no solution exists, for every instance in the class it is designed for",
+   "verbatim_quote": "the algorithm will either find a solution or will correctly report that no",
+   "page": "Section 6.1 (text lines 6688-6760)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The instance belongs to the problem class the algorithm was designed for",
+    "The input representation is exact"
+   ],
+   "breakdown_regime": "Completeness is always relative to a stated class; outside that class the same algorithm may fail silently, which is why the class boundary must travel with the claim.",
+   "domain": "combinatorial planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine verdict inherits this definition: a pass, a no-play, or a no-conclusion is only meaningful if the system would have found the conclusion when one existed inside its stated class. Silent absence and proven absence are different outputs and are reported differently.",
+    "source_operator": "combinatorial_completeness",
+    "telemetry": "Per-class coverage statements attached to engine outputs, naming the instance class each verdict was complete over."
+   }
+  },
+  {
+   "primitive_id": "feedback_plan_first_action_sufficiency",
+   "name": "For a feedback plan it is sufficient to store, at each state, only the first action of the optimal sequence from that state; execution then reads the stored action state by state until the goal is reached",
+   "verbatim_quote": "It is suﬃcient at each state to keep only the first action in the sequence.",
+   "page": "Section 8.2, pp. 373-374 (text lines 9830-9875)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Costs are stage-additive so the principle of optimality holds",
+    "The state is fully observed at execution time"
+   ],
+   "breakdown_regime": "Storing one action per state assumes the future state will be known when reached; under sensing uncertainty the plan must be defined over information states instead.",
+   "domain": "feedback planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's policy compression: a full contingency tree collapses into a lookup from situation to recommended action. The tree is the analysis; the stored first action per situation is the deployable artifact, and it stays valid because optimality is recursive.",
+    "source_operator": "feedback_plan_first_action_sufficiency",
+    "telemetry": "Policy tables per sport: situation keys mapped to recommended actions, regenerated whenever the underlying values change."
+   }
+  },
+  {
+   "primitive_id": "optimal_navigation_function",
+   "name": "An optimal navigation function is defined as the optimal cost-to-go G*; a discrete navigation function satisfies the Bellman equation phi(x) = min over u of l(x, u) + phi(f(x, u))",
+   "verbatim_quote": "An optimal navigation function is defined as the optimal cost-to-go, G∗ .",
+   "page": "Section 8.2.2 (text line 9916)",
+   "latex": "\\phi(x) = \\min_{u \\in U(x)} \\left[ l(x, u) + \\phi(f(x, u)) \\right]",
+   "symbol_and_unit_ledger": {
+    "\\phi": "navigation function (cost-to-go) on states",
+    "l(x, u)": "stage cost of action u at state x",
+    "f(x, u)": "successor state",
+    "G^*": "the optimal cost-to-go function"
+   },
+   "assumptions": [
+    "The cost functional is stage-additive",
+    "A navigation function must additionally decrease toward the goal along its own gradient or greedy steps"
+   ],
+   "breakdown_regime": "Not every cost-to-go function is a navigation function: local minima away from the goal trap greedy execution, which is why the extra conditions in Section 8.2.2 exist.",
+   "domain": "feedback planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's state values are navigation functions in this sense: following the locally best action from any state must actually lead toward the goal, not into a local minimum. A value surface with traps produces confident, wrong guidance and has to be rejected at validation.",
+    "source_operator": "optimal_navigation_function",
+    "telemetry": "Value-surface audits: greedy rollouts from sampled states checking that values decrease toward terminal outcomes."
+   }
+  },
+  {
+   "primitive_id": "single_stage_cost_function",
+   "name": "Single-stage decision theory starts from a cost function L : U -> R union {inf}; the best action is u* = argmin over U of L(u) (Formulation 9.1, equation 9.1)",
+   "verbatim_quote": "A function L : U → R ∪ {∞} called the cost function.",
+   "page": "Section 9.1, Formulation 9.1, pp. 439-440 (text lines 11536-11550)",
+   "latex": "u^* = \\arg\\min_{u \\in U} L(u)",
+   "symbol_and_unit_ledger": {
+    "u^*": "the best (minimum-cost) action",
+    "U": "action space of the decision maker",
+    "L(u)": "cost of action u, possibly infinite"
+   },
+   "assumptions": [
+    "There is only one decision and no state carries across stages",
+    "A minimum exists, or the infimum convention is adopted explicitly"
+   ],
+   "breakdown_regime": "On open or unbounded action sets the minimum may not be attained (the text's example: U = (-1, 1), L(u) = u); existence of an optimizer is a condition to check, not a given.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every atomic engine choice is this problem: a set of candidate actions and a cost for each, minimized. The textbook warning transfers directly: when the action set is open (always one more tweak), report the infimum and the fact that it is not attained instead of inventing an optimizer.",
+    "source_operator": "single_stage_cost_function",
+    "telemetry": "Choice logs where the selected action, its evaluated cost, and the runner-up cost are all recorded."
+   }
+  },
+  {
+   "primitive_id": "nature_as_decision_maker",
+   "name": "Uncertainty is modeled by a special decision maker called nature, a fictitious second player whose choices the primary decision maker cannot predict or control",
+   "verbatim_quote": "special DM called nature will be used as a universal way to model uncertainties.",
+   "page": "Section 9.1, pp. 439-440 (text lines 11536-11580)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nature's choices are not made for nature's own benefit; nature is a modeling device, unless a true game-theoretic opponent is intended"
+   ],
+   "breakdown_regime": "Treating nature as an adversary when it is merely random yields worst-case paralysis; treating an adversary as random yields exploitable plans. The modeler must choose which nature is.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine names its uncertainty source in every model: opponent behavior is a true second decision maker and gets game-theoretic treatment, while weather and officiating are fictitious nature and get distributional treatment. Confusing the two is a modeling error with opposite failure directions.",
+    "source_operator": "nature_as_decision_maker",
+    "telemetry": "Model cards per signal stating whether the uncertainty source is adversarial, random, or mixed, and which analysis was applied."
+   }
+  },
+  {
+   "primitive_id": "nature_action_space_mdp",
+   "name": "Formulation 10.1 adds to discrete planning a finite nature action space Theta(x, u) for each state and chosen action, so transitions become f(x, u, theta) with theta outside the planner's control",
+   "verbatim_quote": "A finite, nonempty nature action space Θ(x, u) for each x ∈ X and u ∈ U (x).",
+   "page": "Section 10.1, Formulation 10.1, pp. 497-498 (text lines 13152-13203)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nature's action set is finite and known once x and u are fixed",
+    "The planner observes its own action and the resulting state, not nature's action directly"
+   ],
+   "breakdown_regime": "If nature's action space is misspecified (an outcome exists that no theta produces), every guarantee built on the formulation is void for that outcome.",
+   "domain": "sequential decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine transitions are modeled exactly this way: our action (the forecast stance, the lineup assumption) plus nature's action (the bounce, the flag, the late scratch) jointly determine the next state. Scenario design is the enumeration of Theta for the states that matter.",
+    "source_operator": "nature_action_space_mdp",
+    "telemetry": "Scenario enumerations per key game state, listing the nature outcomes considered and any explicitly excluded."
+   }
+  },
+  {
+   "primitive_id": "controlled_markov_process_mdp",
+   "name": "With probabilistic uncertainty over nature's actions, Formulation 10.1 is a controlled Markov process, or Markov decision process (MDP), with transition probabilities P(x_{k+1} | x_k, u_k) obtained by accumulating nature's probability mass",
+   "verbatim_quote": "referred to as a controlled Markov process or Markov decision process (MDP).",
+   "page": "Section 10.1 (text lines 13202-13203)",
+   "latex": "P(x_{k+1} \\mid x_k, u_k)",
+   "symbol_and_unit_ledger": {
+    "P(x_{k+1} | x_k, u_k)": "probability of transitioning to state x_{k+1} when action u_k is applied at state x_k",
+    "x_k, u_k": "current state and planner action at stage k"
+   },
+   "assumptions": [
+    "The Markov property: the transition depends on history only through the current state and action",
+    "Probabilities over nature's actions are known or estimable"
+   ],
+   "breakdown_regime": "If the current state does not capture everything history-dependent (fatigue, hidden injuries, momentum), the Markov assumption fails and the MDP values are systematically wrong.",
+   "domain": "sequential decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's probabilistic core is an MDP: situation, action, transition distribution. The discipline this imposes is naming what the state must contain for the Markov property to be approximately true, and testing that approximation instead of assuming it.",
+    "source_operator": "controlled_markov_process_mdp",
+    "telemetry": "Markov checks: outcome predictability with and without history features beyond the current state, per sport."
+   }
+  },
+  {
+   "primitive_id": "feedback_plan_function_mdp",
+   "name": "A plan for the uncertain sequential problem is a feedback plan: a function pi : X -> U that produces the action pi(x) in U(x) for every state x, so the action is known whatever future state occurs",
+   "verbatim_quote": "function π : X → U that produces an action π(x) ∈ U (x), for each x ∈ X.",
+   "page": "Section 10.1.3 (text line 13409)",
+   "latex": "\\pi : X \\to U, \\quad \\pi(x) \\in U(x)",
+   "symbol_and_unit_ledger": {
+    "\\pi": "feedback plan (policy)",
+    "X": "state space",
+    "U": "action space, with pi(x) required to lie in U(x)"
+   },
+   "assumptions": [
+    "The state realized at each stage will be observed before the next action is chosen"
+   ],
+   "breakdown_regime": "A state-feedback plan is undefined the moment the state is not observable; that failure is what forces the move to information states in Chapters 11 and 12.",
+   "domain": "sequential decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine outputs are policies, not scripts: a mapping from whatever situation actually occurs to the action that situation calls for. A forecast that only works if the game follows one scripted path is an open-loop plan and is graded as fragile.",
+    "source_operator": "feedback_plan_function_mdp",
+    "telemetry": "Policy coverage checks: for each reachable situation class, whether the engine's recommendation is defined or missing."
+   }
+  },
+  {
+   "primitive_id": "discounted_cost_model",
+   "name": "The discounted cost model shrinks per-stage costs by a factor alpha in (0, 1) per stage, so the infinite-horizon total is a geometric series that converges to a finite value",
+   "verbatim_quote": "The discounted cost model shrinks the per-stage costs as the stages extend into the future; this yields a geometric series for the total cost that converges to a finite value.",
+   "page": "Section 10.2, Formulation 10.2 discussion (text lines 13858-13880)",
+   "latex": "\\sum_{k=0}^{\\infty} \\alpha^k l_k, \\quad 0 < \\alpha < 1",
+   "symbol_and_unit_ledger": {
+    "\\alpha": "discount factor per stage",
+    "l_k": "cost incurred at stage k",
+    "the sum": "total discounted cost over the infinite horizon"
+   },
+   "assumptions": [
+    "Per-stage costs are bounded",
+    "The same discount factor applies at every stage"
+   ],
+   "breakdown_regime": "Discounting is a modeling choice with real consequences: it declares far-future costs nearly irrelevant, so long-horizon effects (development, health, cap consequences) are underweighted by construction.",
+   "domain": "sequential decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Time preference inside the engine is explicit and parameterized the same way: near-term evidence and near-term consequences weigh more, with a stated alpha. Hidden discounting (recency bias in features) is the failure mode this formulation exists to expose.",
+    "source_operator": "discounted_cost_model",
+    "telemetry": "The alpha used by each model, logged with sensitivity of headline outputs to alpha perturbations."
+   }
+  },
+  {
+   "primitive_id": "information_space_known_state",
+   "name": "The information space I is itself a state space whose state (the information state) is always known to the planner, because it is derived from the planner's own action and observation history",
+   "verbatim_quote": "One nice feature is that the state in this special space is always known.",
+   "page": "Section 11.1 (text lines 15131-15177)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The planner remembers its own actions and observations exactly",
+    "An information mapping updates the I-state after each action and observation"
+   ],
+   "breakdown_regime": "The I-state can grow without bound (the full history), so practical systems need sufficient statistics that compress it; a bad compression silently discards decision-relevant information.",
+   "domain": "information spaces",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's central representational move: when the true state is hidden, reason over the information state (everything observed so far) as if it were the state. Injury status, opponent tendencies, and game script are all I-states, and they are the only states the engine ever actually holds.",
+    "source_operator": "information_space_known_state",
+    "telemetry": "Information-state snapshots per prediction: the exact observation history the conclusion was derived from, stored with the output."
+   }
+  },
+  {
+   "primitive_id": "sensor_mapping",
+   "name": "A sensor mapping h produces the observation y = h(x, psi) for each state x and nature sensing action psi in Psi(x) (Formulation 11.1, item 7)",
+   "verbatim_quote": "A sensor mapping h which produces an observation, y = h(x, ψ), for each x ∈ X and ψ ∈ Ψ(x).",
+   "page": "Section 11.1, Formulation 11.1 item 7 (text lines 15131-15190)",
+   "latex": "y = h(x, \\psi)",
+   "symbol_and_unit_ledger": {
+    "y": "observation produced by the sensor",
+    "h": "sensor mapping",
+    "x": "true state (not directly observed)",
+    "\\psi": "nature sensing action from Psi(x), capturing sensor noise and interference"
+   },
+   "assumptions": [
+    "Observations depend on the state and on nature's sensing action, not on the planner's wishes",
+    "The observation space Y is finite or countably infinite in the discrete model"
+   ],
+   "breakdown_regime": "If the sensor mapping is wrong (a data feed that does not measure what it claims), every downstream I-state is corrupted while remaining internally consistent.",
+   "domain": "information spaces",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine data feed is a sensor mapping with a noise model: the box score, the tracking feed, and the injury report are observations y of a hidden state x, produced through a channel that has its own failure modes. Feeds are modeled, never treated as the state itself.",
+    "source_operator": "sensor_mapping",
+    "telemetry": "Feed documentation per source: what state variable it observes, its known noise and delay characteristics, and its outage history."
+   }
+  },
+  {
+   "primitive_id": "expected_case_optimal_plan_ispace",
+   "name": "Under probabilistic uncertainty, an optimal information-space plan minimizes the expected total cost G^pi(eta_0) = E over H(pi, eta_0) of L (equation 11.23), the expectation taken over all histories the plan can generate",
+   "verbatim_quote": "The task is to find a plan π ∈ Π that minimizes",
+   "page": "Section 11.1 (text lines 15166-15230)",
+   "latex": "G^\\pi(\\eta_0) = \\mathbb{E}_{H(\\pi, \\eta_0)}\\left[ L(\\tilde{x}, \\tilde{u}) \\right]",
+   "symbol_and_unit_ledger": {
+    "G^\\pi(\\eta_0)": "expected cost of plan pi from initial information state eta_0",
+    "H(\\pi, \\eta_0)": "the set of state and action histories generated by pi from eta_0, with their probabilities",
+    "L(\\tilde{x}, \\tilde{u})": "stage-additive cost of a full history"
+   },
+   "assumptions": [
+    "A probability distribution over histories exists and is the right uncertainty model",
+    "Expectation is the agreed risk criterion"
+   ],
+   "breakdown_regime": "Expected-case optimality is silent about the tail: a plan can be expectation-optimal while carrying a catastrophic low-probability outcome, which is why the text pairs it with worst-case analysis (equation 11.22).",
+   "domain": "information spaces",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine plan selection is expectation over generated histories: a strategy is graded by the distribution of full game histories it produces, not by its performance along the single most likely history. Tail behavior is then reported separately, beside the expectation, by design.",
+    "source_operator": "expected_case_optimal_plan_ispace",
+    "telemetry": "Full simulated history distributions per strategy, with mean and tail quantiles both stored."
+   }
+  },
+  {
+   "primitive_id": "differential_constraints_local",
+   "name": "Differential constraints restrict the allowable velocities at each point of the space; they are local constraints, in contrast to the global constraints imposed by obstacles on the configuration set",
+   "verbatim_quote": "The next few chapters introduce differential constraints, which restrict the allowable velocities at each point. These can be considered as local constraints, in contrast to the global constraints that arise due to obstacles.",
+   "page": "Chapter 13 introduction (text lines 18810-18860)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The constraint is expressible as a restriction on the velocity (and possibly higher derivatives) at each state"
+   ],
+   "breakdown_regime": "Local feasibility does not compose into global feasibility: a path can satisfy every local constraint and still fail to connect start to goal, which is the whole difficulty of nonholonomic planning.",
+   "domain": "differential constraints",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine separates the same two constraint classes: global feasibility (does this scenario violate any hard rule of the sport) and local transition feasibility (can the game actually move from this state to that one in one step). Checking only one class is the classic source of impossible forecasts.",
+    "source_operator": "differential_constraints_local",
+    "telemetry": "Transition feasibility tables per sport: which state-to-state moves are legal in one step, independent of their probability."
+   }
+  },
+  {
+   "primitive_id": "phase_transition_equation",
+   "name": "Planning under differential constraints is written over the phase (state) transition equation x-dot = f(x, u); higher-order constraints are reduced to first order by enlarging the state to a phase space",
+   "verbatim_quote": "The state (or phase) transition equation ẋ = f (x, u) is",
+   "page": "Section 13.2 (text lines 19420-19440)",
+   "latex": "\\dot{x} = f(x, u)",
+   "symbol_and_unit_ledger": {
+    "\\dot{x}": "time derivative of the state (velocity and higher derivatives as state components)",
+    "x": "phase state, including positions and their derivatives",
+    "u": "control input",
+    "f": "system dynamics"
+   },
+   "assumptions": [
+    "f is well-defined on the phase space and solutions exist for the applied controls (Lipschitz conditions suffice)",
+    "The state includes enough derivatives to make the system first-order"
+   ],
+   "breakdown_regime": "Existence of solutions is not reachability: the equation can be perfectly well-posed while the goal is unreachable under the dynamics and input bounds, and small-time local controllability can fail entirely.",
+   "domain": "differential constraints",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Continuous engine dynamics (win probability flow, pace evolution, fatigue accumulation) are written in this form: a state, a control or event input, and a rate law. Augmenting the state with derivatives (trend, acceleration of scoring) is the phase-space move, done explicitly rather than by ad hoc features.",
+    "source_operator": "phase_transition_equation",
+    "telemetry": "Rate-law specifications per continuous model: state components, inputs, and the fitted or derived f."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "f5715d29ba50a843-t1",
+   "think": "Planning Algorithms is Steven LaValle's attempt to write one book about every field that computes a course of action: robotics motion planning, artificial intelligence search, control theory, and decision theory under uncertainty. Its spine is a single idea that survives every chapter: a planning problem is a state space, a way to move through it, and a question asked about the movement. Chapter 2 fixes the discrete version in Formulation 2.1, five components that never really change again: states, actions per state, a transition function, an initial state, and a goal set. Everything later is a variation. The configuration space of Chapter 4 is the state space of a robot once geometry is folded into it, and the obstacle region is simply the set of states that are forbidden. The information space of Chapter 11 is the state space of a planner who cannot see the state, built from histories of actions and observations. Recognizing that each new space is the same object in costume is what lets the book reuse its machinery so aggressively: search algorithms from Chapter 2 reappear inside sampling-based planners, value iteration from discrete planning reappears for Markov decision processes and again over information spaces, and the feedback plan of Chapter 8 becomes the policy of Chapter 10 with only the uncertainty model changed. The middle of the book is a taxonomy of guarantees, and it is worth being precise about them because they are not interchangeable. A complete algorithm finds a solution or proves none exists, and Chapter 6 shows such algorithms exist for broad classes of motion planning problems, at the price of PSPACE-hard worst cases inherited from the Piano Mover's Problem. A resolution complete algorithm trades the guarantee for a refinement parameter: fail at one resolution and the honest statement is only that no coarse solution was found. A probabilistically complete algorithm trades determinism for an asymptotic promise, that dense random sampling finds an existing solution with probability converging to one, with the rate usually unknown. Sampling theory gives this trade its quantitative language: density says where samples eventually reach, and dispersion measures the largest empty ball in a finite sample set, which is exactly where undiscovered solutions hide. The RRT and the probabilistic roadmap are the two canonical ways to spend samples, growing a tree toward unexplored volume or wiring samples into a reusable graph. The second half of the book changes what a plan is. An open-loop plan is a sequence of actions; a feedback plan is a function from states to actions, and the text shows the compression that makes feedback plans practical: store only the first action of the optimal sequence at each state, because optimality is recursive and the successor state's stored action takes over on arrival. Once nature enters as a second, fictitious decision maker, the transition function gains a third argument, transition probabilities accumulate over nature's actions, and the problem becomes a Markov decision process whose plans are policies and whose costs may be discounted into a convergent geometric series. When the state is not even observable, the planner's true state is its information state, the sensor mapping becomes part of the model, and optimality splits into worst-case and expected-case analyses over the set of histories a plan can generate. Part IV then reintroduces the body: differential constraints restrict velocities locally, the phase transition equation x-dot equals f of x and u replaces the discrete transition function, and higher-order dynamics are folded into a first-order system by enlarging the state. For a reasoning engine, the book's deepest lesson is that these are not twenty topics but one discipline: define the space, define the moves, state the guarantee grade honestly, and never confuse the observation with the state. Several supporting constructions deserve the same attention as the headline formulations. The generic search template of Chapter 2, in which a priority queue and a sorting function generate breadth-first search, Dijkstra's algorithm, A-star, and best-first search as special cases, is the book's first demonstration that algorithms are parameterizations of one schema rather than isolated inventions. The STRIPS-like formulation of Section 2.4 makes the complementary point about representation: a planning problem can be specified by predicates and operators that implicitly describe an astronomically large state transition graph, so the input to an algorithm is a compression scheme and complexity must be charged against the compressed size. Chapter 6 adds the roadmap idea in its strict form, where cell decompositions of the free space and visibility or Voronoi roadmaps convert a continuous problem into a finite graph without surrendering completeness, and Chapter 8 adds the subtle extra conditions that turn a mere cost-to-go function into a navigation function whose greedy descent cannot be trapped. Section 11.2 answers the obvious objection to history information states, that they grow without bound, by replacing them with derived information states and sufficient statistics when the model permits, which is the planning counterpart of estimation theory's filters. Chapter 12 then shows planning itself being performed inside the information space under sensing uncertainty, including sensorless and underactuated cases where actions must shrink uncertainty before they can exploit it. Chapters 13 to 15 close the loop back to physics: differential constraints are classified, boundary value problems and controllability are confronted, and the final chapter argues that task planning, motion planning, and information gathering are one problem viewed at three scales. Read as a whole, the book is less a catalog of algorithms than a worked example of how to build a science: fix the objects, prove what the methods promise, and mark precisely where each promise expires.",
+   "retrocausal_genealogy": "The lineage runs through several fields that rarely cite each other. Discrete planning descends from Shakey the robot and STRIPS in the early 1970s, and from the graph search tradition of Dijkstra (1959) and Hart, Nilsson, and Raphael's A-star (1968). Motion planning begins with Lozano-Perez's configuration space formulation around 1979 and Reif's PSPACE-hardness result for the Piano Mover's Problem the same year, which set the field's expectations permanently. Sampling-based planning arrived in the 1990s with Kavraki's probabilistic roadmaps and LaValle's own rapidly-exploring random trees (1998), born from the realization that exact C-space computation was a dead end in high dimensions. The decision-theoretic half descends from Bellman's dynamic programming and Howard's Markov decision processes, filtered through control theory's state-space tradition, and the information space chapters synthesize the stochastic control literature on partially observable systems. LaValle, a robotics professor at the University of Illinois, wrote the book as a unification project: one notation, one set of formulations, four fields.",
+   "theory_of_mind": "LaValle believes the reader's core confusion is terminological: roboticists, AI researchers, and control theorists use different words for the same structures and therefore miss each other's results. His model of the domain is that planning is a single mathematical subject whose instances differ only in the state space, the transition model, and the uncertainty model, so he writes every subfield into numbered formulations that deliberately echo Formulation 2.1. He also believes in honesty about complexity: hardness results and guarantee grades are stated next to the algorithms, not in footnotes, because a practitioner who cannot say what grade of promise an algorithm makes does not yet understand the algorithm. The book is written to be read in layers, with core sections marked, which reflects a teacher's model of the reader: build the discrete intuition first, then trust it to carry the continuous and uncertain cases.",
+   "cross_layer_veto": "Several ideas in this book veto sloppy reasoning elsewhere. The completeness taxonomy vetoes any claim of absence that was produced by an incomplete method: a sampling-based search that found nothing has not proven that nothing exists. The dispersion definition vetoes coverage claims based on sample counts alone, since a million samples can still leave a large empty ball. The admissibility condition vetoes confident pruning: an overestimating heuristic silently destroys optimality guarantees, so bounds used for certification must be one-sided. The information space chapters veto state amnesia: a decision procedure that conditions on less than the full observation history, without a proven sufficient statistic, is solving a different problem than the one it was given. Finally, the local-versus-global distinction for differential constraints vetoes step-by-step feasibility arguments for global reachability."
+  }
+ ],
+ "universal_lens": "Any discipline that acts in a world it partly observes is doing planning in LaValle's sense: there is a space of situations, a set of moves, a cost for moving, and information that arrives as you go. The book's portable template is to name those four objects explicitly before choosing any technique, and then to state what grade of guarantee the technique carries: complete, resolution complete, probabilistically complete, or none. Most failed decision systems, in any field, fail at the naming step: the state was never defined, the forbidden region was never written down, or an asymptotic promise was quoted as a finite one.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as its foundations text for reasoning about games: a game is a state space with a transition function, a policy is a feedback plan, and an information state is what a coach or analyst actually holds at decision time. Its research program inherits the book's standards directly: coverage of historical data is reported as dispersion over situation space rather than raw counts, methods are labeled by guarantee grade, and the distinction between adversarial nature (an opponent) and random nature (weather, bounces) is maintained in every model the institute publishes or teaches.",
+ "gse_mapping": "The Galaxy Sports Edge engine adopts the book's architecture wholesale: situations are states, events are transitions, forecasts are policies rather than scripts, and hidden information (injuries, intentions, readiness) is handled with information states built from observation histories, never treated as known state. Value surfaces must behave as navigation functions, worst-case and expected-case analyses are reported side by side, and every output carries the completeness grade of the method that produced it, so a sampling-based conclusion is never presented with the authority of an exact one."
+}

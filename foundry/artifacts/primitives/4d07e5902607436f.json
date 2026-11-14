@@ -1,0 +1,877 @@
+{
+ "book_id": "4d07e5902607436f",
+ "source_status": "COMPLETE",
+ "source_note": "Shai Shalev-Shwartz, 'Online Learning and Online Convex Optimization', Foundations and Trends in Machine Learning, Vol. 4, No. 2 (2011), pp. 107-194; copyright 2012 S. Shalev-Shwartz; DOI 10.1561/2200000018. Author affiliation as printed: Benin School of Computer Science and Engineering, The Hebrew University of Jerusalem, Israel. Local file: ShalevShwartz-2012-OnlineLearningAndOnlineConvexOptimization.pdf, 575,618 bytes; byte-identical copies sit in the books-d-models and books-must-have buckets (raw file sha256 140827dee461b0fa2ad6a28b0bc260d7c7439eab70e5b4aaee1c7530f4a0a3d7). Scan digest sha256(str(size) + file bytes) = 4d07e5902607436f0eff03e008302f670b2ee67047ee76cdd51712b40c4bb579, giving book_id 4d07e5902607436f. Cataloging note: the journal issue is dated 2011 while the copyright and common citation year is 2012, matching the filename. Text extraction is clean prose; displayed mathematics contains occasional missing-glyph boxes, so verbatim quotes were deliberately chosen from clean prose passages and every quote was machine-checked as a contiguous substring of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "online_learning_protocol",
+   "name": "Online learning protocol: sequential rounds of question, prediction, revealed answer, and loss, with no statistical assumptions on the sequence",
+   "verbatim_quote": "Online learning is performed in a sequence of consecutive rounds, where at round t the learner is given a question, xt , taken from an instance domain X , and is required to provide an answer to this question, which we denote by pt .",
+   "page": "Section 1 (printed p. 108); extracted-text line 105",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The sequence of questions and answers may be deterministic, stochastic, or adversarially adaptive to the learner's past behavior",
+    "The correct answer to each round is revealed after the prediction is made"
+   ],
+   "breakdown_regime": "Without some restriction (realizability, randomization, or a structured comparator class) the protocol admits Cover's impossibility: an adversary answering opposite to the learner forces maximal loss every round",
+   "domain": "online learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's prediction cycle is an online round: features arrive, a prediction is issued, the outcome is graded, and the loss is logged before the next round. This primitive fixes the audit schema for every sequential update the engine performs.",
+    "source_operator": "online_learning_protocol",
+    "telemetry": "Per-round prediction logs with timestamps, issued predictions, revealed outcomes, and realized losses"
+   }
+  },
+  {
+   "primitive_id": "regret_definition",
+   "name": "Regret: cumulative loss of the learner minus cumulative loss of the best fixed competing hypothesis in hindsight (Equations 1.1-1.2)",
+   "verbatim_quote": "We restate the learner's goal as having the lowest possible regret relative to H.",
+   "page": "Section 1 (printed pp. 110-111)",
+   "latex": "Regret_T(h^*) = \\sum_{t=1}^{T} \\ell(p_t, y_t) - \\sum_{t=1}^{T} \\ell(h^*(x_t), y_t)",
+   "symbol_and_unit_ledger": {
+    "T": "number of rounds, dimensionless count",
+    "p_t": "learner prediction at round t",
+    "y_t": "true answer at round t",
+    "h^*": "competing hypothesis from class H",
+    "x_t": "question at round t",
+    "ell": "loss function, in loss units"
+   },
+   "assumptions": [
+    "A fixed comparator class H is named in advance",
+    "Losses are comparable across rounds on a common scale"
+   ],
+   "breakdown_regime": "Regret is relative, not absolute: low regret against a weak class certifies little, and regret can be negative against a poor comparator; the bound is vacuous if the best fixed hypothesis is itself bad",
+   "domain": "online learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine model is scored by regret against named fixed reference models over the same graded prediction stream, so model quality is always stated relative to a comparator rather than as a raw hit rate.",
+    "source_operator": "regret_definition",
+    "telemetry": "Cumulative loss series per model and per fixed reference model over identical rounds"
+   }
+  },
+  {
+   "primitive_id": "cover_impossibility",
+   "name": "Cover's impossibility: with |H| = 2 and a fully adversarial answer sequence, every algorithm can be forced to regret at least T/2, so restrictions are necessary",
+   "verbatim_quote": "We first show that this is an impossible mission - no algorithm can obtain a sublinear regret bound even if |H| = 2.",
+   "page": "Section 1.2 (printed p. 112); extracted-text line 267",
+   "latex": "Regret_T(H) \\ge T - T/2 = T/2",
+   "symbol_and_unit_ledger": {
+    "T": "number of rounds, dimensionless count",
+    "H": "hypothesis class",
+    "Regret_T(H)": "worst-case regret against class H, in loss units"
+   },
+   "assumptions": [
+    "The adversary may choose the true answer after seeing the learner's deterministic prediction",
+    "The comparator is the majority label hypothesis in hindsight"
+   ],
+   "breakdown_regime": "The impossibility is escaped only by changing the game: realizability, randomized predictions with an adversary blind to the current coin flip, or margin and structure assumptions",
+   "domain": "online learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Acts as a feasibility veto inside the engine: any proposed sequential rule that promises accuracy against unrestricted adversarial outcome streams is rejected at design time unless it names its restriction (realizability, randomization, margin, or finite Littlestone dimension).",
+    "source_operator": "cover_impossibility",
+    "telemetry": "Design reviews of update rules; adversarial stress tests on historical outcome streams"
+   }
+  },
+  {
+   "primitive_id": "halving_algorithm",
+   "name": "Halving algorithm: predict the majority label of the version space; each mistake at least halves the version space, giving mistake bound log2(|H|)",
+   "verbatim_quote": "The idea is to predict according to the majority of hypotheses in Vt rather than according to some arbitrary h ∈ Vt . That way, whenever we err, we are guaranteed to remove at least half of the hypotheses from the version space.",
+   "page": "Section 1.2.1 (printed p. 114); extracted-text line 329",
+   "latex": "M_{\\mathrm{Halving}}(H) \\le \\log_2 |H|",
+   "symbol_and_unit_ledger": {
+    "M_Halving(H)": "worst-case number of mistakes, dimensionless count",
+    "H": "finite hypothesis class",
+    "|H|": "number of hypotheses in the class"
+   },
+   "assumptions": [
+    "Realizability: some h in H labels every round correctly",
+    "H is finite and the version space can be maintained"
+   ],
+   "breakdown_regime": "Exponentially better than Consistent (|H| - 1) but still requires exact realizability; a single mislabeled round can empty the version space, and majority voting over a large class may be computationally expensive",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate model sets in the engine are maintained as an explicit version space: models inconsistent with graded outcomes are removed, and ensemble votes are taken over the survivors, so each graded mistake provably shrinks the live model set.",
+    "source_operator": "halving_algorithm",
+    "telemetry": "Version space membership per model after each graded round; mistake counts per candidate set"
+   }
+  },
+  {
+   "primitive_id": "convexification_by_randomization",
+   "name": "Convexification by randomization: expert advice becomes online convex optimization by predicting with a distribution over the simplex, turning the discrete choice into the linear loss <w_t, y_t>",
+   "verbatim_quote": "However, as we show below, by allowing the learner to randomize his predictions we can cast the problem in the online convex optimization framework, and therefore can obtain low regret algorithm for this problem.",
+   "page": "Section 2.1.1 (printed pp. 121-122); extracted-text line 615",
+   "latex": "E[y_t[p_t]] = \\sum_{i=1}^{d} P[p_t = i] y_t[i] = \\langle w_t, y_t \\rangle",
+   "symbol_and_unit_ledger": {
+    "w_t": "probability vector over d experts, lies in the simplex, dimensionless",
+    "y_t": "cost vector of the experts at round t, entries in [0,1], loss units",
+    "p_t": "expert index sampled from w_t",
+    "d": "number of experts, dimensionless count"
+   },
+   "assumptions": [
+    "The adversary fixes the cost vector without seeing the learner's current random draw",
+    "Regret is measured in expectation over the learner's randomization"
+   ],
+   "breakdown_regime": "Only expected loss is controlled; a single realized run can deviate, and the trick needs the loss of a mixture to equal the mixture of losses, which holds for expert costs but not for arbitrary discrete losses",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Discrete engine choices (which model, which data view, which feature set) are represented as probability vectors, so selection becomes a differentiable weighting problem and expected loss is optimized directly instead of committing to hard switches.",
+    "source_operator": "convexification_by_randomization",
+    "telemetry": "Mixture weights over candidate models per round; realized versus expected loss per round"
+   }
+  },
+  {
+   "primitive_id": "oco_framework",
+   "name": "Online convex optimization (OCO): predict a vector in a convex set, receive a convex loss function, and compete with the best fixed vector (Equation 2.1)",
+   "verbatim_quote": "Some online prediction problems can be seamlessly cast in the online convex optimization framework.",
+   "page": "Section 2.1 (printed p. 120); extracted-text line 575",
+   "latex": "Regret_T(u) = \\sum_{t=1}^{T} f_t(w_t) - \\sum_{t=1}^{T} f_t(u)",
+   "symbol_and_unit_ledger": {
+    "f_t": "convex loss function revealed at round t",
+    "w_t": "learner vector in convex set S",
+    "u": "competing fixed vector",
+    "T": "number of rounds, dimensionless count"
+   },
+   "assumptions": [
+    "The decision set S is convex and each loss f_t is convex in its vector argument",
+    "The full loss function (or a sub-gradient) is available after each round in the full-information setting"
+   ],
+   "breakdown_regime": "Problems whose loss is not convex in the decision variable do not fit directly; they must first be convexified by randomization or by a surrogate loss, and the guarantee then attaches to the surrogate problem",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's parameter updates are framed as OCO: model parameters live in a convex feasible set, each graded round supplies a convex loss, and update quality is certified by regret against the best fixed parameter vector.",
+    "source_operator": "oco_framework",
+    "telemetry": "Parameter vectors per round, per-round loss functions or gradients, feasible-set definitions"
+   }
+  },
+  {
+   "primitive_id": "surrogate_loss_convexification",
+   "name": "Convexification by surrogate loss: replace a nonconvex loss with a convex upper bound; the resulting relative loss bound charges mistakes to the surrogate loss of a competitor",
+   "verbatim_quote": "This type of bound, where the number of mistakes is upper bounded by the convex surrogate loss of a competing hypothesis, is often called a relative loss bound.",
+   "page": "Section 2.1.2 (printed pp. 123-124); extracted-text line 712",
+   "latex": "|M| \\le 2 \\sum_{t=1}^{T} f_t(u) + 8 \\log d",
+   "symbol_and_unit_ledger": {
+    "M": "set of rounds on which the learner errs",
+    "|M|": "number of mistakes, dimensionless count",
+    "f_t": "convex surrogate loss at round t, upper bounding the true loss",
+    "u": "competing vector in the simplex",
+    "d": "number of hypotheses, dimensionless count"
+   },
+   "assumptions": [
+    "The surrogate is convex and upper bounds the original loss at the learner's predictions",
+    "Some competitor u attains low cumulative surrogate loss (in the realizable case, zero)"
+   ],
+   "breakdown_regime": "If no competitor has low surrogate loss the bound is meaningless; optimizing a loose surrogate can also distort the original objective, as with hinge loss versus 0-1 loss",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Hard engine objectives (discrete correctness of a forecast) are optimized through convex surrogates such as log loss or hinge-style margins, with the discipline that the surrogate must provably upper bound the true scoring loss before any guarantee is quoted.",
+    "source_operator": "surrogate_loss_convexification",
+    "telemetry": "True loss and surrogate loss per round; surrogate loss of reference models"
+   }
+  },
+  {
+   "primitive_id": "follow_the_leader",
+   "name": "Follow-the-Leader (FTL): predict the vector that minimizes total loss on all past rounds",
+   "verbatim_quote": "The most natural learning rule is to use (at any online round) any vector which has minimal loss on all past rounds.",
+   "page": "Section 2.2 (printed p. 124); extracted-text line 295",
+   "latex": "w_t = \\arg\\min_{w \\in S} \\sum_{i=1}^{t-1} f_i(w)",
+   "symbol_and_unit_ledger": {
+    "w_t": "prediction vector at round t",
+    "f_i": "loss function of past round i",
+    "S": "convex decision set"
+   },
+   "assumptions": [
+    "Past losses are fully observed",
+    "The argmin exists; ties are broken arbitrarily"
+   ],
+   "breakdown_regime": "FTL is only as good as its stability: Lemma 2.1 bounds regret by the cumulative one-step changes f_t(w_t) - f_t(w_{t+1}), which can be large when consecutive leaders differ sharply",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's simplest refit rule (retrain on all graded history and deploy the minimizer) is FTL; the primitive supplies its diagnostic: track the one-step prediction change per round as the stability cost that the regret is charged for.",
+    "source_operator": "follow_the_leader",
+    "telemetry": "Per-round refit parameters; one-step loss differences f_t(w_t) - f_t(w_{t+1})"
+   }
+  },
+  {
+   "primitive_id": "ftl_quadratic_regret",
+   "name": "FTL on online quadratic optimization attains logarithmic regret 4L^2 (log T + 1) because the running average moves by O(1/t) per round (Corollary 2.2)",
+   "verbatim_quote": "Corollary 2.2. Consider running FTL on an Online Quadratic Optimization problem with S = Rd and let L = maxt zt . Then, the regret of FTL with respect to all vectors u ∈ Rd is at most 4L2 (log(T ) + 1).",
+   "page": "Section 2.2 (printed p. 126); extracted-text line 862",
+   "latex": "Regret_T(u) \\le 4L^2 (\\log T + 1)",
+   "symbol_and_unit_ledger": {
+    "L": "max_t ||z_t||, bound on target vectors, in feature units",
+    "T": "number of rounds, dimensionless count",
+    "u": "any competing vector in R^d"
+   },
+   "assumptions": [
+    "Losses are quadratic, f_t(w) = (1/2)||w - z_t||^2",
+    "S = R^d is unconstrained",
+    "Target vectors z_t are bounded by L"
+   ],
+   "breakdown_regime": "The logarithmic rate is special to the self-stabilizing quadratic geometry; it does not transfer to linear losses, where FTL fails outright",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Squared-error recalibration layers in the engine inherit this behavior: refitting a quadratic objective on all history is an averaging process whose per-round movement shrinks like 1/t, so its stability cost is only logarithmic.",
+    "source_operator": "ftl_quadratic_regret",
+    "telemetry": "Running parameter averages for quadratic recalibration; per-round movement norms"
+   }
+  },
+  {
+   "primitive_id": "ftl_instability_linear",
+   "name": "FTL fails on online linear optimization: an alternating linear loss sequence makes FTL oscillate between extremes and suffer regret T while the fixed point u = 0 suffers 0 (Example 2.2)",
+   "verbatim_quote": "Intuitively, FTL fails in the above example because its predictions are not stable - wt shifts drastically from round to round where we only added a single loss function to the objective of the optimization problem in the definition of wt .",
+   "page": "Section 2.2 (printed p. 127); extracted-text line 888",
+   "latex": "Regret_T(\\mathrm{FTL}) = T",
+   "symbol_and_unit_ledger": {
+    "T": "number of rounds, dimensionless count",
+    "Regret_T(FTL)": "regret of Follow-the-Leader on the constructed sequence, in loss units"
+   },
+   "assumptions": [
+    "Losses are linear, f_t(w) = z_t w on S = [-1, 1]",
+    "The adversary alternates the sign pattern of z_t as constructed in Example 2.2"
+   ],
+   "breakdown_regime": "This is a worst-case construction, not a claim that FTL fails on benign data; the lesson is that unregularized refitting has no stability guarantee when losses are merely linear",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A standing counterexample in the engine's design rules: any update rule that fully refits to history on near-linear objectives must be assumed unstable until a regularizer is added, because a single new round can flip the deployed parameters end to end.",
+    "source_operator": "ftl_instability_linear",
+    "telemetry": "Parameter flip magnitudes after single-round updates on linear objectives"
+   }
+  },
+  {
+   "primitive_id": "follow_the_regularized_leader",
+   "name": "Follow-the-Regularized-Leader (FoReL): minimize past losses plus a regularization term R(w) whose role is to stabilize the predictions",
+   "verbatim_quote": "Follow-the-Regularized-Leader is a natural modification of the basic FTL algorithm in which we minimize the loss on all past rounds plus a regularization term. The goal of the regularization term is to stabilize the solution.",
+   "page": "Section 2.3 (printed pp. 127-128); extracted-text line 896",
+   "latex": "w_t = \\arg\\min_{w \\in S} \\left( \\sum_{i=1}^{t-1} f_i(w) + R(w) \\right)",
+   "symbol_and_unit_ledger": {
+    "w_t": "prediction vector at round t",
+    "f_i": "loss function of past round i",
+    "R(w)": "regularization function encoding prior preference and stability",
+    "S": "convex decision set"
+   },
+   "assumptions": [
+    "R is chosen before the run and encodes the geometry in which stability is wanted",
+    "Lemma 2.3 decomposes regret into R(u) - R(w_1) plus the cumulative one-step stability terms"
+   ],
+   "breakdown_regime": "A regularizer mismatched to the loss geometry stabilizes in the wrong norm and the regret bound degrades; too strong a regularizer freezes learning, too weak a one restores FTL oscillation",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All engine refits run as FoReL: historical loss plus an explicit regularizer that prices parameter movement, making stability a tunable, auditable term rather than an accident of the optimizer.",
+    "source_operator": "follow_the_regularized_leader",
+    "telemetry": "Regularizer type and strength per model; regret decomposition into prior cost and stability cost"
+   }
+  },
+  {
+   "primitive_id": "doubling_trick",
+   "name": "Doubling trick: an algorithm whose tuning needs the horizon T is made horizon-free by restarting it on periods of doubling length, losing only a constant factor in regret",
+   "verbatim_quote": "The idea is to divide the time into periods of increasing size and run the original algorithm on each period.",
+   "page": "Section 2.3.1 (printed p. 130); extracted-text line 1012",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The base algorithm has a regret bound of the form alpha sqrt(T) once its parameters are set with knowledge of T",
+    "Restarts discard or reset accumulated state at period boundaries"
+   ],
+   "breakdown_regime": "Costs a constant factor (sqrt(2)/(sqrt(2)-1)) in the regret bound and wastes some data at each restart; adaptive step-size schedules often do better in practice",
+   "domain": "online learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine learners that need a season length to set step sizes are wrapped in doubling epochs, so they run indefinitely without a declared horizon while their regret certificate worsens only by a known constant.",
+    "source_operator": "doubling_trick",
+    "telemetry": "Epoch boundaries and per-epoch regret for horizon-tuned learners"
+   }
+  },
+  {
+   "primitive_id": "subgradient_linearization",
+   "name": "Linearization of convex functions: convexity is equivalent to the existence of a tangent lower bound at every point, so regret on convex losses is upper bounded by regret on their linearizations (Lemma 2.5, Equation 2.4)",
+   "verbatim_quote": "In words, convexity is characterized by the existence of tangents that lie below the function.",
+   "page": "Section 2.4 (printed p. 131); extracted-text line 1060",
+   "latex": "f(u) \\ge f(w) + \\langle u - w, z \\rangle, \\quad z \\in \\partial f(w)",
+   "symbol_and_unit_ledger": {
+    "f": "convex function",
+    "w, u": "points in the convex set S",
+    "z": "a sub-gradient of f at w",
+    "partial f(w)": "set of sub-gradients of f at w"
+   },
+   "assumptions": [
+    "f is convex on S",
+    "A sub-gradient z_t of f_t at the played point w_t is available each round"
+   ],
+   "breakdown_regime": "Linearization discards curvature information, so bounds proved this way can be loose for strongly curved losses; nonconvex losses have no such global tangent lower bound",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine optimizers only ever need sub-gradients at the current parameters: each round's convex scoring loss is replaced by its tangent at the deployed model, and all regret accounting is done on the linearized losses.",
+    "source_operator": "subgradient_linearization",
+    "telemetry": "Sub-gradients of the scoring loss at deployed parameters per round"
+   }
+  },
+  {
+   "primitive_id": "ogd_lipschitz_bound",
+   "name": "Online Gradient Descent regret bound: with Lipschitz losses the sub-gradient norms are controlled by the Lipschitz constants, giving Regret <= (1/2eta)||u||^2 + eta T L^2, tuned to BL sqrt(2T) (Corollary 2.7)",
+   "verbatim_quote": "To derive a more concrete bound, we must assure that the norms of sub-gradients will not be excessively large. One way to do this is by assuming that the functions are Lipschitz.",
+   "page": "Section 2.4 (printed pp. 132-133); extracted-text line 1118",
+   "latex": "Regret_T(u) \\le \\frac{1}{2\\eta} \\|u\\|_2^2 + \\eta \\sum_{t=1}^{T} \\|z_t\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "eta": "step size, positive scalar",
+    "u": "competing vector",
+    "z_t": "sub-gradient of f_t at w_t",
+    "L": "root-mean-square Lipschitz constant of the losses",
+    "B": "bound on ||u||_2",
+    "T": "number of rounds, dimensionless count"
+   },
+   "assumptions": [
+    "Each f_t is convex and L_t-Lipschitz with respect to the l2 norm",
+    "The step size eta is set with knowledge of B, L, and T (or via the doubling trick)"
+   ],
+   "breakdown_regime": "If losses are not Lipschitz (unbounded gradients), the sum of squared gradient norms can grow linearly with a large constant and the tuned bound fails; constraints require projection or lazy projection variants",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's default parameter learner is OGD with step size set from measured gradient norms of the scoring loss, and its regret certificate is recomputed from the realized gradient norms rather than assumed constants.",
+    "source_operator": "ogd_lipschitz_bound",
+    "telemetry": "Per-round sub-gradient norms of the scoring loss; realized regret bound versus fixed reference parameters"
+   }
+  },
+  {
+   "primitive_id": "strong_convexity",
+   "name": "Strong convexity: a function lies above its tangents by a quadratic term (sigma/2)||u - w||^2, quantifying curvature that can be converted into stability (Definition 2.4)",
+   "verbatim_quote": "Intuitively, a function is strongly convex if it grows faster than a linear function.",
+   "page": "Section 2.5.1 (printed p. 135); extracted-text line 1194",
+   "latex": "f(u) \\ge f(w) + \\langle z, u - w \\rangle + \\frac{\\sigma}{2} \\|u - w\\|^2",
+   "symbol_and_unit_ledger": {
+    "sigma": "strong convexity modulus, in loss units per squared distance",
+    "z": "a sub-gradient of f at w",
+    "||.||": "the norm with respect to which strong convexity holds"
+   },
+   "assumptions": [
+    "The inequality must hold for every w in S, every sub-gradient z at w, and every u in S, with respect to one fixed norm"
+   ],
+   "breakdown_regime": "Many useful regularizers are strongly convex only in a specific norm (entropy in l1, squared l2 in l2); claiming the wrong norm silently voids the stability lemmas built on it",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Curvature is the engine's stability currency: before a regularizer is trusted to stabilize an update rule, its strong convexity modulus is recorded in the norm that matches the loss's Lipschitz geometry.",
+    "source_operator": "strong_convexity",
+    "telemetry": "Regularizer specifications with modulus and norm; Hessian lower bounds where available"
+   }
+  },
+  {
+   "primitive_id": "entropic_regularization",
+   "name": "Entropic regularization R(w) = sum_i w[i] log w[i] is 1-strongly convex with respect to the l1 norm over the probability simplex (Example 2.5)",
+   "verbatim_quote": "In particular, R is 1-strongly-convex over the probability simplex, which is the positive vectors whose elements sum to 1.",
+   "page": "Section 2.5.1 (printed p. 136); extracted-text line 1259",
+   "latex": "R(w) = \\sum_{i=1}^{d} w[i] \\log w[i]",
+   "symbol_and_unit_ledger": {
+    "w": "vector in the probability simplex, dimensionless weights",
+    "d": "dimension, dimensionless count",
+    "R(w)": "negative entropy regularizer, in nats"
+   },
+   "assumptions": [
+    "w is restricted to the simplex (nonnegative, entries summing to 1)",
+    "Strong convexity is with respect to the l1 norm, proved via the Hessian and Cauchy-Schwarz (Equation 2.6)"
+   ],
+   "breakdown_regime": "Entropy is not strongly convex in l2, so pairing it with l2-Lipschitz losses loses the geometry match; it also forces strictly positive weights, so sparse exact zeros are unreachable",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mixture weights over engine models live on the simplex and are regularized entropically, which is exactly the geometry that yields multiplicative weight updates and regret growing like sqrt(log d) in the number of models.",
+    "source_operator": "entropic_regularization",
+    "telemetry": "Simplex weight vectors over models; entropy of the weight distribution per round"
+   }
+  },
+  {
+   "primitive_id": "stability_from_strong_convexity",
+   "name": "Stability lemma: with a sigma-strongly convex regularizer, consecutive FoReL predictions satisfy f_t(w_t) - f_t(w_{t+1}) <= L_t^2 / sigma, yielding Regret <= R(u) - min R + T L^2 / sigma (Lemma 2.10, Theorem 2.11)",
+   "verbatim_quote": "Therefore, we need to ensure that wt − wt+1 is small. The following lemma shows that if the regularization function R(w) is strongly convex with respect to the same norm, then wt will be close to wt+1 .",
+   "page": "Section 2.5.2 (printed pp. 137-138); extracted-text line 1304",
+   "latex": "f_t(w_t) - f_t(w_{t+1}) \\le L_t \\|w_t - w_{t+1}\\| \\le \\frac{L_t^2}{\\sigma}",
+   "symbol_and_unit_ledger": {
+    "L_t": "Lipschitz constant of f_t in the chosen norm",
+    "sigma": "strong convexity modulus of R in the same norm",
+    "w_t, w_{t+1}": "consecutive FoReL predictions"
+   },
+   "assumptions": [
+    "R is sigma-strongly convex in the same norm in which each f_t is L_t-Lipschitz",
+    "The average of squared Lipschitz constants is bounded by L^2"
+   ],
+   "breakdown_regime": "If sigma is tiny the stability term T L^2 / sigma explodes; the bound also charges the full horizon T even when losses are mostly benign, so it is a worst-case certificate",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine prices every update rule by this identity: one-step prediction change times loss sensitivity is the stability cost, and regularizer strength is raised until the measured stability cost fits the regret budget.",
+    "source_operator": "stability_from_strong_convexity",
+    "telemetry": "Consecutive parameter distances per round; per-round stability cost versus regularizer strength"
+   }
+  },
+  {
+   "primitive_id": "online_mirror_descent",
+   "name": "Online Mirror Descent (OMD): accumulate gradients in a dual vector theta and map back to the decision set through a link function g generated by the regularizer; OGD is the linear special case",
+   "verbatim_quote": "When g is nonlinear we obtain that the vector θ is updated by subtracting the gradient out of it, but the actual prediction is “mirrored” or “linked” to the set S via the function g. Hence the name Online Mirror Descent, and this is why g is often referred to as a link function.",
+   "page": "Section 2.6 (printed pp. 141-142); extracted-text line 1536",
+   "latex": "\\theta_{t+1} = \\theta_t - z_t, \\qquad w_{t+1} = g(\\theta_{t+1}), \\qquad g(\\theta) = \\arg\\max_{w \\in S} \\left( \\langle w, \\theta \\rangle - R(w) \\right)",
+   "symbol_and_unit_ledger": {
+    "theta_t": "dual accumulator vector",
+    "z_t": "sub-gradient of f_t at w_t",
+    "g": "link function induced by the regularizer R",
+    "R": "regularization function, (1/eta)-strongly convex for the regret bound of Theorem 2.15"
+   },
+   "assumptions": [
+    "R is strongly convex with respect to a norm and the losses are Lipschitz in the same geometry",
+    "Sub-gradients at the played points are available (full information)"
+   ],
+   "breakdown_regime": "OMD inherits FoReL's regret but replaces the per-round optimization with a link evaluation; a poorly matched link function (wrong geometry) forfeits the bound, and constrained sets need the lazy-projection variant",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine learners keep their state in dual space: gradients accumulate in theta and the deployed model is g(theta), so changing the regularizer cleanly swaps the update geometry (Euclidean, entropic, p-norm) without touching the loss pipeline.",
+    "source_operator": "online_mirror_descent",
+    "telemetry": "Dual accumulator state per learner; link function configuration; deployed versus dual parameter logs"
+   }
+  },
+  {
+   "primitive_id": "normalized_exponentiated_gradient",
+   "name": "Normalized Exponentiated Gradient: OMD with entropic regularization yields multiplicative updates w_{t+1}[i] proportional to w_t[i] exp(-eta z_t[i]) on the simplex (Corollary 2.16, regret of Corollary 2.14)",
+   "verbatim_quote": "The first algorithm we derive is often called normalized Exponentiated Gradient.",
+   "page": "Section 2.6.1 (printed p. 143); extracted-text line 1580",
+   "latex": "w_{t+1}[i] = \\frac{w_t[i] e^{-\\eta z_t[i]}}{\\sum_j w_t[j] e^{-\\eta z_t[j]}}",
+   "symbol_and_unit_ledger": {
+    "w_t[i]": "weight on coordinate i at round t, dimensionless",
+    "z_t[i]": "i-th coordinate of the sub-gradient (expert cost) at round t, loss units",
+    "eta": "step size, positive scalar"
+   },
+   "assumptions": [
+    "Decision set is the probability simplex",
+    "Regularizer is the scaled entropy (1/eta) sum_i w[i] log w[i], (1/eta)-strongly convex in l1"
+   ],
+   "breakdown_regime": "Weights never reach exact zero, so dead experts keep a residual share; the bound depends on the l-infinity size of gradients, and a fixed eta needs the horizon or the doubling trick",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's ensemble weighting rule: model weights are multiplied down exponentially by their graded losses each round and renormalized, giving log d dependence on the number of models instead of linear dependence.",
+    "source_operator": "normalized_exponentiated_gradient",
+    "telemetry": "Per-model weights before and after each graded round; per-model loss coordinates"
+   }
+  },
+  {
+   "primitive_id": "fenchel_conjugacy",
+   "name": "Fenchel conjugacy: a closed convex function is represented by its tangents, f*(theta) = max_u (<u, theta> - f(u)), and strong convexity of f is dual to strong smoothness of f* (Lemmas 2.19-2.21)",
+   "verbatim_quote": "The function that relates slopes of tangents to their intersection with the y axis is called the Fenchel conjugate of f , and is formally defined as",
+   "page": "Section 2.7.1 (printed pp. 146-147); extracted-text line 1754",
+   "latex": "f^\\star(\\theta) = \\max_u \\left( \\langle u, \\theta \\rangle - f(u) \\right)",
+   "symbol_and_unit_ledger": {
+    "f^star": "Fenchel conjugate of f",
+    "theta": "slope (dual) variable",
+    "u": "primal variable",
+    "f": "closed convex function"
+   },
+   "assumptions": [
+    "f is closed and convex, so f = (f*)*",
+    "Equality in the Fenchel-Young inequality holds when u is a sub-gradient of f* at theta"
+   ],
+   "breakdown_regime": "Nonconvex or non-closed functions are not recovered by double conjugation; the duality-based OMD analysis also improves earlier constants by a factor of 2, so quoting the looser FoReL constants understates the guarantee",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dual representations let the engine store a regularizer either as a penalty or as its conjugate link map, whichever is cheaper to evaluate, and the strong-smooth duality certifies that a strongly convex penalty yields a smooth, stable link function.",
+    "source_operator": "fenchel_conjugacy",
+    "telemetry": "Regularizer and conjugate pairs in the learner library; smoothness constants of link functions"
+   }
+  },
+  {
+   "primitive_id": "bregman_divergence",
+   "name": "Bregman divergence: the gap between a convex function and its linearization, D_R(w||u) = R(w) - R(u) - <grad R(u), w - u>, which specializes to squared Euclidean distance and to KL divergence (Equation 2.12)",
+   "verbatim_quote": "When R is convex the Bregman divergence is always non-negative. However, it is not a metric measure because it is not symmetric and also does not satisfy the triangle inequality.",
+   "page": "Section 2.7.2 (printed p. 148); extracted-text line 1815",
+   "latex": "D_R(w \\Vert u) = R(w) - \\left( R(u) + \\langle \\nabla R(u), w - u \\rangle \\right)",
+   "symbol_and_unit_ledger": {
+    "D_R(w||u)": "Bregman divergence from u to w induced by R, in regularizer units",
+    "R": "differentiable convex function",
+    "grad R(u)": "gradient of R at u"
+   },
+   "assumptions": [
+    "R is convex and differentiable at the reference point",
+    "For KL specialization, w and u lie in the probability simplex"
+   ],
+   "breakdown_regime": "Not a metric: asymmetry and no triangle inequality mean it cannot be used as a generic distance; the Bregman-potential proof technique additionally needs R to be a Legendre function, which the normalized entropy is not",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model drift inside the engine is measured with the Bregman divergence of the active regularizer rather than raw Euclidean distance, so drift is priced in the same geometry the learner actually optimizes.",
+    "source_operator": "bregman_divergence",
+    "telemetry": "Bregman drift between consecutive deployed models; KL drift of ensemble weight vectors"
+   }
+  },
+  {
+   "primitive_id": "local_norm_bounds",
+   "name": "Local norms: for normalized EG the global term ||z_t||_inf^2 in the regret bound can be replaced by the variance-like local term sum_i w_t[i] z_t[i]^2, giving data-dependent tighter bounds (Theorem 2.22)",
+   "verbatim_quote": "In the next sections we will show cases in which the refined local-norm bounds lead to much tighter regret bounds.",
+   "page": "Section 2.8 (printed pp. 152-153); extracted-text line 679",
+   "latex": "\\sum_{t=1}^{T} \\langle w_t - u, z_t \\rangle \\le \\frac{\\log d}{\\eta} + \\eta \\sum_{t=1}^{T} \\sum_{i=1}^{d} w_t[i] z_t[i]^2",
+   "symbol_and_unit_ledger": {
+    "w_t": "simplex weight vector at round t",
+    "z_t": "linear loss (cost) vector at round t",
+    "d": "dimension, dimensionless count",
+    "eta": "step size; requires eta z_t[i] >= -1 for all t, i"
+   },
+   "assumptions": [
+    "Losses are linear and the algorithm is normalized EG with entropic regularization",
+    "eta z_t[i] >= -1 coordinate-wise so the exponential inequality e^{-a} <= 1 - a + a^2 applies"
+   ],
+   "breakdown_regime": "The refinement only helps when the played distribution concentrates on low-loss coordinates; in the worst case the local term equals the global one, and the condition eta z_t[i] >= -1 restricts step sizes for negative losses",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine regret certificates are reported with local norms: the stability charge is weighted by the probability the ensemble actually placed on each model, so concentrated, confident weightings earn tighter certificates than diffuse ones.",
+    "source_operator": "local_norm_bounds",
+    "telemetry": "Per-round local norm sum_i w_t[i] z_t[i]^2 alongside the global gradient norm"
+   }
+  },
+  {
+   "primitive_id": "weighted_majority",
+   "name": "Weighted Majority: normalized EG applied to finite expert classes, with regret min_i sum_t z_t[i] + 2 sqrt(T log d), and in the realizable case total expected loss at most 4 log d (Theorem 3.1)",
+   "verbatim_quote": "Applying the normalized-EG algorithm we obtain an algorithm which is often called Weighted Majority.",
+   "page": "Section 3.1 (printed p. 158); extracted-text line 2244",
+   "latex": "\\sum_{t=1}^{T} \\langle w_t, z_t \\rangle \\le \\min_{i \\in [d]} \\sum_{t=1}^{T} z_t[i] + 2 \\sqrt{T \\log d}",
+   "symbol_and_unit_ledger": {
+    "w_t": "distribution over d experts at round t",
+    "z_t": "cost vector of experts at round t, entries in [0,1]",
+    "T": "number of rounds, dimensionless count",
+    "d": "number of experts, dimensionless count"
+   },
+   "assumptions": [
+    "Expert costs lie in [0, 1]",
+    "The learner may randomize according to w_t; the adversary does not see the current draw",
+    "Step size eta is tuned to T and log d (or set to 1/2 for the multiplicative form of the bound)"
+   ],
+   "breakdown_regime": "The guarantee is against the single best expert in hindsight, not against the best mixture or the best switching sequence; tracking varying best experts needs fixed-share style variants",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's model-combination layer is Weighted Majority over signal models: each graded round multiplies model weights by exp(-eta times realized loss), and the published certificate is regret versus the best single model plus 2 sqrt(T log d).",
+    "source_operator": "weighted_majority",
+    "telemetry": "Expert cost vectors per round; ensemble weights; best-single-model cumulative loss tracker"
+   }
+  },
+  {
+   "primitive_id": "littlestone_dimension",
+   "name": "Littlestone dimension Ldim(H): the depth of the largest shattered binary instance tree; it lower bounds every algorithm's mistake bound and satisfies VCdim(H) <= Ldim(H) with arbitrarily large gaps (Definition 3.3, Lemma 3.2, Theorem 3.5)",
+   "verbatim_quote": "We present a dimension of hypothesis classes that characterizes the best possible achievable mistake bound. This measure was proposed by Nick Littlestone and we therefore refer to it as Ldim(H).",
+   "page": "Section 3.2 (printed p. 161); extracted-text line 2377",
+   "latex": "M_A(H) \\ge Ldim(H) \\quad \\text{for every algorithm } A",
+   "symbol_and_unit_ledger": {
+    "Ldim(H)": "Littlestone dimension of class H, dimensionless count (possibly infinite)",
+    "M_A(H)": "worst-case mistake bound of algorithm A on H, dimensionless count"
+   },
+   "assumptions": [
+    "Instances on a shattered tree are chosen adaptively: each node depends on the labels along the path from the root",
+    "Every root-to-leaf labeling must be realized by some h in H"
+   ],
+   "breakdown_regime": "Ldim can be infinite for natural classes (thresholds on [0,1], halfspaces in R^d for d >= 2), in which case no finite mistake bound exists and margin or distributional assumptions must replace it",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before the engine promises any mistake bound for a model family, the family's sequential complexity is assessed in Littlestone terms: adaptive, path-dependent test sequences, not static test sets, decide whether a finite guarantee exists.",
+    "source_operator": "littlestone_dimension",
+    "telemetry": "Adaptive evaluation trees for model families; realized mistake counts along worst-case paths"
+   }
+  },
+  {
+   "primitive_id": "standard_optimal_algorithm",
+   "name": "Standard Optimal Algorithm (SOA): predict the label of the subclass with larger Littlestone dimension; its mistake bound equals Ldim(H), matching the lower bound exactly (Lemma 3.3, Corollary 3.4)",
+   "verbatim_quote": "The optimal algorithm we present below uses the same idea, but instead of predicting according to the larger class, it predicts according to the class with larger Ldim.",
+   "page": "Section 3.2 (printed p. 163); extracted-text line 2479",
+   "latex": "M_{\\mathrm{SOA}}(H) = Ldim(H)",
+   "symbol_and_unit_ledger": {
+    "M_SOA(H)": "mistake bound of the Standard Optimal Algorithm, dimensionless count",
+    "Ldim(H)": "Littlestone dimension of the version space subclasses"
+   },
+   "assumptions": [
+    "Realizability: labels come from some h in H",
+    "Ldim of arbitrary subclasses of H can be evaluated, which is generally computationally hard"
+   ],
+   "breakdown_regime": "SOA is an existence benchmark, not a practical algorithm: computing Ldim for rich classes is intractable, so deployed learners use efficient surrogates (Perceptron, Winnow, EG) whose bounds hold only under extra assumptions",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SOA sets the engine's optimality reference: for any model family, the gap between a deployed learner's realized mistakes and the Littlestone bound of the family measures how much headroom better algorithms could still claim.",
+    "source_operator": "standard_optimal_algorithm",
+    "telemetry": "Realized mistakes per model family versus family complexity estimates"
+   }
+  },
+  {
+   "primitive_id": "unrealizable_ldim_regret",
+   "name": "Unrealizable characterization: for every class H there is an algorithm with expected regret O(sqrt(Ldim(H) ln(T) T)), and no algorithm can beat Omega(sqrt(Ldim(H) T)) (Theorem 3.6)",
+   "verbatim_quote": "Recall that in the unrealizable case, to sidestep Cover's impossibility result, the learner is allowed to make randomized predictions and we analyze his expected regret.",
+   "page": "Section 3.2.1 (printed p. 165); extracted-text line 2580",
+   "latex": "\\mathrm{Regret} = O\\left( \\sqrt{Ldim(H) \\ln(T) \\, T} \\right), \\qquad \\Omega\\left( \\sqrt{Ldim(H) T} \\right) \\text{ lower bound}",
+   "symbol_and_unit_ledger": {
+    "Ldim(H)": "Littlestone dimension of H",
+    "T": "number of rounds, dimensionless count",
+    "Regret": "expected regret against the best h in H, in loss units"
+   },
+   "assumptions": [
+    "Randomized predictions with expected 0-1 loss",
+    "Ldim(H) is finite"
+   ],
+   "breakdown_regime": "The upper and lower bounds differ by a log(T) factor, and both are worst case over sequences; benign stochastic data usually admits much faster rates than this adversarial characterization suggests",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine quotes learnability of a signal family by its regret scaling in sqrt(Ldim times T): a family's complexity budget is set from its Littlestone estimate before any accuracy claim is published.",
+    "source_operator": "unrealizable_ldim_regret",
+    "telemetry": "Regret curves per model family as rounds accumulate; complexity budget ledger"
+   }
+  },
+  {
+   "primitive_id": "soa_expert_construction",
+   "name": "Expert construction for the unrealizable case: for each hypothesis h and instance sequence, one of at most (eT/Ldim)^Ldim SOA-simulating experts reproduces h exactly, so Weighted Majority over these experts inherits the SOA guarantee (Lemma 3.7, Equation 3.1)",
+   "verbatim_quote": "Our generic online learning algorithm is now an application of the Weighted Majority algorithm with the constructed experts.",
+   "page": "Section 3.2.1 (printed p. 168); extracted-text line 2670",
+   "latex": "d = \\sum_{L=0}^{Ldim(H)} \\binom{T}{L} \\le \\left( \\frac{eT}{Ldim(H)} \\right)^{Ldim(H)}",
+   "symbol_and_unit_ledger": {
+    "d": "number of constructed experts",
+    "T": "number of rounds, dimensionless count",
+    "Ldim(H)": "Littlestone dimension of H",
+    "L": "number of rounds on which the expert flips the SOA prediction"
+   },
+   "assumptions": [
+    "SOA makes at most Ldim(H) mistakes on any sequence labeled by a fixed h in H",
+    "Each expert is indexed by a candidate set of SOA mistake rounds"
+   ],
+   "breakdown_regime": "The expert set is astronomically large and the construction is a proof device, not an implementable ensemble; it shows learnability, while practical algorithms need structure (margins, convexity) to be efficient",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A design pattern for the engine's fallback ensembles: a strong sequential base rule plus a controlled set of deviation patterns can represent any member of a model family, and multiplicative weighting over the patterns recovers the family's guarantee.",
+    "source_operator": "soa_expert_construction",
+    "telemetry": "Base rule predictions; deviation pattern library; weight distribution over patterns"
+   }
+  },
+  {
+   "primitive_id": "perceptron_hinge_surrogate",
+   "name": "Perceptron derivation: run OGD on the hinge surrogate f_t(w) = [1 - y_t <w, x_t>]_+ on mistake rounds and 0 otherwise; the resulting update is independent of the step size eta (Section 3.3.1)",
+   "verbatim_quote": "where [a]+ = max{a, 0} is the hinge function. This loss function is often called the hinge-loss. It satisfies the two conditions:",
+   "page": "Section 3.3.1 (printed pp. 169-170); extracted-text line 2736",
+   "latex": "f_t(w) = [1 - y_t \\langle w, x_t \\rangle]_+",
+   "symbol_and_unit_ledger": {
+    "[a]_+": "hinge function max{0, a}",
+    "y_t": "label in {-1, 1}",
+    "w": "weight vector",
+    "x_t": "instance vector at round t"
+   },
+   "assumptions": [
+    "Labels are in {-1, 1} and predictions are sign(<w, x>)",
+    "The surrogate upper bounds the 0-1 loss and is convex in w",
+    "Updates occur only on rounds where y_t <w_t, x_t> <= 0"
+   ],
+   "breakdown_regime": "Because halfspaces have infinite Littlestone dimension, the Perceptron guarantee is vacuous without a margin or surrogate-loss condition on the sequence; separable-but-small-margin data yields huge bounds",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's linear signal scorers are trained perceptron-style: no update on confident correct rounds, additive correction y_t x_t on violations, with the hinge surrogate logged beside the true discrete score.",
+    "source_operator": "perceptron_hinge_surrogate",
+    "telemetry": "Margin values y_t <w_t, x_t> per round; update events and their magnitudes"
+   }
+  },
+  {
+   "primitive_id": "perceptron_margin_bound",
+   "name": "Perceptron relative mistake bound: |M| <= sum_t f_t(u) + R ||u|| sqrt(sum_t f_t(u)) + R^2 ||u||^2 for any u, reducing to |M| <= (R/gamma)^2 under separability with margin gamma (Theorem 3.9)",
+   "verbatim_quote": "The last assumption of Theorem 3.9 is called separability with large margin.",
+   "page": "Section 3.3.1 (printed p. 172); extracted-text line 2839",
+   "latex": "|M| \\le R^2 \\|u\\|^2 = \\left( \\frac{R}{\\gamma} \\right)^2, \\qquad \\gamma = \\frac{1}{\\|u\\|}",
+   "symbol_and_unit_ledger": {
+    "M": "set of mistake rounds",
+    "|M|": "number of mistakes, dimensionless count",
+    "R": "max_t ||x_t||, radius of the instance sequence",
+    "u": "competing weight vector with y_t <u, x_t> >= 1 for all t",
+    "gamma": "margin, distance from instances to the decision boundary"
+   },
+   "assumptions": [
+    "There exists u separating the sequence with margin: y_t <u, x_t> >= 1 for all t",
+    "Instances are bounded, ||x_t|| <= R"
+   ],
+   "breakdown_regime": "When separability with margin fails, the bound degrades through the hinge violations sum_t f_t(u); a zero-error u can still coexist with many Perceptron mistakes because Ldim of halfspaces is infinite",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Margin is the engine's currency for linear scorers: mistake budgets are quoted as (R/gamma)^2 from measured instance radii and achieved margins, and features are rescaled to grow gamma rather than to chase raw fit.",
+    "source_operator": "perceptron_margin_bound",
+    "telemetry": "Instance norms per round; achieved margins of reference separators; hinge violation sums"
+   }
+  },
+  {
+   "primitive_id": "winnow_bound",
+   "name": "Winnow: unnormalized EG on the disjunction surrogate gives mistake bound |M| <= 8 k log(d) for k relevant attributes out of d, an exponential improvement over the Perceptron's 4(d+1)k on this class (Theorem 3.10)",
+   "verbatim_quote": "We shall see that the mistake bound of Winnow is 8k log(d). That is, we obtain an exponential improvement in terms of the dependence on the dimension.",
+   "page": "Section 3.3.2 (printed p. 173); extracted-text line 2894",
+   "latex": "|M| \\le 8 k \\log d",
+   "symbol_and_unit_ledger": {
+    "M": "set of mistake rounds",
+    "k": "number of relevant attributes in the target disjunction, dimensionless count",
+    "d": "total number of attributes, dimensionless count"
+   },
+   "assumptions": [
+    "Instances are Boolean, x_t in {0, 1}^d",
+    "Target is a k monotone disjunction, equivalently a halfspace with u in {0,1}^d, ||u||_1 = k, separated with margin",
+    "Winnow runs with eta <= 1/2 (eta = 1/4 for the stated bound)"
+   ],
+   "breakdown_regime": "The log d advantage is specific to sparse Boolean targets; for dense targets or real-valued features the Euclidean Perceptron geometry can be better, and monotone disjunction structure is essential to the construction",
+   "domain": "online classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sparse-signal detection in the engine uses multiplicative (Winnow-style) updates: when few of many candidate signals are relevant, the mistake budget scales with k log d, so wide feature scans stay cheap in guarantees.",
+    "source_operator": "winnow_bound",
+    "telemetry": "Relevant-feature counts; per-feature multiplicative weight changes; mistake counts on sparse tasks"
+   }
+  },
+  {
+   "primitive_id": "multi_armed_bandit_problem",
+   "name": "Multi-armed bandit problem: only the cost of the pulled arm is observed, which poses the exploration-exploitation tradeoff that full-information expert advice does not have",
+   "verbatim_quote": "On one hand, we would like to pull the arm which, based on previous rounds, we believe has the lowest cost. On the other hand, maybe it is better to explore the arms and find another arm with a smaller cost.",
+   "page": "Section 4.2 (printed pp. 179-180); extracted-text line 3136",
+   "latex": "E\\left[ \\sum_{t=1}^{T} y_t[p_t] \\right] - \\min_{i} \\sum_{t=1}^{T} y_t[i]",
+   "symbol_and_unit_ledger": {
+    "y_t[i]": "cost of arm i at round t, in [0, 1], loss units",
+    "p_t": "arm pulled at round t, possibly random",
+    "T": "number of rounds, dimensionless count"
+   },
+   "assumptions": [
+    "Costs are bounded in [0, 1]",
+    "Nothing is assumed about the sequence of cost vectors (adversarial bandits)",
+    "The learner observes only y_t[p_t] after each pull"
+   ],
+   "breakdown_regime": "With no structure on arms, information about unpulled arms is never obtained except by pulling them; stochastic bandit methods that assume fixed distributions do not apply to this adversarial formulation",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine component that must choose among data sources, models, or analyses while only observing the chosen one's outcome is a bandit problem, and its exploration budget is set explicitly instead of being left to habit.",
+    "source_operator": "multi_armed_bandit_problem",
+    "telemetry": "Arm pull counts; observed costs per pull; cumulative regret versus best arm in hindsight"
+   }
+  },
+  {
+   "primitive_id": "omd_estimated_gradients",
+   "name": "OMD with estimated gradients: replacing true sub-gradients by unbiased estimates preserves regret bounds, with the bound's norm terms replaced by their expectations (Theorem 4.1)",
+   "verbatim_quote": "The above theorem tells us that as long as we can find z1 , . . . , zT which on one hand are unbiased estimators of sub-gradients and on the other hand has bounded norms, we can still obtain a valid regret bound.",
+   "page": "Section 4.1 (printed p. 179); extracted-text line 3110",
+   "latex": "E[z_t \\mid z_{t-1}, \\ldots, z_1] \\in \\partial f_t(w_t)",
+   "symbol_and_unit_ledger": {
+    "z_t": "random estimated sub-gradient at round t",
+    "f_t": "loss function at round t",
+    "w_t": "played vector at round t",
+    "partial f_t(w_t)": "subdifferential of f_t at w_t"
+   },
+   "assumptions": [
+    "Estimates are unbiased conditionally on the past",
+    "The deterministic regret bound for the estimator sequence has controlled local norm terms sum_t ||z_t||_t^2"
+   ],
+   "breakdown_regime": "Unbiasedness alone is not enough: if the estimator's norms are huge (as with importance weighting when w_t[j] is tiny), the expected bound inflates and can become vacuous",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine learners fed by sampled or partial feedback (only some outcomes graded each round) plug unbiased gradient estimates into the same OMD update, and their certificates carry the estimator's measured norm in place of the true gradient norm.",
+    "source_operator": "omd_estimated_gradients",
+    "telemetry": "Gradient estimate norms per round; sampling probabilities used to build the estimates"
+   }
+  },
+  {
+   "primitive_id": "bandit_feedback_penalty",
+   "name": "Bandit regret penalty: importance-weighted gradient estimation in the multi-armed bandit yields regret 2 sqrt(d log(d) T), a factor of about d worse than full information, because the learner receives only 1/d of the feedback (Corollary 4.2)",
+   "verbatim_quote": "Comparing the above bound to the bound we derived for the Weighted Majority algorithm we observe an additional factor of d, which intuitively stems from the fact that here we only receive 1/d of the feedback the Weighted Majority algorithm receives.",
+   "page": "Section 4.2 (printed p. 181); extracted-text line 3238",
+   "latex": "\\mathrm{Regret} \\le 2 \\sqrt{d \\log(d) \\, T}",
+   "symbol_and_unit_ledger": {
+    "d": "number of arms, dimensionless count",
+    "T": "number of rounds, dimensionless count",
+    "Regret": "expected regret against the best single arm, in loss units"
+   },
+   "assumptions": [
+    "Costs in [0, 1] and the importance-weighted estimator z_t[j] = y_t[j]/w_t[j] on the pulled arm, 0 else",
+    "The dependence on d is unavoidable in this setting, as the source notes the bound is essentially tight"
+   ],
+   "breakdown_regime": "The penalty is intrinsic to bandit feedback, not an artifact of the algorithm; adding structure (side observations, graph feedback, stochastic assumptions) is the only route to better rates",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine budgets partial feedback honestly: a selector that only observes chosen options is charged the factor d in its regret certificate, which is why full grading of predictions is preferred whenever outcomes are actually available.",
+    "source_operator": "bandit_feedback_penalty",
+    "telemetry": "Feedback coverage ratio per selector; regret certificates with and without the bandit penalty"
+   }
+  },
+  {
+   "primitive_id": "one_shot_gradient_estimate",
+   "name": "Gradient descent without a gradient: the smoothed function f-hat(w) = E[f(w + delta v)] has gradient estimable from a single function evaluation, (d/delta) f(w + delta v) v, yielding bandit OCO regret O(T^{3/4}) (Lemmas 4.3-4.4, Corollary 4.5)",
+   "verbatim_quote": "How can we utilize these algorithms when we can only receive the evaluation of the loss function on the predicted vector? As in the multi-armed bandit problem, the main idea is to derive a one-shot estimate to the gradient.",
+   "page": "Section 4.3 (printed p. 182); extracted-text line 3257",
+   "latex": "\\hat{f}(w) = E_{v \\sim U_b} \\left[ f(w + \\delta v) \\right], \\qquad \\nabla \\hat{f}(w) = E_{v \\sim U_{sp}} \\left[ \\frac{d}{\\delta} f(w + \\delta v) v \\right]",
+   "symbol_and_unit_ledger": {
+    "f-hat": "smoothed version of f",
+    "delta": "smoothing radius, positive scalar",
+    "v": "random vector uniform on the unit ball U_b or sphere U_sp",
+    "d": "dimension, dimensionless count",
+    "U_b, U_sp": "uniform distributions on the unit Euclidean ball and sphere"
+   },
+   "assumptions": [
+    "f is L-Lipschitz, so |f-hat(w) - f(w)| <= L delta",
+    "The learner may evaluate f at the perturbed point w + delta v and observes only that value"
+   ],
+   "breakdown_regime": "Regret degrades to T^{3/4} and acquires dimension dependence; whether the T exponent is tight was left open in the source, and the estimator's variance grows like d^2/delta^2 times the squared function range",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Black-box engine scorers whose loss cannot be differentiated are tuned by randomized perturbation: one extra evaluation per round produces an unbiased gradient estimate for the smoothed objective, with delta trading bias against variance.",
+    "source_operator": "one_shot_gradient_estimate",
+    "telemetry": "Perturbation radius per learner; single-evaluation gradient estimates and their variance"
+   }
+  },
+  {
+   "primitive_id": "online_to_batch_conversion",
+   "name": "Online-to-batch conversion: averaging (or randomly selecting) the iterates of an online learner gives a batch hypothesis whose expected true cost exceeds the best fixed cost by at most the average regret (Theorem 5.1, Corollary 5.2)",
+   "verbatim_quote": "Our goal is to demonstrate how online learning can sometimes yield an alternative algorithm for solving stochastic learning problems.",
+   "page": "Section 5 (printed p. 189); extracted-text line 3460",
+   "latex": "E[C(\\bar{w})] - C(u) \\le E\\left[ \\frac{1}{T} \\sum_{t=1}^{T} \\left( f_t(w_t) - f_t(u) \\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "C(w)": "expected cost of hypothesis w under the unknown distribution Q",
+    "bar w": "average (or randomly chosen) iterate of the online learner",
+    "f_t(w)": "cost of w on the t-th sampled example, f_t(w) = c(w, psi_t)",
+    "u": "any competing vector in S"
+   },
+   "assumptions": [
+    "Examples psi_t are sampled i.i.d. from a fixed unknown distribution Q",
+    "For the averaging variant, C is convex (Jensen's inequality step); the randomization variant needs no convexity"
+   ],
+   "breakdown_regime": "The guarantee is in expectation over the sample; high-probability versions need an amplification argument, and the conversion says nothing when the data stream is adversarial rather than i.i.d.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Published engine ratings are produced by this conversion: a season of online updates is averaged into one stable model, and its certified excess cost over the best fixed model is exactly the season's average regret divided by T.",
+    "source_operator": "online_to_batch_conversion",
+    "telemetry": "Iterate sequences per learner; averaged production models; average regret per season"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "4d07e5902607436f-t1",
+   "think": "This monograph surveys online learning with one organizing claim: convexity is the principle that makes sequential prediction tractable. It opens with a bare protocol. A learner receives a question, issues a prediction, then sees the correct answer and pays a loss, round after round, with no statistical assumption about how the sequence is generated. Because an unconstrained adversary can answer opposite to any deterministic prediction, absolute loss is the wrong score. The work therefore measures regret, the gap between the learner's cumulative loss and the cumulative loss of the best fixed competitor chosen in hindsight. Low regret means sublinear growth of that gap, so the learner's average loss converges to the best competitor's average loss even on adversarial data. Two escapes from Cover's impossibility structure the whole theory. The first is realizability: if some hypothesis in a finite class labels every round, the Consistent algorithm wastes at most |H| - 1 mistakes, and the Halving algorithm, by voting with the majority of the version space, wastes at most log2 |H|, because every mistake deletes at least half of the surviving hypotheses. The second escape is randomization: letting predictions be distributions converts discrete problems into convex ones. Both escapes are then unified by convexification. Expert advice becomes online convex optimization on the probability simplex with the linear loss given by the cost vector, and classification with a finite class becomes the same problem through the costs of each hypothesis. Where randomization does not apply, a convex surrogate loss that upper bounds the true loss does the same job, and the resulting relative loss bounds charge mistakes to the surrogate loss of a competitor. Inside online convex optimization the narrative is a stability story. Follow-the-Leader, which refits to all past losses, works for quadratic losses because the running average moves by O(1/t), giving logarithmic regret, but it fails catastrophically on linear losses, where an alternating sequence makes it oscillate and suffer regret T. Regularization is the fix: Follow-the-Regularized-Leader adds a term R(w) whose only job is to keep consecutive predictions close, and its regret decomposes into a prior cost R(u) plus a sum of one-step stability terms. Linearization then does the heavy lifting: since a convex function lies above its tangents, regret on convex losses is bounded by regret on their linearizations at the played points, which turns Euclidean FoReL into Online Gradient Descent and general FoReL into Online Mirror Descent, where gradients accumulate in a dual vector and a link function generated by the regularizer maps back to the decision set. Geometry decides the constants. Strong convexity of the regularizer in the norm dual to the losses' Lipschitz geometry yields the stability lemma and the master bound Regret <= R(u) - min R + T L^2 / sigma. Euclidean regularization suits dense l2 geometry; entropic regularization, strongly convex in l1 over the simplex, yields Exponentiated Gradient and Weighted Majority with only log d dependence on the number of experts; p-norm links interpolate between the two. Duality sharpens everything: Fenchel conjugates represent a function by its tangents, strong convexity and strong smoothness are dual properties, Bregman divergences measure drift in the learner's own geometry, and local norms replace worst-case gradient sizes with the variance-like quantity the played distribution actually incurred, tightening the bounds by constants and sometimes by much more. The classification chapters close the loop on optimality. The Littlestone dimension, defined through adaptively shattered instance trees, exactly characterizes mistake bounds: no algorithm beats Ldim(H), and the Standard Optimal Algorithm, which predicts toward the subclass of larger Ldim, matches it. In the unrealizable case the same dimension characterizes regret up to a log factor, via an expert construction that simulates SOA with candidate mistake sets and then runs Weighted Majority over exponentially many such experts. Perceptron and Winnow fall out as OGD and EG on hinge surrogates, with margin (R/gamma)^2 and sparsity 8k log d bounds respectively. The bandit chapters show the price of partial feedback: unbiased gradient estimates built by importance weighting keep OMD valid, but the multi-armed bandit pays an extra factor of d because only one arm's cost is observed, and the one-point gradient estimate of Flaxman, Kalai, and McMahan degrades full-information T^{1/2} regret to T^{3/4}. The proof architecture deserves attention in its own right, because the same three moves recur in every chapter. First, a one-step comparison: the algorithm's choice today is compared with the choice it would make tomorrow after seeing today's loss, which is exactly the content of the FTL and FoReL lemmas. Second, a stability bound: strong convexity converts that one-step gap into a quantity like L_t^2 / sigma or a Bregman divergence between consecutive dual states, so the total regret becomes a sum of per-round stability charges plus one global prior term. Third, a tuning step: the free parameter eta is chosen to balance the prior term against the accumulated stability charges, which is where the square-root rates come from and where the doubling trick removes the need to know the horizon in advance. The duality chapter shows the same skeleton from the conjugate side and improves the constant by a factor of two, and the local norm chapter shows that the stability charges can be measured in the geometry the algorithm actually visited rather than in a worst-case norm fixed ahead of time. Finally, online-to-batch conversion turns any low-regret online learner into a stochastic learning algorithm by averaging iterates, with excess risk equal to average regret. For a reasoning engine the operational content is direct: score every model by regret against named fixed comparators, treat stability as a priced resource bought with regularization, match update geometry to signal geometry, weight ensembles multiplicatively, budget exploration explicitly when feedback is partial, and publish batch models as averages of online iterates. The limits are equally clear: guarantees are worst case and relative, surrogates can distort the true loss, Littlestone dimension is often infinite or incomputable, and none of the bounds promise absolute accuracy, only competitiveness with the best fixed alternative.",
+   "retrocausal_genealogy": "The lineage runs from sequential decision theory and game theory into modern machine learning. Cover's 1965 impossibility result for binary sequential predictors sets the problem; Littlestone's thesis work supplies mistake bounds, the Halving idea, Winnow, and the dimension that now bears his name. Kivinen and Warmuth built the relative loss bound framework and the Exponentiated Gradient update; Vovk's aggregating algorithm and the Littlestone-Warmuth Weighted Majority analysis give the expert advice backbone. Zinkevich named online convex programming and analyzed gradient descent with projections, Gordon had introduced the regret setting earlier, and Shalev-Shwartz's own thesis and primal-dual work with Singer supply the FoReL and duality machinery surveyed here. Rosenblatt's Perceptron, Agmon's relaxation method, and the Flaxman, Kalai, and McMahan bandit gradient estimate are absorbed as special cases, while Vapnik's general setting of learning frames the closing online-to-batch chapter.",
+   "theory_of_mind": "The author writes for a reader who wants certificates, not heuristics. His model of the domain is an adversary constrained by structure: the environment may be hostile, adaptive, and distribution-free, but learning becomes possible exactly where structure exists, in convexity, in margins, in finite Littlestone dimension, or in feedback that can be unbiasedly estimated. He assumes the reader distrusts any algorithm whose assumptions are unstated, so every bound travels with its conditions: which norm, which comparator class, which feedback model. Pedagogically he believes unification beats cataloguing: dozens of named algorithms are derived from FoReL and OMD so the reader learns one framework with interchangeable parts rather than a zoo of unrelated update rules.",
+   "cross_layer_veto": "This work vetoes several tempting moves in any larger reasoning system. It vetoes update rules with no stability account: an unregularized refit can oscillate, so any layer proposing sequential updates must name its regularizer and its norm. It vetoes accuracy promises for classes of infinite Littlestone dimension unless a margin or surrogate condition replaces the missing structure. It vetoes quoting regret without a named comparator class, since regret against a weak class certifies nothing. It vetoes treating partial feedback as free: bandit-style layers must charge the factor d or the degraded T^{3/4} rate. And it vetoes surrogate objectives that do not provably upper bound the true loss, because every downstream guarantee is inherited from the surrogate, not from the target loss."
+  }
+ ],
+ "universal_lens": "Any system that acts repeatedly and is graded after each action can be redesigned as an online learner. Name the comparator class, define the loss, demand sublinear regret, buy stability with a regularizer matched to the geometry of the action space, convexify discrete choices by randomization or by a surrogate loss that upper bounds the true cost, estimate missing gradients unbiasedly when feedback is partial, and convert the online trace into a batch decision by averaging. The template transfers to control, forecasting, resource allocation, adaptive testing, and any operations loop where decisions are sequential and feedback is delayed but eventually observed.",
+ "gsi_mapping": "For the Galaxy Sports Institute this monograph is core curriculum and reference theory for sequential prediction. It supplies the formal vocabulary (regret, version space, Littlestone dimension, strong convexity, Bregman divergence, local norms) and the theorem inventory against which any proposed learning rule is checked before adoption: what is its comparator class, its stability term, its feedback model, its geometry. Its derivations of Weighted Majority, Perceptron, Winnow, OGD, and mirror descent from one framework give the Institute a single teachable spine for sequential methods, and its impossibility results mark the exact boundaries where guarantees stop and assumptions must be declared.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine this monograph is the update-rule constitution. Each prediction cycle is an online round: signal models act as experts combined by multiplicative weights, parameters are updated by regularized follow-the-leader or mirror descent with the regularizer matched to whether signals are dense or sparse, and every model carries a live regret certificate against the best fixed reference model. Exploration across data views is budgeted as a bandit problem with its factor d charged openly, black-box scorers are tuned with one-point gradient estimates, and published ratings are averages of online iterates whose excess cost is bounded by average regret."
+}
