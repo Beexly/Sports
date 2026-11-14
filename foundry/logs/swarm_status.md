@@ -640,3 +640,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 07:46:04 | COMPLETE | 1898a7adf73deda1 | primitives=28 think_words=903
 - 2026-11-14 07:54:52 | COMPLETE | 1505929a6cf204b1 | primitives=33 think_words=1017
 - 2026-11-14 08:24:57 | COMPLETE | 0245bb24406822d6 | primitives=31 think_words=930
+- 2026-11-14 08:52:09 | CLAIMED | 73a3e0517f31d6ab | worker=hermes-inline file=2024 - RisingBALLER A Player is a Token, a Match is a Sentence A Path Towards a Foundational Model for Football Players Data Analytics - Unknown Authors.md
+- 2026-11-14 09:00:54 | COMPLETE | 10de5eafe60aa00b | primitives=32 think_words=891

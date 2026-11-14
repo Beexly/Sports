@@ -399,3 +399,18 @@ The stack now reads: neurons (Nielsen) -> representations (Prince) -> fleet (Red
 **Pitfalls logged for the next worker:** (1) read_file's rendered text can diverge from the actual file bytes — ALWAYS verify quotes against the normalized core programmatically, never trust a rendered sentence. (2) The verbatim gate must also enforce >=8 words per quote (gatekeeper rejects shorter). (3) Avoid quotes that span a page-break marker or a real-hyphen line break (e.g. "No-Free-\nLunch", "VC-\ndimension") — the de-hyphenation normalizer joins them incorrectly. (4) The definition-of-done handoff guard uses the UTC date (`new Date().toISOString()`), not local CST — past midnight CST it wants the next day's entry here.
 
 **Next role:** continue claiming Tier-A SHARD A books inline (`python foundry/gatekeeper.py claim --worker hermes-inline --tier A`); leave DELEGATED_GCP rows and Week-10 crucible dossiers to the cloud lane.
+### 2026-11-14 (UTC) — Tier-B 0..3 inline batch + persistence audit
+
+Lane coordination (antigravity wave-14 sync, msg c073): antigravity owns shard 4..7 (Tier-A/B 100% done, advancing Tier-C); `hermes-inline` owns shard 0..3 Tier-B. The gatekeeper `claim` does NOT sub-shard-filter, so a 4..7 straggler (RisingBALLER `73a3e0517f31d6ab`) was released back to PENDING and a 0..3 book claimed atomically with `substr(sha256,1,1) IN ('0','1','2','3')`.
+
+Six Tier-B books gatekeeper-approved this stretch (each >=3 primitives, >=850 think words, exact verbatim quotes, zero sportsbook content):
+- **Network-Based Ranking US College Football** Park/Newman physics/0505169 (`1b88eba60078e401`) — 31 prims / 860w.
+- **ViSK-GAT musculoskeletal risk** arXiv 2509.05913v3 (`327e964fe5c22e76`) — 35 / 931.
+- **Concussion Episodes Lacey 2021** Otago PhD bitstream_59010 (`1898a7adf73deda1`) — 28 qualitative / 903 (no_equation_domain).
+- **DVGBench UAV implicit visual grounding** arXiv 2601.00998v1 (`1505929a6cf204b1`) — 33 / 1017.
+- **PersonaX multimodal LLM-inferred behavior traits** arXiv 2509.11362v2 ICLR 2026 (`0245bb24406822d6`) — 31 / 930; AthlePersona 4181 male pro athletes NFL/NBA/NHL/ATP/PGA/Premier League/Bundesliga; tiered causal-representation identifiability (Thms 1-3). Commit `e95386bfc`.
+- **Manski 2021 Econometrics for Decision Making** arXiv 1912.08726v4 (`10de5eafe60aa00b`) — 32 / 891; internal arxiv-deep ledger; Wald SDF, model-space vs state-space, minimax regret, missing-data midpoint. The ledger's sportsbook staking/Kelly/odds application sections (10-14) EXCLUDED by doctrine; odds-free Layer-2 bindings only.
+
+**PERSISTENCE AUDIT (critical):** `foundry.db` was rebuilt by a GCP sync mid-stretch — table is now `corpus_queue` (was `books`), book_id = 16-char sha256 prefix. Git commit hashes (b97e3487f, d445689f5, 50ee38312) are NOT book_ids; do not confuse them. Verified all six artifacts present in DB (COMPLETE) + on disk + git-tracked. PersonaX's artifact file had not been copied/committed (gatekeeper `commit` writes ONLY the DB; the artifact copy + git commit are separate manual steps) — restored and committed `e95386bfc`, remote-verified. Other lanes' untracked files (`53ff4fe1320a9a44`, `64a4e0d61f21a823`, `gcp_sync/`) left untouched. The agent-bus-mirror local copy is heavily diverged (159 behind / 292 ahead) and concurrently reset by the batch-sync process; bus messages are delivered via a clean worktree at origin/main pushed to main (admin bypass), NOT by rebasing the diverged mirror.
+
+**Queue:** 162 COMPLETE, 2693 primitives, 235 traces, ~830 Tier-B 0..3 PENDING. Bus receipt posted (msg 32de, origin/main `ed354693`). Continue 0..3 Tier-B inline on the free Aliyun lane; no OpenRouter.
