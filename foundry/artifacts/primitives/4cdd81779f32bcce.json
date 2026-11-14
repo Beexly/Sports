@@ -1,0 +1,95 @@
+{
+  "book_id": "4cdd81779f32bcce",
+  "source_status": "COMPLETE",
+  "title": "2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al",
+  "file_name": "2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al.pdf",
+  "sha256": "4cdd81779f32bcce64c256507de1bdbe1f8c615ab5bb8a3b06c018224f82442f",
+  "primary_domain": "other",
+  "pages_total": 38,
+  "pages_read": 31,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pascal_siakam_model",
+      "name": "Pascal Siakam Model",
+      "verbatim_quote": "The Pascal Siakam Model Finding Diamonds in the Rough in the NBA Draft By Ayush Batra, Wesley Neidhardt, Pranav Nanda, and Daniel Galper Wharton Moneyball Academy 2020, Sports Analytics Student Research Journal",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes college statistics are predictive of NBA success; ignores external factors like team fit, injury, coaching changes.",
+      "breakdown_regime": "Fails when statistical outliers (e.g., late-round gems) defy linear projections.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Employs conformal prediction intervals to map college metrics to posterior NBA performance distributions, accounting for uncertainty in draft positioning.",
+        "source_operator": "pascal_siakam_model",
+        "telemetry": "Observed NBA win shares vs. predicted win shares for drafted players."
+      }
+    },
+    {
+      "primitive_id": "r_squared_correlation",
+      "name": "R-squared & Correlation Analysis",
+      "verbatim_quote": "Predicting NBA Win Shares ● We then split the players into 2 groups: guards and 'big-men' R-squared = 0.08553 Correlation = 0.2925 R-squared = 0.1593 Correlation = 0.3991",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear relationships between input college variables and NBA outcomes; normally distributed residuals.",
+      "breakdown_regime": "Breaks down when variance is heteroscedastic or when interactions are non-linear.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Utilizes Bayesian hierarchical models to estimate posterior distributions of R-squared values, providing robustness against small sample size.",
+        "source_operator": "r_squared_correlation",
+        "telemetry": "Posterior predictive checks via cross-validation error rates."
+      }
+    },
+    {
+      "primitive_id": "multiple_linear_regression",
+      "name": "Multiple Linear Regression",
+      "verbatim_quote": "WS Regression: Guards We created a multiple linear regression using college stats as inputs in order to predict the players' NBA WS/82 Results of Multiple Linear Regression Unfortunately, the residuals are not normal Bad Model?",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multicollinearity among predictors is minimal; errors are homoscedastic and independent.",
+      "breakdown_regime": "Breaks down when there is severe multicollinearity or influential outliers skewing the mean.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: Implements a state-transition kernel that updates regression coefficients based on observed player performance states (e.g., breakout vs. stagnation).",
+        "source_operator": "multiple_linear_regression",
+        "telemetry": "Mean squared error (MSE) of predictions on holdout validation sets."
+      }
+    },
+    {
+      "primitive_id": "model_performance_analysis",
+      "name": "Model Performance Analysis",
+      "verbatim_quote": "Working With Guards First, we split the dataset of players into two groups: Guards and Big Men Unfortunately, there were an insufficient amount of Centers for their own group Then, we looked at the relationship between Draft Pick and Win Shares per 82 games R-sqrd = 0.078",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Draft pick number is a direct proxy for talent; performance is stationary across time periods.",
+      "breakdown_regime": "Breaks down during periods of league expansion or rule changes affecting player value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Maps this analysis to conformal prediction trees that segment players by percentile bins of expected win shares, adjusting for draft slot.",
+        "source_operator": "model_performance_analysis",
+        "telemetry": "Calibration plots showing actual vs. predicted quantiles of NBA success."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4cdd81779f32bcce_t0",
+      "think": "The core challenge is translating college performance into NBA success, which involves high-dimensional noise and selection bias. The authors use linear regression as a foundational tool but recognize its limitations, such as assuming normality of residuals and linearity. To address these, conformal prediction provides a framework for constructing prediction intervals without distributional assumptions, aligning with GSI's need for robust uncertainty quantification. Additionally, the model's reliance on draft position as a signal introduces potential confounding; instrumental variable techniques could help isolate true talent effects. The primary failure mode is over-reliance on summary statistics, ignoring contextual factors like team systems and developmental trajectories.\n\nDeep epistemic analysis for 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce, domain=other, pages_read=31/38): Operator 'Pascal Siakam Model' (page 1, domain other) captures: The Pascal Siakam Model Finding Diamonds in the Rough in the NBA Draft By Ayush Batra, Wesley Neidhardt, Pranav Nanda, and Daniel Galper Wharton Moneyball Academy 2020, Sports Analytics Student Research Journal Assumptions: Assumes college statistics are predictive of NBA success; ignores external factors like team fit, injury, coaching changes. Breakdown regime: Fails when statistical outliers (e.g., late-round gems) defy linear projections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Employs conformal prediction intervals to map college metrics to posterior NBA performance distributions, accounting for uncertainty in draft positioning. Operator 'R-squared & Correlation Analysis' (page 8, domain other) captures: Predicting NBA Win Shares ● We then split the players into 2 groups: guards and 'big-men' R-squared = 0.08553 Correlation = 0.2925 R-squared = 0.1593 Correlation = 0.3991 Assumptions: Linear relationships between input college variables and NBA outcomes; normally distributed residuals. Breakdown regime: Breaks down when variance is heteroscedastic or when interactions are non-linear. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Utilizes Bayesian hierarchical models to estimate posterior distributions of R-squared values, providing robustness against small sample size. Operator 'Multiple Linear Regression' (page 15, domain other) captures: WS Regression: Guards We created a multiple linear regression using college stats as inputs in order to predict the players' NBA WS/82 Results of Multiple Linear Regression Unfortunately, the residuals are not normal Bad Model? Assumptions: Multicollinearity among predictors is minimal; errors are homoscedastic and independent. Breakdown regime: Breaks down when there is severe multicollinearity or influential outliers skewing the mean. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Implements a state-transition kernel that updates regression coefficients based on observed player performance states (e.g., breakout vs. stagnation). Operator 'Model Performance Analysis' (page 14, domain other) captures: Working With Guards First, we split the dataset of players into two groups: Guards and Big Men Unfortunately, there were an insufficient amount of Centers for their own group Then, we looked at the relationship between Draft Pick and Win Shares per 82 games R-sqrd = 0.078 Assumptions: Draft pick number is a direct proxy for talent; performance is stationary across time periods. Breakdown regime: Breaks down during periods of league expansion or rule changes affecting player value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Maps this analysis to conformal prediction trees that segment players by percentile bins of expected win shares, adjusting for draft slot. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce, domain=other, pages_read=31/38): Operator 'Pascal Siakam Model' (page 1, domain other) captures: The Pascal Siakam Model Finding Diamonds in the Rough in the NBA Draft By Ayush Batra, Wesley Neidhardt, Pranav Nanda, and Daniel Galper Wharton Moneyball Academy 2020, Sports Analytics Student Research Journal Assumptions: Assumes college statistics are predictive of NBA success; ignores external factors like team fit, injury, coaching changes. Breakdown regime: Fails when statistical outliers (e.g., late-round gems) defy linear projections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Employs conformal prediction intervals to map college metrics to posterior NBA performance distributions, accounting for uncertainty in draft positioning. Operator 'R-squared & Correlation Analysis' (page 8, domain other) captures: Predicting NBA Win Shares ● We then split the players into 2 groups: guards and 'big-men' R-squared = 0.08553 Correlation = 0.2925 R-squared = 0.1593 Correlation = 0.3991 Assumptions: Linear relationships between input college variables and NBA outcomes; normally distributed residuals. Breakdown regime: Breaks down when variance is heteroscedastic or when interactions are non-linear. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Utilizes Bayesian hierarchical models to estimate posterior distributions of R-squared values, providing robustness against small sample size. Operator 'Multiple Linear Regression' (page 15, domain other) captures: WS Regression: Guards We created a multiple linear regression using college stats as inputs in order to predict the players' NBA WS/82 Results of Multiple Linear Regression Unfortunately, the residuals are not normal Bad Model? Assumptions: Multicollinearity among predictors is minimal; errors are homoscedastic and independent. Breakdown regime: Breaks down when there is severe multicollinearity or influential outliers skewing the mean. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Implements a state-transition kernel that updates regression coefficients based on observed player performance states (e.g., breakout vs. stagnation). Operator 'Model Performance Analysis' (page 14, domain other) captures: Working With Guards First, we split the dataset of players into two groups: Guards and Big Men Unfortunately, there were an insufficient amount of Centers for their own group Then, we looked at the relationship between Draft Pick and Win Shares per 82 games R-sqrd = 0.078 Assumptions: Draft pick number is a direct proxy for talent; performance is stationary across time periods. Breakdown regime: Breaks down during periods of league expansion or rule changes affecting player value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Maps this analysis to conformal prediction trees that segment players by percentile bins of expected win shares, adjusting for draft slot. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical econometrics (OLS) and modern machine learning (random forests), evolving through sports analytics to incorporate Bayesian hierarchical methods for small-sample inference. Retrocausal Genealogy: Rooted in 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include front offices that may prioritize intangible scouting reports over statistical projections, leading to misaligned incentives and potential model rejection. Theory of Mind & Decision Maker Model: Rooted in 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: Ensure input features (college stats) are decorrelated using principal component analysis to prevent leakage between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al (4cdd81779f32bcce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

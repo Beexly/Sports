@@ -1,0 +1,95 @@
+{
+  "book_id": "4c2cd7e92fc12456",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2502.21085v4",
+  "file_name": "arxiv_2502.21085v4.pdf",
+  "sha256": "4c2cd7e92fc12456bb76d9e22d65dc189e4d103e8873f8e626d23a8599241e4c",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for badminton stroke classification integrating skeletal pose, shuttlecock trajectory, and temporal video clipping via transformer architecture. Universal Lens: Rooted in arxiv_2502.21085v4 (4c2cd7e92fc12456), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over stroke-type hypotheses conditioned on skeletonized player motion and shuttlecock kinematics using conformal predictive distributions. GSI Mapping: Rooted in arxiv_2502.21085v4 (4c2cd7e92fc12456), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in racket sport dynamics driven by real-time pose-trajectory fusion and temporal stroke segmentation logic. GSE Mapping: Rooted in arxiv_2502.21085v4 (4c2cd7e92fc12456), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "video_clipping_strategy",
+      "name": "Video Clipping Strategy",
+      "verbatim_quote": "In this paper, we introduce a novel video clipping strategy to extract frames of each player's racket swing in a badminton broadcast match.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each rally consists of sequential strokes; target stroke frames must be centered within clips for optimal feature extraction.",
+      "breakdown_regime": "Failure occurs when stroke boundaries are misaligned or background noise obscures player poses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps temporal frame sequences to structured stroke segments via defined positional and trajectory constraints.",
+        "source_operator": "video_clipping_strategy",
+        "telemetry": "Accuracy of stroke frame localization relative to actual racket impact."
+      }
+    },
+    {
+      "primitive_id": "skeleton_based_action_recognition",
+      "name": "Skeleton-Based Action Recognition",
+      "verbatim_quote": "This extraction process is called Human Pose Estimation (HPE) [4, 5, 20, 31, 41], and the remaining process is known as Skeleton-based Action Recognition (SAR) [10, 11, 14, 22–24, 26, 35, 39, 40].",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Human motion can be accurately represented through skeletal joint coordinates; motion patterns are discriminable across stroke types.",
+      "breakdown_regime": "Degradation in recognition accuracy due to occlusion, low-resolution poses, or ambiguous joint configurations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transforms pose data into action classification space using learned temporal kernels.",
+        "source_operator": "skeleton_based_action_recognition",
+        "telemetry": "Precision of stroke-type classification from skeletal features alone."
+      }
+    },
+    {
+      "primitive_id": "shuttlecock_trajectory_tracking",
+      "name": "Shuttlecock Trajectory Tracking",
+      "verbatim_quote": "These clipped frames are then processed by three existing models: one for Human Pose Estimation to obtain human skeletal joints, another for shuttlecock trajectory tracking, and the other for court line detection to determine player positions on the court.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Trajectory data provides invariant and reliable signal for stroke type; shuttlecock path is deterministic given initial conditions.",
+      "breakdown_regime": "Loss of trajectory fidelity due to camera jitter, lighting changes, or object occlusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps shuttlecock kinematics to stroke-type labels through geometric and kinematic correlations.",
+        "source_operator": "shuttlecock_trajectory_tracking",
+        "telemetry": "Correlation coefficient between predicted and observed stroke outcomes."
+      }
+    },
+    {
+      "primitive_id": "badminton_stroke_type_transformer",
+      "name": "Badminton Stroke-Type Transformer",
+      "verbatim_quote": "Leveraging these data as inputs, we propose Badminton Stroke-type Transformer (BST) to classify player stroke-types in singles.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Transformer architecture enables effective cross-modal fusion of pose and trajectory signals; temporal context improves classification performance.",
+      "breakdown_regime": "Overfitting to training data or poor generalization to unseen matches due to limited dataset diversity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applies attention mechanisms to combine skeletal and trajectory embeddings into probabilistic stroke-type predictions.",
+        "source_operator": "badminton_stroke_type_transformer",
+        "telemetry": "Top-k accuracy of stroke classification on test datasets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4c2cd7e92fc12456_t0",
+      "think": "The core methodology integrates video segmentation with multimodal sensing to isolate relevant action frames. Video clipping ensures that only frames containing racket-swing events are considered, reducing computational overhead and focusing on high-relevance data. Skeletal pose estimation extracts joint-level motion data, enabling SAR models to capture nuanced movement patterns. Shuttlecock trajectory tracking adds an invariant physical signal—since trajectories reflect actual stroke mechanics rather than deceptive motions—which enhances robustness against adversarial behavior. The BST model fuses these modalities using a transformer architecture, exploiting self-attention to weigh spatial and temporal dependencies. This design addresses key failure modes such as occlusion, motion ambiguity, and environmental variability by grounding inference in both biomechanical consistency and kinematic truth. Dualities emerge between pose and trajectory domains, where each complements the other’s weaknesses. For example, while pose may be occluded, trajectory remains stable. Conversely, trajectory lacks fine-grained motor detail. Thus, the system operates under a hybrid logic of perceptual redundancy and semantic alignment.\n\nDeep epistemic analysis for arxiv_2502.21085v4 (4c2cd7e92fc12456, domain=other, pages_read=18/18): Operator 'Video Clipping Strategy' (page 1, domain other) captures: In this paper, we introduce a novel video clipping strategy to extract frames of each player's racket swing in a badminton broadcast match. Assumptions: Each rally consists of sequential strokes; target stroke frames must be centered within clips for optimal feature extraction. Breakdown regime: Failure occurs when stroke boundaries are misaligned or background noise obscures player poses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps temporal frame sequences to structured stroke segments via defined positional and trajectory constraints. Operator 'Skeleton-Based Action Recognition' (page 1, domain other) captures: This extraction process is called Human Pose Estimation (HPE) [4, 5, 20, 31, 41], and the remaining process is known as Skeleton-based Action Recognition (SAR) [10, 11, 14, 22–24, 26, 35, 39, 40]. Assumptions: Human motion can be accurately represented through skeletal joint coordinates; motion patterns are discriminable across stroke types. Breakdown regime: Degradation in recognition accuracy due to occlusion, low-resolution poses, or ambiguous joint configurations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms pose data into action classification space using learned temporal kernels. Operator 'Shuttlecock Trajectory Tracking' (page 1, domain other) captures: These clipped frames are then processed by three existing models: one for Human Pose Estimation to obtain human skeletal joints, another for shuttlecock trajectory tracking, and the other for court line detection to determine player positions on the court. Assumptions: Trajectory data provides invariant and reliable signal for stroke type; shuttlecock path is deterministic given initial conditions. Breakdown regime: Loss of trajectory fidelity due to camera jitter, lighting changes, or object occlusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps shuttlecock kinematics to stroke-type labels through geometric and kinematic correlations. Operator 'Badminton Stroke-Type Transformer' (page 1, domain other) captures: Leveraging these data as inputs, we propose Badminton Stroke-type Transformer (BST) to classify player stroke-types in singles. Assumptions: Transformer architecture enables effective cross-modal fusion of pose and trajectory signals; temporal context improves classification performance. Breakdown regime: Overfitting to training data or poor generalization to unseen matches due to limited dataset diversity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applies attention mechanisms to combine skeletal and trajectory embeddings into probabilistic stroke-type predictions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2502.21085v4 (4c2cd7e92fc12456, domain=other, pages_read=18/18): Operator 'Video Clipping Strategy' (page 1, domain other) captures: In this paper, we introduce a novel video clipping strategy to extract frames of each player's racket swing in a badminton broadcast match. Assumptions: Each rally consists of sequential strokes; target stroke frames must be centered within clips for optimal feature extraction. Breakdown regime: Failure occurs when stroke boundaries are misaligned or background noise obscures player poses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps temporal frame sequences to structured stroke segments via defined positional and trajectory constraints. Operator 'Skeleton-Based Action Recognition' (page 1, domain other) captures: This extraction process is called Human Pose Estimation (HPE) [4, 5, 20, 31, 41], and the remaining process is known as Skeleton-based Action Recognition (SAR) [10, 11, 14, 22–24, 26, 35, 39, 40]. Assumptions: Human motion can be accurately represented through skeletal joint coordinates; motion patterns are discriminable across stroke types. Breakdown regime: Degradation in recognition accuracy due to occlusion, low-resolution poses, or ambiguous joint configurations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms pose data into action classification space using learned temporal kernels. Operator 'Shuttlecock Trajectory Tracking' (page 1, domain other) captures: These clipped frames are then processed by three existing models: one for Human Pose Estimation to obtain human skeletal joints, another for shuttlecock trajectory tracking, and the other for court line detection to determine player positions on the court. Assumptions: Trajectory data provides invariant and reliable signal for stroke type; shuttlecock path is deterministic given initial conditions. Breakdown regime: Loss of trajectory fidelity due to camera jitter, lighting changes, or object occlusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps shuttlecock kinematics to stroke-type labels through geometric and kinematic correlations. Operator 'Badminton Stroke-Type Transformer' (page 1, domain other) captures: Leveraging these data as inputs, we propose Badminton Stroke-type Transformer (BST) to classify player stroke-types in singles. Assumptions: Transformer architecture enables effective cross-modal fusion of pose and trajectory signals; temporal context improves classification performance. Breakdown regime: Overfitting to training data or poor generalization to unseen matches due to limited dataset diversity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applies attention mechanisms to combine skeletal and trajectory embeddings into probabilistic stroke-type predictions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early HAR approaches that used bounding box analysis, evolving through HPE and SAR paradigms, culminating in modern deep learning architectures like Transformers. Influenced by prior work in sports analytics and computer vision, particularly in racket sports and action recognition. Retrocausal Genealogy: Rooted in arxiv_2502.21085v4 (4c2cd7e92fc12456), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include players who might attempt deception through fake movements, yet shuttlecock physics remains immutable. The model must distinguish intentional misdirection from natural variation, relying on trajectory integrity as a truth anchor. Theory of Mind & Decision Maker Model: Rooted in arxiv_2502.21085v4 (4c2cd7e92fc12456), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that pose and trajectory inputs are not redundant; they must contribute distinct information. Leakage vetoes occur if either modality fails to maintain independence from the other, e.g., if trajectory is derived from pose estimates instead of direct observation. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2502.21085v4 (4c2cd7e92fc12456), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

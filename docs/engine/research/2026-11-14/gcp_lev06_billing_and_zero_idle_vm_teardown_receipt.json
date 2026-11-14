@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "GCP-LEV-06",
+  "generated_at_utc": "2026-11-14T10:58:42.481244+00:00",
+  "credit_stack_ledger": {
+    "gcp_project_id": "galaxysportsedge",
+    "active_gcp_credit_buffer_usd": 103.11,
+    "google_dev_program_renewal": {
+      "renewal_date": "2026-12-06",
+      "credit_grant_usd": 100.0,
+      "status": "SCHEDULED_RENEWAL"
+    },
+    "google_for_startups_ai_cloud_program": {
+      "env_var_reference": "GOOGLE_STARTUPS_CASE_ID",
+      "max_potential_credit_usd": 350000.0,
+      "status": "FOUNDER_APPLICATION_TRACKED"
+    },
+    "aws_shadow_free_tier": {
+      "credit_buffer_usd": 120.0,
+      "idle_ec2_rds_nat_instances": 0,
+      "status": "ZERO_IDLE_BURN"
+    },
+    "openrouter_lane_policy": {
+      "paid_spend_allowed_usd": 0.0,
+      "active_free_lanes": [
+        "alibaba-qwencloud-1m-free",
+        "nvidia-nim-free-40rpm"
+      ]
+    }
+  },
+  "delegated_gcp_queue_ro": {
+    "tier_a": 217,
+    "tier_b": 1606,
+    "tier_c": 6775,
+    "total_delegated_gcp": 8598
+  },
+  "four_vm_fleet_topology": [
+    {
+      "node": "node1",
+      "instance_name": "gse-foundry-gcp-01",
+      "zone": "us-central1-a",
+      "machine_type": "e2-standard-8",
+      "branch": "origin/gcp/foundry-shard-b-2026-11-13"
+    },
+    {
+      "node": "node2",
+      "instance_name": "gse-foundry-gcp-02",
+      "zone": "us-central1-a",
+      "machine_type": "e2-standard-8",
+      "branch": "origin/gcp/foundry-node2-2026-11-13"
+    },
+    {
+      "node": "node3",
+      "instance_name": "gse-foundry-gcp-03",
+      "zone": "us-east1-b",
+      "machine_type": "e2-standard-8",
+      "branch": "origin/gcp/foundry-node3-2026-11-13"
+    },
+    {
+      "node": "node4",
+      "instance_name": "gse-foundry-gcp-04",
+      "zone": "us-west1-b",
+      "machine_type": "e2-standard-8",
+      "branch": "origin/gcp/foundry-node4-2026-11-13"
+    }
+  ],
+  "live_unpack_progress": {
+    "per_node_file_counts": {
+      "node1": 1491,
+      "node2": 1376,
+      "node3": 941,
+      "node4": 942
+    },
+    "total_branch_blobs": 4750,
+    "unique_filenames_flat": 4692,
+    "branch_commits": {
+      "origin/gcp/foundry-shard-b-2026-11-13": "4fc874c88a7444d33c17450674e0dbda53941943",
+      "origin/gcp/foundry-node2-2026-11-13": "0e593501cfe70379a8be135859fd2fa69bd13f59",
+      "origin/gcp/foundry-node3-2026-11-13": "30c32c97f5358ac6a7bdff6f49d0fd730d2d15c9",
+      "origin/gcp/foundry-node4-2026-11-13": "8ed376c6d410afe4bcbb43ce3870f3a6e7e3486d"
+    },
+    "written_in_latest_sync": 107
+  },
+  "teardown_gate": {
+    "decision": "KEEP_RUNNING_ACTIVE_SHARD_B_SWEEP",
+    "teardown_authorized": false,
+    "delegated_target": 8598,
+    "unique_filenames_flat": 4692,
+    "completion_ratio": 0.5457,
+    "missing_flat_files_count": 0,
+    "written_in_latest_sync": 107,
+    "minutes_since_last_branch_advance": 0.0,
+    "blocking_reasons": [
+      "ACTIVE_DRAIN_IN_PROGRESS: 4692/8598 unique docs unpacked (54.6%)",
+      "RECENT_DELTAS_WRITTEN: 107 new files unpacked on latest sync",
+      "QUIET_WINDOW_UNMET: 0.0m < 30.0m"
+    ],
+    "teardown_gcloud_commands_when_authorized": [
+      "gcloud compute instances delete gse-foundry-gcp-01 --project=galaxysportsedge --zone=us-central1-a --quiet",
+      "gcloud compute instances delete gse-foundry-gcp-02 --project=galaxysportsedge --zone=us-central1-a --quiet",
+      "gcloud compute instances delete gse-foundry-gcp-03 --project=galaxysportsedge --zone=us-east1-b --quiet",
+      "gcloud compute instances delete gse-foundry-gcp-04 --project=galaxysportsedge --zone=us-west1-b --quiet"
+    ]
+  }
+}
