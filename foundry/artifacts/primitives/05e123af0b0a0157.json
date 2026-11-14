@@ -1,0 +1,477 @@
+{
+  "book_id": "05e123af0b0a0157",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_QUALITATIVE_ML_CLEAN_OCR",
+  "source_note": "Lu, Qiu & An, 'Machine Learning-Based Classification of Alertness Levels in Elite Shooting Athletes Using Heart Rate Variability', Journal of Sports Science and Medicine (2026) 25:476-486, DOI 10.52082/jssm.2026.476 (11 pages). Full ML/HRV study: 83 elite shooters, 60-min PVT (RT>500ms lapse label), Polar V800 ECG + Kubios, RF-RFE feature selection, SVM/RF/XGBoost/AdaBoost with subject-level 5-fold CV; binary (top/bottom 40%) beats 3-class (AdaBoost AUC 0.67->0.77, acc 0.75); SHAP VLF% top predictor; neurovisceral integration model; honest caveats (VLF% systemic correlate not direct index, elite ceiling effect, calibration NOT evaluated, internal-only validation). Extracted faithfully (not a derivative summary). The source prints NO numbered display equations — HRV indices (VLF/LF/HF bands, SD2/SD1, LF/HF, SDNN, RMSSD, DFA, ApEn/SampEn) are named standard metrics presented in value tables — so primitives use latex:'' with breakdown_regime 'no_equation_domain' and metrics described in assumptions. Domain cs (ML framework) matches catalog; sport-science/psychophysiology context (shooting), not football. The HRV state-classification pipeline, leakage-safe subject-level CV, binary granularity tradeoff, SHAP interpretability, and discrimination-vs-calibration caveat are sport-agnostic and isomorphic to GSE's arousal/readiness monitoring layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "vigilance_definition",
+      "name": "Vigilance: sustained focused attention and responsiveness, inhibiting distractions",
+      "verbatim_quote": "This state encompasses the capacity to sustain focused attention and optimal responsiveness over extended periods while effectively inhibiting distractions",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In precision sports like shooting, athletes must maintain high stable psychophysiological readiness (vigilance): the capacity to sustain focused attention and optimal responsiveness over extended periods while inhibiting distractions; competitive stress disrupts this, causing aiming fluctuation, delayed trigger control, and accuracy decline."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Vigilance as sustained attention is the same attentional-state construct GSE tracks for readiness.",
+        "source_operator": "vigilance_definition",
+        "telemetry": "vigilance = sustained focus + responsiveness + distraction inhibition"
+      }
+    },
+    {
+      "primitive_id": "alertness_tonic_preparedness",
+      "name": "Alertness = immediate tonic level of CNS preparedness",
+      "verbatim_quote": "defined here as the immediate, tonic level of central nervous system preparedness",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Alertness is operationally defined as the immediate, tonic level of central nervous system preparedness, a critical determinant of competitive success; real-time field assessment is hard because subjective scales (MFI-20, VAS, SSS) are biased and discontinuous, PVT interrupts training, and EEG/eye-tracking need strict control."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tonic CNS preparedness is the same arousal-state variable GSE's signal-lights regulation targets.",
+        "source_operator": "alertness_tonic_preparedness",
+        "telemetry": "alertness = immediate tonic CNS preparedness; subjective scales biased/discontinuous"
+      }
+    },
+    {
+      "primitive_id": "hrv_autonomic_arousal",
+      "name": "HRV quantifies autonomic modulation linked to arousal and vigilance",
+      "verbatim_quote": "HRV quantifies the autonomic nervous system's modulation, which is intrinsically linked to psychophysiological arousal and vigilance",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Heart rate variability, a non-invasive ECG-derived metric, quantifies autonomic nervous system modulation intrinsically linked to psychophysiological arousal and vigilance; its wearable compatibility suits ambulatory sports monitoring, and ML models the complex non-linear HRV-vigilance relationship."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "HRV as autonomic-arousal proxy is the same non-invasive state signal GSE uses for readiness monitoring.",
+        "source_operator": "hrv_autonomic_arousal",
+        "telemetry": "HRV = ANS modulation ~ arousal/vigilance; wearable; ML non-linear mapping"
+      }
+    },
+    {
+      "primitive_id": "suboptimal_rt_500ms",
+      "name": "Sub-optimal alertness labeled by PVT reaction time > 500 ms",
+      "verbatim_quote": "A PVT trial was classified as representing a sub-optimal alertness state if the participant's reaction time exceeded 500 ms",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sub-optimal alertness is operationally defined by PVT behavioral performance: a trial with reaction time exceeding 500 ms is a sub-optimal epoch, following the well-established PVT convention where a response over 500 ms is an attentional lapse, substantially slower than the typical alert reaction time of 200-300 ms."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The RT-threshold lapse label is the same behavioral ground-truth GSE uses to supervise state classifiers.",
+        "source_operator": "suboptimal_rt_500ms",
+        "telemetry": "sub-optimal = PVT RT > 500ms (lapse); alert RT 200-300ms"
+      }
+    },
+    {
+      "primitive_id": "attentional_lapse_convention",
+      "name": "500 ms threshold = established PVT attentional-lapse convention",
+      "verbatim_quote": "a response exceeding 500 ms is classified as an attentional lapse",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The RT > 500 ms threshold adopts the established PVT convention (Dinges and Powell 1985; Van Dongen 2003; Reifman 2018) classifying such responses as attentional lapses, ensuring comparability with the broader PVT literature."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The standardized lapse threshold is the same literature-grounded labeling GSE adopts for comparability.",
+        "source_operator": "attentional_lapse_convention",
+        "telemetry": "RT>500ms = attentional lapse (PVT convention); comparability"
+      }
+    },
+    {
+      "primitive_id": "sample_size_obuchowski",
+      "name": "Sample size via Obuchowski method: 54 positive epochs minimum",
+      "verbatim_quote": "The required sample size was calculated using Obuchowski's method for correlated data",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sample size used Obuchowski's method for correlated data (alpha=0.05, power=80%) with pilot-expected AUC 0.75 and positive event rate 35%, requiring a minimum of 54 positive epochs (RT>500ms); the final dataset had 480 valid 10-minute epochs with 168 positive cases, exceeding the requirement and achieving observed AUC 0.77."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The a-priori power calculation is the same sample-size discipline GSE applies before trusting a classifier.",
+        "source_operator": "sample_size_obuchowski",
+        "telemetry": "Obuchowski alpha .05/power .80/AUC .75/rate .35 -> min 54 positive; final 480 epochs/168 positive"
+      }
+    },
+    {
+      "primitive_id": "elite_83_shooters",
+      "name": "83 elite shooters (48M/35F, 18.4y), national first-grade+",
+      "verbatim_quote": "A total of 83 elite shooting athletes from Shanghai (48 males, 35 females",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "83 elite Shanghai shooting athletes (48 male, 35 female; mean age 18.4 +/- 2.5 years), all national first-grade or above (9 International Master, 25 National Master, 49 first-grade), 10m air rifle (47) or air pistol (36), mean training 5.8 +/- 2.3 years, 28.6 +/- 4.2 hours/week; ethics LLSC20250005; morning testing 08:00-09:30 to control diurnal variation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The elite single-sport cohort is the same high-ecological-validity but narrow-generalizability sample GSE notes.",
+        "source_operator": "elite_83_shooters",
+        "telemetry": "83 shooters 48M/35F 18.4y; rifle 47/pistol 36; national-grade+; morning testing"
+      }
+    },
+    {
+      "primitive_id": "pvt_60min_six_blocks",
+      "name": "60-minute PVT: six 10-minute blocks mirroring a shooting match",
+      "verbatim_quote": "the PVT was structured into six consecutive 10-minute blocks, totaling 60 minutes of testing",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The PVT (PsychoPy v2022.2.5) mirrors the ~60-minute temporal structure of 10m air rifle/pistol matches: six consecutive 10-minute blocks of 80 trials each, random 2-10s inter-trial interval, millisecond timer stimulus, spacebar response; HRV recorded continuously; metrics include mean/median RT, reciprocal RT, fastest 10%, slowest 10%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ecologically-valid prolonged task is the same competition-mimicking protocol GSE uses for state data.",
+        "source_operator": "pvt_60min_six_blocks",
+        "telemetry": "PVT 6x10min blocks/80 trials; 2-10s ITI; ~60min match structure; continuous HRV"
+      }
+    },
+    {
+      "primitive_id": "ecg_polar_v800",
+      "name": "ECG via Polar V800 at 1000 Hz, Kubios artifact correction <2%",
+      "verbatim_quote": "Electrocardiographic (ECG) data continuously recorded throughout the vigilance task using a Polar V800 heart rate monitor",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "ECG recorded continuously with a Polar V800 at 1000 Hz, band-pass filtered 0.5-35 Hz, RR intervals artifact-corrected in Kubios HRV Premium 3.5 (Medium threshold), with corrected RR intervals consistently below 2% per participant per epoch, within accepted HRV quality thresholds, indicating high signal integrity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The wearable ECG + artifact-correction pipeline is the same clean-signal preprocessing GSE applies to HRV.",
+        "source_operator": "ecg_polar_v800",
+        "telemetry": "Polar V800 1000Hz; 0.5-35Hz bandpass; Kubios Medium correction <2%"
+      }
+    },
+    {
+      "primitive_id": "hrv_frequency_bands",
+      "name": "HRV bands: VLF 0.01-0.04, LF 0.04-0.15, HF 0.15-0.40 Hz, LF/HF, total power",
+      "verbatim_quote": "very low frequency (VLF: 0.01 - 0.04 Hz), low frequency (LF: 0.04 - 0.15 Hz), high frequency (HF: 0.15 - 0.40 Hz), the LF/HF ratio, and total power",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Frequency-domain HRV parameters computed in Kubios: VLF 0.01-0.04 Hz, LF 0.04-0.15 Hz, HF 0.15-0.40 Hz, LF/HF ratio, and total power, plus time-domain (SDNN, RMSSD, pNN50) and nonlinear (SD1, SD2, SD2/SD1, DFA alpha1/alpha2, ApEn, SampEn) indices quantifying autonomic activity related to vigilance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The HRV feature taxonomy is the same autonomic feature set GSE extracts for state classification.",
+        "source_operator": "hrv_frequency_bands",
+        "telemetry": "VLF .01-.04 / LF .04-.15 / HF .15-.40 Hz; LF/HF; total power; time + nonlinear"
+      }
+    },
+    {
+      "primitive_id": "binary_top_bottom_40",
+      "name": "Binary labeling: Optimal top 40% vs Sub-optimal bottom 40%",
+      "verbatim_quote": "Distinguishing simply between Optimal (Top 40%) and Sub-optimal (Bottom 40%) alertness",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Alertness labeling started as a five-level SD-deviation classification, consolidated to three-class (High/Moderate/Low) and binary (Optimal top 40% vs Sub-optimal bottom 40%); the binary framework was prioritized to maximize discriminative power and ensure a balanced dataset, dropping the ambiguous middle 20%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The top/bottom-40% binary split is the same ambiguity-dropping label design GSE uses for reliable classification.",
+        "source_operator": "binary_top_bottom_40",
+        "telemetry": "5-level -> 3-class -> binary (top 40% optimal / bottom 40% sub-optimal); middle dropped"
+      }
+    },
+    {
+      "primitive_id": "subject_level_cv_leakage",
+      "name": "Subject-level cross-validation folds prevent data leakage",
+      "verbatim_quote": "folds defined at the subject level to prevent data leakage",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hyperparameter tuning used exhaustive grid search with five-fold cross-validation, folds defined at the subject level to prevent data leakage (so all epochs of one athlete stay in one fold); AUC was the optimization metric; train/test split 7:3; feature selection via Random Forest with recursive feature elimination."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Subject-level fold isolation is the same leakage-prevention GSE enforces for within-subject physiological data.",
+        "source_operator": "subject_level_cv_leakage",
+        "telemetry": "5-fold CV subject-level (no leakage); grid search; AUC metric; 7:3 split; RF-RFE"
+      }
+    },
+    {
+      "primitive_id": "four_ml_algorithms",
+      "name": "Four classifiers: SVM, Random Forest, XGBoost, AdaBoost",
+      "verbatim_quote": "support vector machine (SVM), random forest (RF), extreme gradient boosting (XGBoost), and adaptive boosting (AdaBoost)",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Four ML algorithms built vigilance prediction models from selected HRV features: SVM, Random Forest, XGBoost, and AdaBoost, with grid-search hyperparameter tuning (e.g., SVM C and gamma, RF/XGBoost/AdaBoost estimators and learning rates) and evaluation by accuracy, specificity, sensitivity, F1, and AUC plus SHAP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-algorithm bake-off is the same classifier-comparison GSE runs for state prediction.",
+        "source_operator": "four_ml_algorithms",
+        "telemetry": "SVM/RF/XGBoost/AdaBoost; grid search; accuracy/specificity/sensitivity/F1/AUC + SHAP"
+      }
+    },
+    {
+      "primitive_id": "vigilance_decrement_rt",
+      "name": "Vigilance decrement: mean/median/slowest RT rise across blocks",
+      "verbatim_quote": "The mean reaction time, median reaction time, and the slowest 10% reaction time generally increased across blocks",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Across the six PVT blocks, mean RT (272.99 to 297.8 ms), median RT, and slowest-10% RT (397.12 to 492.49 ms, F=7.51) increased significantly (vigilance decrement), while fastest-10% RT showed a decreasing trend with no significant difference (F=0.88); HRV SDNN rose 44.3 to 47.51 ms and total power increased."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The time-on-task vigilance decrement is the same fatigue-driven performance decay GSE models within a game.",
+        "source_operator": "vigilance_decrement_rt",
+        "telemetry": "mean RT 273->298ms; slowest-10% 397->492ms (F=7.51); fastest-10% ns; SDNN 44.3->47.51"
+      }
+    },
+    {
+      "primitive_id": "moderate_boundary_confusion",
+      "name": "Three-class 'Moderate' poorly identified: severe boundary confusion",
+      "verbatim_quote": "misclassified 'Moderate' epochs were overwhelmingly assigned to the adjacent High or Low classes, indicating severe boundary confusion",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In the three-class framework the Moderate alertness class was poorly identified across all four algorithms (Recall 0.02 for SVM/AdaBoost to 0.15 for XGBoost, F1 0.05-0.22), with misclassified Moderate epochs overwhelmingly assigned to adjacent High or Low classes, indicating severe boundary confusion that motivated the binary framework."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The intermediate-class boundary confusion is the same label-ambiguity veto GSE flags in multi-class state models.",
+        "source_operator": "moderate_boundary_confusion",
+        "telemetry": "3-class Moderate Recall 0.02-0.15 / F1 0.05-0.22; misclassified to adjacent High/Low"
+      }
+    },
+    {
+      "primitive_id": "binary_auc_067_to_077",
+      "name": "Binary framework lifts AdaBoost AUC from 0.67 to 0.77",
+      "verbatim_quote": "the binary classification framework eliminated this ambiguous intermediate zone, significantly improving the optimal AdaBoost model's AUC from 0.67",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Eliminating the ambiguous intermediate zone via binary classification significantly improved the optimal AdaBoost model's AUC from 0.67 (three-class) to 0.77 (binary); the binary dataset was perfectly balanced at 240 High (mean RT < 273.98 ms) and 240 Low (mean RT >= 319.60 ms) epochs, a 1:1 ratio needing no synthetic oversampling."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The binary-over-multiclass reliability gain is the same granularity tradeoff GSE applies to state classification.",
+        "source_operator": "binary_auc_067_to_077",
+        "telemetry": "AdaBoost AUC 0.67 (3-class) -> 0.77 (binary); balanced 240/240 (RT<273.98 / >=319.60)"
+      }
+    },
+    {
+      "primitive_id": "balanced_240_240",
+      "name": "Perfectly balanced binary dataset: 240 High + 240 Low epochs",
+      "verbatim_quote": "the dataset comprised 240 epochs labeled as \"High Alertness\" (mean RT < 273.98 ms) and 240 epochs labeled as \"Low Alertness\"",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The binary dataset comprised 240 High Alertness epochs (mean RT < 273.98 ms) and 240 Low Alertness epochs (mean RT >= 319.60 ms), a 1:1 balanced distribution that facilitates unbiased ML training without synthetic oversampling; under this balance PPV equals Precision and Specificity equals NPV."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The balanced 1:1 design is the same class-balance discipline GSE uses to avoid biased classifiers.",
+        "source_operator": "balanced_240_240",
+        "telemetry": "240 High (RT<273.98) + 240 Low (RT>=319.60); 1:1; PPV=Precision, Specificity=NPV"
+      }
+    },
+    {
+      "primitive_id": "adaboost_best_075_077",
+      "name": "AdaBoost best binary: accuracy 0.75, F1 0.73, AUC 0.77",
+      "verbatim_quote": "AdaBoost demonstrating superior performance, achieving the highest Accuracy (0.75), F1-score (0.73), and AUC (0.77)",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In the binary framework all four models improved, with AdaBoost best at Accuracy 0.75, F1 0.73, AUC 0.77 (SVM 0.73/0.65, RF 0.74/0.72, XGBoost 0.74/0.72); in three-class the best was RF accuracy 0.57; the binary AdaBoost AUC 0.77 exceeded the hypothesized 0.70 threshold."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The best-model selection by AUC is the same classifier-ranking GSE performs.",
+        "source_operator": "adaboost_best_075_077",
+        "telemetry": "binary AdaBoost acc .75/F1 .73/AUC .77 best; SVM .65/RF .72/XGBoost .72 AUC; 3-class RF .57"
+      }
+    },
+    {
+      "primitive_id": "shap_vlf_top_predictor",
+      "name": "SHAP: VLF% most influential, then SD2/SD1 and DFA alpha2",
+      "verbatim_quote": "VLF (%) was the most influential predictor, followed by the SD2/SD1 ratio and DFA alpha2",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "SHAP analysis of the AdaBoost model ranked VLF% the most influential predictor, followed by SD2/SD1 ratio and DFA alpha2, with TINN and HF% contributing minimally; higher VLF%, SD2/SD1, alpha2, HR Max-min, and SampEn predicted low alertness (positive SHAP), while higher Mean HR, HF power, TINN, and HF% predicted high alertness."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SHAP feature attribution is the same interpretable predictor-ranking GSE uses to explain state models.",
+        "source_operator": "shap_vlf_top_predictor",
+        "telemetry": "SHAP: VLF% > SD2/SD1 > alpha2; TINN/HF% minimal; high VLF%/SD2-SD1 -> low alertness"
+      }
+    },
+    {
+      "primitive_id": "neurovisceral_integration",
+      "name": "Neurovisceral integration: higher HRV (vagal tone) -> flexible cognition",
+      "verbatim_quote": "Our findings support the neurovisceral integration model, where higher HRV",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The findings support the neurovisceral integration model: higher HRV reflecting robust vagal tone is associated with flexible autonomic adjustment and efficient cognitive resource allocation, facilitating suppression of task-irrelevant distractions and sustained focus for precision aim-and-trigger execution; shooting is a psychomotor task with intense top-down cognitive control and emotional regulation but minimal metabolic demand."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The neurovisceral integration model is the same vagal-tone-cognition link GSE uses for arousal regulation.",
+        "source_operator": "neurovisceral_integration",
+        "telemetry": "neurovisceral integration: high HRV/vagal tone -> autonomic flexibility -> distraction suppression"
+      }
+    },
+    {
+      "primitive_id": "vlf_systemic_correlate_caveat",
+      "name": "VLF% is a systemic correlate of the shooting state, not a direct alertness index",
+      "verbatim_quote": "it should be viewed as a systemic physiological correlate of the quasi-isometric shooting state rather than a direct, isolated index of cognitive alertness",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors caution that VLF%'s mechanistic basis is complex and debated, influenced by non-cognitive thermoregulatory, hormonal, and respiratory rhythms rather than solely central cognitive vigilance; though a robust statistical predictor, VLF% should be viewed as a systemic physiological correlate of the quasi-isometric shooting state, not a direct isolated index of cognitive alertness; SD2/SD1 reflects global autonomic adaptability rather than immediate stress reactivity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The predictor-vs-mechanism caveat is the same statistical-vs-causal distinction GSE enforces on feature interpretation.",
+        "source_operator": "vlf_systemic_correlate_caveat",
+        "telemetry": "VLF% = systemic correlate (thermoreg/hormonal/respiratory), NOT direct alertness index; SD2/SD1 = global adaptability"
+      }
+    },
+    {
+      "primitive_id": "elite_ceiling_effect",
+      "name": "Elite ceiling effect: stable autonomic regulation compresses variance",
+      "verbatim_quote": "elite shooters possess exceptionally fine and stable autonomic regulation, resulting in a 'ceiling effect'",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Elite shooters possess exceptionally fine and stable autonomic regulation, a ceiling effect where performance and physiology stay consistently high with minimal variance, making subtle micro-level vigilance fluctuations harder to detect than in sleep-deprived healthy adults (where 89% SVM accuracy was reported vs 75% here); 75% accuracy under high-stability conditions demonstrates robust sensitivity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The elite ceiling effect is the same variance-compression GSE faces when grading already-elite performers.",
+        "source_operator": "elite_ceiling_effect",
+        "telemetry": "ceiling effect: elite stable ANS, minimal variance; 75% here vs 89% sleep-deprived adults"
+      }
+    },
+    {
+      "primitive_id": "calibration_not_evaluated",
+      "name": "Calibration not evaluated: interpret as discrimination, not calibrated probability",
+      "verbatim_quote": "calibration performance of the model was not evaluated in the present study",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Calibration performance was not evaluated: no calibration curves assessing agreement between predicted probabilities and observed outcomes were generated, so findings should be interpreted primarily as discrimination performance rather than calibrated probability estimates; future work should add calibration analysis (calibration curves, isotonic regression, Platt scaling) and learning-curve assessment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The discrimination-vs-calibration distinction is literally GSE's calibration-map concern: a ranking model is not a probability model.",
+        "source_operator": "calibration_not_evaluated",
+        "telemetry": "calibration NOT evaluated; discrimination only; future isotonic/Platt; no learning curve"
+      }
+    },
+    {
+      "primitive_id": "internal_cv_no_external",
+      "name": "Internal subject-level CV only; no external cohort validation",
+      "verbatim_quote": "the predictive models were validated only through internal subject-level cross-validation and were not evaluated using an independent external cohort",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Limitations: models validated only via internal subject-level cross-validation with no independent external cohort (limiting generalizability across populations/sports/conditions); single-sport n=83 restricts cross-sport generalization; no sex/age/training stratification; no concurrent subjective (VAS/NASA-TLX) or EEG markers (no convergent validity); sleep and menstrual-cycle confounds not fully controlled; morning testing limits diurnal generalizability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The internal-only validation caveat is the same external-validity veto GSE attaches before deployment.",
+        "source_operator": "internal_cv_no_external",
+        "telemetry": "internal subject-level CV only; no external cohort; single sport; no stratification/convergent validity"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "hrvalertness2026_trace",
+      "think": "The retrocausal genealogy of this paper is the search for an objective, non-invasive, unobtrusive way to monitor the psychophysiological readiness of precision-sport athletes. Lu, Qiu, and An, writing in the Journal of Sports Science and Medicine in 2026, observe that shooting demands an exceptionally high and stable level of vigilance, the capacity to sustain focused attention and optimal responsiveness while inhibiting distractions, and that competitive stress disrupts this state through aiming fluctuation and delayed trigger control. Coaches have relied on subjective scales that are biased and discontinuous, the Psychomotor Vigilance Task that interrupts training, or EEG and eye-tracking that require strict laboratory control. Heart rate variability, derived non-invasively from ECG and compatible with wearables, offers a continuous autonomic signal intrinsically linked to arousal and vigilance, and machine learning can model its non-linear relationship to alertness. The study enrolled 83 elite Shanghai shooting athletes, 48 male and 35 female with a mean age of 18.4 years, all national first-grade or above, specializing in 10-meter air rifle or air pistol. Each completed a 60-minute PVT structured into six consecutive 10-minute blocks of 80 trials, mirroring the temporal structure of a shooting match, while ECG was recorded continuously with a Polar V800 at 1000 Hz and artifact-corrected in Kubios with under 2 percent of RR intervals corrected. Sub-optimal alertness was labeled by the established PVT convention of a reaction time exceeding 500 milliseconds, an attentional lapse, and the sample size was justified a priori by Obuchowski's method requiring 54 positive epochs, exceeded by the final 168 positive epochs out of 480. The recursive theory of mind is the labeling and modeling pipeline. A five-level standard-deviation classification was consolidated to three classes and then to a binary framework distinguishing the optimal top 40 percent from the sub-optimal bottom 40 percent, dropping the ambiguous middle to maximize discriminative power and balance the dataset. Features spanning time-domain, frequency-domain, and nonlinear HRV were selected by Random Forest with recursive feature elimination, and four classifiers, SVM, Random Forest, XGBoost, and AdaBoost, were tuned by grid search with five-fold cross-validation whose folds were defined at the subject level to prevent data leakage, with AUC as the optimization metric. Cross-layer veto adjudication is the granularity choice and the interpretability audit. The three-class framework failed on the Moderate class, with recall between 0.02 and 0.15 and severe boundary confusion as Moderate epochs were assigned to adjacent High or Low classes; the binary framework eliminated this ambiguous zone and lifted the best AdaBoost AUC from 0.67 to 0.77, with accuracy 0.75 and F1 0.73 on a perfectly balanced 240-versus-240 dataset. SHAP analysis ranked VLF percent the most influential predictor, followed by the SD2/SD1 ratio and DFA alpha2, with higher VLF percent and SD2/SD1 associated with lower alertness. The findings support the neurovisceral integration model, where higher HRV reflecting robust vagal tone enables flexible autonomic adjustment and efficient cognitive resource allocation. The implementation invariants map directly onto GSE. The HRV autonomic feature set is GSE's non-invasive state signal; the RT-threshold lapse label is GSE's behavioral ground truth; subject-level fold isolation is GSE's leakage prevention; the binary-over-multiclass reliability gain is GSE's granularity tradeoff; SHAP is GSE's interpretability layer; and the neurovisceral integration model is GSE's arousal-regulation mechanism. The outputs are alertness classifications and feature attributions from wearable ECG; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The physiological trend data reinforce the vigilance-decrement story: across the six blocks the time-domain SDNN rose from 44.3 to 47.51 milliseconds and total power increased, indicating rising overall autonomic modulation, yet the frequency-domain sympathovagal balance, the LF and HF normalized units and the LF/HF ratio, showed no drastic linear shift, and the nonlinear SD2 and SD2/SD1 rose while approximate and sample entropy fell. The practical deployment is a portable ECG monitor that reduces testing time by more than 90 percent versus the PVT and offers pre-competition physiological readiness assessment, though formal competition use is constrained by electronic-device regulations, making high-fidelity simulated training the natural setting. The caveats close the account with unusual honesty. The authors stress that VLF percent, though a robust statistical predictor, is a systemic physiological correlate of the quasi-isometric shooting state influenced by thermoregulatory, hormonal, and respiratory rhythms, not a direct isolated index of cognitive alertness, and that SD2/SD1 reflects global autonomic adaptability rather than immediate stress reactivity. They explain the modest 0.75 accuracy by an elite ceiling effect, where exceptionally stable autonomic regulation compresses variance and makes micro-fluctuations harder to detect than in sleep-deprived populations. Most importantly for GSE, calibration was not evaluated, so the model must be read as a discrimination device rather than a source of calibrated probabilities, and validation was internal subject-level cross-validation only with no external cohort, no sex or training stratification, and no convergent subjective or EEG measures. The invariant for GSE is to carry the HRV alertness-classification pipeline and its leakage-safe design while recording the predictor-versus-mechanism caveat, the ceiling effect, and the missing calibration before any quantitative reuse. Future work should validate on independent external cohorts, stratify by sex, age, and training experience, incorporate convergent subjective and EEG measures, and add calibration analysis so that predicted probabilities can be trusted for downstream decision-making rather than mere ranking.",
+      "retrocausal_genealogy": "Objective non-invasive readiness monitoring for precision sport. Lu/Qiu/An, J Sports Sci Med 2026;25:476-486, DOI 10.52082/jssm.2026.476, ethics LLSC20250005. Shooting needs stable vigilance (sustained attention/responsiveness/distraction inhibition); stress -> aiming fluctuation/delayed trigger. Subjective scales (MFI-20/VAS/SSS) biased/discontinuous; PVT interrupts training; EEG/eye-tracking need control. HRV (ECG, wearable) ~ autonomic arousal/vigilance; ML non-linear mapping. 83 elite Shanghai shooters 48M/35F 18.4y, national-grade+, rifle 47/pistol 36. 60-min PVT (6x10min/80 trials, PsychoPy) mirrors match; Polar V800 1000Hz, Kubios Medium <2% correction. Sub-optimal = RT>500ms (PVT lapse convention, alert 200-300ms). Obuchowski alpha .05/power .80/AUC .75/rate .35 -> min 54 positive; final 480 epochs/168 positive. Morning 08:00-09:30 testing.",
+      "theory_of_mind": "Labeling 5-level SD -> 3-class (High/Moderate/Low) -> binary (Optimal top 40%/Sub-optimal bottom 40%, middle dropped). HRV features: time (SDNN/RMSSD/pNN50), frequency (VLF .01-.04/LF .04-.15/HF .15-.40 Hz, LF/HF, total power), nonlinear (SD1/SD2/SD2-SD1/DFA alpha1-2/ApEn/SampEn). RF + recursive feature elimination; 4 classifiers SVM/RF/XGBoost/AdaBoost; grid search + 5-fold CV subject-level (no leakage); AUC metric; 7:3 split. Vigilance decrement: mean RT 273->298ms, slowest-10% 397->492ms (F=7.51), SDNN 44.3->47.51; sympathovagal balance stable. Source prints no numbered equations (named HRV metrics + value tables).",
+      "cross_layer_veto": "3-class Moderate poorly identified (Recall 0.02-0.15, F1 0.05-0.22, boundary confusion to adjacent High/Low); binary lifts AdaBoost AUC 0.67->0.77, acc 0.75/F1 0.73; balanced 240 High (RT<273.98)/240 Low (RT>=319.60), 1:1 no oversampling (PPV=Precision, Specificity=NPV). Binary AUC: AdaBoost .77 > RF/XGBoost .72 > SVM .65; 3-class best RF .57. SHAP: VLF% > SD2/SD1 > DFA alpha2 (TINN/HF% minimal); high VLF%/SD2-SD1/alpha2/SampEn -> low alertness; high Mean HR/HF/TINN -> high. Neurovisceral integration: high HRV/vagal tone -> autonomic flexibility -> distraction suppression. Caveats: VLF% = systemic correlate (thermoreg/hormonal/respiratory) NOT direct alertness index; SD2/SD1 = global adaptability not stress reactivity; elite ceiling effect (stable ANS, minimal variance, 75% vs 89% sleep-deprived); CALIBRATION NOT EVALUATED (discrimination only, future isotonic/Platt); internal subject-level CV only, no external cohort/stratification/convergent validity; sleep/menstrual confounds. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "Alertness in elite precision-sport athletes is classified from wearable HRV by labeling PVT reaction-time lapses (>500 ms), selecting time/frequency/nonlinear autonomic features via RF-RFE, and training SVM/RF/XGBoost/AdaBoost with subject-level cross-validation; a binary optimal-vs-sub-optimal framework (top/bottom 40%) outperforms three-class (AdaBoost AUC 0.77), with SHAP identifying VLF% and SD2/SD1 as key predictors under the neurovisceral integration model — but the model is a discrimination device, not a calibrated probability source.",
+  "gsi_mapping": "GSI treats sub-optimal = PVT RT>500ms (lapse convention); 83 shooters 48M/35F 18.4y; 60-min PVT 6x10min/80 trials; Polar V800 1000Hz/Kubios <2%; Obuchowski min 54 positive (final 480 epochs/168 positive); HRV VLF .01-.04/LF .04-.15/HF .15-.40 Hz + LF/HF + time/nonlinear; labeling 5-level->3-class->binary top/bottom 40%; RF-RFE + SVM/RF/XGBoost/AdaBoost, grid search 5-fold subject-level CV (no leakage), AUC metric, 7:3; 3-class Moderate Recall 0.02-0.15 boundary confusion; binary AdaBoost AUC 0.67->0.77 acc 0.75/F1 0.73, balanced 240/240 (RT<273.98/>=319.60); SHAP VLF%>SD2/SD1>alpha2; neurovisceral integration (vagal tone->flexibility); vigilance decrement mean RT 273->298ms; no printed equations (named metrics).",
+  "gse_mapping": "GSE lifts the HRV alertness-classification pipeline (autonomic feature set, RT-lapse ground truth, RF-RFE selection, subject-level leakage-safe CV, binary granularity tradeoff, SHAP attribution) and the neurovisceral arousal-regulation mechanism as its readiness-monitoring layer; records the VLF% predictor-vs-mechanism caveat, the elite ceiling effect (variance compression), the missing calibration (discrimination not probability), and internal-only/no-external validation as vetoes; all outputs are alertness states and feature attributions from wearable ECG, never sportsbook lines."
+}
