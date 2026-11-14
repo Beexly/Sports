@@ -610,3 +610,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 05:12:35 | COMPLETE | 155682912bc04c44 | primitives=28 think_words=936
 - 2026-11-14 05:13:21 | CLAIMED | 2770c915c86f9287 | worker=hermes-inline shard03 file=2012 - Robust Rankings for College Football - Unknown Authors.pdf
 - 2026-11-14 05:24:21 | COMPLETE | 2770c915c86f9287 | primitives=29 think_words=869
+- 2026-11-14 05:27:30 | CLAIMED | 1b092d89345382c4 | worker=hermes-inline shard03 file=2012 - The Sensitivity of College Football Rankings to Several Modeling Choices - Unknown Authors.pdf
+- 2026-11-14 05:37:03 | COMPLETE | 1b092d89345382c4 | primitives=32 think_words=908
