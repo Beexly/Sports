@@ -323,3 +323,6 @@ Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
 **Proven:** `disclosure-surface` 16 failed-file set -> 16/16 passed after both edits.
 
 **Not proven:** Neither page was rendered in a browser — the assertions are source-scrape plus a syntax parse, and the deploy is Vercel's. `/intelligence/observatory` still carries a legacy palette (`bg-black`, `text-white`, `bg-gray-900`, `border-gray-700`) which `palette-cohesion` will flag until it is migrated to design tokens.
+- **2026-11-14 (C7.2 — I broke `npm ci` and CI said so within 90 seconds):** adding the workspace dependency in C7 did not update `package-lock.json`, so `npm ci` refused to install (`Missing: @sports/stealth-skeleton-provider@1.0.0 from lock file`) and every CI job that installs dependencies died at that step — 20 jobs red in one run, none of them for the reason they appear to be. Fixed with `npm install --package-lock-only` (which errors on the prisma postinstall here but still writes the lock) and the three lock entries are pinned. Worth remembering: on this repo a workspace dependency without a lock entry is a whole-tree outage, not a one-job failure.
+
+**Proven:** `git diff package-lock.json` shows the apps/web dep, the `node_modules/@sports/...` link and the `packages/stealth-skeleton-provider` entry.
