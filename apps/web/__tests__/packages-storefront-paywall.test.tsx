@@ -151,17 +151,35 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       }
     }
 
-    // Verify MNF BUF @ MIN writeup aligns with conserved 503-book stat projections
-    const mnfWriteup = LIVE_SLATE_COACH_WRITEUPS.find((w) => w.windowSlot === "MNF")!;
+    // Week-10 MNF (BUF @ MIN). The slate refreshes weekly, so the pin is the
+    // invariant that has to survive the refresh, not a re-typed prop list:
+    // every prop must name a player the writeup itself lists in its personnel
+    // notes for one of the two teams, carry an XX/100 confidence, a real
+    // half-point line, and (when PLAY) a positive expected CLV. A prop on a
+    // player who is not in this game is the defect these assertions exist for.
+    const mnfWriteups = LIVE_SLATE_COACH_WRITEUPS.filter((w) => w.windowSlot === "MNF");
+    expect(mnfWriteups.length).toBe(1);
+    const mnfWriteup = mnfWriteups[0]!;
     expect(mnfWriteup.matchup).toBe("Buffalo Bills @ Minnesota Vikings");
-    expect(mnfWriteup.sideTotalCall.sideDecision).toBe("PASS");
-    expect(mnfWriteup.sideTotalCall.totalDecision).toBe("PASS");
-    expect(mnfWriteup.topProps.map((p) => `${p.playerName} ${p.side} ${p.line}`)).toEqual([
-      "James Cook UNDER 100.5",
-      "Justin Jefferson UNDER 55.5",
-      "Dalton Kincaid UNDER 57.5",
-      "Jordan Mason UNDER 48.5",
-    ]);
+    expect(["PLAY", "PASS"]).toContain(mnfWriteup.sideTotalCall.sideDecision);
+    expect(["PLAY", "PASS"]).toContain(mnfWriteup.sideTotalCall.totalDecision);
+    expect(mnfWriteup.topProps.length).toBeGreaterThan(0);
+
+    const mnfPersonnel = mnfWriteup.schemeMatchup.personnelTendencies;
+    expect(mnfPersonnel.length).toBeGreaterThan(0);
+    for (const prop of mnfWriteup.topProps) {
+      expect(mnfPersonnel).toContain(prop.playerName);
+      expect(prop.side).toMatch(/^(OVER|UNDER)$/);
+      expect(Number.isInteger(prop.line * 2)).toBe(true);
+      expect(prop.line).toBeGreaterThan(0);
+      expect(prop.confidence).toMatch(/^\d{1,3}\/100$/);
+      if (String(prop.decision) === "PLAY") {
+        expect(prop.expectedClv).toBeGreaterThan(0);
+      }
+      if (typeof prop.pOver === "number" && typeof prop.pUnder === "number") {
+        expect(prop.pOver + prop.pUnder).toBeCloseTo(1, 6);
+      }
+    }
   });
 
   it("gates inactive routes with Under Construction notice (/picks, /board, /calibration, /sgp-projections un-gated to live verified cards), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
@@ -186,17 +204,27 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       unmount();
     }
 
-    // /picks, /board, /calibration, /sgp-projections are restored to live production:
+    // /board is a deliberately dark route under the founder doctrine
+    // (2026-10-29): the public site serves ONLY GALAXY PICKS (PAID)
+    // (/packages) and DFS (/fantasy/dfs). /picks, /calibration and
+    // /sgp-projections stay live, so they must NOT wear the stub notice.
+    const { container: boardDom, unmount: unmountBoard } = render(<BoardPage />);
+    expect(boardDom.querySelector('[data-testid="under-construction-notice"]')).not.toBeNull();
+    expect(boardDom.textContent).toMatch(/Under Construction/i);
+    expect(boardDom.textContent).toContain("GALAXY PICKS (PAID)");
+    const boardHrefs = Array.from(boardDom.querySelectorAll("a")).map((a) =>
+      a.getAttribute("href"),
+    );
+    expect(boardHrefs).toContain("/packages");
+    expect(boardHrefs).toContain("/fantasy/dfs");
+    unmountBoard();
+
+    // /picks, /calibration, /sgp-projections are restored to live production:
     // Pin that they are NOT wearing the stub notice.
     const { container: picksDom, unmount: unmountPicks } = render(<PicksPage />);
     expect(picksDom.textContent).not.toContain("Under Construction");
     expect(picksDom.textContent).toContain("sealed card");
     unmountPicks();
-
-    const { container: boardDom, unmount: unmountBoard } = render(<BoardPage />);
-    expect(boardDom.textContent).not.toContain("Under Construction");
-    expect(boardDom.textContent).toContain("47-19-1");
-    unmountBoard();
 
     const { container: calDom, unmount: unmountCal } = render(<CalibrationProofRoomPage />);
     expect(calDom.textContent).not.toContain("Under Construction");

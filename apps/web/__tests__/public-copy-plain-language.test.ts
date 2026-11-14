@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
+import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
 
 /**
  * FE-10 / FE-15 / C-107 copy contracts (plan LAUNCH_FINISH_LINE_2026-09-05
@@ -46,14 +47,22 @@ describe("FE-10: /board and /picks speak plainly (sealed-era design)", () => {
   });
 
   it("/board says it is under construction and points at Galaxy Picks and DFS", () => {
-    expect(board).toContain("under construction");
+    // Case-insensitive: the notice renders as a capitalized badge
+    // ("Under Construction · Galaxy Picks & DFS Only"), so a lowercase-only
+    // pin failed on presentation while the copy it guards was present.
+    expect(board).toMatch(/under construction/i);
     expect(board).toContain('href="/packages"');
     expect(board).toContain('href="/fantasy/dfs"');
     expect(board).toContain('data-testid="under-construction-notice"');
   });
 
   it("/picks renders the sealed card only, in plain language", () => {
-    expect(picks).toContain("16-5");
+    // The banner's numbers must be the ones the package catalog commits to,
+    // not a literal typed next to them. Reading the constant here means the
+    // pin follows the record instead of re-typing an era of it.
+    const ledger = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
+    expect(picks).toContain(ledger.withGatedPropsRecord);
+    expect(picks).toContain(ledger.withGatedPropsUnits);
     expect(picks).toContain('href="/packages"');
     expect(picks).toMatch(/publishAllowed/);
   });
@@ -99,23 +108,32 @@ describe("C-107: the public calibration claim is MONEYLINE-scoped", () => {
     expect(MARKET_IMPLIED_CALIBRATION_CLAIM).toContain("Confidence is a ranking score");
   });
 
-  it("is rendered on /about from the single constant (/calibration is a stub)", () => {
+  it("is rendered on /about from the single constant; /calibration is live but keeps the claim off its page", () => {
     expect(about).toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
-    // /calibration shipped as an under-construction stub redirecting to
-    // Galaxy Picks and DFS, so it renders no calibration claim at all.
+    // /calibration shipped as an under-construction stub once, then went live
+    // as the Calibration Proof Room. The pin that matters is not the stub — it
+    // is that the MONEYLINE-scoped market-implied claim lives in exactly one
+    // place (/about, sourced from MARKET_IMPLIED_CALIBRATION_CLAIM) and the
+    // proof room never restates it in its own words.
+    expect(calibration).toContain("Calibration Proof Room");
     expect(calibration).not.toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
     expect(calibration).not.toContain('data-testid="calibration-claim-scope"');
-    expect(calibration).toContain('data-testid="under-construction-notice"');
+    expect(calibration).not.toMatch(/market-implied/i);
   });
 
-  it("/calibration renders no interactive chart and no chart-basis claim", () => {
-    // The stub renders no ProofExplorer and no confidence-bucketed chart, so
-    // there is no chart to misread as the market-implied measurement.
+  it("/calibration renders the committed record and no chart-basis claim", () => {
+    // The proof room's record numbers are the package catalog's committed
+    // values, so the page cannot print a record the catalog does not carry.
+    const ledger = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
+    expect(calibration).toContain(ledger.withGatedPropsRecord);
+    expect(calibration).toContain(ledger.withGatedPropsUnits);
+
+    // No confidence-bucketed chart dressed up as the market-implied
+    // measurement. (The conviction-band ladder is a separate, labelled
+    // signal-path table and is allowed; a chart-basis claim is not.)
     expect(calibration).not.toContain('data-testid="calibration-chart-basis"');
     expect(calibration).not.toContain("groups settled picks by confidence score");
     expect(calibration).not.toContain("not the market-implied measurement");
-    expect(calibration).toContain('href="/packages"');
-    expect(calibration).toContain('href="/fantasy/dfs"');
   });
 
   it("no public copy still calls confidence a calibrated number", () => {
