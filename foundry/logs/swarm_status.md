@@ -608,3 +608,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 05:06:48 | COMPLETE | 35a21ae0e8047e7a | primitives=34 think_words=882
 - 2026-11-14 05:07:33 | CLAIMED | 155682912bc04c44 | worker=hermes-inline shard03 file=2012 - A Markov Model of Football Using Stochastic Processes to Model a Football Drive - Unknown Authors.pdf
 - 2026-11-14 05:12:35 | COMPLETE | 155682912bc04c44 | primitives=28 think_words=936
+- 2026-11-14 05:13:21 | CLAIMED | 2770c915c86f9287 | worker=hermes-inline shard03 file=2012 - Robust Rankings for College Football - Unknown Authors.pdf
+- 2026-11-14 05:24:21 | COMPLETE | 2770c915c86f9287 | primitives=29 think_words=869
