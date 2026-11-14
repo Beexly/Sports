@@ -1,0 +1,759 @@
+{
+  "book_id": "3012b2996271809f",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Alexander H. Williams, Sethward R. Brugler, Benjamin A. Clarke (The Ohio State University / General Motors), 'MAYFIELD: Machine Learning Algorithm for Yearly Forecasting Indicators and Estimation of Long-Run Player Development', MIT Sloan Sports Analytics Conference 2021 Research Paper Competition (27 pages). Full math-heavy paper: LSH-accelerated approximate k-NN regression, CMA-ES optimization, robust MCD-weighted Mahalanobis distance with learned feature weights, chi-square similarity scores, hybrid AR-kNN regression with LOESS bias correction, stadium/league statistical translations, collegiate Approximate Value, and a KUBIAK benchmark; extracted faithfully (not a derivative summary). Catalog primary_domain is cs (the ML methodology); the application is NFL player projection. The mathematical equations are shifted-font (garbled math-italic glyphs) throughout, so they are reconstructed as labeled LaTeX from unambiguous prose and flagged in assumptions; printed numerical results (q=49Y+17, T=20, B=log2(N)/N, K grid, RMSE tables) are preserved. Outputs are statistical career projections from public PFR data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "mayfield_lsh_knn",
+      "name": "MAYFIELD: approximate k-NN regression with LSH for NFL yearly stats",
+      "verbatim_quote": "MAYFIELD accepts quantitative and qualitative input data and can be calibrated according to a variety of parameters",
+      "page": 1,
+      "latex": "\\hat v_{0,t+u}=\\text{kNN-regression}_{\\text{LSH}}(r_0;\\ K,Y,u,T,B)",
+      "symbol_and_unit_ledger": {
+        "K": "neighbors",
+        "Y": "segment years",
+        "u": "forecast horizon",
+        "T": "hash functions",
+        "B": "LOESS bandwidth"
+      },
+      "assumptions": [
+        "MAYFIELD is a novel, fast, approximate k-nearest-neighbor regression using locality-sensitive hashing in high-dimensional spaces to predict yearly NFL player statistics, accepting quantitative and qualitative inputs and calibrated by several parameters."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An LSH-accelerated approximate k-NN regressor is the same scalable similarity-projection kernel GSE uses for player forecasting.",
+        "source_operator": "mayfield_lsh_knn",
+        "telemetry": "approx kNN + LSH; quant+qual inputs"
+      }
+    },
+    {
+      "primitive_id": "new_metrics_suite",
+      "name": "New metrics: weighted similarity, stadium/league factors, NCAA-NFL translations",
+      "verbatim_quote": "we propose several new computational metrics for empirical player comparison and evaluation in American football, including a weighted inverse-distance similarity score, stadium and league factors, and NCAA-NFL statistical translations",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The paper proposes a weighted inverse-distance similarity score, stadium and league factors, and NCAA-NFL statistical translations as new computational metrics for empirical player comparison."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A suite of context-normalization and similarity metrics is the same valuation toolkit GSE builds for cross-era, cross-league player comparison.",
+        "source_operator": "new_metrics_suite",
+        "telemetry": "weighted sim + stadium/league factors + translations"
+      }
+    },
+    {
+      "primitive_id": "train_1970_2009_cv_2010_18",
+      "name": "Train 1970-2009 all positions; CV on 2010-18",
+      "verbatim_quote": "We utilize a training set of comprehensive NFL statistics from 1970-2009, across all player positions and conduct cross-validation on the model with the subset of 2010-18 NFL statistics",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Training uses comprehensive NFL statistics 1970-2009 across all positions; cross-validation uses the 2010-18 subset, a temporal holdout."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A multi-decade training set with a temporal holdout is the same out-of-time validation GSE requires of projection models.",
+        "source_operator": "train_1970_2009_cv_2010_18",
+        "telemetry": "train 1970-2009; CV 2010-18"
+      }
+    },
+    {
+      "primitive_id": "football_analytical_gap",
+      "name": "Football lags baseball/basketball in analytics",
+      "verbatim_quote": "American football is considerably less analytically developed than other professional sports, most notably baseball and basketball",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "American football is considerably less analytically developed than baseball and basketball due to sparse public data, traditional video scouting, and the sport's complexity; prior comprehensive models (Silver's MLB/NBA, Schatz's NFL) are proprietary and irreproducible."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An analytical gap caused by proprietary methods is the same reproducibility deficit GSE closes with open, comprehensive models.",
+        "source_operator": "football_analytical_gap",
+        "telemetry": "football behind MLB/NBA; models proprietary"
+      }
+    },
+    {
+      "primitive_id": "reproducible_comprehensive",
+      "name": "Reproducible, comprehensive, learning-based career forecasting",
+      "verbatim_quote": "We present a reproducible, comprehensive, learning-based methodology for year-by-year statistical forecasting of NFL players’ careers",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The methodology is reproducible, comprehensive, and learning-based, forecasting NFL players' careers year by year across the entire post-merger (post-1970) player set, unlike proprietary predecessors."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A reproducible comprehensive career forecaster is the same open projection standard GSE holds.",
+        "source_operator": "reproducible_comprehensive",
+        "telemetry": "reproducible, all post-1970 players"
+      }
+    },
+    {
+      "primitive_id": "pfr_dataset_1970",
+      "name": "PFR historical database: every player/team/season since 1970",
+      "verbatim_quote": "MAYFIELD utilizes a dataset derived from the Pro Football Reference (PFR) historical database consisting of on-field performance statistics and biographical information for every player, team, and season since 1970",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The dataset is derived from Pro Football Reference's historical database of on-field performance and biographical information for every player, team, and season since the 1970 NFL-AFL merger, segregated into position groups."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A public historical box-score corpus is the same data substrate GSE uses for career projection.",
+        "source_operator": "pfr_dataset_1970",
+        "telemetry": "PFR since 1970 merger; position groups"
+      }
+    },
+    {
+      "primitive_id": "approximate_value_drinen",
+      "name": "Include PFR Approximate Value (all-inclusive contribution)",
+      "verbatim_quote": "we include PFR's “Approximate Value\" metric (Drinen 2008b), which places a numerical value on the all-inclusive contributions of a player to his team's success in a given season",
+      "page": 3,
+      "latex": "\\text{AV}=\\text{all-inclusive player contribution to team success (Drinen 2008)}",
+      "symbol_and_unit_ledger": {
+        "AV": "Approximate Value (season)"
+      },
+      "assumptions": [
+        "PFR's Approximate Value (Drinen 2008) places a numerical value on a player's all-inclusive contribution to team success in a season and is included as a feature."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An all-inclusive contribution metric is the same value-over-replacement target GSE projects.",
+        "source_operator": "approximate_value_drinen",
+        "telemetry": "AV = all-inclusive contribution (Drinen)"
+      }
+    },
+    {
+      "primitive_id": "srs_team_rating",
+      "name": "SRS team ratings: offense/defense vs league average in PPG",
+      "verbatim_quote": "SRS estimates the strength of a team's offense and defense relative to the league average in terms of points per game",
+      "page": 3,
+      "latex": "\\text{SRS}_{\\text{off}}=+6.0\\Rightarrow \\text{score 6 more PPG than average}",
+      "symbol_and_unit_ledger": {
+        "SRS": "Simple Rating System (points per game vs league avg)"
+      },
+      "assumptions": [
+        "Dynamic biographical features include Simple Rating System team ratings (Drinen 2006), estimating offense/defense strength relative to league average in points per game (e.g. +6.0 offensive SRS means 6 more points per game than average)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A points-based team-strength rating is the same context feature GSE feeds player projections.",
+        "source_operator": "srs_team_rating",
+        "telemetry": "SRS: offense/def PPG vs league avg"
+      }
+    },
+    {
+      "primitive_id": "career_segments_Y",
+      "name": "Career segments: static bio + Y consecutive dynamic seasons",
+      "verbatim_quote": "Each segment consists of a player's static biographical data and Y consecutive seasons of that player's dynamic biographical and performance data",
+      "page": 4,
+      "latex": "r_{i,t}=(\\text{static bio}_i,\\ \\{x_{i,t-Y+1},\\dots,x_{i,t}\\})",
+      "symbol_and_unit_ledger": {
+        "Y": "segment length in years",
+        "r": "career segment"
+      },
+      "assumptions": [
+        "Historical performance is combined into overlapping career segments: each segment is a player's static biographical data plus Y consecutive seasons of dynamic biographical and performance data; the set S of all Y-year segments forms the training basis."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Overlapping fixed-length career windows are the same temporal-segment representation GSE uses for trajectory projection.",
+        "source_operator": "career_segments_Y",
+        "telemetry": "segment = static bio + Y dynamic seasons"
+      }
+    },
+    {
+      "primitive_id": "scoring_environment_variance",
+      "name": "Raw stats confounded by scoring-environment variance",
+      "verbatim_quote": "A major hurdle when comparing raw statistics of professional football players is variance in scoring environments",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Comparing raw football statistics is confounded by variance in scoring environments (weather for kickers, league rules and quality), so statistics must be translated to a common baseline; no football method existed despite early baseball sabermetrics addressing it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Environment-driven statistical variance is the same park/league confound GSE normalizes before comparing players.",
+        "source_operator": "scoring_environment_variance",
+        "telemetry": "raw stats confounded by environment"
+      }
+    },
+    {
+      "primitive_id": "stadium_factor_5yr_ma",
+      "name": "Stadium factors: 5-year moving average (small NFL sample)",
+      "verbatim_quote": "instead of the typical 1-year park factors used in sabermetrics, we utilize an unweighted 5-year moving average of",
+      "page": 5,
+      "latex": "\\Phi_{i,t}=\\frac{\\lambda^{\\text{home}}_{i,t}+\\lambda'^{\\text{home}}_{i,t}}{\\lambda^{\\text{away}}_{i,t}+\\lambda'^{\\text{away}}_{i,t}};\\quad \\Omega=\\text{5-yr MA of adjusted }\\Phi",
+      "symbol_and_unit_ledger": {
+        "Phi": "base stadium factor (home/away for+against ratio)",
+        "Omega": "team-rating-adjusted stadium factor"
+      },
+      "assumptions": [
+        "Stadium factors follow a modified Thorn & Palmer (1984): base factor Phi is the home/away ratio of a team's recorded plus allowed per-game statistic; codependent offensive/defensive team ratings tau are iterated to convergence (~3 iterations) to adjust for team and opponent caliber, giving adjusted factors Omega; an unweighted 5-year moving average of Omega is used instead of 1-year park factors because NFL seasons have small samples. Equations are shifted-font and reconstructed from prose."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed (Thorn & Palmer 1984; Szymborski 1997)",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A team-and-opponent-adjusted, multi-year park factor is the same environment-normalization kernel GSE applies to cross-season stats.",
+        "source_operator": "stadium_factor_5yr_ma",
+        "telemetry": "Phi home/away ratio; tau iterate ~3; Omega 5-yr MA"
+      }
+    },
+    {
+      "primitive_id": "league_year_translation",
+      "name": "NCAA-NFL translation to a 2018-19 NFL baseline",
+      "verbatim_quote": "these translations are not a prediction of how a player would have performed during that year if they had been in the NFL",
+      "page": 6,
+      "latex": "\\hat\\chi_{i,t}=\\chi_{i,t}\\sqrt{\\Theta_t/\\Omega_{i,t}};\\quad \\Theta_t=\\frac{\\lambda_{\\text{base}}}{\\lambda_{i,t}\\cdot\\delta}",
+      "symbol_and_unit_ledger": {
+        "Theta": "league-year factor",
+        "delta": "league talent deflator (per NCAA D-IA conference)",
+        "base": "NFL 2018-19"
+      },
+      "assumptions": [
+        "Collegiate and professional stats are translated to one NFL-average baseline (base NFL 2018-19) via a league-year factor Theta and a talent deflator delta measured per NCAA D-IA conference (and an Other category) among players who played in both leagues; the final translated value is chi*sqrt(Theta/Omega). These are estimates of observed performance in the baseline environment, NOT predictions of hypothetical NFL performance, and do not capture playing-time, play-style, or coaching differences. Equations shifted-font, reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed (Szymborski 1997); translations are contextual estimates not predictions",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A league-and-era translation to a common baseline is the same cross-league normalization GSE uses to compare amateur and pro output.",
+        "source_operator": "league_year_translation",
+        "telemetry": "chi_hat = chi*sqrt(Theta/Omega); base NFL 2018-19"
+      }
+    },
+    {
+      "primitive_id": "collegiate_AV",
+      "name": "Collegiate Approximate Value extends Drinen to NCAA",
+      "verbatim_quote": "Approximate Value is only defined for the NFL, and does not currently support evaluation of collegiate football players",
+      "page": 6,
+      "latex": "\\text{AV}^{\\text{skill}}_{i,t}=100\\frac{\\lambda_{\\text{PPD}}}{\\bar\\lambda_{\\text{PPD}}}(\\zeta_{\\text{Pass}}+\\zeta_{\\text{Rush}}+\\zeta_{\\text{Rec}}+\\zeta_{\\text{Block}});\\ \\text{AYA}=\\frac{\\text{PassYds}+20\\text{PassTD}-45\\text{INT}}{\\text{PassAtt}}",
+      "symbol_and_unit_ledger": {
+        "zeta": "positional share of team offensive output",
+        "PPD": "points per drive",
+        "AYA": "adjusted yards per attempt"
+      },
+      "assumptions": [
+        "Approximate Value is extended to NCAA football: skill-position AV partitions team offensive output by positional responsibility (pass/rush/receive/block shares with Drinen's leading coefficients), scaled by points-per-drive; OL AV substitutes All-America/All-Conference for Pro Bowl/All-Pro and omits starting-lineup data; defensive AV uses position weights (DL/EDGE 0.6, LB 0.3, CB/S 0.1) and team-total proportions. Equations shifted-font, reconstructed from prose."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed (Drinen 2008a); collegiate AV mirrors NFL AV for comparability",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A collegiate extension of an all-inclusive value metric is the same amateur valuation GSE needs to compare college and pro careers.",
+        "source_operator": "collegiate_AV",
+        "telemetry": "collegiate AV = Drinen extended; AYA=(Yds+20TD-45INT)/Att"
+      }
+    },
+    {
+      "primitive_id": "knn_principle",
+      "name": "k-NN principle: similar observables imply similar unknowns",
+      "verbatim_quote": "principle from which kNN derives is essentially just that objects which are highly similar in their observable characteristics",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The nearest-neighbor principle (Cover 1968) is that objects highly similar in observable characteristics are likely similar in unknown characteristics; kNN is versatile and effective across credit scoring, medicine, and encryption, and underlies proprietary player projection systems."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The nearest-neighbor similarity principle is the same comp-based reasoning GSE uses to project a player from historical analogues.",
+        "source_operator": "knn_principle",
+        "telemetry": "similar observables -> similar unknowns (Cover 1968)"
+      }
+    },
+    {
+      "primitive_id": "approximate_regression_not_exact",
+      "name": "Approximate k-NN regression (LSH partial search), not exact/classification",
+      "verbatim_quote": "MAYFIELD is distinct from both kNN classification techniques, which predict categorical variables rather than continuous ones, and exact kNN methods, which search the entire training set for neighbors",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "MAYFIELD is approximate k-NN regression: it predicts continuous statistics (not categorical classes) and uses an LSH-controlled partial search rather than searching the entire training set as exact k-NN does."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An approximate rather than exact neighbor search is the same scalability tradeoff GSE makes for high-dimensional player spaces.",
+        "source_operator": "approximate_regression_not_exact",
+        "telemetry": "approx regression; LSH partial search"
+      }
+    },
+    {
+      "primitive_id": "cma_es_optimizer",
+      "name": "CMA-ES evolutionary optimizer for rugged parameter landscape",
+      "verbatim_quote": "We select the Covariance Matrix Adaptation-Evolution Strategy (CMA-ES) solver for optimizing MAYFIELD's parameters",
+      "page": 9,
+      "latex": "\\theta^{*}=\\arg\\min_{\\theta}\\ \\epsilon(R;\\theta)\\ \\text{via CMA-ES (Hansen 2016)}",
+      "symbol_and_unit_ledger": {
+        "theta": "6+Y weighting parameters",
+        "epsilon": "RMSE-of-Mahalanobis fitness"
+      },
+      "assumptions": [
+        "MAYFIELD learns 6+Y weighting parameters via CMA-ES (Hansen 2016), a stochastic evolutionary strategy suited to ill-conditioned, rugged, noisy, high-dimensional fitness landscapes, selecting parent parameter combinations across generations until convergence; preferred over BOBYQA, BFGS, Nelder-Mead, Powell. Five hyperparameters (K, Y, u, T, B) are set heuristically, with K and Y chosen by cross-validation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A derivative-free evolutionary optimizer for a rugged projection landscape is the same global-optimization choice GSE makes when gradients are unavailable.",
+        "source_operator": "cma_es_optimizer",
+        "telemetry": "CMA-ES; 6+Y params; K,Y via CV"
+      }
+    },
+    {
+      "primitive_id": "cma_es_rugged_landscape",
+      "name": "Player-performance landscape is rugged, noisy, high-dimensional",
+      "verbatim_quote": "Since the landscape of player performance vectors is highly rugged, noisy, and highly dimensional, CMA-ES is an ideal optimization algorithm",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because the landscape of player performance vectors is highly rugged, noisy, and high-dimensional, CMA-ES is an ideal optimizer compared to gradient-based or simplex methods."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A rugged noisy objective is the same optimization difficulty GSE anticipates in player-projection tuning.",
+        "source_operator": "cma_es_rugged_landscape",
+        "telemetry": "rugged/noisy/high-dim -> CMA-ES"
+      }
+    },
+    {
+      "primitive_id": "lsh_dimensionality",
+      "name": "LSH needed: >10,000 comparables, q=49Y+17 dimensions",
+      "verbatim_quote": "MAYFIELD's initial N-order set of comparables may be in excess of 10,000 segments comprising up to q = 49*Y+17 variable dimensions",
+      "page": 10,
+      "latex": "q=49Y+17;\\quad F'=\\lvert C\\rvert^{-1/q}\\,C\\,\\Sigma^{-1/2}F",
+      "symbol_and_unit_ledger": {
+        "q": "feature dimensionality",
+        "Sigma^{-1/2}": "principal root of inverse covariance",
+        "C": "diagonal feature weights"
+      },
+      "assumptions": [
+        "A player segment's comparable set can exceed 10,000 segments in up to q=49Y+17 dimensions, so LSH (Gionis, Indyk & Motwani 1999) reduces dimensionality; a linear transform F'=|C|^{-1/q} C Sigma^{-1/2} F prepares the space, then ceil(log2 N) random hyperplanes produce hash codes whose matching bits define candidate neighbor sets, repeated T=20 times and unioned until at least K candidates. Equations shifted-font, reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed (LSH Gionis-Indyk-Motwani 1999)",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LSH dimensionality reduction for massive comparable sets is the same scalable neighbor-search GSE uses in high-dimensional player space.",
+        "source_operator": "lsh_dimensionality",
+        "telemetry": "q=49Y+17; >10k comparables; T=20 hashes"
+      }
+    },
+    {
+      "primitive_id": "lsh_high_probability",
+      "name": "LSH excludes unlikely-interesting neighbors with high probability",
+      "verbatim_quote": "the manner in which LSH operates ensures with high probability that these excluded segments are unlikely to be of practical interest when K is small relative to N",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "LSH makes MAYFIELD approximate (some potential neighbors are excluded from distance measurement), but with high probability the excluded segments are unlikely to be of practical interest when K is small relative to N."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A probabilistic guarantee on approximate neighbor search is the same accuracy-efficiency tradeoff GSE accepts for scalability.",
+        "source_operator": "lsh_high_probability",
+        "telemetry": "LSH excludes low-interest neighbors w.h.p. (K<<N)"
+      }
+    },
+    {
+      "primitive_id": "mahalanobis_over_euclidean",
+      "name": "Mahalanobis distance standardizes scale and decorrelates features",
+      "verbatim_quote": "MD offers several advantages over more common metrics, such as Euclidean distance",
+      "page": 11,
+      "latex": "d_A(a,b)=\\sqrt{(b-a)^{\\top}\\Sigma^{-1}(b-a)}",
+      "symbol_and_unit_ledger": {
+        "Sigma": "feature auto-covariance",
+        "d_A": "Mahalanobis distance"
+      },
+      "assumptions": [
+        "Mahalanobis distance d_A(a,b)=sqrt((b-a)^T Sigma^{-1} (b-a)) is preferred over Euclidean because the inverse covariance simultaneously standardizes each axis's scale and adjusts for correlation between dimensions; setting Sigma=I recovers Euclidean, and categorical variables use Jaccard distance. The formula is shifted-font and reconstructed."
+      ],
+      "breakdown_regime": "shifted-font formula reconstructed (Mahalanobis 1936)",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A covariance-aware distance is the same scale-and-correlation-normalized similarity GSE uses for heterogeneous player features.",
+        "source_operator": "mahalanobis_over_euclidean",
+        "telemetry": "MD = sqrt((b-a)^T Sigma^-1 (b-a)); categorical=Jaccard"
+      }
+    },
+    {
+      "primitive_id": "mcd_robust_covariance",
+      "name": "MCD estimator makes covariance robust to outliers",
+      "verbatim_quote": "MCD has been shown to be highly robust to outliers",
+      "page": 11,
+      "latex": "\\Sigma_{\\text{MCD}}=\\text{Minimum Covariance Determinant (Rousseeuw 1984)}",
+      "symbol_and_unit_ledger": {
+        "Sigma_MCD": "robust covariance estimate"
+      },
+      "assumptions": [
+        "Because classical covariance is outlier-sensitive and ignores the feature-target relation, MAYFIELD uses Rousseeuw's (1984) Minimum Covariance Determinant (MCD) estimator for Sigma, which is highly robust to outliers and superior for Mahalanobis calculations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A robust covariance estimator is the same outlier-resistant similarity foundation GSE needs for noisy sports data.",
+        "source_operator": "mcd_robust_covariance",
+        "telemetry": "MCD robust covariance (Rousseeuw 1984)"
+      }
+    },
+    {
+      "primitive_id": "weighted_md_learned",
+      "name": "Learned weighted Mahalanobis via feature-predictive-power weights",
+      "verbatim_quote": "we adopt the following exponential weighting scheme based on a hyperparameter",
+      "page": 13,
+      "latex": "d_F=|C|^{-1/q}\\sqrt{(r-r_0)^{\\top}\\Sigma^{-1/2}C^2\\Sigma^{-1/2}(r-r_0)};\\quad C=\\bigoplus_{j=1}^{q}\\alpha^{\\rho_j}\\hat e_j,\\ \\rho_j=\\mathrm{corr}(\\eta_j,\\kappa)",
+      "symbol_and_unit_ledger": {
+        "C": "diagonal feature weights",
+        "rho_j": "corr(feature-j distance, future-vector MD)",
+        "alpha": "weighting hyperparameter >=1"
+      },
+      "assumptions": [
+        "Following Schultz & Joachims (2004), a diagonal weighting matrix C^2 is inserted into the Mahalanobis metric, giving d_F=|C|^{-1/q} sqrt((r-r0)^T Sigma^{-1/2} C^2 Sigma^{-1/2}(r-r0)), interpretable as Euclidean distance in the transformed space F'. Each weight is set by rho_j=corr(eta_j,kappa), the correlation between feature-j pairwise distance and future-performance-vector Mahalanobis distance, via an exponential scheme C=direct-sum alpha^{rho_j} to keep weights strictly positive and upweight predictive features. Equations shifted-font, reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed (Schultz & Joachims 2004)",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A distance metric learned from feature-to-future predictive correlation is the same supervised similarity weighting GSE uses to make comps predictive.",
+        "source_operator": "weighted_md_learned",
+        "telemetry": "weighted MD; C_jj = alpha^rho_j; rho=corr(feat dist, future MD)"
+      }
+    },
+    {
+      "primitive_id": "malignant_features",
+      "name": "Malignant features: similar inputs but dissimilar futures",
+      "verbatim_quote": "These “malignant\" features are such that the more similar any two segments are in that dimension of the data, the less similar their corresponding future performance vectors are",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Features negatively correlated with future-performance similarity are 'malignant': the more similar two segments are on that feature, the less similar their futures, so upweighting them selects misleading neighbors; the exponential weighting keeps weights positive while downweighting such features rather than zeroing them (which would make C singular)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Identifying and downweighting anti-predictive features is the same feature-veto GSE applies to avoid misleading comps.",
+        "source_operator": "malignant_features",
+        "telemetry": "malignant features: negative corr w/ future similarity"
+      }
+    },
+    {
+      "primitive_id": "james_similarity_lineage",
+      "name": "Similarity scores lineage: Bill James 1994 Hall of Fame comps",
+      "verbatim_quote": "Bill James (1994) first introduced the concept of “similarity scores\" for empirical comparison of Baseball Hall of Fame candidates",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Bill James (1994) introduced similarity scores for comparing Baseball Hall of Fame candidates, spawning sports comparison methods (Silver, Kubatko, Hollinger, Pelton, Drinen); football is well-represented via Schatz (2010) and Drinen (2008), but prior work uses arbitrary-weight first/second-order polynomials without feature interactions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Jamesian similarity-score tradition is the same comp-based player comparison GSE formalizes with a learned metric.",
+        "source_operator": "james_similarity_lineage",
+        "telemetry": "James 1994 similarity scores -> sports comps"
+      }
+    },
+    {
+      "primitive_id": "arbitrary_weights_critique",
+      "name": "Prior similarity scores use arbitrary, unjustified weights",
+      "verbatim_quote": "the weighting coefficients utilized in such models appear to be completely arbitrary, as their respective authors give no treatment to the procedure used to estimate weights",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Almost all prior sports similarity scores use strictly first- or second-order polynomial models with no feature interactions and apparently arbitrary weighting coefficients whose estimation procedure is never described; MAYFIELD rectifies this with formally established non-sporting methods."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Critiquing arbitrary comp weights is the same demand for principled, learned similarity GSE enforces.",
+        "source_operator": "arbitrary_weights_critique",
+        "telemetry": "prior comps: arbitrary weights, no interactions"
+      }
+    },
+    {
+      "primitive_id": "percentile_chi2_similarity",
+      "name": "Percentilized features -> chi-square similarity score",
+      "verbatim_quote": "we percentilize the data, which conforms features to a strictly uniform distribution on (0,1)",
+      "page": 14,
+      "latex": "\\mathrm{SS}(r_{i,t},r_0)=1-F_{\\chi^2(q)}(d_F)=\\frac{\\Gamma(q/2,\\ d_F/2)}{\\Gamma(q/2)}",
+      "symbol_and_unit_ledger": {
+        "SS": "similarity score in (0,1]",
+        "d_F": "weighted Mahalanobis distance",
+        "q": "dimensions (>60)"
+      },
+      "assumptions": [
+        "Data are percentilized to a uniform (0,1) distribution; since d_F is a sum of uniform variables and q>60, its distribution is approximated by chi-square(q), and the similarity score is defined as the probability of observing a segment at least as distant as the given one, i.e. the complement of the chi-square(q) CDF over d_F (complete/incomplete gamma functions). The K most similar segments in the LSH set form the neighbor set. Equations shifted-font, reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed; chi-square approximation justified by large q and percentilization",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A probabilistic chi-square similarity score is the same calibrated comp-similarity GSE uses to rank historical analogues.",
+        "source_operator": "percentile_chi2_similarity",
+        "telemetry": "SS = 1 - chi2_CDF(d_F); q>60; percentilized"
+      }
+    },
+    {
+      "primitive_id": "hybrid_ar_knn_regression",
+      "name": "Hybrid regression: inverse-distance k-NN + AR terms",
+      "verbatim_quote": "incorporating traditional time-series techniques such as autoregressive moving-average (ARMA) terms into the kNN regression equation greatly improves model accuracy and fit in some applications",
+      "page": 15,
+      "latex": "\\hat v_{0,t+u}=\\beta_1\\,\\text{IDW}(L_{r_0})+\\beta_2\\,\\text{IDW}(\\Delta v_i)+\\sum_{w}\\varphi_w\\,v_{0,t-w}+c",
+      "symbol_and_unit_ledger": {
+        "IDW": "inverse-distance-weighted interpolation",
+        "L": "neighbor future vectors",
+        "phi": "AR weights",
+        "beta": "learned weights"
+      },
+      "assumptions": [
+        "The regression combines an inverse-distance-weighted interpolation of neighbors' future vectors, a similar interpolation of their net change, a Y-order autoregressive series on the player's own past single-year components, and a constant; the phi and beta weights are learned. Adding AR terms to k-NN regression improves accuracy and fit. The equation is shifted-font and reconstructed from the prose description of its four terms."
+      ],
+      "breakdown_regime": "shifted-font equation reconstructed from four-term prose description",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A hybrid k-NN-plus-autoregressive forecaster is the same comp-and-trajectory projection GSE uses for player development.",
+        "source_operator": "hybrid_ar_knn_regression",
+        "telemetry": "v_hat = b1*IDW(L) + b2*IDW(dv) + AR(phi) + c"
+      }
+    },
+    {
+      "primitive_id": "subsumes_naive_and_knn",
+      "name": "Model subsumes naive and classical k-NN (accuracy floor)",
+      "verbatim_quote": "MAYFIELD is thus guaranteed accuracy no worse than either a naive or the classical kNN predicted value, since both methods are subsumed by our model",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Setting phi_3=1 and the other phi weights to zero reduces the regression to a naive prediction, so MAYFIELD is guaranteed accuracy no worse than either a naive or classical k-NN prediction, since both are subsumed by the model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A model that nests its baselines as special cases is the same accuracy-floor guarantee GSE designs into its forecaster.",
+        "source_operator": "subsumes_naive_and_knn",
+        "telemetry": "subsumes naive (phi3=1) and classical kNN"
+      }
+    },
+    {
+      "primitive_id": "loess_bias_correction",
+      "name": "Per-feature LOESS corrects boundedness and regression-to-mean bias",
+      "verbatim_quote": "we take the additional step of fitting a LOESS model for each feature in",
+      "page": 16,
+      "latex": "\\hat{\\hat v}_{0,t+u}=\\sum_{j=1}^{p} g_j(\\hat v^{\\,j}_{0,t+u})\\,\\hat e_j;\\quad B=\\frac{\\log_2 N}{N}",
+      "symbol_and_unit_ledger": {
+        "g_j": "LOESS smooth for feature j",
+        "B": "bandwidth (subset fraction)"
+      },
+      "assumptions": [
+        "Because k-NN interpolation can predict percentile ranks outside [0,1] and over-predict regression to the mean, a per-feature LOESS (locally estimated scatterplot smoothing, Savitzky-Golay 1964 / Cleveland 1979) regresses realized on predicted values to correct bias; bandwidth B=log2(N)/N gives a large window for noisy dense data, and LOESS supplies local confidence intervals. The final prediction is the sum of LOESS-smoothed components. Equations shifted-font, reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equations reconstructed (Cleveland 1979 LOESS)",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A nonparametric local bias-correction is the same calibration layer GSE applies to keep projections bounded and unbiased.",
+        "source_operator": "loess_bias_correction",
+        "telemetry": "LOESS per feature; B=log2(N)/N; local CIs"
+      }
+    },
+    {
+      "primitive_id": "loess_kept_separate",
+      "name": "LOESS kept separate to preserve interpretable weights",
+      "verbatim_quote": "Larger values of B result in smoother results and make the locally estimated polynomials more robust to outliers",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "LOESS is kept as a minor univariate correction rather than absorbing the linear regression, because combining them would lose the interpretable phi weights, risk overfitting out-of-sample, and greatly increase runtime on multivariate data; larger bandwidth B yields smoother, outlier-robust local polynomials."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Separating an interpretable linear stage from a flexible correction is the same interpretability-versus-flexibility balance GSE maintains.",
+        "source_operator": "loess_kept_separate",
+        "telemetry": "LOESS separate: keep phi interpretable, avoid overfit"
+      }
+    },
+    {
+      "primitive_id": "rmse_mahalanobis_fitness",
+      "name": "Fitness = RMSE of Mahalanobis distance across vector space",
+      "verbatim_quote": "classical MD is especially useful since it adjusts for covariance between the dimensions of",
+      "page": 17,
+      "latex": "\\epsilon(R)=\\sqrt{\\frac{1}{N}\\sum_{r_{i,t}\\in R}(\\hat{\\hat v}_{i,t+u}-v_{i,t+u})^{\\top}\\Sigma^{-1}(\\hat{\\hat v}_{i,t+u}-v_{i,t+u})}",
+      "symbol_and_unit_ledger": {
+        "epsilon": "RMSE of classical MD between predicted and realized vectors"
+      },
+      "assumptions": [
+        "To scalarize error across the p-dimensional performance vector space, the fitness function is the RMSE of the classical Mahalanobis distance between predicted and realized vectors, which adjusts for covariance between dimensions and measures general lack of information rather than cumulative per-dimension error; CMA-ES minimizes this over the learned weights. The equation is shifted-font and reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equation reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A covariance-aware multivariate error metric is the same fitness GSE uses to tune a multi-stat projection jointly.",
+        "source_operator": "rmse_mahalanobis_fitness",
+        "telemetry": "fitness = RMSE of MD(v_hat, v) over R"
+      }
+    },
+    {
+      "primitive_id": "cv_stable_genuine_power",
+      "name": "Stable in/out-of-sample RMSE indicates genuine predictive power",
+      "verbatim_quote": "RMSE are stable between the training set and the out-of-sample results, indicating that MAYFIELD is not accuracy due to spurious variation in the data, but rather genuine predictive power",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Cross-validation trains on 1970-2009 and evaluates out-of-sample on 2010-2018, testing K in {5,...,50} and u in {1,2,3} with Y=3; RMSE is stable between training and out-of-sample, indicating genuine predictive power rather than spurious variation (source writes 'is not accuracy due to')."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stable train/test error is the same generalization evidence GSE requires before trusting a projection.",
+        "source_operator": "cv_stable_genuine_power",
+        "telemetry": "RMSE stable in/out-of-sample; K 5-50, Y=3"
+      }
+    },
+    {
+      "primitive_id": "kubiaK_benchmark",
+      "name": "Benchmark vs KUBIAK (Schatz), the foremost NFL projection model",
+      "verbatim_quote": "we compared the predicted season results of our model to the 2010-2017 predictions of KUBIAK (Schatz, 2008), the foremost football statistics prediction model",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "MAYFIELD is compared to KUBIAK (Schatz 2008), the foremost football statistics prediction model, on 2010-2017 predictions using standardized RMSE (1.0 = one standard deviation, lower better); KUBIAK similarly uses multi-season history, biographical stats, and similar-player comparisons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Benchmarking against the leading proprietary model is the same competitive validation GSE performs.",
+        "source_operator": "kubiaK_benchmark",
+        "telemetry": "vs KUBIAK 2010-2017; standardized RMSE"
+      }
+    },
+    {
+      "primitive_id": "beats_kubiaK_every_position",
+      "name": "MAYFIELD substantially beats KUBIAK at every position",
+      "verbatim_quote": "Overall, MAYFIELD offers a substantial improvement in accuracy over KUBIAK's methods in every position",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "MAYFIELD offers a substantial accuracy improvement over KUBIAK at every position with more balanced RMSE across statistics, and is significantly better for all QB/TE/K stats and all position-relevant stats (RB rushing, WR receiving, defensive tackles/sacks/turnovers/pass deflections)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A comprehensive accuracy win over the incumbent is the same validated-edge result GSE seeks.",
+        "source_operator": "beats_kubiaK_every_position",
+        "telemetry": "beats KUBIAK every position; balanced RMSE"
+      }
+    },
+    {
+      "primitive_id": "weaknesses_rare_unstable",
+      "name": "Weaknesses: rare, unstable defensive/ST TDs and WR rushes",
+      "verbatim_quote": "MAYFIELD's main weaknesses appear to be the prediction of defensive/special teams touchdowns and wide receiver rushing statistics",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "MAYFIELD's main weaknesses are defensive/special-teams touchdowns and WR rushing statistics, where KUBIAK is significantly better at 90% confidence; these are rare, unstable occurrences not truly indicative of position performance, so the weakness is honest and bounded."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Acknowledging weakness on rare unstable events is the same honest limitation-reporting GSE applies to low-frequency stats.",
+        "source_operator": "weaknesses_rare_unstable",
+        "telemetry": "weak: def/ST TDs, WR rushes (rare/unstable)"
+      }
+    },
+    {
+      "primitive_id": "robust_missing_data_extensible",
+      "name": "Distance robust to missing data; absorbs tracking/scouting features",
+      "verbatim_quote": "our distance function is robust to missing data (a major concern for any newer metrics which are unable to be calculated for historical data)",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The distance function is robust to missing data, so newer player-tracking metrics (pass-block/rush win rate, air yards, nflWAR) can be absorbed into the feature space even when uncomputable for historical data; contextual data like depth-chart position, scouting grades, and medical/salary information would likewise increase accuracy without modification."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A missing-data-robust, extensible feature space is the same forward-compatible design GSE uses to absorb advanced metrics.",
+        "source_operator": "robust_missing_data_extensible",
+        "telemetry": "robust to missing data; absorbs tracking/scouting"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "mayfield2021_trace",
+      "think": "The retrocausal genealogy of MAYFIELD is the analytical gap between American football and other professional sports. Alexander Williams, Sethward Brugler, and Benjamin Clarke of Ohio State and General Motors observe that football is considerably less analytically developed than baseball and basketball because of sparse public data, an emphasis on traditional video scouting, and the sport's complexity, and that the leading comprehensive forecasting models, Nate Silver's for MLB and the NBA and Aaron Schatz's KUBIAK for the NFL, are proprietary and irreproducible. Their response is a reproducible, comprehensive, learning-based methodology for year-by-year forecasting of every post-merger NFL player's career. The methodological lineage is deep: Cover's 1968 nearest-neighbor rule, Gionis-Indyk-Motwani's 1999 locality-sensitive hashing, Mahalanobis's 1936 generalized distance, Rousseeuw's 1984 minimum covariance determinant, Schultz and Joachims's 2004 learned distance metric, Hansen's CMA-ES evolutionary optimizer, Cleveland's 1979 LOESS, and the baseball translation tradition of Thorn and Palmer 1984 and Szymborski 1997, with Bill James's 1994 similarity scores as the comp-comparison ancestor. The data are Pro Football Reference's historical database of every player, team, and season since the 1970 merger, segregated into position groups, with position-relevant box-score statistics, PFR's Approximate Value, and static and dynamic biographical variables including Simple Rating System team ratings. Careers are cut into overlapping segments of static biography plus Y consecutive dynamic seasons. Because raw statistics are confounded by scoring environments, the paper builds stadium factors as a home-and-away for-plus-against ratio adjusted by codependent offensive and defensive team ratings iterated to convergence, smoothed with a five-year moving average because NFL samples are small, and a league-year factor with a per-conference talent deflator translating NCAA and NFL statistics to a 2018-19 NFL baseline; it also extends Approximate Value to collegiate football, substituting All-America and All-Conference honors for Pro Bowl and All-Pro. The recursive theory of mind is projecting a player by finding the historical careers most similar to his and reading their futures, but with a similarity notion that is itself learned to be predictive. MAYFIELD is approximate k-NN regression: locality-sensitive hashing reduces a comparable set that can exceed ten thousand segments in up to q equals 49Y plus 17 dimensions to a candidate neighborhood, with high probability excluding only uninteresting segments when K is small relative to N. Similarity is a weighted Mahalanobis distance using a robust MCD covariance and a diagonal weight matrix whose entries are an exponential function of each feature's correlation with future-performance similarity, so that predictive features are upweighted and malignant features, which make segments look alike while their futures diverge, are downweighted without singularity. The distance is percentilized and approximated by a chi-square distribution, turning it into a probabilistic similarity score, and the K nearest neighbors feed a hybrid regression combining inverse-distance-weighted neighbor futures, neighbor net changes, and a Y-order autoregressive term on the player's own past. Cross-layer veto adjudication is the calibration and the honest benchmark. Because k-NN interpolation can push percentile ranks outside the unit interval and over-predict regression to the mean, a per-feature LOESS correction with bandwidth log2(N)/N smooths and bounds the predictions and supplies local confidence intervals, kept separate from the linear stage to preserve interpretable weights and avoid overfitting. The fitness function is the RMSE of the classical Mahalanobis distance between predicted and realized performance vectors, which CMA-ES minimizes over the learned weights, a derivative-free evolutionary optimizer chosen because the player-performance landscape is rugged, noisy, and high-dimensional. The model subsumes both a naive prediction and classical k-NN as special cases, guaranteeing an accuracy floor. Trained on 1970 to 2009 and cross-validated on 2010 to 2018 with stable in-and-out-of-sample RMSE, MAYFIELD substantially beats KUBIAK at every position with more balanced error, and is significantly better on all position-relevant statistics; its only significant weaknesses, at 90 percent confidence, are rare and unstable defensive and special-teams touchdowns and wide-receiver rushing, which the authors honestly note are not truly indicative of performance. The implementation invariants map directly onto GSE. The LSH-accelerated approximate k-NN is GSE's scalable comp-search; the learned weighted Mahalanobis with MCD covariance is GSE's predictive, outlier-robust similarity; the chi-square similarity score is GSE's calibrated comp ranking; the hybrid AR-kNN regression is GSE's comp-and-trajectory forecaster; the LOESS correction is GSE's bounded bias-calibration; the Mahalanobis-RMSE fitness and CMA-ES tuning are GSE's joint multi-stat optimization; the stadium and league translations are GSE's environment normalization; and the missing-data-robust, extensible feature space is GSE's forward-compatible design for absorbing tracking and scouting data. The outputs are statistical career projections from public box-score data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is PFR since 1970, training 1970 to 2009 and cross-validation 2010 to 2018, with Y equals 3, K tested from 5 to 50, forecast horizons u in 1, 2, 3, T equals 20 hash functions, and LOESS bandwidth log2(N)/N; the feature dimension is q equals 49Y plus 17, exceeding 60 in all cases; the stadium factor uses a five-year moving average and the translation baseline is NFL 2018-19; and the benchmark is KUBIAK on 2010 to 2017 standardized RMSE. The mathematical equations are shifted-font throughout, so the stadium and league factors, collegiate Approximate Value, weighted Mahalanobis distance, exponential feature weighting, chi-square similarity, hybrid regression, LOESS correction, and fitness function are reconstructed as labeled LaTeX from the unambiguous prose and flagged in the assumptions, with the printed numerical results and the authors' honest weaknesses preserved. The invariant for GSE is to carry the learned-similarity comp forecaster with its robust covariance, predictive feature weighting, and bounded calibration, while recording that the translations are contextual estimates rather than hypothetical NFL predictions and that rare-event statistics remain weak.",
+      "retrocausal_genealogy": "MAYFIELD originates in football's analytical gap vs MLB/NBA (sparse public data, video scouting, complexity) and the proprietary irreproducibility of Silver's MLB/NBA models and Schatz's KUBIAK. Williams/Brugler/Clarke (Ohio State/GM) build a reproducible comprehensive learning-based career forecaster for all post-1970 NFL players. Lineage: Cover 1968 kNN, Gionis-Indyk-Motwani 1999 LSH, Mahalanobis 1936, Rousseeuw 1984 MCD, Schultz-Joachims 2004 learned metric, Hansen CMA-ES, Cleveland 1979 LOESS, Thorn-Palmer 1984 + Szymborski 1997 translations, James 1994 similarity scores. Data: PFR since 1970 merger.",
+      "theory_of_mind": "A player is projected from the historical careers most similar to his, with a similarity notion learned to be predictive. Approximate kNN regression: LSH reduces >10k comparables in q=49Y+17 dims to a candidate neighborhood (excludes uninteresting segments w.h.p. when K<<N). Weighted Mahalanobis with robust MCD covariance + diagonal C=alpha^rho_j (rho_j=corr(feature distance, future-vector MD)) upweights predictive features, downweights 'malignant' ones without singularity. Percentilized distance ~ chi-square(q) -> probabilistic similarity score; K nearest feed hybrid regression = IDW(neighbor futures) + IDW(net changes) + Y-order AR + constant.",
+      "cross_layer_veto": "Per-feature LOESS (B=log2(N)/N) bounds percentile predictions and corrects regression-to-mean bias, kept separate to preserve interpretable weights; fitness = RMSE of classical Mahalanobis between predicted/realized vectors, minimized by CMA-ES (rugged/noisy/high-dim landscape). Subsumes naive + classical kNN (accuracy floor). Train 1970-2009, CV 2010-2018, stable RMSE -> genuine power. Beats KUBIAK every position (2010-2017 standardized RMSE), balanced; only significant weaknesses (90% conf) rare/unstable def+ST TDs and WR rushes. Equations shifted-font, reconstructed as labeled LaTeX; translations are contextual estimates not hypothetical predictions; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "MAYFIELD forecasts NFL player careers year by year via an LSH-accelerated approximate k-nearest-neighbor regression whose similarity is a learned, robust weighted Mahalanobis distance (MCD covariance, feature weights from correlation with future-performance similarity), turned into a chi-square similarity score, feeding a hybrid autoregressive-kNN regression with LOESS bias correction, all tuned by CMA-ES on a Mahalanobis-RMSE fitness and validated to beat KUBIAK across positions.",
+  "gsi_mapping": "GSI treats MAYFIELD as approximate kNN regression: LSH (q=49Y+17, T=20) over PFR segments (static bio + Y dynamic seasons); weighted Mahalanobis d_F=|C|^{-1/q}sqrt((r-r0)^T Sigma^{-1/2} C^2 Sigma^{-1/2}(r-r0)) with MCD covariance and C=alpha^rho_j (rho=corr(feature dist, future MD)); SS=1-chi2_CDF(d_F); v_hat=b1*IDW(L)+b2*IDW(dv)+AR(phi)+c; LOESS B=log2(N)/N; fitness=RMSE of MD; CMA-ES; stadium Phi home/away ratio + 5-yr MA, translation chi_hat=chi*sqrt(Theta/Omega) base NFL 2018-19; train 1970-2009 CV 2010-2018; beats KUBIAK every position.",
+  "gse_mapping": "GSE lifts the LSH scalable comp-search, the learned predictive robust Mahalanobis similarity (MCD + malignant-feature downweighting), the chi-square comp ranking, the hybrid AR-kNN career forecaster, the bounded LOESS calibration, the Mahalanobis-RMSE/CMA-ES joint tuning, the stadium/league environment normalization, and the missing-data-robust extensible feature space; translations recorded as contextual estimates not predictions; all outputs are statistical career projections, never sportsbook lines."
+}

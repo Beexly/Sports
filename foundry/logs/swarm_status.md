@@ -568,3 +568,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:31:36 | COMPLETE | 33819cf53272627c | primitives=25 think_words=851
 - 2026-11-14 02:32:16 | CLAIMED | 181310dec4740603 | worker=hermes-inline shard03 file=2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors.pdf
 - 2026-11-14 02:35:52 | COMPLETE | 181310dec4740603 | primitives=25 think_words=851
+- 2026-11-14 02:36:39 | CLAIMED | 3012b2996271809f | worker=hermes-inline shard03 file=2021 - MAYFIELD Machine Learning Algorithm for Yearly Forecasting Indicators and Estimation of Long-Run Player Development - Unknown Authors.pdf
+- 2026-11-14 02:42:50 | COMPLETE | 3012b2996271809f | primitives=36 think_words=932
