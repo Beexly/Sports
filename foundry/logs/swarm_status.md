@@ -590,3 +590,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 03:54:26 | COMPLETE | 039b0af9d963efda | primitives=22 think_words=869
 - 2026-11-14 03:55:26 | CLAIMED | 05e123af0b0a0157 | worker=hermes-inline shard03 file=2026 - Machine Learning Based Classification of Alertness Levels in Elite Shooting Athletes Using Heart Rate Variability - Lu et al.pdf
 - 2026-11-14 04:07:12 | COMPLETE | 05e123af0b0a0157 | primitives=24 think_words=861
+- 2026-11-14 04:10:16 | CLAIMED | 04b253956fe4be89 | worker=hermes-inline shard03 file=2026 - Mechanical Output and Post-exercise Jump Responses to Percentage-Based, Repetitions-in-Reserve, and Velocity-Based Back-Squat Training in Tr - Mei et al.pdf
+- 2026-11-14 04:15:49 | COMPLETE | 04b253956fe4be89 | primitives=27 think_words=858
