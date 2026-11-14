@@ -600,3 +600,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 04:33:29 | COMPLETE | 332e9b44e34c27f7 | primitives=24 think_words=856
 - 2026-11-14 04:34:18 | CLAIMED | 3789b1db7ff3cab8 | worker=hermes-inline shard03 file=2024 - Analysis of Success Probabilities in Field Hockey with Machine Learning - Lee.pdf
 - 2026-11-14 04:46:32 | COMPLETE | 3789b1db7ff3cab8 | primitives=27 think_words=929
+- 2026-11-14 04:47:53 | CLAIMED | 238bb03f7c401b23 | worker=hermes-inline shard03 file=2025 - Optimizing Lead Distance - Whitney-Epstein et al.pdf
+- 2026-11-14 04:52:01 | COMPLETE | 238bb03f7c401b23 | primitives=12 think_words=872
