@@ -1,0 +1,535 @@
+{
+  "book_id": "3ad08dd96b7ba73c",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Vaz-de-Melo et al., 'Characterizing and Controlling the Perceived Competitive Balance in Sports Leagues', MIT Sloan Sports Analytics Conference 2026 Research Paper Competition, Business of Sports track, Paper ID 85 (29 pages). Full paper: equal-skill null-model turning point tau (perceived balance), schedule-invariant expected turning point tau-hat via round-robin permutation averaging, and the iMWM max-weight-matching scheduler controlling tau (oracle >=96% / yesterday ~69% success; tau-maxmin broadcast variant); extracted faithfully (not a derivative summary). Equations 1-17 are shifted-font and reconstructed as labeled LaTeX from prose. IMPORTANT provenance: the source collected betting odds (betexplorer.com) only as auxiliary favorite indicators and for a validation correlation (Sec 4.4); the core tau/tau-hat metric and scheduler are odds-free (empirical home/draw/away result frequencies). GSE lifts only the odds-free balance methodology and scheduler; no sportsbook lines, spreads, totals, or implied odds are carried into GSE outputs. Perceived balance is distinct from true balance; schedule manipulation raises fairness questions.",
+  "primitives": [
+    {
+      "primitive_id": "competitive_balance_viability",
+      "name": "Competitive balance is fundamental to league viability",
+      "verbatim_quote": "The concept of competitive balance, which refers to a well-balanced distribution of sporting talent across teams, is widely considered fundamental to a league's long-term viability and success",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Competitive balance, a well-balanced distribution of sporting talent across teams, is widely considered fundamental to a league's long-term viability; large strength disparities yield predictable outcomes and unappealing mid-to-late-season matches, though the balance-demand relationship is empirically nuanced (no link, inverse via loss aversion, or positive in high-stakes/neutral contexts)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Talent-distribution balance is the same league-health metric GSE tracks for engagement and fairness.",
+        "source_operator": "competitive_balance_viability",
+        "telemetry": "balance = talent distribution; viability driver"
+      }
+    },
+    {
+      "primitive_id": "stakeless_matches_fairness",
+      "name": "Unbalanced late rounds create stakeless matches, threatening fairness",
+      "verbatim_quote": "matches can become \"stakeless\" for some participants, threatening fairness as it could be a reason to not exert full effort to win",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In the last rounds of unbalanced tournaments, matches can become stakeless for some participants, threatening fairness because teams may not exert full effort to win; this motivates measuring and controlling within-season balance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stakeless-match risk is the same effort-incentive failure GSE flags in late-season scenarios.",
+        "source_operator": "stakeless_matches_fairness",
+        "telemetry": "stakeless late matches -> reduced effort / fairness risk"
+      }
+    },
+    {
+      "primitive_id": "metrics_neglect_stochastic",
+      "name": "Standard balance metrics neglect stochastic match outcomes",
+      "verbatim_quote": "They neglect the stochastic nature of match outcomes, which can make leagues sharing the same underlying (true) competitive balance exhibit varying point distributions",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Normalized dispersion metrics are deterministic and highly sensitive to observed points, neglecting the stochastic nature of match outcomes; leagues with the same true balance can show different point-dispersion levels, and even perfectly balanced leagues show non-negligible variance bands (5th-95th percentile of 1000 simulations)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Accounting for outcome stochasticity is the same null-model reasoning GSE applies to balance.",
+        "source_operator": "metrics_neglect_stochastic",
+        "telemetry": "deterministic metrics ignore stochastic variance bands"
+      }
+    },
+    {
+      "primitive_id": "permanent_divergence_pattern",
+      "name": "Real imbalance diverges permanently from the balanced band after a matchday",
+      "verbatim_quote": "Beyond this point, the real variance permanently diverges",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Comparing real tournaments to perfectly balanced simulations, the real competitive imbalance stays within the simulated band until a specific matchday, beyond which the real variance permanently diverges with a more pronounced rate of increase; this turning point varies greatly across tournaments and sports."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The permanent-divergence turning point is the same regime-change detector GSE uses for season balance.",
+        "source_operator": "permanent_divergence_pattern",
+        "telemetry": "real variance diverges permanently after turning point"
+      }
+    },
+    {
+      "primitive_id": "tau_interpretable_1392",
+      "name": "Turning point and its fraction are interpretable across 1,392 seasons",
+      "verbatim_quote": "demonstrate this across 1,392 seasons in 77 countries",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The first contribution is that the turning-point matchday and the fraction of matchdays before it are intuitive, interpretable measures of competitive balance, demonstrated across 1,392 seasons in 77 countries."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An interpretable duration-based balance measure is the same fan-facing metric GSE prefers over opaque indices.",
+        "source_operator": "tau_interpretable_1392",
+        "telemetry": "tau + tau% interpretable; 1,392 seasons / 77 countries"
+      }
+    },
+    {
+      "primitive_id": "tau_hat_schedule_invariant",
+      "name": "Expected turning point tau-hat is schedule-independent",
+      "verbatim_quote": "which represents the expected turning point of a tournament",
+      "page": 4,
+      "latex": "\\hat\\tau=\\frac{1}{|\\mathcal{G}^{RR}_{M_0}|}\\sum_{M\\in\\mathcal{G}^{RR}_{M_0}}\\tau(M)",
+      "symbol_and_unit_ledger": {
+        "tau_hat": "expected turning point over round-robin permutations"
+      },
+      "assumptions": [
+        "The second contribution is the expected turning-point estimator, the expected turning point of a tournament averaged over schedule permutations, independent of the actual schedule and thus a more reliable measure enabling meaningful cross-league and cross-sport comparisons (Equation 7 shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Eq 7 shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Schedule-invariant expectation is the same confound-neutralized metric GSE uses for fair comparison.",
+        "source_operator": "tau_hat_schedule_invariant",
+        "telemetry": "tau_hat = mean tau over RR permutations; schedule-free"
+      }
+    },
+    {
+      "primitive_id": "schedule_controls_perception",
+      "name": "Designed schedules alter perceived balance without rule changes",
+      "verbatim_quote": "carefully designed schedules could alter how balanced a tournament appears to audiences",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The third contribution is a scheduling approach controlling the divergence-point timing: postponing it makes the competition appear balanced longer (appealing to mid-table fans), advancing it separates top and bottom earlier (attracting loss-averse fans to consequential games); carefully designed schedules alter perceived balance without complex costly compensation mechanisms."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Perception control via scheduling is the same engagement-lever GSE identifies that needs no rule change.",
+        "source_operator": "schedule_controls_perception",
+        "telemetry": "postpone tau -> balanced longer; advance -> decisive earlier"
+      }
+    },
+    {
+      "primitive_id": "dataset_279k_matches",
+      "name": "Dataset: 279k matches, 1,392 seasons, 4 sports, 2011-2020",
+      "verbatim_quote": "In total, there are over 279,00 matches spread out across 1,392 seasons, averaging approximately 201 games per season",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The dataset covers 35 basketball, 30 volleyball, 79 football, and 30 handball leagues from betexplorer.com, seasons 2011-2020, over 279,000 matches across 1,392 seasons averaging about 201 games each; only seasons with at least 8 teams and 50 matches are included, and renamed divisions are aggregated; home team, result, date, and (when available) odds are collected, the odds serving only as favorite indicators."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-sport multi-season corpus is the same broad validation substrate GSE uses.",
+        "source_operator": "dataset_279k_matches",
+        "telemetry": "279k matches / 1,392 seasons / 4 sports / 2011-2020"
+      }
+    },
+    {
+      "primitive_id": "null_model_equal_skill",
+      "name": "Null model: equal-skill teams, same schedule, empirical result frequencies",
+      "verbatim_quote": "we compare the observed skill imbalance in the real tournament to those generated by a null model that replicates the characteristics of the tournament",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The null model simulates a perfectly balanced version of the regular season following the same schedule, with all teams equally skilled; it captures point-distribution variability when no skill differences exist, so a highly skewed real distribution is unlikely under the null and signals genuine imbalance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An equal-skill null model is the same chance-baseline GSE uses to test for real imbalance.",
+        "source_operator": "null_model_equal_skill",
+        "telemetry": "null = equal skill, same schedule, empirical frequencies"
+      }
+    },
+    {
+      "primitive_id": "points_coupled_not_independent",
+      "name": "Team points are identically distributed but coupled to opponents",
+      "verbatim_quote": "which are not independent since the points a team obtain in a match are directly coupled to its adversary’s points",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Standings up to round t are identically distributed random variables that are not independent, because a team's match points are directly coupled to its adversary's; points are 3 for a win, 1 for a draw, 0 for a loss, with home/draw/away probabilities empirically estimated from the real tournament's frequencies (draws impossible in basketball/volleyball, rare in handball)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coupled point accumulation is the same zero-sum constraint GSE respects in standings simulation.",
+        "source_operator": "points_coupled_not_independent",
+        "telemetry": "X_i,t = sum x_i,j; 3/1/0; coupled to opponent; P_h/P_d/P_a empirical"
+      }
+    },
+    {
+      "primitive_id": "same_schedule_fair_comparison",
+      "name": "Fair comparison requires identical matchday participants",
+      "verbatim_quote": "Our framework only works if the comparison to the expected behaviour is fair, that is, if the same teams that played on a matchday also play during it in our simulation",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The framework requires a fair comparison: the same teams that played on a matchday must also play during it in the simulation, so forcing the schedule to match is crucial for tournaments with peculiar match order; because simulations obey the same rules they serve as a unified reference valid across leagues and sports."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Schedule-matched simulation is the same apples-to-apples null comparison GSE enforces.",
+        "source_operator": "same_schedule_fair_comparison",
+        "telemetry": "same matchday participants in real and null"
+      }
+    },
+    {
+      "primitive_id": "tau_duration_balanced",
+      "name": "Turning point = duration tournament appears perfectly balanced",
+      "verbatim_quote": "It represents the duration that a tournament can be considered perfectly balanced and can be used as a measure of competitive balance",
+      "page": 5,
+      "latex": "\\tau=\\arg\\max\\{t:\\mathcal{V}_t<q_t\\},\\quad \\tau\\%=\\tau/T",
+      "symbol_and_unit_ledger": {
+        "V_t": "observed points variance at t",
+        "q_t": "(1-alpha) null quantile",
+        "T": "season length"
+      },
+      "assumptions": [
+        "The observed turning point is the number of rounds whose standings dispersion mirrors the perfectly balanced expectation; larger values mean more perceived balance, and a tournament with no turning point is perfectly balanced throughout (value equals duration); it is estimated as the last round the observed variance stays below the null quantile envelope, normalized by season length (Equations 4-5 shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Eqs 4-5 shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The duration-inside-envelope metric is the same perceived-balance measure GSE computes.",
+        "source_operator": "tau_duration_balanced",
+        "telemetry": "tau = argmax{t: V_t<q_t}; tau%=tau/T"
+      }
+    },
+    {
+      "primitive_id": "null_quantile_envelope",
+      "name": "Null quantile envelope from K simulations (Eqs 1-3)",
+      "verbatim_quote": "These probabilities are empirically estimated based on the observed",
+      "page": 5,
+      "latex": "\\mu_t=\\frac1K\\sum_k\\mathcal{V}_t^{(k)};\\ q_t=\\inf\\{q:(1-\\alpha)\\le\\hat{\\mathcal{F}}_t(q)\\};\\ \\hat{\\mathcal{F}}_t(q)=\\frac1K\\sum_k I(\\mathcal{V}_t^{(k)}\\le q)",
+      "symbol_and_unit_ledger": {
+        "mu_t": "expected null imbalance",
+        "q_t": "(1-alpha) quantile",
+        "K": "simulation count"
+      },
+      "assumptions": [
+        "K null simulations record the points distribution and its imbalance per round; the expected imbalance mu_t is their average (Eq 1), and the threshold q_t is the (1-alpha)-quantile of simulated imbalances via the empirical CDF (Eqs 2-3); the observed variance lying above q_t for a long time is highly unlikely under equal skill, defining the turning point (equations shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Eqs 1-3 shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A simulation quantile envelope is the same significance band GSE uses to detect divergence.",
+        "source_operator": "null_quantile_envelope",
+        "telemetry": "mu_t=mean V^(k); q_t=(1-alpha) quantile; empirical CDF"
+      }
+    },
+    {
+      "primitive_id": "soccer_most_balanced_upsets",
+      "name": "Soccer most balanced (tau%=45.9%): low scoring breeds upsets",
+      "verbatim_quote": "Soccer leagues are the most balanced ones: the ones that present, on average, the highest turning point values",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Soccer leagues are the most balanced with mean normalized turning point 45.9% (points distributions akin to perfectly balanced for nearly half the season), versus basketball 32.6%, volleyball 29.6%, and handball 27.4%; the discrepancy is attributed to the higher likelihood of underdogs winning in soccer due to the minimal goals required for victory, producing more upsets and closer standings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sport-specific balance from scoring frequency is the same upset-rate mechanism GSE models.",
+        "source_operator": "soccer_most_balanced_upsets",
+        "telemetry": "soccer 45.9% / basketball 32.6% / volleyball 29.6% / handball 27.4%"
+      }
+    },
+    {
+      "primitive_id": "sada_cruzeiro_schedule_artifact",
+      "name": "Schedule artifact: Sada Cruzeiro's 5 early games forced tau=4",
+      "verbatim_quote": "while most teams in the tournament had played only two matches, the top-ranked team in the world at the time played five",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The observed turning point depends on game order: in the 2013/14 Brazilian Superliga, Sada Cruzeiro played five matches while most teams played two (rescheduled around the World Championship), won all five (only 3.9% likely under equal skill with P_h=53.8%/P_a=46.2%), and the imbalance diverged after its third match giving tau=4, motivating a schedule-invariant measure."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The schedule-induced artifact is the same confound GSE removes via permutation averaging.",
+        "source_operator": "sada_cruzeiro_schedule_artifact",
+        "telemetry": "Sada Cruzeiro 5 games vs 2; won all (3.9% null); tau=4"
+      }
+    },
+    {
+      "primitive_id": "permutation_averaging",
+      "name": "Expected turning point averages over round-robin permutations",
+      "verbatim_quote": "we simply assume that all non-round-robin schedules can never happen and that all round-robin schedules are equally likely",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Viewing the turning point as a random variable over schedule permutations, the expected value sums tau(M)*P(M); since exact permutation probabilities are impractical, all non-round-robin schedules are assumed impossible and all round-robin schedules equally likely, giving tau-hat as the mean over a sampled set of K round-robin permutations (generating all is unfeasible for 15+ teams), a format standardization to well-ordered round robins."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Permutation averaging under a uniform round-robin prior is the same schedule-neutralization GSE applies.",
+        "source_operator": "permutation_averaging",
+        "telemetry": "tau_hat = mean over K sampled RR permutations"
+      }
+    },
+    {
+      "primitive_id": "tau_hat_more_stable",
+      "name": "Expected turning point is more stable; observed values run lower",
+      "verbatim_quote": "is considerably more stable than the observed one",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The expected normalized turning point is considerably more stable than the observed one (concentrated quartiles and whiskers), evidence of reliability against peculiar schedules; observed values are lower in general, possibly indicating organizers deliberately or not use schedules that slightly favor a rapid distinction between good and bad teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stability gain is the same variance-reduction GSE expects from neutralization.",
+        "source_operator": "tau_hat_more_stable",
+        "telemetry": "tau_hat% tighter quartiles; observed lower (organizer bias?)"
+      }
+    },
+    {
+      "primitive_id": "betting_market_validation",
+      "name": "Validation: tau-hat negatively correlates with betting-market accuracy",
+      "verbatim_quote": "We measure predictability using the accuracy of the betting market for the tournament, that is, what fraction of the season matches the team with the smallest odds won",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The expected turning point is validated against tournament predictability, measured as the fraction of matches the smallest-odds team won (betting-market accuracy); there is a notable negative correlation across all four sports, with a linear model showing accuracy drops at least 10% as tau-hat increases by about 0.3, consistent with uncertainty-of-outcome theory. NOTE: this is a source validation step using odds; the core tau/tau-hat metric itself is odds-free (empirical result frequencies), and GSE lifts only the odds-free methodology."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Balance validating against predictability is the same external-criterion check GSE uses (with any predictability measure, not requiring odds).",
+        "source_operator": "betting_market_validation",
+        "telemetry": "tau_hat vs market accuracy: negative corr; -10% per +0.3"
+      }
+    },
+    {
+      "primitive_id": "schedule_optimization_objective",
+      "name": "Optimal schedule maximizes duration inside the quantile envelope",
+      "verbatim_quote": "we wish to determine which feasible tournament schedule maximizes the duration the imbalance stays inside the envelope",
+      "page": 12,
+      "latex": "S^*=\\arg\\max_S\\,\\tau(S),\\ \\tau(S)=\\arg\\max\\{t:\\mathcal{V}_t(S)\\le\\mathbb{Q}_{1-\\alpha}[\\mathcal{V}_t(S)]\\}",
+      "symbol_and_unit_ledger": {
+        "S": "schedule tensor in {0,1}^{T x n x n}",
+        "tau*": "maximized perceived balance"
+      },
+      "assumptions": [
+        "The control problem finds the feasible schedule maximizing the duration the standings variance stays inside the quantile envelope; the schedule is a third-order binary tensor S_tij indicating when ordered match (i,j) occurs, match points are predetermined recorded results (a projection of the skill distribution), and the optimal schedule S* maximizes tau(S) with tau* = tau(S*) (Equations 10-12 shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Eqs 10-12 shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Schedule optimization to prolong perceived balance is the same engagement-maximizing fixture design GSE performs.",
+        "source_operator": "schedule_optimization_objective",
+        "telemetry": "S* = argmax_S tau(S); binary schedule tensor"
+      }
+    },
+    {
+      "primitive_id": "points_variance_schedule",
+      "name": "Points and variance are explicit functions of the schedule (Eqs 8-9)",
+      "verbatim_quote": "the direct projection of the underlying skill distribution in the real world",
+      "page": 12,
+      "latex": "X_{i,t}(S)=\\sum_{\\tilde t=1}^{t}\\sum_j[x_i(i,j)S_{\\tilde t ij}+x_i(j,i)S_{\\tilde t ji}];\\ \\mathcal{V}_t(S)=\\frac{1}{n-1}\\sum_i(X_{i,t}(S)-\\bar X_t)^2",
+      "symbol_and_unit_ledger": {
+        "X_i,t(S)": "team i points to round t under S",
+        "V_t(S)": "points variance"
+      },
+      "assumptions": [
+        "Because match results are predetermined, team i's points to round t under any schedule S sum the recorded home/away match points weighted by the schedule tensor (Eq 8), and the imbalance is the points variance across teams (Eq 9); this makes the turning point an explicit function of the schedule that can be optimized (equations shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Eqs 8-9 shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Schedule-parameterized standings variance is the same differentiable-by-enumeration objective GSE optimizes.",
+        "source_operator": "points_variance_schedule",
+        "telemetry": "X_i,t(S)=sum recorded pts * S; V_t(S)=variance"
+      }
+    },
+    {
+      "primitive_id": "drr_constraints",
+      "name": "Double round-robin feasibility constraints (Eqs 13-16)",
+      "verbatim_quote": "Equation 13 states that no team will ever face itself during the competition",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For the double round-robin format (about 90% of studied seasons, including Europe's top five soccer leagues), feasibility requires no self-matches (Eq 13), each ordered pair played exactly once (Eq 14), one match per team per round (Eq 15), and two turns so teams face each other once before any repeat (Eq 16); a more general formulation for non-DRR formats like the NBA is in the Appendix."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Round-robin feasibility constraints are the same fixture-validity rules GSE encodes.",
+        "source_operator": "drr_constraints",
+        "telemetry": "DRR: no self / each pair once / 1 per round / two turns"
+      }
+    },
+    {
+      "primitive_id": "minimizer_best_home",
+      "name": "tau-minimizer: best team home early accelerates separation",
+      "verbatim_quote": "best team to play at home in the initial matches is optimal to minimize the perceived competitive balance",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "To minimize perceived competitive balance, the best team plays at home in initial matches, increasing its win likelihood and accelerating the separation between good and bad teams, raising points variance; the iMWM scheduler builds a tau-minimizer then reverses it (a heuristic, not guaranteed to maximize) with home-away status flipped."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The minimize-balance direction is the same early-separation lever GSE can invert for engagement.",
+        "source_operator": "minimizer_best_home",
+        "telemetry": "minimize PCB: best team home early -> faster separation"
+      }
+    },
+    {
+      "primitive_id": "maximizer_worst_home",
+      "name": "tau-maximizer: worst team home evens win probabilities",
+      "verbatim_quote": "It is favorable to set the worst team as home, leveraging the home-court advantage to mitigate the difference in skill in a match",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For maximization, the worst team is set as home, leveraging home-court advantage to mitigate the skill difference and make each team's winning probability as even as possible, better mimicking a perfectly balanced tournament; this is the opposite of the minimizer's best-team-home rule."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Home-advantage leveling is the same balance-enhancing assignment GSE uses.",
+        "source_operator": "maximizer_worst_home",
+        "telemetry": "maximize PCB: worst team home -> even win probs"
+      }
+    },
+    {
+      "primitive_id": "greedy_max_weight_matching",
+      "name": "Greedy max-skill-discrepancy matching per round (iMWM)",
+      "verbatim_quote": "we propose a greedy approach that matches teams with the greatest skill discrepancy in each round",
+      "page": 14,
+      "latex": "w(r_i,r_j)=(i-j)^2;\\ S'_t=A_t\\odot U",
+      "symbol_and_unit_ledger": {
+        "w": "squared rank discrepancy",
+        "A_t": "max-weight matching adjacency",
+        "U": "strictly upper triangular"
+      },
+      "assumptions": [
+        "The tau-minimizer greedily matches teams with the greatest skill discrepancy each round (best vs worst), making good teams' matches easy and bad teams' matches hard so dispersion rises rapidly; teams ordered by skill form an undirected weighted graph (complete in round 1, scheduled edges removed later), and a max-weight matching (Galil 1986) selects edges, with home assigned to the higher-ranked team via S'_t = A_t element-wise-times U (strictly upper triangular); the weight is the squared rank difference (i-j)^2 (Eq 17), chosen over absolute difference for faster growth and to avoid ambiguous equal weight sums."
+      ],
+      "breakdown_regime": "Eq 17 + matching assignment shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Iterative max-weight matching is the same greedy fixture-assignment GSE uses to control dispersion.",
+        "source_operator": "greedy_max_weight_matching",
+        "telemetry": "greedy best-vs-worst; max-weight matching; w=(i-j)^2; home=higher rank"
+      }
+    },
+    {
+      "primitive_id": "oracle_96_yesterday_69",
+      "name": "Oracle ranking lifts balance in 96% of seasons; yesterday 69%",
+      "verbatim_quote": "at least 96% of the seasons considered experienced a strict increase in their perceived competitive balance",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The scheduler needs only a skill-ordered team list R, from a prediction model or experts; with an oracle R (actual final rankings) at least 96% of seasons strictly increase perceived balance across all sports, while the yesterday model (previous season's rankings, a lower bound, promoted teams placed alphabetically at the bottom) still increases about 69% of first-division seasons; Table 1 gives oracle+mirrored 95.7% success (+33.3%/-6.3%) down to yesterday+reversed 64.3% (+18.7%/-10.8%)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ranking-quality-bounded schedule gains are the same input-sensitivity GSE reports.",
+        "source_operator": "oracle_96_yesterday_69",
+        "telemetry": "oracle >=96% / yesterday ~69%; Table1 95.7%->64.3%"
+      }
+    },
+    {
+      "primitive_id": "tau_maxmin_broadcast",
+      "name": "tau-maxmin: maximize first half, minimize second for thrilling finish",
+      "verbatim_quote": "we sacrifice the perception of competitive balance to ensure the most thrilling matches occur towards the tournament’s conclusion",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because a pure tau-maximizer can move the most attractive matches too early (violating broadcasting interests), the intermediate tau-maxmin scheduler uses the maximizer for the first half and the minimizer for the second, sacrificing late balance to ensure thrilling matches at the conclusion (risking stakeless games); for DRR it still increases balance in about 86% (oracle) / 64% (yesterday) of seasons, and about 79%/62% for general tournaments."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The balance-versus-broadcast tradeoff is the same multi-objective scheduling GSE balances.",
+        "source_operator": "tau_maxmin_broadcast",
+        "telemetry": "tau-maxmin: max 1st half / min 2nd; 86%/64% DRR"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "perceivedbalance2026_trace",
+      "think": "The retrocausal genealogy of this paper is the uncertainty-of-outcome hypothesis and the recognition that competitive balance, a well-balanced distribution of talent, is fundamental to a league's long-term viability. The authors, Vaz-de-Melo and colleagues, writing for the MIT Sloan 2026 Business of Sports track, note that large strength disparities make outcomes predictable and late-season matches stakeless, threatening fairness because teams may not exert full effort. The empirical balance-demand relationship is nuanced, with studies finding no link, an inverse link via loss aversion, or positive effects in high-stakes or neutral contexts. Standard dispersion metrics are deterministic, sensitive to observed points, and neglect the stochastic nature of match outcomes, so leagues with the same true balance can show different point distributions; even perfectly balanced leagues show non-negligible variance bands across a thousand simulations. The key observation is a recurring divergence pattern: the real points variance stays within the perfectly balanced simulation band until a specific matchday, then permanently diverges with a faster increase. The first contribution is that this turning point and its fraction of the season are interpretable balance measures, demonstrated across 1,392 seasons in 77 countries. The dataset spans 35 basketball, 30 volleyball, 79 football, and 30 handball leagues from 2011 to 2020, over 279,000 matches averaging about 201 games per season, restricted to seasons with at least 8 teams and 50 matches. The source collected betting odds only as auxiliary favorite indicators and for a validation correlation; the core metric itself is odds-free. The recursive theory of mind is a null model of equal-skill teams that captures what chance alone produces. The null simulates the same schedule with all teams equally skilled, drawing each result from the real tournament's empirical home/draw/away frequencies, with points of 3 for a win, 1 for a draw, 0 for a loss; team points are identically distributed but coupled to opponents, and draws are impossible in basketball and volleyball. The expected imbalance per round is the mean over K simulations, and a quantile envelope at significance alpha defines the band; the observed turning point is the last round the real variance stays below the envelope, normalized by season length. Soccer is the most balanced at a mean 45.9 percent because low scoring breeds upsets, versus basketball 32.6, volleyball 29.6, and handball 27.4 percent. Cross-layer veto adjudication is the schedule dependence and its neutralization. The observed turning point depends on match order: in the 2013/14 Brazilian Superliga, Sada Cruzeiro played five early games while others played two, won all five at only 3.9 percent null likelihood, and forced a turning point of 4. The expected turning point averages the turning point over round-robin schedule permutations, assuming non-round-robin schedules impossible and round-robin schedules equally likely, sampled because enumerating all is unfeasible for fifteen or more teams; it is considerably more stable, and observed values run lower, suggesting organizers favor rapid separation. A validation against betting-market accuracy shows a negative correlation, with accuracy dropping at least ten percent as the expected turning point rises by about 0.3, but this is a source validation step, not part of the odds-free core metric. The implementation invariants map directly onto GSE. The equal-skill null model is GSE's chance baseline; the quantile-envelope turning point is GSE's perceived-balance detector; the permutation-averaged expected turning point is GSE's schedule-neutralized comparison metric; and the scheduling optimizer is GSE's engagement lever. The control problem finds the feasible binary schedule tensor maximizing the duration the points variance stays inside the envelope, with predetermined recorded match points, explicit points-and-variance functions of the schedule, and double round-robin feasibility constraints covering about ninety percent of seasons. The outputs are balance measures and optimized schedules from public results data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The scheduler, the parameter ledger, and the limitations close the account. The Iterative Maximum Weighted-Matching scheduler greedily matches greatest skill discrepancy each round via max-weight matching with squared rank-difference weights, assigning home to the higher-ranked team to minimize balance, then reverses it as a maximization heuristic; minimizing puts the best team home early to accelerate separation, while maximizing puts the worst team home to leverage home advantage and even win probabilities. With an oracle skill ranking at least 96 percent of seasons increase perceived balance, and the yesterday model still lifts about 69 percent; the tau-maxmin variant maximizes the first half and minimizes the second to keep thrilling matches late, trading balance for broadcast value. The equations are shifted-font, so they are reconstructed as labeled LaTeX and flagged, and the reversal heuristic carries no guarantee of optimality. The invariant for GSE is to carry the null-model turning-point framework and the matching-based scheduler, while recording that perceived balance is distinct from true balance and that schedule manipulation raises fairness questions before any quantitative reuse. The deeper insight is that perceived balance and true balance are different objects: a league can be genuinely unbalanced yet appear balanced longer if its schedule delays the divergence, or genuinely balanced yet appear lopsided early if strong teams meet weak ones at home first. This separation lets organizers shape audience engagement through fixture design alone, without salary caps or revenue sharing, but it also raises a fairness question, since deliberately engineering when fans perceive imbalance is a form of manipulation the paper acknowledges rather than resolves. GSE treats the scheduler as an engagement tool subject to that ethical caveat, and reports perceived and true balance as separate quantities so a downstream consumer never conflates the two.",
+      "retrocausal_genealogy": "Uncertainty-of-outcome hypothesis; competitive balance (talent distribution) fundamental to league viability; disparities -> predictable/stakeless matches -> fairness risk. Balance-demand nuanced (no link / inverse loss-aversion / positive high-stakes). Standard dispersion metrics deterministic, neglect stochastic outcomes; perfectly balanced leagues show variance bands (1000 sims). Vaz-de-Melo et al., MIT Sloan 2026 Business of Sports ID 85. Data: 35 basketball/30 volleyball/79 football/30 handball leagues, betexplorer.com 2011-2020, >279k matches/1,392 seasons/77 countries, >=8 teams/50 matches; odds collected only as favorite indicators + validation (core metric odds-free).",
+      "theory_of_mind": "Null model of equal-skill teams captures chance alone: same schedule, results drawn from empirical P_h/P_d/P_a, points 3/1/0, coupled to opponents (draws impossible basketball/volleyball). mu_t=mean over K sims (Eq1); q_t=(1-alpha) quantile via empirical CDF (Eqs2-3); tau=argmax{t:V_t<q_t} (Eq4), tau%=tau/T (Eq5). Soccer most balanced 45.9% (low scoring->upsets) vs basketball 32.6/volleyball 29.6/handball 27.4. Real variance diverges permanently after tau. The null supplies the chance-only baseline against which observed imbalance is judged statistically significant.",
+      "cross_layer_veto": "Schedule dependence: Sada Cruzeiro 2013/14 Superliga 5 early games vs 2, won all (3.9% null, P_h 53.8/P_a 46.2), tau=4. Expected tau_hat=mean over RR permutations (Eq7), non-RR impossible/RR equally likely, sampled K (>=15 teams unfeasible to enumerate); more stable, observed lower (organizer bias). Validation: tau_hat vs betting-market accuracy negative corr (-10% per +0.3) -- source validation only, core odds-free. Control: S*=argmax_S tau(S) (Eqs10-12), binary tensor S_tij, predetermined results, X_i,t(S)/V_t(S) (Eqs8-9), DRR constraints (Eqs13-16, ~90%). iMWM: greedy max skill-discrepancy max-weight matching, w=(i-j)^2 (Eq17), home=higher rank (minimize), reverse heuristic (maximize); worst-team-home evens win probs. Oracle >=96% / yesterday ~69% increase; Table1 95.7%->64.3%; tau-maxmin (max 1st/min 2nd) 86%/64% DRR for broadcast. Equations shifted-font reconstructed; zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "Within-season competitive balance is measured by the turning point at which a league's points-variance permanently diverges from an equal-skill null-model quantile envelope (observed tau, schedule-sensitive; expected tau-hat, schedule-invariant via round-robin permutation averaging), and controlled by an iterative max-weight-matching scheduler that reorders fixtures to prolong or shorten perceived balance, validated across 1,392 seasons in four sports.",
+  "gsi_mapping": "GSI treats the model as equal-skill null (same schedule, empirical P_h/P_d/P_a, points 3/1/0, coupled), mu_t=mean V^(k) (Eq1), q_t=(1-alpha) quantile (Eqs2-3), tau=argmax{t:V_t<q_t} (Eq4), tau%=tau/T (Eq5); tau_hat=mean over K sampled RR permutations (Eq7); soccer 45.9%/basketball 32.6/volleyball 29.6/handball 27.4; data 279k matches/1,392 seasons/2011-2020; control S*=argmax_S tau(S) (Eqs10-12), binary tensor, X_i,t(S)/V_t(S) (Eqs8-9), DRR constraints (Eqs13-16); iMWM greedy max-discrepancy max-weight matching w=(i-j)^2 (Eq17), home=higher rank, reverse heuristic; oracle >=96%/yesterday ~69%, Table1 95.7%->64.3%, tau-maxmin 86%/64%; betting-market validation is source-only (core odds-free).",
+  "gse_mapping": "GSE lifts the equal-skill null-model turning-point framework, the schedule-invariant permutation-averaged expected turning point, and the matching-based fixture scheduler (with the minimize/maximize home-assignment logic and tau-maxmin broadcast tradeoff) as its league-balance and engagement layer; records that perceived != true balance, the reversal heuristic has no optimality guarantee, and schedule manipulation raises fairness questions; all outputs are balance measures and schedules from public results, never sportsbook lines."
+}

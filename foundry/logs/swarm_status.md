@@ -580,3 +580,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 03:12:35 | COMPLETE | 2c8c36af2305e179 | primitives=21 think_words=857
 - 2026-11-14 03:13:34 | CLAIMED | 3c8b550bc3be4562 | worker=hermes-inline shard03 file=2014 - What Does it Take to Call a Strike Three Biases in Umpire Decision Making - Unknown Authors.pdf
 - 2026-11-14 03:16:53 | COMPLETE | 3c8b550bc3be4562 | primitives=22 think_words=850
+- 2026-11-14 03:17:46 | CLAIMED | 3ad08dd96b7ba73c | worker=hermes-inline shard03 file=2026 - Characterizing and Controlling the Perceived Competitive Balance in Sports Leagues - Vaz-de-Melo et al.pdf
+- 2026-11-14 03:34:00 | COMPLETE | 3ad08dd96b7ba73c | primitives=26 think_words=907
