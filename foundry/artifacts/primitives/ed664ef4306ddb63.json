@@ -1,0 +1,359 @@
+{
+ "book_id": "ed664ef4306ddb63",
+ "title": "Special Olympics Football (Soccer) Coaching Guide",
+ "author": "Special Olympics, Inc. (contributing authors: Venisha Bowler, Floyd Croxton, Wanda S. Durden, Mark Hanken, Dave Lenox, Eddie Meechan, Paul Rosin, Jon-Paul St. Germain)",
+ "year": 2004,
+ "source_pdf": "C:/Users/Garrett/Downloads/Football+Coaching+Guide.pdf",
+ "source_note": "Special Olympics Football Coaching Guide, created February 2004, 133 pages, full read via pymupdf. ASSOCIATION FOOTBALL (SOCCER), not American football — catalog domain 'football' but the content is soccer (11-a-side, goalkeepers, dribbling, Unified Sports); flagged. Coaching pedagogy for athletes with intellectual disabilities (Special Olympics mission: year-round training/competition for people 8+ with intellectual disabilities). Qualitative coaching guide, no fitted statistical equations -> mostly no_equation_domain; time/space grid, progressions, ability/age tiering formalized as labeled structures. 16 primitives. Key concepts: ability-tiered competition (lower=individual skills, moderate=modified team smaller area/modified rules, higher=11-a-side + Unified Sports); goal setting (realistic yet challenging, short/intermediate/long-term, measurable, accepted, under athlete's control, goal not result); structured session (warm-up/stretch -> skills instruction -> competition experience -> cool down); game as teacher (minigames 1v1/3v3, scrimmages, >=10 min free play coach says nothing); time/space grid (best players control ball in little time/small space, less skilled need more time/space, coaching grids adjust field to ability); progressions (known->unknown, simple->complex, general->specific, new skills early/consolidate before complex); ability grouping (similar skills; superior partners control or accommodate/sandbag); age grouping (3-5 yr spread <=21, 10-15 yr >=22); meaningful involvement (every teammate role/contribute; fails when superior skills dominate critical periods or sandbag); skills assessment (baseline, group, measure progression); recognition/decision-making best learned in game settings (4v4 small field); safety (physical matching head-to-head, goalkeeper reaction time, shin pads, secure goals); clear goals + positive feedback. No sportsbook lines used as model inputs.",
+ "domain": "football",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "ability_tiered_competition",
+   "name": "Ability-tiered competition: individual skills -> modified team -> 11-a-side/Unified",
+   "verbatim_quote": "For athletes with lower ability, who do not have the readiness for direct, face-to-face offense and defense, competition is offered in individual skills competition.",
+   "page": 2,
+   "latex": "\\text{lower ability}\\rightarrow\\text{individual skills};\\quad \\text{moderate}\\rightarrow\\text{modified team};\\quad \\text{higher}\\rightarrow\\text{11-a-side / Unified}",
+   "symbol_and_unit_ledger": {
+    "ability tier": "athlete readiness level [tier]",
+    "modified team": "smaller area, modified rules [format]"
+   },
+   "assumptions": [
+    "Competition is based on athletes' ability levels",
+    "Lower ability: individual skills; average/moderate: modified team (smaller area, modified rules); higher: traditional 11-a-side and Unified Sports"
+   ],
+   "breakdown_regime": "no_equation_domain: a readiness-gated competition taxonomy, not an equation; it breaks down if athletes are placed in formats above their readiness.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE readiness-gated competition tiers IS this ability tiering: the engine gates competition format by athlete readiness (individual skills -> modified team -> full team), the readiness-tier discipline matching format to ability, analogous to developmental-stage gating. GSI: gate competition format by readiness tier.",
+    "source_operator": "ability_tiered_competition",
+    "telemetry": "ability tiers; individual skills; modified team; 11-a-side; Unified Sports; readiness-gated"
+   }
+  },
+  {
+   "primitive_id": "goal_setting_motivation",
+   "name": "Realistic yet challenging goals drive motivation and confidence",
+   "verbatim_quote": "Realistic, yet challenging goals for each athlete are important to the motivation of the athlete both at training and during competition.",
+   "page": 6,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Goals are realistic yet challenging, structured short/intermediate/long-term, measurable, and accepted by the athlete",
+    "Sport confidence makes participation fun and is critical to motivation; goals drive training and competition plans"
+   ],
+   "breakdown_regime": "no_equation_domain: a goal-setting motivation principle, not an equation; it breaks down if goals are unrealistic, unmeasurable, or not accepted by the athlete.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE realistic-challenging goal setting IS this principle: the engine frames development goals as realistic-yet-challenging, measurable, and athlete-accepted (short/intermediate/long-term stepping stones), the goal-setting discipline that sustains motivation and confidence. GSI: realistic-challenging measurable accepted goals as motivation drivers.",
+    "source_operator": "goal_setting_motivation",
+    "telemetry": "realistic yet challenging; short/intermediate/long-term; measurable; accepted; confidence/motivation"
+   }
+  },
+  {
+   "primitive_id": "goal_controllables",
+   "name": "Goals must be under the athlete's control — a goal, not a result",
+   "verbatim_quote": "Is the goal under the athlete's control and does it focus on his/her goals and no one else's?",
+   "page": 6,
+   "latex": "\\text{valid goal}\\iff \\text{under athlete's control}\\ \\land\\ \\text{a process goal, not an outcome result}",
+   "symbol_and_unit_ledger": {
+    "controllables": "factors under the athlete's control [set]"
+   },
+   "assumptions": [
+    "The assessing-goals checklist asks whether the goal is under the athlete's control and is a goal not a result",
+    "Goals must be positively stated, meet the athlete's needs, and be important enough to work toward"
+   ],
+   "breakdown_regime": "no_equation_domain: a controllables/process-goal criterion, not an equation; it breaks down if goals are outcome results outside the athlete's control.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE controllables process-goal criterion IS this checklist: the engine validates that development goals are under the athlete's control and are process goals not outcome results, the controllables discipline connecting to process-over-outcome grading. GSI: validate goals as controllable process targets, not uncontrollable outcomes.",
+    "source_operator": "goal_controllables",
+    "telemetry": "under athlete's control; goal not result; positively stated; controllables; process goal"
+   }
+  },
+  {
+   "primitive_id": "training_session_structure",
+   "name": "Structured session: warm-up -> skills instruction -> competition -> cool down",
+   "verbatim_quote": "Special Olympics athletes respond well to a simple, well-structured training routine with which they can become familiar.",
+   "page": 9,
+   "latex": "\\text{session}=\\text{warm-up/stretch}\\rightarrow\\text{skills instruction}\\rightarrow\\text{competition experience}\\rightarrow\\text{cool down}",
+   "symbol_and_unit_ledger": {
+    "warm-up": "low-intensity dribbling + stretch [phase]",
+    "skills instruction": "review + new skill [phase]",
+    "competition": "minigames/scrimmage/free play [phase]",
+    "cool down": "slow run/walk/stretch [phase]"
+   },
+   "assumptions": [
+    "A simple well-structured routine (warm-up, skills instruction, competition experience, cool down) is prepared before the field",
+    "New skills are introduced early; groups of six or less; physically assist lower-ability players"
+   ],
+   "breakdown_regime": "no_equation_domain: a session-structure template, not an equation; it breaks down if sessions are unstructured or new skills are introduced late when athletes are fatigued.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE structured-session template IS this routine: the engine organizes training into warm-up, skills instruction, competition experience, and cool down with new skills early, the session-structure template that makes practice systematic and familiar. GSI: structured training-session template with new skills introduced early.",
+    "source_operator": "training_session_structure",
+    "telemetry": "warm-up; skills instruction; competition; cool down; groups <=6; new skills early; structured routine"
+   }
+  },
+  {
+   "primitive_id": "game_as_teacher",
+   "name": "The game is a great teacher: minigames teach rules and understanding",
+   "verbatim_quote": "Players learn a lot by simply playing the game. The game is a great teacher.",
+   "page": 9,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Minigames (1v1, 3v3) teach basic rules and game understanding; scrimmages teach positions and restarts",
+    "At least 10 minutes of free play where the coach says nothing is always allowed"
+   ],
+   "breakdown_regime": "no_equation_domain: a game-based-learning principle, not an equation; it breaks down if drill-only instruction replaces game-based understanding.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE game-based learning IS this game-as-teacher principle: the engine recognizes that game understanding and recognition are learned by playing (minigames/scrimmages/free play), not drill-only instruction, the game-as-teacher discipline connecting to situational recognition. GSI: game-based learning where understanding emerges from play, not drill-only.",
+    "source_operator": "game_as_teacher",
+    "telemetry": "game is a great teacher; minigames 1v1/3v3; scrimmages; 10 min free play; coach says nothing"
+   }
+  },
+  {
+   "primitive_id": "time_space_grid",
+   "name": "Football is time and space: skill scales the required time/space",
+   "verbatim_quote": "The game of football is about time and space. The best players can control the ball in little time and within a small space. Less skilled players need more time and greater space in which to perform.",
+   "page": 11,
+   "latex": "\\text{required space, time}=\\text{function}(\\text{skill})^{-1}:\\ \\text{higher skill}\\Rightarrow\\text{less time/space};\\quad \\text{lower skill}\\Rightarrow\\text{more time/space}",
+   "symbol_and_unit_ledger": {
+    "time": "time available to control the ball [s]",
+    "space": "space available to perform [area]",
+    "skill": "technical ability level [level]"
+   },
+   "assumptions": [
+    "The best players control the ball in little time and small space; less skilled players need more time and greater space",
+    "Coaching grids adjust the field of play to the technical abilities of the athletes"
+   ],
+   "breakdown_regime": "no_equation_domain: the inverse skill-time/space relation is a qualitative coaching principle, not a fitted law; it breaks down if treated as a precise quantitative function rather than a constraint-scaling heuristic.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE skill-scaled time-space constraint IS this grid principle: the engine scales the time/space constraint inversely with skill (higher skill needs less time/space, lower skill more), the constraint-scaling discipline that connects to the geospatial/Voronoi layer (less skilled need larger zones and more decision time). GSI: scale time/space constraints inversely with agent skill.",
+    "source_operator": "time_space_grid",
+    "telemetry": "time and space; best players little time/small space; less skilled more time/space; coaching grids adjust"
+   }
+  },
+  {
+   "primitive_id": "progression_simple_to_complex",
+   "name": "Progressions: known->unknown, simple->complex, general->specific; new skills early",
+   "verbatim_quote": "Introduce new skills early in the practice session, when players are fresh and attentive. Practice new skills for several days before incorporating them into more complex drills and game scenarios.",
+   "page": 10,
+   "latex": "\\text{known}\\rightarrow\\text{unknown};\\quad \\text{simple}\\rightarrow\\text{complex};\\quad \\text{general}\\rightarrow\\text{specific};\\quad \\text{new skill before complex drill}",
+   "symbol_and_unit_ledger": {
+    "progression": "ordered learning sequence [ordering]"
+   },
+   "assumptions": [
+    "Learning progresses known-to-unknown, simple-to-complex, general-to-specific",
+    "New skills are introduced early when fresh, practiced several days before complex drills/game scenarios"
+   ],
+   "breakdown_regime": "no_equation_domain: a pedagogical ordering principle, not an equation; it breaks down if complex scenarios precede the simple skill base or new skills are introduced when fatigued.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE simple-to-complex progression IS this ordering: the engine sequences learning known->unknown, simple->complex, general->specific, introducing new skills early and consolidating before complexity, the pedagogical-progression discipline gating skill introduction. GSI: ordered learning progression from simple/known/general to complex/unknown/specific.",
+    "source_operator": "progression_simple_to_complex",
+    "telemetry": "known->unknown; simple->complex; general->specific; new skills early; consolidate before complex"
+   }
+  },
+  {
+   "primitive_id": "ability_grouping",
+   "name": "Ability grouping: similar skills; superior players control or accommodate",
+   "verbatim_quote": "Unified Sports football teams work best when all team members have similar sports skills.",
+   "page": 18,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Teams work best when members have similar sports skills",
+    "Partners far superior either control competition or accommodate by not competing to their potential; both diminish interaction/teamwork"
+   ],
+   "breakdown_regime": "no_equation_domain: an ability-matching principle, not an equation; it breaks down if ability mismatches let superior players dominate or sandbag.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE ability-matched grouping IS this principle: the engine recognizes teams function best with similar skill levels (superior players either dominate or accommodate, both harming genuine competition), the ability-matching discipline connecting to matched-competition development. GSI: group by similar ability; mismatches cause domination or sandbagging.",
+    "source_operator": "ability_grouping",
+    "telemetry": "similar sports skills; superior control or accommodate; interaction/teamwork diminished; ability grouping"
+   }
+  },
+  {
+   "primitive_id": "superior_player_failure",
+   "name": "Meaningful involvement fails when superior skills dominate critical periods",
+   "verbatim_quote": "Control most aspects of the competition during critical periods of the game.",
+   "page": 18,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Meaningful involvement is NOT achieved when members have superior skills, act as on-field coaches, or control critical periods",
+    "It also fails when members lower their ability dramatically so as not to control the game, or only show up on competition day"
+   ],
+   "breakdown_regime": "no_equation_domain: a meaningful-involvement failure criterion, not an equation; it breaks down if dominance or sandbagging is mistaken for genuine involvement.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE genuine-involvement criterion IS this failure mode: the engine recognizes that meaningful involvement fails when one agent dominates critical periods or sandbags (lowers ability), so genuine contribution requires balanced agency, the anti-domination/anti-sandbagging involvement criterion. GSI: genuine involvement requires balanced agency, not domination or sandbagging.",
+    "source_operator": "superior_player_failure",
+    "telemetry": "meaningful involvement fails; superior skills; on-field coaches; control critical periods; sandbagging"
+   }
+  },
+  {
+   "primitive_id": "age_grouping",
+   "name": "Age grouping: within 3-5 years (<=21), 10-15 years (>=22)",
+   "verbatim_quote": "Within 3-5 years of age for athletes 21 years of age and under.",
+   "page": 18,
+   "latex": "\\Delta\\text{age}\\le 3\\text{-}5\\ \\text{yr (athletes }\\le 21\\text{)};\\quad \\Delta\\text{age}\\le 10\\text{-}15\\ \\text{yr (athletes }\\ge 22\\text{)}",
+   "symbol_and_unit_ledger": {
+    "Delta age": "age spread within a team [yr]"
+   },
+   "assumptions": [
+    "Team members should be closely matched in age",
+    "Within 3-5 years for athletes 21 and under; within 10-15 years for athletes 22 and over; an 8-year-old should not compete with/against a 30-year-old"
+   ],
+   "breakdown_regime": "no_equation_domain: the age-band figures are developmental-safety guidelines, not fitted statistical laws; they break down if treated as precise population thresholds rather than safety groupings.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE age-band grouping IS this guideline: the engine groups athletes by age bands (3-5 yr spread for <=21, 10-15 yr for >=22) for developmental safety, the age-matching discipline preventing extreme age mismatches. GSI: age-band grouping for developmental safety.",
+    "source_operator": "age_grouping",
+    "telemetry": "3-5 yr spread <=21; 10-15 yr >=22; closely matched age; 8 vs 30 prohibited"
+   }
+  },
+  {
+   "primitive_id": "meaningful_involvement",
+   "name": "Meaningful involvement: every teammate plays a role and contributes",
+   "verbatim_quote": "Every teammate should play a role and have the opportunity to contribute to the team.",
+   "page": 18,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Unified Sports teams provide meaningful involvement for all athletes and partners",
+    "Indicators: compete without undue injury risk, follow rules, have ability/opportunity to contribute, blend skills to improve lesser-ability athletes"
+   ],
+   "breakdown_regime": "no_equation_domain: an inclusion/participation principle, not an equation; it breaks down if some teammates are excluded from genuine contribution.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE inclusive-contribution principle IS this meaningful-involvement ideal: the engine values every agent having a role and opportunity to contribute (blending skills to lift lesser-ability teammates), the inclusive-contribution discipline for team functioning. GSI: every agent has a role and contributes; blend skills to lift weaker members.",
+    "source_operator": "meaningful_involvement",
+    "telemetry": "meaningful involvement; every teammate role/contribute; blend skills; improve lesser ability; Unified Sports"
+   }
+  },
+  {
+   "primitive_id": "skills_assessment_baseline",
+   "name": "Skills assessment: baseline, group by ability, measure progression",
+   "verbatim_quote": "The sport skills assessment chart is a systematic method that is useful in determining the skill ability of an athlete.",
+   "page": 19,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The skills assessment determines ability before participation",
+    "It establishes baseline training areas, groups similar-ability athletes, measures progression, and determines the daily training schedule"
+   ],
+   "breakdown_regime": "no_equation_domain: an assessment methodology, not an equation; it breaks down if athletes are grouped/trained without a baseline skill assessment.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE baseline skill assessment IS this methodology: the engine assesses skill ability before participation to establish baselines, group by ability, and measure progression, the baseline-assessment discipline connecting to longitudinal player tracking. GSI: baseline skill assessment to group, train, and measure progression.",
+    "source_operator": "skills_assessment_baseline",
+    "telemetry": "skills assessment; baseline; group similar ability; measure progression; daily training schedule"
+   }
+  },
+  {
+   "primitive_id": "recognition_in_game",
+   "name": "Recognition and decision-making best learned in game settings",
+   "verbatim_quote": "Football requires accurate and quick decision making. The ability to recognize situations, understand the pitch and make appropriate decisions is very important.",
+   "page": 17,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Football requires accurate, quick decision-making and situation recognition",
+    "Recognition skills are best learned in game settings; practice situations should emphasize skills/tactics likely in a game (e.g. 4v4 small field)"
+   ],
+   "breakdown_regime": "no_equation_domain: a situated-learning principle, not an equation; it breaks down if recognition is trained only in isolated drills without game-like context.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE situated recognition learning IS this principle: the engine recognizes that situation recognition and quick decision-making are best learned in game-like settings (not isolated drills), the situated-learning discipline connecting to the situational-recognition layer. GSI: recognition/decision skills learned in situated game-like contexts.",
+    "source_operator": "recognition_in_game",
+    "telemetry": "accurate quick decision making; recognize situations; game settings; 4v4 small field; game-like practice"
+   }
+  },
+  {
+   "primitive_id": "safety_physical_matching",
+   "name": "Safety: physically match head-to-head, goalkeeper reaction time",
+   "verbatim_quote": "Make sure that players are physically matched in games where players go against each other, head-to-head, (e.g., one-on-one drills).",
+   "page": 16,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Players must be physically matched in head-to-head drills",
+    "A player with very slow reaction time should not be put in goal; the goalkeeper must understand how to play the position safely; shin pads required"
+   ],
+   "breakdown_regime": "no_equation_domain: a safety-matching principle, not an equation; it breaks down if physical mismatches or unsafe goalkeeper placement are ignored.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE safety physical-matching IS this principle: the engine enforces physical matching in head-to-head contests and safe goalkeeper placement (reaction-time aware), the safety-matching discipline gating contact and position assignment. GSI: physical matching in head-to-head and reaction-time-aware safe position assignment.",
+    "source_operator": "safety_physical_matching",
+    "telemetry": "physically matched head-to-head; goalkeeper reaction time; shin pads; safe position; 1v1 drills"
+   }
+  },
+  {
+   "primitive_id": "clear_goals_positive_feedback",
+   "name": "Clear concise goals and positive feedback improve learning",
+   "verbatim_quote": "Learning improves when athletes know what is expected of them.",
+   "page": 13,
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Learning improves when athletes know what is expected (clear concise goals)",
+    "Give clear concise instructions, demonstrate, record progress together, emphasize/reward what is done well, provide variety, allow individual differences"
+   ],
+   "breakdown_regime": "no_equation_domain: a coaching-feedback principle, not an equation; it breaks down if expectations are unclear or feedback is purely negative.",
+   "domain": "football",
+   "confidence": 0.83,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE clear-expectation positive-feedback IS this principle: the engine recognizes learning improves with clear expectations, demonstration, recorded progress, and positive feedback (reward what is done well), the clear-expectation/positive-feedback coaching discipline. GSI: clear expectations + demonstration + positive feedback improve learning.",
+    "source_operator": "clear_goals_positive_feedback",
+    "telemetry": "clear concise goals; know expectations; demonstrate; record progress; positive feedback; variety; individual differences"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "specialolympics_soccer_coaching_2004",
+   "think": "This inline cycle extracts the Special Olympics Football Coaching Guide, a February 2004 coaching manual for association football (soccer) produced by Special Olympics for athletes with intellectual disabilities. The provenance requires an honest domain flag: although the catalog domain is football, this is association football (soccer), evidenced by the eleven-a-side game, goalkeepers, dribbling, and Unified Sports, not American football. Sixteen primitives are extracted, each with a verified verbatim quote, a page anchor, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. The guide is qualitative coaching pedagogy with no fitted statistical equations, so most primitives are labeled no_equation_domain while the time/space grid principle, the learning progressions, and the ability/age tiering are formalized as labeled structures, and no sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the Special Olympics mission (year-round sports training and competition for people eight and older with intellectual disabilities) and the Unified Sports philosophy into this coaching guide, with the contributing authors drawn from Special Olympics programs across Oregon, Colorado, Australia, and Virginia. The load-bearing objects are the ability-tiered competition structure (individual skills for lower ability, modified team for moderate, traditional eleven-a-side and Unified Sports for higher), the time/space grid principle (the game is about time and space; the best players control the ball in little time and small space while less skilled players need more time and greater space), the learning progressions (known to unknown, simple to complex, general to specific), and the meaningful-involvement criterion for Unified Sports (every teammate plays a role and contributes).\n\nThe recursive theory of mind models the coach as a reasoner who must match format, grouping, and constraint to the athlete's ability and maturity, and the athlete as a developing agent whose motivation depends on realistic yet challenging, controllable, measurable goals. The goal-setting checklist insists a goal be under the athlete's control and be a process goal not an outcome result, connecting directly to the controllables discipline. The game-as-teacher principle holds that players learn by playing (minigames, scrimmages, and at least ten minutes of free play where the coach says nothing), and recognition and quick decision-making are best learned in game-like settings rather than isolated drills. The ability-grouping principle warns that partners far superior to teammates either control competition or accommodate by not competing to their potential, both diminishing genuine interaction.\n\nThe cross-layer veto adjudication places this coaching-pedagogy and constraint-scaling layer beside the rulebook constraint layer, the FDM player-development layer, the mental-conditioning layers, and the geospatial and situational-recognition layers. The first veto is the constraint-scaling veto: the time/space available to perform scales inversely with skill, so the engine adjusts spatial zones and decision time to ability, connecting directly to the geospatial/Voronoi layer where less skilled agents need larger zones and more time. The second veto is the readiness-gating veto: competition format and grouping are matched to ability and age (individual skills to modified team to full team; age bands of three-to-five years under twenty-one and ten-to-fifteen over twenty-two), the readiness-tier discipline shared with the FDM stages. The third veto is the progression veto: learning proceeds known-to-unknown, simple-to-complex, general-to-specific, with new skills introduced early and consolidated before complexity. The fourth veto is the controllables-and-goal veto: goals must be under the athlete's control and be process goals not results, connecting to process-over-outcome grading. The fifth veto is the genuine-involvement veto: meaningful involvement fails when one agent dominates critical periods or sandbags, so balanced agency is required for true team functioning.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The structured training session runs warm-up and stretching (every player warms up with a ball), skills instruction (review previous skills, introduce the new theme early, groups of six or less, physically assist lower-ability players), competition experience (minigames and scrimmages and free play), and cool down (slow run/walk/stretch, comment on the session, finish with a team cheer). The skills assessment establishes a baseline before participation, groups similar-ability athletes, measures progression, and determines the daily training schedule, connecting to longitudinal player tracking. The safety principles require physical matching in head-to-head drills, reaction-time-aware goalkeeper placement (a player with very slow reaction time should not be in goal), shin pads, field inspection, and secure goals. The principles of effective training emphasize keeping all active, clear concise goals and instructions, demonstration, recording progress together, positive feedback that rewards what is done well, variety to prevent boredom, and allowance for individual differences in learning rate and capacity. The season plan presents skills systematically in a twice-a-week format with ten to fifteen minutes of individual goalkeeper work each practice, and the guide stresses that the more athletes compete the better they get, so competition opportunities (local program games, community leagues, and scrimmages at the end of every session) are expanded to drive development and motivation. These invariants ground the engine's skill-scaled time/space constraints, readiness-gated grouping, simple-to-complex progressions, controllable process goals, situated recognition learning, and genuine-involvement team functioning, completing a sovereign coaching-pedagogy layer that complements the FDM development layer, and it repeatedly insists on keeping the fun in fundamentals throughout, all grounded in clean verbatim prose with the association-football domain honestly declared.",
+   "retrocausal_genealogy": "The genealogy runs from the Special Olympics mission (year-round training/competition for people 8+ with intellectual disabilities) and the Unified Sports philosophy into this Feb 2004 coaching guide (authors from Oregon/Colorado/Australia/Virginia programs). Load-bearing objects: ability-tiered competition (individual skills -> modified team -> 11-a-side/Unified); time/space grid principle (game is about time and space; best players control ball in little time/small space, less skilled need more time/space); learning progressions (known->unknown, simple->complex, general->specific); meaningful-involvement criterion (every teammate plays a role/contributes). ASSOCIATION FOOTBALL (SOCCER), not American — flagged.",
+   "theory_of_mind": "The coach matches format/grouping/constraint to ability and maturity; the athlete's motivation depends on realistic-yet-challenging, controllable, measurable goals. Goal checklist: under athlete's control, a process goal not a result (controllables). Game-as-teacher: players learn by playing (minigames/scrimmages/10-min free play where coach says nothing); recognition/quick decisions best learned in game-like settings. Ability grouping: far-superior partners either control competition or accommodate (sandbag), both diminishing genuine interaction.",
+   "cross_layer_veto": "Five vetoes adjudicate beside the rulebook constraint, FDM development, mental-conditioning, and geospatial/situational-recognition layers. Constraint-scaling veto: time/space scales inversely with skill (connects to geospatial/Voronoi — less skilled need larger zones/more time). Readiness-gating veto: format/grouping matched to ability and age (individual->modified->full; age bands 3-5 yr <=21, 10-15 yr >=22), shared with FDM stages. Progression veto: known->unknown, simple->complex, general->specific, new skills early/consolidated. Controllables-goal veto: goals under athlete's control, process not result (process-over-outcome). Genuine-involvement veto: involvement fails when one agent dominates critical periods or sandbags; balanced agency required."
+  }
+ ],
+ "universal_lens": "The Special Olympics Football (Soccer) Coaching Guide contributes the coaching-pedagogy / constraint-scaling layer: ability-tiered competition (individual skills -> modified team -> full team/Unified), the time/space grid principle (required time/space scales inversely with skill), learning progressions (known->unknown, simple->complex, general->specific), readiness-gated ability/age grouping, controllable process goals (goal not result), the game-as-teacher and situated-recognition learning, the meaningful-involvement criterion (balanced agency, no domination or sandbagging), baseline skills assessment, and structured-session/safety/positive-feedback pedagogy. It is association football (soccer), flagged.",
+ "gsi_mapping": "For GSI these primitives are the general coaching-pedagogy and constraint-scaling layer for any skill-development organization: gate competition format and grouping by readiness/ability/age; scale time/space constraints inversely with agent skill; sequence learning known->unknown, simple->complex, general->specific with new skills introduced early and consolidated; validate goals as controllable process targets not outcomes; learn recognition/decision skills in situated game-like contexts; require balanced agency for genuine involvement (no domination or sandbagging); assess baseline skill to group/train/measure progression; and use structured sessions with clear expectations, demonstration, and positive feedback.",
+ "gse_mapping": "For GSE this maps onto the engine's coaching-pedagogy, constraint-scaling, and team-functioning layers: the time/space grid IS skill-scaled spatial/decision-time constraints (connecting to the geospatial/Voronoi layer — less skilled need larger zones and more time); ability-tiered competition and age bands IS readiness-gated grouping (shared with the FDM stages); the progressions IS simple-to-complex skill introduction; the goal-not-result controllables criterion IS process-over-outcome goal validation; game-as-teacher and recognition-in-game-settings IS situated situational-recognition learning; meaningful involvement (no domination/sandbagging) IS balanced-agency team functioning; and baseline skills assessment IS longitudinal player tracking. All are qualitative no_equation_domain heuristics from clean prose; the association-football (soccer) domain is honestly declared; no sportsbook line is a model input."
+}
