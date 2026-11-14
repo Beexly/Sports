@@ -1,0 +1,577 @@
+{
+ "book_id": "4d7b8b264059be1f",
+ "title": "A Starting Point for Analyzing Basketball Statistics",
+ "author": "Justin Kubatko, Dean Oliver, Kevin Pelton, Dan T. Rosenbaum",
+ "year": 2007,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2007 A starting point for analyzing basketball statistics.pdf",
+ "source_note": "Journal of Quantitative Analysis in Sports, Vol 3 Iss 3 Art 1 (2007), DOI 10.2202/1559-0410.1070, American Statistical Association. 24 pages, full read via pymupdf. Identity confirmed (Kubatko/Ohio State & basketball-reference, Oliver/Basketball on Paper & Denver Nuggets, Pelton/Seattle Sonics & Storm, Rosenbaum/UNC Greensboro & Cleveland Cavaliers). PROVENANCE: the simple formulas (possessions-lost eq 2, ORtg/DRtg eq 5-6, PTS40 eq 8, pace adj eq 9, FG%/eFG%/TS% eq 10-12, plays eq 7) print in clean readable text and are quoted/used directly; the general possession formula eq 1, OLS spec eq 3, rebound-rate eq 13-18, NBA_EFF eq 19, Pythagorean eq 20 and Bell-Curve eq 21 use a shifted/custom font and are reconstructed in labeled LaTeX from the unambiguous prose (alpha-share possession model, Pythagorean exponent 13-17/16.5, Bell-Curve normal-CDF Z-method). OLS coefficients from Table 1 (FGA 0.964, missed FG -0.345, FTA 0.4637, OREB -0.6227, DREB 0.3643, TO 0.9767, R^2 0.9615, n=5178). No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "possession_definition",
+   "name": "Possession defined by control of the ball",
+   "verbatim_quote": "A possession starts when one team gains control (or possession) of the basketball and ends when that team gives up control of the basketball.",
+   "page": 4,
+   "latex": "\\text{possession}=[\\text{gain control},\\ \\text{lose control}];\\quad \\text{ends via made FG/FT, defensive rebound, or turnover}",
+   "symbol_and_unit_ledger": {
+    "possession": "interval of team ball-control [count]",
+    "FG/FT": "field goal / free throw [event]"
+   },
+   "assumptions": [
+    "A possession ends on a made shot that changes possession, a defensive rebound, or a turnover",
+    "An offensive rebound does not end the possession"
+   ],
+   "breakdown_regime": "End-of-period possessions with <=4 seconds and no attempt/turnover are not counted; the control definition is an accounting convention, not an officially tracked stat in most games.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE possession accounting IS the engine's fundamental unit of opportunity: just as a basketball possession is the interval of ball-control that ends in a shot, turnover, or defensive rebound, the engine's per-drive/per-snap accounting defines the atomic opportunity unit so that efficiency is measured per opportunity rather than per raw event. GSI: the discrete resource-transaction unit that bounds a production cycle.",
+    "source_operator": "possession_definition",
+    "telemetry": "per-possession event ledger; control-start/control-end markers; possession count"
+   }
+  },
+  {
+   "primitive_id": "equal_possessions",
+   "name": "Equal possessions for opponents (accounting identity)",
+   "verbatim_quote": "Possessions are guaranteed to be approximately the same for two teams in a game (within two for a non-overtime game), so possessions provide a useful basis for evaluating the efficiency of teams and individuals.",
+   "page": 4,
+   "latex": "|\\mathrm{POSS}_t-\\mathrm{POSS}_o|\\le 2\\quad(\\text{non-overtime})",
+   "symbol_and_unit_ledger": {
+    "POSS_t": "team possessions [count]",
+    "POSS_o": "opponent possessions [count]"
+   },
+   "assumptions": [
+    "Both teams share the same game clock and alternating control",
+    "Holds within two possessions for a non-overtime game"
+   ],
+   "breakdown_regime": "Overtime and end-of-period edge cases break exact equality; the identity is approximate (within two), not exact, so per-possession comparisons carry small residual noise.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE equal-opportunity normalization IS this identity: because opponents face approximately equal possessions, per-possession efficiency isolates quality from pace, exactly as the engine normalizes team production to a common opportunity base before comparing. GSI: a conserved transaction count that makes two competing processes rate-comparable.",
+    "source_operator": "equal_possessions",
+    "telemetry": "possession differential |POSS_t - POSS_o|; verify <=2 in regulation"
+   }
+  },
+  {
+   "primitive_id": "score_per_possession",
+   "name": "Winning = outscoring per possession",
+   "verbatim_quote": "To win, teams and individuals try to score more points per possession than their opponents.",
+   "page": 4,
+   "latex": "\\text{win}\\iff \\frac{\\mathrm{PTS}_t}{\\mathrm{POSS}_t}>\\frac{\\mathrm{PTS}_o}{\\mathrm{POSS}_o}",
+   "symbol_and_unit_ledger": {
+    "PTS": "points [score]",
+    "POSS": "possessions [count]",
+    "PTS/POSS": "points per possession [score/opportunity]"
+   },
+   "assumptions": [
+    "Possessions are approximately equal so the per-possession comparison decides the game",
+    "Points are the terminal scoring currency"
+   ],
+   "breakdown_regime": "Garbage-time and buzzer effects can decouple per-possession dominance from the final margin; the criterion is the efficiency comparison, not the raw score.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE edge-per-opportunity IS points per possession: the engine wins by extracting more expected value per betting opportunity than the market extracts from it, not by accumulating raw volume. GSI: maximize output per transaction rather than total throughput.",
+    "source_operator": "score_per_possession",
+    "telemetry": "points-per-possession differential; efficiency margin"
+   }
+  },
+  {
+   "primitive_id": "offensive_rebound_play",
+   "name": "Offensive rebound starts a play, not a possession",
+   "verbatim_quote": "Note that under this definition of a possession, an offensive rebound does not start a new possession; an offensive rebound starts a new play.",
+   "page": 4,
+   "latex": "\\text{OREB}\\Rightarrow \\text{new play},\\ \\neg\\,\\text{new possession}",
+   "symbol_and_unit_ledger": {
+    "OREB": "offensive rebound [event]",
+    "play": "sub-possession scoring attempt [count]"
+   },
+   "assumptions": [
+    "A possession can contain multiple plays via offensive rebounds",
+    "Plays are therefore not equal across opponents"
+   ],
+   "breakdown_regime": "Confusing plays with possessions inflates opportunity counts and breaks the equal-opportunity identity; the paper explicitly warns against calling plays 'possessions'.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE play-vs-possession distinction IS the engine's drive-vs-snap accounting: an offensive rebound extends a drive (new snap/play) without creating a new drive (possession), so the engine must not double-count opportunities when a drive continues. GSI: nested transaction granularity, sub-events within a parent transaction.",
+    "source_operator": "offensive_rebound_play",
+    "telemetry": "play count vs possession count; offensive-rebound continuation flag"
+   }
+  },
+  {
+   "primitive_id": "possessions_lost_formula",
+   "name": "Simple possession estimator (possessions lost)",
+   "verbatim_quote": "This formulation sometimes is referred to as possessions lost, but it is important to note that it implies that defensive rebounds have no possession value.",
+   "page": 5,
+   "latex": "\\mathrm{POSS}_t=\\mathrm{FGA}_t+0.44\\,\\mathrm{FTA}_t-\\mathrm{OREB}_t+\\mathrm{TO}_t",
+   "symbol_and_unit_ledger": {
+    "FGA": "field goal attempts [count]",
+    "FTA": "free throw attempts [count]",
+    "OREB": "offensive rebounds [count]",
+    "TO": "turnovers [count]",
+    "0.44": "fraction of FT ending possessions [dimensionless]"
+   },
+   "assumptions": [
+    "alpha=1 (missed shots fully credited to offense) and sigma=0.44",
+    "Defensive rebounds assigned zero possession value",
+    "Calibrated to the 2002-06 NBA; overestimates by ~1.5 possessions/game"
+   ],
+   "breakdown_regime": "The 0.44 free-throw coefficient and alpha=1 assumption are era-specific; the formula overestimates possessions and ignores defensive-rebound credit, so it is a biased special case of the general formulation.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE box-score opportunity estimation IS this estimator: the engine reconstructs the opportunity count from observable event totals (attempts, turnovers, rebounds) when play-by-play is absent, using a calibrated linear combination, and must carry the known bias. GSI: linear state reconstruction from aggregate counters.",
+    "source_operator": "possessions_lost_formula",
+    "telemetry": "estimated POSS vs play-by-play POSS; bias ~+1.5/game; correlation ~0.973"
+   }
+  },
+  {
+   "primitive_id": "missed_shot_possession_share",
+   "name": "Missed shots share possession credit with defensive rebounds",
+   "verbatim_quote": "Missed field goal attempts and missed possession-ending free throw attempts share credit for the possession with defensive rebounds.",
+   "page": 5,
+   "latex": "\\text{missed FG value}=\\alpha,\\quad \\text{DREB value}=1-\\alpha,\\quad \\text{OREB value}=-\\alpha;\\quad \\hat\\alpha\\approx0.59",
+   "symbol_and_unit_ledger": {
+    "alpha": "offensive share of a missed-shot possession [dimensionless 0-1]",
+    "DREB": "defensive rebound [event]",
+    "OREB": "offensive rebound [event]"
+   },
+   "assumptions": [
+    "A missed shot creates a loose ball contested by both teams",
+    "alpha estimated ~0.5931 from play-by-play; loose ball ~69% defensive / ~31% offensive"
+   ],
+   "breakdown_regime": "Team rebounds and end-of-quarter offensive rebounds prevent the shares from summing exactly to one; the alpha split is an empirical estimate, not an identity.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE contested-event credit assignment IS this share split: when a snap produces a contested outcome (a turnover battle, a rebound-like loose ball), the engine splits opportunity credit between the continuing and terminating side by an empirically calibrated share rather than assigning it wholly to one side. GSI: probabilistic credit assignment for contested resource transitions.",
+    "source_operator": "missed_shot_possession_share",
+    "telemetry": "alpha share estimate; loose-ball defensive/offensive split ~69/31"
+   }
+  },
+  {
+   "primitive_id": "averaged_both_teams",
+   "name": "Averaging both teams improves possession prediction",
+   "verbatim_quote": "the best predictor of a particular team's number of possessions is the average estimated using both teams rather than the estimated number for just that specific team.",
+   "page": 6,
+   "latex": "\\widehat{\\mathrm{POSS}}=\\tfrac12(\\widehat{\\mathrm{POSS}}_t+\\widehat{\\mathrm{POSS}}_o);\\quad \\rho:0.9493\\to0.9726",
+   "symbol_and_unit_ledger": {
+    "POSS_hat": "estimated possessions [count]",
+    "rho": "correlation with actual possessions [dimensionless]"
+   },
+   "assumptions": [
+    "Both teams' box scores carry complementary information about the shared possession count",
+    "Averaging cancels team-specific estimation noise"
+   ],
+   "breakdown_regime": "Averaging assumes the two estimates are noisy measurements of a common quantity; it fails if one team's data is systematically corrupted.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE two-sided estimation IS this averaging: the engine estimates a shared game quantity (pace, possessions) from both teams' observable logs and averages to cancel one-sided noise, raising correlation with truth from 0.949 to 0.973. GSI: sensor fusion of two noisy measurements of a conserved quantity.",
+    "source_operator": "averaged_both_teams",
+    "telemetry": "own-team vs averaged correlation (0.9493 vs 0.9726); OLS R^2 0.9615"
+   }
+  },
+  {
+   "primitive_id": "efficiency_wins",
+   "name": "Per-possession efficiency isolates quality from pace",
+   "verbatim_quote": "efficiency with the ball is what ultimately wins; hence, this measure better isolates the quality of a team's offense and defense.",
+   "page": 9,
+   "latex": "\\mathrm{ORtg}=\\frac{\\mathrm{PTS}_t}{\\mathrm{POSS}_t}\\times100,\\quad \\mathrm{DRtg}=\\frac{\\mathrm{PTS}_o}{\\mathrm{POSS}_o}\\times100",
+   "symbol_and_unit_ledger": {
+    "ORtg": "offensive rating [points per 100 possessions]",
+    "DRtg": "defensive rating [points per 100 possessions]",
+    "PTS": "points [score]",
+    "POSS": "possessions [count]"
+   },
+   "assumptions": [
+    "Possessions are dictated by both participants and approximately equal",
+    "Per-game points confound efficiency with pace"
+   ],
+   "breakdown_regime": "Ratings still depend on the possession estimate's accuracy and on opponent quality; raw per-game points are not a clean quality signal because pace varies.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE rate-normalized quality IS the offensive/defensive rating: the engine measures team quality per 100 opportunities (per-possession efficiency) rather than per game, stripping out pace so a fast high-scoring team is not mistaken for a good one. GSI: normalize throughput by transaction count to recover true process quality.",
+    "source_operator": "efficiency_wins",
+    "telemetry": "ORtg/DRtg per 100 possessions; net efficiency = ORtg - DRtg"
+   }
+  },
+  {
+   "primitive_id": "offense_defense_uncorrelated",
+   "name": "Offense and defense are nearly independent",
+   "verbatim_quote": "there is very little correlation between offensive and defensive ratings; good offensive teams do not tend to be better or worse on defense.",
+   "page": 9,
+   "latex": "\\mathrm{corr}(\\mathrm{ORtg},\\mathrm{DRtg})\\approx0",
+   "symbol_and_unit_ledger": {
+    "ORtg": "offensive rating [pts/100 poss]",
+    "DRtg": "defensive rating [pts/100 poss]",
+    "corr": "Pearson correlation [dimensionless]"
+   },
+   "assumptions": [
+    "Offensive and defensive quality are driven by largely separate skills and personnel",
+    "Empirically near-zero correlation across teams"
+   ],
+   "breakdown_regime": "The near-independence is an empirical regularity, not a law; roster construction or scheme can induce correlation in specific eras.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE orthogonal skill dimensions IS this independence: the engine treats offensive and defensive quality as separate latent factors rather than collapsing them into one team-strength scalar, because they are empirically near-uncorrelated. GSI: decorrelated performance axes that must be modeled jointly but not conflated.",
+    "source_operator": "offense_defense_uncorrelated",
+    "telemetry": "ORtg-DRtg correlation; two-factor team-strength decomposition"
+   }
+  },
+  {
+   "primitive_id": "plays_not_equal",
+   "name": "Plays are not equal across opponents",
+   "verbatim_quote": "Hence, plays are not approximately equal for two teams in a game and thus are not as useful as a basis for evaluating team efficiency.",
+   "page": 10,
+   "latex": "\\mathrm{PLAYS}_t=\\mathrm{FGA}_t+0.44\\,\\mathrm{FTA}_t+\\mathrm{TO}_t;\\quad \\mathrm{PLAYS}_t\\ne\\mathrm{PLAYS}_o",
+   "symbol_and_unit_ledger": {
+    "PLAYS": "plays (possessions + offensive rebounds) [count]",
+    "FGA": "field goal attempts [count]",
+    "TO": "turnovers [count]"
+   },
+   "assumptions": [
+    "Offensive rebounds create extra plays for one team without a matching opponent play",
+    "~105 plays on ~91.7 possessions in 2002-06"
+   ],
+   "breakdown_regime": "Because plays are unequal, per-play rates are not pace-neutral and mislead cross-team comparison; possessions are the correct denominator.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE denominator selection IS this distinction: the engine must normalize by the equal-opportunity unit (possessions/drives) not the unequal sub-event unit (plays/snaps), or cross-team comparisons inherit a pace bias. GSI: choose the conserved denominator for rate normalization.",
+    "source_operator": "plays_not_equal",
+    "telemetry": "plays vs possessions count (~105 vs ~91.7); denominator-equality check"
+   }
+  },
+  {
+   "primitive_id": "per_minute_cutoff",
+   "name": "Per-minute rates need a minutes threshold",
+   "verbatim_quote": "per-minute statistics become unreliable for players who have played very few minutes; generally, 500 or 1,000 minutes played in an NBA season is used as a cut-off point",
+   "page": 11,
+   "latex": "\\mathrm{PTS40}_p=\\frac{\\mathrm{PTS}_p}{\\mathrm{MIN}_p}\\times40;\\quad \\text{reliable iff }\\mathrm{MIN}_p\\gtrsim500\\text{-}1000",
+   "symbol_and_unit_ledger": {
+    "PTS40": "points per 40 minutes [score/40min]",
+    "MIN": "minutes played [time]",
+    "500-1000": "reliability cutoff [minutes]"
+   },
+   "assumptions": [
+    "Per-minute production is approximately stable across varying minutes above the cutoff",
+    "Small samples make per-minute rates noisy"
+   ],
+   "breakdown_regime": "Below ~500-1000 minutes the rate is dominated by sampling noise and role effects; extrapolating a low-minute rate to a starter role is the breakout-forecast trap.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE small-sample reliability gate IS this cutoff: the engine refuses to trust a per-opportunity rate estimated from too few opportunities (a thin sample), applying a minimum-sample threshold before projecting a rate to a larger role. GSI: minimum-sample validity gate on rate estimators.",
+    "source_operator": "per_minute_cutoff",
+    "telemetry": "minutes/opportunities sample size; rate stability vs sample; 500-1000 cutoff"
+   }
+  },
+  {
+   "primitive_id": "pace_adjustment",
+   "name": "Pace adjustment to a common opportunity base",
+   "verbatim_quote": "A team that averages 100 possessions per game gives their team 25 percent more chances to shoot, assist, rebound, etc. than a team that averages 80 possessions per game.",
+   "page": 12,
+   "latex": "\\mathrm{adjPTS40}_p=\\mathrm{PTS40}_p\\times\\frac{\\mathrm{POSS}_{\\text{league}}}{\\mathrm{POSS}_t}",
+   "symbol_and_unit_ledger": {
+    "POSS_league": "league average possessions/game [count]",
+    "POSS_t": "team possessions/game [count]",
+    "adjPTS40": "pace-adjusted points per 40 [score/40min]"
+   },
+   "assumptions": [
+    "Counting stats scale linearly with possessions",
+    "League average is the common reference base"
+   ],
+   "breakdown_regime": "Pace adjustment assumes counting production scales with opportunity count; it does not correct for the usage-efficiency tradeoff or opponent quality.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE pace normalization IS this adjustment: the engine rescales a team's or player's counting production to a league-common opportunity base so a fast team's inflated totals are not mistaken for superior quality, multiplying by league-possessions over team-possessions. GSI: normalize output to a reference transaction rate.",
+    "source_operator": "pace_adjustment",
+    "telemetry": "pace factor POSS_league/POSS_t; adjusted vs raw counting stats"
+   }
+  },
+  {
+   "primitive_id": "efg_ts",
+   "name": "Effective FG% and True Shooting% scoring efficiency",
+   "verbatim_quote": "Effective field goal percentage accounts for made three pointers (3PM), whereas true shooting percentage accounts for both three pointers and free throws.",
+   "page": 12,
+   "latex": "\\mathrm{eFG\\%}=\\frac{\\mathrm{FGM}+0.5\\cdot\\mathrm{3PM}}{\\mathrm{FGA}};\\quad \\mathrm{TS\\%}=\\frac{\\mathrm{PTS}/2}{\\mathrm{FGA}+0.44\\,\\mathrm{FTA}}",
+   "symbol_and_unit_ledger": {
+    "FGM": "field goals made [count]",
+    "3PM": "three-pointers made [count]",
+    "FGA": "field goal attempts [count]",
+    "PTS": "points [score]",
+    "FTA": "free throw attempts [count]",
+    "0.5": "three-point bonus weight [dimensionless]",
+    "0.44": "FT possession fraction [dimensionless]"
+   },
+   "assumptions": [
+    "A made three is worth 1.5 made twos, hence the 0.5 bonus",
+    "TS% treats all scoring attempts (field + free throws) on a common denominator"
+   ],
+   "breakdown_regime": "eFG% isolates field shooting while TS% captures total scoring efficiency; neither alone is universally preferred, and the 0.44 FT coefficient is era-calibrated.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE attempt-quality weighting IS eFG%/TS%: the engine weights each scoring attempt by its true point value (a three counts 1.5x a two, free throws folded in) rather than counting makes uniformly, so shot quality is measured on a point-equivalent denominator. GSI: value-weighted success rate over heterogeneous attempt types.",
+    "source_operator": "efg_ts",
+    "telemetry": "eFG% vs FG% vs TS% (means 47.9 / 44.6 / 52.3); attempt-value weights"
+   }
+  },
+  {
+   "primitive_id": "four_factors_breakdown",
+   "name": "Four Factors decompose the ratings",
+   "verbatim_quote": "If offensive and defensive ratings provide summaries of the overall performance of a team on a per-possession basis, then Four Factors provide a breakdown of those ratings.",
+   "page": 14,
+   "latex": "\\text{Four Factors}=\\{\\mathrm{eFG\\%},\\ \\mathrm{TO}/\\mathrm{POSS},\\ \\mathrm{OREB\\%},\\ \\mathrm{FTM}/\\mathrm{FGA}\\}",
+   "symbol_and_unit_ledger": {
+    "eFG%": "effective field goal percentage [probability]",
+    "TO/POSS": "turnovers per possession [rate]",
+    "OREB%": "offensive rebound percentage [probability]",
+    "FTM/FGA": "free throw rate [rate]"
+   },
+   "assumptions": [
+    "The four factors are shooting, turnovers, offensive rebounding, and free throws",
+    "Offense maximizes all but turnovers; defense is the opposite"
+   ],
+   "breakdown_regime": "Casting offensive rebounding as a percentage of available rebounds avoids the spurious negative factor from raw offensive rebounds correlating with missed shots; the factors are not equivalent in weight.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE factor decomposition IS the Four Factors: the engine decomposes a team's per-possession efficiency into orthogonal causal factors (shot quality, ball security, second chances, foul drawing) so a rating can be explained and projected factor-by-factor rather than as a black box. GSI: decompose a performance metric into interpretable causal drivers.",
+    "source_operator": "four_factors_breakdown",
+    "telemetry": "four factor values offense vs defense; factor-win differential"
+   }
+  },
+  {
+   "primitive_id": "four_factors_weights",
+   "name": "Four Factors relative weights 10/6/3/3",
+   "verbatim_quote": "the relative weights of these are approximately 10, 6, 3, and 3, respectively, in the NBA.",
+   "page": 15,
+   "latex": "w_{\\mathrm{eFG}}:w_{\\mathrm{TO}}:w_{\\mathrm{OREB}}:w_{\\mathrm{FT}}\\approx10:6:3:3",
+   "symbol_and_unit_ledger": {
+    "w_eFG": "shooting weight [relative]",
+    "w_TO": "turnover weight [relative]",
+    "w_OREB": "offensive-rebound weight [relative]",
+    "w_FT": "free-throw weight [relative]"
+   },
+   "assumptions": [
+    "Weights attributed to Kupfer (2005) for the NBA",
+    "Shooting dominates, then turnovers, then rebounding and free throws"
+   ],
+   "breakdown_regime": "The weights are empirical and era/league-specific, not universal constants; applying NBA weights to other leagues or eras is a calibration error.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE factor prioritization IS this weight vector: the engine ranks the causal drivers of efficiency by empirical impact (shooting ~10, turnovers ~6, rebounding and free throws ~3 each) so model attention and feature weighting follow measured importance rather than intuition. GSI: empirically calibrated feature-importance weights.",
+    "source_operator": "four_factors_weights",
+    "telemetry": "factor weight vector 10/6/3/3; sensitivity of rating to each factor"
+   }
+  },
+  {
+   "primitive_id": "plusminus_def",
+   "name": "Plus/minus = on-court team point differential",
+   "verbatim_quote": "Plus/minus statistics measure the team point differential (offensive points minus defensive points or offensive rating minus defensive rating) when a particular player is in the game",
+   "page": 16,
+   "latex": "+/-_p=(\\mathrm{PTS}_{\\text{for}}-\\mathrm{PTS}_{\\text{against}})\\big|_{p\\ \\text{on floor}}",
+   "symbol_and_unit_ledger": {
+    "+/-_p": "player plus/minus [point differential]",
+    "PTS_for/against": "team points scored/allowed while p on floor [score]"
+   },
+   "assumptions": [
+    "Measured per-minute or per-possession while the player is on the floor",
+    "Captures non-box-score contributions (screens, spacing, help defense)"
+   ],
+   "breakdown_regime": "Raw plus/minus confounds the player with his four teammates and five opponents; it is the individual version of team efficiency differential, not a clean isolated player value.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE on-off impact IS plus/minus: the engine measures the team's efficiency differential when a player (or scheme) is active versus inactive, capturing contributions the raw box score misses, while flagging the teammate/opponent confound. GSI: marginal system-performance delta attributable to a component's presence.",
+    "source_operator": "plusminus_def",
+    "telemetry": "on-court net efficiency; on/off differential; teammate confound"
+   }
+  },
+  {
+   "primitive_id": "adjusted_plusminus",
+   "name": "Adjusted plus/minus isolates marginal contribution by regression",
+   "verbatim_quote": "Adjusted plus/minus statistics use regression techniques to account for the players a given player plays with and against.",
+   "page": 17,
+   "latex": "\\text{net efficiency}\\sim\\sum_p \\beta_p\\,\\mathbf{1}[p\\ \\text{on floor}];\\quad \\beta_p=\\text{marginal player value}",
+   "symbol_and_unit_ledger": {
+    "beta_p": "regression coefficient = marginal player contribution [pts/100 poss]",
+    "1[p on floor]": "player presence indicator [dimensionless]"
+   },
+   "assumptions": [
+    "Team point differential is regressed on player presence indicators (home/away)",
+    "Coefficients isolate marginal contribution controlling for teammates and opponents"
+   ],
+   "breakdown_regime": "Requires many games for precise coefficients; correlated teammate minutes and systematic opponent-quality differences are not fully removed (WINVAL / Rosenbaum 2004 / Sagarin-Winston).",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE confound-adjusted attribution IS adjusted plus/minus: the engine regresses outcomes on presence indicators to isolate a factor's marginal contribution while controlling for the other factors active simultaneously, rather than crediting raw on-court totals. GSI: regression-based marginal attribution under collinear component presence.",
+    "source_operator": "adjusted_plusminus",
+    "telemetry": "player beta coefficients; standard errors vs games sampled; collinearity of minutes"
+   }
+  },
+  {
+   "primitive_id": "usage_efficiency_tradeoff",
+   "name": "Usage-efficiency tradeoff is the central optimization",
+   "verbatim_quote": "most basketball analysts argue that there is typically a tradeoff between possession usage and efficiency.",
+   "page": 18,
+   "latex": "\\frac{d\\,\\mathrm{Efficiency}}{d\\,\\mathrm{Usage}}<0\\quad(\\text{beyond easy opportunities})",
+   "symbol_and_unit_ledger": {
+    "Usage": "possession usage rate [fraction of team possessions]",
+    "Efficiency": "points per possession [score/opportunity]"
+   },
+   "assumptions": [
+    "Players exhaust easy opportunities (dunks, layups, open shots) first",
+    "Higher usage forces lower-quality shots; defenses adjust to high-usage players"
+   ],
+   "breakdown_regime": "The negative relationship is hard to identify causally without a credible instrument (usage-related but with no independent efficiency effect); public evidence is inconclusive.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE volume-quality tradeoff IS the usage-efficiency curve: the engine models that increasing a factor's volume (more picks, more usage) degrades its average quality because the best opportunities are taken first and the market adapts, so optimal allocation balances volume against marginal quality. GSI: diminishing marginal returns under adaptive opposition.",
+    "source_operator": "usage_efficiency_tradeoff",
+    "telemetry": "usage vs efficiency slope; marginal-quality decay; instrument for causal identification"
+   }
+  },
+  {
+   "primitive_id": "linear_weights_faults",
+   "name": "Linear weights have structural faults",
+   "verbatim_quote": "linear weights have numerous faults, including the frequently subjective weights applied to the statistics, the lack of defensive statistics available for such systems, the lack of correlation with winning at the team level",
+   "page": 18,
+   "latex": "\\mathrm{Value}_p=\\sum_k w_k\\,\\mathrm{stat}_{p,k}\\quad(\\text{subjective }w_k)",
+   "symbol_and_unit_ledger": {
+    "w_k": "weight on statistic k [subjective]",
+    "stat_p,k": "player p statistic k [count/rate]"
+   },
+   "assumptions": [
+    "Player value is a weighted sum of box-score statistics (NBA_EFF, PER, TENDEX, Points Created)",
+    "Weights are often chosen by logic rather than calibrated to wins"
+   ],
+   "breakdown_regime": "Subjective weights, missing defensive stats, weak team-win correlation, no calibration measuring stick, and difficulty incorporating new stats make linear weights unreliable as sovereign value measures.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE anti-heuristic valuation IS this critique: the engine rejects subjective weighted-sum player/pick valuations that lack a win-calibrated measuring stick and defensive coverage, insisting weights be calibrated to outcomes rather than asserted, the same discipline that bans toy equations. GSI: outcome-calibrated weighting versus arbitrary heuristic scoring.",
+    "source_operator": "linear_weights_faults",
+    "telemetry": "weight provenance (calibrated vs subjective); win-correlation of the metric"
+   }
+  },
+  {
+   "primitive_id": "pythagorean_premise",
+   "name": "Pythagorean win% from points scored/allowed",
+   "verbatim_quote": "team winning percentages are generally closely related to points scored and points allowed (and, in cases where they differ, the difference is usually not a repeatable skill).",
+   "page": 19,
+   "latex": "\\mathrm{PYTH}_t=\\frac{\\mathrm{PTS}_t^{x}}{\\mathrm{PTS}_t^{x}+\\mathrm{PTS}_o^{x}}",
+   "symbol_and_unit_ledger": {
+    "PYTH": "Pythagorean winning percentage [probability]",
+    "PTS_t/PTS_o": "points scored/allowed [score]",
+    "x": "empirical exponent [dimensionless]"
+   },
+   "assumptions": [
+    "Winning percentage is driven by point differential, not luck in close games",
+    "Deviations from Pythagorean expectation are usually non-repeatable"
+   ],
+   "breakdown_regime": "The exponent x is empirical and era/league-dependent; the formula assumes point differential is the repeatable driver and close-game luck regresses.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE expected-win from differential IS the Pythagorean method: the engine estimates a team's true win probability from its scored/allowed differential rather than its actual record, treating close-game over/under-performance as non-repeatable noise that regresses. GSI: steady-state success probability from a net-rate invariant.",
+    "source_operator": "pythagorean_premise",
+    "telemetry": "Pythagorean vs actual win%; residual (luck) regression to zero"
+   }
+  },
+  {
+   "primitive_id": "pythagorean_exponent",
+   "name": "NBA Pythagorean exponent ~13-17 (16.5)",
+   "verbatim_quote": "In NBA basketball, the value of x has been estimated empirically from different works to be between about 13 and 17",
+   "page": 19,
+   "latex": "x_{\\mathrm{NBA}}\\in[13,17],\\quad x_{\\mathrm{ESPN/Oliver}}=16.5;\\quad x_{\\mathrm{baseball}}\\approx1.8\\text{-}2",
+   "symbol_and_unit_ledger": {
+    "x": "Pythagorean exponent [dimensionless]",
+    "16.5": "Oliver/ESPN adopted NBA exponent [dimensionless]"
+   },
+   "assumptions": [
+    "Larger exponents better capture very good/very bad teams; least-squares favors smaller because most teams bunch at 30-50 wins",
+    "Fewer possessions (college/WNBA) require smaller exponents"
+   ],
+   "breakdown_regime": "The exponent trades off fit at the extremes versus the bunched middle; it is era-dependent (pace slowed but margins stable) and league-dependent (possessions per game).",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE exponent calibration IS this empirical choice: the engine calibrates the sensitivity of its win-probability transform to the scoring environment (possessions per game, margin distribution) rather than importing a universal constant, matching the Bashuk margin-to-WP calibration discipline. GSI: environment-calibrated transform sensitivity.",
+    "source_operator": "pythagorean_exponent",
+    "telemetry": "exponent x by league/era; extreme-team vs middle-team fit"
+   }
+  },
+  {
+   "primitive_id": "bell_curve_advantage",
+   "name": "Bell Curve win% needs no era/league recalibration",
+   "verbatim_quote": "it does not need empirical modification for application in different leagues or different eras",
+   "page": 20,
+   "latex": "\\mathrm{Win\\%}_t=\\Phi\\!\\left(\\frac{\\mathrm{PPG}_t-\\mathrm{PPG}_o}{\\mathrm{StDev}(\\mathrm{PPG}_t-\\mathrm{PPG}_o)}\\right)",
+   "symbol_and_unit_ledger": {
+    "Phi": "standard normal CDF [probability]",
+    "PPG": "points per game [score/game]",
+    "StDev": "standard deviation of net points across schedule [score/game]"
+   },
+   "assumptions": [
+    "Points scored and allowed are approximately normal; net points is their difference (also normal)",
+    "Win probability is the normal CDF of the net-points Z-statistic"
+   ],
+   "breakdown_regime": "Ties are impossible in basketball so the net-points standard deviation carries extra noise, biasing extreme teams ~1-2 percentage points toward 0.500; requires individual-game net-points data.",
+   "domain": "math",
+   "confidence": 0.92,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE distributional win-probability IS the Bell Curve method: the engine derives win probability from the full distribution of net production (mean and variance) via a normal CDF rather than a fitted power law, so it transfers across leagues and eras without recalibration and incorporates how teams play up/down to opponents. GSI: distribution-based success probability from a net-rate Z-score.",
+    "source_operator": "bell_curve_advantage",
+    "telemetry": "net-points mean and StDev; Z-statistic; Phi(Z) win%; bias toward 0.5 at extremes"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "kubatko2007_basketball_accounting",
+   "think": "This inline cycle extracts Kubatko, Oliver, Pelton and Rosenbaum's 2007 Journal of Quantitative Analysis in Sports paper, A Starting Point for Analyzing Basketball Statistics, the peer-reviewed foundation of modern basketball analytics. Twenty-two primitives are extracted, each with a clean verbatim quote verified as an exact substring of the normalized text, a page anchor, an equation, a symbol-and-unit ledger, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. A provenance note is required: the simple formulas (the possessions-lost estimator, offensive and defensive ratings, per-minute and pace-adjusted rates, effective field goal and true shooting percentages) print in clean readable text and are used directly, while the general possession formula, the OLS specification, the rebound-rate family, the NBA efficiency statistic, and the Pythagorean and Bell-Curve display equations use a shifted font and are reconstructed in labeled LaTeX from the unambiguous prose. No sportsbook line is used as a model input anywhere.\n\nThe retrocausal genealogy runs from Bill James's baseball Pythagorean expectation and Dean Oliver's Basketball on Paper through the non-academic APBRmetrics community into this peer-reviewed synthesis. The paper's load-bearing invariant is the possession: an interval of ball-control that ends in a made shot, a defensive rebound, or a turnover, and which is guaranteed approximately equal for both opponents within two in a non-overtime game. This accounting identity is the scar that created the whole field, because it is what makes per-possession efficiency a pace-neutral quality signal rather than a volume artifact. The genealogy is precise that an offensive rebound starts a new play but not a new possession, so plays are unequal across opponents and are the wrong denominator; this distinction is the source of decades of terminology confusion the paper explicitly resolves. The possession estimator itself descends from two decades of competing box-score formulas, which the paper unifies as special cases of a general alpha-share formulation and then calibrates by OLS on 5,178 games, finding that averaging both teams' estimates raises the correlation with actual possessions from 0.949 to 0.973.\n\nThe recursive theory of mind models the analyst and the coach as agents reasoning about hidden quality under noisy observation. The coach chooses whether to crash the offensive boards or retreat to prevent fast breaks, which is why offensive and defensive rebounding percentages are negatively correlated; the analyst must infer this strategic choice from the rebounding split rather than read raw rebound totals as pure ability. The general manager evaluating a player must see through the usage-efficiency tradeoff, recognizing that a high-usage player's efficiency falls because easy opportunities are exhausted first and defenses adapt, and that isolating this causal effect requires a credible instrument. The plus/minus family is itself a theory-of-mind ladder: raw plus/minus reads the team's on-court differential, net plus/minus subtracts the without-player baseline assuming uncorrelated substitutions, and adjusted plus/minus regresses out teammates and opponents to isolate marginal contribution, each step correcting a confound the previous step ignored. The analyst's task is to choose the rung whose assumptions match the data available.\n\nThe cross-layer veto adjudication is where this book earns its place beside the win-probability and optimization layers. The first veto is denominator equality: normalize by the conserved opportunity unit (possessions) not the unequal sub-event unit (plays), or cross-team comparison inherits a pace bias, which is the engine's per-opportunity normalization discipline. The second veto is the small-sample gate: per-minute and per-possession rates are unreliable below a minimum sample, so the engine refuses to project a thin-sample rate to a larger role. The third veto is the confound correction: raw on-court impact confounds the player with teammates and opponents, so attribution must regress out the co-active factors, the adjusted-plus/minus discipline applied to pick attribution. The fourth veto is the anti-heuristic rule: subjective linear weights without a win-calibrated measuring stick and defensive coverage are rejected, the same doctrine that bans toy equations. The fifth veto is calibration transfer: the Pythagorean exponent and the Four Factors weights are era- and league-specific, so the engine calibrates rather than imports constants, while the Bell-Curve distributional method transfers without recalibration. The objective links to the Bashuk win-probability layer, Pythagorean and Bell-Curve both map scored/allowed differential to win probability, and the usage-efficiency tradeoff links to the Kirshner knapsack's diminishing marginal value. The result is a sovereign basketball-accounting layer: a conserved opportunity unit, pace-neutral rate normalization, factor decomposition with calibrated weights, confound-adjusted attribution, and distributional win-probability, all grounded in clean verbatim prose with honestly labeled equation reconstructions.\n\nThree further sovereign details complete the accounting layer. The OLS possession estimation is itself a calibration invariant: Table 1 reports a made field goal worth about 0.96 possessions, a missed field goal about 0.62 (the sum of the attempt and miss coefficients), a turnover about 0.98, and defensive and offensive rebounds about 0.36 and -0.62, with R-squared 0.9615 across 5,178 games; the missed-shot and defensive-rebound values nearly sum to one, confirming the general alpha-share formulation. The rebound-rate family carries a probabilistic interpretation: a loose ball after a missed shot becomes a defensive rebound about 69 percent of the time and an offensive rebound about 31 percent, so the possession values 0.62 and 0.36 are roughly the probabilities that a rebound saves or extends a possession, linking the accounting coefficients to a physical contest. Finally, floor percentage, the fraction of possessions scoring at least one point, serves as the characteristic probability of a binomial scoring model, though independence assumptions can fail. These details ground the engine's calibration of opportunity coefficients to observed contest probabilities rather than asserting them, and they tie the accounting layer to the physical and probabilistic layers beneath it.",
+   "retrocausal_genealogy": "The genealogy runs from Bill James's baseball Pythagorean expectation and Dean Oliver's Basketball on Paper through the non-academic APBRmetrics community into this peer-reviewed JQAS synthesis. The load-bearing invariant is the possession, an interval of ball-control guaranteed approximately equal for both opponents within two in regulation, which makes per-possession efficiency a pace-neutral quality signal. The paper resolves the play-versus-possession confusion (an offensive rebound starts a play not a possession, so plays are unequal and the wrong denominator), unifies two decades of box-score possession formulas as special cases of a general alpha-share formulation, and calibrates by OLS on 5,178 games, finding that averaging both teams raises correlation with actual possessions from 0.949 to 0.973. The Four Factors, per-minute rates, pace adjustment, plus/minus family, linear weights, Pythagorean and Bell-Curve methods all descend from this possession foundation.",
+   "theory_of_mind": "The analyst and coach reason about hidden quality under noisy observation. The coach's crash-the-boards versus retreat choice produces the negative correlation between offensive and defensive rebounding, so the analyst infers strategy from the rebounding split rather than reading raw totals as ability. The GM sees through the usage-efficiency tradeoff, recognizing high-usage efficiency falls because easy opportunities exhaust first and defenses adapt, and that causal identification needs a credible instrument. The plus/minus family is a theory-of-mind ladder: raw on-court differential, net plus/minus subtracting the without-player baseline under uncorrelated substitutions, and adjusted plus/minus regressing out teammates and opponents, each rung correcting a confound the last ignored. The analyst chooses the rung whose assumptions match the available data.",
+   "cross_layer_veto": "Five vetoes adjudicate against the win-probability and optimization layers. Denominator equality: normalize by the conserved possession unit not the unequal play unit or comparison inherits pace bias. Small-sample gate: per-opportunity rates are unreliable below a minimum sample, so thin-sample rates are not projected to larger roles. Confound correction: raw on-court impact confounds teammates and opponents, so attribution regresses out co-active factors. Anti-heuristic rule: subjective linear weights without a win-calibrated measuring stick and defensive coverage are rejected, the same doctrine banning toy equations. Calibration transfer: Pythagorean exponents and Four Factors weights are era/league-specific so the engine calibrates rather than imports constants, while the Bell-Curve distributional method transfers without recalibration. The objective links to Bashuk win-probability and the usage-efficiency tradeoff links to the Kirshner knapsack's diminishing marginal value."
+  }
+ ],
+ "universal_lens": "Kubatko et al. 2007 contributes the basketball-accounting and rate-normalization layer to the Foundry stack: a conserved opportunity unit (the possession, equal for opponents within two), pace-neutral per-possession efficiency (offensive/defensive ratings), a calibrated box-score possession estimator unified as alpha-share special cases, factor decomposition (Four Factors with 10/6/3/3 weights), value-weighted shooting efficiency (eFG%/TS%), a confound-adjusted attribution ladder (raw/net/adjusted plus/minus), the usage-efficiency tradeoff as the central optimization, and two distributional win-probability transforms (Pythagorean power law and Bell-Curve normal CDF). Its load-bearing invariants are denominator equality, small-sample reliability, confound correction, outcome-calibrated weights, and era/league-calibrated transforms.",
+ "gsi_mapping": "For GSI these primitives are the general accounting and normalization layer: define a conserved transaction unit so competing processes are rate-comparable, normalize output by transaction count to recover true quality from throughput, reconstruct a shared state from two noisy measurements by averaging, decompose a performance metric into interpretable causal drivers with empirically calibrated importance weights, attribute marginal contribution by regressing out collinear co-active components, gate rate estimators on minimum sample size, and derive success probability from a net-rate distribution (Z-score CDF) that transfers across environments without recalibration. The anti-subjective-weighting discipline forbids heuristic scoring without an outcome-calibrated measuring stick.",
+ "gse_mapping": "For GSE this is the per-opportunity accounting and team-strength layer: the possession IS the engine's atomic opportunity unit (drive/snap), equal-opportunity normalization IS pace adjustment, per-possession efficiency IS the edge-per-opportunity quality signal, the Four Factors IS the causal decomposition of team strength with calibrated weights, eFG%/TS% IS attempt-value weighting, adjusted plus/minus IS confound-adjusted pick/player attribution, the usage-efficiency tradeoff IS the volume-quality decay that links to the Kirshner knapsack, the small-sample cutoff IS the thin-sample reliability gate, and Pythagorean/Bell-Curve map scored-allowed differential to win probability linking to the Bashuk layer. Equation reconstructions are labeled and no sportsbook line is a model input."
+}
